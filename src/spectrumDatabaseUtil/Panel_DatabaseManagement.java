@@ -462,7 +462,8 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		
 		// Both runnable jar and IDE work with condition: Databases folder and runnable jar have to be in the same location
 		databasesFolder = new File (jarFile.getParentFile().toString() + "/Databases");		//parent is the folder contain jar file
-		seperator = "/";
+		seperator = "/";		
+		if (!databasesFolder.exists()) {databasesFolder.mkdirs();}	//Create folder Databases if it does not exist		
 //		JOptionPane.showMessageDialog(this, databasesFolder);
 		
 
