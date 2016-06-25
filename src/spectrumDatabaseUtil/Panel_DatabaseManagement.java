@@ -45,7 +45,7 @@ import javax.swing.tree.TreePath;
 
 @SuppressWarnings("serial")
 public class Panel_DatabaseManagement extends JLayeredPane {
-	private File databasesFolder = new File("C:/SpectrumLite/Databases");
+	private File databasesFolder;
 	private String seperator = "/";
 	private JTree DatabaseTree;
 	private DefaultMutableTreeNode root, processingNode;
@@ -442,26 +442,31 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		root.removeAllChildren();
 		model.reload(root);
 
-		// Find all the .db files in the predefined folder to add into to DatabaseTree			
-		
+
+		// Get working location of the IDE project, or runnable jar file
 		final File jarFile = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath());		
 		if(jarFile.isFile()) {  // Run with JAR file
 			databasesFolder = new File (":Databases");	//Note: we have to define databaseFolder as String to make it work
-			seperator = ":";
+			seperator = ":";		
 			
 //			//runnable jar path
 //			String url = "jdbc:sqlite::resource:mydb.db";
 		} else { // Run with IDE
 //			databasesFolder = new File (jarFile + "/Databases");	//return: C:\SpectrumLite\JavaModel\bin\Databases
-//			seperator = "/";
-			
+//			seperator = "/";			
 			
 //			//Eclipse test path
 //			String url = "jdbc:sqlite:resource/mydb.db";
 		}
 
 		
+		// Both runnable jar and IDE work with condition: Databases folder and runnable jar have to be in the same location
+		databasesFolder = new File (jarFile.getParentFile().toString() + "/Databases");		//parent is the folder contain jar file
+		seperator = "/";
+//		JOptionPane.showMessageDialog(this, databasesFolder);
 		
+
+		// Find all the .db files in the predefined folder to add into to DatabaseTree	
 		String files;
 		File[] listOfFiles = databasesFolder.listFiles(new FilenameFilter() {
 			@Override
