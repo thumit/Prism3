@@ -991,7 +991,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 				} else if (!extentionList.contains(extension.toUpperCase())) {
 					// Choose the right delimited
 					// JDialog.setDefaultLookAndFeelDecorated(true);
-					UIManager.put("OptionPane.cancelButtonText", "Do not import '." + extension + "' files");
+					UIManager.put("OptionPane.cancelButtonText", "Cancel");
 					UIManager.put("OptionPane.okButtonText", "Import");
 
 					Object[] selectionValues = { "Comma", "Space", "Tab" };
