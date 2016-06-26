@@ -867,7 +867,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 						row++;
 					}
 					 
-					//Close all statements, connections-----------------------------
+					//Close all statements, connections------------------------------------
 					rs.close();
 					st.close();
 					con_from.close();
