@@ -17,6 +17,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -45,6 +46,7 @@ import javax.swing.tree.TreePath;
 
 @SuppressWarnings("serial")
 public class Panel_DatabaseManagement extends JLayeredPane {
+	private String workingLocation;
 	private File databasesFolder;
 	private String seperator = "/";
 	private JTree DatabaseTree;
@@ -461,7 +463,8 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 
 		
 		// Both runnable jar and IDE work with condition: Databases folder and runnable jar have to be in the same location
-		databasesFolder = new File (jarFile.getParentFile().toString() + "/Databases");		//parent is the folder contain jar file
+		workingLocation = jarFile.getParentFile().toString();
+		databasesFolder = new File (workingLocation + "/Databases");		//parent is the folder contain jar file
 		seperator = "/";		
 		if (!databasesFolder.exists()) {databasesFolder.mkdirs();}	//Create folder Databases if it does not exist		
 //		JOptionPane.showMessageDialog(this, databasesFolder);
@@ -710,10 +713,9 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 					DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();
 					TreeNode[] nodes = model.getPathToRoot(child);
 					TreePath path = new TreePath(nodes);
-					DatabaseTree.getSelectionModel().removeSelectionPath(path); // Deselect
-																				// childs
-					// System.out.println(processingNode.getChildCount());
+					DatabaseTree.getSelectionModel().removeSelectionPath(path); // Deselect childs
 				}
+				DatabaseTree.collapsePath(new TreePath(processingNode.getPath()));	//Collapse the selected database	
 			}
 		}
 		selectionPaths = DatabaseTree.getSelectionPaths();			//This is very important to get the most recent selected paths
@@ -738,7 +740,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 				
 		String initialSelection = listNames[0];			//First database shows up
 		String selection = (String) JOptionPane.showInputDialog(this,
-				"Selected tables and selected databases (including their non-selected tables) will be copied and pasted into", "Please select a database as destination to paste",
+				"Selected tables and selected databases (including all tables in selected databases) will be copied and pasted into", "Please select a database as destination to paste",
 				JOptionPane.QUESTION_MESSAGE, null, listNames, initialSelection);
 		
 		
@@ -752,6 +754,15 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 			}
 		}
 		
+		// Find the destination node
+		DefaultMutableTreeNode destinationNode = new DefaultMutableTreeNode(destinationFileName);
+		Enumeration<DefaultMutableTreeNode> e = root.depthFirstEnumeration();
+		while (e.hasMoreElements()) {		//Search for the name that match
+			DefaultMutableTreeNode node = e.nextElement();
+			if (node.toString().equalsIgnoreCase(destinationFileName) && root.isNodeChild(node)) {		//Name match, and node is child of root
+				destinationNode = node;
+			}
+		}
 		
 		//---------------------------------------------------	DO ONLY WHEN USER PRESS 'OK' 			
 		//Loop through all selected tables and databases the users want to copy		
@@ -773,65 +784,126 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 //			System.out.println(numberofTables);		
 //			System.out.println(selection);
 		
-			//Define arrays to store all tables SQL connection information: databases and tables info are needed
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		}
-		
-		
-		
-		
-		
-		
-		DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();
-		
-//		for (TreePath selectionPath : selectionPaths) {		
-//			currentLevel = selectionPath.getPathCount();
-//			processingNode = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
-//			DatabaseTree.setSelectionPath(null);
-//			
-//			if (currentLevel == 3) {		//Level 3 nodes					
-//				currentDatabase = processingNode.getParent().toString(); 
-//				currenTableName = processingNode.getUserObject().toString();
-//				model.removeNodeFromParent(processingNode);
-//				doQuery("DROP TABLE IF EXISTS " + "[" + currenTableName + "]");
-//				showNothing();
-//			}
-//
-//			if (currentLevel == 2) {		//Level 2 nodes	
-//				currentDatabase = processingNode.getUserObject().toString(); 
-//				model.removeNodeFromParent(processingNode);
-//				File file = new File(databasesFolder + seperator + currentDatabase);
-//				file.delete();
-//				showNothing();
-//			}
-//		}
-		
-		
-		
-		
-		
-		
-		
-		
+			//Define arrays to store all tables SQL connection information: databases and tables info are needed		
+			String[] copiedTables_names = new String[numberofTables];
+			String[] database_of_copiedTables = new String[numberofTables];
+			int ii = 0;
+			for (TreePath selectionPath : selectionPaths) {
 
+				currentLevel = selectionPath.getPathCount();
+				processingNode = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
+
+				if (currentLevel == 3) {
+					database_of_copiedTables[ii] = processingNode.getParent().toString();
+					copiedTables_names[ii] = processingNode.getUserObject().toString();
+					ii++;
+				}
+
+				else if (currentLevel == 2) { // Level 2 nodes: databases
+					// Loop through all tables in this database to get information		
+					Enumeration<DefaultMutableTreeNode> e1 = processingNode.depthFirstEnumeration();
+					while (e1.hasMoreElements()) {		//Search for the name that match
+						DefaultMutableTreeNode childnode = e1.nextElement();
+						if (processingNode.isNodeChild(childnode)) {		//If table (childnode) is child of that database (processingNode)
+							database_of_copiedTables[ii] = childnode.getParent().toString();
+							copiedTables_names[ii] = childnode.getUserObject().toString();
+							ii++;
+						}
+					}
+				}
+			}
+			//---------------------------------------------------		
+
+			int count = 0;		//just help to know how many tables have been added
+			
+			// Now loop through all copied tables and add them to the destine database		
+			for (int i = 0; i < numberofTables; i++) { // Loop through all copied tables
+
+				try {
+					Connection con_from = DriverManager
+							.getConnection("jdbc:sqlite:" + databasesFolder + seperator + database_of_copiedTables[i]);
+
+					Statement st = con_from.createStatement();					
+					ResultSet rs = st.executeQuery("SELECT * FROM " + "[" + copiedTables_names[i] + "];");
+					
+					//Get columns name and name_modified should be:	'ColumnName' TEXT, 'ColumnName' TEXT, 'ColumnName' TEXT,.......   
+					ResultSetMetaData rsmd = rs.getMetaData();
+					int columnCount = rsmd.getColumnCount();
+					
+					String[] columnNames = new String[columnCount];
+					String name_modified = new String();
+					
+					// The column count in rsmd starts from 1
+					for (int jj = 0; jj < columnCount; jj++ ) {
+						columnNames[jj] = rsmd.getColumnName(jj+1);		//jj+1 is because rsmd has colum names indexed from 1 to n
+						name_modified = name_modified + "'" + columnNames[jj] + "' TEXT, ";
+					}
+					name_modified = name_modified.substring(0, name_modified.lastIndexOf(','));		//Remove the last ","
+					//-----------------------------------------------------------
+		
+										
+					//Now connect to destine database----------------------------		
+					Connection con_to = DriverManager
+							.getConnection("jdbc:sqlite:" + databasesFolder + seperator + destinationNode);		
+					Statement st1 = con_to.createStatement();
+					
+					//Create a new table with the same name in the destine database
+					st1.executeUpdate("CREATE TABLE " + "[" + copiedTables_names[i] + "]" + " (" + name_modified + ");");
+									
+					//Make currentrow[row] to be:		'value1', 'value2', .....
+					String[] currentRow = new String[columnCount];
+					int row = 0;
+					while (rs.next()) {		//Loop through all rows of the copied table
+						currentRow[row] = "";	//This is important to make the first member of this String not "null"
+					    for (int jj = 1; jj < columnCount + 1; jj++) {
+					    	currentRow[row] = currentRow[row] +"'" + rs.getString(jj) +"'" +", ";
+					    }
+					    currentRow[row] = currentRow[row].substring(0, currentRow[row].lastIndexOf(','));		//Remove the last "," 				      
+					   
+					    //Execute the insert
+					    String statement = "INSERT INTO " + "[" + copiedTables_names[i] + "]" + " VALUES (" + currentRow[row] + ");";	// [] surrounds tableName		 
+						st1.executeUpdate(statement);
+
+						row++;
+					}
+					 
+					//Close all statements, connections-----------------------------
+					rs.close();
+					st.close();
+					con_from.close();
+					
+					st1.close();
+					con_to.close();
+				}
+
+				catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+				
+							
+				//Show tables
+				
+				if (errorCAUGHT.equals(false)) {
+					// Make the new table appear on the TREE----------->YEAHHHHHHHHHHHHHHH
+					DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();
+					DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(copiedTables_names[i]);
+					model.insertNodeInto(newNode, destinationNode, destinationNode.getChildCount());
+					TreeNode[] nodes = model.getPathToRoot(newNode);
+					TreePath path = new TreePath(nodes);
+					DatabaseTree.scrollPathToVisible(path);
+					// DatabaseTree.setEnabled(false);
+					// DatabaseTree.setEditable(true);
+					if (count ==0) DatabaseTree.setSelectionPath(path);			//this help deselect all original nodes
+					// DatabaseTree.startEditingAtPath(path);
+					editingPath = path;			
+					DatabaseTree.getSelectionModel().addSelectionPath(path); // Deselect childs
+					count ++;
+				}
+				errorCAUGHT = false;	
+				
+				
+			}	//End of For loop
+		}	//End of if (selection != null)
 	}
 
 	//--------------------------------------------------------------------------------------------------------------------------------
@@ -945,6 +1017,8 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		}
 												
 		
+		int count = 0;		//just help to know how many tables have been added
+		
 		// Loop through all saved extension to find the one match the current file, then return the delimited for that file 
 		for (int i = 0; i < files.length; i++) {
 			if (files[i].isFile()) {
@@ -971,8 +1045,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 					SQLite.create_importTable_Stm(currentfile);
 					doQuery(SQLite.get_importTable_Stm());
 					if (errorCAUGHT.equals(false)) {
-						// Make the new table appear on the
-						// TREE----------->YEAHHHHHHHHHHHHHHH
+						// Make the new table appear on the TREE----------->YEAHHHHHHHHHHHHHHH
 						String tableName = currentfile.getName();
 						if (tableName.contains("."))
 							tableName = tableName.substring(0, tableName.lastIndexOf('.'));
@@ -985,16 +1058,19 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 						DatabaseTree.scrollPathToVisible(path);
 						// DatabaseTree.setEnabled(false);
 						// DatabaseTree.setEditable(true);
-						DatabaseTree.setSelectionPath(path);
+						if (count ==0) DatabaseTree.setSelectionPath(path);			//this help deselect all original nodes
 						// DatabaseTree.startEditingAtPath(path);
 						editingPath = path;
+						DatabaseTree.getSelectionModel().addSelectionPath(path); // Deselect childs
+						count ++;
 					}
-					errorCAUGHT = false;
+					errorCAUGHT = false;	
 				}
 			} // end of If
 		} // end of For loop
 	}
 
+	//--------------------------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public void delete_Databases_or_Tables() {
 		
@@ -1011,9 +1087,9 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 					TreeNode[] nodes = model.getPathToRoot(child);
 					TreePath path = new TreePath(nodes);
 					DatabaseTree.getSelectionModel().removeSelectionPath(path); // Deselect childs
-					//System.out.println(processingNode.getChildCount());
 				}
-			}
+				DatabaseTree.collapsePath(new TreePath(processingNode.getPath()));	//Collapse the selected database				
+			}	
 		}
 		selectionPaths = DatabaseTree.getSelectionPaths();			//This is very important to get the most recent selected paths
 		//End of set up---------------------------------------------------------------
@@ -1021,7 +1097,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		
 		
 		//Ask to delete 
-		int response = JOptionPane.showConfirmDialog(this, "Selected tables and selected databases (including their non-selected tables) will be deleted ?", "Confirm Delete",
+		int response = JOptionPane.showConfirmDialog(this, "Selected tables and selected databases (including all tables in selected databases) will be deleted ?", "Confirm Delete",
 		        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 		    if (response == JOptionPane.NO_OPTION) {
 		      
@@ -1061,6 +1137,8 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 	}
 	
 	//--------------------------------------------------------------------------------------------------------------------------------
+
+	//--------------------------------------------------------------------------------------------------------------------------------
 	public void showNothing () {
 		dataDisplayTextField.setText(null);	//Show nothing on the TextField
 		// show nothing (a table with 0 row and 0 column) if no node is  currently selected
@@ -1069,6 +1147,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		tm.setRowCount(0);
 		tm.fireTableDataChanged();
 	}
+	
 	
 	//--------------------------------------------------------------------------------------------------------------------------------
 	// Get values to pass to other classes
