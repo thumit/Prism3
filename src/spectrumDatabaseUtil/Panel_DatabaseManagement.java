@@ -877,7 +877,8 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 				}
 
 				catch (SQLException e1) {
-					e1.printStackTrace();
+					JOptionPane.showMessageDialog(this, e1, e1.getMessage(), WIDTH, null);
+					errorCAUGHT = true;
 				}
 				
 							
@@ -1071,7 +1072,6 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 	}
 
 	//--------------------------------------------------------------------------------------------------------------------------------
-	//--------------------------------------------------------------------------------------------------------------------------------
 	public void delete_Databases_or_Tables() {
 		
 		//These following code work very well, I just dont want to use it for now
@@ -1135,8 +1135,6 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		    } else if (response == JOptionPane.CLOSED_OPTION) {
 		}
 	}
-	
-	//--------------------------------------------------------------------------------------------------------------------------------
 
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public void showNothing () {
