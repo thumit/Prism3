@@ -42,7 +42,8 @@ public class Spectrum_Main extends JFrame {
 			public void run() {
 
 				try {
-					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+					//UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+					UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
 				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
 						| UnsupportedLookAndFeelException ex) {
 				}
