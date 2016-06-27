@@ -1049,9 +1049,44 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 
 				
 				if (fileDelimited != null) {
-					// Do the Query
-					SQLite.create_importTable_Stm(currentfile);
-					doQuery(SQLite.get_importTable_Stm());
+					// Get info from the file
+					SQLite.create_importTable_Stm(currentfile);		//Read file into arrays
+					String[] statement = new String [SQLite.get_importTable_TotalLines()];		//this arrays hold all the statements
+					statement = SQLite.get_importTable_Stm();	
+					
+					
+					try {
+						Class.forName("org.sqlite.JDBC").newInstance();
+						conn = DriverManager.getConnection("jdbc:sqlite:" + databasesFolder + seperator + currentDatabase);
+
+						conn.setAutoCommit(false);										
+						PreparedStatement pst = null;
+
+						// prepared execution
+						for (int line = 0; line < SQLite.get_importTable_TotalLines(); line++) {
+							pst = conn.prepareStatement(statement[line]);
+							pst.executeUpdate();
+						}
+					
+						pst.close();
+						conn.commit();			//commit all prepared execution, this is important
+						conn.close();				
+						
+					} catch (InstantiationException e) {
+						JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
+						errorCAUGHT=true;
+					} catch (IllegalAccessException e) {
+						JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
+						errorCAUGHT=true;
+					} catch (ClassNotFoundException e) {
+						JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
+						errorCAUGHT=true;
+					} catch (SQLException e) {
+						JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
+						errorCAUGHT=true;
+					}
+									
+					
 					if (errorCAUGHT.equals(false)) {
 						// Make the new table appear on the TREE----------->YEAHHHHHHHHHHHHHHH
 						String tableName = currentfile.getName();
@@ -1123,7 +1158,6 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 						doQuery("DROP TABLE IF EXISTS " + "[" + currenTableName + "]");
 						showNothing();
 					}
-
 				}	
 				
 				for (TreePath selectionPath : selectionPaths) {		//Loop through all again and delete all level 2 nodes (databases)

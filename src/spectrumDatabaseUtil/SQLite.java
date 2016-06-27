@@ -10,7 +10,8 @@ import java.util.List;
 public class SQLite {
 	
 private static String delimited;
-private static String statement;
+private static String[] statement;
+private static int totalLines;
 	
 	public static void create_importTable_Stm (File file) {
 		// Read the whole file to array, create statement query to create table using the first line as column names
@@ -91,10 +92,17 @@ private static String statement;
 				//Get the table name without extension
 				String tableName = file.getName();
 				if(tableName.contains(".")) tableName= tableName.substring(0, tableName.lastIndexOf('.'));	
-						
+				
+				
+				// add statement to array
+				
+				
+				statement = new String[a.length];
+				totalLines = a.length;
+				
 				// Finally, The statement to add a new table with Column Names only:
 //				statement = "CREATE TABLE " + "\"" + tableName + "\"" + " (" + string1 + ");";		//Double quote surrounds tableName
-				statement = "CREATE TABLE " + "[" + tableName + "]" + " (" + string1 + ");";		// [] surrounds tableName	
+				statement[0] = "CREATE TABLE " + "[" + tableName + "]" + " (" + string1 + ");";		// [] surrounds tableName	
 			
 				// And here are statement to import from the second record (or line) to the end of the file
 				for (int i = 1; i < a.length; i++) {
@@ -107,7 +115,7 @@ private static String statement;
 				}
 					string2 = string2 + "'" + currentRow[rowCount-1] + "'";  //For the last item of the row we don't add ,				
 //					statement = statement + "INSERT INTO " + "\"" + tableName + "\"" + " VALUES (" + string2 + ");";	//Double quote surrounds tableName
-					statement = statement + "INSERT INTO " + "[" + tableName + "]" + " VALUES (" + string2 + ");";	// [] surrounds tableName
+					statement[i] = "INSERT INTO " + "[" + tableName + "]" + " VALUES (" + string2 + ");";	// [] surrounds tableName
 			}
 
 			} catch (IOException e) {
@@ -117,11 +125,13 @@ private static String statement;
 		}
 	}
 
-	public static String get_importTable_Stm () {
+	public static String[] get_importTable_Stm () {
 		return statement;
 	}
 	
-
+	public static int get_importTable_TotalLines () {
+		return totalLines;
+	}
 }
 
 
