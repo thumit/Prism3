@@ -15,6 +15,7 @@ import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -844,14 +845,20 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 										
 					//Now connect to destine database----------------------------		
 					Connection con_to = DriverManager
-							.getConnection("jdbc:sqlite:" + databasesFolder + seperator + destinationNode);		
-					Statement st1 = con_to.createStatement();
+							.getConnection("jdbc:sqlite:" + databasesFolder + seperator + destinationNode);											
+					con_to.setAutoCommit(false);										
+					PreparedStatement pst = null;
+			
+					//Create table 
+					String statement;
+					statement = "CREATE TABLE " + "[" + copiedTables_names[i] + "]" + " (" + name_modified + ");";		
+					pst= con_to.prepareStatement(statement);
+					pst.executeUpdate();
 					
-					//Create a new table with the same name in the destine database
-					st1.executeUpdate("CREATE TABLE " + "[" + copiedTables_names[i] + "]" + " (" + name_modified + ");");
-									
-					//Make currentrow[row] to be:		'value1', 'value2', .....
-					String[] currentRow = new String[columnCount];
+					
+					//Insert value into tables
+					statement = "";		//reset to make new statement													
+					String[] currentRow = new String[columnCount];			//Make currentrow[row] to be:		'value1', 'value2', .....
 					int row = 0;
 					while (rs.next()) {		//Loop through all rows of the copied table
 						currentRow[row] = "";	//This is important to make the first member of this String not "null"
@@ -861,18 +868,21 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 					    currentRow[row] = currentRow[row].substring(0, currentRow[row].lastIndexOf(','));		//Remove the last "," 				      
 					   
 					    //Execute the insert
-					    String statement = "INSERT INTO " + "[" + copiedTables_names[i] + "]" + " VALUES (" + currentRow[row] + ");";	// [] surrounds tableName		 
-						st1.executeUpdate(statement);
-
+					    statement ="INSERT INTO " + "[" + copiedTables_names[i] + "]" + " VALUES (" + currentRow[row] + "); ";	// [] surrounds tableName		 				
 						row++;
+						
+						pst= con_to.prepareStatement(statement);
+						pst.executeUpdate();
 					}
-					 
+					
+					
 					//Close all statements, connections------------------------------------
 					rs.close();
 					st.close();
 					con_from.close();
 					
-					st1.close();
+					pst.close();
+					con_to.commit();			//commit all prepared execution, this is important
 					con_to.close();
 				}
 
@@ -913,51 +923,50 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		File[] files = FilesChooser.chosenDatabases(); 	
 		//Loop through all files, each is a table
 		for (int i = 0; i < files.length; i++) {							
-				File sourceFile = files[i];
-				File deskFile = new File(databasesFolder + seperator + sourceFile.getName());
-				// Copy and paste
-				String temptext = null;
-				try {
-					if (deskFile.exists() == false) {
-						Files.copy(sourceFile.toPath(), deskFile.toPath());
-						temptext = "'" + deskFile.getName() + "' has been imported";
-					} else
-					if (deskFile.exists() == true) {	
-						int response = JOptionPane.showConfirmDialog(this, "Do you want to overwrite the existing database " + deskFile.getName() +" ?", "Confirm",
-						        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-						    if (response == JOptionPane.NO_OPTION) {
-						    	temptext = "The existing database '" + deskFile.getName() + "' has not been overwritten";
-						    } else if (response == JOptionPane.YES_OPTION) {
-						    	Files.copy(sourceFile.toPath(), deskFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-								temptext = "Existing database '" + deskFile.getName() + "' has been overwritten";
-						    } else if (response == JOptionPane.CLOSED_OPTION) {
-						    	temptext = "'" + deskFile.getName() + "' has not been overwritten";
-						    }
+			File sourceFile = files[i];
+			File deskFile = new File(databasesFolder + seperator + sourceFile.getName());
+			// Copy and paste
+			String temptext = null;
+			try {
+				if (deskFile.exists() == false) {
+					Files.copy(sourceFile.toPath(), deskFile.toPath());
+					temptext = "'" + deskFile.getName() + "' has been imported";
+				} else if (deskFile.exists() == true) {	
+					int response = JOptionPane.showConfirmDialog(this, "Do you want to overwrite the existing database " + deskFile.getName() +" ?", "Confirm",
+							JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+					if (response == JOptionPane.NO_OPTION) {
+						temptext = "The existing database '" + deskFile.getName() + "' has not been overwritten";
+					} else if (response == JOptionPane.YES_OPTION) {
+						Files.copy(sourceFile.toPath(), deskFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+						temptext = "Existing database '" + deskFile.getName() + "' has been overwritten";
+					} else if (response == JOptionPane.CLOSED_OPTION) {
+						temptext = "'" + deskFile.getName() + "' has not been overwritten";
 					}
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
 				}
-				
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			
-				// Make the new Databases appear on the TREE----------->YEAHHHHHHHHHHHHHHH
-				String DatabaseName = deskFile.getName();
-				refreshDatabaseTree();
-				@SuppressWarnings("unchecked")
-				Enumeration<DefaultMutableTreeNode> e = root.depthFirstEnumeration();
-				while (e.hasMoreElements()) {		//Search for the name that match
-					DefaultMutableTreeNode node = e.nextElement();
-					if (node.toString().equalsIgnoreCase(DatabaseName) && root.isNodeChild(node)) {		//Name match, and node is child of root
-						DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();
-						TreeNode[] nodes = model.getPathToRoot(node);
-						TreePath path = new TreePath(nodes);
-						DatabaseTree.scrollPathToVisible(path);
-						DatabaseTree.setSelectionPath(path);
-						editingPath = path;
-					}
+			// Make the new Databases appear on the
+			// TREE----------->YEAHHHHHHHHHHHHHHH
+			String DatabaseName = deskFile.getName();
+			refreshDatabaseTree();
+			@SuppressWarnings("unchecked")
+			Enumeration<DefaultMutableTreeNode> e = root.depthFirstEnumeration();
+			while (e.hasMoreElements()) { // Search for the name that match
+				DefaultMutableTreeNode node = e.nextElement();
+				if (node.toString().equalsIgnoreCase(DatabaseName) && root.isNodeChild(node)) {		//Name match, and node is child of root
+					DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();
+					TreeNode[] nodes = model.getPathToRoot(node);
+					TreePath path = new TreePath(nodes);
+					DatabaseTree.scrollPathToVisible(path);
+					DatabaseTree.setSelectionPath(path);
+					editingPath = path;
 				}
-				dataDisplayTextField.setText(temptext);
-			} // end of For loop
+			}
+			dataDisplayTextField.setText(temptext);
+		} // end of For loop
 	}
 	
 	//--------------------------------------------------------------------------------------------------------------------------------
@@ -1034,9 +1043,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 				// currentFile
 				for (int j = 0; j < extentionList.size(); j++) {
 					if (extentionList.get(j).equals(extension.toUpperCase())) {
-						fileDelimited = delimitedList.get(j); // This is the
-																// returned
-																// delimited
+						fileDelimited = delimitedList.get(j); // This is the returned delimited
 					}
 				}
 
