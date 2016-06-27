@@ -892,8 +892,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 				}
 				
 							
-				//Show tables
-				
+				//Show tables			
 				if (errorCAUGHT.equals(false)) {
 					// Make the new table appear on the TREE----------->YEAHHHHHHHHHHHHHHH
 					DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();
@@ -907,7 +906,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 					if (count ==0) DatabaseTree.setSelectionPath(path);			//this help deselect all original nodes
 					// DatabaseTree.startEditingAtPath(path);
 					editingPath = path;			
-					DatabaseTree.getSelectionModel().addSelectionPath(path); // Deselect childs
+					DatabaseTree.getSelectionModel().addSelectionPath(path); // add childs into selection but not show table
 					count ++;
 				}
 				errorCAUGHT = false;	
@@ -1027,9 +1026,77 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		}
 												
 		
-		int count = 0;		//just help to know how many tables have been added
 		
-		// Loop through all saved extension to find the one match the current file, then return the delimited for that file 
+		//Prepared statement multiple level
+		try {
+			//-------------------------------------------------
+			Class.forName("org.sqlite.JDBC").newInstance();
+			conn = DriverManager.getConnection("jdbc:sqlite:" + databasesFolder + seperator + currentDatabase);
+
+			conn.setAutoCommit(false);										
+			PreparedStatement pst = null;
+			//-------------------------------------------------
+	
+			// Loop through all saved extension to find the one match the current file, then return the delimited for that file 
+			for (int i = 0; i < files.length; i++) {
+				if (files[i].isFile()) {
+					String extension = null;
+					File currentfile = files[i];
+					int jj = currentfile.getName().lastIndexOf('.');
+					if (jj > 0) {
+						extension = currentfile.getName().substring(jj + 1);
+					}
+	
+					// Find the delimited of this
+					// currentFile
+					for (int j = 0; j < extentionList.size(); j++) {
+						if (extentionList.get(j).equals(extension.toUpperCase())) {
+							fileDelimited = delimitedList.get(j); // This is the returned delimited
+						}
+					}
+	
+					
+					if (fileDelimited != null) {
+						// Get info from the file
+						SQLite.create_importTable_Stm(currentfile);		//Read file into arrays
+						String[] statement = new String [SQLite.get_importTable_TotalLines()];		//this arrays hold all the statements
+						statement = SQLite.get_importTable_Stm();	
+
+						// prepared execution
+						for (int line = 0; line < SQLite.get_importTable_TotalLines(); line++) {
+							pst = conn.prepareStatement(statement[line]);
+							pst.executeUpdate();
+						}
+					}
+				} // end of If
+			} // end of For loop
+		
+	
+		
+		//Commit execution-------------------------------------------------
+			pst.close();
+			conn.commit(); // commit all prepared execution, this is important
+			conn.close();
+
+		} catch (InstantiationException e) {
+			JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
+			errorCAUGHT = true;
+		} catch (IllegalAccessException e) {
+			JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
+			errorCAUGHT = true;
+		} catch (ClassNotFoundException e) {
+			JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
+			errorCAUGHT = true;
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
+			errorCAUGHT = true;
+		}		
+		//-------------------------------------------------
+		
+	
+		
+		//Show new impoted tables-----------------------------------------------------------------------
+		int count = 0; // just help to know how many tables have been added
 		for (int i = 0; i < files.length; i++) {
 			if (files[i].isFile()) {
 				String extension = null;
@@ -1039,77 +1106,31 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 					extension = currentfile.getName().substring(jj + 1);
 				}
 
-				// Find the delimited of this
-				// currentFile
-				for (int j = 0; j < extentionList.size(); j++) {
-					if (extentionList.get(j).equals(extension.toUpperCase())) {
-						fileDelimited = delimitedList.get(j); // This is the returned delimited
-					}
+				// add import tables into selection path
+				if (errorCAUGHT.equals(false)) {
+					// Make the new table appear on the
+					// TREE----------->YEAHHHHHHHHHHHHHHH
+					String tableName = currentfile.getName();
+					if (tableName.contains("."))
+						tableName = tableName.substring(0, tableName.lastIndexOf('.'));
+					final String NodeName = tableName;
+					DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();
+					DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(NodeName);
+					model.insertNodeInto(newNode, processingNode, processingNode.getChildCount());
+					TreeNode[] nodes = model.getPathToRoot(newNode);
+					TreePath path = new TreePath(nodes);
+					DatabaseTree.scrollPathToVisible(path);
+					// DatabaseTree.setEnabled(false);
+					// DatabaseTree.setEditable(true);
+					if (count == 0)
+						DatabaseTree.setSelectionPath(path); // this help deselect all original nodes
+					// DatabaseTree.startEditingAtPath(path);
+					editingPath = path;
+					DatabaseTree.getSelectionModel().addSelectionPath(path); // add childs into selection but not show table
+					count++;
 				}
-
-				
-				if (fileDelimited != null) {
-					// Get info from the file
-					SQLite.create_importTable_Stm(currentfile);		//Read file into arrays
-					String[] statement = new String [SQLite.get_importTable_TotalLines()];		//this arrays hold all the statements
-					statement = SQLite.get_importTable_Stm();	
-					
-					
-					try {
-						Class.forName("org.sqlite.JDBC").newInstance();
-						conn = DriverManager.getConnection("jdbc:sqlite:" + databasesFolder + seperator + currentDatabase);
-
-						conn.setAutoCommit(false);										
-						PreparedStatement pst = null;
-
-						// prepared execution
-						for (int line = 0; line < SQLite.get_importTable_TotalLines(); line++) {
-							pst = conn.prepareStatement(statement[line]);
-							pst.executeUpdate();
-						}
-					
-						pst.close();
-						conn.commit();			//commit all prepared execution, this is important
-						conn.close();				
-						
-					} catch (InstantiationException e) {
-						JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
-						errorCAUGHT=true;
-					} catch (IllegalAccessException e) {
-						JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
-						errorCAUGHT=true;
-					} catch (ClassNotFoundException e) {
-						JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
-						errorCAUGHT=true;
-					} catch (SQLException e) {
-						JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
-						errorCAUGHT=true;
-					}
-									
-					
-					if (errorCAUGHT.equals(false)) {
-						// Make the new table appear on the TREE----------->YEAHHHHHHHHHHHHHHH
-						String tableName = currentfile.getName();
-						if (tableName.contains("."))
-							tableName = tableName.substring(0, tableName.lastIndexOf('.'));
-						final String NodeName = tableName;
-						DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();
-						DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(NodeName);
-						model.insertNodeInto(newNode, processingNode, processingNode.getChildCount());
-						TreeNode[] nodes = model.getPathToRoot(newNode);
-						TreePath path = new TreePath(nodes);
-						DatabaseTree.scrollPathToVisible(path);
-						// DatabaseTree.setEnabled(false);
-						// DatabaseTree.setEditable(true);
-						if (count ==0) DatabaseTree.setSelectionPath(path);			//this help deselect all original nodes
-						// DatabaseTree.startEditingAtPath(path);
-						editingPath = path;
-						DatabaseTree.getSelectionModel().addSelectionPath(path); // Deselect childs
-						count ++;
-					}
-					errorCAUGHT = false;	
-				}
-			} // end of If
+				errorCAUGHT = false;
+			}
 		} // end of For loop
 	}
 
@@ -1146,7 +1167,8 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		    } else if (response == JOptionPane.YES_OPTION) {
 		    	DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();	
 				
-				for (TreePath selectionPath : selectionPaths) {		//Loop through all and delete all level 3 nodes
+				
+		    	for (TreePath selectionPath : selectionPaths) {		//Loop through all and delete all level 3 nodes
 					currentLevel = selectionPath.getPathCount();
 					processingNode = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
 					DatabaseTree.setSelectionPath(null);
@@ -1159,6 +1181,73 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 						showNothing();
 					}
 				}	
+				
+				
+				
+				
+		    	
+		    	
+		    	
+		    	
+//				try {
+//					Class.forName("org.sqlite.JDBC").newInstance();
+//					conn = DriverManager.getConnection("jdbc:sqlite:" + databasesFolder + seperator + currentDatabase);
+//
+//					conn.setAutoCommit(false);										
+//					PreparedStatement pst = null;
+//
+//					// prepared execution
+//					
+//					for (TreePath selectionPath : selectionPaths) {		//Loop through all and delete all level 3 nodes
+//						currentLevel = selectionPath.getPathCount();
+//						processingNode = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
+//						DatabaseTree.setSelectionPath(null);
+//						
+//						if (currentLevel == 3) {		//DELETE Tables						
+//							currentDatabase = processingNode.getParent().toString(); 
+//							currenTableName = processingNode.getUserObject().toString();
+//							model.removeNodeFromParent(processingNode);
+//							
+//							
+//							
+//							pst = conn.prepareStatement("DROP TABLE IF EXISTS " + "[" + currenTableName + "]");
+//							pst.executeUpdate();
+//						} else if (currentLevel == 2 || conn==null) {			//This require all database if selected have to be deleted first
+//
+//							pst.close();
+//							conn.commit();			//commit all prepared execution, this is important
+//							conn.close();	
+//							showNothing();
+//						}
+//						
+//					}								
+//				} catch (InstantiationException e) {
+//					JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
+//					errorCAUGHT=true;
+//				} catch (IllegalAccessException e) {
+//					JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
+//					errorCAUGHT=true;
+//				} catch (ClassNotFoundException e) {
+//					JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
+//					errorCAUGHT=true;
+//				} catch (SQLException e) {
+//					JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
+//					errorCAUGHT=true;
+//				}
+//					
+//				
+				
+	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+				
+				
 				
 				for (TreePath selectionPath : selectionPaths) {		//Loop through all again and delete all level 2 nodes (databases)
 					currentLevel = selectionPath.getPathCount();
