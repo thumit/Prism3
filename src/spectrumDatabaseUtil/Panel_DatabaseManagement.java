@@ -723,7 +723,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		// End of set up---------------------------------------------------------------
 				
 	
-		//---------------------------------------------------				
+		//Show a popup for the destination of copied tables---------------------------------------------------				
 		//Loop through all databases in the working folder
 		File[] listOfFiles = databasesFolder.listFiles(new FilenameFilter() {
 			@Override
@@ -1102,7 +1102,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 				String extension = null;
 				File currentfile = files[i];
 				int jj = currentfile.getName().lastIndexOf('.');
-				if (jj > 0) {
+				if (jj > 0) {		//to prevent empty name (before dot) where jj=0, or no dot where jj=-1 
 					extension = currentfile.getName().substring(jj + 1);
 				}
 
@@ -1137,7 +1137,6 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public void delete_Databases_or_Tables() {
 		
-		//These following code work very well, I just dont want to use it for now
 		//Some set up ---------------------------------------------------------------
 		int node_Level = 0;
 		for (TreePath selectionPath : selectionPaths) {		//Loop through all selected nodes
@@ -1174,6 +1173,9 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 					DatabaseTree.setSelectionPath(null);
 					
 					if (currentLevel == 3) {		//DELETE Tables						
+						//Find all notes that share the same parent (same database) and currently in the selectionPath, group them into 1 delete transection						
+						
+						
 						currentDatabase = processingNode.getParent().toString(); 
 						currenTableName = processingNode.getUserObject().toString();
 						model.removeNodeFromParent(processingNode);
@@ -1186,16 +1188,26 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 				
 				
 		    	
+		 
+		    	
+		    	
+		    	
+		    	
+		    	
 		    	
 		    	
 		    	
 //				try {
 //					Class.forName("org.sqlite.JDBC").newInstance();
-//					conn = DriverManager.getConnection("jdbc:sqlite:" + databasesFolder + seperator + currentDatabase);
-//
-//					conn.setAutoCommit(false);										
-//					PreparedStatement pst = null;
-//
+//					int connCount =0;		//Total number of databases as parents of selected tables, also total number of connections we need for DELETE 
+//					String[] conDeleteString = new String[1000];
+//					Connection[] conDelete = new Connection[1000];
+//					PreparedStatement[] pst = new PreparedStatement[1000];
+//					conDelete[connCount] = null;
+//					conDeleteString[connCount] = null;
+//					pst[connCount] = null;
+//					
+//					
 //					// prepared execution
 //					
 //					for (TreePath selectionPath : selectionPaths) {		//Loop through all and delete all level 3 nodes
@@ -1209,18 +1221,36 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 //							model.removeNodeFromParent(processingNode);
 //							
 //							
-//							
-//							pst = conn.prepareStatement("DROP TABLE IF EXISTS " + "[" + currenTableName + "]");
-//							pst.executeUpdate();
-//						} else if (currentLevel == 2 || conn==null) {			//This require all database if selected have to be deleted first
-//
-//							pst.close();
-//							conn.commit();			//commit all prepared execution, this is important
-//							conn.close();	
+//							if (conDeleteString[connCount] != ("jdbc:sqlite:" + databasesFolder + seperator + currentDatabase)) {		//check if connection has changed
+//								connCount++;		//connection will start from connCount=1
+//								
+//								conDeleteString[connCount] = ("jdbc:sqlite:" + databasesFolder + seperator + currentDatabase);
+//								conDelete[connCount] = DriverManager.getConnection("jdbc:sqlite:" + databasesFolder + seperator + currentDatabase);
+//								conDelete[connCount].setAutoCommit(false);	
+//							}
+//															
+//							pst[connCount] = conDelete[connCount].prepareStatement("DROP TABLE IF EXISTS " + "[" + currenTableName + "]");
+//							pst[connCount].executeUpdate();					
+//						} 
+//					}		
+//					
+//					
+//					if (connCount>=1) {
+//						//Now loop through all the connections to commit DELETE
+//						for (int i = 1; i <= connCount; i++) { //Loop starts from 1 not 0, because connection started from 1 (see above)
+//							pst[connCount].close();
+//							conDelete[i].commit(); //commit all prepared execution, this is important
+//							conDelete[i].close();
 //							showNothing();
-//						}
-//						
-//					}								
+//						}			
+//					}	
+//					
+//					
+//	
+//					
+//					
+//					
+//					
 //				} catch (InstantiationException e) {
 //					JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
 //					errorCAUGHT=true;
@@ -1234,8 +1264,26 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 //					JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
 //					errorCAUGHT=true;
 //				}
-//					
-//				
+					
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
 				
 	
 		    	
