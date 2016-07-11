@@ -48,7 +48,7 @@ public class Spectrum_Main extends JFrame {
 						| UnsupportedLookAndFeelException ex) {
 				}
 
-				setTitle("SpectrumLite Demo Version 1.00");
+				setTitle("SpectrumLite Demo Version 1.01");
 				//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 				addWindowListener(new WindowAdapter() {@Override public void windowClosing(WindowEvent e){exitSpectrumLite();}});				

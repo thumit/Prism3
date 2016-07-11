@@ -10,6 +10,8 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
@@ -464,7 +466,15 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 
 		
 		// Both runnable jar and IDE work with condition: Databases folder and runnable jar have to be in the same location
-		workingLocation = jarFile.getParentFile().toString();
+		workingLocation = jarFile.getParentFile().toString();	
+		try {
+			//to handle name with space (%20)
+			workingLocation = URLDecoder.decode(workingLocation, "utf-8");
+			workingLocation = new File(workingLocation).getPath();
+		} catch (UnsupportedEncodingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		databasesFolder = new File (workingLocation + "/Databases");		//parent is the folder contain jar file
 		seperator = "/";		
 		if (!databasesFolder.exists()) {databasesFolder.mkdirs();}	//Create folder Databases if it does not exist		
