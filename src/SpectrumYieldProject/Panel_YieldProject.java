@@ -11,10 +11,8 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.util.Enumeration;
+
 import javax.swing.JButton;
 import javax.swing.JLayeredPane;
 import javax.swing.JMenuItem;
@@ -22,7 +20,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.JTree;
@@ -38,7 +35,7 @@ import spectrumGUI.Spectrum_Main;
 
 @SuppressWarnings("serial")
 public class Panel_YieldProject extends JLayeredPane {
-	private JButton btnNewRun;
+	private JButton btnNewRun, btnEditRun, btnDeleteRun;
 	
 	private String workingLocation;
 	private File ProjectsFolder, CurrentProjectFolder, CurrentRunFolder;
@@ -53,7 +50,7 @@ public class Panel_YieldProject extends JLayeredPane {
 	private TreePath editingPath;
 	private Boolean RunName_Edit_HasChanged = false;
 	private Boolean renaming = false;
-	
+	private Boolean isProjectNewlyCreatedOrOpened = true;
 
 	private JToolBar projectToolBar;
 
@@ -122,8 +119,15 @@ public class Panel_YieldProject extends JLayeredPane {
 			}
 		});
 		projectToolBar.add(btnNewRun);
-		projectToolBar.add(new JButton("Edit Run"));
-		projectToolBar.add(new JButton("Delete Run"));
+		
+		btnDeleteRun = new JButton("Delete Run");
+		btnDeleteRun.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				delete_Runs();
+			}
+		});
+		projectToolBar.add(btnDeleteRun);
 
 		// Add all components to JInternalFrame------------------------------------------------------------
 		super.add(projectToolBar, BorderLayout.NORTH);
@@ -187,27 +191,24 @@ public class Panel_YieldProject extends JLayeredPane {
 				//End of set up---------------------------------------------------------------
 							
 
-				// right clicked MenuItems only appear on nodes level 1, 2, or (single or multiple nodes selection)
+				// right clicked MenuItems only appear on nodes level 1, 2, or 3 (single or multiple nodes selection)
 				if /* (clickedNode.isRoot()) { */ (currentLevel == 1 || currentLevel == 2 || currentLevel == 3) {
 					// A popup that holds all JmenuItems
 					JPopupMenu popup = new JPopupMenu();
 
-					// // All nodes can be refreshed
-					// ------------------------------------------------------------
-					// final JMenuItem refreshMenuItem = new
-					// JMenuItem("Refresh");
-					// refreshMenuItem.addActionListener(new ActionListener() {
-					// @Override
-					// public void actionPerformed(ActionEvent actionEvent) {
-					// refreshDatabaseTree();
-					// showNothing(); // show nothing on RightPanel and
-					// DisplayTextField
-					// }
-					// });
-					// popup.add(refreshMenuItem);
-
-					// Only nodes level 1 (root)can have
-					// "New"--------------------------
+					// All nodes can be refreshed ------------------------------------------------------------
+					final JMenuItem refreshMenuItem = new JMenuItem("Refresh");
+					refreshMenuItem.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent actionEvent) {
+							refreshProjectTree();
+							showNothing(); // show nothing on RightPanel and DisplayTextField
+						}
+					});
+					popup.add(refreshMenuItem);				
+					
+					
+					// Only nodes level 1 (root)can have "New"--------------------------
 					// and this menuItem only shows up when 1 node is selected
 					if ((currentLevel == 1) && NodeCount == 1) {
 						final String Menuname = "New Run";
@@ -220,91 +221,21 @@ public class Panel_YieldProject extends JLayeredPane {
 						});
 						popup.add(newMenuItem);
 					}
-					//
-					//
-					//
-					// // Only nodes level 1 (root) and 2 (databases) can have
-					// "Import"----------------------
-					// // and this menuItem only shows up when 1 node is
-					// selected
-					// if (currentLevel == 1 && NodeCount==1) {
-					// final JMenuItem importDBMenuItem = new JMenuItem("Import
-					// databases");
-					// importDBMenuItem.addActionListener(new ActionListener() {
-					// @Override
-					// public void actionPerformed(ActionEvent actionEvent) {
-					// importDatabases();
-					// } // end of actionPerformed
-					// });
-					// popup.add(importDBMenuItem);
-					// } else
-					//
-					// // and this menuItem only shows up when 1 node is
-					// selected
-					// if (currentLevel == 2 && NodeCount==1) {
-					// final JMenuItem importTableMenuItem = new
-					// JMenuItem("Import tables");
-					// importTableMenuItem.addActionListener(new
-					// ActionListener() {
-					// @Override
-					// public void actionPerformed(ActionEvent actionEvent) {
-					// importTables();
-					// } //end of actionPerformed
-					// });
-					// popup.add(importTableMenuItem);
-					// }
-					//
-					//
-					//
-					// // Only nodes level 2 (database) and 3 (table) can be
-					// renamed--------------------------
-					// // and this menuItem only shows up when 1 node is
-					// selected
-					// if ((currentLevel == 2 || currentLevel == 3) &&
-					// NodeCount==1) {
-					// final JMenuItem renameMenuItem = new JMenuItem("Rename");
-					// renameMenuItem.addActionListener(new ActionListener() {
-					// @Override
-					// public void actionPerformed(ActionEvent actionEvent) {
-					// rename_Database_or_Table();
-					// }
-					// });
-					// popup.add(renameMenuItem);
-					// }
-					//
-					//
-					//
-					// // Only nodes level 2 (database) and 3 (table) can have
-					// "copy"--------------------------
-					// if (currentLevel == 2 || currentLevel == 3 ||
-					// rootSelected ==false) {
-					// final JMenuItem copyMenuItem = new JMenuItem("Copy");
-					// copyMenuItem.addActionListener(new ActionListener() {
-					// @Override
-					// public void actionPerformed(ActionEvent actionEvent) {
-					// copy_Databases_or_Tables();
-					// }
-					// });
-					// popup.add(copyMenuItem);
-					// }
-					//
-					//
-					// // Only nodes level 2 (database) and 3 (table) can be
-					// deleted--------------------------
-					// if (currentLevel == 2 || currentLevel == 3 ||
-					// rootSelected ==false) {
-					// final JMenuItem deleteMenuItem = new JMenuItem("Delete");
-					// deleteMenuItem.addActionListener(new ActionListener() {
-					// @Override
-					// public void actionPerformed(ActionEvent actionEvent) {
-					// delete_Databases_or_Tables();
-					// }
-					// });
-					// popup.add(deleteMenuItem);
-					// }
-
-					// Show the JmenuItems on selected node when it is right
-					// clicked
+				
+					
+					// Only nodes level 2 (Run) can be deleted--------------------------
+					if (currentLevel == 2 || currentLevel == 3 || rootSelected ==false) {					
+						final JMenuItem deleteMenuItem = new JMenuItem("Delete Run");
+						deleteMenuItem.addActionListener(new ActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent actionEvent) {								
+								delete_Runs();
+							}
+						});
+						popup.add(deleteMenuItem);
+					}
+					
+					// Show the JmenuItems on selected node when it is right clicked
 					popup.show(projectTree, e.getX(), e.getY());
 				}
 			}
@@ -376,7 +307,17 @@ public class Panel_YieldProject extends JLayeredPane {
 			CurrentProjectFolder.mkdirs();
 		} // Create folder for current Project if it does not exist
 		// End of create projects folder-------------------------------------------------------------------
-	
+		
+		
+		// These are very important codes
+		//		Whenever a Project is newly created, it will be first refreshed,
+		//		After the first refresh isProjectNewlyCreatedOrOpened=false
+		//		Then in the next time if we do anything, the CurrentProjectFolder will be referred to the JinternalFrame title
+		if (isProjectNewlyCreatedOrOpened==false) {
+				CurrentProjectFolder= new File(workingLocation + "/Projects/" + Spectrum_Main.mainFrameReturn().getSelectedFrame().getTitle());	
+		}
+		isProjectNewlyCreatedOrOpened=false;
+		
 		
 		// Find all the Runs folders in the "Projects" folder to add into DatabaseTree	
 		String files;
@@ -479,7 +420,57 @@ public class Panel_YieldProject extends JLayeredPane {
 		projectTree.setEditable(false);		// Disable editing
 		RunName_Edit_HasChanged = false;
 	}
-	
+
+	//--------------------------------------------------------------------------------------------------------------------------------
+	public void delete_Runs() {
+//		//Deselect the root if it is selected
+		projectTree.getSelectionModel().removeSelectionPath(new TreePath(root));
+
+		
+		//Some set up ---------------------------------------------------------------
+		int node_Level;
+		for (TreePath selectionPath : selectionPaths) {		//Loop through all selected nodes
+			processingNode = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
+			node_Level = selectionPath.getPathCount();
+			if (node_Level==2 && processingNode.getChildCount() >= 0) {		//If node is a Run and has childs then deselect all of its childs				
+				for (Enumeration e = processingNode.children(); e.hasMoreElements();) {
+					TreeNode child = (TreeNode) e.nextElement();
+					DefaultTreeModel model = (DefaultTreeModel) projectTree.getModel();	
+					TreeNode[] nodes = model.getPathToRoot(child);
+					TreePath path = new TreePath(nodes);
+					projectTree.getSelectionModel().removeSelectionPath(path); // Deselect childs
+				}
+				projectTree.collapsePath(new TreePath(processingNode.getPath()));	//Collapse the selected database				
+			}	
+		}
+		selectionPaths = projectTree.getSelectionPaths();			//This is very important to get the most recent selected paths
+		//End of set up---------------------------------------------------------------
+		
+		if (selectionPaths != null) {		//at least 1 run has to be selected 
+			//Ask to delete 
+			int response = JOptionPane.showConfirmDialog(this, "Selected Runs will be deleted ?", "Confirm Delete",
+					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			if (response == JOptionPane.NO_OPTION) {
+
+			} else if (response == JOptionPane.YES_OPTION) {
+				DefaultTreeModel model = (DefaultTreeModel) projectTree.getModel();
+				for (TreePath selectionPath : selectionPaths) { //Loop through and delete all level 2 nodes (Runs)
+					currentLevel = selectionPath.getPathCount();
+					DefaultMutableTreeNode processingNode = (DefaultMutableTreeNode) selectionPath
+							.getLastPathComponent();
+					projectTree.setSelectionPath(null);
+					if (currentLevel == 2) { //DELETE selected Runs
+						currentRun = processingNode.getUserObject().toString();
+						model.removeNodeFromParent(processingNode);
+						File file = new File(CurrentProjectFolder + seperator + currentRun);
+						file.delete();
+						showNothing();
+					}
+				}
+			} else if (response == JOptionPane.CLOSED_OPTION) {
+			}
+		}
+	}
 
 	// --------------------------------------------------------------------------------------------------------------------------------
 	public void showNothing() {

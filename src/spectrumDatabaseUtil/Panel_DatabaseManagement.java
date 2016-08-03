@@ -1134,7 +1134,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 	public void delete_Databases_or_Tables() {
 		
 		//Some set up ---------------------------------------------------------------
-		int node_Level = 0;
+		int node_Level;
 		for (TreePath selectionPath : selectionPaths) {		//Loop through all selected nodes
 			processingNode = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
 			node_Level = selectionPath.getPathCount();

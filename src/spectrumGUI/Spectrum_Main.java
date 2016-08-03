@@ -118,46 +118,46 @@ public class Spectrum_Main extends JFrame {
 								
 								spectrumDesktopPane.add(ProjectInternalFrame, BorderLayout.CENTER); // attach internal frame
 								ProjectInternalFrame.setSize((int) (getWidth()/1.5),(int) (getHeight()/1.5));
-								ProjectInternalFrame.setLocation(25 * (OpenProjectCount % 10), 25 * (OpenProjectCount  % 10));
+								ProjectInternalFrame.setLocation(50 * (OpenProjectCount % 10), 50 * (OpenProjectCount  % 10));
 								ProjectInternalFrame.setVisible(true); // show internal frame
 														
 //								NewProject.setEnabled(false); //Disable "New" menuItem when a new project is created
-//								InternalFrameListener ProjectInternalFrame_listener = new InternalFrameListener() {
-//								      public void internalFrameActivated(InternalFrameEvent e) {
-//								       // dumpInfo("Activated", e);
-//								      }
-//
-//								      public void internalFrameClosed(InternalFrameEvent e) {
-//								       // dumpInfo("Closed", e);
-//								      }
-//
-//								      public void internalFrameClosing(InternalFrameEvent e) {
-//								       // dumpInfo("Closing", e);
+								InternalFrameListener ProjectInternalFrame_listener = new InternalFrameListener() {
+								      public void internalFrameActivated(InternalFrameEvent e) {
+								       // dumpInfo("Activated", e);
+								      }
+
+								      public void internalFrameClosed(InternalFrameEvent e) {
+								       // dumpInfo("Closed", e);
+								      }
+
+								      public void internalFrameClosing(InternalFrameEvent e) {
+								       // dumpInfo("Closing", e);
 //								        NewProject.setEnabled(true); //Enable "New" menuItem
-//								      }
-//
-//								      public void internalFrameDeactivated(InternalFrameEvent e) {
-//								       // dumpInfo("Deactivated", e);
-//								      }
-//
-//								      public void internalFrameDeiconified(InternalFrameEvent e) {
-//								      //  dumpInfo("Deiconified", e);
-//								      }
-//
-//								      public void internalFrameIconified(InternalFrameEvent e) {
-//								      //  dumpInfo("Iconified", e);
-//								      }
-//
-//								      public void internalFrameOpened(InternalFrameEvent e) {
-//								      //  dumpInfo("Opened", e);
-//								      }
-//
-//								      private void dumpInfo(String s, InternalFrameEvent e) {
-//								        System.out.println("Source: " + e.getInternalFrame().getName()
-//								            + " : " + s);
-//								      }
-//								    };
-//									ProjectInternalFrame.addInternalFrameListener(ProjectInternalFrame_listener);
+								      }
+
+								      public void internalFrameDeactivated(InternalFrameEvent e) {
+								       // dumpInfo("Deactivated", e);
+								      }
+
+								      public void internalFrameDeiconified(InternalFrameEvent e) {
+								      //  dumpInfo("Deiconified", e);
+								      }
+
+								      public void internalFrameIconified(InternalFrameEvent e) {
+								      //  dumpInfo("Iconified", e);
+								      }
+
+								      public void internalFrameOpened(InternalFrameEvent e) {
+								      //  dumpInfo("Opened", e);
+								      }
+
+								      private void dumpInfo(String s, InternalFrameEvent e) {
+								        System.out.println("Source: " + e.getInternalFrame().getName()
+								            + " : " + s);
+								      }
+								    };
+									ProjectInternalFrame.addInternalFrameListener(ProjectInternalFrame_listener);
 							} // end method actionPerformed
 						} // end anonymous inner class
 				); // end call to addActionListener
