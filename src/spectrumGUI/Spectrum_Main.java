@@ -18,6 +18,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
 
+import SpectrumYieldProject.Panel_YieldProject;
 import spectrumDatabaseUtil.Panel_DatabaseManagement;
 
 @SuppressWarnings("serial")
@@ -27,15 +28,20 @@ public class Spectrum_Main extends JFrame {
 	private JMenu MenuFile, MenuUtilities, MenuHelp;
 	private JMenuItem NewProject, OpenProject, SaveProject, SaveProjectAs, CloseProject, ExitSoftware; // For MenuFile
 	private JMenuItem DatabaseManagement; // For MenuUtilities
-	private JMenuItem Contents, About; // For MenuMenuHelpFile	
-	private static Panel_BackGroundDesktop spectrumDesktopPane;
-
+	private JMenuItem Contents, About; // For MenuMenuHelpFile
+	
 	private int OpenProjectCount = 0;
+	
+	private static Panel_BackGroundDesktop spectrumDesktopPane;
+	private static String currentProjectName;
 
+	
+	//--------------------------------------------------------------------------------------------------------------------------------
 	public static void main(String[] args) {
 		new Spectrum_Main();
 	}
 
+	//--------------------------------------------------------------------------------------------------------------------------------
 	public Spectrum_Main() {
 		EventQueue.invokeLater(new Runnable() {
 			@Override
@@ -103,10 +109,11 @@ public class Spectrum_Main extends JFrame {
 							// display new internal window
 							public void actionPerformed(ActionEvent event) {
 								// create internal frame
-								JInternalFrame ProjectInternalFrame = new JInternalFrame("New Project " + (++OpenProjectCount), 
+								currentProjectName="New Project " + (++OpenProjectCount);
+								JInternalFrame ProjectInternalFrame = new JInternalFrame(currentProjectName, 
 																						true /*resizable*/, true, /*closable*/true/*maximizable*/, true/*iconifiable*/);																						
-								Panel_Project spectrumMainPanel = new Panel_Project(); // create new panel
-								ProjectInternalFrame.add(spectrumMainPanel, BorderLayout.CENTER); // add panel
+								Panel_YieldProject YieldProjectPanel = new Panel_YieldProject(); // create new panel
+								ProjectInternalFrame.add(YieldProjectPanel, BorderLayout.CENTER); // add panel
 								ProjectInternalFrame.pack(); // set internal frame to size of contents
 								
 								spectrumDesktopPane.add(ProjectInternalFrame, BorderLayout.CENTER); // attach internal frame
@@ -185,7 +192,7 @@ public class Spectrum_Main extends JFrame {
 										((int) ((getHeight() - DatabaseManagement_Frame.getHeight())/3)));	// Set the DatabaseManagement_Frame near the center of the Main frame
 								DatabaseManagement_Frame.setVisible(true); // show internal frame
 														
-								DatabaseManagement.setEnabled(false); //Disable "New" menuItem when a new project is created
+								DatabaseManagement.setEnabled(false); //Disable "DatabaseManagement" menuItem when it is already opened
 								InternalFrameListener DatabaseInternalFrame_listener = new InternalFrameListener() {
 								      public void internalFrameActivated(InternalFrameEvent e) {
 								       // dumpInfo("Activated", e);
@@ -229,7 +236,7 @@ public class Spectrum_Main extends JFrame {
 		}); // end EventQueue.invokeLater
 	} // end public Spectrum_Main
 	
-	
+	//--------------------------------------------------------------------------------------------------------------------------------
 	public void exitSpectrumLite() {
 		String ExitOption[] = {"Save","Don't Save","Cancel"};
 		int response = JOptionPane.showOptionDialog(this,"Do you want to save the change you made to 'Projectname.prj'?", "SpectrumLite" ,JOptionPane.DEFAULT_OPTION,JOptionPane.WARNING_MESSAGE,null,ExitOption,ExitOption[1]);
@@ -243,14 +250,20 @@ public class Spectrum_Main extends JFrame {
 		}
 	} // end public void exitSpectrumLite()
 
-	
+	//--------------------------------------------------------------------------------------------------------------------------------
 	@Override
 	public Dimension getPreferredSize() {
-		return new Dimension(900, 600);
+		return new Dimension(1600, 900);
 	}
 	
-	
+	//--------------------------------------------------------------------------------------------------------------------------------
 	public static Panel_BackGroundDesktop mainFrameReturn(){
 	   return spectrumDesktopPane;
-	  }      
+	  } 
+	
+	//--------------------------------------------------------------------------------------------------------------------------------
+	  public static String getProjectName() {
+		     return currentProjectName;
+		  }
+	
 }

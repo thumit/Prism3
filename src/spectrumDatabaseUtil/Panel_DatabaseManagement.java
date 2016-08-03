@@ -78,7 +78,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		//splitPane.setResizeWeight(0.15);
 		splitPane.setOneTouchExpandable(true);
 		splitPane.setDividerLocation(200);
-		splitPane.setDividerSize(5);
+//		splitPane.setDividerSize(5);
 		//splitPane.getComponent(2).setCursor(new Cursor(Cursor.HAND_CURSOR));
 		
 		
@@ -141,9 +141,8 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 	             
 	         }
 	     });//end addFocusListener
-			
-		MouseAdapter queryTextField_mouseClick = new MouseAdapter()	//When user click on queryTextField
-		{
+		
+		queryTextField.addMouseListener(new MouseAdapter(){			//When user click on queryTextField
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				DatabaseTree.setEnabled(false);		//disable the tree
@@ -151,45 +150,39 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 					queryTextField.setText(null);					
 				}
 			}
-		};
-		queryTextField.addMouseListener(queryTextField_mouseClick); // Add listener to queryTextField
-
-			
-		Action action = new AbstractAction()	//When user press Enter on Keyboard
-		{
+	     });//end addMouseListener
+		
+		queryTextField.addActionListener(new AbstractAction(){		//When user press Enter on Keyboard
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				currentSQLstatement = queryTextField.getText();	
 				doQuery(currentSQLstatement);
 				queryTextField.setText(null);
 			}
-		};
-		queryTextField.addActionListener(action);	
-
+	     });//end addActionListener
 		
+			
+	
 		// Add all components to JInternalFrame-----------------------------		
 		super.add(queryTextField, BorderLayout.NORTH);
 		super.add(dataDisplayTextField, BorderLayout.SOUTH);
 		super.add(splitPane, BorderLayout.CENTER);
 		super.setOpaque(false);
-	} // end newProjectPanel()	
-	
+	} // end Panel_DatabaseManagement()	
 	
 	// --------------------------------------------------------------------------------------------------------------------------------
 	public void doMouseClicked(MouseEvent e) {     	
 	
 		TreePath path = DatabaseTree.getPathForLocation(e.getX(), e.getY());
 		if (path == null) {
-			DatabaseTree.clearSelection();		//clear selection whenever mouse click is performed not on Jtree nodes
-			dataDisplayTextField.setText(null);	//Show nothing on the TextField		
+			DatabaseTree.clearSelection();		//clear selection whenever mouse click is performed not on Jtree nodes	
 			showNothing();	// show nothing (a table with 0 row and 0 column) if no node selected
 			return;
 		}
 		if (path != null) dataDisplayTextField.setText(path.toString());
 
-//		final DefaultMutableTreeNode clickedNode = (DefaultMutableTreeNode) path.getLastPathComponent();
+		
 		selectionPaths = DatabaseTree.getSelectionPaths();
-
 		// check if node was selected
 		boolean isSelected = false;
 		if (selectionPaths != null) {
@@ -358,7 +351,6 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		
 		
 		// ------------Calculate the level of the current selected node
-		//TreePath path_level = DatabaseTree.getSelectionPath();
 		currentLevel = path.getPathCount();
 		DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) evt.getPath().getLastPathComponent();
 		
@@ -533,7 +525,6 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 			TreeNode[] nodes = model.getPathToRoot(newNode);
 			TreePath path = new TreePath(nodes);
 			DatabaseTree.scrollPathToVisible(path);
-			DatabaseTree.setEnabled(false);
 			DatabaseTree.setEditable(true);
 			DatabaseTree.setSelectionPath(path);
 			DatabaseTree.startEditingAtPath(path);
@@ -561,83 +552,6 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 	}
 	
 	//--------------------------------------------------------------------------------------------------------------------------------
-	public void applyDatabase_Namechange (){
-		//----------------------------------------------------
- 		// This is the new Database name being applied after you finished the naming edit  
-			//Simulate 1 enter
-//			try {
-//				Robot r = new Robot();
-//				r.keyPress(KeyEvent.VK_ENTER);
-//				r.keyRelease(KeyEvent.VK_ENTER);
-//				refreshDatabaseTree();
-//			} catch (AWTException e) {
-//				// TODO Auto-generated catch block
-//			}	
-					
-    	DefaultMutableTreeNode editingNode = (DefaultMutableTreeNode) editingPath.getLastPathComponent();  	
-    	String nameWOext = editingNode.getUserObject().toString();		//Get the user typed name
-    	if(nameWOext.contains(".")) nameWOext= nameWOext.substring(0, nameWOext.lastIndexOf('.'));		//Remove extension if the name has it
-    	String editingName = databasesFolder + seperator + nameWOext + ".db";	//Add .db to the name
-    	newfile = new File(editingName);
- 			
-		File file = new File(databasesFolder + seperator + "empty.db");		//temporary empty database						
-		File file2 = new File(databasesFolder + seperator + "empty.db");
-		
-		
-		File deskFile = newfile;
-		// Copy and paste
-		String temptext = null;
-
-		if (deskFile.exists() == false) {
-			file.renameTo(newfile); // Then replace the file name
-			temptext = "'" + deskFile.getName() + "' has been created";
-		} else if (deskFile.exists() == true) {
-			int response = JOptionPane.showConfirmDialog(this,
-					"Do you want to overwrite the existing database " + deskFile.getName() + " ?", "Confirm",
-					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-			if (response == JOptionPane.NO_OPTION) {
-				temptext = "The existing database '" + deskFile.getName() + "' has not been overwritten";
-			} else if (response == JOptionPane.YES_OPTION) {
-				deskFile.delete();
-				file.renameTo(newfile); // Then replace the file name
-				temptext = "Existing database '" + deskFile.getName() + "' has been overwritten";
-			} else if (response == JOptionPane.CLOSED_OPTION) {
-				temptext = "'" + deskFile.getName() + "' has not been overwritten";
-			}
-		}
-
-		if (renaming == true) file2.renameTo(oldfile);				//For "rename" option only
-		if (Database_Name_Edit_HasChanged == true) file2.delete(); // delete the temporary empty.db		//For "new" option
-		
-		// Refresh and enable editing
-		refreshDatabaseTree();
-		DatabaseTree.setEnabled(true);
-
-		// Make the new Databases appear on the
-		// TREE----------->YEAHHHHHHHHHHHHHHH
-		String DatabaseName = deskFile.getName();
-		refreshDatabaseTree();
-		@SuppressWarnings("unchecked")
-		Enumeration<DefaultMutableTreeNode> e1 = root.depthFirstEnumeration();
-		while (e1.hasMoreElements()) { // Search for the name that match
-			DefaultMutableTreeNode node = e1.nextElement();
-			if (node.toString().equalsIgnoreCase(DatabaseName) && root.isNodeChild(node)) {		//Name match, and node is child of root
-				DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();
-				TreeNode[] nodes = model.getPathToRoot(node);
-				TreePath path = new TreePath(nodes);
-				DatabaseTree.scrollPathToVisible(path);
-				DatabaseTree.setSelectionPath(path);
-				editingPath = path;
-			}
-		}
-		dataDisplayTextField.setText(temptext);
-		// Disable editing
-		DatabaseTree.setEditable(false);
-		Database_Name_Edit_HasChanged = false;
-		renaming = false;			//For "rename" option only
-	}
-	
-	//--------------------------------------------------------------------------------------------------------------------------------
 	public void rename_Database_or_Table() {
 		
 		if (processingNode != null && currentLevel == 2) {		//rename Database
@@ -645,7 +559,6 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 			TreeNode[] nodes = model.getPathToRoot(processingNode);
 			TreePath path = new TreePath(nodes);
 			DatabaseTree.scrollPathToVisible(path);
-			DatabaseTree.setEnabled(false);
 			DatabaseTree.setEditable(true);
 			DatabaseTree.setSelectionPath(path);
 			DatabaseTree.startEditingAtPath(path);
@@ -690,6 +603,79 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		}
 	}
 		
+	//--------------------------------------------------------------------------------------------------------------------------------
+	public void applyDatabase_Namechange (){
+		//----------------------------------------------------
+ 		// This is the new Database name being applied after you finished the naming edit  
+			//Simulate 1 enter
+//			try {
+//				Robot r = new Robot();
+//				r.keyPress(KeyEvent.VK_ENTER);
+//				r.keyRelease(KeyEvent.VK_ENTER);
+//				refreshDatabaseTree();
+//			} catch (AWTException e) {
+//				// TODO Auto-generated catch block
+//			}	
+					
+    	DefaultMutableTreeNode editingNode = (DefaultMutableTreeNode) editingPath.getLastPathComponent();  	
+    	String nameWOext = editingNode.getUserObject().toString();		//Get the user typed name
+    	if(nameWOext.contains(".")) nameWOext= nameWOext.substring(0, nameWOext.lastIndexOf('.'));		//Remove extension if the name has it
+    	String editingName = databasesFolder + seperator + nameWOext + ".db";	//Add .db to the name
+    	newfile = new File(editingName);
+ 			
+		File file = new File(databasesFolder + seperator + "empty.db");		//temporary empty database for New option					
+		File file2 = new File(databasesFolder + seperator + "empty.db");	//For "rename" option only
+		
+		
+		File deskFile = newfile;
+		// Copy and paste
+		String temptext = null;
+
+		if (deskFile.exists() == false) {
+			file.renameTo(newfile); // Then replace the file name
+			temptext = "'" + deskFile.getName() + "' has been created";
+		} else if (deskFile.exists() == true) {
+			int response = JOptionPane.showConfirmDialog(this,
+					"Do you want to overwrite the existing database " + deskFile.getName() + " ?", "Confirm",
+					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			if (response == JOptionPane.NO_OPTION) {
+				temptext = "The existing database '" + deskFile.getName() + "' has not been overwritten";
+			} else if (response == JOptionPane.YES_OPTION) {
+				deskFile.delete();
+				file.renameTo(newfile); // Then replace the file name
+				temptext = "Existing database '" + deskFile.getName() + "' has been overwritten";
+			} else if (response == JOptionPane.CLOSED_OPTION) {
+				temptext = "'" + deskFile.getName() + "' has not been overwritten";
+			}
+		}
+
+		if (renaming == true) file2.renameTo(oldfile);				//For "rename" option only
+		if (Database_Name_Edit_HasChanged == true) file2.delete(); // delete the temporary empty.db		//For "new" option
+		
+		
+		// Make the new Databases appear on the TREE----------->YEAHHHHHHHHHHHHHHH
+		String DatabaseName = deskFile.getName();
+		refreshDatabaseTree();
+		@SuppressWarnings("unchecked")
+		Enumeration<DefaultMutableTreeNode> e1 = root.depthFirstEnumeration();
+		while (e1.hasMoreElements()) { // Search for the name that match
+			DefaultMutableTreeNode node = e1.nextElement();
+			if (node.toString().equalsIgnoreCase(DatabaseName) && root.isNodeChild(node)) {		//Name match, and node is child of root
+				DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();
+				TreeNode[] nodes = model.getPathToRoot(node);
+				TreePath path = new TreePath(nodes);
+				DatabaseTree.scrollPathToVisible(path);
+				DatabaseTree.setSelectionPath(path);
+				editingPath = path;
+			}
+		}
+		
+		dataDisplayTextField.setText(temptext);
+		DatabaseTree.setEditable(false);			// Disable editing
+		Database_Name_Edit_HasChanged = false;
+		renaming = false;			//For "rename" option only
+	}
+			
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public void applyTable_Namechange (){	
 		String temptext = null;
@@ -1334,14 +1320,24 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		tm.fireTableDataChanged();
 	}
 	
-	
 	//--------------------------------------------------------------------------------------------------------------------------------
 	// Get values to pass to other classes
 	public static String getDelimited() {
 		return fileDelimited;
 	}
 
-	
+	//--------------------------------------------------------------------------------------------------------------------------------
+	// Just a class that contains different examples, not being used
+	public void Examples () {
+
+		
+//		JOptionPane.showMessageDialog(this, databasesFolder);		
+		
+		
+		
+		
+		
+		
 //	// To help get the path to databases, use it later
 //	@SuppressWarnings("unused")
 //	private String GetExecutionPath(){
@@ -1350,47 +1346,74 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 //	    absolutePath = absolutePath.replaceAll("%20"," "); // Surely need to do this here
 //	    return absolutePath;
 //	};
-	
-} // Final End		
-	
-	
-	
-//	//Get variable to pass to other classes
-//	  public String getConnection() {
-//		     return CurrenTableName;
-//		  }
+//	//------------------------------------------------------------------------------------------------------------------
 
 
 
-// // bind a keyboard key
-//Action doNewName = new AbstractAction() {
-//	public void actionPerformed(ActionEvent e) {
-//
+
+
+//	// bind a keyboard key
+//	Action doNewName = new AbstractAction() {
+//		public void actionPerformed(ActionEvent e) {
+//	
+//		}
+//	};
+//	DatabaseTree.getInputMap().put(KeyStroke.getKeyStroke("F2"), "doNewName");
+//	DatabaseTree.getActionMap().put("doNewName", doNewName);
+//	//------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+//	//another example
+//	MouseListener ml = new MouseAdapter() {
+//	@Override
+//	public void mousePressed(MouseEvent e) {
+//	    int row = DatabaseTree.getRowForLocation(e.getX(), e.getY());
+//	    TreePath path = DatabaseTree.getPathForLocation(e.getX(), e.getY());
+//	    if (row != -1) {
+//	        if (e.getClickCount() == 1) {
+//	        	DatabaseTree.setEditable(true);
+//	        	DatabaseTree.startEditingAtPath(path);
+//	        }
+//	    }
 //	}
-//};
-//DatabaseTree.getInputMap().put(KeyStroke.getKeyStroke("F2"), "doNewName");
-//DatabaseTree.getActionMap().put("doNewName", doNewName);
+//	};
+//	DatabaseTree.addMouseListener(ml);
+//	DatabaseTree.getInputMap().put(
+//	KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "startEditing");
+//		//------------------------------------------------------------------------------------------------------------------
 
+		
+		
+		
+		
+//		// These are different ways to write listeners
+//		MouseAdapter queryTextField_mouseClick = new MouseAdapter()	//When user click on queryTextField
+//		{
+//			@Override
+//			public void mouseClicked(MouseEvent e) {
+//				DatabaseTree.setEnabled(false);		//disable the tree
+//				if (queryTextField.getText().equals("Type your queries here")) {	//clear the text
+//					queryTextField.setText(null);					
+//				}
+//			}
+//		};
+//		queryTextField.addMouseListener(queryTextField_mouseClick); // Add listener to queryTextField
+//
+//			
+//		Action action = new AbstractAction()	//When user press Enter on Keyboard
+//		{
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				currentSQLstatement = queryTextField.getText();	
+//				doQuery(currentSQLstatement);
+//				queryTextField.setText(null);
+//			}
+//		};
+//		queryTextField.addActionListener(action);	
+//		//------------------------------------------------------------------------------------------------------------------
+	}
 
-
-
-
-
-////another example
-//MouseListener ml = new MouseAdapter() {
-//@Override
-//public void mousePressed(MouseEvent e) {
-//    int row = DatabaseTree.getRowForLocation(e.getX(), e.getY());
-//    TreePath path = DatabaseTree.getPathForLocation(e.getX(), e.getY());
-//    if (row != -1) {
-//        if (e.getClickCount() == 1) {
-//        	DatabaseTree.setEditable(true);
-//        	DatabaseTree.startEditingAtPath(path);
-//        }
-//    }
-//}
-//};
-//DatabaseTree.addMouseListener(ml);
-//DatabaseTree.getInputMap().put(
-//KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "startEditing");
-
+} // Final End		

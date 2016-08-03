@@ -14,7 +14,7 @@ public class Panel_BackGroundDesktop extends JDesktopPane {
 
 	public Panel_BackGroundDesktop() {
 		try {
-			img = ImageIO.read(new URL("https://scontent-ord1-1.xx.fbcdn.net/t31.0-8/704603_4557695574296_2068777877_o.jpg"));			   
+			img = ImageIO.read(new URL("https://scontent-ord1-1.xx.fbcdn.net/t31.0-8/281108_4557696894329_1537435731_o.jpg"));			   
 //			img = ImageIO.read(new File("C:\\Users\\Public\\Pictures\\Sample Pictures\\Desert.jpg"));
 			BufferedImage bg = img;
 			setBackgroundImage(bg);
