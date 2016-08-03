@@ -18,8 +18,8 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
 
-import SpectrumYieldProject.Panel_YieldProject;
 import spectrumDatabaseUtil.Panel_DatabaseManagement;
+import spectrumYieldProject.Panel_YieldProject;
 
 @SuppressWarnings("serial")
 public class Spectrum_Main extends JFrame {
@@ -253,7 +253,7 @@ public class Spectrum_Main extends JFrame {
 	//--------------------------------------------------------------------------------------------------------------------------------
 	@Override
 	public Dimension getPreferredSize() {
-		return new Dimension(1600, 900);
+		return new Dimension(1400, 800);
 	}
 	
 	//--------------------------------------------------------------------------------------------------------------------------------
@@ -262,8 +262,8 @@ public class Spectrum_Main extends JFrame {
 	  } 
 	
 	//--------------------------------------------------------------------------------------------------------------------------------
-	  public static String getProjectName() {
-		     return currentProjectName;
-		  }
-	
+	public static String getProjectName() {
+		return currentProjectName;
+	}
+
 }
