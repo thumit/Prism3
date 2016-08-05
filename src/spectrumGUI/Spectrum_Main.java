@@ -96,7 +96,6 @@ public class Spectrum_Main extends JFrame {
 				setJMenuBar(spectrum_Menubar);	
 				getContentPane().add(spectrumDesktopPane);
 				
-				// setSize(400, 300);
 				pack();
 				setLocationRelativeTo(null);
 				setVisible(true);
