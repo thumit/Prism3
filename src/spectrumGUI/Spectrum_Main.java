@@ -238,8 +238,8 @@ public class Spectrum_Main extends JFrame {
 	
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public void exitSpectrumLite() {
-		String ExitOption[] = {"Save","Don't Save","Cancel"};
-		int response = JOptionPane.showOptionDialog(this,"Do you want to save the change you made to 'Projectname.prj'?", "SpectrumLite" ,JOptionPane.DEFAULT_OPTION,JOptionPane.WARNING_MESSAGE,null,ExitOption,ExitOption[1]);
+		String ExitOption[] = {"Yes","No","Cancel"};
+		int response = JOptionPane.showOptionDialog(this,"Do you want to save the changes you made to 'Projectname.prj'?", "SpectrumLite" ,JOptionPane.DEFAULT_OPTION,JOptionPane.WARNING_MESSAGE,null,ExitOption,ExitOption[1]);
 		if (response == 0) /* Save */
 		{
 			System.exit(0);
