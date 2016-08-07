@@ -583,9 +583,10 @@ public class Panel_YieldProject extends JLayeredPane {
 				btnNewRun.setVisible(false);
 				btnDeleteRun.setVisible(false);
 				btnSolveRun.setVisible(false);
+				displayTextField.setVisible(false);
 				btnEditRun.setText("Stop Editing");
 				btnEditRun.setForeground(Color.RED);
-				super.remove(splitPanel);		
+				super.remove(splitPanel);
 				editPanel = new Panel_EditRun();		// This panel only visible when "Start Editing"	
 				super.add(editPanel);
 			} 	
@@ -596,13 +597,14 @@ public class Panel_YieldProject extends JLayeredPane {
 		// For Stop Editing
 		else if (btnEditRun.getText() == "Stop Editing") {
 			//Enable all other buttons, change name to "Start Editing",  remove editPanel and add splitPanel 
+			displayTextField.setVisible(true);
 			btnNewRun.setVisible(true);
 			btnDeleteRun.setVisible(true);
 			btnSolveRun.setVisible(true);
 			btnEditRun.setText("Start Editing");
 			btnEditRun.setForeground(null);
 			super.remove(editPanel);
-			super.add(splitPanel);		
+			super.add(splitPanel);	
 		}  //End of stop editing
 	}
 

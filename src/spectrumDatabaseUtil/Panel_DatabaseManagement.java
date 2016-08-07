@@ -1401,8 +1401,10 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 //			}
 //		};
 //		queryTextField.addMouseListener(queryTextField_mouseClick); // Add listener to queryTextField
-//
-//			
+
+		
+		
+		
 //		Action action = new AbstractAction()	//When user press Enter on Keyboard
 //		{
 //			@Override
@@ -1414,6 +1416,53 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 //		};
 //		queryTextField.addActionListener(action);	
 //		//------------------------------------------------------------------------------------------------------------------
+		
+		
+		
+		
+		
+		// another different way
+		
+//		combo1.addActionListener(new applyChanges_Listener());	
+		
+		
+//		class applyChanges_Listener implements ActionListener {
+//			public void actionPerformed(ActionEvent e) {
+//				// Apply any change in the GUI to the TEXT area
+//
+//				
+//				
+//				for (int i = 0; i < listOfEditRuns.length; i++) {
+//					if (radioButton_Left[i].isSelected()) {
+//						for (int j = 0; j < 3; j++) {
+//							if (radioButton_Right[j].isSelected()) {			
+//								if (j == 0) {
+////									textArea1.setText(st1);
+////									textArea1.append(st1 + "\n\r");
+////								} else if (j == 1) {
+////									GUI_Text_splitPanel.setLeftComponent(panelInput3[i]);
+////									GUI_Text_splitPanel.setRightComponent(panelInput4[i]);
+////								} else if (j == 2) {
+////									GUI_Text_splitPanel.setLeftComponent(panelInput5[i]);
+////									GUI_Text_splitPanel.setRightComponent(panelInput6[i]);
+//								}				
+//							}
+//						}
+//					}
+//				}
+//				
+//				
+//				
+//			}
+//		}
+		
+		
+		
+		
+		
+		
+		
+		
 	}
 
 } // Final End		

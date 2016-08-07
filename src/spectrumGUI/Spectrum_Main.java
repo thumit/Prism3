@@ -116,7 +116,7 @@ public class Spectrum_Main extends JFrame {
 								ProjectInternalFrame.pack(); // set internal frame to size of contents
 								
 								spectrumDesktopPane.add(ProjectInternalFrame, BorderLayout.CENTER); // attach internal frame
-								ProjectInternalFrame.setSize((int) (getWidth()/1.5),(int) (getHeight()/1.5));
+								ProjectInternalFrame.setSize((int) (getWidth()/1.3),(int) (getHeight()/1.5));
 								ProjectInternalFrame.setLocation(50 * (OpenProjectCount % 10), 50 * (OpenProjectCount  % 10));
 								ProjectInternalFrame.setVisible(true); // show internal frame
 														
@@ -186,7 +186,7 @@ public class Spectrum_Main extends JFrame {
 								DatabaseManagement_Frame.pack(); // set internal frame to size of contents
 								
 								spectrumDesktopPane.add(DatabaseManagement_Frame, BorderLayout.CENTER); // attach internal frame
-								DatabaseManagement_Frame.setSize((int) (getWidth()/1.5),(int) (getHeight()/1.5));
+								DatabaseManagement_Frame.setSize((int) (getWidth()/1.3),(int) (getHeight()/1.5));
 								DatabaseManagement_Frame.setLocation((int) ((getWidth() - DatabaseManagement_Frame.getWidth())/2),
 										((int) ((getHeight() - DatabaseManagement_Frame.getHeight())/3)));	// Set the DatabaseManagement_Frame near the center of the Main frame
 								DatabaseManagement_Frame.setVisible(true); // show internal frame
