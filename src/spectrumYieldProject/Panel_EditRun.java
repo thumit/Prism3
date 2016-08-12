@@ -83,7 +83,7 @@ public class Panel_EditRun extends JLayeredPane implements ActionListener {
 
 	//--------------------------------------------------------------------------------------------------------------------------------
 	// Get values to pass to other classes
-	public static File getTheOnlySelectedRuns() {
+	public static File getTheOnlySelectedRun() {
 		File currentSelectedRun = null;
 		for (int i = 0; i < listOfEditRuns.length; i++) {
 			if (radioButton_Left[i].isSelected()) {

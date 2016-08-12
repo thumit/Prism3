@@ -9,10 +9,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.AbstractAction;
@@ -49,7 +46,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private JPanel radioPanel_Right, combinePanel; 
 	private ButtonGroup radioGroup_Right; 
 	private JRadioButton[] radioButton_Right; 
-	private File currentRun = Panel_EditRun.getTheOnlySelectedRuns();
+	private File currentRun = Panel_EditRun.getTheOnlySelectedRun();
+	private static File fileManagementUnit;
 	
 	//6 panels for the selected Run
 	private PaneL_General_Inputs_GUI panelInput0_GUI;
@@ -60,9 +58,11 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private PaneL_Constraints_Text panelInput2_TEXT;		
 
 	
-	int rowCount = 5000;
+	private int rowCount, colCount;
+	private String[] columnNames;
 	private JTable table;
-	Object[][] data = new Object[5000][2];
+	MyTableModel model;
+	Object[][] data;
 //	= {
 //			{ "BNNCAL", "23", "NG", new Integer(5), new Boolean(false) },
 //			{ "BNNCDM", "432", "NG", new Integer(3), new Boolean(true) },
@@ -220,8 +220,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		}
 	}
 
+	
 	// Panel Rules-----------------------------------------------------------------------------------
-	class PaneL_Rules_GUI extends JLayeredPane {
+	class PaneL_Rules_GUI extends JLayeredPane implements ActionListener {
 		// Define 28 check box for 6 layers
 		JCheckBox[] checkboxFilter, checkboxRule;
 		
@@ -247,31 +248,38 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			super.add(textField1, c);
 			
 			JButton button1 = new JButton("Import Units");
-			button1.setToolTipText("No more than 5000 management units. Cut is made from unit 5001");
 			button1.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					File fileUnit = FilesChooser2.chosenManagementunit();
-					textField1.setText(fileUnit.getAbsolutePath());
-					
-					// Read the whole text file into table
-					try {
-						List<String> list;
-						list = Files.readAllLines(Paths.get(fileUnit.getAbsolutePath()), StandardCharsets.UTF_8);
-						String[] units_line = list.toArray(new String[list.size()]);
-						
-						rowCount = list.size();
-						for (int line = 0; line < list.size(); line++) {
-							data[line][0] = units_line[line];
-							table.setRowSelectionInterval(line, line); //To help trigger the row refresh: clear then add back the rows
+					fileManagementUnit = FilesChooser2.chosenManagementunit();				
+					if (fileManagementUnit!=null) {
+						textField1.setText(fileManagementUnit.getAbsolutePath());
+						// Read the whole text file into table
+						ReadUnit.readValues(fileManagementUnit);
+						String[][] value = ReadUnit.getValues();
+						rowCount = ReadUnit.get_TotalRows();
+						colCount = ReadUnit.get_TotalColumns() + 1; //the +1 is the rules Column
+						data = new Object[rowCount][colCount];
+						columnNames = new String[colCount];
+						for (int row = 0; row < rowCount; row++) {
+							for (int column = 0; column < colCount - 1; column++) {
+								data[row][column] = value[row][column];
+							}
 						}
-
-						table.clearSelection();	//To help trigger the row refresh: clear then add back the rows
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						table.setValueAt(data[0][0], 0, 0); //To help trigger the table refresh: fireTableDataChanged() and repaint();	
+						columnNames[0] = "Unit ID";
+						columnNames[1] = "Layer 1";
+						columnNames[2] = "Layer 2";
+						columnNames[3] = "Layer 3";
+						columnNames[4] = "Layer 4";
+						columnNames[5] = "Layer 5";
+						columnNames[6] = "Layer 6";
+						columnNames[7] = "Total area (acres)";
+						columnNames[colCount - 1] = "Rules";
+						table.createDefaultColumnsFromModel(); // Very important code to refresh the number of Columns	shown
+						table.getColumnModel().getColumn(colCount - 2).setPreferredWidth(100); //Set width of Column "Total area" bigger
+						table.getColumnModel().getColumn(colCount - 1).setPreferredWidth(400); //Set width of Column "Rules" bigger
 					}
-
 				}
 			});
 			c.gridx = 2;
@@ -285,6 +293,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			for (int i = 1; i <= 28; i++) {
 				checkboxFilter[i] = new JCheckBox();
 				checkboxFilter[i].setSelected(true);
+				checkboxFilter[i].addActionListener(this);
 			}
 			
 			JLabel label2_1 = new JLabel("Layer 1");
@@ -530,6 +539,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			// 2 buttons for select all and de-select all		
 			JButton selectAll = new JButton("Select All");
+			selectAll.addActionListener(this);
 			selectAll.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {
@@ -544,6 +554,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			checkPanel.add(selectAll, c1);
 			
 			JButton deselectAll = new JButton("De-Select All");
+			deselectAll.addActionListener(this);
 			deselectAll.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {
@@ -723,7 +734,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					}
 					table.clearSelection();	//To help trigger the row refresh: clear then add back the rows
 					for (int i: selectedRow) {
-						data[i][1] = applyText;
+						data[i][colCount-1] = applyText;
 						table.addRowSelectionInterval(table.convertRowIndexToView(i),table.convertRowIndexToView(i));
 					}					
 				}
@@ -752,38 +763,111 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c.gridheight = 1;   //1 rows high
 			super.add(ruleEditorPanel, c);
 		}
+		
+		//Listeners for checkBox Filter--------------------------------------------------------------------
+		public void actionPerformed(ActionEvent e) {
+			TableRowSorter<MyTableModel> sorter = new TableRowSorter<MyTableModel>(model);
+			table.setRowSorter(sorter);
+			List<RowFilter<MyTableModel,Object>> filters; 			
+			
+			RowFilter<MyTableModel, Object> layer1_filter = null;
+			filters  = new ArrayList<RowFilter<MyTableModel,Object>>();
+			for (int i = 1; i <= 6; i++) {
+				if (checkboxFilter[i].isSelected()) {			
+					filters.add(RowFilter.regexFilter(checkboxFilter[i].getText(), 1));		
+				}
+			}
+			layer1_filter = RowFilter.orFilter(filters);
+			
+			
+			RowFilter<MyTableModel, Object> layer2_filter = null;
+			filters  = new ArrayList<RowFilter<MyTableModel,Object>>();
+			for (int i = 7; i <= 8; i++) {
+				if (checkboxFilter[i].isSelected()) {			
+					filters.add(RowFilter.regexFilter(checkboxFilter[i].getText(), 2));		
+				}
+			}
+			layer2_filter = RowFilter.orFilter(filters);
+			
+			
+			RowFilter<MyTableModel, Object> layer3_filter = null;
+			filters  = new ArrayList<RowFilter<MyTableModel,Object>>();
+			for (int i = 9; i <= 12; i++) {
+				if (checkboxFilter[i].isSelected()) {			
+					filters.add(RowFilter.regexFilter(checkboxFilter[i].getText(), 3));		
+				}
+			}
+			layer3_filter = RowFilter.orFilter(filters);
+			
+			
+			RowFilter<MyTableModel, Object> layer4_filter = null;
+			filters  = new ArrayList<RowFilter<MyTableModel,Object>>();
+			for (int i = 13; i <= 16; i++) {
+				if (checkboxFilter[i].isSelected()) {			
+					filters.add(RowFilter.regexFilter(checkboxFilter[i].getText(), 4));		
+				}
+			}
+			layer4_filter = RowFilter.orFilter(filters);
+			
+	
+			RowFilter<MyTableModel, Object> layer5_filter = null;
+			filters  = new ArrayList<RowFilter<MyTableModel,Object>>();
+			for (int i = 17; i <= 23; i++) {
+				if (checkboxFilter[i].isSelected()) {			
+					filters.add(RowFilter.regexFilter(checkboxFilter[i].getText(), 5));		
+				}
+			}
+			layer5_filter = RowFilter.orFilter(filters);
+
+			
+			RowFilter<MyTableModel, Object> layer6_filter = null;
+			filters  = new ArrayList<RowFilter<MyTableModel,Object>>();
+			for (int i = 24; i <= 28; i++) {
+				if (checkboxFilter[i].isSelected()) {
+					filters.add(RowFilter.regexFilter(checkboxFilter[i].getText(), 6));		
+				}
+			}
+			layer6_filter=RowFilter.orFilter(filters);
+			
+			
+			RowFilter<MyTableModel, Object> combine_AllFilters = null;
+			filters  = new ArrayList<RowFilter<MyTableModel,Object>>();
+			filters.add(layer1_filter);
+			filters.add(layer2_filter);
+			filters.add(layer3_filter);
+			filters.add(layer4_filter);
+			filters.add(layer5_filter);
+			filters.add(layer6_filter);
+			combine_AllFilters = RowFilter.andFilter(filters);
+
+			
+			sorter.setRowFilter(combine_AllFilters);
+		}
 	}
 	
 	class PaneL_Rules_Text extends JPanel {
-//	    private JTable table;
-	    private JTextField filterText;
-	    private TableRowSorter<MyTableModel> sorter;
-	 
 	    public PaneL_Rules_Text() {
-	    	super();
+	         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 	    	
-	    	
+	         rowCount = 30;
+	         colCount = 9;
+	         data = new Object[rowCount][colCount];
+	         columnNames= new String[] {"Unit ID" , "Layer 1", "Layer 2", "Layer 3", "Layer 4", "Layer 5", "Layer 6", 
+	 				"Total area (acres)", "Rules"};
+	         
 			// Populate the data matrix without any information
 			for (int row = 0; row < 1; row++) {			// 1 row is ok
-				for (int col = 0; col < 2; ++col) {		//Number of Columns must match
+				for (int col = 0; col < colCount; ++col) {		//Number of Columns must match
 					data[row][col] = "";
 				}
 			}
 	    	
 	    	
-	    	
-	    	
-	    	
-	    	
-	    	
-	    	
-	         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-	  
-	         //Create a table with a sorter.
-	         MyTableModel model = new MyTableModel();
-	         sorter = new TableRowSorter<MyTableModel>(model);
+	         //Create a table
+	         model = new MyTableModel();
 	         table = new JTable(model);
-	         table.setRowSorter(sorter);
+	         table.getColumnModel().getColumn(colCount-2).setPreferredWidth(100);	//Set width of Column "Total area" bigger
+	         table.getColumnModel().getColumn(colCount-1).setPreferredWidth(400);	//Set width of Column "Rules" bigger
 	         table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 	         table.setFillsViewportHeight(true);
 	         table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);	  
@@ -792,111 +876,60 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	         JScrollPane scrollPane = new JScrollPane(table);
 	  
 	         //Add the scroll pane to this panel.
-	         add(scrollPane);
-	  
-	         
-	         
-	         
-//	         filterText = new JTextField();
-//	         //Whenever filterText changes, invoke newFilter.
-//	         filterText.getDocument().addDocumentListener(
-//	                 new DocumentListener() {
-//	                     public void changedUpdate(DocumentEvent e) {
-//	                         newFilter();
-//	                     }
-//	                     public void insertUpdate(DocumentEvent e) {
-//	                         newFilter();
-//	                     }
-//	                     public void removeUpdate(DocumentEvent e) {
-//	                         newFilter();
-//	                     }
-//	                 });
-	         
+	         add(scrollPane);         
 	     }
-	  
-	     /** 
-	      * Update the row filter regular expression from the expression in
-	      * the text box.
-	      */
-	     private void newFilter() {
-	         RowFilter<MyTableModel, Object> rf = null;
-	         //If current expression doesn't parse, don't update.
-	         try {
-	             rf = RowFilter.regexFilter(filterText.getText(), 0);
-	         } catch (java.util.regex.PatternSyntaxException e) {
-	             return;
-	         }
-	         sorter.setRowFilter(rf);
-	     }
-	  
-	  
-	  
-	  
-	     class MyTableModel extends AbstractTableModel {
-	         private String[] columnNames = {"ID, Layer1, Layer2, Layer3, Layer 4, Layer 5, Layer 6, Total Area",
-	                                         "Rules"};
+	}	
+		
+	class MyTableModel extends AbstractTableModel {
+	    	 
+		public MyTableModel() {
 
-//	         private Object[][] data = {
-//					{ "Kathy", "Smith", "Snowboarding", new Integer(5), new Boolean(false) },
-//					{ "John", "Doe", "Rowing", new Integer(3), new Boolean(true) },
-//					{ "Sue", "Black", "Knitting", new Integer(2), new Boolean(false) },
-//					{ "Jane", "White", "Speed reading", new Integer(20), new Boolean(true) },
-//					{ "Joe", "Brown", "Pool", new Integer(10), new Boolean(false) } };
-	         
-	         
-	         public int getColumnCount() {
-	             return columnNames.length;
-	         }
-	  
-	         public int getRowCount() {
-	             return rowCount;
-	         }
-	  
-	         public String getColumnName(int col) {
-	             return columnNames[col];
-	         }
-	  
-	         public Object getValueAt(int row, int col) {
-	             return data[row][col];
-	         }
-	  
-	         /*
-	          * JTable uses this method to determine the default renderer/
-	          * editor for each cell.  If we didn't implement this method,
-	          * then the last column would contain text ("true"/"false"),
-	          * rather than a check box.
-	          */
-	         
-			public Class getColumnClass(int c) {
-				return getValueAt(0, c).getClass();
-			}
+		  }
 
-			/*
-			 * Don't need to implement this method unless your table's editable.
-			 */
-			
-			public boolean isCellEditable(int row, int col) {
-				// Note that the data/cell address is constant,
-				// no matter where the cell appears onscreen.
-				if (col < 1) {
-					return false;
-				} else {
-					return true;
-				}
-			}
-	  
-			public void setValueAt(Object value, int row, int col) {
-				data[row][col] = value;
-				fireTableCellUpdated(row, col);
-				fireTableDataChanged();
-				repaint();
+		public int getColumnCount() {
+			return colCount;
+		}
+
+		public int getRowCount() {
+			return rowCount;
+		}
+
+		public String getColumnName(int col) {
+			return columnNames[col];
+		}
+
+		public Object getValueAt(int row, int col) {
+			return data[row][col];
+		}
+
+		/*
+		 * JTable uses this method to determine the default renderer/ editor for
+		 * each cell. If we didn't implement this method, then the last column
+		 * would contain text ("true"/"false"), rather than a check box.
+		 */
+	         
+//		public Class getColumnClass(int c) {
+//			return getValueAt(0, c).getClass();
+//		}
+
+		// Don't need to implement this method unless your table's editable.
+		public boolean isCellEditable(int row, int col) {
+			// Note that the data/cell address is constant,
+			// no matter where the cell appears onscreen.
+			if (col < colCount - 1) { // Only the last column is editable
+				return false;
+			} else {
+				return true;
 			}
 		}
+
+		public void setValueAt(Object value, int row, int col) {
+			data[row][col] = value;
+			fireTableCellUpdated(row, col);
+			fireTableDataChanged();
+			repaint();
+		}
 	}
-	
-	
-	
-	
 	
 	
 	
