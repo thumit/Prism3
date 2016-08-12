@@ -266,6 +266,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 								data[row][column] = value[row][column];
 							}
 						}
+						TableRowSorter<MyTableModel> sorter = new TableRowSorter<MyTableModel>(model);
+						table.setRowSorter(sorter);
 						table.setValueAt(data[0][0], 0, 0); //To help trigger the table refresh: fireTableDataChanged() and repaint();	
 						columnNames[0] = "Unit ID";
 						columnNames[1] = "Layer 1";
@@ -908,9 +910,10 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		 * would contain text ("true"/"false"), rather than a check box.
 		 */
 	         
-//		public Class getColumnClass(int c) {
+		public Class getColumnClass(int c) {
 //			return getValueAt(0, c).getClass();
-//		}
+			return (getValueAt(0, c) == null ? Object.class : getValueAt(0, c).getClass());
+		}
 
 		// Don't need to implement this method unless your table's editable.
 		public boolean isCellEditable(int row, int col) {
