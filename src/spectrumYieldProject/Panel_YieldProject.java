@@ -624,14 +624,24 @@ public class Panel_YieldProject extends JLayeredPane {
 			super.remove(editPanel);
 			super.add(splitPanel);
 			
+			
+			//Delete all files of the edited Runs
+			for (int i = 0; i < listOfEditRuns.length; i++) {
+				File[] contents = listOfEditRuns[i].listFiles();
+			    if (contents != null) {
+			        for (File f : contents) {
+			        	f.delete();
+			        }
+			    }
+			}
+			
 			//Get all input files
 			File[] generalInputFile = editPanel.getGeneralInputFile();
 			File[] managementOptionsFile = editPanel.getManagementOptionsFile();
 			File[] userConstraintsFile = editPanel.getUserConstraintsFile();
 			
-			//Ask to save input files		
+			//Create new input files		
 			for (int i = 0; i < listOfEditRuns.length; i++) {
-				System.out.println(generalInputFile[i].getAbsolutePath());
 				if (!generalInputFile[i].exists())
 					try {
 						generalInputFile[i].createNewFile();

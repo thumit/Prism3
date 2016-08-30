@@ -1,2 +1,9 @@
 Unit ID	Layer 1	Layer 2	Layer 3	Layer 4	Layer 5	Layer 6	Total area (acres)	Available Methods/Prescriptions	Methods for Implementation	
-										
+BNNCCM	B	N	N	C	C	M	1353	null	NG 	
+BNNCCP	B	N	N	C	C	P	651	null	NG 	
+BNNCCS	B	N	N	C	C	S	97	null	NG 	
+BNNCDL	B	N	N	C	D	L	1725	null	NG 	
+BNNCDM	B	N	N	C	D	M	540	null	NG 	
+BNNCDP	B	N	N	C	D	P	77	null	NG 	
+BNNCDS	B	N	N	C	D	S	84	null	NG 	
+BNNCIL	B	N	N	C	I	L	247	null	NG 	
