@@ -8,7 +8,11 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,19 +47,18 @@ import javax.swing.text.DefaultFormatter;
 
 public class Panel_EditRun_Details extends JLayeredPane implements ActionListener {
 	private JSplitPane GUI_Text_splitPanel ;
-	private JPanel radioPanel_Right, combinePanel; 
+	private JPanel radioPanel_Right; 
 	private ButtonGroup radioGroup_Right; 
 	private JRadioButton[] radioButton_Right; 
-	private File currentRun = Panel_EditRun.getTheOnlySelectedRun();
-	private static File fileManagementUnit;
+	private File fileManagementUnit, fileDatabase;
 	
 	//6 panels for the selected Run
 	private PaneL_General_Inputs_GUI panelInput0_GUI;
 	private PaneL_General_Inputs_Text panelInput0_TEXT;
-	private PaneL_Rules_GUI panelInput1_GUI;
-	private PaneL_Rules_Text panelInput1_TEXT;
-	private PaneL_Constraints_GUI panelInput2_GUI;
-	private PaneL_Constraints_Text panelInput2_TEXT;		
+	private PaneL_ManagementOptions_GUI panelInput1_GUI;
+	private PaneL_ManagementOptions_Text panelInput1_TEXT;
+	private PaneL_UserConstraints_GUI panelInput2_GUI;
+	private PaneL_UserConstraints_Text panelInput2_TEXT;		
 
 	
 	private int rowCount, colCount;
@@ -70,6 +73,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 //			{ "BNPHCL", "123", "NG", new Integer(20), new Boolean(true) },
 //			{ "BNOHCM", "768", "NG", new Integer(10), new Boolean(false) } };
 	
+	
 	public Panel_EditRun_Details() {
 		super.setLayout(new BorderLayout());
 
@@ -80,8 +84,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		
 		radioButton_Right  = new JRadioButton[3];
 		radioButton_Right[0]= new JRadioButton("General Inputs");
-		radioButton_Right[1]= new JRadioButton("Rules");
-		radioButton_Right[2]= new JRadioButton("Constraints");
+		radioButton_Right[1]= new JRadioButton("Management Options");
+		radioButton_Right[2]= new JRadioButton("User Constraints");
 		radioButton_Right[0].setSelected(true);
 		for (int i = 0; i < 3; i++) {
 				radioGroup_Right.add(radioButton_Right[i]);
@@ -98,10 +102,10 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		// Create all new 6 panels for the selected Run--------------------------------------------------
 		panelInput0_GUI = new PaneL_General_Inputs_GUI();
 		panelInput0_TEXT = new PaneL_General_Inputs_Text();
-		panelInput1_GUI = new PaneL_Rules_GUI();
-		panelInput1_TEXT = new PaneL_Rules_Text();
-		panelInput2_GUI = new PaneL_Constraints_GUI();
-		panelInput2_TEXT = new PaneL_Constraints_Text();
+		panelInput1_GUI = new PaneL_ManagementOptions_GUI();
+		panelInput1_TEXT = new PaneL_ManagementOptions_Text();
+		panelInput2_GUI = new PaneL_UserConstraints_GUI();
+		panelInput2_TEXT = new PaneL_UserConstraints_Text();
 					
 		
 		// Show the 2 panelInput of the selected Run
@@ -134,7 +138,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				}
 			}
 
- 
 	// Panel General Inputs-----------------------------------------------------------------------------	
 	class PaneL_General_Inputs_GUI extends JLayeredPane {
 		public PaneL_General_Inputs_GUI() {
@@ -149,14 +152,14 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			super.add(label1);
 			super.add(combo1);
 			
-			JLabel label2 = new JLabel("Budget limit (thousand dollars)");
-			JSpinner spin2 = new JSpinner (new SpinnerNumberModel(1000, 0, null, 10));
+			JLabel label2 = new JLabel("Solving time limit (minutes)");
+			JSpinner spin2 = new JSpinner (new SpinnerNumberModel(5, 0, 60, 1));
 			JFormattedTextField SpinnerText = ((DefaultEditor) spin2.getEditor()).getTextField();
 			SpinnerText.setHorizontalAlignment(JTextField.LEFT);
 			super.add(label2);
 			super.add(spin2);
 			
-			JLabel label3 = new JLabel("Discount rate (%)");
+			JLabel label3 = new JLabel("Annual discount rate (%)");
 			JComboBox combo3 = new JComboBox();		
 			for (int i = 0; i <= 100; i++) {
 				double value = (double) i/10;
@@ -205,15 +208,15 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		        	spin2.setValue(spin2.getValue());
 		        	// Apply any change in the GUI to the TEXT area	
 		        	String input0_info = label1.getText() + "	" + combo1.getSelectedItem().toString() + "\n"
-							+ label2.getText() + "	" + (Integer)spin2.getValue() + "\n"
 							+ label3.getText() + "	" + combo3.getSelectedItem().toString() + "\n"
+							+ label2.getText() + "	" + (Integer)spin2.getValue() + "\n"
 							+ label4.getText() + "	" + combo4.getSelectedItem().toString();
 					panelInput0_TEXT.setText(input0_info);
 		        }
 		    });
 		}
 	}
-	
+
 	class PaneL_General_Inputs_Text extends JTextArea {
 		public PaneL_General_Inputs_Text() {		
 			setRows(10);		// set text areas with 10 rows when starts	
@@ -221,13 +224,13 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	}
 
 	
+	
 	// Panel Rules-----------------------------------------------------------------------------------
-	class PaneL_Rules_GUI extends JLayeredPane implements ActionListener {
+	class PaneL_ManagementOptions_GUI extends JLayeredPane implements ActionListener {
 		// Define 28 check box for 6 layers
 		JCheckBox[] checkboxFilter, checkboxRule;
 		
-		
-		public PaneL_Rules_GUI() {
+		public PaneL_ManagementOptions_GUI() {
 			setLayout(new GridBagLayout());
 			GridBagConstraints c = new GridBagConstraints();
 			c.fill = GridBagConstraints.BOTH;
@@ -251,18 +254,18 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			button1.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					fileManagementUnit = FilesChooser2.chosenManagementunit();				
+					fileManagementUnit = FilesChooser_Units.chosenManagementunit();				
 					if (fileManagementUnit!=null) {
 						textField1.setText(fileManagementUnit.getAbsolutePath());
 						// Read the whole text file into table
 						ReadUnit.readValues(fileManagementUnit);
 						String[][] value = ReadUnit.getValues();
 						rowCount = ReadUnit.get_TotalRows();
-						colCount = ReadUnit.get_TotalColumns() + 1; //the +1 is the rules Column
+						colCount = ReadUnit.get_TotalColumns() + 2; //the 2 prescriptions Column
 						data = new Object[rowCount][colCount];
 						columnNames = new String[colCount];
 						for (int row = 0; row < rowCount; row++) {
-							for (int column = 0; column < colCount - 1; column++) {
+							for (int column = 0; column < colCount - 2; column++) {
 								data[row][column] = value[row][column];
 							}
 						}
@@ -277,10 +280,13 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						columnNames[5] = "Layer 5";
 						columnNames[6] = "Layer 6";
 						columnNames[7] = "Total area (acres)";
-						columnNames[colCount - 1] = "Rules";
+						columnNames[colCount - 2] = "Available Methods/Prescriptions";
+						columnNames[colCount - 1] = "Methods for Implementation";
 						table.createDefaultColumnsFromModel(); // Very important code to refresh the number of Columns	shown
-						table.getColumnModel().getColumn(colCount - 2).setPreferredWidth(100); //Set width of Column "Total area" bigger
-						table.getColumnModel().getColumn(colCount - 1).setPreferredWidth(400); //Set width of Column "Rules" bigger
+						table.getColumnModel().getColumn(colCount-3).setPreferredWidth(120);	//Set width of Column "Total area" bigger
+				        table.getColumnModel().getColumn(colCount-2).setPreferredWidth(350);	//Set width of Column "Available Methods/Prescriptions" bigger
+				        table.getColumnModel().getColumn(colCount-1).setPreferredWidth(200);	//Set width of Column "Methods for Implementation" bigger
+				        
 					}
 				}
 			});
@@ -288,9 +294,41 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c.gridy = 0;
 			super.add(button1, c);
 
+			
+			// 2nd grid line-----------------------------------------------------------------------
+			// 2nd grid line-----------------------------------------------------------------------
+			JLabel label2 = new JLabel("Database (.db file)");
+			c.gridx = 0;
+			c.gridy = 1;
+			super.add(label2, c);
+
+			JTextField textField2 = new JTextField(30);
+			textField2.setEditable(false);
+			c.gridx = 1;
+			c.gridy = 1;
+			super.add(textField2, c);
+
+			JButton button2 = new JButton("Import Database");
+			button2.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					fileDatabase = FilesChooser_Database.chosenDatabase();				
+					if (fileDatabase!=null) {
+						textField2.setText(fileDatabase.getAbsolutePath());
+						// Read the database tables into array
+						Object[][][] table = Read_DatabaseTables.getTableArrays(fileDatabase);
+					}
+				}
+			});
+			c.gridx = 2;
+			c.gridy = 1;
+			super.add(button2, c);
+			// End of 2nd grid line-----------------------------------------------------------------------
+			// End of 2nd grid line-----------------------------------------------------------------------
+			
 				
-			// 2nd grid line-----------------------------------------------------------------------
-			// 2nd grid line-----------------------------------------------------------------------
+			// 3rd grid line-----------------------------------------------------------------------
+			// 3rd grid line-----------------------------------------------------------------------
 			checkboxFilter = new JCheckBox[29];
 			for (int i = 1; i <= 28; i++) {
 				checkboxFilter[i] = new JCheckBox();
@@ -569,14 +607,14 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c1.gridy = 9;
 			c1.gridwidth = 2;
 			checkPanel.add(deselectAll, c1);
-			// End of 2nd grid line-----------------------------------------------------------------------
-			// End of 2nd grid line-----------------------------------------------------------------------
+			// End of 3rd grid line-----------------------------------------------------------------------
+			// End of 3rd grid line-----------------------------------------------------------------------
 
 			
 			
 			
-			// 3rd grid line-----------------------------------------------------------------------
-			// 3rd grid line-----------------------------------------------------------------------
+			// 4th grid line-----------------------------------------------------------------------
+			// 4th grid line-----------------------------------------------------------------------
 			checkboxRule = new JCheckBox[5];
 			for (int i = 1; i <= 4; i++) {
 				checkboxRule[i] = new JCheckBox();
@@ -585,7 +623,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			
 			JPanel ruleEditorPanel = new JPanel();		
-			TitledBorder border2 = new TitledBorder("Rule Editor");
+			TitledBorder border2 = new TitledBorder("Silvicultural Methods");
 			border2.setTitleJustification(TitledBorder.CENTER);
 			ruleEditorPanel.setBorder(border2);
 			ruleEditorPanel.setLayout(new GridBagLayout());
@@ -596,52 +634,52 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 				
 			// 1st line inside ruleEditorPanel
-		    checkboxRule[1].setText("Even Age");
+		    checkboxRule[1].setText("Even Age (EA)");
 			JLabel label3_1_1 = new JLabel("Min Rotation Age");
 			JLabel label3_1_2 = new JLabel("Max Rotation Age");
 			JComboBox combo3_1_1 = new JComboBox();
-			for (int i = 1; i <= 30; i++) {
+			for (int i = 1; i <= 50; i++) {
 				combo3_1_1.addItem(i);
 			}
-			combo3_1_1.setSelectedItem((int) 20);
+			combo3_1_1.setSelectedItem((int) 1);
 			JComboBox combo3_1_2 = new JComboBox();
-			for (int i = 1; i <= 30; i++) {
+			for (int i = 1; i <= 50; i++) {
 				combo3_1_2.addItem(i);
 			}
-			combo3_1_2.setSelectedItem((int) 25);
+			combo3_1_2.setSelectedItem((int) 50);
 						
 			c2.gridx = 0;
 			c2.gridy = 0;
 			ruleEditorPanel.add(checkboxRule[1], c2);
 				
-			c2.gridx = 1;
-			c2.gridy = 1;
-			ruleEditorPanel.add(label3_1_1, c2);
-			
-			c2.gridx = 2;
-			c2.gridy = 1;
-			ruleEditorPanel.add(combo3_1_1, c2);
-			
-			c2.gridx = 3;
-			c2.gridy = 1;
-			ruleEditorPanel.add(label3_1_2, c2);
-			
-			c2.gridx = 4;
-			c2.gridy = 1;
-			ruleEditorPanel.add(combo3_1_2, c2);
+//			c2.gridx = 1;
+//			c2.gridy = 1;
+//			ruleEditorPanel.add(label3_1_1, c2);
+//			
+//			c2.gridx = 2;
+//			c2.gridy = 1;
+//			ruleEditorPanel.add(combo3_1_1, c2);
+//			
+//			c2.gridx = 3;
+//			c2.gridy = 1;
+//			ruleEditorPanel.add(label3_1_2, c2);
+//			
+//			c2.gridx = 4;
+//			c2.gridy = 1;
+//			ruleEditorPanel.add(combo3_1_2, c2);
 			
 			
 			// 2nd line inside ruleEditorPanel
-			checkboxRule[2].setText("Group Selection");
-			JLabel label3_2_1 = new JLabel("Start Age");
-			JLabel label3_2_2 = new JLabel("Repeat Interval (periods)");
+			checkboxRule[2].setText("Group Selection (GS)");
+			JLabel label3_2_1 = new JLabel("Min Timing Choice");
+			JLabel label3_2_2 = new JLabel("Max Timing Choice");
 			JComboBox combo3_2_1 = new JComboBox();
-			for (int i = 1; i <= 10; i++) {
+			for (int i = 0; i <= 10; i++) {
 				combo3_2_1.addItem(i);
 			}
-			combo3_2_1.setSelectedItem((int) 8);
+			combo3_2_1.setSelectedItem((int) 0);
 			JComboBox combo3_2_2 = new JComboBox();
-			for (int i = 3; i <= 5; i++) {
+			for (int i = 0; i <= 10; i++) {
 				combo3_2_2.addItem(i);
 			}
 			combo3_2_2.setSelectedItem((int) 4);
@@ -650,34 +688,34 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c2.gridy = 2;
 			ruleEditorPanel.add(checkboxRule[2], c2);
 				
-			c2.gridx = 1;
-			c2.gridy = 3;
-			ruleEditorPanel.add(label3_2_1, c2);
-			
-			c2.gridx = 2;
-			c2.gridy = 3;
-			ruleEditorPanel.add(combo3_2_1, c2);
-			
-			c2.gridx = 3;
-			c2.gridy = 3;
-			ruleEditorPanel.add(label3_2_2, c2);
-			
-			c2.gridx = 4;
-			c2.gridy = 3;
-			ruleEditorPanel.add(combo3_2_2, c2);
+//			c2.gridx = 1;
+//			c2.gridy = 3;
+//			ruleEditorPanel.add(label3_2_1, c2);
+//			
+//			c2.gridx = 2;
+//			c2.gridy = 3;
+//			ruleEditorPanel.add(combo3_2_1, c2);
+//			
+//			c2.gridx = 3;
+//			c2.gridy = 3;
+//			ruleEditorPanel.add(label3_2_2, c2);
+//			
+//			c2.gridx = 4;
+//			c2.gridy = 3;
+//			ruleEditorPanel.add(combo3_2_2, c2);
 			
 			
 			// 3rd line inside ruleEditorPanel
-			checkboxRule[3].setText("Prescribed Burn");
-			JLabel label3_3_1 = new JLabel("Start Age");
-			JLabel label3_3_2 = new JLabel("Repeat Interval (periods)");
+			checkboxRule[3].setText("Prescribed Burn (PB)");
+			JLabel label3_3_1 = new JLabel("Min Timing Choice");
+			JLabel label3_3_2 = new JLabel("Max Timing Choice");
 			JComboBox combo3_3_1 = new JComboBox();
-			for (int i = 1; i <= 10; i++) {
+			for (int i = 0; i <= 10; i++) {
 				combo3_3_1.addItem(i);
 			}
-			combo3_3_1.setSelectedItem((int) 8);
+			combo3_3_1.setSelectedItem((int) 0);
 			JComboBox combo3_3_2 = new JComboBox();
-			for (int i = 3; i <= 5; i++) {
+			for (int i = 0; i <= 10; i++) {
 				combo3_3_2.addItem(i);
 			}
 			combo3_3_2.setSelectedItem((int) 4);
@@ -686,47 +724,50 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c2.gridy = 4;
 			ruleEditorPanel.add(checkboxRule[3], c2);
 
-			c2.gridx = 1;
-			c2.gridy = 5;
-			ruleEditorPanel.add(label3_3_1, c2);
-
-			c2.gridx = 2;
-			c2.gridy = 5;
-			ruleEditorPanel.add(combo3_3_1, c2);
-
-			c2.gridx = 3;
-			c2.gridy = 5;
-			ruleEditorPanel.add(label3_3_2, c2);
-
-			c2.gridx = 4;
-			c2.gridy = 5;
-			ruleEditorPanel.add(combo3_3_2, c2);
+//			c2.gridx = 1;
+//			c2.gridy = 5;
+//			ruleEditorPanel.add(label3_3_1, c2);
+//
+//			c2.gridx = 2;
+//			c2.gridy = 5;
+//			ruleEditorPanel.add(combo3_3_1, c2);
+//
+//			c2.gridx = 3;
+//			c2.gridy = 5;
+//			ruleEditorPanel.add(label3_3_2, c2);
+//
+//			c2.gridx = 4;
+//			c2.gridy = 5;
+//			ruleEditorPanel.add(combo3_3_2, c2);
 			
 			
 			// 4th line inside ruleEditorPanel
-			checkboxRule[4].setText("Natural Growth");
+			checkboxRule[4].setText("Natural Growth (NG)");
 			c2.gridx = 0;
 			c2.gridy = 6;
 			ruleEditorPanel.add(checkboxRule[4], c2);
 
 			
 			// 5th line inside ruleEditorPanel: Apply Button
-			JButton applyRule = new JButton("Apply selected rules to the selected management units below");
+			JButton applyRule = new JButton("Set methods for implementation on the selected management units below");
 			applyRule.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {
 					String applyText = "";
 					if (checkboxRule[1].isSelected()) {
-						applyText = applyText  + "EA(" + combo3_1_1.getSelectedItem() + "," + combo3_1_2.getSelectedItem() + ")   "; 
+						applyText = applyText  + "EA ";
+						//applyText = applyText  + "EA(" + combo3_1_1.getSelectedItem() + "," + combo3_1_2.getSelectedItem() + ")   "; 
 					}
 					if (checkboxRule[2].isSelected()) {
-						applyText = applyText  + "GS(" + combo3_2_1.getSelectedItem() + "," + combo3_2_2.getSelectedItem() + ")   "; 
+						applyText = applyText  + "GS ";
+						//applyText = applyText  + "GS(" + combo3_2_1.getSelectedItem() + "," + combo3_2_2.getSelectedItem() + ")   "; 
 					}
 					if (checkboxRule[3].isSelected()) {
-						applyText = applyText  + "PB(" + combo3_3_1.getSelectedItem() + "," + combo3_3_2.getSelectedItem() + ")   "; 
+						applyText = applyText  + "PB ";
+						//applyText = applyText  + "PB(" + combo3_3_1.getSelectedItem() + "," + combo3_3_2.getSelectedItem() + ")   "; 
 					}
 					if (checkboxRule[4].isSelected()) {
-						applyText = applyText  + "NG   "; 
+						applyText = applyText  + "NG "; 
 					}
 					
 					int[] selectedRow = table.getSelectedRows();	
@@ -746,21 +787,21 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c2.gridwidth = 5; 	//5 columns wide
 			ruleEditorPanel.add(applyRule, c2);
 			
-			// End of 3rd grid line-----------------------------------------------------------------------
-			// End of 3rd grid line-----------------------------------------------------------------------
+			// End of 4th grid line-----------------------------------------------------------------------
+			// End of 4th grid line-----------------------------------------------------------------------
 			
 			
 	
 			
 			// Add the checkPanel to the main Grid
 			c.gridx = 0;
-			c.gridy = 1;
+			c.gridy = 2;
 			c.gridwidth = 3;   //3 columns wide
 			super.add(checkPanel, c);
 			
 			// Add the modifyPanel to the main Grid	
 			c.gridx = 3;
-			c.gridy = 1;
+			c.gridy = 2;
 			c.gridwidth = 3;   //3 columns wide
 			c.gridheight = 1;   //1 rows high
 			super.add(ruleEditorPanel, c);
@@ -846,16 +887,16 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			sorter.setRowFilter(combine_AllFilters);
 		}
 	}
-	
-	class PaneL_Rules_Text extends JPanel {
-	    public PaneL_Rules_Text() {
+
+	class PaneL_ManagementOptions_Text extends JLayeredPane {
+	    public PaneL_ManagementOptions_Text() {
 	         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 	    	
 	         rowCount = 30;
-	         colCount = 9;
+	         colCount = 10;
 	         data = new Object[rowCount][colCount];
 	         columnNames= new String[] {"Unit ID" , "Layer 1", "Layer 2", "Layer 3", "Layer 4", "Layer 5", "Layer 6", 
-	 				"Total area (acres)", "Rules"};
+	 				"Total area (acres)", "Available Methods/Prescriptions", "Methods for Implementation"};
 	         
 			// Populate the data matrix without any information
 			for (int row = 0; row < 1; row++) {			// 1 row is ok
@@ -867,9 +908,25 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	    	
 	         //Create a table
 	         model = new MyTableModel();
-	         table = new JTable(model);
-	         table.getColumnModel().getColumn(colCount-2).setPreferredWidth(100);	//Set width of Column "Total area" bigger
-	         table.getColumnModel().getColumn(colCount-1).setPreferredWidth(400);	//Set width of Column "Rules" bigger
+	         table = new JTable(model) {
+	             //Implement table cell tool tips           
+	             public String getToolTipText(MouseEvent e) {
+	                 String tip = null;
+	                 java.awt.Point p = e.getPoint();
+	                 int rowIndex = rowAtPoint(p);
+	                 int colIndex = columnAtPoint(p);
+	                 try {
+	                       tip = getValueAt(rowIndex, colIndex).toString();
+	                 } catch (RuntimeException e1) {
+	                     //catch null pointer exception if mouse is over an empty line
+	                 }
+	                 return tip;
+	             }
+	         };
+	         //table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+	         table.getColumnModel().getColumn(colCount-3).setPreferredWidth(120);	//Set width of Column "Total area" bigger
+	         table.getColumnModel().getColumn(colCount-2).setPreferredWidth(350);	//Set width of Column "Available Methods/Prescriptions" bigger
+	         table.getColumnModel().getColumn(colCount-1).setPreferredWidth(200);	//Set width of Column "Methods for Implementation" bigger
 	         table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 	         table.setFillsViewportHeight(true);
 	         table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);	  
@@ -882,6 +939,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	     }
 	}	
 		
+	
 	class MyTableModel extends AbstractTableModel {
 	    	 
 		public MyTableModel() {
@@ -956,18 +1014,61 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 	
 	// Panel Constraints-----------------------------------------------------------------------------------
-	class PaneL_Constraints_GUI extends JLayeredPane {
-		public PaneL_Constraints_GUI() {
+	class PaneL_UserConstraints_GUI extends JLayeredPane {
+		public PaneL_UserConstraints_GUI() {
 			
 			
 	
 		}
 	}
 	
-	class PaneL_Constraints_Text  extends JTextArea {
-		public PaneL_Constraints_Text() {
+	class PaneL_UserConstraints_Text  extends JTextArea {
+		public PaneL_UserConstraints_Text() {
 			setRows(50);		// set text areas with 10 rows when starts		
 		}
 	}
-
+	
+	
+	//--------------------------------------------------------------------------------------------------------------------------------
+	// Get values to pass to other classes
+	public File getGeneralInputFile() {
+		File generalInputFile = new File("GeneralInputs.txt");
+		try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(generalInputFile))) {
+			panelInput0_TEXT.write(fileOut);
+			fileOut.close();
+		} catch (IOException e) {
+		}
+		return generalInputFile;
+	}
+	
+	public File getManagementOptionsFile() {
+		File managementOptionsFile = new File("ManagementOptions.txt");	
+		//Only print out units with implemented methods <> null
+		try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(managementOptionsFile))) {
+			for (int j = 0; j < table.getColumnCount(); j++) {
+				fileOut.write(table.getColumnName(j) + "\t");
+			}
+			for (int i = 0; i < table.getRowCount(); i++) {
+				if (table.getValueAt(i, table.getColumnCount()-1)!=null) {
+					fileOut.newLine();
+					for (int j = 0; j < table.getColumnCount(); j++) {
+						fileOut.write((String) (table.getValueAt(i, j)) + "\t");
+					}
+				}
+			}
+			fileOut.close();
+		} catch (IOException e) {
+		}
+		return managementOptionsFile;
+	}
+	
+	public File getUserConstraintsFile() {
+		File userConstraintsFile = new File("UserConstraints.txt");
+		try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(userConstraintsFile))) {
+			panelInput2_TEXT.write(fileOut);
+			fileOut.close();
+		} catch (IOException e) {
+		}
+		return userConstraintsFile;
+	}
 }

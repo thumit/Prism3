@@ -6,13 +6,13 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import spectrumGUI.Spectrum_Main;
 
-public class FilesChooser2 {
+public class FilesChooser_Units {
 	
 
 	public static File chosenManagementunit() {
-		JFileChooser chooser = new JFileChooser("Select the .csv file that contains management units");
+		JFileChooser chooser = new JFileChooser();
+		chooser.setDialogTitle("Select management units file");
 		chooser.setMultiSelectionEnabled(false);
-		
 		
 		chooser.setApproveButtonText("Import");
 		chooser.setApproveButtonToolTipText("Import management units from the selected file");

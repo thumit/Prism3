@@ -10,10 +10,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.nio.file.Files;
 import java.util.Enumeration;
+
 import javax.swing.JButton;
 import javax.swing.JLayeredPane;
 import javax.swing.JMenuItem;
@@ -215,6 +216,23 @@ public class Panel_YieldProject extends JLayeredPane {
 					rootSelected =false;
 					NodeCount = NodeCount -1;
 				}
+				
+				//Deselect all level3 nodes if this is a multiple Nodes selection
+				selectionPaths = projectTree.getSelectionPaths();
+				for (TreePath selectionPath : selectionPaths) { //Loop through all selected nodes
+					if (NodeCount>1 && selectionPath.getPathCount() == 3) {
+						projectTree.getSelectionModel().removeSelectionPath(selectionPath);
+						NodeCount = NodeCount - 1;
+					} else {
+						currentLevel = selectionPath.getPathCount();
+					}
+				} 
+							
+				//Reselect all nodes left
+				selectionPaths = projectTree.getSelectionPaths();
+				for (TreePath selectionPath : selectionPaths) { //Loop through all selected nodes	
+					currentLevel = selectionPath.getPathCount();
+				}
 				//End of set up---------------------------------------------------------------
 							
 
@@ -251,7 +269,7 @@ public class Panel_YieldProject extends JLayeredPane {
 				
 					
 					// Only nodes level 2 (Run) can be Deleted--------------------------
-					if (currentLevel == 2 || rootSelected ==false) {					
+					if (currentLevel == 2 && rootSelected ==false) {					
 						final JMenuItem deleteMenuItem = new JMenuItem("Delete Runs");
 						deleteMenuItem.addActionListener(new ActionListener() {
 							@Override
@@ -264,7 +282,7 @@ public class Panel_YieldProject extends JLayeredPane {
 					
 					
 					// Only nodes level 2 (Run) can be Edited--------------------------
-					if (currentLevel == 2 || rootSelected ==false) {					
+					if (currentLevel == 2 && rootSelected ==false) {					
 						final JMenuItem editMenuItem = new JMenuItem("Start Editing");
 						editMenuItem.addActionListener(new ActionListener() {
 							@Override
@@ -277,7 +295,7 @@ public class Panel_YieldProject extends JLayeredPane {
 					
 					
 					// Only nodes level 2 (Run) can be Solved--------------------------
-					if (currentLevel == 2 || rootSelected ==false) {					
+					if (currentLevel == 2 && rootSelected ==false) {					
 						final JMenuItem solveMenuItem = new JMenuItem("Start Solving");
 						solveMenuItem.addActionListener(new ActionListener() {
 							@Override
@@ -286,8 +304,7 @@ public class Panel_YieldProject extends JLayeredPane {
 							}
 						});
 						popup.add(solveMenuItem);
-					}
-					
+					}				
 					
 					// Show the JmenuItems on selected node when it is right clicked
 					popup.show(projectTree, e.getX(), e.getY());
@@ -308,7 +325,7 @@ public class Panel_YieldProject extends JLayeredPane {
 		// ------------Calculate the level of the current selected node
 		currentLevel = path.getPathCount();
 		DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) evt.getPath().getLastPathComponent();
-		
+
 		// ------------Only show currentRunTask when the node level is 3
 		if (currentLevel == 3) {	//selected node is a task
 			// Get the URL of the current selected node			
@@ -320,7 +337,7 @@ public class Panel_YieldProject extends JLayeredPane {
 		} else if (currentLevel != 3) {		
 			// show nothing if the current selected node is not a task
 			showNothing();
-			if (currentLevel == 2) currentRun = selectedNode.getUserObject().toString();	// the selected node is a database
+			if (currentLevel == 2) currentRun = selectedNode.getUserObject().toString();	// the selected node is a Run
 			if (currentLevel == 1) currentRun = selectedNode.getUserObject().toString();	// the selected node is Root
 		}
 	}
@@ -387,27 +404,22 @@ public class Panel_YieldProject extends JLayeredPane {
 				fileName = listOfFiles[i].getName();
 				DefaultMutableTreeNode level2node = new DefaultMutableTreeNode(fileName);
 				root.add(level2node);
+	
+				//Inside run folder, add all files as child nodes
+				String filename2;
+				File[] listOfFiles2 = listOfFiles[i].listFiles(new FilenameFilter() {
+					@Override
+					public boolean accept(File dir, String name) {
+						return name.endsWith(".txt");
+					}
+				});
 				
-//				// Read each database file and add all of its table as child nodes--------------------------------------				  
-//				/*Connection*/ conn = null;
-//				try {
-//					Class.forName("org.sqlite.JDBC").newInstance();
-//					conn = DriverManager.getConnection("jdbc:sqlite:" + databasesFolder + seperator + files);
-//					DatabaseMetaData md = conn.getMetaData();
-//					ResultSet rs = md.getTables(null, null, "%", null);
-//					while (rs.next()) {
-///*						String tableCatalog = rs.getString(1);
-//						String tableSchema = rs.getString(2);					*/
-//						String tableName = rs.getString(3);
-//
-//						DefaultMutableTreeNode level3node = new DefaultMutableTreeNode(tableName);
-//						level2node.add(level3node);
-//					}
-//					rs.close();
-//					conn.close();
-//				} catch (Exception e) {
-//					System.err.println(e.getClass().getName() + ": " + e.getMessage());
-//				}		
+				for (int j = 0; j < listOfFiles2.length; j++) {
+					filename2 = listOfFiles2[j].getName();
+					DefaultMutableTreeNode level3node = new DefaultMutableTreeNode(filename2);
+					level2node.add(level3node);
+				}
+	
 			} // end of If
 		} // end of For loop		
 				projectTree.expandPath(new TreePath(root.getPath()));	//Expand the root		
@@ -519,7 +531,13 @@ public class Panel_YieldProject extends JLayeredPane {
 						currentRun = processingNode.getUserObject().toString();
 						model.removeNodeFromParent(processingNode);
 						File file = new File(currentProjectFolder + seperator + currentRun);
-						file.delete();
+						File[] contents = file.listFiles();		//Delete all input files inside a Run
+					    if (contents != null) {
+					        for (File f : contents) {
+					        	f.delete();
+					        }
+					    }
+						file.delete();		//Here, the Run folder is deleted
 						showNothing();
 					}
 				}
@@ -604,7 +622,36 @@ public class Panel_YieldProject extends JLayeredPane {
 			btnEditRun.setText("Start Editing");
 			btnEditRun.setForeground(null);
 			super.remove(editPanel);
-			super.add(splitPanel);	
+			super.add(splitPanel);
+			
+			//Get all input files
+			File[] generalInputFile = editPanel.getGeneralInputFile();
+			File[] managementOptionsFile = editPanel.getManagementOptionsFile();
+			File[] userConstraintsFile = editPanel.getUserConstraintsFile();
+			
+			//Ask to save input files		
+			for (int i = 0; i < listOfEditRuns.length; i++) {
+				System.out.println(generalInputFile[i].getAbsolutePath());
+				if (!generalInputFile[i].exists())
+					try {
+						generalInputFile[i].createNewFile();
+					} catch (IOException e) {
+					}
+				
+				if (!managementOptionsFile[i].exists())
+					try {
+						managementOptionsFile[i].createNewFile();
+					} catch (IOException e) {
+					}
+				
+				if (!userConstraintsFile[i].exists())
+					try {
+						userConstraintsFile[i].createNewFile();
+					} catch (IOException e) {
+					}
+			}
+			refreshProjectTree();	//Refresh the tree
+			
 		}  //End of stop editing
 	}
 

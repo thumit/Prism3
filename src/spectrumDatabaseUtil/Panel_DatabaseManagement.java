@@ -1456,8 +1456,23 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 //			}
 //		}
 		
-		
-		
+
+		//------------------------------------------------------------------------------------------------------------------
+		//another way to write JTable to text file
+//		try (PrintWriter fileOut = new PrintWriter(managementOptionsFile)) {
+//		for (int column = 0; column < table.getColumnCount(); column++) {
+//			fileOut.print(table.getColumnName(column) + ",");
+//		}
+//		fileOut.println();
+//		
+//		for(int row = 0; row < table.getRowCount(); row++) {
+//	        for(int column = 0; column < table.getColumnCount(); column++) {
+//	        	fileOut.print(table.getValueAt(row, column) + ",");
+//	        }
+//			fileOut.println();
+//		}
+//	} catch (IOException e) {
+//	}		
 		
 		
 		

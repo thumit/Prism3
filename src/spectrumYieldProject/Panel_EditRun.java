@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JLayeredPane;
@@ -13,11 +14,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 
 public class Panel_EditRun extends JLayeredPane implements ActionListener {
-	private JSplitPane splitPanel, GUI_Text_splitPanel ;
+	private JSplitPane splitPanel;
 	private JPanel radioPanel_Left; 
 	private ButtonGroup radioGroup_Left;
-	private static JRadioButton[] radioButton_Left; 
-	private static File[] listOfEditRuns = null;
+	private JRadioButton[] radioButton_Left; 
+	private File[] listOfEditRuns = null;
 	private JScrollPane scrollPane_Left, scrollPane_Right;
 	private Panel_EditRun_Details[] combinePanel;
 	
@@ -70,6 +71,8 @@ public class Panel_EditRun extends JLayeredPane implements ActionListener {
 		// Add all components to JInternalFrame------------------------------------------------------------
 		super.add(splitPanel, BorderLayout.CENTER);
 		super.setOpaque(false);
+		
+		
 	} // end Panel_EditRun()
 
 	// Listener for radio buttons----------------------------------------------------------------------
@@ -81,18 +84,36 @@ public class Panel_EditRun extends JLayeredPane implements ActionListener {
 		}	
     }
 
+    
 	//--------------------------------------------------------------------------------------------------------------------------------
 	// Get values to pass to other classes
-	public static File getTheOnlySelectedRun() {
-		File currentSelectedRun = null;
+	public File[] getGeneralInputFile() {
+		File[] generalInputFile = new File[Panel_YieldProject.getSelectedRuns().length];
 		for (int i = 0; i < listOfEditRuns.length; i++) {
-			if (radioButton_Left[i].isSelected()) {
-				currentSelectedRun = listOfEditRuns[i];
-			}
+			File temp = new File(listOfEditRuns[i].getAbsolutePath() + "/GeneralInputs.txt");
+			combinePanel[i].getGeneralInputFile().renameTo(temp);
+			generalInputFile[i] = temp;
 		}
-		return currentSelectedRun;
-	}
+		return generalInputFile;
+	}	
 
+	public File[] getManagementOptionsFile() {
+		File[] managementOptionsFile = new File[Panel_YieldProject.getSelectedRuns().length];
+		for (int i = 0; i < listOfEditRuns.length; i++) {
+			File temp = new File(listOfEditRuns[i].getAbsolutePath() + "/ManagementOptions.txt");
+			combinePanel[i].getManagementOptionsFile().renameTo(temp);
+			managementOptionsFile[i] = temp;
+		}
+		return managementOptionsFile;
+	}	
 	
-
+	public File[] getUserConstraintsFile() {
+		File[] userConstraintsFile = new File[Panel_YieldProject.getSelectedRuns().length];
+		for (int i = 0; i < listOfEditRuns.length; i++) {
+			File temp = new File(listOfEditRuns[i].getAbsolutePath() + "/UserConstraints.txt");
+			combinePanel[i].getUserConstraintsFile().renameTo(temp);
+			userConstraintsFile[i] = temp;
+		}
+		return userConstraintsFile;
+	}
 }
