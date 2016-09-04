@@ -91,18 +91,18 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		DatabaseTree.setInvokesStopCellEditing(true);	// Even when we leave the node by clicking mouse, the name editing will be kept 
 		
 		DatabaseTree.addMouseListener(new MouseAdapter() { // Add listener to DatabaseTree
-			public void mouseClicked(MouseEvent e) {
+			public void mousePressed(MouseEvent e) {
 				DatabaseTree.setEnabled(true);
 				queryTextField.setText("Type your queries here");
 				doMouseClicked(e);
 			}
 		});
 		
-		DatabaseTree.addTreeSelectionListener(new TreeSelectionListener() {
-			public void valueChanged(TreeSelectionEvent evt) {
-				doWhenSelectionChange(evt);
-			}
-		});	
+//		DatabaseTree.addTreeSelectionListener(new TreeSelectionListener() {
+//			public void valueChanged(TreeSelectionEvent evt) {
+//				doWhenSelectionChange(evt);
+//			}
+//		});	
 	
 		DatabaseTree.addFocusListener(new FocusListener(){		//change name whenever node stopped editing
 	         public void focusGained(FocusEvent e) {  
@@ -179,7 +179,9 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 			showNothing();	// show nothing (a table with 0 row and 0 column) if no node selected
 			return;
 		}
-		if (path != null) dataDisplayTextField.setText(path.toString());
+		if (path != null) dataDisplayTextField.setText(path.toString()); 	// display Full path
+//		DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) path.getLastPathComponent();
+//		dataDisplayTextField.setText(selectedNode.toString());		//display Only last node name
 
 		
 		selectionPaths = DatabaseTree.getSelectionPaths();
@@ -199,7 +201,23 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 	
 		if (SwingUtilities.isLeftMouseButton(e)) {
 			if (e.getClickCount() == 1) {
-				// Do something here
+				// Show node information of the last selected node		
+				DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) path.getLastPathComponent();
+				currentLevel = path.getPathCount();
+				
+				// ------------Only show DatabaseTable if the node level is 3
+				if (currentLevel == 3) {	//selected node is a table
+					 // Get the URL of the current selected node			
+					currenTableName = selectedNode.getUserObject().toString();
+					// Get the parent node which is the database that contains the selected table
+					currentDatabase = selectedNode.getParent().toString();          
+					currentSQLstatement = "SELECT * FROM " + "[" + currenTableName + "];";		//this query show the whole table information
+					doQuery(currentSQLstatement);
+							
+				} else if (currentLevel != 3) {		
+					if (currentLevel == 2) currentDatabase = selectedNode.getUserObject().toString();	// the selected node is a database
+					if (currentLevel == 1) currentDatabase = selectedNode.getUserObject().toString();	// the selected node is Root
+				}
 			} else if (e.getClickCount() == 2) {
 				// Do something here
 			}
@@ -337,39 +355,8 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 	}
 		
 	// --------------------------------------------------------------------------------------------------------------------------------
-	public void doWhenSelectionChange (TreeSelectionEvent evt) {
-		
-		//----------------------------------------------------
-		//Display only the selected node name to dataDisplayTextField
-//		DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) evt.getPath().getLastPathComponent();
-//		dataDisplayTextField.setText(selectedNode.toString());
-		
-		//Display full paths to the selected node to dataDisplayTextField
-		TreePath path = evt.getPath();
-		if (path == null) dataDisplayTextField.setText(null);
-		if (path != null) dataDisplayTextField.setText(path.toString());
-		
-		
-		// ------------Calculate the level of the current selected node
-		currentLevel = path.getPathCount();
-		DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) evt.getPath().getLastPathComponent();
-		
-		// ------------Only show DatabaseTable if the node level is 3
-		if (currentLevel == 3) {	//selected node is a table
-			 // Get the URL of the current selected node			
-			currenTableName = selectedNode.getUserObject().toString();
-			// Get the parent node which is the database that contains the selected table
-			currentDatabase = selectedNode.getParent().toString();          
-			currentSQLstatement = "SELECT * FROM " + "[" + currenTableName + "];";		//this query show the whole table information
-			doQuery(currentSQLstatement);
-					
-		} else if (currentLevel != 3) {		
-			// show nothing (a table with 0 row and 0 column) if the current selected node is not a table
-			showNothing();
-			if (currentLevel == 2) currentDatabase = selectedNode.getUserObject().toString();	// the selected node is a database
-			if (currentLevel == 1) currentDatabase = selectedNode.getUserObject().toString();	// the selected node is Root
-		}
-	}
+//	public void doWhenSelectionChange (TreeSelectionEvent evt) {
+//	}
 	
 	// --------------------------------------------------------------------------------------------------------------------------------
 	public void doQuery(String query) {		//Note a statement not starting with SELECT is not a Query

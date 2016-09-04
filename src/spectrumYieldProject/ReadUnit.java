@@ -28,14 +28,14 @@ private static String value[][];
 				list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
 				String[] a = list.toArray(new String[list.size()]);
 							
-				//Read the first row into array. This will be Column names
+				//Read the first row 
 				String[] columnName = a[0].split(delimited);
 				totalRows = a.length;
 				totalColumns = columnName.length;				
 				value = new String[totalRows][totalColumns];
 			
 				// read all values from all rows and columns
-				for (int i = 0; i < totalRows; i++) {		//From 2nd row			
+				for (int i = 0; i < totalRows; i++) {		//From 1st row			
 					String[] rowValue = a[i].split(delimited);		
 					for (int j = 0; j < totalColumns; j++) {
 						value[i][j] = rowValue[j].replaceAll("\\s+","");

@@ -158,6 +158,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									    } catch (IOException ex) {
 									    }
 									}
+									reader.close();
+									pIn.close();
+									pOut.close();
 								} catch (IOException e) {
 								}
 							}
@@ -232,15 +235,24 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 	//--------------------------------------------------------------------------------------------------------------------------------
 	//Solve each run
 	public void SolveProblem(int row, File runFolder) {
-		problemFile[row] = new File(runFolder.getAbsolutePath() + "/Problem.lp");
-		solutionFile[row] = new File(runFolder.getAbsolutePath() + "/Solution.lp");
-		
 		
 		try {
+			problemFile[row] = new File(runFolder.getAbsolutePath() + "/Problem.lp");
+			solutionFile[row] = new File(runFolder.getAbsolutePath() + "/Solution.lp");
+		
+			//Read input files to retrieve values later
+			ReadRunInputs read= new ReadRunInputs();
+			read.readGeneralInputs(new File(runFolder.getAbsolutePath() + "/GeneralInputs.txt"));
+			read.readManagementOptions(new File(runFolder.getAbsolutePath() + "/ManagementOptions.txt"));
+
+		
+
+			
+
 			// Set up problem-------------------------------------------------
 			int total_VegetationConditions =2;
-			int total_ManagementUnits = 300; 	//Start from 0 -->99, same starting from 0 for the below
-			int total_Periods = 20;
+			int total_ManagementUnits = read.get_total_ManagementUnits(); 	//Start from 0 -->99, same starting from 0 for the below
+			int total_Periods = read.get_total_Periods();
 			int total_AgeClasses = total_Periods;		//loop from age 1 to age total_AgeClasses (set total_AgeClasses=total_Periods)
 			int total_EAcutTypes =2;
 			int total_methods = 4;
@@ -701,13 +713,13 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						for (int a = 1; a < total_AgeClasses; a++) {			
 							c13_indexlist.get(C13_num).add(xEA[s][m][t][a][1]);
 							c13_valuelist.get(C13_num).add((double) 1);
-
-							// Add - sigma(c) xEA[1][m][t+1][1][c]
-							for (int c = 0; c < total_EAcutTypes; c++) {
-								c13_indexlist.get(C13_num).add(xEA[1][m][t + 1][1][c]);
-								c13_valuelist.get(C13_num).add((double) -1);
-							}
 						}
+					}
+					
+					// Add - sigma(c) xEA[1][m][t+1][1][c]
+					for (int c = 0; c < total_EAcutTypes; c++) {
+						c13_indexlist.get(C13_num).add(xEA[1][m][t+1][1][c]);
+						c13_valuelist.get(C13_num).add((double) -1);
 					}
 
 					// add bounds
@@ -754,15 +766,36 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			lp.addRows(c12_lb, c12_ub, c12_index, c12_value);	// Constraints 12
 			lp.addRows(c13_lb, c13_ub, c13_index, c13_value);	// Constraints 13
 			
-
+//			// Set constraints set name: Notice THIS WILL EXTREMELY SLOW THE SOLVING PROCESS (recommend for debugging only)
+//			int indexOfC6 = C6_num;
+//			int indexOfC7 = indexOfC6 + C7_num;
+//			int indexOfC8 = indexOfC7 + C8_num;
+//			int indexOfC9 = indexOfC8 + C9_num;
+//			int indexOfC10 = indexOfC9 + C10_num;
+//			int indexOfC11 = indexOfC10 + C11_num;
+//			int indexOfC12 = indexOfC11 + C12_num;
+//			int indexOfC13 = indexOfC12 + C13_num;		//Note: 	lp.getRanges().length = indexOfC13
+//			
+//			for (int i = 0; i<lp.getRanges().length; i++) {		
+//				if (0<=i && i<indexOfC6) lp.getRanges() [i].setName("EQ(6)_");
+//				if (indexOfC6<=i && i<indexOfC7) lp.getRanges() [i].setName("EQ(7)_");
+//				if (indexOfC7<=i && i<indexOfC8) lp.getRanges() [i].setName("EQ(8)_");
+//				if (indexOfC8<=i && i<indexOfC9) lp.getRanges() [i].setName("EQ(9)_");
+//				if (indexOfC9<=i && i<indexOfC10) lp.getRanges() [i].setName("EQ(10)_");
+//				if (indexOfC10<=i && i<indexOfC11) lp.getRanges() [i].setName("EQ(11)_");
+//				if (indexOfC11<=i && i<indexOfC12) lp.getRanges() [i].setName("EQ(12)_");
+//				if (indexOfC12<=i && i<indexOfC13) lp.getRanges() [i].setName("EQ(13)_");
+//			}
+			
+			
 			cplex.addMinimize(cplex.scalProd(var, objvals));		// Set objective function to minimize
 			cplex.setParam(IloCplex.Param.RootAlgorithm,			// Auto choose optimization method
                     IloCplex.Algorithm.Auto);
 //			cplex.setParam(IloCplex.DoubleParam.EpGap, 0.00);		// Gap is 0%
-			cplex.setParam(IloCplex.DoubleParam.TimeLimit, 300);	// Time limit is 300 seconds
-			cplex.setParam(IloCplex.BooleanParam.PreInd, false);	// Turn off preSolve to see full variables and constraints
+			cplex.setParam(IloCplex.DoubleParam.TimeLimit, 20);	// Time limit is 300 seconds
+//			cplex.setParam(IloCplex.BooleanParam.PreInd, false);	// Turn off preSolve to see full variables and constraints
 																	// Note: currently if not turning PreSolve off, cplex will crash
-			cplex.exportModel(problemFile[row].getAbsolutePath());
+			
 			data[row][2] = cplex.getNcols();
 			data[row][3] = cplex.getNrows();
 			data[row][4] = "running";
@@ -770,108 +803,31 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			table.setValueAt(data[row][3] , row, 3);
 			table.setValueAt(data[row][4] , row, 4);
 			
-			cplex.solve();
-			data[row][4] = "done";
-			table.setValueAt(data[row][4] , row, 4);
-			cplex.writeSolution(solutionFile[row].getAbsolutePath());
-			
+			if (cplex.solve()) {
+				cplex.exportModel(problemFile[row].getAbsolutePath());
+				cplex.writeSolution(solutionFile[row].getAbsolutePath());
+				data[row][4] = "sucessful";
+				table.setValueAt(data[row][4], row, 4);
+			}
 			cplex.endModel();
 			cplex.end();
 			
 			
 			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-//			
-//			
-//			int nvars = 12;
-//
-//			IloCplex cplex = new IloCplex();
-//			IloLPMatrix lp = cplex.addLPMatrix();
-//
-//			// add empty corresponding to new variables columns to lp
-//			IloNumVar[] x = cplex.numVarArray(cplex.columnArray(lp, nvars), 0.0, 50.0);
-//
-//		      // add rows to lp
-//		    double[]   d = {-1.0, 4.0, 1.0, 1.0, -2.0, -2.0, -1.0};
-//		    double[][] valH = {{-1.0, -1.0, -1.0},
-//		                       { 1.0,  1.0,  1.0},
-//		                       { 1.0,  1.0,  1.0,  1.0},
-//		                       { 1.0,  1.0,  1.0},
-//		                       {-1.0, -1.0, -1.0,  1.0},
-//		                       {-1.0, -1.0,  1.0},
-//		                       {-1.0, -1.0, -1.0, -1.0}};
-//		    int[][]    indH = {{7, 8, 9},
-//		                       {0, 5, 7},
-//		                       {1, 3, 6, 8},
-//		                       {2, 4, 9},
-//		                       {5, 6, 10, 11},
-//		                       {3, 4, 10},
-//		                       {0, 1, 2, 11}};
-//			lp.addRows(d, d, indH, valH);
-//
-//			// add the objective function
-//		    double[] objvals = {1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 2.0, 2.0};
-//			cplex.addMinimize(cplex.scalProd(x, objvals));
-//
-//			// Solve initial problem with the network optimizer
-//			data[row][4] = "solving";	
-//			cplex.setParam(IloCplex.Param.RootAlgorithm, IloCplex.Algorithm.Network);
-//			cplex.solve();
-//			data[row][4] = "done";
-//		
-//			System.out.println("After network optimization, objective is " + cplex.getObjValue());
-//
-//		    // add rows from matrix A to lp
-//		    double[]   b = {2.0, 3.0};
-//		    double[][] valA = {{2.0, 5.0},
-//		                         {1.0, 1.0, 1.0}};
-//		    int[][]    indA = {{10, 11},
-//		                        {0, 2, 5}};
-//			lp.addRows(b, b, indA, valA);
-//
-//			// Because the problem is dual feasible with the rows added, using the dual simplex method is indicated.
-//			cplex.setParam(IloCplex.Param.RootAlgorithm, IloCplex.Algorithm.Dual);
-//			if (cplex.solve()) {
-//				System.out.println("Solution status = " + cplex.getStatus());
-//				System.out.println("Solution value  = " + cplex.getObjValue());
-//
-//				double[] sol = cplex.getValues(lp);
-//				for (int j = 0; j < nvars; ++j) {
-//					System.out.println("Variable " + j + ": Value = " + sol[j]);
-//				}
-//			}
-//			cplex.end();
+	
 		}
 		catch (IloException e) {
 			System.err.println("Concert exception '" + e + "' caught");
+			displayTextArea.append("Concert exception '" + e + "' caught for " + listOfEditRuns[row].getName() + "\n");
+			data[row][4] = "fail";
+			table.setValueAt(data[row][4] , row, 4);
+		}
+		
+		catch (Exception e2) {
+			System.err.println("Concert exception '" + e2 + "' caught");
+			displayTextArea.append("Exception '" + e2 + "' caught for " + listOfEditRuns[row].getName() + "\n");
+			data[row][4] = "fail";
+			table.setValueAt(data[row][4] , row, 4);
 		}
 	}
-	
 }

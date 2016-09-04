@@ -9,10 +9,14 @@ import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Enumeration;
@@ -29,8 +33,6 @@ import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
@@ -85,16 +87,16 @@ public class Panel_YieldProject extends JLayeredPane {
 	
 		
 		projectTree.addMouseListener(new MouseAdapter() { // Add listener to DatabaseTree
-			public void mouseClicked(MouseEvent e) {
-				doMouseClicked(e);
+			public void mousePressed(MouseEvent e) {
+				doMousePressed(e);
 			}
 		});
 		
-		projectTree.addTreeSelectionListener(new TreeSelectionListener() {
-			public void valueChanged(TreeSelectionEvent evt) {
-				doWhenSelectionChange(evt);
-			}
-		});	
+//		projectTree.addTreeSelectionListener(new TreeSelectionListener() {
+//			public void valueChanged(TreeSelectionEvent evt) {
+//				doWhenSelectionChange(evt);
+//			}
+//		});	
 	
 		projectTree.addFocusListener(new FocusListener(){		//change name whenever node stopped editing
 	         public void focusGained(FocusEvent e) {  
@@ -171,7 +173,7 @@ public class Panel_YieldProject extends JLayeredPane {
 	} // end Panel_Project()
 
 	// --------------------------------------------------------------------------------------------------------------------------------
-	public void doMouseClicked(MouseEvent e) {
+	public void doMousePressed(MouseEvent e) {
 		
 		TreePath path = projectTree.getPathForLocation(e.getX(), e.getY());
 		if (path == null) {
@@ -179,7 +181,9 @@ public class Panel_YieldProject extends JLayeredPane {
 			showNothing();	// show nothing if no node selected
 			return;
 		}
-		if (path != null) displayTextField.setText(path.toString());  
+		if (path != null) displayTextField.setText(path.toString()); 	// display Full path
+//		DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) path.getLastPathComponent();
+//		dataDisplayTextField.setText(selectedNode.toString());		//display Only last node name
 
 		
 		selectionPaths = projectTree.getSelectionPaths();
@@ -199,7 +203,30 @@ public class Panel_YieldProject extends JLayeredPane {
 	
 		if (SwingUtilities.isLeftMouseButton(e)) {
 			if (e.getClickCount() == 1) {
-				// Do something here
+				// Show node information of the last selected node
+				DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) path.getLastPathComponent();
+				currentLevel = path.getPathCount();
+				
+				// ------------Only show currentInputFile when the node level is 3
+				if (currentLevel == 3) {	//selected node is an InputFile
+					// Get the URL of the current selected node			
+					currentInputFile = selectedNode.getUserObject().toString();
+					// Get the parent node which is the Run that contains the selected InputFile
+					currentRun = selectedNode.getParent().toString();          
+					// Show the GUI for the currentInputFile here....	
+					try {
+						FileReader reader;
+						reader = new FileReader(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/" + currentInputFile);
+						rightPanelTextArea.read(reader,currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/" + currentInputFile);	
+						reader.close();			//must close it otherwise, file is in use and cannot be deleted
+					} catch (IOException e1) {	
+					}
+					
+				} else if (currentLevel != 3) {		
+					rightPanelTextArea.setText("");
+					if (currentLevel == 2) currentRun = selectedNode.getUserObject().toString();	// the selected node is a Run
+					if (currentLevel == 1) currentRun = selectedNode.getUserObject().toString();	// the selected node is Root
+				}
 			} else if (e.getClickCount() == 2) {
 				// Do something here
 			}
@@ -320,42 +347,8 @@ public class Panel_YieldProject extends JLayeredPane {
 	}
 
 	// --------------------------------------------------------------------------------------------------------------------------------
-	public void doWhenSelectionChange (TreeSelectionEvent evt) {
-		
-		//Display full paths to the selected node to dataDisplayTextField
-		TreePath path = evt.getPath();
-		if (path == null) displayTextField.setText(null);
-		if (path != null) displayTextField.setText(path.toString());
-		
-		
-		// ------------Calculate the level of the current selected node
-		currentLevel = path.getPathCount();
-		DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) evt.getPath().getLastPathComponent();
-
-		// ------------Only show currentInputFile when the node level is 3
-		if (currentLevel == 3) {	//selected node is a task
-			// Get the URL of the current selected node			
-			currentInputFile = selectedNode.getUserObject().toString();
-			// Get the parent node which is the Run that contains the selected InputFile
-			currentRun = selectedNode.getParent().toString();          
-			// Show the GUI for the currentInputFile here....	
-			try {
-				FileReader reader;
-				reader = new FileReader(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/" + currentInputFile);
-				try {
-					rightPanelTextArea.read(reader,currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/" + currentInputFile);
-				} catch (IOException e) {
-				}	
-			} catch (FileNotFoundException e) {
-			}
-			
-		} else if (currentLevel != 3) {		
-			// show nothing if the current selected node is not a task
-			showNothing();
-			if (currentLevel == 2) currentRun = selectedNode.getUserObject().toString();	// the selected node is a Run
-			if (currentLevel == 1) currentRun = selectedNode.getUserObject().toString();	// the selected node is Root
-		}
-	}
+//	public void doWhenSelectionChange (TreeSelectionEvent evt) {
+//	}
 	
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public void refreshProjectTree() {
@@ -657,21 +650,10 @@ public class Panel_YieldProject extends JLayeredPane {
 					File[] managementOptionsFile = editPanel.getManagementOptionsFile();
 					File[] userConstraintsFile = editPanel.getUserConstraintsFile();
 					//Create new input files		
-					for (int i = 0; i < listOfEditRuns.length; i++) {
-						if (!generalInputFile[i].exists())
+					for (int i = 0; i < listOfEditRuns.length; i++) {			
 							try {
 								generalInputFile[i].createNewFile();
-							} catch (IOException e) {
-							}
-
-						if (!managementOptionsFile[i].exists())
-							try {
 								managementOptionsFile[i].createNewFile();
-							} catch (IOException e) {
-							}
-
-						if (!userConstraintsFile[i].exists())
-							try {
 								userConstraintsFile[i].createNewFile();
 							} catch (IOException e) {
 							}
@@ -765,7 +747,7 @@ public class Panel_YieldProject extends JLayeredPane {
 
 	// --------------------------------------------------------------------------------------------------------------------------------
 	public void showNothing() {
-		displayTextField.setText(null); // Show nothing on the TextArea
+		displayTextField.setText(null); // Show nothing on the TextField
 	}
 
 	//--------------------------------------------------------------------------------------------------------------------------------
