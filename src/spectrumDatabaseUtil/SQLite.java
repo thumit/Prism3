@@ -119,8 +119,7 @@ private static int totalLines;
 			}
 
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			}
 		}
 	}

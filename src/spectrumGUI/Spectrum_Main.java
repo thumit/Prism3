@@ -53,9 +53,10 @@ public class Spectrum_Main extends JFrame {
 					UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
 				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
 						| UnsupportedLookAndFeelException ex) {
+					System.err.println(ex.getClass().getName() + ": " + ex.getMessage());
 				}
 
-				setTitle("SpectrumLite Demo Version 1.01");
+				setTitle("SpectrumLite Demo Version 1.03");
 				//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 				addWindowListener(new WindowAdapter() {@Override public void windowClosing(WindowEvent e){exitSpectrumLite();}});				
@@ -117,7 +118,7 @@ public class Spectrum_Main extends JFrame {
 								ProjectInternalFrame.pack(); // set internal frame to size of contents
 								
 								spectrumDesktopPane.add(ProjectInternalFrame, BorderLayout.CENTER); // attach internal frame
-								ProjectInternalFrame.setSize((int) (getWidth()/1.1),(int) (getHeight()/1.5));
+								ProjectInternalFrame.setSize((int) (getWidth()/1.1),(int) (getHeight()/1.2));
 								ProjectInternalFrame.setLocation(50 * (OpenProjectCount % 10), 50 * (OpenProjectCount  % 10));
 								ProjectInternalFrame.setVisible(true); // show internal frame
 														

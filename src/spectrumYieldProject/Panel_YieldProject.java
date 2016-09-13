@@ -9,14 +9,9 @@ import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Enumeration;
@@ -219,7 +214,8 @@ public class Panel_YieldProject extends JLayeredPane {
 						reader = new FileReader(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/" + currentInputFile);
 						rightPanelTextArea.read(reader,currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/" + currentInputFile);	
 						reader.close();			//must close it otherwise, file is in use and cannot be deleted
-					} catch (IOException e1) {	
+					} catch (IOException e1) {
+						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
 					}
 					
 				} else if (currentLevel != 3) {		
@@ -373,8 +369,7 @@ public class Panel_YieldProject extends JLayeredPane {
 			workingLocation = URLDecoder.decode(workingLocation, "utf-8");
 			workingLocation = new File(workingLocation).getPath();
 		} catch (UnsupportedEncodingException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
 		}
 		projectsFolder = new File(workingLocation + "/Projects");
 		currentProjectFolder = new File(workingLocation + "/Projects/" + Spectrum_Main.getProjectName());
@@ -497,25 +492,14 @@ public class Panel_YieldProject extends JLayeredPane {
 
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public void delete_Runs() {
-		// Deselect the root if it is selected
-		projectTree.getSelectionModel().removeSelectionPath(new TreePath(root));
-	
 		//Some set up ---------------------------------------------------------------	
 		if (selectionPaths != null) {
 			int node_Level;
 			for (TreePath selectionPath : selectionPaths) { //Loop through all selected nodes
-				processingNode = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
-				node_Level = selectionPath.getPathCount();
-				if (node_Level == 2 && processingNode.getChildCount() >= 0) { //If node is a Run and has childs then deselect all of its childs				
-					for (Enumeration e = processingNode.children(); e.hasMoreElements();) {
-						TreeNode child = (TreeNode) e.nextElement();
-						DefaultTreeModel model = (DefaultTreeModel) projectTree.getModel();
-						TreeNode[] nodes = model.getPathToRoot(child);
-						TreePath path = new TreePath(nodes);
-						projectTree.getSelectionModel().removeSelectionPath(path); // Deselect childs
-					}
-					projectTree.collapsePath(new TreePath(processingNode.getPath())); //Collapse the selected database				
-				}
+				node_Level = selectionPath.getPathCount();		
+				if (node_Level == 1 || node_Level == 3) {
+					projectTree.getSelectionModel().removeSelectionPath(selectionPath);		//Deselect all level 1 and level 3 nodes
+				}				
 			}
 			selectionPaths = projectTree.getSelectionPaths(); //This is very important to get the most recent selected paths
 		}
@@ -558,27 +542,15 @@ public class Panel_YieldProject extends JLayeredPane {
 	public void edit_Runs() {
 		
 		// For Start Editing
-		if (btnEditRun.getText()=="Start Editing") {
-		
-			// Deselect the root if it is selected
-			projectTree.getSelectionModel().removeSelectionPath(new TreePath(root));
-			
-			//Some set up ---------------------------------------------------------------
+		if (btnEditRun.getText()=="Start Editing") {	
+			//Some set up ---------------------------------------------------------------	
 			if (selectionPaths != null) {
 				int node_Level;
 				for (TreePath selectionPath : selectionPaths) { //Loop through all selected nodes
-					processingNode = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
-					node_Level = selectionPath.getPathCount();
-					if (node_Level == 2 && processingNode.getChildCount() >= 0) { //If node is a Run and has childs then deselect all of its childs				
-						for (Enumeration e = processingNode.children(); e.hasMoreElements();) {
-							TreeNode child = (TreeNode) e.nextElement();
-							DefaultTreeModel model = (DefaultTreeModel) projectTree.getModel();
-							TreeNode[] nodes = model.getPathToRoot(child);
-							TreePath path = new TreePath(nodes);
-							projectTree.getSelectionModel().removeSelectionPath(path); // Deselect childs
-						}
-						projectTree.collapsePath(new TreePath(processingNode.getPath())); //Collapse the selected database				
-					}
+					node_Level = selectionPath.getPathCount();		
+					if (node_Level == 1 || node_Level == 3) {
+						projectTree.getSelectionModel().removeSelectionPath(selectionPath);		//Deselect all level 1 and level 3 nodes
+					}				
 				}
 				selectionPaths = projectTree.getSelectionPaths(); //This is very important to get the most recent selected paths
 			}
@@ -648,14 +620,17 @@ public class Panel_YieldProject extends JLayeredPane {
 					//Get all input files
 					File[] generalInputFile = editPanel.getGeneralInputFile();
 					File[] managementOptionsFile = editPanel.getManagementOptionsFile();
+					File[] CoverTypeConversionsFile = editPanel.getCoverTypeConversionsFile();
 					File[] userConstraintsFile = editPanel.getUserConstraintsFile();
 					//Create new input files		
 					for (int i = 0; i < listOfEditRuns.length; i++) {			
 							try {
 								generalInputFile[i].createNewFile();
 								managementOptionsFile[i].createNewFile();
+								CoverTypeConversionsFile[i].createNewFile();
 								userConstraintsFile[i].createNewFile();
 							} catch (IOException e) {
+								System.err.println(e.getClass().getName() + ": " + e.getMessage());
 							}
 					}
 					refreshProjectTree(); //Refresh the tree
@@ -671,26 +646,14 @@ public class Panel_YieldProject extends JLayeredPane {
 		
 		// For Start Solving
 		if (btnSolveRun.getText()=="Start Solving") {
-
-			// Deselect the root if it is selected
-			projectTree.getSelectionModel().removeSelectionPath(new TreePath(root));
-			
-			//Some set up ---------------------------------------------------------------
+			//Some set up ---------------------------------------------------------------	
 			if (selectionPaths != null) {
 				int node_Level;
 				for (TreePath selectionPath : selectionPaths) { //Loop through all selected nodes
-					processingNode = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
-					node_Level = selectionPath.getPathCount();
-					if (node_Level == 2 && processingNode.getChildCount() >= 0) { //If node is a Run and has childs then deselect all of its childs				
-						for (Enumeration e = processingNode.children(); e.hasMoreElements();) {
-							TreeNode child = (TreeNode) e.nextElement();
-							DefaultTreeModel model = (DefaultTreeModel) projectTree.getModel();
-							TreeNode[] nodes = model.getPathToRoot(child);
-							TreePath path = new TreePath(nodes);
-							projectTree.getSelectionModel().removeSelectionPath(path); // Deselect childs
-						}
-						projectTree.collapsePath(new TreePath(processingNode.getPath())); //Collapse the selected database				
-					}
+					node_Level = selectionPath.getPathCount();		
+					if (node_Level == 1 || node_Level == 3) {
+						projectTree.getSelectionModel().removeSelectionPath(selectionPath);		//Deselect all level 1 and level 3 nodes
+					}				
 				}
 				selectionPaths = projectTree.getSelectionPaths(); //This is very important to get the most recent selected paths
 			}

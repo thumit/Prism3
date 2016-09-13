@@ -7,15 +7,13 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-import spectrumDatabaseUtil.Panel_DatabaseManagement;
-
 public class ReadUnit {
 
-private static String delimited;
-private static int totalRows, totalColumns;
-private static String value[][];
+private String delimited;
+private int totalRows, totalColumns;
+private String value[][];
 	
-	public static void readValues (File file) {
+	public void readValues (File file) {
 		delimited = ",";		// comma delimited
 	//	delimited = "\\s+";		// space delimited
 	//	delimited = "\t";		// tab delimited
@@ -43,21 +41,20 @@ private static String value[][];
 				}
 
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			}
 		}
 	}
 
-	public static String[][] getValues () {
+	public String[][] getValues () {
 		return value;
 	}
 	
-	public static int get_TotalRows () {
+	public int get_TotalRows () {
 		return totalRows;
 	}
 	
-	public static int get_TotalColumns () {
+	public int get_TotalColumns () {
 		return totalColumns;
 	}
 }

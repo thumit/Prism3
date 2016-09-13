@@ -29,11 +29,11 @@ public class Panel_EditRun extends JLayeredPane implements ActionListener {
 		
 		
 		splitPanel = new JSplitPane();
-		// splitPane.setResizeWeight(0.15);
+		// splitPanel.setResizeWeight(0.15);
 		splitPanel.setOneTouchExpandable(true);
 		splitPanel.setDividerLocation(200);
-		// splitPane.setDividerSize(5);
-		// splitPane.getComponent(2).setCursor(new Cursor(Cursor.HAND_CURSOR));
+		// splitPanel.setDividerSize(5);
+		// splitPanel.getComponent(2).setCursor(new Cursor(Cursor.HAND_CURSOR));
 
 		
 		// Left split panel--------------------------------------------------------------------------------
@@ -97,6 +97,16 @@ public class Panel_EditRun extends JLayeredPane implements ActionListener {
 		return generalInputFile;
 	}	
 
+	public File[] getCoverTypeConversionsFile() {
+		File[] CoverTypeConversionsFile = new File[Panel_YieldProject.getSelectedRuns().length];
+		for (int i = 0; i < listOfEditRuns.length; i++) {
+			File temp = new File(listOfEditRuns[i].getAbsolutePath() + "/CoverTypeConversions.txt");
+			combinePanel[i].getCoverTypeConversionsFile().renameTo(temp);
+			CoverTypeConversionsFile[i] = temp;
+		}
+		return CoverTypeConversionsFile;
+	}	
+	
 	public File[] getManagementOptionsFile() {
 		File[] managementOptionsFile = new File[Panel_YieldProject.getSelectedRuns().length];
 		for (int i = 0; i < listOfEditRuns.length; i++) {

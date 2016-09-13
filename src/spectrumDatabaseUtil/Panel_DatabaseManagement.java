@@ -27,7 +27,6 @@ import java.util.Enumeration;
 import java.util.List;
 
 import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.JLayeredPane;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -39,8 +38,6 @@ import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -400,6 +397,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 				stmt.close();
 				conn.close();
 			} catch (Exception ex) {
+				System.err.println(ex.getClass().getName() + ": " + ex.getMessage());
 				JOptionPane.showMessageDialog(this, ex, ex.getMessage(), WIDTH, null);
 				errorCAUGHT=true;
 			}
@@ -412,6 +410,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 				stmt.close();
 				conn.close();
 			} catch (Exception ex) {
+				System.err.println(ex.getClass().getName() + ": " + ex.getMessage());
 				JOptionPane.showMessageDialog(this, ex, ex.getMessage(), WIDTH, null);
 				errorCAUGHT=true;
 			}
@@ -451,8 +450,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 			workingLocation = URLDecoder.decode(workingLocation, "utf-8");
 			workingLocation = new File(workingLocation).getPath();
 		} catch (UnsupportedEncodingException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
 		}
 		databasesFolder = new File (workingLocation + "/Databases");		//parent is the folder contain jar file
 		seperator = "/";		

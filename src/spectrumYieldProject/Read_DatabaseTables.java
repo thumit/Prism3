@@ -8,10 +8,10 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class Read_DatabaseTables {
-	private static Object[][][] table_values;			// Note: indexes start from 0 
-	private static Object[] nameOftable;
+	private Object[][][] table_values;			// Note: indexes start from 0 
+	private Object[] nameOftable;
 	
-	public static Object[][][] getTableArrays(File file) {
+	public Object[][][] getTableArrays(File file) {
 		try {
 			Connection conn;
 			Class.forName("org.sqlite.JDBC").newInstance();

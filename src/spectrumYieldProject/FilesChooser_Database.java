@@ -3,8 +3,6 @@ package spectrumYieldProject;
 import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
-import spectrumDatabaseUtil.Panel_DatabaseManagement;
 import spectrumGUI.Spectrum_Main;
 
 public class FilesChooser_Database {

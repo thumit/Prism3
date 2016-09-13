@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+
 import javax.imageio.ImageIO;
 import javax.swing.JDesktopPane;
 
@@ -19,7 +20,7 @@ public class Panel_BackGroundDesktop extends JDesktopPane {
 			BufferedImage bg = img;
 			setBackgroundImage(bg);
 		} catch (IOException ex) {
-			ex.printStackTrace();
+			System.err.println(ex.getClass().getName() + ": " + ex.getMessage());
 		}
 	}
 

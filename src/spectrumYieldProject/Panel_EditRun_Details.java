@@ -8,7 +8,6 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -38,6 +37,7 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.ToolTipManager;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -72,7 +72,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 //			{ "BNSHCL", "546", "NG", new Integer(2), new Boolean(false) },
 //			{ "BNPHCL", "123", "NG", new Integer(20), new Boolean(true) },
 //			{ "BNOHCM", "768", "NG", new Integer(10), new Boolean(false) } };
-	
+	private JCheckBox[][] ConversionCheck_To;
 	
 	public Panel_EditRun_Details() {
 		super.setLayout(new BorderLayout());
@@ -95,6 +95,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		
 		GUI_Text_splitPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		GUI_Text_splitPanel.setDividerSize(5);
+		GUI_Text_splitPanel.setEnabled(false);
 		GUI_Text_splitPanel.setLeftComponent(null);
 		GUI_Text_splitPanel.setRightComponent(null);
 			
@@ -228,29 +229,40 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	// Panel Rules-----------------------------------------------------------------------------------
 	class PaneL_ManagementOptions_GUI extends JLayeredPane implements ActionListener {
 		// Define 28 check box for 6 layers
-		JCheckBox[] checkboxFilter, checkboxRule;
+		JCheckBox[] checkboxRule;
+		List<List<JCheckBox>> checkboxFilter;
 		
 		public PaneL_ManagementOptions_GUI() {
 			setLayout(new GridBagLayout());
-			GridBagConstraints c = new GridBagConstraints();
-			c.fill = GridBagConstraints.BOTH;
-			c.weightx = 1;
-		    c.weighty = 1;
+			ToolTipManager.sharedInstance().setInitialDelay(0);		//Show toolTip immediately
+			
+		    // 1st grid -----------------------------------------------------------------------
+		 	// 1st grid -----------------------------------------------------------------------
+			JPanel importPanel = new JPanel();		
+			TitledBorder border0 = new TitledBorder("Import Files");
+			border0.setTitleJustification(TitledBorder.CENTER);
+			importPanel.setBorder(border0);
+			importPanel.setLayout(new GridBagLayout());
+			GridBagConstraints c0 = new GridBagConstraints();
+			c0.fill = GridBagConstraints.HORIZONTAL;
+			c0.weightx = 1;
+		    c0.weighty = 1;
+			
 
+			// 1st grid line 1----------------------
+			JLabel label1 = new JLabel("Strata (.csv file)");
+			c0.gridx = 0;
+			c0.gridy = 0;
+			importPanel.add(label1, c0);
 			
-			// 1st grid line
-			JLabel label1 = new JLabel("Management Units (.csv file)");
-			c.gridx = 0;
-			c.gridy = 0;
-			super.add(label1, c);
-			
-			JTextField textField1 = new JTextField(30);
+			JTextField textField1 = new JTextField(35);
 			textField1.setEditable(false);
-			c.gridx = 1;
-			c.gridy = 0;
-			super.add(textField1, c);
+			c0.gridx = 1;
+			c0.gridy = 0;
+			c0.gridwidth = 4;
+			importPanel.add(textField1, c0);
 			
-			JButton button1 = new JButton("Import Units");
+			JButton button1 = new JButton("Import Strata");
 			button1.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -258,10 +270,11 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					if (fileManagementUnit!=null) {
 						textField1.setText(fileManagementUnit.getAbsolutePath());
 						// Read the whole text file into table
-						ReadUnit.readValues(fileManagementUnit);
-						String[][] value = ReadUnit.getValues();
-						rowCount = ReadUnit.get_TotalRows();
-						colCount = ReadUnit.get_TotalColumns() + 2; //the 2 prescriptions Column
+						ReadUnit read = new ReadUnit();
+						read.readValues(fileManagementUnit);
+						String[][] value = read.getValues();
+						rowCount = read.get_TotalRows();
+						colCount = read.get_TotalColumns() + 2; //the 2 prescriptions Column
 						data = new Object[rowCount][colCount];
 						columnNames = new String[colCount];
 						for (int row = 0; row < rowCount; row++) {
@@ -272,7 +285,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						TableRowSorter<MyTableModel> sorter = new TableRowSorter<MyTableModel>(model);
 						table.setRowSorter(sorter);
 						table.setValueAt(data[0][0], 0, 0); //To help trigger the table refresh: fireTableDataChanged() and repaint();	
-						columnNames[0] = "Unit ID";
+						columnNames[0] = "Strata ID";
 						columnNames[1] = "Layer 1";
 						columnNames[2] = "Layer 2";
 						columnNames[3] = "Layer 3";
@@ -290,23 +303,23 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					}
 				}
 			});
-			c.gridx = 2;
-			c.gridy = 0;
-			super.add(button1, c);
+			c0.gridx = 5;
+			c0.gridy = 0;
+			importPanel.add(button1, c0);
 
 			
-			// 2nd grid line-----------------------------------------------------------------------
-			// 2nd grid line-----------------------------------------------------------------------
+			// 1st grid line 2----------------------------
 			JLabel label2 = new JLabel("Database (.db file)");
-			c.gridx = 0;
-			c.gridy = 1;
-			super.add(label2, c);
+			c0.gridx = 0;
+			c0.gridy = 1;
+			importPanel.add(label2, c0);
 
-			JTextField textField2 = new JTextField(30);
+			JTextField textField2 = new JTextField(35);
 			textField2.setEditable(false);
-			c.gridx = 1;
-			c.gridy = 1;
-			super.add(textField2, c);
+			c0.gridx = 1;
+			c0.gridy = 1;
+			c0.gridwidth = 4;
+			importPanel.add(textField2, c0);
 
 			JButton button2 = new JButton("Import Database");
 			button2.addActionListener(new ActionListener() {
@@ -316,280 +329,212 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					if (fileDatabase!=null) {
 						textField2.setText(fileDatabase.getAbsolutePath());
 						// Read the database tables into array
-						Object[][][] table = Read_DatabaseTables.getTableArrays(fileDatabase);
+						Read_DatabaseTables read_DatabaseTables = new Read_DatabaseTables();
+						Object[][][] table = read_DatabaseTables.getTableArrays(fileDatabase);
 					}
 				}
 			});
-			c.gridx = 2;
-			c.gridy = 1;
-			super.add(button2, c);
-			// End of 2nd grid line-----------------------------------------------------------------------
-			// End of 2nd grid line-----------------------------------------------------------------------
+			c0.gridx = 5;
+			c0.gridy = 1;
+			importPanel.add(button2, c0);
+			// End of 1st grid -----------------------------------------------------------------------
+			// End of 1st grid -----------------------------------------------------------------------
 			
 				
-			// 3rd grid line-----------------------------------------------------------------------
-			// 3rd grid line-----------------------------------------------------------------------
-			checkboxFilter = new JCheckBox[29];
-			for (int i = 1; i <= 28; i++) {
-				checkboxFilter[i] = new JCheckBox();
-				checkboxFilter[i].setSelected(true);
-				checkboxFilter[i].addActionListener(this);
-			}
+			// 2nd grid -----------------------------------------------------------------------
+			// 2nd grid -----------------------------------------------------------------------			
 			
-			JLabel label2_1 = new JLabel("Layer 1");
-			checkboxFilter[1].setText("B");
-			checkboxFilter[2].setText("U");
-			checkboxFilter[3].setText("S");
-			checkboxFilter[4].setText("K");
-			checkboxFilter[5].setText("R");
-			checkboxFilter[6].setText("C");
+			//Layers title
+			List<String> layers_Title = new ArrayList<String>();
+			layers_Title.add("Layer 1");
+			layers_Title.add("Layer 2");
+			layers_Title.add("Layer 3");
+			layers_Title.add("Layer 4");
+			layers_Title.add("Layer 5");
+			layers_Title.add("Layer 6");
+		
+			//Layers title ToolTip
+			List<String> layers_Title_ToolTip = new ArrayList<String>();
+			layers_Title_ToolTip.add("Vegetation Desired Future Condition Areas");
+			layers_Title_ToolTip.add("Roadless Status");
+			layers_Title_ToolTip.add("Timber Suitability");
+			layers_Title_ToolTip.add("Resource Condition Zones");
+			layers_Title_ToolTip.add("Vegetation Cover Types");
+			layers_Title_ToolTip.add("Size Class");
 			
-			JLabel label2_2 = new JLabel("Layer 2");
-			checkboxFilter[7].setText("R");
-			checkboxFilter[8].setText("N");
 			
-			JLabel label2_3 = new JLabel("Layer 3");
-			checkboxFilter[9].setText("N");
-			checkboxFilter[10].setText("O");
-			checkboxFilter[11].setText("P");
-			checkboxFilter[12].setText("S");
 			
-			JLabel label2_4 = new JLabel("Layer 4");
-			checkboxFilter[13].setText("L");
-			checkboxFilter[14].setText("H");
-			checkboxFilter[15].setText("C");
-			checkboxFilter[16].setText("R");
+			//Layers element name
+			List<String> layer1 = new ArrayList<String>();
+			layer1.add("B");
+			layer1.add("U");
+			layer1.add("S");
+			layer1.add("K");
+			layer1.add("R");
+			layer1.add("C");
 			
-			JLabel label2_5 = new JLabel("Layer 5");
-			checkboxFilter[17].setText("P");
-			checkboxFilter[18].setText("D");
-			checkboxFilter[19].setText("W");
-			checkboxFilter[20].setText("C");
-			checkboxFilter[21].setText("I");
-			checkboxFilter[22].setText("A");
-			checkboxFilter[23].setText("L");
+			List<String> layer2 = new ArrayList<String>();
+			layer2.add("R");
+			layer2.add("N");
+		
+			List<String> layer3 = new ArrayList<String>();
+			layer3.add("N");
+			layer3.add("O");
+			layer3.add("P");
+			layer3.add("S");
 
-			JLabel label2_6 = new JLabel("Layer 6");
-			checkboxFilter[24].setText("S");
-			checkboxFilter[25].setText("P");
-			checkboxFilter[26].setText("M");
-			checkboxFilter[27].setText("L");
-			checkboxFilter[28].setText("N");
+			List<String> layer4 = new ArrayList<String>();
+			layer4.add("L");
+			layer4.add("H");
+			layer4.add("C");
+			layer4.add("R");
 			
-			// Set tooltip texts
-			label2_1.setToolTipText("Vegetation Desired Future Condition Areas"); 
-			checkboxFilter[1].setToolTipText("Bitterroot Mtns. (M333D) Breaklands");
-			checkboxFilter[2].setToolTipText("Bitterroot Mtns. (M333D) Uplands");
-			checkboxFilter[3].setToolTipText("Bitterroot Mtns. (M333D) Subalpine");
-			checkboxFilter[4].setToolTipText("Idaho Batholith (M332A) Breaklands");
-			checkboxFilter[5].setToolTipText("Idaho Batholith (M332A) Uplands");
-			checkboxFilter[6].setToolTipText("Idaho Batholith (M332A) Subalpine");
-			
-			label2_2.setToolTipText("Roadless Status");
-			checkboxFilter[7].setToolTipText("Roadless and undeveloped");
-			checkboxFilter[8].setToolTipText("Roaded and developed");
-			
-			label2_3.setToolTipText("Timber Suitability");
-			checkboxFilter[9].setToolTipText("Not Available or Not Suited; No Timber Harvest Allowed");
-			checkboxFilter[10].setToolTipText("Generally Suitable for Timber Harvest for other resource objectives, no scheduled output");
-			checkboxFilter[11].setToolTipText("Generally Suitable for Timber Harvest for other resource objectives, scheduled output");
-			checkboxFilter[12].setToolTipText("Suited for Timber Production");
-			
-			label2_4.setToolTipText("Resource Condition Zones");
-			checkboxFilter[13].setToolTipText("Lynx habitat – conserve watershed");
-			checkboxFilter[14].setToolTipText("Lynx habitat – restore watershed");
-			checkboxFilter[15].setToolTipText("Non-Lynx habitat – conserve watershed");
-			checkboxFilter[16].setToolTipText("Non-Lynx habitat – restore watershed");
-			
-			label2_5.setToolTipText("Vegetation Cover Types");
-			checkboxFilter[17].setToolTipText("Ponderosa Pine");
-			checkboxFilter[18].setToolTipText("Dry Douglas-fir/Grand Fir");
-			checkboxFilter[19].setToolTipText("Mesic Douglas-fir mix");
-			checkboxFilter[20].setToolTipText("Grand Fir/Western Red Cedar");
-			checkboxFilter[21].setToolTipText("Cold Douglas-fir mix");
-			checkboxFilter[22].setToolTipText("Subalpine Fir mix");
-			checkboxFilter[23].setToolTipText("Lodgepole Pine");
+			List<String> layer5 = new ArrayList<String>();
+			layer5.add("P");
+			layer5.add("D");
+			layer5.add("W");
+			layer5.add("C");
+			layer5.add("I");
+			layer5.add("A");
+			layer5.add("L");
+		
+			List<String> layer6 = new ArrayList<String>();
+			layer6.add("S");
+			layer6.add("P");
+			layer6.add("M");
+			layer6.add("L");
+			layer6.add("N");
 
-			label2_6.setToolTipText("Size Class");
-			checkboxFilter[24].setToolTipText("Seedling and Sapling (0” – 5”)");
-			checkboxFilter[25].setToolTipText("Small (5” – 10”)");
-			checkboxFilter[26].setToolTipText("Medium (10” – 15”)");
-			checkboxFilter[27].setToolTipText("Large (15”+)");
-			checkboxFilter[28].setToolTipText("None");
 			
 			
-			//Add all 6 layer labels and 28 checkbox to checkPanel
+			//Layers element ToolTip
+			List<String> layer1_ToolTips = new ArrayList<String>();
+			layer1_ToolTips.add("Bitterroot Mtns. (M333D) Breaklands");
+			layer1_ToolTips.add("Bitterroot Mtns. (M333D) Uplands");
+			layer1_ToolTips.add("Bitterroot Mtns. (M333D) Subalpine");
+			layer1_ToolTips.add("Idaho Batholith (M332A) Breaklands");
+			layer1_ToolTips.add("Idaho Batholith (M332A) Uplands");
+			layer1_ToolTips.add("Idaho Batholith (M332A) Subalpine");
+			
+			List<String> layer2_ToolTips = new ArrayList<String>();
+			layer2_ToolTips.add("Roadless and undeveloped");
+			layer2_ToolTips.add("Roaded and developed");
+			
+			List<String> layer3_ToolTips = new ArrayList<String>();
+			layer3_ToolTips.add("Not Available or Not Suited; No Timber Harvest Allowed");
+			layer3_ToolTips.add("Generally Suitable for Timber Harvest for other resource objectives, no scheduled output");
+			layer3_ToolTips.add("Generally Suitable for Timber Harvest for other resource objectives, scheduled output");
+			layer3_ToolTips.add("Suited for Timber Production");
+			
+			List<String> layer4_ToolTips = new ArrayList<String>();
+			layer4_ToolTips.add("Lynx habitat – conserve watershed");
+			layer4_ToolTips.add("Lynx habitat – restore watershed");
+			layer4_ToolTips.add("Non-Lynx habitat – conserve watershed");
+			layer4_ToolTips.add("Non-Lynx habitat – restore watershed");			
+			
+			List<String> layer5_ToolTips = new ArrayList<String>();
+			layer5_ToolTips.add("Ponderosa Pine");
+			layer5_ToolTips.add("Dry Douglas-fir/Grand Fir");
+			layer5_ToolTips.add("Mesic Douglas-fir mix");
+			layer5_ToolTips.add("Grand Fir/Western Red Cedar");
+			layer5_ToolTips.add("Cold Douglas-fir mix");
+			layer5_ToolTips.add("Subalpine Fir mix");
+			layer5_ToolTips.add("Lodgepole Pine");	
+			
+			List<String> layer6_ToolTips = new ArrayList<String>();
+			layer6_ToolTips.add("Seedling and Sapling (0” – 5");
+			layer6_ToolTips.add("Small (5” – 10”)");
+			layer6_ToolTips.add("Medium (10” – 15”)");
+			layer6_ToolTips.add("Large (15”+)");
+			layer6_ToolTips.add("None");
+			
+			int total_layers = 6;
+			List<List<String>> allLayers = new ArrayList<List<String>>();
+			allLayers.add(layer1);
+			allLayers.add(layer2);
+			allLayers.add(layer3);
+			allLayers.add(layer4);
+			allLayers.add(layer5);
+			allLayers.add(layer6);
+			
+			int total_layers_ToolTips = 6;
+			List<List<String>> allLayers_ToolTips = new ArrayList<List<String>>();
+			allLayers_ToolTips.add(layer1_ToolTips);
+			allLayers_ToolTips.add(layer2_ToolTips);
+			allLayers_ToolTips.add(layer3_ToolTips);
+			allLayers_ToolTips.add(layer4_ToolTips);
+			allLayers_ToolTips.add(layer5_ToolTips);
+			allLayers_ToolTips.add(layer6_ToolTips);
+			
+
+			
+					
+			//Add all layers labels and checkboxes to checkPanel
 			JPanel checkPanel = new JPanel();		
-			TitledBorder border = new TitledBorder("Management Unit Filter");
+			TitledBorder border = new TitledBorder("Strata Filter");
 //			border.setTitleFont(new Font("Sans-Serif", Font.BOLD, 14));
 			border.setTitleJustification(TitledBorder.CENTER);
 			checkPanel.setBorder(border);
 			checkPanel.setLayout(new GridBagLayout());
 			GridBagConstraints c1 = new GridBagConstraints();
-			c1.fill = GridBagConstraints.BOTH;
+			c1.fill = GridBagConstraints.HORIZONTAL;
 			c1.weightx = 1;
 		    c1.weighty = 1;
 			
-			// 1st grid column inside checkPanel
-			c1.gridx = 0;
-			c1.gridy = 0;
-			checkPanel.add(label2_1, c1);
+		    
+			//Add layers labels
+		    List<JLabel> layers_Title_Label = new ArrayList<JLabel>();
+			for (int i = 0; i < total_layers; i++) {
+				layers_Title_Label.add(new JLabel(layers_Title.get(i)));
+				layers_Title_Label.get(i).setToolTipText(layers_Title_ToolTip.get(i));
+				c1.gridx = i;
+				c1.gridy = 0;
+				checkPanel.add(layers_Title_Label.get(i), c1);
+			}
+			
 
-			c1.gridx = 0;
-			c1.gridy = 1;
-			checkPanel.add(checkboxFilter[1], c1);
-
-			c1.gridx = 0;
-			c1.gridy = 2;
-			checkPanel.add(checkboxFilter[2], c1);
-
-			c1.gridx = 0;
-			c1.gridy = 3;
-			checkPanel.add(checkboxFilter[3], c1);
-
-			c1.gridx = 0;
-			c1.gridy = 4;
-			checkPanel.add(checkboxFilter[4], c1);
-
-			c1.gridx = 0;
-			c1.gridy = 5;
-			checkPanel.add(checkboxFilter[5], c1);
-
-			c1.gridx = 0;
-			c1.gridy = 6;
-			checkPanel.add(checkboxFilter[6], c1);
+			//Add CheckBox for all layers
+			checkboxFilter = new ArrayList<List<JCheckBox>>();
+			for (int i = 0; i < allLayers.size(); i++) {		//Loop all layers
+				List<JCheckBox> temp_List = new ArrayList<JCheckBox>();		//A temporary List
+				checkboxFilter.add(temp_List);
+				for (int j = 0; j < allLayers.get(i).size(); j++) {		//Loop all elements in each layer
+					checkboxFilter.get(i).add(new JCheckBox(allLayers.get(i).get(j)));
+					checkboxFilter.get(i).get(j).setToolTipText(allLayers_ToolTips.get(i).get(j));
+					
+					checkboxFilter.get(i).get(j).setSelected(true);
+					checkboxFilter.get(i).get(j).addActionListener(this);
+					
+					c1.gridx = i;
+					c1.gridy = j + 1;
+					checkPanel.add(checkboxFilter.get(i).get(j), c1);
+				}
+			}
+			
+			int lastRow = 0;
+			for (int i = 0; i < allLayers.size(); i++) {		//Loop all layers
+				for (int j = 0; j < allLayers.get(i).size(); j++) {		//Loop all elements in each layer
+					if (j+1>lastRow) lastRow = j+1;
+				}
+			}
 			
 			
-			// 2nd grid column inside checkPanel
-			c1.gridx = 1;
-			c1.gridy = 0;
-			checkPanel.add(label2_2, c1);
-
-			c1.gridx = 1;
-			c1.gridy = 1;
-			checkPanel.add(checkboxFilter[7], c1);
-
-			c1.gridx = 1;
-			c1.gridy = 2;
-			checkPanel.add(checkboxFilter[8], c1);
-
-
-			// 3rd grid column inside checkPanel
-			c1.gridx = 2;
-			c1.gridy = 0;
-			checkPanel.add(label2_3, c1);
-
-			c1.gridx = 2;
-			c1.gridy = 1;
-			checkPanel.add(checkboxFilter[9], c1);
-
-			c1.gridx = 2;
-			c1.gridy = 2;
-			checkPanel.add(checkboxFilter[10], c1);
 			
-			c1.gridx = 2;
-			c1.gridy = 3;
-			checkPanel.add(checkboxFilter[11], c1);
-
-			c1.gridx = 2;
-			c1.gridy = 4;
-			checkPanel.add(checkboxFilter[12], c1);
-			
-			
-			// 4th grid column inside checkPanel
-			c1.gridx = 3;
-			c1.gridy = 0;
-			checkPanel.add(label2_4, c1);
-
-			c1.gridx = 3;
-			c1.gridy = 1;
-			checkPanel.add(checkboxFilter[13], c1);
-
-			c1.gridx = 3;
-			c1.gridy = 2;
-			checkPanel.add(checkboxFilter[14], c1);
-
-			c1.gridx = 3;
-			c1.gridy = 3;
-			checkPanel.add(checkboxFilter[15], c1);
-
-			c1.gridx = 3;
-			c1.gridy = 4;
-			checkPanel.add(checkboxFilter[16], c1);
-
-			// 5th grid column inside checkPanel
-			c1.gridx = 4;
-			c1.gridy = 0;
-			checkPanel.add(label2_5, c1);
-
-			c1.gridx = 4;
-			c1.gridy = 1;
-			checkPanel.add(checkboxFilter[17], c1);
-
-			c1.gridx = 4;
-			c1.gridy = 2;
-			checkPanel.add(checkboxFilter[18], c1);
-
-			c1.gridx = 4;
-			c1.gridy = 3;
-			checkPanel.add(checkboxFilter[19], c1);
-
-			c1.gridx = 4;
-			c1.gridy = 4;
-			checkPanel.add(checkboxFilter[20], c1);
-
-			c1.gridx = 4;
-			c1.gridy = 5;
-			checkPanel.add(checkboxFilter[21], c1);
-
-			c1.gridx = 4;
-			c1.gridy = 6;
-			checkPanel.add(checkboxFilter[22], c1);
-			
-			c1.gridx = 4;
-			c1.gridy = 7;
-			checkPanel.add(checkboxFilter[23], c1);
-			
-			
-			// 6th grid column inside checkPanel
-			c1.gridx = 5;
-			c1.gridy = 0;
-			checkPanel.add(label2_6, c1);
-
-			c1.gridx = 5;
-			c1.gridy = 1;
-			checkPanel.add(checkboxFilter[24], c1);
-
-			c1.gridx = 5;
-			c1.gridy = 2;
-			checkPanel.add(checkboxFilter[25], c1);
-
-			c1.gridx = 5;
-			c1.gridy = 3;
-			checkPanel.add(checkboxFilter[26], c1);
-
-			c1.gridx = 5;
-			c1.gridy = 4;
-			checkPanel.add(checkboxFilter[27], c1);
-
-			c1.gridx = 5;
-			c1.gridy = 5;
-			checkPanel.add(checkboxFilter[28], c1);
-			
-			
-			// 2 buttons for select all and de-select all		
+			//Add 2 buttons for select all and de-select all		
 			JButton selectAll = new JButton("Select All");
 			selectAll.addActionListener(this);
 			selectAll.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {
-					for (int i = 1; i <= 28; i++) {
-						checkboxFilter[i].setSelected(true);
-					}	
+					for (int i = 0; i < allLayers.size(); i++) {		//Loop all layers
+						for (int j = 0; j < allLayers.get(i).size(); j++) {		//Loop all elements in each layer
+							checkboxFilter.get(i).get(j).setSelected(true);
+						}
+					}
 				}
 			});
 			c1.gridx = 0;
-			c1.gridy = 9;
+			c1.gridy = lastRow + 1;
 			c1.gridwidth = 2;
 			checkPanel.add(selectAll, c1);
 			
@@ -598,23 +543,25 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			deselectAll.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {
-					for (int i = 1; i <= 28; i++) {
-						checkboxFilter[i].setSelected(false);
+					for (int i = 0; i < allLayers.size(); i++) {		//Loop all layers
+						for (int j = 0; j < allLayers.get(i).size(); j++) {		//Loop all elements in each layer
+							checkboxFilter.get(i).get(j).setSelected(false);
+						}
 					}	
 				}
 			});
-			c1.gridx = 4;
-			c1.gridy = 9;
+			c1.gridx = allLayers.size()-2;
+			c1.gridy = lastRow + 1;
 			c1.gridwidth = 2;
 			checkPanel.add(deselectAll, c1);
-			// End of 3rd grid line-----------------------------------------------------------------------
-			// End of 3rd grid line-----------------------------------------------------------------------
+			// End of 2nd grid -----------------------------------------------------------------------
+			// End of 2nd grid -----------------------------------------------------------------------
 
 			
 			
 			
-			// 4th grid line-----------------------------------------------------------------------
-			// 4th grid line-----------------------------------------------------------------------
+			// 3rd grid -----------------------------------------------------------------------
+			// 3rd grid -----------------------------------------------------------------------
 			checkboxRule = new JCheckBox[5];
 			for (int i = 1; i <= 4; i++) {
 				checkboxRule[i] = new JCheckBox();
@@ -628,143 +575,81 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			ruleEditorPanel.setBorder(border2);
 			ruleEditorPanel.setLayout(new GridBagLayout());
 			GridBagConstraints c2 = new GridBagConstraints();
-			c2.fill = GridBagConstraints.BOTH;
+			c2.fill = GridBagConstraints.HORIZONTAL;
 			c2.weightx = 1;
 		    c2.weighty = 1;
 			
 				
 			// 1st line inside ruleEditorPanel
-		    checkboxRule[1].setText("Even Age (EA)");
-			JLabel label3_1_1 = new JLabel("Min Rotation Age");
-			JLabel label3_1_2 = new JLabel("Max Rotation Age");
-			JComboBox combo3_1_1 = new JComboBox();
-			for (int i = 1; i <= 50; i++) {
-				combo3_1_1.addItem(i);
-			}
-			combo3_1_1.setSelectedItem((int) 1);
-			JComboBox combo3_1_2 = new JComboBox();
-			for (int i = 1; i <= 50; i++) {
-				combo3_1_2.addItem(i);
-			}
-			combo3_1_2.setSelectedItem((int) 50);
-						
-			c2.gridx = 0;
+		    checkboxRule[1].setText("Even Age (EA) - Cover Type conversions below are allowed for all strata");
+		    c2.gridx = 0;
 			c2.gridy = 0;
+			c2.gridwidth = 8;
 			ruleEditorPanel.add(checkboxRule[1], c2);
-				
-//			c2.gridx = 1;
-//			c2.gridy = 1;
-//			ruleEditorPanel.add(label3_1_1, c2);
-//			
-//			c2.gridx = 2;
-//			c2.gridy = 1;
-//			ruleEditorPanel.add(combo3_1_1, c2);
-//			
-//			c2.gridx = 3;
-//			c2.gridy = 1;
-//			ruleEditorPanel.add(label3_1_2, c2);
-//			
-//			c2.gridx = 4;
-//			c2.gridy = 1;
-//			ruleEditorPanel.add(combo3_1_2, c2);
 			
+			
+			int total_CoverType = allLayers.get(4).size();		// total number of elements - 1 in layer5 Cover Type (0 to...)
+		  
+			//Labels for Cover Type From
+			for (int i = 0; i < total_CoverType; i++) {
+				JLabel labelConvert = new JLabel("        " + allLayers.get(4).get(i) + "      regenerated as     ");
+				c2.gridx = 0;
+				c2.gridy = i + 1;
+				c2.gridwidth = 2;
+				ruleEditorPanel.add(labelConvert, c2);
+			}
+			
+			//CheckBox for Cover Type To
+			int startx = 1;
+			ConversionCheck_To = new JCheckBox[total_CoverType][total_CoverType];
+		    for (int i = 0; i < total_CoverType; i++) {
+		    	   for (int j = 0; j < total_CoverType; j++) {
+				    	ConversionCheck_To[i][j] = new JCheckBox(allLayers.get(4).get(j));
+				    	ConversionCheck_To[i][j].setToolTipText(allLayers_ToolTips.get(4).get(j));
+				    	c2.gridx = startx+ j + 1;
+						c2.gridy = i+1;
+						c2.gridwidth = 1;
+						ruleEditorPanel.add(ConversionCheck_To[i][j], c2);
+						if (i==j) ConversionCheck_To[i][j].setSelected(true);
+					}
+			}
+		    		
 			
 			// 2nd line inside ruleEditorPanel
-			checkboxRule[2].setText("Group Selection (GS)");
-			JLabel label3_2_1 = new JLabel("Min Timing Choice");
-			JLabel label3_2_2 = new JLabel("Max Timing Choice");
-			JComboBox combo3_2_1 = new JComboBox();
-			for (int i = 0; i <= 10; i++) {
-				combo3_2_1.addItem(i);
-			}
-			combo3_2_1.setSelectedItem((int) 0);
-			JComboBox combo3_2_2 = new JComboBox();
-			for (int i = 0; i <= 10; i++) {
-				combo3_2_2.addItem(i);
-			}
-			combo3_2_2.setSelectedItem((int) 4);
-						
+			checkboxRule[2].setText("Group Selection (GS)");					
 			c2.gridx = 0;
-			c2.gridy = 2;
+			c2.gridy = total_CoverType + 1;
 			ruleEditorPanel.add(checkboxRule[2], c2);
-				
-//			c2.gridx = 1;
-//			c2.gridy = 3;
-//			ruleEditorPanel.add(label3_2_1, c2);
-//			
-//			c2.gridx = 2;
-//			c2.gridy = 3;
-//			ruleEditorPanel.add(combo3_2_1, c2);
-//			
-//			c2.gridx = 3;
-//			c2.gridy = 3;
-//			ruleEditorPanel.add(label3_2_2, c2);
-//			
-//			c2.gridx = 4;
-//			c2.gridy = 3;
-//			ruleEditorPanel.add(combo3_2_2, c2);
 			
 			
 			// 3rd line inside ruleEditorPanel
 			checkboxRule[3].setText("Prescribed Burn (PB)");
-			JLabel label3_3_1 = new JLabel("Min Timing Choice");
-			JLabel label3_3_2 = new JLabel("Max Timing Choice");
-			JComboBox combo3_3_1 = new JComboBox();
-			for (int i = 0; i <= 10; i++) {
-				combo3_3_1.addItem(i);
-			}
-			combo3_3_1.setSelectedItem((int) 0);
-			JComboBox combo3_3_2 = new JComboBox();
-			for (int i = 0; i <= 10; i++) {
-				combo3_3_2.addItem(i);
-			}
-			combo3_3_2.setSelectedItem((int) 4);
-
 			c2.gridx = 0;
-			c2.gridy = 4;
+			c2.gridy = total_CoverType + 2;
 			ruleEditorPanel.add(checkboxRule[3], c2);
-
-//			c2.gridx = 1;
-//			c2.gridy = 5;
-//			ruleEditorPanel.add(label3_3_1, c2);
-//
-//			c2.gridx = 2;
-//			c2.gridy = 5;
-//			ruleEditorPanel.add(combo3_3_1, c2);
-//
-//			c2.gridx = 3;
-//			c2.gridy = 5;
-//			ruleEditorPanel.add(label3_3_2, c2);
-//
-//			c2.gridx = 4;
-//			c2.gridy = 5;
-//			ruleEditorPanel.add(combo3_3_2, c2);
 			
 			
 			// 4th line inside ruleEditorPanel
 			checkboxRule[4].setText("Natural Growth (NG)");
 			c2.gridx = 0;
-			c2.gridy = 6;
+			c2.gridy = total_CoverType + 3;
 			ruleEditorPanel.add(checkboxRule[4], c2);
 
 			
 			// 5th line inside ruleEditorPanel: Apply Button
-			JButton applyRule = new JButton("Set methods for implementation on the selected management units below");
+			JButton applyRule = new JButton("Set methods for implementation on the selected strata below");
 			applyRule.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {
 					String applyText = "";
 					if (checkboxRule[1].isSelected()) {
 						applyText = applyText  + "EA ";
-						//applyText = applyText  + "EA(" + combo3_1_1.getSelectedItem() + "," + combo3_1_2.getSelectedItem() + ")   "; 
 					}
 					if (checkboxRule[2].isSelected()) {
 						applyText = applyText  + "GS ";
-						//applyText = applyText  + "GS(" + combo3_2_1.getSelectedItem() + "," + combo3_2_2.getSelectedItem() + ")   "; 
 					}
 					if (checkboxRule[3].isSelected()) {
 						applyText = applyText  + "PB ";
-						//applyText = applyText  + "PB(" + combo3_3_1.getSelectedItem() + "," + combo3_3_2.getSelectedItem() + ")   "; 
 					}
 					if (checkboxRule[4].isSelected()) {
 						applyText = applyText  + "NG "; 
@@ -783,107 +668,66 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				}
 			});
 			c2.gridx = 0;
-			c2.gridy = 8;
-			c2.gridwidth = 5; 	//5 columns wide
+			c2.gridy = total_CoverType + 4;
+			c2.gridwidth = total_CoverType + 1;	//GridBagConstraints.REMAINDER; 	//8 columns wide because there are 7 cover types
 			ruleEditorPanel.add(applyRule, c2);
 			
-			// End of 4th grid line-----------------------------------------------------------------------
-			// End of 4th grid line-----------------------------------------------------------------------
+			// End of 3rd grid -----------------------------------------------------------------------
+			// End of 3rd grid -----------------------------------------------------------------------
 			
 			
-	
-			
-			// Add the checkPanel to the main Grid
+			// Add all Grids to the Main Grid-----------------------------------------------------------------------
+			// Add all Grids to the Main Grid-----------------------------------------------------------------------
+			GridBagConstraints c = new GridBagConstraints();
+			c.fill = GridBagConstraints.BOTH;
+			c.weightx = 1;
+		    c.weighty = 1;
+		    	    
+		    // Add the 1st grid - importPanel to the main Grid
 			c.gridx = 0;
-			c.gridy = 2;
-			c.gridwidth = 3;   //3 columns wide
+			c.gridy = 0;
+			c.gridwidth = 1; 
+			super.add(importPanel, c);
+			
+			// Add the 2nd grid - checkPanel to the main Grid
+			c.gridx = 0;
+			c.gridy = 1;
+			c.gridwidth = 1;
 			super.add(checkPanel, c);
 			
-			// Add the modifyPanel to the main Grid	
-			c.gridx = 3;
-			c.gridy = 2;
-			c.gridwidth = 3;   //3 columns wide
-			c.gridheight = 1;   //1 rows high
+			// Add the 3rd grid - ruleEditorPanel to the main Grid	
+			c.gridx = 1;
+			c.gridy = 0;
+			c.gridwidth = 1;
+			c.gridheight = 2;
 			super.add(ruleEditorPanel, c);
 		}
 		
 		//Listeners for checkBox Filter--------------------------------------------------------------------
 		public void actionPerformed(ActionEvent e) {
-			TableRowSorter<MyTableModel> sorter = new TableRowSorter<MyTableModel>(model);
-			table.setRowSorter(sorter);
-			List<RowFilter<MyTableModel,Object>> filters; 			
-			
-			RowFilter<MyTableModel, Object> layer1_filter = null;
-			filters  = new ArrayList<RowFilter<MyTableModel,Object>>();
-			for (int i = 1; i <= 6; i++) {
-				if (checkboxFilter[i].isSelected()) {			
-					filters.add(RowFilter.regexFilter(checkboxFilter[i].getText(), 1));		
-				}
-			}
-			layer1_filter = RowFilter.orFilter(filters);
-			
-			
-			RowFilter<MyTableModel, Object> layer2_filter = null;
-			filters  = new ArrayList<RowFilter<MyTableModel,Object>>();
-			for (int i = 7; i <= 8; i++) {
-				if (checkboxFilter[i].isSelected()) {			
-					filters.add(RowFilter.regexFilter(checkboxFilter[i].getText(), 2));		
-				}
-			}
-			layer2_filter = RowFilter.orFilter(filters);
-			
-			
-			RowFilter<MyTableModel, Object> layer3_filter = null;
-			filters  = new ArrayList<RowFilter<MyTableModel,Object>>();
-			for (int i = 9; i <= 12; i++) {
-				if (checkboxFilter[i].isSelected()) {			
-					filters.add(RowFilter.regexFilter(checkboxFilter[i].getText(), 3));		
-				}
-			}
-			layer3_filter = RowFilter.orFilter(filters);
-			
-			
-			RowFilter<MyTableModel, Object> layer4_filter = null;
-			filters  = new ArrayList<RowFilter<MyTableModel,Object>>();
-			for (int i = 13; i <= 16; i++) {
-				if (checkboxFilter[i].isSelected()) {			
-					filters.add(RowFilter.regexFilter(checkboxFilter[i].getText(), 4));		
-				}
-			}
-			layer4_filter = RowFilter.orFilter(filters);
-			
-	
-			RowFilter<MyTableModel, Object> layer5_filter = null;
-			filters  = new ArrayList<RowFilter<MyTableModel,Object>>();
-			for (int i = 17; i <= 23; i++) {
-				if (checkboxFilter[i].isSelected()) {			
-					filters.add(RowFilter.regexFilter(checkboxFilter[i].getText(), 5));		
-				}
-			}
-			layer5_filter = RowFilter.orFilter(filters);
 
+			//This help filter to get the strata as specified by the CheckBoxes
+			TableRowSorter<MyTableModel> sorter = new TableRowSorter<MyTableModel>(model);
+			table.setRowSorter(sorter);			
+			List<RowFilter<MyTableModel, Object>> filters, filters2;
+
+			filters2  = new ArrayList<RowFilter<MyTableModel,Object>>();
 			
-			RowFilter<MyTableModel, Object> layer6_filter = null;
-			filters  = new ArrayList<RowFilter<MyTableModel,Object>>();
-			for (int i = 24; i <= 28; i++) {
-				if (checkboxFilter[i].isSelected()) {
-					filters.add(RowFilter.regexFilter(checkboxFilter[i].getText(), 6));		
+			for (int i = 0; i < checkboxFilter.size(); i++) {
+				RowFilter<MyTableModel, Object> layer_filter = null;
+				filters  = new ArrayList<RowFilter<MyTableModel,Object>>();
+				for (int j = 0; j < checkboxFilter.get(i).size(); j++) {
+					if (checkboxFilter.get(i).get(j).isSelected()) {			
+						filters.add(RowFilter.regexFilter(checkboxFilter.get(i).get(j).getText(), i + 1));	// i+1 is the table column containing the first layer	
+					}
 				}
+				layer_filter = RowFilter.orFilter(filters);
+				
+				filters2.add(layer_filter);
 			}
-			layer6_filter=RowFilter.orFilter(filters);
-			
 			
 			RowFilter<MyTableModel, Object> combine_AllFilters = null;
-			filters  = new ArrayList<RowFilter<MyTableModel,Object>>();
-			filters.add(layer1_filter);
-			filters.add(layer2_filter);
-			filters.add(layer3_filter);
-			filters.add(layer4_filter);
-			filters.add(layer5_filter);
-			filters.add(layer6_filter);
-			combine_AllFilters = RowFilter.andFilter(filters);
-
-			
+			combine_AllFilters = RowFilter.andFilter(filters2);
 			sorter.setRowFilter(combine_AllFilters);
 		}
 	}
@@ -895,7 +739,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	         rowCount = 30;
 	         colCount = 10;
 	         data = new Object[rowCount][colCount];
-	         columnNames= new String[] {"Unit ID" , "Layer 1", "Layer 2", "Layer 3", "Layer 4", "Layer 5", "Layer 6", 
+	         columnNames= new String[] {"Strata ID" , "Layer 1", "Layer 2", "Layer 3", "Layer 4", "Layer 5", "Layer 6", 
 	 				"Total area (acres)", "Available Methods/Prescriptions", "Methods for Implementation"};
 	         
 			// Populate the data matrix without any information
@@ -909,19 +753,19 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	         //Create a table
 	         model = new MyTableModel();
 	         table = new JTable(model) {
-	             //Implement table cell tool tips           
-	             public String getToolTipText(MouseEvent e) {
-	                 String tip = null;
-	                 java.awt.Point p = e.getPoint();
-	                 int rowIndex = rowAtPoint(p);
-	                 int colIndex = columnAtPoint(p);
-	                 try {
-	                       tip = getValueAt(rowIndex, colIndex).toString();
-	                 } catch (RuntimeException e1) {
-	                     //catch null pointer exception if mouse is over an empty line
-	                 }
-	                 return tip;
-	             }
+//	             //Implement table cell tool tips           
+//	             public String getToolTipText(MouseEvent e) {
+//	                 String tip = null;
+//	                 java.awt.Point p = e.getPoint();
+//	                 int rowIndex = rowAtPoint(p);
+//	                 int colIndex = columnAtPoint(p);
+//	                 try {
+//	                       tip = getValueAt(rowIndex, colIndex).toString();
+//	                 } catch (RuntimeException e1) {
+//	                	 System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+//	                 }
+//	                 return tip;
+//	             }
 	         };
 	         //table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 	         table.getColumnModel().getColumn(colCount-3).setPreferredWidth(120);	//Set width of Column "Total area" bigger
@@ -1037,19 +881,20 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			panelInput0_TEXT.write(fileOut);
 			fileOut.close();
 		} catch (IOException e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 		}
 		return generalInputFile;
 	}
 	
 	public File getManagementOptionsFile() {
 		File managementOptionsFile = new File("ManagementOptions.txt");	
-		//Only print out units with implemented methods <> null
+		//Only print out Strata with implemented methods <> null
 		try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(managementOptionsFile))) {
 			for (int j = 0; j < table.getColumnCount(); j++) {
 				fileOut.write(table.getColumnName(j) + "\t");
 			}
 			for (int i = 0; i < table.getRowCount(); i++) {
-				if (table.getValueAt(i, table.getColumnCount()-1)!=null) {
+				if (table.getValueAt(i, table.getColumnCount()-1)!=null) {		//IF there is method set up for this strata
 					fileOut.newLine();
 					for (int j = 0; j < table.getColumnCount(); j++) {
 						fileOut.write((String) (table.getValueAt(i, j)) + "\t");
@@ -1058,8 +903,30 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			}
 			fileOut.close();
 		} catch (IOException e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 		}
 		return managementOptionsFile;
+	}
+	
+	public File getCoverTypeConversionsFile() {
+		File coverTypeConversionsFile = new File("CoverTypeConversions.txt");	
+		try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(coverTypeConversionsFile))) {
+			// Write info in the GUI Cover Type Conversions
+			for (int i = 0; i < ConversionCheck_To.length; i++) {
+				for (int j = 0; j < ConversionCheck_To[i].length; j++) {
+					if (ConversionCheck_To[i][j].isSelected()) {
+						String coverTypeConversion_info = ConversionCheck_To[i][i].getText() + " ";		//From this Cover Type
+						coverTypeConversion_info = coverTypeConversion_info + ConversionCheck_To[i][j].getText();		//To this Cover Type
+						fileOut.write(coverTypeConversion_info + "\n");
+					}
+				}
+			}
+
+			fileOut.close();
+		} catch (IOException e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+		}
+		return coverTypeConversionsFile;
 	}
 	
 	public File getUserConstraintsFile() {
@@ -1068,6 +935,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			panelInput2_TEXT.write(fileOut);
 			fileOut.close();
 		} catch (IOException e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 		}
 		return userConstraintsFile;
 	}

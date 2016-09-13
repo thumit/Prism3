@@ -1,29 +1,28 @@
 package spectrumYieldProject;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
-
-import spectrumDatabaseUtil.Panel_DatabaseManagement;
 
 public class ReadRunInputs {
 	//For readGeneralInputs
-	private  String In1_delimited;
-	private  int In1_totalRows, In1_totalColumns;
-	private  String In1_value[][];
+	private String In1_delimited;
+	private int In1_totalRows, In1_totalColumns;
+	private String In1_value[][];
 	
 	//For readManagementOptions
-	private  String In2_delimited;
-	private  int In2_totalRows, In2_totalColumns;
-	private  String In2_value[][];
+	private String In2_delimited;
+	private int In2_totalRows, In2_totalColumns;
+	private String In2_value[][];
 
+	//For readCoverTypeConversions
+	private List<String> coverTypeConversions_list;
 	
-	public  void readGeneralInputs (File file) {
+	public void readGeneralInputs (File file) {
 	//	delimited = ",";		// comma delimited
 	//	delimited = "\\s+";		// space delimited
 		In1_delimited = "\t";		// tab delimited
@@ -50,18 +49,17 @@ public class ReadRunInputs {
 				}
 
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			}
 		}
 	}
 	
-	public  int get_total_Periods () {
+	public int get_total_Periods () {
 		return Integer.valueOf(In1_value[0][1]);
 	}
+//-------------------------------------------------------------------------------------------------------------------------------------------------	
 	
-	
-	public  void readManagementOptions (File file) {
+	public void readManagementOptions (File file) {
 	//	delimited = ",";		// comma delimited
 	//	delimited = "\\s+";		// space delimited
 		In2_delimited = "\t";		// tab delimited
@@ -88,21 +86,71 @@ public class ReadRunInputs {
 				}
 
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			}
 		}
 	}
 
-	public String[][] getValues () {
+	public String[][] getIn2_Values () {
 		return In2_value;
 	}
 	
-	public int get_total_ManagementUnits () {
-		return In2_totalRows-1;
+	public List<String> get_modeled_strata () {
+		List<String> modeled_strata = new ArrayList<String>();
+		for (int i = 1; i < In2_totalRows; i++) {		//From 2nd row			
+			modeled_strata.add(In2_value[i][0]);	//1st column contains the full name with 6 layers letters
+		}
+		return modeled_strata;
 	}
 	
-	public int get_TotalColumns () {
+	public List<String> get_modeled_strata_withoutSizeClass () {
+		List<String> modeled_strata_withoutSizeClass = new ArrayList<String>();
+		for (int i = 1; i < In2_totalRows; i++) {		//From 2nd row			
+			modeled_strata_withoutSizeClass.add(In2_value[i][0].substring(0,In2_value[i][0].length()-1));	//remove the last character to get name with 5 layers only
+		}
+		return modeled_strata_withoutSizeClass;
+	}	
+	
+	public List<String> get_modeled_strata_withoutSizeClassandCoverType () {
+		List<String> get_modeled_strata_withoutSizeClassandCoverType = new ArrayList<String>();
+		for (int i = 1; i < In2_totalRows; i++) {		//From 2nd row			
+			get_modeled_strata_withoutSizeClassandCoverType.add(In2_value[i][0].substring(0,In2_value[i][0].length()-2));	//remove the last 2 characters to get name with 4 layers only
+		}
+		return get_modeled_strata_withoutSizeClassandCoverType;
+	}
+	
+	public int get_In2_TotalRows () {
+		return In2_totalRows;
+	}
+	
+	public int get_In2_TotalColumns () {
 		return In2_totalColumns;
 	}
+//-------------------------------------------------------------------------------------------------------------------------------------------------
+	
+	
+	public void readCoverTypeConversions (File file) {
+	//	delimited = ",";		// comma delimited
+		String delimited = "\\s+";		// space delimited
+	//	delimited = "\t";		// tab delimited
+		
+		if (delimited != null) {
+			try {		
+				// All lines to be in coverType_list;	
+				coverTypeConversions_list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
+			} catch (IOException e) {
+				System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			}
+		}
+	}
+	
+	public List<String> getCoverTypeConversions () {
+		return coverTypeConversions_list;
+	}		
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------	
+	
+	
+	
+	
 }
