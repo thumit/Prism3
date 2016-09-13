@@ -23,7 +23,7 @@
    maxPi="0"
    maxSlack="0"
    maxRedCost="0"
-   kappa="3"/>
+   kappa="3.5"/>
  <linearConstraints>
   <constraint index="0" status="LL" slack="0" dual="0"/>
   <constraint index="1" status="LL" slack="0" dual="-0"/>
@@ -45,14 +45,14 @@
   <constraint index="17" status="BS" slack="0" dual="0"/>
   <constraint index="18" status="BS" slack="0" dual="0"/>
   <constraint index="19" status="BS" slack="0" dual="0"/>
-  <constraint index="20" status="BS" slack="0" dual="0"/>
+  <constraint index="20" status="LL" slack="0" dual="-0"/>
   <constraint index="21" status="BS" slack="0" dual="0"/>
   <constraint index="22" status="BS" slack="0" dual="0"/>
   <constraint index="23" status="BS" slack="0" dual="0"/>
   <constraint index="24" status="BS" slack="0" dual="0"/>
   <constraint index="25" status="BS" slack="0" dual="0"/>
   <constraint index="26" status="BS" slack="0" dual="0"/>
-  <constraint index="27" status="BS" slack="0" dual="0"/>
+  <constraint index="27" status="LL" slack="0" dual="-0"/>
   <constraint index="28" status="BS" slack="0" dual="0"/>
   <constraint index="29" status="LL" slack="0" dual="0"/>
   <constraint index="30" status="LL" slack="0" dual="0"/>
@@ -106,46 +106,46 @@
   <variable name="xEAeR(0,1,0,2,5,3)(3)" index="23" status="BS" value="0" reducedCost="0"/>
   <variable name="xEAr(0,1,0,2,0)(2)(1)" index="24" status="LL" value="0" reducedCost="0"/>
   <variable name="xEAr(0,1,0,2,0)(3)(1)" index="25" status="LL" value="0" reducedCost="0"/>
-  <variable name="xEAr(0,1,0,2,0)(3)(2)" index="26" status="LL" value="0" reducedCost="0"/>
+  <variable name="xEAr(0,1,0,2,0)(3)(2)" index="26" status="BS" value="0" reducedCost="0"/>
   <variable name="xEAr(0,1,0,2,1)(2)(1)" index="27" status="LL" value="0" reducedCost="0"/>
   <variable name="xEAr(0,1,0,2,1)(3)(1)" index="28" status="LL" value="0" reducedCost="0"/>
-  <variable name="xEAr(0,1,0,2,1)(3)(2)" index="29" status="LL" value="0" reducedCost="0"/>
+  <variable name="xEAr(0,1,0,2,1)(3)(2)" index="29" status="BS" value="0" reducedCost="0"/>
   <variable name="xEAr(0,1,0,2,2)(2)(1)" index="30" status="LL" value="0" reducedCost="0"/>
   <variable name="xEAr(0,1,0,2,2)(3)(1)" index="31" status="LL" value="0" reducedCost="0"/>
-  <variable name="xEAr(0,1,0,2,2)(3)(2)" index="32" status="LL" value="0" reducedCost="0"/>
+  <variable name="xEAr(0,1,0,2,2)(3)(2)" index="32" status="BS" value="0" reducedCost="0"/>
   <variable name="xEAr(0,1,0,2,3)(2)(1)" index="33" status="LL" value="0" reducedCost="0"/>
   <variable name="xEAr(0,1,0,2,3)(3)(1)" index="34" status="LL" value="0" reducedCost="0"/>
-  <variable name="xEAr(0,1,0,2,3)(3)(2)" index="35" status="LL" value="0" reducedCost="0"/>
+  <variable name="xEAr(0,1,0,2,3)(3)(2)" index="35" status="BS" value="0" reducedCost="0"/>
   <variable name="xEAr(0,1,0,2,4)(2)(1)" index="36" status="LL" value="0" reducedCost="0"/>
   <variable name="xEAr(0,1,0,2,4)(3)(1)" index="37" status="LL" value="0" reducedCost="0"/>
-  <variable name="xEAr(0,1,0,2,4)(3)(2)" index="38" status="LL" value="0" reducedCost="0"/>
-  <variable name="xEAr(0,1,0,2,5)(2)(1)" index="39" status="LL" value="0" reducedCost="0"/>
-  <variable name="xEAr(0,1,0,2,5)(3)(1)" index="40" status="LL" value="0" reducedCost="0"/>
-  <variable name="xEAr(0,1,0,2,5)(3)(2)" index="41" status="LL" value="0" reducedCost="0"/>
+  <variable name="xEAr(0,1,0,2,4)(3)(2)" index="38" status="BS" value="0" reducedCost="0"/>
+  <variable name="xEAr(0,1,0,2,5)(2)(1)" index="39" status="BS" value="0" reducedCost="0"/>
+  <variable name="xEAr(0,1,0,2,5)(3)(1)" index="40" status="BS" value="0" reducedCost="0"/>
+  <variable name="xEAr(0,1,0,2,5)(3)(2)" index="41" status="BS" value="0" reducedCost="0"/>
   <variable name="xEAr(0,1,0,2,6)(2)(1)" index="42" status="LL" value="0" reducedCost="0"/>
   <variable name="xEAr(0,1,0,2,6)(3)(1)" index="43" status="LL" value="0" reducedCost="0"/>
-  <variable name="xEAr(0,1,0,2,6)(3)(2)" index="44" status="LL" value="0" reducedCost="0"/>
+  <variable name="xEAr(0,1,0,2,6)(3)(2)" index="44" status="BS" value="0" reducedCost="0"/>
   <variable name="xEAr&apos;(0,1,0,2,0)(2)(1)(0)" index="45" status="LL" value="0" reducedCost="0"/>
   <variable name="xEAr&apos;(0,1,0,2,0)(3)(1)(0)" index="46" status="LL" value="0" reducedCost="0"/>
-  <variable name="xEAr&apos;(0,1,0,2,0)(3)(2)(0)" index="47" status="BS" value="-0" reducedCost="0"/>
+  <variable name="xEAr&apos;(0,1,0,2,0)(3)(2)(0)" index="47" status="LL" value="0" reducedCost="0"/>
   <variable name="xEAr&apos;(0,1,0,2,1)(2)(1)(1)" index="48" status="LL" value="0" reducedCost="0"/>
   <variable name="xEAr&apos;(0,1,0,2,1)(3)(1)(1)" index="49" status="LL" value="0" reducedCost="0"/>
-  <variable name="xEAr&apos;(0,1,0,2,1)(3)(2)(1)" index="50" status="BS" value="-0" reducedCost="0"/>
+  <variable name="xEAr&apos;(0,1,0,2,1)(3)(2)(1)" index="50" status="LL" value="0" reducedCost="0"/>
   <variable name="xEAr&apos;(0,1,0,2,2)(2)(1)(2)" index="51" status="LL" value="0" reducedCost="0"/>
   <variable name="xEAr&apos;(0,1,0,2,2)(3)(1)(2)" index="52" status="LL" value="0" reducedCost="0"/>
-  <variable name="xEAr&apos;(0,1,0,2,2)(3)(2)(2)" index="53" status="BS" value="-0" reducedCost="0"/>
+  <variable name="xEAr&apos;(0,1,0,2,2)(3)(2)(2)" index="53" status="LL" value="0" reducedCost="0"/>
   <variable name="xEAr&apos;(0,1,0,2,3)(2)(1)(3)" index="54" status="LL" value="0" reducedCost="0"/>
   <variable name="xEAr&apos;(0,1,0,2,3)(3)(1)(3)" index="55" status="LL" value="0" reducedCost="0"/>
-  <variable name="xEAr&apos;(0,1,0,2,3)(3)(2)(3)" index="56" status="BS" value="-0" reducedCost="0"/>
+  <variable name="xEAr&apos;(0,1,0,2,3)(3)(2)(3)" index="56" status="LL" value="0" reducedCost="0"/>
   <variable name="xEAr&apos;(0,1,0,2,4)(2)(1)(4)" index="57" status="LL" value="0" reducedCost="0"/>
   <variable name="xEAr&apos;(0,1,0,2,4)(3)(1)(4)" index="58" status="LL" value="0" reducedCost="0"/>
-  <variable name="xEAr&apos;(0,1,0,2,4)(3)(2)(4)" index="59" status="BS" value="-0" reducedCost="0"/>
+  <variable name="xEAr&apos;(0,1,0,2,4)(3)(2)(4)" index="59" status="LL" value="0" reducedCost="0"/>
   <variable name="xEAr&apos;(0,1,0,2,5)(2)(1)(5)" index="60" status="LL" value="0" reducedCost="0"/>
   <variable name="xEAr&apos;(0,1,0,2,5)(3)(1)(5)" index="61" status="LL" value="0" reducedCost="0"/>
-  <variable name="xEAr&apos;(0,1,0,2,5)(3)(2)(5)" index="62" status="BS" value="-0" reducedCost="0"/>
+  <variable name="xEAr&apos;(0,1,0,2,5)(3)(2)(5)" index="62" status="LL" value="0" reducedCost="0"/>
   <variable name="xEAr&apos;(0,1,0,2,6)(2)(1)(6)" index="63" status="LL" value="0" reducedCost="0"/>
   <variable name="xEAr&apos;(0,1,0,2,6)(3)(1)(6)" index="64" status="LL" value="0" reducedCost="0"/>
-  <variable name="xEAr&apos;(0,1,0,2,6)(3)(2)(6)" index="65" status="BS" value="-0" reducedCost="0"/>
+  <variable name="xEAr&apos;(0,1,0,2,6)(3)(2)(6)" index="65" status="LL" value="0" reducedCost="0"/>
   <variable name="xEArR(0,1,0,2,0)(2)(1)" index="66" status="BS" value="0" reducedCost="0"/>
   <variable name="xEArR(0,1,0,2,0)(3)(1)" index="67" status="BS" value="0" reducedCost="0"/>
   <variable name="xEArR(0,1,0,2,0)(3)(2)" index="68" status="BS" value="0" reducedCost="0"/>

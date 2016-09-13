@@ -1279,7 +1279,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 											c15_valuelist.get(C15_num).add((double) -1);
 											
 											//Add sigma(t')(c) xEAe'(s1,s2,s3,s4,s5,s6)[t'][c]	
-											for (int tt = t + 1; tt <= total_Periods; tt++) {
+											for (int tt = t; tt <= total_Periods; tt++) {
 												for (int c = 0; c < layer5.size(); c++) {
 													String thisCoverTypeconversion = layer5.get(s5) + " " + layer5.get(c);
 													if (coverTypeConversions.contains(thisCoverTypeconversion)) {
@@ -1347,7 +1347,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 											c16_valuelist.get(C16_num).add((double) -1);
 											
 											//Add sigma(c) xEAr'(s1,s2,s3,s4,s5)[t'][a=t'-t][c]
-											for (int tt = t + 1; tt <= total_Periods; tt++) {
+											for (int tt = t; tt <= total_Periods; tt++) {
 												for (int c = 0; c < layer5.size(); c++) {
 													String thisCoverTypeconversion = layer5.get(s5) + " " + layer5.get(c);						
 													if (coverTypeConversions.contains(thisCoverTypeconversion)) {

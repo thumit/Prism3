@@ -1,1503 +1,1503 @@
 Strata ID	Layer 1	Layer 2	Layer 3	Layer 4	Layer 5	Layer 6	Total area (acres)	Available Methods/Prescriptions	Methods for Implementation	
-BNNCAL	B	N	N	C	A	L	335	null	EA 	
-BNNCAM	B	N	N	C	A	M	63	null	EA 	
-BNNCAP	B	N	N	C	A	P	64	null	EA 	
-BNNCCL	B	N	N	C	C	L	4121	null	EA 	
-BNNCCM	B	N	N	C	C	M	1353	null	EA 	
-BNNCCP	B	N	N	C	C	P	651	null	EA 	
-BNNCCS	B	N	N	C	C	S	97	null	EA 	
-BNNCDL	B	N	N	C	D	L	1725	null	EA 	
-BNNCDM	B	N	N	C	D	M	540	null	EA 	
-BNNCDP	B	N	N	C	D	P	77	null	EA 	
-BNNCDS	B	N	N	C	D	S	84	null	EA 	
-BNNCIL	B	N	N	C	I	L	247	null	EA 	
-BNNCIM	B	N	N	C	I	M	61	null	EA 	
-BNNCLL	B	N	N	C	L	L	181	null	EA 	
-BNNCLM	B	N	N	C	L	M	92	null	EA 	
-BNNCPL	B	N	N	C	P	L	1268	null	EA 	
-BNNCPM	B	N	N	C	P	M	909	null	EA 	
-BNNCPP	B	N	N	C	P	P	142	null	EA 	
-BNNCWL	B	N	N	C	W	L	4299	null	EA 	
-BNNCWM	B	N	N	C	W	M	1664	null	EA 	
-BNNCWP	B	N	N	C	W	P	310	null	EA 	
-BNNCWS	B	N	N	C	W	S	107	null	EA 	
-BNNHCL	B	N	N	H	C	L	71	null	EA 	
-BNNLAL	B	N	N	L	A	L	378	null	EA 	
-BNNLAM	B	N	N	L	A	M	157	null	EA 	
-BNNLAS	B	N	N	L	A	S	86	null	EA 	
-BNNLCL	B	N	N	L	C	L	1396	null	EA 	
-BNNLCM	B	N	N	L	C	M	396	null	EA 	
-BNNLCS	B	N	N	L	C	S	100	null	EA 	
-BNNLDL	B	N	N	L	D	L	58	null	EA 	
-BNNLIL	B	N	N	L	I	L	242	null	EA 	
-BNNLIM	B	N	N	L	I	M	217	null	EA 	
-BNNLIS	B	N	N	L	I	S	140	null	EA 	
-BNNLLM	B	N	N	L	L	M	75	null	EA 	
-BNNLPL	B	N	N	L	P	L	92	null	EA 	
-BNNLWL	B	N	N	L	W	L	1144	null	EA 	
-BNNLWM	B	N	N	L	W	M	337	null	EA 	
-BNNLWP	B	N	N	L	W	P	64	null	EA 	
-BNNLWS	B	N	N	L	W	S	75	null	EA 	
-BNNRCL	B	N	N	R	C	L	1707	null	EA 	
-BNNRCM	B	N	N	R	C	M	355	null	EA 	
-BNNRDL	B	N	N	R	D	L	77	null	EA 	
-BNNRPL	B	N	N	R	P	L	116	null	EA 	
-BNNRWL	B	N	N	R	W	L	943	null	EA 	
-BNNRWM	B	N	N	R	W	M	291	null	EA 	
-BNNRWP	B	N	N	R	W	P	68	null	EA 	
-BNOHCL	B	N	O	H	C	L	675	null	EA 	
-BNOHCM	B	N	O	H	C	M	133	null	EA 	
-BNOHWL	B	N	O	H	W	L	287	null	EA 	
-BNORCL	B	N	O	R	C	L	2401	null	EA 	
-BNORCM	B	N	O	R	C	M	385	null	EA 	
-BNORDL	B	N	O	R	D	L	171	null	EA 	
-BNORDM	B	N	O	R	D	M	90	null	EA 	
-BNORPL	B	N	O	R	P	L	127	null	EA 	
-BNORWL	B	N	O	R	W	L	1338	null	EA 	
-BNORWM	B	N	O	R	W	M	162	null	EA 	
-BNORWP	B	N	O	R	W	P	70	null	EA 	
-BNPCCL	B	N	P	C	C	L	78	null	EA 	
-BNPHCL	B	N	P	H	C	L	478	null	EA 	
-BNPHCM	B	N	P	H	C	M	135	null	EA 	
-BNPHCP	B	N	P	H	C	P	56	null	EA 	
-BNPHWL	B	N	P	H	W	L	245	null	EA 	
-BNPHWM	B	N	P	H	W	M	90	null	EA 	
-BNPRAL	B	N	P	R	A	L	118	null	EA 	
-BNPRCL	B	N	P	R	C	L	1246	null	EA 	
-BNPRCM	B	N	P	R	C	M	323	null	EA 	
-BNPRCP	B	N	P	R	C	P	72	null	EA 	
-BNPRDL	B	N	P	R	D	L	65	null	EA 	
-BNPRPL	B	N	P	R	P	L	77	null	EA 	
-BNPRWL	B	N	P	R	W	L	742	null	EA 	
-BNPRWM	B	N	P	R	W	M	220	null	EA 	
-BNPRWP	B	N	P	R	W	P	62	null	EA 	
-BNSHCL	B	N	S	H	C	L	1617	null	EA 	
-BNSHCM	B	N	S	H	C	M	293	null	EA 	
-BNSHCP	B	N	S	H	C	P	65	null	EA 	
-BNSHCS	B	N	S	H	C	S	109	null	EA 	
-BNSHIL	B	N	S	H	I	L	57	null	EA 	
-BNSHLL	B	N	S	H	L	L	104	null	EA 	
-BNSHWL	B	N	S	H	W	L	974	null	EA 	
-BNSHWM	B	N	S	H	W	M	206	null	EA 	
-BNSHWP	B	N	S	H	W	P	113	null	EA 	
-BNSHWS	B	N	S	H	W	S	215	null	EA 	
-BNSRCL	B	N	S	R	C	L	8882	null	EA 	
-BNSRCM	B	N	S	R	C	M	1847	null	EA 	
-BNSRCP	B	N	S	R	C	P	453	null	EA 	
-BNSRCS	B	N	S	R	C	S	183	null	EA 	
-BNSRDL	B	N	S	R	D	L	495	null	EA 	
-BNSRDM	B	N	S	R	D	M	211	null	EA 	
-BNSRDP	B	N	S	R	D	P	80	null	EA 	
-BNSRDS	B	N	S	R	D	S	66	null	EA 	
-BNSRLL	B	N	S	R	L	L	88	null	EA 	
-BNSRPL	B	N	S	R	P	L	645	null	EA 	
-BNSRPP	B	N	S	R	P	P	56	null	EA 	
-BNSRWL	B	N	S	R	W	L	5031	null	EA 	
-BNSRWM	B	N	S	R	W	M	801	null	EA 	
-BNSRWP	B	N	S	R	W	P	657	null	EA 	
-BNSRWS	B	N	S	R	W	S	545	null	EA 	
-BRNCAL	B	R	N	C	A	L	137	null	EA 	
-BRNCAM	B	R	N	C	A	M	113	null	EA 	
-BRNCCL	B	R	N	C	C	L	4702	null	EA 	
-BRNCCM	B	R	N	C	C	M	987	null	EA 	
-BRNCCP	B	R	N	C	C	P	194	null	EA 	
-BRNCCS	B	R	N	C	C	S	104	null	EA 	
-BRNCDL	B	R	N	C	D	L	542	null	EA 	
-BRNCDM	B	R	N	C	D	M	377	null	EA 	
-BRNCDP	B	R	N	C	D	P	56	null	EA 	
-BRNCIL	B	R	N	C	I	L	239	null	EA 	
-BRNCIM	B	R	N	C	I	M	79	null	EA 	
-BRNCLL	B	R	N	C	L	L	140	null	EA 	
-BRNCLM	B	R	N	C	L	M	161	null	EA 	
-BRNCPL	B	R	N	C	P	L	837	null	EA 	
-BRNCPM	B	R	N	C	P	M	442	null	EA 	
-BRNCPP	B	R	N	C	P	P	55	null	EA 	
-BRNCWL	B	R	N	C	W	L	3076	null	EA 	
-BRNCWM	B	R	N	C	W	M	1750	null	EA 	
-BRNCWP	B	R	N	C	W	P	260	null	EA 	
-BRNCWS	B	R	N	C	W	S	163	null	EA 	
-BRNHAM	B	R	N	H	A	M	57	null	EA 	
-BRNHCL	B	R	N	H	C	L	1019	null	EA 	
-BRNHCM	B	R	N	H	C	M	509	null	EA 	
-BRNHCP	B	R	N	H	C	P	58	null	EA 	
-BRNHLM	B	R	N	H	L	M	118	null	EA 	
-BRNHWL	B	R	N	H	W	L	706	null	EA 	
-BRNHWM	B	R	N	H	W	M	409	null	EA 	
-BRNHWP	B	R	N	H	W	P	129	null	EA 	
-BRNLAL	B	R	N	L	A	L	310	null	EA 	
-BRNLAM	B	R	N	L	A	M	195	null	EA 	
-BRNLCL	B	R	N	L	C	L	1571	null	EA 	
-BRNLCM	B	R	N	L	C	M	761	null	EA 	
-BRNLCP	B	R	N	L	C	P	80	null	EA 	
-BRNLDL	B	R	N	L	D	L	61	null	EA 	
-BRNLDM	B	R	N	L	D	M	107	null	EA 	
-BRNLIL	B	R	N	L	I	L	113	null	EA 	
-BRNLIM	B	R	N	L	I	M	112	null	EA 	
-BRNLLM	B	R	N	L	L	M	67	null	EA 	
-BRNLWL	B	R	N	L	W	L	1333	null	EA 	
-BRNLWM	B	R	N	L	W	M	938	null	EA 	
-BRNLWP	B	R	N	L	W	P	106	null	EA 	
-BRNRAL	B	R	N	R	A	L	79	null	EA 	
-BRNRCL	B	R	N	R	C	L	2381	null	EA 	
-BRNRCM	B	R	N	R	C	M	760	null	EA 	
-BRNRCP	B	R	N	R	C	P	111	null	EA 	
-BRNRDL	B	R	N	R	D	L	314	null	EA 	
-BRNRDM	B	R	N	R	D	M	120	null	EA 	
-BRNRLL	B	R	N	R	L	L	56	null	EA 	
-BRNRPL	B	R	N	R	P	L	68	null	EA 	
-BRNRPM	B	R	N	R	P	M	136	null	EA 	
-BRNRWL	B	R	N	R	W	L	1929	null	EA 	
-BRNRWM	B	R	N	R	W	M	606	null	EA 	
-BRNRWP	B	R	N	R	W	P	128	null	EA 	
-BRNRWS	B	R	N	R	W	S	61	null	EA 	
-BROCCL	B	R	O	C	C	L	311	null	EA 	
-BROCCM	B	R	O	C	C	M	51	null	EA 	
-BROCCS	B	R	O	C	C	S	78	null	EA 	
-BROCDL	B	R	O	C	D	L	128	null	EA 	
-BROCPL	B	R	O	C	P	L	83	null	EA 	
-BROCWL	B	R	O	C	W	L	335	null	EA 	
-BROCWM	B	R	O	C	W	M	66	null	EA 	
-BROHCL	B	R	O	H	C	L	168	null	EA 	
-BROLCL	B	R	O	L	C	L	65	null	EA 	
-BRORCL	B	R	O	R	C	L	1611	null	EA 	
-BRORCM	B	R	O	R	C	M	360	null	EA 	
-BRORCP	B	R	O	R	C	P	70	null	EA 	
-BRORCS	B	R	O	R	C	S	58	null	EA 	
-BRORDL	B	R	O	R	D	L	248	null	EA 	
-BRORPL	B	R	O	R	P	L	82	null	EA 	
-BRORWL	B	R	O	R	W	L	1268	null	EA 	
-BRORWM	B	R	O	R	W	M	246	null	EA 	
-BRORWP	B	R	O	R	W	P	63	null	EA 	
-BRORWS	B	R	O	R	W	S	60	null	EA 	
-BRPCAL	B	R	P	C	A	L	86	null	EA 	
-BRPCAS	B	R	P	C	A	S	77	null	EA 	
-BRPCCL	B	R	P	C	C	L	1056	null	EA 	
-BRPCCM	B	R	P	C	C	M	219	null	EA 	
-BRPCCP	B	R	P	C	C	P	64	null	EA 	
-BRPCCS	B	R	P	C	C	S	392	null	EA 	
-BRPCDL	B	R	P	C	D	L	217	null	EA 	
-BRPCDS	B	R	P	C	D	S	67	null	EA 	
-BRPCIL	B	R	P	C	I	L	167	null	EA 	
-BRPCIS	B	R	P	C	I	S	61	null	EA 	
-BRPCPL	B	R	P	C	P	L	293	null	EA 	
-BRPCPS	B	R	P	C	P	S	53	null	EA 	
-BRPCWL	B	R	P	C	W	L	1167	null	EA 	
-BRPCWM	B	R	P	C	W	M	160	null	EA 	
-BRPCWP	B	R	P	C	W	P	277	null	EA 	
-BRPCWS	B	R	P	C	W	S	464	null	EA 	
-BRPHCL	B	R	P	H	C	L	644	null	EA 	
-BRPHCM	B	R	P	H	C	M	333	null	EA 	
-BRPHLL	B	R	P	H	L	L	79	null	EA 	
-BRPHWL	B	R	P	H	W	L	324	null	EA 	
-BRPHWM	B	R	P	H	W	M	203	null	EA 	
-BRPHWP	B	R	P	H	W	P	76	null	EA 	
-BRPLAL	B	R	P	L	A	L	85	null	EA 	
-BRPLAM	B	R	P	L	A	M	77	null	EA 	
-BRPLCL	B	R	P	L	C	L	471	null	EA 	
-BRPLCM	B	R	P	L	C	M	85	null	EA 	
-BRPLCP	B	R	P	L	C	P	53	null	EA 	
-BRPLCS	B	R	P	L	C	S	155	null	EA 	
-BRPLIL	B	R	P	L	I	L	72	null	EA 	
-BRPLWL	B	R	P	L	W	L	424	null	EA 	
-BRPLWM	B	R	P	L	W	M	68	null	EA 	
-BRPLWP	B	R	P	L	W	P	85	null	EA 	
-BRPLWS	B	R	P	L	W	S	139	null	EA 	
-BRPRAL	B	R	P	R	A	L	52	null	EA 	
-BRPRCL	B	R	P	R	C	L	7588	null	EA 	
-BRPRCM	B	R	P	R	C	M	2608	null	EA 	
-BRPRCP	B	R	P	R	C	P	394	null	EA 	
-BRPRCS	B	R	P	R	C	S	399	null	EA 	
-BRPRDL	B	R	P	R	D	L	1188	null	EA 	
-BRPRDM	B	R	P	R	D	M	344	null	EA 	
-BRPRDP	B	R	P	R	D	P	138	null	EA 	
-BRPRDS	B	R	P	R	D	S	277	null	EA 	
-BRPRIL	B	R	P	R	I	L	92	null	EA 	
-BRPRIP	B	R	P	R	I	P	55	null	EA 	
-BRPRLL	B	R	P	R	L	L	81	null	EA 	
-BRPRPL	B	R	P	R	P	L	481	null	EA 	
-BRPRPM	B	R	P	R	P	M	162	null	EA 	
-BRPRPP	B	R	P	R	P	P	70	null	EA 	
-BRPRPS	B	R	P	R	P	S	57	null	EA 	
-BRPRWL	B	R	P	R	W	L	5277	null	EA 	
-BRPRWM	B	R	P	R	W	M	1743	null	EA 	
-BRPRWP	B	R	P	R	W	P	373	null	EA 	
-BRPRWS	B	R	P	R	W	S	554	null	EA 	
-CNNCAL	C	N	N	C	A	L	13028	null	EA 	
-CNNCAM	C	N	N	C	A	M	28537	null	EA 	
-CNNCAP	C	N	N	C	A	P	27072	null	EA 	
-CNNCAS	C	N	N	C	A	S	292	null	EA 	
-CNNCCL	C	N	N	C	C	L	3782	null	EA 	
-CNNCCM	C	N	N	C	C	M	755	null	EA 	
-CNNCCP	C	N	N	C	C	P	395	null	EA 	
-CNNCCS	C	N	N	C	C	S	71	null	EA 	
-CNNCDL	C	N	N	C	D	L	1562	null	EA 	
-CNNCDM	C	N	N	C	D	M	636	null	EA 	
-CNNCDP	C	N	N	C	D	P	123	null	EA 	
-CNNCDS	C	N	N	C	D	S	154	null	EA 	
-CNNCIL	C	N	N	C	I	L	8449	null	EA 	
-CNNCIM	C	N	N	C	I	M	14243	null	EA 	
-CNNCIP	C	N	N	C	I	P	7732	null	EA 	
-CNNCIS	C	N	N	C	I	S	731	null	EA 	
-CNNCLL	C	N	N	C	L	L	3055	null	EA 	
-CNNCLM	C	N	N	C	L	M	9430	null	EA 	
-CNNCLP	C	N	N	C	L	P	9579	null	EA 	
-CNNCPL	C	N	N	C	P	L	3182	null	EA 	
-CNNCPM	C	N	N	C	P	M	3068	null	EA 	
-CNNCPP	C	N	N	C	P	P	291	null	EA 	
-CNNCPS	C	N	N	C	P	S	240	null	EA 	
-CNNCWL	C	N	N	C	W	L	3931	null	EA 	
-CNNCWM	C	N	N	C	W	M	2908	null	EA 	
-CNNCWP	C	N	N	C	W	P	749	null	EA 	
-CNNCWS	C	N	N	C	W	S	118	null	EA 	
-CNNHAL	C	N	N	H	A	L	997	null	EA 	
-CNNHAM	C	N	N	H	A	M	907	null	EA 	
-CNNHAP	C	N	N	H	A	P	861	null	EA 	
-CNNHIL	C	N	N	H	I	L	1058	null	EA 	
-CNNHIM	C	N	N	H	I	M	925	null	EA 	
-CNNHIP	C	N	N	H	I	P	484	null	EA 	
-CNNHLL	C	N	N	H	L	L	724	null	EA 	
-CNNHLM	C	N	N	H	L	M	390	null	EA 	
-CNNHLP	C	N	N	H	L	P	316	null	EA 	
-CNNHWL	C	N	N	H	W	L	142	null	EA 	
-CNNLAL	C	N	N	L	A	L	33323	null	EA 	
-CNNLAM	C	N	N	L	A	M	56955	null	EA 	
-CNNLAP	C	N	N	L	A	P	38935	null	EA 	
-CNNLAS	C	N	N	L	A	S	1116	null	EA 	
-CNNLCL	C	N	N	L	C	L	5270	null	EA 	
-CNNLCM	C	N	N	L	C	M	1025	null	EA 	
-CNNLCP	C	N	N	L	C	P	473	null	EA 	
-CNNLCS	C	N	N	L	C	S	200	null	EA 	
-CNNLDL	C	N	N	L	D	L	1744	null	EA 	
-CNNLDM	C	N	N	L	D	M	666	null	EA 	
-CNNLDP	C	N	N	L	D	P	51	null	EA 	
-CNNLDS	C	N	N	L	D	S	184	null	EA 	
-CNNLIL	C	N	N	L	I	L	19303	null	EA 	
-CNNLIM	C	N	N	L	I	M	32817	null	EA 	
-CNNLIP	C	N	N	L	I	P	14895	null	EA 	
-CNNLIS	C	N	N	L	I	S	1863	null	EA 	
-CNNLLL	C	N	N	L	L	L	6453	null	EA 	
-CNNLLM	C	N	N	L	L	M	23216	null	EA 	
-CNNLLP	C	N	N	L	L	P	17277	null	EA 	
-CNNLPL	C	N	N	L	P	L	1803	null	EA 	
-CNNLPM	C	N	N	L	P	M	2528	null	EA 	
-CNNLPP	C	N	N	L	P	P	370	null	EA 	
-CNNLPS	C	N	N	L	P	S	110	null	EA 	
-CNNLWL	C	N	N	L	W	L	7496	null	EA 	
-CNNLWM	C	N	N	L	W	M	5075	null	EA 	
-CNNLWP	C	N	N	L	W	P	1715	null	EA 	
-CNNLWS	C	N	N	L	W	S	331	null	EA 	
-CNNRAL	C	N	N	R	A	L	1237	null	EA 	
-CNNRAM	C	N	N	R	A	M	2226	null	EA 	
-CNNRAP	C	N	N	R	A	P	1865	null	EA 	
-CNNRAS	C	N	N	R	A	S	206	null	EA 	
-CNNRIL	C	N	N	R	I	L	1061	null	EA 	
-CNNRIM	C	N	N	R	I	M	1499	null	EA 	
-CNNRIP	C	N	N	R	I	P	836	null	EA 	
-CNNRIS	C	N	N	R	I	S	213	null	EA 	
-CNNRLL	C	N	N	R	L	L	638	null	EA 	
-CNNRLM	C	N	N	R	L	M	794	null	EA 	
-CNNRLP	C	N	N	R	L	P	597	null	EA 	
-CNNRWL	C	N	N	R	W	L	152	null	EA 	
-CNNRWM	C	N	N	R	W	M	103	null	EA 	
-CNOCAL	C	N	O	C	A	L	120	null	EA 	
-CNOCAM	C	N	O	C	A	M	204	null	EA 	
-CNOCAP	C	N	O	C	A	P	117	null	EA 	
-CNOCCL	C	N	O	C	C	L	86	null	EA 	
-CNOCIL	C	N	O	C	I	L	129	null	EA 	
-CNOCIM	C	N	O	C	I	M	53	null	EA 	
-CNOCIP	C	N	O	C	I	P	72	null	EA 	
-CNOCLL	C	N	O	C	L	L	60	null	EA 	
-CNOCLM	C	N	O	C	L	M	60	null	EA 	
-CNOCLP	C	N	O	C	L	P	57	null	EA 	
-CNOCWL	C	N	O	C	W	L	65	null	EA 	
-CNOHAL	C	N	O	H	A	L	426	null	EA 	
-CNOHAM	C	N	O	H	A	M	448	null	EA 	
-CNOHAP	C	N	O	H	A	P	695	null	EA 	
-CNOHIL	C	N	O	H	I	L	393	null	EA 	
-CNOHIM	C	N	O	H	I	M	348	null	EA 	
-CNOHIP	C	N	O	H	I	P	338	null	EA 	
-CNOHLL	C	N	O	H	L	L	167	null	EA 	
-CNOHLM	C	N	O	H	L	M	273	null	EA 	
-CNOHLP	C	N	O	H	L	P	266	null	EA 	
-CNOHWL	C	N	O	H	W	L	55	null	EA 	
-CNOLAL	C	N	O	L	A	L	97	null	EA 	
-CNOLAM	C	N	O	L	A	M	147	null	EA 	
-CNOLAP	C	N	O	L	A	P	333	null	EA 	
-CNOLIM	C	N	O	L	I	M	71	null	EA 	
-CNOLIP	C	N	O	L	I	P	91	null	EA 	
-CNOLLM	C	N	O	L	L	M	56	null	EA 	
-CNOLLP	C	N	O	L	L	P	101	null	EA 	
-CNORAL	C	N	O	R	A	L	336	null	EA 	
-CNORAM	C	N	O	R	A	M	217	null	EA 	
-CNORAP	C	N	O	R	A	P	218	null	EA 	
-CNORIL	C	N	O	R	I	L	409	null	EA 	
-CNORIM	C	N	O	R	I	M	252	null	EA 	
-CNORIP	C	N	O	R	I	P	233	null	EA 	
-CNORLL	C	N	O	R	L	L	241	null	EA 	
-CNORLM	C	N	O	R	L	M	156	null	EA 	
-CNORLP	C	N	O	R	L	P	159	null	EA 	
-CNORWL	C	N	O	R	W	L	109	null	EA 	
-CNORWM	C	N	O	R	W	M	67	null	EA 	
-CNPCAL	C	N	P	C	A	L	498	null	EA 	
-CNPCAM	C	N	P	C	A	M	992	null	EA 	
-CNPCAP	C	N	P	C	A	P	1161	null	EA 	
-CNPCCL	C	N	P	C	C	L	713	null	EA 	
-CNPCCM	C	N	P	C	C	M	220	null	EA 	
-CNPCCP	C	N	P	C	C	P	114	null	EA 	
-CNPCIL	C	N	P	C	I	L	830	null	EA 	
-CNPCIM	C	N	P	C	I	M	548	null	EA 	
-CNPCIP	C	N	P	C	I	P	657	null	EA 	
-CNPCLL	C	N	P	C	L	L	504	null	EA 	
-CNPCLM	C	N	P	C	L	M	751	null	EA 	
-CNPCLP	C	N	P	C	L	P	1143	null	EA 	
-CNPCWL	C	N	P	C	W	L	985	null	EA 	
-CNPCWM	C	N	P	C	W	M	254	null	EA 	
-CNPCWP	C	N	P	C	W	P	445	null	EA 	
-CNPHAL	C	N	P	H	A	L	116	null	EA 	
-CNPHAM	C	N	P	H	A	M	548	null	EA 	
-CNPHAP	C	N	P	H	A	P	881	null	EA 	
-CNPHIL	C	N	P	H	I	L	135	null	EA 	
-CNPHIM	C	N	P	H	I	M	358	null	EA 	
-CNPHIP	C	N	P	H	I	P	552	null	EA 	
-CNPHLL	C	N	P	H	L	L	103	null	EA 	
-CNPHLM	C	N	P	H	L	M	346	null	EA 	
-CNPHLP	C	N	P	H	L	P	577	null	EA 	
-CNPLAL	C	N	P	L	A	L	186	null	EA 	
-CNPLAM	C	N	P	L	A	M	734	null	EA 	
-CNPLAP	C	N	P	L	A	P	1208	null	EA 	
-CNPLIM	C	N	P	L	I	M	289	null	EA 	
-CNPLIP	C	N	P	L	I	P	173	null	EA 	
-CNPLLL	C	N	P	L	L	L	55	null	EA 	
-CNPLLM	C	N	P	L	L	M	238	null	EA 	
-CNPLLP	C	N	P	L	L	P	234	null	EA 	
-CNPRAM	C	N	P	R	A	M	318	null	EA 	
-CNPRAP	C	N	P	R	A	P	809	null	EA 	
-CNPRIL	C	N	P	R	I	L	98	null	EA 	
-CNPRIM	C	N	P	R	I	M	155	null	EA 	
-CNPRIP	C	N	P	R	I	P	112	null	EA 	
-CNPRLL	C	N	P	R	L	L	86	null	EA 	
-CNPRLM	C	N	P	R	L	M	96	null	EA 	
-CNPRLP	C	N	P	R	L	P	157	null	EA 	
-CNSCAL	C	N	S	C	A	L	637	null	EA 	
-CNSCAM	C	N	S	C	A	M	478	null	EA 	
-CNSCAP	C	N	S	C	A	P	607	null	EA 	
-CNSCCL	C	N	S	C	C	L	592	null	EA 	
-CNSCIL	C	N	S	C	I	L	834	null	EA 	
-CNSCIM	C	N	S	C	I	M	408	null	EA 	
-CNSCIP	C	N	S	C	I	P	348	null	EA 	
-CNSCLL	C	N	S	C	L	L	890	null	EA 	
-CNSCLM	C	N	S	C	L	M	528	null	EA 	
-CNSCLP	C	N	S	C	L	P	473	null	EA 	
-CNSCWL	C	N	S	C	W	L	828	null	EA 	
-CNSCWM	C	N	S	C	W	M	109	null	EA 	
-CNSCWP	C	N	S	C	W	P	61	null	EA 	
-CNSHAL	C	N	S	H	A	L	3564	null	EA 	
-CNSHAM	C	N	S	H	A	M	3792	null	EA 	
-CNSHAP	C	N	S	H	A	P	5069	null	EA 	
-CNSHAS	C	N	S	H	A	S	98	null	EA 	
-CNSHCL	C	N	S	H	C	L	287	null	EA 	
-CNSHIL	C	N	S	H	I	L	3769	null	EA 	
-CNSHIM	C	N	S	H	I	M	2307	null	EA 	
-CNSHIP	C	N	S	H	I	P	2218	null	EA 	
-CNSHIS	C	N	S	H	I	S	137	null	EA 	
-CNSHLL	C	N	S	H	L	L	2904	null	EA 	
-CNSHLM	C	N	S	H	L	M	2396	null	EA 	
-CNSHLP	C	N	S	H	L	P	2897	null	EA 	
-CNSHPM	C	N	S	H	P	M	127	null	EA 	
-CNSHWL	C	N	S	H	W	L	1064	null	EA 	
-CNSHWM	C	N	S	H	W	M	305	null	EA 	
-CNSHWP	C	N	S	H	W	P	291	null	EA 	
-CNSLAL	C	N	S	L	A	L	240	null	EA 	
-CNSLAM	C	N	S	L	A	M	786	null	EA 	
-CNSLAP	C	N	S	L	A	P	1751	null	EA 	
-CNSLIL	C	N	S	L	I	L	190	null	EA 	
-CNSLIM	C	N	S	L	I	M	552	null	EA 	
-CNSLIP	C	N	S	L	I	P	440	null	EA 	
-CNSLLL	C	N	S	L	L	L	143	null	EA 	
-CNSLLM	C	N	S	L	L	M	314	null	EA 	
-CNSLLP	C	N	S	L	L	P	707	null	EA 	
-CNSLWM	C	N	S	L	W	M	67	null	EA 	
-CNSRAL	C	N	S	R	A	L	4105	null	EA 	
-CNSRAM	C	N	S	R	A	M	3298	null	EA 	
-CNSRAP	C	N	S	R	A	P	3680	null	EA 	
-CNSRAS	C	N	S	R	A	S	397	null	EA 	
-CNSRCL	C	N	S	R	C	L	298	null	EA 	
-CNSRCM	C	N	S	R	C	M	261	null	EA 	
-CNSRDL	C	N	S	R	D	L	97	null	EA 	
-CNSRDM	C	N	S	R	D	M	131	null	EA 	
-CNSRIL	C	N	S	R	I	L	6065	null	EA 	
-CNSRIM	C	N	S	R	I	M	3725	null	EA 	
-CNSRIP	C	N	S	R	I	P	2731	null	EA 	
-CNSRIS	C	N	S	R	I	S	291	null	EA 	
-CNSRLL	C	N	S	R	L	L	2477	null	EA 	
-CNSRLM	C	N	S	R	L	M	2457	null	EA 	
-CNSRLP	C	N	S	R	L	P	2377	null	EA 	
-CNSRLS	C	N	S	R	L	S	65	null	EA 	
-CNSRPL	C	N	S	R	P	L	108	null	EA 	
-CNSRPM	C	N	S	R	P	M	407	null	EA 	
-CNSRPP	C	N	S	R	P	P	193	null	EA 	
-CNSRPS	C	N	S	R	P	S	62	null	EA 	
-CNSRWL	C	N	S	R	W	L	1161	null	EA 	
-CNSRWM	C	N	S	R	W	M	955	null	EA 	
-CNSRWP	C	N	S	R	W	P	375	null	EA 	
-CRNCAL	C	R	N	C	A	L	1825	null	EA 	
-CRNCAM	C	R	N	C	A	M	2819	null	EA 	
-CRNCAP	C	R	N	C	A	P	1198	null	EA 	
-CRNCAS	C	R	N	C	A	S	189	null	EA 	
-CRNCCL	C	R	N	C	C	L	74	null	EA 	
-CRNCIL	C	R	N	C	I	L	2085	null	EA 	
-CRNCIM	C	R	N	C	I	M	1970	null	EA 	
-CRNCIP	C	R	N	C	I	P	756	null	EA 	
-CRNCIS	C	R	N	C	I	S	94	null	EA 	
-CRNCLL	C	R	N	C	L	L	516	null	EA 	
-CRNCLM	C	R	N	C	L	M	1452	null	EA 	
-CRNCLP	C	R	N	C	L	P	620	null	EA 	
-CRNCLS	C	R	N	C	L	S	51	null	EA 	
-CRNCPL	C	R	N	C	P	L	1166	null	EA 	
-CRNCPM	C	R	N	C	P	M	1202	null	EA 	
-CRNCPP	C	R	N	C	P	P	147	null	EA 	
-CRNCWL	C	R	N	C	W	L	212	null	EA 	
-CRNCWM	C	R	N	C	W	M	296	null	EA 	
-CRNCWP	C	R	N	C	W	P	141	null	EA 	
-CRNHAL	C	R	N	H	A	L	127	null	EA 	
-CRNHAM	C	R	N	H	A	M	818	null	EA 	
-CRNHAP	C	R	N	H	A	P	713	null	EA 	
-CRNHIL	C	R	N	H	I	L	205	null	EA 	
-CRNHIM	C	R	N	H	I	M	318	null	EA 	
-CRNHIP	C	R	N	H	I	P	223	null	EA 	
-CRNHLL	C	R	N	H	L	L	59	null	EA 	
-CRNHLM	C	R	N	H	L	M	360	null	EA 	
-CRNHLP	C	R	N	H	L	P	266	null	EA 	
-CRNHWL	C	R	N	H	W	L	97	null	EA 	
-CRNHWM	C	R	N	H	W	M	183	null	EA 	
-CRNLAL	C	R	N	L	A	L	3051	null	EA 	
-CRNLAM	C	R	N	L	A	M	7546	null	EA 	
-CRNLAP	C	R	N	L	A	P	12507	null	EA 	
-CRNLAS	C	R	N	L	A	S	75	null	EA 	
-CRNLCL	C	R	N	L	C	L	664	null	EA 	
-CRNLCM	C	R	N	L	C	M	118	null	EA 	
-CRNLCP	C	R	N	L	C	P	51	null	EA 	
-CRNLIL	C	R	N	L	I	L	1642	null	EA 	
-CRNLIM	C	R	N	L	I	M	4812	null	EA 	
-CRNLIP	C	R	N	L	I	P	3746	null	EA 	
-CRNLIS	C	R	N	L	I	S	203	null	EA 	
-CRNLLL	C	R	N	L	L	L	926	null	EA 	
-CRNLLM	C	R	N	L	L	M	4120	null	EA 	
-CRNLLP	C	R	N	L	L	P	4114	null	EA 	
-CRNLPM	C	R	N	L	P	M	72	null	EA 	
-CRNLPP	C	R	N	L	P	P	94	null	EA 	
-CRNLWL	C	R	N	L	W	L	754	null	EA 	
-CRNLWM	C	R	N	L	W	M	461	null	EA 	
-CRNLWP	C	R	N	L	W	P	185	null	EA 	
-CRNRAL	C	R	N	R	A	L	445	null	EA 	
-CRNRAM	C	R	N	R	A	M	1018	null	EA 	
-CRNRAP	C	R	N	R	A	P	722	null	EA 	
-CRNRAS	C	R	N	R	A	S	575	null	EA 	
-CRNRIL	C	R	N	R	I	L	301	null	EA 	
-CRNRIM	C	R	N	R	I	M	610	null	EA 	
-CRNRIP	C	R	N	R	I	P	533	null	EA 	
-CRNRIS	C	R	N	R	I	S	157	null	EA 	
-CRNRLL	C	R	N	R	L	L	61	null	EA 	
-CRNRLM	C	R	N	R	L	M	254	null	EA 	
-CRNRLP	C	R	N	R	L	P	355	null	EA 	
-CRNRPM	C	R	N	R	P	M	90	null	EA 	
-CRNRWL	C	R	N	R	W	L	69	null	EA 	
-CRNRWM	C	R	N	R	W	M	192	null	EA 	
-CROCAL	C	R	O	C	A	L	164	null	EA 	
-CROCAM	C	R	O	C	A	M	371	null	EA 	
-CROCAP	C	R	O	C	A	P	688	null	EA 	
-CROCIL	C	R	O	C	I	L	370	null	EA 	
-CROCIM	C	R	O	C	I	M	300	null	EA 	
-CROCIP	C	R	O	C	I	P	357	null	EA 	
-CROCLL	C	R	O	C	L	L	93	null	EA 	
-CROCLM	C	R	O	C	L	M	189	null	EA 	
-CROCLP	C	R	O	C	L	P	269	null	EA 	
-CROHAL	C	R	O	H	A	L	306	null	EA 	
-CROHAM	C	R	O	H	A	M	242	null	EA 	
-CROHAP	C	R	O	H	A	P	383	null	EA 	
-CROHIL	C	R	O	H	I	L	229	null	EA 	
-CROHIM	C	R	O	H	I	M	138	null	EA 	
-CROHIP	C	R	O	H	I	P	173	null	EA 	
-CROHLL	C	R	O	H	L	L	250	null	EA 	
-CROHLM	C	R	O	H	L	M	182	null	EA 	
-CROHLP	C	R	O	H	L	P	189	null	EA 	
-CROLAL	C	R	O	L	A	L	356	null	EA 	
-CROLAM	C	R	O	L	A	M	429	null	EA 	
-CROLAP	C	R	O	L	A	P	1797	null	EA 	
-CROLIL	C	R	O	L	I	L	343	null	EA 	
-CROLIM	C	R	O	L	I	M	252	null	EA 	
-CROLIP	C	R	O	L	I	P	495	null	EA 	
-CROLLL	C	R	O	L	L	L	87	null	EA 	
-CROLLM	C	R	O	L	L	M	207	null	EA 	
-CROLLP	C	R	O	L	L	P	444	null	EA 	
-CRORAL	C	R	O	R	A	L	238	null	EA 	
-CRORAM	C	R	O	R	A	M	202	null	EA 	
-CRORAP	C	R	O	R	A	P	171	null	EA 	
-CRORIL	C	R	O	R	I	L	290	null	EA 	
-CRORIM	C	R	O	R	I	M	138	null	EA 	
-CRORIP	C	R	O	R	I	P	134	null	EA 	
-CRORLL	C	R	O	R	L	L	57	null	EA 	
-CRORLM	C	R	O	R	L	M	128	null	EA 	
-CRORLP	C	R	O	R	L	P	111	null	EA 	
-CRPCAL	C	R	P	C	A	L	1055	null	EA 	
-CRPCAM	C	R	P	C	A	M	2432	null	EA 	
-CRPCAP	C	R	P	C	A	P	6553	null	EA 	
-CRPCIL	C	R	P	C	I	L	2382	null	EA 	
-CRPCIM	C	R	P	C	I	M	1762	null	EA 	
-CRPCIP	C	R	P	C	I	P	2665	null	EA 	
-CRPCLL	C	R	P	C	L	L	683	null	EA 	
-CRPCLM	C	R	P	C	L	M	1879	null	EA 	
-CRPCLP	C	R	P	C	L	P	2948	null	EA 	
-CRPCPL	C	R	P	C	P	L	164	null	EA 	
-CRPCPM	C	R	P	C	P	M	56	null	EA 	
-CRPCPP	C	R	P	C	P	P	54	null	EA 	
-CRPCWL	C	R	P	C	W	L	113	null	EA 	
-CRPCWM	C	R	P	C	W	M	87	null	EA 	
-CRPHAL	C	R	P	H	A	L	1066	null	EA 	
-CRPHAM	C	R	P	H	A	M	1632	null	EA 	
-CRPHAP	C	R	P	H	A	P	3896	null	EA 	
-CRPHCL	C	R	P	H	C	L	96	null	EA 	
-CRPHCM	C	R	P	H	C	M	57	null	EA 	
-CRPHIL	C	R	P	H	I	L	1015	null	EA 	
-CRPHIM	C	R	P	H	I	M	1234	null	EA 	
-CRPHIP	C	R	P	H	I	P	1479	null	EA 	
-CRPHLL	C	R	P	H	L	L	1057	null	EA 	
-CRPHLM	C	R	P	H	L	M	2163	null	EA 	
-CRPHLP	C	R	P	H	L	P	2639	null	EA 	
-CRPHWL	C	R	P	H	W	L	77	null	EA 	
-CRPHWM	C	R	P	H	W	M	87	null	EA 	
-CRPLAL	C	R	P	L	A	L	1454	null	EA 	
-CRPLAM	C	R	P	L	A	M	2729	null	EA 	
-CRPLAP	C	R	P	L	A	P	8858	null	EA 	
-CRPLAS	C	R	P	L	A	S	63	null	EA 	
-CRPLCL	C	R	P	L	C	L	61	null	EA 	
-CRPLIL	C	R	P	L	I	L	1837	null	EA 	
-CRPLIM	C	R	P	L	I	M	1919	null	EA 	
-CRPLIP	C	R	P	L	I	P	3662	null	EA 	
-CRPLLL	C	R	P	L	L	L	758	null	EA 	
-CRPLLM	C	R	P	L	L	M	1623	null	EA 	
-CRPLLP	C	R	P	L	L	P	3424	null	EA 	
-CRPLWL	C	R	P	L	W	L	229	null	EA 	
-CRPLWM	C	R	P	L	W	M	72	null	EA 	
-CRPLWP	C	R	P	L	W	P	57	null	EA 	
-CRPRAL	C	R	P	R	A	L	1788	null	EA 	
-CRPRAM	C	R	P	R	A	M	2080	null	EA 	
-CRPRAP	C	R	P	R	A	P	2147	null	EA 	
-CRPRAS	C	R	P	R	A	S	433	null	EA 	
-CRPRCL	C	R	P	R	C	L	63	null	EA 	
-CRPRDM	C	R	P	R	D	M	53	null	EA 	
-CRPRIL	C	R	P	R	I	L	2336	null	EA 	
-CRPRIM	C	R	P	R	I	M	1833	null	EA 	
-CRPRIP	C	R	P	R	I	P	1248	null	EA 	
-CRPRIS	C	R	P	R	I	S	97	null	EA 	
-CRPRLL	C	R	P	R	L	L	867	null	EA 	
-CRPRLM	C	R	P	R	L	M	1368	null	EA 	
-CRPRLP	C	R	P	R	L	P	1636	null	EA 	
-CRPRPL	C	R	P	R	P	L	160	null	EA 	
-CRPRPM	C	R	P	R	P	M	209	null	EA 	
-CRPRWL	C	R	P	R	W	L	144	null	EA 	
-CRPRWM	C	R	P	R	W	M	332	null	EA 	
-CRPRWP	C	R	P	R	W	P	62	null	EA 	
-KNNCAL	K	N	N	C	A	L	6669	null	EA 	
-KNNCAM	K	N	N	C	A	M	3423	null	EA 	
-KNNCAP	K	N	N	C	A	P	750	null	EA 	
-KNNCAS	K	N	N	C	A	S	288	null	EA 	
-KNNCCL	K	N	N	C	C	L	9272	null	EA 	
-KNNCCM	K	N	N	C	C	M	2046	null	EA 	
-KNNCCP	K	N	N	C	C	P	422	null	EA 	
-KNNCCS	K	N	N	C	C	S	334	null	EA 	
-KNNCDL	K	N	N	C	D	L	11926	null	EA 	
-KNNCDM	K	N	N	C	D	M	4272	null	EA 	
-KNNCDP	K	N	N	C	D	P	1005	null	EA 	
-KNNCDS	K	N	N	C	D	S	1121	null	EA 	
-KNNCIL	K	N	N	C	I	L	16276	null	EA 	
-KNNCIM	K	N	N	C	I	M	14311	null	EA 	
-KNNCIP	K	N	N	C	I	P	1970	null	EA 	
-KNNCIS	K	N	N	C	I	S	833	null	EA 	
-KNNCLL	K	N	N	C	L	L	3479	null	EA 	
-KNNCLM	K	N	N	C	L	M	2686	null	EA 	
-KNNCLP	K	N	N	C	L	P	664	null	EA 	
-KNNCLS	K	N	N	C	L	S	90	null	EA 	
-KNNCPL	K	N	N	C	P	L	24346	null	EA 	
-KNNCPM	K	N	N	C	P	M	20251	null	EA 	
-KNNCPP	K	N	N	C	P	P	3479	null	EA 	
-KNNCPS	K	N	N	C	P	S	1195	null	EA 	
-KNNCWL	K	N	N	C	W	L	16388	null	EA 	
-KNNCWM	K	N	N	C	W	M	9736	null	EA 	
-KNNCWP	K	N	N	C	W	P	1275	null	EA 	
-KNNCWS	K	N	N	C	W	S	887	null	EA 	
-KNNHAM	K	N	N	H	A	M	69	null	EA 	
-KNNHIL	K	N	N	H	I	L	66	null	EA 	
-KNNHIM	K	N	N	H	I	M	103	null	EA 	
-KNNHIP	K	N	N	H	I	P	76	null	EA 	
-KNNHLM	K	N	N	H	L	M	55	null	EA 	
-KNNHPM	K	N	N	H	P	M	65	null	EA 	
-KNNHWM	K	N	N	H	W	M	54	null	EA 	
-KNNLAL	K	N	N	L	A	L	4029	null	EA 	
-KNNLAM	K	N	N	L	A	M	2155	null	EA 	
-KNNLAP	K	N	N	L	A	P	431	null	EA 	
-KNNLAS	K	N	N	L	A	S	556	null	EA 	
-KNNLCL	K	N	N	L	C	L	6685	null	EA 	
-KNNLCM	K	N	N	L	C	M	1857	null	EA 	
-KNNLCP	K	N	N	L	C	P	240	null	EA 	
-KNNLCS	K	N	N	L	C	S	592	null	EA 	
-KNNLDL	K	N	N	L	D	L	2622	null	EA 	
-KNNLDM	K	N	N	L	D	M	1068	null	EA 	
-KNNLDP	K	N	N	L	D	P	154	null	EA 	
-KNNLDS	K	N	N	L	D	S	645	null	EA 	
-KNNLIL	K	N	N	L	I	L	5152	null	EA 	
-KNNLIM	K	N	N	L	I	M	2908	null	EA 	
-KNNLIP	K	N	N	L	I	P	489	null	EA 	
-KNNLIS	K	N	N	L	I	S	1577	null	EA 	
-KNNLLL	K	N	N	L	L	L	817	null	EA 	
-KNNLLM	K	N	N	L	L	M	919	null	EA 	
-KNNLLP	K	N	N	L	L	P	143	null	EA 	
-KNNLLS	K	N	N	L	L	S	51	null	EA 	
-KNNLPL	K	N	N	L	P	L	3075	null	EA 	
-KNNLPM	K	N	N	L	P	M	2494	null	EA 	
-KNNLPP	K	N	N	L	P	P	204	null	EA 	
-KNNLPS	K	N	N	L	P	S	408	null	EA 	
-KNNLWL	K	N	N	L	W	L	7524	null	EA 	
-KNNLWM	K	N	N	L	W	M	3554	null	EA 	
-KNNLWP	K	N	N	L	W	P	603	null	EA 	
-KNNLWS	K	N	N	L	W	S	1056	null	EA 	
-KNNRAL	K	N	N	R	A	L	493	null	EA 	
-KNNRAM	K	N	N	R	A	M	275	null	EA 	
-KNNRAP	K	N	N	R	A	P	87	null	EA 	
-KNNRCL	K	N	N	R	C	L	1102	null	EA 	
-KNNRCM	K	N	N	R	C	M	436	null	EA 	
-KNNRDL	K	N	N	R	D	L	3040	null	EA 	
-KNNRDM	K	N	N	R	D	M	1424	null	EA 	
-KNNRDP	K	N	N	R	D	P	140	null	EA 	
-KNNRIL	K	N	N	R	I	L	1322	null	EA 	
-KNNRIM	K	N	N	R	I	M	1790	null	EA 	
-KNNRIP	K	N	N	R	I	P	653	null	EA 	
-KNNRLL	K	N	N	R	L	L	246	null	EA 	
-KNNRLM	K	N	N	R	L	M	252	null	EA 	
-KNNRLP	K	N	N	R	L	P	51	null	EA 	
-KNNRPL	K	N	N	R	P	L	5119	null	EA 	
-KNNRPM	K	N	N	R	P	M	3269	null	EA 	
-KNNRPP	K	N	N	R	P	P	2744	null	EA 	
-KNNRPS	K	N	N	R	P	S	188	null	EA 	
-KNNRWL	K	N	N	R	W	L	3217	null	EA 	
-KNNRWM	K	N	N	R	W	M	2213	null	EA 	
-KNNRWP	K	N	N	R	W	P	433	null	EA 	
-KNOCAL	K	N	O	C	A	L	133	null	EA 	
-KNOCAM	K	N	O	C	A	M	149	null	EA 	
-KNOCCL	K	N	O	C	C	L	364	null	EA 	
-KNOCCM	K	N	O	C	C	M	114	null	EA 	
-KNOCDL	K	N	O	C	D	L	301	null	EA 	
-KNOCDM	K	N	O	C	D	M	99	null	EA 	
-KNOCIL	K	N	O	C	I	L	473	null	EA 	
-KNOCIM	K	N	O	C	I	M	275	null	EA 	
-KNOCLL	K	N	O	C	L	L	114	null	EA 	
-KNOCLM	K	N	O	C	L	M	111	null	EA 	
-KNOCPL	K	N	O	C	P	L	489	null	EA 	
-KNOCPM	K	N	O	C	P	M	272	null	EA 	
-KNOCWL	K	N	O	C	W	L	485	null	EA 	
-KNOCWM	K	N	O	C	W	M	252	null	EA 	
-KNOHAL	K	N	O	H	A	L	58	null	EA 	
-KNOHAM	K	N	O	H	A	M	80	null	EA 	
-KNOHCL	K	N	O	H	C	L	213	null	EA 	
-KNOHIL	K	N	O	H	I	L	121	null	EA 	
-KNOHIM	K	N	O	H	I	M	130	null	EA 	
-KNOHLM	K	N	O	H	L	M	74	null	EA 	
-KNOHWL	K	N	O	H	W	L	258	null	EA 	
-KNOHWM	K	N	O	H	W	M	113	null	EA 	
-KNOLCL	K	N	O	L	C	L	86	null	EA 	
-KNOLWL	K	N	O	L	W	L	84	null	EA 	
-KNORAL	K	N	O	R	A	L	814	null	EA 	
-KNORAM	K	N	O	R	A	M	470	null	EA 	
-KNORCL	K	N	O	R	C	L	2425	null	EA 	
-KNORCM	K	N	O	R	C	M	739	null	EA 	
-KNORCP	K	N	O	R	C	P	53	null	EA 	
-KNORDL	K	N	O	R	D	L	3005	null	EA 	
-KNORDM	K	N	O	R	D	M	1436	null	EA 	
-KNORDP	K	N	O	R	D	P	72	null	EA 	
-KNORIL	K	N	O	R	I	L	1449	null	EA 	
-KNORIM	K	N	O	R	I	M	1462	null	EA 	
-KNORIP	K	N	O	R	I	P	165	null	EA 	
-KNORLL	K	N	O	R	L	L	263	null	EA 	
-KNORLM	K	N	O	R	L	M	320	null	EA 	
-KNORPL	K	N	O	R	P	L	3322	null	EA 	
-KNORPM	K	N	O	R	P	M	1227	null	EA 	
-KNORPP	K	N	O	R	P	P	724	null	EA 	
-KNORPS	K	N	O	R	P	S	79	null	EA 	
-KNORWL	K	N	O	R	W	L	3832	null	EA 	
-KNORWM	K	N	O	R	W	M	1875	null	EA 	
-KNORWP	K	N	O	R	W	P	249	null	EA 	
-KNPCAL	K	N	P	C	A	L	264	null	EA 	
-KNPCAM	K	N	P	C	A	M	239	null	EA 	
-KNPCCL	K	N	P	C	C	L	661	null	EA 	
-KNPCCM	K	N	P	C	C	M	197	null	EA 	
-KNPCDL	K	N	P	C	D	L	294	null	EA 	
-KNPCDM	K	N	P	C	D	M	253	null	EA 	
-KNPCIL	K	N	P	C	I	L	746	null	EA 	
-KNPCIM	K	N	P	C	I	M	712	null	EA 	
-KNPCIP	K	N	P	C	I	P	132	null	EA 	
-KNPCLL	K	N	P	C	L	L	326	null	EA 	
-KNPCLM	K	N	P	C	L	M	536	null	EA 	
-KNPCPL	K	N	P	C	P	L	498	null	EA 	
-KNPCPM	K	N	P	C	P	M	456	null	EA 	
-KNPCPP	K	N	P	C	P	P	85	null	EA 	
-KNPCWL	K	N	P	C	W	L	1015	null	EA 	
-KNPCWM	K	N	P	C	W	M	357	null	EA 	
-KNPCWP	K	N	P	C	W	P	61	null	EA 	
-KNPHAM	K	N	P	H	A	M	86	null	EA 	
-KNPHIL	K	N	P	H	I	L	195	null	EA 	
-KNPHIM	K	N	P	H	I	M	69	null	EA 	
-KNPHIP	K	N	P	H	I	P	103	null	EA 	
-KNPLWL	K	N	P	L	W	L	72	null	EA 	
-KNPRAL	K	N	P	R	A	L	589	null	EA 	
-KNPRAM	K	N	P	R	A	M	413	null	EA 	
-KNPRCL	K	N	P	R	C	L	921	null	EA 	
-KNPRCM	K	N	P	R	C	M	380	null	EA 	
-KNPRDL	K	N	P	R	D	L	1398	null	EA 	
-KNPRDM	K	N	P	R	D	M	738	null	EA 	
-KNPRDP	K	N	P	R	D	P	96	null	EA 	
-KNPRIL	K	N	P	R	I	L	874	null	EA 	
-KNPRIM	K	N	P	R	I	M	951	null	EA 	
-KNPRIP	K	N	P	R	I	P	327	null	EA 	
-KNPRLL	K	N	P	R	L	L	220	null	EA 	
-KNPRLM	K	N	P	R	L	M	202	null	EA 	
-KNPRLP	K	N	P	R	L	P	92	null	EA 	
-KNPRPL	K	N	P	R	P	L	2029	null	EA 	
-KNPRPM	K	N	P	R	P	M	1492	null	EA 	
-KNPRPP	K	N	P	R	P	P	716	null	EA 	
-KNPRPS	K	N	P	R	P	S	83	null	EA 	
-KNPRWL	K	N	P	R	W	L	2357	null	EA 	
-KNPRWM	K	N	P	R	W	M	1075	null	EA 	
-KNPRWP	K	N	P	R	W	P	318	null	EA 	
-KNSCAL	K	N	S	C	A	L	292	null	EA 	
-KNSCAM	K	N	S	C	A	M	191	null	EA 	
-KNSCCL	K	N	S	C	C	L	468	null	EA 	
-KNSCCM	K	N	S	C	C	M	169	null	EA 	
-KNSCDL	K	N	S	C	D	L	583	null	EA 	
-KNSCDM	K	N	S	C	D	M	175	null	EA 	
-KNSCIL	K	N	S	C	I	L	1635	null	EA 	
-KNSCIM	K	N	S	C	I	M	858	null	EA 	
-KNSCIP	K	N	S	C	I	P	111	null	EA 	
-KNSCLL	K	N	S	C	L	L	351	null	EA 	
-KNSCLM	K	N	S	C	L	M	256	null	EA 	
-KNSCPL	K	N	S	C	P	L	1466	null	EA 	
-KNSCPM	K	N	S	C	P	M	1647	null	EA 	
-KNSCPP	K	N	S	C	P	P	140	null	EA 	
-KNSCWL	K	N	S	C	W	L	771	null	EA 	
-KNSCWM	K	N	S	C	W	M	341	null	EA 	
-KNSHAL	K	N	S	H	A	L	94	null	EA 	
-KNSHAM	K	N	S	H	A	M	133	null	EA 	
-KNSHCL	K	N	S	H	C	L	838	null	EA 	
-KNSHCM	K	N	S	H	C	M	202	null	EA 	
-KNSHIL	K	N	S	H	I	L	188	null	EA 	
-KNSHIM	K	N	S	H	I	M	178	null	EA 	
-KNSHLL	K	N	S	H	L	L	145	null	EA 	
-KNSHLM	K	N	S	H	L	M	170	null	EA 	
-KNSHWL	K	N	S	H	W	L	579	null	EA 	
-KNSHWM	K	N	S	H	W	M	424	null	EA 	
-KNSHWP	K	N	S	H	W	P	78	null	EA 	
-KNSLCL	K	N	S	L	C	L	183	null	EA 	
-KNSLIL	K	N	S	L	I	L	102	null	EA 	
-KNSLLM	K	N	S	L	L	M	80	null	EA 	
-KNSLWL	K	N	S	L	W	L	246	null	EA 	
-KNSLWM	K	N	S	L	W	M	67	null	EA 	
-KNSLWP	K	N	S	L	W	P	75	null	EA 	
-KNSRAL	K	N	S	R	A	L	2600	null	EA 	
-KNSRAM	K	N	S	R	A	M	2040	null	EA 	
-KNSRAP	K	N	S	R	A	P	324	null	EA 	
-KNSRAS	K	N	S	R	A	S	119	null	EA 	
-KNSRCL	K	N	S	R	C	L	6885	null	EA 	
-KNSRCM	K	N	S	R	C	M	2462	null	EA 	
-KNSRCP	K	N	S	R	C	P	213	null	EA 	
-KNSRCS	K	N	S	R	C	S	133	null	EA 	
-KNSRDL	K	N	S	R	D	L	6168	null	EA 	
-KNSRDM	K	N	S	R	D	M	5934	null	EA 	
-KNSRDP	K	N	S	R	D	P	492	null	EA 	
-KNSRDS	K	N	S	R	D	S	109	null	EA 	
-KNSRIL	K	N	S	R	I	L	5369	null	EA 	
-KNSRIM	K	N	S	R	I	M	8228	null	EA 	
-KNSRIP	K	N	S	R	I	P	2097	null	EA 	
-KNSRIS	K	N	S	R	I	S	446	null	EA 	
-KNSRLL	K	N	S	R	L	L	1535	null	EA 	
-KNSRLM	K	N	S	R	L	M	1913	null	EA 	
-KNSRLP	K	N	S	R	L	P	558	null	EA 	
-KNSRLS	K	N	S	R	L	S	276	null	EA 	
-KNSRPL	K	N	S	R	P	L	9927	null	EA 	
-KNSRPM	K	N	S	R	P	M	10195	null	EA 	
-KNSRPP	K	N	S	R	P	P	4910	null	EA 	
-KNSRPS	K	N	S	R	P	S	462	null	EA 	
-KNSRWL	K	N	S	R	W	L	11269	null	EA 	
-KNSRWM	K	N	S	R	W	M	7199	null	EA 	
-KNSRWP	K	N	S	R	W	P	1689	null	EA 	
-KNSRWS	K	N	S	R	W	S	435	null	EA 	
-KRNCAL	K	R	N	C	A	L	1324	null	EA 	
-KRNCAM	K	R	N	C	A	M	509	null	EA 	
-KRNCAP	K	R	N	C	A	P	101	null	EA 	
-KRNCAS	K	R	N	C	A	S	117	null	EA 	
-KRNCCL	K	R	N	C	C	L	1620	null	EA 	
-KRNCCM	K	R	N	C	C	M	539	null	EA 	
-KRNCCP	K	R	N	C	C	P	60	null	EA 	
-KRNCDL	K	R	N	C	D	L	1326	null	EA 	
-KRNCDM	K	R	N	C	D	M	489	null	EA 	
-KRNCDP	K	R	N	C	D	P	72	null	EA 	
-KRNCIL	K	R	N	C	I	L	3099	null	EA 	
-KRNCIM	K	R	N	C	I	M	1841	null	EA 	
-KRNCIP	K	R	N	C	I	P	319	null	EA 	
-KRNCIS	K	R	N	C	I	S	205	null	EA 	
-KRNCLL	K	R	N	C	L	L	293	null	EA 	
-KRNCLM	K	R	N	C	L	M	356	null	EA 	
-KRNCPL	K	R	N	C	P	L	2882	null	EA 	
-KRNCPM	K	R	N	C	P	M	3086	null	EA 	
-KRNCPP	K	R	N	C	P	P	544	null	EA 	
-KRNCWL	K	R	N	C	W	L	2857	null	EA 	
-KRNCWM	K	R	N	C	W	M	2219	null	EA 	
-KRNCWP	K	R	N	C	W	P	306	null	EA 	
-KRNCWS	K	R	N	C	W	S	131	null	EA 	
-KRNHCL	K	R	N	H	C	L	113	null	EA 	
-KRNHWL	K	R	N	H	W	L	61	null	EA 	
-KRNLAL	K	R	N	L	A	L	2798	null	EA 	
-KRNLAM	K	R	N	L	A	M	833	null	EA 	
-KRNLAP	K	R	N	L	A	P	242	null	EA 	
-KRNLAS	K	R	N	L	A	S	71	null	EA 	
-KRNLCL	K	R	N	L	C	L	2608	null	EA 	
-KRNLCM	K	R	N	L	C	M	1081	null	EA 	
-KRNLCP	K	R	N	L	C	P	101	null	EA 	
-KRNLDL	K	R	N	L	D	L	176	null	EA 	
-KRNLDM	K	R	N	L	D	M	160	null	EA 	
-KRNLIL	K	R	N	L	I	L	3337	null	EA 	
-KRNLIM	K	R	N	L	I	M	1966	null	EA 	
-KRNLIP	K	R	N	L	I	P	353	null	EA 	
-KRNLIS	K	R	N	L	I	S	284	null	EA 	
-KRNLLL	K	R	N	L	L	L	498	null	EA 	
-KRNLLM	K	R	N	L	L	M	651	null	EA 	
-KRNLLP	K	R	N	L	L	P	123	null	EA 	
-KRNLPL	K	R	N	L	P	L	206	null	EA 	
-KRNLPM	K	R	N	L	P	M	1047	null	EA 	
-KRNLPP	K	R	N	L	P	P	66	null	EA 	
-KRNLWL	K	R	N	L	W	L	3758	null	EA 	
-KRNLWM	K	R	N	L	W	M	2193	null	EA 	
-KRNLWP	K	R	N	L	W	P	469	null	EA 	
-KRNLWS	K	R	N	L	W	S	95	null	EA 	
-KRNRAL	K	R	N	R	A	L	253	null	EA 	
-KRNRAM	K	R	N	R	A	M	121	null	EA 	
-KRNRCL	K	R	N	R	C	L	292	null	EA 	
-KRNRCM	K	R	N	R	C	M	112	null	EA 	
-KRNRDL	K	R	N	R	D	L	1749	null	EA 	
-KRNRDM	K	R	N	R	D	M	1040	null	EA 	
-KRNRDP	K	R	N	R	D	P	85	null	EA 	
-KRNRDS	K	R	N	R	D	S	58	null	EA 	
-KRNRIL	K	R	N	R	I	L	1951	null	EA 	
-KRNRIM	K	R	N	R	I	M	614	null	EA 	
-KRNRIP	K	R	N	R	I	P	151	null	EA 	
-KRNRLL	K	R	N	R	L	L	156	null	EA 	
-KRNRLM	K	R	N	R	L	M	63	null	EA 	
-KRNRPL	K	R	N	R	P	L	1337	null	EA 	
-KRNRPM	K	R	N	R	P	M	1184	null	EA 	
-KRNRPP	K	R	N	R	P	P	698	null	EA 	
-KRNRWL	K	R	N	R	W	L	584	null	EA 	
-KRNRWM	K	R	N	R	W	M	370	null	EA 	
-KRNRWS	K	R	N	R	W	S	132	null	EA 	
-KROCAL	K	R	O	C	A	L	222	null	EA 	
-KROCAM	K	R	O	C	A	M	156	null	EA 	
-KROCAP	K	R	O	C	A	P	58	null	EA 	
-KROCCL	K	R	O	C	C	L	55	null	EA 	
-KROCDL	K	R	O	C	D	L	136	null	EA 	
-KROCIL	K	R	O	C	I	L	651	null	EA 	
-KROCIM	K	R	O	C	I	M	533	null	EA 	
-KROCIP	K	R	O	C	I	P	74	null	EA 	
-KROCLL	K	R	O	C	L	L	69	null	EA 	
-KROCLM	K	R	O	C	L	M	104	null	EA 	
-KROCPL	K	R	O	C	P	L	173	null	EA 	
-KROCPM	K	R	O	C	P	M	120	null	EA 	
-KROCWL	K	R	O	C	W	L	159	null	EA 	
-KROHCL	K	R	O	H	C	L	139	null	EA 	
-KROHWL	K	R	O	H	W	L	93	null	EA 	
-KROLAL	K	R	O	L	A	L	415	null	EA 	
-KROLAM	K	R	O	L	A	M	200	null	EA 	
-KROLCL	K	R	O	L	C	L	618	null	EA 	
-KROLCM	K	R	O	L	C	M	67	null	EA 	
-KROLIL	K	R	O	L	I	L	597	null	EA 	
-KROLIM	K	R	O	L	I	M	317	null	EA 	
-KROLIP	K	R	O	L	I	P	92	null	EA 	
-KROLLL	K	R	O	L	L	L	136	null	EA 	
-KROLLM	K	R	O	L	L	M	105	null	EA 	
-KROLPM	K	R	O	L	P	M	55	null	EA 	
-KROLWL	K	R	O	L	W	L	554	null	EA 	
-KRORAL	K	R	O	R	A	L	173	null	EA 	
-KRORAM	K	R	O	R	A	M	212	null	EA 	
-KRORCL	K	R	O	R	C	L	539	null	EA 	
-KRORCM	K	R	O	R	C	M	119	null	EA 	
-KRORDL	K	R	O	R	D	L	800	null	EA 	
-KRORDM	K	R	O	R	D	M	381	null	EA 	
-KRORDS	K	R	O	R	D	S	80	null	EA 	
-KRORIL	K	R	O	R	I	L	345	null	EA 	
-KRORIM	K	R	O	R	I	M	419	null	EA 	
-KRORPL	K	R	O	R	P	L	447	null	EA 	
-KRORPM	K	R	O	R	P	M	197	null	EA 	
-KRORPS	K	R	O	R	P	S	76	null	EA 	
-KRORWL	K	R	O	R	W	L	667	null	EA 	
-KRORWM	K	R	O	R	W	M	241	null	EA 	
-KRORWS	K	R	O	R	W	S	116	null	EA 	
-KRPCAL	K	R	P	C	A	L	837	null	EA 	
-KRPCAM	K	R	P	C	A	M	546	null	EA 	
-KRPCAP	K	R	P	C	A	P	167	null	EA 	
-KRPCCL	K	R	P	C	C	L	154	null	EA 	
-KRPCDL	K	R	P	C	D	L	311	null	EA 	
-KRPCDM	K	R	P	C	D	M	118	null	EA 	
-KRPCDP	K	R	P	C	D	P	78	null	EA 	
-KRPCIL	K	R	P	C	I	L	2993	null	EA 	
-KRPCIM	K	R	P	C	I	M	2301	null	EA 	
-KRPCIP	K	R	P	C	I	P	331	null	EA 	
-KRPCLL	K	R	P	C	L	L	551	null	EA 	
-KRPCLM	K	R	P	C	L	M	363	null	EA 	
-KRPCLP	K	R	P	C	L	P	114	null	EA 	
-KRPCPL	K	R	P	C	P	L	352	null	EA 	
-KRPCPM	K	R	P	C	P	M	842	null	EA 	
-KRPCPP	K	R	P	C	P	P	71	null	EA 	
-KRPCWL	K	R	P	C	W	L	581	null	EA 	
-KRPCWM	K	R	P	C	W	M	486	null	EA 	
-KRPHAM	K	R	P	H	A	M	71	null	EA 	
-KRPHCL	K	R	P	H	C	L	90	null	EA 	
-KRPHDL	K	R	P	H	D	L	54	null	EA 	
-KRPHIL	K	R	P	H	I	L	86	null	EA 	
-KRPHIM	K	R	P	H	I	M	80	null	EA 	
-KRPHLL	K	R	P	H	L	L	55	null	EA 	
-KRPHWL	K	R	P	H	W	L	111	null	EA 	
-KRPHWM	K	R	P	H	W	M	123	null	EA 	
-KRPLAL	K	R	P	L	A	L	967	null	EA 	
-KRPLAM	K	R	P	L	A	M	769	null	EA 	
-KRPLAP	K	R	P	L	A	P	236	null	EA 	
-KRPLCL	K	R	P	L	C	L	63	null	EA 	
-KRPLDL	K	R	P	L	D	L	165	null	EA 	
-KRPLDM	K	R	P	L	D	M	118	null	EA 	
-KRPLIL	K	R	P	L	I	L	2057	null	EA 	
-KRPLIM	K	R	P	L	I	M	1627	null	EA 	
-KRPLIP	K	R	P	L	I	P	230	null	EA 	
-KRPLLL	K	R	P	L	L	L	235	null	EA 	
-KRPLLM	K	R	P	L	L	M	273	null	EA 	
-KRPLLP	K	R	P	L	L	P	78	null	EA 	
-KRPLPL	K	R	P	L	P	L	120	null	EA 	
-KRPLPM	K	R	P	L	P	M	235	null	EA 	
-KRPLWL	K	R	P	L	W	L	471	null	EA 	
-KRPLWM	K	R	P	L	W	M	137	null	EA 	
-KRPRAL	K	R	P	R	A	L	872	null	EA 	
-KRPRAM	K	R	P	R	A	M	885	null	EA 	
-KRPRAP	K	R	P	R	A	P	102	null	EA 	
-KRPRAS	K	R	P	R	A	S	83	null	EA 	
-KRPRCL	K	R	P	R	C	L	1720	null	EA 	
-KRPRCM	K	R	P	R	C	M	474	null	EA 	
-KRPRCP	K	R	P	R	C	P	125	null	EA 	
-KRPRCS	K	R	P	R	C	S	445	null	EA 	
-KRPRDL	K	R	P	R	D	L	3278	null	EA 	
-KRPRDM	K	R	P	R	D	M	2078	null	EA 	
-KRPRDP	K	R	P	R	D	P	257	null	EA 	
-KRPRDS	K	R	P	R	D	S	443	null	EA 	
-KRPRIL	K	R	P	R	I	L	2047	null	EA 	
-KRPRIM	K	R	P	R	I	M	2767	null	EA 	
-KRPRIP	K	R	P	R	I	P	904	null	EA 	
-KRPRIS	K	R	P	R	I	S	299	null	EA 	
-KRPRLL	K	R	P	R	L	L	400	null	EA 	
-KRPRLM	K	R	P	R	L	M	276	null	EA 	
-KRPRLP	K	R	P	R	L	P	92	null	EA 	
-KRPRLS	K	R	P	R	L	S	58	null	EA 	
-KRPRPL	K	R	P	R	P	L	2483	null	EA 	
-KRPRPM	K	R	P	R	P	M	1422	null	EA 	
-KRPRPP	K	R	P	R	P	P	622	null	EA 	
-KRPRPS	K	R	P	R	P	S	541	null	EA 	
-KRPRWL	K	R	P	R	W	L	2365	null	EA 	
-KRPRWM	K	R	P	R	W	M	1583	null	EA 	
-KRPRWP	K	R	P	R	W	P	304	null	EA 	
-KRPRWS	K	R	P	R	W	S	878	null	EA 	
-RNNCAL	R	N	N	C	A	L	326	null	EA 	
-RNNCAM	R	N	N	C	A	M	215	null	EA 	
-RNNCAP	R	N	N	C	A	P	245	null	EA 	
-RNNCCL	R	N	N	C	C	L	470	null	EA 	
-RNNCDL	R	N	N	C	D	L	553	null	EA 	
-RNNCIL	R	N	N	C	I	L	550	null	EA 	
-RNNCIM	R	N	N	C	I	M	241	null	EA 	
-RNNCIP	R	N	N	C	I	P	302	null	EA 	
-RNNCLL	R	N	N	C	L	L	305	null	EA 	
-RNNCLM	R	N	N	C	L	M	164	null	EA 	
-RNNCLP	R	N	N	C	L	P	204	null	EA 	
-RNNCPL	R	N	N	C	P	L	295	null	EA 	
-RNNCPM	R	N	N	C	P	M	81	null	EA 	
-RNNCWL	R	N	N	C	W	L	790	null	EA 	
-RNNCWM	R	N	N	C	W	M	117	null	EA 	
-RNNHAL	R	N	N	H	A	L	826	null	EA 	
-RNNHAM	R	N	N	H	A	M	246	null	EA 	
-RNNHAP	R	N	N	H	A	P	240	null	EA 	
-RNNHCL	R	N	N	H	C	L	1273	null	EA 	
-RNNHCM	R	N	N	H	C	M	87	null	EA 	
-RNNHCP	R	N	N	H	C	P	51	null	EA 	
-RNNHIL	R	N	N	H	I	L	589	null	EA 	
-RNNHIM	R	N	N	H	I	M	426	null	EA 	
-RNNHIP	R	N	N	H	I	P	161	null	EA 	
-RNNHLL	R	N	N	H	L	L	347	null	EA 	
-RNNHLM	R	N	N	H	L	M	168	null	EA 	
-RNNHLP	R	N	N	H	L	P	156	null	EA 	
-RNNHWL	R	N	N	H	W	L	1654	null	EA 	
-RNNHWM	R	N	N	H	W	M	444	null	EA 	
-RNNHWP	R	N	N	H	W	P	168	null	EA 	
-RNNLAL	R	N	N	L	A	L	536	null	EA 	
-RNNLAM	R	N	N	L	A	M	121	null	EA 	
-RNNLAP	R	N	N	L	A	P	246	null	EA 	
-RNNLCL	R	N	N	L	C	L	219	null	EA 	
-RNNLDL	R	N	N	L	D	L	1041	null	EA 	
-RNNLDM	R	N	N	L	D	M	139	null	EA 	
-RNNLDS	R	N	N	L	D	S	176	null	EA 	
-RNNLIL	R	N	N	L	I	L	299	null	EA 	
-RNNLIM	R	N	N	L	I	M	72	null	EA 	
-RNNLIS	R	N	N	L	I	S	75	null	EA 	
-RNNLLL	R	N	N	L	L	L	128	null	EA 	
-RNNLLM	R	N	N	L	L	M	176	null	EA 	
-RNNLLP	R	N	N	L	L	P	93	null	EA 	
-RNNLPL	R	N	N	L	P	L	609	null	EA 	
-RNNLPM	R	N	N	L	P	M	118	null	EA 	
-RNNLPS	R	N	N	L	P	S	131	null	EA 	
-RNNLWL	R	N	N	L	W	L	457	null	EA 	
-RNNLWM	R	N	N	L	W	M	108	null	EA 	
-RNNLWS	R	N	N	L	W	S	106	null	EA 	
-RNNRAL	R	N	N	R	A	L	721	null	EA 	
-RNNRAM	R	N	N	R	A	M	373	null	EA 	
-RNNRAP	R	N	N	R	A	P	180	null	EA 	
-RNNRCL	R	N	N	R	C	L	755	null	EA 	
-RNNRCM	R	N	N	R	C	M	92	null	EA 	
-RNNRDL	R	N	N	R	D	L	77	null	EA 	
-RNNRIL	R	N	N	R	I	L	1505	null	EA 	
-RNNRIM	R	N	N	R	I	M	1258	null	EA 	
-RNNRIP	R	N	N	R	I	P	434	null	EA 	
-RNNRIS	R	N	N	R	I	S	95	null	EA 	
-RNNRLL	R	N	N	R	L	L	705	null	EA 	
-RNNRLM	R	N	N	R	L	M	471	null	EA 	
-RNNRLP	R	N	N	R	L	P	340	null	EA 	
-RNNRLS	R	N	N	R	L	S	59	null	EA 	
-RNNRPL	R	N	N	R	P	L	69	null	EA 	
-RNNRPM	R	N	N	R	P	M	77	null	EA 	
-RNNRWL	R	N	N	R	W	L	1160	null	EA 	
-RNNRWM	R	N	N	R	W	M	471	null	EA 	
-RNNRWP	R	N	N	R	W	P	129	null	EA 	
-RNNRWS	R	N	N	R	W	S	55	null	EA 	
-RNOCAL	R	N	O	C	A	L	242	null	EA 	
-RNOCAM	R	N	O	C	A	M	157	null	EA 	
-RNOCAP	R	N	O	C	A	P	219	null	EA 	
-RNOCCL	R	N	O	C	C	L	334	null	EA 	
-RNOCIL	R	N	O	C	I	L	283	null	EA 	
-RNOCIM	R	N	O	C	I	M	142	null	EA 	
-RNOCIP	R	N	O	C	I	P	76	null	EA 	
-RNOCLL	R	N	O	C	L	L	169	null	EA 	
-RNOCLM	R	N	O	C	L	M	185	null	EA 	
-RNOCLP	R	N	O	C	L	P	154	null	EA 	
-RNOCWL	R	N	O	C	W	L	413	null	EA 	
-RNOCWM	R	N	O	C	W	M	140	null	EA 	
-RNOCWP	R	N	O	C	W	P	96	null	EA 	
-RNOHAL	R	N	O	H	A	L	844	null	EA 	
-RNOHAM	R	N	O	H	A	M	300	null	EA 	
-RNOHAP	R	N	O	H	A	P	380	null	EA 	
-RNOHCL	R	N	O	H	C	L	1998	null	EA 	
-RNOHCM	R	N	O	H	C	M	245	null	EA 	
-RNOHCP	R	N	O	H	C	P	89	null	EA 	
-RNOHIL	R	N	O	H	I	L	1402	null	EA 	
-RNOHIM	R	N	O	H	I	M	784	null	EA 	
-RNOHIP	R	N	O	H	I	P	346	null	EA 	
-RNOHIS	R	N	O	H	I	S	57	null	EA 	
-RNOHLL	R	N	O	H	L	L	832	null	EA 	
-RNOHLM	R	N	O	H	L	M	580	null	EA 	
-RNOHLP	R	N	O	H	L	P	296	null	EA 	
-RNOHWL	R	N	O	H	W	L	2780	null	EA 	
-RNOHWM	R	N	O	H	W	M	742	null	EA 	
-RNOHWP	R	N	O	H	W	P	443	null	EA 	
-RNOLAL	R	N	O	L	A	L	65	null	EA 	
-RNOLAM	R	N	O	L	A	M	99	null	EA 	
-RNOLAP	R	N	O	L	A	P	187	null	EA 	
-RNOLCL	R	N	O	L	C	L	154	null	EA 	
-RNOLIP	R	N	O	L	I	P	60	null	EA 	
-RNOLLP	R	N	O	L	L	P	91	null	EA 	
-RNOLWL	R	N	O	L	W	L	154	null	EA 	
-RNORAL	R	N	O	R	A	L	1102	null	EA 	
-RNORAM	R	N	O	R	A	M	577	null	EA 	
-RNORAP	R	N	O	R	A	P	318	null	EA 	
-RNORCL	R	N	O	R	C	L	2907	null	EA 	
-RNORCM	R	N	O	R	C	M	459	null	EA 	
-RNORCP	R	N	O	R	C	P	120	null	EA 	
-RNORDL	R	N	O	R	D	L	265	null	EA 	
-RNORDM	R	N	O	R	D	M	56	null	EA 	
-RNORIL	R	N	O	R	I	L	3629	null	EA 	
-RNORIM	R	N	O	R	I	M	2650	null	EA 	
-RNORIP	R	N	O	R	I	P	729	null	EA 	
-RNORIS	R	N	O	R	I	S	68	null	EA 	
-RNORLL	R	N	O	R	L	L	1972	null	EA 	
-RNORLM	R	N	O	R	L	M	1219	null	EA 	
-RNORLP	R	N	O	R	L	P	523	null	EA 	
-RNORPL	R	N	O	R	P	L	133	null	EA 	
-RNORPM	R	N	O	R	P	M	109	null	EA 	
-RNORWL	R	N	O	R	W	L	3081	null	EA 	
-RNORWM	R	N	O	R	W	M	1012	null	EA 	
-RNORWP	R	N	O	R	W	P	232	null	EA 	
-RNPCAL	R	N	P	C	A	L	565	null	EA 	
-RNPCAM	R	N	P	C	A	M	188	null	EA 	
-RNPCAP	R	N	P	C	A	P	354	null	EA 	
-RNPCCL	R	N	P	C	C	L	887	null	EA 	
-RNPCCM	R	N	P	C	C	M	97	null	EA 	
-RNPCCP	R	N	P	C	C	P	104	null	EA 	
-RNPCDL	R	N	P	C	D	L	109	null	EA 	
-RNPCIL	R	N	P	C	I	L	1198	null	EA 	
-RNPCIM	R	N	P	C	I	M	304	null	EA 	
-RNPCIP	R	N	P	C	I	P	484	null	EA 	
-RNPCLL	R	N	P	C	L	L	622	null	EA 	
-RNPCLM	R	N	P	C	L	M	859	null	EA 	
-RNPCLP	R	N	P	C	L	P	895	null	EA 	
-RNPCPL	R	N	P	C	P	L	329	null	EA 	
-RNPCPM	R	N	P	C	P	M	78	null	EA 	
-RNPCWL	R	N	P	C	W	L	1688	null	EA 	
-RNPCWM	R	N	P	C	W	M	486	null	EA 	
-RNPCWP	R	N	P	C	W	P	316	null	EA 	
-RNPHAL	R	N	P	H	A	L	492	null	EA 	
-RNPHAM	R	N	P	H	A	M	198	null	EA 	
-RNPHAP	R	N	P	H	A	P	104	null	EA 	
-RNPHCL	R	N	P	H	C	L	1346	null	EA 	
-RNPHIL	R	N	P	H	I	L	89	null	EA 	
-RNPHIP	R	N	P	H	I	P	68	null	EA 	
-RNPHLL	R	N	P	H	L	L	372	null	EA 	
-RNPHLM	R	N	P	H	L	M	85	null	EA 	
-RNPHLP	R	N	P	H	L	P	132	null	EA 	
-RNPHWL	R	N	P	H	W	L	2080	null	EA 	
-RNPHWM	R	N	P	H	W	M	283	null	EA 	
-RNPHWP	R	N	P	H	W	P	199	null	EA 	
-RNPLAM	R	N	P	L	A	M	57	null	EA 	
-RNPLAP	R	N	P	L	A	P	199	null	EA 	
-RNPLIP	R	N	P	L	I	P	131	null	EA 	
-RNPLLM	R	N	P	L	L	M	53	null	EA 	
-RNPLLP	R	N	P	L	L	P	118	null	EA 	
-RNPRAL	R	N	P	R	A	L	255	null	EA 	
-RNPRAM	R	N	P	R	A	M	72	null	EA 	
-RNPRCL	R	N	P	R	C	L	1719	null	EA 	
-RNPRCM	R	N	P	R	C	M	180	null	EA 	
-RNPRCP	R	N	P	R	C	P	99	null	EA 	
-RNPRDL	R	N	P	R	D	L	88	null	EA 	
-RNPRDM	R	N	P	R	D	M	62	null	EA 	
-RNPRIL	R	N	P	R	I	L	123	null	EA 	
-RNPRIM	R	N	P	R	I	M	292	null	EA 	
-RNPRLL	R	N	P	R	L	L	196	null	EA 	
-RNPRLM	R	N	P	R	L	M	76	null	EA 	
-RNPRLP	R	N	P	R	L	P	89	null	EA 	
-RNPRPM	R	N	P	R	P	M	107	null	EA 	
-RNPRWL	R	N	P	R	W	L	2129	null	EA 	
-RNPRWM	R	N	P	R	W	M	591	null	EA 	
-RNPRWP	R	N	P	R	W	P	126	null	EA 	
-RNSCAL	R	N	S	C	A	L	843	null	EA 	
-RNSCAM	R	N	S	C	A	M	550	null	EA 	
-RNSCAP	R	N	S	C	A	P	455	null	EA 	
-RNSCCL	R	N	S	C	C	L	1341	null	EA 	
-RNSCCM	R	N	S	C	C	M	188	null	EA 	
-RNSCCP	R	N	S	C	C	P	63	null	EA 	
-RNSCIL	R	N	S	C	I	L	1344	null	EA 	
-RNSCIM	R	N	S	C	I	M	1225	null	EA 	
-RNSCIP	R	N	S	C	I	P	520	null	EA 	
-RNSCLL	R	N	S	C	L	L	1150	null	EA 	
-RNSCLM	R	N	S	C	L	M	878	null	EA 	
-RNSCLP	R	N	S	C	L	P	880	null	EA 	
-RNSCPL	R	N	S	C	P	L	221	null	EA 	
-RNSCWL	R	N	S	C	W	L	1783	null	EA 	
-RNSCWM	R	N	S	C	W	M	714	null	EA 	
-RNSCWP	R	N	S	C	W	P	111	null	EA 	
-RNSHAL	R	N	S	H	A	L	7029	null	EA 	
-RNSHAM	R	N	S	H	A	M	2294	null	EA 	
-RNSHAP	R	N	S	H	A	P	1992	null	EA 	
-RNSHAS	R	N	S	H	A	S	504	null	EA 	
-RNSHCL	R	N	S	H	C	L	14449	null	EA 	
-RNSHCM	R	N	S	H	C	M	1359	null	EA 	
-RNSHCP	R	N	S	H	C	P	804	null	EA 	
-RNSHCS	R	N	S	H	C	S	240	null	EA 	
-RNSHIL	R	N	S	H	I	L	7815	null	EA 	
-RNSHIM	R	N	S	H	I	M	3150	null	EA 	
-RNSHIP	R	N	S	H	I	P	2238	null	EA 	
-RNSHIS	R	N	S	H	I	S	483	null	EA 	
-RNSHLL	R	N	S	H	L	L	4264	null	EA 	
-RNSHLM	R	N	S	H	L	M	2049	null	EA 	
-RNSHLP	R	N	S	H	L	P	1825	null	EA 	
-RNSHLS	R	N	S	H	L	S	160	null	EA 	
-RNSHWL	R	N	S	H	W	L	17837	null	EA 	
-RNSHWM	R	N	S	H	W	M	4610	null	EA 	
-RNSHWP	R	N	S	H	W	P	2275	null	EA 	
-RNSHWS	R	N	S	H	W	S	552	null	EA 	
-RNSLAL	R	N	S	L	A	L	235	null	EA 	
-RNSLAM	R	N	S	L	A	M	319	null	EA 	
-RNSLAP	R	N	S	L	A	P	621	null	EA 	
-RNSLCL	R	N	S	L	C	L	576	null	EA 	
-RNSLCM	R	N	S	L	C	M	94	null	EA 	
-RNSLIL	R	N	S	L	I	L	200	null	EA 	
-RNSLIM	R	N	S	L	I	M	272	null	EA 	
-RNSLIP	R	N	S	L	I	P	214	null	EA 	
-RNSLLL	R	N	S	L	L	L	154	null	EA 	
-RNSLLM	R	N	S	L	L	M	271	null	EA 	
-RNSLLP	R	N	S	L	L	P	333	null	EA 	
-RNSLWL	R	N	S	L	W	L	864	null	EA 	
-RNSLWM	R	N	S	L	W	M	207	null	EA 	
-RNSLWP	R	N	S	L	W	P	105	null	EA 	
-RNSRAL	R	N	S	R	A	L	10833	null	EA 	
-RNSRAM	R	N	S	R	A	M	5058	null	EA 	
-RNSRAP	R	N	S	R	A	P	2163	null	EA 	
-RNSRAS	R	N	S	R	A	S	835	null	EA 	
-RNSRCL	R	N	S	R	C	L	19595	null	EA 	
-RNSRCM	R	N	S	R	C	M	2655	null	EA 	
-RNSRCP	R	N	S	R	C	P	937	null	EA 	
-RNSRCS	R	N	S	R	C	S	585	null	EA 	
-RNSRDL	R	N	S	R	D	L	1223	null	EA 	
-RNSRDM	R	N	S	R	D	M	826	null	EA 	
-RNSRDP	R	N	S	R	D	P	146	null	EA 	
-RNSRIL	R	N	S	R	I	L	20789	null	EA 	
-RNSRIM	R	N	S	R	I	M	15867	null	EA 	
-RNSRIP	R	N	S	R	I	P	6604	null	EA 	
-RNSRIS	R	N	S	R	I	S	1006	null	EA 	
-RNSRLL	R	N	S	R	L	L	10786	null	EA 	
-RNSRLM	R	N	S	R	L	M	6462	null	EA 	
-RNSRLP	R	N	S	R	L	P	3999	null	EA 	
-RNSRLS	R	N	S	R	L	S	329	null	EA 	
-RNSRPL	R	N	S	R	P	L	1267	null	EA 	
-RNSRPM	R	N	S	R	P	M	1045	null	EA 	
-RNSRPP	R	N	S	R	P	P	300	null	EA 	
-RNSRPS	R	N	S	R	P	S	57	null	EA 	
-RNSRWL	R	N	S	R	W	L	20806	null	EA 	
-RNSRWM	R	N	S	R	W	M	7677	null	EA 	
-RNSRWP	R	N	S	R	W	P	2558	null	EA 	
-RNSRWS	R	N	S	R	W	S	1527	null	EA 	
-RRNCAL	R	R	N	C	A	L	823	null	EA 	
-RRNCAM	R	R	N	C	A	M	685	null	EA 	
-RRNCAP	R	R	N	C	A	P	670	null	EA 	
-RRNCAS	R	R	N	C	A	S	56	null	EA 	
-RRNCCL	R	R	N	C	C	L	1005	null	EA 	
-RRNCCM	R	R	N	C	C	M	71	null	EA 	
-RRNCIL	R	R	N	C	I	L	389	null	EA 	
-RRNCIM	R	R	N	C	I	M	327	null	EA 	
-RRNCIP	R	R	N	C	I	P	138	null	EA 	
-RRNCLL	R	R	N	C	L	L	419	null	EA 	
-RRNCLM	R	R	N	C	L	M	479	null	EA 	
-RRNCLP	R	R	N	C	L	P	338	null	EA 	
-RRNCWL	R	R	N	C	W	L	1417	null	EA 	
-RRNCWM	R	R	N	C	W	M	289	null	EA 	
-RRNCWP	R	R	N	C	W	P	470	null	EA 	
-RRNHAL	R	R	N	H	A	L	511	null	EA 	
-RRNHAM	R	R	N	H	A	M	170	null	EA 	
-RRNHAP	R	R	N	H	A	P	209	null	EA 	
-RRNHCL	R	R	N	H	C	L	1456	null	EA 	
-RRNHCM	R	R	N	H	C	M	244	null	EA 	
-RRNHCP	R	R	N	H	C	P	73	null	EA 	
-RRNHIL	R	R	N	H	I	L	212	null	EA 	
-RRNHIP	R	R	N	H	I	P	66	null	EA 	
-RRNHLL	R	R	N	H	L	L	181	null	EA 	
-RRNHLM	R	R	N	H	L	M	97	null	EA 	
-RRNHLP	R	R	N	H	L	P	115	null	EA 	
-RRNHWL	R	R	N	H	W	L	1917	null	EA 	
-RRNHWM	R	R	N	H	W	M	548	null	EA 	
-RRNHWP	R	R	N	H	W	P	441	null	EA 	
-RRNHWS	R	R	N	H	W	S	59	null	EA 	
-RRNLAL	R	R	N	L	A	L	1997	null	EA 	
-RRNLAM	R	R	N	L	A	M	1442	null	EA 	
-RRNLAP	R	R	N	L	A	P	1900	null	EA 	
-RRNLAS	R	R	N	L	A	S	58	null	EA 	
-RRNLCL	R	R	N	L	C	L	2727	null	EA 	
-RRNLCM	R	R	N	L	C	M	458	null	EA 	
-RRNLCP	R	R	N	L	C	P	94	null	EA 	
-RRNLCS	R	R	N	L	C	S	64	null	EA 	
-RRNLIL	R	R	N	L	I	L	1004	null	EA 	
-RRNLIM	R	R	N	L	I	M	660	null	EA 	
-RRNLIP	R	R	N	L	I	P	587	null	EA 	
-RRNLLL	R	R	N	L	L	L	942	null	EA 	
-RRNLLM	R	R	N	L	L	M	1130	null	EA 	
-RRNLLP	R	R	N	L	L	P	1015	null	EA 	
-RRNLWL	R	R	N	L	W	L	4083	null	EA 	
-RRNLWM	R	R	N	L	W	M	1020	null	EA 	
-RRNLWP	R	R	N	L	W	P	980	null	EA 	
-RRNLWS	R	R	N	L	W	S	73	null	EA 	
-RRNRAL	R	R	N	R	A	L	181	null	EA 	
-RRNRAM	R	R	N	R	A	M	169	null	EA 	
-RRNRAP	R	R	N	R	A	P	195	null	EA 	
-RRNRCL	R	R	N	R	C	L	557	null	EA 	
-RRNRIL	R	R	N	R	I	L	107	null	EA 	
-RRNRIM	R	R	N	R	I	M	109	null	EA 	
-RRNRLL	R	R	N	R	L	L	129	null	EA 	
-RRNRLM	R	R	N	R	L	M	63	null	EA 	
-RRNRWL	R	R	N	R	W	L	439	null	EA 	
-RRNRWM	R	R	N	R	W	M	90	null	EA 	
-RRNRWP	R	R	N	R	W	P	58	null	EA 	
-RROCAL	R	R	O	C	A	L	224	null	EA 	
-RROCAM	R	R	O	C	A	M	244	null	EA 	
-RROCAP	R	R	O	C	A	P	518	null	EA 	
-RROCIL	R	R	O	C	I	L	216	null	EA 	
-RROCIM	R	R	O	C	I	M	273	null	EA 	
-RROCIP	R	R	O	C	I	P	259	null	EA 	
-RROCLL	R	R	O	C	L	L	122	null	EA 	
-RROCLM	R	R	O	C	L	M	200	null	EA 	
-RROCLP	R	R	O	C	L	P	419	null	EA 	
-RROCWL	R	R	O	C	W	L	57	null	EA 	
-RROHAL	R	R	O	H	A	L	489	null	EA 	
-RROHAM	R	R	O	H	A	M	64	null	EA 	
-RROHAP	R	R	O	H	A	P	188	null	EA 	
-RROHCL	R	R	O	H	C	L	1344	null	EA 	
-RROHCM	R	R	O	H	C	M	99	null	EA 	
-RROHCP	R	R	O	H	C	P	102	null	EA 	
-RROHIL	R	R	O	H	I	L	215	null	EA 	
-RROHIM	R	R	O	H	I	M	160	null	EA 	
-RROHIP	R	R	O	H	I	P	165	null	EA 	
-RROHLL	R	R	O	H	L	L	301	null	EA 	
-RROHLM	R	R	O	H	L	M	203	null	EA 	
-RROHLP	R	R	O	H	L	P	195	null	EA 	
-RROHWL	R	R	O	H	W	L	1978	null	EA 	
-RROHWM	R	R	O	H	W	M	280	null	EA 	
-RROHWP	R	R	O	H	W	P	184	null	EA 	
-RROLAL	R	R	O	L	A	L	362	null	EA 	
-RROLAM	R	R	O	L	A	M	296	null	EA 	
-RROLAP	R	R	O	L	A	P	730	null	EA 	
-RROLCL	R	R	O	L	C	L	311	null	EA 	
-RROLCP	R	R	O	L	C	P	72	null	EA 	
-RROLIL	R	R	O	L	I	L	232	null	EA 	
-RROLIM	R	R	O	L	I	M	146	null	EA 	
-RROLIP	R	R	O	L	I	P	184	null	EA 	
-RROLLL	R	R	O	L	L	L	130	null	EA 	
-RROLLM	R	R	O	L	L	M	100	null	EA 	
-RROLLP	R	R	O	L	L	P	263	null	EA 	
-RROLWL	R	R	O	L	W	L	550	null	EA 	
-RROLWM	R	R	O	L	W	M	138	null	EA 	
-RROLWP	R	R	O	L	W	P	95	null	EA 	
-RRORAL	R	R	O	R	A	L	296	null	EA 	
-RRORAM	R	R	O	R	A	M	162	null	EA 	
-RRORAP	R	R	O	R	A	P	82	null	EA 	
-RRORCL	R	R	O	R	C	L	384	null	EA 	
-RRORIL	R	R	O	R	I	L	351	null	EA 	
-RRORIM	R	R	O	R	I	M	242	null	EA 	
-RRORIP	R	R	O	R	I	P	109	null	EA 	
-RRORLL	R	R	O	R	L	L	300	null	EA 	
-RRORLM	R	R	O	R	L	M	161	null	EA 	
-RRORLP	R	R	O	R	L	P	102	null	EA 	
-RRORWL	R	R	O	R	W	L	557	null	EA 	
-RRORWM	R	R	O	R	W	M	177	null	EA 	
-RRPCAL	R	R	P	C	A	L	759	null	EA 	
-RRPCAM	R	R	P	C	A	M	827	null	EA 	
-RRPCAP	R	R	P	C	A	P	1551	null	EA 	
-RRPCAS	R	R	P	C	A	S	132	null	EA 	
-RRPCCL	R	R	P	C	C	L	52	null	EA 	
-RRPCIL	R	R	P	C	I	L	1998	null	EA 	
-RRPCIM	R	R	P	C	I	M	1254	null	EA 	
-RRPCIP	R	R	P	C	I	P	1447	null	EA 	
-RRPCIS	R	R	P	C	I	S	64	null	EA 	
-RRPCLL	R	R	P	C	L	L	581	null	EA 	
-RRPCLM	R	R	P	C	L	M	1260	null	EA 	
-RRPCLP	R	R	P	C	L	P	1762	null	EA 	
-RRPCWL	R	R	P	C	W	L	147	null	EA 	
-RRPCWM	R	R	P	C	W	M	74	null	EA 	
-RRPCWP	R	R	P	C	W	P	54	null	EA 	
-RRPCWS	R	R	P	C	W	S	206	null	EA 	
-RRPHAL	R	R	P	H	A	L	1314	null	EA 	
-RRPHAM	R	R	P	H	A	M	540	null	EA 	
-RRPHAP	R	R	P	H	A	P	652	null	EA 	
-RRPHCL	R	R	P	H	C	L	3678	null	EA 	
-RRPHCM	R	R	P	H	C	M	424	null	EA 	
-RRPHCP	R	R	P	H	C	P	89	null	EA 	
-RRPHCS	R	R	P	H	C	S	79	null	EA 	
-RRPHIL	R	R	P	H	I	L	759	null	EA 	
-RRPHIM	R	R	P	H	I	M	404	null	EA 	
-RRPHIP	R	R	P	H	I	P	352	null	EA 	
-RRPHLL	R	R	P	H	L	L	856	null	EA 	
-RRPHLM	R	R	P	H	L	M	832	null	EA 	
-RRPHLP	R	R	P	H	L	P	561	null	EA 	
-RRPHWL	R	R	P	H	W	L	4223	null	EA 	
-RRPHWM	R	R	P	H	W	M	713	null	EA 	
-RRPHWP	R	R	P	H	W	P	566	null	EA 	
-RRPHWS	R	R	P	H	W	S	74	null	EA 	
-RRPLAL	R	R	P	L	A	L	840	null	EA 	
-RRPLAM	R	R	P	L	A	M	979	null	EA 	
-RRPLAP	R	R	P	L	A	P	1745	null	EA 	
-RRPLAS	R	R	P	L	A	S	64	null	EA 	
-RRPLCL	R	R	P	L	C	L	113	null	EA 	
-RRPLCS	R	R	P	L	C	S	109	null	EA 	
-RRPLIL	R	R	P	L	I	L	1030	null	EA 	
-RRPLIM	R	R	P	L	I	M	666	null	EA 	
-RRPLIP	R	R	P	L	I	P	1222	null	EA 	
-RRPLIS	R	R	P	L	I	S	82	null	EA 	
-RRPLLL	R	R	P	L	L	L	295	null	EA 	
-RRPLLM	R	R	P	L	L	M	580	null	EA 	
-RRPLLP	R	R	P	L	L	P	947	null	EA 	
-RRPLWL	R	R	P	L	W	L	407	null	EA 	
-RRPLWM	R	R	P	L	W	M	197	null	EA 	
-RRPLWP	R	R	P	L	W	P	74	null	EA 	
-RRPLWS	R	R	P	L	W	S	188	null	EA 	
-RRPRAL	R	R	P	R	A	L	1480	null	EA 	
-RRPRAM	R	R	P	R	A	M	889	null	EA 	
-RRPRAP	R	R	P	R	A	P	358	null	EA 	
-RRPRAS	R	R	P	R	A	S	340	null	EA 	
-RRPRCL	R	R	P	R	C	L	2294	null	EA 	
-RRPRCM	R	R	P	R	C	M	172	null	EA 	
-RRPRCP	R	R	P	R	C	P	59	null	EA 	
-RRPRCS	R	R	P	R	C	S	168	null	EA 	
-RRPRDL	R	R	P	R	D	L	111	null	EA 	
-RRPRDS	R	R	P	R	D	S	150	null	EA 	
-RRPRIL	R	R	P	R	I	L	1374	null	EA 	
-RRPRIM	R	R	P	R	I	M	721	null	EA 	
-RRPRIP	R	R	P	R	I	P	540	null	EA 	
-RRPRIS	R	R	P	R	I	S	195	null	EA 	
-RRPRLL	R	R	P	R	L	L	617	null	EA 	
-RRPRLM	R	R	P	R	L	M	990	null	EA 	
-RRPRLP	R	R	P	R	L	P	589	null	EA 	
-RRPRPL	R	R	P	R	P	L	86	null	EA 	
-RRPRPS	R	R	P	R	P	S	87	null	EA 	
-RRPRWL	R	R	P	R	W	L	2480	null	EA 	
-RRPRWM	R	R	P	R	W	M	540	null	EA 	
-RRPRWP	R	R	P	R	W	P	363	null	EA 	
-RRPRWS	R	R	P	R	W	S	306	null	EA 	
-UNNHCL	U	N	N	H	C	L	154	null	EA 	
-UNNHWL	U	N	N	H	W	L	76	null	EA 	
-UNNHWS	U	N	N	H	W	S	55	null	EA 	
-UNNRCL	U	N	N	R	C	L	246	null	EA 	
-UNNRWL	U	N	N	R	W	L	117	null	EA 	
-UNOHCL	U	N	O	H	C	L	830	null	EA 	
-UNOHWL	U	N	O	H	W	L	356	null	EA 	
-UNORCL	U	N	O	R	C	L	953	null	EA 	
-UNORCM	U	N	O	R	C	M	81	null	EA 	
-UNORWL	U	N	O	R	W	L	296	null	EA 	
-UNPHAL	U	N	P	H	A	L	64	null	EA 	
-UNPHCL	U	N	P	H	C	L	508	null	EA 	
-UNPHWL	U	N	P	H	W	L	269	null	EA 	
-UNPRAL	U	N	P	R	A	L	104	null	EA 	
-UNPRCL	U	N	P	R	C	L	1008	null	EA 	
-UNPRCM	U	N	P	R	C	M	61	null	EA 	
-UNPRCS	U	N	P	R	C	S	56	null	EA 	
-UNPRWL	U	N	P	R	W	L	507	null	EA 	
-UNSHAL	U	N	S	H	A	L	129	null	EA 	
-UNSHAS	U	N	S	H	A	S	188	null	EA 	
-UNSHCL	U	N	S	H	C	L	4284	null	EA 	
-UNSHCM	U	N	S	H	C	M	324	null	EA 	
-UNSHCP	U	N	S	H	C	P	180	null	EA 	
-UNSHCS	U	N	S	H	C	S	483	null	EA 	
-UNSHLL	U	N	S	H	L	L	147	null	EA 	
-UNSHWL	U	N	S	H	W	L	2199	null	EA 	
-UNSHWM	U	N	S	H	W	M	231	null	EA 	
-UNSHWP	U	N	S	H	W	P	153	null	EA 	
-UNSHWS	U	N	S	H	W	S	1166	null	EA 	
-UNSRAL	U	N	S	R	A	L	75	null	EA 	
-UNSRAS	U	N	S	R	A	S	85	null	EA 	
-UNSRCL	U	N	S	R	C	L	6804	null	EA 	
-UNSRCM	U	N	S	R	C	M	597	null	EA 	
-UNSRCP	U	N	S	R	C	P	260	null	EA 	
-UNSRCS	U	N	S	R	C	S	290	null	EA 	
-UNSRDL	U	N	S	R	D	L	99	null	EA 	
-UNSRDM	U	N	S	R	D	M	59	null	EA 	
-UNSRLL	U	N	S	R	L	L	191	null	EA 	
-UNSRPL	U	N	S	R	P	L	78	null	EA 	
-UNSRWL	U	N	S	R	W	L	2961	null	EA 	
-UNSRWM	U	N	S	R	W	M	332	null	EA 	
-UNSRWP	U	N	S	R	W	P	167	null	EA 	
-UNSRWS	U	N	S	R	W	S	959	null	EA 	
-URNCCL	U	R	N	C	C	L	112	null	EA 	
-URNCWL	U	R	N	C	W	L	112	null	EA 	
-URNHCL	U	R	N	H	C	L	191	null	EA 	
-URNHWL	U	R	N	H	W	L	105	null	EA 	
-URNLCL	U	R	N	L	C	L	150	null	EA 	
-URNRCL	U	R	N	R	C	L	219	null	EA 	
-UROHCL	U	R	O	H	C	L	51	null	EA 	
-URORCL	U	R	O	R	C	L	103	null	EA 	
-URPHCL	U	R	P	H	C	L	314	null	EA 	
-URPHWL	U	R	P	H	W	L	114	null	EA 	
-URPRCL	U	R	P	R	C	L	963	null	EA 	
-URPRCM	U	R	P	R	C	M	75	null	EA 	
-URPRWL	U	R	P	R	W	L	404	null	EA 	
-URPRWP	U	R	P	R	W	P	59	null	EA 	
-URPRWS	U	R	P	R	W	S	58	null	EA 	
+BNNCAL	B	N	N	C	A	L	335	null		
+BNNCAM	B	N	N	C	A	M	63	null		
+BNNCAP	B	N	N	C	A	P	64	null		
+BNNCCL	B	N	N	C	C	L	4121	null		
+BNNCCM	B	N	N	C	C	M	1353	null		
+BNNCCP	B	N	N	C	C	P	651	null		
+BNNCCS	B	N	N	C	C	S	97	null		
+BNNCDL	B	N	N	C	D	L	1725	null		
+BNNCDM	B	N	N	C	D	M	540	null		
+BNNCDP	B	N	N	C	D	P	77	null		
+BNNCDS	B	N	N	C	D	S	84	null		
+BNNCIL	B	N	N	C	I	L	247	null		
+BNNCIM	B	N	N	C	I	M	61	null		
+BNNCLL	B	N	N	C	L	L	181	null		
+BNNCLM	B	N	N	C	L	M	92	null		
+BNNCPL	B	N	N	C	P	L	1268	null		
+BNNCPM	B	N	N	C	P	M	909	null		
+BNNCPP	B	N	N	C	P	P	142	null		
+BNNCWL	B	N	N	C	W	L	4299	null		
+BNNCWM	B	N	N	C	W	M	1664	null		
+BNNCWP	B	N	N	C	W	P	310	null		
+BNNCWS	B	N	N	C	W	S	107	null		
+BNNHCL	B	N	N	H	C	L	71	null		
+BNNLAL	B	N	N	L	A	L	378	null		
+BNNLAM	B	N	N	L	A	M	157	null		
+BNNLAS	B	N	N	L	A	S	86	null		
+BNNLCL	B	N	N	L	C	L	1396	null		
+BNNLCM	B	N	N	L	C	M	396	null		
+BNNLCS	B	N	N	L	C	S	100	null		
+BNNLDL	B	N	N	L	D	L	58	null		
+BNNLIL	B	N	N	L	I	L	242	null		
+BNNLIM	B	N	N	L	I	M	217	null		
+BNNLIS	B	N	N	L	I	S	140	null		
+BNNLLM	B	N	N	L	L	M	75	null		
+BNNLPL	B	N	N	L	P	L	92	null		
+BNNLWL	B	N	N	L	W	L	1144	null		
+BNNLWM	B	N	N	L	W	M	337	null		
+BNNLWP	B	N	N	L	W	P	64	null		
+BNNLWS	B	N	N	L	W	S	75	null		
+BNNRCL	B	N	N	R	C	L	1707	null		
+BNNRCM	B	N	N	R	C	M	355	null		
+BNNRDL	B	N	N	R	D	L	77	null		
+BNNRPL	B	N	N	R	P	L	116	null		
+BNNRWL	B	N	N	R	W	L	943	null		
+BNNRWM	B	N	N	R	W	M	291	null		
+BNNRWP	B	N	N	R	W	P	68	null		
+BNOHCL	B	N	O	H	C	L	675	null		
+BNOHCM	B	N	O	H	C	M	133	null		
+BNOHWL	B	N	O	H	W	L	287	null		
+BNORCL	B	N	O	R	C	L	2401	null		
+BNORCM	B	N	O	R	C	M	385	null		
+BNORDL	B	N	O	R	D	L	171	null		
+BNORDM	B	N	O	R	D	M	90	null		
+BNORPL	B	N	O	R	P	L	127	null		
+BNORWL	B	N	O	R	W	L	1338	null		
+BNORWM	B	N	O	R	W	M	162	null		
+BNORWP	B	N	O	R	W	P	70	null		
+BNPCCL	B	N	P	C	C	L	78	null		
+BNPHCL	B	N	P	H	C	L	478	null		
+BNPHCM	B	N	P	H	C	M	135	null		
+BNPHCP	B	N	P	H	C	P	56	null		
+BNPHWL	B	N	P	H	W	L	245	null		
+BNPHWM	B	N	P	H	W	M	90	null		
+BNPRAL	B	N	P	R	A	L	118	null		
+BNPRCL	B	N	P	R	C	L	1246	null		
+BNPRCM	B	N	P	R	C	M	323	null		
+BNPRCP	B	N	P	R	C	P	72	null		
+BNPRDL	B	N	P	R	D	L	65	null		
+BNPRPL	B	N	P	R	P	L	77	null		
+BNPRWL	B	N	P	R	W	L	742	null		
+BNPRWM	B	N	P	R	W	M	220	null		
+BNPRWP	B	N	P	R	W	P	62	null		
+BNSHCL	B	N	S	H	C	L	1617	null		
+BNSHCM	B	N	S	H	C	M	293	null		
+BNSHCP	B	N	S	H	C	P	65	null		
+BNSHCS	B	N	S	H	C	S	109	null		
+BNSHIL	B	N	S	H	I	L	57	null		
+BNSHLL	B	N	S	H	L	L	104	null		
+BNSHWL	B	N	S	H	W	L	974	null		
+BNSHWM	B	N	S	H	W	M	206	null		
+BNSHWP	B	N	S	H	W	P	113	null		
+BNSHWS	B	N	S	H	W	S	215	null		
+BNSRCL	B	N	S	R	C	L	8882	null		
+BNSRCM	B	N	S	R	C	M	1847	null		
+BNSRCP	B	N	S	R	C	P	453	null		
+BNSRCS	B	N	S	R	C	S	183	null		
+BNSRDL	B	N	S	R	D	L	495	null		
+BNSRDM	B	N	S	R	D	M	211	null		
+BNSRDP	B	N	S	R	D	P	80	null		
+BNSRDS	B	N	S	R	D	S	66	null		
+BNSRLL	B	N	S	R	L	L	88	null		
+BNSRPL	B	N	S	R	P	L	645	null		
+BNSRPP	B	N	S	R	P	P	56	null		
+BNSRWL	B	N	S	R	W	L	5031	null		
+BNSRWM	B	N	S	R	W	M	801	null		
+BNSRWP	B	N	S	R	W	P	657	null		
+BNSRWS	B	N	S	R	W	S	545	null		
+BRNCAL	B	R	N	C	A	L	137	null		
+BRNCAM	B	R	N	C	A	M	113	null		
+BRNCCL	B	R	N	C	C	L	4702	null		
+BRNCCM	B	R	N	C	C	M	987	null		
+BRNCCP	B	R	N	C	C	P	194	null		
+BRNCCS	B	R	N	C	C	S	104	null		
+BRNCDL	B	R	N	C	D	L	542	null		
+BRNCDM	B	R	N	C	D	M	377	null		
+BRNCDP	B	R	N	C	D	P	56	null		
+BRNCIL	B	R	N	C	I	L	239	null		
+BRNCIM	B	R	N	C	I	M	79	null		
+BRNCLL	B	R	N	C	L	L	140	null		
+BRNCLM	B	R	N	C	L	M	161	null		
+BRNCPL	B	R	N	C	P	L	837	null		
+BRNCPM	B	R	N	C	P	M	442	null		
+BRNCPP	B	R	N	C	P	P	55	null		
+BRNCWL	B	R	N	C	W	L	3076	null		
+BRNCWM	B	R	N	C	W	M	1750	null		
+BRNCWP	B	R	N	C	W	P	260	null		
+BRNCWS	B	R	N	C	W	S	163	null		
+BRNHAM	B	R	N	H	A	M	57	null		
+BRNHCL	B	R	N	H	C	L	1019	null		
+BRNHCM	B	R	N	H	C	M	509	null		
+BRNHCP	B	R	N	H	C	P	58	null		
+BRNHLM	B	R	N	H	L	M	118	null		
+BRNHWL	B	R	N	H	W	L	706	null		
+BRNHWM	B	R	N	H	W	M	409	null		
+BRNHWP	B	R	N	H	W	P	129	null		
+BRNLAL	B	R	N	L	A	L	310	null		
+BRNLAM	B	R	N	L	A	M	195	null		
+BRNLCL	B	R	N	L	C	L	1571	null		
+BRNLCM	B	R	N	L	C	M	761	null		
+BRNLCP	B	R	N	L	C	P	80	null		
+BRNLDL	B	R	N	L	D	L	61	null		
+BRNLDM	B	R	N	L	D	M	107	null		
+BRNLIL	B	R	N	L	I	L	113	null		
+BRNLIM	B	R	N	L	I	M	112	null		
+BRNLLM	B	R	N	L	L	M	67	null		
+BRNLWL	B	R	N	L	W	L	1333	null		
+BRNLWM	B	R	N	L	W	M	938	null		
+BRNLWP	B	R	N	L	W	P	106	null		
+BRNRAL	B	R	N	R	A	L	79	null		
+BRNRCL	B	R	N	R	C	L	2381	null		
+BRNRCM	B	R	N	R	C	M	760	null		
+BRNRCP	B	R	N	R	C	P	111	null		
+BRNRDL	B	R	N	R	D	L	314	null		
+BRNRDM	B	R	N	R	D	M	120	null		
+BRNRLL	B	R	N	R	L	L	56	null		
+BRNRPL	B	R	N	R	P	L	68	null		
+BRNRPM	B	R	N	R	P	M	136	null		
+BRNRWL	B	R	N	R	W	L	1929	null		
+BRNRWM	B	R	N	R	W	M	606	null		
+BRNRWP	B	R	N	R	W	P	128	null		
+BRNRWS	B	R	N	R	W	S	61	null		
+BROCCL	B	R	O	C	C	L	311	null		
+BROCCM	B	R	O	C	C	M	51	null		
+BROCCS	B	R	O	C	C	S	78	null		
+BROCDL	B	R	O	C	D	L	128	null		
+BROCPL	B	R	O	C	P	L	83	null		
+BROCWL	B	R	O	C	W	L	335	null		
+BROCWM	B	R	O	C	W	M	66	null		
+BROHCL	B	R	O	H	C	L	168	null		
+BROLCL	B	R	O	L	C	L	65	null		
+BRORCL	B	R	O	R	C	L	1611	null		
+BRORCM	B	R	O	R	C	M	360	null		
+BRORCP	B	R	O	R	C	P	70	null		
+BRORCS	B	R	O	R	C	S	58	null		
+BRORDL	B	R	O	R	D	L	248	null		
+BRORPL	B	R	O	R	P	L	82	null		
+BRORWL	B	R	O	R	W	L	1268	null		
+BRORWM	B	R	O	R	W	M	246	null		
+BRORWP	B	R	O	R	W	P	63	null		
+BRORWS	B	R	O	R	W	S	60	null		
+BRPCAL	B	R	P	C	A	L	86	null		
+BRPCAS	B	R	P	C	A	S	77	null		
+BRPCCL	B	R	P	C	C	L	1056	null		
+BRPCCM	B	R	P	C	C	M	219	null		
+BRPCCP	B	R	P	C	C	P	64	null		
+BRPCCS	B	R	P	C	C	S	392	null		
+BRPCDL	B	R	P	C	D	L	217	null		
+BRPCDS	B	R	P	C	D	S	67	null		
+BRPCIL	B	R	P	C	I	L	167	null		
+BRPCIS	B	R	P	C	I	S	61	null		
+BRPCPL	B	R	P	C	P	L	293	null		
+BRPCPS	B	R	P	C	P	S	53	null		
+BRPCWL	B	R	P	C	W	L	1167	null		
+BRPCWM	B	R	P	C	W	M	160	null		
+BRPCWP	B	R	P	C	W	P	277	null		
+BRPCWS	B	R	P	C	W	S	464	null		
+BRPHCL	B	R	P	H	C	L	644	null		
+BRPHCM	B	R	P	H	C	M	333	null		
+BRPHLL	B	R	P	H	L	L	79	null		
+BRPHWL	B	R	P	H	W	L	324	null		
+BRPHWM	B	R	P	H	W	M	203	null		
+BRPHWP	B	R	P	H	W	P	76	null		
+BRPLAL	B	R	P	L	A	L	85	null		
+BRPLAM	B	R	P	L	A	M	77	null		
+BRPLCL	B	R	P	L	C	L	471	null		
+BRPLCM	B	R	P	L	C	M	85	null		
+BRPLCP	B	R	P	L	C	P	53	null		
+BRPLCS	B	R	P	L	C	S	155	null		
+BRPLIL	B	R	P	L	I	L	72	null		
+BRPLWL	B	R	P	L	W	L	424	null		
+BRPLWM	B	R	P	L	W	M	68	null		
+BRPLWP	B	R	P	L	W	P	85	null		
+BRPLWS	B	R	P	L	W	S	139	null		
+BRPRAL	B	R	P	R	A	L	52	null		
+BRPRCL	B	R	P	R	C	L	7588	null		
+BRPRCM	B	R	P	R	C	M	2608	null		
+BRPRCP	B	R	P	R	C	P	394	null		
+BRPRCS	B	R	P	R	C	S	399	null		
+BRPRDL	B	R	P	R	D	L	1188	null		
+BRPRDM	B	R	P	R	D	M	344	null		
+BRPRDP	B	R	P	R	D	P	138	null		
+BRPRDS	B	R	P	R	D	S	277	null		
+BRPRIL	B	R	P	R	I	L	92	null		
+BRPRIP	B	R	P	R	I	P	55	null		
+BRPRLL	B	R	P	R	L	L	81	null		
+BRPRPL	B	R	P	R	P	L	481	null		
+BRPRPM	B	R	P	R	P	M	162	null		
+BRPRPP	B	R	P	R	P	P	70	null		
+BRPRPS	B	R	P	R	P	S	57	null		
+BRPRWL	B	R	P	R	W	L	5277	null		
+BRPRWM	B	R	P	R	W	M	1743	null		
+BRPRWP	B	R	P	R	W	P	373	null		
+BRPRWS	B	R	P	R	W	S	554	null		
+CNNCAL	C	N	N	C	A	L	13028	null		
+CNNCAM	C	N	N	C	A	M	28537	null		
+CNNCAP	C	N	N	C	A	P	27072	null		
+CNNCAS	C	N	N	C	A	S	292	null		
+CNNCCL	C	N	N	C	C	L	3782	null		
+CNNCCM	C	N	N	C	C	M	755	null		
+CNNCCP	C	N	N	C	C	P	395	null		
+CNNCCS	C	N	N	C	C	S	71	null		
+CNNCDL	C	N	N	C	D	L	1562	null		
+CNNCDM	C	N	N	C	D	M	636	null		
+CNNCDP	C	N	N	C	D	P	123	null		
+CNNCDS	C	N	N	C	D	S	154	null		
+CNNCIL	C	N	N	C	I	L	8449	null		
+CNNCIM	C	N	N	C	I	M	14243	null		
+CNNCIP	C	N	N	C	I	P	7732	null		
+CNNCIS	C	N	N	C	I	S	731	null		
+CNNCLL	C	N	N	C	L	L	3055	null		
+CNNCLM	C	N	N	C	L	M	9430	null		
+CNNCLP	C	N	N	C	L	P	9579	null		
+CNNCPL	C	N	N	C	P	L	3182	null		
+CNNCPM	C	N	N	C	P	M	3068	null		
+CNNCPP	C	N	N	C	P	P	291	null		
+CNNCPS	C	N	N	C	P	S	240	null		
+CNNCWL	C	N	N	C	W	L	3931	null		
+CNNCWM	C	N	N	C	W	M	2908	null		
+CNNCWP	C	N	N	C	W	P	749	null		
+CNNCWS	C	N	N	C	W	S	118	null		
+CNNHAL	C	N	N	H	A	L	997	null		
+CNNHAM	C	N	N	H	A	M	907	null		
+CNNHAP	C	N	N	H	A	P	861	null		
+CNNHIL	C	N	N	H	I	L	1058	null		
+CNNHIM	C	N	N	H	I	M	925	null		
+CNNHIP	C	N	N	H	I	P	484	null		
+CNNHLL	C	N	N	H	L	L	724	null		
+CNNHLM	C	N	N	H	L	M	390	null		
+CNNHLP	C	N	N	H	L	P	316	null		
+CNNHWL	C	N	N	H	W	L	142	null		
+CNNLAL	C	N	N	L	A	L	33323	null		
+CNNLAM	C	N	N	L	A	M	56955	null		
+CNNLAP	C	N	N	L	A	P	38935	null		
+CNNLAS	C	N	N	L	A	S	1116	null		
+CNNLCL	C	N	N	L	C	L	5270	null		
+CNNLCM	C	N	N	L	C	M	1025	null		
+CNNLCP	C	N	N	L	C	P	473	null		
+CNNLCS	C	N	N	L	C	S	200	null		
+CNNLDL	C	N	N	L	D	L	1744	null		
+CNNLDM	C	N	N	L	D	M	666	null		
+CNNLDP	C	N	N	L	D	P	51	null		
+CNNLDS	C	N	N	L	D	S	184	null		
+CNNLIL	C	N	N	L	I	L	19303	null		
+CNNLIM	C	N	N	L	I	M	32817	null		
+CNNLIP	C	N	N	L	I	P	14895	null		
+CNNLIS	C	N	N	L	I	S	1863	null		
+CNNLLL	C	N	N	L	L	L	6453	null		
+CNNLLM	C	N	N	L	L	M	23216	null		
+CNNLLP	C	N	N	L	L	P	17277	null		
+CNNLPL	C	N	N	L	P	L	1803	null		
+CNNLPM	C	N	N	L	P	M	2528	null		
+CNNLPP	C	N	N	L	P	P	370	null		
+CNNLPS	C	N	N	L	P	S	110	null		
+CNNLWL	C	N	N	L	W	L	7496	null		
+CNNLWM	C	N	N	L	W	M	5075	null		
+CNNLWP	C	N	N	L	W	P	1715	null		
+CNNLWS	C	N	N	L	W	S	331	null		
+CNNRAL	C	N	N	R	A	L	1237	null		
+CNNRAM	C	N	N	R	A	M	2226	null		
+CNNRAP	C	N	N	R	A	P	1865	null		
+CNNRAS	C	N	N	R	A	S	206	null		
+CNNRIL	C	N	N	R	I	L	1061	null		
+CNNRIM	C	N	N	R	I	M	1499	null		
+CNNRIP	C	N	N	R	I	P	836	null		
+CNNRIS	C	N	N	R	I	S	213	null		
+CNNRLL	C	N	N	R	L	L	638	null		
+CNNRLM	C	N	N	R	L	M	794	null		
+CNNRLP	C	N	N	R	L	P	597	null		
+CNNRWL	C	N	N	R	W	L	152	null		
+CNNRWM	C	N	N	R	W	M	103	null		
+CNOCAL	C	N	O	C	A	L	120	null		
+CNOCAM	C	N	O	C	A	M	204	null		
+CNOCAP	C	N	O	C	A	P	117	null		
+CNOCCL	C	N	O	C	C	L	86	null		
+CNOCIL	C	N	O	C	I	L	129	null		
+CNOCIM	C	N	O	C	I	M	53	null		
+CNOCIP	C	N	O	C	I	P	72	null		
+CNOCLL	C	N	O	C	L	L	60	null		
+CNOCLM	C	N	O	C	L	M	60	null		
+CNOCLP	C	N	O	C	L	P	57	null		
+CNOCWL	C	N	O	C	W	L	65	null		
+CNOHAL	C	N	O	H	A	L	426	null		
+CNOHAM	C	N	O	H	A	M	448	null		
+CNOHAP	C	N	O	H	A	P	695	null		
+CNOHIL	C	N	O	H	I	L	393	null		
+CNOHIM	C	N	O	H	I	M	348	null		
+CNOHIP	C	N	O	H	I	P	338	null		
+CNOHLL	C	N	O	H	L	L	167	null		
+CNOHLM	C	N	O	H	L	M	273	null		
+CNOHLP	C	N	O	H	L	P	266	null		
+CNOHWL	C	N	O	H	W	L	55	null		
+CNOLAL	C	N	O	L	A	L	97	null		
+CNOLAM	C	N	O	L	A	M	147	null		
+CNOLAP	C	N	O	L	A	P	333	null		
+CNOLIM	C	N	O	L	I	M	71	null		
+CNOLIP	C	N	O	L	I	P	91	null		
+CNOLLM	C	N	O	L	L	M	56	null		
+CNOLLP	C	N	O	L	L	P	101	null		
+CNORAL	C	N	O	R	A	L	336	null		
+CNORAM	C	N	O	R	A	M	217	null		
+CNORAP	C	N	O	R	A	P	218	null		
+CNORIL	C	N	O	R	I	L	409	null		
+CNORIM	C	N	O	R	I	M	252	null		
+CNORIP	C	N	O	R	I	P	233	null		
+CNORLL	C	N	O	R	L	L	241	null		
+CNORLM	C	N	O	R	L	M	156	null		
+CNORLP	C	N	O	R	L	P	159	null		
+CNORWL	C	N	O	R	W	L	109	null		
+CNORWM	C	N	O	R	W	M	67	null		
+CNPCAL	C	N	P	C	A	L	498	null		
+CNPCAM	C	N	P	C	A	M	992	null		
+CNPCAP	C	N	P	C	A	P	1161	null		
+CNPCCL	C	N	P	C	C	L	713	null		
+CNPCCM	C	N	P	C	C	M	220	null		
+CNPCCP	C	N	P	C	C	P	114	null		
+CNPCIL	C	N	P	C	I	L	830	null		
+CNPCIM	C	N	P	C	I	M	548	null		
+CNPCIP	C	N	P	C	I	P	657	null		
+CNPCLL	C	N	P	C	L	L	504	null		
+CNPCLM	C	N	P	C	L	M	751	null		
+CNPCLP	C	N	P	C	L	P	1143	null		
+CNPCWL	C	N	P	C	W	L	985	null		
+CNPCWM	C	N	P	C	W	M	254	null		
+CNPCWP	C	N	P	C	W	P	445	null		
+CNPHAL	C	N	P	H	A	L	116	null		
+CNPHAM	C	N	P	H	A	M	548	null		
+CNPHAP	C	N	P	H	A	P	881	null		
+CNPHIL	C	N	P	H	I	L	135	null		
+CNPHIM	C	N	P	H	I	M	358	null		
+CNPHIP	C	N	P	H	I	P	552	null		
+CNPHLL	C	N	P	H	L	L	103	null		
+CNPHLM	C	N	P	H	L	M	346	null		
+CNPHLP	C	N	P	H	L	P	577	null		
+CNPLAL	C	N	P	L	A	L	186	null		
+CNPLAM	C	N	P	L	A	M	734	null		
+CNPLAP	C	N	P	L	A	P	1208	null		
+CNPLIM	C	N	P	L	I	M	289	null		
+CNPLIP	C	N	P	L	I	P	173	null		
+CNPLLL	C	N	P	L	L	L	55	null		
+CNPLLM	C	N	P	L	L	M	238	null		
+CNPLLP	C	N	P	L	L	P	234	null		
+CNPRAM	C	N	P	R	A	M	318	null		
+CNPRAP	C	N	P	R	A	P	809	null		
+CNPRIL	C	N	P	R	I	L	98	null		
+CNPRIM	C	N	P	R	I	M	155	null		
+CNPRIP	C	N	P	R	I	P	112	null		
+CNPRLL	C	N	P	R	L	L	86	null		
+CNPRLM	C	N	P	R	L	M	96	null		
+CNPRLP	C	N	P	R	L	P	157	null		
+CNSCAL	C	N	S	C	A	L	637	null		
+CNSCAM	C	N	S	C	A	M	478	null		
+CNSCAP	C	N	S	C	A	P	607	null		
+CNSCCL	C	N	S	C	C	L	592	null		
+CNSCIL	C	N	S	C	I	L	834	null		
+CNSCIM	C	N	S	C	I	M	408	null		
+CNSCIP	C	N	S	C	I	P	348	null		
+CNSCLL	C	N	S	C	L	L	890	null		
+CNSCLM	C	N	S	C	L	M	528	null		
+CNSCLP	C	N	S	C	L	P	473	null		
+CNSCWL	C	N	S	C	W	L	828	null		
+CNSCWM	C	N	S	C	W	M	109	null		
+CNSCWP	C	N	S	C	W	P	61	null		
+CNSHAL	C	N	S	H	A	L	3564	null		
+CNSHAM	C	N	S	H	A	M	3792	null		
+CNSHAP	C	N	S	H	A	P	5069	null		
+CNSHAS	C	N	S	H	A	S	98	null		
+CNSHCL	C	N	S	H	C	L	287	null		
+CNSHIL	C	N	S	H	I	L	3769	null		
+CNSHIM	C	N	S	H	I	M	2307	null		
+CNSHIP	C	N	S	H	I	P	2218	null		
+CNSHIS	C	N	S	H	I	S	137	null		
+CNSHLL	C	N	S	H	L	L	2904	null		
+CNSHLM	C	N	S	H	L	M	2396	null		
+CNSHLP	C	N	S	H	L	P	2897	null		
+CNSHPM	C	N	S	H	P	M	127	null		
+CNSHWL	C	N	S	H	W	L	1064	null		
+CNSHWM	C	N	S	H	W	M	305	null		
+CNSHWP	C	N	S	H	W	P	291	null		
+CNSLAL	C	N	S	L	A	L	240	null		
+CNSLAM	C	N	S	L	A	M	786	null		
+CNSLAP	C	N	S	L	A	P	1751	null		
+CNSLIL	C	N	S	L	I	L	190	null		
+CNSLIM	C	N	S	L	I	M	552	null		
+CNSLIP	C	N	S	L	I	P	440	null		
+CNSLLL	C	N	S	L	L	L	143	null		
+CNSLLM	C	N	S	L	L	M	314	null		
+CNSLLP	C	N	S	L	L	P	707	null		
+CNSLWM	C	N	S	L	W	M	67	null		
+CNSRAL	C	N	S	R	A	L	4105	null		
+CNSRAM	C	N	S	R	A	M	3298	null		
+CNSRAP	C	N	S	R	A	P	3680	null		
+CNSRAS	C	N	S	R	A	S	397	null		
+CNSRCL	C	N	S	R	C	L	298	null		
+CNSRCM	C	N	S	R	C	M	261	null		
+CNSRDL	C	N	S	R	D	L	97	null		
+CNSRDM	C	N	S	R	D	M	131	null		
+CNSRIL	C	N	S	R	I	L	6065	null		
+CNSRIM	C	N	S	R	I	M	3725	null		
+CNSRIP	C	N	S	R	I	P	2731	null		
+CNSRIS	C	N	S	R	I	S	291	null		
+CNSRLL	C	N	S	R	L	L	2477	null		
+CNSRLM	C	N	S	R	L	M	2457	null		
+CNSRLP	C	N	S	R	L	P	2377	null		
+CNSRLS	C	N	S	R	L	S	65	null		
+CNSRPL	C	N	S	R	P	L	108	null		
+CNSRPM	C	N	S	R	P	M	407	null		
+CNSRPP	C	N	S	R	P	P	193	null		
+CNSRPS	C	N	S	R	P	S	62	null		
+CNSRWL	C	N	S	R	W	L	1161	null		
+CNSRWM	C	N	S	R	W	M	955	null		
+CNSRWP	C	N	S	R	W	P	375	null		
+CRNCAL	C	R	N	C	A	L	1825	null		
+CRNCAM	C	R	N	C	A	M	2819	null		
+CRNCAP	C	R	N	C	A	P	1198	null		
+CRNCAS	C	R	N	C	A	S	189	null		
+CRNCCL	C	R	N	C	C	L	74	null		
+CRNCIL	C	R	N	C	I	L	2085	null		
+CRNCIM	C	R	N	C	I	M	1970	null		
+CRNCIP	C	R	N	C	I	P	756	null		
+CRNCIS	C	R	N	C	I	S	94	null		
+CRNCLL	C	R	N	C	L	L	516	null		
+CRNCLM	C	R	N	C	L	M	1452	null		
+CRNCLP	C	R	N	C	L	P	620	null		
+CRNCLS	C	R	N	C	L	S	51	null		
+CRNCPL	C	R	N	C	P	L	1166	null		
+CRNCPM	C	R	N	C	P	M	1202	null		
+CRNCPP	C	R	N	C	P	P	147	null		
+CRNCWL	C	R	N	C	W	L	212	null		
+CRNCWM	C	R	N	C	W	M	296	null		
+CRNCWP	C	R	N	C	W	P	141	null		
+CRNHAL	C	R	N	H	A	L	127	null		
+CRNHAM	C	R	N	H	A	M	818	null		
+CRNHAP	C	R	N	H	A	P	713	null		
+CRNHIL	C	R	N	H	I	L	205	null		
+CRNHIM	C	R	N	H	I	M	318	null		
+CRNHIP	C	R	N	H	I	P	223	null		
+CRNHLL	C	R	N	H	L	L	59	null		
+CRNHLM	C	R	N	H	L	M	360	null		
+CRNHLP	C	R	N	H	L	P	266	null		
+CRNHWL	C	R	N	H	W	L	97	null		
+CRNHWM	C	R	N	H	W	M	183	null		
+CRNLAL	C	R	N	L	A	L	3051	null		
+CRNLAM	C	R	N	L	A	M	7546	null		
+CRNLAP	C	R	N	L	A	P	12507	null		
+CRNLAS	C	R	N	L	A	S	75	null		
+CRNLCL	C	R	N	L	C	L	664	null		
+CRNLCM	C	R	N	L	C	M	118	null		
+CRNLCP	C	R	N	L	C	P	51	null		
+CRNLIL	C	R	N	L	I	L	1642	null		
+CRNLIM	C	R	N	L	I	M	4812	null		
+CRNLIP	C	R	N	L	I	P	3746	null		
+CRNLIS	C	R	N	L	I	S	203	null		
+CRNLLL	C	R	N	L	L	L	926	null		
+CRNLLM	C	R	N	L	L	M	4120	null		
+CRNLLP	C	R	N	L	L	P	4114	null		
+CRNLPM	C	R	N	L	P	M	72	null		
+CRNLPP	C	R	N	L	P	P	94	null		
+CRNLWL	C	R	N	L	W	L	754	null		
+CRNLWM	C	R	N	L	W	M	461	null		
+CRNLWP	C	R	N	L	W	P	185	null		
+CRNRAL	C	R	N	R	A	L	445	null		
+CRNRAM	C	R	N	R	A	M	1018	null		
+CRNRAP	C	R	N	R	A	P	722	null		
+CRNRAS	C	R	N	R	A	S	575	null		
+CRNRIL	C	R	N	R	I	L	301	null		
+CRNRIM	C	R	N	R	I	M	610	null		
+CRNRIP	C	R	N	R	I	P	533	null		
+CRNRIS	C	R	N	R	I	S	157	null		
+CRNRLL	C	R	N	R	L	L	61	null		
+CRNRLM	C	R	N	R	L	M	254	null		
+CRNRLP	C	R	N	R	L	P	355	null		
+CRNRPM	C	R	N	R	P	M	90	null		
+CRNRWL	C	R	N	R	W	L	69	null		
+CRNRWM	C	R	N	R	W	M	192	null		
+CROCAL	C	R	O	C	A	L	164	null		
+CROCAM	C	R	O	C	A	M	371	null		
+CROCAP	C	R	O	C	A	P	688	null		
+CROCIL	C	R	O	C	I	L	370	null		
+CROCIM	C	R	O	C	I	M	300	null		
+CROCIP	C	R	O	C	I	P	357	null		
+CROCLL	C	R	O	C	L	L	93	null		
+CROCLM	C	R	O	C	L	M	189	null		
+CROCLP	C	R	O	C	L	P	269	null		
+CROHAL	C	R	O	H	A	L	306	null		
+CROHAM	C	R	O	H	A	M	242	null		
+CROHAP	C	R	O	H	A	P	383	null		
+CROHIL	C	R	O	H	I	L	229	null		
+CROHIM	C	R	O	H	I	M	138	null		
+CROHIP	C	R	O	H	I	P	173	null		
+CROHLL	C	R	O	H	L	L	250	null		
+CROHLM	C	R	O	H	L	M	182	null		
+CROHLP	C	R	O	H	L	P	189	null		
+CROLAL	C	R	O	L	A	L	356	null		
+CROLAM	C	R	O	L	A	M	429	null		
+CROLAP	C	R	O	L	A	P	1797	null		
+CROLIL	C	R	O	L	I	L	343	null		
+CROLIM	C	R	O	L	I	M	252	null		
+CROLIP	C	R	O	L	I	P	495	null		
+CROLLL	C	R	O	L	L	L	87	null		
+CROLLM	C	R	O	L	L	M	207	null		
+CROLLP	C	R	O	L	L	P	444	null		
+CRORAL	C	R	O	R	A	L	238	null		
+CRORAM	C	R	O	R	A	M	202	null		
+CRORAP	C	R	O	R	A	P	171	null		
+CRORIL	C	R	O	R	I	L	290	null		
+CRORIM	C	R	O	R	I	M	138	null		
+CRORIP	C	R	O	R	I	P	134	null		
+CRORLL	C	R	O	R	L	L	57	null		
+CRORLM	C	R	O	R	L	M	128	null		
+CRORLP	C	R	O	R	L	P	111	null		
+CRPCAL	C	R	P	C	A	L	1055	null		
+CRPCAM	C	R	P	C	A	M	2432	null		
+CRPCAP	C	R	P	C	A	P	6553	null		
+CRPCIL	C	R	P	C	I	L	2382	null		
+CRPCIM	C	R	P	C	I	M	1762	null		
+CRPCIP	C	R	P	C	I	P	2665	null		
+CRPCLL	C	R	P	C	L	L	683	null		
+CRPCLM	C	R	P	C	L	M	1879	null		
+CRPCLP	C	R	P	C	L	P	2948	null		
+CRPCPL	C	R	P	C	P	L	164	null		
+CRPCPM	C	R	P	C	P	M	56	null		
+CRPCPP	C	R	P	C	P	P	54	null		
+CRPCWL	C	R	P	C	W	L	113	null		
+CRPCWM	C	R	P	C	W	M	87	null		
+CRPHAL	C	R	P	H	A	L	1066	null		
+CRPHAM	C	R	P	H	A	M	1632	null		
+CRPHAP	C	R	P	H	A	P	3896	null		
+CRPHCL	C	R	P	H	C	L	96	null		
+CRPHCM	C	R	P	H	C	M	57	null		
+CRPHIL	C	R	P	H	I	L	1015	null		
+CRPHIM	C	R	P	H	I	M	1234	null		
+CRPHIP	C	R	P	H	I	P	1479	null		
+CRPHLL	C	R	P	H	L	L	1057	null		
+CRPHLM	C	R	P	H	L	M	2163	null		
+CRPHLP	C	R	P	H	L	P	2639	null		
+CRPHWL	C	R	P	H	W	L	77	null		
+CRPHWM	C	R	P	H	W	M	87	null		
+CRPLAL	C	R	P	L	A	L	1454	null		
+CRPLAM	C	R	P	L	A	M	2729	null		
+CRPLAP	C	R	P	L	A	P	8858	null		
+CRPLAS	C	R	P	L	A	S	63	null		
+CRPLCL	C	R	P	L	C	L	61	null		
+CRPLIL	C	R	P	L	I	L	1837	null		
+CRPLIM	C	R	P	L	I	M	1919	null		
+CRPLIP	C	R	P	L	I	P	3662	null		
+CRPLLL	C	R	P	L	L	L	758	null		
+CRPLLM	C	R	P	L	L	M	1623	null		
+CRPLLP	C	R	P	L	L	P	3424	null		
+CRPLWL	C	R	P	L	W	L	229	null		
+CRPLWM	C	R	P	L	W	M	72	null		
+CRPLWP	C	R	P	L	W	P	57	null		
+CRPRAL	C	R	P	R	A	L	1788	null		
+CRPRAM	C	R	P	R	A	M	2080	null		
+CRPRAP	C	R	P	R	A	P	2147	null		
+CRPRAS	C	R	P	R	A	S	433	null		
+CRPRCL	C	R	P	R	C	L	63	null		
+CRPRDM	C	R	P	R	D	M	53	null		
+CRPRIL	C	R	P	R	I	L	2336	null		
+CRPRIM	C	R	P	R	I	M	1833	null		
+CRPRIP	C	R	P	R	I	P	1248	null		
+CRPRIS	C	R	P	R	I	S	97	null		
+CRPRLL	C	R	P	R	L	L	867	null		
+CRPRLM	C	R	P	R	L	M	1368	null		
+CRPRLP	C	R	P	R	L	P	1636	null		
+CRPRPL	C	R	P	R	P	L	160	null		
+CRPRPM	C	R	P	R	P	M	209	null		
+CRPRWL	C	R	P	R	W	L	144	null		
+CRPRWM	C	R	P	R	W	M	332	null		
+CRPRWP	C	R	P	R	W	P	62	null		
+KNNCAL	K	N	N	C	A	L	6669	null		
+KNNCAM	K	N	N	C	A	M	3423	null		
+KNNCAP	K	N	N	C	A	P	750	null		
+KNNCAS	K	N	N	C	A	S	288	null		
+KNNCCL	K	N	N	C	C	L	9272	null		
+KNNCCM	K	N	N	C	C	M	2046	null		
+KNNCCP	K	N	N	C	C	P	422	null		
+KNNCCS	K	N	N	C	C	S	334	null		
+KNNCDL	K	N	N	C	D	L	11926	null		
+KNNCDM	K	N	N	C	D	M	4272	null		
+KNNCDP	K	N	N	C	D	P	1005	null		
+KNNCDS	K	N	N	C	D	S	1121	null		
+KNNCIL	K	N	N	C	I	L	16276	null		
+KNNCIM	K	N	N	C	I	M	14311	null		
+KNNCIP	K	N	N	C	I	P	1970	null		
+KNNCIS	K	N	N	C	I	S	833	null		
+KNNCLL	K	N	N	C	L	L	3479	null		
+KNNCLM	K	N	N	C	L	M	2686	null		
+KNNCLP	K	N	N	C	L	P	664	null		
+KNNCLS	K	N	N	C	L	S	90	null		
+KNNCPL	K	N	N	C	P	L	24346	null		
+KNNCPM	K	N	N	C	P	M	20251	null		
+KNNCPP	K	N	N	C	P	P	3479	null		
+KNNCPS	K	N	N	C	P	S	1195	null		
+KNNCWL	K	N	N	C	W	L	16388	null		
+KNNCWM	K	N	N	C	W	M	9736	null		
+KNNCWP	K	N	N	C	W	P	1275	null		
+KNNCWS	K	N	N	C	W	S	887	null		
+KNNHAM	K	N	N	H	A	M	69	null		
+KNNHIL	K	N	N	H	I	L	66	null		
+KNNHIM	K	N	N	H	I	M	103	null		
+KNNHIP	K	N	N	H	I	P	76	null		
+KNNHLM	K	N	N	H	L	M	55	null		
+KNNHPM	K	N	N	H	P	M	65	null		
+KNNHWM	K	N	N	H	W	M	54	null		
+KNNLAL	K	N	N	L	A	L	4029	null		
+KNNLAM	K	N	N	L	A	M	2155	null		
+KNNLAP	K	N	N	L	A	P	431	null		
+KNNLAS	K	N	N	L	A	S	556	null		
+KNNLCL	K	N	N	L	C	L	6685	null		
+KNNLCM	K	N	N	L	C	M	1857	null		
+KNNLCP	K	N	N	L	C	P	240	null		
+KNNLCS	K	N	N	L	C	S	592	null		
+KNNLDL	K	N	N	L	D	L	2622	null		
+KNNLDM	K	N	N	L	D	M	1068	null		
+KNNLDP	K	N	N	L	D	P	154	null		
+KNNLDS	K	N	N	L	D	S	645	null		
+KNNLIL	K	N	N	L	I	L	5152	null		
+KNNLIM	K	N	N	L	I	M	2908	null		
+KNNLIP	K	N	N	L	I	P	489	null		
+KNNLIS	K	N	N	L	I	S	1577	null		
+KNNLLL	K	N	N	L	L	L	817	null		
+KNNLLM	K	N	N	L	L	M	919	null		
+KNNLLP	K	N	N	L	L	P	143	null		
+KNNLLS	K	N	N	L	L	S	51	null		
+KNNLPL	K	N	N	L	P	L	3075	null		
+KNNLPM	K	N	N	L	P	M	2494	null		
+KNNLPP	K	N	N	L	P	P	204	null		
+KNNLPS	K	N	N	L	P	S	408	null		
+KNNLWL	K	N	N	L	W	L	7524	null		
+KNNLWM	K	N	N	L	W	M	3554	null		
+KNNLWP	K	N	N	L	W	P	603	null		
+KNNLWS	K	N	N	L	W	S	1056	null		
+KNNRAL	K	N	N	R	A	L	493	null		
+KNNRAM	K	N	N	R	A	M	275	null		
+KNNRAP	K	N	N	R	A	P	87	null		
+KNNRCL	K	N	N	R	C	L	1102	null		
+KNNRCM	K	N	N	R	C	M	436	null		
+KNNRDL	K	N	N	R	D	L	3040	null		
+KNNRDM	K	N	N	R	D	M	1424	null		
+KNNRDP	K	N	N	R	D	P	140	null		
+KNNRIL	K	N	N	R	I	L	1322	null		
+KNNRIM	K	N	N	R	I	M	1790	null		
+KNNRIP	K	N	N	R	I	P	653	null		
+KNNRLL	K	N	N	R	L	L	246	null		
+KNNRLM	K	N	N	R	L	M	252	null		
+KNNRLP	K	N	N	R	L	P	51	null		
+KNNRPL	K	N	N	R	P	L	5119	null		
+KNNRPM	K	N	N	R	P	M	3269	null		
+KNNRPP	K	N	N	R	P	P	2744	null		
+KNNRPS	K	N	N	R	P	S	188	null		
+KNNRWL	K	N	N	R	W	L	3217	null		
+KNNRWM	K	N	N	R	W	M	2213	null		
+KNNRWP	K	N	N	R	W	P	433	null		
+KNOCAL	K	N	O	C	A	L	133	null		
+KNOCAM	K	N	O	C	A	M	149	null		
+KNOCCL	K	N	O	C	C	L	364	null		
+KNOCCM	K	N	O	C	C	M	114	null		
+KNOCDL	K	N	O	C	D	L	301	null		
+KNOCDM	K	N	O	C	D	M	99	null		
+KNOCIL	K	N	O	C	I	L	473	null		
+KNOCIM	K	N	O	C	I	M	275	null		
+KNOCLL	K	N	O	C	L	L	114	null		
+KNOCLM	K	N	O	C	L	M	111	null		
+KNOCPL	K	N	O	C	P	L	489	null		
+KNOCPM	K	N	O	C	P	M	272	null		
+KNOCWL	K	N	O	C	W	L	485	null		
+KNOCWM	K	N	O	C	W	M	252	null		
+KNOHAL	K	N	O	H	A	L	58	null		
+KNOHAM	K	N	O	H	A	M	80	null		
+KNOHCL	K	N	O	H	C	L	213	null		
+KNOHIL	K	N	O	H	I	L	121	null		
+KNOHIM	K	N	O	H	I	M	130	null		
+KNOHLM	K	N	O	H	L	M	74	null		
+KNOHWL	K	N	O	H	W	L	258	null		
+KNOHWM	K	N	O	H	W	M	113	null		
+KNOLCL	K	N	O	L	C	L	86	null		
+KNOLWL	K	N	O	L	W	L	84	null		
+KNORAL	K	N	O	R	A	L	814	null		
+KNORAM	K	N	O	R	A	M	470	null		
+KNORCL	K	N	O	R	C	L	2425	null		
+KNORCM	K	N	O	R	C	M	739	null		
+KNORCP	K	N	O	R	C	P	53	null		
+KNORDL	K	N	O	R	D	L	3005	null		
+KNORDM	K	N	O	R	D	M	1436	null		
+KNORDP	K	N	O	R	D	P	72	null		
+KNORIL	K	N	O	R	I	L	1449	null		
+KNORIM	K	N	O	R	I	M	1462	null		
+KNORIP	K	N	O	R	I	P	165	null		
+KNORLL	K	N	O	R	L	L	263	null		
+KNORLM	K	N	O	R	L	M	320	null		
+KNORPL	K	N	O	R	P	L	3322	null		
+KNORPM	K	N	O	R	P	M	1227	null		
+KNORPP	K	N	O	R	P	P	724	null		
+KNORPS	K	N	O	R	P	S	79	null		
+KNORWL	K	N	O	R	W	L	3832	null		
+KNORWM	K	N	O	R	W	M	1875	null		
+KNORWP	K	N	O	R	W	P	249	null		
+KNPCAL	K	N	P	C	A	L	264	null		
+KNPCAM	K	N	P	C	A	M	239	null		
+KNPCCL	K	N	P	C	C	L	661	null		
+KNPCCM	K	N	P	C	C	M	197	null		
+KNPCDL	K	N	P	C	D	L	294	null		
+KNPCDM	K	N	P	C	D	M	253	null		
+KNPCIL	K	N	P	C	I	L	746	null		
+KNPCIM	K	N	P	C	I	M	712	null		
+KNPCIP	K	N	P	C	I	P	132	null		
+KNPCLL	K	N	P	C	L	L	326	null		
+KNPCLM	K	N	P	C	L	M	536	null		
+KNPCPL	K	N	P	C	P	L	498	null		
+KNPCPM	K	N	P	C	P	M	456	null		
+KNPCPP	K	N	P	C	P	P	85	null		
+KNPCWL	K	N	P	C	W	L	1015	null		
+KNPCWM	K	N	P	C	W	M	357	null		
+KNPCWP	K	N	P	C	W	P	61	null		
+KNPHAM	K	N	P	H	A	M	86	null		
+KNPHIL	K	N	P	H	I	L	195	null		
+KNPHIM	K	N	P	H	I	M	69	null		
+KNPHIP	K	N	P	H	I	P	103	null		
+KNPLWL	K	N	P	L	W	L	72	null		
+KNPRAL	K	N	P	R	A	L	589	null		
+KNPRAM	K	N	P	R	A	M	413	null		
+KNPRCL	K	N	P	R	C	L	921	null		
+KNPRCM	K	N	P	R	C	M	380	null		
+KNPRDL	K	N	P	R	D	L	1398	null		
+KNPRDM	K	N	P	R	D	M	738	null		
+KNPRDP	K	N	P	R	D	P	96	null		
+KNPRIL	K	N	P	R	I	L	874	null		
+KNPRIM	K	N	P	R	I	M	951	null		
+KNPRIP	K	N	P	R	I	P	327	null		
+KNPRLL	K	N	P	R	L	L	220	null		
+KNPRLM	K	N	P	R	L	M	202	null		
+KNPRLP	K	N	P	R	L	P	92	null		
+KNPRPL	K	N	P	R	P	L	2029	null		
+KNPRPM	K	N	P	R	P	M	1492	null		
+KNPRPP	K	N	P	R	P	P	716	null		
+KNPRPS	K	N	P	R	P	S	83	null		
+KNPRWL	K	N	P	R	W	L	2357	null		
+KNPRWM	K	N	P	R	W	M	1075	null		
+KNPRWP	K	N	P	R	W	P	318	null		
+KNSCAL	K	N	S	C	A	L	292	null		
+KNSCAM	K	N	S	C	A	M	191	null		
+KNSCCL	K	N	S	C	C	L	468	null		
+KNSCCM	K	N	S	C	C	M	169	null		
+KNSCDL	K	N	S	C	D	L	583	null		
+KNSCDM	K	N	S	C	D	M	175	null		
+KNSCIL	K	N	S	C	I	L	1635	null		
+KNSCIM	K	N	S	C	I	M	858	null		
+KNSCIP	K	N	S	C	I	P	111	null		
+KNSCLL	K	N	S	C	L	L	351	null		
+KNSCLM	K	N	S	C	L	M	256	null		
+KNSCPL	K	N	S	C	P	L	1466	null		
+KNSCPM	K	N	S	C	P	M	1647	null		
+KNSCPP	K	N	S	C	P	P	140	null		
+KNSCWL	K	N	S	C	W	L	771	null		
+KNSCWM	K	N	S	C	W	M	341	null		
+KNSHAL	K	N	S	H	A	L	94	null		
+KNSHAM	K	N	S	H	A	M	133	null		
+KNSHCL	K	N	S	H	C	L	838	null		
+KNSHCM	K	N	S	H	C	M	202	null		
+KNSHIL	K	N	S	H	I	L	188	null		
+KNSHIM	K	N	S	H	I	M	178	null		
+KNSHLL	K	N	S	H	L	L	145	null		
+KNSHLM	K	N	S	H	L	M	170	null		
+KNSHWL	K	N	S	H	W	L	579	null		
+KNSHWM	K	N	S	H	W	M	424	null		
+KNSHWP	K	N	S	H	W	P	78	null		
+KNSLCL	K	N	S	L	C	L	183	null		
+KNSLIL	K	N	S	L	I	L	102	null		
+KNSLLM	K	N	S	L	L	M	80	null		
+KNSLWL	K	N	S	L	W	L	246	null		
+KNSLWM	K	N	S	L	W	M	67	null		
+KNSLWP	K	N	S	L	W	P	75	null		
+KNSRAL	K	N	S	R	A	L	2600	null		
+KNSRAM	K	N	S	R	A	M	2040	null		
+KNSRAP	K	N	S	R	A	P	324	null		
+KNSRAS	K	N	S	R	A	S	119	null		
+KNSRCL	K	N	S	R	C	L	6885	null		
+KNSRCM	K	N	S	R	C	M	2462	null		
+KNSRCP	K	N	S	R	C	P	213	null		
+KNSRCS	K	N	S	R	C	S	133	null		
+KNSRDL	K	N	S	R	D	L	6168	null		
+KNSRDM	K	N	S	R	D	M	5934	null		
+KNSRDP	K	N	S	R	D	P	492	null		
+KNSRDS	K	N	S	R	D	S	109	null		
+KNSRIL	K	N	S	R	I	L	5369	null		
+KNSRIM	K	N	S	R	I	M	8228	null		
+KNSRIP	K	N	S	R	I	P	2097	null		
+KNSRIS	K	N	S	R	I	S	446	null		
+KNSRLL	K	N	S	R	L	L	1535	null		
+KNSRLM	K	N	S	R	L	M	1913	null		
+KNSRLP	K	N	S	R	L	P	558	null		
+KNSRLS	K	N	S	R	L	S	276	null		
+KNSRPL	K	N	S	R	P	L	9927	null		
+KNSRPM	K	N	S	R	P	M	10195	null		
+KNSRPP	K	N	S	R	P	P	4910	null		
+KNSRPS	K	N	S	R	P	S	462	null		
+KNSRWL	K	N	S	R	W	L	11269	null		
+KNSRWM	K	N	S	R	W	M	7199	null		
+KNSRWP	K	N	S	R	W	P	1689	null		
+KNSRWS	K	N	S	R	W	S	435	null		
+KRNCAL	K	R	N	C	A	L	1324	null		
+KRNCAM	K	R	N	C	A	M	509	null		
+KRNCAP	K	R	N	C	A	P	101	null		
+KRNCAS	K	R	N	C	A	S	117	null		
+KRNCCL	K	R	N	C	C	L	1620	null		
+KRNCCM	K	R	N	C	C	M	539	null		
+KRNCCP	K	R	N	C	C	P	60	null		
+KRNCDL	K	R	N	C	D	L	1326	null		
+KRNCDM	K	R	N	C	D	M	489	null		
+KRNCDP	K	R	N	C	D	P	72	null		
+KRNCIL	K	R	N	C	I	L	3099	null		
+KRNCIM	K	R	N	C	I	M	1841	null		
+KRNCIP	K	R	N	C	I	P	319	null		
+KRNCIS	K	R	N	C	I	S	205	null		
+KRNCLL	K	R	N	C	L	L	293	null		
+KRNCLM	K	R	N	C	L	M	356	null		
+KRNCPL	K	R	N	C	P	L	2882	null		
+KRNCPM	K	R	N	C	P	M	3086	null		
+KRNCPP	K	R	N	C	P	P	544	null		
+KRNCWL	K	R	N	C	W	L	2857	null		
+KRNCWM	K	R	N	C	W	M	2219	null		
+KRNCWP	K	R	N	C	W	P	306	null		
+KRNCWS	K	R	N	C	W	S	131	null		
+KRNHCL	K	R	N	H	C	L	113	null		
+KRNHWL	K	R	N	H	W	L	61	null		
+KRNLAL	K	R	N	L	A	L	2798	null		
+KRNLAM	K	R	N	L	A	M	833	null		
+KRNLAP	K	R	N	L	A	P	242	null		
+KRNLAS	K	R	N	L	A	S	71	null		
+KRNLCL	K	R	N	L	C	L	2608	null		
+KRNLCM	K	R	N	L	C	M	1081	null		
+KRNLCP	K	R	N	L	C	P	101	null		
+KRNLDL	K	R	N	L	D	L	176	null		
+KRNLDM	K	R	N	L	D	M	160	null		
+KRNLIL	K	R	N	L	I	L	3337	null		
+KRNLIM	K	R	N	L	I	M	1966	null		
+KRNLIP	K	R	N	L	I	P	353	null		
+KRNLIS	K	R	N	L	I	S	284	null		
+KRNLLL	K	R	N	L	L	L	498	null		
+KRNLLM	K	R	N	L	L	M	651	null		
+KRNLLP	K	R	N	L	L	P	123	null		
+KRNLPL	K	R	N	L	P	L	206	null		
+KRNLPM	K	R	N	L	P	M	1047	null		
+KRNLPP	K	R	N	L	P	P	66	null		
+KRNLWL	K	R	N	L	W	L	3758	null		
+KRNLWM	K	R	N	L	W	M	2193	null		
+KRNLWP	K	R	N	L	W	P	469	null		
+KRNLWS	K	R	N	L	W	S	95	null		
+KRNRAL	K	R	N	R	A	L	253	null		
+KRNRAM	K	R	N	R	A	M	121	null		
+KRNRCL	K	R	N	R	C	L	292	null		
+KRNRCM	K	R	N	R	C	M	112	null		
+KRNRDL	K	R	N	R	D	L	1749	null		
+KRNRDM	K	R	N	R	D	M	1040	null		
+KRNRDP	K	R	N	R	D	P	85	null		
+KRNRDS	K	R	N	R	D	S	58	null		
+KRNRIL	K	R	N	R	I	L	1951	null		
+KRNRIM	K	R	N	R	I	M	614	null		
+KRNRIP	K	R	N	R	I	P	151	null		
+KRNRLL	K	R	N	R	L	L	156	null		
+KRNRLM	K	R	N	R	L	M	63	null		
+KRNRPL	K	R	N	R	P	L	1337	null		
+KRNRPM	K	R	N	R	P	M	1184	null		
+KRNRPP	K	R	N	R	P	P	698	null		
+KRNRWL	K	R	N	R	W	L	584	null		
+KRNRWM	K	R	N	R	W	M	370	null		
+KRNRWS	K	R	N	R	W	S	132	null		
+KROCAL	K	R	O	C	A	L	222	null		
+KROCAM	K	R	O	C	A	M	156	null		
+KROCAP	K	R	O	C	A	P	58	null		
+KROCCL	K	R	O	C	C	L	55	null		
+KROCDL	K	R	O	C	D	L	136	null		
+KROCIL	K	R	O	C	I	L	651	null		
+KROCIM	K	R	O	C	I	M	533	null		
+KROCIP	K	R	O	C	I	P	74	null		
+KROCLL	K	R	O	C	L	L	69	null		
+KROCLM	K	R	O	C	L	M	104	null		
+KROCPL	K	R	O	C	P	L	173	null		
+KROCPM	K	R	O	C	P	M	120	null		
+KROCWL	K	R	O	C	W	L	159	null		
+KROHCL	K	R	O	H	C	L	139	null		
+KROHWL	K	R	O	H	W	L	93	null		
+KROLAL	K	R	O	L	A	L	415	null		
+KROLAM	K	R	O	L	A	M	200	null		
+KROLCL	K	R	O	L	C	L	618	null		
+KROLCM	K	R	O	L	C	M	67	null		
+KROLIL	K	R	O	L	I	L	597	null		
+KROLIM	K	R	O	L	I	M	317	null		
+KROLIP	K	R	O	L	I	P	92	null		
+KROLLL	K	R	O	L	L	L	136	null		
+KROLLM	K	R	O	L	L	M	105	null		
+KROLPM	K	R	O	L	P	M	55	null		
+KROLWL	K	R	O	L	W	L	554	null		
+KRORAL	K	R	O	R	A	L	173	null		
+KRORAM	K	R	O	R	A	M	212	null		
+KRORCL	K	R	O	R	C	L	539	null		
+KRORCM	K	R	O	R	C	M	119	null		
+KRORDL	K	R	O	R	D	L	800	null		
+KRORDM	K	R	O	R	D	M	381	null		
+KRORDS	K	R	O	R	D	S	80	null		
+KRORIL	K	R	O	R	I	L	345	null		
+KRORIM	K	R	O	R	I	M	419	null		
+KRORPL	K	R	O	R	P	L	447	null		
+KRORPM	K	R	O	R	P	M	197	null		
+KRORPS	K	R	O	R	P	S	76	null		
+KRORWL	K	R	O	R	W	L	667	null		
+KRORWM	K	R	O	R	W	M	241	null		
+KRORWS	K	R	O	R	W	S	116	null		
+KRPCAL	K	R	P	C	A	L	837	null		
+KRPCAM	K	R	P	C	A	M	546	null		
+KRPCAP	K	R	P	C	A	P	167	null		
+KRPCCL	K	R	P	C	C	L	154	null		
+KRPCDL	K	R	P	C	D	L	311	null		
+KRPCDM	K	R	P	C	D	M	118	null		
+KRPCDP	K	R	P	C	D	P	78	null		
+KRPCIL	K	R	P	C	I	L	2993	null		
+KRPCIM	K	R	P	C	I	M	2301	null		
+KRPCIP	K	R	P	C	I	P	331	null		
+KRPCLL	K	R	P	C	L	L	551	null		
+KRPCLM	K	R	P	C	L	M	363	null		
+KRPCLP	K	R	P	C	L	P	114	null		
+KRPCPL	K	R	P	C	P	L	352	null		
+KRPCPM	K	R	P	C	P	M	842	null		
+KRPCPP	K	R	P	C	P	P	71	null		
+KRPCWL	K	R	P	C	W	L	581	null		
+KRPCWM	K	R	P	C	W	M	486	null		
+KRPHAM	K	R	P	H	A	M	71	null		
+KRPHCL	K	R	P	H	C	L	90	null		
+KRPHDL	K	R	P	H	D	L	54	null		
+KRPHIL	K	R	P	H	I	L	86	null		
+KRPHIM	K	R	P	H	I	M	80	null		
+KRPHLL	K	R	P	H	L	L	55	null		
+KRPHWL	K	R	P	H	W	L	111	null		
+KRPHWM	K	R	P	H	W	M	123	null		
+KRPLAL	K	R	P	L	A	L	967	null		
+KRPLAM	K	R	P	L	A	M	769	null		
+KRPLAP	K	R	P	L	A	P	236	null		
+KRPLCL	K	R	P	L	C	L	63	null		
+KRPLDL	K	R	P	L	D	L	165	null		
+KRPLDM	K	R	P	L	D	M	118	null		
+KRPLIL	K	R	P	L	I	L	2057	null		
+KRPLIM	K	R	P	L	I	M	1627	null		
+KRPLIP	K	R	P	L	I	P	230	null		
+KRPLLL	K	R	P	L	L	L	235	null		
+KRPLLM	K	R	P	L	L	M	273	null		
+KRPLLP	K	R	P	L	L	P	78	null		
+KRPLPL	K	R	P	L	P	L	120	null		
+KRPLPM	K	R	P	L	P	M	235	null		
+KRPLWL	K	R	P	L	W	L	471	null		
+KRPLWM	K	R	P	L	W	M	137	null		
+KRPRAL	K	R	P	R	A	L	872	null		
+KRPRAM	K	R	P	R	A	M	885	null		
+KRPRAP	K	R	P	R	A	P	102	null		
+KRPRAS	K	R	P	R	A	S	83	null		
+KRPRCL	K	R	P	R	C	L	1720	null		
+KRPRCM	K	R	P	R	C	M	474	null		
+KRPRCP	K	R	P	R	C	P	125	null		
+KRPRCS	K	R	P	R	C	S	445	null		
+KRPRDL	K	R	P	R	D	L	3278	null		
+KRPRDM	K	R	P	R	D	M	2078	null		
+KRPRDP	K	R	P	R	D	P	257	null		
+KRPRDS	K	R	P	R	D	S	443	null		
+KRPRIL	K	R	P	R	I	L	2047	null		
+KRPRIM	K	R	P	R	I	M	2767	null		
+KRPRIP	K	R	P	R	I	P	904	null		
+KRPRIS	K	R	P	R	I	S	299	null		
+KRPRLL	K	R	P	R	L	L	400	null		
+KRPRLM	K	R	P	R	L	M	276	null		
+KRPRLP	K	R	P	R	L	P	92	null		
+KRPRLS	K	R	P	R	L	S	58	null		
+KRPRPL	K	R	P	R	P	L	2483	null		
+KRPRPM	K	R	P	R	P	M	1422	null		
+KRPRPP	K	R	P	R	P	P	622	null		
+KRPRPS	K	R	P	R	P	S	541	null		
+KRPRWL	K	R	P	R	W	L	2365	null		
+KRPRWM	K	R	P	R	W	M	1583	null		
+KRPRWP	K	R	P	R	W	P	304	null		
+KRPRWS	K	R	P	R	W	S	878	null		
+RNNCAL	R	N	N	C	A	L	326	null		
+RNNCAM	R	N	N	C	A	M	215	null		
+RNNCAP	R	N	N	C	A	P	245	null		
+RNNCCL	R	N	N	C	C	L	470	null		
+RNNCDL	R	N	N	C	D	L	553	null		
+RNNCIL	R	N	N	C	I	L	550	null		
+RNNCIM	R	N	N	C	I	M	241	null		
+RNNCIP	R	N	N	C	I	P	302	null		
+RNNCLL	R	N	N	C	L	L	305	null		
+RNNCLM	R	N	N	C	L	M	164	null		
+RNNCLP	R	N	N	C	L	P	204	null		
+RNNCPL	R	N	N	C	P	L	295	null		
+RNNCPM	R	N	N	C	P	M	81	null		
+RNNCWL	R	N	N	C	W	L	790	null		
+RNNCWM	R	N	N	C	W	M	117	null		
+RNNHAL	R	N	N	H	A	L	826	null		
+RNNHAM	R	N	N	H	A	M	246	null		
+RNNHAP	R	N	N	H	A	P	240	null		
+RNNHCL	R	N	N	H	C	L	1273	null		
+RNNHCM	R	N	N	H	C	M	87	null		
+RNNHCP	R	N	N	H	C	P	51	null		
+RNNHIL	R	N	N	H	I	L	589	null		
+RNNHIM	R	N	N	H	I	M	426	null		
+RNNHIP	R	N	N	H	I	P	161	null		
+RNNHLL	R	N	N	H	L	L	347	null		
+RNNHLM	R	N	N	H	L	M	168	null		
+RNNHLP	R	N	N	H	L	P	156	null		
+RNNHWL	R	N	N	H	W	L	1654	null		
+RNNHWM	R	N	N	H	W	M	444	null		
+RNNHWP	R	N	N	H	W	P	168	null		
+RNNLAL	R	N	N	L	A	L	536	null		
+RNNLAM	R	N	N	L	A	M	121	null		
+RNNLAP	R	N	N	L	A	P	246	null		
+RNNLCL	R	N	N	L	C	L	219	null		
+RNNLDL	R	N	N	L	D	L	1041	null		
+RNNLDM	R	N	N	L	D	M	139	null		
+RNNLDS	R	N	N	L	D	S	176	null		
+RNNLIL	R	N	N	L	I	L	299	null		
+RNNLIM	R	N	N	L	I	M	72	null		
+RNNLIS	R	N	N	L	I	S	75	null		
+RNNLLL	R	N	N	L	L	L	128	null		
+RNNLLM	R	N	N	L	L	M	176	null		
+RNNLLP	R	N	N	L	L	P	93	null		
+RNNLPL	R	N	N	L	P	L	609	null		
+RNNLPM	R	N	N	L	P	M	118	null		
+RNNLPS	R	N	N	L	P	S	131	null		
+RNNLWL	R	N	N	L	W	L	457	null		
+RNNLWM	R	N	N	L	W	M	108	null		
+RNNLWS	R	N	N	L	W	S	106	null		
+RNNRAL	R	N	N	R	A	L	721	null		
+RNNRAM	R	N	N	R	A	M	373	null		
+RNNRAP	R	N	N	R	A	P	180	null		
+RNNRCL	R	N	N	R	C	L	755	null		
+RNNRCM	R	N	N	R	C	M	92	null		
+RNNRDL	R	N	N	R	D	L	77	null		
+RNNRIL	R	N	N	R	I	L	1505	null		
+RNNRIM	R	N	N	R	I	M	1258	null		
+RNNRIP	R	N	N	R	I	P	434	null		
+RNNRIS	R	N	N	R	I	S	95	null		
+RNNRLL	R	N	N	R	L	L	705	null		
+RNNRLM	R	N	N	R	L	M	471	null		
+RNNRLP	R	N	N	R	L	P	340	null		
+RNNRLS	R	N	N	R	L	S	59	null		
+RNNRPL	R	N	N	R	P	L	69	null		
+RNNRPM	R	N	N	R	P	M	77	null		
+RNNRWL	R	N	N	R	W	L	1160	null		
+RNNRWM	R	N	N	R	W	M	471	null		
+RNNRWP	R	N	N	R	W	P	129	null		
+RNNRWS	R	N	N	R	W	S	55	null		
+RNOCAL	R	N	O	C	A	L	242	null		
+RNOCAM	R	N	O	C	A	M	157	null		
+RNOCAP	R	N	O	C	A	P	219	null		
+RNOCCL	R	N	O	C	C	L	334	null		
+RNOCIL	R	N	O	C	I	L	283	null		
+RNOCIM	R	N	O	C	I	M	142	null		
+RNOCIP	R	N	O	C	I	P	76	null		
+RNOCLL	R	N	O	C	L	L	169	null		
+RNOCLM	R	N	O	C	L	M	185	null		
+RNOCLP	R	N	O	C	L	P	154	null		
+RNOCWL	R	N	O	C	W	L	413	null		
+RNOCWM	R	N	O	C	W	M	140	null		
+RNOCWP	R	N	O	C	W	P	96	null		
+RNOHAL	R	N	O	H	A	L	844	null		
+RNOHAM	R	N	O	H	A	M	300	null		
+RNOHAP	R	N	O	H	A	P	380	null		
+RNOHCL	R	N	O	H	C	L	1998	null		
+RNOHCM	R	N	O	H	C	M	245	null		
+RNOHCP	R	N	O	H	C	P	89	null		
+RNOHIL	R	N	O	H	I	L	1402	null		
+RNOHIM	R	N	O	H	I	M	784	null		
+RNOHIP	R	N	O	H	I	P	346	null		
+RNOHIS	R	N	O	H	I	S	57	null		
+RNOHLL	R	N	O	H	L	L	832	null		
+RNOHLM	R	N	O	H	L	M	580	null		
+RNOHLP	R	N	O	H	L	P	296	null		
+RNOHWL	R	N	O	H	W	L	2780	null		
+RNOHWM	R	N	O	H	W	M	742	null		
+RNOHWP	R	N	O	H	W	P	443	null		
+RNOLAL	R	N	O	L	A	L	65	null		
+RNOLAM	R	N	O	L	A	M	99	null		
+RNOLAP	R	N	O	L	A	P	187	null		
+RNOLCL	R	N	O	L	C	L	154	null		
+RNOLIP	R	N	O	L	I	P	60	null		
+RNOLLP	R	N	O	L	L	P	91	null		
+RNOLWL	R	N	O	L	W	L	154	null		
+RNORAL	R	N	O	R	A	L	1102	null		
+RNORAM	R	N	O	R	A	M	577	null		
+RNORAP	R	N	O	R	A	P	318	null		
+RNORCL	R	N	O	R	C	L	2907	null		
+RNORCM	R	N	O	R	C	M	459	null		
+RNORCP	R	N	O	R	C	P	120	null		
+RNORDL	R	N	O	R	D	L	265	null		
+RNORDM	R	N	O	R	D	M	56	null		
+RNORIL	R	N	O	R	I	L	3629	null		
+RNORIM	R	N	O	R	I	M	2650	null		
+RNORIP	R	N	O	R	I	P	729	null		
+RNORIS	R	N	O	R	I	S	68	null		
+RNORLL	R	N	O	R	L	L	1972	null		
+RNORLM	R	N	O	R	L	M	1219	null		
+RNORLP	R	N	O	R	L	P	523	null		
+RNORPL	R	N	O	R	P	L	133	null		
+RNORPM	R	N	O	R	P	M	109	null		
+RNORWL	R	N	O	R	W	L	3081	null		
+RNORWM	R	N	O	R	W	M	1012	null		
+RNORWP	R	N	O	R	W	P	232	null		
+RNPCAL	R	N	P	C	A	L	565	null		
+RNPCAM	R	N	P	C	A	M	188	null		
+RNPCAP	R	N	P	C	A	P	354	null		
+RNPCCL	R	N	P	C	C	L	887	null		
+RNPCCM	R	N	P	C	C	M	97	null		
+RNPCCP	R	N	P	C	C	P	104	null		
+RNPCDL	R	N	P	C	D	L	109	null		
+RNPCIL	R	N	P	C	I	L	1198	null		
+RNPCIM	R	N	P	C	I	M	304	null		
+RNPCIP	R	N	P	C	I	P	484	null		
+RNPCLL	R	N	P	C	L	L	622	null		
+RNPCLM	R	N	P	C	L	M	859	null		
+RNPCLP	R	N	P	C	L	P	895	null		
+RNPCPL	R	N	P	C	P	L	329	null		
+RNPCPM	R	N	P	C	P	M	78	null		
+RNPCWL	R	N	P	C	W	L	1688	null		
+RNPCWM	R	N	P	C	W	M	486	null		
+RNPCWP	R	N	P	C	W	P	316	null		
+RNPHAL	R	N	P	H	A	L	492	null		
+RNPHAM	R	N	P	H	A	M	198	null		
+RNPHAP	R	N	P	H	A	P	104	null		
+RNPHCL	R	N	P	H	C	L	1346	null		
+RNPHIL	R	N	P	H	I	L	89	null		
+RNPHIP	R	N	P	H	I	P	68	null		
+RNPHLL	R	N	P	H	L	L	372	null		
+RNPHLM	R	N	P	H	L	M	85	null		
+RNPHLP	R	N	P	H	L	P	132	null		
+RNPHWL	R	N	P	H	W	L	2080	null		
+RNPHWM	R	N	P	H	W	M	283	null		
+RNPHWP	R	N	P	H	W	P	199	null		
+RNPLAM	R	N	P	L	A	M	57	null		
+RNPLAP	R	N	P	L	A	P	199	null		
+RNPLIP	R	N	P	L	I	P	131	null		
+RNPLLM	R	N	P	L	L	M	53	null		
+RNPLLP	R	N	P	L	L	P	118	null		
+RNPRAL	R	N	P	R	A	L	255	null		
+RNPRAM	R	N	P	R	A	M	72	null		
+RNPRCL	R	N	P	R	C	L	1719	null		
+RNPRCM	R	N	P	R	C	M	180	null		
+RNPRCP	R	N	P	R	C	P	99	null		
+RNPRDL	R	N	P	R	D	L	88	null		
+RNPRDM	R	N	P	R	D	M	62	null		
+RNPRIL	R	N	P	R	I	L	123	null		
+RNPRIM	R	N	P	R	I	M	292	null		
+RNPRLL	R	N	P	R	L	L	196	null		
+RNPRLM	R	N	P	R	L	M	76	null		
+RNPRLP	R	N	P	R	L	P	89	null		
+RNPRPM	R	N	P	R	P	M	107	null		
+RNPRWL	R	N	P	R	W	L	2129	null		
+RNPRWM	R	N	P	R	W	M	591	null		
+RNPRWP	R	N	P	R	W	P	126	null		
+RNSCAL	R	N	S	C	A	L	843	null		
+RNSCAM	R	N	S	C	A	M	550	null		
+RNSCAP	R	N	S	C	A	P	455	null		
+RNSCCL	R	N	S	C	C	L	1341	null		
+RNSCCM	R	N	S	C	C	M	188	null		
+RNSCCP	R	N	S	C	C	P	63	null		
+RNSCIL	R	N	S	C	I	L	1344	null		
+RNSCIM	R	N	S	C	I	M	1225	null		
+RNSCIP	R	N	S	C	I	P	520	null		
+RNSCLL	R	N	S	C	L	L	1150	null		
+RNSCLM	R	N	S	C	L	M	878	null		
+RNSCLP	R	N	S	C	L	P	880	null		
+RNSCPL	R	N	S	C	P	L	221	null		
+RNSCWL	R	N	S	C	W	L	1783	null		
+RNSCWM	R	N	S	C	W	M	714	null		
+RNSCWP	R	N	S	C	W	P	111	null		
+RNSHAL	R	N	S	H	A	L	7029	null		
+RNSHAM	R	N	S	H	A	M	2294	null		
+RNSHAP	R	N	S	H	A	P	1992	null		
+RNSHAS	R	N	S	H	A	S	504	null		
+RNSHCL	R	N	S	H	C	L	14449	null		
+RNSHCM	R	N	S	H	C	M	1359	null		
+RNSHCP	R	N	S	H	C	P	804	null		
+RNSHCS	R	N	S	H	C	S	240	null		
+RNSHIL	R	N	S	H	I	L	7815	null		
+RNSHIM	R	N	S	H	I	M	3150	null		
+RNSHIP	R	N	S	H	I	P	2238	null		
+RNSHIS	R	N	S	H	I	S	483	null		
+RNSHLL	R	N	S	H	L	L	4264	null		
+RNSHLM	R	N	S	H	L	M	2049	null		
+RNSHLP	R	N	S	H	L	P	1825	null		
+RNSHLS	R	N	S	H	L	S	160	null		
+RNSHWL	R	N	S	H	W	L	17837	null		
+RNSHWM	R	N	S	H	W	M	4610	null		
+RNSHWP	R	N	S	H	W	P	2275	null		
+RNSHWS	R	N	S	H	W	S	552	null		
+RNSLAL	R	N	S	L	A	L	235	null		
+RNSLAM	R	N	S	L	A	M	319	null		
+RNSLAP	R	N	S	L	A	P	621	null		
+RNSLCL	R	N	S	L	C	L	576	null		
+RNSLCM	R	N	S	L	C	M	94	null		
+RNSLIL	R	N	S	L	I	L	200	null		
+RNSLIM	R	N	S	L	I	M	272	null		
+RNSLIP	R	N	S	L	I	P	214	null		
+RNSLLL	R	N	S	L	L	L	154	null		
+RNSLLM	R	N	S	L	L	M	271	null		
+RNSLLP	R	N	S	L	L	P	333	null		
+RNSLWL	R	N	S	L	W	L	864	null		
+RNSLWM	R	N	S	L	W	M	207	null		
+RNSLWP	R	N	S	L	W	P	105	null		
+RNSRAL	R	N	S	R	A	L	10833	null		
+RNSRAM	R	N	S	R	A	M	5058	null		
+RNSRAP	R	N	S	R	A	P	2163	null		
+RNSRAS	R	N	S	R	A	S	835	null		
+RNSRCL	R	N	S	R	C	L	19595	null		
+RNSRCM	R	N	S	R	C	M	2655	null		
+RNSRCP	R	N	S	R	C	P	937	null		
+RNSRCS	R	N	S	R	C	S	585	null		
+RNSRDL	R	N	S	R	D	L	1223	null		
+RNSRDM	R	N	S	R	D	M	826	null		
+RNSRDP	R	N	S	R	D	P	146	null		
+RNSRIL	R	N	S	R	I	L	20789	null		
+RNSRIM	R	N	S	R	I	M	15867	null		
+RNSRIP	R	N	S	R	I	P	6604	null		
+RNSRIS	R	N	S	R	I	S	1006	null		
+RNSRLL	R	N	S	R	L	L	10786	null		
+RNSRLM	R	N	S	R	L	M	6462	null		
+RNSRLP	R	N	S	R	L	P	3999	null		
+RNSRLS	R	N	S	R	L	S	329	null		
+RNSRPL	R	N	S	R	P	L	1267	null		
+RNSRPM	R	N	S	R	P	M	1045	null		
+RNSRPP	R	N	S	R	P	P	300	null		
+RNSRPS	R	N	S	R	P	S	57	null		
+RNSRWL	R	N	S	R	W	L	20806	null		
+RNSRWM	R	N	S	R	W	M	7677	null		
+RNSRWP	R	N	S	R	W	P	2558	null		
+RNSRWS	R	N	S	R	W	S	1527	null		
+RRNCAL	R	R	N	C	A	L	823	null		
+RRNCAM	R	R	N	C	A	M	685	null		
+RRNCAP	R	R	N	C	A	P	670	null		
+RRNCAS	R	R	N	C	A	S	56	null		
+RRNCCL	R	R	N	C	C	L	1005	null		
+RRNCCM	R	R	N	C	C	M	71	null		
+RRNCIL	R	R	N	C	I	L	389	null		
+RRNCIM	R	R	N	C	I	M	327	null		
+RRNCIP	R	R	N	C	I	P	138	null		
+RRNCLL	R	R	N	C	L	L	419	null		
+RRNCLM	R	R	N	C	L	M	479	null		
+RRNCLP	R	R	N	C	L	P	338	null		
+RRNCWL	R	R	N	C	W	L	1417	null		
+RRNCWM	R	R	N	C	W	M	289	null		
+RRNCWP	R	R	N	C	W	P	470	null		
+RRNHAL	R	R	N	H	A	L	511	null		
+RRNHAM	R	R	N	H	A	M	170	null		
+RRNHAP	R	R	N	H	A	P	209	null		
+RRNHCL	R	R	N	H	C	L	1456	null		
+RRNHCM	R	R	N	H	C	M	244	null		
+RRNHCP	R	R	N	H	C	P	73	null		
+RRNHIL	R	R	N	H	I	L	212	null		
+RRNHIP	R	R	N	H	I	P	66	null		
+RRNHLL	R	R	N	H	L	L	181	null		
+RRNHLM	R	R	N	H	L	M	97	null		
+RRNHLP	R	R	N	H	L	P	115	null		
+RRNHWL	R	R	N	H	W	L	1917	null		
+RRNHWM	R	R	N	H	W	M	548	null		
+RRNHWP	R	R	N	H	W	P	441	null		
+RRNHWS	R	R	N	H	W	S	59	null		
+RRNLAL	R	R	N	L	A	L	1997	null		
+RRNLAM	R	R	N	L	A	M	1442	null		
+RRNLAP	R	R	N	L	A	P	1900	null		
+RRNLAS	R	R	N	L	A	S	58	null		
+RRNLCL	R	R	N	L	C	L	2727	null		
+RRNLCM	R	R	N	L	C	M	458	null		
+RRNLCP	R	R	N	L	C	P	94	null		
+RRNLCS	R	R	N	L	C	S	64	null		
+RRNLIL	R	R	N	L	I	L	1004	null		
+RRNLIM	R	R	N	L	I	M	660	null		
+RRNLIP	R	R	N	L	I	P	587	null		
+RRNLLL	R	R	N	L	L	L	942	null		
+RRNLLM	R	R	N	L	L	M	1130	null		
+RRNLLP	R	R	N	L	L	P	1015	null		
+RRNLWL	R	R	N	L	W	L	4083	null		
+RRNLWM	R	R	N	L	W	M	1020	null		
+RRNLWP	R	R	N	L	W	P	980	null		
+RRNLWS	R	R	N	L	W	S	73	null		
+RRNRAL	R	R	N	R	A	L	181	null		
+RRNRAM	R	R	N	R	A	M	169	null		
+RRNRAP	R	R	N	R	A	P	195	null		
+RRNRCL	R	R	N	R	C	L	557	null		
+RRNRIL	R	R	N	R	I	L	107	null		
+RRNRIM	R	R	N	R	I	M	109	null		
+RRNRLL	R	R	N	R	L	L	129	null		
+RRNRLM	R	R	N	R	L	M	63	null		
+RRNRWL	R	R	N	R	W	L	439	null		
+RRNRWM	R	R	N	R	W	M	90	null		
+RRNRWP	R	R	N	R	W	P	58	null		
+RROCAL	R	R	O	C	A	L	224	null		
+RROCAM	R	R	O	C	A	M	244	null		
+RROCAP	R	R	O	C	A	P	518	null		
+RROCIL	R	R	O	C	I	L	216	null		
+RROCIM	R	R	O	C	I	M	273	null		
+RROCIP	R	R	O	C	I	P	259	null		
+RROCLL	R	R	O	C	L	L	122	null		
+RROCLM	R	R	O	C	L	M	200	null		
+RROCLP	R	R	O	C	L	P	419	null		
+RROCWL	R	R	O	C	W	L	57	null		
+RROHAL	R	R	O	H	A	L	489	null		
+RROHAM	R	R	O	H	A	M	64	null		
+RROHAP	R	R	O	H	A	P	188	null		
+RROHCL	R	R	O	H	C	L	1344	null		
+RROHCM	R	R	O	H	C	M	99	null		
+RROHCP	R	R	O	H	C	P	102	null		
+RROHIL	R	R	O	H	I	L	215	null		
+RROHIM	R	R	O	H	I	M	160	null		
+RROHIP	R	R	O	H	I	P	165	null		
+RROHLL	R	R	O	H	L	L	301	null		
+RROHLM	R	R	O	H	L	M	203	null		
+RROHLP	R	R	O	H	L	P	195	null		
+RROHWL	R	R	O	H	W	L	1978	null		
+RROHWM	R	R	O	H	W	M	280	null		
+RROHWP	R	R	O	H	W	P	184	null		
+RROLAL	R	R	O	L	A	L	362	null		
+RROLAM	R	R	O	L	A	M	296	null		
+RROLAP	R	R	O	L	A	P	730	null		
+RROLCL	R	R	O	L	C	L	311	null		
+RROLCP	R	R	O	L	C	P	72	null		
+RROLIL	R	R	O	L	I	L	232	null		
+RROLIM	R	R	O	L	I	M	146	null		
+RROLIP	R	R	O	L	I	P	184	null		
+RROLLL	R	R	O	L	L	L	130	null		
+RROLLM	R	R	O	L	L	M	100	null		
+RROLLP	R	R	O	L	L	P	263	null		
+RROLWL	R	R	O	L	W	L	550	null		
+RROLWM	R	R	O	L	W	M	138	null		
+RROLWP	R	R	O	L	W	P	95	null		
+RRORAL	R	R	O	R	A	L	296	null		
+RRORAM	R	R	O	R	A	M	162	null		
+RRORAP	R	R	O	R	A	P	82	null		
+RRORCL	R	R	O	R	C	L	384	null		
+RRORIL	R	R	O	R	I	L	351	null		
+RRORIM	R	R	O	R	I	M	242	null		
+RRORIP	R	R	O	R	I	P	109	null		
+RRORLL	R	R	O	R	L	L	300	null		
+RRORLM	R	R	O	R	L	M	161	null		
+RRORLP	R	R	O	R	L	P	102	null		
+RRORWL	R	R	O	R	W	L	557	null		
+RRORWM	R	R	O	R	W	M	177	null		
+RRPCAL	R	R	P	C	A	L	759	null		
+RRPCAM	R	R	P	C	A	M	827	null		
+RRPCAP	R	R	P	C	A	P	1551	null		
+RRPCAS	R	R	P	C	A	S	132	null		
+RRPCCL	R	R	P	C	C	L	52	null		
+RRPCIL	R	R	P	C	I	L	1998	null		
+RRPCIM	R	R	P	C	I	M	1254	null		
+RRPCIP	R	R	P	C	I	P	1447	null		
+RRPCIS	R	R	P	C	I	S	64	null		
+RRPCLL	R	R	P	C	L	L	581	null		
+RRPCLM	R	R	P	C	L	M	1260	null		
+RRPCLP	R	R	P	C	L	P	1762	null		
+RRPCWL	R	R	P	C	W	L	147	null		
+RRPCWM	R	R	P	C	W	M	74	null		
+RRPCWP	R	R	P	C	W	P	54	null		
+RRPCWS	R	R	P	C	W	S	206	null		
+RRPHAL	R	R	P	H	A	L	1314	null		
+RRPHAM	R	R	P	H	A	M	540	null		
+RRPHAP	R	R	P	H	A	P	652	null		
+RRPHCL	R	R	P	H	C	L	3678	null		
+RRPHCM	R	R	P	H	C	M	424	null		
+RRPHCP	R	R	P	H	C	P	89	null		
+RRPHCS	R	R	P	H	C	S	79	null		
+RRPHIL	R	R	P	H	I	L	759	null		
+RRPHIM	R	R	P	H	I	M	404	null		
+RRPHIP	R	R	P	H	I	P	352	null		
+RRPHLL	R	R	P	H	L	L	856	null		
+RRPHLM	R	R	P	H	L	M	832	null		
+RRPHLP	R	R	P	H	L	P	561	null		
+RRPHWL	R	R	P	H	W	L	4223	null		
+RRPHWM	R	R	P	H	W	M	713	null		
+RRPHWP	R	R	P	H	W	P	566	null		
+RRPHWS	R	R	P	H	W	S	74	null		
+RRPLAL	R	R	P	L	A	L	840	null		
+RRPLAM	R	R	P	L	A	M	979	null		
+RRPLAP	R	R	P	L	A	P	1745	null		
+RRPLAS	R	R	P	L	A	S	64	null		
+RRPLCL	R	R	P	L	C	L	113	null		
+RRPLCS	R	R	P	L	C	S	109	null		
+RRPLIL	R	R	P	L	I	L	1030	null		
+RRPLIM	R	R	P	L	I	M	666	null		
+RRPLIP	R	R	P	L	I	P	1222	null		
+RRPLIS	R	R	P	L	I	S	82	null		
+RRPLLL	R	R	P	L	L	L	295	null		
+RRPLLM	R	R	P	L	L	M	580	null		
+RRPLLP	R	R	P	L	L	P	947	null		
+RRPLWL	R	R	P	L	W	L	407	null		
+RRPLWM	R	R	P	L	W	M	197	null		
+RRPLWP	R	R	P	L	W	P	74	null		
+RRPLWS	R	R	P	L	W	S	188	null		
+RRPRAL	R	R	P	R	A	L	1480	null		
+RRPRAM	R	R	P	R	A	M	889	null		
+RRPRAP	R	R	P	R	A	P	358	null		
+RRPRAS	R	R	P	R	A	S	340	null		
+RRPRCL	R	R	P	R	C	L	2294	null		
+RRPRCM	R	R	P	R	C	M	172	null		
+RRPRCP	R	R	P	R	C	P	59	null		
+RRPRCS	R	R	P	R	C	S	168	null		
+RRPRDL	R	R	P	R	D	L	111	null		
+RRPRDS	R	R	P	R	D	S	150	null		
+RRPRIL	R	R	P	R	I	L	1374	null		
+RRPRIM	R	R	P	R	I	M	721	null		
+RRPRIP	R	R	P	R	I	P	540	null		
+RRPRIS	R	R	P	R	I	S	195	null		
+RRPRLL	R	R	P	R	L	L	617	null		
+RRPRLM	R	R	P	R	L	M	990	null		
+RRPRLP	R	R	P	R	L	P	589	null		
+RRPRPL	R	R	P	R	P	L	86	null		
+RRPRPS	R	R	P	R	P	S	87	null		
+RRPRWL	R	R	P	R	W	L	2480	null		
+RRPRWM	R	R	P	R	W	M	540	null		
+RRPRWP	R	R	P	R	W	P	363	null		
+RRPRWS	R	R	P	R	W	S	306	null		
+UNNHCL	U	N	N	H	C	L	154	null		
+UNNHWL	U	N	N	H	W	L	76	null		
+UNNHWS	U	N	N	H	W	S	55	null		
+UNNRCL	U	N	N	R	C	L	246	null		
+UNNRWL	U	N	N	R	W	L	117	null		
+UNOHCL	U	N	O	H	C	L	830	null		
+UNOHWL	U	N	O	H	W	L	356	null		
+UNORCL	U	N	O	R	C	L	953	null		
+UNORCM	U	N	O	R	C	M	81	null		
+UNORWL	U	N	O	R	W	L	296	null		
+UNPHAL	U	N	P	H	A	L	64	null		
+UNPHCL	U	N	P	H	C	L	508	null		
+UNPHWL	U	N	P	H	W	L	269	null		
+UNPRAL	U	N	P	R	A	L	104	null		
+UNPRCL	U	N	P	R	C	L	1008	null		
+UNPRCM	U	N	P	R	C	M	61	null		
+UNPRCS	U	N	P	R	C	S	56	null		
+UNPRWL	U	N	P	R	W	L	507	null		
+UNSHAL	U	N	S	H	A	L	129	null		
+UNSHAS	U	N	S	H	A	S	188	null		
+UNSHCL	U	N	S	H	C	L	4284	null		
+UNSHCM	U	N	S	H	C	M	324	null		
+UNSHCP	U	N	S	H	C	P	180	null		
+UNSHCS	U	N	S	H	C	S	483	null		
+UNSHLL	U	N	S	H	L	L	147	null		
+UNSHWL	U	N	S	H	W	L	2199	null		
+UNSHWM	U	N	S	H	W	M	231	null		
+UNSHWP	U	N	S	H	W	P	153	null		
+UNSHWS	U	N	S	H	W	S	1166	null		
+UNSRAL	U	N	S	R	A	L	75	null		
+UNSRAS	U	N	S	R	A	S	85	null		
+UNSRCL	U	N	S	R	C	L	6804	null		
+UNSRCM	U	N	S	R	C	M	597	null		
+UNSRCP	U	N	S	R	C	P	260	null		
+UNSRCS	U	N	S	R	C	S	290	null		
+UNSRDL	U	N	S	R	D	L	99	null		
+UNSRDM	U	N	S	R	D	M	59	null		
+UNSRLL	U	N	S	R	L	L	191	null		
+UNSRPL	U	N	S	R	P	L	78	null		
+UNSRWL	U	N	S	R	W	L	2961	null		
+UNSRWM	U	N	S	R	W	M	332	null		
+UNSRWP	U	N	S	R	W	P	167	null		
+UNSRWS	U	N	S	R	W	S	959	null		
+URNCCL	U	R	N	C	C	L	112	null		
+URNCWL	U	R	N	C	W	L	112	null		
+URNHCL	U	R	N	H	C	L	191	null		
+URNHWL	U	R	N	H	W	L	105	null		
+URNLCL	U	R	N	L	C	L	150	null		
+URNRCL	U	R	N	R	C	L	219	null		
+UROHCL	U	R	O	H	C	L	51	null		
+URORCL	U	R	O	R	C	L	103	null		
+URPHCL	U	R	P	H	C	L	314	null		
+URPHWL	U	R	P	H	W	L	114	null		
+URPRCL	U	R	P	R	C	L	963	null		
+URPRCM	U	R	P	R	C	M	75	null		
+URPRWL	U	R	P	R	W	L	404	null		
+URPRWP	U	R	P	R	W	P	59	null		
+URPRWS	U	R	P	R	W	S	58	null		
