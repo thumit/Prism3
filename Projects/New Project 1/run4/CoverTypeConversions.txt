@@ -1,11 +1,8 @@
 P P
-D P
 D D
 W W
-C D
 C C
+I P
 I I
-A C
 A A
-L A
 L L

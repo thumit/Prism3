@@ -1,0 +1,9 @@
+Strata ID	Layer 1	Layer 2	Layer 3	Layer 4	Layer 5	Layer 6	Total area (acres)	Available Methods/Prescriptions	Methods for Implementation	
+BNNLIM	B	N	N	L	I	M	217	null	EA GS 	
+BNNLIS	B	N	N	L	I	S	140	null	EA GS 	
+BNNLLM	B	N	N	L	L	M	75	null	EA GS 	
+BNNLNN	B	N	N	L	NS	N	701	null	EA GS 	
+BNNLPL	B	N	N	L	P	L	92	null	EA GS 	
+BNNLWL	B	N	N	L	W	L	1144	null	EA GS 	
+BNNLWM	B	N	N	L	W	M	337	null	EA GS 	
+BNNLWP	B	N	N	L	W	P	64	null	EA GS 	

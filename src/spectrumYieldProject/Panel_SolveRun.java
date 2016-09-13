@@ -278,47 +278,18 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			
 
 			// Set up problem-------------------------------------------------
-			List<String> layer1 = new ArrayList<String>();
-			layer1.add("B");
-			layer1.add("U");
-			layer1.add("S");
-			layer1.add("K");
-			layer1.add("R");
-			layer1.add("C");
-			
-			List<String> layer2 = new ArrayList<String>();
-			layer2.add("R");
-			layer2.add("N");
+			Read_Indentifiers read_Identifiers = new Read_Indentifiers();	
+			List<List<String>> allLayers =  read_Identifiers.get_allLayers();
 		
-			List<String> layer3 = new ArrayList<String>();
-			layer3.add("N");
-			layer3.add("O");
-			layer3.add("P");
-			layer3.add("S");
-
-			List<String> layer4 = new ArrayList<String>();
-			layer4.add("L");
-			layer4.add("H");
-			layer4.add("C");
-			layer4.add("R");
+			List<String> layer1 = allLayers.get(0);
+			List<String> layer2 = allLayers.get(1);
+			List<String> layer3 = allLayers.get(2);
+			List<String> layer4 = allLayers.get(3);
+			List<String> layer5 = allLayers.get(4);
+			List<String> layer6 = allLayers.get(5);
+						
 			
-			List<String> layer5 = new ArrayList<String>();
-			layer5.add("P");
-			layer5.add("D");
-			layer5.add("W");
-			layer5.add("C");
-			layer5.add("I");
-			layer5.add("A");
-			layer5.add("L");
-		
-			List<String> layer6 = new ArrayList<String>();
-			layer6.add("S");
-			layer6.add("P");
-			layer6.add("M");
-			layer6.add("L");
-			layer6.add("N");			
 			
-
 			
 			int total_Periods = read.get_total_Periods();
 			int total_AgeClasses = total_Periods-1;		//loop from age 1 to age total_AgeClasses (set total_AgeClasses=total_Periods-1)

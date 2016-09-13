@@ -1,7 +1,13 @@
 P P
+P W
 D D
 W W
+C D
+C W
 C C
 I I
+A C
 A A
 L L
+N A
+N N
