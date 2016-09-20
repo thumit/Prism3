@@ -1,9 +1,8 @@
 P P
-D P
 D D
 W W
-W I
 C C
 I I
 A A
 L L
+N N

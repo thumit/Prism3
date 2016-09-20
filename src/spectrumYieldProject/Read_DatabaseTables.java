@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 
 public class Read_DatabaseTables {
@@ -81,5 +82,36 @@ public class Read_DatabaseTables {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 		}
 		return table_values;
+	}
+	
+	
+	public String[] getTableColumnNames(File file) {
+		
+		String[] table_ColumnNames = null;
+		
+		try {
+			Connection conn;
+			Class.forName("org.sqlite.JDBC").newInstance();
+			conn = DriverManager.getConnection("jdbc:sqlite:" + file);
+			
+			Statement st = conn.createStatement();
+			ResultSet rs = st.executeQuery("SELECT * FROM " + "[" + nameOftable[0] + "];");
+			
+			// get columns info
+			ResultSetMetaData rsmd = rs.getMetaData();
+			int columnCount = rsmd.getColumnCount();
+			
+			table_ColumnNames = new String[columnCount];
+			for (int i = 1; i <= columnCount; i++) {		//this start from 1
+				table_ColumnNames[i-1] = rsmd.getColumnName(i);			//Note that tableColumnNames start from 0
+			}			
+			
+			rs.close();
+			conn.close();
+
+		} catch (Exception e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+		}
+		return table_ColumnNames;
 	}
 }

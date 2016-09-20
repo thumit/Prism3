@@ -1,30 +1,6 @@
 Strata ID	Layer 1	Layer 2	Layer 3	Layer 4	Layer 5	Layer 6	Total area (acres)	Available Methods/Prescriptions	Methods for Implementation	
-BNNCAL	B	N	N	C	A	L	335	null	EA GS 	
-BNNCAM	B	N	N	C	A	M	63	null	EA GS 	
-BNNCAP	B	N	N	C	A	P	64	null	EA GS 	
-BNNCIL	B	N	N	C	I	L	247	null	EA GS 	
-BNNCIM	B	N	N	C	I	M	61	null	EA GS 	
-BNNCLL	B	N	N	C	L	L	181	null	EA GS 	
-BNNCLM	B	N	N	C	L	M	92	null	EA GS 	
-BNNCNN	B	N	N	C	N	N	1279	null	EA GS 	
-BNNLAL	B	N	N	L	A	L	378	null	EA GS 	
-BNNLAM	B	N	N	L	A	M	157	null	EA GS 	
-BNNLAS	B	N	N	L	A	S	86	null	EA GS 	
-BNNLIL	B	N	N	L	I	L	242	null	EA GS 	
-BNNLIM	B	N	N	L	I	M	217	null	EA GS 	
-BNNLIS	B	N	N	L	I	S	140	null	EA GS 	
-BNNLLM	B	N	N	L	L	M	75	null	EA GS 	
-BNNLNN	B	N	N	L	N	N	701	null	EA GS 	
-BNNRNN	B	N	N	R	N	N	546	null	EA GS 	
-BNORNN	B	N	O	R	N	N	177	null	EA GS 	
-BNPHNN	B	N	P	H	N	N	142	null	EA GS 	
-BNPRAL	B	N	P	R	A	L	118	null	EA GS 	
-BNPRNN	B	N	P	R	N	N	55	null	EA GS 	
-BNSHIL	B	N	S	H	I	L	57	null	EA GS 	
-BNSHLL	B	N	S	H	L	L	104	null	EA GS 	
-BNSHNN	B	N	S	H	N	N	67	null	EA GS 	
-BNSRLL	B	N	S	R	L	L	88	null	EA GS 	
-BNSRNN	B	N	S	R	N	N	811	null	EA GS 	
-BRNCAL	B	R	N	C	A	L	137	null	EA GS 	
-BRNCAM	B	R	N	C	A	M	113	null	EA GS 	
-BRNCIL	B	R	N	C	I	L	239	null	EA GS 	
+BNNCAL	B	N	N	C	A	L	335	null	EA GS PB NG 	
+BNNCAM	B	N	N	C	A	M	63	null	EA GS PB NG 	
+BNNCAP	B	N	N	C	A	P	64	null	EA GS PB NG 	
+BNNCCL	B	N	N	C	C	L	4121	null	EA GS PB NG 	
+BNNCCM	B	N	N	C	C	M	1353	null	EA GS PB NG 	
