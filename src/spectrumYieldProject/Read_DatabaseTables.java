@@ -7,12 +7,20 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.JLabel;
 
 public class Read_DatabaseTables {
 	private Object[][][] table_values;			// Note: indexes start from 0 
 	private Object[] nameOftable;
+	private String[] table_ColumnNames;
 	
-	public Object[][][] getTableArrays(File file) {
+	
+	public Read_DatabaseTables(File file) {
+		
+		// To get "table_values" and "nameOftable"
 		try {
 			Connection conn;
 			Class.forName("org.sqlite.JDBC").newInstance();
@@ -80,15 +88,11 @@ public class Read_DatabaseTables {
 
 		} catch (Exception e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
-		}
-		return table_values;
-	}
-	
-	
-	public String[] getTableColumnNames(File file) {
+		}		
+		//-----------------------------------------------------------------------------------------------------------------------------
 		
-		String[] table_ColumnNames = null;
-		
+
+		// To get "table_ColumnNames" --> just need to open the first yield table (table 0) and get the column names
 		try {
 			Connection conn;
 			Class.forName("org.sqlite.JDBC").newInstance();
@@ -112,6 +116,39 @@ public class Read_DatabaseTables {
 		} catch (Exception e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 		}
+		
+	}
+	
+	
+	public Object[][][] getTableArrays() {	
+		return table_values;
+	}
+	
+	
+	public String[] getTableColumnNames() {
 		return table_ColumnNames;
 	}
+	
+	
+	public List<String> getColumnUniqueValues(int columnIndex) {
+		List<String> listOfUniqueValues = new ArrayList<String>();
+		
+		for (int tb = 0; tb < table_values.length; tb++) {
+			for (int rowIndex = 0; rowIndex < table_values[tb].length; rowIndex++) {
+				if (!listOfUniqueValues.contains(table_values[tb][rowIndex][columnIndex].toString())) {	// only add to list if list does not contain the value
+					listOfUniqueValues.add(table_values[tb][rowIndex][columnIndex].toString());
+				}
+			}
+		}
+
+		return listOfUniqueValues;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 }

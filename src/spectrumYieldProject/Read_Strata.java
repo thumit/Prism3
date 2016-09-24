@@ -7,7 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-public class ReadUnit {
+public class Read_Strata {
 
 private String delimited;
 private int totalRows, totalColumns;

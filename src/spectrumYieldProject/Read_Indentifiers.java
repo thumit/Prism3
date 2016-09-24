@@ -1,324 +1,162 @@
 package spectrumYieldProject;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Read_Indentifiers {
-
-	public List<String> get_layers_Title() {
-		//Layers title
-		List<String> layers_Title = new ArrayList<String>();
-		layers_Title.add("Layer 1");
-		layers_Title.add("Layer 2");
-		layers_Title.add("Layer 3");
-		layers_Title.add("Layer 4");
-		layers_Title.add("Layer 5");
-		layers_Title.add("Layer 6");
+	private List<String> layers_Title;
+	private List<String> layers_Title_ToolTip;
 	
+	private List<List<String>> allLayers;
+	private List<List<String>> allLayers_ToolTips;
+	
+	public Read_Indentifiers() {
+		
+//		File file = FilesChooser_Units.chosenManagementunit();	
+//		File file = new File("C:\\Users\\Dung Nguyen\\Desktop\\LayersDefinition(Matchyieldtable).csv");
+		File file = new File("C:\\Users\\Dung Nguyen\\Desktop\\LayersDefinition.csv");
+		
+		String delimited;
+			delimited = ","; // comma delimited
+		// delimited = "\\s+"; // space delimited
+		// delimited = "\t"; // tab delimited
+					
+			
+		if (delimited != null) {
+			try {
+				// All lines to be in array
+				List<String> list;
+				list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
+				String[] a = list.toArray(new String[list.size()]);
+				int totalRows = a.length;
+				int totalCols = 2;
+				String value[][] = new String[totalRows][totalCols];
+
+				// read all values from all rows and columns
+				for (int i = 0; i < totalRows; i++) { // Read from 1st row
+					String[] rowValue = a[i].split(delimited);
+					for (int j = 0; j < totalCols && j < rowValue.length; j++) {
+//						value[i][j] = rowValue[j].replaceAll("\\s+", "");		//Remove all the space in the String   
+						value[i][j] = rowValue[j];		//to make toolTp text separated with space, may need the above line if there is spaces in layer and elements name in the file LayersDefinition.csv
+					}
+				}
+	
+
+				layers_Title = new ArrayList<String>();
+				layers_Title_ToolTip = new ArrayList<String>();
+				
+				allLayers = new ArrayList<List<String>>();
+				allLayers_ToolTips = new ArrayList<List<String>>();
+				
+				
+				//Loop through all rows and add all layers information
+				int i = 0;
+		        while (i < totalRows) {
+		        	//Add Layer title and toolTip    	
+		        	layers_Title.add(value[i][0]);
+		        	layers_Title_ToolTip.add(value[i][1]);
+
+		        	//Get total elements in this layer
+		        	i++;
+		        	int total_elements = Integer.parseInt(value[i][0]);
+		        	
+
+		        	//Create a new Layer Name and toolTips:  2 temporary Lists
+		        	List<String> newLayer = new ArrayList<String>();
+		        	List<String> newLayer_ToolTip = new ArrayList<String>();
+
+		        	//Loop through all elements of this layer name and toolTip
+		        	for (int j = 0; j < total_elements; j++) {
+		        		i++;
+		        		newLayer.add(value[i][0]);
+		        		newLayer_ToolTip.add(value[i][1]);
+					}
+		        	
+		        	//Add temporary Lists to the allLayers & allLayers_ToolTips
+		        	allLayers.add(newLayer);
+		        	allLayers_ToolTips.add(newLayer_ToolTip);
+		        	
+		        	//Move to the next Layer
+		        	i++;
+		        }
+				
+
+			} catch (IOException e) {
+				System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			}
+		}
+		
+		
+		
+	}
+	
+	
+	public List<String> get_layers_Title() {       
 		return layers_Title;
 	}
 
 	
-	public List<String> get_layers_Title_ToolTip() {
-		//Layers title ToolTip
-		List<String> layers_Title_ToolTip = new ArrayList<String>();
-		layers_Title_ToolTip.add("Vegetation Desired Future Condition Areas");
-		layers_Title_ToolTip.add("Roadless Status");
-		layers_Title_ToolTip.add("Timber Suitability");
-		layers_Title_ToolTip.add("Resource Condition Zones");
-		layers_Title_ToolTip.add("Vegetation Cover Types");
-		layers_Title_ToolTip.add("Size Class");
-				
+	public List<String> get_layers_Title_ToolTip() {		
 		return layers_Title_ToolTip;
 	}
 	
 	
-	public List<List<String>> get_allLayers() {
-		//Layers title
-		List<String> layers_Title = new ArrayList<String>();
-		layers_Title.add("Layer 1");
-		layers_Title.add("Layer 2");
-		layers_Title.add("Layer 3");
-		layers_Title.add("Layer 4");
-		layers_Title.add("Layer 5");
-		layers_Title.add("Layer 6");
-	
-		//Layers title ToolTip
-		List<String> layers_Title_ToolTip = new ArrayList<String>();
-		layers_Title_ToolTip.add("Vegetation Desired Future Condition Areas");
-		layers_Title_ToolTip.add("Roadless Status");
-		layers_Title_ToolTip.add("Timber Suitability");
-		layers_Title_ToolTip.add("Resource Condition Zones");
-		layers_Title_ToolTip.add("Vegetation Cover Types");
-		layers_Title_ToolTip.add("Size Class");
-		
-			
-		//Layers element name
-		List<String> layer1 = new ArrayList<String>();
-		layer1.add("B");
-		layer1.add("U");
-		layer1.add("S");
-		layer1.add("K");
-		layer1.add("R");
-		layer1.add("C");
-		
-		List<String> layer2 = new ArrayList<String>();
-		layer2.add("R");
-		layer2.add("N");
-	
-		List<String> layer3 = new ArrayList<String>();
-		layer3.add("N");
-		layer3.add("O");
-		layer3.add("P");
-		layer3.add("S");
-
-		List<String> layer4 = new ArrayList<String>();
-		layer4.add("L");
-		layer4.add("H");
-		layer4.add("C");
-		layer4.add("R");
-		
-		List<String> layer5 = new ArrayList<String>();
-		layer5.add("P");
-		layer5.add("D");
-		layer5.add("W");
-		layer5.add("C");
-		layer5.add("I");
-		layer5.add("A");
-		layer5.add("L");
-		layer5.add("N");
-	
-		List<String> layer6 = new ArrayList<String>();
-		layer6.add("S");
-		layer6.add("P");
-		layer6.add("M");
-		layer6.add("L");
-		layer6.add("N");
-			
-		List<List<String>> allLayers = new ArrayList<List<String>>();
-		allLayers.add(layer1);
-		allLayers.add(layer2);
-		allLayers.add(layer3);
-		allLayers.add(layer4);
-		allLayers.add(layer5);
-		allLayers.add(layer6);
-			
+	public List<List<String>> get_allLayers() {			
 		return allLayers;
 	}
 	
 	public List<List<String>> get_allLayers_ToolTips() {
-		//Layers element ToolTip
-		List<String> layer1_ToolTips = new ArrayList<String>();
-		layer1_ToolTips.add("Bitterroot Mtns. (M333D) Breaklands");
-		layer1_ToolTips.add("Bitterroot Mtns. (M333D) Uplands");
-		layer1_ToolTips.add("Bitterroot Mtns. (M333D) Subalpine");
-		layer1_ToolTips.add("Idaho Batholith (M332A) Breaklands");
-		layer1_ToolTips.add("Idaho Batholith (M332A) Uplands");
-		layer1_ToolTips.add("Idaho Batholith (M332A) Subalpine");
-		
-		List<String> layer2_ToolTips = new ArrayList<String>();
-		layer2_ToolTips.add("Roadless and undeveloped");
-		layer2_ToolTips.add("Roaded and developed");
-		
-		List<String> layer3_ToolTips = new ArrayList<String>();
-		layer3_ToolTips.add("Not Available or Not Suited; No Timber Harvest Allowed");
-		layer3_ToolTips.add("Generally Suitable for Timber Harvest for other resource objectives, no scheduled output");
-		layer3_ToolTips.add("Generally Suitable for Timber Harvest for other resource objectives, scheduled output");
-		layer3_ToolTips.add("Suited for Timber Production");
-		
-		List<String> layer4_ToolTips = new ArrayList<String>();
-		layer4_ToolTips.add("Lynx habitat – conserve watershed");
-		layer4_ToolTips.add("Lynx habitat – restore watershed");
-		layer4_ToolTips.add("Non-Lynx habitat – conserve watershed");
-		layer4_ToolTips.add("Non-Lynx habitat – restore watershed");			
-		
-		List<String> layer5_ToolTips = new ArrayList<String>();
-		layer5_ToolTips.add("Ponderosa Pine");
-		layer5_ToolTips.add("Dry Douglas-fir/Grand Fir");
-		layer5_ToolTips.add("Mesic Douglas-fir mix");
-		layer5_ToolTips.add("Grand Fir/Western Red Cedar");
-		layer5_ToolTips.add("Cold Douglas-fir mix");
-		layer5_ToolTips.add("Subalpine Fir mix");
-		layer5_ToolTips.add("Lodgepole Pine");	
-		layer5_ToolTips.add("No Species");
-		
-		List<String> layer6_ToolTips = new ArrayList<String>();
-		layer6_ToolTips.add("Seedling and Sapling (0” – 5");
-		layer6_ToolTips.add("Small (5” – 10”)");
-		layer6_ToolTips.add("Medium (10” – 15”)");
-		layer6_ToolTips.add("Large (15”+)");
-		layer6_ToolTips.add("None");
-		
-		
-		List<List<String>> allLayers_ToolTips = new ArrayList<List<String>>();
-		allLayers_ToolTips.add(layer1_ToolTips);
-		allLayers_ToolTips.add(layer2_ToolTips);
-		allLayers_ToolTips.add(layer3_ToolTips);
-		allLayers_ToolTips.add(layer4_ToolTips);
-		allLayers_ToolTips.add(layer5_ToolTips);
-		allLayers_ToolTips.add(layer6_ToolTips);
-		
 		return allLayers_ToolTips;
 	}	
 
+
 	
-//	public List<String> get_Groups() {
-//		//Group Title:	Each (element) represents a group of columns in the yield table
-//		List<String> group = new ArrayList<String>();
-//
-////	group.add("Stand Age/10 years");
-//		group.add("1. Live/Trees/All Species");
-//		group.add("2. Live/Average DBH/All Species");
-//		group.add("3. Live/Average Height/All Species");
-//		group.add("4. Live/Basal Area/All Species");
-//		group.add("5. Live/Cubic Feet/All Species");
-//		group.add("6. Live/Board Feet/All Species");
-//		group.add("7. Harvest/Trees/All Species");
-//		group.add("8. Harvest/Average DBH/All Species");
-//		group.add("9. Harvest/Average Height/All Species");
-//		group.add("10. Harvest/Basal Area/All Species");
-//		group.add("11. Harvest/Cubic Feet/All Species");
-//		group.add("12. Harvest/Board Feet/All Species");
-//		group.add("13. Canopy Cover/Acres");
-//		group.add("14. Lynx/Acres");
-//		group.add("15. Fire Hazard Rating/Acres");
-//		group.add("16. Snags/Acres");
-//		
-//		
-//		return group;
-//	}	
 	
-//	public List<List<String>> get_GroupParameters() {
-//
-//		//Add Parameters to each group
-////		List<String> group0 = new ArrayList<String>();
-////		for (int i = 1; i <= 30; i++) {
-////			group0.add(String.valueOf(i));
-////		}
-//		
-//		List<String> group1 = new ArrayList<String>();
-//		group1.add("LTr.AllSx");
-//		group1.add("LTr.Gp1Xx");
-//		group1.add("LTr.Gp2Mm");
-//		group1.add("LTr.Gp3Yy");
-//		group1.add("LTr.Gp4Ss");
-//			
-//		List<String> group2 = new ArrayList<String>();
-//		group2.add("LAD.AllSx");
-//		group2.add("LAD.Gp1Xx");
-//		group2.add("LAD.Gp2Mm");
-//		group2.add("LAD.Gp3Yy");
-//		group2.add("LAD.Gp4Ss");		
-//		
-//		List<String> group3 = new ArrayList<String>();
-//		group3.add("LAH.AllSx");
-//		group3.add("LAH.Gp1Xx");
-//		group3.add("LAH.Gp2Mm");
-//		group3.add("LAH.Gp3Yy");
-//		group3.add("LAH.Gp4Ss");	
-//	
-//		List<String> group4 = new ArrayList<String>();
-//		group4.add("LBA.AllSx");
-//		group4.add("LBA.Gp1Xx");
-//		group4.add("LBA.Gp2Mm");
-//		group4.add("LBA.Gp3Yy");
-//		group4.add("LBA.Gp4Ss");	
-//		
-//		List<String> group5 = new ArrayList<String>();
-//		group5.add("LCA.AllSx");
-//		group5.add("LCA.Gp1Xx");
-//		group5.add("LCA.Gp2Mm");
-//		group5.add("LCA.Gp3Yy");
-//		group5.add("LCA.Gp4Ss");
-//		
-//		List<String> group6 = new ArrayList<String>();
-//		group6.add("LBd.AllSx");
-//		group6.add("LBd.Gp1Xx");
-//		group6.add("LBd.Gp2Mm");
-//		group6.add("LBd.Gp3Yy");
-//		group6.add("LBd.Gp4Ss");
-//		
-//		List<String> group7 = new ArrayList<String>();
-//		group7.add("HTr.AllSx");
-//		group7.add("HTr.Gp1Xx");
-//		group7.add("HTr.Gp2Mm");
-//		group7.add("HTr.Gp3Yy");
-//		group7.add("HTr.Gp4Ss");
-//		
-//		List<String> group8 = new ArrayList<String>();
-//		group8.add("HAD.AllSx");
-//		group8.add("HAD.Gp1Xx");
-//		group8.add("HAD.Gp2Mm");
-//		group8.add("HAD.Gp3Yy");
-//		group8.add("HAD.Gp4Ss");
-//		
-//		List<String> group9 = new ArrayList<String>();
-//		group9.add("HAH.AllSx");
-//		group9.add("HAH.Gp1Xx");
-//		group9.add("HAH.Gp2Mm");
-//		group9.add("HAH.Gp3Yy");
-//		group9.add("HAH.Gp4Ss");	
-//	
-//		List<String> group10 = new ArrayList<String>();
-//		group10.add("HBA.AllSx");
-//		group10.add("HBA.Gp1Xx");
-//		group10.add("HBA.Gp2Mm");
-//		group10.add("HBA.Gp3Yy");
-//		group10.add("HBA.Gp4Ss");	
-//		
-//		List<String> group11 = new ArrayList<String>();
-//		group11.add("HCA.AllSx");
-//		group11.add("HCA.Gp1Xx");
-//		group11.add("HCA.Gp2Mm");
-//		group11.add("HCA.Gp3Yy");
-//		group11.add("HCA.Gp4Ss");
-//		
-//		List<String> group12 = new ArrayList<String>();
-//		group12.add("HBd.AllSx");
-//		group12.add("HBd.Gp1Xx");
-//		group12.add("HBd.Gp2Mm");
-//		group12.add("HBd.Gp3Yy");
-//		group12.add("HBd.Gp4Ss");
-//		
-//		List<String> group13 = new ArrayList<String>();
-//		group13.add("_CC00P");
-//		group13.add("_CC10P");
-//		group13.add("_CC15P");
-//		group13.add("_CC20P");
-//	
-//		List<String> group14 = new ArrayList<String>();
-//		group14.add("_LYNX");		
-//
-//		List<String> group15 = new ArrayList<String>();
-//		group15.add("_FIRE");
-//	
-//		List<String> group16 = new ArrayList<String>();
-//		group16.add("_SNAG10T");
-//		group16.add("_SNAG20P");
-//	
-//			
-//	
-//		List<List<String>> allGroups = new ArrayList<List<String>>();
-////		allGroups.add(group0);
-//		allGroups.add(group1);
-//		allGroups.add(group2);
-//		allGroups.add(group3);
-//		allGroups.add(group4);
-//		allGroups.add(group5);
-//		allGroups.add(group6);
-//		allGroups.add(group7);
-//		allGroups.add(group8);
-//		allGroups.add(group9);
-//		allGroups.add(group10);
-//		allGroups.add(group11);
-//		allGroups.add(group12);
-//		allGroups.add(group13);
-//		allGroups.add(group14);
-//		allGroups.add(group15);
-//		allGroups.add(group16);
-//	
-//		return allGroups;
-//	}	
+	
+	public List<String> get_MethodsPeriodsAges_Title() {
+		//Layers title
+		List<String> MethodsPeriodsAges_Title = new ArrayList<String>();
+		MethodsPeriodsAges_Title.add("Silvicultural Methods");
+		MethodsPeriodsAges_Title.add("Time Periods");
+		MethodsPeriodsAges_Title.add("Age Classes");
+
+		return MethodsPeriodsAges_Title;
+	}
+
+	
+	public List<List<String>> get_MethodsPeriodsAges() {
+		//Layers element name
+		List<String> layer1 = new ArrayList<String>();			//Silvicultural methods
+		layer1.add("Even Age");
+		layer1.add("Group Selection");
+		layer1.add("Prescribed Burn");
+		layer1.add("Natural Growth");
+
+		
+		List<String> layer2 = new ArrayList<String>();		//Time Periods
+		for (int i = 1; i <= 50; i++) {
+			layer2.add(Integer.toString(i));
+		}
+		
+		List<String> layer3 = new ArrayList<String>();		//Age Classes
+		for (int i = 1; i <= 50; i++) {
+			layer3.add(Integer.toString(i));
+		}
+
+			
+		List<List<String>> MethodsPeriodsAges = new ArrayList<List<String>>();
+		MethodsPeriodsAges.add(layer1);
+		MethodsPeriodsAges.add(layer2);
+//		MethodsPeriodsAges.add(layer3);
+			
+		return MethodsPeriodsAges;
+	}
+
 
 	
 	public String get_ParameterToolTip(String YTcolumnNames) {
