@@ -9,8 +9,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.PrintStream;
@@ -277,8 +281,24 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			
 			
 
-			// Set up problem-------------------------------------------------
-			Read_Indentifiers read_Identifiers = new Read_Indentifiers();	
+			// Set up problem-------------------------------------------------		//////////////////////////////////////Need to change this is important, better to read from input file //////////////////////////
+			// get the "StrataDefinition.csv" file from where this class is located
+		
+			File file_StrataDefinition = new File("StrataDefinition.csv");
+			try {
+				InputStream initialStream = getClass().getResourceAsStream("StrataDefinition.csv");		//Default definition
+				byte[] buffer = new byte[initialStream.available()];
+				initialStream.read(buffer);
+				
+				 OutputStream outStream = new FileOutputStream(file_StrataDefinition);
+				 outStream.write(buffer);
+				 
+			} catch (FileNotFoundException e1) {
+			} catch (IOException e1) {
+			}
+					
+			
+			Read_Indentifiers read_Identifiers = new Read_Indentifiers(file_StrataDefinition);		//file_StrataDefinition
 			List<List<String>> allLayers =  read_Identifiers.get_allLayers();
 		
 			List<String> layer1 = allLayers.get(0);

@@ -19,12 +19,17 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BoxLayout;
@@ -67,7 +72,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private JPanel radioPanel_Right; 
 	private ButtonGroup radioGroup_Right; 
 	private JRadioButton[] radioButton_Right; 
-	private File fileManagementUnit, fileDatabase;
+	private File file_ExistingStrata, file_Database;
+	private File file_StrataDefinition;
+	private String newDefinition = "currently set to Default with 6 Layers";
 	
 	//6 panels for the selected Run
 	private PaneL_General_Inputs_GUI panelInput0_GUI;
@@ -81,6 +88,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 	private Read_Strata read_Strata;
 	private Read_DatabaseTables read_DatabaseTables;
+	private Read_Indentifiers read_Identifiers;
 	
 	private Object[][][] yieldTable_values;
 	private String [] yieldTable_ColumnNames;
@@ -107,6 +115,22 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	public Panel_EditRun_Details() {
 		super.setLayout(new BorderLayout());
 
+		// get the "StrataDefinition.csv" file from where this class is located
+		try {
+			file_StrataDefinition = new File("StrataDefinition.csv");	
+			
+			InputStream initialStream = getClass().getResourceAsStream("StrataDefinition.csv");		//Default definition
+			byte[] buffer = new byte[initialStream.available()];
+			initialStream.read(buffer);
+			
+			 OutputStream outStream = new FileOutputStream(file_StrataDefinition);
+			 outStream.write(buffer);
+			 
+		} catch (FileNotFoundException e1) {
+		} catch (IOException e1) {
+		}
+
+		
 		// Add 3 input options to radioPanel and add that panel to scrollPane_Right at combinePanel NORTH
 		radioPanel_Right = new JPanel();
 		radioPanel_Right.setLayout(new FlowLayout());		
@@ -279,11 +303,55 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c0.weightx = 1;
 		    c0.weighty = 1;
 			
-
-			// 1st grid line 1----------------------
-			JLabel label1 = new JLabel("Strata (.csv file)");
+		       
+		 // 1st grid line 0----------------------------
+			JLabel label0 = new JLabel("Strata Definition (.csv)");
 			c0.gridx = 0;
 			c0.gridy = 0;
+			c0.weightx = 0.1;
+			c0.weighty = 1;
+			importPanel.add(label0, c0);
+
+			JTextField textField0 = new JTextField(25);
+			textField0.setEditable(false);
+			textField0.setText(newDefinition);
+			c0.gridx = 1;
+			c0.gridy = 0;
+			c0.weightx = 1;
+			c0.weighty = 1;
+			importPanel.add(textField0, c0);
+
+			JButton button0 = new JButton("Import Definition");
+			button0.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					file_StrataDefinition = FilesChooser_StrataDefinition.chosenDefinition();
+					if (file_StrataDefinition != null) {
+						newDefinition = file_StrataDefinition.getAbsolutePath();
+						
+						//create 4 new instances of the 2 Panels 
+						panelInput1_GUI = new PaneL_ManagementOptions_GUI();
+						panelInput1_TEXT = new PaneL_ManagementOptions_Text();
+						panelInput2_GUI = new PaneL_UserConstraints_GUI();
+						panelInput2_TEXT = new PaneL_UserConstraints_Text();
+						
+						//and show the 2 new instances of ManagementOptions Panel
+						GUI_Text_splitPanel.setLeftComponent(panelInput1_GUI);
+						GUI_Text_splitPanel.setRightComponent(panelInput1_TEXT);	
+					}
+				}
+			});
+			c0.gridx = 2;
+			c0.gridy = 0;
+			c0.weightx = 0;
+			c0.weighty = 1;
+			importPanel.add(button0, c0);
+
+		 			
+			// 1st grid line 1----------------------
+			JLabel label1 = new JLabel("Existing Strata (.csv)");
+			c0.gridx = 0;
+			c0.gridy = 1;
 			c0.weightx = 0.1;
 		    c0.weighty = 1;
 			importPanel.add(label1, c0);
@@ -291,7 +359,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			JTextField textField1 = new JTextField(25);
 			textField1.setEditable(false);
 			c0.gridx = 1;
-			c0.gridy = 0;
+			c0.gridy = 1;
 			c0.weightx = 1;
 		    c0.weighty = 1;
 			importPanel.add(textField1, c0);
@@ -300,12 +368,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			button1.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					fileManagementUnit = FilesChooser_Units.chosenManagementunit();				
-					if (fileManagementUnit!=null) {
-						textField1.setText(fileManagementUnit.getAbsolutePath());
+					file_ExistingStrata = FilesChooser_ExistingStrata.chosenStrata();				
+					if (file_ExistingStrata!=null) {
+						textField1.setText(file_ExistingStrata.getAbsolutePath());
 						// Read the whole text file into table
 						read_Strata = new Read_Strata();
-						read_Strata.readValues(fileManagementUnit);
+						read_Strata.readValues(file_ExistingStrata);
 						String[][] value = read_Strata.getValues();
 						rowCount = read_Strata.get_TotalRows();
 						colCount = read_Strata.get_TotalColumns() + 1; //the "Methods for Implementation" Column
@@ -335,17 +403,17 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					}
 				}
 			});
-			c0.gridx = 5;
-			c0.gridy = 0;
+			c0.gridx = 2;
+			c0.gridy = 1;
 			c0.weightx = 0;
 		    c0.weighty = 1;
 			importPanel.add(button1, c0);
 
 			
 			// 1st grid line 2----------------------------
-			JLabel label2 = new JLabel("Database (.db file)");
+			JLabel label2 = new JLabel("Database (.db)");
 			c0.gridx = 0;
-			c0.gridy = 1;
+			c0.gridy = 2;
 			c0.weightx = 0.1;
 		    c0.weighty = 1;
 			importPanel.add(label2, c0);
@@ -353,7 +421,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			JTextField textField2 = new JTextField(25);
 			textField2.setEditable(false);
 			c0.gridx = 1;
-			c0.gridy = 1;
+			c0.gridy = 2;
 			c0.weightx = 1;
 		    c0.weighty = 1;
 			importPanel.add(textField2, c0);
@@ -362,18 +430,23 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			button2.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					fileDatabase = FilesChooser_Database.chosenDatabase();				
-					if (fileDatabase!=null) {
-						textField2.setText(fileDatabase.getAbsolutePath());
+					file_Database = FilesChooser_Database.chosenDatabase();				
+					if (file_Database!=null) {
+						textField2.setText(file_Database.getAbsolutePath());
+						
+						//create 2 new instances of this Panel 
+						panelInput2_GUI = new PaneL_UserConstraints_GUI();
+						panelInput2_TEXT = new PaneL_UserConstraints_Text();
+							
 						// Read the database tables into array
-						read_DatabaseTables = new Read_DatabaseTables(fileDatabase);
+						read_DatabaseTables = new Read_DatabaseTables(file_Database);
 						yieldTable_values = read_DatabaseTables.getTableArrays();
 						yieldTable_ColumnNames = read_DatabaseTables.getTableColumnNames();
 					}
 				}
 			});
-			c0.gridx = 5;
-			c0.gridy = 1;
+			c0.gridx = 2;
+			c0.gridy = 2;
 			c0.weightx = 0;
 		    c0.weighty = 1;
 			importPanel.add(button2, c0);
@@ -383,7 +456,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				
 			// 2nd grid -----------------------------------------------------------------------
 			// 2nd grid -----------------------------------------------------------------------						
-			Read_Indentifiers read_Identifiers = new Read_Indentifiers();
+			read_Identifiers = new Read_Indentifiers(file_StrataDefinition);
 			
 			List<String> layers_Title = read_Identifiers.get_layers_Title();
 			List<String> layers_Title_ToolTip = read_Identifiers.get_layers_Title_ToolTip();
@@ -514,13 +587,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			}
 			
 			//CheckBox for Cover Type To
-			int startx = 1;
 			ConversionCheck_To = new JCheckBox[total_CoverType][total_CoverType];
 		    for (int i = 0; i < total_CoverType; i++) {
 		    	   for (int j = 0; j < total_CoverType; j++) {
 				    	ConversionCheck_To[i][j] = new JCheckBox(allLayers.get(4).get(j));
 				    	ConversionCheck_To[i][j].setToolTipText(allLayers_ToolTips.get(4).get(j));
-				    	c2.gridx = startx+ j + 1;
+				    	c2.gridx = j + 1;
 						c2.gridy = i+1;
 						c2.gridwidth = 1;
 						silvicultural_Methods_Panel.add(ConversionCheck_To[i][j], c2);
@@ -765,7 +837,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				
 			// 1st grid -----------------------------------------------------------------------
 			// 1st grid -----------------------------------------------------------------------						
-			Read_Indentifiers read_Identifiers = new Read_Indentifiers();
+			read_Identifiers = new Read_Indentifiers(file_StrataDefinition);
 			
 			List<String> layers_Title = read_Identifiers.get_layers_Title();
 			List<String> layers_Title_ToolTip = read_Identifiers.get_layers_Title_ToolTip();
@@ -871,8 +943,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					if (i==4) checkboxStaticIdentifiers.get(i).get(j).setEnabled(false);
 					//Set layer 6 - Size Class invisible
 					if (i==5) checkboxStaticIdentifiers.get(i).get(j).setEnabled(false);
-					//Deselect all time period check boxes (7)
-					if (i==7) checkboxStaticIdentifiers.get(i).get(j).setSelected(false);
+//					//Deselect all time period check boxes (7)
+//					if (i==7) checkboxStaticIdentifiers.get(i).get(j).setSelected(false);
 				}
 			}
 			
@@ -885,13 +957,10 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			// 2nd grid -----------------------------------------------------------------------
 			// 2nd grid -----------------------------------------------------------------------	
 			class checkboxScrollPanel extends JScrollPane {	
-				private JCheckBox checkboxNotUsingColumn;
+				private JCheckBox checkboxNoParameter;
 				private List<JCheckBox> checkboxParameter;
-				private List<JLabel> allDynamicIdentifiers_Titles;
-				private List<List<JCheckBox>> checkboxDynamicIdentifiers;
-				JScrollPane defineScrollPane;		//for Definition of dynamic identifier
 				
-				public checkboxScrollPanel(String nameTag, int option) {
+				public checkboxScrollPanel(String nameTag) {
 					
 					JPanel parametersPanel = new JPanel();	
 					parametersPanel.setLayout(new GridBagLayout());
@@ -899,7 +968,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					c2.fill = GridBagConstraints.HORIZONTAL;
 					c2.weightx = 1;
 				    c2.weighty = 1;
-				    
 				    
 					setViewportView(parametersPanel);
 				    
@@ -920,18 +988,15 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						public void actionPerformed(ActionEvent e) {
 							if (yieldTable_ColumnNames != null && checkboxParameter == null) {				
 								parametersPanel.remove(tempButton);		//Remove the tempButton
-								
-								checkboxDynamicIdentifiers = new ArrayList<List<JCheckBox>>();	
 								checkboxParameter = new ArrayList<JCheckBox>();
 								
 								for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
 									String YTcolumnName = yieldTable_ColumnNames[i];
 
-									checkboxDynamicIdentifiers.add(new ArrayList<JCheckBox>());		//add empty List
 									checkboxParameter.add(new JCheckBox(YTcolumnName));		//add checkbox
 									checkboxParameter.get(i).setToolTipText(read_Identifiers.get_ParameterToolTip(YTcolumnName) + " (Column index: " + i + ")");		//add toolTip
 									
-									// add checkboxVariables to the Panel
+									// add checkboxParameter to the Panel
 								    c2.gridx = 0;
 								    c2.gridy = 1 + i;
 									c2.weightx = 1;
@@ -942,81 +1007,189 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 								
 								//Add an extra checkbox for the option of not using any Column, use 1 instead as multiplier
 								//This is also the checkbox for the option of not using any Column as dynamic identifier
-								checkboxNotUsingColumn = new JCheckBox();		//add checkbox		
-								
-								if (option == 1) {		//For the Parameters panel only
-									checkboxNotUsingColumn.setText("NoParameter");		
-									checkboxNotUsingColumn.setToolTipText("1 is used as multiplier (parameter), no column will be used as parameter");		//set toolTip
-								} else if (option == 2){	//For the dynamic identifiers only	
-									checkboxNotUsingColumn.setText("NoIdentifier");	
-									checkboxNotUsingColumn.setToolTipText("No column will be used as dynamic identifier");		//set toolTip
-								}
+								checkboxNoParameter = new JCheckBox();		//add checkbox			
+								checkboxNoParameter.setText("NoParameter");		
+								checkboxNoParameter.setToolTipText("1 is used as multiplier (parameter), no column will be used as parameter");		//set toolTip
 								
 								// add the checkBox to the Panel
 								c2.gridx = 0;
 								c2.gridy = 0;
 								c2.weightx = 1;
 								c2.weighty = 1;
-								parametersPanel.add(checkboxNotUsingColumn, c2);
+								parametersPanel.add(checkboxNoParameter, c2);
 								
 								// Add listeners to de-select all other checkBoxes
-								checkboxNotUsingColumn.addActionListener(new ActionListener() {
+								checkboxNoParameter.addActionListener(new ActionListener() {
 									@Override
 									public void actionPerformed(ActionEvent actionEvent) {
-										if (checkboxNotUsingColumn.isSelected()) {
+										if (checkboxNoParameter.isSelected()) {
 											for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
 												checkboxParameter.get(i).setSelected(false);
-												if (option == 2) 	allDynamicIdentifiers_Titles.get(i).setVisible(false);		//Set invisible all labels of dynamic identifiers
 											} 
 										}
 									}
 								});								
 								
 								
-								
-								
-								
 								// Add listeners to checkBox so if then name has AllSx then other checkbox would be deselected 
-								if (option == 1) {		//For the Parameters panel only
-									for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
-										String currentCheckBoxName = yieldTable_ColumnNames[i];
-										int currentCheckBoxIndex = i;
-										
-										checkboxParameter.get(i).addActionListener(new ActionListener() {	
-											@Override
-											public void actionPerformed(ActionEvent actionEvent) {
-												//Deselect the NoParameter checkBox
-												checkboxNotUsingColumn.setSelected(false);
-												
-												if (currentCheckBoxName.contains("AllSx")) {
-													for (int j = 0; j < yieldTable_ColumnNames.length; j++) {		
-														if (j!=currentCheckBoxIndex) 	checkboxParameter.get(j).setSelected(false);
-													}
-												} else {
-													for (int j = 0; j < yieldTable_ColumnNames.length; j++) {		
-														if (checkboxParameter.get(j).getText().contains("AllSx")) 	checkboxParameter.get(j).setSelected(false);
-													}
-												}					
-											}
-										});
-									}
+								for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
+									String currentCheckBoxName = yieldTable_ColumnNames[i];
+									int currentCheckBoxIndex = i;
+									
+									checkboxParameter.get(i).addActionListener(new ActionListener() {	
+										@Override
+										public void actionPerformed(ActionEvent actionEvent) {
+											//Deselect the NoParameter checkBox
+											checkboxNoParameter.setSelected(false);
+											
+											if (currentCheckBoxName.contains("AllSx")) {
+												for (int j = 0; j < yieldTable_ColumnNames.length; j++) {		
+													if (j!=currentCheckBoxIndex) 	checkboxParameter.get(j).setSelected(false);
+												}
+											} else {
+												for (int j = 0; j < yieldTable_ColumnNames.length; j++) {		
+													if (checkboxParameter.get(j).getText().contains("AllSx")) 	checkboxParameter.get(j).setSelected(false);
+												}
+											}					
+										}
+									});
 								}
 
+								//Do a resize to same size for JInteral Frame of the project to help repaint the checkboxVariables added					
+								Spectrum_Main.mainFrameReturn().getSelectedFrame().setSize(Spectrum_Main.mainFrameReturn().getSelectedFrame().getSize());	
+							}
+						}
+					});		
+					
+				}
+			}
+			
+		    	
+			checkboxScrollPanel parametersScrollPanel = new checkboxScrollPanel("Get parameters from YT columns");
+			TitledBorder border2 = new TitledBorder("PARAMETERS (yield table columns)");
+			border2.setTitleJustification(TitledBorder.CENTER);
+			parametersScrollPanel.setBorder(border2);
+	    	parametersScrollPanel.setPreferredSize(new Dimension(250, 100));
+			// End of 2nd grid -----------------------------------------------------------------------
+			// End of 2nd grid -----------------------------------------------------------------------
+			
+
+
+	    	
+			// 4th Grid -----------------------------------------------------------------------
+			// 4th Grid -----------------------------------------------------------------------	
+			class checkbox_dynamicScrollPanel extends JScrollPane {	
+				private JCheckBox checkboxNoIdentifier;
+				private List<JCheckBox> allDynamicIdentifiers;
+				private List<JScrollPane> allDynamicIdentifiers_ScrollPane;
+				private List<List<JCheckBox>> checkboxDynamicIdentifiers;
+				private JScrollPane defineScrollPane;		//for Definition of dynamic identifier
+				
+				public checkbox_dynamicScrollPanel(String nameTag, int option) {
+
+					// Define the Panel contains everything --------------------------
+					JPanel dynamic_identifiersPanel = new JPanel();		
+					dynamic_identifiersPanel.setLayout(new GridBagLayout());
+					GridBagConstraints c3 = new GridBagConstraints();
+					c3.fill = GridBagConstraints.BOTH;
+					c3.weightx = 1;
+				    c3.weighty = 1;
+				    // Add elements to this Panel later at the end --------------------------
+					
+					
+				
+	
+					//This is the Panel for select all available identifiers--------------------------
+					JPanel select_Panel = new JPanel();	
+					select_Panel.setLayout(new GridBagLayout());
+					GridBagConstraints c2 = new GridBagConstraints();
+					c2.fill = GridBagConstraints.HORIZONTAL;
+					c2.weightx = 1;
+				    c2.weighty = 1;
+				    
+				    //Add variableGroups to the comboBox
+					JComboBox comboGroups = new JComboBox();			
+		
+					JButton tempButton = new JButton(nameTag);
+					// add comboBox to the Panel
+					c2.gridx = 0;
+					c2.gridy = 0;
+					c2.weightx = 1;
+					c2.weighty = 1;
+					select_Panel.add(tempButton, c2);
+					//------------------------------------------------------------------------------
+					
+					
+											
+					tempButton.addActionListener(new AbstractAction() {
+						public void actionPerformed(ActionEvent e) {
+							if (yieldTable_ColumnNames != null && allDynamicIdentifiers == null) {				
+								select_Panel.remove(tempButton);		//Remove the tempButton
 								
+								checkboxDynamicIdentifiers = new ArrayList<List<JCheckBox>>();	
+								allDynamicIdentifiers = new ArrayList<JCheckBox>();
+								
+								for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
+									String YTcolumnName = yieldTable_ColumnNames[i];
+
+									checkboxDynamicIdentifiers.add(new ArrayList<JCheckBox>());		//add empty List
+									allDynamicIdentifiers.add(new JCheckBox(YTcolumnName));		//add checkbox
+									allDynamicIdentifiers.get(i).setToolTipText(read_Identifiers.get_ParameterToolTip(YTcolumnName) + " (Column index: " + i + ")");		//add toolTip
+									
+									// add checkboxParameter to the Panel
+								    c2.gridx = 0;
+								    c2.gridy = 1 + i;
+									c2.weightx = 1;
+								    c2.weighty = 1;
+									select_Panel.add(allDynamicIdentifiers.get(i), c2);
+								}
+								
+								
+								//Add an extra checkBox for the option of not using any Column as dynamic identifier
+								checkboxNoIdentifier = new JCheckBox();		//add checkBox		
+								checkboxNoIdentifier.setText("NoIdentifier");	
+								checkboxNoIdentifier.setToolTipText("No column will be used as dynamic identifier");		//set toolTip
+								
+								// add the checkBox to the Panel
+								c2.gridx = 0;
+								c2.gridy = 0;
+								c2.weightx = 1;
+								c2.weighty = 1;
+								select_Panel.add(checkboxNoIdentifier, c2);
+								
+								// Add listeners to de-select all other checkBoxes
+								checkboxNoIdentifier.addActionListener(new ActionListener() {
+									@Override
+									public void actionPerformed(ActionEvent actionEvent) {
+										if (checkboxNoIdentifier.isSelected()) {
+											for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
+												allDynamicIdentifiers.get(i).setSelected(false);
+												allDynamicIdentifiers_ScrollPane.get(i).setVisible(false);		//Set invisible all scrollPanes of dynamic identifiers
+												
+												//Do a resize to same size for JInteral Frame of the project to help repaint					
+												Spectrum_Main.mainFrameReturn().getSelectedFrame().setSize(Spectrum_Main.mainFrameReturn().getSelectedFrame().getSize());	
+											} 
+										}
+									}
+								});								
+								
+						
 							
 								if (option == 2) {		//For the dynamic identifiers only						
 									//Add all dynamic identifiers lables
-									allDynamicIdentifiers_Titles = new ArrayList<JLabel>();
+									allDynamicIdentifiers_ScrollPane = new ArrayList<JScrollPane>();
 									
 									for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
-										String YTcolumnName = checkboxParameter.get(i).getText();		
-										allDynamicIdentifiers_Titles.add(new JLabel(YTcolumnName));			//Add Label
-										allDynamicIdentifiers_Titles.get(i).setToolTipText(read_Identifiers.get_ParameterToolTip(YTcolumnName));		//add toolTip
-										allDynamicIdentifiers_Titles.get(i).setVisible(false);		//Set invisible
+										String YTcolumnName = allDynamicIdentifiers.get(i).getText();		
+										allDynamicIdentifiers_ScrollPane.add(new JScrollPane());			//Add ScrollPane
+										allDynamicIdentifiers_ScrollPane.get(i).setBorder(new TitledBorder(YTcolumnName));	//set Title
+										allDynamicIdentifiers_ScrollPane.get(i).setPreferredSize(new Dimension(150, 100));
+//										allDynamicIdentifiers_ScrollPane.get(i).setToolTipText(read_Identifiers.get_ParameterToolTip(YTcolumnName) + " (Column index: " + i + ")");		//add toolTip										
+										allDynamicIdentifiers_ScrollPane.get(i).setVisible(false);		//Set invisible
 										
-										c2.gridx = 1 + i;
-										c2.gridy = 0;
-										parametersPanel.add(allDynamicIdentifiers_Titles.get(i), c2);
+										c3.gridx =1 + i;
+										c3.gridy = 0;
+										dynamic_identifiersPanel.add(allDynamicIdentifiers_ScrollPane.get(i), c3);
 									}					
 																			
 									
@@ -1025,12 +1198,15 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 										String currentCheckBoxName = yieldTable_ColumnNames[i];
 										int currentCheckBoxIndex = i;
 										
-										checkboxParameter.get(i).addActionListener(new ActionListener() {	
+										allDynamicIdentifiers.get(i).addActionListener(new ActionListener() {	
 											@Override
 											public void actionPerformed(ActionEvent actionEvent) {
 												// A popupPanel to define identifier if the checkBox is selected
-												if (checkboxParameter.get(currentCheckBoxIndex).isSelected()) {
-										
+												if (allDynamicIdentifiers.get(currentCheckBoxIndex).isSelected()) {
+													
+													//Remove all checkBoxes previously added into the Column list (or the dynamic identifier)
+													checkboxDynamicIdentifiers.get(currentCheckBoxIndex).clear();
+															
 													//define popupPanel
 													JPanel popupPanel = new JPanel();
 													popupPanel.setLayout(new GridBagLayout());
@@ -1256,54 +1432,89 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 													int response = JOptionPane.showConfirmDialog(Spectrum_Main.mainFrameReturn(), popupPanel,
 															"Add   '" + currentCheckBoxName + "'   to the set of dynamic identifiers ?", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null);
 													if (response == JOptionPane.NO_OPTION) {
-														checkboxParameter.get(currentCheckBoxIndex).setSelected(false);
+														allDynamicIdentifiers.get(currentCheckBoxIndex).setSelected(false);
 													} else if (response == JOptionPane.YES_OPTION) {
 														//Deselect the No Identifier checkBox
-														checkboxNotUsingColumn.setSelected(false);
+														checkboxNoIdentifier.setSelected(false);
 														
-														//Set the title visible
-														allDynamicIdentifiers_Titles.get(currentCheckBoxIndex).setVisible(true);
+														//Set the identifier ScrollPane visible
+														allDynamicIdentifiers_ScrollPane.get(currentCheckBoxIndex).setVisible(true);
+														
+														
+														//create a temporary Panel contains all checkboxes of that column 
+														JPanel tempPanel = new JPanel();
+														tempPanel.setLayout(new GridBagLayout());
+														GridBagConstraints c_temp = new GridBagConstraints();
+														c_temp.fill = GridBagConstraints.HORIZONTAL;
+														c_temp.weightx = 1;
+														c_temp.weighty = 1;
+														
+														for (int j = 0; j < checkboxDynamicIdentifiers.get(currentCheckBoxIndex).size(); j++) {
+															c_temp.gridx = 1;
+															c_temp.gridy = j;
+															tempPanel.add(checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(j), c_temp);
+														}
+			
+														//Set Scroll Pane view to the tempPanel
+														allDynamicIdentifiers_ScrollPane.get(currentCheckBoxIndex).setViewportView(tempPanel);
 														
 													} else if (response == JOptionPane.CLOSED_OPTION) {
-														checkboxParameter.get(currentCheckBoxIndex).setSelected(false);
+														allDynamicIdentifiers.get(currentCheckBoxIndex).setSelected(false);
 													}
 												
-												} else {	//if checkbox is not selected then remove the title
-													allDynamicIdentifiers_Titles.get(currentCheckBoxIndex).setVisible(false);
-												}	
-
+												} else {	//if checkbox is not selected then remove the identifier ScrollPane
+													allDynamicIdentifiers_ScrollPane.get(currentCheckBoxIndex).setVisible(false);
+												}
+											
+												//Do a resize to same size for JInteral Frame of the project to help repaint the identifier ScrollPane added or removed					
+												Spectrum_Main.mainFrameReturn().getSelectedFrame().setSize(Spectrum_Main.mainFrameReturn().getSelectedFrame().getSize());
 											}
 										});
 									}		
 								}
-								
-								
-								
-								//Do a resize to same size for JInteral Frame of the project to help repaint the checkboxVariables added					
+											
+								//Do a resize to same size for JInteral Frame of the project to help repaint the checkboxes added					
 								Spectrum_Main.mainFrameReturn().getSelectedFrame().setSize(Spectrum_Main.mainFrameReturn().getSelectedFrame().getSize());	
 							}
 						}
 					});		
 					
+					
+					
+
+					
+	
+					//ScrollPane contains the identifiers that are able to be selected
+					JScrollPane selectIdentifiersScrollPanel = new JScrollPane(select_Panel);
+					TitledBorder border3_2 = new TitledBorder("Select Identifiers");
+					border3_2.setTitleJustification(TitledBorder.CENTER);
+					selectIdentifiersScrollPanel.setBorder(border3_2);
+					selectIdentifiersScrollPanel.setPreferredSize(new Dimension(200, 100));
+					
+					//Add the above ScrollPane
+					c3.gridx = 0;
+					c3.gridy = 0;
+					dynamic_identifiersPanel.add(selectIdentifiersScrollPanel, c3);
+					
+					
+					//Add dynamic_identifiersPanel to this Class which is a mother JSCrollPanel
+					setViewportView(dynamic_identifiersPanel);
 				}
 			}
 			
-		    
-		    
 			
-			checkboxScrollPanel parametersScrollPanel = new checkboxScrollPanel("Get parameters from YT columns", 1);
-			TitledBorder border2 = new TitledBorder("PARAMETERS (yield table columns)");
-			border2.setTitleJustification(TitledBorder.CENTER);
-			parametersScrollPanel.setBorder(border2);
-	    	parametersScrollPanel.setPreferredSize(new Dimension(250, 100));
-			// End of 2nd grid -----------------------------------------------------------------------
-			// End of 2nd grid -----------------------------------------------------------------------
+			checkbox_dynamicScrollPanel dynamic_identifiersScrollPanel = new checkbox_dynamicScrollPanel("Get identifiers from yield table columns", 2);
+			TitledBorder border3_1 = new TitledBorder("Dynamic identifiers for PARAMETERS (from yield table)");
+			border3_1.setTitleJustification(TitledBorder.CENTER);
+			dynamic_identifiersScrollPanel.setBorder(border3_1);
+			dynamic_identifiersScrollPanel.setPreferredSize(new Dimension(250, 100));	
+			// End of 4th Grid -----------------------------------------------------------------------
+			// End of 4th Grid -----------------------------------------------------------------------	
+			
+		
+
 			
 
-	    	
-	    	
-	    	
-	    	
 			// 3rd Grid -----------------------------------------------------------------------
 			// 3rd Grid -----------------------------------------------------------------------						
 			JPanel buttonPanel = new JPanel(new BorderLayout(0, 0));
@@ -1328,8 +1539,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 							
 							//add constraint info at column 6 "PARAMETERS"
 							String parameterConstraintColumn = "";
-							if (parametersScrollPanel.checkboxNotUsingColumn.isSelected()) {
-								parameterConstraintColumn = parametersScrollPanel.checkboxNotUsingColumn.getText();
+							if (parametersScrollPanel.checkboxNoParameter.isSelected()) {
+								parameterConstraintColumn = parametersScrollPanel.checkboxNoParameter.getText();
 							} else {
 								for (int j = 0; j < yieldTable_ColumnNames.length; j++) {
 									if (parametersScrollPanel.checkboxParameter.get(j).isSelected()) {			//add the index of selected Columns to this String
@@ -1355,7 +1566,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 									} else if (checkboxName.equals("Natural Growth")) {
 										checkboxName = "NG";
 									}	
-									if (checkboxStaticIdentifiers.get(ii).get(j).isSelected())	staticIdentifiersColumn = staticIdentifiersColumn + checkboxName + " "	;
+									//Add checkBox if it is selected or disable
+									if (checkboxStaticIdentifiers.get(ii).get(j).isSelected() || !checkboxStaticIdentifiers.get(ii).get(j).isEnabled())	
+										staticIdentifiersColumn = staticIdentifiersColumn + checkboxName + " "	;
 								}
 								staticIdentifiersColumn = staticIdentifiersColumn + "; ";
 							}	
@@ -1420,115 +1633,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			// End of 6th Grid -----------------------------------------------------------------------		
 			
 			    	
-	    	
-	    	
-			
-
-	    	
-			// 4th Grid -----------------------------------------------------------------------
-			// 4th Grid -----------------------------------------------------------------------						
-			JPanel dynamic_identifiersPanel = new JPanel();		
-			dynamic_identifiersPanel.setLayout(new GridBagLayout());
-			GridBagConstraints c3 = new GridBagConstraints();
-			c3.fill = GridBagConstraints.HORIZONTAL;
-			c3.weightx = 1;
-		    c3.weighty = 1;
-		    
-		    
-		    
-	    	JScrollPane dynamic_identifiersScrollPanel = new JScrollPane(dynamic_identifiersPanel);
-			TitledBorder border3_1 = new TitledBorder("Dynamic identifiers for PARAMETERS (from yield table)");
-			border3_1.setTitleJustification(TitledBorder.CENTER);
-			dynamic_identifiersScrollPanel.setBorder(border3_1);
-			dynamic_identifiersScrollPanel.setPreferredSize(new Dimension(100, 250));
-			
-			
-			
-			
-			
-			c3.gridx = 0;
-			c3.gridy = 0;	
-			checkboxScrollPanel selectIdentifiersScrollPanel = new checkboxScrollPanel("Get identifiers from yield table columns", 2);
-			TitledBorder border3_2 = new TitledBorder("Select Identifiers");
-			border3_2.setTitleJustification(TitledBorder.CENTER);
-			selectIdentifiersScrollPanel.setBorder(border3_2);
-			selectIdentifiersScrollPanel.setPreferredSize(new Dimension(300, 200));
-			dynamic_identifiersPanel.add(selectIdentifiersScrollPanel, c3);
-			
-			
-
-
-			
-
-//			//Add CheckBox for the last 2 layers only
-//		    checkboxDynamicIdentifiers = new ArrayList<List<JCheckBox>>();
-//			for (int i = 0; i < 2; i++) {		//Loop 2 layers
-//				List<JCheckBox> temp_List = new ArrayList<JCheckBox>();		//A temporary List
-//				checkboxDynamicIdentifiers.add(temp_List);
-//				for (int j = 0; j < allLayers.get(i+4).size(); j++) {		//Loop all elements in each layer
-//					checkboxDynamicIdentifiers.get(i).add(new JCheckBox(allLayers.get(i+4).get(j)));
-//					checkboxDynamicIdentifiers.get(i).get(j).setToolTipText(allLayers_ToolTips.get(i+4).get(j));	
-//					checkboxDynamicIdentifiers.get(i).get(j).setSelected(true);
-//					
-//					c4.gridx = i;
-//					c4.gridy = j + 1;
-//					dynamic_identifiersPanel.add(checkboxDynamicIdentifiers.get(i).get(j), c4);
-//				}
-//			}
-//			
-//			int lastRow2 = 0;
-//			for (int i = 0; i < 2; i++) {		//Loop 2 layers
-//				for (int j = 0; j < allLayers.get(i+4).size(); j++) {		//Loop all elements in each layer
-//					if (j+1>lastRow2) lastRow2 = j+1;
-//				}
-//			}
-//			
-//			
-//			
-//			//Add 2 buttons for select all and de-select all		
-//			JButton selectAll1 = new JButton("Select All");
-//			selectAll1.addActionListener(new ActionListener() {
-//				@Override
-//				public void actionPerformed(ActionEvent actionEvent) {
-//					for (int i = 0; i < 2; i++) {		//Loop all layers
-//						for (int j = 0; j < allLayers.get(i+4).size(); j++) {		//Loop all elements in each layer
-//							checkboxDynamicIdentifiers.get(i).get(j).setSelected(true);
-//						}
-//					}
-//				}
-//			});
-//			c4.gridx = 0;
-//			c4.gridy = lastRow2 + 1;
-//			c4.gridwidth = 1;
-//			dynamic_identifiersPanel.add(selectAll1, c4);
-//			
-//			JButton deselectAll1 = new JButton("De-Select All");
-//			deselectAll1.addActionListener(new ActionListener() {
-//				@Override
-//				public void actionPerformed(ActionEvent actionEvent) {
-//					for (int i = 0; i < 2; i++) {		//Loop all layers
-//						for (int j = 0; j < allLayers.get(i+4).size(); j++) {		//Loop all elements in each layer
-//							checkboxDynamicIdentifiers.get(i).get(j).setSelected(false);
-//						}
-//					}	
-//				}
-//			});
-//			c4.gridx = 1;
-//			c4.gridy = lastRow2 + 1;
-//			c4.gridwidth = 1;
-//			dynamic_identifiersPanel.add(deselectAll1, c4);				
-			// End of 4th Grid -----------------------------------------------------------------------
-			// End of 4th Grid -----------------------------------------------------------------------	
-			
-		
-
-			
-	    	
-	    	
-	    	
-	
-			
-			
+	    		
 			
 			// 5th Grid -----------------------------------------------------------------------
 			// 5th Grid -----------------------------------------------------------------------				
@@ -1602,28 +1707,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			constraintTablePanel.setBorder(border5);
 			constraintTablePanel.add(constraints_ScrollPane);
 	         		
-			// 5th Grid -----------------------------------------------------------------------
-			// 5th Grid -----------------------------------------------------------------------				
-			
+			// End of 5th Grid -----------------------------------------------------------------------
+			// End of 5th Grid -----------------------------------------------------------------------				
 			
 			
 
 			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-		    
 		    
 			// Add all Grids to the Main Grid-----------------------------------------------------------------------
 			// Add all Grids to the Main Grid-----------------------------------------------------------------------

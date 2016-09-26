@@ -6,17 +6,17 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import spectrumGUI.Spectrum_Main;
 
-public class FilesChooser_Units {
+public class FilesChooser_StrataDefinition {
 	
 
-	public static File chosenManagementunit() {
+	public static File chosenDefinition() {
 		JFileChooser chooser = new JFileChooser();
-		chooser.setDialogTitle("Select management units file");
+		chooser.setDialogTitle("Select strata definition file");
 		chooser.setMultiSelectionEnabled(false);
 		
 		chooser.setApproveButtonText("Import");
-		chooser.setApproveButtonToolTipText("Import management units from the selected file");
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("Management Units File '.csv' '.txt'", "csv", "txt");
+		chooser.setApproveButtonToolTipText("Import strata definition from the selected file");
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Strata Definition File '.csv' '.txt'", "csv", "txt");
 		chooser.setFileFilter(filter);
 		chooser.setAcceptAllFileFilterUsed(false);
 		

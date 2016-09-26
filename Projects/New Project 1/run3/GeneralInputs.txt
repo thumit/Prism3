@@ -1,0 +1,4 @@
+Number of planning periods	15
+Solving time limit (minutes)	5
+Annual discount rate (%)	3.6
+Solver for optimization	CPLEX

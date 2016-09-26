@@ -8,16 +8,11 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class Read_Strata {
-
-private String delimited;
-private int totalRows, totalColumns;
-private String value[][];
+	private int totalRows, totalColumns;
+	private String value[][];
 	
 	public void readValues (File file) {
-		delimited = ",";		// comma delimited
-	//	delimited = "\\s+";		// space delimited
-	//	delimited = "\t";		// tab delimited
-	//	delimited = Panel_DatabaseManagement.getDelimited();
+		String delimited = ","; // 		","		comma delimited			"\\s+"		space delimited		"\t"	tab delimited
 				
 		if (delimited != null) {
 			try {		

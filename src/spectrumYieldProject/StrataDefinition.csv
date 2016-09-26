@@ -1,0 +1,41 @@
+Layer 1, Vegetation Desired Future Condition Areas
+6
+B, Bitterroot Mtns. (M333D) Breaklands
+U, Bitterroot Mtns. (M333D) Uplands
+S, Bitterroot Mtns. (M333D) Subalpine
+K, Idaho Batholith (M332A) Breaklands
+R, Idaho Batholith (M332A) Uplands
+C, Idaho Batholith (M332A) Subalpine
+Layer 2, Roadless Status
+2
+R, Roadless and undeveloped
+N, Roaded and developed
+Layer 3, Timber Suitability
+4
+N, Not Available or Not Suited; No Timber Harvest Allowed
+O, Generally Suitable for Timber Harvest for other resource objectives, no scheduled output
+P, Generally Suitable for Timber Harvest for other resource objectives, scheduled output
+S, Suited for Timber Production
+Layer 4, Resource Condition Zones
+4
+L, Lynx habitat - conserve watershed
+H, Lynx habitat - restore watershed
+C, Non-Lynx habitat - conserve watershed
+R, Non-Lynx habitat - restore watershed
+Layer 5, Vegetation Cover Types
+8
+P, WDI or DIP where the indicator tree species is Ponderosa Pine
+D, WDT or DTD where the indicator tree species is Dry Douglas-fir/Grand Fir
+W, MI or MIW where the indicator tree species is Mesic Douglas-fir mix
+C, MT or MTC where the indicator tree species is Grand Fir/Western Red Cedar
+I, SI or SII where the indicator tree species is Cold Douglas-fir mix
+A, ST or STA where the indicator tree species is Subalpine Fir mix
+L, LP or LPP where the indicator tree species is Lodgepole Pine
+N, NS NonStocked
+Layer 6, Size Class
+5
+S, Seedling and Sapling (0" - 5")
+P, Small (5" - 10")
+M, Medium (10" - 15")
+L, Large (15"+)
+N, None

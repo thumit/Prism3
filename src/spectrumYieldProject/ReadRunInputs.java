@@ -10,12 +10,10 @@ import java.util.List;
 
 public class ReadRunInputs {
 	//For readGeneralInputs
-	private String In1_delimited;
 	private int In1_totalRows, In1_totalColumns;
 	private String In1_value[][];
 	
 	//For readManagementOptions
-	private String In2_delimited;
 	private int In2_totalRows, In2_totalColumns;
 	private String In2_value[][];
 
@@ -23,9 +21,7 @@ public class ReadRunInputs {
 	private List<String> coverTypeConversions_list;
 	
 	public void readGeneralInputs (File file) {
-	//	delimited = ",";		// comma delimited
-	//	delimited = "\\s+";		// space delimited
-		In1_delimited = "\t";		// tab delimited
+		String In1_delimited = "\t";		// tab delimited
 				
 		if (In1_delimited != null) {
 			try {		
@@ -60,9 +56,7 @@ public class ReadRunInputs {
 //-------------------------------------------------------------------------------------------------------------------------------------------------	
 	
 	public void readManagementOptions (File file) {
-	//	delimited = ",";		// comma delimited
-	//	delimited = "\\s+";		// space delimited
-		In2_delimited = "\t";		// tab delimited
+		String In2_delimited = "\t";		// tab delimited
 				
 		if (In2_delimited != null) {
 			try {		

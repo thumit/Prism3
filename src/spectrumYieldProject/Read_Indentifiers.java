@@ -15,23 +15,15 @@ public class Read_Indentifiers {
 	private List<List<String>> allLayers;
 	private List<List<String>> allLayers_ToolTips;
 	
-	public Read_Indentifiers() {
+	public Read_Indentifiers(File file_StrataDefinition) {
 		
-//		File file = FilesChooser_Units.chosenManagementunit();	
-//		File file = new File("C:\\Users\\Dung Nguyen\\Desktop\\LayersDefinition(Matchyieldtable).csv");
-		File file = new File("C:\\Users\\Dung Nguyen\\Desktop\\LayersDefinition.csv");
-		
-		String delimited;
-			delimited = ","; // comma delimited
-		// delimited = "\\s+"; // space delimited
-		// delimited = "\t"; // tab delimited
-					
-			
+		String delimited = ","; // 		","		comma delimited			"\\s+"		space delimited		"\t"	tab delimited
+	
 		if (delimited != null) {
 			try {
 				// All lines to be in array
 				List<String> list;
-				list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
+				list = Files.readAllLines(Paths.get(file_StrataDefinition.getAbsolutePath()), StandardCharsets.UTF_8);
 				String[] a = list.toArray(new String[list.size()]);
 				int totalRows = a.length;
 				int totalCols = 2;
@@ -42,7 +34,7 @@ public class Read_Indentifiers {
 					String[] rowValue = a[i].split(delimited);
 					for (int j = 0; j < totalCols && j < rowValue.length; j++) {
 //						value[i][j] = rowValue[j].replaceAll("\\s+", "");		//Remove all the space in the String   
-						value[i][j] = rowValue[j];		//to make toolTp text separated with space, may need the above line if there is spaces in layer and elements name in the file LayersDefinition.csv
+						value[i][j] = rowValue[j];		//to make toolTp text separated with space, may need the above line if there is spaces in layer and elements name in the file StrataDefinition.csv
 					}
 				}
 	
