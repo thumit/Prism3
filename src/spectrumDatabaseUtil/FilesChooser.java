@@ -14,9 +14,12 @@ public class FilesChooser {
 		chooser.setApproveButtonText("Import");
 		chooser.setApproveButtonToolTipText("Import files as table");
 		
-		chooser.showOpenDialog(Spectrum_Main.mainFrameReturn());
-		File[] files;
-		files = chooser.getSelectedFiles();		
+		int returnValue = chooser.showOpenDialog(Spectrum_Main.mainFrameReturn());
+		File[] files = null;
+		if (returnValue == JFileChooser.APPROVE_OPTION) {
+
+			files = chooser.getSelectedFiles();
+		}
 		return files;
 	}
 	
@@ -30,9 +33,12 @@ public class FilesChooser {
 		chooser.setFileFilter(filter);
 		chooser.setAcceptAllFileFilterUsed(false);
 		
-		chooser.showOpenDialog(Spectrum_Main.mainFrameReturn());
-		File[] files;
-		files = chooser.getSelectedFiles();
+		int returnValue = chooser.showOpenDialog(Spectrum_Main.mainFrameReturn());
+		File[] files = null;
+		if (returnValue == JFileChooser.APPROVE_OPTION) {
+
+			files = chooser.getSelectedFiles();
+		}
 		return files;
 	}
 }

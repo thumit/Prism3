@@ -900,53 +900,57 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public void importDatabases() {
 		// Open File chooser
-		File[] files = FilesChooser.chosenDatabases(); 	
-		//Loop through all files, each is a table
-		for (int i = 0; i < files.length; i++) {							
-			File sourceFile = files[i];
-			File deskFile = new File(databasesFolder + seperator + sourceFile.getName());
-			// Copy and paste
-			String temptext = null;
-			try {
-				if (deskFile.exists() == false) {
-					Files.copy(sourceFile.toPath(), deskFile.toPath());
-					temptext = "'" + deskFile.getName() + "' has been imported";
-				} else if (deskFile.exists() == true) {	
-					int response = JOptionPane.showConfirmDialog(this, "Do you want to overwrite the existing database " + deskFile.getName() +" ?", "Confirm",
-							JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-					if (response == JOptionPane.NO_OPTION) {
-						temptext = "The existing database '" + deskFile.getName() + "' has not been overwritten";
-					} else if (response == JOptionPane.YES_OPTION) {
-						Files.copy(sourceFile.toPath(), deskFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-						temptext = "Existing database '" + deskFile.getName() + "' has been overwritten";
-					} else if (response == JOptionPane.CLOSED_OPTION) {
-						temptext = "'" + deskFile.getName() + "' has not been overwritten";
+		File[] files = FilesChooser.chosenDatabases(); 
+		
+		if (files!= null) {
+			//Loop through all files, each is a table
+			for (int i = 0; i < files.length; i++) {							
+				File sourceFile = files[i];
+				File deskFile = new File(databasesFolder + seperator + sourceFile.getName());
+				// Copy and paste
+				String temptext = null;
+				try {
+					if (deskFile.exists() == false) {
+						Files.copy(sourceFile.toPath(), deskFile.toPath());
+						temptext = "'" + deskFile.getName() + "' has been imported";
+					} else if (deskFile.exists() == true) {	
+						int response = JOptionPane.showConfirmDialog(this, "Do you want to overwrite the existing database " + deskFile.getName() +" ?", "Confirm",
+								JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+						if (response == JOptionPane.NO_OPTION) {
+							temptext = "The existing database '" + deskFile.getName() + "' has not been overwritten";
+						} else if (response == JOptionPane.YES_OPTION) {
+							Files.copy(sourceFile.toPath(), deskFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+							temptext = "Existing database '" + deskFile.getName() + "' has been overwritten";
+						} else if (response == JOptionPane.CLOSED_OPTION) {
+							temptext = "'" + deskFile.getName() + "' has not been overwritten";
+						}
+					}
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				// Make the new Databases appear on the TREE----------->YEAHHHHHHHHHHHHHHH
+				String DatabaseName = deskFile.getName();
+				refreshDatabaseTree();
+				@SuppressWarnings("unchecked")
+				Enumeration<DefaultMutableTreeNode> e = root.depthFirstEnumeration();
+				while (e.hasMoreElements()) { // Search for the name that match
+					DefaultMutableTreeNode node = e.nextElement();
+					if (node.toString().equalsIgnoreCase(DatabaseName) && root.isNodeChild(node)) {		//Name match, and node is child of root
+						DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();
+						TreeNode[] nodes = model.getPathToRoot(node);
+						TreePath path = new TreePath(nodes);
+						DatabaseTree.scrollPathToVisible(path);
+						DatabaseTree.setSelectionPath(path);
+						editingPath = path;
 					}
 				}
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+				dataDisplayTextField.setText(temptext);
+			} // end of For loop
 			
-			// Make the new Databases appear on the
-			// TREE----------->YEAHHHHHHHHHHHHHHH
-			String DatabaseName = deskFile.getName();
-			refreshDatabaseTree();
-			@SuppressWarnings("unchecked")
-			Enumeration<DefaultMutableTreeNode> e = root.depthFirstEnumeration();
-			while (e.hasMoreElements()) { // Search for the name that match
-				DefaultMutableTreeNode node = e.nextElement();
-				if (node.toString().equalsIgnoreCase(DatabaseName) && root.isNodeChild(node)) {		//Name match, and node is child of root
-					DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();
-					TreeNode[] nodes = model.getPathToRoot(node);
-					TreePath path = new TreePath(nodes);
-					DatabaseTree.scrollPathToVisible(path);
-					DatabaseTree.setSelectionPath(path);
-					editingPath = path;
-				}
-			}
-			dataDisplayTextField.setText(temptext);
-		} // end of For loop
+					
+		}	
 	}
 	
 	//--------------------------------------------------------------------------------------------------------------------------------
@@ -955,164 +959,165 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		// Open File chooser
 		File[] files = FilesChooser.chosenTables(); 
 		
-		
-		// Loop through all files to get extension, match extension with delimited
-		List<String> extentionList = new ArrayList<String>();	//A list contain all extension that have its delimited identified							
-		List<String> delimitedList = new ArrayList<String>();	//A list contain all delimited. same structure as the extentionList	
-			
-		for (int i = 0; i < files.length; i++) {
-			if (files[i].isFile()) {
-				File currentfile = files[i];
-				String extension = null;
-				fileDelimited = null;
-				int jj = currentfile.getName().lastIndexOf('.');
-				if (jj > 0) {
-					extension = currentfile.getName().substring(jj + 1);
-				}
-				if (extension.toUpperCase().equals("CSV")) {
-					fileDelimited = ",";
-					extentionList.add("CSV");
-					delimitedList.add(",");
-				} else if (extension.toUpperCase().equals("YLD")) {
-					fileDelimited = "\\s+";
-					extentionList.add("YLD");
-					delimitedList.add("\\s+");
-				} else if (!extentionList.contains(extension.toUpperCase())) {
-					// Choose the right delimited
-					// JDialog.setDefaultLookAndFeelDecorated(true);
-					UIManager.put("OptionPane.cancelButtonText", "Cancel");
-					UIManager.put("OptionPane.okButtonText", "Import");
-
-					Object[] selectionValues = { "Comma", "Space", "Tab" };
-					String initialSelection = "Comma";
-					String selection = (String) JOptionPane.showInputDialog(this, "The delimited type for all of your '." + extension + "' files (i.e. " + currentfile.getName() + ") would be",
-							"Please help SpectrumLite identify delimited type", JOptionPane.QUESTION_MESSAGE, null, selectionValues, initialSelection);
-						
-					if (selection == "Comma") {
-						fileDelimited = ",";
-					} else if (selection == "Space") {
-						fileDelimited = "\\s+";
-					} else if (selection == "Tab") {
-						fileDelimited = "\t";
-					} else if (selection == null) {
-						fileDelimited = null;
+		if (files!= null) {
+			// Loop through all files to get extension, match extension with delimited
+			List<String> extentionList = new ArrayList<String>();	//A list contain all extension that have its delimited identified							
+			List<String> delimitedList = new ArrayList<String>();	//A list contain all delimited. same structure as the extentionList	
+				
+			for (int i = 0; i < files.length; i++) {
+				if (files[i].isFile()) {
+					File currentfile = files[i];
+					String extension = null;
+					fileDelimited = null;
+					int jj = currentfile.getName().lastIndexOf('.');
+					if (jj > 0) {
+						extension = currentfile.getName().substring(jj + 1);
 					}
-					extentionList.add(extension.toUpperCase());
-					delimitedList.add(fileDelimited);
+					if (extension.toUpperCase().equals("CSV")) {
+						fileDelimited = ",";
+						extentionList.add("CSV");
+						delimitedList.add(",");
+					} else if (extension.toUpperCase().equals("YLD")) {
+						fileDelimited = "\\s+";
+						extentionList.add("YLD");
+						delimitedList.add("\\s+");
+					} else if (!extentionList.contains(extension.toUpperCase())) {
+						// Choose the right delimited
+						// JDialog.setDefaultLookAndFeelDecorated(true);
+						UIManager.put("OptionPane.cancelButtonText", "Cancel");
+						UIManager.put("OptionPane.okButtonText", "Import");
 
-					UIManager.put("OptionPane.cancelButtonText", "Cancel");
-					UIManager.put("OptionPane.okButtonText", "Ok");
+						Object[] selectionValues = { "Comma", "Space", "Tab" };
+						String initialSelection = "Comma";
+						String selection = (String) JOptionPane.showInputDialog(this, "The delimited type for all of your '." + extension + "' files (i.e. " + currentfile.getName() + ") would be",
+								"Please help SpectrumLite identify delimited type", JOptionPane.QUESTION_MESSAGE, null, selectionValues, initialSelection);
+							
+						if (selection == "Comma") {
+							fileDelimited = ",";
+						} else if (selection == "Space") {
+							fileDelimited = "\\s+";
+						} else if (selection == "Tab") {
+							fileDelimited = "\t";
+						} else if (selection == null) {
+							fileDelimited = null;
+						}
+						extentionList.add(extension.toUpperCase());
+						delimitedList.add(fileDelimited);
+
+						UIManager.put("OptionPane.cancelButtonText", "Cancel");
+						UIManager.put("OptionPane.okButtonText", "Ok");
+					}
 				}
 			}
-		}
-												
-		
-		
-		//Prepared statement multiple level
-		try {
-			//-------------------------------------------------
-			Class.forName("org.sqlite.JDBC").newInstance();
-			conn = DriverManager.getConnection("jdbc:sqlite:" + databasesFolder + seperator + currentDatabase);
+													
+			
+			
+			//Prepared statement multiple level
+			try {
+				//-------------------------------------------------
+				Class.forName("org.sqlite.JDBC").newInstance();
+				conn = DriverManager.getConnection("jdbc:sqlite:" + databasesFolder + seperator + currentDatabase);
 
-			conn.setAutoCommit(false);										
-			PreparedStatement pst = null;
+				conn.setAutoCommit(false);										
+				PreparedStatement pst = null;
+				//-------------------------------------------------
+		
+				// Loop through all saved extension to find the one match the current file, then return the delimited for that file 
+				for (int i = 0; i < files.length; i++) {
+					if (files[i].isFile()) {
+						String extension = null;
+						File currentfile = files[i];
+						int jj = currentfile.getName().lastIndexOf('.');
+						if (jj > 0) {
+							extension = currentfile.getName().substring(jj + 1);
+						}
+		
+						// Find the delimited of this
+						// currentFile
+						for (int j = 0; j < extentionList.size(); j++) {
+							if (extentionList.get(j).equals(extension.toUpperCase())) {
+								fileDelimited = delimitedList.get(j); // This is the returned delimited
+							}
+						}
+		
+						
+						if (fileDelimited != null) {
+							// Get info from the file
+							SQLite.create_importTable_Stm(currentfile);		//Read file into arrays
+							String[] statement = new String [SQLite.get_importTable_TotalLines()];		//this arrays hold all the statements
+							statement = SQLite.get_importTable_Stm();	
+
+							// prepared execution
+							for (int line = 0; line < SQLite.get_importTable_TotalLines(); line++) {
+								pst = conn.prepareStatement(statement[line]);
+								pst.executeUpdate();
+							}
+						}
+					} // end of If
+				} // end of For loop
+			
+		
+			
+			//Commit execution-------------------------------------------------
+				pst.close();
+				conn.commit(); // commit all prepared execution, this is important
+				conn.close();
+
+			} catch (InstantiationException e) {
+				JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
+				errorCAUGHT = true;
+			} catch (IllegalAccessException e) {
+				JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
+				errorCAUGHT = true;
+			} catch (ClassNotFoundException e) {
+				JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
+				errorCAUGHT = true;
+			} catch (SQLException e) {
+				JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
+				errorCAUGHT = true;
+			}		
 			//-------------------------------------------------
-	
-			// Loop through all saved extension to find the one match the current file, then return the delimited for that file 
+			
+		
+			
+			//Show new impoted tables-----------------------------------------------------------------------
+			int count = 0; // just help to know how many tables have been added
 			for (int i = 0; i < files.length; i++) {
 				if (files[i].isFile()) {
 					String extension = null;
 					File currentfile = files[i];
 					int jj = currentfile.getName().lastIndexOf('.');
-					if (jj > 0) {
+					if (jj > 0) {		//to prevent empty name (before dot) where jj=0, or no dot where jj=-1 
 						extension = currentfile.getName().substring(jj + 1);
 					}
-	
-					// Find the delimited of this
-					// currentFile
-					for (int j = 0; j < extentionList.size(); j++) {
-						if (extentionList.get(j).equals(extension.toUpperCase())) {
-							fileDelimited = delimitedList.get(j); // This is the returned delimited
-						}
+
+					// add import tables into selection path
+					if (errorCAUGHT.equals(false)) {
+						// Make the new table appear on the
+						// TREE----------->YEAHHHHHHHHHHHHHHH
+						String tableName = currentfile.getName();
+						if (tableName.contains("."))
+							tableName = tableName.substring(0, tableName.lastIndexOf('.'));
+						final String NodeName = tableName;
+						DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();
+						DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(NodeName);
+						model.insertNodeInto(newNode, processingNode, processingNode.getChildCount());
+						TreeNode[] nodes = model.getPathToRoot(newNode);
+						TreePath path = new TreePath(nodes);
+						DatabaseTree.scrollPathToVisible(path);
+						// DatabaseTree.setEnabled(false);
+						// DatabaseTree.setEditable(true);
+						if (count == 0)
+							DatabaseTree.setSelectionPath(path); // this help deselect all original nodes
+						// DatabaseTree.startEditingAtPath(path);
+						editingPath = path;
+						DatabaseTree.getSelectionModel().addSelectionPath(path); // add childs into selection but not show table
+						count++;
 					}
-	
-					
-					if (fileDelimited != null) {
-						// Get info from the file
-						SQLite.create_importTable_Stm(currentfile);		//Read file into arrays
-						String[] statement = new String [SQLite.get_importTable_TotalLines()];		//this arrays hold all the statements
-						statement = SQLite.get_importTable_Stm();	
-
-						// prepared execution
-						for (int line = 0; line < SQLite.get_importTable_TotalLines(); line++) {
-							pst = conn.prepareStatement(statement[line]);
-							pst.executeUpdate();
-						}
-					}
-				} // end of If
-			} // end of For loop
-		
-	
-		
-		//Commit execution-------------------------------------------------
-			pst.close();
-			conn.commit(); // commit all prepared execution, this is important
-			conn.close();
-
-		} catch (InstantiationException e) {
-			JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
-			errorCAUGHT = true;
-		} catch (IllegalAccessException e) {
-			JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
-			errorCAUGHT = true;
-		} catch (ClassNotFoundException e) {
-			JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
-			errorCAUGHT = true;
-		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
-			errorCAUGHT = true;
-		}		
-		//-------------------------------------------------
-		
-	
-		
-		//Show new impoted tables-----------------------------------------------------------------------
-		int count = 0; // just help to know how many tables have been added
-		for (int i = 0; i < files.length; i++) {
-			if (files[i].isFile()) {
-				String extension = null;
-				File currentfile = files[i];
-				int jj = currentfile.getName().lastIndexOf('.');
-				if (jj > 0) {		//to prevent empty name (before dot) where jj=0, or no dot where jj=-1 
-					extension = currentfile.getName().substring(jj + 1);
+					errorCAUGHT = false;
 				}
-
-				// add import tables into selection path
-				if (errorCAUGHT.equals(false)) {
-					// Make the new table appear on the
-					// TREE----------->YEAHHHHHHHHHHHHHHH
-					String tableName = currentfile.getName();
-					if (tableName.contains("."))
-						tableName = tableName.substring(0, tableName.lastIndexOf('.'));
-					final String NodeName = tableName;
-					DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();
-					DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(NodeName);
-					model.insertNodeInto(newNode, processingNode, processingNode.getChildCount());
-					TreeNode[] nodes = model.getPathToRoot(newNode);
-					TreePath path = new TreePath(nodes);
-					DatabaseTree.scrollPathToVisible(path);
-					// DatabaseTree.setEnabled(false);
-					// DatabaseTree.setEditable(true);
-					if (count == 0)
-						DatabaseTree.setSelectionPath(path); // this help deselect all original nodes
-					// DatabaseTree.startEditingAtPath(path);
-					editingPath = path;
-					DatabaseTree.getSelectionModel().addSelectionPath(path); // add childs into selection but not show table
-					count++;
-				}
-				errorCAUGHT = false;
-			}
-		} // end of For loop
+			} // end of For loop						
+		}
 	}
 
 	//--------------------------------------------------------------------------------------------------------------------------------

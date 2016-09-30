@@ -19,9 +19,12 @@ public class FilesChooser_Database {
 		chooser.setFileFilter(filter);
 		chooser.setAcceptAllFileFilterUsed(false);
 		
-		chooser.showOpenDialog(Spectrum_Main.mainFrameReturn());
-		File file;
-		file = chooser.getSelectedFile();
+		int returnValue = chooser.showOpenDialog(Spectrum_Main.mainFrameReturn());
+		File file = null;
+		if (returnValue == JFileChooser.APPROVE_OPTION) {
+			file = chooser.getSelectedFile();
+		}
+
 		return file;
 	}
 }
