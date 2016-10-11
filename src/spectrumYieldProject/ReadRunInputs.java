@@ -22,16 +22,16 @@ public class ReadRunInputs {
 			List<String> list;
 			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
 			String[] a = list.toArray(new String[list.size()]);
-						
+								
 			//Read the first row
-			String[] columnName = a[0].split(delimited);
-			GI_totalRows = a.length;
+			String[] columnName = a[0].split(delimited);	//Read the first row
+			GI_totalRows = a.length - 1;	// - 1st row which is the column name
 			GI_totalColumns = columnName.length;				
 			GI_value = new String[GI_totalRows][GI_totalColumns];
 		
 			// read all values from all rows and columns
 			for (int i = 0; i < GI_totalRows; i++) {		//From 1st row			
-				String[] rowValue = a[i].split(delimited);		
+				String[] rowValue = a[i+1].split(delimited);		
 				for (int j = 0; j < GI_totalColumns; j++) {
 					GI_value[i][j] = rowValue[j].replaceAll("\\s+","");
 				}
@@ -258,12 +258,11 @@ public class ReadRunInputs {
 	
 	
 	public List<List<String>> get_all_staticIdentifiers_in_row (int row) {	//Column 7 in the GUI table "Static identifiers". The whole is contained by UC_value[i][7]
-		List<List<String>> all_staticIdentifiers = new ArrayList<List<String>>();;
+		List<List<String>> all_staticIdentifiers = new ArrayList<List<String>>();
 		
 		//Read the whole cell into array
 		String[] staticLayer_Info = UC_value[row][7].split(";");		//Note: row 0 is the title only, row 1 is constraint 1,.....
 		int total_staticIdentifiers = staticLayer_Info.length;
-	
 		
 		//Get all static Identifiers to be in the list
 		for (int i = 0; i < total_staticIdentifiers; i++) {		//6 first identifiers is strata 6 layers (layer 0 to 5)		
@@ -345,26 +344,84 @@ public class ReadRunInputs {
 	
 	public List<String> get_static_timePeriods (int row) {	
 		List<List<String>> all_staticIdentifiers = get_all_staticIdentifiers_in_row(row);
-		List<String> static_timePeriods = all_staticIdentifiers.get(7);
+		List<String> static_timePeriods = all_staticIdentifiers.get(7);	
 		return static_timePeriods;
 	}	
 
+	
+	
+	public List<List<String>> get_all_dynamicIdentifiers_in_row (int row) {	//Column 8 in the GUI table "Dynamic identifiers". The whole is contained by UC_value[i][8]
+		List<List<String>> all_dynamicIdentifiers = new ArrayList<List<String>>();
+		
+		//Read the whole cell into array
+		String[] dynamicLayer_Info = UC_value[row][8].split(";");		//Note: row 0 is the title only, row 1 is constraint 1,.....
+		int total_dynamicIdentifiers = dynamicLayer_Info.length;
+	
+		
+		//Get all dynamic Identifiers to be in the list
+		for (int i = 0; i < total_dynamicIdentifiers; i++) {	
+			List<String> thisIdentifier = new ArrayList<String>();
+			
+			String[] identifierElements = dynamicLayer_Info[i].split("\\s+");				//space delimited
+			for (int j = 1; j < identifierElements.length; j++) {		//Ignore the first element which is the identifier column index, so we loop from 1 not 0
+				thisIdentifier.add(identifierElements[j].replaceAll("\\s+",""));		//Add element name, if name has spaces then remove all the spaces
+			}
+			
+			all_dynamicIdentifiers.add(thisIdentifier);
+		}
+			
+		return all_dynamicIdentifiers;
+	}	
+	
+	
+	public List<String> get_all_dynamicIdentifiers_columnsIndexes_in_row (int row) {	//Column 8 in the GUI table "Dynamic identifiers". The whole is contained by UC_value[i][8]
+		List<String> all_dynamicIdentifiers_columnIndexes = new ArrayList<String>();
+			
+		//Read the whole cell into array
+		String[] dynamicLayer_Info = UC_value[row][8].split(";");		//Note: row 0 is the title only, row 1 is constraint 1,.....
+		int total_dynamicIdentifiers = dynamicLayer_Info.length;
+
+		//Get all dynamic Identifiers to be in the list
+		for (int i = 0; i < total_dynamicIdentifiers; i++) {	
+			String[] identifierElements = dynamicLayer_Info[i].split("\\s+");				//space delimited
+			//add the first element which is the identifier column index
+			all_dynamicIdentifiers_columnIndexes.add(identifierElements[0].replaceAll("\\s+",""));
+		}
+			
+		return all_dynamicIdentifiers_columnIndexes;
+	}	
+	
+	
+	
+	
+	public List<String> get_Parameters_indexes_list (int row) {	
+		List<String> parameters_indexes_list = new ArrayList<String>();
+		
+		//Read the whole cell into array
+		String[] parameter_Info = UC_value[row][6].split("\\s+");			
+		for (int i = 0; i < parameter_Info.length; i++) {	
+			parameters_indexes_list.add(parameter_Info[i].replaceAll("\\s+",""));
+		}				
+		return parameters_indexes_list;
+	}	
 //-------------------------------------------------------------------------------------------------------------------------------------------------	
 	//For readCoverTypeConversions
 	private List<String> coverTypeConversions_list;	
 	
 	public void readCoverTypeConversions (File file) {
-	//	delimited = ",";		// comma delimited
-		String delimited = "\\s+";		// space delimited
-	//	delimited = "\t";		// tab delimited
+		try {		
+			// All lines except the 1st line to be in a list;		
+			List<String> list;	
+			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
+			list.remove(0);	//Remove the first row "From" "To"
 		
-		if (delimited != null) {
-			try {		
-				// All lines to be in coverType_list;	
-				coverTypeConversions_list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
-			} catch (IOException e) {
-				System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			coverTypeConversions_list = new ArrayList<String>();
+			for (int i = 0; i < list.size(); i++) {
+				coverTypeConversions_list.add(list.get(i).replaceAll("\t", " "));
 			}
+
+		} catch (IOException e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 		}
 	}
 	

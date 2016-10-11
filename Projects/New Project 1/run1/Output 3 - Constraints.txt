@@ -1,0 +1,2 @@
+Index	Slack	Dual
+1	300000.0	-0.0

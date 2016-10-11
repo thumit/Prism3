@@ -131,7 +131,7 @@ public class Read_Indentifiers {
 		layer1.add("Even Age");
 		layer1.add("Group Selection");
 		layer1.add("Prescribed Burn");
-		layer1.add("Natural Growth e");
+		layer1.add("Natural Growth");
 
 		
 		List<String> layer2 = new ArrayList<String>();		//Time Periods
@@ -166,7 +166,7 @@ public class Read_Indentifiers {
 			try {
 				file_SpectrumLiteLibrary = new File("SpectrumLiteLibrary.csv");
 
-				InputStream initialStream = getClass().getResourceAsStream("SpectrumLiteLibrary.csv"); //Default definition
+				InputStream initialStream = getClass().getResourceAsStream("/SpectrumLiteLibrary.csv"); //Default definition
 				byte[] buffer = new byte[initialStream.available()];
 				initialStream.read(buffer);
 

@@ -44,7 +44,7 @@ public class FilesChooser_StrataDefinition {
 				try {
 					File file_StrataDefinition = new File("StrataDefinition.csv");	
 						
-					InputStream initialStream = Panel_EditRun_Details.class.getResourceAsStream("StrataDefinition.csv");		//Default definition
+					InputStream initialStream = Panel_EditRun_Details.class.getResourceAsStream("/StrataDefinition.csv");		//Default definition
 					byte[] buffer = new byte[initialStream.available()];
 					initialStream.read(buffer);
 

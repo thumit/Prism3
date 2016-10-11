@@ -2,6 +2,12 @@ package spectrumYieldProject;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -9,38 +15,68 @@ import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.util.Enumeration;
+import java.util.List;
 
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.JTree;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.ToolTipManager;
+import javax.swing.border.TitledBorder;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
-import spectrumGUI.Spectrum_Main;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.block.BlockBorder;
+import org.jfree.chart.labels.PieSectionLabelGenerator;
+import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
+import org.jfree.chart.plot.PieLabelLinkStyle;
+import org.jfree.chart.plot.PiePlot3D;
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.data.general.PieDataset;
+import org.jfree.util.Rotation;
 
+import spectrumGUI.Spectrum_Main;
 @SuppressWarnings("serial")
 public class Panel_YieldProject extends JLayeredPane {
 	private JSplitPane splitPanel;
 	private Panel_EditRun editPanel;		// This panel only visible when "Start Editing"
 	private Panel_SolveRun solvePanel;		// This panel only visible when "Start Solving"
-	private JButton btnNewRun, btnDeleteRun, btnEditRun, btnSolveRun;
+	private Panel_CustomizeOutput customizeOutputPanel;		// This panel only visible when Start "Customize Output"
+	private JButton btnNewRun, btnDeleteRun, btnEditRun, btnRefresh, btnSolveRun, btnCustomizeOutput;
+	private ImageIcon icon;
+	private Image scaleImage;
 	
 	private String workingLocation;
 	private static File[] listOfEditRuns;
@@ -59,10 +95,20 @@ public class Panel_YieldProject extends JLayeredPane {
 	private Boolean renaming = false;
 	private Boolean isProjectNewlyCreatedOrOpened = true;
 
-	private JToolBar projectToolBar;
+	private ToolBarWithBgImage projectToolBar;
+	
+	private JScrollPane scrollPane_Left, scrollPane_Right;
 
+	
+	private int rowCount, colCount;
+	private String[] columnNames;
+	private JTable table;
+	private MyTableModel model;
+	private Object[][] data;	
+	
 	public Panel_YieldProject() {
 		super.setLayout(new BorderLayout(0, 0));
+		ToolTipManager.sharedInstance().setInitialDelay(0);		//Show toolTip immediately
 
 		splitPanel = new JSplitPane();
 		// splitPane.setResizeWeight(0.15);
@@ -72,7 +118,7 @@ public class Panel_YieldProject extends JLayeredPane {
 		// splitPane.getComponent(2).setCursor(new Cursor(Cursor.HAND_CURSOR));
 
 		// Left split panel--------------------------------------------------------------------------------
-		JScrollPane scrollPane_Left = new JScrollPane();
+		scrollPane_Left = new JScrollPane();
 		splitPanel.setLeftComponent(scrollPane_Left);
 		root = new DefaultMutableTreeNode("Runs");
 		projectTree = new JTree(root); // Add the root of DatabaseTree
@@ -105,23 +151,32 @@ public class Panel_YieldProject extends JLayeredPane {
 		scrollPane_Left.setViewportView(projectTree);
 
 		// Right split panel-------------------------------------------------------------------------------
-		JScrollPane scrollPane_Right = new JScrollPane();
+		scrollPane_Right = new JScrollPane();
 		splitPanel.setRightComponent(scrollPane_Right);
 		
 		rightPanelTextArea = new JTextArea();
 		rightPanelTextArea.setEditable(false);
-		scrollPane_Right.setViewportView(rightPanelTextArea);
+//		scrollPane_Right.setViewportView(rightPanelTextArea); 
 		
 		// TextField at South----------------------------------------------
 		displayTextField = new JTextField("", 0);
 		displayTextField.setEditable(false);
 
 		// projectToolBar at North-------------------------------------------------------------------------
-		projectToolBar = new JToolBar("Project Tools", 0);
+//		icon = new ImageIcon(getClass().getResource("/spectrumlite.png"));
+//		scaleImage = icon.getImage().getScaledInstance(250, 30,Image.SCALE_SMOOTH);
+//		projectToolBar = new ToolBarWithBgImage("Project Tools", JToolBar.HORIZONTAL, new ImageIcon(scaleImage));
+		projectToolBar = new ToolBarWithBgImage("Project Tools", JToolBar.HORIZONTAL, null);
 		projectToolBar.setFloatable(false);	//to make a tool bar immovable
 		projectToolBar.setRollover(true);	//to visually indicate tool bar buttons when the user passes over them with the cursor
 
-		btnNewRun = new JButton("New Run");
+
+	
+		btnNewRun = new JButton();
+		btnNewRun.setToolTipText("New Run");
+		icon = new ImageIcon(getClass().getResource("/icon_new.png"));
+		scaleImage = icon.getImage().getScaledInstance(25, 25,Image.SCALE_SMOOTH);
+		btnNewRun.setIcon(new ImageIcon(scaleImage));
 		btnNewRun.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
@@ -132,7 +187,11 @@ public class Panel_YieldProject extends JLayeredPane {
 		});
 		projectToolBar.add(btnNewRun);
 		
-		btnDeleteRun = new JButton("Delete Runs");
+		btnDeleteRun = new JButton();
+		btnDeleteRun.setToolTipText("Delete Runs");
+		icon = new ImageIcon(getClass().getResource("/icon_delete.png"));
+		scaleImage = icon.getImage().getScaledInstance(25, 25,Image.SCALE_SMOOTH);
+		btnDeleteRun.setIcon(new ImageIcon(scaleImage));
 		btnDeleteRun.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
@@ -141,7 +200,26 @@ public class Panel_YieldProject extends JLayeredPane {
 		});
 		projectToolBar.add(btnDeleteRun);
 
-		btnEditRun = new JButton("Start Editing");
+		
+		btnRefresh = new JButton();
+		btnRefresh.setToolTipText("Refresh");
+		icon = new ImageIcon(getClass().getResource("/icon_refresh.png"));
+		scaleImage = icon.getImage().getScaledInstance(25, 25,Image.SCALE_SMOOTH);
+		btnRefresh.setIcon(new ImageIcon(scaleImage));
+		btnRefresh.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				refreshProjectTree();
+			}
+		});
+		projectToolBar.add(btnRefresh);
+		
+		
+		btnEditRun = new JButton();
+		btnEditRun.setToolTipText("Start Editing");
+		icon = new ImageIcon(getClass().getResource("/icon_edit.png"));
+		scaleImage = icon.getImage().getScaledInstance(25, 25,Image.SCALE_SMOOTH);
+		btnEditRun.setIcon(new ImageIcon(scaleImage));
 		btnEditRun.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
@@ -150,7 +228,12 @@ public class Panel_YieldProject extends JLayeredPane {
 		});
 		projectToolBar.add(btnEditRun);
 		
-		btnSolveRun = new JButton("Start Solving");
+		
+		btnSolveRun = new JButton();
+		btnSolveRun.setToolTipText("Start Solving");
+		icon = new ImageIcon(getClass().getResource("/icon_solve.png"));
+		scaleImage = icon.getImage().getScaledInstance(25, 25,Image.SCALE_SMOOTH);
+		btnSolveRun.setIcon(new ImageIcon(scaleImage));
 		btnSolveRun.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
@@ -158,6 +241,20 @@ public class Panel_YieldProject extends JLayeredPane {
 			}
 		});
 		projectToolBar.add(btnSolveRun);
+		
+		
+		btnCustomizeOutput = new JButton();
+		btnCustomizeOutput.setToolTipText("Customize Output");
+		icon = new ImageIcon(getClass().getResource("/icon_customize.png"));
+		scaleImage = icon.getImage().getScaledInstance(25, 25,Image.SCALE_SMOOTH);
+		btnCustomizeOutput.setIcon(new ImageIcon(scaleImage));
+		btnCustomizeOutput.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				customize_Output();
+			}
+		});
+		projectToolBar.add(btnCustomizeOutput);
 
 		//------------------------------------------------------------------------------------------------
 		// Add all components to JInternalFrame------------------------------------------------------------
@@ -209,17 +306,102 @@ public class Panel_YieldProject extends JLayeredPane {
 					// Get the parent node which is the Run that contains the selected InputFile
 					currentRun = selectedNode.getParent().toString();          
 					// Show the GUI for the currentInputFile here....	
+//					try {
+//						FileReader reader;
+//						reader = new FileReader(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/" + currentInputFile);
+//						rightPanelTextArea.read(reader,currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/" + currentInputFile);	
+//						reader.close();			//must close it otherwise, file is in use and cannot be deleted					
+//					} catch (IOException e1) {
+//						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+//					}
+					
+					
 					try {
-						FileReader reader;
-						reader = new FileReader(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/" + currentInputFile);
-						rightPanelTextArea.read(reader,currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/" + currentInputFile);	
-						reader.close();			//must close it otherwise, file is in use and cannot be deleted
+						String delimited = "\t";		// tab delimited
+						File file = new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/" + currentInputFile);
+						List<String> list;
+						list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);			
+						String[] a = list.toArray(new String[list.size()]);					
+														
+						//Setup the table--------------------------------------------------------------------------------
+						columnNames = a[0].split(delimited);		//tab delimited		//Read the first row	
+						rowCount = a.length - 1;  // - 1st row which is the column name
+						colCount = columnNames.length;
+						data = new Object[rowCount][colCount];
+					
+						
+						// Populate the data matrix
+						for (int row = 0; row < rowCount; row++) {
+							String[] rowValue = a[row + 1].split(delimited);	//tab delimited	
+							for (int col = 0; col < colCount; col++) {
+								data[row][col] = rowValue[col];
+							}	
+						}	
+						
+						
+						//Create a table
+						model = new MyTableModel();
+						table = new JTable(model) {
+							@Override			//These override is to make the width of the cell fit all contents of the cell
+							public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+								// For the cells in table								
+								Component component = super.prepareRenderer(renderer, row, column);
+								int rendererWidth = component.getPreferredSize().width;
+								TableColumn tableColumn = getColumnModel().getColumn(column);
+								int maxWidth = Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth());
+								
+								// For the column names
+								TableCellRenderer renderer2 = table.getTableHeader().getDefaultRenderer();	
+								Component component2 = renderer2.getTableCellRendererComponent(table,
+							            tableColumn.getHeaderValue(), false, false, -1, column);
+								maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
+								
+								tableColumn.setPreferredWidth(maxWidth);
+								return component;
+							}
+						};
+						
+						
+//						table.getColumnModel().getColumn(1).setPreferredWidth(100);	//Set width of Column 'Validation'
+						DefaultTableCellRenderer renderer = (DefaultTableCellRenderer)table.getDefaultRenderer(Object.class);
+						renderer.setHorizontalAlignment(SwingConstants.LEFT);		// Set alignment of values in the table to the left side
+			     		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+//						table.setPreferredScrollableViewportSize(new Dimension(400, 100));
+//						table.setFillsViewportHeight(true);
+						table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+						
+
+				
+//						//Make everything transparent
+//						renderer.setOpaque(false);
+//						table.setOpaque(false);
+//						scrollPane_Right.setOpaque(false);
+						
+						
+						if (currentInputFile.equals("Output 4 - Management_Overview.txt")) {		//show a panel with chart if the selected node name is "Output 4 - Management_Overview.txt"
+							scrollPane_Right.setViewportView(new PaneL_Management_Overview(table));
+							
+							table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+							table.addMouseListener(new MouseAdapter() { // Add listener
+								public void mouseReleased(MouseEvent e) {
+									scrollPane_Right.setViewportView(new PaneL_Management_Overview(table));
+								}
+							});
+							
+						} else {		//Show the file as table
+							scrollPane_Right.setViewportView(table); 
+						}
+						
 					} catch (IOException e1) {
 						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
-					}
-					
+					}				
+										
+
+						
+			
 				} else if (currentLevel != 3) {		
 					rightPanelTextArea.setText("");
+					showNothing();
 					if (currentLevel == 2) currentRun = selectedNode.getUserObject().toString();	// the selected node is a Run
 					if (currentLevel == 1) currentRun = selectedNode.getUserObject().toString();	// the selected node is Root
 				}
@@ -272,6 +454,9 @@ public class Panel_YieldProject extends JLayeredPane {
 
 					// All nodes can be refreshed ------------------------------------------------------------
 					final JMenuItem refreshMenuItem = new JMenuItem("Refresh");
+					icon = new ImageIcon(getClass().getResource("/icon_refresh.png"));
+					scaleImage = icon.getImage().getScaledInstance(15, 15,Image.SCALE_SMOOTH);
+					refreshMenuItem.setIcon(new ImageIcon(scaleImage));
 					refreshMenuItem.addActionListener(new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent actionEvent) {
@@ -287,6 +472,9 @@ public class Panel_YieldProject extends JLayeredPane {
 					if ((currentLevel == 1) && NodeCount == 1) {
 						final String Menuname = "New Run";
 						final JMenuItem newMenuItem = new JMenuItem(Menuname);
+						icon = new ImageIcon(getClass().getResource("/icon_new.png"));
+						scaleImage = icon.getImage().getScaledInstance(15, 15,Image.SCALE_SMOOTH);
+						newMenuItem.setIcon(new ImageIcon(scaleImage));
 						newMenuItem.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent actionEvent) {
@@ -300,6 +488,9 @@ public class Panel_YieldProject extends JLayeredPane {
 					// Only nodes level 2 (Run) can be Deleted--------------------------
 					if (currentLevel == 2 && rootSelected ==false) {					
 						final JMenuItem deleteMenuItem = new JMenuItem("Delete Runs");
+						icon = new ImageIcon(getClass().getResource("/icon_delete.png"));
+						scaleImage = icon.getImage().getScaledInstance(15, 15,Image.SCALE_SMOOTH);
+						deleteMenuItem.setIcon(new ImageIcon(scaleImage));
 						deleteMenuItem.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent actionEvent) {								
@@ -313,6 +504,9 @@ public class Panel_YieldProject extends JLayeredPane {
 					// Only nodes level 2 (Run) can be Edited--------------------------
 					if (currentLevel == 2 && rootSelected ==false) {					
 						final JMenuItem editMenuItem = new JMenuItem("Start Editing");
+						icon = new ImageIcon(getClass().getResource("/icon_edit.png"));
+						scaleImage = icon.getImage().getScaledInstance(15, 15,Image.SCALE_SMOOTH);
+						editMenuItem.setIcon(new ImageIcon(scaleImage));
 						editMenuItem.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent actionEvent) {								
@@ -326,6 +520,9 @@ public class Panel_YieldProject extends JLayeredPane {
 					// Only nodes level 2 (Run) can be Solved--------------------------
 					if (currentLevel == 2 && rootSelected ==false) {					
 						final JMenuItem solveMenuItem = new JMenuItem("Start Solving");
+						icon = new ImageIcon(getClass().getResource("/icon_solve.png"));
+						scaleImage = icon.getImage().getScaledInstance(15, 15,Image.SCALE_SMOOTH);
+						solveMenuItem.setIcon(new ImageIcon(scaleImage));
 						solveMenuItem.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent actionEvent) {								
@@ -333,7 +530,22 @@ public class Panel_YieldProject extends JLayeredPane {
 							}
 						});
 						popup.add(solveMenuItem);
-					}				
+					}	
+					
+					// Only nodes level 2 (Run) can be Customize output--------------------------
+					if (currentLevel == 2 && rootSelected ==false) {					
+						final JMenuItem customizeOutput_MenuItem = new JMenuItem("Customize Output");
+						icon = new ImageIcon(getClass().getResource("/icon_customize.png"));
+						scaleImage = icon.getImage().getScaledInstance(15, 15,Image.SCALE_SMOOTH);
+						customizeOutput_MenuItem.setIcon(new ImageIcon(scaleImage));
+						customizeOutput_MenuItem.addActionListener(new ActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent actionEvent) {								
+								customize_Output();
+							}
+						});
+						popup.add(customizeOutput_MenuItem);
+					}
 					
 					// Show the JmenuItems on selected node when it is right clicked
 					popup.show(projectTree, e.getX(), e.getY());
@@ -425,7 +637,8 @@ public class Panel_YieldProject extends JLayeredPane {
 	
 			} // end of If
 		} // end of For loop		
-				projectTree.expandPath(new TreePath(root.getPath()));	//Expand the root		
+				projectTree.expandPath(new TreePath(root.getPath()));	//Expand the root	
+				if (scrollPane_Right != null) showNothing();
 	} // end of Refresh()
 		
 	// --------------------------------------------------------------------------------------------------------------------------------
@@ -542,7 +755,7 @@ public class Panel_YieldProject extends JLayeredPane {
 	public void edit_Runs() {
 		
 		// For Start Editing
-		if (btnEditRun.getText()=="Start Editing") {	
+		if (btnEditRun.getToolTipText()=="Start Editing") {	
 			//Some set up ---------------------------------------------------------------	
 			if (selectionPaths != null) {
 				int node_Level;
@@ -563,7 +776,7 @@ public class Panel_YieldProject extends JLayeredPane {
 				int fileCount=0;
 				
 				DefaultTreeModel model = (DefaultTreeModel) projectTree.getModel();
-				for (TreePath selectionPath : selectionPaths) { //Loop through and delete all level 2 nodes (Runs)
+				for (TreePath selectionPath : selectionPaths) { //Loop through all level 2 nodes (Runs)
 					currentLevel = selectionPath.getPathCount();
 					DefaultMutableTreeNode processingNode = (DefaultMutableTreeNode) selectionPath
 							.getLastPathComponent();
@@ -579,9 +792,14 @@ public class Panel_YieldProject extends JLayeredPane {
 				//Disable all other buttons, change name to "Stop Editing",  remove splitPanel and add editPanel
 				btnNewRun.setVisible(false);
 				btnDeleteRun.setVisible(false);
+				btnRefresh.setVisible(false);
 				btnSolveRun.setVisible(false);
+				btnCustomizeOutput.setVisible(false);
 				displayTextField.setVisible(false);
-				btnEditRun.setText("Stop Editing");
+				btnEditRun.setToolTipText("Stop Editing");
+				icon = new ImageIcon(getClass().getResource("/icon_back.png"));
+				scaleImage = icon.getImage().getScaledInstance(25, 25,Image.SCALE_SMOOTH);
+				btnEditRun.setRolloverIcon(new ImageIcon(scaleImage));
 				btnEditRun.setForeground(Color.RED);
 				super.remove(splitPanel);
 				editPanel = new Panel_EditRun();		// This panel only visible when "Start Editing"	
@@ -592,7 +810,7 @@ public class Panel_YieldProject extends JLayeredPane {
 	
 		
 		// For Stop Editing
-		else if (btnEditRun.getText() == "Stop Editing") {
+		else if (btnEditRun.getToolTipText() == "Stop Editing") {
 			int response = JOptionPane.showConfirmDialog(this, 
 			"Save all changes you made ?", "Stop Editing", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if (response == JOptionPane.NO_OPTION || response == JOptionPane.YES_OPTION) {
@@ -600,8 +818,11 @@ public class Panel_YieldProject extends JLayeredPane {
 				displayTextField.setVisible(true);
 				btnNewRun.setVisible(true);
 				btnDeleteRun.setVisible(true);
+				btnRefresh.setVisible(true);
 				btnSolveRun.setVisible(true);
-				btnEditRun.setText("Start Editing");
+				btnCustomizeOutput.setVisible(true);
+				btnEditRun.setToolTipText("Start Editing");
+				btnEditRun.setRolloverIcon(null);
 				btnEditRun.setForeground(null);
 				super.remove(editPanel);
 				super.add(splitPanel);
@@ -617,11 +838,14 @@ public class Panel_YieldProject extends JLayeredPane {
 							}
 						}
 					}
+					
 					//Get all input files
 					File[] generalInputFile = editPanel.getGeneralInputFile();
 					File[] managementOptionsFile = editPanel.getManagementOptionsFile();
 					File[] CoverTypeConversionsFile = editPanel.getCoverTypeConversionsFile();
 					File[] userConstraintsFile = editPanel.getUserConstraintsFile();
+					File[] databaseFile = editPanel.getDatabaseFile();
+					
 					//Create new input files		
 					for (int i = 0; i < listOfEditRuns.length; i++) {			
 							try {
@@ -629,6 +853,7 @@ public class Panel_YieldProject extends JLayeredPane {
 								managementOptionsFile[i].createNewFile();
 								CoverTypeConversionsFile[i].createNewFile();
 								userConstraintsFile[i].createNewFile();
+								databaseFile[i].createNewFile();
 							} catch (IOException e) {
 								System.err.println(e.getClass().getName() + ": " + e.getMessage());
 							}
@@ -645,7 +870,7 @@ public class Panel_YieldProject extends JLayeredPane {
 	public void solve_Runs() {
 		
 		// For Start Solving
-		if (btnSolveRun.getText()=="Start Solving") {
+		if (btnSolveRun.getToolTipText()=="Start Solving") {
 			//Some set up ---------------------------------------------------------------	
 			if (selectionPaths != null) {
 				int node_Level;
@@ -666,7 +891,7 @@ public class Panel_YieldProject extends JLayeredPane {
 				int fileCount=0;
 				
 				DefaultTreeModel model = (DefaultTreeModel) projectTree.getModel();
-				for (TreePath selectionPath : selectionPaths) { //Loop through and delete all level 2 nodes (Runs)
+				for (TreePath selectionPath : selectionPaths) { //Loop through all level 2 nodes (Runs)
 					currentLevel = selectionPath.getPathCount();
 					DefaultMutableTreeNode processingNode = (DefaultMutableTreeNode) selectionPath
 							.getLastPathComponent();
@@ -681,9 +906,14 @@ public class Panel_YieldProject extends JLayeredPane {
 				// Disable all other buttons, change name to "Stop Solving", remove splitPanel and add editPanel
 				btnNewRun.setVisible(false);
 				btnDeleteRun.setVisible(false);
+				btnRefresh.setVisible(false);
 				btnEditRun.setVisible(false);
+				btnCustomizeOutput.setVisible(false);
 				displayTextField.setVisible(false);
-				btnSolveRun.setText("Stop Solving");
+				btnSolveRun.setToolTipText("Stop Solving");
+				icon = new ImageIcon(getClass().getResource("/icon_back.png"));
+				scaleImage = icon.getImage().getScaledInstance(25, 25,Image.SCALE_SMOOTH);
+				btnSolveRun.setRolloverIcon(new ImageIcon(scaleImage));
 				btnSolveRun.setForeground(Color.RED);
 				super.remove(splitPanel);
 				solvePanel = new Panel_SolveRun(); // This panel only visible when "Start Solving"
@@ -694,13 +924,16 @@ public class Panel_YieldProject extends JLayeredPane {
 		
 		
 		// For Stop Solving
-		else if (btnSolveRun.getText() == "Stop Solving") {
+		else if (btnSolveRun.getToolTipText() == "Stop Solving") {
 			//Enable all other buttons and splitPanel and change name to "Start Solving"
 			btnNewRun.setVisible(true);
 			btnDeleteRun.setVisible(true);
+			btnRefresh.setVisible(true);
 			btnEditRun.setVisible(true);
+			btnCustomizeOutput.setVisible(true);
 			displayTextField.setVisible(true);
-			btnSolveRun.setText("Start Solving");
+			btnSolveRun.setToolTipText("Start Solving");
+			btnSolveRun.setRolloverIcon(null);
 			btnSolveRun.setForeground(null);
 			super.remove(solvePanel);
 			super.add(splitPanel);
@@ -708,9 +941,295 @@ public class Panel_YieldProject extends JLayeredPane {
 		}
 	}
 
+	//--------------------------------------------------------------------------------------------------------------------------------
+	public void customize_Output() {
+		
+		// For Start Customizing
+		if (btnCustomizeOutput.getToolTipText()=="Customize Output") {
+			//Some set up ---------------------------------------------------------------	
+			if (selectionPaths != null) {
+				int node_Level;
+				for (TreePath selectionPath : selectionPaths) { //Loop through all selected nodes
+					node_Level = selectionPath.getPathCount();		
+					if (node_Level == 1 || node_Level == 3) {
+						projectTree.getSelectionModel().removeSelectionPath(selectionPath);		//Deselect all level 1 and level 3 nodes
+					}				
+				}
+				selectionPaths = projectTree.getSelectionPaths(); //This is very important to get the most recent selected paths
+			}
+			//End of set up---------------------------------------------------------------
+			
+					
+			if (selectionPaths != null) { //at least 1 run has to be selected 
+				// Create a files list that contains selected runs
+				listOfEditRuns = new File[selectionPaths.length];
+				int fileCount=0;
+				
+				DefaultTreeModel model = (DefaultTreeModel) projectTree.getModel();
+				for (TreePath selectionPath : selectionPaths) { //Loop through all level 2 nodes (Runs)
+					currentLevel = selectionPath.getPathCount();
+					DefaultMutableTreeNode processingNode = (DefaultMutableTreeNode) selectionPath
+							.getLastPathComponent();
+					if (currentLevel == 2) { //Add to the list
+						currentRun = processingNode.getUserObject().toString();
+						File file = new File(currentProjectFolder + seperator + currentRun);
+						listOfEditRuns[fileCount] = file;
+						fileCount++;
+					}
+				}
+				
+				// Disable all other buttons, change name to "Return to Main Window", remove splitPanel and add editPanel
+				btnNewRun.setVisible(false);
+				btnDeleteRun.setVisible(false);
+				btnRefresh.setVisible(false);
+				btnEditRun.setVisible(false);
+				btnSolveRun.setVisible(false);
+				displayTextField.setVisible(false);
+				btnCustomizeOutput.setToolTipText("Return to Main Window");
+				icon = new ImageIcon(getClass().getResource("/icon_back.png"));
+				scaleImage = icon.getImage().getScaledInstance(25, 25,Image.SCALE_SMOOTH);
+				btnCustomizeOutput.setRolloverIcon(new ImageIcon(scaleImage));
+				btnCustomizeOutput.setForeground(Color.RED);
+				super.remove(splitPanel);
+				customizeOutputPanel = new Panel_CustomizeOutput(); // This panel only visible when Start "Customize Output"
+				super.add(customizeOutputPanel);
+			}
+		} // End of start solving
+		
+		
+		
+		// For Stop Customizing
+		else if (btnCustomizeOutput.getToolTipText() == "Return to Main Window") {
+			//Enable all other buttons and splitPanel and change name to "Customize Output"
+			btnNewRun.setVisible(true);
+			btnDeleteRun.setVisible(true);
+			btnRefresh.setVisible(true);
+			btnEditRun.setVisible(true);
+			btnSolveRun.setVisible(true);
+			displayTextField.setVisible(true);
+			btnCustomizeOutput.setToolTipText("Customize Output");
+			btnCustomizeOutput.setRolloverIcon(null);
+			btnCustomizeOutput.setForeground(null);
+			super.remove(customizeOutputPanel);
+			super.add(splitPanel);
+			refreshProjectTree(); //Refresh the tree
+		}
+	}
+
+
+	
+	// --------------------------------------------------------------------------------------------------------------------------------
+	class MyTableModel extends AbstractTableModel {
+	   	 
+		public MyTableModel() {
+
+		  }
+
+		public int getColumnCount() {
+			return colCount;
+		}
+
+		public int getRowCount() {
+			return rowCount;
+		}
+
+		public String getColumnName(int col) {
+			return columnNames[col];
+		}
+
+		public Object getValueAt(int row, int col) {
+			return data[row][col];
+		}
+
+		public Class getColumnClass(int c) {
+			return (getValueAt(0, c) == null ? Object.class : getValueAt(0, c).getClass());
+		}
+
+		// Don't need to implement this method unless your table's editable.
+		public boolean isCellEditable(int row, int col) {
+			return false;	// all cells are not allowed for editing
+		}
+
+		public void setValueAt(Object value, int row, int col) {
+			data[row][col] = value;
+			fireTableCellUpdated(row, col);
+			fireTableDataChanged();
+			repaint();
+		}
+	}	
+
+	// Panel Management Overview-----------------------------------------------------------------------------	
+	class PaneL_Management_Overview extends JLayeredPane {
+		public PaneL_Management_Overview(JTable thisTable) {
+			setLayout(new GridBagLayout());
+			GridBagConstraints c = new GridBagConstraints();
+			c.fill = GridBagConstraints.NONE;
+			c.weightx = 1;
+		    c.weighty = 1;
+		    
+		    //---------------------------------------------------------------
+		    //Create a chart
+		    PieDataset dataset = create_ManagementOverview_dataset();
+	        JFreeChart chart = createChart(dataset);
+
+	        // add the chart to a panel...
+	        ChartPanel chartPanel = new ChartPanel(chart);
+	        chart.getLegend().setFrame(BlockBorder.NONE);	//Remove the ugly border surrounded Legend
+	        TitledBorder border = new TitledBorder("Management (acres) for " + rowCount + " EXISTING STRATA across the entire planning horizon");
+			border.setTitleJustification(TitledBorder.CENTER);
+			chartPanel.setBorder(border);
+	        chartPanel.setPreferredSize(new Dimension(520, 350));
+	        //---------------------------------------------------------------
+	        
+	        
+	        //---------------------------------------------------------------
+	        String strataName = "";
+	        if (thisTable.getSelectedRow() >= 0) 	strataName = data[thisTable.getSelectedRow()][0].toString();
+	        
+	        //Create a chart
+		    PieDataset dataset2 = create_strataOverview_dataset();
+	        JFreeChart chart2 = createChart(dataset2);
+
+	        // add the chart to a panel...
+        	ChartPanel chartPanel2 = new ChartPanel(chart2);
+	        chart2.getLegend().setFrame(BlockBorder.NONE);	//Remove the ugly border surrounded Legend
+	        TitledBorder border2 = new TitledBorder("Management (acres) for '" + strataName + "' across the entire planning horizon");
+			border2.setTitleJustification(TitledBorder.CENTER);
+			chartPanel2.setBorder(border2);
+	        chartPanel2.setPreferredSize(new Dimension(500, 350));
+	        //---------------------------------------------------------------
+	        
+	        
+		    // Add the 1st grid - chartPanel for all Strata
+			c.gridx = 0;
+			c.gridy = 0;
+			c.gridwidth = 1;
+			c.weightx = 0;
+		    c.weighty = 0;
+			super.add(chartPanel, c);
+			
+		    // Add the 2nd grid - chartPanel for the selected Strata
+			c.gridx = 1;
+			c.gridy = 0;
+			c.gridwidth = 1;
+			c.weightx = 0;
+			c.weighty = 0;
+			super.add(chartPanel2, c);			
+			
+			// Add the 3rd grid - table
+			c.gridx = 0;
+			c.gridy = 1;
+			c.gridwidth = 2;
+			c.weightx = 0;
+		    c.weighty = 1;
+			c.fill = GridBagConstraints.VERTICAL;
+			thisTable.setPreferredScrollableViewportSize(new Dimension(1044, 100));			
+			JScrollPane tableScrollPane = new JScrollPane(thisTable);
+			tableScrollPane.setBorder(BorderFactory.createEmptyBorder());	//Hide the border line surrounded scrollPane
+			super.add(tableScrollPane, c);
+		}
+	
+				
+		private PieDataset create_ManagementOverview_dataset() {
+			DefaultPieDataset dataset = new DefaultPieDataset();
+
+			double total_NG = 0;
+			double total_PB = 0;
+			double total_GS = 0;
+			double total_EA = 0;
+			for (int i = 0; i < data.length; i++) { // Loop table rows
+				total_NG = total_NG + Double.parseDouble(data[i][7].toString());
+				total_PB = total_PB + Double.parseDouble(data[i][8].toString());
+				total_GS = total_GS + Double.parseDouble(data[i][9].toString());
+				total_EA = total_EA + Double.parseDouble(data[i][10].toString());
+			}
+		
+			dataset.setValue("Natural Growth", total_NG);
+			dataset.setValue("Prescribed Burn", total_PB);
+			dataset.setValue("Group Selection", total_GS);
+			dataset.setValue("Even Age", total_EA);
+			
+			return dataset;
+		}
+
+		private PieDataset create_strataOverview_dataset() {
+			DefaultPieDataset dataset = new DefaultPieDataset();
+
+			if (table.getSelectedRow() >= 0) {
+				double total_NG = 0;
+				double total_PB = 0;
+				double total_GS = 0;
+				double total_EA = 0;
+					
+				total_NG = total_NG + Double.parseDouble(data[table.getSelectedRow()][7].toString());
+				total_PB = total_PB + Double.parseDouble(data[table.getSelectedRow()][8].toString());
+				total_GS = total_GS + Double.parseDouble(data[table.getSelectedRow()][9].toString());
+				total_EA = total_EA + Double.parseDouble(data[table.getSelectedRow()][10].toString());
+
+			
+				dataset.setValue("Natural Growth", total_NG);
+				dataset.setValue("Prescribed Burn", total_PB);
+				dataset.setValue("Group Selection", total_GS);
+				dataset.setValue("Even Age", total_EA);
+			}
+
+			return dataset;
+		}		
+		
+		
+		@SuppressWarnings("deprecation")
+		private JFreeChart createChart(PieDataset dataset) {
+			JFreeChart chart = ChartFactory.createPieChart3D(null, // chart title
+					dataset, // dataset
+					true, // include legend
+					true, false);
+			PiePlot3D  plot = (PiePlot3D ) chart.getPlot();
+			plot.setStartAngle(135);
+	        plot.setDirection(Rotation.CLOCKWISE);
+	        plot.setForegroundAlpha(0.5f);
+//	        plot.setBackgroundPaint(null);
+			plot.setNoDataMessage("No data available");
+			plot.setExplodePercent(1, 0.1);
+			
+			PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(
+		            "{0}: {1} ({2})", new DecimalFormat("0"), new DecimalFormat("0%"));
+		    plot.setLabelGenerator(gen);
+		    
+		    plot.setLabelBackgroundPaint(null);
+		    plot.setLabelShadowPaint(null);
+		    plot.setLabelOutlinePaint(null);
+		    plot.setLabelLinkStyle(PieLabelLinkStyle.QUAD_CURVE);
+		    
+//		    plot.setLabelLinksVisible(false);
+//			plot.setLabelGenerator(null);
+//			plot.setSimpleLabels(true);
+			return chart;
+		}				
+	}	
+	
+	// Tool bar with background image--------------------------------------------------------------------------------------------------------------------------------
+	class ToolBarWithBgImage extends JToolBar {	  
+	      private ImageIcon bgImage;
+	  
+	      ToolBarWithBgImage(String name, int orientation, ImageIcon ii) {
+	         super(name, orientation);
+	         this.bgImage = ii;
+	         setOpaque(true);
+	      }
+	  
+	      public void paintComponent(Graphics g) {
+	         super.paintComponent(g);
+	         if (bgImage != null) {
+	            Dimension size = this.getSize();
+	            g.drawImage(bgImage.getImage(), size.width - bgImage.getIconWidth(), (size.height - bgImage.getIconHeight())/2, bgImage.getIconWidth(), bgImage.getIconHeight(), this);
+	         }
+	      }
+	   }
+	
 	// --------------------------------------------------------------------------------------------------------------------------------
 	public void showNothing() {
-		displayTextField.setText(null); // Show nothing on the TextField
+//		displayTextField.setText(null); // Show nothing on the TextField
+		scrollPane_Right.setViewportView(null);
 	}
 
 	//--------------------------------------------------------------------------------------------------------------------------------

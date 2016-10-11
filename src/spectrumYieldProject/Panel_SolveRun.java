@@ -8,9 +8,11 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -18,8 +20,6 @@ import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.PrintStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -58,7 +58,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 	private File[] listOfEditRuns = null;
 	private JScrollPane scrollPane_Left, scrollPane_Right;
 	
-	private File[] problemFile, solutionFile;
+	private File[] problemFile, solutionFile, output_generalInfo_file, output_variables_file, output_constraints_file, output_managementOverview_file;
 	
 	public Panel_SolveRun() {
 		super.setLayout(new BorderLayout(0, 0));
@@ -87,7 +87,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 //      table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         table.setPreferredScrollableViewportSize(new Dimension(400, 100));
         table.setFillsViewportHeight(true);
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
  
         
         //Setup the TextArea--------------------------------------------------------------------------------
@@ -112,91 +112,99 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 		splitPanel2.setDividerSize(0);
 		splitPanel2.setLeftComponent(scrollPane_Left);
 		
-		// Animated test -----------------
-		try {
-//			https://media.giphy.com/media/TFhobYtkih62k/giphy.gif
-//			http://www.lovethisgif.com/uploaded_images/56753-Pikachu-Running-Animation-By-Cadetderp-On-Deviantart.gif
-//			http://orig11.deviantart.net/b288/f/2009/260/9/5/pikachu_vector_by_elfaceitoso.png
-//			JLabel imageLabel = new JLabel(new ImageIcon(new URL("http://www.lovethisgif.com/uploaded_images/56753-Pikachu-Running-Animation-By-Cadetderp-On-Deviantart.gif")));
-//			JScrollPane scrollPane_Left2 = new JScrollPane();
-//			scrollPane_Left2.setViewportView(imageLabel);
-			ImageIcon icon = new ImageIcon(new URL("http://www.lovethisgif.com/uploaded_images/56753-Pikachu-Running-Animation-By-Cadetderp-On-Deviantart.gif"));
-//			ImageIcon icon2 = new ImageIcon("C:\\pikachuHat.jpg");
-			ImageIcon icon2 = new ImageIcon(new URL("http://orig11.deviantart.net/b288/f/2009/260/9/5/pikachu_vector_by_elfaceitoso.png"));		
-			
-			Image scaleImage = icon.getImage().getScaledInstance(200, 150,Image.SCALE_DEFAULT);
-			Image scaleImage2 = icon2.getImage().getScaledInstance(150, 150,Image.SCALE_DEFAULT);
+
+		java.net.URL imgURL = getClass().getResource("/pikachuRunning.gif");		//Name is case sensitive
+		java.net.URL imgURL2 = getClass().getResource("/pikachuHello.png");			//Name is case sensitive		
+
 		
-			runStatButton = new JButton(new ImageIcon(scaleImage2));
-			runStatButton.setDisabledIcon(new ImageIcon(scaleImage));
-			runStatButton.setHorizontalTextPosition(JButton.CENTER);
-			runStatButton.setVerticalTextPosition(JButton.TOP);
-			runStatButton.setFont(new Font(null, Font.BOLD, 15));
-			runStatButton.setText("CLICK ME TO GET SOLUTIONS");
-			runStatButton.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent actionEvent) {
-					if (solvingstatus==false) {
-						//Solve runs when clicked
-						problemFile = new File[rowCount];
-						solutionFile = new File[rowCount];
-						
-						// Open 2 new parallel threads: 1 for running CPLEX, 1 for redirecting console to displayTextArea
-						Thread thread2 = new Thread() {
-							public void run() {
-								try {
-									//redirect console to JTextArea
-									PipedOutputStream pOut = new PipedOutputStream();
-									System.setOut(new PrintStream(pOut));
-									PipedInputStream pIn = new PipedInputStream(pOut);
-									BufferedReader reader = new BufferedReader(new InputStreamReader(pIn));
-									
-									while(solvingstatus==true) {
-									    try {
-									        String line = reader.readLine();
-									        if(line != null) {
-									            // Write line to displayTextArea
-									        	displayTextArea.append(line + "\n");
-									        }
-									    } catch (IOException ex) {
-									    	System.err.println(ex.getClass().getName() + ": " + ex.getMessage());
-									    }
-									}
-									reader.close();
-									pIn.close();
-									pOut.close();
-								} catch (IOException e) {
-									System.err.println(e.getClass().getName() + ": " + e.getMessage());
+//		try {		//Activate this if want some picture from Internet
+//			//	https://media.giphy.com/media/TFhobYtkih62k/giphy.gif
+//			//	http://www.lovethisgif.com/uploaded_images/56753-Pikachu-Running-Animation-By-Cadetderp-On-Deviantart.gif
+//			//	http://orig11.deviantart.net/b288/f/2009/260/9/5/pikachu_vector_by_elfaceitoso.png	
+//			imgURL = new java.net.URL("http://www.lovethisgif.com/uploaded_images/56753-Pikachu-Running-Animation-By-Cadetderp-On-Deviantart.gif");
+//			imgURL2 = new java.net.URL("http://orig11.deviantart.net/b288/f/2009/260/9/5/pikachu_vector_by_elfaceitoso.png");
+//		} catch (MalformedURLException e1) {
+//			System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+//		}	
+		
+       	
+		ImageIcon icon = new ImageIcon(imgURL);		//Image is in the same location of this class
+		ImageIcon icon2 = new ImageIcon(imgURL2);		//Image is in the same location of this class
+				
+		Image scaleImage = icon.getImage().getScaledInstance(200, 150,Image.SCALE_SMOOTH);
+		Image scaleImage2 = icon2.getImage().getScaledInstance(150, 150,Image.SCALE_SMOOTH);
+	
+		runStatButton = new JButton(new ImageIcon(scaleImage2));
+		runStatButton.setDisabledIcon(new ImageIcon(scaleImage));
+		runStatButton.setHorizontalTextPosition(JButton.CENTER);
+		runStatButton.setVerticalTextPosition(JButton.TOP);
+		runStatButton.setFont(new Font(null, Font.BOLD, 15));
+		runStatButton.setText("CLICK ME TO GET SOLUTIONS");
+		runStatButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				if (solvingstatus==false) {
+					//Solve runs when clicked
+					problemFile = new File[rowCount];
+					solutionFile = new File[rowCount];
+					output_variables_file = new File[rowCount];
+					output_constraints_file = new File[rowCount];
+					output_generalInfo_file = new File[rowCount];
+					output_managementOverview_file = new File[rowCount];
+					
+
+					// Open 2 new parallel threads: 1 for running CPLEX, 1 for redirecting console to displayTextArea
+					Thread thread2 = new Thread() {
+						public void run() {
+							try {
+								//redirect console to JTextArea
+								PipedOutputStream pOut = new PipedOutputStream();
+								System.setOut(new PrintStream(pOut));
+								PipedInputStream pIn = new PipedInputStream(pOut);
+								BufferedReader reader = new BufferedReader(new InputStreamReader(pIn));
+								
+								while(solvingstatus==true) {
+								    try {
+								        String line = reader.readLine();
+								        if(line != null) {
+								            // Write line to displayTextArea
+								        	displayTextArea.append(line + "\n");
+								        }
+								    } catch (IOException ex) {
+								    	System.err.println(ex.getClass().getName() + ": " + ex.getMessage());
+								    }
 								}
+								reader.close();
+								pIn.close();
+								pOut.close();
+							} catch (IOException e) {
+								System.err.println(e.getClass().getName() + ": " + e.getMessage());
 							}
-						};
-						
-						
-						Thread thread1 = new Thread() {
-							public void run() {
-								for (int row = 0; row < rowCount; row++) {
-									runStatButton.setText("searching for " + listOfEditRuns[row].getName() + " solution");
-									SolveProblem(row, listOfEditRuns[row]);
-								}
-								solvingstatus=false;
-								runStatButton.setText("CLICK ME TO GET SOLUTIONS");
-								runStatButton.setEnabled(true);
+						}
+					};
+					
+					
+					Thread thread1 = new Thread() {
+						public void run() {
+							for (int row = 0; row < rowCount; row++) {
+								runStatButton.setText("searching for " + listOfEditRuns[row].getName() + " solution");
+								SolveProblem(row, listOfEditRuns[row]);
 							}
-						};
-						
-						
-						runStatButton.setEnabled(false);
-						solvingstatus=true;
-						thread1.start();
-						thread2.start();		//Note: Pipe broken due to disconnects before receiving responses. (safe Exception)		
-					}
+							solvingstatus=false;
+							runStatButton.setText("CLICK ME TO GET SOLUTIONS");
+							runStatButton.setEnabled(true);
+						}
+					};
+					
+					
+					runStatButton.setEnabled(false);
+					solvingstatus=true;
+					thread1.start();
+					thread2.start();		//Note: Pipe broken due to disconnects before receiving responses. (safe Exception)		
 				}
-			});
-			splitPanel2.setRightComponent(runStatButton);
-		} catch (MalformedURLException e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage());
-		}
-        // Animated test-----------------	
+			}
+		});
+		splitPanel2.setRightComponent(runStatButton);							
 		splitPanel.setLeftComponent(splitPanel2);
 								
 		
@@ -263,13 +271,20 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 		try {
 			problemFile[row] = new File(runFolder.getAbsolutePath() + "/Problem.lp");
 			solutionFile[row] = new File(runFolder.getAbsolutePath() + "/Solution.lp");
+			output_generalInfo_file[row] = new File(runFolder.getAbsolutePath() + "/Output 1 - General_Info.txt");	
+			output_variables_file[row] = new File(runFolder.getAbsolutePath() + "/Output 2 - Variables.txt");
+			output_constraints_file[row] = new File(runFolder.getAbsolutePath() + "/Output 3 - Constraints.txt");	
+			output_managementOverview_file[row] = new File(runFolder.getAbsolutePath() + "/Output 4 - Management_Overview.txt");
+			
+			
 		
 			//Read input files to retrieve values later
 			ReadRunInputs read= new ReadRunInputs();
-			read.readGeneralInputs(new File(runFolder.getAbsolutePath() + "/GeneralInputs.txt"));
-			read.readManagementOptions(new File(runFolder.getAbsolutePath() + "/ManagementOptions.txt"));
-			read.readUserConstraints(new File(runFolder.getAbsolutePath() + "/UserConstraints.txt"));
-			read.readCoverTypeConversions(new File(runFolder.getAbsolutePath() + "/CoverTypeConversions.txt"));
+			read.readGeneralInputs(new File(runFolder.getAbsolutePath() + "/Input 1 - GeneralInputs.txt"));
+			read.readManagementOptions(new File(runFolder.getAbsolutePath() + "/Input 2A - ManagementOptions.txt"));
+			read.readCoverTypeConversions(new File(runFolder.getAbsolutePath() + "/Input 2B - CoverTypeConversions.txt"));
+			read.readUserConstraints(new File(runFolder.getAbsolutePath() + "/Input 3 - UserConstraints.txt"));
+			Read_DatabaseTables read_DatabaseTables = new Read_DatabaseTables(new File(runFolder.getAbsolutePath() + "/database.db"));
 			
 			//ManagementOptions info
 			List<String> modeled_strata, modeled_strata_withoutSizeClass, modeled_strata_withoutSizeClassandCoverType = new ArrayList<String>();
@@ -296,14 +311,20 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			coverTypeConversions = read.getCoverTypeConversions();
 			
 			
+			//Database Info
+			Object[][][] yieldTable_values = read_DatabaseTables.getTableArrays();
+			Object[] yieldTable_Name = read_DatabaseTables.get_nameOftable();
+			GetParameter_totalValue getParameter_totalValues = new GetParameter_totalValue();
 			
 
+			
+			
 			// Set up problem-------------------------------------------------		//////////////////////////////////////Need to change this is important, better to read from input file //////////////////////////
 			// get the "StrataDefinition.csv" file from where this class is located
 		
 			File file_StrataDefinition = new File("StrataDefinition.csv");
 			try {
-				InputStream initialStream = getClass().getResourceAsStream("StrataDefinition.csv");		//Default definition
+				InputStream initialStream = getClass().getResourceAsStream("/StrataDefinition.csv");		//Default definition
 				byte[] buffer = new byte[initialStream.available()];
 				initialStream.read(buffer);
 				
@@ -416,7 +437,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			// Create soft constraint decision variables y(j)			
 			for (int j = 0; j < total_softConstraints; j++) {
 				objlist.add((double) 0);
-				vnamelist.add("y(" + j + ")");
+//				vnamelist.add("y(" + j + ")");
+				vnamelist.add("y_" + j);
 				vlblist.add((double) 0);
 				vublist.add(Double.MAX_VALUE);
 				vtlist.add(IloNumVarType.Float);
@@ -428,7 +450,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			// Create soft constraint lower bound variables l(j)			
 			for (int j = 0; j < total_softConstraints; j++) {
 				objlist.add(softConstraints_LB_Weight[j]);		//add LB weight W|[j]
-				vnamelist.add("l(" + j + ")");
+//				vnamelist.add("l(" + j + ")");
+				vnamelist.add("l_" + j);
 				vlblist.add((double) 0);
 				vublist.add(softConstraints_LB[j]);			//l[j] can be max = L[j]
 				vtlist.add(IloNumVarType.Float);
@@ -440,7 +463,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			// Create soft constraint upper bound variables u(j)			
 			for (int j = 0; j < total_softConstraints; j++) {
 				objlist.add(softConstraints_UB_Weight[j]);		//add UB weight W||[j]
-				vnamelist.add("u(" + j + ")");
+//				vnamelist.add("u(" + j + ")");
+				vnamelist.add("u_" + j);
 				vlblist.add((double) 0);
 				vublist.add(Double.MAX_VALUE);					//u[j] can be max = any positive number
 				vtlist.add(IloNumVarType.Float);
@@ -452,7 +476,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			// Create hard constraint decision variables z(k)			
 			for (int k = 0; k < total_hardConstraints; k++) {
 				objlist.add((double) 0);
-				vnamelist.add("z(" + k + ")");
+//				vnamelist.add("z(" + k + ")");
+				vnamelist.add("z_" + k);
 				vlblist.add(hardConstraints_LB[k]);				// Constraints 4 is set here as LB
 				vublist.add(hardConstraints_UB[k]);					// Constraints 5 is set here as UB
 				vtlist.add(IloNumVarType.Float);
@@ -472,7 +497,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									if (modeled_strata.contains(strataName)) {
 										for (int q = 0; q < total_methods; q++) {
 											objlist.add((double) 0);
-											vnamelist.add("x(" + s1 + "," + s2 + "," + s3 + "," + s4 + "," + s5 + "," + s6 + ")(" + q + ")");
+//											vnamelist.add("x(" + s1 + "," + s2 + "," + s3 + "," + s4 + "," + s5 + "," + s6 + ")(" + q + ")");
+											vnamelist.add("x_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6) + "," + q);
 											vlblist.add((double) 0);
 											vublist.add(Double.MAX_VALUE);
 											vtlist.add(IloNumVarType.Float);
@@ -498,7 +524,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									String strataName = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4) + layer5.get(s5) + layer6.get(s6);
 									if (modeled_strata.contains(strataName)) {
 										objlist.add((double) 0);
-										vnamelist.add("xNG(" + s1 + "," + s2 + "," + s3 + "," + s4 + "," + s5 + "," + s6 + ")");
+//										vnamelist.add("xNG(" + s1 + "," + s2 + "," + s3 + "," + s4 + "," + s5 + "," + s6 + ")");			
+										vnamelist.add("xNG_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6));										
 										vlblist.add((double) 0);
 										vublist.add(Double.MAX_VALUE);
 										vtlist.add(IloNumVarType.Float);
@@ -524,7 +551,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									if (modeled_strata.contains(strataName)) {
 										for (int i = 0; i < total_PB_Prescriptions; i++) {
 											objlist.add((double) 0);
-											vnamelist.add("xPB(" + s1 + "," + s2 + "," + s3 + "," + s4 + "," + s5 + "," + s6 + ")(" + i + ")");
+//											vnamelist.add("xPB(" + s1 + "," + s2 + "," + s3 + "," + s4 + "," + s5 + "," + s6 + ")(" + i + ")");
+											vnamelist.add("xPB_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6) + "," + i);
 											vlblist.add((double) 0);
 											vublist.add(Double.MAX_VALUE);
 											vtlist.add(IloNumVarType.Float);
@@ -551,7 +579,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									if (modeled_strata.contains(strataName)) {
 										for (int i = 0; i < total_PB_Prescriptions; i++) {
 											objlist.add((double) 0);
-											vnamelist.add("xGS(" + s1 + "," + s2 + "," + s3 + "," + s4 + "," + s5 + "," + s6 + ")(" + i + ")");
+//											vnamelist.add("xGS(" + s1 + "," + s2 + "," + s3 + "," + s4 + "," + s5 + "," + s6 + ")(" + i + ")");
+											vnamelist.add("xGS_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6) + "," + i);
 											vlblist.add((double) 0);
 											vublist.add(Double.MAX_VALUE);
 											vtlist.add(IloNumVarType.Float);
@@ -578,7 +607,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									if (modeled_strata.contains(strataName)) {
 										for (int t = 1; t <= total_Periods; t++) {
 											objlist.add((double) 0);
-											vnamelist.add("xEAe(" + s1 + "," + s2 + "," + s3 + "," + s4 + "," + s5 + "," + s6 + ")(" + t + ")");
+//											vnamelist.add("xEAe(" + s1 + "," + s2 + "," + s3 + "," + s4 + "," + s5 + "," + s6 + ")(" + t + ")");
+											vnamelist.add("xEAe_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6) + "," + t);
 											vlblist.add((double) 0);
 											vublist.add(Double.MAX_VALUE);
 											vtlist.add(IloNumVarType.Float);
@@ -608,7 +638,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 												String thisCoverTypeconversion = layer5.get(s5) + " " + layer5.get(c);						
 												if (coverTypeConversions.contains(thisCoverTypeconversion)) {
 													objlist.add((double) 0);
-													vnamelist.add("xEAe'(" + s1 + "," + s2 + "," + s3 + "," + s4 + "," + s5 + "," + s6 + ")(" + t + ")(" + c + ")");
+//													vnamelist.add("xEAe'(" + s1 + "," + s2 + "," + s3 + "," + s4 + "," + s5 + "," + s6 + ")(" + t + ")(" + c + ")");
+													vnamelist.add("xEAe'_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6) + "," + t + "," + layer5.get(c));
 													vlblist.add((double) 0);
 													vublist.add(Double.MAX_VALUE);
 													vtlist.add(IloNumVarType.Float);
@@ -637,7 +668,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									for (int t = 2; t <= total_Periods; t++) {
 										for (int a = 1; a <= t-1; a++) {
 											objlist.add((double) 0);
-											vnamelist.add("xEAr(" + s1 + "," + s2 + "," + s3 + "," + s4 + "," + s5 + ")(" + t + ")(" + a + ")");
+//											vnamelist.add("xEAr(" + s1 + "," + s2 + "," + s3 + "," + s4 + "," + s5 + ")(" + t + ")(" + a + ")");
+											vnamelist.add("xEAr_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + t + "," + a);							
 											vlblist.add((double) 0);
 											vublist.add(Double.MAX_VALUE);
 											vtlist.add(IloNumVarType.Float);
@@ -667,7 +699,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 												String thisCoverTypeconversion = layer5.get(s5) + " " + layer5.get(c);						
 												if (coverTypeConversions.contains(thisCoverTypeconversion)) {
 													objlist.add((double) 0);
-													vnamelist.add("xEAr'(" + s1 + "," + s2 + "," + s3 + "," + s4 + "," + s5 + ")(" + t + ")(" + a + ")(" + c + ")");
+//													vnamelist.add("xEAr'(" + s1 + "," + s2 + "," + s3 + "," + s4 + "," + s5 + ")(" + t + ")(" + a + ")(" + c + ")");
+													vnamelist.add("xEAr'_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + t + "," + a + "," + layer5.get(c));	
 													vlblist.add((double) 0);
 													vublist.add(Double.MAX_VALUE);
 													vtlist.add(IloNumVarType.Float);
@@ -1339,6 +1372,15 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				
 			//Add -y(j) + user constraint = 0		or 			-z(k) + user constraint = 0
 			for (int i = 1; i < total_softConstraints + total_hardConstraints + 1; i++) {	//Loop from 1 because the first row of the userConstraint file is just title
+				
+				//Get the parameter indexes list
+				List<String> parameters_indexes_list = read.get_Parameters_indexes_list(i);
+				//Get the dynamic identifiers indexes list
+				List<String> all_dynamicIdentifiers_columnIndexes = read.get_all_dynamicIdentifiers_columnsIndexes_in_row(i);
+				List<List<String>> all_dynamicIdentifiers = read.get_all_dynamicIdentifiers_in_row(i);
+				
+				
+						
 				//Add constraint
 				c15_indexlist.add(new ArrayList<Integer>());
 				c15_valuelist.add(new ArrayList<Double>());
@@ -1365,10 +1407,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				List<String> static_strata = read.get_static_strata(i);
 				List<String> static_strata_withoutSizeClassandCoverType = read.get_static_strata_withoutSizeClassandCoverType(i);
 				
-				
-
+								
 				//Add xNG and xEAe				currently using Eq. 11 so we don't need to add xEAe, only add xNG
-				if (static_SilvivulturalMethods.contains("NGe")) {	
+				if (static_SilvivulturalMethods.contains("NG")) {	
 					for (int s1 = 0; s1 < layer1.size(); s1++) {
 						for (int s2 = 0; s2 < layer2.size(); s2++) {
 							for (int s3 = 0; s3 < layer3.size(); s3++) {
@@ -1383,8 +1424,16 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 													double parameter =0;
 													for (int t : integer_static_timePeriods) {		//Loop all periods
 														if (t <= total_Periods) {
-															//Find all parameter match the t and add themm all to parameter
-															parameter = parameter + 1;				// This is 1 if NoParameter, need to update later if there are parameters
+															//Find all parameter match the t and add them all to parameter
+															/*	Table Name = s5 + s6 convert then + method + timingChoice
+															 * Table column indexes for the parameters is identified by parameters_indexes_list
+															 * dynamic identifiers are identified by "all_dynamicIdentifiers_columnIndexes" & "all_dynamicIdentifiers"
+															 * Table row index = t - 1  
+															 */												
+															double para_value = getParameter_totalValues.getValue(layer5.get(s5), layer6.get(s6), "A", "0", 
+																	yieldTable_Name, yieldTable_values, parameters_indexes_list,
+																	all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers, t-1);
+															parameter = parameter + para_value;
 														}
 													}
 													
@@ -1420,8 +1469,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 														double parameter =0;
 														for (int t : integer_static_timePeriods) {		//Loop all periods
 															if (t <= total_Periods) {
-																//Find all parameter match the t and add themm all to parameter
-																parameter = parameter + 1;				// This is 1 if NoParameter, need to update later if there are parameters
+																//Find all parameter match the t and add them all to parameter
+																double para_value = getParameter_totalValues.getValue(layer5.get(s5), layer6.get(s6), "D", Integer.toString(ii), 
+																		yieldTable_Name, yieldTable_values, parameters_indexes_list,
+																		all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers, t-1);
+																parameter = parameter + para_value;		
 															}
 														}
 														
@@ -1457,8 +1509,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 														double parameter =0;
 														for (int t : integer_static_timePeriods) {		//Loop all periods
 															if (t <= total_Periods) {
-																//Find all parameter match the t and add themm all to parameter
-																parameter = parameter + 1;				// This is 1 if NoParameter, need to update later if there are parameters
+																//Find all parameter match the t and add them all to parameter
+																double para_value = getParameter_totalValues.getValue(layer5.get(s5), layer6.get(s6), "C", Integer.toString(ii), 
+																		yieldTable_Name, yieldTable_values, parameters_indexes_list,
+																		all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers, t-1);
+																parameter = parameter + para_value;	
 															}
 														}
 														
@@ -1500,7 +1555,10 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																for (int t : integer_static_timePeriods) {		//Loop all periods, 	final cut at tt but we need parameter at time t
 																	if (t<=tt) {
 																		//Find all parameter match the t and add them all to parameter
-																		parameter = parameter + 1;				// This is 1 if NoParameter, need to update later if there are parameters
+																		double para_value = getParameter_totalValues.getValue(layer5.get(s5), layer6.get(s6), "B", "AgeClassShouldBeHere", 
+																				yieldTable_Name, yieldTable_values, parameters_indexes_list,
+																				all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers, t-1);
+																		parameter = parameter + para_value;	
 																	}
 																}
 																
@@ -1539,7 +1597,10 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																for (int t : integer_static_timePeriods) {		//Loop all periods, 	final cut at tt but we need parameter at time t
 																	if (t >= 2 && t<=tt) {
 																		//Find all parameter match the t and add them all to parameter
-																		parameter = parameter + 1;				// This is 1 if NoParameter, need to update later if there are parameters
+																		double para_value = getParameter_totalValues.getValue(layer5.get(s5), "notNeeded", "B", "AgeClassShouldBeHere", 
+																				yieldTable_Name, yieldTable_values, parameters_indexes_list,
+																				all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers, t-1);
+																		parameter = parameter + para_value;	
 																	}
 																}
 																
@@ -1576,7 +1637,10 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 														for (int t : integer_static_timePeriods) {		//Loop all periods, t and tt are the same
 															if (t == tt) {
 																//Find all parameter match the t and add them all to parameter
-																parameter = parameter + 1;				// This is 1 if NoParameter, need to update later if there are parameters
+																double para_value = getParameter_totalValues.getValue(layer5.get(s5), "notNeeded", "A", "AgeClassShouldBeHere", 
+																		yieldTable_Name, yieldTable_values, parameters_indexes_list,
+																		all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers, t-1);
+																parameter = parameter + para_value;			
 															}
 														}
 														
@@ -1685,23 +1749,146 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			table.setValueAt(data[row][3] , row, 3);
 			table.setValueAt(data[row][4] , row, 4);
 
-			cplex.exportModel(problemFile[row].getAbsolutePath());
+//			cplex.exportModel(problemFile[row].getAbsolutePath());
 			if (cplex.solve()) {
-				cplex.writeSolution(solutionFile[row].getAbsolutePath());
+//				cplex.writeSolution(solutionFile[row].getAbsolutePath());
 				
+
+				//Get output info to array
+	            double[] value = cplex.getValues(lp);
+	            double[] reduceCost = cplex.getReducedCosts(lp);
+	            double[] dual = cplex.getDuals(lp);
+	            double[] slack = cplex.getSlacks(lp);
+				
+				//Write Solution files
+	           
+	            
+	            //General Info
+	            output_generalInfo_file[row].delete();
+				try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_generalInfo_file[row]))) {
+					// Write variables info
+					fileOut.write("Output Description" + "\t" + "Output Value");
+					
+					fileOut.newLine();
+					fileOut.write("Optimization solver"  + "\t" + "CPLEX");
+					
+					fileOut.newLine();
+					fileOut.write("Solution status"  + "\t" + cplex.getStatus());
+					
+					fileOut.newLine();
+					fileOut.write("Solution algorithm"  + "\t" + cplex.getAlgorithm());
+					
+					fileOut.newLine();
+					fileOut.write("Simplex iterations"  + "\t" + cplex.getNiterations64());
+					
+					fileOut.newLine();
+					fileOut.write("Solving time (seconds)"  + "\t" + cplex.getCplexTime());
+					
+					fileOut.newLine();
+					fileOut.write("Total variables"  + "\t" + cplex.getNcols());
+					
+					fileOut.newLine();
+					fileOut.write("Total constraints"  + "\t" + cplex.getNrows());
+					
+					fileOut.newLine();
+					fileOut.write("Objective value"  + "\t" + cplex.getObjValue());
+
+					fileOut.close();
+				} catch (IOException e) {
+					System.err.println(e.getClass().getName() + ": " + e.getMessage());
+				}
+				output_generalInfo_file[row].createNewFile();
+	            
+				
+				//Variables if value <> 0
+	            output_variables_file[row].delete();
+				try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_variables_file[row]))) {
+					// Write variables info
+					fileOut.write("Index" + "\t" + "Name" + "\t" + "Value" + "\t" + "Reduced Cost");
+					for (int i = 0; i < value.length; i++) {	
+						if (value[i] != 0) {
+							fileOut.newLine();
+							fileOut.write(i + "\t" + vname[i] + "\t" + value[i] + "\t" + reduceCost[i]);
+						}
+					}
+
+					fileOut.close();
+				} catch (IOException e) {
+					System.err.println(e.getClass().getName() + ": " + e.getMessage());
+				}
+				output_variables_file[row].createNewFile();
+
+				
+				//Constraints  if dual or slack <> 0
+				output_constraints_file[row].delete();
+				try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_constraints_file[row]))) {
+					// Write constraints info
+					fileOut.write("Index" + "\t" + "Slack" + "\t" + "Dual");
+					for (int j = 0; j < dual.length; j++) {	
+						if (slack[j] != 0 || dual[j] != 0 ) {
+							fileOut.newLine();
+							fileOut.write(j + "\t" + slack[j] + "\t" + dual[j]);
+						}
+					}
+
+					fileOut.close();
+				} catch (IOException e) {
+					System.err.println(e.getClass().getName() + ": " + e.getMessage());
+				}	
+				output_constraints_file[row].createNewFile();
+				
+				
+				
+				//Management Overview
+	            output_managementOverview_file[row].delete();
+				try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_managementOverview_file[row]))) {
+					// Write info
+					fileOut.write("Strata ID" + "\t" + "Layer 1" + "\t" + "Layer 2" + "\t" + "Layer 3" + "\t" + "Layer 4" + "\t" + "Layer 5" + "\t" + "Layer 6"
+							 + "\t" + "Natural Growth (acres)" + "\t" + "Prescribed Burn (acres)" + "\t" + "Group Selection (acres)" + "\t" + "Even Age (acres)");
+					
+					for (int s1 = 0; s1 < layer1.size(); s1++) {
+						for (int s2 = 0; s2 < layer2.size(); s2++) {
+							for (int s3 = 0; s3 < layer3.size(); s3++) {
+								for (int s4 = 0; s4 < layer4.size(); s4++) {
+									for (int s5 = 0; s5 < layer5.size(); s5++) {
+										for (int s6 = 0; s6 < layer6.size(); s6++) {
+											String strataName = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4) + layer5.get(s5) + layer6.get(s6);
+											if (modeled_strata.contains(strataName)) {					
+												
+												//New line for each strata
+												fileOut.newLine();	
+												//Write StrataID and 6 layers info
+												fileOut.write(strataName + "\t" + layer1.get(s1) + "\t" + layer2.get(s2) + "\t" + layer3.get(s3) 
+														+ "\t" + layer4.get(s4) + "\t" + layer5.get(s5) + "\t" + layer6.get(s6));									
+												//Write acres from each method
+												for (int q = 0; q < total_methods; q++) {
+													int this_var_index = x[s1][s2][s3][s4][s5][s6][q];
+													fileOut.write("\t" + value[this_var_index]);			
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+					fileOut.close();
+				} catch (IOException e) {
+					System.err.println(e.getClass().getName() + ": " + e.getMessage());
+				}
+				output_managementOverview_file[row].createNewFile();
+				
+				
+				
+				
+				//Show successful or fail in the GUI
 				data[row][1] = "valid";
 				table.setValueAt(data[row][1], row, 1);
 				data[row][4] = "successful";
 				table.setValueAt(data[row][4], row, 4);
 			}		
-
-			
 			cplex.endModel();
 			cplex.end();
-			
-			
-			
-	
 		}
 		catch (IloException e) {
 			System.err.println("Concert exception '" + e + "' caught for " + listOfEditRuns[row].getName());
@@ -1711,6 +1898,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			table.setValueAt(data[row][1], row, 1);
 			data[row][4] = "fail";
 			table.setValueAt(data[row][4] , row, 4);
+			
+			output_variables_file[row].delete();
+			output_constraints_file[row].delete();	
+			output_generalInfo_file[row].delete();	
+			output_managementOverview_file[row].delete();
 		}
 		
 		catch (Exception e2) {
@@ -1720,6 +1912,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			table.setValueAt(data[row][1], row, 1);
 			data[row][4] = "fail";
 			table.setValueAt(data[row][4] , row, 4);
+			
+			output_variables_file[row].delete();
+			output_constraints_file[row].delete();
+			output_generalInfo_file[row].delete();
+			output_managementOverview_file[row].delete();
 		}
 	}
 }

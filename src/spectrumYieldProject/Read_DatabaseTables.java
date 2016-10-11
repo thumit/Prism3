@@ -128,7 +128,10 @@ public class Read_DatabaseTables {
 	public String[] getTableColumnNames() {
 		return table_ColumnNames;
 	}
-	
+
+	public Object[] get_nameOftable() {
+		return nameOftable;
+	}
 	
 	public List<String> getColumnUniqueValues(int columnIndex) {
 		List<String> listOfUniqueValues = new ArrayList<String>();

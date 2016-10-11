@@ -2,11 +2,14 @@ package spectrumGUI;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JDesktopPane;
 
 
@@ -15,10 +18,24 @@ public class Panel_BackGroundDesktop extends JDesktopPane {
 
 	public Panel_BackGroundDesktop() {
 		try {
-			img = ImageIO.read(new URL("https://scontent-iad3-1.xx.fbcdn.net/t31.0-8/705097_4557689934155_1784248166_o.jpg"));			   
+//			img = ImageIO.read(new URL("https://scontent-iad3-1.xx.fbcdn.net/t31.0-8/705097_4557689934155_1784248166_o.jpg"));			   
 //			img = ImageIO.read(new File("C:\\Users\\Public\\Pictures\\Sample Pictures\\Desert.jpg"));
+			img = ImageIO.read(getClass().getResource("/spectrumlite.png"));
 			BufferedImage bg = img;
-			setBackgroundImage(bg);
+			
+
+			//Rescale buffered image-----------------
+			final float FACTOR  = 4f;
+			int scaleX = (int) (bg.getWidth() * FACTOR);
+			int scaleY = (int) (bg.getHeight() * FACTOR);
+			Image scaleImage = bg.getScaledInstance(3000, 60, Image.SCALE_SMOOTH);
+			BufferedImage bg2 = new BufferedImage(scaleX, scaleY, BufferedImage.TYPE_INT_ARGB);
+			bg2.getGraphics().drawImage(scaleImage, 0, 0 , null);
+			//End of Rescaling buffered image-----------------
+					
+			
+//			setBackgroundImage(bg);
+			setBackgroundImage(bg2);
 		} catch (IOException ex) {
 			System.err.println(ex.getClass().getName() + ": " + ex.getMessage());
 		}
@@ -58,10 +75,17 @@ public class Panel_BackGroundDesktop extends JDesktopPane {
 		super.paintComponent(g);
 		BufferedImage bg = getBackgroundImage();
 		if (bg != null) {
-			int x = (int) ((getWidth() - bg.getWidth())/2.5);
-			int y = (int) ((getHeight() - bg.getHeight())/1.4);
-			g.drawImage(bg, x, y, this);
 //			g.drawImage(bg, 0, 0, getWidth(), getHeight(), this);
+			
+//			int x = (int) ((getWidth() - bg.getWidth())/2.5);
+//			int y = (int) ((getHeight() - bg.getHeight())/1.4);
+//			g.drawImage(bg, x, y, this);
+			
+			
+			int x = (int) 10;
+			int y = (int) 10;
+			g.drawImage(bg, x, y, getWidth(), getWidth()/2, this);
+
 		}
 	}
 }

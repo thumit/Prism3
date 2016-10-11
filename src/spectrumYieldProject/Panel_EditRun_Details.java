@@ -1,6 +1,7 @@
 package spectrumYieldProject;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -25,6 +26,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -61,6 +63,8 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 import javax.swing.text.DefaultFormatter;
 
@@ -118,7 +122,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		try {
 			file_StrataDefinition = new File("StrataDefinition.csv");	
 			
-			InputStream initialStream = getClass().getResourceAsStream("StrataDefinition.csv");		//Default definition
+			InputStream initialStream = getClass().getResourceAsStream("/StrataDefinition.csv");		//Default definition
 			byte[] buffer = new byte[initialStream.available()];
 			initialStream.read(buffer);
 			
@@ -212,7 +216,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			super.add(combo1);
 			
 			JLabel label2 = new JLabel("Solving time limit (minutes)");
-			JSpinner spin2 = new JSpinner (new SpinnerNumberModel(5, 0, 60, 1));
+			JSpinner spin2 = new JSpinner (new SpinnerNumberModel(15, 0, 60, 1));
 			JFormattedTextField SpinnerText = ((DefaultEditor) spin2.getEditor()).getTextField();
 			SpinnerText.setHorizontalAlignment(JTextField.LEFT);
 			super.add(label2);
@@ -1381,21 +1385,169 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 																
 																
 																JPanel rangePanel = new JPanel();
+																rangePanel.setLayout(new GridBagLayout());
+																GridBagConstraints c_dP = new GridBagConstraints();
+																c_dP.fill = GridBagConstraints.HORIZONTAL;
+																c_dP.weightx = 0;
+																c_dP.weighty = 0;
+																
+																//Add Label and Combo asking for number of ranges
+																c_dP.gridx = 0;
+																c_dP.gridy = 0;
+																rangePanel.add(new JLabel("Number of ranges"), c_dP);
+																
+																c_dP.gridx = 1;
+																c_dP.gridy = 0;
+																JComboBox combo = new JComboBox();		
+																for (int comboValue = 1; comboValue <= 100; comboValue++) {
+																	combo.addItem(comboValue);
+																}
+																combo.setSelectedItem(null);
+																rangePanel.add(combo, c_dP);
+
+
+																//Add Label and TextField asking for min value
+																c_dP.gridx = 0;
+																c_dP.gridy = 1;
+																rangePanel.add(new JLabel("Min value"), c_dP);
+																
+																c_dP.gridx = 1;
+																c_dP.gridy = 1;
+																JTextField min_TF = new JTextField(3);															
+																min_TF.setText(uniqueValueList.get(0));
+																rangePanel.add(min_TF, c_dP);
 																
 																
+																//Add Label and TextField asking for max value
+																c_dP.gridx = 0;
+																c_dP.gridy = 2;
+																rangePanel.add(new JLabel("Max value"), c_dP);
+																
+																c_dP.gridx = 1;
+																c_dP.gridy = 2;
+																JTextField max_TF = new JTextField(3);															
+																max_TF.setText(uniqueValueList.get(uniqueValueList.size()-1));
+																rangePanel.add(max_TF, c_dP);
 																
 																
+																//add empty label to prevent things move
+																c_dP.gridx = 0;
+																c_dP.gridy = 3;
+																c_dP.weightx = 0;
+																c_dP.weighty = 1;
+																rangePanel.add(new JLabel(""), c_dP);	
 																
+
 																
-																
-																
-																
-																
-																
-																
-																
-																
-																
+																//Listener for the combo
+															    combo.addActionListener(new AbstractAction() {
+															        @Override
+															        public void actionPerformed(ActionEvent e) {
+															        	try {																        													        	
+																        	int numberofRanges = (Integer) combo.getSelectedItem();	        	
+																        	double minValue = Double.parseDouble(min_TF.getText());
+																        	double maxValue = Double.parseDouble(max_TF.getText());
+															        
+																        	if (minValue <= maxValue) {
+																	        	//Remove all checkBoxes previously added into the Column list (or the dynamic identifier)
+																				checkboxDynamicIdentifiers.get(currentCheckBoxIndex).clear();
+																				rangePanel.removeAll();
+																																									
+																	        	
+																	        	c_dP.weightx = 1;
+																				c_dP.weighty = 0;
+																	        	
+																	        	//Add Label and Spinner asking for number of ranges
+																				c_dP.gridx = 0;
+																				c_dP.gridy = 0;
+																				rangePanel.add(new JLabel("Number of ranges"), c_dP);
+																				
+																				c_dP.gridx = 1;
+																				c_dP.gridy = 0;
+																				rangePanel.add(combo, c_dP);
+		
+																				//Add 4 labels
+																				c_dP.gridx = 0;
+																				c_dP.gridy = 1;
+																				rangePanel.add(new JLabel("Range"), c_dP);
+																				
+																				c_dP.gridx = 1;
+																				c_dP.gridy = 1;
+																				rangePanel.add(new JLabel("From"), c_dP);
+																				
+																				c_dP.gridx = 2;
+																				c_dP.gridy = 1;
+																				rangePanel.add(new JLabel("To"), c_dP);
+																				
+																				c_dP.gridx = 3;
+																				c_dP.gridy = 1;
+																				rangePanel.add(new JLabel("Define name of this range"), c_dP);	
+																	        
+																			
+																	        	//Add all ranges and textField for the toolTip
+																				for (int j = 0; j < numberofRanges; j++) {																									
+																					String valueFrom = String.format("%.2f", minValue + (maxValue-minValue)/numberofRanges*j);
+																					String valueTo = String.format("%.2f", minValue + (maxValue-minValue)/numberofRanges*(j+1));
+																					
+																					checkboxDynamicIdentifiers.get(currentCheckBoxIndex).add(new JCheckBox("[" + valueFrom + "," + valueTo + ")"));
+																					c_dP.gridx = 0;
+																					c_dP.gridy = 2 + j;
+																					rangePanel.add(checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(j), c_dP);
+																			
+																					c_dP.gridx = 1;
+																					c_dP.gridy = 2 + j;
+																					JTextField from_TF = new JTextField(3);
+																					
+																					from_TF.setText(valueFrom);
+																					rangePanel.add(from_TF, c_dP);
+																					
+																					c_dP.gridx = 2;
+																					c_dP.gridy = 2 + j;
+																					JTextField to_TF = new JTextField(3);
+																					to_TF.setText(valueTo);
+																					rangePanel.add(to_TF, c_dP);
+																					
+																					c_dP.gridx = 3;
+																					c_dP.gridy = 2 + j;
+																					JTextField name_TF = new JTextField(20);
+																					name_TF.setText("");	//ToolTip text = ""
+																					rangePanel.add(name_TF, c_dP);
+																					
+																					//Add listener for TextField to be toolTip
+																					int jj=j;
+																					name_TF.getDocument().addDocumentListener(new DocumentListener() {
+																						@Override  
+																						public void changedUpdate(DocumentEvent e) {
+																							checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(jj).setToolTipText(name_TF.getText());
+																						}
+																						public void removeUpdate(DocumentEvent e) {
+																							checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(jj).setToolTipText(name_TF.getText());
+																						}
+																						public void insertUpdate(DocumentEvent e) {
+																							checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(jj).setToolTipText(name_TF.getText());
+																						}
+																					});
+																				}
+																				
+																				
+																				c_dP.gridx = 4;
+																				c_dP.gridy = 2 + numberofRanges;
+																				c_dP.weightx = 1;
+																				c_dP.weighty = 1;
+																				rangePanel.add(new JLabel(""), c_dP);  //add empty label to make everything not move
+																	        	
+																				
+																	        	// Apply change to the GUI
+																				defineScrollPane.setViewportView(rangePanel);	
+																        	} else {
+																        		JOptionPane.showMessageDialog(Spectrum_Main.mainFrameReturn(), "'Min value' must be less than or equal to 'Max value'");														        																							
+																        	}
+																		} catch (Exception ee)  {
+														        		JOptionPane.showMessageDialog(Spectrum_Main.mainFrameReturn(), "'Min value' and 'Max value' must be numbers");														        		
+																		}
+																	}
+															    });
+		
 																defineScrollPane.setViewportView(rangePanel);
 															}
 														}
@@ -1453,7 +1605,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 															"Add   '" + currentCheckBoxName + "'   to the set of dynamic identifiers ?", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null);
 													if (response == JOptionPane.NO_OPTION) {
 														allDynamicIdentifiers.get(currentCheckBoxIndex).setSelected(false);
-													} else if (response == JOptionPane.YES_OPTION) {
+													} else if (response == JOptionPane.YES_OPTION && checkboxDynamicIdentifiers.get(currentCheckBoxIndex).size()>0) {
 														//Deselect the No Identifier checkBox
 														checkboxNoIdentifier.setSelected(false);
 														
@@ -1479,6 +1631,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 														allDynamicIdentifiers_ScrollPane.get(currentCheckBoxIndex).setViewportView(tempPanel);
 														
 													} else if (response == JOptionPane.CLOSED_OPTION) {
+														allDynamicIdentifiers.get(currentCheckBoxIndex).setSelected(false);
+													} else {
 														allDynamicIdentifiers.get(currentCheckBoxIndex).setSelected(false);
 													}
 												
@@ -1584,17 +1738,15 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 										checkboxName = "GS";
 									} else if (checkboxName.equals("Prescribed Burn")) {
 										checkboxName = "PB";
-									} else if (checkboxName.equals("Natural Growth e")) {
-										checkboxName = "NGe";
+									} else if (checkboxName.equals("Natural Growth")) {
+										checkboxName = "NG";
 									}
-									else if (checkboxName.equals("Natural Growth r")) {
-										checkboxName = "NGr";
-									}	
+									
 									//Add checkBox if it is selected or disable
 									if (checkboxStaticIdentifiers.get(ii).get(j).isSelected() || !checkboxStaticIdentifiers.get(ii).get(j).isEnabled())	
 										staticIdentifiersColumn = staticIdentifiersColumn + checkboxName + " "	;
 								}
-								staticIdentifiersColumn = staticIdentifiersColumn + "; ";
+								staticIdentifiersColumn = staticIdentifiersColumn + ";";
 							}	
 							data2[i][7] = staticIdentifiersColumn;
 							
@@ -1612,7 +1764,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 												|| !dynamic_identifiersScrollPanel.checkboxDynamicIdentifiers.get(ii).get(j).isEnabled())
 											dynamicIdentifiersColumn = dynamicIdentifiersColumn + checkboxName + " ";
 									}
-									dynamicIdentifiersColumn = dynamicIdentifiersColumn + "; ";
+									dynamicIdentifiersColumn = dynamicIdentifiersColumn + ";";
 								}
 							}	
 							
@@ -1693,6 +1845,24 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			// Create a table
 			model2 = new MyTableModel2();
 			table2 = new JTable(model2) {
+				@Override			//These override is to make the width of the cell fit all contents of the cell
+				public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+					// For the cells in table								
+					Component component = super.prepareRenderer(renderer, row, column);
+					int rendererWidth = component.getPreferredSize().width;
+					TableColumn tableColumn = getColumnModel().getColumn(column);
+					int maxWidth = Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth());
+					
+					// For the column names
+					TableCellRenderer renderer2 = table.getTableHeader().getDefaultRenderer();	
+					Component component2 = renderer2.getTableCellRendererComponent(table,
+				            tableColumn.getHeaderValue(), false, false, -1, column);
+					maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
+					
+					tableColumn.setPreferredWidth(maxWidth);
+					return component;
+				}
+				
 //	             //Implement table cell tool tips           
 //	             public String getToolTipText(MouseEvent e) {
 //	                 String tip = null;
@@ -1705,8 +1875,11 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 //	                	 System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
 //	                 }
 //	                 return tip;
-//	             }
-	         };
+//	             }		
+			};
+
+
+
 	         
 
 	        // Set up Types for each table2 Columns
@@ -1717,14 +1890,14 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	         
 	         
 	        //table2.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-			table2.getColumnModel().getColumn(0).setPreferredWidth(250);
-			table2.getColumnModel().getColumn(colCount2-7).setPreferredWidth(150);	
-			table2.getColumnModel().getColumn(colCount2-6).setPreferredWidth(150);	
-			table2.getColumnModel().getColumn(colCount2-5).setPreferredWidth(150);	
-	        table2.getColumnModel().getColumn(colCount2-4).setPreferredWidth(150);	//Set width of Column "Penalty/Unit (Soft Const.)" bigger
-	        table2.getColumnModel().getColumn(colCount2-3).setPreferredWidth(150);	//Set width of Column "PARAMETERS" bigger
-	        table2.getColumnModel().getColumn(colCount2-2).setPreferredWidth(300);	//Set width of Column "Static identifiers for VARIABLES" bigger
-	        table2.getColumnModel().getColumn(colCount2-1).setPreferredWidth(300);	//Set width of Column "Dynamic identifiers for PARAMETERS" bigger
+//			table2.getColumnModel().getColumn(0).setPreferredWidth(250);
+//			table2.getColumnModel().getColumn(colCount2-7).setPreferredWidth(150);	
+//			table2.getColumnModel().getColumn(colCount2-6).setPreferredWidth(150);	
+//			table2.getColumnModel().getColumn(colCount2-5).setPreferredWidth(150);	
+//	        table2.getColumnModel().getColumn(colCount2-4).setPreferredWidth(150);	//Set width of Column "Penalty/Unit (Soft Const.)" bigger
+//	        table2.getColumnModel().getColumn(colCount2-3).setPreferredWidth(150);	//Set width of Column "PARAMETERS" bigger
+//	        table2.getColumnModel().getColumn(colCount2-2).setPreferredWidth(300);	//Set width of Column "Static identifiers for VARIABLES" bigger
+//	        table2.getColumnModel().getColumn(colCount2-1).setPreferredWidth(300);	//Set width of Column "Dynamic identifiers for PARAMETERS" bigger
 //			table2.setPreferredScrollableViewportSize(new Dimension(1500, 200));
 			table2.setAutoResizeMode(0);
 			table2.setFillsViewportHeight(true);
@@ -1906,9 +2079,13 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	//--------------------------------------------------------------------------------------------------------------------------------
 	// Get values to pass to other classes
 	public File getGeneralInputFile() {
-		File generalInputFile = new File("GeneralInputs.txt");
+		File generalInputFile = new File("Input 1 - GeneralInputs.txt");
 		try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(generalInputFile))) {
-			panelInput0_TEXT.write(fileOut);
+			// Write info
+			fileOut.write("Input Description" + "\t" + "Selected Option");
+			fileOut.newLine();
+			fileOut.write(panelInput0_TEXT.getText());
+//			panelInput0_TEXT.write(fileOut);
 			fileOut.close();
 		} catch (IOException e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -1917,7 +2094,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	}
 	
 	public File getManagementOptionsFile() {
-		File managementOptionsFile = new File("ManagementOptions.txt");	
+		File managementOptionsFile = new File("Input 2A - ManagementOptions.txt");	
 		//Only print out Strata with implemented methods <> null
 		try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(managementOptionsFile))) {
 			for (int j = 0; j < table.getColumnCount(); j++) {
@@ -1940,15 +2117,18 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	}
 	
 	public File getCoverTypeConversionsFile() {
-		File coverTypeConversionsFile = new File("CoverTypeConversions.txt");	
+		File coverTypeConversionsFile = new File("Input 2B - CoverTypeConversions.txt");	
 		try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(coverTypeConversionsFile))) {
 			// Write info in the GUI Cover Type Conversions
+			fileOut.write("CoverType Before EA cut" + "\t" + "CoverType After EA cut");
+			
 			for (int i = 0; i < ConversionCheck_To.length; i++) {
 				for (int j = 0; j < ConversionCheck_To[i].length; j++) {
 					if (ConversionCheck_To[i][j].isSelected()) {
-						String coverTypeConversion_info = ConversionCheck_To[i][i].getText() + " ";		//From this Cover Type
+						fileOut.newLine();
+						String coverTypeConversion_info = ConversionCheck_To[i][i].getText() + "\t";		//From this Cover Type
 						coverTypeConversion_info = coverTypeConversion_info + ConversionCheck_To[i][j].getText();		//To this Cover Type
-						fileOut.write(coverTypeConversion_info + "\n");
+						fileOut.write(coverTypeConversion_info);
 					}
 				}
 			}
@@ -1961,7 +2141,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	}
 	
 	public File getUserConstraintsFile() {
-		File userConstraintsFile = new File("UserConstraints.txt");
+		File userConstraintsFile = new File("Input 3 - UserConstraints.txt");
 		
 		//Only print out rows if columns  1, 2 or 4, 6, 7, 8 <> null
 		try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(userConstraintsFile))) {
@@ -1991,6 +2171,13 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		return userConstraintsFile;	
 	}
 	
-	
-	
+	public File getDatabaseFile() {	
+		File databaseFile = new File("database.db");
+		try {
+			Files.copy(file_Database.toPath(),databaseFile.toPath());
+		} catch (IOException e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+		}
+		return databaseFile;	
+	}	
 }

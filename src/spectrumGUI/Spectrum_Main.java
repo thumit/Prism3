@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JMenu;
@@ -56,7 +57,9 @@ public class Spectrum_Main extends JFrame {
 					System.err.println(ex.getClass().getName() + ": " + ex.getMessage());
 				}
 
+				
 				setTitle("SpectrumLite Demo Version 1.05");
+				setIconImage(new ImageIcon(getClass().getResource("/icon_main.png")).getImage());
 				//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 				addWindowListener(new WindowAdapter() {@Override public void windowClosing(WindowEvent e){exitSpectrumLite();}});				

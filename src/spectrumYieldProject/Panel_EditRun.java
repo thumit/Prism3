@@ -90,7 +90,7 @@ public class Panel_EditRun extends JLayeredPane implements ActionListener {
 	public File[] getGeneralInputFile() {
 		File[] generalInputFile = new File[Panel_YieldProject.getSelectedRuns().length];
 		for (int i = 0; i < listOfEditRuns.length; i++) {
-			File temp = new File(listOfEditRuns[i].getAbsolutePath() + "/GeneralInputs.txt");
+			File temp = new File(listOfEditRuns[i].getAbsolutePath() + "/Input 1 - GeneralInputs.txt");
 			combinePanel[i].getGeneralInputFile().renameTo(temp);
 			generalInputFile[i] = temp;
 		}
@@ -100,7 +100,7 @@ public class Panel_EditRun extends JLayeredPane implements ActionListener {
 	public File[] getCoverTypeConversionsFile() {
 		File[] CoverTypeConversionsFile = new File[Panel_YieldProject.getSelectedRuns().length];
 		for (int i = 0; i < listOfEditRuns.length; i++) {
-			File temp = new File(listOfEditRuns[i].getAbsolutePath() + "/CoverTypeConversions.txt");
+			File temp = new File(listOfEditRuns[i].getAbsolutePath() + "/Input 2B - CoverTypeConversions.txt");
 			combinePanel[i].getCoverTypeConversionsFile().renameTo(temp);
 			CoverTypeConversionsFile[i] = temp;
 		}
@@ -110,7 +110,7 @@ public class Panel_EditRun extends JLayeredPane implements ActionListener {
 	public File[] getManagementOptionsFile() {
 		File[] managementOptionsFile = new File[Panel_YieldProject.getSelectedRuns().length];
 		for (int i = 0; i < listOfEditRuns.length; i++) {
-			File temp = new File(listOfEditRuns[i].getAbsolutePath() + "/ManagementOptions.txt");
+			File temp = new File(listOfEditRuns[i].getAbsolutePath() + "/Input 2A - ManagementOptions.txt");
 			combinePanel[i].getManagementOptionsFile().renameTo(temp);
 			managementOptionsFile[i] = temp;
 		}
@@ -120,10 +120,20 @@ public class Panel_EditRun extends JLayeredPane implements ActionListener {
 	public File[] getUserConstraintsFile() {
 		File[] userConstraintsFile = new File[Panel_YieldProject.getSelectedRuns().length];
 		for (int i = 0; i < listOfEditRuns.length; i++) {
-			File temp = new File(listOfEditRuns[i].getAbsolutePath() + "/UserConstraints.txt");
+			File temp = new File(listOfEditRuns[i].getAbsolutePath() + "/Input 3 - UserConstraints.txt");
 			combinePanel[i].getUserConstraintsFile().renameTo(temp);
 			userConstraintsFile[i] = temp;
 		}
 		return userConstraintsFile;
+	}
+	
+	public File[] getDatabaseFile() {
+		File[] databaseFile = new File[Panel_YieldProject.getSelectedRuns().length];
+		for (int i = 0; i < listOfEditRuns.length; i++) {
+			File temp = new File(listOfEditRuns[i].getAbsolutePath() + "/database.db");
+			combinePanel[i].getDatabaseFile().renameTo(temp);
+			databaseFile[i] = temp;
+		}
+		return databaseFile;
 	}
 }

@@ -1,0 +1,2 @@
+Const. Description (optional)	Const. Type	LB Value	Penalty/Unit < LB (SOFT)	UB Value	Penalty/Unit > UB (SOFT)	PARAMETERS Index	Static identifiers for VARIABLES	Dynamic identifiers for PARAMETERS	
+in period 1,  10,000 acres ponderosa	SOFT	10000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P ;5 S P M L N ;6 EA GS PB NG ;7 5 ;	NoIdentifier	
