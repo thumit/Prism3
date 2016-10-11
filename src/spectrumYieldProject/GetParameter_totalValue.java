@@ -14,7 +14,7 @@ public class GetParameter_totalValue {
 		if (all_dynamicIdentifiers_columnIndexes.contains("NoIdentifier") && parameters_indexes_list.contains("NoParameter")) {
 			value_to_return = 1;
 		} 
-		else {		//Check the yield table		
+		else {		// Check the yield table 		
 		
 			if (s5.equals("P")) s5 = "VDIP";
 			if (s5.equals("D")) s5 = "VDTD";
