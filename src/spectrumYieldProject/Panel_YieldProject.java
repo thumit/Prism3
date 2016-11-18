@@ -29,6 +29,7 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JMenuItem;
@@ -63,8 +64,10 @@ import org.jfree.chart.labels.PieSectionLabelGenerator;
 import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
 import org.jfree.chart.plot.PieLabelLinkStyle;
 import org.jfree.chart.plot.PiePlot3D;
+import org.jfree.chart.plot.Plot;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
+import org.jfree.ui.RectangleEdge;
 import org.jfree.util.Rotation;
 
 import spectrumGUI.Spectrum_Main;
@@ -841,8 +844,11 @@ public class Panel_YieldProject extends JLayeredPane {
 					
 					//Get all input files
 					File[] generalInputFile = editPanel.getGeneralInputFile();
-					File[] managementOptionsFile = editPanel.getManagementOptionsFile();
-					File[] CoverTypeConversionsFile = editPanel.getCoverTypeConversionsFile();
+					File[] selectedStrataFile = editPanel.getSelectedStrataFile();
+					File[] requirementsFile = editPanel.getRequirementsFile();
+					File[] srDrequirementsFile = editPanel.getSRDRequirementsFile();
+					File[] srDisturbancesFile = editPanel.getSRDisturbancesFile();
+					File[] msFireFile = editPanel.getMSFireFile();
 					File[] userConstraintsFile = editPanel.getUserConstraintsFile();
 					File[] databaseFile = editPanel.getDatabaseFile();
 					
@@ -850,8 +856,11 @@ public class Panel_YieldProject extends JLayeredPane {
 					for (int i = 0; i < listOfEditRuns.length; i++) {			
 							try {
 								generalInputFile[i].createNewFile();
-								managementOptionsFile[i].createNewFile();
-								CoverTypeConversionsFile[i].createNewFile();
+								selectedStrataFile[i].createNewFile();
+								requirementsFile[i].createNewFile();
+								srDrequirementsFile[i].createNewFile();
+								msFireFile[i].createNewFile();
+								srDisturbancesFile[i].createNewFile();
 								userConstraintsFile[i].createNewFile();
 								databaseFile[i].createNewFile();
 							} catch (IOException e) {
@@ -1070,15 +1079,15 @@ public class Panel_YieldProject extends JLayeredPane {
 		    //---------------------------------------------------------------
 		    //Create a chart
 		    PieDataset dataset = create_ManagementOverview_dataset();
-	        JFreeChart chart = createChart(dataset);
+	        JFreeChart chart = createChart(dataset, "Management decisions at the start of planning horizon for " + rowCount + " EXISTING STRATA");
 
 	        // add the chart to a panel...
 	        ChartPanel chartPanel = new ChartPanel(chart);
 	        chart.getLegend().setFrame(BlockBorder.NONE);	//Remove the ugly border surrounded Legend
-	        TitledBorder border = new TitledBorder("Management (acres) for " + rowCount + " EXISTING STRATA across the entire planning horizon");
+	        TitledBorder border = new TitledBorder("");
 			border.setTitleJustification(TitledBorder.CENTER);
 			chartPanel.setBorder(border);
-	        chartPanel.setPreferredSize(new Dimension(520, 350));
+	        chartPanel.setPreferredSize(new Dimension(600, 350));
 	        //---------------------------------------------------------------
 	        
 	        
@@ -1088,15 +1097,15 @@ public class Panel_YieldProject extends JLayeredPane {
 	        
 	        //Create a chart
 		    PieDataset dataset2 = create_strataOverview_dataset();
-	        JFreeChart chart2 = createChart(dataset2);
+	        JFreeChart chart2 = createChart(dataset2, "Management decisions at the start of planning horizon for '" + strataName + "' ");
 
 	        // add the chart to a panel...
         	ChartPanel chartPanel2 = new ChartPanel(chart2);
 	        chart2.getLegend().setFrame(BlockBorder.NONE);	//Remove the ugly border surrounded Legend
-	        TitledBorder border2 = new TitledBorder("Management (acres) for '" + strataName + "' across the entire planning horizon");
+	        TitledBorder border2 = new TitledBorder("");
 			border2.setTitleJustification(TitledBorder.CENTER);
 			chartPanel2.setBorder(border2);
-	        chartPanel2.setPreferredSize(new Dimension(500, 350));
+	        chartPanel2.setPreferredSize(new Dimension(600, 350));
 	        //---------------------------------------------------------------
 	        
 	        
@@ -1123,7 +1132,7 @@ public class Panel_YieldProject extends JLayeredPane {
 			c.weightx = 0;
 		    c.weighty = 1;
 			c.fill = GridBagConstraints.VERTICAL;
-			thisTable.setPreferredScrollableViewportSize(new Dimension(1044, 100));			
+			thisTable.setPreferredScrollableViewportSize(new Dimension(1216, 100));			
 			JScrollPane tableScrollPane = new JScrollPane(thisTable);
 			tableScrollPane.setBorder(BorderFactory.createEmptyBorder());	//Hide the border line surrounded scrollPane
 			super.add(tableScrollPane, c);
@@ -1137,17 +1146,20 @@ public class Panel_YieldProject extends JLayeredPane {
 			double total_PB = 0;
 			double total_GS = 0;
 			double total_EA = 0;
+			double total_MS = 0;
 			for (int i = 0; i < data.length; i++) { // Loop table rows
 				total_NG = total_NG + Double.parseDouble(data[i][7].toString());
 				total_PB = total_PB + Double.parseDouble(data[i][8].toString());
 				total_GS = total_GS + Double.parseDouble(data[i][9].toString());
 				total_EA = total_EA + Double.parseDouble(data[i][10].toString());
+				total_MS = total_MS + Double.parseDouble(data[i][11].toString());
 			}
 		
 			dataset.setValue("Natural Growth", total_NG);
 			dataset.setValue("Prescribed Burn", total_PB);
 			dataset.setValue("Group Selection", total_GS);
 			dataset.setValue("Even Age", total_EA);
+			dataset.setValue("Mixed Severity Wildfire", total_MS);
 			
 			return dataset;
 		}
@@ -1160,17 +1172,20 @@ public class Panel_YieldProject extends JLayeredPane {
 				double total_PB = 0;
 				double total_GS = 0;
 				double total_EA = 0;
+				double total_MS = 0;
 					
 				total_NG = total_NG + Double.parseDouble(data[table.getSelectedRow()][7].toString());
 				total_PB = total_PB + Double.parseDouble(data[table.getSelectedRow()][8].toString());
 				total_GS = total_GS + Double.parseDouble(data[table.getSelectedRow()][9].toString());
 				total_EA = total_EA + Double.parseDouble(data[table.getSelectedRow()][10].toString());
+				total_MS = total_MS + Double.parseDouble(data[table.getSelectedRow()][11].toString());
 
 			
 				dataset.setValue("Natural Growth", total_NG);
 				dataset.setValue("Prescribed Burn", total_PB);
 				dataset.setValue("Group Selection", total_GS);
 				dataset.setValue("Even Age", total_EA);
+				dataset.setValue("Mixed Severity Wildfire", total_MS);
 			}
 
 			return dataset;
@@ -1178,27 +1193,36 @@ public class Panel_YieldProject extends JLayeredPane {
 		
 		
 		@SuppressWarnings("deprecation")
-		private JFreeChart createChart(PieDataset dataset) {
-			JFreeChart chart = ChartFactory.createPieChart3D(null, // chart title
+		private JFreeChart createChart(PieDataset dataset, String chartName) {
+			JFreeChart chart = ChartFactory.createPieChart3D(chartName, // chart title
 					dataset, // dataset
 					true, // include legend
-					true, false);
+					true, false);		
+			chart.setBorderVisible(true);
+			chart.setBackgroundPaint(Color.LIGHT_GRAY);
+			chart.getLegend().setBackgroundPaint(null);
+			chart.getLegend().setPosition(RectangleEdge.BOTTOM);
+			chart.getLegend().setItemFont(new java.awt.Font("defaultFont", java.awt.Font.PLAIN, 13));
+			chart.getTitle().setFont(new java.awt.Font("defaultFont", java.awt.Font.BOLD, 14));
+					
 			PiePlot3D  plot = (PiePlot3D ) chart.getPlot();
+			plot.setOutlinePaint(null);
 			plot.setStartAngle(135);
 	        plot.setDirection(Rotation.CLOCKWISE);
-	        plot.setForegroundAlpha(0.5f);
-//	        plot.setBackgroundPaint(null);
-			plot.setNoDataMessage("No data available");
+	        plot.setForegroundAlpha(0.6f);
+	        plot.setBackgroundPaint(null);
+			plot.setNoDataMessage("Select an existing strata in the table below to view chart");
 			plot.setExplodePercent(1, 0.1);
 			
 			PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(
-		            "{0}: {1} ({2})", new DecimalFormat("0"), new DecimalFormat("0%"));
-		    plot.setLabelGenerator(gen);
-		    
+		            "{0}: {1} ({2})", new DecimalFormat("0.00 acres"), new DecimalFormat("0.0%"));			// "{0}: {1} ({2})"
+		    plot.setLabelGenerator(gen);	    
 		    plot.setLabelBackgroundPaint(null);
 		    plot.setLabelShadowPaint(null);
 		    plot.setLabelOutlinePaint(null);
 		    plot.setLabelLinkStyle(PieLabelLinkStyle.QUAD_CURVE);
+		    
+		  
 		    
 //		    plot.setLabelLinksVisible(false);
 //			plot.setLabelGenerator(null);
@@ -1226,7 +1250,17 @@ public class Panel_YieldProject extends JLayeredPane {
 	      }
 	   }
 	
-	// --------------------------------------------------------------------------------------------------------------------------------
+	// All child components will be transparent----------------------------------------------------------------------------------------------------------------	
+	public void setOpaqueForAll(JComponent aComponent, boolean isOpaque) {
+		  aComponent.setOpaque(isOpaque);
+		  Component[] comps = aComponent.getComponents();
+		  for (Component c : comps) {
+		    if (c instanceof JComponent) {
+		      setOpaqueForAll((JComponent) c, isOpaque);
+		    }
+		  }
+		}	
+	// --------------------------------------------------------------------------------------------------------------------------------		
 	public void showNothing() {
 //		displayTextField.setText(null); // Show nothing on the TextField
 		scrollPane_Right.setViewportView(null);

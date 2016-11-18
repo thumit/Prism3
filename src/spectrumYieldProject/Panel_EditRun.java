@@ -97,30 +97,60 @@ public class Panel_EditRun extends JLayeredPane implements ActionListener {
 		return generalInputFile;
 	}	
 
-	public File[] getCoverTypeConversionsFile() {
-		File[] CoverTypeConversionsFile = new File[Panel_YieldProject.getSelectedRuns().length];
+	public File[] getSelectedStrataFile() {
+		File[] selectedStrataFile = new File[Panel_YieldProject.getSelectedRuns().length];
 		for (int i = 0; i < listOfEditRuns.length; i++) {
-			File temp = new File(listOfEditRuns[i].getAbsolutePath() + "/Input 2B - CoverTypeConversions.txt");
-			combinePanel[i].getCoverTypeConversionsFile().renameTo(temp);
-			CoverTypeConversionsFile[i] = temp;
+			File temp = new File(listOfEditRuns[i].getAbsolutePath() + "/Input 2 - SelectedStrata.txt");
+			combinePanel[i].getSelectedStrataFile().renameTo(temp);
+			selectedStrataFile[i] = temp;
 		}
-		return CoverTypeConversionsFile;
+		return selectedStrataFile;
+	}	
+
+	public File[] getRequirementsFile() {
+		File[] requirementsFile = new File[Panel_YieldProject.getSelectedRuns().length];
+		for (int i = 0; i < listOfEditRuns.length; i++) {
+			File temp = new File(listOfEditRuns[i].getAbsolutePath() + "/Input 3 - UniversalRequirements.txt");
+			combinePanel[i].getRequirementsFile().renameTo(temp);
+			requirementsFile[i] = temp;
+		}
+		return requirementsFile;
+	}	
+
+	public File[] getSRDRequirementsFile() {
+		File[] SRDrequirementsFile = new File[Panel_YieldProject.getSelectedRuns().length];
+		for (int i = 0; i < listOfEditRuns.length; i++) {
+			File temp = new File(listOfEditRuns[i].getAbsolutePath() + "/Input 7 - SRDRequirements.txt");
+			combinePanel[i].getSRDRequirementsFile().renameTo(temp);
+			SRDrequirementsFile[i] = temp;
+		}
+		return SRDrequirementsFile;
+	}
+	
+	public File[] getMSFireFile() {
+		File[] MSFireFile = new File[Panel_YieldProject.getSelectedRuns().length];
+		for (int i = 0; i < listOfEditRuns.length; i++) {
+			File temp = new File(listOfEditRuns[i].getAbsolutePath() + "/Input 4 - MSFire.txt");
+			combinePanel[i].getMSFireFile().renameTo(temp);
+			MSFireFile[i] = temp;
+		}
+		return MSFireFile;
 	}	
 	
-	public File[] getManagementOptionsFile() {
-		File[] managementOptionsFile = new File[Panel_YieldProject.getSelectedRuns().length];
+	public File[] getSRDisturbancesFile() {
+		File[] SRDisturbancesFile = new File[Panel_YieldProject.getSelectedRuns().length];
 		for (int i = 0; i < listOfEditRuns.length; i++) {
-			File temp = new File(listOfEditRuns[i].getAbsolutePath() + "/Input 2A - ManagementOptions.txt");
-			combinePanel[i].getManagementOptionsFile().renameTo(temp);
-			managementOptionsFile[i] = temp;
+			File temp = new File(listOfEditRuns[i].getAbsolutePath() + "/Input 5 - SRDisturbances.txt");
+			combinePanel[i].getSRDisturbancesFile().renameTo(temp);
+			SRDisturbancesFile[i] = temp;
 		}
-		return managementOptionsFile;
-	}	
+		return SRDisturbancesFile;
+	}
 	
 	public File[] getUserConstraintsFile() {
 		File[] userConstraintsFile = new File[Panel_YieldProject.getSelectedRuns().length];
 		for (int i = 0; i < listOfEditRuns.length; i++) {
-			File temp = new File(listOfEditRuns[i].getAbsolutePath() + "/Input 3 - UserConstraints.txt");
+			File temp = new File(listOfEditRuns[i].getAbsolutePath() + "/Input 6 - UserConstraints.txt");
 			combinePanel[i].getUserConstraintsFile().renameTo(temp);
 			userConstraintsFile[i] = temp;
 		}

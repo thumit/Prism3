@@ -1,14 +1,20 @@
 package spectrumGUI;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsDevice.WindowTranslucency;
+import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JMenu;
@@ -19,8 +25,8 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
-
 import spectrumDatabaseUtil.Panel_DatabaseManagement;
+import spectrumYieldProject.ComponentResizer;
 import spectrumYieldProject.Panel_YieldProject;
 
 @SuppressWarnings("serial")
@@ -33,6 +39,7 @@ public class Spectrum_Main extends JFrame {
 	private JMenuItem Contents, About; // For MenuMenuHelpFile
 	
 	private int OpenProjectCount = 0;
+	private int pX,pY;
 	
 	private static Panel_BackGroundDesktop spectrumDesktopPane;
 	private static String currentProjectName;
@@ -40,7 +47,20 @@ public class Spectrum_Main extends JFrame {
 	
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public static void main(String[] args) {
-		new Spectrum_Main();
+//		new Spectrum_Main();
+			
+		//For translucent windows
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		GraphicsDevice gd = ge.getDefaultScreenDevice();
+		 if (gd.isWindowTranslucencySupported(WindowTranslucency.TRANSLUCENT)) {
+			setDefaultLookAndFeelDecorated(true);	
+			Spectrum_Main main = new Spectrum_Main();
+//			main.setUndecorated(true);
+			main.setOpacity(0.95f);		
+			ComponentResizer cr = new ComponentResizer();
+			cr.registerComponent(main);
+		}    
+			
 	}
 
 	//--------------------------------------------------------------------------------------------------------------------------------
@@ -51,14 +71,18 @@ public class Spectrum_Main extends JFrame {
 
 				try {
 					//UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+					// UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 					UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
 				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
 						| UnsupportedLookAndFeelException ex) {
 					System.err.println(ex.getClass().getName() + ": " + ex.getMessage());
 				}
 
+				//These 2 lines make SpectrumLite Main full screen
+//				setExtendedState(JFrame.MAXIMIZED_BOTH); 
+//				setUndecorated(true);
 				
-				setTitle("SpectrumLite Demo Version 1.05");
+				setTitle("SpectrumLite Demo Version 1.06");
 				setIconImage(new ImageIcon(getClass().getResource("/icon_main.png")).getImage());
 				//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -80,8 +104,25 @@ public class Spectrum_Main extends JFrame {
 				MenuUtilities = new JMenu("Utilities");
 				MenuHelp = new JMenu("Help");
 
-				spectrum_Menubar = new JMenuBar();
+				
 				spectrumDesktopPane = new Panel_BackGroundDesktop();
+				spectrum_Menubar = new JMenuBar();
+				// Add mouse listener for JMenuBar
+				spectrum_Menubar.addMouseListener(new MouseAdapter() {
+					public void mousePressed(MouseEvent me) {
+						// Get x,y and store them
+						pX = me.getX();
+						pY = me.getY();
+					}
+				});
+
+				// Add MouseMotionListener for detecting drag
+				spectrum_Menubar.addMouseMotionListener(new MouseAdapter() {
+					public void mouseDragged(MouseEvent me) {
+						setLocation(getLocation().x + me.getX() - pX, getLocation().y + me.getY() - pY);
+					}
+				});
+							
 				
 				// Add components: Menubar, Menus, MenuItems----------------------------------
 				MenuFile.add(NewProject);
@@ -100,6 +141,8 @@ public class Spectrum_Main extends JFrame {
 
 				setJMenuBar(spectrum_Menubar);	
 				getContentPane().add(spectrumDesktopPane);
+				setOpaqueForAll(spectrum_Menubar, false);
+				setOpaqueForAll(spectrumDesktopPane, false);
 				
 				pack();
 				setLocationRelativeTo(null);
@@ -121,7 +164,7 @@ public class Spectrum_Main extends JFrame {
 								ProjectInternalFrame.pack(); // set internal frame to size of contents
 								
 								spectrumDesktopPane.add(ProjectInternalFrame, BorderLayout.CENTER); // attach internal frame
-								ProjectInternalFrame.setSize((int) (getWidth()/1.1),(int) (getHeight()/1.25));
+								ProjectInternalFrame.setSize((int) (getWidth()/1.08),(int) (getHeight()/1.25));
 								ProjectInternalFrame.setLocation(50 * (OpenProjectCount % 10), 50 * (OpenProjectCount  % 10));
 								ProjectInternalFrame.setVisible(true); // show internal frame
 														
@@ -253,7 +296,17 @@ public class Spectrum_Main extends JFrame {
 			System.exit(0);
 		}
 	} // end public void exitSpectrumLite()
-
+	// --------------------------------------------------------------------------------------------------------------------------------	
+	// All child components will be transparent----------------------------------------------------------------------------------------------------------------	
+	public void setOpaqueForAll(JComponent aComponent, boolean isOpaque) {
+		  aComponent.setOpaque(isOpaque);
+		  Component[] comps = aComponent.getComponents();
+		  for (Component c : comps) {
+		    if (c instanceof JComponent) {
+		      setOpaqueForAll((JComponent) c, isOpaque);
+		    }
+		  }
+		}	
 	//--------------------------------------------------------------------------------------------------------------------------------
 	@Override
 	public Dimension getPreferredSize() {

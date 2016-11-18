@@ -1,9 +1,0 @@
-Strata ID	Layer 1	Layer 2	Layer 3	Layer 4	Layer 5	Layer 6	Total area (acres)	Methods for Implementation	
-BNNCAL	B	N	N	C	A	L	335	This strata is in the model, all methods are allowed	
-BNNCAM	B	N	N	C	A	M	63	This strata is in the model, all methods are allowed	
-BNNCAP	B	N	N	C	A	P	64	This strata is in the model, all methods are allowed	
-BNNCCL	B	N	N	C	C	L	4121	This strata is in the model, all methods are allowed	
-BNNCCM	B	N	N	C	C	M	1353	This strata is in the model, all methods are allowed	
-BNNCCP	B	N	N	C	C	P	651	This strata is in the model, all methods are allowed	
-BNNCCS	B	N	N	C	C	S	97	This strata is in the model, all methods are allowed	
-BNNCDL	B	N	N	C	D	L	1725	This strata is in the model, all methods are allowed	

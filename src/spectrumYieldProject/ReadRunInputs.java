@@ -9,6 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import javax.swing.JOptionPane;
+
+import spectrumGUI.Spectrum_Main;
+
 public class ReadRunInputs {
 	//For readGeneralInputs
 	private int GI_totalRows, GI_totalColumns;
@@ -405,33 +409,140 @@ public class ReadRunInputs {
 		return parameters_indexes_list;
 	}	
 //-------------------------------------------------------------------------------------------------------------------------------------------------	
-	//For readCoverTypeConversions
+	//For readRequirements
+	private List<String> coverTypeConversions_and_RotationAges_list;	
 	private List<String> coverTypeConversions_list;	
 	
-	public void readCoverTypeConversions (File file) {
-		try {		
+	public void readRequirements (File file) {
+		try {
 			// All lines except the 1st line to be in a list;		
 			List<String> list;	
 			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
-			list.remove(0);	//Remove the first row "From" "To"
+			list.remove(0);	//Remove the first row (Column names)
 		
+			coverTypeConversions_and_RotationAges_list = new ArrayList<String>();
 			coverTypeConversions_list = new ArrayList<String>();
+			
 			for (int i = 0; i < list.size(); i++) {
-				coverTypeConversions_list.add(list.get(i).replaceAll("\t", " "));
-			}
+				String[] values = list.get(i).split("\t");
+				String listname = values[0] + " " + values[1];
+				coverTypeConversions_list.add(listname);
 
+				int RA_min = Integer.parseInt(values[2]);
+				int RA_max = Integer.parseInt(values[3]);
+
+				for (int age = RA_min; age <= RA_max; age++) {
+					String listname2 = values[0] + " " + values[1] + " " + age;
+					coverTypeConversions_and_RotationAges_list.add(listname2);
+				}
+			}
+			
 		} catch (IOException e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 		}
 	}
 	
+	public List<String> getcoverTypeConversions_and_RotationAges () {
+		return coverTypeConversions_and_RotationAges_list;
+	}		
+	
 	public List<String> getCoverTypeConversions () {
 		return coverTypeConversions_list;
-	}		
+	}
 
+	
+	
 //-------------------------------------------------------------------------------------------------------------------------------------------------	
+	//For readMSFire
+	private List<Double> msFireProportion_list;	
 	
+	public void readMSFire (File file) {
+		try {
+			// All lines except the 1st line to be in a list;		
+			List<String> list;	
+			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
+			list.remove(0);	//Remove the first row (Column names)
+		
+			msFireProportion_list = new ArrayList<Double>();		
+			for (int i = 0; i < list.size(); i++) {
+				String[] values = list.get(i).split("\t");				
+				msFireProportion_list.add(Double.parseDouble(values[2]));
+			}
+			
+		} catch (IOException e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+		}
+	}		
+							
+	public double[] getMSFireProportion () {		
+		double[] array = Stream.of(msFireProportion_list.toArray(new Double[msFireProportion_list.size()])).mapToDouble(Double::doubleValue).toArray();
+		return array;
+	}	
 	
+	//-------------------------------------------------------------------------------------------------------------------------------------------------	
+	//For readSRDFile
+	private double[][] SRDProportion;	
 	
+	public void readSRDFile (File file) {
+		try {
+			// All lines except the 1st line to be in a list;		
+			List<String> list;	
+			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
+			list.remove(0);	//Remove the first row (Column names)
+			int ageClass = 0;
+			int s5 = 0;
+		
+			//Define the size of array
+			String[] firstRowValue = list.get(0).split("\t");
+			int totalRows = list.size();
+			int totalColumns = firstRowValue.length;	
+			SRDProportion = new double[totalColumns - 1][totalRows + 1];		//This is 	P(s5,a)				since age = row + 1 the size should be [totalRows + 1]			
+																											// - 1st column which is the age class column	
+			
+			//Put the values to arrays
+			for (int i = 0; i < totalRows; i++) {
+				ageClass = i + 1;
+				String[] values = list.get(i).split("\t");	
+				for (int j = 1; j < totalColumns; j++) {
+					s5 = j - 1;
+					SRDProportion[s5][ageClass] = Double.parseDouble(values[j]);							
+				}
+			}
+			
+		} catch (IOException e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+		}
+	}		
+							
+	public double[][] getSRDProportion () {		
+		return SRDProportion;
+	}			
+
+	//-------------------------------------------------------------------------------------------------------------------------------------------------		
+	//For readSRDrequirementFile
+	private List<Double> SRDrequirementProportion_list;	
+	
+	public void readSRDrequirementFile (File file) {
+		try {
+			// All lines except the 1st line to be in a list;		
+			List<String> list;	
+			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
+			list.remove(0);	//Remove the first row (Column names)
+		
+			SRDrequirementProportion_list = new ArrayList<Double>();		
+			for (int i = 0; i < list.size(); i++) {
+				String[] values = list.get(i).split("\t");				
+				SRDrequirementProportion_list.add(Double.parseDouble(values[3]));
+			}
+			
+		} catch (IOException e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+		}
+	}		
+							
+	public double[] getSRDrequirementProportion () {		
+		double[] array = Stream.of(SRDrequirementProportion_list.toArray(new Double[SRDrequirementProportion_list.size()])).mapToDouble(Double::doubleValue).toArray();
+		return array;
+	}		
 	
 }

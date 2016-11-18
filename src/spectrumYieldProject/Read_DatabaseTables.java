@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JLabel;
@@ -148,7 +149,38 @@ public class Read_DatabaseTables {
 	}
 	
 	
-	
+	public String get_stratingAgeClass(String s5, String s6, String silviculturalMethod, String timingChoice) {
+		if (s5.equals("P")) s5 = "VDIP";
+		if (s5.equals("D")) s5 = "VDTD";
+		if (s5.equals("W")) s5 = "VMIW";
+		if (s5.equals("C")) s5 = "VMTC";
+		if (s5.equals("I")) s5 = "VSII";
+		if (s5.equals("A")) s5 = "VSTA";
+		if (s5.equals("L")) s5 = "VLPP";
+		if (s5.equals("N")) s5 = "NS";
+		
+		if (s6.equals("N")) s6 = "50";
+		if (s6.equals("S")) s6 = "30";
+		if (s6.equals("P")) s6 = "20";
+		if (s6.equals("M")) s6 = "13";
+		if (s6.equals("L")) s6 = "12";
+		
+		silviculturalMethod = "A";	//only use NG table
+		timingChoice ="0";
+		
+		String tableName_toFind = s5 + s6 + silviculturalMethod + timingChoice;
+		String valueReturn = null;
+		
+		try {
+			int index = Arrays.asList(nameOftable).indexOf(tableName_toFind);
+			valueReturn = table_values[index][0][2].toString();			//row 0 is the first period (1sr row), column 2 is "St_Age/10"
+		} catch (Exception e) {
+			valueReturn = "not found";
+			System.err.println(e.getClass().getName() + ": " + e.getMessage() + " not found age class from yield table: " + tableName_toFind);
+		}
+		
+		return valueReturn;	
+	}
 	
 	
 	
