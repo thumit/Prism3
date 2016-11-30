@@ -436,7 +436,12 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										for (int i = 1; i < read.get_MO_TotalRows(); i++) {	//From 2nd row			
 											if (Input2_value[i][0].equals(strataName)) {
 												StrataArea[s1][s2][s3][s4][s5][s6] = Double.parseDouble(Input2_value[i][7]);		//area
-												StartingAge[s1][s2][s3][s4][s5][s6] = Integer.parseInt(Input2_value[i][read.get_MO_TotalColumns() - 2]);	//age class	
+												
+												if (Input2_value[i][read.get_MO_TotalColumns() - 2].toString().equals("notfound")) {
+													StartingAge[s1][s2][s3][s4][s5][s6] = 1;		//Assume age class = 1 if not found any yield table for this existing strata
+												} else {
+													StartingAge[s1][s2][s3][s4][s5][s6] = Integer.parseInt(Input2_value[i][read.get_MO_TotalColumns() - 2]);	//age class
+												}										
 											}	
 										}
 									}

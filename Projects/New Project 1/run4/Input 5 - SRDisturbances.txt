@@ -1,5 +1,5 @@
-Age Class of Regenerated Strata	P	D	W	C	I	A	L	N	
-1	0.2	0.2	0.2	0.2	0.2	0.2	0.2	0.0	
+Age Class of Regenerated Strata	D	W	P	C	I	A	L	N	
+1	0.2	0.2	23.0	0.2	0.2	0.2	0.2	0.0	
 2	0.2	0.2	0.2	0.2	0.2	0.2	0.2	0.0	
 3	0.2	0.2	0.2	0.2	0.2	0.2	0.2	0.0	
 4	0.2	0.2	0.2	0.2	0.2	0.2	0.2	0.0	

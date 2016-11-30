@@ -45,6 +45,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -61,6 +62,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
+import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -345,6 +347,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	class PaneL_General_Inputs_Text extends JTextArea {
 		public PaneL_General_Inputs_Text() {		
 			setRows(10);		// set text areas with 10 rows when starts	
+			setEditable(false);
 		}
 	}
 
@@ -1671,7 +1674,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			// 2nd grid -----------------------------------------------------------------------
 			// 2nd grid -----------------------------------------------------------------------
 			JPanel StandReplacing_Panel = new JPanel();		
-			TitledBorder border3 = new TitledBorder("Specify the proportion of regenerated strata area (%) loss due to Stand Replacing Disturbances in each time period");
+			TitledBorder border3 = new TitledBorder("Specify the proportion of regenerated strata area (%) lost due to Stand Replacing Disturbances in each time period");
 			border3.setTitleJustification(TitledBorder.CENTER);
 			StandReplacing_Panel.setBorder(border3);
 			StandReplacing_Panel.setLayout(new GridBagLayout());
@@ -3005,7 +3008,18 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			TableRowSorter<MyTableModel2> sorter2 = new TableRowSorter<MyTableModel2>(model2);	//Add sorter
 			table2.setRowSorter(sorter2);
 			
+			
+		    MultiLineTableCellRenderer renderer = new MultiLineTableCellRenderer();
+
+		    //set TableCellRenderer into a specified JTable column class
+		    table2.setDefaultRenderer(String[].class, renderer);
+
+		    //or, set TableCellRenderer into a specified JTable column
+		    table2.getColumnModel().getColumn(0).setCellRenderer(renderer);
+			
    
+		    
+		    
 			// Create the scroll pane and add the constraintTablePanel to it.
 			JScrollPane constraints_ScrollPane = new JScrollPane();
 			constraints_ScrollPane.setViewportView(table2);
@@ -3164,8 +3178,26 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 	
 	
-	
-	
+	//--------------------------------------------------------------------------------------------------------------------------------
+	public class MultiLineTableCellRenderer extends JList<String> implements TableCellRenderer {
+
+	    @Override
+	    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+	        //make multi line where the cell value is String[]
+	        if (value instanceof String[]) {
+	            setListData((String[]) value);
+	        }
+
+	        //cell backgroud color when selected
+	        if (isSelected) {
+	            setBackground(UIManager.getColor("Table.selectionBackground"));
+	        } else {
+	            setBackground(UIManager.getColor("Table.background"));
+	        }
+
+	        return this;
+	    }
+	}	
 	
 	
 	
