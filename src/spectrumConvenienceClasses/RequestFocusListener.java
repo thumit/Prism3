@@ -42,7 +42,7 @@ public class RequestFocusListener implements AncestorListener
 	 */
 	public RequestFocusListener(boolean removeListener)
 	{
-		this.removeListener = removeListener;
+//		this.removeListener = removeListener;				//This make the component focus multiple times
 	}
 
 	@Override

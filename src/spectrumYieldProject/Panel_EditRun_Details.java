@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BoxLayout;
@@ -77,7 +78,6 @@ import javax.swing.table.TableRowSorter;
 import javax.swing.text.DefaultFormatter;
 
 import spectrumGUI.Spectrum_Main;
-import spectrumYieldProject.Panel_SolveRun.MyTableModel;
 
 public class Panel_EditRun_Details extends JLayeredPane implements ActionListener {
 	private JSplitPane GUI_Text_splitPanel ;
@@ -2085,10 +2085,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				    c2.weighty = 1;
 				    
 					setViewportView(parametersPanel);
-				    
-    
-				    //Add variableGroups to the comboBox
-					JComboBox comboGroups = new JComboBox();			
+				    		
 		
 					JButton tempButton = new JButton(nameTag);
 					// add comboBox to the Panel
@@ -2220,10 +2217,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					GridBagConstraints c2 = new GridBagConstraints();
 					c2.fill = GridBagConstraints.HORIZONTAL;
 					c2.weightx = 1;
-				    c2.weighty = 1;
-				    
-				    //Add variableGroups to the comboBox
-					JComboBox comboGroups = new JComboBox();			
+				    c2.weighty = 1;		
 		
 					JButton tempButton = new JButton(nameTag);
 					// add comboBox to the Panel

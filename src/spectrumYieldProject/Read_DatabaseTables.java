@@ -11,8 +11,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.swing.JLabel;
-
 public class Read_DatabaseTables {
 	private Object[][][] table_values;			// Note: indexes start from 0 
 	private Object[] nameOftable;

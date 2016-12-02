@@ -1,5 +1,6 @@
 package spectrumGUI;
 
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -40,8 +41,9 @@ import javax.swing.event.InternalFrameListener;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
-import spectrumConvenienceClasses.CheckNameValid;
+import spectrumConvenienceClasses.NameHandle;
 import spectrumConvenienceClasses.RequestFocusListener;
+import spectrumConvenienceClasses.WindowAppearanceHandle;
 import spectrumDatabaseUtil.Panel_DatabaseManagement;
 import spectrumYieldProject.ComponentResizer;
 import spectrumYieldProject.Panel_YieldProject;
@@ -50,8 +52,7 @@ import spectrumYieldProject.Panel_YieldProject;
 public class Spectrum_Main extends JFrame {
 	// Define variables------------------------------------------------------------------------
 	private File 		projectsFolder;
-	private String 		workingLocation,
-						seperator = "/";
+	private String 		workingLocation;
 	
 	private ImageIcon 	icon;
 	private Image 		scaleImage;
@@ -59,12 +60,11 @@ public class Spectrum_Main extends JFrame {
 	private JMenuBar 	spectrum_Menubar;
 	private JMenu 		menuFile, menuUtility, menuHelp,
 						menuOpenProject;
-	private JMenuItem 	newProject, saveProject, saveProjectAs, closeProject, exitSoftware, //Children of MenuFile
+	private JMenuItem 	newProject, exitSoftware, //Children of MenuFile
 						existingProject, //For menuOpenProject
 						DatabaseManagement, //For MenuUtility
 						contents, update, contact, about; //For MenuMenuHelpFile
 	
-	private int 		OpenProjectCount = 0;
 	private int 		pX,pY;
 	
 	private static Panel_BackGroundDesktop spectrumDesktopPane;
@@ -75,18 +75,17 @@ public class Spectrum_Main extends JFrame {
 	public static void main(String[] args) {
 //		new Spectrum_Main();
 			
-		//For translucent windows
+		// For translucent windows
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice gd = ge.getDefaultScreenDevice();
-		 if (gd.isWindowTranslucencySupported(WindowTranslucency.TRANSLUCENT)) {
-			setDefaultLookAndFeelDecorated(true);	
+		if (gd.isWindowTranslucencySupported(WindowTranslucency.TRANSLUCENT)) {
+			setDefaultLookAndFeelDecorated(true);
 			Spectrum_Main main = new Spectrum_Main();
-//			main.setUndecorated(true);
-			main.setOpacity(0.95f);		
+		// 	main.setUndecorated(true);
+			main.setOpacity(0.95f);
 			ComponentResizer cr = new ComponentResizer();
 			cr.registerComponent(main);
-		}    
-			
+		} 		
 	}
 
 	//--------------------------------------------------------------------------------------------------------------------------------
@@ -97,7 +96,7 @@ public class Spectrum_Main extends JFrame {
 
 				try {
 					//UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-					// UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+					//UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 					UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
 				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
 						| UnsupportedLookAndFeelException ex) {
@@ -108,7 +107,7 @@ public class Spectrum_Main extends JFrame {
 //				setExtendedState(JFrame.MAXIMIZED_BOTH); 
 //				setUndecorated(true);
 				
-				setTitle("SpectrumLite Demo Version 1.07");
+				setTitle("SpectrumLite Demo Version 1.08");
 				setIconImage(new ImageIcon(getClass().getResource("/icon_main.png")).getImage());
 				//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -118,9 +117,6 @@ public class Spectrum_Main extends JFrame {
 				// Define components: Menubar, Menus, MenuItems----------------------------------
 				newProject = new JMenuItem("New");
 				menuOpenProject = new JMenu("Open");
-//				SaveProject = new JMenuItem("Save");
-//				SaveProjectAs = new JMenuItem("Save as");
-//				CloseProject = new JMenuItem("Close");
 				exitSoftware = new JMenuItem("Exit");
 				DatabaseManagement = new JMenuItem("Database Management");
 				contents = new JMenuItem("Contents");
@@ -155,9 +151,6 @@ public class Spectrum_Main extends JFrame {
 				// Add components: Menubar, Menus, MenuItems----------------------------------
 				menuFile.add(newProject);
 				menuFile.add(menuOpenProject);
-//				MenuFile.add(SaveProject);
-//				MenuFile.add(SaveProjectAs);
-//				MenuFile.add(CloseProject);
 				menuFile.add(exitSoftware);
 				menuUtility.add(DatabaseManagement);
 				menuHelp.add(contents);
@@ -171,8 +164,8 @@ public class Spectrum_Main extends JFrame {
 
 				setJMenuBar(spectrum_Menubar);	
 				getContentPane().add(spectrumDesktopPane);
-				setOpaqueForAll(spectrum_Menubar, false);
-				setOpaqueForAll(spectrumDesktopPane, false);
+				WindowAppearanceHandle.setOpaqueForAll(spectrum_Menubar, false);
+				WindowAppearanceHandle.setOpaqueForAll(spectrumDesktopPane, false);
 				
 				pack();
 				setLocationRelativeTo(null);
@@ -213,48 +206,40 @@ public class Spectrum_Main extends JFrame {
 									JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, new ImageIcon(scaleImage), ExitOption, ExitOption[0]);
 							if (response == 0) 
 							{
-								try {	
-									//Check Name if valid
-									CheckNameValid checkValid = new CheckNameValid();
-									
-									//Check Name if already exists
-									// Find all the existing projects in the "Projects" folder		
-									File[] listOfFiles = projectsFolder.listFiles(new FilenameFilter() {
-										@Override
-										public boolean accept(File dir, String name) {
-											return name.startsWith("");
-										}
-									});
-
-									List<String> existingName_list = new ArrayList<String>();
-									for (int i = 0; i < listOfFiles.length; i++) {
-										if (listOfFiles[i].isDirectory()) {
-											String fileName;
-											fileName = listOfFiles[i].getName();
-											existingName_list.add(fileName);								
-										}
-									}	
-									
-									
-									//Only create new project if Name is valid and existing projects do not contain this Name
-									if (checkValid.nameIsValid(currentProjectName)==true && !existingName_list.contains(currentProjectName)) {
-										openOrnewJInternalFrame();
-										stop_naming = true;
-									} else {
-										titleText = "Name already exists or contains special characters. Please try a new name:";									
+								
+								//Check Name if already exists
+								// Find all the existing projects in the "Projects" folder		
+								File[] listOfFiles = projectsFolder.listFiles(new FilenameFilter() {
+									@Override
+									public boolean accept(File dir, String name) {
+										return name.startsWith("");
 									}
-								} catch (Exception e) {
-									System.err.println(e.getClass().getName() + ": " + e.getMessage());
-									titleText = "Invalid (Name already exists or contains special characters). Please type a new name!";
+								});
+
+								List<String> existingName_list = new ArrayList<String>();
+								for (int i = 0; i < listOfFiles.length; i++) {
+									if (listOfFiles[i].isDirectory()) {
+										String fileName;
+										fileName = listOfFiles[i].getName();
+										existingName_list.add(fileName);								
+									}
+								}	
+								
+								
+								//if Name is valid and existing projects do not contain this Name
+								if (NameHandle.nameIsValid(currentProjectName)==true && !existingName_list.contains(currentProjectName)) {
+									if (new File(workingLocation + "/Projects/" + currentProjectName).mkdir()) {		//try if can create a folder with the existing project name
+										createNewJInternalFrame();		//create new internal frame for this existing project
+										stop_naming = true;
+									}
+								} else {
+									titleText = "Name already exists or contains special characters. Please try a new name:";									
 								}
-							}
-							else if (response == 1) 
-							{
-								stop_naming = true;
-							} else //This is close (x) button
-							{
-								stop_naming = true;
-							}
+							} 					
+
+							else if (response == 1)	stop_naming = true;
+							
+							else stop_naming = true;		//This is close (x) button
 					    }
 						
 					}
@@ -305,7 +290,7 @@ public class Spectrum_Main extends JFrame {
 												}
 											}
 										} else {
-											openOrnewJInternalFrame(); // Open it
+											createNewJInternalFrame(); // Open it
 										}
 										
 										
@@ -404,7 +389,6 @@ public class Spectrum_Main extends JFrame {
 		final File jarFile = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
 		if (jarFile.isFile()) { // Run with JAR file
 			projectsFolder = new File(":Projects");
-			seperator = ":";
 		}
 
 		// Both runnable jar and IDE work with condition: Projects folder and runnable jar have to be in the same location
@@ -417,7 +401,6 @@ public class Spectrum_Main extends JFrame {
 			System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
 		}
 		projectsFolder = new File(workingLocation + "/Projects");
-		seperator = "/";
 		if (!projectsFolder.exists()) {
 			projectsFolder.mkdirs();
 		} // Create folder Projects if it does not exist
@@ -425,7 +408,7 @@ public class Spectrum_Main extends JFrame {
 	}		
 	
 	//--------------------------------------------------------------------------------------------------------------------------------
-	public void openOrnewJInternalFrame() {
+	public void createNewJInternalFrame() {
 		// create internal frame
 		JInternalFrame ProjectInternalFrame = new JInternalFrame(currentProjectName, 
 																true /*resizable*/, true, /*closable*/true/*maximizable*/, true/*iconifiable*/);	
@@ -445,7 +428,6 @@ public class Spectrum_Main extends JFrame {
 		}
 		ProjectInternalFrame.setVisible(true); // show internal frame
 								
-//		NewProject.setEnabled(false); //Disable "New" menuItem when a new project is created
 		InternalFrameListener ProjectInternalFrame_listener = new InternalFrameListener() {
 		      public void internalFrameActivated(InternalFrameEvent e) {
 
@@ -456,8 +438,7 @@ public class Spectrum_Main extends JFrame {
 		      }
 
 		      public void internalFrameClosing(InternalFrameEvent e) {
-//		        NewProject.setEnabled(true); //Enable "New" menuItem
-		    	  
+
 		    	icon = new ImageIcon(getClass().getResource("/icon_question.png"));
 		  		scaleImage = icon.getImage().getScaledInstance(50, 50,Image.SCALE_SMOOTH);
 		  		String ExitOption[] = {"Yes","No"};
@@ -507,17 +488,6 @@ public class Spectrum_Main extends JFrame {
 		{
 		}
 	} 
-	
-	//All child components will be transparent----------------------------------------------------------------------------------------
-	public void setOpaqueForAll(JComponent aComponent, boolean isOpaque) {
-		  aComponent.setOpaque(isOpaque);
-		  Component[] comps = aComponent.getComponents();
-		  for (Component c : comps) {
-		    if (c instanceof JComponent) {
-		      setOpaqueForAll((JComponent) c, isOpaque);
-		    }
-		  }
-		}	
 	
 	//--------------------------------------------------------------------------------------------------------------------------------
 	@Override

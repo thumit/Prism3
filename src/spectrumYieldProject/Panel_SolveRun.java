@@ -43,6 +43,7 @@ import ilog.concert.IloLPMatrix;
 import ilog.concert.IloNumVar;
 import ilog.concert.IloNumVarType;
 import ilog.cplex.IloCplex;
+import spectrumConvenienceClasses.LibraryHandle;
 
 public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 	private JSplitPane splitPanel, splitPanel2;
@@ -162,6 +163,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								//redirect console to JTextArea
 								PipedOutputStream pOut = new PipedOutputStream();
 								System.setOut(new PrintStream(pOut));
+								System.setErr(new PrintStream(pOut));
 								PipedInputStream pIn = new PipedInputStream(pOut);
 								BufferedReader reader = new BufferedReader(new InputStreamReader(pIn));
 								
@@ -173,14 +175,14 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								        	displayTextArea.append(line + "\n");
 								        }
 								    } catch (IOException ex) {
-								    	System.err.println(ex.getClass().getName() + ": " + ex.getMessage());
+								    	System.err.println("Panel Solve Runs - Thread 2 error - " + ex.getClass().getName() + ": " + ex.getMessage());
 								    }
 								}
 								reader.close();
 								pIn.close();
 								pOut.close();
 							} catch (IOException e) {
-								System.err.println(e.getClass().getName() + ": " + e.getMessage());
+								System.err.println("Panel Solve Runs - Thread 2 error - " + e.getClass().getName() + ": " + e.getMessage());
 							}
 						}
 					};
@@ -269,6 +271,14 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 	//--------------------------------------------------------------------------------------------------------------------------------
 	//Solve each run
 	public void SolveProblem(int row, File runFolder) {
+
+		//Add the Cplex native library path dynamically at run time
+		try {
+			LibraryHandle.addLibraryPath("C:/Program Files/IBM/ILOG/CPLEX_Studio126/cplex/bin/x64_win64");
+		} catch (Exception e) {
+			System.err.println("Panel Solve Runs - cplexLib.addLibraryPath error - " + e.getClass().getName() + ": " + e.getMessage());
+		}		
+		
 		
 		try {
 			problemFile[row] = new File(runFolder.getAbsolutePath() + "/Problem.lp");
@@ -347,9 +357,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				 initialStream.close();
 				 outStream.close();
 			} catch (FileNotFoundException e1) {
-				System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+				System.err.println("Panel Solve Runs - file_StrataDefinition not found error - " + e1.getClass().getName() + ": " + e1.getMessage());
 			} catch (IOException e2) {
-				System.err.println(e2.getClass().getName() + ": " + e2.getMessage());
+				System.err.println("Panel Solve Runs - file_StrataDefinition read-write stream error - " + e2.getClass().getName() + ": " + e2.getMessage());
 			}
 					
 			
@@ -2390,7 +2400,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 
 					fileOut.close();
 				} catch (IOException e) {
-					System.err.println(e.getClass().getName() + ": " + e.getMessage());
+					System.err.println("Panel Solve Runs - FileWriter(output_generalInfo_file[row]) error - " + e.getClass().getName() + ": " + e.getMessage());
 				}
 				output_generalInfo_file[row].createNewFile();
 	            
@@ -2411,7 +2421,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 
 					fileOut.close();
 				} catch (IOException e) {
-					System.err.println(e.getClass().getName() + ": " + e.getMessage());
+					System.err.println("Panel Solve Runs - FileWriter(output_variables_file[row]) error - " + e.getClass().getName() + ": " + e.getMessage());				
 				}
 				output_variables_file[row].createNewFile();
 
@@ -2430,7 +2440,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 
 					fileOut.close();
 				} catch (IOException e) {
-					System.err.println(e.getClass().getName() + ": " + e.getMessage());
+					System.err.println("Panel Solve Runs - FileWriter(output_constraints_file[row]) error - " + e.getClass().getName() + ": " + e.getMessage());
 				}	
 				output_constraints_file[row].createNewFile();
 				
@@ -2474,7 +2484,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					}
 					fileOut.close();
 				} catch (IOException e) {
-					System.err.println(e.getClass().getName() + ": " + e.getMessage());
+					System.err.println("Panel Solve Runs - FileWriter(output_managementOverview_file[row]) error - " + e.getClass().getName() + ": " + e.getMessage());
 				}
 				output_managementOverview_file[row].createNewFile();
 				

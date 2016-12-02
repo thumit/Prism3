@@ -34,10 +34,11 @@ public class GetParameter_totalValue {
 	
 			String tableName_toFind = s5 + s6 + silviculturalMethod + timingChoice;
 	//		String[] string_yieldTable_Name = Arrays.stream(yieldTable_Name).toArray(String[]::new);		
+			boolean foundtable = false;
 			
 			for (int i = 0; i < yieldTable_Name.length; i++) {
 				if (yieldTable_Name[i].toString().equals(tableName_toFind) && row < yieldTable_values[i].length) {		// If yield table Name match && table has that row index						
-					
+					foundtable = true;
 					
 					boolean add_dynamicIdentifiers_match = true;	//always true if No dynamic Identifier				
 					if (!all_dynamicIdentifiers_columnIndexes.contains("NoIdentifier")) {	//If there are dynamic identifiers
@@ -88,13 +89,17 @@ public class GetParameter_totalValue {
 								value_to_return = value_to_return + Double.parseDouble(yieldTable_values[i][row][col].toString());		// then add to the total of all parameters found
 								}
 							} catch (Exception e) {
-								System.err.println("cannot get access to table " + yieldTable_Name[i].toString() + " Row Index " + row + " Exception " + e);
+								System.err.println("Cannot get access to table " + yieldTable_Name[i].toString() + " Row Index " + row + " Exception " + e);
 							}
 						}
 					}
 				} else { //If yield table Name does not match or table does not have that row	
 
 				}
+			}
+			
+			if (!foundtable) {	//If not found table
+//				System.out.println("Not found table " + tableName_toFind);
 			}
 		}
 		return value_to_return;

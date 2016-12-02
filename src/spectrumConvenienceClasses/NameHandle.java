@@ -1,7 +1,7 @@
 package spectrumConvenienceClasses;
 
-public class CheckNameValid {
-	 public boolean nameIsValid(String s) {
+public class NameHandle {
+	 public static boolean nameIsValid(String s) {
 		 boolean isNameValid = true;
 		 
 		 if (s == null || s.trim().isEmpty()) {

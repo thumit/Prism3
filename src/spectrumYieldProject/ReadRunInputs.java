@@ -9,10 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import javax.swing.JOptionPane;
-
-import spectrumGUI.Spectrum_Main;
-
 public class ReadRunInputs {
 	//For readGeneralInputs
 	private int GI_totalRows, GI_totalColumns;

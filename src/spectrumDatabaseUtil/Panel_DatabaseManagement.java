@@ -599,7 +599,6 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 //				r.keyRelease(KeyEvent.VK_ENTER);
 //				refreshDatabaseTree();
 //			} catch (AWTException e) {
-//				// TODO Auto-generated catch block
 //			}	
 					
     	DefaultMutableTreeNode editingNode = (DefaultMutableTreeNode) editingPath.getLastPathComponent();  	
@@ -672,8 +671,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 			doQuery(currentSQLstatement);	
 			temptext = "Table '" + currenTableName + "' has been renamed to " + nameWOext;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.err.println("Panel DatabaseManagement - applyTable_Namechange error - " + e.getClass().getName() + ": " + e.getMessage());
 			temptext = "Cannot rename the table";
 		}
 		dataDisplayTextField.setText(temptext);
@@ -728,10 +726,8 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		
 		// Find the database user selected
 		String destinationFileName = null;
-		File destinationFile = null;
-		for (int i = 0; i < listOfFiles.length; i++) {
+		for (int i = 0; i < listNames.length; i++) {
 			if (selection==listNames[i]) {
-				destinationFile = listOfFiles[i];
 				destinationFileName = listNames[i];
 			}
 		}
@@ -925,9 +921,8 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 							temptext = "'" + deskFile.getName() + "' has not been overwritten";
 						}
 					}
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				} catch (IOException e) {
+					System.err.println("importDatabases - copy error - " + e.getClass().getName() + ": " + e.getMessage());
 				}
 				
 				// Make the new Databases appear on the TREE----------->YEAHHHHHHHHHHHHHHH
