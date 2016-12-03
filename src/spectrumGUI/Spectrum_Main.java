@@ -2,7 +2,6 @@ package spectrumGUI;
 
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.GraphicsDevice;
@@ -24,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JMenu;
@@ -44,7 +42,7 @@ import javax.swing.event.MenuListener;
 import spectrumConvenienceClasses.NameHandle;
 import spectrumConvenienceClasses.RequestFocusListener;
 import spectrumConvenienceClasses.WindowAppearanceHandle;
-import spectrumDatabaseUtil.Panel_DatabaseManagement;
+import spectrumDatabase.Panel_DatabaseManagement;
 import spectrumYieldProject.ComponentResizer;
 import spectrumYieldProject.Panel_YieldProject;
 
@@ -206,8 +204,6 @@ public class Spectrum_Main extends JFrame {
 									JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, new ImageIcon(scaleImage), ExitOption, ExitOption[0]);
 							if (response == 0) 
 							{
-								
-								//Check Name if already exists
 								// Find all the existing projects in the "Projects" folder		
 								File[] listOfFiles = projectsFolder.listFiles(new FilenameFilter() {
 									@Override
@@ -224,8 +220,7 @@ public class Spectrum_Main extends JFrame {
 										existingName_list.add(fileName);								
 									}
 								}	
-								
-								
+												
 								//if Name is valid and existing projects do not contain this Name
 								if (NameHandle.nameIsValid(currentProjectName)==true && !existingName_list.contains(currentProjectName)) {
 									if (new File(workingLocation + "/Projects/" + currentProjectName).mkdir()) {		//try if can create a folder with the existing project name
@@ -237,8 +232,7 @@ public class Spectrum_Main extends JFrame {
 								}
 							} 					
 
-							else if (response == 1)	stop_naming = true;
-							
+							else if (response == 1)	stop_naming = true;					
 							else stop_naming = true;		//This is close (x) button
 					    }
 						
@@ -352,7 +346,7 @@ public class Spectrum_Main extends JFrame {
 								      }
 
 								      public void internalFrameClosing(InternalFrameEvent e) {							 
-								    	  DatabaseManagement.setEnabled(true); //Enable "New" menuItem
+								    	  DatabaseManagement.setEnabled(true); //Enable
 								      }
 
 								      public void internalFrameDeactivated(InternalFrameEvent e) {
@@ -442,7 +436,7 @@ public class Spectrum_Main extends JFrame {
 		    	icon = new ImageIcon(getClass().getResource("/icon_question.png"));
 		  		scaleImage = icon.getImage().getScaledInstance(50, 50,Image.SCALE_SMOOTH);
 		  		String ExitOption[] = {"Yes","No"};
-				int response = JOptionPane.showOptionDialog(Spectrum_Main.mainFrameReturn(),"We recommend 'stop editing' to save the changes you made. Would you like to close this project ?", "Close Project",
+				int response = JOptionPane.showOptionDialog(Spectrum_Main.mainFrameReturn(),"Your changes would not be saved if closing project while editing. Would you like to close this project ?", "Close Project",
 						JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, new ImageIcon(scaleImage), ExitOption, ExitOption[0]);
 				if (response == 0)
 				{
@@ -478,7 +472,7 @@ public class Spectrum_Main extends JFrame {
 		scaleImage = icon.getImage().getScaledInstance(50, 50,Image.SCALE_SMOOTH);
 //		String ExitOption[] = {"Yes","No","Cancel"};
 		String ExitOption[] = {"Yes","No"};
-		int response = JOptionPane.showOptionDialog(Spectrum_Main.mainFrameReturn(),"All projects will be saved automatically. Would you like to stop SpectrumLite ?", "Exit SpectrumLite",
+		int response = JOptionPane.showOptionDialog(Spectrum_Main.mainFrameReturn(),"Your changes would not be saved if exit while editing. Would you like to exit SpectrumLite ?", "Exit SpectrumLite",
 				JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, new ImageIcon(scaleImage), ExitOption, ExitOption[0]);
 		if (response == 0)
 		{

@@ -1,4 +1,4 @@
-package spectrumDatabaseUtil;
+package spectrumDatabase;
 
 import java.io.File;
 import javax.swing.JFileChooser;

@@ -29,7 +29,6 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JLayeredPane;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -46,7 +45,6 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.border.TitledBorder;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -68,6 +66,7 @@ import org.jfree.data.general.PieDataset;
 import org.jfree.ui.RectangleEdge;
 import org.jfree.util.Rotation;
 
+import spectrumConvenienceClasses.TableModelSpectrum;
 import spectrumGUI.Spectrum_Main;
 @SuppressWarnings("serial")
 public class Panel_YieldProject extends JLayeredPane {
@@ -104,7 +103,7 @@ public class Panel_YieldProject extends JLayeredPane {
 	private int rowCount, colCount;
 	private String[] columnNames;
 	private JTable table;
-	private MyTableModel model;
+	private TableModelSpectrum model;
 	private Object[][] data;	
 	
 	public Panel_YieldProject() {
@@ -341,7 +340,7 @@ public class Panel_YieldProject extends JLayeredPane {
 						
 						
 						//Create a table
-						model = new MyTableModel();
+						model = new TableModelSpectrum(colCount, rowCount, columnNames, data);
 						table = new JTable(model) {
 							@Override			//These override is to make the width of the cell fit all contents of the cell
 							public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
@@ -1024,47 +1023,6 @@ public class Panel_YieldProject extends JLayeredPane {
 	}
 
 
-	
-	// --------------------------------------------------------------------------------------------------------------------------------
-	class MyTableModel extends AbstractTableModel {
-	   	 
-		public MyTableModel() {
-
-		  }
-
-		public int getColumnCount() {
-			return colCount;
-		}
-
-		public int getRowCount() {
-			return rowCount;
-		}
-
-		public String getColumnName(int col) {
-			return columnNames[col];
-		}
-
-		public Object getValueAt(int row, int col) {
-			return data[row][col];
-		}
-
-		public Class getColumnClass(int c) {
-			return (getValueAt(0, c) == null ? Object.class : getValueAt(0, c).getClass());
-		}
-
-		// Don't need to implement this method unless your table's editable.
-		public boolean isCellEditable(int row, int col) {
-			return false;	// all cells are not allowed for editing
-		}
-
-		public void setValueAt(Object value, int row, int col) {
-			data[row][col] = value;
-			fireTableCellUpdated(row, col);
-			fireTableDataChanged();
-			repaint();
-		}
-	}	
-
 	// Panel Management Overview-----------------------------------------------------------------------------	
 	class PaneL_Management_Overview extends JLayeredPane {
 		public PaneL_Management_Overview(JTable thisTable) {
@@ -1248,16 +1206,6 @@ public class Panel_YieldProject extends JLayeredPane {
 	      }
 	   }
 	
-	// All child components will be transparent----------------------------------------------------------------------------------------------------------------	
-	public void setOpaqueForAll(JComponent aComponent, boolean isOpaque) {
-		  aComponent.setOpaque(isOpaque);
-		  Component[] comps = aComponent.getComponents();
-		  for (Component c : comps) {
-		    if (c instanceof JComponent) {
-		      setOpaqueForAll((JComponent) c, isOpaque);
-		    }
-		  }
-		}	
 	// --------------------------------------------------------------------------------------------------------------------------------		
 	public void showNothing() {
 //		displayTextField.setText(null); // Show nothing on the TextField

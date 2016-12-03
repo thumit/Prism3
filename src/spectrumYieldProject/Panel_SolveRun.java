@@ -37,6 +37,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.text.DefaultCaret;
 
 import ilog.concert.IloException;
 import ilog.concert.IloLPMatrix;
@@ -44,6 +45,7 @@ import ilog.concert.IloNumVar;
 import ilog.concert.IloNumVarType;
 import ilog.cplex.IloCplex;
 import spectrumConvenienceClasses.LibraryHandle;
+import spectrumConvenienceClasses.TableModelSpectrum;
 
 public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 	private JSplitPane splitPanel, splitPanel2;
@@ -54,7 +56,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 	private int rowCount, colCount;
 	private String[] columnNames;
 	private JTable table;
-	private MyTableModel model;
+	private TableModelSpectrum model;
 	private Object[][] data;
 	
 	private File[] listOfEditRuns = null;
@@ -81,7 +83,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 		}	
 		
 		//Create a table
-        model = new MyTableModel();
+        model = new TableModelSpectrum(colCount, rowCount, columnNames, data);
         table = new JTable(model);
         table.getColumnModel().getColumn(1).setPreferredWidth(100);	//Set width of Column 'Validation'
         DefaultTableCellRenderer renderer = (DefaultTableCellRenderer)table.getDefaultRenderer(Object.class);
@@ -97,6 +99,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 		displayTextArea.setBackground(Color.BLACK); 
 		displayTextArea.setForeground(Color.WHITE);
 		displayTextArea.setEditable(false);
+		DefaultCaret caret = (DefaultCaret) displayTextArea.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.OUT_BOTTOM);
         
         
         //Create splitPanel------------------------------------------------------------------------------
@@ -192,6 +196,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						public void run() {
 							for (int row = 0; row < rowCount; row++) {
 								runStatButton.setText("searching for " + listOfEditRuns[row].getName() + " solution");
+								data[row][4] = "reading";
+								table.setValueAt(data[row][4] , row, 4);
 								SolveProblem(row, listOfEditRuns[row]);
 							}
 							solvingstatus=false;
@@ -224,49 +230,10 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 		
 	} // end Panel_SolveRun()
 
-	// Listener for----------------------------------------------------------------------
+	// Listener for this class----------------------------------------------------------------------
     public void actionPerformed(ActionEvent e) {
- 
     }
 
-	class MyTableModel extends AbstractTableModel {
-   	 
-		public MyTableModel() {
-
-		  }
-
-		public int getColumnCount() {
-			return colCount;
-		}
-
-		public int getRowCount() {
-			return rowCount;
-		}
-
-		public String getColumnName(int col) {
-			return columnNames[col];
-		}
-
-		public Object getValueAt(int row, int col) {
-			return data[row][col];
-		}
-
-		public Class getColumnClass(int c) {
-			return (getValueAt(0, c) == null ? Object.class : getValueAt(0, c).getClass());
-		}
-
-		// Don't need to implement this method unless your table's editable.
-		public boolean isCellEditable(int row, int col) {
-			return false;	// all cells are not allowed for editing
-		}
-
-		public void setValueAt(Object value, int row, int col) {
-			data[row][col] = value;
-			fireTableCellUpdated(row, col);
-			fireTableDataChanged();
-			repaint();
-		}
-	}
 	
 	//--------------------------------------------------------------------------------------------------------------------------------
 	//Solve each run
@@ -2349,7 +2316,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			
 			data[row][2] = cplex.getNcols();
 			data[row][3] = cplex.getNrows();
-			data[row][4] = "running";
+			data[row][4] = "solving";
 			table.setValueAt(data[row][2] , row, 2); //To help trigger the table refresh: fireTableDataChanged() and repaint();
 			table.setValueAt(data[row][3] , row, 3);
 			table.setValueAt(data[row][4] , row, 4);

@@ -46,7 +46,6 @@ import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -63,7 +62,6 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
-import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -110,6 +108,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private Object[][][] yieldTable_values;
 	private String [] yieldTable_ColumnNames;
 	
+	
+	private int totalPeriod;
 	
 	private int rowCount, colCount;
 	private String[] columnNames;
@@ -313,6 +313,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			Action apply = new AbstractAction() {
 				public void actionPerformed(ActionEvent e) {
+					totalPeriod = Integer.parseInt(combo1.getSelectedItem().toString());
+					
 					// Apply any change in the GUI to the TEXT area	
 					String input0_info = label1.getText() + "	" + combo1.getSelectedItem().toString() + "\n"
 							+ label2.getText() + "	" + (Integer)spin2.getValue() + "\n"
@@ -456,10 +458,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					file_Database = FilesChooser_Database.chosenDatabase();				
 					if (file_Database!=null) {
 						textField2.setText(file_Database.getAbsolutePath());
-						
-						//create 2 new instances of this Panel 
-						panelInput5_GUI = new PaneL_UserConstraints_GUI();
-						panelInput5_TEXT = new PaneL_UserConstraints_Text();
 							
 						// Read the database tables into array
 						read_DatabaseTables = new Read_DatabaseTables(file_Database);
@@ -484,6 +482,11 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						}
 				        data3[3][1] = total_0yieldtable;
 				        table3.setValueAt(data3[3][1], 3, 1);
+				        
+						
+						//create 2 new instances of this Panel 
+						panelInput5_GUI = new PaneL_UserConstraints_GUI();
+						panelInput5_TEXT = new PaneL_UserConstraints_Text();
 					}
 				}
 			});
@@ -1487,7 +1490,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					}	
 				}
 				
-				//Calculate and write percentge
+				//Calculate and write percentage
 				table_row=0;
 				for (int i = 0; i < total_CoverType; i++) {
 					for (int j = 0; j < total_CoverType; j++) {					
@@ -1940,8 +1943,10 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 	
 	// Panel Constraints-----------------------------------------------------------------------------------
-	class PaneL_UserConstraints_GUI extends JLayeredPane {
+	class PaneL_UserConstraints_GUI extends JLayeredPane implements ActionListener {
 		List<List<JCheckBox>> checkboxStaticIdentifiers;
+		checkboxScrollPanel parametersScrollPanel;
+		checkbox_dynamicScrollPanel dynamic_identifiersScrollPanel;
 //		List<List<JCheckBox>> checkboxDynamicIdentifiers;
 //		List<JCheckBox> checkbox_select_DynamicIdentifiers;
 //		List<JCheckBox> checkboxParameter;
@@ -2071,113 +2076,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			// 2nd grid -----------------------------------------------------------------------
 			// 2nd grid -----------------------------------------------------------------------	
-			class checkboxScrollPanel extends JScrollPane {	
-				private JCheckBox checkboxNoParameter;
-				private List<JCheckBox> checkboxParameter;
-				
-				public checkboxScrollPanel(String nameTag) {
-					
-					JPanel parametersPanel = new JPanel();	
-					parametersPanel.setLayout(new GridBagLayout());
-					GridBagConstraints c2 = new GridBagConstraints();
-					c2.fill = GridBagConstraints.HORIZONTAL;
-					c2.weightx = 1;
-				    c2.weighty = 1;
-				    
-					setViewportView(parametersPanel);
-				    		
-		
-					JButton tempButton = new JButton(nameTag);
-					// add comboBox to the Panel
-					c2.gridx = 0;
-					c2.gridy = 0;
-					c2.weightx = 1;
-					c2.weighty = 1;
-					parametersPanel.add(tempButton, c2);
-					
-					
-					tempButton.addActionListener(new AbstractAction() {
-						public void actionPerformed(ActionEvent e) {
-							if (yieldTable_ColumnNames != null && checkboxParameter == null) {				
-								parametersPanel.remove(tempButton);		//Remove the tempButton
-								checkboxParameter = new ArrayList<JCheckBox>();
-								
-								for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
-									String YTcolumnName = yieldTable_ColumnNames[i];
-
-									checkboxParameter.add(new JCheckBox(YTcolumnName));		//add checkbox
-									checkboxParameter.get(i).setToolTipText(read_Identifiers.get_ParameterToolTip(YTcolumnName) + " (Column index: " + i + ")");		//add toolTip
-									
-									// add checkboxParameter to the Panel
-								    c2.gridx = 0;
-								    c2.gridy = 1 + i;
-									c2.weightx = 1;
-								    c2.weighty = 1;
-									parametersPanel.add(checkboxParameter.get(i), c2);
-								}
-								
-								
-								//Add an extra checkbox for the option of not using any Column, use 1 instead as multiplier
-								//This is also the checkbox for the option of not using any Column as dynamic identifier
-								checkboxNoParameter = new JCheckBox();		//add checkbox			
-								checkboxNoParameter.setText("NoParameter");		
-								checkboxNoParameter.setToolTipText("1 is used as multiplier (parameter), no column will be used as parameter");		//set toolTip
-								
-								// add the checkBox to the Panel
-								c2.gridx = 0;
-								c2.gridy = 0;
-								c2.weightx = 1;
-								c2.weighty = 1;
-								parametersPanel.add(checkboxNoParameter, c2);
-								
-								// Add listeners to de-select all other checkBoxes
-								checkboxNoParameter.addActionListener(new ActionListener() {
-									@Override
-									public void actionPerformed(ActionEvent actionEvent) {
-										if (checkboxNoParameter.isSelected()) {
-											for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
-												checkboxParameter.get(i).setSelected(false);
-											} 
-										}
-									}
-								});								
-								
-								
-								// Add listeners to checkBox so if then name has AllSx then other checkbox would be deselected 
-								for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
-									String currentCheckBoxName = yieldTable_ColumnNames[i];
-									int currentCheckBoxIndex = i;
-									
-									checkboxParameter.get(i).addActionListener(new ActionListener() {	
-										@Override
-										public void actionPerformed(ActionEvent actionEvent) {
-											//Deselect the NoParameter checkBox
-											checkboxNoParameter.setSelected(false);
-											
-											if (currentCheckBoxName.contains("AllSx")) {
-												for (int j = 0; j < yieldTable_ColumnNames.length; j++) {		
-													if (j!=currentCheckBoxIndex) 	checkboxParameter.get(j).setSelected(false);
-												}
-											} else {
-												for (int j = 0; j < yieldTable_ColumnNames.length; j++) {		
-													if (checkboxParameter.get(j).getText().contains("AllSx")) 	checkboxParameter.get(j).setSelected(false);
-												}
-											}					
-										}
-									});
-								}
-
-								//Do a resize to same size for JInteral Frame of the project to help repaint the checkboxVariables added					
-								Spectrum_Main.mainFrameReturn().getSelectedFrame().setSize(Spectrum_Main.mainFrameReturn().getSelectedFrame().getSize());	
-							}
-						}
-					});		
-					
-				}
-			}
-			
-		    	
-			checkboxScrollPanel parametersScrollPanel = new checkboxScrollPanel("Get parameters from YT columns");
+			parametersScrollPanel = new checkboxScrollPanel("Get parameters from YT columns");
 			TitledBorder border2 = new TitledBorder("PARAMETERS (yield table columns)");
 			border2.setTitleJustification(TitledBorder.CENTER);
 			parametersScrollPanel.setBorder(border2);
@@ -2190,591 +2089,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	    	
 			// 4th Grid -----------------------------------------------------------------------
 			// 4th Grid -----------------------------------------------------------------------	
-			class checkbox_dynamicScrollPanel extends JScrollPane {	
-				private JCheckBox checkboxNoIdentifier;
-				private List<JCheckBox> allDynamicIdentifiers;
-				private List<JScrollPane> allDynamicIdentifiers_ScrollPane;
-				private List<List<JCheckBox>> checkboxDynamicIdentifiers;
-				private JScrollPane defineScrollPane;		//for Definition of dynamic identifier
-				
-				public checkbox_dynamicScrollPanel(String nameTag, int option) {
-
-					// Define the Panel contains everything --------------------------
-					JPanel dynamic_identifiersPanel = new JPanel();		
-					dynamic_identifiersPanel.setLayout(new GridBagLayout());
-					GridBagConstraints c3 = new GridBagConstraints();
-					c3.fill = GridBagConstraints.BOTH;
-					c3.weightx = 1;
-				    c3.weighty = 1;
-				    // Add elements to this Panel later at the end --------------------------
-					
-					
-				
-	
-					//This is the Panel for select all available identifiers--------------------------
-					JPanel select_Panel = new JPanel();	
-					select_Panel.setLayout(new GridBagLayout());
-					GridBagConstraints c2 = new GridBagConstraints();
-					c2.fill = GridBagConstraints.HORIZONTAL;
-					c2.weightx = 1;
-				    c2.weighty = 1;		
-		
-					JButton tempButton = new JButton(nameTag);
-					// add comboBox to the Panel
-					c2.gridx = 0;
-					c2.gridy = 0;
-					c2.weightx = 1;
-					c2.weighty = 1;
-					select_Panel.add(tempButton, c2);
-					//------------------------------------------------------------------------------
-					
-					
-											
-					tempButton.addActionListener(new AbstractAction() {
-						public void actionPerformed(ActionEvent e) {
-							if (yieldTable_ColumnNames != null && allDynamicIdentifiers == null) {				
-								select_Panel.remove(tempButton);		//Remove the tempButton
-								
-								checkboxDynamicIdentifiers = new ArrayList<List<JCheckBox>>();	
-								allDynamicIdentifiers = new ArrayList<JCheckBox>();
-								
-								for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
-									String YTcolumnName = yieldTable_ColumnNames[i];
-
-									checkboxDynamicIdentifiers.add(new ArrayList<JCheckBox>());		//add empty List
-									allDynamicIdentifiers.add(new JCheckBox(YTcolumnName));		//add checkbox
-									allDynamicIdentifiers.get(i).setToolTipText(read_Identifiers.get_ParameterToolTip(YTcolumnName) + " (Column index: " + i + ")");		//add toolTip
-									
-									// add checkboxParameter to the Panel
-								    c2.gridx = 0;
-								    c2.gridy = 1 + i;
-									c2.weightx = 1;
-								    c2.weighty = 1;
-									select_Panel.add(allDynamicIdentifiers.get(i), c2);
-								}
-								
-								
-								//Add an extra checkBox for the option of not using any Column as dynamic identifier
-								checkboxNoIdentifier = new JCheckBox();		//add checkBox		
-								checkboxNoIdentifier.setText("NoIdentifier");	
-								checkboxNoIdentifier.setToolTipText("No column will be used as dynamic identifier");		//set toolTip
-								
-								// add the checkBox to the Panel
-								c2.gridx = 0;
-								c2.gridy = 0;
-								c2.weightx = 1;
-								c2.weighty = 1;
-								select_Panel.add(checkboxNoIdentifier, c2);
-								
-								// Add listeners to de-select all other checkBoxes
-								checkboxNoIdentifier.addActionListener(new ActionListener() {
-									@Override
-									public void actionPerformed(ActionEvent actionEvent) {
-										if (checkboxNoIdentifier.isSelected()) {
-											for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
-												allDynamicIdentifiers.get(i).setSelected(false);
-												allDynamicIdentifiers_ScrollPane.get(i).setVisible(false);		//Set invisible all scrollPanes of dynamic identifiers
-												
-												//Do a resize to same size for JInteral Frame of the project to help repaint					
-												Spectrum_Main.mainFrameReturn().getSelectedFrame().setSize(Spectrum_Main.mainFrameReturn().getSelectedFrame().getSize());	
-											} 
-										}
-									}
-								});								
-								
-						
-							
-								if (option == 2) {		//For the dynamic identifiers only						
-									//Add all dynamic identifiers lables
-									allDynamicIdentifiers_ScrollPane = new ArrayList<JScrollPane>();
-									
-									for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
-										String YTcolumnName = allDynamicIdentifiers.get(i).getText();		
-										allDynamicIdentifiers_ScrollPane.add(new JScrollPane());			//Add ScrollPane
-										allDynamicIdentifiers_ScrollPane.get(i).setBorder(new TitledBorder(YTcolumnName));	//set Title
-										allDynamicIdentifiers_ScrollPane.get(i).setPreferredSize(new Dimension(150, 100));
-//										allDynamicIdentifiers_ScrollPane.get(i).setToolTipText(read_Identifiers.get_ParameterToolTip(YTcolumnName) + " (Column index: " + i + ")");		//add toolTip										
-										allDynamicIdentifiers_ScrollPane.get(i).setVisible(false);		//Set invisible
-										
-										c3.gridx =1 + i;
-										c3.gridy = 0;
-										dynamic_identifiersPanel.add(allDynamicIdentifiers_ScrollPane.get(i), c3);
-									}					
-																			
-									
-									// Add listeners to checkBoxes
-									for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
-										String currentCheckBoxName = yieldTable_ColumnNames[i];
-										int currentCheckBoxIndex = i;
-										
-										allDynamicIdentifiers.get(i).addActionListener(new ActionListener() {	
-											@Override
-											public void actionPerformed(ActionEvent actionEvent) {
-												// A popupPanel to define identifier if the checkBox is selected
-												if (allDynamicIdentifiers.get(currentCheckBoxIndex).isSelected()) {
-													
-													//Remove all checkBoxes previously added into the Column list (or the dynamic identifier)
-													checkboxDynamicIdentifiers.get(currentCheckBoxIndex).clear();
-															
-													//define popupPanel
-													JPanel popupPanel = new JPanel();
-													popupPanel.setLayout(new GridBagLayout());
-													TitledBorder border_popup = new TitledBorder("PLEASE HELP SPECTRUMLITE DEFINE THIS IDENTIFIER");
-													border_popup.setTitleJustification(TitledBorder.CENTER);
-													popupPanel.setBorder(border_popup);
-													popupPanel.setPreferredSize(new Dimension(800, 400));;
-													GridBagConstraints c_popup = new GridBagConstraints();
-													c_popup.fill = GridBagConstraints.BOTH;
-													c_popup.weightx = 1;
-													c_popup.weighty = 1;
-													
-													// Just to make the OptionPanel resizable
-													popupPanel.addHierarchyListener(new HierarchyListener() {
-													    public void hierarchyChanged(HierarchyEvent e) {
-													        Window window = SwingUtilities.getWindowAncestor(popupPanel);
-													        if (window instanceof Dialog) {
-													            Dialog dialog = (Dialog)window;
-													            if (!dialog.isResizable()) {
-													                dialog.setResizable(true);
-													            }
-													        }
-													    }
-													});												
-													//---------------------------------------------------------------------------------------------------	
-													
-													JPanel listPanel = new JPanel();
-													listPanel.setLayout(new GridBagLayout());
-													GridBagConstraints c_list = new GridBagConstraints();
-													c_list.fill = GridBagConstraints.HORIZONTAL;
-													c_list.weightx = 1;
-													c_list.weighty = 1;
-													
-													
-													List<String> uniqueValueList = read_DatabaseTables.getColumnUniqueValues(currentCheckBoxIndex);									
-													//Sort the list	
-													try {	//Sort Double
-														Collections.sort(uniqueValueList,new Comparator<String>() {
-															@Override
-														    public int compare(String o1, String o2) {
-														        return Double.valueOf(o1).compareTo(Double.valueOf(o2));
-														    }
-														});	
-													} catch (Exception e1) {
-														Collections.sort(uniqueValueList);	//Sort String
-													}
-													
-													//Add Labels of unique values to listPanel
-													for (int j = 0; j < uniqueValueList.size(); j++) {
-														c_list.gridx = 0;
-														c_list.gridy = j;
-														c_list.weightx = 1;
-														c_list.weighty = 1;
-														listPanel.add(new JLabel(uniqueValueList.get(j)), c_list);		
-													}
-													
-													//ScrollPane contains the listPanel
-													JScrollPane uniqueValueList_ScrollPanel = new JScrollPane(listPanel);
-													TitledBorder border_List = new TitledBorder("List of unique values");
-													border_List.setTitleJustification(TitledBorder.CENTER);
-													uniqueValueList_ScrollPanel.setBorder(border_List);
-													uniqueValueList_ScrollPanel.setPreferredSize(new Dimension(80, 300));
-													//---------------------------------------------------------------------------------------------------
-													
-													//JTextArea contains some info of this column
-													JTextArea columnInfo_TArea = new JTextArea();
-													columnInfo_TArea.setEditable(false);
-													columnInfo_TArea.setLineWrap(true);
-													columnInfo_TArea.setWrapStyleWord(true);
-													columnInfo_TArea.append("SpectrumLite found " + uniqueValueList.size() + 
-															" unique values for this identifier (across " + yieldTable_values.length + " yield tables in your database)."  + "\n");
-													
-													if (uniqueValueList.size()<=20) {
-														columnInfo_TArea.append("'DISCRETE IDENTIFIER' is recommended.");
-													} else {
-														columnInfo_TArea.append("'RANGE IDENTIFIER' is recommended.");
-													}
-													//---------------------------------------------------------------------------------------------------
-	
-													//defineScrollPane for Definition
-													defineScrollPane = new JScrollPane();	
-													defineScrollPane.setBorder(new TitledBorder(""));
-													//---------------------------------------------------------------------------------------------------
-												
-													//2 radioButtons for DISCRETE or RANGE definition
-													JRadioButton radioDISCRETE = new JRadioButton("DISCRETE IDENTIFIER"); 
-													JRadioButton radioRANGE = new JRadioButton("RANGE IDENTIFIER"); 
-													
-													//Add 2 radio to the group
-													ButtonGroup definitionGroup = new ButtonGroup();
-													definitionGroup.add(radioDISCRETE);
-													definitionGroup.add(radioRANGE);
-													
-													
-													//Add listener for radioDISCRETE
-													radioDISCRETE.addActionListener(new ActionListener() {
-														@Override
-														public void actionPerformed(ActionEvent e) {
-															if (radioDISCRETE.isSelected()) {
-																//Remove all checkBoxes previously added into the Column list (or the dynamic identifier)
-																checkboxDynamicIdentifiers.get(currentCheckBoxIndex).clear();
-																
-																
-																JPanel discretePanel = new JPanel();	
-																discretePanel.setLayout(new GridBagLayout());
-																GridBagConstraints c_dP = new GridBagConstraints();
-																c_dP.fill = GridBagConstraints.HORIZONTAL;
-																c_dP.weightx = 1;
-																c_dP.weighty = 1;
-																
-																//Add 2 labels
-																c_dP.gridx = 0;
-																c_dP.gridy = 0;
-																discretePanel.add(new JLabel("Unique Value"), c_dP);
-																
-																c_dP.gridx = 1;
-																c_dP.gridy = 0;
-																discretePanel.add(new JLabel("Define Name (Below are suggestions from SpectrumLite's library)"), c_dP);
-																
-																//Add all discrete values and textField for the toolTip
-																for (int j = 0; j < uniqueValueList.size(); j++) {
-																	String nameOfColumnAndUniqueValue = currentCheckBoxName + " " + uniqueValueList.get(j);	//The name
-																								
-																	checkboxDynamicIdentifiers.get(currentCheckBoxIndex).add(new JCheckBox(uniqueValueList.get(j)));
-																	checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(j).setToolTipText(read_Identifiers.get_ParameterToolTip(nameOfColumnAndUniqueValue));	//ToolTip of this Name from SpectrumLite Library;
-																	c_dP.gridx = 0;
-																	c_dP.gridy = 1 + j;
-																	discretePanel.add(checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(j), c_dP);
-																	
-																	c_dP.gridx = 1;
-																	c_dP.gridy = 1 + j;
-																	JTextField name_TF = new JTextField(20);
-																	name_TF.setText(read_Identifiers.get_ParameterToolTip(nameOfColumnAndUniqueValue));	//ToolTip of this Name from SpectrumLite Library
-																	discretePanel.add(name_TF, c_dP);
-																	
-																	//Add listener for TextField to be toolTip
-																	int jj=j;
-																	name_TF.getDocument().addDocumentListener(new DocumentListener() {
-																		@Override  
-																		public void changedUpdate(DocumentEvent e) {
-																			checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(jj).setToolTipText(name_TF.getText());
-																		}
-																		public void removeUpdate(DocumentEvent e) {
-																			checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(jj).setToolTipText(name_TF.getText());
-																		}
-																		public void insertUpdate(DocumentEvent e) {
-																			checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(jj).setToolTipText(name_TF.getText());
-																		}
-																	});
-																}						
-																defineScrollPane.setViewportView(discretePanel);	
-															}
-														}
-													});
-													
-													
-													//Add listener for radioRANGE
-													radioRANGE.addActionListener(new ActionListener() {
-														@Override
-														public void actionPerformed(ActionEvent e) {
-															if (radioRANGE.isSelected()) {
-																//Remove all checkBoxes previously added into the Column list (or the dynamic identifier)
-																checkboxDynamicIdentifiers.get(currentCheckBoxIndex).clear();
-																
-																
-																JPanel rangePanel = new JPanel();
-																rangePanel.setLayout(new GridBagLayout());
-																GridBagConstraints c_dP = new GridBagConstraints();
-																c_dP.fill = GridBagConstraints.HORIZONTAL;
-																c_dP.weightx = 0;
-																c_dP.weighty = 0;
-																
-																//Add Label and Combo asking for number of ranges
-																c_dP.gridx = 0;
-																c_dP.gridy = 0;
-																rangePanel.add(new JLabel("Number of ranges"), c_dP);
-																
-																c_dP.gridx = 1;
-																c_dP.gridy = 0;
-																JComboBox combo = new JComboBox();		
-																for (int comboValue = 1; comboValue <= 100; comboValue++) {
-																	combo.addItem(comboValue);
-																}
-																combo.setSelectedItem(null);
-																rangePanel.add(combo, c_dP);
-
-
-																//Add Label and TextField asking for min value
-																c_dP.gridx = 0;
-																c_dP.gridy = 1;
-																rangePanel.add(new JLabel("Min value"), c_dP);
-																
-																c_dP.gridx = 1;
-																c_dP.gridy = 1;
-																JTextField min_TF = new JTextField(3);															
-																min_TF.setText(uniqueValueList.get(0));
-																rangePanel.add(min_TF, c_dP);
-																
-																
-																//Add Label and TextField asking for max value
-																c_dP.gridx = 0;
-																c_dP.gridy = 2;
-																rangePanel.add(new JLabel("Max value"), c_dP);
-																
-																c_dP.gridx = 1;
-																c_dP.gridy = 2;
-																JTextField max_TF = new JTextField(3);															
-																max_TF.setText(uniqueValueList.get(uniqueValueList.size()-1));
-																rangePanel.add(max_TF, c_dP);
-																
-																
-																//add empty label to prevent things move
-																c_dP.gridx = 0;
-																c_dP.gridy = 3;
-																c_dP.weightx = 0;
-																c_dP.weighty = 1;
-																rangePanel.add(new JLabel(""), c_dP);	
-																
-
-																
-																//Listener for the combo
-															    combo.addActionListener(new AbstractAction() {
-															        @Override
-															        public void actionPerformed(ActionEvent e) {
-															        	try {																        													        	
-																        	int numberofRanges = (Integer) combo.getSelectedItem();	        	
-																        	double minValue = Double.parseDouble(min_TF.getText());
-																        	double maxValue = Double.parseDouble(max_TF.getText());
-															        
-																        	if (minValue <= maxValue) {
-																	        	//Remove all checkBoxes previously added into the Column list (or the dynamic identifier)
-																				checkboxDynamicIdentifiers.get(currentCheckBoxIndex).clear();
-																				rangePanel.removeAll();
-																																									
-																	        	
-																	        	c_dP.weightx = 1;
-																				c_dP.weighty = 0;
-																	        	
-																	        	//Add Label and Spinner asking for number of ranges
-																				c_dP.gridx = 0;
-																				c_dP.gridy = 0;
-																				rangePanel.add(new JLabel("Number of ranges"), c_dP);
-																				
-																				c_dP.gridx = 1;
-																				c_dP.gridy = 0;
-																				rangePanel.add(combo, c_dP);
-		
-																				//Add 4 labels
-																				c_dP.gridx = 0;
-																				c_dP.gridy = 1;
-																				rangePanel.add(new JLabel("Range"), c_dP);
-																				
-																				c_dP.gridx = 1;
-																				c_dP.gridy = 1;
-																				rangePanel.add(new JLabel("From"), c_dP);
-																				
-																				c_dP.gridx = 2;
-																				c_dP.gridy = 1;
-																				rangePanel.add(new JLabel("To"), c_dP);
-																				
-																				c_dP.gridx = 3;
-																				c_dP.gridy = 1;
-																				rangePanel.add(new JLabel("Define name of this range"), c_dP);	
-																	        
-																			
-																	        	//Add all ranges and textField for the toolTip
-																				for (int j = 0; j < numberofRanges; j++) {																									
-																					String valueFrom = String.format("%.2f", minValue + (maxValue-minValue)/numberofRanges*j);
-																					String valueTo = String.format("%.2f", minValue + (maxValue-minValue)/numberofRanges*(j+1));
-																					
-																					checkboxDynamicIdentifiers.get(currentCheckBoxIndex).add(new JCheckBox("[" + valueFrom + "," + valueTo + ")"));
-																					c_dP.gridx = 0;
-																					c_dP.gridy = 2 + j;
-																					rangePanel.add(checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(j), c_dP);
-																			
-																					c_dP.gridx = 1;
-																					c_dP.gridy = 2 + j;
-																					JTextField from_TF = new JTextField(3);
-																					
-																					from_TF.setText(valueFrom);
-																					rangePanel.add(from_TF, c_dP);
-																					
-																					c_dP.gridx = 2;
-																					c_dP.gridy = 2 + j;
-																					JTextField to_TF = new JTextField(3);
-																					to_TF.setText(valueTo);
-																					rangePanel.add(to_TF, c_dP);
-																					
-																					c_dP.gridx = 3;
-																					c_dP.gridy = 2 + j;
-																					JTextField name_TF = new JTextField(20);
-																					name_TF.setText("");	//ToolTip text = ""
-																					rangePanel.add(name_TF, c_dP);
-																					
-																					//Add listener for TextField to be toolTip
-																					int jj=j;
-																					name_TF.getDocument().addDocumentListener(new DocumentListener() {
-																						@Override  
-																						public void changedUpdate(DocumentEvent e) {
-																							checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(jj).setToolTipText(name_TF.getText());
-																						}
-																						public void removeUpdate(DocumentEvent e) {
-																							checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(jj).setToolTipText(name_TF.getText());
-																						}
-																						public void insertUpdate(DocumentEvent e) {
-																							checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(jj).setToolTipText(name_TF.getText());
-																						}
-																					});
-																				}
-																				
-																				
-																				c_dP.gridx = 4;
-																				c_dP.gridy = 2 + numberofRanges;
-																				c_dP.weightx = 1;
-																				c_dP.weighty = 1;
-																				rangePanel.add(new JLabel(""), c_dP);  //add empty label to make everything not move
-																	        	
-																				
-																	        	// Apply change to the GUI
-																				defineScrollPane.setViewportView(rangePanel);	
-																        	} else {
-																        		JOptionPane.showMessageDialog(Spectrum_Main.mainFrameReturn(), "'Min value' must be less than or equal to 'Max value'");														        																							
-																        	}
-																		} catch (Exception ee)  {
-														        		JOptionPane.showMessageDialog(Spectrum_Main.mainFrameReturn(), "'Min value' and 'Max value' must be numbers");														        		
-																		}
-																	}
-															    });
-		
-																defineScrollPane.setViewportView(rangePanel);
-															}
-														}
-													});
-													//---------------------------------------------------------------------------------------------------
-											
-													//Add all to the popupPanel												
-													
-													//Add columnInfo_TArea to popupPanel
-													c_popup.gridx = 0;
-													c_popup.gridy = 0;
-													c_popup.gridwidth = 3;
-													c_popup.gridheight = 1;
-													c_popup.weightx = 1;
-													c_popup.weighty = 0;
-													popupPanel.add(columnInfo_TArea, c_popup);
-																						
-													//Add uniqueValueList_ScrollPanel to popupPanel
-													c_popup.gridx = 0;
-													c_popup.gridy = 1;
-													c_popup.gridwidth = 1;
-													c_popup.gridheight = 2;
-													c_popup.weightx = 1;
-													c_popup.weighty = 1;
-													popupPanel.add(uniqueValueList_ScrollPanel, c_popup);
-													
-													//Add 2 radios to popupPanel
-													c_popup.gridx = 1;
-													c_popup.gridy = 1;
-													c_popup.gridwidth = 1;
-													c_popup.gridheight = 1;
-													c_popup.weightx = 1;
-													c_popup.weighty = 0;
-													popupPanel.add(radioDISCRETE, c_popup);
-													
-													c_popup.gridx = 2;
-													c_popup.gridy = 1;
-													c_popup.gridwidth = 1;
-													c_popup.gridheight = 1;
-													c_popup.weightx = 1;
-													c_popup.weighty = 0;
-													popupPanel.add(radioRANGE, c_popup);
-													
-													//Add defineScrollPane to popupPanel
-													c_popup.gridx = 1;
-													c_popup.gridy = 2;
-													c_popup.gridwidth = 2;
-													c_popup.gridheight = 1;
-													c_popup.weightx = 1;
-													c_popup.weighty = 1;
-													popupPanel.add(defineScrollPane, c_popup);
-													//---------------------------------------------------------------------------------------------------
-													
-													int response = JOptionPane.showConfirmDialog(Spectrum_Main.mainFrameReturn(), popupPanel,
-															"Add   '" + currentCheckBoxName + "'   to the set of dynamic identifiers ?", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null);
-													if (response == JOptionPane.NO_OPTION) {
-														allDynamicIdentifiers.get(currentCheckBoxIndex).setSelected(false);
-													} else if (response == JOptionPane.YES_OPTION && checkboxDynamicIdentifiers.get(currentCheckBoxIndex).size()>0) {
-														//Deselect the No Identifier checkBox
-														checkboxNoIdentifier.setSelected(false);
-														
-														//Set the identifier ScrollPane visible
-														allDynamicIdentifiers_ScrollPane.get(currentCheckBoxIndex).setVisible(true);
-														
-														
-														//create a temporary Panel contains all checkboxes of that column 
-														JPanel tempPanel = new JPanel();
-														tempPanel.setLayout(new GridBagLayout());
-														GridBagConstraints c_temp = new GridBagConstraints();
-														c_temp.fill = GridBagConstraints.HORIZONTAL;
-														c_temp.weightx = 1;
-														c_temp.weighty = 1;
-														
-														for (int j = 0; j < checkboxDynamicIdentifiers.get(currentCheckBoxIndex).size(); j++) {
-															c_temp.gridx = 1;
-															c_temp.gridy = j;
-															tempPanel.add(checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(j), c_temp);
-														}
-			
-														//Set Scroll Pane view to the tempPanel
-														allDynamicIdentifiers_ScrollPane.get(currentCheckBoxIndex).setViewportView(tempPanel);
-														
-													} else if (response == JOptionPane.CLOSED_OPTION) {
-														allDynamicIdentifiers.get(currentCheckBoxIndex).setSelected(false);
-													} else {
-														allDynamicIdentifiers.get(currentCheckBoxIndex).setSelected(false);
-													}
-												
-												} else {	//if checkbox is not selected then remove the identifier ScrollPane
-													allDynamicIdentifiers_ScrollPane.get(currentCheckBoxIndex).setVisible(false);
-												}
-											
-												//Do a resize to same size for JInteral Frame of the project to help repaint the identifier ScrollPane added or removed					
-												Spectrum_Main.mainFrameReturn().getSelectedFrame().setSize(Spectrum_Main.mainFrameReturn().getSelectedFrame().getSize());
-											}
-										});
-									}		
-								}
-											
-								//Do a resize to same size for JInteral Frame of the project to help repaint the checkboxes added					
-								Spectrum_Main.mainFrameReturn().getSelectedFrame().setSize(Spectrum_Main.mainFrameReturn().getSelectedFrame().getSize());	
-							}
-						}
-					});		
-					
-					
-					
-
-					
-	
-					//ScrollPane contains the identifiers that are able to be selected
-					JScrollPane selectIdentifiersScrollPanel = new JScrollPane(select_Panel);
-					TitledBorder border3_2 = new TitledBorder("Select Identifiers");
-					border3_2.setTitleJustification(TitledBorder.CENTER);
-					selectIdentifiersScrollPanel.setBorder(border3_2);
-					selectIdentifiersScrollPanel.setPreferredSize(new Dimension(200, 100));
-					
-					//Add the above ScrollPane
-					c3.gridx = 0;
-					c3.gridy = 0;
-					dynamic_identifiersPanel.add(selectIdentifiersScrollPanel, c3);
-					
-					
-					//Add dynamic_identifiersPanel to this Class which is a mother JSCrollPanel
-					setViewportView(dynamic_identifiersPanel);
-				}
-			}
-			
-			
-			checkbox_dynamicScrollPanel dynamic_identifiersScrollPanel = new checkbox_dynamicScrollPanel("Get identifiers from yield table columns", 2);
+			dynamic_identifiersScrollPanel = new checkbox_dynamicScrollPanel("Get identifiers from yield table columns", 2);
 			TitledBorder border3_1 = new TitledBorder("Dynamic identifiers for PARAMETERS (from yield table)");
 			border3_1.setTitleJustification(TitledBorder.CENTER);
 			dynamic_identifiersScrollPanel.setBorder(border3_1);
@@ -2839,8 +2154,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 										checkboxName = "NG";
 									}
 									
-									//Add checkBox if it is selected or disable
-									if (checkboxStaticIdentifiers.get(ii).get(j).isSelected() || !checkboxStaticIdentifiers.get(ii).get(j).isEnabled())	
+									//Add checkBox if it is (selected & visible) or disable
+									if ((checkboxStaticIdentifiers.get(ii).get(j).isSelected() && (checkboxStaticIdentifiers.get(ii).get(j).isVisible())
+											|| !checkboxStaticIdentifiers.get(ii).get(j).isEnabled()))	
 										staticIdentifiersColumn = staticIdentifiersColumn + checkboxName + " "	;
 								}
 								staticIdentifiersColumn = staticIdentifiersColumn + ";";
@@ -2856,9 +2172,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 									dynamicIdentifiersColumn = dynamicIdentifiersColumn + ii + " ";
 									for (int j = 0; j < dynamic_identifiersScrollPanel.checkboxDynamicIdentifiers.get(ii).size(); j++) { //Loop all checkBoxes in this active identifier
 										String checkboxName = dynamic_identifiersScrollPanel.checkboxDynamicIdentifiers.get(ii).get(j).getText();									
-										//Add checkBox if it is selected or disable
-										if (dynamic_identifiersScrollPanel.checkboxDynamicIdentifiers.get(ii).get(j).isSelected()
-												|| !dynamic_identifiersScrollPanel.checkboxDynamicIdentifiers.get(ii).get(j).isEnabled())
+										//Add checkBox if it is (selected & visible) or disable
+										if ((dynamic_identifiersScrollPanel.checkboxDynamicIdentifiers.get(ii).get(j).isSelected() && (dynamic_identifiersScrollPanel.checkboxDynamicIdentifiers.get(ii).get(j).isVisible())
+												|| !dynamic_identifiersScrollPanel.checkboxDynamicIdentifiers.get(ii).get(j).isEnabled()))
 											dynamicIdentifiersColumn = dynamicIdentifiersColumn + checkboxName + " ";
 									}
 									dynamicIdentifiersColumn = dynamicIdentifiersColumn + ";";
@@ -3001,23 +2317,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			table2.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);  
 			TableRowSorter<MyTableModel2> sorter2 = new TableRowSorter<MyTableModel2>(model2);	//Add sorter
 			table2.setRowSorter(sorter2);
-			
-			
-		    MultiLineTableCellRenderer renderer = new MultiLineTableCellRenderer();
-
-		    //set TableCellRenderer into a specified JTable column class
-		    table2.setDefaultRenderer(String[].class, renderer);
-
-		    //or, set TableCellRenderer into a specified JTable column
-		    table2.getColumnModel().getColumn(0).setCellRenderer(renderer);
-			
-   
-		    
+				    
 		    
 			// Create the scroll pane and add the constraintTablePanel to it.
 			JScrollPane constraints_ScrollPane = new JScrollPane();
 			constraints_ScrollPane.setViewportView(table2);
-			constraints_ScrollPane.setPreferredSize(new Dimension(800, 250));
+			constraints_ScrollPane.setPreferredSize(new Dimension(300, 150));
 	         
 	         
 	         //Create a JPanel and Add the scrollPane to this panel.
@@ -3093,7 +2398,695 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c.weightx = 1;
 		    c.weighty = 1;
 			super.add(constraintTablePanel, c);
+			
+			//when radioButton_Right[4] is selected, time period GUI will be updated
+			radioButton_Right[4].addActionListener(this);
 		}
+		
+		// Listener for this class----------------------------------------------------------------------
+	    public void actionPerformed(ActionEvent e) {
+	    	
+	    	//Update GUI for time period 
+	    	for (int j = 0; j < checkboxStaticIdentifiers.get(7).size(); j++) {					
+				if (j < totalPeriod) {
+					checkboxStaticIdentifiers.get(7).get(j).setVisible(true);		//Periods to be visible 			
+				} else {
+					checkboxStaticIdentifiers.get(7).get(j).setVisible(false);		//Periods to be invisible
+					checkboxStaticIdentifiers.get(7).get(j).setSelected(false);		//Periods to be unselected
+				}
+			}  	
+	    	
+	       	//Update Parameter Panel
+	    	if (yieldTable_ColumnNames != null && parametersScrollPanel.checkboxParameter == null) {
+	    		parametersScrollPanel = new checkboxScrollPanel("Get parameters from YT columns");
+	    	}
+	    	
+	      	//Update Dynamic Identifier Panel
+	    	if (yieldTable_ColumnNames != null && dynamic_identifiersScrollPanel.allDynamicIdentifiers == null) {
+	    		dynamic_identifiersScrollPanel = new checkbox_dynamicScrollPanel("Get identifiers from yield table columns", 2);
+	    	}
+
+	    }
+	    
+	    
+		class checkboxScrollPanel extends JScrollPane {	
+			private JCheckBox checkboxNoParameter;
+			private List<JCheckBox> checkboxParameter;
+			
+			public checkboxScrollPanel(String nameTag) {
+				
+				JPanel parametersPanel = new JPanel();	
+				parametersPanel.setLayout(new GridBagLayout());
+				GridBagConstraints c2 = new GridBagConstraints();
+				c2.fill = GridBagConstraints.HORIZONTAL;
+				c2.weightx = 1;
+			    c2.weighty = 1;
+			    
+				setViewportView(parametersPanel);
+			    		
+				if (yieldTable_ColumnNames != null && checkboxParameter == null) {				
+					checkboxParameter = new ArrayList<JCheckBox>();
+					
+					for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
+						String YTcolumnName = yieldTable_ColumnNames[i];
+
+						checkboxParameter.add(new JCheckBox(YTcolumnName));		//add checkbox
+						checkboxParameter.get(i).setToolTipText(read_Identifiers.get_ParameterToolTip(YTcolumnName) + " (Column index: " + i + ")");		//add toolTip
+						
+						// add checkboxParameter to the Panel
+					    c2.gridx = 0;
+					    c2.gridy = 1 + i;
+						c2.weightx = 1;
+					    c2.weighty = 1;
+						parametersPanel.add(checkboxParameter.get(i), c2);
+					}
+					
+					
+					//Add an extra checkbox for the option of not using any Column, use 1 instead as multiplier
+					//This is also the checkbox for the option of not using any Column as dynamic identifier
+					checkboxNoParameter = new JCheckBox();		//add checkbox			
+					checkboxNoParameter.setText("NoParameter");		
+					checkboxNoParameter.setToolTipText("1 is used as multiplier (parameter), no column will be used as parameter");		//set toolTip
+					
+					// add the checkBox to the Panel
+					c2.gridx = 0;
+					c2.gridy = 0;
+					c2.weightx = 1;
+					c2.weighty = 1;
+					parametersPanel.add(checkboxNoParameter, c2);
+					
+					// Add listeners to de-select all other checkBoxes
+					checkboxNoParameter.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent actionEvent) {
+							if (checkboxNoParameter.isSelected()) {
+								for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
+									checkboxParameter.get(i).setSelected(false);
+								} 
+							}
+						}
+					});								
+					
+					
+					// Add listeners to checkBox so if then name has AllSx then other checkbox would be deselected 
+					for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
+						String currentCheckBoxName = yieldTable_ColumnNames[i];
+						int currentCheckBoxIndex = i;
+						
+						checkboxParameter.get(i).addActionListener(new ActionListener() {	
+							@Override
+							public void actionPerformed(ActionEvent actionEvent) {
+								//Deselect the NoParameter checkBox
+								checkboxNoParameter.setSelected(false);
+								
+								if (currentCheckBoxName.contains("AllSx")) {
+									for (int j = 0; j < yieldTable_ColumnNames.length; j++) {		
+										if (j!=currentCheckBoxIndex) 	checkboxParameter.get(j).setSelected(false);
+									}
+								} else {
+									for (int j = 0; j < yieldTable_ColumnNames.length; j++) {		
+										if (checkboxParameter.get(j).getText().contains("AllSx")) 	checkboxParameter.get(j).setSelected(false);
+									}
+								}					
+							}
+						});
+					}
+
+					//Do a resize to same size for JInteral Frame of the project to help repaint the checkboxVariables added					
+					Spectrum_Main.mainFrameReturn().getSelectedFrame().setSize(Spectrum_Main.mainFrameReturn().getSelectedFrame().getSize());	
+				}	
+				
+			}
+		}
+		
+		class checkbox_dynamicScrollPanel extends JScrollPane {	
+			private JCheckBox checkboxNoIdentifier;
+			private List<JCheckBox> allDynamicIdentifiers;
+			private List<JScrollPane> allDynamicIdentifiers_ScrollPane;
+			private List<List<JCheckBox>> checkboxDynamicIdentifiers;
+			private JScrollPane defineScrollPane;		//for Definition of dynamic identifier
+			
+			public checkbox_dynamicScrollPanel(String nameTag, int option) {
+
+				// Define the Panel contains everything --------------------------
+				JPanel dynamic_identifiersPanel = new JPanel();		
+				dynamic_identifiersPanel.setLayout(new GridBagLayout());
+				GridBagConstraints c3 = new GridBagConstraints();
+				c3.fill = GridBagConstraints.BOTH;
+				c3.weightx = 1;
+			    c3.weighty = 1;
+			    // Add elements to this Panel later at the end --------------------------
+				
+				
+			
+
+				//This is the Panel for select all available identifiers--------------------------
+				JPanel select_Panel = new JPanel();	
+				select_Panel.setLayout(new GridBagLayout());
+				GridBagConstraints c2 = new GridBagConstraints();
+				c2.fill = GridBagConstraints.HORIZONTAL;
+				c2.weightx = 1;
+			    c2.weighty = 1;		
+				//------------------------------------------------------------------------------
+				
+				
+			    if (yieldTable_ColumnNames != null && allDynamicIdentifiers == null) {				
+					
+					checkboxDynamicIdentifiers = new ArrayList<List<JCheckBox>>();	
+					allDynamicIdentifiers = new ArrayList<JCheckBox>();
+					
+					for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
+						String YTcolumnName = yieldTable_ColumnNames[i];
+
+						checkboxDynamicIdentifiers.add(new ArrayList<JCheckBox>());		//add empty List
+						allDynamicIdentifiers.add(new JCheckBox(YTcolumnName));		//add checkbox
+						allDynamicIdentifiers.get(i).setToolTipText(read_Identifiers.get_ParameterToolTip(YTcolumnName) + " (Column index: " + i + ")");		//add toolTip
+						
+						// add checkboxParameter to the Panel
+					    c2.gridx = 0;
+					    c2.gridy = 1 + i;
+						c2.weightx = 1;
+					    c2.weighty = 1;
+						select_Panel.add(allDynamicIdentifiers.get(i), c2);
+					}
+					
+					
+					//Add an extra checkBox for the option of not using any Column as dynamic identifier
+					checkboxNoIdentifier = new JCheckBox();		//add checkBox		
+					checkboxNoIdentifier.setText("NoIdentifier");	
+					checkboxNoIdentifier.setToolTipText("No column will be used as dynamic identifier");		//set toolTip
+					
+					// add the checkBox to the Panel
+					c2.gridx = 0;
+					c2.gridy = 0;
+					c2.weightx = 1;
+					c2.weighty = 1;
+					select_Panel.add(checkboxNoIdentifier, c2);
+					
+					// Add listeners to de-select all other checkBoxes
+					checkboxNoIdentifier.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent actionEvent) {
+							if (checkboxNoIdentifier.isSelected()) {
+								for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
+									allDynamicIdentifiers.get(i).setSelected(false);
+									allDynamicIdentifiers_ScrollPane.get(i).setVisible(false);		//Set invisible all scrollPanes of dynamic identifiers
+									
+									//Do a resize to same size for JInteral Frame of the project to help repaint					
+									Spectrum_Main.mainFrameReturn().getSelectedFrame().setSize(Spectrum_Main.mainFrameReturn().getSelectedFrame().getSize());	
+								} 
+							}
+						}
+					});								
+					
+			
+				
+					if (option == 2) {		//For the dynamic identifiers only						
+						//Add all dynamic identifiers lables
+						allDynamicIdentifiers_ScrollPane = new ArrayList<JScrollPane>();
+						
+						for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
+							String YTcolumnName = allDynamicIdentifiers.get(i).getText();		
+							allDynamicIdentifiers_ScrollPane.add(new JScrollPane());			//Add ScrollPane
+							allDynamicIdentifiers_ScrollPane.get(i).setBorder(new TitledBorder(YTcolumnName));	//set Title
+							allDynamicIdentifiers_ScrollPane.get(i).setPreferredSize(new Dimension(150, 100));
+//							allDynamicIdentifiers_ScrollPane.get(i).setToolTipText(read_Identifiers.get_ParameterToolTip(YTcolumnName) + " (Column index: " + i + ")");		//add toolTip										
+							allDynamicIdentifiers_ScrollPane.get(i).setVisible(false);		//Set invisible
+							
+							c3.gridx =1 + i;
+							c3.gridy = 0;
+							dynamic_identifiersPanel.add(allDynamicIdentifiers_ScrollPane.get(i), c3);
+						}					
+																
+						
+						// Add listeners to checkBoxes
+						for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
+							String currentCheckBoxName = yieldTable_ColumnNames[i];
+							int currentCheckBoxIndex = i;
+							
+							allDynamicIdentifiers.get(i).addActionListener(new ActionListener() {	
+								@Override
+								public void actionPerformed(ActionEvent actionEvent) {
+									// A popupPanel to define identifier if the checkBox is selected
+									if (allDynamicIdentifiers.get(currentCheckBoxIndex).isSelected()) {
+										
+										//Remove all checkBoxes previously added into the Column list (or the dynamic identifier)
+										checkboxDynamicIdentifiers.get(currentCheckBoxIndex).clear();
+												
+										//define popupPanel
+										JPanel popupPanel = new JPanel();
+										popupPanel.setLayout(new GridBagLayout());
+										TitledBorder border_popup = new TitledBorder("PLEASE HELP SPECTRUMLITE DEFINE THIS IDENTIFIER");
+										border_popup.setTitleJustification(TitledBorder.CENTER);
+										popupPanel.setBorder(border_popup);
+										popupPanel.setPreferredSize(new Dimension(800, 400));;
+										GridBagConstraints c_popup = new GridBagConstraints();
+										c_popup.fill = GridBagConstraints.BOTH;
+										c_popup.weightx = 1;
+										c_popup.weighty = 1;
+										
+										// Just to make the OptionPanel resizable
+										popupPanel.addHierarchyListener(new HierarchyListener() {
+										    public void hierarchyChanged(HierarchyEvent e) {
+										        Window window = SwingUtilities.getWindowAncestor(popupPanel);
+										        if (window instanceof Dialog) {
+										            Dialog dialog = (Dialog)window;
+										            if (!dialog.isResizable()) {
+										                dialog.setResizable(true);
+										            }
+										        }
+										    }
+										});												
+										//---------------------------------------------------------------------------------------------------	
+										
+										JPanel listPanel = new JPanel();
+										listPanel.setLayout(new GridBagLayout());
+										GridBagConstraints c_list = new GridBagConstraints();
+										c_list.fill = GridBagConstraints.HORIZONTAL;
+										c_list.weightx = 1;
+										c_list.weighty = 1;
+										
+										
+										List<String> uniqueValueList = read_DatabaseTables.getColumnUniqueValues(currentCheckBoxIndex);									
+										//Sort the list	
+										try {	//Sort Double
+											Collections.sort(uniqueValueList,new Comparator<String>() {
+												@Override
+											    public int compare(String o1, String o2) {
+											        return Double.valueOf(o1).compareTo(Double.valueOf(o2));
+											    }
+											});	
+										} catch (Exception e1) {
+											Collections.sort(uniqueValueList);	//Sort String
+										}
+										
+										//Add Labels of unique values to listPanel
+										for (int j = 0; j < uniqueValueList.size(); j++) {
+											c_list.gridx = 0;
+											c_list.gridy = j;
+											c_list.weightx = 1;
+											c_list.weighty = 1;
+											listPanel.add(new JLabel(uniqueValueList.get(j)), c_list);		
+										}
+										
+										//ScrollPane contains the listPanel
+										JScrollPane uniqueValueList_ScrollPanel = new JScrollPane(listPanel);
+										TitledBorder border_List = new TitledBorder("List of unique values");
+										border_List.setTitleJustification(TitledBorder.CENTER);
+										uniqueValueList_ScrollPanel.setBorder(border_List);
+										uniqueValueList_ScrollPanel.setPreferredSize(new Dimension(80, 300));
+										//---------------------------------------------------------------------------------------------------
+										
+										//JTextArea contains some info of this column
+										JTextArea columnInfo_TArea = new JTextArea();
+										columnInfo_TArea.setEditable(false);
+										columnInfo_TArea.setLineWrap(true);
+										columnInfo_TArea.setWrapStyleWord(true);
+										columnInfo_TArea.append("SpectrumLite found " + uniqueValueList.size() + 
+												" unique values for this identifier (across " + yieldTable_values.length + " yield tables in your database)."  + "\n");
+										
+										if (uniqueValueList.size()<=20) {
+											columnInfo_TArea.append("'DISCRETE IDENTIFIER' is recommended.");
+										} else {
+											columnInfo_TArea.append("'RANGE IDENTIFIER' is recommended.");
+										}
+										//---------------------------------------------------------------------------------------------------
+
+										//defineScrollPane for Definition
+										defineScrollPane = new JScrollPane();	
+										defineScrollPane.setBorder(new TitledBorder(""));
+										//---------------------------------------------------------------------------------------------------
+									
+										//2 radioButtons for DISCRETE or RANGE definition
+										JRadioButton radioDISCRETE = new JRadioButton("DISCRETE IDENTIFIER"); 
+										JRadioButton radioRANGE = new JRadioButton("RANGE IDENTIFIER"); 
+										
+										//Add 2 radio to the group
+										ButtonGroup definitionGroup = new ButtonGroup();
+										definitionGroup.add(radioDISCRETE);
+										definitionGroup.add(radioRANGE);
+										
+										
+										//Add listener for radioDISCRETE
+										radioDISCRETE.addActionListener(new ActionListener() {
+											@Override
+											public void actionPerformed(ActionEvent e) {
+												if (radioDISCRETE.isSelected()) {
+													//Remove all checkBoxes previously added into the Column list (or the dynamic identifier)
+													checkboxDynamicIdentifiers.get(currentCheckBoxIndex).clear();
+													
+													
+													JPanel discretePanel = new JPanel();	
+													discretePanel.setLayout(new GridBagLayout());
+													GridBagConstraints c_dP = new GridBagConstraints();
+													c_dP.fill = GridBagConstraints.HORIZONTAL;
+													c_dP.weightx = 1;
+													c_dP.weighty = 1;
+													
+													//Add 2 labels
+													c_dP.gridx = 0;
+													c_dP.gridy = 0;
+													discretePanel.add(new JLabel("Unique Value"), c_dP);
+													
+													c_dP.gridx = 1;
+													c_dP.gridy = 0;
+													discretePanel.add(new JLabel("Define Name (Below are suggestions from SpectrumLite's library)"), c_dP);
+													
+													//Add all discrete values and textField for the toolTip
+													for (int j = 0; j < uniqueValueList.size(); j++) {
+														String nameOfColumnAndUniqueValue = currentCheckBoxName + " " + uniqueValueList.get(j);	//The name
+																					
+														checkboxDynamicIdentifiers.get(currentCheckBoxIndex).add(new JCheckBox(uniqueValueList.get(j)));
+														checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(j).setToolTipText(read_Identifiers.get_ParameterToolTip(nameOfColumnAndUniqueValue));	//ToolTip of this Name from SpectrumLite Library;
+														c_dP.gridx = 0;
+														c_dP.gridy = 1 + j;
+														discretePanel.add(checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(j), c_dP);
+														
+														c_dP.gridx = 1;
+														c_dP.gridy = 1 + j;
+														JTextField name_TF = new JTextField(20);
+														name_TF.setText(read_Identifiers.get_ParameterToolTip(nameOfColumnAndUniqueValue));	//ToolTip of this Name from SpectrumLite Library
+														discretePanel.add(name_TF, c_dP);
+														
+														//Add listener for TextField to be toolTip
+														int jj=j;
+														name_TF.getDocument().addDocumentListener(new DocumentListener() {
+															@Override  
+															public void changedUpdate(DocumentEvent e) {
+																checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(jj).setToolTipText(name_TF.getText());
+															}
+															public void removeUpdate(DocumentEvent e) {
+																checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(jj).setToolTipText(name_TF.getText());
+															}
+															public void insertUpdate(DocumentEvent e) {
+																checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(jj).setToolTipText(name_TF.getText());
+															}
+														});
+													}						
+													defineScrollPane.setViewportView(discretePanel);	
+												}
+											}
+										});
+										
+										
+										//Add listener for radioRANGE
+										radioRANGE.addActionListener(new ActionListener() {
+											@Override
+											public void actionPerformed(ActionEvent e) {
+												if (radioRANGE.isSelected()) {
+													//Remove all checkBoxes previously added into the Column list (or the dynamic identifier)
+													checkboxDynamicIdentifiers.get(currentCheckBoxIndex).clear();
+													
+													
+													JPanel rangePanel = new JPanel();
+													rangePanel.setLayout(new GridBagLayout());
+													GridBagConstraints c_dP = new GridBagConstraints();
+													c_dP.fill = GridBagConstraints.HORIZONTAL;
+													c_dP.weightx = 0;
+													c_dP.weighty = 0;
+													
+													//Add Label and Combo asking for number of ranges
+													c_dP.gridx = 0;
+													c_dP.gridy = 0;
+													rangePanel.add(new JLabel("Number of ranges"), c_dP);
+													
+													c_dP.gridx = 1;
+													c_dP.gridy = 0;
+													JComboBox combo = new JComboBox();		
+													for (int comboValue = 1; comboValue <= 100; comboValue++) {
+														combo.addItem(comboValue);
+													}
+													combo.setSelectedItem(null);
+													rangePanel.add(combo, c_dP);
+
+
+													//Add Label and TextField asking for min value
+													c_dP.gridx = 0;
+													c_dP.gridy = 1;
+													rangePanel.add(new JLabel("Min value"), c_dP);
+													
+													c_dP.gridx = 1;
+													c_dP.gridy = 1;
+													JTextField min_TF = new JTextField(3);															
+													min_TF.setText(uniqueValueList.get(0));
+													rangePanel.add(min_TF, c_dP);
+													
+													
+													//Add Label and TextField asking for max value
+													c_dP.gridx = 0;
+													c_dP.gridy = 2;
+													rangePanel.add(new JLabel("Max value"), c_dP);
+													
+													c_dP.gridx = 1;
+													c_dP.gridy = 2;
+													JTextField max_TF = new JTextField(3);															
+													max_TF.setText(uniqueValueList.get(uniqueValueList.size()-1));
+													rangePanel.add(max_TF, c_dP);
+													
+													
+													//add empty label to prevent things move
+													c_dP.gridx = 0;
+													c_dP.gridy = 3;
+													c_dP.weightx = 0;
+													c_dP.weighty = 1;
+													rangePanel.add(new JLabel(""), c_dP);	
+													
+
+													
+													//Listener for the combo
+												    combo.addActionListener(new AbstractAction() {
+												        @Override
+												        public void actionPerformed(ActionEvent e) {
+												        	try {																        													        	
+													        	int numberofRanges = (Integer) combo.getSelectedItem();	        	
+													        	double minValue = Double.parseDouble(min_TF.getText());
+													        	double maxValue = Double.parseDouble(max_TF.getText());
+												        
+													        	if (minValue <= maxValue) {
+														        	//Remove all checkBoxes previously added into the Column list (or the dynamic identifier)
+																	checkboxDynamicIdentifiers.get(currentCheckBoxIndex).clear();
+																	rangePanel.removeAll();
+																																						
+														        	
+														        	c_dP.weightx = 1;
+																	c_dP.weighty = 0;
+														        	
+														        	//Add Label and Spinner asking for number of ranges
+																	c_dP.gridx = 0;
+																	c_dP.gridy = 0;
+																	rangePanel.add(new JLabel("Number of ranges"), c_dP);
+																	
+																	c_dP.gridx = 1;
+																	c_dP.gridy = 0;
+																	rangePanel.add(combo, c_dP);
+
+																	//Add 4 labels
+																	c_dP.gridx = 0;
+																	c_dP.gridy = 1;
+																	rangePanel.add(new JLabel("Range"), c_dP);
+																	
+																	c_dP.gridx = 1;
+																	c_dP.gridy = 1;
+																	rangePanel.add(new JLabel("From"), c_dP);
+																	
+																	c_dP.gridx = 2;
+																	c_dP.gridy = 1;
+																	rangePanel.add(new JLabel("To"), c_dP);
+																	
+																	c_dP.gridx = 3;
+																	c_dP.gridy = 1;
+																	rangePanel.add(new JLabel("Define name of this range"), c_dP);	
+														        
+																
+														        	//Add all ranges and textField for the toolTip
+																	for (int j = 0; j < numberofRanges; j++) {																									
+																		String valueFrom = String.format("%.2f", minValue + (maxValue-minValue)/numberofRanges*j);
+																		String valueTo = String.format("%.2f", minValue + (maxValue-minValue)/numberofRanges*(j+1));
+																		
+																		checkboxDynamicIdentifiers.get(currentCheckBoxIndex).add(new JCheckBox("[" + valueFrom + "," + valueTo + ")"));
+																		c_dP.gridx = 0;
+																		c_dP.gridy = 2 + j;
+																		rangePanel.add(checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(j), c_dP);
+																
+																		c_dP.gridx = 1;
+																		c_dP.gridy = 2 + j;
+																		JTextField from_TF = new JTextField(3);
+																		
+																		from_TF.setText(valueFrom);
+																		rangePanel.add(from_TF, c_dP);
+																		
+																		c_dP.gridx = 2;
+																		c_dP.gridy = 2 + j;
+																		JTextField to_TF = new JTextField(3);
+																		to_TF.setText(valueTo);
+																		rangePanel.add(to_TF, c_dP);
+																		
+																		c_dP.gridx = 3;
+																		c_dP.gridy = 2 + j;
+																		JTextField name_TF = new JTextField(20);
+																		name_TF.setText("");	//ToolTip text = ""
+																		rangePanel.add(name_TF, c_dP);
+																		
+																		//Add listener for TextField to be toolTip
+																		int jj=j;
+																		name_TF.getDocument().addDocumentListener(new DocumentListener() {
+																			@Override  
+																			public void changedUpdate(DocumentEvent e) {
+																				checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(jj).setToolTipText(name_TF.getText());
+																			}
+																			public void removeUpdate(DocumentEvent e) {
+																				checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(jj).setToolTipText(name_TF.getText());
+																			}
+																			public void insertUpdate(DocumentEvent e) {
+																				checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(jj).setToolTipText(name_TF.getText());
+																			}
+																		});
+																	}
+																	
+																	
+																	c_dP.gridx = 4;
+																	c_dP.gridy = 2 + numberofRanges;
+																	c_dP.weightx = 1;
+																	c_dP.weighty = 1;
+																	rangePanel.add(new JLabel(""), c_dP);  //add empty label to make everything not move
+														        	
+																	
+														        	// Apply change to the GUI
+																	defineScrollPane.setViewportView(rangePanel);	
+													        	} else {
+													        		JOptionPane.showMessageDialog(Spectrum_Main.mainFrameReturn(), "'Min value' must be less than or equal to 'Max value'");														        																							
+													        	}
+															} catch (Exception ee)  {
+											        		JOptionPane.showMessageDialog(Spectrum_Main.mainFrameReturn(), "'Min value' and 'Max value' must be numbers");														        		
+															}
+														}
+												    });
+
+													defineScrollPane.setViewportView(rangePanel);
+												}
+											}
+										});
+										//---------------------------------------------------------------------------------------------------
+								
+										//Add all to the popupPanel												
+										
+										//Add columnInfo_TArea to popupPanel
+										c_popup.gridx = 0;
+										c_popup.gridy = 0;
+										c_popup.gridwidth = 3;
+										c_popup.gridheight = 1;
+										c_popup.weightx = 1;
+										c_popup.weighty = 0;
+										popupPanel.add(columnInfo_TArea, c_popup);
+																			
+										//Add uniqueValueList_ScrollPanel to popupPanel
+										c_popup.gridx = 0;
+										c_popup.gridy = 1;
+										c_popup.gridwidth = 1;
+										c_popup.gridheight = 2;
+										c_popup.weightx = 1;
+										c_popup.weighty = 1;
+										popupPanel.add(uniqueValueList_ScrollPanel, c_popup);
+										
+										//Add 2 radios to popupPanel
+										c_popup.gridx = 1;
+										c_popup.gridy = 1;
+										c_popup.gridwidth = 1;
+										c_popup.gridheight = 1;
+										c_popup.weightx = 1;
+										c_popup.weighty = 0;
+										popupPanel.add(radioDISCRETE, c_popup);
+										
+										c_popup.gridx = 2;
+										c_popup.gridy = 1;
+										c_popup.gridwidth = 1;
+										c_popup.gridheight = 1;
+										c_popup.weightx = 1;
+										c_popup.weighty = 0;
+										popupPanel.add(radioRANGE, c_popup);
+										
+										//Add defineScrollPane to popupPanel
+										c_popup.gridx = 1;
+										c_popup.gridy = 2;
+										c_popup.gridwidth = 2;
+										c_popup.gridheight = 1;
+										c_popup.weightx = 1;
+										c_popup.weighty = 1;
+										popupPanel.add(defineScrollPane, c_popup);
+										//---------------------------------------------------------------------------------------------------
+										
+										int response = JOptionPane.showConfirmDialog(Spectrum_Main.mainFrameReturn(), popupPanel,
+												"Add   '" + currentCheckBoxName + "'   to the set of dynamic identifiers ?", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null);
+										if (response == JOptionPane.NO_OPTION) {
+											allDynamicIdentifiers.get(currentCheckBoxIndex).setSelected(false);
+										} else if (response == JOptionPane.YES_OPTION && checkboxDynamicIdentifiers.get(currentCheckBoxIndex).size()>0) {
+											//Deselect the No Identifier checkBox
+											checkboxNoIdentifier.setSelected(false);
+											
+											//Set the identifier ScrollPane visible
+											allDynamicIdentifiers_ScrollPane.get(currentCheckBoxIndex).setVisible(true);
+											
+											
+											//create a temporary Panel contains all checkboxes of that column 
+											JPanel tempPanel = new JPanel();
+											tempPanel.setLayout(new GridBagLayout());
+											GridBagConstraints c_temp = new GridBagConstraints();
+											c_temp.fill = GridBagConstraints.HORIZONTAL;
+											c_temp.weightx = 1;
+											c_temp.weighty = 1;
+											
+											for (int j = 0; j < checkboxDynamicIdentifiers.get(currentCheckBoxIndex).size(); j++) {
+												c_temp.gridx = 1;
+												c_temp.gridy = j;
+												tempPanel.add(checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(j), c_temp);
+											}
+
+											//Set Scroll Pane view to the tempPanel
+											allDynamicIdentifiers_ScrollPane.get(currentCheckBoxIndex).setViewportView(tempPanel);
+											
+										} else if (response == JOptionPane.CLOSED_OPTION) {
+											allDynamicIdentifiers.get(currentCheckBoxIndex).setSelected(false);
+										} else {
+											allDynamicIdentifiers.get(currentCheckBoxIndex).setSelected(false);
+										}
+									
+									} else {	//if checkbox is not selected then remove the identifier ScrollPane
+										allDynamicIdentifiers_ScrollPane.get(currentCheckBoxIndex).setVisible(false);
+									}
+								
+									//Do a resize to same size for JInteral Frame of the project to help repaint the identifier ScrollPane added or removed					
+									Spectrum_Main.mainFrameReturn().getSelectedFrame().setSize(Spectrum_Main.mainFrameReturn().getSelectedFrame().getSize());
+								}
+							});
+						}		
+					}
+								
+					//Do a resize to same size for JInteral Frame of the project to help repaint the checkboxes added					
+					Spectrum_Main.mainFrameReturn().getSelectedFrame().setSize(Spectrum_Main.mainFrameReturn().getSelectedFrame().getSize());	
+				}
+				
+
+				
+
+				//ScrollPane contains the identifiers that are able to be selected
+				JScrollPane selectIdentifiersScrollPanel = new JScrollPane(select_Panel);
+				TitledBorder border3_2 = new TitledBorder("Select Identifiers");
+				border3_2.setTitleJustification(TitledBorder.CENTER);
+				selectIdentifiersScrollPanel.setBorder(border3_2);
+				selectIdentifiersScrollPanel.setPreferredSize(new Dimension(200, 100));
+				
+				//Add the above ScrollPane
+				c3.gridx = 0;
+				c3.gridy = 0;
+				dynamic_identifiersPanel.add(selectIdentifiersScrollPanel, c3);
+				
+				
+				//Add dynamic_identifiersPanel to this Class which is a mother JSCrollPanel
+				setViewportView(dynamic_identifiersPanel);
+			}
+		}
+		    
+	    
 	}
 
 	
@@ -3161,44 +3154,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			repaint();
 		}
 	}	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	//--------------------------------------------------------------------------------------------------------------------------------
-	public class MultiLineTableCellRenderer extends JList<String> implements TableCellRenderer {
-
-	    @Override
-	    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-	        //make multi line where the cell value is String[]
-	        if (value instanceof String[]) {
-	            setListData((String[]) value);
-	        }
-
-	        //cell backgroud color when selected
-	        if (isSelected) {
-	            setBackground(UIManager.getColor("Table.selectionBackground"));
-	        } else {
-	            setBackground(UIManager.getColor("Table.background"));
-	        }
-
-	        return this;
-	    }
-	}	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	
