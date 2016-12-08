@@ -1,0 +1,16 @@
+Cover Type Before Regeneration	Cover Type After Regeneration	Min Rotation Age-Class	Max Rotation Age-Class	Allowed Options	
+P	P	20	24	Yes	
+P	D	20	24	Yes	
+D	P	20	24	Yes	
+D	D	20	24	Yes	
+W	D	20	24	Yes	
+W	W	20	24	Yes	
+W	C	20	24	Yes	
+C	P	20	24	Yes	
+C	D	20	24	Yes	
+C	C	20	24	Yes	
+I	I	20	24	Yes	
+A	P	20	24	Yes	
+A	A	20	24	Yes	
+L	L	20	24	Yes	
+N	N	20	24	Yes	

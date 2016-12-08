@@ -1,0 +1,18 @@
+Strata ID	Layer 1	Layer 2	Layer 3	Layer 4	Layer 5	Layer 6	Total area (acres)	Age Class	Strata in optimization model	
+BNNCAL	B	N	N	C	A	L	335	9	Yes	
+BNNLAL	B	N	N	L	A	L	378	9	Yes	
+BNPRAL	B	N	P	R	A	L	118	9	Yes	
+BRNCAL	B	R	N	C	A	L	137	9	Yes	
+BRNLAL	B	R	N	L	A	L	310	9	Yes	
+BRNRAL	B	R	N	R	A	L	79	9	Yes	
+BRPCAL	B	R	P	C	A	L	86	9	Yes	
+BRPLAL	B	R	P	L	A	L	85	9	Yes	
+BRPRAL	B	R	P	R	A	L	52	9	Yes	
+CNNCAL	C	N	N	C	A	L	13028	9	Yes	
+CNNHAL	C	N	N	H	A	L	997	9	Yes	
+CNNLAL	C	N	N	L	A	L	33323	9	Yes	
+CNNRAL	C	N	N	R	A	L	1237	9	Yes	
+CNOCAL	C	N	O	C	A	L	120	9	Yes	
+CNOHAL	C	N	O	H	A	L	426	9	Yes	
+CNOLAL	C	N	O	L	A	L	97	9	Yes	
+CNORAL	C	N	O	R	A	L	336	9	Yes	

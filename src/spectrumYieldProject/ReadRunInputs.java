@@ -50,12 +50,12 @@ public class ReadRunInputs {
 		return Integer.parseInt(GI_value[1][1]);
 	}
 	
-	public int get_AnnualDiscountRate () {
-		return Integer.parseInt(GI_value[2][1]);
+	public double get_AnnualDiscountRate () {
+		return Double.parseDouble(GI_value[2][1]);
 	}
 	
-	public int get_Solver () {
-		return Integer.parseInt(GI_value[3][1]);
+	public String get_Solver () {
+		return GI_value[3][1].toString();
 	}
 //-------------------------------------------------------------------------------------------------------------------------------------------------	
 	//For readManagementOptions

@@ -75,6 +75,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 import javax.swing.text.DefaultFormatter;
 
+import spectrumConvenienceClasses.FilesHandle;
 import spectrumGUI.Spectrum_Main;
 
 public class Panel_EditRun_Details extends JLayeredPane implements ActionListener {
@@ -170,7 +171,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 		// get the "StrataDefinition.csv" file from where this class is located
 		try {
-			file_StrataDefinition = new File("StrataDefinition.csv");	
+			file_StrataDefinition = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "StrataDefinition.csv");
+			file_StrataDefinition.deleteOnExit();
 			
 			InputStream initialStream = getClass().getResourceAsStream("/StrataDefinition.csv");		//Default definition
 			byte[] buffer = new byte[initialStream.available()];
@@ -238,7 +240,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	} // end Panel_EditRun_Details()
 
 	
-	// Listener for radio buttons----------------------------------------------------------------------
+	// Listener for radio buttons------------------------------------------------------------------------------------------------
     public void actionPerformed(ActionEvent e) {
 		for (int j = 0; j < radioButton_Right.length; j++) {
 			if (radioButton_Right[j].isSelected()) {		
@@ -265,7 +267,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		}
 	}
 
-	// Panel General Inputs-----------------------------------------------------------------------------	
+    
+	// Panel General Inputs------------------------------------------------------------------------------------------------------	
 	class PaneL_General_Inputs_GUI extends JLayeredPane {
 		public PaneL_General_Inputs_GUI() {
 			setLayout(new GridLayout(0,4,30,0));		//2 last numbers are the gaps 			
@@ -354,8 +357,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	}
 
 	
-	
-	// Panel Model_Definiton-----------------------------------------------------------------------------------
+	// Panel Model_Identifiniton--------------------------------------------------------------------------------------------------
 	class PaneL_Model_Identifiniton_GUI extends JLayeredPane implements ItemListener {
 		// Define 28 check box for 6 layers
 		List<List<JCheckBox>> checkboxFilter;
@@ -402,7 +404,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			button0.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					File tempDefinitionFile = FilesChooser_StrataDefinition.chosenDefinition();	
+					File tempDefinitionFile = FilesHandle.chosenDefinition();	
 					if (tempDefinitionFile != null) {	//Only change StrataDefinition if the FileChooser return a file that is not Null
 						file_StrataDefinition = tempDefinitionFile;
 						newDefinition = file_StrataDefinition.getAbsolutePath();
@@ -455,7 +457,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			button2.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					file_Database = FilesChooser_Database.chosenDatabase();				
+					file_Database = FilesHandle.chosenDatabase();				
 					if (file_Database!=null) {
 						textField2.setText(file_Database.getAbsolutePath());
 							
@@ -521,7 +523,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			button1.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					file_ExistingStrata = FilesChooser_ExistingStrata.chosenStrata();				
+					file_ExistingStrata = FilesHandle.chosenStrata();				
 					if (file_ExistingStrata!=null) {
 						textField1.setText(file_ExistingStrata.getAbsolutePath());
 						// Read the whole text file into table
@@ -984,7 +986,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		}
 	}
 	
-
 	class MyTableModel3 extends AbstractTableModel {
 	   	 
 		public MyTableModel3() {
@@ -1034,7 +1035,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	}	
 	
 	
-	// Panel Universal_Requiremetns-----------------------------------------------------------------------------------
+	// Panel Universal_Requiremetns------------------------------------------------------------------------------------------------
 	class PaneL_Universal_Requiements_GUI extends JLayeredPane {
 		public PaneL_Universal_Requiements_GUI() {
 			setLayout(new GridBagLayout());
@@ -1507,7 +1508,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		}
 	}		
 		
-	
 	class PaneL_Universal_Requiements_Text extends JLayeredPane {
 	    public PaneL_Universal_Requiements_Text() {
 
@@ -1516,7 +1516,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	}	
 	
 
-	// Panel Disturbances-----------------------------------------------------------------------------------
+	// Panel Disturbances-----------------------------------------------------------------------------------------------------------
 	class PaneL_Disturbances_GUI extends JLayeredPane {
 		public PaneL_Disturbances_GUI() {
 			setLayout(new GridBagLayout());
@@ -1876,7 +1876,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		}
 	}	
 
-	
 	class MyTableModel6 extends AbstractTableModel {
 	   	 
 		public MyTableModel6() {
@@ -1934,7 +1933,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		}
 	}	
 		
-	
 	class PaneL_Disturbances_Text extends JLayeredPane {
 		public PaneL_Disturbances_Text() {
 
@@ -1942,7 +1940,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	}
 	
 	
-	// Panel Constraints-----------------------------------------------------------------------------------
+	// Panel User Constraints--------------------------------------------------------------------------------------------------------
 	class PaneL_UserConstraints_GUI extends JLayeredPane implements ActionListener {
 		List<List<JCheckBox>> checkboxStaticIdentifiers;
 		checkboxScrollPanel parametersScrollPanel;
@@ -2076,7 +2074,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			// 2nd grid -----------------------------------------------------------------------
 			// 2nd grid -----------------------------------------------------------------------	
-			parametersScrollPanel = new checkboxScrollPanel("Get parameters from YT columns");
+			parametersScrollPanel = new checkboxScrollPanel();		// "Get parameters from YT columns"
 			TitledBorder border2 = new TitledBorder("PARAMETERS (yield table columns)");
 			border2.setTitleJustification(TitledBorder.CENTER);
 			parametersScrollPanel.setBorder(border2);
@@ -2089,7 +2087,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	    	
 			// 4th Grid -----------------------------------------------------------------------
 			// 4th Grid -----------------------------------------------------------------------	
-			dynamic_identifiersScrollPanel = new checkbox_dynamicScrollPanel("Get identifiers from yield table columns", 2);
+			dynamic_identifiersScrollPanel = new checkbox_dynamicScrollPanel(2);	// "Get identifiers from yield table columns"
 			TitledBorder border3_1 = new TitledBorder("Dynamic identifiers for PARAMETERS (from yield table)");
 			border3_1.setTitleJustification(TitledBorder.CENTER);
 			dynamic_identifiersScrollPanel.setBorder(border3_1);
@@ -2418,12 +2416,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	    	
 	       	//Update Parameter Panel
 	    	if (yieldTable_ColumnNames != null && parametersScrollPanel.checkboxParameter == null) {
-	    		parametersScrollPanel = new checkboxScrollPanel("Get parameters from YT columns");
+	    		parametersScrollPanel = new checkboxScrollPanel();	//"Get parameters from YT columns"
 	    	}
 	    	
 	      	//Update Dynamic Identifier Panel
 	    	if (yieldTable_ColumnNames != null && dynamic_identifiersScrollPanel.allDynamicIdentifiers == null) {
-	    		dynamic_identifiersScrollPanel = new checkbox_dynamicScrollPanel("Get identifiers from yield table columns", 2);
+	    		dynamic_identifiersScrollPanel = new checkbox_dynamicScrollPanel(2);	//"Get identifiers from yield table columns"
 	    	}
 
 	    }
@@ -2433,8 +2431,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			private JCheckBox checkboxNoParameter;
 			private List<JCheckBox> checkboxParameter;
 			
-			public checkboxScrollPanel(String nameTag) {
-				
+			public checkboxScrollPanel() {				
 				JPanel parametersPanel = new JPanel();	
 				parametersPanel.setLayout(new GridBagLayout());
 				GridBagConstraints c2 = new GridBagConstraints();
@@ -2514,8 +2511,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 					//Do a resize to same size for JInteral Frame of the project to help repaint the checkboxVariables added					
 					Spectrum_Main.mainFrameReturn().getSelectedFrame().setSize(Spectrum_Main.mainFrameReturn().getSelectedFrame().getSize());	
-				}	
-				
+				}
+
 			}
 		}
 		
@@ -2526,7 +2523,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			private List<List<JCheckBox>> checkboxDynamicIdentifiers;
 			private JScrollPane defineScrollPane;		//for Definition of dynamic identifier
 			
-			public checkbox_dynamicScrollPanel(String nameTag, int option) {
+			public checkbox_dynamicScrollPanel(int option) {
 
 				// Define the Panel contains everything --------------------------
 				JPanel dynamic_identifiersPanel = new JPanel();		
@@ -3085,18 +3082,15 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				setViewportView(dynamic_identifiersPanel);
 			}
 		}
-		    
-	    
+   		
 	}
 
-	
 	class PaneL_UserConstraints_Text  extends JTextArea {
 		public PaneL_UserConstraints_Text() {
 			setRows(50);		// set text areas with 10 rows when starts		
 		}
 	}
 	
-
 	class MyTableModel2 extends AbstractTableModel {
    	 
 		public MyTableModel2() {
@@ -3154,13 +3148,31 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			repaint();
 		}
 	}	
-	
-	
+		
 	
 	//--------------------------------------------------------------------------------------------------------------------------------
 	// Get values to pass to other classes
-	public File getGeneralInputFile() {
-		File generalInputFile = new File("Input 1 - GeneralInputs.txt");
+	
+	//Add all input Files to a list
+	public List<File> get_List_Of_inputFiles () {
+		List<File> inputFiles_list = new ArrayList<File>();	
+		inputFiles_list.add(getGeneralInputFile());
+		inputFiles_list.add(getSelectedStrataFile());
+		inputFiles_list.add(getRequirementsFile());
+		inputFiles_list.add(getMSFireFile());
+		inputFiles_list.add(getSRDisturbancesFile());
+		inputFiles_list.add(getUserConstraintsFile());
+		inputFiles_list.add(getSRDRequirementsFile());
+		inputFiles_list.add(getDatabaseFile());
+		
+		return inputFiles_list;
+	}
+	
+
+	
+	private File getGeneralInputFile() {
+		File generalInputFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "Input 1 - GeneralInputs.txt");
+		generalInputFile.deleteOnExit();
 		try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(generalInputFile))) {
 			// Write info
 			fileOut.write("Input Description" + "\t" + "Selected Option");
@@ -3174,8 +3186,11 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		return generalInputFile;
 	}
 	
-	public File getSelectedStrataFile() {
-		File selectedStrataFile = new File("Input 2 - SelectedStrata.txt");	
+	
+	private File getSelectedStrataFile() {
+		File selectedStrataFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "Input 2 - SelectedStrata.txt");	
+		selectedStrataFile.deleteOnExit();
+		
 		//Only print out Strata with implemented methods <> null
 		try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(selectedStrataFile))) {
 			for (int j = 0; j < table.getColumnCount(); j++) {
@@ -3197,9 +3212,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		return selectedStrataFile;
 	}
 	
-	public File getRequirementsFile() {
+	
+	private File getRequirementsFile() {
 		//Only print out if the last column Allowed Options <> null
-		File requirementsFile = new File("Input 3 - UniversalRequirements.txt");	
+		File requirementsFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "Input 3 - UniversalRequirements.txt");
+		requirementsFile.deleteOnExit();
+		
 		try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(requirementsFile))) {
 			for (int j = 0; j < table4.getColumnCount(); j++) {
 				fileOut.write(table4.getColumnName(j) + "\t");
@@ -3220,8 +3238,11 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		return requirementsFile;
 	}
 
-	public File getMSFireFile() {
-		File MSFireFile = new File("Input 4 - MSFire.txt");	
+	
+	private File getMSFireFile() {
+		File MSFireFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "Input 4 - MSFire.txt");	
+		MSFireFile.deleteOnExit();
+		
 		try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(MSFireFile))) {
 			for (int j = 0; j < table5.getColumnCount(); j++) {
 				fileOut.write(table5.getColumnName(j) + "\t");
@@ -3240,8 +3261,11 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		return MSFireFile;
 	}	
 	
-	public File getSRDisturbancesFile() {
-		File SRDisturbancesFile = new File("Input 5 - SRDisturbances.txt");	
+	
+	private File getSRDisturbancesFile() {
+		File SRDisturbancesFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "Input 5 - SRDisturbances.txt");	
+		SRDisturbancesFile.deleteOnExit();
+		
 		try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(SRDisturbancesFile))) {
 			for (int j = 0; j < table6.getColumnCount(); j++) {
 				fileOut.write(table6.getColumnName(j) + "\t");
@@ -3260,8 +3284,10 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		return SRDisturbancesFile;
 	}	
 	
-	public File getUserConstraintsFile() {
-		File userConstraintsFile = new File("Input 6 - UserConstraints.txt");
+	
+	private File getUserConstraintsFile() {
+		File userConstraintsFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "Input 6 - UserConstraints.txt");
+		userConstraintsFile.deleteOnExit();
 		
 		//Only print out rows if columns  1, 2 or 4, 6, 7, 8 <> null
 		try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(userConstraintsFile))) {
@@ -3291,8 +3317,11 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		return userConstraintsFile;	
 	}
 
-	public File getSRDRequirementsFile() {
-		File SRDrequirementsFile = new File("Input 7 - SRDRequirements.txt");	
+	
+	private File getSRDRequirementsFile() {
+		File SRDrequirementsFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "Input 7 - SRDRequirements.txt");	
+		SRDrequirementsFile.deleteOnExit();
+		
 		try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(SRDrequirementsFile))) {
 			for (int j = 0; j < table7.getColumnCount(); j++) {
 				fileOut.write(table7.getColumnName(j) + "\t");
@@ -3311,10 +3340,13 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		return SRDrequirementsFile;
 	}
 	
-	public File getDatabaseFile() {	
-		File databaseFile = new File("database.db");
+	
+	private File getDatabaseFile() {	
+		File databaseFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "database.db");
+		if (databaseFile.exists()) databaseFile.delete();
+		
 		try {
-			Files.copy(file_Database.toPath(),databaseFile.toPath());
+			if (file_Database != null) Files.copy(file_Database.toPath(), databaseFile.toPath());
 		} catch (IOException e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 		}

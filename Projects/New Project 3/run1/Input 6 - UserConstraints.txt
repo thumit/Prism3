@@ -1,0 +1,1 @@
+Const. Description (optional)	Const. Type	LB Value	Penalty/Unit < LB (SOFT)	UB Value	Penalty/Unit > UB (SOFT)	PARAMETERS Index	Static identifiers for VARIABLES	Dynamic identifiers for PARAMETERS	

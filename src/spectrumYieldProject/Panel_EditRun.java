@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -18,16 +20,13 @@ public class Panel_EditRun extends JLayeredPane implements ActionListener {
 	private JPanel radioPanel_Left; 
 	private ButtonGroup radioGroup_Left;
 	private JRadioButton[] radioButton_Left; 
-	private File[] listOfEditRuns = null;
+	private File[] listOfEditRuns = Panel_YieldProject.getSelectedRuns();		// Return the selected Runs for editing
 	private JScrollPane scrollPane_Left, scrollPane_Right;
 	private Panel_EditRun_Details[] combinePanel;
 	
 	public Panel_EditRun() {
 		super.setLayout(new BorderLayout(0, 0));
-		// Return the selected Runs
-		listOfEditRuns = Panel_YieldProject.getSelectedRuns();
-		
-		
+	
 		splitPanel = new JSplitPane();
 		// splitPanel.setResizeWeight(0.15);
 		splitPanel.setOneTouchExpandable(true);
@@ -87,83 +86,28 @@ public class Panel_EditRun extends JLayeredPane implements ActionListener {
     
 	//--------------------------------------------------------------------------------------------------------------------------------
 	// Get values to pass to other classes
-	public File[] getGeneralInputFile() {
-		File[] generalInputFile = new File[Panel_YieldProject.getSelectedRuns().length];
-		for (int i = 0; i < listOfEditRuns.length; i++) {
-			File temp = new File(listOfEditRuns[i].getAbsolutePath() + "/Input 1 - GeneralInputs.txt");
-			combinePanel[i].getGeneralInputFile().renameTo(temp);
-			generalInputFile[i] = temp;
+    
+    //Get all input Files from all edited runs and return a 2D array which contains Input Files with corrected Paths
+	public File[][] getInputFiles() {
+		int total_Runs = listOfEditRuns.length;
+		File[][] InputFiles = new File[total_Runs][];
+			
+		for (int i = 0; i < total_Runs; i++) {
+			
+			int total_Inputs_perRun = combinePanel[i].get_List_Of_inputFiles().size();
+			InputFiles[i] = new File[total_Inputs_perRun];		//Redim the array
+			
+			for (int j = 0; j < total_Inputs_perRun; j++) {		
+				File temp = new File(listOfEditRuns[i].getAbsolutePath() + "/" + combinePanel[i].get_List_Of_inputFiles().get(j).getName());			
+				combinePanel[i].get_List_Of_inputFiles().get(j).renameTo(temp);	
+				InputFiles[i][j] = temp;
+			}
 		}
-		return generalInputFile;
+		
+		return InputFiles;
 	}	
-
-	public File[] getSelectedStrataFile() {
-		File[] selectedStrataFile = new File[Panel_YieldProject.getSelectedRuns().length];
-		for (int i = 0; i < listOfEditRuns.length; i++) {
-			File temp = new File(listOfEditRuns[i].getAbsolutePath() + "/Input 2 - SelectedStrata.txt");
-			combinePanel[i].getSelectedStrataFile().renameTo(temp);
-			selectedStrataFile[i] = temp;
-		}
-		return selectedStrataFile;
-	}	
-
-	public File[] getRequirementsFile() {
-		File[] requirementsFile = new File[Panel_YieldProject.getSelectedRuns().length];
-		for (int i = 0; i < listOfEditRuns.length; i++) {
-			File temp = new File(listOfEditRuns[i].getAbsolutePath() + "/Input 3 - UniversalRequirements.txt");
-			combinePanel[i].getRequirementsFile().renameTo(temp);
-			requirementsFile[i] = temp;
-		}
-		return requirementsFile;
-	}	
-
-	public File[] getSRDRequirementsFile() {
-		File[] SRDrequirementsFile = new File[Panel_YieldProject.getSelectedRuns().length];
-		for (int i = 0; i < listOfEditRuns.length; i++) {
-			File temp = new File(listOfEditRuns[i].getAbsolutePath() + "/Input 7 - SRDRequirements.txt");
-			combinePanel[i].getSRDRequirementsFile().renameTo(temp);
-			SRDrequirementsFile[i] = temp;
-		}
-		return SRDrequirementsFile;
-	}
+    
+ 
 	
-	public File[] getMSFireFile() {
-		File[] MSFireFile = new File[Panel_YieldProject.getSelectedRuns().length];
-		for (int i = 0; i < listOfEditRuns.length; i++) {
-			File temp = new File(listOfEditRuns[i].getAbsolutePath() + "/Input 4 - MSFire.txt");
-			combinePanel[i].getMSFireFile().renameTo(temp);
-			MSFireFile[i] = temp;
-		}
-		return MSFireFile;
-	}	
 	
-	public File[] getSRDisturbancesFile() {
-		File[] SRDisturbancesFile = new File[Panel_YieldProject.getSelectedRuns().length];
-		for (int i = 0; i < listOfEditRuns.length; i++) {
-			File temp = new File(listOfEditRuns[i].getAbsolutePath() + "/Input 5 - SRDisturbances.txt");
-			combinePanel[i].getSRDisturbancesFile().renameTo(temp);
-			SRDisturbancesFile[i] = temp;
-		}
-		return SRDisturbancesFile;
-	}
-	
-	public File[] getUserConstraintsFile() {
-		File[] userConstraintsFile = new File[Panel_YieldProject.getSelectedRuns().length];
-		for (int i = 0; i < listOfEditRuns.length; i++) {
-			File temp = new File(listOfEditRuns[i].getAbsolutePath() + "/Input 6 - UserConstraints.txt");
-			combinePanel[i].getUserConstraintsFile().renameTo(temp);
-			userConstraintsFile[i] = temp;
-		}
-		return userConstraintsFile;
-	}
-	
-	public File[] getDatabaseFile() {
-		File[] databaseFile = new File[Panel_YieldProject.getSelectedRuns().length];
-		for (int i = 0; i < listOfEditRuns.length; i++) {
-			File temp = new File(listOfEditRuns[i].getAbsolutePath() + "/database.db");
-			combinePanel[i].getDatabaseFile().renameTo(temp);
-			databaseFile[i] = temp;
-		}
-		return databaseFile;
-	}
 }

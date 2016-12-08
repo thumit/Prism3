@@ -44,10 +44,12 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
+import spectrumConvenienceClasses.FilesHandle;
+import spectrumGUI.Spectrum_Main;
+
 @SuppressWarnings("serial")
 public class Panel_DatabaseManagement extends JLayeredPane {
-	private String workingLocation;
-	private File databasesFolder;
+	private File databasesFolder = FilesHandle.get_DatabasesFolder();
 	private String seperator = "/";
 	private JTree DatabaseTree;
 	private DefaultMutableTreeNode root, processingNode;
@@ -424,39 +426,6 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode)model.getRoot();
 		root.removeAllChildren();
 		model.reload(root);
-
-
-		// Get working location of the IDE project, or runnable jar file
-		final File jarFile = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath());		
-		if(jarFile.isFile()) {  // Run with JAR file
-			databasesFolder = new File (":Databases");	//Note: we have to define databaseFolder as String to make it work
-			seperator = ":";		
-			
-//			//runnable jar path
-//			String url = "jdbc:sqlite::resource:mydb.db";
-		} else { // Run with IDE
-//			databasesFolder = new File (jarFile + "/Databases");	//return: C:\SpectrumLite\JavaModel\bin\Databases
-//			seperator = "/";			
-			
-//			//Eclipse test path
-//			String url = "jdbc:sqlite:resource/mydb.db";
-		}
-
-		
-		// Both runnable jar and IDE work with condition: Databases folder and runnable jar have to be in the same location
-		workingLocation = jarFile.getParentFile().toString();	
-		try {
-			//to handle name with space (%20)
-			workingLocation = URLDecoder.decode(workingLocation, "utf-8");
-			workingLocation = new File(workingLocation).getPath();
-		} catch (UnsupportedEncodingException e1) {
-			System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
-		}
-		databasesFolder = new File (workingLocation + "/Databases");		//parent is the folder contain jar file
-		seperator = "/";		
-		if (!databasesFolder.exists()) {databasesFolder.mkdirs();}	//Create folder Databases if it does not exist		
-//		JOptionPane.showMessageDialog(this, databasesFolder);
-		
 
 		// Find all the .db files in the predefined folder to add into to DatabaseTree	
 		String files;
@@ -1316,7 +1285,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 	public void Examples () {
 
 		
-//		JOptionPane.showMessageDialog(this, databasesFolder);		
+//		JOptionPane.showMessageDialog(Spectrum_Main.mainFrameReturn(), FilesHandle.get_workingLocation());	
 		
 		
 		

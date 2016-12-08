@@ -66,6 +66,7 @@ import org.jfree.data.general.PieDataset;
 import org.jfree.ui.RectangleEdge;
 import org.jfree.util.Rotation;
 
+import spectrumConvenienceClasses.FilesHandle;
 import spectrumConvenienceClasses.TableModelSpectrum;
 import spectrumGUI.Spectrum_Main;
 @SuppressWarnings("serial")
@@ -78,9 +79,8 @@ public class Panel_YieldProject extends JLayeredPane {
 	private ImageIcon icon;
 	private Image scaleImage;
 	
-	private String workingLocation;
 	private static File[] listOfEditRuns;
-	private File projectsFolder, currentProjectFolder, currentRunFolder;
+	private File currentProjectFolder, currentRunFolder;
 	private String seperator = "/";
 	private JTree projectTree;
 	private DefaultMutableTreeNode root, processingNode;
@@ -93,7 +93,6 @@ public class Panel_YieldProject extends JLayeredPane {
 	private TreePath editingPath;
 	private Boolean runName_Edit_HasChanged = false;
 	private Boolean renaming = false;
-	private Boolean isProjectNewlyCreatedOrOpened = true;
 
 	private ToolBarWithBgImage projectToolBar;
 	
@@ -566,45 +565,10 @@ public class Panel_YieldProject extends JLayeredPane {
 		root.removeAllChildren();
 		model.reload(root);
 
-		// Check if Projects folder exists, if not then create it--------------------------------------------
-		// Get working location of the IDE project, or runnable jar file
-		final File jarFile = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
-		if (jarFile.isFile()) { // Run with JAR file
-			projectsFolder = new File(":Projects");
-			seperator = ":";
-		}
-
-		// Both runnable jar and IDE work with condition: Projects folder and runnable jar have to be in the same location
-		workingLocation = jarFile.getParentFile().toString();
-		try {
-			// to handle name with space (%20)
-			workingLocation = URLDecoder.decode(workingLocation, "utf-8");
-			workingLocation = new File(workingLocation).getPath();
-		} catch (UnsupportedEncodingException e1) {
-			System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
-		}
-		projectsFolder = new File(workingLocation + "/Projects");
-		currentProjectFolder = new File(workingLocation + "/Projects/" + Spectrum_Main.getProjectName());
-		seperator = "/";
-		if (!projectsFolder.exists()) {
-			projectsFolder.mkdirs();
-		} // Create folder Projects if it does not exist
-		if (!currentProjectFolder.exists()) {
-			currentProjectFolder.mkdirs();
-		} // Create folder for current Project if it does not exist
-		// End of create projects folder-------------------------------------------------------------------
-		
-		
-		// These are very important codes
-		//		Whenever a Project is newly created, it will be first refreshed,
-		//		After the first refresh isProjectNewlyCreatedOrOpened=false
-		//		Then in the next time if we do anything, the CurrentProjectFolder will be referred to the JinternalFrame title
-		if (isProjectNewlyCreatedOrOpened==false) {
-				currentProjectFolder= new File(workingLocation + "/Projects/" + Spectrum_Main.mainFrameReturn().getSelectedFrame().getTitle());	
-		}
-		isProjectNewlyCreatedOrOpened=false;
-		
-		
+		// CurrentProjectFolder will be referred to the currently opened and selected JinternalFrame title 
+		currentProjectFolder= new File(FilesHandle.get_projectsFolder().getAbsolutePath() + "/" + Spectrum_Main.mainFrameReturn().getSelectedFrame().getTitle());	
+//		currentProjectFolder = new File(workingLocation + "/Projects/" + Spectrum_Main.getProjectName());	//IF pack JInternal Frame in Spectrum_main then we need this	
+	
 		// Find all the Runs folders in the "Projects" folder to add into DatabaseTree	
 		String fileName;
 		File[] listOfFiles = currentProjectFolder.listFiles(new FilenameFilter() {
@@ -790,18 +754,17 @@ public class Panel_YieldProject extends JLayeredPane {
 				
 
 				//Disable all other buttons, change name to "Stop Editing",  remove splitPanel and add editPanel
-				btnNewRun.setVisible(false);
-				btnDeleteRun.setVisible(false);
-				btnRefresh.setVisible(false);
-				btnSolveRun.setVisible(false);
-				btnCustomizeOutput.setVisible(false);
+				for (Component c : projectToolBar.getComponents()) c.setVisible(false);
 				displayTextField.setVisible(false);
+				
+				btnEditRun.setVisible(true);		
 				btnEditRun.setToolTipText("Stop Editing");
 				icon = new ImageIcon(getClass().getResource("/icon_back.png"));
 				scaleImage = icon.getImage().getScaledInstance(25, 25,Image.SCALE_SMOOTH);
 				btnEditRun.setRolloverIcon(new ImageIcon(scaleImage));
 				btnEditRun.setForeground(Color.RED);
 				super.remove(splitPanel);
+				super.remove(displayTextField);
 				editPanel = new Panel_EditRun();		// This panel only visible when "Start Editing"	
 				super.add(editPanel);
 			} 	
@@ -815,12 +778,9 @@ public class Panel_YieldProject extends JLayeredPane {
 			"Save all changes you made ?", "Stop Editing", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if (response == JOptionPane.NO_OPTION || response == JOptionPane.YES_OPTION) {
 				//Enable all other buttons, change name to "Start Editing",  remove editPanel and add splitPanel 
+				for (Component c : projectToolBar.getComponents()) c.setVisible(true);
 				displayTextField.setVisible(true);
-				btnNewRun.setVisible(true);
-				btnDeleteRun.setVisible(true);
-				btnRefresh.setVisible(true);
-				btnSolveRun.setVisible(true);
-				btnCustomizeOutput.setVisible(true);
+				
 				btnEditRun.setToolTipText("Start Editing");
 				btnEditRun.setRolloverIcon(null);
 				btnEditRun.setForeground(null);
@@ -839,31 +799,17 @@ public class Panel_YieldProject extends JLayeredPane {
 						}
 					}
 					
-					//Get all input files
-					File[] generalInputFile = editPanel.getGeneralInputFile();
-					File[] selectedStrataFile = editPanel.getSelectedStrataFile();
-					File[] requirementsFile = editPanel.getRequirementsFile();
-					File[] srDrequirementsFile = editPanel.getSRDRequirementsFile();
-					File[] srDisturbancesFile = editPanel.getSRDisturbancesFile();
-					File[] msFireFile = editPanel.getMSFireFile();
-					File[] userConstraintsFile = editPanel.getUserConstraintsFile();
-					File[] databaseFile = editPanel.getDatabaseFile();
-					
-					//Create new input files		
-					for (int i = 0; i < listOfEditRuns.length; i++) {			
-							try {
-								generalInputFile[i].createNewFile();
-								selectedStrataFile[i].createNewFile();
-								requirementsFile[i].createNewFile();
-								srDrequirementsFile[i].createNewFile();
-								msFireFile[i].createNewFile();
-								srDisturbancesFile[i].createNewFile();
-								userConstraintsFile[i].createNewFile();
-								databaseFile[i].createNewFile();
-							} catch (IOException e) {
-								System.err.println(e.getClass().getName() + ": " + e.getMessage());
-							}
-					}
+					//Create new Input Files for the edited runs			
+					File[][] all_Inputs_from_all_runs = editPanel.getInputFiles();		//Get input files from 2D array:  [edited runs][inputs in each run]
+//					for (int i = 0; i < all_Inputs_from_all_runs.length; i++) {			
+//						for (int j = 0; j < all_Inputs_from_all_runs[i].length; j++) {			
+//							try {
+//								all_Inputs_from_all_runs[i][j].createNewFile();			//Create new for all input files
+//							} catch (IOException e) {
+//								System.err.println(e.getClass().getName() + ": " + e.getMessage());
+//							}
+//						}
+//					}
 					refreshProjectTree(); //Refresh the tree
 				}
 			} else if (response == JOptionPane.CLOSED_OPTION) {			
@@ -910,12 +856,10 @@ public class Panel_YieldProject extends JLayeredPane {
 				}
 				
 				// Disable all other buttons, change name to "Stop Solving", remove splitPanel and add editPanel
-				btnNewRun.setVisible(false);
-				btnDeleteRun.setVisible(false);
-				btnRefresh.setVisible(false);
-				btnEditRun.setVisible(false);
-				btnCustomizeOutput.setVisible(false);
+				for (Component c : projectToolBar.getComponents()) c.setVisible(false);
 				displayTextField.setVisible(false);
+				
+				btnSolveRun.setVisible(true);
 				btnSolveRun.setToolTipText("Stop Solving");
 				icon = new ImageIcon(getClass().getResource("/icon_back.png"));
 				scaleImage = icon.getImage().getScaledInstance(25, 25,Image.SCALE_SMOOTH);
@@ -932,12 +876,9 @@ public class Panel_YieldProject extends JLayeredPane {
 		// For Stop Solving
 		else if (btnSolveRun.getToolTipText() == "Stop Solving") {
 			//Enable all other buttons and splitPanel and change name to "Start Solving"
-			btnNewRun.setVisible(true);
-			btnDeleteRun.setVisible(true);
-			btnRefresh.setVisible(true);
-			btnEditRun.setVisible(true);
-			btnCustomizeOutput.setVisible(true);
+			for (Component c : projectToolBar.getComponents()) c.setVisible(true);
 			displayTextField.setVisible(true);
+			
 			btnSolveRun.setToolTipText("Start Solving");
 			btnSolveRun.setRolloverIcon(null);
 			btnSolveRun.setForeground(null);
@@ -985,12 +926,10 @@ public class Panel_YieldProject extends JLayeredPane {
 				}
 				
 				// Disable all other buttons, change name to "Return to Main Window", remove splitPanel and add editPanel
-				btnNewRun.setVisible(false);
-				btnDeleteRun.setVisible(false);
-				btnRefresh.setVisible(false);
-				btnEditRun.setVisible(false);
-				btnSolveRun.setVisible(false);
+				for (Component c : projectToolBar.getComponents()) c.setVisible(false);
 				displayTextField.setVisible(false);
+				
+				btnCustomizeOutput.setVisible(true);
 				btnCustomizeOutput.setToolTipText("Return to Main Window");
 				icon = new ImageIcon(getClass().getResource("/icon_back.png"));
 				scaleImage = icon.getImage().getScaledInstance(25, 25,Image.SCALE_SMOOTH);
@@ -1007,12 +946,9 @@ public class Panel_YieldProject extends JLayeredPane {
 		// For Stop Customizing
 		else if (btnCustomizeOutput.getToolTipText() == "Return to Main Window") {
 			//Enable all other buttons and splitPanel and change name to "Customize Output"
-			btnNewRun.setVisible(true);
-			btnDeleteRun.setVisible(true);
-			btnRefresh.setVisible(true);
-			btnEditRun.setVisible(true);
-			btnSolveRun.setVisible(true);
+			for (Component c : projectToolBar.getComponents()) c.setVisible(true);
 			displayTextField.setVisible(true);
+			
 			btnCustomizeOutput.setToolTipText("Customize Output");
 			btnCustomizeOutput.setRolloverIcon(null);
 			btnCustomizeOutput.setForeground(null);

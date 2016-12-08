@@ -17,8 +17,6 @@ import java.awt.event.WindowEvent;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +37,7 @@ import javax.swing.event.InternalFrameListener;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
+import spectrumConvenienceClasses.FilesHandle;
 import spectrumConvenienceClasses.NameHandle;
 import spectrumConvenienceClasses.RequestFocusListener;
 import spectrumConvenienceClasses.WindowAppearanceHandle;
@@ -49,9 +48,6 @@ import spectrumYieldProject.Panel_YieldProject;
 @SuppressWarnings("serial")
 public class Spectrum_Main extends JFrame {
 	// Define variables------------------------------------------------------------------------
-	private File 		projectsFolder;
-	private String 		workingLocation;
-	
 	private ImageIcon 	icon;
 	private Image 		scaleImage;
 	
@@ -105,7 +101,7 @@ public class Spectrum_Main extends JFrame {
 //				setExtendedState(JFrame.MAXIMIZED_BOTH); 
 //				setUndecorated(true);
 				
-				setTitle("SpectrumLite Demo Version 1.08");
+				setTitle("SpectrumLite Demo Version 1.09");
 				setIconImage(new ImageIcon(getClass().getResource("/icon_main.png")).getImage());
 				//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -174,8 +170,6 @@ public class Spectrum_Main extends JFrame {
 				// Add listeners "New"------------------------------------------------
 				newProject.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent event) {
-						createProjectsFolder();			//create Projects folder if not exist
-						
 						//JtextField to type name
 						JTextField projectName_JTextField = new JTextField(35);
 						projectName_JTextField.getDocument().addDocumentListener(new DocumentListener() {
@@ -205,7 +199,7 @@ public class Spectrum_Main extends JFrame {
 							if (response == 0) 
 							{
 								// Find all the existing projects in the "Projects" folder		
-								File[] listOfFiles = projectsFolder.listFiles(new FilenameFilter() {
+								File[] listOfFiles = FilesHandle.get_projectsFolder().listFiles(new FilenameFilter() {
 									@Override
 									public boolean accept(File dir, String name) {
 										return name.startsWith("");
@@ -223,7 +217,7 @@ public class Spectrum_Main extends JFrame {
 												
 								//if Name is valid and existing projects do not contain this Name
 								if (NameHandle.nameIsValid(currentProjectName)==true && !existingName_list.contains(currentProjectName)) {
-									if (new File(workingLocation + "/Projects/" + currentProjectName).mkdir()) {		//try if can create a folder with the existing project name
+									if (new File(FilesHandle.get_projectsFolder().getAbsolutePath() + "/" + currentProjectName).mkdir()) {		//try if can create a folder with the existing project name
 										createNewJInternalFrame();		//create new internal frame for this existing project
 										stop_naming = true;
 									}
@@ -244,11 +238,10 @@ public class Spectrum_Main extends JFrame {
 				menuOpenProject.addMenuListener(new MenuListener() {
 					@Override
 			        public void menuSelected(MenuEvent e) {					
-						createProjectsFolder();			//create Projects folder if not exist
 						menuOpenProject.removeAll();			//REMOVE ALL existing projects
 										
 						// Find all the existing projects in the "Projects" folder		
-						File[] listOfFiles = projectsFolder.listFiles(new FilenameFilter() {
+						File[] listOfFiles = FilesHandle.get_projectsFolder().listFiles(new FilenameFilter() {
 							@Override
 							public boolean accept(File dir, String name) {
 								return name.startsWith("");
@@ -321,10 +314,7 @@ public class Spectrum_Main extends JFrame {
 							public void actionPerformed(ActionEvent event) {
 								// create internal frame
 								JInternalFrame DatabaseManagement_Frame = new JInternalFrame("Database Management", 
-																						true /*resizable*/, true, /*closable*/true/*maximizable*/, true/*iconifiable*/);	
-								Panel_DatabaseManagement DatabaseManagementPanel = new Panel_DatabaseManagement(); // create new panel
-								DatabaseManagement_Frame.add(DatabaseManagementPanel, BorderLayout.CENTER); // add panel
-								DatabaseManagement_Frame.pack(); // set internal frame to size of contents
+																						true /*resizable*/, true, /*closable*/true/*maximizable*/, true/*iconifiable*/);								
 								
 								spectrumDesktopPane.add(DatabaseManagement_Frame, BorderLayout.CENTER); // attach internal frame
 								DatabaseManagement_Frame.setSize((int) (getWidth()/1.08),(int) (getHeight()/1.25));
@@ -333,8 +323,14 @@ public class Spectrum_Main extends JFrame {
 								if (Spectrum_Main.mainFrameReturn().getSelectedFrame() != null) {	//or Set the DatabaseManagement_Frame near the recently opened JInternalFrame
 									DatabaseManagement_Frame.setLocation(Spectrum_Main.mainFrameReturn().getSelectedFrame().getX() + 30, Spectrum_Main.mainFrameReturn().getSelectedFrame().getY() + 30);
 								}
-								DatabaseManagement_Frame.setVisible(true); // show internal frame
-														
+								
+								// Note: visible first for the JIframe to be selected, pack at the end would be fail for JIframe to be selected (Spectrum_Main.mainFrameReturn().getSelectedFrame = null)
+								DatabaseManagement_Frame.setVisible(true); // show internal frame					
+								Panel_DatabaseManagement DatabaseManagementPanel = new Panel_DatabaseManagement(); // create new panel
+								DatabaseManagement_Frame.add(DatabaseManagementPanel, BorderLayout.CENTER); // add panel
+//								DatabaseManagement_Frame.pack(); // set internal frame to size of contents
+								
+
 								DatabaseManagement.setEnabled(false); //Disable "DatabaseManagement" menuItem when it is already opened
 								InternalFrameListener DatabaseInternalFrame_listener = new InternalFrameListener() {
 								      public void internalFrameActivated(InternalFrameEvent e) {
@@ -374,32 +370,7 @@ public class Spectrum_Main extends JFrame {
 			} //end public void run()					
 		}); // end EventQueue.invokeLater
 	} // end public Spectrum_Main
-	
-
-	//--------------------------------------------------------------------------------------------------------------------------------
-	public void createProjectsFolder() {
-		// Check if Projects folder exists, if not then create it--------------------------------------------
-		// Get working location of the IDE project, or runnable jar file
-		final File jarFile = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
-		if (jarFile.isFile()) { // Run with JAR file
-			projectsFolder = new File(":Projects");
-		}
-
-		// Both runnable jar and IDE work with condition: Projects folder and runnable jar have to be in the same location
-		workingLocation = jarFile.getParentFile().toString();
-		try {
-			// to handle name with space (%20)
-			workingLocation = URLDecoder.decode(workingLocation, "utf-8");
-			workingLocation = new File(workingLocation).getPath();
-		} catch (UnsupportedEncodingException e1) {
-			System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
-		}
-		projectsFolder = new File(workingLocation + "/Projects");
-		if (!projectsFolder.exists()) {
-			projectsFolder.mkdirs();
-		} // Create folder Projects if it does not exist
-		// End of create projects folder-------------------------------------------------------------------		
-	}		
+			
 	
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public void createNewJInternalFrame() {
@@ -407,12 +378,7 @@ public class Spectrum_Main extends JFrame {
 		JInternalFrame ProjectInternalFrame = new JInternalFrame(currentProjectName, 
 																true /*resizable*/, true, /*closable*/true/*maximizable*/, true/*iconifiable*/);	
 		ProjectInternalFrame.setDefaultCloseOperation(JInternalFrame.DO_NOTHING_ON_CLOSE);
-		
-		
-		Panel_YieldProject YieldProjectPanel = new Panel_YieldProject(); // create new panel
-		ProjectInternalFrame.add(YieldProjectPanel, BorderLayout.CENTER); // add panel
-		ProjectInternalFrame.pack(); // set internal frame to size of contents
-		
+				
 		spectrumDesktopPane.add(ProjectInternalFrame, BorderLayout.CENTER); // attach internal frame
 		ProjectInternalFrame.setSize((int) (getWidth()/1.08),(int) (getHeight()/1.25));		
 		ProjectInternalFrame.setLocation((int) ((getWidth() - ProjectInternalFrame.getWidth())/2),
@@ -420,7 +386,13 @@ public class Spectrum_Main extends JFrame {
 		if (Spectrum_Main.mainFrameReturn().getSelectedFrame() != null) {	//or Set the ProjectInternalFrame near the recently opened JInternalFrame
 			ProjectInternalFrame.setLocation(Spectrum_Main.mainFrameReturn().getSelectedFrame().getX() + 30, Spectrum_Main.mainFrameReturn().getSelectedFrame().getY() + 30);
 		}
-		ProjectInternalFrame.setVisible(true); // show internal frame
+			
+		// Note: visible first for the JIframe to be selected, pack at the end would be fail for JIframe to be selected (Spectrum_Main.mainFrameReturn().getSelectedFrame = null)
+		ProjectInternalFrame.setVisible(true); // show internal frame	
+		Panel_YieldProject YieldProjectPanel = new Panel_YieldProject(); // create new panel
+		ProjectInternalFrame.add(YieldProjectPanel, BorderLayout.CENTER); // add panel
+//		ProjectInternalFrame.pack(); // set internal frame to size of contents
+		
 								
 		InternalFrameListener ProjectInternalFrame_listener = new InternalFrameListener() {
 		      public void internalFrameActivated(InternalFrameEvent e) {

@@ -35,7 +35,6 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.text.DefaultCaret;
 
@@ -44,6 +43,8 @@ import ilog.concert.IloLPMatrix;
 import ilog.concert.IloNumVar;
 import ilog.concert.IloNumVarType;
 import ilog.cplex.IloCplex;
+import lpsolve.LpSolve;
+import spectrumConvenienceClasses.FilesHandle;
 import spectrumConvenienceClasses.LibraryHandle;
 import spectrumConvenienceClasses.TableModelSpectrum;
 
@@ -59,16 +60,13 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 	private TableModelSpectrum model;
 	private Object[][] data;
 	
-	private File[] listOfEditRuns = null;
+	private File[] listOfEditRuns =  Panel_YieldProject.getSelectedRuns();		// Return the selected Runs for solving
 	private JScrollPane scrollPane_Left, scrollPane_Right;
 	
 	private File[] problemFile, solutionFile, output_generalInfo_file, output_variables_file, output_constraints_file, output_managementOverview_file;
 	
 	public Panel_SolveRun() {
 		super.setLayout(new BorderLayout(0, 0));
-		// Return the selected Runs
-		listOfEditRuns = Panel_YieldProject.getSelectedRuns();
-		
 
 		//Setup the table--------------------------------------------------------------------------------
 		rowCount = listOfEditRuns.length;
@@ -182,6 +180,13 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								    	System.err.println("Panel Solve Runs - Thread 2 error - " + ex.getClass().getName() + ": " + ex.getMessage());
 								    }
 								}
+								displayTextArea.append("--------------------------------------------------------------" + "\n");
+								displayTextArea.append("--------------------------------------------------------------" + "\n");
+								displayTextArea.append("SOLVING PROCESS IS COMPLETED" + "\n");
+								displayTextArea.append("--------------------------------------------------------------" + "\n");
+								displayTextArea.append("--------------------------------------------------------------" + "\n");
+								displayTextArea.append("\n" + "\n" + "\n");
+								
 								reader.close();
 								pIn.close();
 								pOut.close();
@@ -200,13 +205,27 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								table.setValueAt(data[row][4] , row, 4);
 								SolveProblem(row, listOfEditRuns[row]);
 							}
+
+							try {
+								sleep(1000);			//sleep 1 second to so thread 2 can still print out report
+								thread2.interrupt();
+							} catch (InterruptedException e) {
+								System.err.println("Panel Solve Runs - Thread 1 sleep error - " + e.getClass().getName() + ": " + e.getMessage());
+							}
+							
 							solvingstatus=false;
 							runStatButton.setText("CLICK ME TO GET SOLUTIONS");
-							runStatButton.setEnabled(true);
+							runStatButton.setEnabled(true);	
 						}
 					};
 					
 					
+					// Clear table info
+					for (int row = 0; row < rowCount; row++) {
+						for (int col = 0; col < colCount; col++) {
+							if (col != 0 && col != 4) table.setValueAt("" , row, col);
+						}
+					}				
 					runStatButton.setEnabled(false);
 					solvingstatus=true;
 					thread1.start();
@@ -238,15 +257,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 	//--------------------------------------------------------------------------------------------------------------------------------
 	//Solve each run
 	public void SolveProblem(int row, File runFolder) {
-
-		//Add the Cplex native library path dynamically at run time
-		try {
-			LibraryHandle.addLibraryPath("C:/Program Files/IBM/ILOG/CPLEX_Studio126/cplex/bin/x64_win64");
-		} catch (Exception e) {
-			System.err.println("Panel Solve Runs - cplexLib.addLibraryPath error - " + e.getClass().getName() + ": " + e.getMessage());
-		}		
-		
-		
+	
 		try {
 			problemFile[row] = new File(runFolder.getAbsolutePath() + "/Problem.lp");
 			solutionFile[row] = new File(runFolder.getAbsolutePath() + "/Solution.lp");
@@ -312,7 +323,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			// Set up problem-------------------------------------------------		//////////////////////////////////////Need to change this is important, better to read from input file //////////////////////////
 			// get the "StrataDefinition.csv" file from where this class is located
 		
-			File file_StrataDefinition = new File("StrataDefinition.csv");
+			File file_StrataDefinition = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "StrataDefinition.csv");
+			file_StrataDefinition.deleteOnExit();
 			try {
 				InputStream initialStream = getClass().getResourceAsStream("/StrataDefinition.csv");		//Default definition
 				byte[] buffer = new byte[initialStream.available()];
@@ -2256,23 +2268,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			
 			
 			// Solve problem-------------------------------------------------	
-			IloCplex cplex = new IloCplex();
-			IloLPMatrix lp = cplex.addLPMatrix();
-			IloNumVar[] var = cplex.numVarArray(cplex.columnArray(lp, nvars), vlb, vub, vtype, vname);
 			
-			// Add constraints
-			lp.addRows(c2_lb, c2_ub, c2_index, c2_value);	// Constraints 2
-			lp.addRows(c3_lb, c3_ub, c3_index, c3_value);	// Constraints 3
-			lp.addRows(c6_lb, c6_ub, c6_index, c6_value);	// Constraints 6
-			lp.addRows(c7_lb, c7_ub, c7_index, c7_value);	// Constraints 7
-			lp.addRows(c8_lb, c8_ub, c8_index, c8_value);	// Constraints 8
-			lp.addRows(c9_lb, c9_ub, c9_index, c9_value);	// Constraints 9
-			lp.addRows(c10_lb, c10_ub, c10_index, c10_value);	// Constraints 10
-			lp.addRows(c11_lb, c11_ub, c11_index, c11_value);	// Constraints 11
-			lp.addRows(c12_lb, c12_ub, c12_index, c12_value);	// Constraints 12
-			lp.addRows(c13_lb, c13_ub, c13_index, c13_value);	// Constraints 13
-			lp.addRows(c14_lb, c14_ub, c14_index, c14_value);	// Constraints 14
-			lp.addRows(c15_lb, c15_ub, c15_index, c15_value);	// Constraints 15
+
+			
 			
 			
 //			// Set constraints set name: Notice THIS WILL EXTREMELY SLOW THE SOLVING PROCESS (recommend for debugging only)
@@ -2305,142 +2303,181 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 //			}
 			
 			
-			cplex.addMinimize(cplex.scalProd(var, objvals));		// Set objective function to minimize
-			cplex.setParam(IloCplex.Param.RootAlgorithm,			// Auto choose optimization method
-                    IloCplex.Algorithm.Auto);
-//			cplex.setParam(IloCplex.DoubleParam.EpGap, 0.00);		// Gap is 0%
-			int solvingTimeLimit = read.get_SolvingTimeLimit() * 60;			//Get time Limit in minute * 60 = seconds
-			cplex.setParam(IloCplex.DoubleParam.TimeLimit, solvingTimeLimit);	// Set Time limit
-//			cplex.setParam(IloCplex.BooleanParam.PreInd, false);	// Turn off preSolve to see full variables and constraints
-																	// Note: currently if not turning PreSolve off, cplex will crash
 			
-			data[row][2] = cplex.getNcols();
-			data[row][3] = cplex.getNrows();
-			data[row][4] = "solving";
-			table.setValueAt(data[row][2] , row, 2); //To help trigger the table refresh: fireTableDataChanged() and repaint();
-			table.setValueAt(data[row][3] , row, 3);
-			table.setValueAt(data[row][4] , row, 4);
-
-//			cplex.exportModel(problemFile[row].getAbsolutePath());
-			if (cplex.solve()) {
-//				cplex.writeSolution(solutionFile[row].getAbsolutePath());
+			
+			
+			
+			
+			if (read.get_Solver().equals("CPLEX")) {
 				
-
-				//Get output info to array
-	            double[] value = cplex.getValues(lp);
-	            double[] reduceCost = cplex.getReducedCosts(lp);
-	            double[] dual = cplex.getDuals(lp);
-	            double[] slack = cplex.getSlacks(lp);
-				
-				//Write Solution files
-	           
-	            
-	            //General Info
-	            output_generalInfo_file[row].delete();
-				try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_generalInfo_file[row]))) {
-					// Write variables info
-					fileOut.write("Output Description" + "\t" + "Output Value");
-					
-					fileOut.newLine();
-					fileOut.write("Optimization solver"  + "\t" + "CPLEX");
-					
-					fileOut.newLine();
-					fileOut.write("Solution status"  + "\t" + cplex.getStatus());
-					
-					fileOut.newLine();
-					fileOut.write("Solution algorithm"  + "\t" + cplex.getAlgorithm());
-					
-					fileOut.newLine();
-					fileOut.write("Simplex iterations"  + "\t" + cplex.getNiterations64());
-					
-					fileOut.newLine();
-					fileOut.write("Solving time (seconds)"  + "\t" + cplex.getCplexTime());
-					
-					fileOut.newLine();
-					fileOut.write("Total variables"  + "\t" + cplex.getNcols());
-					
-					fileOut.newLine();
-					fileOut.write("Total constraints"  + "\t" + cplex.getNrows());
-					
-					fileOut.newLine();
-					fileOut.write("Objective value"  + "\t" + cplex.getObjValue());
-
-					fileOut.close();
-				} catch (IOException e) {
-					System.err.println("Panel Solve Runs - FileWriter(output_generalInfo_file[row]) error - " + e.getClass().getName() + ": " + e.getMessage());
+				//Add the Cplex native library path dynamically at run time
+				try {
+					LibraryHandle.addLibraryPath("C:/Program Files/IBM/ILOG/CPLEX_Studio126/cplex/bin/x64_win64");
+				} catch (Exception e) {
+					System.err.println("Panel Solve Runs - cplexLib.addLibraryPath error - " + e.getClass().getName() + ": " + e.getMessage());
 				}
-				output_generalInfo_file[row].createNewFile();
-	            
 				
-				//Variables if value <> 0
-	            output_variables_file[row].delete();
-				try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_variables_file[row]))) {
-					// Write variables info
-					fileOut.write("Index" + "\t" + "Name" + "\t" + "Value" + "\t" + "Reduced Cost");
-					for (int i = 0; i < value.length; i++) {	
-						if (value[i] != 0) {
-							DecimalFormat twoDForm = new DecimalFormat("#.##"); 
-							Double newValue = Double.valueOf(twoDForm.format(value[i]));		//Only get 2 decimal for double value
-							fileOut.newLine();
-							fileOut.write(i + "\t" + vname[i] + "\t" + newValue + "\t" + reduceCost[i]);
-						}
+				IloCplex cplex = new IloCplex();
+				IloLPMatrix lp = cplex.addLPMatrix();
+				IloNumVar[] var = cplex.numVarArray(cplex.columnArray(lp, nvars), vlb, vub, vtype, vname);
+				
+				
+				// Add constraints
+				lp.addRows(c2_lb, c2_ub, c2_index, c2_value); // Constraints 2
+				lp.addRows(c3_lb, c3_ub, c3_index, c3_value); // Constraints 3
+				lp.addRows(c6_lb, c6_ub, c6_index, c6_value); // Constraints 6
+				lp.addRows(c7_lb, c7_ub, c7_index, c7_value); // Constraints 7
+				lp.addRows(c8_lb, c8_ub, c8_index, c8_value); // Constraints 8
+				lp.addRows(c9_lb, c9_ub, c9_index, c9_value); // Constraints 9
+				lp.addRows(c10_lb, c10_ub, c10_index, c10_value); // Constraints 10
+				lp.addRows(c11_lb, c11_ub, c11_index, c11_value); // Constraints 11
+				lp.addRows(c12_lb, c12_ub, c12_index, c12_value); // Constraints 12
+				lp.addRows(c13_lb, c13_ub, c13_index, c13_value); // Constraints 13
+				lp.addRows(c14_lb, c14_ub, c14_index, c14_value); // Constraints 14
+				lp.addRows(c15_lb, c15_ub, c15_index, c15_value); // Constraints 15
+				
+				
+				cplex.addMinimize(cplex.scalProd(var, objvals)); // Set objective function to minimize
+				cplex.setParam(IloCplex.Param.RootAlgorithm, IloCplex.Algorithm.Auto); // Auto choose optimization method
+//				cplex.setParam(IloCplex.DoubleParam.EpGap, 0.00); // Gap is 0%
+				int solvingTimeLimit = read.get_SolvingTimeLimit() * 60; //Get time Limit in minute * 60 = seconds
+				cplex.setParam(IloCplex.DoubleParam.TimeLimit, solvingTimeLimit); // Set Time limit
+//				cplex.setParam(IloCplex.BooleanParam.PreInd, false);	// Turn off preSolve to see full variables and constraints
+				
+				//Add table info
+				data[row][2] = cplex.getNcols();
+				data[row][3] = cplex.getNrows();
+				data[row][4] = "solving";
+				table.setValueAt(data[row][2], row, 2); //To help trigger the table refresh: fireTableDataChanged() and repaint();
+				table.setValueAt(data[row][3], row, 3);
+				table.setValueAt(data[row][4], row, 4);
+				
+				
+//				cplex.exportModel(problemFile[row].getAbsolutePath());
+				long time_start = System.currentTimeMillis();		//measure time before solving
+				if (cplex.solve()) {
+					long time_end = System.currentTimeMillis();		//measure time after solving
+//					cplex.writeSolution(solutionFile[row].getAbsolutePath());
+
+					//Get output info to array
+					double[] value = cplex.getValues(lp);
+					double[] reduceCost = cplex.getReducedCosts(lp);
+					double[] dual = cplex.getDuals(lp);
+					double[] slack = cplex.getSlacks(lp);
+
+					//Write Solution files
+
+					//General Info
+					output_generalInfo_file[row].delete();
+					try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_generalInfo_file[row]))) {
+						// Write variables info
+						fileOut.write("Output Description" + "\t" + "Output Value");
+
+						fileOut.newLine();
+						fileOut.write("Optimization solver" + "\t" + "CPLEX");
+
+						fileOut.newLine();
+						fileOut.write("Solution status" + "\t" + cplex.getStatus());
+
+						fileOut.newLine();
+						fileOut.write("Solution algorithm" + "\t" + cplex.getAlgorithm());
+
+						fileOut.newLine();
+						fileOut.write("Simplex iterations" + "\t" + cplex.getNiterations64());
+
+						fileOut.newLine();
+						fileOut.write("Solving time (seconds)" + "\t" + (double) (time_end - time_start)/1000 /*cplex.getCplexTime()*/);
+
+						fileOut.newLine();
+						fileOut.write("Total variables" + "\t" + cplex.getNcols());
+
+						fileOut.newLine();
+						fileOut.write("Total constraints" + "\t" + cplex.getNrows());
+
+						fileOut.newLine();
+						fileOut.write("Objective value" + "\t" + cplex.getObjValue());
+
+						fileOut.close();
+					} catch (IOException e) {
+						System.err.println("Panel Solve Runs - FileWriter(output_generalInfo_file[row]) error - " + e.getClass().getName() + ": " + e.getMessage());
 					}
+					output_generalInfo_file[row].createNewFile();
 
-					fileOut.close();
-				} catch (IOException e) {
-					System.err.println("Panel Solve Runs - FileWriter(output_variables_file[row]) error - " + e.getClass().getName() + ": " + e.getMessage());				
-				}
-				output_variables_file[row].createNewFile();
-
-				
-				//Constraints  if dual or slack <> 0
-				output_constraints_file[row].delete();
-				try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_constraints_file[row]))) {
-					// Write constraints info
-					fileOut.write("Index" + "\t" + "Slack" + "\t" + "Dual");
-					for (int j = 0; j < dual.length; j++) {	
-						if (slack[j] != 0 || dual[j] != 0 ) {
-							fileOut.newLine();
-							fileOut.write(j + "\t" + slack[j] + "\t" + dual[j]);
-						}
-					}
-
-					fileOut.close();
-				} catch (IOException e) {
-					System.err.println("Panel Solve Runs - FileWriter(output_constraints_file[row]) error - " + e.getClass().getName() + ": " + e.getMessage());
-				}	
-				output_constraints_file[row].createNewFile();
-				
-				
-				
-				//Management Overview
-	            output_managementOverview_file[row].delete();
-				try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_managementOverview_file[row]))) {
-					// Write info
-					fileOut.write("Strata ID" + "\t" + "Layer 1" + "\t" + "Layer 2" + "\t" + "Layer 3" + "\t" + "Layer 4" + "\t" + "Layer 5" + "\t" + "Layer 6"
-							 + "\t" + "Natural Growth (acres)" + "\t" + "Prescribed Burn (acres)" + "\t" + "Group Selection (acres)" + "\t" + "Even Age (acres)" + "\t" + "Mixed Severity Wildfire (acres)");
 					
-					for (int s1 = 0; s1 < layer1.size(); s1++) {
-						for (int s2 = 0; s2 < layer2.size(); s2++) {
-							for (int s3 = 0; s3 < layer3.size(); s3++) {
-								for (int s4 = 0; s4 < layer4.size(); s4++) {
-									for (int s5 = 0; s5 < layer5.size(); s5++) {
-										for (int s6 = 0; s6 < layer6.size(); s6++) {
-											String strataName = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4) + layer5.get(s5) + layer6.get(s6);
-											if (modeled_strata.contains(strataName)) {					
-												
-												//New line for each strata
-												fileOut.newLine();	
-												//Write StrataID and 6 layers info
-												fileOut.write(strataName + "\t" + layer1.get(s1) + "\t" + layer2.get(s2) + "\t" + layer3.get(s3) 
-														+ "\t" + layer4.get(s4) + "\t" + layer5.get(s5) + "\t" + layer6.get(s6));									
-												//Write acres from each method
-												for (int q = 0; q < total_methods; q++) {
-													int this_var_index = x[s1][s2][s3][s4][s5][s6][q];
-													
-													DecimalFormat twoDForm = new DecimalFormat("#.##"); 
-													Double newValue = Double.valueOf(twoDForm.format(value[this_var_index]));		//Only get 2 decimal for double value
-													fileOut.write("\t" + newValue);			
+					//Variables if value <> 0
+					output_variables_file[row].delete();
+					try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_variables_file[row]))) {
+						// Write variables info
+						fileOut.write("Index" + "\t" + "Name" + "\t" + "Value" + "\t" + "Reduced Cost");
+						for (int i = 0; i < value.length; i++) {
+							if (value[i] != 0) {
+								DecimalFormat twoDForm = new DecimalFormat("#.##");
+								Double newValue = Double.valueOf(twoDForm.format(value[i])); //Only get 2 decimal for double value
+								fileOut.newLine();
+								fileOut.write(i + "\t" + vname[i] + "\t" + newValue + "\t" + reduceCost[i]);
+							}
+						}
+
+						fileOut.close();
+					} catch (IOException e) {
+						System.err.println("Panel Solve Runs - FileWriter(output_variables_file[row]) error - "	+ e.getClass().getName() + ": " + e.getMessage());
+					}
+					output_variables_file[row].createNewFile();
+
+					
+					//Constraints  if dual or slack <> 0
+					output_constraints_file[row].delete();
+					try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_constraints_file[row]))) {
+						// Write constraints info
+						fileOut.write("Index" + "\t" + "Slack" + "\t" + "Dual");
+						for (int j = 0; j < dual.length; j++) {
+							if (slack[j] != 0 || dual[j] != 0) {
+								fileOut.newLine();
+								fileOut.write(j + "\t" + slack[j] + "\t" + dual[j]);
+							}
+						}
+
+						fileOut.close();
+					} catch (IOException e) {
+						System.err.println("Panel Solve Runs - FileWriter(output_constraints_file[row]) error - " + e.getClass().getName() + ": " + e.getMessage());
+					}
+					output_constraints_file[row].createNewFile();
+
+					
+					//Management Overview
+					output_managementOverview_file[row].delete();
+					try (BufferedWriter fileOut = new BufferedWriter(
+							new FileWriter(output_managementOverview_file[row]))) {
+						// Write info
+						fileOut.write("Strata ID" + "\t" + "Layer 1" + "\t" + "Layer 2" + "\t" + "Layer 3" + "\t" + "Layer 4" + "\t" + "Layer 5" + "\t" + "Layer 6" + "\t" 
+						+ "Natural Growth (acres)" + "\t" + "Prescribed Burn (acres)" + "\t" + "Group Selection (acres)" + "\t"
+						+ "Even Age (acres)" + "\t" + "Mixed Severity Wildfire (acres)");
+
+						for (int s1 = 0; s1 < layer1.size(); s1++) {
+							for (int s2 = 0; s2 < layer2.size(); s2++) {
+								for (int s3 = 0; s3 < layer3.size(); s3++) {
+									for (int s4 = 0; s4 < layer4.size(); s4++) {
+										for (int s5 = 0; s5 < layer5.size(); s5++) {
+											for (int s6 = 0; s6 < layer6.size(); s6++) {
+												String strataName = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4) + layer5.get(s5) + layer6.get(s6);
+												if (modeled_strata.contains(strataName)) {
+
+													//New line for each strata
+													fileOut.newLine();
+													//Write StrataID and 6 layers info
+													fileOut.write(
+															strataName + "\t" + layer1.get(s1) + "\t" + layer2.get(s2)
+																	+ "\t" + layer3.get(s3) + "\t" + layer4.get(s4)
+																	+ "\t" + layer5.get(s5) + "\t" + layer6.get(s6));
+													//Write acres from each method
+													for (int q = 0; q < total_methods; q++) {
+														int this_var_index = x[s1][s2][s3][s4][s5][s6][q];
+
+														DecimalFormat twoDForm = new DecimalFormat("#.##");
+														Double newValue = Double
+																.valueOf(twoDForm.format(value[this_var_index])); //Only get 2 decimal for double value
+														fileOut.write("\t" + newValue);
+													}
 												}
 											}
 										}
@@ -2448,24 +2485,393 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								}
 							}
 						}
+						fileOut.close();
+					} catch (IOException e) {
+						System.err.println("Panel Solve Runs - FileWriter(output_managementOverview_file[row]) error - " + e.getClass().getName() + ": " + e.getMessage());
 					}
-					fileOut.close();
-				} catch (IOException e) {
-					System.err.println("Panel Solve Runs - FileWriter(output_managementOverview_file[row]) error - " + e.getClass().getName() + ": " + e.getMessage());
+					output_managementOverview_file[row].createNewFile();
+
+					//Show successful or fail in the GUI
+					data[row][1] = "valid";
+					table.setValueAt(data[row][1], row, 1);
+					data[row][4] = "successful";
+					table.setValueAt(data[row][4], row, 4);
 				}
-				output_managementOverview_file[row].createNewFile();
+				
+				cplex.endModel();
+				cplex.end();
+			}
+			
+	
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			if (read.get_Solver().equals("LPSOLVE")) {				//Reference for all LPsolve classes here:		http://lpsolve.sourceforge.net/5.5/Java/docs/api/lpsolve/LpSolve.html
+				
+//				//Add the Cplex native library path dynamically at run time
+//				try {
+//					LibraryHandle.addLibraryPath("C:/SpectrumLite_Documents/Setup/lp_solve_5.5_java/lib/win64");
+//				} catch (Exception e) {
+//					System.err.println("Panel Solve Runs - LPsolve.addLibraryPath error - " + e.getClass().getName() + ": " + e.getMessage());
+//				}
 				
 				
+				// Create a problem with nV variables and 0 constraints
+				LpSolve solver = LpSolve.makeLp(0, nV);
 				
+			    solver.setVerbose(LpSolve.NEUTRAL); //set verbose level
+		        solver.setMinim(); //set the problem to minimization
+		        		        
+		        //Set objective function coefficients
+		        solver.setObjFn(pad1ZeroInfront(objvals));		      
 				
-				//Show successful or fail in the GUI
-				data[row][1] = "valid";
-				table.setValueAt(data[row][1], row, 1);
-				data[row][4] = "successful";
+//		        //Set scaling			//Note this make outputs change
+//		        solver.setScaling(LpSolve.SCALE_NONE);				//reference here:	http://lpsolve.sourceforge.net/5.5/set_scaling.htm
+		        
+//		        //Set preSolve:		Eliminate linearly dependent rows = LpSolve.PRESOLVE_LINDEP  (value int = 4)
+//		        solver.setPresolve(LpSolve.PRESOLVE_LINDEP, solver.getPresolveloops());		//reference here:	http://lpsolve.sourceforge.net/5.5/set_presolve.htm
+		        
+		        
+		        for (int i = 0; i < nV; ++i) {
+					solver.setColName(i, vname[i]); // Set variable name
+					solver.setBounds(i + 1, vlb[i], vub[i]); // plus one is required by the lib
+				}
+		      	        
+//		        //lower bounds for the variables	      
+//				for (int i = 0; i < nV; ++i) {
+//					solver.setLowbo(i + 1, vlb[i]); // plus one is required by the lib
+//				}
+//		      		         
+//		        //upper bounds for the variables
+//				for (int i = 0; i < nV; ++i) {
+//					solver.setUpbo(i + 1, vub[i]); // plus one is required by the lib
+//				}
+		         
+		        
+		        //Allocate memory forin advance to add constraints & variables faster		Reference:	http://lpsolve.sourceforge.net/5.5/resize_lp.htm
+		        int totalConstraints = c2_lb.length + c3_lb.length + c6_lb.length + c7_lb.length + c8_lb.length 
+		        									+ c9_lb.length + c10_lb.length + c11_lb.length + c12_lb.length + c13_lb.length + c14_lb.length + c15_lb.length;
+		        solver.resizeLp(totalConstraints, solver.getNcolumns());
+		        
+				
+		        //Add constraints:			//	The sign of the constraint: LE (1) for <=, EQ (3) for =, GE (2) for >=
+											//	addConstraint(parameters, sign, RHS)
+				
+		        solver.setAddRowmode(true);	//perform much better addConstraintex -----------------------------------------------------------
+//		        // Constraints 2   
+//				for (int i = 0; i < c2_num; ++i) {
+//					if (c2_lb[i] != Double.MIN_VALUE) {
+//						solver.addConstraint(pad1ZeroInfront(withoutZero_To_WithZero(nV, c2_value[i], c2_index[i])), LpSolve.GE, c2_lb[i]);
+//					}	
+//				}	
+//				// Constraints 3   
+//				for (int i = 0; i < c3_num; ++i) {
+//					if (c3_ub[i] != Double.MAX_VALUE) {
+//						solver.addConstraint(pad1ZeroInfront(withoutZero_To_WithZero(nV, c3_value[i], c3_index[i])), LpSolve.LE, c3_ub[i]);
+//					}			
+//				}	
+//				
+//				// Constraints 6   
+//				for (int i = 0; i < c6_num; ++i) {
+//					solver.addConstraint(pad1ZeroInfront(withoutZero_To_WithZero(nV, c6_value[i], c6_index[i])), LpSolve.EQ, c6_lb[i]);
+//				}			
+//				// Constraints 7
+//				for (int i = 0; i < c7_num; ++i) {
+//					solver.addConstraint(pad1ZeroInfront(withoutZero_To_WithZero(nV, c7_value[i], c7_index[i])), LpSolve.EQ, c7_lb[i]);
+//				}	
+//				// Constraints 8
+//				for (int i = 0; i < c8_num; ++i) {
+//					solver.addConstraint(pad1ZeroInfront(withoutZero_To_WithZero(nV, c8_value[i], c8_index[i])), LpSolve.EQ, c8_lb[i]);
+//				}	
+//				// Constraints 9
+//				for (int i = 0; i < c9_num; ++i) {
+//					solver.addConstraint(pad1ZeroInfront(withoutZero_To_WithZero(nV, c9_value[i], c9_index[i])), LpSolve.EQ, c9_lb[i]);
+//				}	
+//				// Constraints 10
+//				for (int i = 0; i < c10_num; ++i) {
+//					solver.addConstraint(pad1ZeroInfront(withoutZero_To_WithZero(nV, c10_value[i], c10_index[i])), LpSolve.EQ, c10_lb[i]);
+//				}	
+//				// Constraints 11
+//				for (int i = 0; i < c11_num; ++i) {
+//					solver.addConstraint(pad1ZeroInfront(withoutZero_To_WithZero(nV, c11_value[i], c11_index[i])), LpSolve.EQ, c11_lb[i]);
+//				}	
+//				// Constraints 12
+//				for (int i = 0; i < c12_num; ++i) {
+//					solver.addConstraint(pad1ZeroInfront(withoutZero_To_WithZero(nV, c12_value[i], c12_index[i])), LpSolve.EQ, c12_lb[i]);
+//				}	
+//				// Constraints 13
+//				for (int i = 0; i < c13_num; ++i) {
+//					solver.addConstraint(pad1ZeroInfront(withoutZero_To_WithZero(nV, c13_value[i], c13_index[i])), LpSolve.EQ, c13_lb[i]);
+//				}	
+//				// Constraints 14
+//				for (int i = 0; i < c14_num; ++i) {
+//					solver.addConstraint(pad1ZeroInfront(withoutZero_To_WithZero(nV, c14_value[i], c14_index[i])), LpSolve.EQ, c14_lb[i]);
+//				}	
+//				// Constraints 15
+//				for (int i = 0; i < c15_num; ++i) {
+//					solver.addConstraint(pad1ZeroInfront(withoutZero_To_WithZero(nV, c15_value[i], c15_index[i])), LpSolve.EQ, c15_lb[i]);
+//				}	
+		        
+		        //Add addConstraintex much more faster than addConstraint.		Reference:		http://lpsolve.sourceforge.net/5.5/add_constraint.htm
+		        // Constraints 2   
+				for (int i = 0; i < c2_num; ++i) {
+					if (c2_lb[i] != Double.MIN_VALUE) {			
+						solver.addConstraintex(c2_value[i].length, c2_value[i], plus1toIndex(c2_index[i]), LpSolve.GE, c2_lb[i]);
+					}	
+				}	
+				// Constraints 3   
+				for (int i = 0; i < c3_num; ++i) {
+					if (c3_ub[i] != Double.MAX_VALUE) {
+						solver.addConstraintex(c3_value[i].length, c3_value[i], plus1toIndex(c3_index[i]), LpSolve.LE, c3_ub[i]);
+					}			
+				}	
+				
+				// Constraints 6   
+				for (int i = 0; i < c6_num; ++i) {
+					solver.addConstraintex(c6_value[i].length, c6_value[i], plus1toIndex(c6_index[i]), LpSolve.EQ, c6_lb[i]);
+				}			
+				// Constraints 7
+				for (int i = 0; i < c7_num; ++i) {
+					solver.addConstraintex(c7_value[i].length, c7_value[i], plus1toIndex(c7_index[i]), LpSolve.EQ, c7_lb[i]);
+				}	
+				// Constraints 8
+				for (int i = 0; i < c8_num; ++i) {
+					solver.addConstraintex(c8_value[i].length, c8_value[i], plus1toIndex(c8_index[i]), LpSolve.EQ, c8_lb[i]);
+				}	
+				// Constraints 9
+				for (int i = 0; i < c9_num; ++i) {
+					solver.addConstraintex(c9_value[i].length, c9_value[i], plus1toIndex(c9_index[i]), LpSolve.EQ, c9_lb[i]);
+				}	
+				// Constraints 10
+				for (int i = 0; i < c10_num; ++i) {
+					solver.addConstraintex(c10_value[i].length, c10_value[i], plus1toIndex(c10_index[i]), LpSolve.EQ, c10_lb[i]);
+				}	
+				// Constraints 11
+				for (int i = 0; i < c11_num; ++i) {
+					solver.addConstraintex(c11_value[i].length, c11_value[i], plus1toIndex(c11_index[i]), LpSolve.EQ, c11_lb[i]);
+				}	
+				// Constraints 12
+				for (int i = 0; i < c12_num; ++i) {
+					solver.addConstraintex(c12_value[i].length, c12_value[i], plus1toIndex(c12_index[i]), LpSolve.EQ, c12_lb[i]);
+				}	
+				// Constraints 13
+				for (int i = 0; i < c13_num; ++i) {
+					solver.addConstraintex(c13_value[i].length, c13_value[i], plus1toIndex(c13_index[i]), LpSolve.EQ, c13_lb[i]);
+				}	
+				// Constraints 14
+				for (int i = 0; i < c14_num; ++i) {
+					solver.addConstraintex(c14_value[i].length, c14_value[i], plus1toIndex(c14_index[i]), LpSolve.EQ, c14_lb[i]);
+				}	
+				// Constraints 15
+				for (int i = 0; i < c15_num; ++i) {
+					solver.addConstraintex(c15_value[i].length, c15_value[i], plus1toIndex(c15_index[i]), LpSolve.EQ, c15_lb[i]);
+				}	
+				solver.setAddRowmode(false);	//perform much better addConstraintex-----------------------------------------------------------
+				
+		        
+				//Add table info
+				data[row][2] = solver.getNcolumns();
+				data[row][3] = solver.getNrows();
+				data[row][4] = "solving";
+				table.setValueAt(data[row][2], row, 2); //To help trigger the table refresh: fireTableDataChanged() and repaint();
+				table.setValueAt(data[row][3], row, 3);
 				table.setValueAt(data[row][4], row, 4);
-			}		
-			cplex.endModel();
-			cplex.end();
+		        
+//		        //solve the problem
+//		        int status = solver.solve();
+//		        if(isSolutionValid(status)==false) {
+//		            solver.setScaling(LpSolve.SCALE_NONE); //turn off automatic scaling
+//		            status = solver.solve();
+//		            if(isSolutionValid(status)==false) {
+//		                throw new RuntimeException("LPSolver Error: "+solver.getStatustext(status));
+//					}
+//				}	        
+		        
+		        //solve the problem
+//				solver.writeLp(problemFile[row].getAbsolutePath());
+				if (isSolutionValid(solver.solve()) == true) {
+//					solver.setOutputfile(solutionFile[row].getAbsolutePath());
+
+					
+					//Get output info to array
+					double[] value = solver.getPtrVariables();
+//					double[] reduceCost = cplex.getReducedCosts(lp);
+					double[] dual = solver.getPtrDualSolution();
+//					double[] slack = cplex.getSlacks(lp);
+
+					//Write Solution files
+
+					//General Info
+					output_generalInfo_file[row].delete();
+					try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_generalInfo_file[row]))) {
+						// Write variables info
+						fileOut.write("Output Description" + "\t" + "Output Value");
+
+						fileOut.newLine();
+						fileOut.write("Optimization solver" + "\t" + "LPSOLVE");
+
+						fileOut.newLine();
+						fileOut.write("Solution status" + "\t" + solver.getStatus());
+
+						fileOut.newLine();
+						fileOut.write("Solution algorithm" + "\t" + " "/*+ solver.getAlgorithm()*/);
+
+						fileOut.newLine();
+						fileOut.write("Simplex iterations" + "\t" + solver.getTotalIter());
+
+						fileOut.newLine();
+						fileOut.write("Solving time (seconds)" + "\t" + solver.timeElapsed() /*+ cplex.getCplexTime()*/);
+
+						fileOut.newLine();
+						fileOut.write("Total variables" + "\t" + solver.getNcolumns());
+
+						fileOut.newLine();
+						fileOut.write("Total constraints" + "\t" + solver.getNrows());
+
+						fileOut.newLine();
+						fileOut.write("Objective value" + "\t" + solver.getObjective());
+
+						fileOut.close();
+					} catch (IOException e) {
+						System.err.println("Panel Solve Runs - FileWriter(output_generalInfo_file[row]) error - " + e.getClass().getName() + ": " + e.getMessage());
+					}
+					output_generalInfo_file[row].createNewFile();
+
+					
+					//Variables if value <> 0
+					output_variables_file[row].delete();
+					try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_variables_file[row]))) {
+						// Write variables info
+						fileOut.write("Index" + "\t" + "Name" + "\t" + "Value" + "\t" + "Reduced Cost");
+						for (int i = 0; i < value.length; i++) {
+							if (value[i] != 0) {
+								DecimalFormat twoDForm = new DecimalFormat("#.##");
+								Double newValue = Double.valueOf(twoDForm.format(value[i])); //Only get 2 decimal for double value
+								fileOut.newLine();
+								fileOut.write(i + "\t" + vname[i] + "\t" + newValue + "\t" + " ");
+//								fileOut.write(i + "\t" + vname[i] + "\t" + newValue + "\t" + reduceCost[i]);
+							}
+						}
+
+						fileOut.close();
+					} catch (IOException e) {
+						System.err.println("Panel Solve Runs - FileWriter(output_variables_file[row]) error - "	+ e.getClass().getName() + ": " + e.getMessage());
+					}
+					output_variables_file[row].createNewFile();
+
+					
+					//Constraints  if dual or slack <> 0
+					output_constraints_file[row].delete();
+					try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_constraints_file[row]))) {
+						// Write constraints info
+						fileOut.write("Index" + "\t" + "Slack" + "\t" + "Dual");
+//						for (int j = 0; j < dual.length; j++) {
+//							if (slack[j] != 0 || dual[j] != 0) {
+//								fileOut.newLine();
+//								fileOut.write(j + "\t" + slack[j] + "\t" + dual[j]);
+//							}
+//						}
+
+						fileOut.close();
+					} catch (IOException e) {
+						System.err.println("Panel Solve Runs - FileWriter(output_constraints_file[row]) error - " + e.getClass().getName() + ": " + e.getMessage());
+					}
+					output_constraints_file[row].createNewFile();
+
+					
+					//Management Overview
+					output_managementOverview_file[row].delete();
+					try (BufferedWriter fileOut = new BufferedWriter(
+							new FileWriter(output_managementOverview_file[row]))) {
+						// Write info
+						fileOut.write("Strata ID" + "\t" + "Layer 1" + "\t" + "Layer 2" + "\t" + "Layer 3" + "\t" + "Layer 4" + "\t" + "Layer 5" + "\t" + "Layer 6" + "\t" 
+						+ "Natural Growth (acres)" + "\t" + "Prescribed Burn (acres)" + "\t" + "Group Selection (acres)" + "\t"
+						+ "Even Age (acres)" + "\t" + "Mixed Severity Wildfire (acres)");
+
+						for (int s1 = 0; s1 < layer1.size(); s1++) {
+							for (int s2 = 0; s2 < layer2.size(); s2++) {
+								for (int s3 = 0; s3 < layer3.size(); s3++) {
+									for (int s4 = 0; s4 < layer4.size(); s4++) {
+										for (int s5 = 0; s5 < layer5.size(); s5++) {
+											for (int s6 = 0; s6 < layer6.size(); s6++) {
+												String strataName = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4) + layer5.get(s5) + layer6.get(s6);
+												if (modeled_strata.contains(strataName)) {
+
+													//New line for each strata
+													fileOut.newLine();
+													//Write StrataID and 6 layers info
+													fileOut.write(
+															strataName + "\t" + layer1.get(s1) + "\t" + layer2.get(s2)
+																	+ "\t" + layer3.get(s3) + "\t" + layer4.get(s4)
+																	+ "\t" + layer5.get(s5) + "\t" + layer6.get(s6));
+													//Write acres from each method
+													for (int q = 0; q < total_methods; q++) {
+														int this_var_index = x[s1][s2][s3][s4][s5][s6][q];
+
+														DecimalFormat twoDForm = new DecimalFormat("#.##");
+														Double newValue = Double
+																.valueOf(twoDForm.format(value[this_var_index])); //Only get 2 decimal for double value
+														fileOut.write("\t" + newValue);
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+						fileOut.close();
+					} catch (IOException e) {
+						System.err.println("Panel Solve Runs - FileWriter(output_managementOverview_file[row]) error - " + e.getClass().getName() + ": " + e.getMessage());
+					}
+					output_managementOverview_file[row].createNewFile();
+
+					//Show successful or fail in the GUI
+					data[row][1] = "valid";
+					table.setValueAt(data[row][1], row, 1);
+					data[row][4] = "successful";
+					table.setValueAt(data[row][4], row, 4);
+					
+					
+					
+					
+				}
+				solver.deleteLp();
+			}			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 		}
 		catch (IloException e) {
 			System.err.println("Concert exception '" + e + "' caught for " + listOfEditRuns[row].getName());
@@ -2495,5 +2901,49 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			output_generalInfo_file[row].delete();
 			output_managementOverview_file[row].delete();
 		}
+	}
+	
+	
+	private static int[] plus1toIndex(int[] array) {
+		int[] plus1Array = new int[array.length];
+		for (int i = 0; i < array.length; ++i) {
+			plus1Array[i] = array[i] + 1;		 // plus one is required by the lib
+		}	
+		return plus1Array;
+	}	
+	
+	
+	private static double[] withoutZero_To_WithZero(int total_var, double[] value, int[] index) {
+		double[] array = new double[total_var];	
+		
+		//all values to be 0
+		for (int i = 0; i < total_var; i++) {
+			array[i] = 0;
+		} 
+		
+		//for other values, check index & value to set it
+		for (int i = 0; i < index.length; i++) {
+			array[index[i]] = value[i];
+		} 
+
+		return array;
+	}	
+	
+	
+	private static double[] pad1ZeroInfront(double[] array) {
+		double[] paddedArray = new double[array.length + 1];
+		System.arraycopy(array, 0, paddedArray, 1, array.length);
+		return paddedArray;
+	}
+	
+	
+    /**
+     * Checks whether the status corresponds to a valid solution
+     * 
+     * @param status    The status id returned by lpsolve
+     * @return          Boolean which indicates if the solution is valid
+     */
+	private static boolean isSolutionValid(int status) {
+		return (status == 0) || (status == 1) || (status == 11) || (status == 12);
 	}
 }

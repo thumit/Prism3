@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 public class LibraryHandle {
 	public static void addLibraryPath(String pathToAdd) throws Exception {
+		//To help load the native libraries (usually the folder contains the .dll files) of the added jars
 		
 		Field usrPathsField = ClassLoader.class.getDeclaredField("usr_paths");
 		usrPathsField.setAccessible(true);
