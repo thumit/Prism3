@@ -774,9 +774,16 @@ public class Panel_YieldProject extends JLayeredPane {
 		
 		// For Stop Editing
 		else if (btnEditRun.getToolTipText() == "Stop Editing") {
-			int response = JOptionPane.showConfirmDialog(this, 
-			"Save all changes you made ?", "Stop Editing", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-			if (response == JOptionPane.NO_OPTION || response == JOptionPane.YES_OPTION) {
+			
+			
+			icon = new ImageIcon(getClass().getResource("/icon_question.png"));
+	  		scaleImage = icon.getImage().getScaledInstance(50, 50,Image.SCALE_SMOOTH);
+	  		String ExitOption[] = {"Yes","No"};
+			int response = JOptionPane.showOptionDialog(Spectrum_Main.mainFrameReturn(),"Save all changes you made ?", "Stop Editing",
+					JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, new ImageIcon(scaleImage), ExitOption, ExitOption[0]);
+			
+			if (response == 0 || response == 1)				//Yes or No
+			{
 				//Enable all other buttons, change name to "Start Editing",  remove editPanel and add splitPanel 
 				for (Component c : projectToolBar.getComponents()) c.setVisible(true);
 				displayTextField.setVisible(true);
@@ -787,8 +794,8 @@ public class Panel_YieldProject extends JLayeredPane {
 				super.remove(editPanel);
 				super.add(splitPanel);
 				
-				if (response == JOptionPane.YES_OPTION) {
-
+				if (response == 0)		//Yes option
+				{
 					//Delete all files of the edited Runs
 					for (int i = 0; i < listOfEditRuns.length; i++) {
 						File[] contents = listOfEditRuns[i].listFiles();
@@ -812,8 +819,8 @@ public class Panel_YieldProject extends JLayeredPane {
 //					}
 					refreshProjectTree(); //Refresh the tree
 				}
-			} else if (response == JOptionPane.CLOSED_OPTION) {			
-			}
+	        }
+			
 
 		}  //End of stop editing
 	}

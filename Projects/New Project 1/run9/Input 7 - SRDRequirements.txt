@@ -1,6 +1,6 @@
 Cover Type before Stand Replacing Disturbances	Cover Type after Stand Replacing Disturbances	Weight of Regenerated Area	Percentage Equivalent (%)	
-P	P	1	33.33333333333333	
-P	D	2	66.66666666666666	
+P	P	1	100.0	
+P	D	0	0.0	
 P	W	0	0.0	
 P	C	0	0.0	
 P	I	0	0.0	

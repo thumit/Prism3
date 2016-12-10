@@ -106,6 +106,7 @@ public class FilesHandle {
 	
 	public static File chosenDatabase() {
 		JFileChooser chooser = new JFileChooser();
+		chooser.setCurrentDirectory(get_DatabasesFolder());
 		chooser.setDialogTitle("Select database file");
 		chooser.setMultiSelectionEnabled(false);
 		
@@ -127,6 +128,7 @@ public class FilesHandle {
 	
 	public static File chosenStrata() {
 		JFileChooser chooser = new JFileChooser();
+		chooser.setCurrentDirectory(new File(get_workingLocation()));
 		chooser.setDialogTitle("Select existing strata file");
 		chooser.setMultiSelectionEnabled(false);
 		
@@ -148,6 +150,7 @@ public class FilesHandle {
 	
 	public static File chosenDefinition() {
 		JFileChooser chooser = new JFileChooser();
+		chooser.setCurrentDirectory(new File(get_workingLocation()));
 		chooser.setDialogTitle("Select strata definition file");
 		chooser.setMultiSelectionEnabled(false);
 		

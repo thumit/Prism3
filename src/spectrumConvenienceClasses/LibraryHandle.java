@@ -26,4 +26,13 @@ public class LibraryHandle {
 		newPaths[(newPaths.length - 1)] = pathToAdd;
 		usrPathsField.set(null, newPaths);
 	}
+	
+	public static void setLibraryPath(String path) throws Exception {
+	    System.setProperty("java.library.path", path);
+	 
+	    //set sys_paths to null
+	    final Field sysPathsField = ClassLoader.class.getDeclaredField("sys_paths");
+	    sysPathsField.setAccessible(true);
+	    sysPathsField.set(null, null);
+	}
 }

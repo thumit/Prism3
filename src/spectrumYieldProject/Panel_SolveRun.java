@@ -65,6 +65,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 	
 	private File[] problemFile, solutionFile, output_generalInfo_file, output_variables_file, output_constraints_file, output_managementOverview_file;
 	
+	private DecimalFormat twoDForm = new DecimalFormat("#.##");	 //Only get 2 decimal will be assess
+	
 	public Panel_SolveRun() {
 		super.setLayout(new BorderLayout(0, 0));
 
@@ -2312,7 +2314,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				
 				//Add the Cplex native library path dynamically at run time
 				try {
-					LibraryHandle.addLibraryPath("C:/Program Files/IBM/ILOG/CPLEX_Studio126/cplex/bin/x64_win64");
+//					LibraryHandle.addLibraryPath("C:/Program Files/IBM/ILOG/CPLEX_Studio126/cplex/bin/x64_win64");
+					
+					LibraryHandle.setLibraryPath(FilesHandle.get_temporaryFolder().getAbsolutePath().toString());
+					LibraryHandle.addLibraryPath(FilesHandle.get_temporaryFolder().getAbsolutePath().toString());
+					System.out.println("Loading CPLEX .dll from " + FilesHandle.get_temporaryFolder().getAbsolutePath().toString());	
 				} catch (Exception e) {
 					System.err.println("Panel Solve Runs - cplexLib.addLibraryPath error - " + e.getClass().getName() + ": " + e.getMessage());
 				}
@@ -2353,11 +2359,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				table.setValueAt(data[row][4], row, 4);
 				
 				
-//				cplex.exportModel(problemFile[row].getAbsolutePath());
+				cplex.exportModel(problemFile[row].getAbsolutePath());
 				long time_start = System.currentTimeMillis();		//measure time before solving
 				if (cplex.solve()) {
 					long time_end = System.currentTimeMillis();		//measure time after solving
-//					cplex.writeSolution(solutionFile[row].getAbsolutePath());
+					cplex.writeSolution(solutionFile[row].getAbsolutePath());
 
 					//Get output info to array
 					double[] value = cplex.getValues(lp);
@@ -2384,9 +2390,10 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 
 						fileOut.newLine();
 						fileOut.write("Simplex iterations" + "\t" + cplex.getNiterations64());
-
+				
+						double timeElapsed = (double) (time_end - time_start)/1000;
 						fileOut.newLine();
-						fileOut.write("Solving time (seconds)" + "\t" + (double) (time_end - time_start)/1000 /*cplex.getCplexTime()*/);
+						fileOut.write("Solving time (seconds)" + "\t" + Double.valueOf(twoDForm.format(timeElapsed)) /*cplex.getCplexTime()*/);
 
 						fileOut.newLine();
 						fileOut.write("Total variables" + "\t" + cplex.getNcols());
@@ -2395,7 +2402,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						fileOut.write("Total constraints" + "\t" + cplex.getNrows());
 
 						fileOut.newLine();
-						fileOut.write("Objective value" + "\t" + cplex.getObjValue());
+						fileOut.write("Objective value" + "\t" + Double.valueOf(twoDForm.format(cplex.getObjValue())));
 
 						fileOut.close();
 					} catch (IOException e) {
@@ -2411,10 +2418,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						fileOut.write("Index" + "\t" + "Name" + "\t" + "Value" + "\t" + "Reduced Cost");
 						for (int i = 0; i < value.length; i++) {
 							if (value[i] != 0) {
-								DecimalFormat twoDForm = new DecimalFormat("#.##");
-								Double newValue = Double.valueOf(twoDForm.format(value[i])); //Only get 2 decimal for double value
 								fileOut.newLine();
-								fileOut.write(i + "\t" + vname[i] + "\t" + newValue + "\t" + reduceCost[i]);
+								fileOut.write(i + "\t" + vname[i] + "\t" +  Double.valueOf(twoDForm.format(value[i])) + "\t" +  Double.valueOf(twoDForm.format(reduceCost[i])));
 							}
 						}
 
@@ -2433,7 +2438,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						for (int j = 0; j < dual.length; j++) {
 							if (slack[j] != 0 || dual[j] != 0) {
 								fileOut.newLine();
-								fileOut.write(j + "\t" + slack[j] + "\t" + dual[j]);
+								fileOut.write(j + "\t" + Double.valueOf(twoDForm.format(slack[j])) + "\t" + Double.valueOf(twoDForm.format(dual[j])));
 							}
 						}
 
@@ -2472,11 +2477,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 													//Write acres from each method
 													for (int q = 0; q < total_methods; q++) {
 														int this_var_index = x[s1][s2][s3][s4][s5][s6][q];
-
-														DecimalFormat twoDForm = new DecimalFormat("#.##");
-														Double newValue = Double
-																.valueOf(twoDForm.format(value[this_var_index])); //Only get 2 decimal for double value
-														fileOut.write("\t" + newValue);
+														fileOut.write("\t" + Double.valueOf(twoDForm.format(value[this_var_index])));
 													}
 												}
 											}
@@ -2525,12 +2526,16 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			
 			if (read.get_Solver().equals("LPSOLVE")) {				//Reference for all LPsolve classes here:		http://lpsolve.sourceforge.net/5.5/Java/docs/api/lpsolve/LpSolve.html
 				
-//				//Add the Cplex native library path dynamically at run time
-//				try {
+				//Add the LPsolve native library path dynamically at run time
+				try {
 //					LibraryHandle.addLibraryPath("C:/SpectrumLite_Documents/Setup/lp_solve_5.5_java/lib/win64");
-//				} catch (Exception e) {
-//					System.err.println("Panel Solve Runs - LPsolve.addLibraryPath error - " + e.getClass().getName() + ": " + e.getMessage());
-//				}
+					
+					LibraryHandle.setLibraryPath(FilesHandle.get_temporaryFolder().getAbsolutePath().toString());
+					LibraryHandle.addLibraryPath(FilesHandle.get_temporaryFolder().getAbsolutePath().toString());
+					System.out.println("Loading LPSOLVE .dll from " + FilesHandle.get_temporaryFolder().getAbsolutePath().toString());			
+				} catch (Exception e) {
+					System.err.println("Panel Solve Runs - LPsolve.addLibraryPath error - " + e.getClass().getName() + ": " + e.getMessage());
+				}
 				
 				
 				// Create a problem with nV variables and 0 constraints
@@ -2538,14 +2543,44 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				
 			    solver.setVerbose(LpSolve.NEUTRAL); //set verbose level
 		        solver.setMinim(); //set the problem to minimization
-		        		        
+		        
+		        
+		        
+		        
+//		        //---------------------------------------------------------------------------
+//		        //---------------------------------------------------------------------------
+//		        // From other people set up, I dont understand but I think it can speed up the solving process: no speed improved
+//		        solver.setScalelimit(5); 
+//
+//		        solver.setPivoting(LpSolve.PRICER_DEVEX + 
+//		        LpSolve.PRICE_ADAPTIVE ); 
+//		        solver.setMaxpivot(250); 
+//
+//		        solver.setBbFloorfirst(LpSolve.BRANCH_AUTOMATIC); 
+//		        solver.setBbRule(LpSolve.NODE_PSEUDONONINTSELECT + 
+//		        LpSolve.NODE_GREEDYMODE + LpSolve.NODE_DYNAMICMODE + 
+//		        LpSolve.NODE_RCOSTFIXING); 
+//		        solver.setObjBound(1E30); 
+//		        solver.setBbDepthlimit(-50); 
+//
+//		        solver.setImprove(LpSolve.IMPROVE_DUALFEAS + 
+//		        LpSolve.IMPROVE_THETAGAP); 
+//
+//		        solver.setSimplextype(LpSolve.SIMPLEX_DUAL_PRIMAL); 
+//		        //---------------------------------------------------------------------------
+//		        //---------------------------------------------------------------------------
+		        
+		        
+		        
+
+		        
 		        //Set objective function coefficients
 		        solver.setObjFn(pad1ZeroInfront(objvals));		      
 				
 //		        //Set scaling			//Note this make outputs change
 //		        solver.setScaling(LpSolve.SCALE_NONE);				//reference here:	http://lpsolve.sourceforge.net/5.5/set_scaling.htm
 		        
-//		        //Set preSolve:		Eliminate linearly dependent rows = LpSolve.PRESOLVE_LINDEP  (value int = 4)
+//		        //Set preSolve:		Eliminate linearly dependent rows = LpSolve.PRESOLVE_LINDEP  (value int = 4), option 1 can reduce iteration --> solve faster
 //		        solver.setPresolve(LpSolve.PRESOLVE_LINDEP, solver.getPresolveloops());		//reference here:	http://lpsolve.sourceforge.net/5.5/set_presolve.htm
 		        
 		        
@@ -2737,7 +2772,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						fileOut.write("Simplex iterations" + "\t" + solver.getTotalIter());
 
 						fileOut.newLine();
-						fileOut.write("Solving time (seconds)" + "\t" + solver.timeElapsed() /*+ cplex.getCplexTime()*/);
+						fileOut.write("Solving time (seconds)" + "\t" + Double.valueOf(twoDForm.format(solver.timeElapsed())) /*+ cplex.getCplexTime()*/);
 
 						fileOut.newLine();
 						fileOut.write("Total variables" + "\t" + solver.getNcolumns());
@@ -2746,7 +2781,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						fileOut.write("Total constraints" + "\t" + solver.getNrows());
 
 						fileOut.newLine();
-						fileOut.write("Objective value" + "\t" + solver.getObjective());
+						fileOut.write("Objective value" + "\t" + Double.valueOf(twoDForm.format(solver.getObjective())));
 
 						fileOut.close();
 					} catch (IOException e) {
@@ -2762,10 +2797,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						fileOut.write("Index" + "\t" + "Name" + "\t" + "Value" + "\t" + "Reduced Cost");
 						for (int i = 0; i < value.length; i++) {
 							if (value[i] != 0) {
-								DecimalFormat twoDForm = new DecimalFormat("#.##");
-								Double newValue = Double.valueOf(twoDForm.format(value[i])); //Only get 2 decimal for double value
 								fileOut.newLine();
-								fileOut.write(i + "\t" + vname[i] + "\t" + newValue + "\t" + " ");
+								fileOut.write(i + "\t" + vname[i] + "\t" + Double.valueOf(twoDForm.format(value[i])) + "\t" + " ");
 //								fileOut.write(i + "\t" + vname[i] + "\t" + newValue + "\t" + reduceCost[i]);
 							}
 						}
@@ -2824,11 +2857,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 													//Write acres from each method
 													for (int q = 0; q < total_methods; q++) {
 														int this_var_index = x[s1][s2][s3][s4][s5][s6][q];
-
-														DecimalFormat twoDForm = new DecimalFormat("#.##");
-														Double newValue = Double
-																.valueOf(twoDForm.format(value[this_var_index])); //Only get 2 decimal for double value
-														fileOut.write("\t" + newValue);
+														fileOut.write("\t" + Double.valueOf(twoDForm.format(value[this_var_index])));
 													}
 												}
 											}
