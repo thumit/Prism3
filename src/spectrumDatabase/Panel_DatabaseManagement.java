@@ -45,7 +45,7 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import spectrumConvenienceClasses.FilesHandle;
-import spectrumGUI.Spectrum_Main;
+import spectrumROOT.Spectrum_Main;
 
 @SuppressWarnings("serial")
 public class Panel_DatabaseManagement extends JLayeredPane {

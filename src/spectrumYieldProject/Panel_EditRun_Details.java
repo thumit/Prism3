@@ -76,7 +76,7 @@ import javax.swing.table.TableRowSorter;
 import javax.swing.text.DefaultFormatter;
 
 import spectrumConvenienceClasses.FilesHandle;
-import spectrumGUI.Spectrum_Main;
+import spectrumROOT.Spectrum_Main;
 
 public class Panel_EditRun_Details extends JLayeredPane implements ActionListener {
 	private JSplitPane GUI_Text_splitPanel ;
@@ -2824,7 +2824,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 													
 													c_dP.gridx = 1;
 													c_dP.gridy = 1;
-													JTextField min_TF = new JTextField(3);															
+													JTextField min_TF = new JTextField(10);															
 													min_TF.setText(uniqueValueList.get(0));
 													rangePanel.add(min_TF, c_dP);
 													
@@ -2836,7 +2836,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 													
 													c_dP.gridx = 1;
 													c_dP.gridy = 2;
-													JTextField max_TF = new JTextField(3);															
+													JTextField max_TF = new JTextField(10);															
 													max_TF.setText(uniqueValueList.get(uniqueValueList.size()-1));
 													rangePanel.add(max_TF, c_dP);
 													

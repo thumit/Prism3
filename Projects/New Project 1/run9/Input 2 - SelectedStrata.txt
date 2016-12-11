@@ -1,14 +1,30 @@
 Strata ID	Layer 1	Layer 2	Layer 3	Layer 4	Layer 5	Layer 6	Total area (acres)	Age Class	Strata in optimization model	
-BNNCAP	B	N	N	C	A	P	64	null	Yes	
-BNNCCL	B	N	N	C	C	L	4121	null	Yes	
-BNNCCM	B	N	N	C	C	M	1353	null	Yes	
-BNNCCP	B	N	N	C	C	P	651	null	Yes	
-BNNCCS	B	N	N	C	C	S	97	null	Yes	
-BNNCDL	B	N	N	C	D	L	1725	null	Yes	
-BNNCDM	B	N	N	C	D	M	540	null	Yes	
-BNNCDP	B	N	N	C	D	P	77	null	Yes	
-BNNCDS	B	N	N	C	D	S	84	null	Yes	
-BNNCIL	B	N	N	C	I	L	247	null	Yes	
-BNNCIM	B	N	N	C	I	M	61	null	Yes	
-BNNCLL	B	N	N	C	L	L	181	null	Yes	
-BNNCLM	B	N	N	C	L	M	92	null	Yes	
+BNNCAL	B	N	N	C	A	L	335	9	Yes	
+BNNCAM	B	N	N	C	A	M	63	8	Yes	
+BNNCAP	B	N	N	C	A	P	64	4	Yes	
+BNNCCL	B	N	N	C	C	L	4121	8	Yes	
+BNNCCM	B	N	N	C	C	M	1353	8	Yes	
+BNNCCP	B	N	N	C	C	P	651	4	Yes	
+BNNCCS	B	N	N	C	C	S	97	2	Yes	
+BNNCDL	B	N	N	C	D	L	1725	8	Yes	
+BNNCDM	B	N	N	C	D	M	540	8	Yes	
+BNNCDP	B	N	N	C	D	P	77	not found	Yes	
+BNNCDS	B	N	N	C	D	S	84	2	Yes	
+BNNCIL	B	N	N	C	I	L	247	8	Yes	
+BNNCIM	B	N	N	C	I	M	61	8	Yes	
+BNNCLL	B	N	N	C	L	L	181	8	Yes	
+BNNCLM	B	N	N	C	L	M	92	8	Yes	
+BNNCNN	B	N	N	C	N	N	1279	not found	Yes	
+BNNCPL	B	N	N	C	P	L	1268	8	Yes	
+BNNCPM	B	N	N	C	P	M	909	8	Yes	
+BNNCPP	B	N	N	C	P	P	142	not found	Yes	
+BNNCWL	B	N	N	C	W	L	4299	8	Yes	
+BNNCWM	B	N	N	C	W	M	1664	8	Yes	
+BNNCWP	B	N	N	C	W	P	310	4	Yes	
+BNNCWS	B	N	N	C	W	S	107	2	Yes	
+BNNHCL	B	N	N	H	C	L	71	8	Yes	
+BNNLAL	B	N	N	L	A	L	378	9	Yes	
+BNNLAM	B	N	N	L	A	M	157	8	Yes	
+BNNLAS	B	N	N	L	A	S	86	1	Yes	
+BNNLCL	B	N	N	L	C	L	1396	8	Yes	
+BNNLCM	B	N	N	L	C	M	396	8	Yes	

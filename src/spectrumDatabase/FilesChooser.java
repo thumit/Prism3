@@ -5,7 +5,7 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import spectrumConvenienceClasses.FilesHandle;
-import spectrumGUI.Spectrum_Main;
+import spectrumROOT.Spectrum_Main;
 
 public class FilesChooser {
 	

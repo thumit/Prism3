@@ -1,4 +1,4 @@
-package spectrumGUI;
+package spectrumROOT;
 
 
 import java.awt.BorderLayout;
@@ -37,12 +37,12 @@ import javax.swing.event.InternalFrameListener;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
+import spectrumConvenienceClasses.ComponentResizer;
 import spectrumConvenienceClasses.FilesHandle;
 import spectrumConvenienceClasses.NameHandle;
 import spectrumConvenienceClasses.RequestFocusListener;
 import spectrumConvenienceClasses.WindowAppearanceHandle;
 import spectrumDatabase.Panel_DatabaseManagement;
-import spectrumYieldProject.ComponentResizer;
 import spectrumYieldProject.Panel_YieldProject;
 
 @SuppressWarnings("serial")
@@ -52,18 +52,20 @@ public class Spectrum_Main extends JFrame {
 	private Image 		scaleImage;
 	
 	private JMenuBar 	spectrum_Menubar;
-	private JMenu 		menuFile, menuUtility, menuHelp,
+	private JMenu 		menuFile, menuUtility, menuWindow, menuHelp,
 						menuOpenProject;
 	private JMenuItem 	newProject, exitSoftware, //Children of MenuFile
 						existingProject, //For menuOpenProject
 						DatabaseManagement, //For MenuUtility
-						contents, update, contact, about; //For MenuMenuHelpFile
+						contents, update, contact, about; //For MenuMenuHelp
+	
+	private MenuItem_SetTransparency setTransparency;	//For menuWindow
 	
 	private int 		pX,pY;
 	
 	private static Panel_BackGroundDesktop spectrumDesktopPane;
 	private static String currentProjectName;
-
+	private static Spectrum_Main main;
 	
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public static void main(String[] args) {
@@ -74,10 +76,10 @@ public class Spectrum_Main extends JFrame {
 		GraphicsDevice gd = ge.getDefaultScreenDevice();
 		if (gd.isWindowTranslucencySupported(WindowTranslucency.TRANSLUCENT)) {
 			setDefaultLookAndFeelDecorated(true);
-			Spectrum_Main main = new Spectrum_Main();
+			main = new Spectrum_Main();
 		// 	main.setUndecorated(true);
 			main.setOpacity(0.95f);
-			ComponentResizer cr = new ComponentResizer();
+			ComponentResizer cr = new ComponentResizer();	//Need resize since if "setDefaultLookAndFeelDecorated(true);" then the top corners cannot be resized (java famous bug?)
 			cr.registerComponent(main);
 		} 		
 	}
@@ -101,7 +103,7 @@ public class Spectrum_Main extends JFrame {
 //				setExtendedState(JFrame.MAXIMIZED_BOTH); 
 //				setUndecorated(true);
 				
-				setTitle("SpectrumLite Demo Version 1.09");
+				setTitle("SpectrumLite Demo Version 1.10");
 				setIconImage(new ImageIcon(getClass().getResource("/icon_main.png")).getImage());
 				//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -113,6 +115,7 @@ public class Spectrum_Main extends JFrame {
 				menuOpenProject = new JMenu("Open");
 				exitSoftware = new JMenuItem("Exit");
 				DatabaseManagement = new JMenuItem("Database Management");
+				setTransparency = new MenuItem_SetTransparency(main);
 				contents = new JMenuItem("Contents");
 				update = new JMenuItem("Check for updates");
 				contact = new JMenuItem("Contact us");
@@ -120,6 +123,7 @@ public class Spectrum_Main extends JFrame {
 
 				menuFile = new JMenu("File");
 				menuUtility = new JMenu("Utility");
+				menuWindow = new JMenu("Window");
 				menuHelp = new JMenu("Help");
 
 				
@@ -147,6 +151,7 @@ public class Spectrum_Main extends JFrame {
 				menuFile.add(menuOpenProject);
 				menuFile.add(exitSoftware);
 				menuUtility.add(DatabaseManagement);
+				menuWindow.add(setTransparency);
 				menuHelp.add(contents);
 				menuHelp.add(update);
 				menuHelp.add(contact);
@@ -154,6 +159,7 @@ public class Spectrum_Main extends JFrame {
 
 				spectrum_Menubar.add(menuFile);
 				spectrum_Menubar.add(menuUtility);
+				spectrum_Menubar.add(menuWindow);
 				spectrum_Menubar.add(menuHelp);
 
 				setJMenuBar(spectrum_Menubar);	
@@ -207,13 +213,15 @@ public class Spectrum_Main extends JFrame {
 								});
 
 								List<String> existingName_list = new ArrayList<String>();
-								for (int i = 0; i < listOfFiles.length; i++) {
-									if (listOfFiles[i].isDirectory()) {
-										String fileName;
-										fileName = listOfFiles[i].getName();
-										existingName_list.add(fileName);								
-									}
-								}	
+								if (listOfFiles != null) {
+									for (int i = 0; i < listOfFiles.length; i++) {
+										if (listOfFiles[i].isDirectory()) {
+											String fileName;
+											fileName = listOfFiles[i].getName();
+											existingName_list.add(fileName);								
+										}
+									}		
+								}
 												
 								//if Name is valid and existing projects do not contain this Name
 								if (NameHandle.nameIsValid(currentProjectName)==true && !existingName_list.contains(currentProjectName)) {
@@ -224,10 +232,11 @@ public class Spectrum_Main extends JFrame {
 								} else {
 									titleText = "Name already exists or contains special characters. Please try a new name:";									
 								}
-							} 					
-
-							else if (response == 1)	stop_naming = true;					
-							else stop_naming = true;		//This is close (x) button
+							} 		
+							
+							else {
+								stop_naming = true;
+							}
 					    }
 						
 					}
@@ -248,43 +257,45 @@ public class Spectrum_Main extends JFrame {
 							}
 						});
 
-						for (int i = 0; i < listOfFiles.length; i++) {
-							if (listOfFiles[i].isDirectory()) {
-								String fileName;
-								fileName = listOfFiles[i].getName();
-								existingProject = new JMenuItem(fileName);
-								menuOpenProject.add(existingProject);			//ADD ALL existing projects
+						if (listOfFiles != null) {
+							for (int i = 0; i < listOfFiles.length; i++) {
+								if (listOfFiles[i].isDirectory()) {
+									String fileName;
+									fileName = listOfFiles[i].getName();
+									existingProject = new JMenuItem(fileName);
+									menuOpenProject.add(existingProject);			//ADD ALL existing projects
 
-								existingProject.addActionListener(new ActionListener() {
-									public void actionPerformed(ActionEvent event) {
-										currentProjectName = fileName;
-										
-										JInternalFrame[] opened_InternalFrames = Spectrum_Main.mainFrameReturn().getAllFrames();	//All displayed internalFrames
-										List<String> openedFrames_list = new ArrayList<String>();					//List of Frames Names					
-										for (int i = 0; i < opened_InternalFrames.length; i++) {
-											openedFrames_list.add(opened_InternalFrames[i].getTitle());		//Loop all displayed IFrames to get Names and add to the list
-										}
-										
-										//Only open if it is not opened yet
-										if (openedFrames_list.contains(fileName)) {
+									existingProject.addActionListener(new ActionListener() {
+										public void actionPerformed(ActionEvent event) {
+											currentProjectName = fileName;
+											
+											JInternalFrame[] opened_InternalFrames = Spectrum_Main.mainFrameReturn().getAllFrames();	//All displayed internalFrames
+											List<String> openedFrames_list = new ArrayList<String>();					//List of Frames Names					
 											for (int i = 0; i < opened_InternalFrames.length; i++) {
-												if (opened_InternalFrames[i].getTitle().equals(fileName)) { 
-													try {
-														opened_InternalFrames[i].setSelected(true);
-													} catch (PropertyVetoException e) {
-														System.err.println(e.getClass().getName() + ": " + e.getMessage());
+												openedFrames_list.add(opened_InternalFrames[i].getTitle());		//Loop all displayed IFrames to get Names and add to the list
+											}
+											
+											//Only open if it is not opened yet
+											if (openedFrames_list.contains(fileName)) {
+												for (int i = 0; i < opened_InternalFrames.length; i++) {
+													if (opened_InternalFrames[i].getTitle().equals(fileName)) { 
+														try {
+															opened_InternalFrames[i].setSelected(true);
+														} catch (PropertyVetoException e) {
+															System.err.println(e.getClass().getName() + ": " + e.getMessage());
+														}
 													}
 												}
+											} else {
+												createNewJInternalFrame(); // Open it
 											}
-										} else {
-											createNewJInternalFrame(); // Open it
+											
+											
 										}
-										
-										
-									}
-								});
+									});
+								}
 							}
-						}	
+						}
 
 					}
 					

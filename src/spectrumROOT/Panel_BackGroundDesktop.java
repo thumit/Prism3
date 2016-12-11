@@ -1,4 +1,4 @@
-package spectrumGUI;
+package spectrumROOT;
 
 import java.awt.Dimension;
 import java.awt.Graphics;

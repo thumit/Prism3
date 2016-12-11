@@ -13,7 +13,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import spectrumGUI.Spectrum_Main;
+import spectrumROOT.Spectrum_Main;
 import spectrumYieldProject.Panel_EditRun_Details;
 
 public class FilesHandle {

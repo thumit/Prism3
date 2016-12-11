@@ -68,7 +68,7 @@ import org.jfree.util.Rotation;
 
 import spectrumConvenienceClasses.FilesHandle;
 import spectrumConvenienceClasses.TableModelSpectrum;
-import spectrumGUI.Spectrum_Main;
+import spectrumROOT.Spectrum_Main;
 @SuppressWarnings("serial")
 public class Panel_YieldProject extends JLayeredPane {
 	private JSplitPane splitPanel;
@@ -578,29 +578,33 @@ public class Panel_YieldProject extends JLayeredPane {
 			}
 		});
 
-		for (int i = 0; i < listOfFiles.length; i++) {
-			if (listOfFiles[i].isDirectory()) {
-				fileName = listOfFiles[i].getName();
-				DefaultMutableTreeNode level2node = new DefaultMutableTreeNode(fileName);
-				root.add(level2node);
-	
-				//Inside run folder, add all files as child nodes
-				String filename2;
-				File[] listOfFiles2 = listOfFiles[i].listFiles(new FilenameFilter() {
-					@Override
-					public boolean accept(File dir, String name) {
-						return name.endsWith(".txt") || name.endsWith(".lp");
+		if (listOfFiles != null) {
+			for (int i = 0; i < listOfFiles.length; i++) {
+				if (listOfFiles[i].isDirectory()) {
+					fileName = listOfFiles[i].getName();
+					DefaultMutableTreeNode level2node = new DefaultMutableTreeNode(fileName);
+					root.add(level2node);
+		
+					//Inside run folder, add all files as child nodes
+					String filename2;
+					File[] listOfFiles2 = listOfFiles[i].listFiles(new FilenameFilter() {
+						@Override
+						public boolean accept(File dir, String name) {
+							return name.endsWith(".txt") || name.endsWith(".lp");
+						}
+					});
+					
+					if (listOfFiles2 != null) {
+						for (int j = 0; j < listOfFiles2.length; j++) {
+							filename2 = listOfFiles2[j].getName();
+							DefaultMutableTreeNode level3node = new DefaultMutableTreeNode(filename2);
+							level2node.add(level3node);
+						}
 					}
-				});
-				
-				for (int j = 0; j < listOfFiles2.length; j++) {
-					filename2 = listOfFiles2[j].getName();
-					DefaultMutableTreeNode level3node = new DefaultMutableTreeNode(filename2);
-					level2node.add(level3node);
-				}
-	
-			} // end of If
-		} // end of For loop		
+		
+				} // end of If
+			} // end of For loop
+		}
 				projectTree.expandPath(new TreePath(root.getPath()));	//Expand the root	
 				if (scrollPane_Right != null) showNothing();
 	} // end of Refresh()
@@ -659,6 +663,7 @@ public class Panel_YieldProject extends JLayeredPane {
 				projectTree.scrollPathToVisible(path);
 				projectTree.setSelectionPath(path);
 				editingPath = path;
+				selectionPaths = projectTree.getSelectionPaths();
 			}
 		}
 
@@ -739,7 +744,6 @@ public class Panel_YieldProject extends JLayeredPane {
 				listOfEditRuns = new File[selectionPaths.length];
 				int fileCount=0;
 				
-				DefaultTreeModel model = (DefaultTreeModel) projectTree.getModel();
 				for (TreePath selectionPath : selectionPaths) { //Loop through all level 2 nodes (Runs)
 					currentLevel = selectionPath.getPathCount();
 					DefaultMutableTreeNode processingNode = (DefaultMutableTreeNode) selectionPath
@@ -764,7 +768,6 @@ public class Panel_YieldProject extends JLayeredPane {
 				btnEditRun.setRolloverIcon(new ImageIcon(scaleImage));
 				btnEditRun.setForeground(Color.RED);
 				super.remove(splitPanel);
-				super.remove(displayTextField);
 				editPanel = new Panel_EditRun();		// This panel only visible when "Start Editing"	
 				super.add(editPanel);
 			} 	
@@ -849,7 +852,6 @@ public class Panel_YieldProject extends JLayeredPane {
 				listOfEditRuns = new File[selectionPaths.length];
 				int fileCount=0;
 				
-				DefaultTreeModel model = (DefaultTreeModel) projectTree.getModel();
 				for (TreePath selectionPath : selectionPaths) { //Loop through all level 2 nodes (Runs)
 					currentLevel = selectionPath.getPathCount();
 					DefaultMutableTreeNode processingNode = (DefaultMutableTreeNode) selectionPath
@@ -919,7 +921,7 @@ public class Panel_YieldProject extends JLayeredPane {
 				listOfEditRuns = new File[selectionPaths.length];
 				int fileCount=0;
 				
-				DefaultTreeModel model = (DefaultTreeModel) projectTree.getModel();
+
 				for (TreePath selectionPath : selectionPaths) { //Loop through all level 2 nodes (Runs)
 					currentLevel = selectionPath.getPathCount();
 					DefaultMutableTreeNode processingNode = (DefaultMutableTreeNode) selectionPath
