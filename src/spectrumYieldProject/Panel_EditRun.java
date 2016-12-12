@@ -20,13 +20,14 @@ public class Panel_EditRun extends JLayeredPane implements ActionListener {
 	private JPanel radioPanel_Left; 
 	private ButtonGroup radioGroup_Left;
 	private JRadioButton[] radioButton_Left; 
-	private File[] listOfEditRuns = Panel_YieldProject.getSelectedRuns();		// Return the selected Runs for editing
+	private File[] listOfEditRuns;		// Return the selected Runs for editing
 	private JScrollPane scrollPane_Left, scrollPane_Right;
 	private Panel_EditRun_Details[] combinePanel;
 	
-	public Panel_EditRun() {
+	public Panel_EditRun(File[] runsList) {
 		super.setLayout(new BorderLayout(0, 0));
-	
+		listOfEditRuns = runsList;
+		
 		splitPanel = new JSplitPane();
 		// splitPanel.setResizeWeight(0.15);
 		splitPanel.setOneTouchExpandable(true);

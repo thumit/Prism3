@@ -620,6 +620,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 				DatabaseTree.scrollPathToVisible(path);
 				DatabaseTree.setSelectionPath(path);
 				editingPath = path;
+				selectionPaths = DatabaseTree.getSelectionPaths();
 			}
 		}
 		

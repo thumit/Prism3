@@ -92,8 +92,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private PaneL_General_Inputs_Text panelInput1_TEXT;
 	private PaneL_Model_Identifiniton_GUI panelInput2_GUI;
 	private PaneL_Model_Identification_Text panelInput2_TEXT;
-	private PaneL_Universal_Requiements_GUI panelInput3_GUI;
-	private PaneL_Universal_Requiements_Text panelInput3_TEXT;
+	private PaneL_CovertypeConversion_GUI panelInput3_GUI;
+	private PaneL_CovertypeConversion_Text panelInput3_TEXT;
 	private PaneL_Disturbances_GUI panelInput4_GUI;
 	private PaneL_Disturbances_Text panelInput4_TEXT;
 	private PaneL_UserConstraints_GUI panelInput5_GUI;
@@ -198,7 +198,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		radioButton_Right  = new JRadioButton[5];
 		radioButton_Right[0]= new JRadioButton("General Inputs");
 		radioButton_Right[1]= new JRadioButton("Model Identification");
-		radioButton_Right[2]= new JRadioButton("Universal Requirements");
+		radioButton_Right[2]= new JRadioButton("Covertype Conversion");
 		radioButton_Right[3]= new JRadioButton("Natural Disturbances");
 		radioButton_Right[4]= new JRadioButton("User Constraints");
 		radioButton_Right[0].setSelected(true);
@@ -220,8 +220,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		panelInput1_TEXT = new PaneL_General_Inputs_Text();
 		panelInput2_GUI = new PaneL_Model_Identifiniton_GUI();
 		panelInput2_TEXT = new PaneL_Model_Identification_Text();
-		panelInput3_GUI = new PaneL_Universal_Requiements_GUI();
-		panelInput3_TEXT = new PaneL_Universal_Requiements_Text();
+		panelInput3_GUI = new PaneL_CovertypeConversion_GUI();
+		panelInput3_TEXT = new PaneL_CovertypeConversion_Text();
 		panelInput4_GUI = new PaneL_Disturbances_GUI();
 		panelInput4_TEXT = new PaneL_Disturbances_Text();
 		panelInput5_GUI = new PaneL_UserConstraints_GUI();
@@ -412,8 +412,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						//create 4 new instances of the 2 Panels 
 						panelInput2_GUI = new PaneL_Model_Identifiniton_GUI();
 						panelInput2_TEXT = new PaneL_Model_Identification_Text();
-						panelInput3_GUI = new PaneL_Universal_Requiements_GUI();
-						panelInput3_TEXT = new PaneL_Universal_Requiements_Text();
+						panelInput3_GUI = new PaneL_CovertypeConversion_GUI();
+						panelInput3_TEXT = new PaneL_CovertypeConversion_Text();
 						panelInput4_GUI = new PaneL_Disturbances_GUI();
 						panelInput4_TEXT = new PaneL_Disturbances_Text();
 						panelInput5_GUI = new PaneL_UserConstraints_GUI();
@@ -1035,9 +1035,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	}	
 	
 	
-	// Panel Universal_Requiremetns------------------------------------------------------------------------------------------------
-	class PaneL_Universal_Requiements_GUI extends JLayeredPane {
-		public PaneL_Universal_Requiements_GUI() {
+	// Panel Covertype Conversion------------------------------------------------------------------------------------------------
+	class PaneL_CovertypeConversion_GUI extends JLayeredPane {
+		public PaneL_CovertypeConversion_GUI() {
 			setLayout(new GridBagLayout());
 			ToolTipManager.sharedInstance().setInitialDelay(0);		//Show toolTip immediately
 			
@@ -1508,8 +1508,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		}
 	}		
 		
-	class PaneL_Universal_Requiements_Text extends JLayeredPane {
-	    public PaneL_Universal_Requiements_Text() {
+	class PaneL_CovertypeConversion_Text extends JLayeredPane {
+	    public PaneL_CovertypeConversion_Text() {
 
 	    	
 	     }
@@ -3215,7 +3215,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 	private File getRequirementsFile() {
 		//Only print out if the last column Allowed Options <> null
-		File requirementsFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "Input 3 - UniversalRequirements.txt");
+		File requirementsFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "Input 3 - CovertypeConversion.txt");
 		requirementsFile.deleteOnExit();
 		
 		try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(requirementsFile))) {

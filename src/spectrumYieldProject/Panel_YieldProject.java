@@ -79,7 +79,7 @@ public class Panel_YieldProject extends JLayeredPane {
 	private ImageIcon icon;
 	private Image scaleImage;
 	
-	private static File[] listOfEditRuns;
+	private File[] listOfEditRuns;
 	private File currentProjectFolder, currentRunFolder;
 	private String seperator = "/";
 	private JTree projectTree;
@@ -768,7 +768,7 @@ public class Panel_YieldProject extends JLayeredPane {
 				btnEditRun.setRolloverIcon(new ImageIcon(scaleImage));
 				btnEditRun.setForeground(Color.RED);
 				super.remove(splitPanel);
-				editPanel = new Panel_EditRun();		// This panel only visible when "Start Editing"	
+				editPanel = new Panel_EditRun(listOfEditRuns);		// This panel only visible when "Start Editing"	
 				super.add(editPanel);
 			} 	
 		} //End of start editing
@@ -875,7 +875,7 @@ public class Panel_YieldProject extends JLayeredPane {
 				btnSolveRun.setRolloverIcon(new ImageIcon(scaleImage));
 				btnSolveRun.setForeground(Color.RED);
 				super.remove(splitPanel);
-				solvePanel = new Panel_SolveRun(); // This panel only visible when "Start Solving"
+				solvePanel = new Panel_SolveRun(listOfEditRuns); // This panel only visible when "Start Solving"
 				super.add(solvePanel);
 			}
 		} // End of start solving
@@ -945,7 +945,7 @@ public class Panel_YieldProject extends JLayeredPane {
 				btnCustomizeOutput.setRolloverIcon(new ImageIcon(scaleImage));
 				btnCustomizeOutput.setForeground(Color.RED);
 				super.remove(splitPanel);
-				customizeOutputPanel = new Panel_CustomizeOutput(); // This panel only visible when Start "Customize Output"
+				customizeOutputPanel = new Panel_CustomizeOutput(listOfEditRuns); // This panel only visible when Start "Customize Output"
 				super.add(customizeOutputPanel);
 			}
 		} // End of start solving
@@ -1155,12 +1155,6 @@ public class Panel_YieldProject extends JLayeredPane {
 	public void showNothing() {
 //		displayTextField.setText(null); // Show nothing on the TextField
 		scrollPane_Right.setViewportView(null);
-	}
-
-	//--------------------------------------------------------------------------------------------------------------------------------
-	// Get values to pass to other classes
-	public static File[] getSelectedRuns() {
-		return listOfEditRuns;
 	}
 
 }

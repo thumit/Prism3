@@ -3,7 +3,7 @@ Optimization solver	LPSOLVE
 Solution status	0
 Solution algorithm	 
 Simplex iterations	1139
-Solving time (seconds)	0.35
+Solving time (seconds)	0.32
 Total variables	8342
 Total constraints	8511
 Objective value	2.145039032E7

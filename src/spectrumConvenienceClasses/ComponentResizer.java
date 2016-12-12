@@ -4,6 +4,10 @@ import java.awt.event.*;
 import java.util.*;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+
+import spectrumROOT.MenuItem_SetLookAndFeel;
+import spectrumROOT.Spectrum_Main;
 
 /**
  *  The ComponentResizer allows you to resize a component by dragging a border
@@ -333,6 +337,7 @@ public class ComponentResizer extends MouseAdapter
 		{
 			((JComponent)source).setAutoscrolls( autoscrolls );
 		}
+	
 	}
 
 	/**
@@ -352,11 +357,27 @@ public class ComponentResizer extends MouseAdapter
 		Point dragged = e.getPoint();
 		SwingUtilities.convertPointToScreen(dragged, source);
 
-		if (NORTH == (direction & NORTH))	//Remove this if when we setResizable of the "main" to be false
-		{
+//		changeBounds(source, direction, bounds, pressed, dragged);			//Original code, changed by Dung's code below
+		
+
+		//Dung's codes: ---------------------------------add to manage the resize of Look and Feels ---------------------------------
+		//Only Metal & Nimbus (when firstly opened) has title bar
+		//In these 2 cases, the Component Resizer will be set to inActive for the North so main.autoResize can work on that title bar
+		if (UIManager.getLookAndFeel().getName().equals("Metal") || MenuItem_SetLookAndFeel.is_Nimbus_Without_titleBar() == false) {
+			if (NORTH == (direction & NORTH)) // Dung's codes: add to manage the resize of Look and Feels
+			{
+				
+			}
+		} else {
+			Spectrum_Main.mainReturn().setResizable(false);	
 			changeBounds(source, direction, bounds, pressed, dragged);
 		}
-
+		
+		Spectrum_Main.mainReturn().setResizable(true);							
+		//End of Dung's added codes --------------------------------------------------------------------------------------------------
+		
+		
+		
 	}
 
 	protected void changeBounds(Component source, int direction, Rectangle bounds, Point pressed, Point current)

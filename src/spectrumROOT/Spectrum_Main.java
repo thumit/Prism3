@@ -2,6 +2,7 @@ package spectrumROOT;
 
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.GraphicsDevice;
@@ -20,16 +21,17 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JMenu;
-import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.InternalFrameEvent;
@@ -39,6 +41,7 @@ import javax.swing.event.MenuListener;
 
 import spectrumConvenienceClasses.ComponentResizer;
 import spectrumConvenienceClasses.FilesHandle;
+import spectrumConvenienceClasses.JMenuBarCustomize;
 import spectrumConvenienceClasses.NameHandle;
 import spectrumConvenienceClasses.RequestFocusListener;
 import spectrumConvenienceClasses.WindowAppearanceHandle;
@@ -51,21 +54,23 @@ public class Spectrum_Main extends JFrame {
 	private ImageIcon 	icon;
 	private Image 		scaleImage;
 	
-	private JMenuBar 	spectrum_Menubar;
-	private JMenu 		menuFile, menuUtility, menuWindow, menuHelp,
-						menuOpenProject;
-	private JMenuItem 	newProject, exitSoftware, //Children of MenuFile
-						existingProject, //For menuOpenProject
-						DatabaseManagement, //For MenuUtility
-						contents, update, contact, about; //For MenuMenuHelp
+	private JMenuBarCustomize 	spectrum_Menubar;
+	private JMenu 				menuFile, menuUtility, menuWindow, menuHelp,
+								menuOpenProject;
+	private JMenuItem 			newProject, exitSoftware, //Children of MenuFile
+								existingProject, //For menuOpenProject
+								DatabaseManagement, //For MenuUtility
+								contents, update, contact, about; //For MenuMenuHelp
 	
-	private MenuItem_SetTransparency setTransparency;	//For menuWindow
+	private MenuItem_SetTransparency 	setTransparency;	//For menuWindow
+	private MenuItem_SetLookAndFeel 	setLookAndFeel;		//For menuWindow
 	
 	private int 		pX,pY;
 	
 	private static Panel_BackGroundDesktop spectrumDesktopPane;
 	private static String currentProjectName;
 	private static Spectrum_Main main;
+	private static ComponentResizer cr;
 	
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public static void main(String[] args) {
@@ -75,11 +80,17 @@ public class Spectrum_Main extends JFrame {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice gd = ge.getDefaultScreenDevice();
 		if (gd.isWindowTranslucencySupported(WindowTranslucency.TRANSLUCENT)) {
-			setDefaultLookAndFeelDecorated(true);
+//			setDefaultLookAndFeelDecorated(true);
 			main = new Spectrum_Main();
-		// 	main.setUndecorated(true);
+		 	main.setUndecorated(true);
 			main.setOpacity(0.95f);
-			ComponentResizer cr = new ComponentResizer();	//Need resize since if "setDefaultLookAndFeelDecorated(true);" then the top corners cannot be resized (java famous bug?)
+			
+			//Need border so cr can work
+			Border tempBorder = BorderFactory.createMatteBorder(4, 0, 0, 0, Color.BLACK);
+//			TitledBorder title = BorderFactory.createTitledBorder(tempBorder, "SpectrumLite Demo Version 1.10");
+			main.getRootPane().setBorder(tempBorder);
+			
+			cr = new ComponentResizer();	//Need resize since if "setDefaultLookAndFeelDecorated(true);" then the top corners cannot be resized (java famous bug?)
 			cr.registerComponent(main);
 		} 		
 	}
@@ -98,12 +109,9 @@ public class Spectrum_Main extends JFrame {
 						| UnsupportedLookAndFeelException ex) {
 					System.err.println(ex.getClass().getName() + ": " + ex.getMessage());
 				}
-
-				//These 2 lines make SpectrumLite Main full screen
-//				setExtendedState(JFrame.MAXIMIZED_BOTH); 
-//				setUndecorated(true);
+//				setExtendedState(JFrame.MAXIMIZED_BOTH); 	//make SpectrumLite Main full screen
 				
-				setTitle("SpectrumLite Demo Version 1.10");
+//				setTitle("SpectrumLite Demo Version 1.10");
 				setIconImage(new ImageIcon(getClass().getResource("/icon_main.png")).getImage());
 				//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -116,6 +124,7 @@ public class Spectrum_Main extends JFrame {
 				exitSoftware = new JMenuItem("Exit");
 				DatabaseManagement = new JMenuItem("Database Management");
 				setTransparency = new MenuItem_SetTransparency(main);
+				setLookAndFeel = new MenuItem_SetLookAndFeel(main, cr);
 				contents = new JMenuItem("Contents");
 				update = new JMenuItem("Check for updates");
 				contact = new JMenuItem("Contact us");
@@ -128,7 +137,7 @@ public class Spectrum_Main extends JFrame {
 
 				
 				spectrumDesktopPane = new Panel_BackGroundDesktop();
-				spectrum_Menubar = new JMenuBar();
+				spectrum_Menubar = new JMenuBarCustomize();
 				// Add mouse listener for JMenuBar
 				spectrum_Menubar.addMouseListener(new MouseAdapter() {
 					public void mousePressed(MouseEvent me) {
@@ -152,6 +161,7 @@ public class Spectrum_Main extends JFrame {
 				menuFile.add(exitSoftware);
 				menuUtility.add(DatabaseManagement);
 				menuWindow.add(setTransparency);
+				menuWindow.add(setLookAndFeel);
 				menuHelp.add(contents);
 				menuHelp.add(update);
 				menuHelp.add(contact);
@@ -161,6 +171,7 @@ public class Spectrum_Main extends JFrame {
 				spectrum_Menubar.add(menuUtility);
 				spectrum_Menubar.add(menuWindow);
 				spectrum_Menubar.add(menuHelp);
+				spectrum_Menubar.addFrameFeatures();
 
 				setJMenuBar(spectrum_Menubar);	
 				getContentPane().add(spectrumDesktopPane);
@@ -173,6 +184,33 @@ public class Spectrum_Main extends JFrame {
 
 				
 				// Add listeners for MenuItems------------------------------------------------
+				
+				// Add listener for "Window"------------------------------------------------
+				menuWindow.addMenuListener(new MenuListener() {
+					@Override
+			        public void menuSelected(MenuEvent e) {						
+						//Only allow to change look and feel if No Frame is opened, this is to prevent fail performance of the components after changing look and feel
+						if (Spectrum_Main.mainFrameReturn().getAllFrames().length ==  0) {
+							setLookAndFeel.setEnabled(true);
+						} else {
+							setLookAndFeel.setEnabled(false);
+						}		
+					}
+
+					@Override
+					public void menuDeselected(MenuEvent e) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void menuCanceled(MenuEvent e) {
+						// TODO Auto-generated method stub
+						
+					}
+				});
+				
+				
 				// Add listeners "New"------------------------------------------------
 				newProject.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent event) {
@@ -466,6 +504,18 @@ public class Spectrum_Main extends JFrame {
 		}
 	} 
 	
+	public void minimize() {
+		main.setState(JFrame.ICONIFIED);
+	}
+
+	public void restore() {
+		if (main.getState() != JFrame.MAXIMIZED_BOTH) {
+			main.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		} else {
+			main.setExtendedState(JFrame.NORMAL);
+		}		
+	}
+
 	//--------------------------------------------------------------------------------------------------------------------------------
 	@Override
 	public Dimension getPreferredSize() {
@@ -473,9 +523,13 @@ public class Spectrum_Main extends JFrame {
 	}
 	
 	//--------------------------------------------------------------------------------------------------------------------------------
-	public static Panel_BackGroundDesktop mainFrameReturn(){
-	   return spectrumDesktopPane;
-	  } 
+	public static Panel_BackGroundDesktop mainFrameReturn() {
+		return spectrumDesktopPane;
+	}
+	
+	public static Spectrum_Main mainReturn() {
+		return main;
+	}
 	
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public static String getProjectName() {

@@ -46,13 +46,12 @@ public class Panel_CustomizeOutput extends JLayeredPane implements ActionListene
 	private MyTableModel model;
 	private Object[][] data;
 	
-	private File[] listOfEditRuns = null;
+	private File[] listOfEditRuns ;
 	private JScrollPane scrollPane_Left, scrollPane_Right;
 	
 	private File[] problemFile, solutionFile, output_variables_file, output_constraints_file, output_generalInfo_file;
 	
-	public Panel_CustomizeOutput() {
-		
+	public Panel_CustomizeOutput(File[] runsList) {
 		
 		
 		// create a dataset...
@@ -77,8 +76,7 @@ public class Panel_CustomizeOutput extends JLayeredPane implements ActionListene
 		
 		
 		super.setLayout(new BorderLayout(0, 0));
-		// Return the selected Runs
-		listOfEditRuns = Panel_YieldProject.getSelectedRuns();
+		listOfEditRuns = runsList;
 		
 
 		//Setup the table--------------------------------------------------------------------------------

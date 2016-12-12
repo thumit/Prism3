@@ -60,15 +60,16 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 	private TableModelSpectrum model;
 	private Object[][] data;
 	
-	private File[] listOfEditRuns =  Panel_YieldProject.getSelectedRuns();		// Return the selected Runs for solving
+	private File[] listOfEditRuns ;
 	private JScrollPane scrollPane_Left, scrollPane_Right;
 	
 	private File[] problemFile, solutionFile, output_generalInfo_file, output_variables_file, output_constraints_file, output_managementOverview_file;
 	
 	private DecimalFormat twoDForm = new DecimalFormat("#.##");	 //Only get 2 decimal will be assess
 	
-	public Panel_SolveRun() {
+	public Panel_SolveRun(File[] runsList) {
 		super.setLayout(new BorderLayout(0, 0));
+		listOfEditRuns = runsList;
 
 		//Setup the table--------------------------------------------------------------------------------
 		rowCount = listOfEditRuns.length;
@@ -274,7 +275,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			ReadRunInputs read= new ReadRunInputs();
 			read.readGeneralInputs(new File(runFolder.getAbsolutePath() + "/Input 1 - GeneralInputs.txt"));
 			read.readManagementOptions(new File(runFolder.getAbsolutePath() + "/Input 2 - SelectedStrata.txt"));
-			read.readRequirements(new File(runFolder.getAbsolutePath() + "/Input 3 - UniversalRequirements.txt"));
+			read.readRequirements(new File(runFolder.getAbsolutePath() + "/Input 3 - CovertypeConversion.txt"));
 			read.readMSFire(new File(runFolder.getAbsolutePath() + "/Input 4 - MSFire.txt"));
 			read.readSRDFile(new File(runFolder.getAbsolutePath() + "/Input 5 - SRDisturbances.txt"));
 			read.readUserConstraints(new File(runFolder.getAbsolutePath() + "/Input 6 - UserConstraints.txt"));
@@ -2359,11 +2360,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				table.setValueAt(data[row][4], row, 4);
 				
 				
-				cplex.exportModel(problemFile[row].getAbsolutePath());
+//				cplex.exportModel(problemFile[row].getAbsolutePath());
 				long time_start = System.currentTimeMillis();		//measure time before solving
 				if (cplex.solve()) {
 					long time_end = System.currentTimeMillis();		//measure time after solving
-					cplex.writeSolution(solutionFile[row].getAbsolutePath());
+//					cplex.writeSolution(solutionFile[row].getAbsolutePath());
 
 					//Get output info to array
 					double[] value = cplex.getValues(lp);
