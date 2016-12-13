@@ -28,9 +28,11 @@ import javax.swing.JInternalFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -64,9 +66,7 @@ public class Spectrum_Main extends JFrame {
 	
 	private MenuItem_SetTransparency 	setTransparency;	//For menuWindow
 	private MenuItem_SetLookAndFeel 	setLookAndFeel;		//For menuWindow
-	
-	private int 		pX,pY;
-	
+		
 	private static Panel_BackGroundDesktop spectrumDesktopPane;
 	private static String currentProjectName;
 	private static Spectrum_Main main;
@@ -100,17 +100,20 @@ public class Spectrum_Main extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-
-				try {
-					//UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-					//UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-					UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
-						| UnsupportedLookAndFeelException ex) {
-					System.err.println(ex.getClass().getName() + ": " + ex.getMessage());
-				}
+			
+				for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+					if (info.getName().equals("Nimbus")) {
+						try {
+							UIManager.setLookAndFeel(info.getClassName());
+						} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+								| UnsupportedLookAndFeelException e1) {
+							System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+						}
+					}
+				}		
 //				setExtendedState(JFrame.MAXIMIZED_BOTH); 	//make SpectrumLite Main full screen
 				setMinimumSize(new Dimension(600, 300));
+				
 				
 //				setTitle("SpectrumLite Demo Version 1.10");
 				setIconImage(new ImageIcon(getClass().getResource("/icon_main.png")).getImage());
@@ -139,21 +142,6 @@ public class Spectrum_Main extends JFrame {
 				
 				spectrumDesktopPane = new Panel_BackGroundDesktop();
 				spectrum_Menubar = new JMenuBarCustomize();
-				// Add mouse listener for JMenuBar
-				spectrum_Menubar.addMouseListener(new MouseAdapter() {
-					public void mousePressed(MouseEvent me) {
-						// Get x,y and store them
-						pX = me.getX();
-						pY = me.getY();
-					}
-				});
-
-				// Add MouseMotionListener for detecting drag
-				spectrum_Menubar.addMouseMotionListener(new MouseAdapter() {
-					public void mouseDragged(MouseEvent me) {
-						setLocation(getLocation().x + me.getX() - pX, getLocation().y + me.getY() - pY);
-					}
-				});
 							
 				
 				// Add components: Menubar, Menus, MenuItems----------------------------------

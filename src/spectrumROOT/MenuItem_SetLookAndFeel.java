@@ -70,19 +70,12 @@ public class MenuItem_SetLookAndFeel extends JMenuItem {
 								if (info.getName().equals(radioButton[selectedLF].getText())) {
 									try {
 
-//										if (UIManager.getLookAndFeel().getName().equals("Nimbus") || UIManager.getLookAndFeel().getName().equals("Metal"))  {
-//											Spectrum_Main.mainReturn().setResizable(true);
-//										} else {
-//											Spectrum_Main.mainReturn().setResizable(false);
-//										}
-										
 										if (UIManager.getLookAndFeel().getName().equals("Nimbus"))  {
 											is_Nimbus_Without_titleBar = true;
 										}
-																			
-										
+																													
 										UIManager.setLookAndFeel(info.getClassName());
-
+										
 										cr.deregisterComponent(main);
 										cr.registerComponent(main);
 
