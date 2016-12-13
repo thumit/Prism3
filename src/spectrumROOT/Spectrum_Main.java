@@ -39,9 +39,9 @@ import javax.swing.event.InternalFrameListener;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
+import spectrumConvenienceClasses.ColorUtil;
 import spectrumConvenienceClasses.ComponentResizer;
 import spectrumConvenienceClasses.FilesHandle;
-import spectrumConvenienceClasses.JMenuBarCustomize;
 import spectrumConvenienceClasses.NameHandle;
 import spectrumConvenienceClasses.RequestFocusListener;
 import spectrumConvenienceClasses.WindowAppearanceHandle;
@@ -86,7 +86,7 @@ public class Spectrum_Main extends JFrame {
 			main.setOpacity(0.95f);
 			
 			//Need border so cr can work
-			Border tempBorder = BorderFactory.createMatteBorder(4, 0, 0, 0, Color.BLACK);
+			Border tempBorder = BorderFactory.createMatteBorder(3, 1, 1, 1, ColorUtil.makeTransparent(Color.BLACK, 255));
 //			TitledBorder title = BorderFactory.createTitledBorder(tempBorder, "SpectrumLite Demo Version 1.10");
 			main.getRootPane().setBorder(tempBorder);
 			
@@ -110,6 +110,7 @@ public class Spectrum_Main extends JFrame {
 					System.err.println(ex.getClass().getName() + ": " + ex.getMessage());
 				}
 //				setExtendedState(JFrame.MAXIMIZED_BOTH); 	//make SpectrumLite Main full screen
+				setMinimumSize(new Dimension(600, 300));
 				
 //				setTitle("SpectrumLite Demo Version 1.10");
 				setIconImage(new ImageIcon(getClass().getResource("/icon_main.png")).getImage());
@@ -505,11 +506,11 @@ public class Spectrum_Main extends JFrame {
 	} 
 	
 	public void minimize() {
-		main.setState(JFrame.ICONIFIED);
+		main.setExtendedState(JFrame.ICONIFIED);
 	}
 
 	public void restore() {
-		if (main.getState() != JFrame.MAXIMIZED_BOTH) {
+		if (main.getExtendedState() != JFrame.MAXIMIZED_BOTH) {
 			main.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		} else {
 			main.setExtendedState(JFrame.NORMAL);
