@@ -170,9 +170,9 @@ public class JMenuBarCustomize extends JMenuBar implements MouseListener, MouseM
 	public void mouseDragged(MouseEvent event) {
 		if (Spectrum_Main.mainReturn().getExtendedState() != JFrame.NORMAL) {
 			Spectrum_Main.mainReturn().setExtendedState(JFrame.NORMAL);		//Set normal Jframe size when start dragging
-			Spectrum_Main.mainReturn().setLocation(Math.abs(event.getX() - Spectrum_Main.mainReturn().getWidth()/2)  , event.getY());
-			pX = Math.abs(event.getX() - Spectrum_Main.mainReturn().getWidth() / 2);
-			pY = event.getY();
+			//These 2 lines are very smart lol, cuz its my codes (help to make the JFrame have the top center move to the cursor location)
+			pX = event.getX() - pX + Spectrum_Main.mainReturn().getWidth()/2;
+			pY = event.getY() - pY;
 		} else {		
 		Spectrum_Main.mainReturn().setLocation(Spectrum_Main.mainReturn().getLocation().x + event.getX() - pX, 
 				Spectrum_Main.mainReturn().getLocation().y + event.getY() - pY);		//when dragged, move the frame

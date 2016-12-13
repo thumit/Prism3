@@ -418,7 +418,7 @@ public class ComponentResizer extends MouseAdapter
 			int drag = getDragDistance(current.x, pressed.x, snapSize.width);
 			Dimension boundingSize = getBoundingSize( source );
 			int maximum = Math.min(boundingSize.width - x, maximumSize.width);
-			drag = getDragBounded(drag, snapSize.width, width, minimumSize.width, maximum);
+			drag = getDragBounded(drag, snapSize.width, width, minimumSize.width, maximumSize.width /*maximum*/);		//Dung's change this since it makes resize right edge on second monitor fail (JFrame disappear)
 			width += drag;
 		}
 
