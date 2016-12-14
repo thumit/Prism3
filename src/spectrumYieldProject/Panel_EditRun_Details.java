@@ -340,8 +340,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		        	spin2.setValue(spin2.getValue());
 		        	// Apply any change in the GUI to the TEXT area	
 		        	String input0_info = label1.getText() + "	" + combo1.getSelectedItem().toString() + "\n"
+		        			+ label2.getText() + "	" + (Integer)spin2.getValue() + "\n"
 							+ label3.getText() + "	" + combo3.getSelectedItem().toString() + "\n"
-							+ label2.getText() + "	" + (Integer)spin2.getValue() + "\n"
 							+ label4.getText() + "	" + combo4.getSelectedItem().toString();
 					panelInput1_TEXT.setText(input0_info);
 		        }
@@ -368,7 +368,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 		    // 1st grid -----------------------------------------------------------------------
 		 	// 1st grid -----------------------------------------------------------------------
-			JPanel importPanel = new JPanel();		
+			JPanel importPanel = new JPanel();
 			TitledBorder border0 = new TitledBorder("Import Files");
 			border0.setTitleJustification(TitledBorder.CENTER);
 			importPanel.setBorder(border0);
@@ -376,7 +376,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			GridBagConstraints c0 = new GridBagConstraints();
 			c0.fill = GridBagConstraints.HORIZONTAL;
 			c0.weightx = 1;
-		    c0.weighty = 1;
+			c0.weighty = 1;
 			
 		       
 		 // 1st grid line 0----------------------------
@@ -526,47 +526,37 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					file_ExistingStrata = FilesHandle.chosenStrata();				
 					if (file_ExistingStrata!=null) {
 						textField1.setText(file_ExistingStrata.getAbsolutePath());
-						// Read the whole text file into table
+						
+						//Read the whole text file into table
 						read_Strata = new Read_Strata();
 						read_Strata.readValues(file_ExistingStrata);
 						String[][] value = read_Strata.getValues();
-						rowCount = read_Strata.get_TotalRows();
-						colCount = read_Strata.get_TotalColumns() + 2; //the "Age Class" & "Strata in optimization model" Columns
+						rowCount = read_Strata.get_TotalRows();	//Total rows of existing strata
+//						colCount = read_Strata.get_TotalColumns() + 2; //the "Age Class" & "Strata in optimization model" Columns add to the total of existing strata columns
+//						table.createDefaultColumnsFromModel(); // Very important code to refresh the number of Columns shown based on existing strata total columns
 						data = new Object[rowCount][colCount];
-						columnNames = new String[colCount];
 						for (int row = 0; row < rowCount; row++) {
-							for (int column = 0; column < colCount - 2; column++) {
+							for (int column = 0; column < read_Strata.get_TotalColumns() - 1; column++) {		//loop all existing strata columns, except the last column
 								data[row][column] = value[row][column];
 							}
+							data[row][colCount - 3] = value[row][read_Strata.get_TotalColumns() - 1];	//the last column is "Total acres"
 						}
+			         
+						//Only add sorter after having the data loaded
 						TableRowSorter<MyTableModel> sorter = new TableRowSorter<MyTableModel>(model);
 						table.setRowSorter(sorter);
-						table.setValueAt(data[0][0], 0, 0); //To help trigger the table refresh: fireTableDataChanged() and repaint();	
-						columnNames[0] = "Strata ID";
-						columnNames[1] = "Layer 1";
-						columnNames[2] = "Layer 2";
-						columnNames[3] = "Layer 3";
-						columnNames[4] = "Layer 4";
-						columnNames[5] = "Layer 5";
-						columnNames[6] = "Layer 6";
-						columnNames[7] = "Total area (acres)";
-						columnNames[colCount - 2] = "Age Class";
-						columnNames[colCount - 1] = "Strata in optimization model";
-						table.createDefaultColumnsFromModel(); // Very important code to refresh the number of Columns	shown
-						table.getColumnModel().getColumn(7).setPreferredWidth(120);	//Set width of Column "Total area" bigger
-				        table.getColumnModel().getColumn(colCount-1).setPreferredWidth(200);	//Set width of Column "Strata in optimization model" bigger
-				        
-
+				                  
 				        //Update Models OverView table
 				        data3[0][1] = "0 vs " + rowCount;
 				        table3.setValueAt(data3[0][1], 0, 1);
 				        
 				        availableAcres = 0;
 				        for (int row = 0; row < rowCount; row++) {
-				        	availableAcres = availableAcres + Double.parseDouble(data[row][7].toString());
+				        	availableAcres = availableAcres + Double.parseDouble(data[row][colCount - 3].toString());
 						}
 				        data3[1][1] = "0 vs " + availableAcres;
 				        table3.setValueAt(data3[1][1], 1, 1);
+						
 				        
 				        //Enable "Import Database"
 				        textField2.setText(null);
@@ -763,7 +753,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			        
 			        modeledAcres = 0;
 			        for (int row = 0; row < rowCount; row++) {
-			        	if (data[row][colCount -1]!=null && data[row][colCount -1].toString().equals("Yes"))	modeledAcres = modeledAcres + Double.parseDouble(data[row][7].toString());
+			        	if (data[row][colCount -1]!=null && data[row][colCount -1].toString().equals("Yes"))	modeledAcres = modeledAcres + Double.parseDouble(data[row][colCount - 3].toString());
 					}
 			        data3[1][1] = modeledAcres + " vs " + availableAcres;
 			        table3.setValueAt(data3[1][1], 1, 1);
@@ -883,62 +873,71 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		}
 	}
 
-	class PaneL_Model_Identification_Text extends JLayeredPane {
-	    public PaneL_Model_Identification_Text() {
-	         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-	    	
-	         rowCount = 0;
-	         colCount = 10;
-	         data = new Object[rowCount][colCount];
-	         columnNames= new String[] {"Strata ID" , "Layer 1", "Layer 2", "Layer 3", "Layer 4", "Layer 5", "Layer 6", 
-	 				"Total area (acres)", "Age Class", "Strata in optimization model"};
-	         
-//			// Populate the data matrix without any information
-//			for (int row = 0; row < 1; row++) {			// 1 row is ok
-//				for (int col = 0; col < colCount; ++col) {		//Number of Columns must match
-//					data[row][col] = "";
-//				}
-//			}
-	    	
-	    	
-	         //Create a table
-	         model = new MyTableModel();
-	         table = new JTable(model) {
-//	             //Implement table cell tool tips           
-//	             public String getToolTipText(MouseEvent e) {
-//	                 String tip = null;
-//	                 java.awt.Point p = e.getPoint();
-//	                 int rowIndex = rowAtPoint(p);
-//	                 int colIndex = columnAtPoint(p);
-//	                 try {
-//	                       tip = getValueAt(rowIndex, colIndex).toString();
-//	                 } catch (RuntimeException e1) {
-//	                	 System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
-//	                 }
-//	                 return tip;
-//	             }
-	         };
-	         //table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-	         table.getColumnModel().getColumn(7).setPreferredWidth(120);	//Set width of Column "Total area" bigger
-	         table.getColumnModel().getColumn(colCount-1).setPreferredWidth(200);	//Set width of Column "Strata in optimization model" bigger
-	         table.setPreferredScrollableViewportSize(new Dimension(500, 70));
-	         table.setFillsViewportHeight(true);
-	         table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);	  
-
-	         //Create the scroll pane and add the table to it.
-	         JScrollPane scrollPane = new JScrollPane(table);
-	  
-	         //Add the scroll pane to this panel.
-	         add(scrollPane);         
-	     }
-	}	
 		
+	class PaneL_Model_Identification_Text extends JLayeredPane {
+		public PaneL_Model_Identification_Text() {
+			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+			read_Identifiers = new Read_Indentifiers(file_StrataDefinition);
+			List<String> layers_Title = read_Identifiers.get_layers_Title();
+			List<String> layers_Title_ToolTip = read_Identifiers.get_layers_Title_ToolTip();
+	         
+			
+			rowCount = 0;
+			colCount = layers_Title.size() + 4;
+			columnNames = new String[colCount];
+
+			columnNames[0] = "Strata ID";		//add for the name of strata
+			for (int i = 0; i < layers_Title.size(); i++) {
+				columnNames[i+1] = layers_Title.get(i);			//add 6 layers to the column header name
+			}
+	         
+			columnNames[colCount - 3] = "Total area (acres)";	//add 3 more columns
+			columnNames[colCount - 2] = "Age Class";
+			columnNames[colCount - 1] = "Strata in optimization model";
+	         
+	         
+			//Create a table
+			model = new MyTableModel();
+			table = new JTable(model) {
+//				// Implement table cell tool tips
+//				public String getToolTipText(MouseEvent e) {
+//					String tip = null;
+//					java.awt.Point p = e.getPoint();
+//					int rowIndex = rowAtPoint(p);
+//					int colIndex = columnAtPoint(p);
+//					try {
+//						tip = getValueAt(rowIndex, colIndex).toString();
+//					} catch (RuntimeException e1) {
+//						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+//					}
+//					return tip;
+//				}
+			};
+
+			// table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+			table.setPreferredScrollableViewportSize(new Dimension(500, 70));
+			table.setFillsViewportHeight(true);
+			table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);	  
+//			table.createDefaultColumnsFromModel(); // Very important code to refresh the number of Columns	shown
+	        table.getColumnModel().getColumn(colCount - 3).setPreferredWidth(120);	//Set width of Column "Total area" bigger
+	        table.getColumnModel().getColumn(colCount - 1).setPreferredWidth(200);	//Set width of Column "Strata in optimization model" bigger
+	         
+	         
+ 
+			//Create the scroll pane and add the table to it.
+			JScrollPane scrollPane = new JScrollPane(table);
+
+			//Add the scroll pane to this panel.
+			add(scrollPane);      
+	     }
+	}
 	
 	class MyTableModel extends AbstractTableModel {
-	    	 
+
 		public MyTableModel() {
 
-		  }
+		}
 
 		public int getColumnCount() {
 			return colCount;
@@ -2405,12 +2404,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	    public void actionPerformed(ActionEvent e) {
 	    	
 	    	//Update GUI for time period 
-	    	for (int j = 0; j < checkboxStaticIdentifiers.get(7).size(); j++) {					
+	    	for (int j = 0; j < checkboxStaticIdentifiers.get(checkboxStaticIdentifiers.size() - 1).size(); j++) {			//The last element is Time period			
 				if (j < totalPeriod) {
-					checkboxStaticIdentifiers.get(7).get(j).setVisible(true);		//Periods to be visible 			
+					checkboxStaticIdentifiers.get(checkboxStaticIdentifiers.size() - 1).get(j).setVisible(true);		//Periods to be visible 			
 				} else {
-					checkboxStaticIdentifiers.get(7).get(j).setVisible(false);		//Periods to be invisible
-					checkboxStaticIdentifiers.get(7).get(j).setSelected(false);		//Periods to be unselected
+					checkboxStaticIdentifiers.get(checkboxStaticIdentifiers.size() - 1).get(j).setVisible(false);		//Periods to be invisible
+					checkboxStaticIdentifiers.get(checkboxStaticIdentifiers.size() - 1).get(j).setSelected(false);		//Periods to be unselected
 				}
 			}  	
 	    	
@@ -3191,23 +3190,25 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		File selectedStrataFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "Input 2 - SelectedStrata.txt");	
 		selectedStrataFile.deleteOnExit();
 		
-		//Only print out Strata with implemented methods <> null
-		try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(selectedStrataFile))) {
-			for (int j = 0; j < table.getColumnCount(); j++) {
-				fileOut.write(table.getColumnName(j) + "\t");
-			}
-			
-			for (int i = 0; i < table.getRowCount(); i++) {
-				if ((Object) table.getValueAt(i, table.getColumnCount()-1)!=null  &&  (Object) table.getValueAt(i, table.getColumnCount()-1)!="") {		//IF there is method set up for this strata
-					fileOut.newLine();
-					for (int j = 0; j < table.getColumnCount(); j++) {
-						fileOut.write((Object) (table.getValueAt(i, j)) + "\t");
+		if (data != null) {
+			//Only print out Strata with implemented methods <> null
+			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(selectedStrataFile))) {
+				for (int j = 0; j < columnNames.length; j++) { //Note: colCount = columnNames.length
+					fileOut.write(columnNames[j] + "\t");
+				}
+
+				for (int i = 0; i < data.length; i++) {
+					if (data[i][colCount - 1] == "Yes") { //IF strata is in optimization model
+						fileOut.newLine();
+						for (int j = 0; j < colCount; j++) {
+							fileOut.write(data[i][j] + "\t");
+						}
 					}
 				}
+				fileOut.close();
+			} catch (IOException e) {
+				System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			}
-			fileOut.close();
-		} catch (IOException e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 		}
 		return selectedStrataFile;
 	}
@@ -3218,22 +3219,25 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		File requirementsFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "Input 3 - CovertypeConversion.txt");
 		requirementsFile.deleteOnExit();
 		
-		try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(requirementsFile))) {
-			for (int j = 0; j < table4.getColumnCount(); j++) {
-				fileOut.write(table4.getColumnName(j) + "\t");
-			}
-			
-			for (int i = 0; i < table4.getRowCount(); i++) {
-				if ((Object) table4.getValueAt(i, table4.getColumnCount()-1)!=null  &&  (Object) table4.getValueAt(i, table4.getColumnCount()-1)!="") {		//IF there is method set up for this strata
-					fileOut.newLine();
-					for (int j = 0; j < table4.getColumnCount(); j++) {
-						fileOut.write((Object) (table4.getValueAt(i, j)) + "\t");
+		if (data4 != null) {
+			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(requirementsFile))) {
+				for (int j = 0; j < columnNames4.length; j++) {
+					fileOut.write(columnNames4[j] + "\t");
+				}
+
+				for (int i = 0; i < data4.length; i++) {
+					if (data4[i][colCount4 - 1] == "Yes") { //IF conversion is selected "Yes"
+						fileOut.newLine();
+						for (int j = 0; j < colCount4; j++) {
+							fileOut.write(data4[i][j] + "\t");
+						}
 					}
 				}
-			}
-			fileOut.close();
-		} catch (IOException e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+
+				fileOut.close();
+			} catch (IOException e) {
+				System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			} 
 		}
 		return requirementsFile;
 	}
@@ -3243,20 +3247,22 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		File MSFireFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "Input 4 - MSFire.txt");	
 		MSFireFile.deleteOnExit();
 		
-		try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(MSFireFile))) {
-			for (int j = 0; j < table5.getColumnCount(); j++) {
-				fileOut.write(table5.getColumnName(j) + "\t");
-			}
-			
-			for (int i = 0; i < table5.getRowCount(); i++) {
-				fileOut.newLine();
-				for (int j = 0; j < table5.getColumnCount(); j++) {
-					fileOut.write((Object) (table5.getValueAt(i, j)) + "\t");
+		if (data5 != null) {
+			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(MSFireFile))) {
+				for (int j = 0; j < columnNames5.length; j++) {
+					fileOut.write(columnNames5[j] + "\t");
 				}
-			}
-			fileOut.close();
-		} catch (IOException e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+
+				for (int i = 0; i < data5.length; i++) {
+					fileOut.newLine();
+					for (int j = 0; j < colCount5; j++) {
+						fileOut.write(data5[i][j] + "\t");
+					}
+				}
+				fileOut.close();
+			} catch (IOException e) {
+				System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			} 
 		}
 		return MSFireFile;
 	}	
@@ -3266,20 +3272,22 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		File SRDisturbancesFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "Input 5 - SRDisturbances.txt");	
 		SRDisturbancesFile.deleteOnExit();
 		
-		try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(SRDisturbancesFile))) {
-			for (int j = 0; j < table6.getColumnCount(); j++) {
-				fileOut.write(table6.getColumnName(j) + "\t");
-			}
-			
-			for (int i = 0; i < table6.getRowCount(); i++) {
-				fileOut.newLine();
-				for (int j = 0; j < table6.getColumnCount(); j++) {
-					fileOut.write((Object) (table6.getValueAt(i, j)) + "\t");
+		if (data6 != null) {
+			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(SRDisturbancesFile))) {
+				for (int j = 0; j < columnNames6.length; j++) {
+					fileOut.write(columnNames6[j] + "\t");
 				}
-			}
-			fileOut.close();
-		} catch (IOException e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+
+				for (int i = 0; i < data6.length; i++) {
+					fileOut.newLine();
+					for (int j = 0; j < colCount6; j++) {
+						fileOut.write(data6[i][j] + "\t");
+					}
+				}
+				fileOut.close();
+			} catch (IOException e) {
+				System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			} 
 		}
 		return SRDisturbancesFile;
 	}	
@@ -3289,30 +3297,33 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		File userConstraintsFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "Input 6 - UserConstraints.txt");
 		userConstraintsFile.deleteOnExit();
 		
-		//Only print out rows if columns  1, 2 or 4, 6, 7, 8 <> null
-		try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(userConstraintsFile))) {
-			for (int j = 0; j < table2.getColumnCount(); j++) {
-				fileOut.write(table2.getColumnName(j) + "\t");
-			}
-			
-			for (int i = 0; i < table2.getRowCount(); i++) {
-				boolean checkValidity = true;
-				for (int j = 1; j < table2.getColumnCount(); j++) {
-					if (j==1 || (j==2 && j==4) || j==6 || j==7 || j==8) {
-						if ((Object) (table2.getValueAt(i, j)) == null || (Object) (table2.getValueAt(i, j)) == "")		checkValidity = false;	
+		if (data2 != null) {
+			//Only print out rows if columns  1, 2 or 4, 6, 7, 8 <> null
+			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(userConstraintsFile))) {
+				for (int j = 0; j < columnNames2.length; j++) {
+					fileOut.write(columnNames2[j] + "\t");
+				}
+				
+				for (int i = 0; i < data2.length; i++) {
+					boolean checkValidity = true;
+					for (int j = 0; j < colCount2; j++) {
+						if (j == 1 || (j == 2 && j == 4) || j == 6 || j == 7 || j == 8) {
+							if (data2[i][j] == null || data2[i][j] == "")
+								checkValidity = false;
+						}	
+					}
+					
+					if (checkValidity == true) { // if columns  1, 2 or 4, 6, 7, 8 <> null then write to file
+						fileOut.newLine();
+						for (int j = 0; j < colCount2; j++) {
+							fileOut.write(data2[i][j] + "\t");
+						}
 					}
 				}
-								
-				if (checkValidity == true) { // if columns  1, 2 or 4, 6, 7, 8 <> null then write to file
-					fileOut.newLine();
-					for (int j = 0; j < table2.getColumnCount(); j++) {
-						fileOut.write((Object) (table2.getValueAt(i, j)) + "\t");
-					}
-				}
-			}
-			fileOut.close();
-		} catch (IOException e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+				fileOut.close();
+			} catch (IOException e) {
+				System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			} 
 		}
 		return userConstraintsFile;	
 	}
@@ -3322,20 +3333,22 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		File SRDrequirementsFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "Input 7 - SRDRequirements.txt");	
 		SRDrequirementsFile.deleteOnExit();
 		
-		try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(SRDrequirementsFile))) {
-			for (int j = 0; j < table7.getColumnCount(); j++) {
-				fileOut.write(table7.getColumnName(j) + "\t");
-			}
-			
-			for (int i = 0; i < table7.getRowCount(); i++) {
-				fileOut.newLine();
-				for (int j = 0; j < table7.getColumnCount(); j++) {
-					fileOut.write((Object) (table7.getValueAt(i, j)) + "\t");
+		if (data7 != null) {
+			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(SRDrequirementsFile))) {
+				for (int j = 0; j < columnNames7.length; j++) {
+					fileOut.write(columnNames7[j] + "\t");
 				}
-			}
-			fileOut.close();
-		} catch (IOException e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+
+				for (int i = 0; i < data7.length; i++) {
+					fileOut.newLine();
+					for (int j = 0; j < colCount7; j++) {
+						fileOut.write(data7[i][j] + "\t");
+					}
+				}
+				fileOut.close();
+			} catch (IOException e) {
+				System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			} 
 		}
 		return SRDrequirementsFile;
 	}

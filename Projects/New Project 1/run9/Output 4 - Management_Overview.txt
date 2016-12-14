@@ -1,0 +1,15 @@
+Strata ID	Layer 1	Layer 2	Layer 3	Layer 4	Layer 5	Layer 6	Natural Growth (acres)	Prescribed Burn (acres)	Group Selection (acres)	Even Age (acres)	Mixed Severity Wildfire (acres)
+BNNCPL	B	N	N	C	P	L	1204.6	0.0	0.0	0.0	63.4
+BNNCDS	B	N	N	C	D	S	0.0	79.8	0.0	0.0	4.2
+BNNCDP	B	N	N	C	D	P	73.15	0.0	0.0	0.0	3.85
+BNNCDM	B	N	N	C	D	M	0.0	513.0	0.0	0.0	27.0
+BNNCDL	B	N	N	C	D	L	1638.75	0.0	0.0	0.0	86.25
+BNNCCS	B	N	N	C	C	S	0.0	92.15	0.0	0.0	4.85
+BNNCCP	B	N	N	C	C	P	0.0	618.45	0.0	0.0	32.55
+BNNCCM	B	N	N	C	C	M	0.0	1285.35	0.0	0.0	67.65
+BNNCCL	B	N	N	C	C	L	0.0	0.0	3914.95	0.0	206.05
+BNNCIM	B	N	N	C	I	M	0.0	57.95	0.0	0.0	3.05
+BNNCIL	B	N	N	C	I	L	0.0	0.0	234.65	0.0	12.35
+BNNCLM	B	N	N	C	L	M	87.4	0.0	0.0	0.0	4.6
+BNNCLL	B	N	N	C	L	L	0.0	0.0	171.95	0.0	9.05
+BNNCNN	B	N	N	C	N	N	1279.0	0.0	0.0	0.0	0.0
