@@ -3,7 +3,6 @@ package spectrumYieldProject;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -11,11 +10,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.HierarchyEvent;
-import java.awt.event.HierarchyListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
@@ -30,12 +26,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultCellEditor;
@@ -60,13 +55,10 @@ import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
@@ -76,6 +68,7 @@ import javax.swing.table.TableRowSorter;
 import javax.swing.text.DefaultFormatter;
 
 import spectrumConvenienceClasses.FilesHandle;
+import spectrumConvenienceClasses.TableModelSpectrum;
 import spectrumROOT.Spectrum_Main;
 
 public class Panel_EditRun_Details extends JLayeredPane implements ActionListener {
@@ -88,16 +81,19 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private String newDefinition = "currently set to Default with 6 Layers";
 	
 	//6 panels for the selected Run
-	private PaneL_General_Inputs_GUI panelInput1_GUI;
-	private PaneL_General_Inputs_Text panelInput1_TEXT;
-	private PaneL_Model_Identifiniton_GUI panelInput2_GUI;
-	private PaneL_Model_Identification_Text panelInput2_TEXT;
-	private PaneL_CovertypeConversion_GUI panelInput3_GUI;
-	private PaneL_CovertypeConversion_Text panelInput3_TEXT;
-	private PaneL_Disturbances_GUI panelInput4_GUI;
-	private PaneL_Disturbances_Text panelInput4_TEXT;
-	private PaneL_UserConstraints_GUI panelInput5_GUI;
-	private PaneL_UserConstraints_Text panelInput5_TEXT;		
+	private General_Inputs_GUI paneL_General_Inputs_GUI;
+	private General_Inputs_Text panel_General_Inputs_Text;
+	private Model_Identifiniton_GUI panel_Model_Identifiniton_GUI;
+	private Model_Identification_Text panel_Model_Identification_Text;
+	private CovertypeConversion_GUI panel_CovertypeConversion_GUI;
+	private CovertypeConversion_Text panel_CovertypeConversion_Text;
+	private Disturbances_GUI panel_Disturbances_GUI;
+	private Disturbances_Text panel_Disturbances_Text;
+	private Management_Cost_GUI panel_Management_Cost_GUI;
+	private Management_Cost_Text panel_Management_Cost_Text;
+	private UserConstraints_GUI panel_UserConstraints_GUI;
+	private UserConstraints_Text panel_UserConstraints_Text;	
+	
 
 	private ImageIcon icon;
 	private Image scaleImage;
@@ -112,16 +108,23 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 	private int totalPeriod;
 	
+	
+	
+	
+	private int rowCount1, colCount1;
+	private String[] columnNames1;
+	private JTable table1;
+	private TableModelSpectrum model1;
+	private Object[][] data1;
+	
+	
 	private int rowCount, colCount;
 	private String[] columnNames;
 	private JTable table;
 	private MyTableModel model;
 	private Object[][] data;
 
-	
-	private JCheckBox[][] ConversionCheck_To;
-	
-	
+
 	private int rowCount2, colCount2;
 	private String[] columnNames2;
 	private JTable table2;
@@ -195,12 +198,13 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		radioPanel_Right.setLayout(new FlowLayout());		
 		radioGroup_Right = new ButtonGroup();
 		
-		radioButton_Right  = new JRadioButton[5];
+		radioButton_Right  = new JRadioButton[6];
 		radioButton_Right[0]= new JRadioButton("General Inputs");
 		radioButton_Right[1]= new JRadioButton("Model Identification");
 		radioButton_Right[2]= new JRadioButton("Covertype Conversion");
 		radioButton_Right[3]= new JRadioButton("Natural Disturbances");
-		radioButton_Right[4]= new JRadioButton("User Constraints");
+		radioButton_Right[4]= new JRadioButton("Management Cost");
+		radioButton_Right[5]= new JRadioButton("User Constraints");
 		radioButton_Right[0].setSelected(true);
 		for (int i = 0; i < radioButton_Right.length; i++) {
 				radioGroup_Right.add(radioButton_Right[i]);
@@ -216,21 +220,23 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 	
 		// Create all new 6 panels for the selected Run--------------------------------------------------
-		panelInput1_GUI = new PaneL_General_Inputs_GUI();
-		panelInput1_TEXT = new PaneL_General_Inputs_Text();
-		panelInput2_GUI = new PaneL_Model_Identifiniton_GUI();
-		panelInput2_TEXT = new PaneL_Model_Identification_Text();
-		panelInput3_GUI = new PaneL_CovertypeConversion_GUI();
-		panelInput3_TEXT = new PaneL_CovertypeConversion_Text();
-		panelInput4_GUI = new PaneL_Disturbances_GUI();
-		panelInput4_TEXT = new PaneL_Disturbances_Text();
-		panelInput5_GUI = new PaneL_UserConstraints_GUI();
-		panelInput5_TEXT = new PaneL_UserConstraints_Text();
+		paneL_General_Inputs_GUI = new General_Inputs_GUI();
+		panel_General_Inputs_Text = new General_Inputs_Text();
+		panel_Model_Identifiniton_GUI = new Model_Identifiniton_GUI();
+		panel_Model_Identification_Text = new Model_Identification_Text();
+		panel_CovertypeConversion_GUI = new CovertypeConversion_GUI();
+		panel_CovertypeConversion_Text = new CovertypeConversion_Text();
+		panel_Disturbances_GUI = new Disturbances_GUI();
+		panel_Disturbances_Text = new Disturbances_Text();
+		panel_Management_Cost_GUI = new Management_Cost_GUI();
+		panel_Management_Cost_Text = new Management_Cost_Text();
+		panel_UserConstraints_GUI = new UserConstraints_GUI();
+		panel_UserConstraints_Text = new UserConstraints_Text();
 					
 		
 		// Show the 2 panelInput of the selected Run
-		GUI_Text_splitPanel.setLeftComponent(panelInput1_GUI);
-		GUI_Text_splitPanel.setRightComponent(panelInput1_TEXT);	
+		GUI_Text_splitPanel.setLeftComponent(paneL_General_Inputs_GUI);
+		GUI_Text_splitPanel.setRightComponent(panel_General_Inputs_Text);	
 		
 		
 		// Add all components to The Panel------------------------------------------------------------
@@ -245,23 +251,26 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		for (int j = 0; j < radioButton_Right.length; j++) {
 			if (radioButton_Right[j].isSelected()) {		
 				if (j == 0) {
-					GUI_Text_splitPanel.setLeftComponent(panelInput1_GUI);
-					GUI_Text_splitPanel.setRightComponent(panelInput1_TEXT);
+					GUI_Text_splitPanel.setLeftComponent(paneL_General_Inputs_GUI);
+					GUI_Text_splitPanel.setRightComponent(panel_General_Inputs_Text);
 				} else if (j == 1) {
-					GUI_Text_splitPanel.setLeftComponent(panelInput2_GUI);
-					GUI_Text_splitPanel.setRightComponent(panelInput2_TEXT);
+					GUI_Text_splitPanel.setLeftComponent(panel_Model_Identifiniton_GUI);
+					GUI_Text_splitPanel.setRightComponent(panel_Model_Identification_Text);
 				} else if (j == 2) {
-					GUI_Text_splitPanel.setLeftComponent(panelInput3_GUI);
+					GUI_Text_splitPanel.setLeftComponent(panel_CovertypeConversion_GUI);
 					GUI_Text_splitPanel.setRightComponent(null);
-//					GUI_Text_splitPanel.setRightComponent(panelInput3_TEXT);
+//					GUI_Text_splitPanel.setRightComponent(panel_CovertypeConversion_Text);
 				} else if (j == 3) {
-					GUI_Text_splitPanel.setLeftComponent(panelInput4_GUI);
+					GUI_Text_splitPanel.setLeftComponent(panel_Disturbances_GUI);
 					GUI_Text_splitPanel.setRightComponent(null);
-//					GUI_Text_splitPanel.setRightComponent(panelInput4_TEXT);
+//					GUI_Text_splitPanel.setRightComponent(panel_Disturbances_Text);
 				} else if (j == 4) {
-					GUI_Text_splitPanel.setLeftComponent(panelInput5_GUI);
+					GUI_Text_splitPanel.setLeftComponent(panel_Management_Cost_GUI);
+					GUI_Text_splitPanel.setRightComponent(panel_Management_Cost_Text);
+				} else if (j == 5) {
+					GUI_Text_splitPanel.setLeftComponent(panel_UserConstraints_GUI);
 					GUI_Text_splitPanel.setRightComponent(null);
-//					GUI_Text_splitPanel.setRightComponent(panelInput5_TEXT);
+//					GUI_Text_splitPanel.setRightComponent(panel_UserConstraints_Text);
 				}
 			}
 		}
@@ -269,8 +278,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
     
 	// Panel General Inputs------------------------------------------------------------------------------------------------------	
-	class PaneL_General_Inputs_GUI extends JLayeredPane {
-		public PaneL_General_Inputs_GUI() {
+	class General_Inputs_GUI extends JLayeredPane {
+		public General_Inputs_GUI() {
 			setLayout(new GridLayout(0,4,30,0));		//2 last numbers are the gaps 			
 			
 			JLabel label1 = new JLabel("Total planning periods (decades)");
@@ -318,12 +327,13 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				public void actionPerformed(ActionEvent e) {
 					totalPeriod = Integer.parseInt(combo1.getSelectedItem().toString());
 					
-					// Apply any change in the GUI to the TEXT area	
-					String input0_info = label1.getText() + "	" + combo1.getSelectedItem().toString() + "\n"
-							+ label2.getText() + "	" + (Integer)spin2.getValue() + "\n"
-							+ label3.getText() + "	" + combo3.getSelectedItem().toString() + "\n"
-							+ label4.getText() + "	" + combo4.getSelectedItem().toString();
-					panelInput1_TEXT.setText(input0_info);
+					// Apply any change in the GUI to the table
+					data1[0][1] = combo1.getSelectedItem().toString();
+					data1[1][1] = (Integer)spin2.getValue();
+					data1[2][1] = combo3.getSelectedItem().toString();
+					data1[3][1] = combo4.getSelectedItem().toString();
+					model1.fireTableDataChanged();
+
 				}
 			};
 			
@@ -338,31 +348,58 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		        @Override
 		        public void stateChanged(ChangeEvent e) {
 		        	spin2.setValue(spin2.getValue());
-		        	// Apply any change in the GUI to the TEXT area	
-		        	String input0_info = label1.getText() + "	" + combo1.getSelectedItem().toString() + "\n"
-		        			+ label2.getText() + "	" + (Integer)spin2.getValue() + "\n"
-							+ label3.getText() + "	" + combo3.getSelectedItem().toString() + "\n"
-							+ label4.getText() + "	" + combo4.getSelectedItem().toString();
-					panelInput1_TEXT.setText(input0_info);
+		        	
+		        	// Apply any change in the GUI to the table
+					data1[0][1] = combo1.getSelectedItem().toString();
+					data1[1][1] = (Integer)spin2.getValue();
+					data1[2][1] = combo3.getSelectedItem().toString();
+					data1[3][1] = combo4.getSelectedItem().toString();
+					model1.fireTableDataChanged();
 		        }
 		    });
 		}
 	}
 
-	class PaneL_General_Inputs_Text extends JTextArea {
-		public PaneL_General_Inputs_Text() {		
-			setRows(10);		// set text areas with 10 rows when starts	
-			setEditable(false);
+	class General_Inputs_Text extends JScrollPane {
+		public General_Inputs_Text() {		
+			
+			//Setup the table--------------------------------------------------------------------------------
+			rowCount1 = 4;
+			colCount1 = 2;
+			data1 = new Object[rowCount1][colCount1];
+	        columnNames1= new String[] {"Input Description" , "Selected Option"};
+			
+	        data1[0][0] = "Total planning periods (decades)";		
+			data1[1][0] = "Solving time limit (minutes)";
+			data1[2][0] = "Annual discount rate (%)";
+			data1[3][0] = "Solver for optimization";
+	        
+
+			//Create a table
+	        model1 = new TableModelSpectrum(colCount1, rowCount1, columnNames1, data1);
+	        table1 = new JTable(model1);
+			
+	        DefaultTableCellRenderer renderer = (DefaultTableCellRenderer)table1.getDefaultRenderer(Object.class);
+	        renderer.setHorizontalAlignment(SwingConstants.LEFT);		// Set alignment of values in the table to the left side
+			table1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+			table1.getColumnModel().getColumn(0).setPreferredWidth(250);	//Set width of 1st Column bigger
+			table1.getColumnModel().getColumn(1).setPreferredWidth(100);	//Set width of 2nd Column bigger
+//			table1.setTableHeader(null);
+//			table1.setPreferredScrollableViewportSize(new Dimension(400, 100));
+//			table1.setFillsViewportHeight(true);
+	        table1.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+
+	        setViewportView(table1);
 		}
 	}
 
 	
 	// Panel Model_Identifiniton--------------------------------------------------------------------------------------------------
-	class PaneL_Model_Identifiniton_GUI extends JLayeredPane implements ItemListener {
+	class Model_Identifiniton_GUI extends JLayeredPane implements ItemListener {
 		// Define 28 check box for 6 layers
 		List<List<JCheckBox>> checkboxFilter;
 		
-		public PaneL_Model_Identifiniton_GUI() {
+		public Model_Identifiniton_GUI() {
 			setLayout(new GridBagLayout());
 			ToolTipManager.sharedInstance().setInitialDelay(0);		//Show toolTip immediately
 			
@@ -410,18 +447,18 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						newDefinition = file_StrataDefinition.getAbsolutePath();
 						
 						//create 4 new instances of the 2 Panels 
-						panelInput2_GUI = new PaneL_Model_Identifiniton_GUI();
-						panelInput2_TEXT = new PaneL_Model_Identification_Text();
-						panelInput3_GUI = new PaneL_CovertypeConversion_GUI();
-						panelInput3_TEXT = new PaneL_CovertypeConversion_Text();
-						panelInput4_GUI = new PaneL_Disturbances_GUI();
-						panelInput4_TEXT = new PaneL_Disturbances_Text();
-						panelInput5_GUI = new PaneL_UserConstraints_GUI();
-						panelInput5_TEXT = new PaneL_UserConstraints_Text();
+						panel_Model_Identifiniton_GUI = new Model_Identifiniton_GUI();
+						panel_Model_Identification_Text = new Model_Identification_Text();
+						panel_CovertypeConversion_GUI = new CovertypeConversion_GUI();
+						panel_CovertypeConversion_Text = new CovertypeConversion_Text();
+						panel_Disturbances_GUI = new Disturbances_GUI();
+						panel_Disturbances_Text = new Disturbances_Text();
+						panel_UserConstraints_GUI = new UserConstraints_GUI();
+						panel_UserConstraints_Text = new UserConstraints_Text();
 						
 						//and show the 2 new instances of Model_Definition Panel
-						GUI_Text_splitPanel.setLeftComponent(panelInput2_GUI);
-						GUI_Text_splitPanel.setRightComponent(panelInput2_TEXT);	
+						GUI_Text_splitPanel.setLeftComponent(panel_Model_Identifiniton_GUI);
+						GUI_Text_splitPanel.setRightComponent(panel_Model_Identification_Text);	
 					}
 				}
 			});
@@ -471,24 +508,24 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 							String s5 = data[row][5].toString();
 							String s6 = data[row][6].toString();
 							data[row][colCount - 2] = read_DatabaseTables.get_stratingAgeClass(s5, s6, "A", "0");							
-					        table.setValueAt(data[row][colCount - 2], row, colCount - 2);
+							model.fireTableDataChanged();
 						}
 				      
 						 //Update Models OverView table
 				        data3[2][1] = yieldTable_values.length;
-				        table3.setValueAt(data3[2][1], 2, 1);
+				        model3.fireTableDataChanged();
 				        
-				        int total_0yieldtable =0;
+				        int total_yieldtable =0;
 				        for (int row = 0; row < rowCount; row++) {				        	
-				        	if (data[row][colCount -2].toString().equals("not found"))		total_0yieldtable = total_0yieldtable +1;
+				        	if (data[row][colCount -2].toString().equals("not found"))		total_yieldtable = total_yieldtable +1;
 						}
-				        data3[3][1] = total_0yieldtable;
-				        table3.setValueAt(data3[3][1], 3, 1);
+				        data3[3][1] = total_yieldtable;
+				        model3.fireTableDataChanged();
 				        
 						
 						//create 2 new instances of this Panel 
-						panelInput5_GUI = new PaneL_UserConstraints_GUI();
-						panelInput5_TEXT = new PaneL_UserConstraints_Text();
+						panel_UserConstraints_GUI = new UserConstraints_GUI();
+						panel_UserConstraints_Text = new UserConstraints_Text();
 					}
 				}
 			});
@@ -548,14 +585,14 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				                  
 				        //Update Models OverView table
 				        data3[0][1] = "0 vs " + rowCount;
-				        table3.setValueAt(data3[0][1], 0, 1);
+				        model3.fireTableDataChanged();
 				        
 				        availableAcres = 0;
 				        for (int row = 0; row < rowCount; row++) {
 				        	availableAcres = availableAcres + Double.parseDouble(data[row][colCount - 3].toString());
 						}
 				        data3[1][1] = "0 vs " + availableAcres;
-				        table3.setValueAt(data3[1][1], 1, 1);
+				        model3.fireTableDataChanged();
 						
 				        
 				        //Enable "Import Database"
@@ -701,7 +738,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	        DefaultTableCellRenderer renderer = (DefaultTableCellRenderer)table3.getDefaultRenderer(Object.class);
 	        renderer.setHorizontalAlignment(SwingConstants.LEFT);		// Set alignment of values in the table to the left side
 //	        table3.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-	        table3.getColumnModel().getColumn(0).setPreferredWidth(200);	//Set width of 1st Column bigger
+	        table3.getColumnModel().getColumn(0).setPreferredWidth(250);	//Set width of 1st Column bigger
 	        table3.setTableHeader(null);
 	        table3.setPreferredScrollableViewportSize(new Dimension(400, 100));
 	        table3.setFillsViewportHeight(true);
@@ -748,7 +785,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						if (data[row][colCount -1]!=null && data[row][colCount -1].toString().equals("Yes"))	modeledStrata = modeledStrata + 1;
 					}
 			        data3[0][1] = modeledStrata + " vs " + rowCount;
-			        table3.setValueAt(data3[0][1], 0, 1);
+			        model3.fireTableDataChanged();
 			        
 			        
 			        modeledAcres = 0;
@@ -756,7 +793,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			        	if (data[row][colCount -1]!=null && data[row][colCount -1].toString().equals("Yes"))	modeledAcres = modeledAcres + Double.parseDouble(data[row][colCount - 3].toString());
 					}
 			        data3[1][1] = modeledAcres + " vs " + availableAcres;
-			        table3.setValueAt(data3[1][1], 1, 1);
+			        model3.fireTableDataChanged();
 				}
 			});
 			c2.gridx = 0;
@@ -795,7 +832,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						if (data[row][colCount -1]!=null && data[row][colCount -1].toString().equals("Yes"))	modeledStrata = modeledStrata + 1;
 					}
 			        data3[0][1] = modeledStrata + " vs " + rowCount;
-			        table3.setValueAt(data3[0][1], 0, 1);
+			        model3.fireTableDataChanged();
 			        
 			        
 			        modeledAcres = 0;
@@ -803,7 +840,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			        	if (data[row][colCount -1]!=null && data[row][colCount -1].toString().equals("Yes"))	modeledAcres = modeledAcres + Double.parseDouble(data[row][7].toString());
 					}
 			        data3[1][1] = modeledAcres + " vs " + availableAcres;
-			        table3.setValueAt(data3[1][1], 1, 1);
+			        model3.fireTableDataChanged();
 				}
 			});
 			c2.gridx = 1;
@@ -847,35 +884,34 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		//Listeners for checkBox Filter--------------------------------------------------------------------
 		public void itemStateChanged(ItemEvent e) {
 
-			//This help filter to get the strata as specified by the CheckBoxes
-			TableRowSorter<MyTableModel> sorter = new TableRowSorter<MyTableModel>(model);
-			table.setRowSorter(sorter);			
-			List<RowFilter<MyTableModel, Object>> filters, filters2;
-
-			filters2  = new ArrayList<RowFilter<MyTableModel,Object>>();
-			
-			for (int i = 0; i < checkboxFilter.size(); i++) {
-				RowFilter<MyTableModel, Object> layer_filter = null;
-				filters  = new ArrayList<RowFilter<MyTableModel,Object>>();
-				for (int j = 0; j < checkboxFilter.get(i).size(); j++) {
-					if (checkboxFilter.get(i).get(j).isSelected()) {			
-						filters.add(RowFilter.regexFilter(checkboxFilter.get(i).get(j).getText(), i + 1));	// i+1 is the table column containing the first layer	
+			if (data != null) {		//Only allow sorter if the data of existing strata is loaded
+				//This help filter to get the strata as specified by the CheckBoxes
+				TableRowSorter<MyTableModel> sorter = new TableRowSorter<MyTableModel>(model);
+				table.setRowSorter(sorter);
+				List<RowFilter<MyTableModel, Object>> filters, filters2;
+				filters2 = new ArrayList<RowFilter<MyTableModel, Object>>();
+				for (int i = 0; i < checkboxFilter.size(); i++) {
+					RowFilter<MyTableModel, Object> layer_filter = null;
+					filters = new ArrayList<RowFilter<MyTableModel, Object>>();
+					for (int j = 0; j < checkboxFilter.get(i).size(); j++) {
+						if (checkboxFilter.get(i).get(j).isSelected()) {
+							filters.add(RowFilter.regexFilter(checkboxFilter.get(i).get(j).getText(), i + 1)); // i+1 is the table column containing the first layer	
+						}
 					}
+					layer_filter = RowFilter.orFilter(filters);
+
+					filters2.add(layer_filter);
 				}
-				layer_filter = RowFilter.orFilter(filters);
-				
-				filters2.add(layer_filter);
+				RowFilter<MyTableModel, Object> combine_AllFilters = null;
+				combine_AllFilters = RowFilter.andFilter(filters2);
+				sorter.setRowFilter(combine_AllFilters);
 			}
-			
-			RowFilter<MyTableModel, Object> combine_AllFilters = null;
-			combine_AllFilters = RowFilter.andFilter(filters2);
-			sorter.setRowFilter(combine_AllFilters);
 		}
 	}
 
 		
-	class PaneL_Model_Identification_Text extends JLayeredPane {
-		public PaneL_Model_Identification_Text() {
+	class Model_Identification_Text extends JLayeredPane {
+		public Model_Identification_Text() {
 			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 			read_Identifiers = new Read_Indentifiers(file_StrataDefinition);
@@ -979,9 +1015,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 		public void setValueAt(Object value, int row, int col) {
 			data[row][col] = value;
-			fireTableCellUpdated(row, col);
 			fireTableDataChanged();
-			repaint();
 		}
 	}
 	
@@ -1027,16 +1061,14 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 		public void setValueAt(Object value, int row, int col) {
 			data3[row][col] = value;
-			fireTableCellUpdated(row, col);
 			fireTableDataChanged();
-			repaint();
 		}
 	}	
 	
 	
 	// Panel Covertype Conversion------------------------------------------------------------------------------------------------
-	class PaneL_CovertypeConversion_GUI extends JLayeredPane {
-		public PaneL_CovertypeConversion_GUI() {
+	class CovertypeConversion_GUI extends JLayeredPane {
+		public CovertypeConversion_GUI() {
 			setLayout(new GridBagLayout());
 			ToolTipManager.sharedInstance().setInitialDelay(0);		//Show toolTip immediately
 			
@@ -1048,16 +1080,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			// 1st grid -----------------------------------------------------------------------
 			// 1st grid -----------------------------------------------------------------------
-			JPanel EArequirements_Panel = new JPanel();		
-			TitledBorder border2 = new TitledBorder("Requirements of Even Age Method: Cover Type Conversion & Rotation Age-Class");
-			border2.setTitleJustification(TitledBorder.CENTER);
-			EArequirements_Panel.setBorder(border2);
-			EArequirements_Panel.setLayout(new GridBagLayout());
-			GridBagConstraints c2 = new GridBagConstraints();
-			c2.fill = GridBagConstraints.BOTH;
-			c2.weightx = 1;
-		    c2.weighty = 1;
-
 			int total_CoverType = allLayers.get(4).size();		// total number of elements - 1 in layer5 Cover Type (0 to...)
 				
 
@@ -1179,73 +1201,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	        table4.setFillsViewportHeight(true);
 	        table4.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 	        
-	        JScrollPane Requirements_ScrollPane = new JScrollPane();
-	        Requirements_ScrollPane.setViewportView(table4);
-	        
-		    c2.gridx = 0;
-			c2.gridy = 0;
-			c2.weightx = 1;
-		    c2.weighty = 1;
-		    EArequirements_Panel.add(Requirements_ScrollPane, c2);							
-			
-		
-//			//Labels for Cover Type From
-//			 List<JLabel> CTfrom_lable = new ArrayList<JLabel>();
-//			for (int i = 0; i < total_CoverType; i++) {
-//				CTfrom_lable.add(new JLabel("        " + allLayers.get(4).get(i) + "      regenerated as     "));
-//				CTfrom_lable.get(i).setToolTipText(allLayers_ToolTips.get(4).get(i));
-//				c2.gridx = 0;
-//				c2.gridy = i + 1;
-//				c2.gridwidth = 1;
-//				Requirements_Panel.add(CTfrom_lable.get(i), c2);
-//			}
-//			
-//			//CheckBox for Cover Type To
-//			ConversionCheck_To = new JCheckBox[total_CoverType][total_CoverType];
-//		    for (int i = 0; i < total_CoverType; i++) {
-//		    	   for (int j = 0; j < total_CoverType; j++) {
-//				    	ConversionCheck_To[i][j] = new JCheckBox(allLayers.get(4).get(j));
-//				    	ConversionCheck_To[i][j].setToolTipText(allLayers_ToolTips.get(4).get(j));
-//				    	c2.gridx = j + 1;
-//						c2.gridy = i+1;
-//						c2.gridwidth = 1;
-//						Requirements_Panel.add(ConversionCheck_To[i][j], c2);
-//						if (i==j) ConversionCheck_To[i][j].setSelected(true);
-//						
-//						
-//						//Make label Enable after a checkbox is selected
-//						int current_i = i;
-//						int current_j = j;
-//						ConversionCheck_To[i][j].addActionListener(new ActionListener() {	
-//							@Override
-//							public void actionPerformed(ActionEvent actionEvent) {
-//								if (ConversionCheck_To[current_i][current_j].isSelected()) {
-//									CTfrom_lable.get(current_i).setEnabled(true);
-//								}					
-//							}
-//						});
-//					}
-//		    	   			
-//					//add listeners to select all or deselect all
-//		    		int curent_index = i;
-//					CTfrom_lable.get(i).addMouseListener(new MouseAdapter() {
-//						@Override
-//						public void mouseClicked(MouseEvent e) {
-//							if (CTfrom_lable.get(curent_index).isEnabled()) {	
-//								for (int j = 0; j < total_CoverType; j++) {		//Loop all elements in each layer
-//									ConversionCheck_To[curent_index][j].setSelected(false);
-//								}
-//								CTfrom_lable.get(curent_index).setEnabled(false);
-//							} else {
-//								for (int j = 0; j < total_CoverType; j++) {		//Loop all elements in each layer
-//									ConversionCheck_To[curent_index][j].setSelected(true);
-//								}
-//								CTfrom_lable.get(curent_index).setEnabled(true);
-//							}
-//						}
-//					});
-//			}
-
+	        //Put table4 into CovertypeConversion_EA_ScrollPane
+	        JScrollPane CovertypeConversion_EA_ScrollPane = new JScrollPane();
+	        TitledBorder border2 = new TitledBorder("Requirements of Even Age Method: Cover Type Conversion & Rotation Age-Class");
+			border2.setTitleJustification(TitledBorder.CENTER);
+			CovertypeConversion_EA_ScrollPane.setBorder(border2);
+	        CovertypeConversion_EA_ScrollPane.setViewportView(table4);						
 			// End of 1st grid -----------------------------------------------------------------------
 			// End of 1st grid -----------------------------------------------------------------------
 			
@@ -1253,16 +1214,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		    
 			// 2nd grid -----------------------------------------------------------------------
 			// 2nd grid -----------------------------------------------------------------------
-			JPanel SRDrequirements_Panel = new JPanel();		
-			TitledBorder border3 = new TitledBorder("Requirements of Stand Replacing Disturbances: Cover Type Conversion & Proportion (%)");
-			border3.setTitleJustification(TitledBorder.CENTER);
-			SRDrequirements_Panel.setBorder(border3);
-			SRDrequirements_Panel.setLayout(new GridBagLayout());
-			GridBagConstraints c3 = new GridBagConstraints();
-			c3.fill = GridBagConstraints.BOTH;
-			c3.weightx = 1;
-		    c3.weighty = 1;
-				
 
 			//Setup the table--------------------------------------------------------------------------------
 			rowCount7 = total_CoverType*total_CoverType;
@@ -1328,14 +1279,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	        table7.setFillsViewportHeight(true);
 	        table7.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 	        
-	        JScrollPane SRDrequirements_ScrollPane = new JScrollPane();
-	        SRDrequirements_ScrollPane.setViewportView(table7);
-	        
-		    c3.gridx = 0;
-			c3.gridy = 0;
-			c3.weightx = 1;
-		    c3.weighty = 1;
-		    SRDrequirements_Panel.add(SRDrequirements_ScrollPane, c3);							
+	        //Put table7 into CovertypeConversion_SRD_ScrollPane
+			JScrollPane CovertypeConversion_SRD_ScrollPane = new JScrollPane();
+			TitledBorder border3 = new TitledBorder("Requirements of Stand Replacing Disturbances: Cover Type Conversion & Proportion (%)");
+			border3.setTitleJustification(TitledBorder.CENTER);
+			CovertypeConversion_SRD_ScrollPane.setBorder(border3);
+	        CovertypeConversion_SRD_ScrollPane.setViewportView(table7);						
 			// End of 2nd grid -----------------------------------------------------------------------
 			// End of 2nd grid -----------------------------------------------------------------------		    
 		    
@@ -1350,19 +1299,19 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		    c.weighty = 1;
 
 			
-			// Add the 1st grid - EArequirements_Panel to the main Grid	
+			// Add the 1st grid - CovertypeConversion_EA_ScrollPane to the main Grid	
 			c.gridx = 0;
 			c.gridy = 0;
 			c.gridwidth = 1;
 			c.gridheight = 1;
-			super.add(EArequirements_Panel, c);
+			super.add(CovertypeConversion_EA_ScrollPane, c);
 			
-			// Add the 1st grid - SRDrequirements_Panel to the main Grid	
+			// Add the 1st grid - CovertypeConversion_SRD_ScrollPane to the main Grid	
 			c.gridx = 0;
 			c.gridy = 1;
 			c.gridwidth = 1;
 			c.gridheight = 1;
-			super.add(SRDrequirements_Panel, c);
+			super.add(CovertypeConversion_SRD_ScrollPane, c);
 		}
 	}
 
@@ -1416,9 +1365,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						"Your input has not been accepted. Only age classes in the range 1-100 would be allowed.");
 			} else {
 				data4[row][col] = value;
-				fireTableCellUpdated(row, col);
 				fireTableDataChanged();
-				repaint();
 			}
 		}
 	}	
@@ -1500,15 +1447,13 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				}
 				
 				
-				fireTableCellUpdated(row, col);
 				fireTableDataChanged();
-				repaint();
 			}
 		}
 	}		
 		
-	class PaneL_CovertypeConversion_Text extends JLayeredPane {
-	    public PaneL_CovertypeConversion_Text() {
+	class CovertypeConversion_Text extends JLayeredPane {
+	    public CovertypeConversion_Text() {
 
 	    	
 	     }
@@ -1516,8 +1461,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 
 	// Panel Disturbances-----------------------------------------------------------------------------------------------------------
-	class PaneL_Disturbances_GUI extends JLayeredPane {
-		public PaneL_Disturbances_GUI() {
+	class Disturbances_GUI extends JLayeredPane {
+		public Disturbances_GUI() {
 			setLayout(new GridBagLayout());
 			ToolTipManager.sharedInstance().setInitialDelay(0);		//Show toolTip immediately
 			
@@ -1529,19 +1474,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			// 1st grid -----------------------------------------------------------------------
 			// 1st grid -----------------------------------------------------------------------
-			JPanel MixedFire_Panel = new JPanel();		
-			TitledBorder border2 = new TitledBorder("Specify the proportion of exsiting strata area (%) sufferred from Mixed Severity Wildfire across all time periods");
-			border2.setTitleJustification(TitledBorder.CENTER);
-			MixedFire_Panel.setBorder(border2);
-			MixedFire_Panel.setLayout(new GridBagLayout());
-			GridBagConstraints c2 = new GridBagConstraints();
-			c2.fill = GridBagConstraints.BOTH;
-			c2.weightx = 1;
-		    c2.weighty = 1;
-
 			int total_CoverType = allLayers.get(4).size();		// total number of elements - 1 in layer5 Cover Type (0 to...)
-			int total_SizeClass = allLayers.get(5).size();		// total number of elements - 1 in layer6 Size Class (0 to...)
-			
+			int total_SizeClass = allLayers.get(5).size();		// total number of elements - 1 in layer6 Size Class (0 to...)			
 			
 			//Setup the table--------------------------------------------------------------------------------
 			rowCount5 = total_CoverType*total_SizeClass;
@@ -1564,7 +1498,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			//Create a table
 	        model5 = new MyTableModel5();
 			table5 = new JTable(model5){
-	             //Implement table cell tool tips           
+				@Override
+				//Implement table cell tool tips           
 				public String getToolTipText(MouseEvent e) {
 					String tip = null;
 					java.awt.Point p = e.getPoint();
@@ -1592,6 +1527,24 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					}
 					return tip;
 				}
+				
+				@Override			//These override is to make the width of the cell fit all contents of the cell
+				public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+					// For the cells in table								
+					Component component = super.prepareRenderer(renderer, row, column);
+					int rendererWidth = component.getPreferredSize().width;
+					TableColumn tableColumn = getColumnModel().getColumn(column);
+					int maxWidth = Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth());
+					
+					// For the column names
+					TableCellRenderer renderer2 = table.getTableHeader().getDefaultRenderer();	
+					Component component2 = renderer2.getTableCellRendererComponent(table,
+				            tableColumn.getHeaderValue(), false, false, -1, column);
+					maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
+					
+					tableColumn.setPreferredWidth(maxWidth);
+					return component;
+				}		
 			};
 			
 			//Set Color and Alighment for Cells
@@ -1656,17 +1609,17 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 //	        table5.getColumnModel().getColumn(0).setPreferredWidth(200);	//Set width of 1st Column bigger
 //	        table5.setTableHeader(null);
 	        table5.setPreferredScrollableViewportSize(new Dimension(400, 120));
+//	        table5.setAutoResizeMode(0);
 	        table5.setFillsViewportHeight(true);
 	        table5.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 	        
-	        JScrollPane MixedFire_ScrollPane = new JScrollPane();
-	        MixedFire_ScrollPane.setViewportView(table5);
 	        
-		    c2.gridx = 0;
-			c2.gridy = 0;
-			c2.weightx = 1;
-		    c2.weighty = 1;
-		    MixedFire_Panel.add(MixedFire_ScrollPane, c2);							
+	        //Put table5 into MixedFire_ScrollPane
+	        JScrollPane MixedFire_ScrollPane = new JScrollPane();
+	    	TitledBorder border2 = new TitledBorder("Specify the proportion of exsiting strata area (%) sufferred from Mixed Severity Wildfire across all time periods");
+			border2.setTitleJustification(TitledBorder.CENTER);
+			MixedFire_ScrollPane.setBorder(border2);
+	        MixedFire_ScrollPane.setViewportView(table5);			
 			// End of 1st grid -----------------------------------------------------------------------
 			// End of 1st grid -----------------------------------------------------------------------
 			
@@ -1675,17 +1628,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		    
 			// 2nd grid -----------------------------------------------------------------------
 			// 2nd grid -----------------------------------------------------------------------
-			JPanel StandReplacing_Panel = new JPanel();		
-			TitledBorder border3 = new TitledBorder("Specify the proportion of regenerated strata area (%) lost due to Stand Replacing Disturbances in each time period");
-			border3.setTitleJustification(TitledBorder.CENTER);
-			StandReplacing_Panel.setBorder(border3);
-			StandReplacing_Panel.setLayout(new GridBagLayout());
-			GridBagConstraints c3 = new GridBagConstraints();
-			c3.fill = GridBagConstraints.BOTH;
-			c3.weightx = 1;
-		    c3.weighty = 1;
 
-		    
 			//Setup the table--------------------------------------------------------------------------------
 			rowCount6 = 30;
 			colCount6 = total_CoverType + 1;
@@ -1778,14 +1721,13 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	        table6.setFillsViewportHeight(true);
 	        table6.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 	        
-	        JScrollPane StandReplacing_ScrollPane = new JScrollPane();
-	        StandReplacing_ScrollPane.setViewportView(table6);
 	        
-		    c3.gridx = 0;
-			c3.gridy = 0;
-			c3.weightx = 1;
-		    c3.weighty = 1;
-		    StandReplacing_Panel.add(StandReplacing_ScrollPane, c3);							
+	        //Put table6 into StandReplacing_ScrollPane
+	        JScrollPane StandReplacing_ScrollPane = new JScrollPane();
+	        TitledBorder border3 = new TitledBorder("Specify the proportion of regenerated strata area (%) lost due to Stand Replacing Disturbances in each time period");
+			border3.setTitleJustification(TitledBorder.CENTER);
+			StandReplacing_ScrollPane.setBorder(border3);
+	        StandReplacing_ScrollPane.setViewportView(table6);
 			// End of 2nd grid -----------------------------------------------------------------------
 			// End of 2nd grid -----------------------------------------------------------------------		    
 		    
@@ -1801,19 +1743,19 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		    c.weighty = 1;
 
 			
-			// Add the 1st grid - MixedFire_Panel to the main Grid	
+			// Add the 1st grid - MixedFire_ScrollPane to the main Grid	
 			c.gridx = 0;
 			c.gridy = 0;
 			c.gridwidth = 1;
 			c.gridheight = 1;
-			super.add(MixedFire_Panel, c);
+			super.add(MixedFire_ScrollPane, c);
 			
-			// Add the 2nd grid - StandReplacing_Panel to the main Grid	
+			// Add the 2nd grid - StandReplacing_ScrollPane to the main Grid	
 			c.gridx = 0;
 			c.gridy = 1;
 			c.gridwidth = 1;
 			c.gridheight = 1;
-			super.add(StandReplacing_Panel, c);
+			super.add(StandReplacing_ScrollPane, c);
 		}
 
 	}
@@ -1868,9 +1810,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						"Your input has not been accepted. Only double values in the range 0-100 (%) would be allowed.");
 			} else {
 				data5[row][col] = value;
-				fireTableCellUpdated(row, col);
 				fireTableDataChanged();
-				repaint();
 			}
 		}
 	}	
@@ -1925,178 +1865,187 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						"Your input has not been accepted. Only double values in the range 0-100 (%) would be allowed.");
 			} else {
 				data6[row][col] = value;
-				fireTableCellUpdated(row, col);
 				fireTableDataChanged();
-				repaint();
 			}
 		}
 	}	
 		
-	class PaneL_Disturbances_Text extends JLayeredPane {
-		public PaneL_Disturbances_Text() {
+	class Disturbances_Text extends JLayeredPane {
+		public Disturbances_Text() {
 
 		}
 	}
 	
 	
-	// Panel User Constraints--------------------------------------------------------------------------------------------------------
-	class PaneL_UserConstraints_GUI extends JLayeredPane implements ActionListener {
-		List<List<JCheckBox>> checkboxStaticIdentifiers;
-		checkboxScrollPanel parametersScrollPanel;
-		checkbox_dynamicScrollPanel dynamic_identifiersScrollPanel;
-//		List<List<JCheckBox>> checkboxDynamicIdentifiers;
-//		List<JCheckBox> checkbox_select_DynamicIdentifiers;
-//		List<JCheckBox> checkboxParameter;
+	// Panel Management_Cost------------------------------------------------------------------------------------------------------	
+	class Management_Cost_GUI extends JLayeredPane {
+		public Management_Cost_GUI() {
+			
+			// This all_actions List contains all actions loaded from yield tables------------------------------------------------------------
+			List<String> all_actions = new ArrayList<String>();
+			all_actions.add("Pre-Commercial Thin Type 1");
+			all_actions.add("Pre-Commercial Thin Type 2");
+			all_actions.add("Pre-Commercial Thin Type 3");
+			all_actions.add("Commercial Thin Type 1");
+			all_actions.add("Commercial Thin Type 2");
+			all_actions.add("Commercial Thin Type 3");
+			all_actions.add("Clear Cut Type 1");
+			all_actions.add("Clear Cut Type 2");
+			all_actions.add("Clear Cut Type 3");
+			all_actions.add("Understory Burn Type 1");
+			all_actions.add("Understory Burn Type 2");
+			all_actions.add("Understory Burn Type 3");
+			all_actions.add("Broadcast Burn");
+			all_actions.add("Seed Cut");
+			all_actions.add("Overstory Removal");
+			all_actions.add("Group Openning Type 1");
+			all_actions.add("Group Openning Type 2");
+			all_actions.add("Group Openning Type 3");
+			all_actions.add("Single Tree Openning");
+			all_actions.add("Artificial Regeneration");
+			all_actions.add("Tree Planting");
+			all_actions.add("Weed Treatments");
 		
-		public PaneL_UserConstraints_GUI() {
-			setLayout(new GridBagLayout());
-			ToolTipManager.sharedInstance().setInitialDelay(0);		//Show toolTip immediately	
-				
-			// 1st grid -----------------------------------------------------------------------
-			// 1st grid -----------------------------------------------------------------------						
-			read_Identifiers = new Read_Indentifiers(file_StrataDefinition);
+			JTextArea action_info = new JTextArea();
+			action_info.setBackground(new Color(0,0,0,0));
+			action_info.setEditable(false);
+			action_info.setLineWrap(true);
+			action_info.setWrapStyleWord(true);
+			action_info.append("SpectrumLite is assuming that it found " + all_actions.size() + 
+					" unique management actions across all" /*+ yieldTable_values.length*/ + " yield tables in your database"  + "\n");	
+			action_info.append("All Base Costs are set to 100 as default. Please re-define your true costs");	
 			
-			List<String> layers_Title = read_Identifiers.get_layers_Title();
-			List<String> layers_Title_ToolTip = read_Identifiers.get_layers_Title_ToolTip();
-			List<List<String>> allLayers =  read_Identifiers.get_allLayers();
-			List<List<String>> allLayers_ToolTips = read_Identifiers.get_allLayers_ToolTips();
-
-			int total_layers = allLayers.size();				//Remove the last 1 layers				= allLayers.size() - 1
-//			int total_layers_ToolTips = allLayers_ToolTips.size() -1;	//Remove the last 1 layers			= allLayers.size() - 1
-
+			JScrollPane action_info_scroll = new JScrollPane(action_info); //place the JTextArea in a scroll pane
+			action_info_scroll.setBorder(BorderFactory.createEmptyBorder());
+			action_info_scroll.setPreferredSize(new Dimension(100, 50));
+			// This all_actions List contains all actions loaded from yield tables------------------------------------------------------------
 
 			
-			// Add 3 more into static identifiers
-			List<String> MethodsPeriodsAges_Title = read_Identifiers.get_MethodsPeriodsAges_Title();
-			List<List<String>> MethodsPeriodsAges =  read_Identifiers.get_MethodsPeriodsAges();		
-			
-			layers_Title.addAll(MethodsPeriodsAges_Title);
-			layers_Title_ToolTip.addAll(MethodsPeriodsAges_Title);
-			allLayers.addAll(MethodsPeriodsAges);
-			allLayers_ToolTips.addAll(MethodsPeriodsAges);
-			
-			int total_staticIdentifiers = total_layers + MethodsPeriodsAges.size();
+		
 			
 			
 			
-			//Add all layers labels and checkboxes to identifiersPanel
-			JPanel identifiersPanel = new JPanel();		
-			identifiersPanel.setLayout(new GridBagLayout());
-			GridBagConstraints c1 = new GridBagConstraints();
-			c1.fill = GridBagConstraints.HORIZONTAL;
-			c1.weightx = 1;
-		    c1.weighty = 1;
+			
+			
+			
+	
+			JSplitPane splitPanel = new JSplitPane();
+			// splitPanel.setResizeWeight(0.15);
+//			splitPanel.setOneTouchExpandable(true);
+			splitPanel.setDividerLocation(250);
+			splitPanel.setDividerSize(3);
+			// splitPanel.getComponent(2).setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-		    
-		    
-		    
-	    	JScrollPane identifiersScrollPanel = new JScrollPane(identifiersPanel);
-			TitledBorder border1 = new TitledBorder("Static identifiers for VARIABLES (from model definition)");
-			border1.setTitleJustification(TitledBorder.CENTER);
-			identifiersScrollPanel.setBorder(border1);
-			identifiersScrollPanel.setPreferredSize(new Dimension(100, 250));
-		    
-		    
-		    
-			//Add all layers labels
-		    List<JLabel> layers_Title_Label = new ArrayList<JLabel>();
-			for (int i = 0; i < total_staticIdentifiers; i++) {
-				layers_Title_Label.add(new JLabel(layers_Title.get(i)));
-				layers_Title_Label.get(i).setToolTipText(layers_Title_ToolTip.get(i));
-				
-				//add listeners to select all or deselect all
-				int curent_index = i;
-				layers_Title_Label.get(curent_index).addMouseListener(new MouseAdapter() {
+			
+			// Left split panel--------------------------------------------------------------------------------
+			JScrollPane scrollPane_Left = new JScrollPane();
+			TitledBorder border = new TitledBorder("Management Action List");
+			border.setTitleJustification(TitledBorder.CENTER);
+			scrollPane_Left.setBorder(border);
+			scrollPane_Left.setPreferredSize(new Dimension(250, 300));
+			splitPanel.setLeftComponent(scrollPane_Left);
+			
+			// Add all selected Runs to radioPanel and add that panel to scrollPane_Left
+			JPanel radioPanel_Left = new JPanel();
+			radioPanel_Left.setLayout(new BoxLayout(radioPanel_Left, BoxLayout.Y_AXIS));
+			ButtonGroup radioGroup_Left = new ButtonGroup();
+			
+			JRadioButton[] radioButton_Left  = new JRadioButton[all_actions.size()];
+			for (int i = 0; i < all_actions.size(); i++) {
+				radioButton_Left[i] = new JRadioButton(all_actions.get(i));
+					radioGroup_Left.add(radioButton_Left[i]);
+					radioPanel_Left.add(radioButton_Left[i]);
+//					radioButton_Left[i].addActionListener(this);
+			}
+			radioButton_Left[0].setSelected(true);
+			scrollPane_Left.setViewportView(radioPanel_Left);					
+			
+			
+			// Right split panel-------------------------------------------------------------------------------
+			JScrollPane scrollPane_Right = new JScrollPane();
+			TitledBorder border2 = new TitledBorder("Cost Definition");
+			border2.setTitleJustification(TitledBorder.CENTER);
+			scrollPane_Right.setBorder(border2);
+			scrollPane_Right.setPreferredSize(new Dimension(400, 300));
+			splitPanel.setRightComponent(scrollPane_Right);
+			
+			
+			Child_Panel_Cost[] cost_panel = new Child_Panel_Cost[all_actions.size()];
+			for (int i = 0; i < all_actions.size(); i++) {
+				cost_panel[i] = new Child_Panel_Cost(read_Identifiers, yieldTable_ColumnNames);
+			}
+			border2.setTitle("Cost Definition - " + all_actions.get(0));
+			scrollPane_Right.setBorder(border2);
+			scrollPane_Right.setViewportView(cost_panel[0]);
+			
+			
+			
+					
+			//Listeners for radios----------------------------------------------------------------------------
+			for (int i = 0; i < all_actions.size(); i++) {
+				int currentAction = i;
+				radioButton_Left[i].addActionListener(new ActionListener() {
 					@Override
-					public void mouseClicked(MouseEvent e) {
-						if (layers_Title_Label.get(curent_index).isEnabled()) {	
-							for (int j = 0; j < allLayers.get(curent_index).size(); j++) {		//Loop all elements in each layer
-								checkboxStaticIdentifiers.get(curent_index).get(j).setSelected(false);
-							}
-							layers_Title_Label.get(curent_index).setEnabled(false);
-						} else {
-							for (int j = 0; j < allLayers.get(curent_index).size(); j++) {		//Loop all elements in each layer
-								checkboxStaticIdentifiers.get(curent_index).get(j).setSelected(true);
-							}
-							layers_Title_Label.get(curent_index).setEnabled(true);
-						}
+					public void actionPerformed(ActionEvent actionEvent) {
+						if (radioButton_Left[currentAction].isSelected()) {
+							scrollPane_Right.setViewportView(cost_panel[currentAction]);
+							border2.setTitle("Cost Definition - " + all_actions.get(currentAction));
+							scrollPane_Right.setBorder(border2);
+							scrollPane_Right.repaint();
+						}			
 					}
 				});
+			}
 		
-				//Add to identifiersPanel
-				c1.gridx = i;
-				c1.gridy = 0;
-				identifiersPanel.add(layers_Title_Label.get(i), c1);
-			}
-			
+		
 
-			//Add CheckBox for all layers
-			checkboxStaticIdentifiers = new ArrayList<List<JCheckBox>>();
-			for (int i = 0; i < total_staticIdentifiers; i++) {		//Loop all layers
-				List<JCheckBox> temp_List = new ArrayList<JCheckBox>();		//A temporary List
-				checkboxStaticIdentifiers.add(temp_List);
-				for (int j = 0; j < allLayers.get(i).size(); j++) {		//Loop all elements in each layer
-					checkboxStaticIdentifiers.get(i).add(new JCheckBox(allLayers.get(i).get(j)));
-					checkboxStaticIdentifiers.get(i).get(j).setToolTipText(allLayers_ToolTips.get(i).get(j));	
-					checkboxStaticIdentifiers.get(i).get(j).setSelected(true);
-					
-					c1.gridx = i;
-					c1.gridy = j + 1;
-					identifiersPanel.add(checkboxStaticIdentifiers.get(i).get(j), c1);
-					
-					//Make label Enable after a checkbox is selected
-					int current_i = i;
-					int current_j = j;
-					checkboxStaticIdentifiers.get(i).get(j).addActionListener(new ActionListener() {	
-						@Override
-						public void actionPerformed(ActionEvent actionEvent) {
-							if (checkboxStaticIdentifiers.get(current_i).get(current_j).isSelected()) {
-								layers_Title_Label.get(current_i).setEnabled(true);
-							}					
-						}
-					});
+			// Add all components to JInternalFrame------------------------------------------------------------
+			setLayout(new BorderLayout(0, 0));
+			add(action_info_scroll, BorderLayout.NORTH);
+			add(splitPanel, BorderLayout.CENTER);
+		}		
+	}
+
+	class Management_Cost_Text extends JTextArea {
+		public Management_Cost_Text() {		
+			
+		}
+	}	
+	
+	
+
+	// Panel User Constraints--------------------------------------------------------------------------------------------------------
+	class UserConstraints_GUI extends JLayeredPane implements ActionListener {
+		List<List<JCheckBox>> checkboxStaticIdentifiers;
+		ScrollPane_Parameters parametersScrollPanel;
+		ScrollPane_DynamicIdentifiers dynamic_identifiersScrollPanel;
+		
+		public UserConstraints_GUI() {
+			setLayout(new GridBagLayout());
+			ToolTipManager.sharedInstance().setInitialDelay(0);		//Show toolTip immediately	
+	
+			
+			
+			// 1st grid ------------------------------------------------------------------------------			
+			ScrollPane_StaticIdentifiers identifiersScrollPanel = new ScrollPane_StaticIdentifiers(file_StrataDefinition);
+			checkboxStaticIdentifiers = identifiersScrollPanel.get_CheckboxStaticIdentifiers();
+			// End of 1st grid -----------------------------------------------------------------------
+
 							
-//					//Set layer 5 - Cover Type invisible
-//					if (i==4) checkboxStaticIdentifiers.get(i).get(j).setEnabled(false);
-					//Set layer 6 - Size Class invisible
-					if (i==5) checkboxStaticIdentifiers.get(i).get(j).setEnabled(false);
-//					//Deselect all time period check boxes (7)
-//					if (i==7) checkboxStaticIdentifiers.get(i).get(j).setSelected(false);
-				}
-			}
-			
-			// End of 1st grid -----------------------------------------------------------------------
-			// End of 1st grid -----------------------------------------------------------------------
-
-			
-			
-			
-			// 2nd grid -----------------------------------------------------------------------
-			// 2nd grid -----------------------------------------------------------------------	
-			parametersScrollPanel = new checkboxScrollPanel();		// "Get parameters from YT columns"
+			// 2nd grid ------------------------------------------------------------------------------
+			parametersScrollPanel = new ScrollPane_Parameters(read_Identifiers, yieldTable_ColumnNames);		// "Get parameters from YT columns"
 			TitledBorder border2 = new TitledBorder("PARAMETERS (yield table columns)");
 			border2.setTitleJustification(TitledBorder.CENTER);
 			parametersScrollPanel.setBorder(border2);
 	    	parametersScrollPanel.setPreferredSize(new Dimension(250, 100));
 			// End of 2nd grid -----------------------------------------------------------------------
-			// End of 2nd grid -----------------------------------------------------------------------
 			
-
-
 	    	
-			// 4th Grid -----------------------------------------------------------------------
-			// 4th Grid -----------------------------------------------------------------------	
-			dynamic_identifiersScrollPanel = new checkbox_dynamicScrollPanel(2);	// "Get identifiers from yield table columns"
-			TitledBorder border3_1 = new TitledBorder("Dynamic identifiers for PARAMETERS (from yield table)");
-			border3_1.setTitleJustification(TitledBorder.CENTER);
-			dynamic_identifiersScrollPanel.setBorder(border3_1);
-			dynamic_identifiersScrollPanel.setPreferredSize(new Dimension(250, 100));	
+			// 4th Grid ------------------------------------------------------------------------------	
+			dynamic_identifiersScrollPanel = new ScrollPane_DynamicIdentifiers(2, read_DatabaseTables, read_Identifiers,
+					yieldTable_ColumnNames, yieldTable_values);	// "Get identifiers from yield table columns"
 			// End of 4th Grid -----------------------------------------------------------------------
-			// End of 4th Grid -----------------------------------------------------------------------	
-			
-		
-
-			
+				
 
 			// 3rd Grid -----------------------------------------------------------------------
 			// 3rd Grid -----------------------------------------------------------------------						
@@ -2110,7 +2059,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			addBtn.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {		
-					if (parametersScrollPanel.checkboxParameter != null) {		//only allow this "SET INFO" when checkBoxes are already created
+					if (parametersScrollPanel.get_checkboxNoParameter() != null) {		//only allow this "SET INFO" when checkBoxes are already created
 						
 						int[] selectedRow = table2.getSelectedRows();	
 						///Convert row index because "Sort" causes problems
@@ -2123,12 +2072,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 							//add constraint info at column 6 "PARAMETERS"
 							String parameterConstraintColumn = "";
 							for (int j = 0; j < yieldTable_ColumnNames.length; j++) {
-								if (parametersScrollPanel.checkboxParameter.get(j).isSelected()) {			//add the index of selected Columns to this String
+								if (parametersScrollPanel.get_checkboxParameter().get(j).isSelected()) {			//add the index of selected Columns to this String
 									parameterConstraintColumn = parameterConstraintColumn + j + " ";
 								}
 							}
 							
-							if (parameterConstraintColumn.equals("") || parametersScrollPanel.checkboxNoParameter.isSelected()) {
+							if (parameterConstraintColumn.equals("") || parametersScrollPanel.get_checkboxNoParameter().isSelected()) {
 								parameterConstraintColumn = "NoParameter";		//= parametersScrollPanel.checkboxNoParameter.getText();
 							}
 							
@@ -2137,9 +2086,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 							
 							//add constraint info at column 7 "Static Identifiers"
 							String staticIdentifiersColumn = "";
-							for (int ii = 0; ii < total_staticIdentifiers; ii++) {		//Loop all layers
+							for (int ii = 0; ii < checkboxStaticIdentifiers.size(); ii++) {		//Loop all static identifiers
 								staticIdentifiersColumn = staticIdentifiersColumn + ii + " ";
-								for (int j = 0; j < allLayers.get(ii).size(); j++) {		//Loop all elements in each layer
+								for (int j = 0; j < checkboxStaticIdentifiers.get(ii).size(); j++) {		//Loop all elements in each layer
 									String checkboxName = checkboxStaticIdentifiers.get(ii).get(j).getText();
 									if (checkboxName.equals("Even Age")) {
 										checkboxName = "EA";
@@ -2163,22 +2112,22 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 							
 							//add constraint info at column 8 "dynamic Identifiers"
 							String dynamicIdentifiersColumn = "";
-							for (int ii = 0; ii < dynamic_identifiersScrollPanel.allDynamicIdentifiers_ScrollPane.size(); ii++) {		//Loop all dynamic identifier ScrollPanes
-								if (dynamic_identifiersScrollPanel.allDynamicIdentifiers_ScrollPane.get(ii).isVisible() &&
-										dynamic_identifiersScrollPanel.checkboxDynamicIdentifiers.get(ii).size() > 0) {			//get the active identifiers (when identifier ScrollPane is visible and List size >0)
+							for (int ii = 0; ii < dynamic_identifiersScrollPanel.get_allDynamicIdentifiers_ScrollPane().size(); ii++) {		//Loop all dynamic identifier ScrollPanes
+								if (dynamic_identifiersScrollPanel.get_allDynamicIdentifiers_ScrollPane().get(ii).isVisible() &&
+										dynamic_identifiersScrollPanel.get_CheckboxDynamicIdentifiers().get(ii).size() > 0) {			//get the active identifiers (when identifier ScrollPane is visible and List size >0)
 									dynamicIdentifiersColumn = dynamicIdentifiersColumn + ii + " ";
-									for (int j = 0; j < dynamic_identifiersScrollPanel.checkboxDynamicIdentifiers.get(ii).size(); j++) { //Loop all checkBoxes in this active identifier
-										String checkboxName = dynamic_identifiersScrollPanel.checkboxDynamicIdentifiers.get(ii).get(j).getText();									
+									for (int j = 0; j < dynamic_identifiersScrollPanel.get_CheckboxDynamicIdentifiers().get(ii).size(); j++) { //Loop all checkBoxes in this active identifier
+										String checkboxName = dynamic_identifiersScrollPanel.get_CheckboxDynamicIdentifiers().get(ii).get(j).getText();									
 										//Add checkBox if it is (selected & visible) or disable
-										if ((dynamic_identifiersScrollPanel.checkboxDynamicIdentifiers.get(ii).get(j).isSelected() && (dynamic_identifiersScrollPanel.checkboxDynamicIdentifiers.get(ii).get(j).isVisible())
-												|| !dynamic_identifiersScrollPanel.checkboxDynamicIdentifiers.get(ii).get(j).isEnabled()))
+										if ((dynamic_identifiersScrollPanel.get_CheckboxDynamicIdentifiers().get(ii).get(j).isSelected() && (dynamic_identifiersScrollPanel.get_CheckboxDynamicIdentifiers().get(ii).get(j).isVisible())
+												|| !dynamic_identifiersScrollPanel.get_CheckboxDynamicIdentifiers().get(ii).get(j).isEnabled()))
 											dynamicIdentifiersColumn = dynamicIdentifiersColumn + checkboxName + " ";
 									}
 									dynamicIdentifiersColumn = dynamicIdentifiersColumn + ";";
 								}
 							}	
 							
-							if (dynamicIdentifiersColumn.equals("") || dynamic_identifiersScrollPanel.checkboxNoIdentifier.isSelected()) {
+							if (dynamicIdentifiersColumn.equals("") || dynamic_identifiersScrollPanel.get_checkboxNoIdentifier().isSelected()) {
 								dynamicIdentifiersColumn = "NoIdentifier";			//= dynamic_identifiersScrollPanel.checkboxNoIdentifier.getText();
 							}
 							
@@ -2198,9 +2147,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			// End of 3rd Grid -----------------------------------------------------------------------		    
 		    
 	
-
-			
-			
 
 			// 6th Grid -----------------------------------------------------------------------
 			// 6th Grid -----------------------------------------------------------------------						
@@ -2396,8 +2342,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		    c.weighty = 1;
 			super.add(constraintTablePanel, c);
 			
-			//when radioButton_Right[4] is selected, time period GUI will be updated
-			radioButton_Right[4].addActionListener(this);
+			//when radioButton_Right[5] is selected, time period GUI will be updated
+			radioButton_Right[5].addActionListener(this);
 		}
 		
 		// Listener for this class----------------------------------------------------------------------
@@ -2414,678 +2360,22 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			}  	
 	    	
 	       	//Update Parameter Panel
-	    	if (yieldTable_ColumnNames != null && parametersScrollPanel.checkboxParameter == null) {
-	    		parametersScrollPanel = new checkboxScrollPanel();	//"Get parameters from YT columns"
+	    	if (yieldTable_ColumnNames != null && parametersScrollPanel.get_checkboxParameter() == null) {
+	    		parametersScrollPanel = new ScrollPane_Parameters(read_Identifiers, yieldTable_ColumnNames);	//"Get parameters from YT columns"
 	    	}
 	    	
 	      	//Update Dynamic Identifier Panel
-	    	if (yieldTable_ColumnNames != null && dynamic_identifiersScrollPanel.allDynamicIdentifiers == null) {
-	    		dynamic_identifiersScrollPanel = new checkbox_dynamicScrollPanel(2);	//"Get identifiers from yield table columns"
+	    	if (yieldTable_ColumnNames != null && dynamic_identifiersScrollPanel.get_allDynamicIdentifiers() == null) {
+	    		dynamic_identifiersScrollPanel = new ScrollPane_DynamicIdentifiers(2, read_DatabaseTables, read_Identifiers,
+						yieldTable_ColumnNames, yieldTable_values);	// "Get identifiers from yield table columns"
 	    	}
 
 	    }
 	    
-	    
-		class checkboxScrollPanel extends JScrollPane {	
-			private JCheckBox checkboxNoParameter;
-			private List<JCheckBox> checkboxParameter;
-			
-			public checkboxScrollPanel() {				
-				JPanel parametersPanel = new JPanel();	
-				parametersPanel.setLayout(new GridBagLayout());
-				GridBagConstraints c2 = new GridBagConstraints();
-				c2.fill = GridBagConstraints.HORIZONTAL;
-				c2.weightx = 1;
-			    c2.weighty = 1;
-			    
-				setViewportView(parametersPanel);
-			    		
-				if (yieldTable_ColumnNames != null && checkboxParameter == null) {				
-					checkboxParameter = new ArrayList<JCheckBox>();
-					
-					for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
-						String YTcolumnName = yieldTable_ColumnNames[i];
-
-						checkboxParameter.add(new JCheckBox(YTcolumnName));		//add checkbox
-						checkboxParameter.get(i).setToolTipText(read_Identifiers.get_ParameterToolTip(YTcolumnName) + " (Column index: " + i + ")");		//add toolTip
-						
-						// add checkboxParameter to the Panel
-					    c2.gridx = 0;
-					    c2.gridy = 1 + i;
-						c2.weightx = 1;
-					    c2.weighty = 1;
-						parametersPanel.add(checkboxParameter.get(i), c2);
-					}
-					
-					
-					//Add an extra checkbox for the option of not using any Column, use 1 instead as multiplier
-					//This is also the checkbox for the option of not using any Column as dynamic identifier
-					checkboxNoParameter = new JCheckBox();		//add checkbox			
-					checkboxNoParameter.setText("NoParameter");		
-					checkboxNoParameter.setToolTipText("1 is used as multiplier (parameter), no column will be used as parameter");		//set toolTip
-					
-					// add the checkBox to the Panel
-					c2.gridx = 0;
-					c2.gridy = 0;
-					c2.weightx = 1;
-					c2.weighty = 1;
-					parametersPanel.add(checkboxNoParameter, c2);
-					
-					// Add listeners to de-select all other checkBoxes
-					checkboxNoParameter.addActionListener(new ActionListener() {
-						@Override
-						public void actionPerformed(ActionEvent actionEvent) {
-							if (checkboxNoParameter.isSelected()) {
-								for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
-									checkboxParameter.get(i).setSelected(false);
-								} 
-							}
-						}
-					});								
-					
-					
-					// Add listeners to checkBox so if then name has AllSx then other checkbox would be deselected 
-					for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
-						String currentCheckBoxName = yieldTable_ColumnNames[i];
-						int currentCheckBoxIndex = i;
-						
-						checkboxParameter.get(i).addActionListener(new ActionListener() {	
-							@Override
-							public void actionPerformed(ActionEvent actionEvent) {
-								//Deselect the NoParameter checkBox
-								checkboxNoParameter.setSelected(false);
-								
-								if (currentCheckBoxName.contains("AllSx")) {
-									for (int j = 0; j < yieldTable_ColumnNames.length; j++) {		
-										if (j!=currentCheckBoxIndex) 	checkboxParameter.get(j).setSelected(false);
-									}
-								} else {
-									for (int j = 0; j < yieldTable_ColumnNames.length; j++) {		
-										if (checkboxParameter.get(j).getText().contains("AllSx")) 	checkboxParameter.get(j).setSelected(false);
-									}
-								}					
-							}
-						});
-					}
-
-					//Do a resize to same size for JInteral Frame of the project to help repaint the checkboxVariables added					
-					Spectrum_Main.mainFrameReturn().getSelectedFrame().setSize(Spectrum_Main.mainFrameReturn().getSelectedFrame().getSize());	
-				}
-
-			}
-		}
-		
-		class checkbox_dynamicScrollPanel extends JScrollPane {	
-			private JCheckBox checkboxNoIdentifier;
-			private List<JCheckBox> allDynamicIdentifiers;
-			private List<JScrollPane> allDynamicIdentifiers_ScrollPane;
-			private List<List<JCheckBox>> checkboxDynamicIdentifiers;
-			private JScrollPane defineScrollPane;		//for Definition of dynamic identifier
-			
-			public checkbox_dynamicScrollPanel(int option) {
-
-				// Define the Panel contains everything --------------------------
-				JPanel dynamic_identifiersPanel = new JPanel();		
-				dynamic_identifiersPanel.setLayout(new GridBagLayout());
-				GridBagConstraints c3 = new GridBagConstraints();
-				c3.fill = GridBagConstraints.BOTH;
-				c3.weightx = 1;
-			    c3.weighty = 1;
-			    // Add elements to this Panel later at the end --------------------------
-				
-				
-			
-
-				//This is the Panel for select all available identifiers--------------------------
-				JPanel select_Panel = new JPanel();	
-				select_Panel.setLayout(new GridBagLayout());
-				GridBagConstraints c2 = new GridBagConstraints();
-				c2.fill = GridBagConstraints.HORIZONTAL;
-				c2.weightx = 1;
-			    c2.weighty = 1;		
-				//------------------------------------------------------------------------------
-				
-				
-			    if (yieldTable_ColumnNames != null && allDynamicIdentifiers == null) {				
-					
-					checkboxDynamicIdentifiers = new ArrayList<List<JCheckBox>>();	
-					allDynamicIdentifiers = new ArrayList<JCheckBox>();
-					
-					for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
-						String YTcolumnName = yieldTable_ColumnNames[i];
-
-						checkboxDynamicIdentifiers.add(new ArrayList<JCheckBox>());		//add empty List
-						allDynamicIdentifiers.add(new JCheckBox(YTcolumnName));		//add checkbox
-						allDynamicIdentifiers.get(i).setToolTipText(read_Identifiers.get_ParameterToolTip(YTcolumnName) + " (Column index: " + i + ")");		//add toolTip
-						
-						// add checkboxParameter to the Panel
-					    c2.gridx = 0;
-					    c2.gridy = 1 + i;
-						c2.weightx = 1;
-					    c2.weighty = 1;
-						select_Panel.add(allDynamicIdentifiers.get(i), c2);
-					}
-					
-					
-					//Add an extra checkBox for the option of not using any Column as dynamic identifier
-					checkboxNoIdentifier = new JCheckBox();		//add checkBox		
-					checkboxNoIdentifier.setText("NoIdentifier");	
-					checkboxNoIdentifier.setToolTipText("No column will be used as dynamic identifier");		//set toolTip
-					
-					// add the checkBox to the Panel
-					c2.gridx = 0;
-					c2.gridy = 0;
-					c2.weightx = 1;
-					c2.weighty = 1;
-					select_Panel.add(checkboxNoIdentifier, c2);
-					
-					// Add listeners to de-select all other checkBoxes
-					checkboxNoIdentifier.addActionListener(new ActionListener() {
-						@Override
-						public void actionPerformed(ActionEvent actionEvent) {
-							if (checkboxNoIdentifier.isSelected()) {
-								for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
-									allDynamicIdentifiers.get(i).setSelected(false);
-									allDynamicIdentifiers_ScrollPane.get(i).setVisible(false);		//Set invisible all scrollPanes of dynamic identifiers
-									
-									//Do a resize to same size for JInteral Frame of the project to help repaint					
-									Spectrum_Main.mainFrameReturn().getSelectedFrame().setSize(Spectrum_Main.mainFrameReturn().getSelectedFrame().getSize());	
-								} 
-							}
-						}
-					});								
-					
-			
-				
-					if (option == 2) {		//For the dynamic identifiers only						
-						//Add all dynamic identifiers lables
-						allDynamicIdentifiers_ScrollPane = new ArrayList<JScrollPane>();
-						
-						for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
-							String YTcolumnName = allDynamicIdentifiers.get(i).getText();		
-							allDynamicIdentifiers_ScrollPane.add(new JScrollPane());			//Add ScrollPane
-							allDynamicIdentifiers_ScrollPane.get(i).setBorder(new TitledBorder(YTcolumnName));	//set Title
-							allDynamicIdentifiers_ScrollPane.get(i).setPreferredSize(new Dimension(150, 100));
-//							allDynamicIdentifiers_ScrollPane.get(i).setToolTipText(read_Identifiers.get_ParameterToolTip(YTcolumnName) + " (Column index: " + i + ")");		//add toolTip										
-							allDynamicIdentifiers_ScrollPane.get(i).setVisible(false);		//Set invisible
-							
-							c3.gridx =1 + i;
-							c3.gridy = 0;
-							dynamic_identifiersPanel.add(allDynamicIdentifiers_ScrollPane.get(i), c3);
-						}					
-																
-						
-						// Add listeners to checkBoxes
-						for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
-							String currentCheckBoxName = yieldTable_ColumnNames[i];
-							int currentCheckBoxIndex = i;
-							
-							allDynamicIdentifiers.get(i).addActionListener(new ActionListener() {	
-								@Override
-								public void actionPerformed(ActionEvent actionEvent) {
-									// A popupPanel to define identifier if the checkBox is selected
-									if (allDynamicIdentifiers.get(currentCheckBoxIndex).isSelected()) {
-										
-										//Remove all checkBoxes previously added into the Column list (or the dynamic identifier)
-										checkboxDynamicIdentifiers.get(currentCheckBoxIndex).clear();
-												
-										//define popupPanel
-										JPanel popupPanel = new JPanel();
-										popupPanel.setLayout(new GridBagLayout());
-										TitledBorder border_popup = new TitledBorder("PLEASE HELP SPECTRUMLITE DEFINE THIS IDENTIFIER");
-										border_popup.setTitleJustification(TitledBorder.CENTER);
-										popupPanel.setBorder(border_popup);
-										popupPanel.setPreferredSize(new Dimension(800, 400));;
-										GridBagConstraints c_popup = new GridBagConstraints();
-										c_popup.fill = GridBagConstraints.BOTH;
-										c_popup.weightx = 1;
-										c_popup.weighty = 1;
-										
-										// Just to make the OptionPanel resizable
-										popupPanel.addHierarchyListener(new HierarchyListener() {
-										    public void hierarchyChanged(HierarchyEvent e) {
-										        Window window = SwingUtilities.getWindowAncestor(popupPanel);
-										        if (window instanceof Dialog) {
-										            Dialog dialog = (Dialog)window;
-										            if (!dialog.isResizable()) {
-										                dialog.setResizable(true);
-										            }
-										        }
-										    }
-										});												
-										//---------------------------------------------------------------------------------------------------	
-										
-										JPanel listPanel = new JPanel();
-										listPanel.setLayout(new GridBagLayout());
-										GridBagConstraints c_list = new GridBagConstraints();
-										c_list.fill = GridBagConstraints.HORIZONTAL;
-										c_list.weightx = 1;
-										c_list.weighty = 1;
-										
-										
-										List<String> uniqueValueList = read_DatabaseTables.getColumnUniqueValues(currentCheckBoxIndex);									
-										//Sort the list	
-										try {	//Sort Double
-											Collections.sort(uniqueValueList,new Comparator<String>() {
-												@Override
-											    public int compare(String o1, String o2) {
-											        return Double.valueOf(o1).compareTo(Double.valueOf(o2));
-											    }
-											});	
-										} catch (Exception e1) {
-											Collections.sort(uniqueValueList);	//Sort String
-										}
-										
-										//Add Labels of unique values to listPanel
-										for (int j = 0; j < uniqueValueList.size(); j++) {
-											c_list.gridx = 0;
-											c_list.gridy = j;
-											c_list.weightx = 1;
-											c_list.weighty = 1;
-											listPanel.add(new JLabel(uniqueValueList.get(j)), c_list);		
-										}
-										
-										//ScrollPane contains the listPanel
-										JScrollPane uniqueValueList_ScrollPanel = new JScrollPane(listPanel);
-										TitledBorder border_List = new TitledBorder("List of unique values");
-										border_List.setTitleJustification(TitledBorder.CENTER);
-										uniqueValueList_ScrollPanel.setBorder(border_List);
-										uniqueValueList_ScrollPanel.setPreferredSize(new Dimension(80, 300));
-										//---------------------------------------------------------------------------------------------------
-										
-										//JTextArea contains some info of this column
-										JTextArea columnInfo_TArea = new JTextArea();
-										columnInfo_TArea.setEditable(false);
-										columnInfo_TArea.setLineWrap(true);
-										columnInfo_TArea.setWrapStyleWord(true);
-										columnInfo_TArea.append("SpectrumLite found " + uniqueValueList.size() + 
-												" unique values for this identifier (across " + yieldTable_values.length + " yield tables in your database)."  + "\n");
-										
-										if (uniqueValueList.size()<=20) {
-											columnInfo_TArea.append("'DISCRETE IDENTIFIER' is recommended.");
-										} else {
-											columnInfo_TArea.append("'RANGE IDENTIFIER' is recommended.");
-										}
-										//---------------------------------------------------------------------------------------------------
-
-										//defineScrollPane for Definition
-										defineScrollPane = new JScrollPane();	
-										defineScrollPane.setBorder(new TitledBorder(""));
-										//---------------------------------------------------------------------------------------------------
-									
-										//2 radioButtons for DISCRETE or RANGE definition
-										JRadioButton radioDISCRETE = new JRadioButton("DISCRETE IDENTIFIER"); 
-										JRadioButton radioRANGE = new JRadioButton("RANGE IDENTIFIER"); 
-										
-										//Add 2 radio to the group
-										ButtonGroup definitionGroup = new ButtonGroup();
-										definitionGroup.add(radioDISCRETE);
-										definitionGroup.add(radioRANGE);
-										
-										
-										//Add listener for radioDISCRETE
-										radioDISCRETE.addActionListener(new ActionListener() {
-											@Override
-											public void actionPerformed(ActionEvent e) {
-												if (radioDISCRETE.isSelected()) {
-													//Remove all checkBoxes previously added into the Column list (or the dynamic identifier)
-													checkboxDynamicIdentifiers.get(currentCheckBoxIndex).clear();
-													
-													
-													JPanel discretePanel = new JPanel();	
-													discretePanel.setLayout(new GridBagLayout());
-													GridBagConstraints c_dP = new GridBagConstraints();
-													c_dP.fill = GridBagConstraints.HORIZONTAL;
-													c_dP.weightx = 1;
-													c_dP.weighty = 1;
-													
-													//Add 2 labels
-													c_dP.gridx = 0;
-													c_dP.gridy = 0;
-													discretePanel.add(new JLabel("Unique Value"), c_dP);
-													
-													c_dP.gridx = 1;
-													c_dP.gridy = 0;
-													discretePanel.add(new JLabel("Define Name (Below are suggestions from SpectrumLite's library)"), c_dP);
-													
-													//Add all discrete values and textField for the toolTip
-													for (int j = 0; j < uniqueValueList.size(); j++) {
-														String nameOfColumnAndUniqueValue = currentCheckBoxName + " " + uniqueValueList.get(j);	//The name
-																					
-														checkboxDynamicIdentifiers.get(currentCheckBoxIndex).add(new JCheckBox(uniqueValueList.get(j)));
-														checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(j).setToolTipText(read_Identifiers.get_ParameterToolTip(nameOfColumnAndUniqueValue));	//ToolTip of this Name from SpectrumLite Library;
-														c_dP.gridx = 0;
-														c_dP.gridy = 1 + j;
-														discretePanel.add(checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(j), c_dP);
-														
-														c_dP.gridx = 1;
-														c_dP.gridy = 1 + j;
-														JTextField name_TF = new JTextField(20);
-														name_TF.setText(read_Identifiers.get_ParameterToolTip(nameOfColumnAndUniqueValue));	//ToolTip of this Name from SpectrumLite Library
-														discretePanel.add(name_TF, c_dP);
-														
-														//Add listener for TextField to be toolTip
-														int jj=j;
-														name_TF.getDocument().addDocumentListener(new DocumentListener() {
-															@Override  
-															public void changedUpdate(DocumentEvent e) {
-																checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(jj).setToolTipText(name_TF.getText());
-															}
-															public void removeUpdate(DocumentEvent e) {
-																checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(jj).setToolTipText(name_TF.getText());
-															}
-															public void insertUpdate(DocumentEvent e) {
-																checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(jj).setToolTipText(name_TF.getText());
-															}
-														});
-													}						
-													defineScrollPane.setViewportView(discretePanel);	
-												}
-											}
-										});
-										
-										
-										//Add listener for radioRANGE
-										radioRANGE.addActionListener(new ActionListener() {
-											@Override
-											public void actionPerformed(ActionEvent e) {
-												if (radioRANGE.isSelected()) {
-													//Remove all checkBoxes previously added into the Column list (or the dynamic identifier)
-													checkboxDynamicIdentifiers.get(currentCheckBoxIndex).clear();
-													
-													
-													JPanel rangePanel = new JPanel();
-													rangePanel.setLayout(new GridBagLayout());
-													GridBagConstraints c_dP = new GridBagConstraints();
-													c_dP.fill = GridBagConstraints.HORIZONTAL;
-													c_dP.weightx = 0;
-													c_dP.weighty = 0;
-													
-													//Add Label and Combo asking for number of ranges
-													c_dP.gridx = 0;
-													c_dP.gridy = 0;
-													rangePanel.add(new JLabel("Number of ranges"), c_dP);
-													
-													c_dP.gridx = 1;
-													c_dP.gridy = 0;
-													JComboBox combo = new JComboBox();		
-													for (int comboValue = 1; comboValue <= 100; comboValue++) {
-														combo.addItem(comboValue);
-													}
-													combo.setSelectedItem(null);
-													rangePanel.add(combo, c_dP);
-
-
-													//Add Label and TextField asking for min value
-													c_dP.gridx = 0;
-													c_dP.gridy = 1;
-													rangePanel.add(new JLabel("Min value"), c_dP);
-													
-													c_dP.gridx = 1;
-													c_dP.gridy = 1;
-													JTextField min_TF = new JTextField(10);															
-													min_TF.setText(uniqueValueList.get(0));
-													rangePanel.add(min_TF, c_dP);
-													
-													
-													//Add Label and TextField asking for max value
-													c_dP.gridx = 0;
-													c_dP.gridy = 2;
-													rangePanel.add(new JLabel("Max value"), c_dP);
-													
-													c_dP.gridx = 1;
-													c_dP.gridy = 2;
-													JTextField max_TF = new JTextField(10);															
-													max_TF.setText(uniqueValueList.get(uniqueValueList.size()-1));
-													rangePanel.add(max_TF, c_dP);
-													
-													
-													//add empty label to prevent things move
-													c_dP.gridx = 0;
-													c_dP.gridy = 3;
-													c_dP.weightx = 0;
-													c_dP.weighty = 1;
-													rangePanel.add(new JLabel(""), c_dP);	
-													
-
-													
-													//Listener for the combo
-												    combo.addActionListener(new AbstractAction() {
-												        @Override
-												        public void actionPerformed(ActionEvent e) {
-												        	try {																        													        	
-													        	int numberofRanges = (Integer) combo.getSelectedItem();	        	
-													        	double minValue = Double.parseDouble(min_TF.getText());
-													        	double maxValue = Double.parseDouble(max_TF.getText());
-												        
-													        	if (minValue <= maxValue) {
-														        	//Remove all checkBoxes previously added into the Column list (or the dynamic identifier)
-																	checkboxDynamicIdentifiers.get(currentCheckBoxIndex).clear();
-																	rangePanel.removeAll();
-																																						
-														        	
-														        	c_dP.weightx = 1;
-																	c_dP.weighty = 0;
-														        	
-														        	//Add Label and Spinner asking for number of ranges
-																	c_dP.gridx = 0;
-																	c_dP.gridy = 0;
-																	rangePanel.add(new JLabel("Number of ranges"), c_dP);
-																	
-																	c_dP.gridx = 1;
-																	c_dP.gridy = 0;
-																	rangePanel.add(combo, c_dP);
-
-																	//Add 4 labels
-																	c_dP.gridx = 0;
-																	c_dP.gridy = 1;
-																	rangePanel.add(new JLabel("Range"), c_dP);
-																	
-																	c_dP.gridx = 1;
-																	c_dP.gridy = 1;
-																	rangePanel.add(new JLabel("From"), c_dP);
-																	
-																	c_dP.gridx = 2;
-																	c_dP.gridy = 1;
-																	rangePanel.add(new JLabel("To"), c_dP);
-																	
-																	c_dP.gridx = 3;
-																	c_dP.gridy = 1;
-																	rangePanel.add(new JLabel("Define name of this range"), c_dP);	
-														        
-																
-														        	//Add all ranges and textField for the toolTip
-																	for (int j = 0; j < numberofRanges; j++) {																									
-																		String valueFrom = String.format("%.2f", minValue + (maxValue-minValue)/numberofRanges*j);
-																		String valueTo = String.format("%.2f", minValue + (maxValue-minValue)/numberofRanges*(j+1));
-																		
-																		checkboxDynamicIdentifiers.get(currentCheckBoxIndex).add(new JCheckBox("[" + valueFrom + "," + valueTo + ")"));
-																		c_dP.gridx = 0;
-																		c_dP.gridy = 2 + j;
-																		rangePanel.add(checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(j), c_dP);
-																
-																		c_dP.gridx = 1;
-																		c_dP.gridy = 2 + j;
-																		JTextField from_TF = new JTextField(3);
-																		
-																		from_TF.setText(valueFrom);
-																		rangePanel.add(from_TF, c_dP);
-																		
-																		c_dP.gridx = 2;
-																		c_dP.gridy = 2 + j;
-																		JTextField to_TF = new JTextField(3);
-																		to_TF.setText(valueTo);
-																		rangePanel.add(to_TF, c_dP);
-																		
-																		c_dP.gridx = 3;
-																		c_dP.gridy = 2 + j;
-																		JTextField name_TF = new JTextField(20);
-																		name_TF.setText("");	//ToolTip text = ""
-																		rangePanel.add(name_TF, c_dP);
-																		
-																		//Add listener for TextField to be toolTip
-																		int jj=j;
-																		name_TF.getDocument().addDocumentListener(new DocumentListener() {
-																			@Override  
-																			public void changedUpdate(DocumentEvent e) {
-																				checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(jj).setToolTipText(name_TF.getText());
-																			}
-																			public void removeUpdate(DocumentEvent e) {
-																				checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(jj).setToolTipText(name_TF.getText());
-																			}
-																			public void insertUpdate(DocumentEvent e) {
-																				checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(jj).setToolTipText(name_TF.getText());
-																			}
-																		});
-																	}
-																	
-																	
-																	c_dP.gridx = 4;
-																	c_dP.gridy = 2 + numberofRanges;
-																	c_dP.weightx = 1;
-																	c_dP.weighty = 1;
-																	rangePanel.add(new JLabel(""), c_dP);  //add empty label to make everything not move
-														        	
-																	
-														        	// Apply change to the GUI
-																	defineScrollPane.setViewportView(rangePanel);	
-													        	} else {
-													        		JOptionPane.showMessageDialog(Spectrum_Main.mainFrameReturn(), "'Min value' must be less than or equal to 'Max value'");														        																							
-													        	}
-															} catch (Exception ee)  {
-											        		JOptionPane.showMessageDialog(Spectrum_Main.mainFrameReturn(), "'Min value' and 'Max value' must be numbers");														        		
-															}
-														}
-												    });
-
-													defineScrollPane.setViewportView(rangePanel);
-												}
-											}
-										});
-										//---------------------------------------------------------------------------------------------------
-								
-										//Add all to the popupPanel												
-										
-										//Add columnInfo_TArea to popupPanel
-										c_popup.gridx = 0;
-										c_popup.gridy = 0;
-										c_popup.gridwidth = 3;
-										c_popup.gridheight = 1;
-										c_popup.weightx = 1;
-										c_popup.weighty = 0;
-										popupPanel.add(columnInfo_TArea, c_popup);
-																			
-										//Add uniqueValueList_ScrollPanel to popupPanel
-										c_popup.gridx = 0;
-										c_popup.gridy = 1;
-										c_popup.gridwidth = 1;
-										c_popup.gridheight = 2;
-										c_popup.weightx = 1;
-										c_popup.weighty = 1;
-										popupPanel.add(uniqueValueList_ScrollPanel, c_popup);
-										
-										//Add 2 radios to popupPanel
-										c_popup.gridx = 1;
-										c_popup.gridy = 1;
-										c_popup.gridwidth = 1;
-										c_popup.gridheight = 1;
-										c_popup.weightx = 1;
-										c_popup.weighty = 0;
-										popupPanel.add(radioDISCRETE, c_popup);
-										
-										c_popup.gridx = 2;
-										c_popup.gridy = 1;
-										c_popup.gridwidth = 1;
-										c_popup.gridheight = 1;
-										c_popup.weightx = 1;
-										c_popup.weighty = 0;
-										popupPanel.add(radioRANGE, c_popup);
-										
-										//Add defineScrollPane to popupPanel
-										c_popup.gridx = 1;
-										c_popup.gridy = 2;
-										c_popup.gridwidth = 2;
-										c_popup.gridheight = 1;
-										c_popup.weightx = 1;
-										c_popup.weighty = 1;
-										popupPanel.add(defineScrollPane, c_popup);
-										//---------------------------------------------------------------------------------------------------
-										
-										int response = JOptionPane.showConfirmDialog(Spectrum_Main.mainFrameReturn(), popupPanel,
-												"Add   '" + currentCheckBoxName + "'   to the set of dynamic identifiers ?", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null);
-										if (response == JOptionPane.NO_OPTION) {
-											allDynamicIdentifiers.get(currentCheckBoxIndex).setSelected(false);
-										} else if (response == JOptionPane.YES_OPTION && checkboxDynamicIdentifiers.get(currentCheckBoxIndex).size()>0) {
-											//Deselect the No Identifier checkBox
-											checkboxNoIdentifier.setSelected(false);
-											
-											//Set the identifier ScrollPane visible
-											allDynamicIdentifiers_ScrollPane.get(currentCheckBoxIndex).setVisible(true);
-											
-											
-											//create a temporary Panel contains all checkboxes of that column 
-											JPanel tempPanel = new JPanel();
-											tempPanel.setLayout(new GridBagLayout());
-											GridBagConstraints c_temp = new GridBagConstraints();
-											c_temp.fill = GridBagConstraints.HORIZONTAL;
-											c_temp.weightx = 1;
-											c_temp.weighty = 1;
-											
-											for (int j = 0; j < checkboxDynamicIdentifiers.get(currentCheckBoxIndex).size(); j++) {
-												c_temp.gridx = 1;
-												c_temp.gridy = j;
-												tempPanel.add(checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(j), c_temp);
-											}
-
-											//Set Scroll Pane view to the tempPanel
-											allDynamicIdentifiers_ScrollPane.get(currentCheckBoxIndex).setViewportView(tempPanel);
-											
-										} else if (response == JOptionPane.CLOSED_OPTION) {
-											allDynamicIdentifiers.get(currentCheckBoxIndex).setSelected(false);
-										} else {
-											allDynamicIdentifiers.get(currentCheckBoxIndex).setSelected(false);
-										}
-									
-									} else {	//if checkbox is not selected then remove the identifier ScrollPane
-										allDynamicIdentifiers_ScrollPane.get(currentCheckBoxIndex).setVisible(false);
-									}
-								
-									//Do a resize to same size for JInteral Frame of the project to help repaint the identifier ScrollPane added or removed					
-									Spectrum_Main.mainFrameReturn().getSelectedFrame().setSize(Spectrum_Main.mainFrameReturn().getSelectedFrame().getSize());
-								}
-							});
-						}		
-					}
-								
-					//Do a resize to same size for JInteral Frame of the project to help repaint the checkboxes added					
-					Spectrum_Main.mainFrameReturn().getSelectedFrame().setSize(Spectrum_Main.mainFrameReturn().getSelectedFrame().getSize());	
-				}
-				
-
-				
-
-				//ScrollPane contains the identifiers that are able to be selected
-				JScrollPane selectIdentifiersScrollPanel = new JScrollPane(select_Panel);
-				TitledBorder border3_2 = new TitledBorder("Select Identifiers");
-				border3_2.setTitleJustification(TitledBorder.CENTER);
-				selectIdentifiersScrollPanel.setBorder(border3_2);
-				selectIdentifiersScrollPanel.setPreferredSize(new Dimension(200, 100));
-				
-				//Add the above ScrollPane
-				c3.gridx = 0;
-				c3.gridy = 0;
-				dynamic_identifiersPanel.add(selectIdentifiersScrollPanel, c3);
-				
-				
-				//Add dynamic_identifiersPanel to this Class which is a mother JSCrollPanel
-				setViewportView(dynamic_identifiersPanel);
-			}
-		}
-   		
 	}
 
-	class PaneL_UserConstraints_Text  extends JTextArea {
-		public PaneL_UserConstraints_Text() {
+	class UserConstraints_Text  extends JTextArea {
+		public UserConstraints_Text() {
 			setRows(50);		// set text areas with 10 rows when starts		
 		}
 	}
@@ -3138,13 +2428,11 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 		public void setValueAt(Object value, int row, int col) {
 			data2[row][col] = value;
-			fireTableCellUpdated(row, col);
 			
 //			data2[row][0] = row;
 //			fireTableCellUpdated(row, 0);
 			
 			fireTableDataChanged();
-			repaint();
 		}
 	}	
 		
@@ -3170,24 +2458,32 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 	
 	private File getGeneralInputFile() {
-		File generalInputFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "Input 1 - GeneralInputs.txt");
+		File generalInputFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/Input 1 - General Inputs.txt");
 		generalInputFile.deleteOnExit();
-		try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(generalInputFile))) {
-			// Write info
-			fileOut.write("Input Description" + "\t" + "Selected Option");
-			fileOut.newLine();
-			fileOut.write(panelInput1_TEXT.getText());
-//			panelInput0_TEXT.write(fileOut);
-			fileOut.close();
-		} catch (IOException e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+		
+		if (data1 != null) {
+			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(generalInputFile))) {
+				for (int j = 0; j < columnNames1.length; j++) {
+					fileOut.write(columnNames1[j] + "\t");
+				}
+
+				for (int i = 0; i < data1.length; i++) {
+					fileOut.newLine();
+					for (int j = 0; j < colCount1; j++) {
+						fileOut.write(data1[i][j] + "\t");
+					}
+				}
+				fileOut.close();
+			} catch (IOException e) {
+				System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			}
 		}
 		return generalInputFile;
 	}
 	
 	
 	private File getSelectedStrataFile() {
-		File selectedStrataFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "Input 2 - SelectedStrata.txt");	
+		File selectedStrataFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/Input 2 - Selected Strata.txt");	
 		selectedStrataFile.deleteOnExit();
 		
 		if (data != null) {
@@ -3216,7 +2512,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 	private File getRequirementsFile() {
 		//Only print out if the last column Allowed Options <> null
-		File requirementsFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "Input 3 - CovertypeConversion.txt");
+		File requirementsFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/Input 3 - Covertype Conversion (Clear Cuts).txt");
 		requirementsFile.deleteOnExit();
 		
 		if (data4 != null) {
@@ -3243,8 +2539,33 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	}
 
 	
+	private File getSRDRequirementsFile() {
+		File SRDrequirementsFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/Input 4 - Covertype Conversion (Replacing Disturbances).txt");	
+		SRDrequirementsFile.deleteOnExit();
+		
+		if (data7 != null) {
+			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(SRDrequirementsFile))) {
+				for (int j = 0; j < columnNames7.length; j++) {
+					fileOut.write(columnNames7[j] + "\t");
+				}
+
+				for (int i = 0; i < data7.length; i++) {
+					fileOut.newLine();
+					for (int j = 0; j < colCount7; j++) {
+						fileOut.write(data7[i][j] + "\t");
+					}
+				}
+				fileOut.close();
+			} catch (IOException e) {
+				System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			} 
+		}
+		return SRDrequirementsFile;
+	}	
+	
+	
 	private File getMSFireFile() {
-		File MSFireFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "Input 4 - MSFire.txt");	
+		File MSFireFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/Input 5 - Mixed Severity Fire.txt");	
 		MSFireFile.deleteOnExit();
 		
 		if (data5 != null) {
@@ -3269,7 +2590,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 	
 	private File getSRDisturbancesFile() {
-		File SRDisturbancesFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "Input 5 - SRDisturbances.txt");	
+		File SRDisturbancesFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/Input 6 - Replacing Disturbances.txt");	
 		SRDisturbancesFile.deleteOnExit();
 		
 		if (data6 != null) {
@@ -3294,7 +2615,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 	
 	private File getUserConstraintsFile() {
-		File userConstraintsFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "Input 6 - UserConstraints.txt");
+		File userConstraintsFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/Input 8 - User Constraints.txt");
 		userConstraintsFile.deleteOnExit();
 		
 		if (data2 != null) {
@@ -3328,32 +2649,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		return userConstraintsFile;	
 	}
 
-	
-	private File getSRDRequirementsFile() {
-		File SRDrequirementsFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "Input 7 - SRDRequirements.txt");	
-		SRDrequirementsFile.deleteOnExit();
 		
-		if (data7 != null) {
-			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(SRDrequirementsFile))) {
-				for (int j = 0; j < columnNames7.length; j++) {
-					fileOut.write(columnNames7[j] + "\t");
-				}
-
-				for (int i = 0; i < data7.length; i++) {
-					fileOut.newLine();
-					for (int j = 0; j < colCount7; j++) {
-						fileOut.write(data7[i][j] + "\t");
-					}
-				}
-				fileOut.close();
-			} catch (IOException e) {
-				System.err.println(e.getClass().getName() + ": " + e.getMessage());
-			} 
-		}
-		return SRDrequirementsFile;
-	}
-	
-	
 	private File getDatabaseFile() {	
 		File databaseFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "database.db");
 		if (databaseFile.exists()) databaseFile.delete();

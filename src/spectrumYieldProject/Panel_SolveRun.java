@@ -205,7 +205,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 							for (int row = 0; row < rowCount; row++) {
 								runStatButton.setText("searching for " + listOfEditRuns[row].getName() + " solution");
 								data[row][4] = "reading";
-								table.setValueAt(data[row][4] , row, 4);
+								model.fireTableDataChanged();
 								SolveProblem(row, listOfEditRuns[row]);
 							}
 
@@ -226,7 +226,10 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					// Clear table info
 					for (int row = 0; row < rowCount; row++) {
 						for (int col = 0; col < colCount; col++) {
-							if (col != 0 && col != 4) table.setValueAt("" , row, col);
+							if (col != 0 && col != 4) {
+								data[row][col] = "";
+								model.fireTableDataChanged();
+							}
 						}
 					}				
 					runStatButton.setEnabled(false);
@@ -264,22 +267,22 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 		try {
 			problemFile[row] = new File(runFolder.getAbsolutePath() + "/Problem.lp");
 			solutionFile[row] = new File(runFolder.getAbsolutePath() + "/Solution.lp");
-			output_generalInfo_file[row] = new File(runFolder.getAbsolutePath() + "/Output 1 - General_Info.txt");	
+			output_generalInfo_file[row] = new File(runFolder.getAbsolutePath() + "/Output 1 - General Infomation.txt");	
 			output_variables_file[row] = new File(runFolder.getAbsolutePath() + "/Output 2 - Variables.txt");
 			output_constraints_file[row] = new File(runFolder.getAbsolutePath() + "/Output 3 - Constraints.txt");	
-			output_managementOverview_file[row] = new File(runFolder.getAbsolutePath() + "/Output 4 - Management_Overview.txt");
+			output_managementOverview_file[row] = new File(runFolder.getAbsolutePath() + "/Output 4 - Management Overview.txt");
 			
 			
 		
 			//Read input files to retrieve values later
-			ReadRunInputs read= new ReadRunInputs();
-			read.readGeneralInputs(new File(runFolder.getAbsolutePath() + "/Input 1 - GeneralInputs.txt"));
-			read.readManagementOptions(new File(runFolder.getAbsolutePath() + "/Input 2 - SelectedStrata.txt"));
-			read.readRequirements(new File(runFolder.getAbsolutePath() + "/Input 3 - CovertypeConversion.txt"));
-			read.readMSFire(new File(runFolder.getAbsolutePath() + "/Input 4 - MSFire.txt"));
-			read.readSRDFile(new File(runFolder.getAbsolutePath() + "/Input 5 - SRDisturbances.txt"));
-			read.readUserConstraints(new File(runFolder.getAbsolutePath() + "/Input 6 - UserConstraints.txt"));
-			read.readSRDrequirementFile(new File(runFolder.getAbsolutePath() + "/Input 7 - SRDRequirements.txt"));
+			Read_RunInputs read= new Read_RunInputs();
+			read.readGeneralInputs(new File(runFolder.getAbsolutePath() + "/Input 1 - General Inputs.txt"));
+			read.readManagementOptions(new File(runFolder.getAbsolutePath() + "/Input 2 - Selected Strata.txt"));
+			read.readRequirements(new File(runFolder.getAbsolutePath() + "/Input 3 - Covertype Conversion (Clear Cuts).txt"));
+			read.readSRDrequirementFile(new File(runFolder.getAbsolutePath() + "/Input 4 - Covertype Conversion (Replacing Disturbances).txt"));
+			read.readMSFire(new File(runFolder.getAbsolutePath() + "/Input 5 - Mixed Severity Fire.txt"));
+			read.readSRDFile(new File(runFolder.getAbsolutePath() + "/Input 6 - Replacing Disturbances.txt"));
+			read.readUserConstraints(new File(runFolder.getAbsolutePath() + "/Input 8 - User Constraints.txt"));
 			Read_DatabaseTables read_DatabaseTables = new Read_DatabaseTables(new File(runFolder.getAbsolutePath() + "/database.db"));
 			
 			//ManagementOptions info
@@ -2355,9 +2358,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				data[row][2] = cplex.getNcols();
 				data[row][3] = cplex.getNrows();
 				data[row][4] = "solving";
-				table.setValueAt(data[row][2], row, 2); //To help trigger the table refresh: fireTableDataChanged() and repaint();
-				table.setValueAt(data[row][3], row, 3);
-				table.setValueAt(data[row][4], row, 4);
+				model.fireTableDataChanged();
 				
 				
 //				cplex.exportModel(problemFile[row].getAbsolutePath());
@@ -2495,9 +2496,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 
 					//Show successful or fail in the GUI
 					data[row][1] = "valid";
-					table.setValueAt(data[row][1], row, 1);
 					data[row][4] = "successful";
-					table.setValueAt(data[row][4], row, 4);
+					model.fireTableDataChanged();
 				}
 				
 				cplex.endModel();
@@ -2726,9 +2726,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				data[row][2] = solver.getNcolumns();
 				data[row][3] = solver.getNrows();
 				data[row][4] = "solving";
-				table.setValueAt(data[row][2], row, 2); //To help trigger the table refresh: fireTableDataChanged() and repaint();
-				table.setValueAt(data[row][3], row, 3);
-				table.setValueAt(data[row][4], row, 4);
+				model.fireTableDataChanged();
 		        
 //		        //solve the problem
 //		        int status = solver.solve();
@@ -2875,9 +2873,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 
 					//Show successful or fail in the GUI
 					data[row][1] = "valid";
-					table.setValueAt(data[row][1], row, 1);
 					data[row][4] = "successful";
-					table.setValueAt(data[row][4], row, 4);
+					model.fireTableDataChanged();
 					
 					
 					
@@ -2908,9 +2905,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			displayTextArea.append("Concert exception '" + e + "' caught for " + listOfEditRuns[row].getName() + "\n");
 			
 			data[row][1] = "Concert error";
-			table.setValueAt(data[row][1], row, 1);
 			data[row][4] = "fail";
-			table.setValueAt(data[row][4] , row, 4);
+			model.fireTableDataChanged();
 			
 			output_variables_file[row].delete();
 			output_constraints_file[row].delete();	
@@ -2922,9 +2918,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			System.err.println(e2.getClass().getName() + ": " + e2.getMessage() + " caught for '" + listOfEditRuns[row].getName() + "' please check Input Files");
 			displayTextArea.append(e2.getClass().getName() + ": " + e2.getMessage() + " caught for '" + listOfEditRuns[row].getName()  + "' please check Input Files" + "\n");
 			data[row][1] = "Invalid Inputs";
-			table.setValueAt(data[row][1], row, 1);
 			data[row][4] = "fail";
-			table.setValueAt(data[row][4] , row, 4);
+			model.fireTableDataChanged();
 			
 			output_variables_file[row].delete();
 			output_constraints_file[row].delete();

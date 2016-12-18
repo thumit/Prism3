@@ -285,7 +285,7 @@ public class Panel_CustomizeOutput extends JLayeredPane implements ActionListene
 //			
 //		
 //			//Read input files to retrieve values later
-//			ReadRunInputs read= new ReadRunInputs();
+//			Read_RunInputs read= new Read_RunInputs();
 //			read.readGeneralInputs(new File(runFolder.getAbsolutePath() + "/GeneralInputs.txt"));
 //			read.readManagementOptions(new File(runFolder.getAbsolutePath() + "/ManagementOptions.txt"));
 //			read.readUserConstraints(new File(runFolder.getAbsolutePath() + "/UserConstraints.txt"));

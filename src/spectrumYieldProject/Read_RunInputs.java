@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class ReadRunInputs {
+public class Read_RunInputs {
 	//For readGeneralInputs
 	private int GI_totalRows, GI_totalColumns;
 	private String GI_value[][];

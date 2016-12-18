@@ -45,7 +45,7 @@ public class Panel_EditRun extends JLayeredPane implements ActionListener {
 		radioPanel_Left.setLayout(new BoxLayout(radioPanel_Left, BoxLayout.Y_AXIS));
 		radioGroup_Left = new ButtonGroup();
 		
-		radioButton_Left  = new JRadioButton[listOfEditRuns.length];
+		radioButton_Left = new JRadioButton[listOfEditRuns.length];
 		for (int i = 0; i < listOfEditRuns.length; i++) {
 			radioButton_Left[i] = new JRadioButton(listOfEditRuns[i].getName());
 				radioGroup_Left.add(radioButton_Left[i]);

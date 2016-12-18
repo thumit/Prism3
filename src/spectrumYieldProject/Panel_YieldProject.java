@@ -17,8 +17,6 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -114,7 +112,7 @@ public class Panel_YieldProject extends JLayeredPane {
 		splitPanel.setOneTouchExpandable(true);
 		splitPanel.setDividerLocation(200);
 		// splitPane.setDividerSize(5);
-		// splitPane.getComponent(2).setCursor(new Cursor(Cursor.HAND_CURSOR));
+//		splitPanel.getComponent(2).setCursor(new Cursor(Cursor.HAND_CURSOR));
 
 		// Left split panel--------------------------------------------------------------------------------
 		scrollPane_Left = new JScrollPane();
@@ -377,7 +375,7 @@ public class Panel_YieldProject extends JLayeredPane {
 //						scrollPane_Right.setOpaque(false);
 						
 						
-						if (currentInputFile.equals("Output 4 - Management_Overview.txt")) {		//show a panel with chart if the selected node name is "Output 4 - Management_Overview.txt"
+						if (currentInputFile.equals("Output 4 - Management Overview.txt")) {		//show a panel with chart if the selected node name is "Output 4 - Management_Overview.txt"
 							scrollPane_Right.setViewportView(new PaneL_Management_Overview(table));
 							
 							table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
