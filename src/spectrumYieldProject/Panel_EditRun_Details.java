@@ -385,7 +385,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			table1.getColumnModel().getColumn(0).setPreferredWidth(250);	//Set width of 1st Column bigger
 			table1.getColumnModel().getColumn(1).setPreferredWidth(100);	//Set width of 2nd Column bigger
 //			table1.setTableHeader(null);
-//			table1.setPreferredScrollableViewportSize(new Dimension(400, 100));
+			table1.setPreferredScrollableViewportSize(new Dimension(400, 100));
 //			table1.setFillsViewportHeight(true);
 	        table1.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
@@ -1537,8 +1537,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					int maxWidth = Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth());
 					
 					// For the column names
-					TableCellRenderer renderer2 = table.getTableHeader().getDefaultRenderer();	
-					Component component2 = renderer2.getTableCellRendererComponent(table,
+					TableCellRenderer renderer2 = table5.getTableHeader().getDefaultRenderer();	
+					Component component2 = renderer2.getTableCellRendererComponent(table5,
 				            tableColumn.getHeaderValue(), false, false, -1, column);
 					maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
 					
@@ -1913,7 +1913,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			action_info.setWrapStyleWord(true);
 			action_info.append("SpectrumLite is assuming that it found " + all_actions.size() + 
 					" unique management actions across all" /*+ yieldTable_values.length*/ + " yield tables in your database"  + "\n");	
-			action_info.append("All Base Costs are set to 100 as default. Please re-define your true costs");	
+			action_info.append("All Base Costs are set to default values. Please re-define your true costs");	
 			
 			JScrollPane action_info_scroll = new JScrollPane(action_info); //place the JTextArea in a scroll pane
 			action_info_scroll.setBorder(BorderFactory.createEmptyBorder());
@@ -1942,7 +1942,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			TitledBorder border = new TitledBorder("Management Action List");
 			border.setTitleJustification(TitledBorder.CENTER);
 			scrollPane_Left.setBorder(border);
-			scrollPane_Left.setPreferredSize(new Dimension(250, 300));
+			scrollPane_Left.setPreferredSize(new Dimension(250, 250));
 			splitPanel.setLeftComponent(scrollPane_Left);
 			
 			// Add all selected Runs to radioPanel and add that panel to scrollPane_Left
@@ -1962,25 +1962,19 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			
 			// Right split panel-------------------------------------------------------------------------------
-			JScrollPane scrollPane_Right = new JScrollPane();
-			TitledBorder border2 = new TitledBorder("Cost Definition");
-			border2.setTitleJustification(TitledBorder.CENTER);
-			scrollPane_Right.setBorder(border2);
-			scrollPane_Right.setPreferredSize(new Dimension(400, 300));
-			splitPanel.setRightComponent(scrollPane_Right);
-			
-			
-			Child_Panel_Cost[] cost_panel = new Child_Panel_Cost[all_actions.size()];
+			Panel_Cost[] cost_ScrollPanel = new Panel_Cost[all_actions.size()];
 			for (int i = 0; i < all_actions.size(); i++) {
-				cost_panel[i] = new Child_Panel_Cost(read_Identifiers, yieldTable_ColumnNames);
+				cost_ScrollPanel[i] = new Panel_Cost(read_Identifiers, yieldTable_ColumnNames);
+				JScrollPane scrollPane_Right = new JScrollPane();
+				TitledBorder border2 = new TitledBorder("Cost Definition - " + all_actions.get(i));
+				border2.setTitleJustification(TitledBorder.CENTER);
+				cost_ScrollPanel[i].setBorder(border2);
+				cost_ScrollPanel[i].setPreferredSize(new Dimension(400, 250));
 			}
-			border2.setTitle("Cost Definition - " + all_actions.get(0));
-			scrollPane_Right.setBorder(border2);
-			scrollPane_Right.setViewportView(cost_panel[0]);
+			splitPanel.setRightComponent(cost_ScrollPanel[0]);
 			
 			
-			
-					
+		
 			//Listeners for radios----------------------------------------------------------------------------
 			for (int i = 0; i < all_actions.size(); i++) {
 				int currentAction = i;
@@ -1988,10 +1982,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					@Override
 					public void actionPerformed(ActionEvent actionEvent) {
 						if (radioButton_Left[currentAction].isSelected()) {
-							scrollPane_Right.setViewportView(cost_panel[currentAction]);
-							border2.setTitle("Cost Definition - " + all_actions.get(currentAction));
-							scrollPane_Right.setBorder(border2);
-							scrollPane_Right.repaint();
+							splitPanel.setRightComponent(cost_ScrollPanel[currentAction]);
 						}			
 					}
 				});
@@ -2210,8 +2201,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					int maxWidth = Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth());
 					
 					// For the column names
-					TableCellRenderer renderer2 = table.getTableHeader().getDefaultRenderer();	
-					Component component2 = renderer2.getTableCellRendererComponent(table,
+					TableCellRenderer renderer2 = table2.getTableHeader().getDefaultRenderer();	
+					Component component2 = renderer2.getTableCellRendererComponent(table2,
 				            tableColumn.getHeaderValue(), false, false, -1, column);
 					maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
 					
@@ -2264,17 +2255,11 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		    
 			// Create the scroll pane and add the constraintTablePanel to it.
 			JScrollPane constraints_ScrollPane = new JScrollPane();
-			constraints_ScrollPane.setViewportView(table2);
-			constraints_ScrollPane.setPreferredSize(new Dimension(300, 150));
-	         
-	         
-	         //Create a JPanel and Add the scrollPane to this panel.
-			JPanel constraintTablePanel = new JPanel(new BorderLayout(0, 0));
 			TitledBorder border5 = new TitledBorder("Constraints Information");
 			border5.setTitleJustification(TitledBorder.CENTER);
-			constraintTablePanel.setBorder(border5);
-			constraintTablePanel.add(constraints_ScrollPane);
-	         		
+			constraints_ScrollPane.setBorder(border5);			
+			constraints_ScrollPane.setViewportView(table2);
+			constraints_ScrollPane.setPreferredSize(new Dimension(300, 150));
 			// End of 5th Grid -----------------------------------------------------------------------
 			// End of 5th Grid -----------------------------------------------------------------------				
 			
@@ -2333,14 +2318,14 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		    c.weighty = 0;
 			super.add(buttonClearPanel, c);	
 		    	    		    
-		    // Add the constraintTablePanel to the main Grid
+		    // Add the constraints_ScrollPane to the main Grid
 			c.gridx = 1;
 			c.gridy = 1;
 			c.gridwidth = 2; 
 			c.gridheight = 3;
 			c.weightx = 1;
 		    c.weighty = 1;
-			super.add(constraintTablePanel, c);
+			super.add(constraints_ScrollPane, c);
 			
 			//when radioButton_Right[5] is selected, time period GUI will be updated
 			radioButton_Right[5].addActionListener(this);
