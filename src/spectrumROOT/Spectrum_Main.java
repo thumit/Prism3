@@ -11,8 +11,6 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyVetoException;
@@ -28,11 +26,10 @@ import javax.swing.JInternalFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -53,8 +50,8 @@ import spectrumYieldProject.Panel_YieldProject;
 @SuppressWarnings("serial")
 public class Spectrum_Main extends JFrame {
 	// Define variables------------------------------------------------------------------------
-	private ImageIcon 	icon;
-	private Image 		scaleImage;
+	private ImageIcon 		icon;
+	private Image 			scaleImage;
 	
 	private JMenuBarCustomize 	spectrum_Menubar;
 	private JMenu 				menuFile, menuUtility, menuWindow, menuHelp,
@@ -67,10 +64,10 @@ public class Spectrum_Main extends JFrame {
 	private MenuItem_SetTransparency 	setTransparency;	//For menuWindow
 	private MenuItem_SetLookAndFeel 	setLookAndFeel;		//For menuWindow
 		
-	private static Panel_BackGroundDesktop spectrumDesktopPane;
-	private static String currentProjectName;
-	private static Spectrum_Main main;
-	private static ComponentResizer cr;
+	private static Panel_BackGroundDesktop 	spectrumDesktopPane;
+	private static String 					currentProjectName;
+	private static Spectrum_Main 			main;
+	private static ComponentResizer 		cr;
 	
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public static void main(String[] args) {
@@ -188,13 +185,11 @@ public class Spectrum_Main extends JFrame {
 
 					@Override
 					public void menuDeselected(MenuEvent e) {
-						// TODO Auto-generated method stub
 						
 					}
 
 					@Override
 					public void menuCanceled(MenuEvent e) {
-						// TODO Auto-generated method stub
 						
 					}
 				});

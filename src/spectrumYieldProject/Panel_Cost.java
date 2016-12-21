@@ -33,7 +33,7 @@ public class Panel_Cost extends JPanel {
 	public Panel_Cost (Read_Indentifiers read_Identifiers, String[] yieldTable_ColumnNames) {	
 
 	
-		//Setup the table--------------------------------------------------------------------------------
+		//Setup the table--------------------------------------------------------------------------------------------
 		rowCount = 1;
 		colCount = 5;
 		data = new Object[rowCount][colCount];
@@ -46,7 +46,7 @@ public class Panel_Cost extends JPanel {
         data[0][4] = 1.2;
         
 
-		//Create a table
+		//Create a table----------------------------------------------------------------------------------------------------------------
         model = new DefaultTableModel(data, columnNames);
         table = new JTable(model) {
 			@Override			//These override is to make the width of the cell fit all contents of the cell
@@ -61,16 +61,26 @@ public class Panel_Cost extends JPanel {
 				TableCellRenderer renderer2 = table.getTableHeader().getDefaultRenderer();	
 				Component component2 = renderer2.getTableCellRendererComponent(table,
 			            tableColumn.getHeaderValue(), false, false, -1, column);
-				maxWidth = Math.max(maxWidth, component2.getPreferredSize().width + 25);		//Here all headers + 25 empty space
+				maxWidth = Math.max(maxWidth, component2.getPreferredSize().width + 15);		//Here all headers + 25 empty space
 				
 				tableColumn.setPreferredWidth(maxWidth);
 				return component;
 			}	
 			
+			@Override
 			public Class getColumnClass(int c) {
 				if (c==0) return String.class;      //column 0 accepts only String
 				else if (c>=1 && c<=4) return Double.class;      //column 1 to 4 accept only Double values    
 		        else return (getValueAt(0, c) == null ? Object.class : getValueAt(0, c).getClass());
+			}
+			
+			@Override
+			public boolean isCellEditable(int row, int col) {
+				if (col == 0 && row==0) { // The 1st cell(0,0)) is not editable
+					return false;
+				} else {
+					return true;
+				}
 			}
 		};
 		
@@ -78,24 +88,31 @@ public class Panel_Cost extends JPanel {
         DefaultTableCellRenderer renderer = (DefaultTableCellRenderer)table.getDefaultRenderer(Object.class);
         renderer.setHorizontalAlignment(SwingConstants.LEFT);		// Set alignment of values in the table to the left side
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        table.getTableHeader().setReorderingAllowed(false);		//Disable columns move
 		table.getColumnModel().getColumn(0).setPreferredWidth(150);	//Set width of 1st Column bigger
 
-		
 //		table.setTableHeader(null);
 //		table.setPreferredScrollableViewportSize(new Dimension(400, 100));
 //		table.setFillsViewportHeight(true);
 		
-        table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+
+		
+		
+		
+		
+		
         
         // Add table to scroll pane
 		JScrollPane cost_scrollpane = new JScrollPane();
 		cost_scrollpane.setViewportView(table);
-		//End of Setup the table--------------------------------------------------------------------------------
+	
+		
 		
 		
 		//Setup the button "ADD"--------------------------------------------------------------------------------
 		JButton addButton = new JButton();
-		addButton.setToolTipText("Add a new cost condition");
+		addButton.setToolTipText("Add a new cost condition (add row)");
 		icon = new ImageIcon(getClass().getResource("/icon_new.png"));
 		scaleImage = icon.getImage().getScaledInstance(25, 25,Image.SCALE_SMOOTH);
 		addButton.setIcon(new ImageIcon(scaleImage));
@@ -107,24 +124,25 @@ public class Panel_Cost extends JPanel {
 				// Refresh the data
 				int nRow = model.getRowCount(), nCol = model.getColumnCount();
 				data = new Object[nRow][nCol];
-				for (int i = 0; i < nRow; i++)
-					for (int j = 0; j < nCol; j++)
+				for (int i = 0; i < nRow; i++) {
+					for (int j = 0; j < nCol; j++) {
 						data[i][j] = model.getValueAt(i, j);
-
+					}	
+				}
 			}
 		});
 		
 
 		//Setup the button "Delete"--------------------------------------------------------------------------------
 		JButton deleteButton = new JButton();
-		deleteButton.setToolTipText("Delete selected cost conditions");
+		deleteButton.setToolTipText("Delete selected cost conditions (delete rows)");
 		icon = new ImageIcon(getClass().getResource("/icon_delete.png"));
 		scaleImage = icon.getImage().getScaledInstance(25, 25,Image.SCALE_SMOOTH);
 		deleteButton.setIcon(new ImageIcon(scaleImage));
 		deleteButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
-				table.getSelectionModel().removeSelectionInterval(0, 0);    //deselect the 1st row because we dont want to delete it
+				table.getSelectionModel().removeSelectionInterval(0, 0);    //deselect the 1st row because we don't want to delete it
 				
 				//Delete the others
 				int[] selectedRow = table.getSelectedRows();
@@ -140,50 +158,49 @@ public class Panel_Cost extends JPanel {
 				// Refresh the data
 				int nRow = model.getRowCount(), nCol = model.getColumnCount();
 				data = new Object[nRow][nCol];
-				for (int i = 0; i < nRow; i++)
-					for (int j = 0; j < nCol; j++)
+				for (int i = 0; i < nRow; i++) {
+					for (int j = 0; j < nCol; j++) {
 						data[i][j] = model.getValueAt(i, j);
-
+					}	
+				}
 			}
 		});
 		
 		
 
-		
-		// Add all to this Big Panel Class
+		// Add all to this Big Panel Class------------------------------------------------------------------------------
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.BOTH;
-		
-		//Add Button
+
+		// Add Button
 		c.gridx = 0;
 		c.gridy = 0;
 		c.weightx = 0;
 		c.weighty = 0;
 		add(addButton, c);
-	
-		//Add Button
+
+		// Add Button
 		c.gridx = 0;
 		c.gridy = 1;
 		c.weightx = 0;
 		c.weighty = 0;
 		add(deleteButton, c);
-		
-		//Add Empty Label to make those above 2 buttons not resize
+
+		// Add Empty Label to make those above 2 buttons not resize
 		c.gridx = 0;
 		c.gridy = 2;
 		c.weightx = 0;
 		c.weighty = 0;
 		add(new JLabel(), c);
-		
-		//Add cost_scrollpane
+
+		// Add cost_scrollpane
 		c.gridx = 1;
 		c.gridy = 0;
 		c.weightx = 1;
 		c.weighty = 1;
 		c.gridheight = 3;
 		add(cost_scrollpane, c);
-		
 
 	}
 	

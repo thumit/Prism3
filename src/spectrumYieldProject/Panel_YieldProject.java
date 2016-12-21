@@ -359,13 +359,15 @@ public class Panel_YieldProject extends JLayeredPane {
 						};
 						
 						
-//						table.getColumnModel().getColumn(1).setPreferredWidth(100);	//Set width of Column 'Validation'
 						DefaultTableCellRenderer renderer = (DefaultTableCellRenderer)table.getDefaultRenderer(Object.class);
 						renderer.setHorizontalAlignment(SwingConstants.LEFT);		// Set alignment of values in the table to the left side
+						table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 			     		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+//						table.getColumnModel().getColumn(1).setPreferredWidth(100);	//Set width of Column 1
+			     		
 //						table.setPreferredScrollableViewportSize(new Dimension(400, 100));
 //						table.setFillsViewportHeight(true);
-						table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+
 						
 
 				
@@ -779,7 +781,7 @@ public class Panel_YieldProject extends JLayeredPane {
 			
 			icon = new ImageIcon(getClass().getResource("/icon_question.png"));
 	  		scaleImage = icon.getImage().getScaledInstance(50, 50,Image.SCALE_SMOOTH);
-	  		String ExitOption[] = {"Yes","No"};
+	  		String[] ExitOption = {"Yes","No"};
 			int response = JOptionPane.showOptionDialog(Spectrum_Main.mainFrameReturn(),"Save all changes you made ?", "Stop Editing",
 					JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, new ImageIcon(scaleImage), ExitOption, ExitOption[0]);
 			

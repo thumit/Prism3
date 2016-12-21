@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Read_Strata {
 	private int totalRows, totalColumns;
-	private String value[][];
+	private String[][] value;
 	
 	public void readValues (File file) {
 		String delimited = ","; // 		","		comma delimited			"\\s+"		space delimited		"\t"	tab delimited

@@ -24,7 +24,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,6 +78,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private JPanel radioPanel_Right; 
 	private ButtonGroup radioGroup_Right; 
 	private JRadioButton[] radioButton_Right; 
+	
+	private File currentRunFolder;
 	private File file_ExistingStrata, file_Database;
 	private File file_StrataDefinition;
 	private String newDefinition = "currently set to Default with 6 Layers";
@@ -110,7 +114,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 	
 	
-	
+	private boolean is_table1_loaded = false;
 	private int rowCount1, colCount1;
 	private String[] columnNames1;
 	private JTable table1;
@@ -118,6 +122,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private Object[][] data1;
 	
 	
+	private boolean is_table_loaded = false;
 	private int rowCount, colCount;
 	private String[] columnNames;
 	private JTable table;
@@ -125,6 +130,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private Object[][] data;
 
 
+	private boolean is_table2_loaded = false;
 	private int rowCount2, colCount2;
 	private String[] columnNames2;
 	private JTable table2;
@@ -133,6 +139,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 	
 	//Jtable Models OverView (in input 1)
+	private boolean is_table3_loaded = false;
 	private int rowCount3, colCount3;
 	private String[] columnNames3;
 	private JTable table3;
@@ -141,6 +148,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private double modeledAcres, availableAcres;
 	
 	//Jtable EA requirements
+	private boolean is_table4_loaded = false;
 	private int rowCount4, colCount4;
 	private String[] columnNames4;
 	private JTable table4;
@@ -148,6 +156,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private Object[][] data4;
 	
 	//Jtable SRD requirements
+	private boolean is_table7_loaded = false;
 	private int rowCount7, colCount7;
 	private String[] columnNames7;
 	private JTable table7;
@@ -155,6 +164,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private Object[][] data7;
 
 	//Jtable MixedFire
+	private boolean is_table5_loaded = false;
 	private int rowCount5, colCount5;
 	private String[] columnNames5;
 	private JTable table5;
@@ -162,6 +172,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private Object[][] data5;
 	
 	//Jtable Stand Replacing Disturbances
+	private boolean is_table6_loaded = false;
 	private int rowCount6, colCount6;
 	private String[] columnNames6;
 	private JTable table6;
@@ -169,9 +180,26 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private Object[][] data6;
 	
 	
-	public Panel_EditRun_Details() {
+	public Panel_EditRun_Details(File RunFolder) {
 		super.setLayout(new BorderLayout());
 
+		
+		//Get some initial information from the run -----------------------------------------------------------------------------------------------
+		currentRunFolder = RunFolder;		
+		
+		
+		File temp_databaseFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + currentRunFolder.getName()+ "_temp_database.db");
+		temp_databaseFile.deleteOnExit();
+		try {
+			Files.copy(new File(currentRunFolder.getAbsolutePath() + "/database.db").toPath(), temp_databaseFile.toPath());
+		} catch (IOException e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+		}
+		file_Database = temp_databaseFile;
+		
+		
+		
+		
 		// get the "StrataDefinition.csv" file from where this class is located
 		try {
 			file_StrataDefinition = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "StrataDefinition.csv");
@@ -192,6 +220,133 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			System.err.println(e2.getClass().getName() + ": " + e2.getMessage());
 		}
 
+		
+		
+		//Load tables
+		File table_file;
+		Load_Table_Info tableLoader;
+		
+		
+		table_file = new File(currentRunFolder.getAbsolutePath() + "/Input 1 - General Inputs.txt");
+		if (table_file.exists()) {		//Load from input
+			tableLoader = new Load_Table_Info(table_file);
+			rowCount1 = tableLoader.get_rowCount();
+			colCount1 = tableLoader.get_colCount();
+			data1 = tableLoader.get_input_data();
+			columnNames1 = tableLoader.get_columnNames();
+			is_table1_loaded = true;
+		} else { // Create a fresh new if Load fail
+			System.err.println("File not exists: Input 1 - General Inputs.txt - New interface is created");
+		}
+			
+		
+		table_file = new File(currentRunFolder.getAbsolutePath() + "/Input 2 - Selected Strata.txt");
+		if (table_file.exists()) { // Load from input
+			tableLoader = new Load_Table_Info(table_file);
+			rowCount = tableLoader.get_rowCount();
+			colCount = tableLoader.get_colCount();
+			data = tableLoader.get_input_data();
+			columnNames = tableLoader.get_columnNames();
+			is_table_loaded = true;
+			
+
+//			//This is strange when only this 1 I have to register the "Yes" - in case we don't use String.ValueOf to compare data (see last lines)
+//			for (int i = 0; i < rowCount; i++) {
+//				data[i][colCount-1] = "Yes";
+//			}			
+		} else { // Create a fresh new if Load fail
+			System.err.println("File not exists: Input 2 - Selected Strata.txt - New interface is created");
+		}	
+		
+															//Need to change later (not here , below) because I didn't write the whole file, just write the yes case
+		table_file = new File(currentRunFolder.getAbsolutePath() + "/Input 3 - Covertype Conversion (Clear Cuts).txt");
+		if (table_file.exists()) { // Load from input
+			tableLoader = new Load_Table_Info(table_file);
+			rowCount4 = tableLoader.get_rowCount();
+			colCount4 = tableLoader.get_colCount();
+			data4 = tableLoader.get_input_data();
+			columnNames4 = tableLoader.get_columnNames();
+			is_table4_loaded = true;
+		} else { // Create a fresh new if Load fail
+			System.err.println("File not exists: Input 3 - Covertype Conversion (Clear Cuts).txt - New interface is created");
+		}
+
+		
+		table_file = new File(currentRunFolder.getAbsolutePath() + "/Input 4 - Covertype Conversion (Replacing Disturbances).txt");
+		if (table_file.exists()) { // Load from input
+			tableLoader = new Load_Table_Info(table_file);
+			rowCount7 = tableLoader.get_rowCount();
+			colCount7 = tableLoader.get_colCount();
+			data7 = tableLoader.get_input_data();
+			columnNames7 = tableLoader.get_columnNames();
+			is_table7_loaded = true;
+		} else { // Create a fresh new if Load fail
+			System.err.println("File not exists: Input 4 - Covertype Conversion (Replacing Disturbances).txt - New interface is created");
+		}
+		
+
+		table_file = new File(currentRunFolder.getAbsolutePath() + "/Input 5 - Mixed Severity Fire.txt");
+		if (table_file.exists()) { // Load from input
+			tableLoader = new Load_Table_Info(table_file);
+			rowCount5 = tableLoader.get_rowCount();
+			colCount5 = tableLoader.get_colCount();
+			data5 = tableLoader.get_input_data();
+			columnNames5 = tableLoader.get_columnNames();
+			is_table5_loaded = true;
+		} else { // Create a fresh new if Load fail
+			System.err.println("File not exists: Input 5 - Mixed Severity Fire.txt - New interface is created");
+		}
+		
+		
+		table_file = new File(currentRunFolder.getAbsolutePath() + "/Input 6 - Replacing Disturbances.txt");
+		if (table_file.exists()) { // Load from input
+			tableLoader = new Load_Table_Info(table_file);
+			rowCount6 = tableLoader.get_rowCount();
+			colCount6 = tableLoader.get_colCount();
+			data6 = tableLoader.get_input_data();
+			columnNames6 = tableLoader.get_columnNames();
+			is_table6_loaded = true;
+		} else { // Create a fresh new if Load fail
+			System.err.println("File not exists: Input 6 - Replacing Disturbances.txt - New interface is created");
+		}		
+		
+		
+		table_file = new File(currentRunFolder.getAbsolutePath() + "/Input 8 - User Constraints.txt");
+		if (table_file.exists()) { // Load from input
+			tableLoader = new Load_Table_Info(table_file);
+			rowCount2 = tableLoader.get_rowCount();
+			colCount2 = tableLoader.get_colCount();
+			data2 = tableLoader.get_input_data();
+			columnNames2 = tableLoader.get_columnNames();
+			is_table2_loaded = true;
+		} else { // Create a fresh new if Load fail
+			System.err.println("File not exists: Input 8 - User Constraints.txt - New interface is created");
+		}
+		
+		
+		
+		
+		
+		
+	
+		
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		//Create the interface ---------------------------------------------------------------------------------------------------------------------
 		
 		// Add 3 input options to radioPanel and add that panel to scrollPane_Right at combinePanel NORTH
 		radioPanel_Right = new JPanel();
@@ -246,6 +401,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	} // end Panel_EditRun_Details()
 
 	
+	
 	// Listener for radio buttons------------------------------------------------------------------------------------------------
     public void actionPerformed(ActionEvent e) {
 		for (int j = 0; j < radioButton_Right.length; j++) {
@@ -275,7 +431,81 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			}
 		}
 	}
+ 
+    
+    
+	// Load inputs of the run------------------------------------------------------------------------------------------------ 
+	private class Load_Table_Info {
+		private int input_colCount;
+		private int input_rowCount;
+		private Object[][] input_data;
+		private String[] input_columnNames;
+    	
+    	private Load_Table_Info(File table_file) {
+			//Load table to get its 4 attributes
+			try {
+				String delimited = "\t";		// tab delimited
+				List<String> list;
+				list = Files.readAllLines(Paths.get(table_file.getAbsolutePath()), StandardCharsets.UTF_8);			
+				String[] a = list.toArray(new String[list.size()]);					
+												
+				//Setup the table--------------------------------------------------------------------------------
+				input_columnNames = a[0].split(delimited);		//tab delimited		//Read the first row	
+				input_rowCount = a.length - 1;  // - 1st row which is the column name
+				input_colCount = input_columnNames.length;
+				input_data = new Object[input_rowCount][input_colCount];
+			
+				
+				// Populate the input_data matrix
+				for (int row = 0; row < input_rowCount; row++) {
+					String[] rowValue = a[row + 1].split(delimited);	//tab delimited	
+					for (int col = 0; col < input_colCount; col++) {
+						input_data[row][col] = rowValue[col];
+					}	
+				}	
+				
+			} catch (IOException e1) {
+				System.err.println(e1.getClass().getName() + ": " + e1.getMessage() + " - Cannot load. New interface is created");
+			}
+		}
 
+		private int get_colCount() {
+			return input_colCount;
+		}
+		
+		private int get_rowCount() {
+			return input_rowCount;
+		}
+		
+		private Object[][] get_input_data() {
+			return input_data;
+		}
+		
+		private String[] get_columnNames() {
+			return input_columnNames;
+		}
+	}
+    
+       
+    
+    //--------------------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------------------  
+    //--------------------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------------------
+   
+    //--------------------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------------------
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
 	// Panel General Inputs------------------------------------------------------------------------------------------------------	
 	class General_Inputs_GUI extends JLayeredPane {
@@ -328,6 +558,11 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					totalPeriod = Integer.parseInt(combo1.getSelectedItem().toString());
 					
 					// Apply any change in the GUI to the table
+					data1[0][0] = "Total planning periods (decades)";
+					data1[1][0] = "Solving time limit (minutes)";
+					data1[2][0] = "Annual discount rate (%)";
+					data1[3][0] = "Solver for optimization";
+					
 					data1[0][1] = combo1.getSelectedItem().toString();
 					data1[1][1] = (Integer)spin2.getValue();
 					data1[2][1] = combo3.getSelectedItem().toString();
@@ -350,6 +585,11 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		        	spin2.setValue(spin2.getValue());
 		        	
 		        	// Apply any change in the GUI to the table
+					data1[0][0] = "Total planning periods (decades)";
+					data1[1][0] = "Solving time limit (minutes)";
+					data1[2][0] = "Annual discount rate (%)";
+					data1[3][0] = "Solver for optimization";
+					
 					data1[0][1] = combo1.getSelectedItem().toString();
 					data1[1][1] = (Integer)spin2.getValue();
 					data1[2][1] = combo3.getSelectedItem().toString();
@@ -363,31 +603,29 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	class General_Inputs_Text extends JScrollPane {
 		public General_Inputs_Text() {		
 			
-			//Setup the table--------------------------------------------------------------------------------
-			rowCount1 = 4;
-			colCount1 = 2;
-			data1 = new Object[rowCount1][colCount1];
-	        columnNames1= new String[] {"Input Description" , "Selected Option"};
-			
-	        data1[0][0] = "Total planning periods (decades)";		
-			data1[1][0] = "Solving time limit (minutes)";
-			data1[2][0] = "Annual discount rate (%)";
-			data1[3][0] = "Solver for optimization";
-	        
-
-			//Create a table
+			//Setup the table------------------------------------------------------------	
+			if (is_table1_loaded == false) { // Create a fresh new if Load fail				
+				rowCount1 = 4;
+				colCount1 = 2;
+				data1 = new Object[rowCount1][colCount1];
+				columnNames1 = new String[] { "Input Description", "Selected Option" };
+			}
+				
+			//Create a table-------------------------------------------------------------
 	        model1 = new TableModelSpectrum(colCount1, rowCount1, columnNames1, data1);
 	        table1 = new JTable(model1);
 			
 	        DefaultTableCellRenderer renderer = (DefaultTableCellRenderer)table1.getDefaultRenderer(Object.class);
 	        renderer.setHorizontalAlignment(SwingConstants.LEFT);		// Set alignment of values in the table to the left side
 			table1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+	        table1.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+	        table1.getTableHeader().setReorderingAllowed(false);		//Disable columns move     
 			table1.getColumnModel().getColumn(0).setPreferredWidth(250);	//Set width of 1st Column bigger
 			table1.getColumnModel().getColumn(1).setPreferredWidth(100);	//Set width of 2nd Column bigger
 //			table1.setTableHeader(null);
 			table1.setPreferredScrollableViewportSize(new Dimension(400, 100));
 //			table1.setFillsViewportHeight(true);
-	        table1.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+
 
 	        setViewportView(table1);
 		}
@@ -578,7 +816,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 							}
 							data[row][colCount - 3] = value[row][read_Strata.get_TotalColumns() - 1];	//the last column is "Total acres"
 						}
-			         
+						model.fireTableDataChanged();
+								         
 						//Only add sorter after having the data loaded
 						TableRowSorter<MyTableModel> sorter = new TableRowSorter<MyTableModel>(model);
 						table.setRowSorter(sorter);
@@ -738,11 +977,13 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	        DefaultTableCellRenderer renderer = (DefaultTableCellRenderer)table3.getDefaultRenderer(Object.class);
 	        renderer.setHorizontalAlignment(SwingConstants.LEFT);		// Set alignment of values in the table to the left side
 //	        table3.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+	        table3.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+	        table3.getTableHeader().setReorderingAllowed(false);		//Disable columns move
 	        table3.getColumnModel().getColumn(0).setPreferredWidth(250);	//Set width of 1st Column bigger
 	        table3.setTableHeader(null);
 	        table3.setPreferredScrollableViewportSize(new Dimension(400, 100));
 	        table3.setFillsViewportHeight(true);
-	        table3.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+	      
 	        
 	        JScrollPane overviewScrollPane = new JScrollPane();
 	        overviewScrollPane.setViewportView(table3);
@@ -914,26 +1155,30 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		public Model_Identification_Text() {
 			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-			read_Identifiers = new Read_Indentifiers(file_StrataDefinition);
-			List<String> layers_Title = read_Identifiers.get_layers_Title();
-			List<String> layers_Title_ToolTip = read_Identifiers.get_layers_Title_ToolTip();
-	         
-			
-			rowCount = 0;
-			colCount = layers_Title.size() + 4;
-			columnNames = new String[colCount];
+					
+			//Setup the table------------------------------------------------------------	
+			if (is_table_loaded == false) { // Create a fresh new if Load fail				
+				read_Identifiers = new Read_Indentifiers(file_StrataDefinition);
+				List<String> layers_Title = read_Identifiers.get_layers_Title();
+				List<String> layers_Title_ToolTip = read_Identifiers.get_layers_Title_ToolTip();
+		         
+				
+				rowCount = 0;
+				colCount = layers_Title.size() + 4;
+				columnNames = new String[colCount];
 
-			columnNames[0] = "Strata ID";		//add for the name of strata
-			for (int i = 0; i < layers_Title.size(); i++) {
-				columnNames[i+1] = layers_Title.get(i);			//add 6 layers to the column header name
+				columnNames[0] = "Strata ID";		//add for the name of strata
+				for (int i = 0; i < layers_Title.size(); i++) {
+					columnNames[i+1] = layers_Title.get(i);			//add 6 layers to the column header name
+				}
+		         
+				columnNames[colCount - 3] = "Total area (acres)";	//add 3 more columns
+				columnNames[colCount - 2] = "Age Class";
+				columnNames[colCount - 1] = "Strata in optimization model";	
 			}
-	         
-			columnNames[colCount - 3] = "Total area (acres)";	//add 3 more columns
-			columnNames[colCount - 2] = "Age Class";
-			columnNames[colCount - 1] = "Strata in optimization model";
-	         
-	         
-			//Create a table
+						
+			
+			//Create a table-------------------------------------------------------------
 			model = new MyTableModel();
 			table = new JTable(model) {
 //				// Implement table cell tool tips
@@ -951,13 +1196,16 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 //				}
 			};
 
-			// table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-			table.setPreferredScrollableViewportSize(new Dimension(500, 70));
-			table.setFillsViewportHeight(true);
+//			table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 			table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);	  
+			table.getTableHeader().setReorderingAllowed(false);		//Disable columns move
 //			table.createDefaultColumnsFromModel(); // Very important code to refresh the number of Columns	shown
 	        table.getColumnModel().getColumn(colCount - 3).setPreferredWidth(120);	//Set width of Column "Total area" bigger
 	        table.getColumnModel().getColumn(colCount - 1).setPreferredWidth(200);	//Set width of Column "Strata in optimization model" bigger
+			
+			table.setPreferredScrollableViewportSize(new Dimension(500, 70));
+			table.setFillsViewportHeight(true);
+
 	         
 	         
  
@@ -1049,9 +1297,13 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	         
 		public Class getColumnClass(int c) {
 //			return getValueAt(0, c).getClass();
-			if (c==0) return String.class;      //column 0 accepts only String
-			else if (c>=2 && c<=5) return Double.class;      //column 2 to 5 accept only Double values    
-	        else return (getValueAt(0, c) == null ? Object.class : getValueAt(0, c).getClass());
+			if (c==0) {
+				return String.class;      //column 0 accepts only String
+			} else if (c>=2 && c<=5) {
+				return Double.class;      //column 2 to 5 accept only Double values    
+			} else {
+				return (getValueAt(0, c) == null ? Object.class : getValueAt(0, c).getClass());
+			}
 		}
 
 		// Don't need to implement this method unless your table's editable.
@@ -1083,29 +1335,32 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			int total_CoverType = allLayers.get(4).size();		// total number of elements - 1 in layer5 Cover Type (0 to...)
 				
 
-			//Setup the table--------------------------------------------------------------------------------
-			rowCount4 = total_CoverType*total_CoverType;
-			colCount4 = 5;
-			data4 = new Object[rowCount4][colCount4];
-	        columnNames4= new String[] {"Cover Type before Clear Cut", "Cover Type after Clear Cut", "Min Age-Class for Clear Cut", "Max Age-Class for Clear Cut", "Options to be applied"};
-			
-			// Populate the data matrix
-	        int table_row = 0;
-			for (int i = 0; i < total_CoverType; i++) {
-				for (int j = 0; j < total_CoverType; j++) {
-					data4[table_row][0] = allLayers.get(4).get(i);
-					data4[table_row][1] = allLayers.get(4).get(j);	
-					data4[table_row][2] = 20;
-					data4[table_row][3] = 24;
-					if (i==j) data4[table_row][4] = "Yes"; else data4[table_row][4] = null;
-					table_row++;
+			//Setup the table------------------------------------------------------------	
+//			if (is_table4_loaded == false) { // Create a fresh new if Load fail				
+				rowCount4 = total_CoverType*total_CoverType;
+				colCount4 = 5;
+				data4 = new Object[rowCount4][colCount4];
+		        columnNames4= new String[] {"Cover Type before Clear Cut", "Cover Type after Clear Cut", "Min Age-Class for Clear Cut", "Max Age-Class for Clear Cut", "Options to be applied"};
+				
+				// Populate the data matrix
+		        int table_row = 0;
+				for (int i = 0; i < total_CoverType; i++) {
+					for (int j = 0; j < total_CoverType; j++) {
+						data4[table_row][0] = allLayers.get(4).get(i);
+						data4[table_row][1] = allLayers.get(4).get(j);	
+						data4[table_row][2] = 20;
+						data4[table_row][3] = 24;
+						if (i==j) data4[table_row][4] = "Yes"; 
+						table_row++;
+					}
 				}
-			}		
+//			}
+				
 			
-			//Create a table
-	        model4 = new MyTableModel4();
-	        table4 = new JTable(model4){
-	             //Implement table cell tool tips           
+			//Create a table-------------------------------------------------------------
+			model4 = new MyTableModel4();
+			table4 = new JTable(model4) {
+				// Implement table cell tool tips
 				public String getToolTipText(MouseEvent e) {
 					String tip = null;
 					java.awt.Point p = e.getPoint();
@@ -1125,7 +1380,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				}
 			};
 			
-			//Set Color and Alighment for Cells
+			//Set Color and Alignment for Cells
 	        DefaultTableCellRenderer r = new DefaultTableCellRenderer() {
 	            @Override
 	            public Component getTableCellRendererComponent(JTable table, Object
@@ -1195,11 +1450,14 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			table4.getColumnModel().getColumn(4).setCellEditor(new DefaultCellEditor(new comboBox_ConstraintType()));
 			
 //	        table4.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+			table4.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+			table4.getTableHeader().setReorderingAllowed(false);		//Disable columns move
 //	        table4.getColumnModel().getColumn(0).setPreferredWidth(200);	//Set width of 1st Column bigger
+			
 //	        table4.setTableHeader(null);
 	        table4.setPreferredScrollableViewportSize(new Dimension(400, 120));
 	        table4.setFillsViewportHeight(true);
-	        table4.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+	     
 	        
 	        //Put table4 into CovertypeConversion_EA_ScrollPane
 	        JScrollPane CovertypeConversion_EA_ScrollPane = new JScrollPane();
@@ -1215,25 +1473,28 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			// 2nd grid -----------------------------------------------------------------------
 			// 2nd grid -----------------------------------------------------------------------
 
-			//Setup the table--------------------------------------------------------------------------------
-			rowCount7 = total_CoverType*total_CoverType;
-			colCount7 = 4;
-			data7 = new Object[rowCount7][colCount7];
-	        columnNames7= new String[] {"Cover Type before Stand Replacing Disturbances", "Cover Type after Stand Replacing Disturbances", "Weight of Regenerated Area", "Percentage Equivalent (%)"};
+			//Setup the table------------------------------------------------------------	
+			if (is_table7_loaded == false) { // Create a fresh new if Load fail				
+				rowCount7 = total_CoverType*total_CoverType;
+				colCount7 = 4;
+				data7 = new Object[rowCount7][colCount7];
+		        columnNames7= new String[] {"Cover Type before Stand Replacing Disturbances", "Cover Type after Stand Replacing Disturbances", "Weight of Regenerated Area", "Percentage Equivalent (%)"};
+				
+				// Populate the data matrix
+		        int table_row2 = 0;
+				for (int i = 0; i < total_CoverType; i++) {
+					for (int j = 0; j < total_CoverType; j++) {
+						data7[table_row2][0] = allLayers.get(4).get(i);
+						data7[table_row2][1] = allLayers.get(4).get(j);	
+						if (i==j) data7[table_row2][2] = 1; else data7[table_row2][2] = 0;
+						if (i==j) data7[table_row2][3] = 100.0; else data7[table_row2][3] = 0.0;
+						table_row2++;
+					}
+				}			
+			}
+				
 			
-			// Populate the data matrix
-	        int table_row2 = 0;
-			for (int i = 0; i < total_CoverType; i++) {
-				for (int j = 0; j < total_CoverType; j++) {
-					data7[table_row2][0] = allLayers.get(4).get(i);
-					data7[table_row2][1] = allLayers.get(4).get(j);	
-					if (i==j) data7[table_row2][2] = 1; else data7[table_row2][2] = 0;
-					if (i==j) data7[table_row2][3] = 100.0; else data7[table_row2][3] = 0.0;
-					table_row2++;
-				}
-			}		
-			
-			//Create a table
+			//Create a table-------------------------------------------------------------		
 	        model7 = new MyTableModel7();
 	        table7 = new JTable(model7){
 	             //Implement table cell tool tips           
@@ -1270,14 +1531,16 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				table7.getColumnModel().getColumn(i).setCellRenderer(r);
 			}		
 			
-			// Set up Types for each table7 Columns
 			
 //	        table7.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+	        table7.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+	        table7.getTableHeader().setReorderingAllowed(false);		//Disable columns move
 //	        table7.getColumnModel().getColumn(0).setPreferredWidth(200);	//Set width of 1st Column bigger
+	        
 //	        table7.setTableHeader(null);
 	        table7.setPreferredScrollableViewportSize(new Dimension(400, 120));
 	        table7.setFillsViewportHeight(true);
-	        table7.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+
 	        
 	        //Put table7 into CovertypeConversion_SRD_ScrollPane
 			JScrollPane CovertypeConversion_SRD_ScrollPane = new JScrollPane();
@@ -1477,25 +1740,28 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			int total_CoverType = allLayers.get(4).size();		// total number of elements - 1 in layer5 Cover Type (0 to...)
 			int total_SizeClass = allLayers.get(5).size();		// total number of elements - 1 in layer6 Size Class (0 to...)			
 			
-			//Setup the table--------------------------------------------------------------------------------
-			rowCount5 = total_CoverType*total_SizeClass;
-			colCount5 = 3;
-			data5 = new Object[rowCount5][colCount5];
-	        columnNames5= new String[] {"1st Period - Cover Type of Existing Strata", "1st Period - Size Class of Existing Strata", "Proportion (%) sufferred from Mixed Severity Wildfire"};
+			//Setup the table------------------------------------------------------------	
+			if (is_table5_loaded == false) { // Create a fresh new if Load fail				
+				rowCount5 = total_CoverType*total_SizeClass;
+				colCount5 = 3;
+				data5 = new Object[rowCount5][colCount5];
+		        columnNames5= new String[] {"1st Period - Cover Type of Existing Strata", "1st Period - Size Class of Existing Strata", "Proportion (%) sufferred from Mixed Severity Wildfire"};
+				
+				// Populate the data matrix
+		        int table_row = 0;
+				for (int i = 0; i < total_CoverType; i++) {
+					for (int j = 0; j < total_SizeClass; j++) {
+						data5[table_row][0] = allLayers.get(4).get(i);
+						data5[table_row][1] = allLayers.get(5).get(j);	
+						data5[table_row][2] = 5.0;
+						if (allLayers.get(4).get(i).equals("N"))	data5[table_row][2] = 0.0;	//Non-stocked --> No MS Fire
+						table_row++;
+					}
+				}						
+			}
+						
 			
-			// Populate the data matrix
-	        int table_row = 0;
-			for (int i = 0; i < total_CoverType; i++) {
-				for (int j = 0; j < total_SizeClass; j++) {
-					data5[table_row][0] = allLayers.get(4).get(i);
-					data5[table_row][1] = allLayers.get(5).get(j);	
-					data5[table_row][2] = 5.0;
-					if (allLayers.get(4).get(i).equals("N"))	data5[table_row][2] = 0.0;	//Non-stocked --> No MS Fire
-					table_row++;
-				}
-			}		
-			
-			//Create a table
+			//Create a table-------------------------------------------------------------			
 	        model5 = new MyTableModel5();
 			table5 = new JTable(model5){
 				@Override
@@ -1606,12 +1872,14 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	       
 	        
 //	        table5.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+	        table5.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+	        table5.getTableHeader().setReorderingAllowed(false);		//Disable columns move
 //	        table5.getColumnModel().getColumn(0).setPreferredWidth(200);	//Set width of 1st Column bigger
+	        
 //	        table5.setTableHeader(null);
 	        table5.setPreferredScrollableViewportSize(new Dimension(400, 120));
-//	        table5.setAutoResizeMode(0);
 	        table5.setFillsViewportHeight(true);
-	        table5.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+
 	        
 	        
 	        //Put table5 into MixedFire_ScrollPane
@@ -1628,34 +1896,38 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		    
 			// 2nd grid -----------------------------------------------------------------------
 			// 2nd grid -----------------------------------------------------------------------
-
-			//Setup the table--------------------------------------------------------------------------------
-			rowCount6 = 30;
-			colCount6 = total_CoverType + 1;
-			data6 = new Object[rowCount6][colCount6];
-	        columnNames6= new String[colCount6];
-	        columnNames6[0] = "Age Class of Regenerated Strata";
-	        for (int i = 1; i < colCount6; i++) {
-	        	 columnNames6[i] = allLayers.get(4).get(i-1);
-			}	
-	        
+		
+			//Setup the table------------------------------------------------------------	
+			if (is_table6_loaded == false) { // Create a fresh new if Load fail				
+				rowCount6 = 30;
+				colCount6 = total_CoverType + 1;
+				data6 = new Object[rowCount6][colCount6];
+		        columnNames6= new String[colCount6];
+		        columnNames6[0] = "Age Class of Regenerated Strata";
+		        for (int i = 1; i < colCount6; i++) {
+		        	 columnNames6[i] = allLayers.get(4).get(i-1);
+				}		        
+				
+				// Populate the data matrix
+				for (int i = 0; i < rowCount6; i++) {
+					data6[i][0] = i+1;			//Age class column, age starts from 1
+					for (int j = 1; j < colCount6; j++) {	//all other columns
+						data6[i][j] = 0.2;
+						if (allLayers.get(4).get(j-1).equals("N"))	data6[i][j] = 0.0;	//Non-stocked --> No SR Fire
+					}
+				}								
+			}
+				
+			
 	        //Header ToolTIp
 	        String[] headerToolTips = new String[colCount6];
 	        for (int i = 1; i < colCount6; i++) {
 	        	headerToolTips[i] = allLayers_ToolTips.get(4).get(i-1);
 			}
 	       
+	        
 			
-			// Populate the data matrix
-			for (int i = 0; i < rowCount6; i++) {
-				data6[i][0] = i+1;			//Age class column, age starts from 1
-				for (int j = 1; j < colCount6; j++) {	//all other columns
-					data6[i][j] = 0.2;
-					if (allLayers.get(4).get(j-1).equals("N"))	data6[i][j] = 0.0;	//Non-stocked --> No SR Fire
-				}
-			}		
-			
-			//Create a table
+			//Create a table-------------------------------------------------------------			
 	        model6 = new MyTableModel6();
 			table6 = new JTable(model6) {
 				  //Implement table cell tool tips           
@@ -1715,11 +1987,14 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 	        
 //	        table6.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+	        table6.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+	        table6.getTableHeader().setReorderingAllowed(false);		//Disable columns move
 	        table6.getColumnModel().getColumn(0).setPreferredWidth(300);	//Set width of 1st Column bigger
+	        
 //	        table6.setTableHeader(null);
 	        table6.setPreferredScrollableViewportSize(new Dimension(400, 120));
 	        table6.setFillsViewportHeight(true);
-	        table6.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+	      
 	        
 	        
 	        //Put table6 into StandReplacing_ScrollPane
@@ -2183,13 +2458,17 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				}
 			}
 			
-		
-			rowCount2 = 10000;
-			colCount2 = 9;
-			data2 = new Object[rowCount2][colCount2];
-			columnNames2 = new String[] { "Const. Description (optional)", "Const. Type", "LB Value", "Penalty/Unit < LB (SOFT)", "UB Value", "Penalty/Unit > UB (SOFT)", "PARAMETERS Index", "Static identifiers for VARIABLES", "Dynamic identifiers for PARAMETERS"};
-	         
-			// Create a table
+				
+			//Setup the table------------------------------------------------------------	
+			if (is_table2_loaded == false) { // Create a fresh new if Load fail				
+				rowCount2 = 10000;
+				colCount2 = 9;
+				data2 = new Object[rowCount2][colCount2];
+				columnNames2 = new String[] { "Const. Description (optional)", "Const. Type", "LB Value", "Penalty/Unit < LB (SOFT)", "UB Value", "Penalty/Unit > UB (SOFT)", "PARAMETERS Index", "Static identifiers for VARIABLES", "Dynamic identifiers for PARAMETERS"};	         				
+			}
+						
+			
+			//Create a table-------------------------------------------------------------		
 			model2 = new MyTableModel2();
 			table2 = new JTable(model2) {
 				@Override			//These override is to make the width of the cell fit all contents of the cell
@@ -2247,8 +2526,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 //	        table2.getColumnModel().getColumn(colCount2-1).setPreferredWidth(300);	//Set width of Column "Dynamic identifiers for PARAMETERS" bigger
 //			table2.setPreferredScrollableViewportSize(new Dimension(1500, 200));
 			table2.setAutoResizeMode(0);
-			table2.setFillsViewportHeight(true);
 			table2.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);  
+			table2.getTableHeader().setReorderingAllowed(false);		//Disable columns move
+			table2.setFillsViewportHeight(true);
 			TableRowSorter<MyTableModel2> sorter2 = new TableRowSorter<MyTableModel2>(model2);	//Add sorter
 			table2.setRowSorter(sorter2);
 				    
@@ -2396,7 +2676,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		public Class getColumnClass(int c) {
 //			return getValueAt(0, c).getClass();
 			if (c==0) return String.class;      //column 0 accepts only String
-			else if (c>=2 && c<=5) return Double.class;      //column 2 to 5 accept only Double values    
+			else if (c>=2 && c<=5) return Long.class;      //column 2 to 5 accept only Double values    			///////Double -->Long or it cannot load the 1.00E7
 	        else return (getValueAt(0, c) == null ? Object.class : getValueAt(0, c).getClass());
 		}
 
@@ -2478,8 +2758,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					fileOut.write(columnNames[j] + "\t");
 				}
 
-				for (int i = 0; i < data.length; i++) {
-					if (data[i][colCount - 1] == "Yes") { //IF strata is in optimization model
+				for (int i = 0; i < data.length; i++) {				//Note: String.ValueOf   is so important to get the String from Object
+					if (String.valueOf(data[i][colCount - 1]).equals("Yes")) { //IF strata is in optimization model		
 						fileOut.newLine();
 						for (int j = 0; j < colCount; j++) {
 							fileOut.write(data[i][j] + "\t");
@@ -2507,7 +2787,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				}
 
 				for (int i = 0; i < data4.length; i++) {
-					if (data4[i][colCount4 - 1] == "Yes") { //IF conversion is selected "Yes"
+					if (String.valueOf(data4[i][colCount4 - 1]).equals("Yes")) { //IF conversion is selected "Yes"
 						fileOut.newLine();
 						for (int j = 0; j < colCount4; j++) {
 							fileOut.write(data4[i][j] + "\t");

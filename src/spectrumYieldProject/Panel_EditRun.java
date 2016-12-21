@@ -63,7 +63,7 @@ public class Panel_EditRun extends JLayeredPane implements ActionListener {
 		// Add all Panel_EditRun_Details for all selected Runs, but only show the 1st selected Run details
 		combinePanel = new Panel_EditRun_Details[listOfEditRuns.length];
 		for (int i = 0; i < listOfEditRuns.length; i++) {
-			combinePanel[i] = new Panel_EditRun_Details();
+			combinePanel[i] = new Panel_EditRun_Details(listOfEditRuns[i]);
 		}			
 		scrollPane_Right.setViewportView(combinePanel[0]);	
 				

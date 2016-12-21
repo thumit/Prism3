@@ -13,6 +13,14 @@ public class TableModelSpectrum extends AbstractTableModel {
 		data = input_data;
 		columnNames = input_columnNames;
 	}
+	
+	public void updateTableModelSpectrum(int input_colCount, int input_rowCount, String[] input_columnNames, Object[][] input_data) {
+		colCount = input_colCount;
+		rowCount = input_rowCount;
+		data = input_data;
+		columnNames = input_columnNames;
+	}
+	
 
 	@Override
 	public int getColumnCount() {
@@ -48,10 +56,10 @@ public class TableModelSpectrum extends AbstractTableModel {
 	@Override
 	public void setValueAt(Object value, int row, int col) {
 		data[row][col] = value;
-		fireTableDataChanged();		//With this we only update data and then repaint the table later to get the view of the updated data
+		fireTableDataChanged();		//With this we only update data and then fire the change
 		
 //		fireTableCellUpdated(row, col);			//This is dangerous because:
-												// 1st: we have to call table1.setValueAt(data1[0][1], 0, 1);
+												// 1st:If columns or rows are not moved and not sorted then we can call table1.setValueAt(data1[0][1], 0, 1);
 												// 2nd: If columns or rows are moved or sorted then we have to call: table1.setValueAt(data1[3][1], table1.convertRowIndexToModel(3), table1.convertColumnIndexToModel(1)); 	
 	}
 };

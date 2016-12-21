@@ -33,7 +33,7 @@ public class Read_Indentifiers {
 				String[] a = list.toArray(new String[list.size()]);
 				int totalRows = a.length;
 				int totalCols = 2;
-				String value[][] = new String[totalRows][totalCols];
+				String[][] value = new String[totalRows][totalCols];
 
 				// read all values from all rows and columns
 				for (int i = 0; i < totalRows; i++) { // Read from 1st row
@@ -194,7 +194,7 @@ public class Read_Indentifiers {
 			String[] a = list.toArray(new String[list.size()]);
 			int totalRows = a.length;
 			int totalCols = 2;
-			String value[][] = new String[totalRows][totalCols];
+			String[][] value = new String[totalRows][totalCols];
 
 			// read all values from all rows and columns
 			for (int i = 0; i < totalRows; i++) { // Read from 1st row

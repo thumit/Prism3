@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 public class Read_RunInputs {
 	//For readGeneralInputs
 	private int GI_totalRows, GI_totalColumns;
-	private String GI_value[][];
+	private String[][] GI_value;
 
 	public void readGeneralInputs (File file) {
 		String delimited = "\t";		// tab delimited
@@ -60,7 +60,7 @@ public class Read_RunInputs {
 //-------------------------------------------------------------------------------------------------------------------------------------------------	
 	//For readManagementOptions
 	private int MO_totalRows, MO_totalColumns;
-	private String MO_value[][];
+	private String[][] MO_value;
 		
 	public void readManagementOptions (File file) {
 		String delimited = "\t";		// tab delimited
@@ -134,7 +134,7 @@ public class Read_RunInputs {
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 	//For readUserConstraints
 	private int UC_totalRows, UC_totalColumns;
-	private String UC_value[][];
+	private String[][] UC_value;
 
 	public void readUserConstraints (File file) {
 		String delimited = "\t";		// tab delimited

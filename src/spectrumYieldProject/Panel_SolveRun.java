@@ -416,7 +416,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 
 			
 			//Get the 2 parameter V(s1,s2,s3,s4,s5,s6) and A(s1,s2,s3,s4,s5,s6)
-			String Input2_value[][] = read.get_MO_Values();	
+			String[][] Input2_value = read.get_MO_Values();	
 			double[][][][][][] StrataArea = new double[layer1.size()][layer2.size()][layer3.size()][layer4.size()][layer5.size()][layer6.size()];
 			int[][][][][][] StartingAge = new int[layer1.size()][layer2.size()][layer3.size()][layer4.size()][layer5.size()][layer6.size()];			
 			for (int s1 = 0; s1 < layer1.size(); s1++) {
@@ -2962,7 +2962,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 	}
 	
 	
-    /**
+    /*
      * Checks whether the status corresponds to a valid solution
      * 
      * @param status    The status id returned by lpsolve
