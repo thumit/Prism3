@@ -93,14 +93,15 @@ public class Panel_EditRun extends JLayeredPane implements ActionListener {
 		int total_Runs = listOfEditRuns.length;
 		File[][] InputFiles = new File[total_Runs][];
 			
-		for (int i = 0; i < total_Runs; i++) {
+		for (int i = 0; i < total_Runs; i++) {	
+			List<File> inputFiles_list = combinePanel[i].get_List_Of_inputFiles();	
+			int total_Inputs_perRun = inputFiles_list.size();
 			
-			int total_Inputs_perRun = combinePanel[i].get_List_Of_inputFiles().size();
 			InputFiles[i] = new File[total_Inputs_perRun];		//Redim the array
 			
 			for (int j = 0; j < total_Inputs_perRun; j++) {		
-				File temp = new File(listOfEditRuns[i].getAbsolutePath() + "/" + combinePanel[i].get_List_Of_inputFiles().get(j).getName());			
-				combinePanel[i].get_List_Of_inputFiles().get(j).renameTo(temp);	
+				File temp = new File(listOfEditRuns[i].getAbsolutePath() + "/" + inputFiles_list.get(j).getName());			
+				inputFiles_list.get(j).renameTo(temp);	
 				InputFiles[i][j] = temp;
 			}
 		}

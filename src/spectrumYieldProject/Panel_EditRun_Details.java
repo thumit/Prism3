@@ -27,6 +27,7 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,10 +80,10 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private ButtonGroup radioGroup_Right; 
 	private JRadioButton[] radioButton_Right; 
 	
-	private File currentRunFolder;
+	private File currentRunFolder, temporary_RunFolder;
 	private File file_ExistingStrata, file_Database;
 	private File file_StrataDefinition;
-	private String newDefinition = "currently set to Default with 6 Layers";
+	private String currentDefinition_location;
 	
 	//6 panels for the selected Run
 	private General_Inputs_GUI paneL_General_Inputs_GUI;
@@ -180,49 +181,255 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private Object[][] data6;
 	
 	
+	private boolean is_this_the_first_load = true;
+	private JButton button_import_database;
+	private JButton button_import_existingStrata;
+	private JButton button_select_Strata;
+	
 	public Panel_EditRun_Details(File RunFolder) {
 		super.setLayout(new BorderLayout());
 
-		
-		//Get some initial information from the run -----------------------------------------------------------------------------------------------
-		currentRunFolder = RunFolder;		
-		
-		
-		File temp_databaseFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + currentRunFolder.getName()+ "_temp_database.db");
-		temp_databaseFile.deleteOnExit();
-		try {
-			Files.copy(new File(currentRunFolder.getAbsolutePath() + "/database.db").toPath(), temp_databaseFile.toPath());
-		} catch (IOException e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage());
-		}
-		file_Database = temp_databaseFile;
-		
-		
-		
-		
-		// get the "StrataDefinition.csv" file from where this class is located
-		try {
-			file_StrataDefinition = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "StrataDefinition.csv");
-			file_StrataDefinition.deleteOnExit();
-			
-			InputStream initialStream = getClass().getResourceAsStream("/StrataDefinition.csv");		//Default definition
-			byte[] buffer = new byte[initialStream.available()];
-			initialStream.read(buffer);
-			
-			OutputStream outStream = new FileOutputStream(file_StrataDefinition);
-			outStream.write(buffer);
+		//Get information from the run and reload inputs-------------------------------------------------------------------------------------------
+		currentRunFolder = RunFolder;	
 
-			initialStream.close();
-			outStream.close();
-		} catch (FileNotFoundException e1) {
-			System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
-		} catch (IOException e2) {
-			System.err.println(e2.getClass().getName() + ": " + e2.getMessage());
+		temporary_RunFolder = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + currentRunFolder.getName());
+		temporary_RunFolder.deleteOnExit();
+		if (!temporary_RunFolder.exists()) {
+			temporary_RunFolder.mkdirs();		 // Create folder Temporary if it does not exist
 		}
+		
+
+		reload_inputs();
+		
+		
+		
+		//Create the interface ---------------------------------------------------------------------------------------------------------------------
+		// Add 6 input options to radioPanel and add that panel to scrollPane_Right at combinePanel NORTH
+		radioPanel_Right = new JPanel();
+		radioPanel_Right.setLayout(new FlowLayout());		
+		radioGroup_Right = new ButtonGroup();
+		
+		radioButton_Right  = new JRadioButton[6];
+		radioButton_Right[0]= new JRadioButton("General Inputs");
+		radioButton_Right[1]= new JRadioButton("Model Identification");
+		radioButton_Right[2]= new JRadioButton("Covertype Conversion");
+		radioButton_Right[3]= new JRadioButton("Natural Disturbances");
+		radioButton_Right[4]= new JRadioButton("Management Cost");
+		radioButton_Right[5]= new JRadioButton("User Constraints");
+		radioButton_Right[0].setSelected(true);
+		for (int i = 0; i < radioButton_Right.length; i++) {
+				radioGroup_Right.add(radioButton_Right[i]);
+				radioPanel_Right.add(radioButton_Right[i]);
+				radioButton_Right[i].addActionListener(this);
+		}	
+		
+		GUI_Text_splitPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+		GUI_Text_splitPanel.setDividerSize(5);
+		GUI_Text_splitPanel.setEnabled(false);
+		GUI_Text_splitPanel.setLeftComponent(null);
+		GUI_Text_splitPanel.setRightComponent(null);
+			
+	
+		// Create all new 6 panels for the selected Run--------------------------------------------------
+		paneL_General_Inputs_GUI = new General_Inputs_GUI();
+		panel_General_Inputs_Text = new General_Inputs_Text();
+		panel_Model_Identifiniton_GUI = new Model_Identifiniton_GUI();
+		panel_Model_Identification_Text = new Model_Identification_Text();
+		panel_CovertypeConversion_GUI = new CovertypeConversion_GUI();
+		panel_CovertypeConversion_Text = new CovertypeConversion_Text();
+		panel_Disturbances_GUI = new Disturbances_GUI();
+		panel_Disturbances_Text = new Disturbances_Text();
+		panel_Management_Cost_GUI = new Management_Cost_GUI();
+		panel_Management_Cost_Text = new Management_Cost_Text();
+		panel_UserConstraints_GUI = new UserConstraints_GUI();
+		panel_UserConstraints_Text = new UserConstraints_Text();
+					
+		
+		// Show the 2 panelInput of the selected Run
+		GUI_Text_splitPanel.setLeftComponent(paneL_General_Inputs_GUI);
+		GUI_Text_splitPanel.setRightComponent(panel_General_Inputs_Text);	
+		
+		
+		// Add all components to The Panel------------------------------------------------------------
+		super.add(radioPanel_Right, BorderLayout.NORTH);
+		super.add(GUI_Text_splitPanel, BorderLayout.CENTER);
+		super.setOpaque(false);
+		
+		
+		
+		// Load input information after all the GUI for all panels are already created---------------------------------
+		File table_file;
+		Load_Table_Info tableLoader;
+		
+		if (file_ExistingStrata != null && is_this_the_first_load == true) {
+			button_import_existingStrata.setEnabled(true);
+			button_import_existingStrata.doClick();
+			
+			
+			// Find the data match to paste into Existing Strata		
+			table_file = new File(currentRunFolder.getAbsolutePath() + "/Input 2 - Selected Strata.txt");
+			if (table_file.exists()) { // Load from input
+				tableLoader = new Load_Table_Info(table_file);
+				
+				Object[][] temp_data = tableLoader.get_input_data();
+				for (int i = 0; i < temp_data.length; i++) {
+					for (int ii = 0; ii < data.length; ii++) {
+						if (   String.valueOf(data[ii][0]).equals(String.valueOf(temp_data[i][0]))   ) {		//Just need to compare Strata ID
+							// Apply temp_data row values to data row 
+							for (int jj = 0; jj < data[ii].length; jj++) {
+								data[ii][jj] = temp_data[i][jj];
+							}		
+						}	
+					}
+				}			
+				button_select_Strata.setEnabled(true);
+				button_select_Strata.doClick();
+				
+				is_table_loaded = true;		
+			} else { // Create a fresh new if Load fail
+				System.err.println("File not exists: Input 2 - Selected Strata.txt - New interface is created");
+			}	
+		}
+		
+		
+
+		table_file = new File(currentRunFolder.getAbsolutePath() + "/Input 3 - Covertype Conversion (Clear Cuts).txt");
+		if (table_file.exists()) { // Load from input
+			tableLoader = new Load_Table_Info(table_file);
+			String twocolumnsGUI, twocolumnsInput;
+			
+			Object[][] temp_data = tableLoader.get_input_data();
+			for (int i = 0; i < temp_data.length; i++) {
+				twocolumnsInput = String.valueOf(temp_data[i][0]) + String.valueOf(temp_data[i][1]);
+				for (int ii = 0; ii < data4.length; ii++) {
+					twocolumnsGUI = String.valueOf(data4[ii][0]) + String.valueOf(data4[ii][1]);			
+					if (twocolumnsGUI.equals(twocolumnsInput)) {		//Just need to compare 2 columns: cover type & size class
+						// Apply temp_data row values to data4 row 
+						for (int jj = 0; jj < data4[ii].length; jj++) {
+							data4[ii][jj] = temp_data[i][jj];
+						}		
+					}	
+				}
+			}	
+			
+			is_table4_loaded = true;
+		} else { // Create a fresh new if Load fail
+			System.err.println("File not exists: Input 3 - Covertype Conversion (Clear Cuts).txt - New interface is created");
+		}
+				
+		
+		
+		if (file_Database != null && is_this_the_first_load == true) {
+			button_import_database.setEnabled(true);
+			button_import_database.doClick();
+		}
+		
+		is_this_the_first_load = false;	
+	} // end Panel_EditRun_Details()
+
+	
+	
+	// Listener for radio buttons------------------------------------------------------------------------------------------------
+    public void actionPerformed(ActionEvent e) {
+		for (int j = 0; j < radioButton_Right.length; j++) {
+			if (radioButton_Right[j].isSelected()) {		
+				if (j == 0) {
+					GUI_Text_splitPanel.setLeftComponent(paneL_General_Inputs_GUI);
+					GUI_Text_splitPanel.setRightComponent(panel_General_Inputs_Text);
+				} else if (j == 1) {
+					GUI_Text_splitPanel.setLeftComponent(panel_Model_Identifiniton_GUI);
+					GUI_Text_splitPanel.setRightComponent(panel_Model_Identification_Text);
+				} else if (j == 2) {
+					GUI_Text_splitPanel.setLeftComponent(panel_CovertypeConversion_GUI);
+					GUI_Text_splitPanel.setRightComponent(null);
+//					GUI_Text_splitPanel.setRightComponent(panel_CovertypeConversion_Text);
+				} else if (j == 3) {
+					GUI_Text_splitPanel.setLeftComponent(panel_Disturbances_GUI);
+					GUI_Text_splitPanel.setRightComponent(null);
+//					GUI_Text_splitPanel.setRightComponent(panel_Disturbances_Text);
+				} else if (j == 4) {
+					GUI_Text_splitPanel.setLeftComponent(panel_Management_Cost_GUI);
+					GUI_Text_splitPanel.setRightComponent(panel_Management_Cost_Text);
+				} else if (j == 5) {
+					GUI_Text_splitPanel.setLeftComponent(panel_UserConstraints_GUI);
+					GUI_Text_splitPanel.setRightComponent(null);
+//					GUI_Text_splitPanel.setRightComponent(panel_UserConstraints_Text);
+				}
+			}
+		}
+	}
+ 
+    
+    // Load inputs of the run------------------------------------------------------------------------------------------------ 
+	public void reload_inputs() {
+		
+		
+		
+		// Load "StrataDefinition.csv" of the run-------------------------------------------------------
+		File definition_to_load = new File(currentRunFolder.getAbsolutePath() + "/StrataDefinition.csv");
+		if (definition_to_load.exists()) {	//Load if the file exists
+			try {
+				file_StrataDefinition = new File(temporary_RunFolder.getAbsolutePath() + "/StrataDefinition.csv");
+				file_StrataDefinition.deleteOnExit();
+				currentDefinition_location = file_StrataDefinition.getAbsolutePath();
+				
+				Files.copy(definition_to_load.toPath(), file_StrataDefinition.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			} catch (IOException e) {
+				System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			}
+		} 
+		else { 	// If file does not exist then load the default definition
+			System.out.println("File not exists: StrataDefinition.csv - New interface is created using Default StrataDefinition.csv");
+			
+			try {	// Read default "StrataDefinition.csv" file from where this class is located
+				file_StrataDefinition = new File(temporary_RunFolder.getAbsolutePath() + "/StrataDefinition.csv");
+				file_StrataDefinition.deleteOnExit();		
+				currentDefinition_location = "Default: " + file_StrataDefinition.getAbsolutePath();
+				
+				InputStream initialStream = getClass().getResourceAsStream("/StrataDefinition.csv");
+				byte[] buffer = new byte[initialStream.available()];
+				initialStream.read(buffer);
+				
+				OutputStream outStream = new FileOutputStream(file_StrataDefinition);		//  and write to file_StrataDefinition
+				outStream.write(buffer);
+
+				initialStream.close();
+				outStream.close();
+			} catch (IOException e) {
+				System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			}
+		}
+		
+		
+		
+		// Load database of the run---------------------------------------------------------------------
+		File exsitingStrata_to_load = new File(currentRunFolder.getAbsolutePath() + "/existingStrata.csv");
+		if (exsitingStrata_to_load.exists()) {	//Load if the file exists
+			try {
+				file_ExistingStrata = new File(temporary_RunFolder.getAbsolutePath() + "/existingStrata.csv");
+				file_ExistingStrata.deleteOnExit();
+				Files.copy(new File(currentRunFolder.getAbsolutePath() + "/existingStrata.csv").toPath(), file_ExistingStrata.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			} catch (IOException e) {
+				System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			}
+		}		
+		
+			
+		// Load database of the run---------------------------------------------------------------------
+		File database_to_load = new File(currentRunFolder.getAbsolutePath() + "/database.db");
+		if (database_to_load.exists()) {	//Load if the file exists
+			try {
+				file_Database = new File(temporary_RunFolder.getAbsolutePath() + "/database.db");
+				file_Database.deleteOnExit();
+				Files.copy(new File(currentRunFolder.getAbsolutePath() + "/database.db").toPath(), file_Database.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			} catch (IOException e) {
+				System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			}
+		}					
+											
 
 		
-		
-		//Load tables
+		//Load tables---------------------------------------------------------------------------------
 		File table_file;
 		Load_Table_Info tableLoader;
 		
@@ -240,36 +447,38 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		}
 			
 		
-		table_file = new File(currentRunFolder.getAbsolutePath() + "/Input 2 - Selected Strata.txt");
-		if (table_file.exists()) { // Load from input
-			tableLoader = new Load_Table_Info(table_file);
-			rowCount = tableLoader.get_rowCount();
-			colCount = tableLoader.get_colCount();
-			data = tableLoader.get_input_data();
-			columnNames = tableLoader.get_columnNames();
-			is_table_loaded = true;
-			
-
-//			//This is strange when only this 1 I have to register the "Yes" - in case we don't use String.ValueOf to compare data (see last lines)
-//			for (int i = 0; i < rowCount; i++) {
-//				data[i][colCount-1] = "Yes";
-//			}			
-		} else { // Create a fresh new if Load fail
-			System.err.println("File not exists: Input 2 - Selected Strata.txt - New interface is created");
-		}	
+		if (file_ExistingStrata == null && is_this_the_first_load == true) {		//If there is no existing strata, still load the selected strata
+			table_file = new File(currentRunFolder.getAbsolutePath() + "/Input 2 - Selected Strata.txt");
+			if (table_file.exists()) { // Load from input
+				tableLoader = new Load_Table_Info(table_file);
+				rowCount = tableLoader.get_rowCount();
+				colCount = tableLoader.get_colCount();
+				data = tableLoader.get_input_data();
+				columnNames = tableLoader.get_columnNames();
+				is_table_loaded = true;
+				
+	
+	//			//This is strange when only this 1 I have to register the "Yes" - in case we don't use String.ValueOf to compare data (see last lines)
+	//			for (int i = 0; i < rowCount; i++) {
+	//				data[i][colCount-1] = "Yes";
+	//			}			
+			} else { // Create a fresh new if Load fail
+				System.err.println("File not exists: Input 2 - Selected Strata.txt - New interface is created");
+			}	
+		}
 		
 															//Need to change later (not here , below) because I didn't write the whole file, just write the yes case
-		table_file = new File(currentRunFolder.getAbsolutePath() + "/Input 3 - Covertype Conversion (Clear Cuts).txt");
-		if (table_file.exists()) { // Load from input
-			tableLoader = new Load_Table_Info(table_file);
-			rowCount4 = tableLoader.get_rowCount();
-			colCount4 = tableLoader.get_colCount();
-			data4 = tableLoader.get_input_data();
-			columnNames4 = tableLoader.get_columnNames();
-			is_table4_loaded = true;
-		} else { // Create a fresh new if Load fail
-			System.err.println("File not exists: Input 3 - Covertype Conversion (Clear Cuts).txt - New interface is created");
-		}
+//		table_file = new File(currentRunFolder.getAbsolutePath() + "/Input 3 - Covertype Conversion (Clear Cuts).txt");
+//		if (table_file.exists()) { // Load from input
+//			tableLoader = new Load_Table_Info(table_file);
+//			rowCount4 = tableLoader.get_rowCount();
+//			colCount4 = tableLoader.get_colCount();
+//			data4 = tableLoader.get_input_data();
+//			columnNames4 = tableLoader.get_columnNames();
+//			is_table4_loaded = true;
+//		} else { // Create a fresh new if Load fail
+//			System.err.println("File not exists: Input 3 - Covertype Conversion (Clear Cuts).txt - New interface is created");
+//		}
 
 		
 		table_file = new File(currentRunFolder.getAbsolutePath() + "/Input 4 - Covertype Conversion (Replacing Disturbances).txt");
@@ -321,120 +530,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			is_table2_loaded = true;
 		} else { // Create a fresh new if Load fail
 			System.err.println("File not exists: Input 8 - User Constraints.txt - New interface is created");
-		}
-		
-		
-		
-		
-		
-		
-	
-		
-
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		//Create the interface ---------------------------------------------------------------------------------------------------------------------
-		
-		// Add 3 input options to radioPanel and add that panel to scrollPane_Right at combinePanel NORTH
-		radioPanel_Right = new JPanel();
-		radioPanel_Right.setLayout(new FlowLayout());		
-		radioGroup_Right = new ButtonGroup();
-		
-		radioButton_Right  = new JRadioButton[6];
-		radioButton_Right[0]= new JRadioButton("General Inputs");
-		radioButton_Right[1]= new JRadioButton("Model Identification");
-		radioButton_Right[2]= new JRadioButton("Covertype Conversion");
-		radioButton_Right[3]= new JRadioButton("Natural Disturbances");
-		radioButton_Right[4]= new JRadioButton("Management Cost");
-		radioButton_Right[5]= new JRadioButton("User Constraints");
-		radioButton_Right[0].setSelected(true);
-		for (int i = 0; i < radioButton_Right.length; i++) {
-				radioGroup_Right.add(radioButton_Right[i]);
-				radioPanel_Right.add(radioButton_Right[i]);
-				radioButton_Right[i].addActionListener(this);
-		}	
-		
-		GUI_Text_splitPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		GUI_Text_splitPanel.setDividerSize(5);
-		GUI_Text_splitPanel.setEnabled(false);
-		GUI_Text_splitPanel.setLeftComponent(null);
-		GUI_Text_splitPanel.setRightComponent(null);
-			
-	
-		// Create all new 6 panels for the selected Run--------------------------------------------------
-		paneL_General_Inputs_GUI = new General_Inputs_GUI();
-		panel_General_Inputs_Text = new General_Inputs_Text();
-		panel_Model_Identifiniton_GUI = new Model_Identifiniton_GUI();
-		panel_Model_Identification_Text = new Model_Identification_Text();
-		panel_CovertypeConversion_GUI = new CovertypeConversion_GUI();
-		panel_CovertypeConversion_Text = new CovertypeConversion_Text();
-		panel_Disturbances_GUI = new Disturbances_GUI();
-		panel_Disturbances_Text = new Disturbances_Text();
-		panel_Management_Cost_GUI = new Management_Cost_GUI();
-		panel_Management_Cost_Text = new Management_Cost_Text();
-		panel_UserConstraints_GUI = new UserConstraints_GUI();
-		panel_UserConstraints_Text = new UserConstraints_Text();
-					
-		
-		// Show the 2 panelInput of the selected Run
-		GUI_Text_splitPanel.setLeftComponent(paneL_General_Inputs_GUI);
-		GUI_Text_splitPanel.setRightComponent(panel_General_Inputs_Text);	
-		
-		
-		// Add all components to The Panel------------------------------------------------------------
-		super.add(radioPanel_Right, BorderLayout.NORTH);
-		super.add(GUI_Text_splitPanel, BorderLayout.CENTER);
-		super.setOpaque(false);
-	} // end Panel_EditRun_Details()
-
-	
-	
-	// Listener for radio buttons------------------------------------------------------------------------------------------------
-    public void actionPerformed(ActionEvent e) {
-		for (int j = 0; j < radioButton_Right.length; j++) {
-			if (radioButton_Right[j].isSelected()) {		
-				if (j == 0) {
-					GUI_Text_splitPanel.setLeftComponent(paneL_General_Inputs_GUI);
-					GUI_Text_splitPanel.setRightComponent(panel_General_Inputs_Text);
-				} else if (j == 1) {
-					GUI_Text_splitPanel.setLeftComponent(panel_Model_Identifiniton_GUI);
-					GUI_Text_splitPanel.setRightComponent(panel_Model_Identification_Text);
-				} else if (j == 2) {
-					GUI_Text_splitPanel.setLeftComponent(panel_CovertypeConversion_GUI);
-					GUI_Text_splitPanel.setRightComponent(null);
-//					GUI_Text_splitPanel.setRightComponent(panel_CovertypeConversion_Text);
-				} else if (j == 3) {
-					GUI_Text_splitPanel.setLeftComponent(panel_Disturbances_GUI);
-					GUI_Text_splitPanel.setRightComponent(null);
-//					GUI_Text_splitPanel.setRightComponent(panel_Disturbances_Text);
-				} else if (j == 4) {
-					GUI_Text_splitPanel.setLeftComponent(panel_Management_Cost_GUI);
-					GUI_Text_splitPanel.setRightComponent(panel_Management_Cost_Text);
-				} else if (j == 5) {
-					GUI_Text_splitPanel.setLeftComponent(panel_UserConstraints_GUI);
-					GUI_Text_splitPanel.setRightComponent(null);
-//					GUI_Text_splitPanel.setRightComponent(panel_UserConstraints_Text);
-				}
-			}
-		}
-	}
- 
+		}     			
+    			 	
+    }
     
-    
-	// Load inputs of the run------------------------------------------------------------------------------------------------ 
+	
+	 // Class to load all table------------------------------------------------------------------------------------------------ 
 	private class Load_Table_Info {
 		private int input_colCount;
 		private int input_rowCount;
@@ -485,8 +586,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			return input_columnNames;
 		}
 	}
-    
-       
     
     //--------------------------------------------------------------------------------------------------------------------------
     //--------------------------------------------------------------------------------------------------------------------------  
@@ -571,6 +670,15 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 				}
 			};
+			
+			
+			//Load info from input to GUI
+			if (is_table1_loaded == true) {
+				if (! String.valueOf(data1[0][1]).equals("null")) combo1.setSelectedItem(Integer.valueOf((String) data1[0][1]));
+				if (! String.valueOf(data1[1][1]).equals("null")) spin2.setValue(Integer.valueOf((String) data1[1][1]));
+				if (! String.valueOf(data1[2][1]).equals("null")) combo3.setSelectedItem(Double.valueOf((String) data1[2][1]));
+				if (! String.valueOf(data1[3][1]).equals("null")) combo4.setSelectedItem(String.valueOf(data1[3][1]));
+			}
 			
 			
 			combo1.addActionListener(apply);
@@ -664,7 +772,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 			JTextField textField0 = new JTextField(25);
 			textField0.setEditable(false);
-			textField0.setText(newDefinition);
+			textField0.setText(currentDefinition_location);
 			c0.gridx = 1;
 			c0.gridy = 0;
 			c0.weightx = 1;
@@ -682,9 +790,19 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					File tempDefinitionFile = FilesHandle.chosenDefinition();	
 					if (tempDefinitionFile != null) {	//Only change StrataDefinition if the FileChooser return a file that is not Null
 						file_StrataDefinition = tempDefinitionFile;
-						newDefinition = file_StrataDefinition.getAbsolutePath();
+						currentDefinition_location = file_StrataDefinition.getAbsolutePath();
 						
 						//create 4 new instances of the 2 Panels 
+						is_table_loaded = false;
+						is_table1_loaded = false;
+						is_table2_loaded = false;
+						is_table3_loaded = false;
+						is_table4_loaded = false;
+						is_table5_loaded = false;
+						is_table6_loaded = false;
+						is_table7_loaded = false;
+						
+						
 						panel_Model_Identifiniton_GUI = new Model_Identifiniton_GUI();
 						panel_Model_Identification_Text = new Model_Identification_Text();
 						panel_CovertypeConversion_GUI = new CovertypeConversion_GUI();
@@ -723,16 +841,17 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		    c0.weighty = 1;
 			importPanel.add(textField2, c0);
 
-			JButton button2 = new JButton();
-			button2.setToolTipText("Import Database");
+			
+			button_import_database = new JButton();
+			button_import_database.setToolTipText("Import Database");
 			icon = new ImageIcon(getClass().getResource("/icon_import.png"));
 			scaleImage = icon.getImage().getScaledInstance(20, 20,Image.SCALE_SMOOTH);
-			button2.setIcon(new ImageIcon(scaleImage));			
-			button2.setEnabled(false);
-			button2.addActionListener(new ActionListener() {
+			button_import_database.setIcon(new ImageIcon(scaleImage));			
+			button_import_database.setEnabled(false);
+			button_import_database.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					file_Database = FilesHandle.chosenDatabase();				
+					if (is_this_the_first_load == false) file_Database = FilesHandle.chosenDatabase();				
 					if (file_Database!=null) {
 						textField2.setText(file_Database.getAbsolutePath());
 							
@@ -771,7 +890,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c0.gridy = 2;
 			c0.weightx = 0;
 		    c0.weighty = 1;
-			importPanel.add(button2, c0);
+			importPanel.add(button_import_database, c0);
 		 			
 					
 			// 1st grid line 1----------------------
@@ -790,15 +909,16 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		    c0.weighty = 1;
 			importPanel.add(textField1, c0);
 			
-			JButton button1 = new JButton();
-			button1.setToolTipText("Import Strata");
+			
+			button_import_existingStrata = new JButton();
+			button_import_existingStrata.setToolTipText("Import Strata");
 			icon = new ImageIcon(getClass().getResource("/icon_import.png"));
 			scaleImage = icon.getImage().getScaledInstance(20, 20,Image.SCALE_SMOOTH);
-			button1.setIcon(new ImageIcon(scaleImage));
-			button1.addActionListener(new ActionListener() {
+			button_import_existingStrata.setIcon(new ImageIcon(scaleImage));
+			button_import_existingStrata.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					file_ExistingStrata = FilesHandle.chosenStrata();				
+					if (is_this_the_first_load == false) file_ExistingStrata = FilesHandle.chosenStrata();				
 					if (file_ExistingStrata!=null) {
 						textField1.setText(file_ExistingStrata.getAbsolutePath());
 						
@@ -836,7 +956,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				        
 				        //Enable "Import Database"
 				        textField2.setText(null);
-				        button2.setEnabled(true);
+				        button_import_database.setEnabled(true);
 					}
 				}
 			});
@@ -844,7 +964,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c0.gridy = 1;
 			c0.weightx = 0;
 		    c0.weighty = 1;
-			importPanel.add(button1, c0);
+			importPanel.add(button_import_existingStrata, c0);
 			// End of 1st grid -----------------------------------------------------------------------
 			// End of 1st grid -----------------------------------------------------------------------
 			
@@ -997,13 +1117,13 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 			
 			// 2nd line inside inforPanel includes 2 buttons
-			//button 1
-			JButton select_Strata = new JButton();
-			select_Strata.setToolTipText("Add the selected existing strata into optimization model");
+			//button 1		
+			button_select_Strata = new JButton();
+			button_select_Strata.setToolTipText("Add the selected existing strata into optimization model");
 			icon = new ImageIcon(getClass().getResource("/icon_select.png"));
 			scaleImage = icon.getImage().getScaledInstance(20, 20,Image.SCALE_SMOOTH);
-			select_Strata.setIcon(new ImageIcon(scaleImage));
-			select_Strata.addActionListener(new ActionListener() {
+			button_select_Strata.setIcon(new ImageIcon(scaleImage));
+			button_select_Strata.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {
 					String applyText = "Yes";				
@@ -1042,7 +1162,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c2.gridwidth = 1;	
 			c2.weightx = 1;
 		    c2.weighty = 0;
-			inforPanel.add(select_Strata, c2);
+			inforPanel.add(button_select_Strata, c2);
 			
 			//button 2
 			JButton remove_Strata = new JButton();
@@ -2528,6 +2648,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			table2.setAutoResizeMode(0);
 			table2.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);  
 			table2.getTableHeader().setReorderingAllowed(false);		//Disable columns move
+			table2.setPreferredScrollableViewportSize(new Dimension(300, 100));
 			table2.setFillsViewportHeight(true);
 			TableRowSorter<MyTableModel2> sorter2 = new TableRowSorter<MyTableModel2>(model2);	//Add sorter
 			table2.setRowSorter(sorter2);
@@ -2539,7 +2660,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			border5.setTitleJustification(TitledBorder.CENTER);
 			constraints_ScrollPane.setBorder(border5);			
 			constraints_ScrollPane.setViewportView(table2);
-			constraints_ScrollPane.setPreferredSize(new Dimension(300, 150));
 			// End of 5th Grid -----------------------------------------------------------------------
 			// End of 5th Grid -----------------------------------------------------------------------				
 			
@@ -2715,6 +2835,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		inputFiles_list.add(getSRDisturbancesFile());
 		inputFiles_list.add(getUserConstraintsFile());
 		inputFiles_list.add(getSRDRequirementsFile());
+		
+		inputFiles_list.add(getDefinitionFile());
+		inputFiles_list.add(getStrataFile());
 		inputFiles_list.add(getDatabaseFile());
 		
 		return inputFiles_list;
@@ -2723,8 +2846,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 	
 	private File getGeneralInputFile() {
-		File generalInputFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/Input 1 - General Inputs.txt");
-		generalInputFile.deleteOnExit();
+		File generalInputFile = new File(temporary_RunFolder.getAbsolutePath() + "/Input 1 - General Inputs.txt");
 		
 		if (data1 != null) {
 			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(generalInputFile))) {
@@ -2748,8 +2870,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 	
 	private File getSelectedStrataFile() {
-		File selectedStrataFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/Input 2 - Selected Strata.txt");	
-		selectedStrataFile.deleteOnExit();
+		File selectedStrataFile = new File(temporary_RunFolder.getAbsolutePath() + "/Input 2 - Selected Strata.txt");	
 		
 		if (data != null) {
 			//Only print out Strata with implemented methods <> null
@@ -2777,8 +2898,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 	private File getRequirementsFile() {
 		//Only print out if the last column Allowed Options <> null
-		File requirementsFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/Input 3 - Covertype Conversion (Clear Cuts).txt");
-		requirementsFile.deleteOnExit();
+		File requirementsFile = new File(temporary_RunFolder.getAbsolutePath() + "/Input 3 - Covertype Conversion (Clear Cuts).txt");
 		
 		if (data4 != null) {
 			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(requirementsFile))) {
@@ -2805,8 +2925,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 	
 	private File getSRDRequirementsFile() {
-		File SRDrequirementsFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/Input 4 - Covertype Conversion (Replacing Disturbances).txt");	
-		SRDrequirementsFile.deleteOnExit();
+		File SRDrequirementsFile = new File(temporary_RunFolder.getAbsolutePath() + "/Input 4 - Covertype Conversion (Replacing Disturbances).txt");	
 		
 		if (data7 != null) {
 			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(SRDrequirementsFile))) {
@@ -2830,8 +2949,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 	
 	private File getMSFireFile() {
-		File MSFireFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/Input 5 - Mixed Severity Fire.txt");	
-		MSFireFile.deleteOnExit();
+		File MSFireFile = new File(temporary_RunFolder.getAbsolutePath() + "/Input 5 - Mixed Severity Fire.txt");	
 		
 		if (data5 != null) {
 			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(MSFireFile))) {
@@ -2855,8 +2973,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 	
 	private File getSRDisturbancesFile() {
-		File SRDisturbancesFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/Input 6 - Replacing Disturbances.txt");	
-		SRDisturbancesFile.deleteOnExit();
+		File SRDisturbancesFile = new File(temporary_RunFolder.getAbsolutePath() + "/Input 6 - Replacing Disturbances.txt");	
 		
 		if (data6 != null) {
 			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(SRDisturbancesFile))) {
@@ -2880,8 +2997,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 	
 	private File getUserConstraintsFile() {
-		File userConstraintsFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/Input 8 - User Constraints.txt");
-		userConstraintsFile.deleteOnExit();
+		File userConstraintsFile = new File(temporary_RunFolder.getAbsolutePath() + "/Input 8 - User Constraints.txt");
 		
 		if (data2 != null) {
 			//Only print out rows if columns  1, 2 or 4, 6, 7, 8 <> null
@@ -2914,13 +3030,36 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		return userConstraintsFile;	
 	}
 
-		
-	private File getDatabaseFile() {	
-		File databaseFile = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "database.db");
-		if (databaseFile.exists()) databaseFile.delete();
+	
+	private File getDefinitionFile() {	
+		File definitionFile = new File(temporary_RunFolder.getAbsolutePath() + "/" + "StrataDefinition.csv");
 		
 		try {
-			if (file_Database != null) Files.copy(file_Database.toPath(), databaseFile.toPath());
+			if (file_StrataDefinition != null) Files.copy(file_StrataDefinition.toPath(), definitionFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+		} catch (IOException e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+		}
+		return definitionFile;	
+	}	
+
+	
+	private File getStrataFile() {	
+		File strataFile = new File(temporary_RunFolder.getAbsolutePath() + "/" + "existingStrata.csv");
+		
+		try {
+			if (file_ExistingStrata != null) Files.copy(file_ExistingStrata.toPath(), strataFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+		} catch (IOException e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+		}
+		return strataFile;	
+	}
+	
+	
+	private File getDatabaseFile() {	
+		File databaseFile = new File(temporary_RunFolder.getAbsolutePath() + "/" + "database.db");
+		
+		try {
+			if (file_Database != null) Files.copy(file_Database.toPath(), databaseFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 		}

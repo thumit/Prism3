@@ -220,7 +220,15 @@ public class Panel_YieldProject extends JLayeredPane {
 		btnEditRun.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
-				edit_Runs();
+				Thread thread1 = new Thread() {			// Make a thread so JFrame will not be frozen
+					public void run() {
+						edit_Runs();
+						Spectrum_Main.mainFrameReturn().getSelectedFrame().revalidate();
+						Spectrum_Main.mainFrameReturn().getSelectedFrame().repaint();
+						this.interrupt();
+					}
+				};
+				thread1.start();
 			}
 		});
 		projectToolBar.add(btnEditRun);
@@ -509,7 +517,15 @@ public class Panel_YieldProject extends JLayeredPane {
 						editMenuItem.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent actionEvent) {								
-								edit_Runs();
+								Thread thread2 = new Thread() {			// Make a thread so JFrame will not be frozen
+									public void run() {
+										edit_Runs();
+										Spectrum_Main.mainFrameReturn().getSelectedFrame().revalidate();
+										Spectrum_Main.mainFrameReturn().getSelectedFrame().repaint();
+										this.interrupt();
+									}
+								};
+								thread2.start();
 							}
 						});
 						popup.add(editMenuItem);

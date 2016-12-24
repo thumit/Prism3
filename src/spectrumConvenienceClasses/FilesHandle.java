@@ -1,5 +1,6 @@
 package spectrumConvenienceClasses;
 
+import java.awt.Image;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -9,6 +10,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -149,56 +151,55 @@ public class FilesHandle {
 	
 	
 	public static File chosenDefinition() {
-		JFileChooser chooser = new JFileChooser();
-		chooser.setCurrentDirectory(new File(get_workingLocation()));
-		chooser.setDialogTitle("Select strata definition file");
-		chooser.setMultiSelectionEnabled(false);
-		
-		chooser.setApproveButtonText("Import");
-		chooser.setApproveButtonToolTipText("Import strata definition from the selected file");
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("Strata Definition File '.csv' '.txt'", "csv", "txt");
-		chooser.setFileFilter(filter);
-		chooser.setAcceptAllFileFilterUsed(false);
-		
-		int returnValue = chooser.showOpenDialog(Spectrum_Main.mainFrameReturn());
 		File file = null;
-		if (returnValue == JFileChooser.APPROVE_OPTION) {	//Return the new Definition as in the selected file
-			file = chooser.getSelectedFile();
-		}
-		
-		
-		if (returnValue == JFileChooser.CANCEL_OPTION) {	//Return the Default definition if Cancel
-		
-			int response = JOptionPane.showConfirmDialog(Spectrum_Main.mainFrameReturn(),
-					"Do you want to reload the Default Strata Definition ?", "Confirm", JOptionPane.YES_NO_OPTION,
-					JOptionPane.QUESTION_MESSAGE);
-			if (response == JOptionPane.YES_OPTION) {
-				try {
-					File file_StrataDefinition = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "StrataDefinition.csv");	
-					file_StrataDefinition.deleteOnExit();
-						
-					InputStream initialStream = Panel_EditRun_Details.class.getResourceAsStream("/StrataDefinition.csv");		//Default definition
-					byte[] buffer = new byte[initialStream.available()];
-					initialStream.read(buffer);
-
-					OutputStream outStream = new FileOutputStream(file_StrataDefinition);
-					outStream.write(buffer);
-
-					initialStream.close();
-					outStream.close();
-
-					file = file_StrataDefinition;
-				} catch (FileNotFoundException e1) {
-					System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
-				} catch (IOException e2) {
-					System.err.println(e2.getClass().getName() + ": " + e2.getMessage());
-				}
-			} else if (response == JOptionPane.NO_OPTION) {
-	
-			} else if (response == JOptionPane.CLOSED_OPTION) {
-
+			
+		ImageIcon icon = new ImageIcon(Spectrum_Main.mainFrameReturn().getClass().getResource("/icon_question.png"));
+		Image scaleImage = icon.getImage().getScaledInstance(50, 50,Image.SCALE_SMOOTH);
+		String ExitOption[] = {"New definition","Default definition","Cancel"};
+		int response = JOptionPane.showOptionDialog(Spectrum_Main.mainFrameReturn(),"Except General Inputs, everything will be reset. Your option ?", "Import Strata Definition",
+				JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, new ImageIcon(scaleImage), ExitOption, ExitOption[2]);
+		if (response == 0)
+		{
+			JFileChooser chooser = new JFileChooser();
+			chooser.setCurrentDirectory(new File(get_workingLocation()));
+			chooser.setDialogTitle("Select strata definition file");
+			chooser.setMultiSelectionEnabled(false);
+			
+			chooser.setApproveButtonText("Import");
+			chooser.setApproveButtonToolTipText("Import strata definition from the selected file");
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("Strata Definition File '.csv' '.txt'", "csv", "txt");
+			chooser.setFileFilter(filter);
+			chooser.setAcceptAllFileFilterUsed(false);
+			
+			int returnValue = chooser.showOpenDialog(Spectrum_Main.mainFrameReturn());
+			if (returnValue == JFileChooser.APPROVE_OPTION) {	//Return the new Definition as in the selected file
+				file = chooser.getSelectedFile();
 			}
 		}
+		if (response == 1)	
+		{
+			try {
+				File file_StrataDefinition = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "StrataDefinition.csv");	
+				file_StrataDefinition.deleteOnExit();
+					
+				InputStream initialStream = Panel_EditRun_Details.class.getResourceAsStream("/StrataDefinition.csv");		//Default definition
+				byte[] buffer = new byte[initialStream.available()];
+				initialStream.read(buffer);
+
+				OutputStream outStream = new FileOutputStream(file_StrataDefinition);
+				outStream.write(buffer);
+
+				initialStream.close();
+				outStream.close();
+
+				file = file_StrataDefinition;
+			} catch (FileNotFoundException e1) {
+				System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+			} catch (IOException e2) {
+				System.err.println(e2.getClass().getName() + ": " + e2.getMessage());
+			}
+		}	
+		
 		return file;
 	}	
 	
