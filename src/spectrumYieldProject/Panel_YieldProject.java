@@ -345,7 +345,7 @@ public class Panel_YieldProject extends JLayeredPane {
 						
 						
 						//Create a table
-						model = new TableModelSpectrum(colCount, rowCount, columnNames, data);
+						model = new TableModelSpectrum(rowCount, colCount, data, columnNames);
 						table = new JTable(model) {
 							@Override			//These override is to make the width of the cell fit all contents of the cell
 							public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {

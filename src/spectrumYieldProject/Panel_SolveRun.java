@@ -84,7 +84,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 		}	
 		
 		//Create a table
-        model = new TableModelSpectrum(colCount, rowCount, columnNames, data);
+        model = new TableModelSpectrum(rowCount, colCount, data, columnNames);
         table = new JTable(model);
         table.getColumnModel().getColumn(1).setPreferredWidth(100);	//Set width of Column 'Validation'
         DefaultTableCellRenderer renderer = (DefaultTableCellRenderer)table.getDefaultRenderer(Object.class);

@@ -7,16 +7,16 @@ public class TableModelSpectrum extends AbstractTableModel {
 	private String[] columnNames;
 	private Object[][] data;
 
-	public TableModelSpectrum(int input_colCount, int input_rowCount, String[] input_columnNames, Object[][] input_data) {
-		colCount = input_colCount;
+	public TableModelSpectrum(int input_rowCount, int input_colCount, Object[][] input_data, String[] input_columnNames) {
 		rowCount = input_rowCount;
+		colCount = input_colCount;
 		data = input_data;
 		columnNames = input_columnNames;
 	}
 	
-	public void updateTableModelSpectrum(int input_colCount, int input_rowCount, String[] input_columnNames, Object[][] input_data) {
-		colCount = input_colCount;
+	public void updateTableModelSpectrum(int input_rowCount, int input_colCount, Object[][] input_data, String[] input_columnNames) {
 		rowCount = input_rowCount;
+		colCount = input_colCount;
 		data = input_data;
 		columnNames = input_columnNames;
 	}
@@ -61,5 +61,9 @@ public class TableModelSpectrum extends AbstractTableModel {
 //		fireTableCellUpdated(row, col);			//This is dangerous because:
 												// 1st:If columns or rows are not moved and not sorted then we can call table1.setValueAt(data1[0][1], 0, 1);
 												// 2nd: If columns or rows are moved or sorted then we have to call: table1.setValueAt(data1[3][1], table1.convertRowIndexToModel(3), table1.convertColumnIndexToModel(1)); 	
+	}
+
+	public void match_DataType() {
+	
 	}
 };
