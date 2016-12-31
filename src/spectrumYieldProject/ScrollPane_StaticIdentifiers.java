@@ -129,10 +129,10 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 	    
 	    
 		this.setViewportView(identifiersPanel);
-		TitledBorder border1 = new TitledBorder("Static identifiers for VARIABLES (from model definition)");
+		TitledBorder border1 = new TitledBorder("Static identifiers for VARIABLES");
 		border1.setTitleJustification(TitledBorder.CENTER);
 		this.setBorder(border1);
-		this.setPreferredSize(new Dimension(100, 250));
+		this.setPreferredSize(new Dimension(500, 250));
 	}
 	
 	public List<List<JCheckBox>> get_CheckboxStaticIdentifiers() {

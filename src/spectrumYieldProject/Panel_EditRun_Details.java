@@ -10,6 +10,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -59,9 +60,12 @@ import javax.swing.RowFilter;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.ToolTipManager;
+import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
@@ -69,6 +73,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 import javax.swing.text.DefaultFormatter;
 
+import spectrumConvenienceClasses.ColorUtil;
 import spectrumConvenienceClasses.FilesHandle;
 import spectrumConvenienceClasses.TableModelSpectrum;
 import spectrumROOT.Spectrum_Main;
@@ -734,7 +739,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 		//Setup the table------------------------------------------------------------	
 		if (is_table2_loaded == false) { // Create a fresh new if Load fail				
-			rowCount2 = 10000;
+			rowCount2 = 0;
 			colCount2 = 9;
 			data2 = new Object[rowCount2][colCount2];
 			columnNames2 = new String[] { "Const. Description (optional)", "Const. Type", "LB Value", "Penalty/Unit < LB (SOFT)", "UB Value", "Penalty/Unit > UB (SOFT)", "PARAMETERS Index", "Static identifiers for VARIABLES", "Dynamic identifiers for PARAMETERS"};	         				
@@ -747,7 +752,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			public Class getColumnClass(int c) {
 				if (c==0) return String.class;      //column 0 accepts only String
 				else if (c>=2 && c<=5) return Double.class;      //column 2 to 5 accept only Double values   
-		        else return (getValueAt(0, c) == null ? Object.class : getValueAt(0, c).getClass());
+				else return String.class;				//Just because delete all rows make JTable fail, otherwise we should use the below line
+//		        else return (getValueAt(0, c) == null ? Object.class : getValueAt(0, c).getClass());		//
 			}
 
 			@Override
@@ -826,25 +832,11 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			
          
-         
-         
-        //table2.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-//		table2.getColumnModel().getColumn(0).setPreferredWidth(250);
-//		table2.getColumnModel().getColumn(colCount2-7).setPreferredWidth(150);	
-//		table2.getColumnModel().getColumn(colCount2-6).setPreferredWidth(150);	
-//		table2.getColumnModel().getColumn(colCount2-5).setPreferredWidth(150);	
-//        table2.getColumnModel().getColumn(colCount2-4).setPreferredWidth(150);	//Set width of Column "Penalty/Unit (Soft Const.)" bigger
-//        table2.getColumnModel().getColumn(colCount2-3).setPreferredWidth(150);	//Set width of Column "PARAMETERS" bigger
-//        table2.getColumnModel().getColumn(colCount2-2).setPreferredWidth(300);	//Set width of Column "Static identifiers for VARIABLES" bigger
-//        table2.getColumnModel().getColumn(colCount2-1).setPreferredWidth(300);	//Set width of Column "Dynamic identifiers for PARAMETERS" bigger
-//		table2.setPreferredScrollableViewportSize(new Dimension(1500, 200));
-		table2.setAutoResizeMode(0);
+		table2.setAutoResizeMode(0);		// 0 = JTable.AUTO_RESIZE_OFF
 		table2.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);  
 		table2.getTableHeader().setReorderingAllowed(false);		//Disable columns move
-		table2.setPreferredScrollableViewportSize(new Dimension(300, 100));
-		table2.setFillsViewportHeight(true);
-		TableRowSorter<TableModelSpectrum> sorter = new TableRowSorter<TableModelSpectrum>(model2);	//Add sorter
-		table2.setRowSorter(sorter);
+		table2.setPreferredScrollableViewportSize(new Dimension(250, 100));
+//		table2.setFillsViewportHeight(true);
 	}
 	
 	//--------------------------------------------------------------------------------------------------------------------------
@@ -1821,8 +1813,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 			JButton button0 = new JButton();
 			button0.setToolTipText("Import Definition");
-			icon = new ImageIcon(getClass().getResource("/icon_import.png"));
-			scaleImage = icon.getImage().getScaledInstance(20, 20,Image.SCALE_SMOOTH);
+			icon = new ImageIcon(getClass().getResource("/icon_add.png"));
+			scaleImage = icon.getImage().getScaledInstance(16, 16,Image.SCALE_SMOOTH);
 			button0.setIcon(new ImageIcon(scaleImage));
 			button0.addActionListener(new ActionListener() {
 				@Override
@@ -1887,8 +1879,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			button_import_database = new JButton();
 			button_import_database.setToolTipText("Import Database");
-			icon = new ImageIcon(getClass().getResource("/icon_import.png"));
-			scaleImage = icon.getImage().getScaledInstance(20, 20,Image.SCALE_SMOOTH);
+			icon = new ImageIcon(getClass().getResource("/icon_add.png"));
+			scaleImage = icon.getImage().getScaledInstance(16, 16,Image.SCALE_SMOOTH);
 			button_import_database.setIcon(new ImageIcon(scaleImage));			
 			button_import_database.setEnabled(false);
 			button_import_database.addActionListener(new ActionListener() {
@@ -1955,8 +1947,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			button_import_existingStrata = new JButton();
 			button_import_existingStrata.setToolTipText("Import Strata");
-			icon = new ImageIcon(getClass().getResource("/icon_import.png"));
-			scaleImage = icon.getImage().getScaledInstance(20, 20,Image.SCALE_SMOOTH);
+			icon = new ImageIcon(getClass().getResource("/icon_add.png"));
+			scaleImage = icon.getImage().getScaledInstance(16, 16,Image.SCALE_SMOOTH);
 			button_import_existingStrata.setIcon(new ImageIcon(scaleImage));
 			button_import_existingStrata.addActionListener(new ActionListener() {
 				@Override
@@ -1980,9 +1972,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 							data[row][colCount - 3] = value[row][read_Strata.get_TotalColumns() - 1];	//the last column is "Total acres"
 						}
 						
-						model.match_DataType();			//a smart way to retrieve the original data type :))))))
+						model.match_DataType();			//a smart way to retrieve the original data type :))))))					
+						model.updateTableModelSpectrum(rowCount, colCount, data, columnNames);		//Very important to (pass table info back to table model) each time data is new Object
 						model.fireTableDataChanged();
-						model.updateTableModelSpectrum(rowCount, colCount, data, columnNames);		//Very important to (pass table info back to table model)
 								         						
 						//Only add sorter after having the data loaded
 						TableRowSorter<TableModelSpectrum> sorter = new TableRowSorter<TableModelSpectrum>(model);
@@ -2140,7 +2132,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			//button 1		
 			button_select_Strata = new JButton();
 			button_select_Strata.setToolTipText("Add the selected existing strata into optimization model");
-			icon = new ImageIcon(getClass().getResource("/icon_select.png"));
+			icon = new ImageIcon(getClass().getResource("/icon_check.png"));
 			scaleImage = icon.getImage().getScaledInstance(20, 20,Image.SCALE_SMOOTH);
 			button_select_Strata.setIcon(new ImageIcon(scaleImage));
 			button_select_Strata.addActionListener(new ActionListener() {
@@ -2187,7 +2179,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			//button 2
 			JButton remove_Strata = new JButton();
 			remove_Strata.setToolTipText("Remove the selected existing strata from optimization model");
-			icon = new ImageIcon(getClass().getResource("/icon_deselect.png"));
+			icon = new ImageIcon(getClass().getResource("/icon_erase.png"));
 			scaleImage = icon.getImage().getScaledInstance(20, 20,Image.SCALE_SMOOTH);
 			remove_Strata.setIcon(new ImageIcon(scaleImage));
 			remove_Strata.addActionListener(new ActionListener() {
@@ -2563,173 +2555,442 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			setLayout(new GridBagLayout());
 			
 			
-			// 1st grid ------------------------------------------------------------------------------			
+			// 1st grid ------------------------------------------------------------------------------		// Static identifiers	
 			ScrollPane_StaticIdentifiers identifiersScrollPanel = new ScrollPane_StaticIdentifiers(file_StrataDefinition);
 			checkboxStaticIdentifiers = identifiersScrollPanel.get_CheckboxStaticIdentifiers();
 			// End of 1st grid -----------------------------------------------------------------------
 
-							
-			// 2nd grid ------------------------------------------------------------------------------
-			parametersScrollPanel = new ScrollPane_Parameters(read_Identifiers, yieldTable_ColumnNames);		// "Get parameters from YT columns"
-			TitledBorder border2 = new TitledBorder("PARAMETERS (yield table columns)");
-			border2.setTitleJustification(TitledBorder.CENTER);
-			parametersScrollPanel.setBorder(border2);
-	    	parametersScrollPanel.setPreferredSize(new Dimension(250, 100));
-			// End of 2nd grid -----------------------------------------------------------------------
+			
+			// 2nd Grid ------------------------------------------------------------------------------		// Dynamic identifiers
+			dynamic_identifiersScrollPanel = new ScrollPane_DynamicIdentifiers(2, 
+					read_DatabaseTables, read_Identifiers, yieldTable_ColumnNames, yieldTable_values);
+			// End of 2nd Grid -----------------------------------------------------------------------
+				
+					
+			// 3rd grid ------------------------------------------------------------------------------		// Parameters
+			parametersScrollPanel = new ScrollPane_Parameters(read_Identifiers, yieldTable_ColumnNames);
+			TitledBorder border = new TitledBorder("PARAMETERS (yield columns)");
+			border.setTitleJustification(TitledBorder.CENTER);
+			parametersScrollPanel.setBorder(border);
+	    	parametersScrollPanel.setPreferredSize(new Dimension(200, 100));
+			// End of 3rd grid -----------------------------------------------------------------------
 			
 	    	
-			// 4th Grid ------------------------------------------------------------------------------	
-			dynamic_identifiersScrollPanel = new ScrollPane_DynamicIdentifiers(2, read_DatabaseTables, read_Identifiers,
-					yieldTable_ColumnNames, yieldTable_values);	// "Get identifiers from yield table columns"
-			// End of 4th Grid -----------------------------------------------------------------------
-				
-
-			// 3rd Grid -----------------------------------------------------------------------
-			// 3rd Grid -----------------------------------------------------------------------						
-			JPanel buttonPanel = new JPanel(new BorderLayout(0, 0));
-			buttonPanel.setPreferredSize(new Dimension(250, 40));;
-			JButton addBtn = new JButton();
-			addBtn.setFont(new Font(null, Font.BOLD, 14));
-			addBtn.setText("SET CONSTRAINTS INFO");
-			addBtn.setToolTipText("Apply information of static identifiers, parameters, and dynamic idetifiers to the selected rows (or constraints)");
+	
+			// 4th Grid ------------------------------------------------------------------------------		// Buttons	
+			// 4th Grid -----------------------------------------------------------------------------
+			// Add all buttons to a Panel----------------------------------
+			JPanel button_table_Panel = new JPanel(new GridBagLayout());
+			TitledBorder border3 = new TitledBorder("Constraints Information");
+			border3.setTitleJustification(TitledBorder.CENTER);
+			button_table_Panel.setBorder(border3);
+			GridBagConstraints c2 = new GridBagConstraints();
+			c2.fill = GridBagConstraints.BOTH;
+			c2.insets = new Insets(0, 5, 10, 10); // padding top 0, left 5, bottom 10, right 10
 			
-			addBtn.addActionListener(new ActionListener() {
+			
+			JButton btn_NewSingle = new JButton();
+			btn_NewSingle.setFont(new Font(null, Font.BOLD, 14));
+//			btn_NewSingle.setText("NEW SINGLE");
+			btn_NewSingle.setToolTipText("New constraint");
+			icon = new ImageIcon(getClass().getResource("/icon_add.png"));
+			scaleImage = icon.getImage().getScaledInstance(16, 16,Image.SCALE_SMOOTH);
+			btn_NewSingle.setIcon(new ImageIcon(scaleImage));
+					
+			c2.gridx = 0;
+			c2.gridy = 0;
+			c2.weightx = 0;
+			c2.weighty = 0;
+			button_table_Panel.add(btn_NewSingle, c2);
+			
+			
+			JButton btn_New_Multiple = new JButton();
+			btn_New_Multiple.setFont(new Font(null, Font.BOLD, 14));
+//			btn_New_Multiple.setText("NEW MULTIPLE");
+			btn_New_Multiple.setToolTipText("New set of constraints");
+			icon = new ImageIcon(getClass().getResource("/icon_add3.png"));
+			scaleImage = icon.getImage().getScaledInstance(16, 16,Image.SCALE_SMOOTH);
+			btn_New_Multiple.setIcon(new ImageIcon(scaleImage));
+					
+			c2.gridx = 0;
+			c2.gridy = 1;
+			c2.weightx = 0;
+			c2.weighty = 0;
+			button_table_Panel.add(btn_New_Multiple, c2);
+			
+			JButton btn_Edit = new JButton();
+//			btn_Edit.setFont(new Font(null, Font.BOLD, 14));
+//			btn_Edit.setText("EDIT");
+			btn_Edit.setToolTipText("Edit a constraint: Reload info to interface & Allow Edit");
+			icon = new ImageIcon(getClass().getResource("/icon_edit2.png"));
+			scaleImage = icon.getImage().getScaledInstance(16, 16,Image.SCALE_SMOOTH);
+			btn_Edit.setIcon(new ImageIcon(scaleImage));
+			btn_Edit.setEnabled(false);
+					
+			c2.gridx = 0;
+			c2.gridy = 2;
+			c2.weightx = 0;
+			c2.weighty = 0;
+			button_table_Panel.add(btn_Edit, c2);
+			
+			
+			JButton btn_Delete = new JButton();
+			btn_Delete.setFont(new Font(null, Font.BOLD, 14));
+//			btn_Delete.setText("DELETE");
+			btn_Delete.setToolTipText("Delete constraints");
+			icon = new ImageIcon(getClass().getResource("/icon_erase.png"));
+			scaleImage = icon.getImage().getScaledInstance(16, 16,Image.SCALE_SMOOTH);
+			btn_Delete.setIcon(new ImageIcon(scaleImage));
+			btn_Delete.setEnabled(false);
+					
+			c2.gridx = 0;
+			c2.gridy = 3;
+			c2.weightx = 0;
+			c2.weighty = 0;
+			button_table_Panel.add(btn_Delete, c2);
+			
+			
+			JButton btn_Sort = new JButton();
+			btn_Sort.setFont(new Font(null, Font.BOLD, 12));
+			btn_Sort.setText("OFF");
+			btn_Sort.setToolTipText("Row sorter status. While 'ON', click columns header to sort");
+			icon = new ImageIcon(getClass().getResource("/icon_table.png"));
+			scaleImage = icon.getImage().getScaledInstance(16, 16,Image.SCALE_SMOOTH);
+			btn_Sort.setIcon(new ImageIcon(scaleImage));
+					
+			c2.gridx = 0;
+			c2.gridy = 4;
+			c2.weightx = 0;
+			c2.weighty = 0;
+			button_table_Panel.add(btn_Sort, c2);
+			
+			
+			JButton btn_Validate = new JButton();
+			btn_Validate.setFont(new Font(null, Font.BOLD, 14));
+//			btn_Validate.setText("VALIDATE");
+			btn_Validate.setToolTipText("Validate constraints");
+			icon = new ImageIcon(getClass().getResource("/icon_magnifier.png"));
+			scaleImage = icon.getImage().getScaledInstance(16, 16,Image.SCALE_SMOOTH);
+			btn_Validate.setIcon(new ImageIcon(scaleImage));
+					
+			c2.gridx = 0;
+			c2.gridy = 5;
+			c2.weightx = 0;
+			c2.weighty = 0;
+			button_table_Panel.add(btn_Validate, c2);
+			
+			
+			c2.insets = new Insets(0, 0, 0, 0); // No padding
+			// Add Empty Label to make all buttons on top not middle
+			c2.gridx = 0;
+			c2.gridy = 6;
+			c2.weightx = 0;
+			c2.weighty = 1;
+			button_table_Panel.add(new JLabel(), c2);
+			
+			// Add table2				
+			create_table2();
+			JScrollPane table_ScrollPane = new JScrollPane(table2);	
+			c2.gridx = 1;
+			c2.gridy = 0;
+			c2.weightx = 1;
+			c2.weighty = 1;
+			c2.gridheight = 7;
+			button_table_Panel.add(table_ScrollPane, c2);
+			// End of 4th Grid -----------------------------------------------------------------------
+			// End of 4th Grid -----------------------------------------------------------------------	
+			
+			
+			
+			// Add Listeners for table2 & buttons----------------------------------------------------------
+			// Add Listeners for table2 & buttons----------------------------------------------------------
+			
+			// table2
+			table2.addMouseListener(new MouseAdapter() { // Add listener to DatabaseTree
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					int[] selectedRow = table2.getSelectedRows();
+					if (selectedRow.length == 1 && !table2.isEditing()) {		// Enable Edit	when: 1 row is selected and no cell is editing
+						btn_Edit.setEnabled(true);
+					} else {		// Disable Edit
+						btn_Edit.setEnabled(false);
+					}
+					
+					if (selectedRow.length >= 1 && !table2.isEditing() && table2.isEnabled()) {		// Enable Delete  when: >=1 row is selected, no cell is editing, table is enable (often after Edit button finished its task)
+						btn_Delete.setEnabled(true);
+					} else {		// Disable Delete
+						btn_Delete.setEnabled(false);
+					}		
+				}
+			});
+			
+			table2.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+		        public void valueChanged(ListSelectionEvent event) {
+		        	int[] selectedRow = table2.getSelectedRows();
+					if (selectedRow.length == 1 && !table2.isEditing()) {		// Enable Edit	when: 1 row is selected and no cell is editing
+						btn_Edit.setEnabled(true);
+					} else {		// Disable Edit
+						btn_Edit.setEnabled(false);
+					}
+					
+					if (selectedRow.length >= 1 && !table2.isEditing() && table2.isEnabled()) {		// Enable Delete  when: >=1 row is selected, no cell is editing, table is enable (often after Edit button finished its task)
+						btn_Delete.setEnabled(true);
+					} else {		// Disable Delete
+						btn_Delete.setEnabled(false);
+					}	
+		        }
+		    });
+			
+			
+
+			// New single
+			btn_NewSingle.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {		
-					if (parametersScrollPanel.get_checkboxNoParameter() != null) {		//only allow this "SET INFO" when checkBoxes are already created
-						
-						int[] selectedRow = table2.getSelectedRows();	
-						///Convert row index because "Sort" causes problems
-						for (int i = 0; i < selectedRow.length; i++) {
-							selectedRow[i] = table2.convertRowIndexToModel(selectedRow[i]);
+					if (parametersScrollPanel.get_checkboxNoParameter() != null) {		//only allow this when checkBoxes are already created
+						// Add 1 row
+						rowCount2++;
+						data2 = new Object[rowCount2][colCount2];
+						for (int ii = 0; ii < rowCount2 - 1; ii++) {
+							for (int jj = 0; jj < colCount2; jj++) {
+								data2[ii][jj] = model2.getValueAt(ii, jj);
+							}	
 						}
-						table2.clearSelection();	//To help trigger the row refresh: clear then add back the rows
+						
+						String[] constraint_info = get_constraint_info();					
+						data2[rowCount2 - 1][6] = constraint_info[0];
+						data2[rowCount2 - 1][7] = constraint_info[1];
+						data2[rowCount2 - 1][8] = constraint_info[2];
+						
+						model2.updateTableModelSpectrum(rowCount2, colCount2, data2, columnNames2);
+						model2.fireTableDataChanged();
+						
+						// Convert the new Row to model view and then select it 
+						int newRow = table2.convertRowIndexToView(rowCount2 - 1);
+						table2.setRowSelectionInterval(newRow, newRow);
+						
+					}
+				}
+			});
+			
+			
+			// Edit
+			btn_Edit.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent actionEvent) {	
+					if (table2.getSelectedRows().length == 1) {		//only allow this when a row is selected
+						if (table2.isEnabled()) {
+							table2.setEnabled(false);
+							btn_NewSingle.setEnabled(false);
+							btn_New_Multiple.setEnabled(false);
+							btn_Delete.setEnabled(false);
+							btn_Sort.setEnabled(false);
+							btn_Validate.setEnabled(false);				
+						} else {	// Do the Edit here and then Enable buttons & the table2 again
+							
+							// Reload GUI
+							
+							
+							
+							
+							// Apply change
+							int selectedRow = table2.getSelectedRow();
+							selectedRow = table2.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems			
+							String[] constraint_info = get_constraint_info();
+							data2[selectedRow][6] = constraint_info[0];
+							data2[selectedRow][7] = constraint_info[1];
+							data2[selectedRow][8] = constraint_info[2];
+							model2.fireTableDataChanged();	
+							
+							// Convert the edited Row to model view and then select it 
+							int editRow = table2.convertRowIndexToView(selectedRow);
+							table2.setRowSelectionInterval(editRow, editRow);
+							
+							// Enable buttons and table2
+							table2.setEnabled(true);
+							btn_NewSingle.setEnabled(true);
+							btn_New_Multiple.setEnabled(true);
+							btn_Delete.setEnabled(true);
+							btn_Sort.setEnabled(true);
+							btn_Validate.setEnabled(true);	
+						}
+						
+					}
+				}
+			});
+			
+				
+			// Delete
+			btn_Delete.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent actionEvent) {	
+					if (table2.getSelectedRows() != null) {		//only allow this when there are rows selected
+						// Get selected rows
+						int[] selectedRow = table2.getSelectedRows();	
+						for (int i = 0; i < selectedRow.length; i++) {
+							selectedRow[i] = table2.convertRowIndexToModel(selectedRow[i]);	///Convert row index because "Sort" causes problems
+						}
+						
+						// Create a list of selected row indexes
+						List<Integer> selected_Index = new ArrayList<Integer>();				
 						for (int i: selectedRow) {
-							
-							//add constraint info at column 6 "PARAMETERS"
-							String parameterConstraintColumn = "";
-							for (int j = 0; j < yieldTable_ColumnNames.length; j++) {
-								if (parametersScrollPanel.get_checkboxParameter().get(j).isSelected()) {			//add the index of selected Columns to this String
-									parameterConstraintColumn = parameterConstraintColumn + j + " ";
+							selected_Index.add(i);
+						}	
+						
+						// Get values to the new data2
+						data2 = new Object[rowCount2 - selectedRow.length][colCount2];
+						int newRow =0;
+						for (int ii = 0; ii < rowCount2; ii++) {
+							if (!selected_Index.contains(ii)) {			//If row not in the list then add to data2 row
+								for (int jj = 0; jj < colCount2; jj++) {
+									data2[newRow][jj] = model2.getValueAt(ii, jj);
 								}
+								newRow++;
 							}
-							
-							if (parameterConstraintColumn.equals("") || parametersScrollPanel.get_checkboxNoParameter().isSelected()) {
-								parameterConstraintColumn = "NoParameter";		//= parametersScrollPanel.checkboxNoParameter.getText();
-							}
-							
-							data2[i][6] = parameterConstraintColumn;
-							
-							
-							//add constraint info at column 7 "Static Identifiers"
-							String staticIdentifiersColumn = "";
-							for (int ii = 0; ii < checkboxStaticIdentifiers.size(); ii++) {		//Loop all static identifiers
-								staticIdentifiersColumn = staticIdentifiersColumn + ii + " ";
-								for (int j = 0; j < checkboxStaticIdentifiers.get(ii).size(); j++) {		//Loop all elements in each layer
-									String checkboxName = checkboxStaticIdentifiers.get(ii).get(j).getText();
-									if (checkboxName.equals("Even Age")) {
-										checkboxName = "EA";
-									} else if (checkboxName.equals("Group Selection")) {
-										checkboxName = "GS";
-									} else if (checkboxName.equals("Prescribed Burn")) {
-										checkboxName = "PB";
-									} else if (checkboxName.equals("Natural Growth")) {
-										checkboxName = "NG";
-									}
-									
-									//Add checkBox if it is (selected & visible) or disable
-									if ((checkboxStaticIdentifiers.get(ii).get(j).isSelected() && (checkboxStaticIdentifiers.get(ii).get(j).isVisible())
-											|| !checkboxStaticIdentifiers.get(ii).get(j).isEnabled()))	
-										staticIdentifiersColumn = staticIdentifiersColumn + checkboxName + " "	;
-								}
-								staticIdentifiersColumn = staticIdentifiersColumn + ";";
-							}	
-							data2[i][7] = staticIdentifiersColumn;
-							
-							
-							//add constraint info at column 8 "dynamic Identifiers"
-							String dynamicIdentifiersColumn = "";
-							for (int ii = 0; ii < dynamic_identifiersScrollPanel.get_allDynamicIdentifiers_ScrollPane().size(); ii++) {		//Loop all dynamic identifier ScrollPanes
-								if (dynamic_identifiersScrollPanel.get_allDynamicIdentifiers_ScrollPane().get(ii).isVisible() &&
-										dynamic_identifiersScrollPanel.get_CheckboxDynamicIdentifiers().get(ii).size() > 0) {			//get the active identifiers (when identifier ScrollPane is visible and List size >0)
-									dynamicIdentifiersColumn = dynamicIdentifiersColumn + ii + " ";
-									for (int j = 0; j < dynamic_identifiersScrollPanel.get_CheckboxDynamicIdentifiers().get(ii).size(); j++) { //Loop all checkBoxes in this active identifier
-										String checkboxName = dynamic_identifiersScrollPanel.get_CheckboxDynamicIdentifiers().get(ii).get(j).getText();									
-										//Add checkBox if it is (selected & visible) or disable
-										if ((dynamic_identifiersScrollPanel.get_CheckboxDynamicIdentifiers().get(ii).get(j).isSelected() && (dynamic_identifiersScrollPanel.get_CheckboxDynamicIdentifiers().get(ii).get(j).isVisible())
-												|| !dynamic_identifiersScrollPanel.get_CheckboxDynamicIdentifiers().get(ii).get(j).isEnabled()))
-											dynamicIdentifiersColumn = dynamicIdentifiersColumn + checkboxName + " ";
-									}
-									dynamicIdentifiersColumn = dynamicIdentifiersColumn + ";";
-								}
-							}	
-							
-							if (dynamicIdentifiersColumn.equals("") || dynamic_identifiersScrollPanel.get_checkboxNoIdentifier().isSelected()) {
-								dynamicIdentifiersColumn = "NoIdentifier";			//= dynamic_identifiersScrollPanel.checkboxNoIdentifier.getText();
-							}
-							
-							data2[i][8] = dynamicIdentifiersColumn;
-							
-							
-								
-							//To help trigger the row refresh: add back the rows, we cleared them before, now add back
-							table2.addRowSelectionInterval(table2.convertRowIndexToView(i),table2.convertRowIndexToView(i));
+						}
+						// Pass back the info to table model
+						rowCount2 = rowCount2 - selectedRow.length;
+						model2.updateTableModelSpectrum(rowCount2, colCount2, data2, columnNames2);
+						model2.fireTableDataChanged();
+					}
+				}
+			});
+					
+			
+			// Sort
+			btn_Sort.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent actionEvent) {	
+					if (parametersScrollPanel.get_checkboxNoParameter() != null) {		//only allow this when checkBoxes are already created
+						if (btn_Sort.getText().equals("ON")) {
+							table2.setRowSorter(null);
+							btn_Sort.setText("OFF");
+							btn_Sort.repaint();
+						} else if (btn_Sort.getText().equals("OFF")) {
+							TableRowSorter<TableModelSpectrum> sorter = new TableRowSorter<TableModelSpectrum>(model2);	//Add sorter
+							table2.setRowSorter(sorter);
+							btn_Sort.setText("ON");
+							btn_Sort.repaint();
 						}	
 					}
 				}
 			});
 			
-			buttonPanel.add(addBtn);		
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+//			//Clear Info
+//			btn_Delete.addActionListener(new ActionListener() {
+//				@Override
+//				public void actionPerformed(ActionEvent actionEvent) {
+//					int[] selectedRow = table2.getSelectedRows();	
+//					///Convert row index because "Sort" causes problems
+//					for (int i = 0; i < selectedRow.length; i++) {
+//						selectedRow[i] = table2.convertRowIndexToModel(selectedRow[i]);
+//					}
+//					table2.clearSelection();	//To help trigger the row refresh: clear then add back the rows
+//					for (int i: selectedRow) {
+//						for (int j=0; j < colCount2; j++) {
+//							data2[i][j] = null;
+//							table2.addRowSelectionInterval(table2.convertRowIndexToView(i),table2.convertRowIndexToView(i));
+//						}
+//					}	
+//				}
+//			});
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+		
+//			JButton addBtn = new JButton();
+//			addBtn.setFont(new Font(null, Font.BOLD, 14));
+//			addBtn.setText("SET CONSTRAINTS INFO");
+//			addBtn.setToolTipText("Apply information of static identifiers, parameters, and dynamic idetifiers to the selected rows (or constraints)");
+//			
+//			addBtn.addActionListener(new ActionListener() {
+//				@Override
+//				public void actionPerformed(ActionEvent actionEvent) {		
+//					if (parametersScrollPanel.get_checkboxNoParameter() != null) {		//only allow this "SET INFO" when checkBoxes are already created
+//						
+//						int[] selectedRow = table2.getSelectedRows();	
+//						///Convert row index because "Sort" causes problems
+//						for (int i = 0; i < selectedRow.length; i++) {
+//							selectedRow[i] = table2.convertRowIndexToModel(selectedRow[i]);
+//						}
+//											
+//						for (int i: selectedRow) {
+//							String[] constraint_info = get_constraint_info();						
+//							data2[i][6] = constraint_info[0];
+//							data2[i][7] = constraint_info[1];
+//							data2[i][8] = constraint_info[2];
+//	
+//							model2.fireTableDataChanged();
+//						}	
+//						
+//						
+//						
+//						
+////						// Add 1 row
+////						rowCount2++;
+////						data2 = new Object[rowCount2][colCount2];
+////						for (int ii = 0; ii < rowCount2 - 1; ii++) {
+////							for (int jj = 0; jj < colCount2; jj++) {
+////								data2[ii][jj] = model2.getValueAt(ii, jj);
+////							}	
+////						}
+////						
+////						String[] constraint_info = get_constraint_info();					
+////						data2[rowCount2 - 1][6] = constraint_info[0];
+////						data2[rowCount2 - 1][7] = constraint_info[1];
+////						data2[rowCount2 - 1][8] = constraint_info[2];
+////						
+////						model2.updateTableModelSpectrum(rowCount2, colCount2, data2, columnNames2);
+////						model2.fireTableDataChanged();
+//						
+//					}
+//				}
+//			});
+//			
+//			buttonPanel.add(addBtn);		
 			// End of 3rd Grid -----------------------------------------------------------------------
 			// End of 3rd Grid -----------------------------------------------------------------------		    
 		    
 	
+			
+			
+			
+			
+			
+			
+			
+			
+			
 
-			// 6th Grid -----------------------------------------------------------------------
-			// 6th Grid -----------------------------------------------------------------------						
-			JPanel buttonClearPanel = new JPanel(new BorderLayout(0, 0));
-			buttonClearPanel.setPreferredSize(new Dimension(250, 40));;
-			JButton clearBtn = new JButton();
-			clearBtn.setFont(new Font(null, Font.BOLD, 14));
-			clearBtn.setText("CLEAR CONSTRANTS INFO");
-			clearBtn.setToolTipText("Clear all information of the selected rows (or constraints)");
 			
-			clearBtn.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent actionEvent) {
-					int[] selectedRow = table2.getSelectedRows();	
-					///Convert row index because "Sort" causes problems
-					for (int i = 0; i < selectedRow.length; i++) {
-						selectedRow[i] = table2.convertRowIndexToModel(selectedRow[i]);
-					}
-					table2.clearSelection();	//To help trigger the row refresh: clear then add back the rows
-					for (int i: selectedRow) {
-						for (int j=0; j < colCount2; j++) {
-							data2[i][j] = null;
-							table2.addRowSelectionInterval(table2.convertRowIndexToView(i),table2.convertRowIndexToView(i));
-						}
-					}	
-				}
-			});
-			
-			buttonClearPanel.add(clearBtn);					
-			// End of 6th Grid -----------------------------------------------------------------------
-			// End of 6th Grid -----------------------------------------------------------------------		
+				
+				
 			
 			    	
 	    		
 			
-			// 5th Grid -----------------------------------------------------------------------
-			// 5th Grid -----------------------------------------------------------------------						
-			create_table2();
-			// Create the scroll pane and add the constraintTablePanel to it.
-			JScrollPane constraints_ScrollPane = new JScrollPane();
-			TitledBorder border5 = new TitledBorder("Constraints Information");
-			border5.setTitleJustification(TitledBorder.CENTER);
-			constraints_ScrollPane.setBorder(border5);			
-			constraints_ScrollPane.setViewportView(table2);
-			// End of 5th Grid -----------------------------------------------------------------------
-			// End of 5th Grid -----------------------------------------------------------------------				
+
 			
 			
 
@@ -2746,10 +3007,10 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c.gridy = 0;
 			c.gridwidth = 2;
 			c.gridheight = 1;
-			c.weightx = 1;
-		    c.weighty = 0;
+			c.weightx = 0.2;
+		    c.weighty = 0.1;
 			super.add(identifiersScrollPanel, c);				
-		    
+		    		
 			// Add dynamic_identifiersPanel to the main Grid
 			c.gridx = 2;
 			c.gridy = 0;
@@ -2758,7 +3019,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c.weightx = 1;
 			c.weighty = 0;
 			super.add(dynamic_identifiersScrollPanel, c);	
-			
+			    		
 			// Add the parametersScrollPanel to the main Grid	
 			c.gridx = 0;
 			c.gridy = 1;
@@ -2766,38 +3027,93 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c.gridheight = 1;
 			c.weightx = 0;
 		    c.weighty = 1;
-			super.add(parametersScrollPanel, c);	
-		    
-		    // Add the buttonPanel to the main Grid	
-			c.gridx = 0;
-			c.gridy = 2;
-			c.gridwidth = 1;
-			c.gridheight = 1;
-			c.weightx = 0;
-		    c.weighty = 0;
-			super.add(buttonPanel, c);	
-			
-		    // Add the buttonClearPanel to the main Grid	
-			c.gridx = 0;
-			c.gridy = 3;
-			c.gridwidth = 1;
-			c.gridheight = 1;
-			c.weightx = 0;
-		    c.weighty = 0;
-			super.add(buttonClearPanel, c);	
+			super.add(parametersScrollPanel, c);						
 		    	    		    
-		    // Add the constraints_ScrollPane to the main Grid
+		    // Add the button_table_Panel to the main Grid
 			c.gridx = 1;
 			c.gridy = 1;
 			c.gridwidth = 2; 
-			c.gridheight = 3;
+			c.gridheight = 1;
 			c.weightx = 1;
 		    c.weighty = 1;
-			super.add(constraints_ScrollPane, c);
+			super.add(button_table_Panel, c);
 			
 			//when radioButton_Right[5] is selected, time period GUI will be updated
 			radioButton_Right[5].addActionListener(this);
 		}
+		
+		
+		private String[] get_constraint_info() {			
+			String[] constraint_info = new String[3];
+			
+			//add constraint info at column 6 "PARAMETERS"
+			String parameterConstraintColumn = "";
+			for (int j = 0; j < yieldTable_ColumnNames.length; j++) {
+				if (parametersScrollPanel.get_checkboxParameter().get(j).isSelected()) {			//add the index of selected Columns to this String
+					parameterConstraintColumn = parameterConstraintColumn + j + " ";
+				}
+			}
+			
+			if (parameterConstraintColumn.equals("") || parametersScrollPanel.get_checkboxNoParameter().isSelected()) {
+				parameterConstraintColumn = "NoParameter";		//= parametersScrollPanel.checkboxNoParameter.getText();
+			}		
+			constraint_info[0] = parameterConstraintColumn;
+			
+			
+			//add constraint info at column 7 "Static Identifiers"
+			String staticIdentifiersColumn = "";
+			for (int ii = 0; ii < checkboxStaticIdentifiers.size(); ii++) {		//Loop all static identifiers
+				staticIdentifiersColumn = staticIdentifiersColumn + ii + " ";
+				for (int j = 0; j < checkboxStaticIdentifiers.get(ii).size(); j++) {		//Loop all elements in each layer
+					String checkboxName = checkboxStaticIdentifiers.get(ii).get(j).getText();
+					if (checkboxName.equals("Even Age")) {
+						checkboxName = "EA";
+					} else if (checkboxName.equals("Group Selection")) {
+						checkboxName = "GS";
+					} else if (checkboxName.equals("Prescribed Burn")) {
+						checkboxName = "PB";
+					} else if (checkboxName.equals("Natural Growth")) {
+						checkboxName = "NG";
+					}
+					
+					//Add checkBox if it is (selected & visible) or disable
+					if ((checkboxStaticIdentifiers.get(ii).get(j).isSelected() && (checkboxStaticIdentifiers.get(ii).get(j).isVisible())
+							|| !checkboxStaticIdentifiers.get(ii).get(j).isEnabled()))	
+						staticIdentifiersColumn = staticIdentifiersColumn + checkboxName + " "	;
+				}
+				staticIdentifiersColumn = staticIdentifiersColumn + ";";
+			}	
+			constraint_info[1] = staticIdentifiersColumn;
+			
+			
+			//add constraint info at column 8 "dynamic Identifiers"
+			String dynamicIdentifiersColumn = "";
+			for (int ii = 0; ii < dynamic_identifiersScrollPanel.get_allDynamicIdentifiers_ScrollPane().size(); ii++) {		//Loop all dynamic identifier ScrollPanes
+				if (dynamic_identifiersScrollPanel.get_allDynamicIdentifiers_ScrollPane().get(ii).isVisible() &&
+						dynamic_identifiersScrollPanel.get_CheckboxDynamicIdentifiers().get(ii).size() > 0) {			//get the active identifiers (when identifier ScrollPane is visible and List size >0)
+					dynamicIdentifiersColumn = dynamicIdentifiersColumn + ii + " ";
+					for (int j = 0; j < dynamic_identifiersScrollPanel.get_CheckboxDynamicIdentifiers().get(ii).size(); j++) { //Loop all checkBoxes in this active identifier
+						String checkboxName = dynamic_identifiersScrollPanel.get_CheckboxDynamicIdentifiers().get(ii).get(j).getText();									
+						//Add checkBox if it is (selected & visible) or disable
+						if ((dynamic_identifiersScrollPanel.get_CheckboxDynamicIdentifiers().get(ii).get(j).isSelected() && (dynamic_identifiersScrollPanel.get_CheckboxDynamicIdentifiers().get(ii).get(j).isVisible())
+								|| !dynamic_identifiersScrollPanel.get_CheckboxDynamicIdentifiers().get(ii).get(j).isEnabled()))
+							dynamicIdentifiersColumn = dynamicIdentifiersColumn + checkboxName + " ";
+					}
+					dynamicIdentifiersColumn = dynamicIdentifiersColumn + ";";
+				}
+			}	
+			
+			if (dynamicIdentifiersColumn.equals("") || dynamic_identifiersScrollPanel.get_checkboxNoIdentifier().isSelected()) {
+				dynamicIdentifiersColumn = "NoIdentifier";			//= dynamic_identifiersScrollPanel.checkboxNoIdentifier.getText();
+			}	
+			constraint_info[2] = dynamicIdentifiersColumn;
+			
+		
+			return constraint_info;
+		}
+		
+		
+		
 		
 		// Listener for this class----------------------------------------------------------------------
 	    public void actionPerformed(ActionEvent e) {

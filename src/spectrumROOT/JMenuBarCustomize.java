@@ -1,11 +1,9 @@
 package spectrumROOT;
 
-import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Robot;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -89,7 +87,7 @@ public class JMenuBarCustomize extends JMenuBar implements MouseListener, MouseM
 		};
 		buttonExit = new JButton(actionExit);
 		buttonExit.setToolTipText("Exit");
-		icon = new ImageIcon(getClass().getResource("/icon_exit.png"));
+		icon = new ImageIcon(getClass().getResource("/icon_erase.png"));
 		scaleImage = icon.getImage().getScaledInstance(15, 15,Image.SCALE_SMOOTH);
 		buttonExit.setIcon(new ImageIcon(scaleImage));
 //		buttonExit.setContentAreaFilled(false);

@@ -601,7 +601,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 		//Add dynamic_identifiersPanel to this Class which is a mother JSCrollPanel
 		setViewportView(dynamic_identifiersPanel);		
 		
-		TitledBorder border = new TitledBorder("Dynamic identifiers for PARAMETERS (from yield table)");
+		TitledBorder border = new TitledBorder("Dynamic identifiers for PARAMETERS");
 		border.setTitleJustification(TitledBorder.CENTER);
 		this.setBorder(border);
 		this.setPreferredSize(new Dimension(250, 100));	

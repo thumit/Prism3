@@ -113,8 +113,8 @@ public class Panel_Cost extends JPanel {
 		//Setup the button "ADD"--------------------------------------------------------------------------------
 		JButton addButton = new JButton();
 		addButton.setToolTipText("Add a new cost condition (add row)");
-		icon = new ImageIcon(getClass().getResource("/icon_new.png"));
-		scaleImage = icon.getImage().getScaledInstance(25, 25,Image.SCALE_SMOOTH);
+		icon = new ImageIcon(getClass().getResource("/icon_add.png"));
+		scaleImage = icon.getImage().getScaledInstance(16, 16,Image.SCALE_SMOOTH);
 		addButton.setIcon(new ImageIcon(scaleImage));
 		addButton.addActionListener(new ActionListener() {
 			@Override
@@ -136,8 +136,8 @@ public class Panel_Cost extends JPanel {
 		//Setup the button "Delete"--------------------------------------------------------------------------------
 		JButton deleteButton = new JButton();
 		deleteButton.setToolTipText("Delete selected cost conditions (delete rows)");
-		icon = new ImageIcon(getClass().getResource("/icon_delete.png"));
-		scaleImage = icon.getImage().getScaledInstance(25, 25,Image.SCALE_SMOOTH);
+		icon = new ImageIcon(getClass().getResource("/icon_erase.png"));
+		scaleImage = icon.getImage().getScaledInstance(16, 16,Image.SCALE_SMOOTH);
 		deleteButton.setIcon(new ImageIcon(scaleImage));
 		deleteButton.addActionListener(new ActionListener() {
 			@Override

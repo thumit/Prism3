@@ -772,7 +772,7 @@ public class Panel_YieldProject extends JLayeredPane {
 					}
 				}
 				
-
+				super.setVisible(false); //----------------------------------------------
 				//Disable all other buttons, change name to "Stop Editing",  remove splitPanel and add editPanel
 				for (Component c : projectToolBar.getComponents()) c.setVisible(false);
 				displayTextField.setVisible(false);
@@ -786,6 +786,7 @@ public class Panel_YieldProject extends JLayeredPane {
 				super.remove(splitPanel);
 				editPanel = new Panel_EditRun(listOfEditRuns);		// This panel only visible when "Start Editing"	
 				super.add(editPanel);
+				super.setVisible(true); //----------------------------------------------
 			} 	
 		} //End of start editing
 		

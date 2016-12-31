@@ -1,4 +1,4 @@
-Cover Type Before Regeneration	Cover Type After Regeneration	Min Rotation Age-Class	Max Rotation Age-Class	Allowed Options	
+Cover Type before Clear Cut	Cover Type after Clear Cut	Min Age-Class for Clear Cut	Max Age-Class for Clear Cut	Options to be applied	
 P	P	2	8	Yes	
 P	D	2	8	Yes	
 D	P	2	8	Yes	
