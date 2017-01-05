@@ -1,6 +1,7 @@
 package spectrumYieldProject;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
@@ -15,12 +16,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
-public class Panel_Cost extends JPanel {	
+public class ScrollPane_Cost extends JScrollPane {	
 	private int rowCount, colCount;
 	private String[] columnNames;
 	private JTable table;
@@ -30,7 +32,7 @@ public class Panel_Cost extends JPanel {
 	private ImageIcon icon;
 	private Image scaleImage;
 	
-	public Panel_Cost (Read_Indentifiers read_Identifiers, String[] yieldTable_ColumnNames) {	
+	public ScrollPane_Cost (Read_Indentifiers read_Identifiers, String[] yieldTable_ColumnNames, String scrollPane_name) {	
 
 	
 		//Setup the table--------------------------------------------------------------------------------------------
@@ -104,8 +106,8 @@ public class Panel_Cost extends JPanel {
 		
         
         // Add table to scroll pane
-		JScrollPane cost_scrollpane = new JScrollPane();
-		cost_scrollpane.setViewportView(table);
+		JScrollPane costDefinition_scrollpane = new JScrollPane();
+		costDefinition_scrollpane.setViewportView(table);
 	
 		
 		
@@ -168,8 +170,9 @@ public class Panel_Cost extends JPanel {
 		
 		
 
-		// Add all to this Big Panel Class------------------------------------------------------------------------------
-		setLayout(new GridBagLayout());
+		// Add all to this a Panel------------------------------------------------------------------------------
+		JPanel cost_panel = new JPanel();
+		cost_panel.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.BOTH;
 
@@ -178,30 +181,38 @@ public class Panel_Cost extends JPanel {
 		c.gridy = 0;
 		c.weightx = 0;
 		c.weighty = 0;
-		add(addButton, c);
+		cost_panel.add(addButton, c);
 
 		// Add Button
 		c.gridx = 0;
 		c.gridy = 1;
 		c.weightx = 0;
 		c.weighty = 0;
-		add(deleteButton, c);
+		cost_panel.add(deleteButton, c);
 
 		// Add Empty Label to make those above 2 buttons not resize
 		c.gridx = 0;
 		c.gridy = 2;
 		c.weightx = 0;
 		c.weighty = 0;
-		add(new JLabel(), c);
+		cost_panel.add(new JLabel(), c);
 
-		// Add cost_scrollpane
+		// Add costDefinition_scrollpane
 		c.gridx = 1;
 		c.gridy = 0;
 		c.weightx = 1;
 		c.weighty = 1;
 		c.gridheight = 3;
-		add(cost_scrollpane, c);
-
+		cost_panel.add(costDefinition_scrollpane, c);
+		
+		cost_panel.setPreferredSize(new Dimension(0, 0));
+		
+		//Add the Panel to this Big ScrollPane------------------------------------------------------------------------------
+		TitledBorder border = new TitledBorder(scrollPane_name);
+		border.setTitleJustification(TitledBorder.CENTER);
+		setBorder(border);
+		setPreferredSize(new Dimension(250, 250));
+		setViewportView(cost_panel);	
 	}
 	
 //	public JCheckBox get_checkboxNoParameter() {

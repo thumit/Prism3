@@ -108,4 +108,18 @@ public class ScrollPane_Parameters extends JScrollPane {
 	public List<JCheckBox> get_checkboxParameter() {
 		return checkboxParameter;
 	}
+	
+	public String get_parameters_info_from_GUI() {			
+		String parameters_info = "";
+		for (int j = 0; j < checkboxParameter.size(); j++) {
+			if (checkboxParameter.get(j).isSelected()) {			//add the index of selected Columns to this String
+				parameters_info = parameters_info + j + " ";
+			}
+		}
+		
+		if (parameters_info.equals("") || checkboxNoParameter.isSelected()) {
+			parameters_info = "NoParameter";		//= parametersScrollPanel.checkboxNoParameter.getText();
+		}		
+		return parameters_info;
+	}
 }

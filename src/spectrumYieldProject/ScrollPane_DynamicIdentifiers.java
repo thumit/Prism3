@@ -156,7 +156,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 								TitledBorder border_popup = new TitledBorder("PLEASE HELP SPECTRUMLITE DEFINE THIS IDENTIFIER");
 								border_popup.setTitleJustification(TitledBorder.CENTER);
 								popupPanel.setBorder(border_popup);
-								popupPanel.setPreferredSize(new Dimension(800, 400));;
+								popupPanel.setPreferredSize(new Dimension(800, 400));
 								GridBagConstraints c_popup = new GridBagConstraints();
 								c_popup.fill = GridBagConstraints.BOTH;
 								c_popup.weightx = 1;
@@ -621,6 +621,29 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 	
 	public List<JScrollPane> get_allDynamicIdentifiers_ScrollPane() {
 		return allDynamicIdentifiers_ScrollPane;
+	}
+	
+	public String get_dynamic_info_from_GUI() {			
+		String dynamic_info = "";
+		for (int ii = 0; ii < allDynamicIdentifiers_ScrollPane.size(); ii++) {		//Loop all dynamic identifier ScrollPanes
+			if (allDynamicIdentifiers_ScrollPane.get(ii).isVisible() &&
+					checkboxDynamicIdentifiers.get(ii).size() > 0) {			//get the active identifiers (when identifier ScrollPane is visible and List size >0)
+				dynamic_info = dynamic_info + ii + " ";
+				for (int j = 0; j < checkboxDynamicIdentifiers.get(ii).size(); j++) { //Loop all checkBoxes in this active identifier
+					String checkboxName = checkboxDynamicIdentifiers.get(ii).get(j).getText();									
+					//Add checkBox if it is (selected & visible) or disable
+					if ((checkboxDynamicIdentifiers.get(ii).get(j).isSelected() && (checkboxDynamicIdentifiers.get(ii).get(j).isVisible())
+							|| !checkboxDynamicIdentifiers.get(ii).get(j).isEnabled()))
+						dynamic_info = dynamic_info + checkboxName + " ";
+				}
+				dynamic_info = dynamic_info + ";";
+			}
+		}	
+		
+		if (dynamic_info.equals("") || checkboxNoIdentifier.isSelected()) {
+			dynamic_info = "NoIdentifier";			//= checkboxNoIdentifier.getText();
+		}	
+		return dynamic_info;
 	}
 		
 }

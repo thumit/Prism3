@@ -17,7 +17,7 @@ public class Panel_BackGroundDesktop extends JDesktopPane {
 		try {
 //			img = ImageIO.read(new URL("https://scontent-iad3-1.xx.fbcdn.net/t31.0-8/705097_4557689934155_1784248166_o.jpg"));			   
 //			img = ImageIO.read(new File("C:\\Users\\Public\\Pictures\\Sample Pictures\\Desert.jpg"));
-			img = ImageIO.read(getClass().getResource("/spectrumlite.png"));
+			img = ImageIO.read(getClass().getResource("/newyear.png"));
 			BufferedImage bg = img;
 			
 
@@ -25,7 +25,8 @@ public class Panel_BackGroundDesktop extends JDesktopPane {
 			final float FACTOR  = 4f;
 			int scaleX = (int) (bg.getWidth() * FACTOR);
 			int scaleY = (int) (bg.getHeight() * FACTOR);
-			Image scaleImage = bg.getScaledInstance(3000, 60, Image.SCALE_SMOOTH);
+//			Image scaleImage = bg.getScaledInstance(3000, 60, Image.SCALE_SMOOTH);		//For Spectrumlite Demo
+			Image scaleImage = bg.getScaledInstance(5000, 80, Image.SCALE_SMOOTH);
 			BufferedImage bg2 = new BufferedImage(scaleX, scaleY, BufferedImage.TYPE_INT_ARGB);
 			bg2.getGraphics().drawImage(scaleImage, 0, 0 , null);
 			//End of Rescaling buffered image-----------------

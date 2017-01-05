@@ -41,7 +41,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
@@ -60,7 +59,6 @@ import javax.swing.RowFilter;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.ToolTipManager;
-import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -73,7 +71,6 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 import javax.swing.text.DefaultFormatter;
 
-import spectrumConvenienceClasses.ColorUtil;
 import spectrumConvenienceClasses.FilesHandle;
 import spectrumConvenienceClasses.TableModelSpectrum;
 import spectrumROOT.Spectrum_Main;
@@ -227,8 +224,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		}	
 		
 		GUI_Text_splitPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		GUI_Text_splitPanel.setDividerSize(5);
-		GUI_Text_splitPanel.setEnabled(false);
+		GUI_Text_splitPanel.setDividerSize(0);
+//		GUI_Text_splitPanel.setEnabled(false);
 			
 	
 		// Create all new 6 panels for the selected Run--------------------------------------------------
@@ -289,6 +286,11 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					GUI_Text_splitPanel.setRightComponent(null);
 //					GUI_Text_splitPanel.setRightComponent(panel_UserConstraints_Text);
 				}
+				
+				// Get everything show up nicely
+				Spectrum_Main.mainFrameReturn().getSelectedFrame().setSize(Spectrum_Main.mainFrameReturn().getSelectedFrame().getSize());	//this can replace the below 2 lines
+//				Spectrum_Main.mainFrameReturn().getSelectedFrame().revalidate();
+//		    	Spectrum_Main.mainFrameReturn().getSelectedFrame().repaint(); 
 			}
 		}
 	}
@@ -2502,14 +2504,10 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			
 			// Right split panel-------------------------------------------------------------------------------
-			Panel_Cost[] cost_ScrollPanel = new Panel_Cost[all_actions.size()];
+			ScrollPane_Cost[] cost_ScrollPanel = new ScrollPane_Cost[all_actions.size()];
 			for (int i = 0; i < all_actions.size(); i++) {
-				cost_ScrollPanel[i] = new Panel_Cost(read_Identifiers, yieldTable_ColumnNames);
-				JScrollPane scrollPane_Right = new JScrollPane();
-				TitledBorder border2 = new TitledBorder("Cost Definition - " + all_actions.get(i));
-				border2.setTitleJustification(TitledBorder.CENTER);
-				cost_ScrollPanel[i].setBorder(border2);
-				cost_ScrollPanel[i].setPreferredSize(new Dimension(400, 250));
+				String scrollPane_name = "Cost Definition - " + all_actions.get(i);
+				cost_ScrollPanel[i] = new ScrollPane_Cost(read_Identifiers, yieldTable_ColumnNames, scrollPane_name);	
 			}
 			splitPanel.setRightComponent(cost_ScrollPanel[0]);
 			
@@ -2549,15 +2547,17 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	class UserConstraints_GUI extends JLayeredPane implements ActionListener {
 		List<List<JCheckBox>> checkboxStaticIdentifiers;
 		ScrollPane_Parameters parametersScrollPanel;
+		ScrollPane_StaticIdentifiers static_identifiersScrollPanel;
 		ScrollPane_DynamicIdentifiers dynamic_identifiersScrollPanel;
+		JPanel button_table_Panel;
 		
 		public UserConstraints_GUI() {
 			setLayout(new GridBagLayout());
 			
 			
 			// 1st grid ------------------------------------------------------------------------------		// Static identifiers	
-			ScrollPane_StaticIdentifiers identifiersScrollPanel = new ScrollPane_StaticIdentifiers(file_StrataDefinition);
-			checkboxStaticIdentifiers = identifiersScrollPanel.get_CheckboxStaticIdentifiers();
+			static_identifiersScrollPanel = new ScrollPane_StaticIdentifiers(file_StrataDefinition);
+			checkboxStaticIdentifiers = static_identifiersScrollPanel.get_CheckboxStaticIdentifiers();
 			// End of 1st grid -----------------------------------------------------------------------
 
 			
@@ -2580,7 +2580,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			// 4th Grid ------------------------------------------------------------------------------		// Buttons	
 			// 4th Grid -----------------------------------------------------------------------------
 			// Add all buttons to a Panel----------------------------------
-			JPanel button_table_Panel = new JPanel(new GridBagLayout());
+			button_table_Panel = new JPanel(new GridBagLayout());
 			TitledBorder border3 = new TitledBorder("Constraints Information");
 			border3.setTitleJustification(TitledBorder.CENTER);
 			button_table_Panel.setBorder(border3);
@@ -2621,7 +2621,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			JButton btn_Edit = new JButton();
 //			btn_Edit.setFont(new Font(null, Font.BOLD, 14));
 //			btn_Edit.setText("EDIT");
-			btn_Edit.setToolTipText("Edit a constraint: Reload info to interface & Allow Edit");
+			btn_Edit.setToolTipText("Edit a single constraint: reload info to interface (not yet) & register changes when 'Submit'");
 			icon = new ImageIcon(getClass().getResource("/icon_edit2.png"));
 			scaleImage = icon.getImage().getScaledInstance(16, 16,Image.SCALE_SMOOTH);
 			btn_Edit.setIcon(new ImageIcon(scaleImage));
@@ -2653,7 +2653,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			JButton btn_Sort = new JButton();
 			btn_Sort.setFont(new Font(null, Font.BOLD, 12));
 			btn_Sort.setText("OFF");
-			btn_Sort.setToolTipText("Row sorter status. While 'ON', click columns header to sort");
+			btn_Sort.setToolTipText("Sorter mode: 'ON' click columns header to sort rows. 'OFF' retrieve original rows position");
 			icon = new ImageIcon(getClass().getResource("/icon_table.png"));
 			scaleImage = icon.getImage().getScaledInstance(16, 16,Image.SCALE_SMOOTH);
 			btn_Sort.setIcon(new ImageIcon(scaleImage));
@@ -2747,74 +2747,340 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			btn_NewSingle.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {		
-					if (parametersScrollPanel.get_checkboxNoParameter() != null) {		//only allow this when checkBoxes are already created
-						// Add 1 row
-						rowCount2++;
-						data2 = new Object[rowCount2][colCount2];
-						for (int ii = 0; ii < rowCount2 - 1; ii++) {
-							for (int jj = 0; jj < colCount2; jj++) {
-								data2[ii][jj] = model2.getValueAt(ii, jj);
-							}	
-						}
-						
-						String[] constraint_info = get_constraint_info();					
-						data2[rowCount2 - 1][6] = constraint_info[0];
-						data2[rowCount2 - 1][7] = constraint_info[1];
-						data2[rowCount2 - 1][8] = constraint_info[2];
-						
-						model2.updateTableModelSpectrum(rowCount2, colCount2, data2, columnNames2);
-						model2.fireTableDataChanged();
-						
-						// Convert the new Row to model view and then select it 
-						int newRow = table2.convertRowIndexToView(rowCount2 - 1);
-						table2.setRowSelectionInterval(newRow, newRow);
-						
+					// Add 1 row
+					rowCount2++;
+					data2 = new Object[rowCount2][colCount2];
+					for (int ii = 0; ii < rowCount2 - 1; ii++) {
+						for (int jj = 0; jj < colCount2; jj++) {
+							data2[ii][jj] = model2.getValueAt(ii, jj);
+						}	
 					}
+									
+					data2[rowCount2 - 1][6] = parametersScrollPanel.get_parameters_info_from_GUI();
+					data2[rowCount2 - 1][7] = static_identifiersScrollPanel.get_static_info_from_GUI();
+					data2[rowCount2 - 1][8] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();
+					
+					model2.updateTableModelSpectrum(rowCount2, colCount2, data2, columnNames2);
+					model2.fireTableDataChanged();
+					
+					// Convert the new Row to model view and then select it 
+					int newRow = table2.convertRowIndexToView(rowCount2 - 1);
+					table2.setRowSelectionInterval(newRow, newRow);
 				}
 			});
+			
+			
+			// New Multiple
+			btn_New_Multiple.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent actionEvent) {		
+					
+					ScrollPane_ConstraintsSplit constraint_split_ScrollPanel = new ScrollPane_ConstraintsSplit(
+							static_identifiersScrollPanel.get_TitleAsCheckboxes(),
+							parametersScrollPanel.get_checkboxParameter(),
+							dynamic_identifiersScrollPanel.get_allDynamicIdentifiers());
+
+					
+					
+					String ExitOption[] = {"Add Constraints","Cancel"};
+					int response = JOptionPane.showOptionDialog(Spectrum_Main.mainFrameReturn(), constraint_split_ScrollPanel, "Create multiple constraints",
+							JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, ExitOption, ExitOption[1]);
+					if (response == 0)	// Add Constraints
+					{		
+						int total_Constraints = 1;
+						List<String> splitStatic_NameList = constraint_split_ScrollPanel.get_splitStatic_NameList();	// Names of static splitters
+
+						for (int i = 0; i < checkboxStaticIdentifiers.size(); i++) {
+							if (splitStatic_NameList.contains(static_identifiersScrollPanel.get_TitleAsCheckboxes().get(i).getText())) {	// IF this static must be splitted
+								int total_Checked_Elements = 0;
+								for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {
+									if (checkboxStaticIdentifiers.get(i).get(j).isSelected() && checkboxStaticIdentifiers.get(i).get(j).isVisible()) {	// If element of this static is checked		
+										total_Checked_Elements ++;	// Increase number of constraints
+									}
+								}
+								total_Constraints = total_Constraints * total_Checked_Elements;
+							}
+						}
+						System.out.println(total_Constraints);
+						
+						
+						
+						// Ask to confirm adding if there are more than 1000 constraints
+						int response2 = 0;	
+						if (total_Constraints > 1000) {
+							icon = new ImageIcon(getClass().getResource("/icon_warning.png"));
+							scaleImage = icon.getImage().getScaledInstance(50, 50,Image.SCALE_SMOOTH);
+							String ExitOption2[] = {"Yes","No"};
+							String warningText = "You are going to add " + total_Constraints + " constraints. It would take some time. Continue to add ?";
+							response2 = JOptionPane.showOptionDialog(Spectrum_Main.mainFrameReturn(), warningText, "Confirm adding constraints",
+									JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, new ImageIcon(scaleImage), ExitOption2, ExitOption2[1]);
+							
+						}
+							
+						if (response2 == 0)
+						{					
+							// After we know the total number of Constraints, then add info for each constraint
+							String[] static_info = new String[total_Constraints];
+							String[] description_extra = new String[total_Constraints];
+							for (int processing_constraint = 0; processing_constraint < total_Constraints; processing_constraint++) { 
+								static_info[processing_constraint] = "";
+								description_extra[processing_constraint] = "";
+							}
+								
+							
+							
+							for (int processing_constraint = 0; processing_constraint < total_Constraints; processing_constraint++) { 
+								int total_same_info_constraints = total_Constraints;
+								
+								
+								for (int i = 0; i < checkboxStaticIdentifiers.size(); i++) {
+									
+									static_info[processing_constraint] = static_info[processing_constraint] + i + " ";
+									
+									
+									
+									if (splitStatic_NameList.contains(static_identifiersScrollPanel.get_TitleAsCheckboxes().get(i).getText())) {	// IF this static must be splitted
+										int total_Checked_Elements = 0;
+										List<Integer> selected_Element_Index = new ArrayList<Integer>();
+										for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {
+											if (checkboxStaticIdentifiers.get(i).get(j).isSelected() && checkboxStaticIdentifiers.get(i).get(j).isVisible()) {	// If element of this static is checked		
+												selected_Element_Index.add(j);
+												total_Checked_Elements ++;	// Increase number of constraints
+											}			
+										}
+										total_same_info_constraints = total_same_info_constraints/total_Checked_Elements;
+	//									System.out.println(total_same_info_constraints);
+										
+										
+	
+										description_extra[processing_constraint] = description_extra[processing_constraint] + " - " + static_identifiersScrollPanel.get_TitleAsCheckboxes().get(i).getText()  + " ";
+											
+										for (int element_to_add = 0; element_to_add < selected_Element_Index.size(); element_to_add++) {
+											
+											for (int j = 0; j < total_same_info_constraints; j++) {
+												
+												// This is my smart check: example
+												/*			1	1	1
+												 * 			2	2	2
+												 * 			3		3
+												 * 					4
+												 *  Then the below If would help write out as: 1,1,1	1,1,2	1,1,2	1,1,4	1,2,1	1,2,2	1,2,3	1,2,3	......	
+												 *  Please figure out the logic by yourself :))									
+												*/
+												if ( processing_constraint % (selected_Element_Index.size() * total_same_info_constraints) == element_to_add * total_same_info_constraints + j) {							
+													String checkboxName = checkboxStaticIdentifiers.get(i).get(selected_Element_Index.get(element_to_add)).getText();
+													if (checkboxName.equals("Even Age")) {
+														checkboxName = "EA";
+													} else if (checkboxName.equals("Group Selection")) {
+														checkboxName = "GS";
+													} else if (checkboxName.equals("Prescribed Burn")) {
+														checkboxName = "PB";
+													} else if (checkboxName.equals("Natural Growth")) {
+														checkboxName = "NG";
+													}
+													
+													//Add checkBox if it is (selected & visible) or disable
+													if ((checkboxStaticIdentifiers.get(i).get(selected_Element_Index.get(element_to_add)).isSelected() && (checkboxStaticIdentifiers.get(i).get(selected_Element_Index.get(element_to_add)).isVisible())
+															|| !checkboxStaticIdentifiers.get(i).get(selected_Element_Index.get(element_to_add)).isEnabled())) {
+														static_info[processing_constraint] = static_info[processing_constraint] + checkboxName + " ";
+														description_extra[processing_constraint] = description_extra[processing_constraint] + checkboxName; 
+													}		
+												}	
+											}
+										}
+										
+										
+										
+										
+									} else {		// IF this static would not be splitted
+										for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {		//Loop all elements in each layer
+											String checkboxName = checkboxStaticIdentifiers.get(i).get(j).getText();
+											if (checkboxName.equals("Even Age")) {
+												checkboxName = "EA";
+											} else if (checkboxName.equals("Group Selection")) {
+												checkboxName = "GS";
+											} else if (checkboxName.equals("Prescribed Burn")) {
+												checkboxName = "PB";
+											} else if (checkboxName.equals("Natural Growth")) {
+												checkboxName = "NG";
+											}
+											
+											//Add checkBox if it is (selected & visible) or disable
+											if ((checkboxStaticIdentifiers.get(i).get(j).isSelected() && (checkboxStaticIdentifiers.get(i).get(j).isVisible())
+													|| !checkboxStaticIdentifiers.get(i).get(j).isEnabled())) {
+												static_info[processing_constraint] = static_info[processing_constraint] + checkboxName + " ";										
+											}		
+										}
+										
+									}
+									
+									
+									
+									static_info[processing_constraint] = static_info[processing_constraint] + ";";
+								}	
+							}
+							
+							
+							
+							
+							for (int processing_constraint = 0; processing_constraint < total_Constraints; processing_constraint++) { 
+								System.out.println(static_info[processing_constraint]);
+							}
+							
+						
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							// Add All Constraints ----------------------------------------------------------------
+							if (total_Constraints > 0) {
+								rowCount2 = rowCount2 + total_Constraints;
+								data2 = new Object[rowCount2][colCount2];
+								for (int ii = 0; ii < rowCount2 - total_Constraints; ii++) {
+									for (int jj = 0; jj < colCount2; jj++) {
+										data2[ii][jj] = model2.getValueAt(ii, jj);
+									}	
+								}
+								
+								Object[][] temp_data = constraint_split_ScrollPanel.get_multiple_constraints_data();
+								JCheckBox autoDescription = constraint_split_ScrollPanel.get_autoDescription();
+								
+								for (int i = rowCount2 - total_Constraints; i < rowCount2; i++) {
+									for (int j = 0; j < colCount2; j++) {
+										if (autoDescription.isSelected()) {
+											if (temp_data[0][0] == null) {
+												data2[i][0] = "C." + i + description_extra[i - rowCount2 + total_Constraints];
+											} else {
+												data2[i][0] = temp_data[0][0] + " " + (i - rowCount2 + total_Constraints + 1) + description_extra[i - rowCount2 + total_Constraints];
+											}
+										} else {
+											data2[i][0] = temp_data[0][0];
+										}
+										data2[i][1] = temp_data[0][1];
+										data2[i][2] = temp_data[0][2];
+										data2[i][3] = temp_data[0][3];
+										data2[i][4] = temp_data[0][4];
+										data2[i][5] = temp_data[0][5];
+										data2[i][6] = parametersScrollPanel.get_parameters_info_from_GUI();
+										data2[i][7] = static_info[i - rowCount2 + total_Constraints];		// Only these splitter are currently allowed
+										data2[i][8] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();				
+									}	
+								}	
+												
+		
+								model2.updateTableModelSpectrum(rowCount2, colCount2, data2, columnNames2);
+								model2.fireTableDataChanged();
+								
+								// Convert the new Row to model view and then select it 
+								for (int i = rowCount2 - total_Constraints; i < rowCount2; i++) {
+									int newRow = table2.convertRowIndexToView(i);
+								}	
+								table2.setRowSelectionInterval(rowCount2 - total_Constraints, rowCount2 - 1);
+							}
+						}
+							
+							
+						
+						
+//						// This is the old method which only split constraints by time period
+//						//	Define popupPanel
+//						JPanel popupPanel = new JPanel();
+//						popupPanel.setLayout(new GridBagLayout());
+//						TitledBorder border_popup = new TitledBorder("Choose Splitters");
+//						border_popup.setTitleJustification(TitledBorder.CENTER);
+//						popupPanel.setBorder(border_popup);
+//						popupPanel.setPreferredSize(new Dimension(800, 400));
+//						
+//						//	These codes make the popupPanel resizable
+//						popupPanel.addHierarchyListener(new HierarchyListener() {
+//						    public void hierarchyChanged(HierarchyEvent e) {
+//						        Window window = SwingUtilities.getWindowAncestor(popupPanel);
+//						        if (window instanceof Dialog) {
+//						            Dialog dialog = (Dialog)window;
+//						            if (!dialog.isResizable()) {
+//						                dialog.setResizable(true);
+//						            }
+//						        }
+//						    }
+//						});						
+						
+						
+						
+						
+//						// Create GUI for each constraint in the set then do click "New Single"
+//						List<Integer> selected_Period = new ArrayList<Integer>();
+//						
+//						for (int j = 0; j < checkboxStaticIdentifiers.get(7).size(); j++) {
+//							if (checkboxStaticIdentifiers.get(7).get(j).isSelected() && checkboxStaticIdentifiers.get(7).get(j).isVisible()) {
+//								selected_Period.add(j);
+//								checkboxStaticIdentifiers.get(7).get(j).setSelected(false);
+//							}
+//						}
+//								
+//						// Do click
+//						for (int i: selected_Period) {
+//							checkboxStaticIdentifiers.get(7).get(i).setSelected(true);
+//							btn_NewSingle.doClick();
+//							checkboxStaticIdentifiers.get(7).get(i).setSelected(false);
+//						}
+//						
+//						// ReLoad the old selected periods
+//						for (int i: selected_Period) {
+//							checkboxStaticIdentifiers.get(7).get(i).setSelected(true);
+//						}					
+					}
+					if (response == 1)	// Cancel: do nothing
+					{
+					}	
+				}
+			});			
 			
 			
 			// Edit
 			btn_Edit.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {	
-					if (table2.getSelectedRows().length == 1) {		//only allow this when a row is selected
-						if (table2.isEnabled()) {
-							table2.setEnabled(false);
-							btn_NewSingle.setEnabled(false);
-							btn_New_Multiple.setEnabled(false);
-							btn_Delete.setEnabled(false);
-							btn_Sort.setEnabled(false);
-							btn_Validate.setEnabled(false);				
-						} else {	// Do the Edit here and then Enable buttons & the table2 again
-							
-							// Reload GUI
-							
-							
-							
-							
-							// Apply change
-							int selectedRow = table2.getSelectedRow();
-							selectedRow = table2.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems			
-							String[] constraint_info = get_constraint_info();
-							data2[selectedRow][6] = constraint_info[0];
-							data2[selectedRow][7] = constraint_info[1];
-							data2[selectedRow][8] = constraint_info[2];
-							model2.fireTableDataChanged();	
-							
-							// Convert the edited Row to model view and then select it 
-							int editRow = table2.convertRowIndexToView(selectedRow);
-							table2.setRowSelectionInterval(editRow, editRow);
-							
-							// Enable buttons and table2
-							table2.setEnabled(true);
-							btn_NewSingle.setEnabled(true);
-							btn_New_Multiple.setEnabled(true);
-							btn_Delete.setEnabled(true);
-							btn_Sort.setEnabled(true);
-							btn_Validate.setEnabled(true);	
-						}
+					if (table2.isEnabled()) {
+						table2.setEnabled(false);
+						btn_NewSingle.setEnabled(false);
+						btn_New_Multiple.setEnabled(false);
+						btn_Delete.setEnabled(false);
+						btn_Sort.setEnabled(false);
+						btn_Validate.setEnabled(false);		
+						btn_Edit.setText("Submit");
+					} else {	// Do the Edit here and then Enable buttons & the table2 again
 						
+						// Reload GUI
+						
+						
+						
+						
+//						// Apply change
+//						int selectedRow = table2.getSelectedRow();
+//						selectedRow = table2.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems										
+//						data2[selectedRow][6] = parametersScrollPanel.get_parameters_info_from_GUI();
+//						data2[selectedRow][7] = static_identifiersScrollPanel.get_static_info_from_GUI();
+//						data2[selectedRow][8] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();
+//						
+//						model2.fireTableDataChanged();	
+//						
+//						// Convert the edited Row to model view and then select it 
+//						int editRow = table2.convertRowIndexToView(selectedRow);
+//						table2.setRowSelectionInterval(editRow, editRow);
+						
+						// Enable buttons and table2
+						table2.setEnabled(true);
+						btn_NewSingle.setEnabled(true);
+						btn_New_Multiple.setEnabled(true);
+						btn_Delete.setEnabled(true);
+						btn_Sort.setEnabled(true);
+						btn_Validate.setEnabled(true);	
+						btn_Edit.setText(null);
 					}
 				}
 			});
@@ -2824,35 +3090,33 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			btn_Delete.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {	
-					if (table2.getSelectedRows() != null) {		//only allow this when there are rows selected
-						// Get selected rows
-						int[] selectedRow = table2.getSelectedRows();	
-						for (int i = 0; i < selectedRow.length; i++) {
-							selectedRow[i] = table2.convertRowIndexToModel(selectedRow[i]);	///Convert row index because "Sort" causes problems
-						}
-						
-						// Create a list of selected row indexes
-						List<Integer> selected_Index = new ArrayList<Integer>();				
-						for (int i: selectedRow) {
-							selected_Index.add(i);
-						}	
-						
-						// Get values to the new data2
-						data2 = new Object[rowCount2 - selectedRow.length][colCount2];
-						int newRow =0;
-						for (int ii = 0; ii < rowCount2; ii++) {
-							if (!selected_Index.contains(ii)) {			//If row not in the list then add to data2 row
-								for (int jj = 0; jj < colCount2; jj++) {
-									data2[newRow][jj] = model2.getValueAt(ii, jj);
-								}
-								newRow++;
-							}
-						}
-						// Pass back the info to table model
-						rowCount2 = rowCount2 - selectedRow.length;
-						model2.updateTableModelSpectrum(rowCount2, colCount2, data2, columnNames2);
-						model2.fireTableDataChanged();
+					// Get selected rows
+					int[] selectedRow = table2.getSelectedRows();	
+					for (int i = 0; i < selectedRow.length; i++) {
+						selectedRow[i] = table2.convertRowIndexToModel(selectedRow[i]);	///Convert row index because "Sort" causes problems
 					}
+					
+					// Create a list of selected row indexes
+					List<Integer> selected_Index = new ArrayList<Integer>();				
+					for (int i: selectedRow) {
+						selected_Index.add(i);
+					}	
+					
+					// Get values to the new data2
+					data2 = new Object[rowCount2 - selectedRow.length][colCount2];
+					int newRow =0;
+					for (int ii = 0; ii < rowCount2; ii++) {
+						if (!selected_Index.contains(ii)) {			//If row not in the list then add to data2 row
+							for (int jj = 0; jj < colCount2; jj++) {
+								data2[newRow][jj] = model2.getValueAt(ii, jj);
+							}
+							newRow++;
+						}
+					}
+					// Pass back the info to table model
+					rowCount2 = rowCount2 - selectedRow.length;
+					model2.updateTableModelSpectrum(rowCount2, colCount2, data2, columnNames2);
+					model2.fireTableDataChanged();		
 				}
 			});
 					
@@ -2861,18 +3125,16 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			btn_Sort.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {	
-					if (parametersScrollPanel.get_checkboxNoParameter() != null) {		//only allow this when checkBoxes are already created
-						if (btn_Sort.getText().equals("ON")) {
-							table2.setRowSorter(null);
-							btn_Sort.setText("OFF");
-							btn_Sort.repaint();
-						} else if (btn_Sort.getText().equals("OFF")) {
-							TableRowSorter<TableModelSpectrum> sorter = new TableRowSorter<TableModelSpectrum>(model2);	//Add sorter
-							table2.setRowSorter(sorter);
-							btn_Sort.setText("ON");
-							btn_Sort.repaint();
-						}	
-					}
+					if (btn_Sort.getText().equals("ON")) {
+						table2.setRowSorter(null);
+						btn_Sort.setText("OFF");
+						btn_Sort.repaint();
+					} else if (btn_Sort.getText().equals("OFF")) {
+						TableRowSorter<TableModelSpectrum> sorter = new TableRowSorter<TableModelSpectrum>(model2); // Add sorter
+						table2.setRowSorter(sorter);
+						btn_Sort.setText("ON");
+						btn_Sort.repaint();
+					}	
 				}
 			});
 			
@@ -3002,14 +3264,14 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c.fill = GridBagConstraints.BOTH;
 
 			
-			// Add IdentifiersPanel to the main Grid
+			// Add static_identifiersScrollPanel to the main Grid
 			c.gridx = 0;
 			c.gridy = 0;
 			c.gridwidth = 2;
 			c.gridheight = 1;
 			c.weightx = 0.2;
 		    c.weighty = 0.1;
-			super.add(identifiersScrollPanel, c);				
+			super.add(static_identifiersScrollPanel, c);				
 		    		
 			// Add dynamic_identifiersPanel to the main Grid
 			c.gridx = 2;
@@ -3043,78 +3305,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		}
 		
 		
-		private String[] get_constraint_info() {			
-			String[] constraint_info = new String[3];
-			
-			//add constraint info at column 6 "PARAMETERS"
-			String parameterConstraintColumn = "";
-			for (int j = 0; j < yieldTable_ColumnNames.length; j++) {
-				if (parametersScrollPanel.get_checkboxParameter().get(j).isSelected()) {			//add the index of selected Columns to this String
-					parameterConstraintColumn = parameterConstraintColumn + j + " ";
-				}
-			}
-			
-			if (parameterConstraintColumn.equals("") || parametersScrollPanel.get_checkboxNoParameter().isSelected()) {
-				parameterConstraintColumn = "NoParameter";		//= parametersScrollPanel.checkboxNoParameter.getText();
-			}		
-			constraint_info[0] = parameterConstraintColumn;
-			
-			
-			//add constraint info at column 7 "Static Identifiers"
-			String staticIdentifiersColumn = "";
-			for (int ii = 0; ii < checkboxStaticIdentifiers.size(); ii++) {		//Loop all static identifiers
-				staticIdentifiersColumn = staticIdentifiersColumn + ii + " ";
-				for (int j = 0; j < checkboxStaticIdentifiers.get(ii).size(); j++) {		//Loop all elements in each layer
-					String checkboxName = checkboxStaticIdentifiers.get(ii).get(j).getText();
-					if (checkboxName.equals("Even Age")) {
-						checkboxName = "EA";
-					} else if (checkboxName.equals("Group Selection")) {
-						checkboxName = "GS";
-					} else if (checkboxName.equals("Prescribed Burn")) {
-						checkboxName = "PB";
-					} else if (checkboxName.equals("Natural Growth")) {
-						checkboxName = "NG";
-					}
-					
-					//Add checkBox if it is (selected & visible) or disable
-					if ((checkboxStaticIdentifiers.get(ii).get(j).isSelected() && (checkboxStaticIdentifiers.get(ii).get(j).isVisible())
-							|| !checkboxStaticIdentifiers.get(ii).get(j).isEnabled()))	
-						staticIdentifiersColumn = staticIdentifiersColumn + checkboxName + " "	;
-				}
-				staticIdentifiersColumn = staticIdentifiersColumn + ";";
-			}	
-			constraint_info[1] = staticIdentifiersColumn;
-			
-			
-			//add constraint info at column 8 "dynamic Identifiers"
-			String dynamicIdentifiersColumn = "";
-			for (int ii = 0; ii < dynamic_identifiersScrollPanel.get_allDynamicIdentifiers_ScrollPane().size(); ii++) {		//Loop all dynamic identifier ScrollPanes
-				if (dynamic_identifiersScrollPanel.get_allDynamicIdentifiers_ScrollPane().get(ii).isVisible() &&
-						dynamic_identifiersScrollPanel.get_CheckboxDynamicIdentifiers().get(ii).size() > 0) {			//get the active identifiers (when identifier ScrollPane is visible and List size >0)
-					dynamicIdentifiersColumn = dynamicIdentifiersColumn + ii + " ";
-					for (int j = 0; j < dynamic_identifiersScrollPanel.get_CheckboxDynamicIdentifiers().get(ii).size(); j++) { //Loop all checkBoxes in this active identifier
-						String checkboxName = dynamic_identifiersScrollPanel.get_CheckboxDynamicIdentifiers().get(ii).get(j).getText();									
-						//Add checkBox if it is (selected & visible) or disable
-						if ((dynamic_identifiersScrollPanel.get_CheckboxDynamicIdentifiers().get(ii).get(j).isSelected() && (dynamic_identifiersScrollPanel.get_CheckboxDynamicIdentifiers().get(ii).get(j).isVisible())
-								|| !dynamic_identifiersScrollPanel.get_CheckboxDynamicIdentifiers().get(ii).get(j).isEnabled()))
-							dynamicIdentifiersColumn = dynamicIdentifiersColumn + checkboxName + " ";
-					}
-					dynamicIdentifiersColumn = dynamicIdentifiersColumn + ";";
-				}
-			}	
-			
-			if (dynamicIdentifiersColumn.equals("") || dynamic_identifiersScrollPanel.get_checkboxNoIdentifier().isSelected()) {
-				dynamicIdentifiersColumn = "NoIdentifier";			//= dynamic_identifiersScrollPanel.checkboxNoIdentifier.getText();
-			}	
-			constraint_info[2] = dynamicIdentifiersColumn;
-			
-		
-			return constraint_info;
-		}
-		
-		
-		
-		
 		// Listener for this class----------------------------------------------------------------------
 	    public void actionPerformed(ActionEvent e) {
 	    	
@@ -3139,13 +3329,20 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						yieldTable_ColumnNames, yieldTable_values);	// "Get identifiers from yield table columns"
 	    	}
 
+	    	//Only set button_table_Panel visible when Parameter scroll Pane have checkboxes created
+	    	if (parametersScrollPanel.get_checkboxParameter() == null) {
+	    		button_table_Panel.setVisible(false);
+	    	} else {
+	    		button_table_Panel.setVisible(true);
+	    	}
+	    	
 	    }
 	    
 	}
 
 	class UserConstraints_Text  extends JTextArea {
 		public UserConstraints_Text() {
-			setRows(50);		// set text areas with 10 rows when starts		
+	
 		}
 	}
 		

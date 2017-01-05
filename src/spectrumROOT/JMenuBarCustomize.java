@@ -37,7 +37,7 @@ public class JMenuBarCustomize extends JMenuBar implements MouseListener, MouseM
 
 		//Shift all below components to the right by some glue boxes
 		add(Box.createGlue());
-		add(new JLabel("SpectrumLite Demo Version 1.10"));
+		add(new JLabel("SpectrumLite Demo Version 1.12"));
 		add(Box.createGlue());
 
 //		add(Box.createHorizontalGlue());

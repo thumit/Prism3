@@ -21,6 +21,7 @@ import javax.swing.border.TitledBorder;
 
 public class ScrollPane_StaticIdentifiers extends JScrollPane {
 	private List<List<JCheckBox>> checkboxStaticIdentifiers;
+	List<JLabel> layers_Title_Label;
 
 	public ScrollPane_StaticIdentifiers (File file_StrataDefinition) {
 	
@@ -58,7 +59,7 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 
     
 		//Add all layers labels
-	    List<JLabel> layers_Title_Label = new ArrayList<JLabel>();
+	    layers_Title_Label = new ArrayList<JLabel>();
 		for (int i = 0; i < total_staticIdentifiers; i++) {
 			layers_Title_Label.add(new JLabel(layers_Title.get(i)));
 			layers_Title_Label.get(i).setToolTipText(layers_Title_ToolTip.get(i));
@@ -135,7 +136,44 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 		this.setPreferredSize(new Dimension(500, 250));
 	}
 	
+	
 	public List<List<JCheckBox>> get_CheckboxStaticIdentifiers() {
 		return checkboxStaticIdentifiers;
+	}
+	
+	
+	public List<JCheckBox> get_TitleAsCheckboxes() {
+		List<JCheckBox> temp_List = new ArrayList<JCheckBox>();		//A temporary List
+		for (int i = 0; i < layers_Title_Label.size(); i++) {
+			temp_List.add(new JCheckBox(layers_Title_Label.get(i).getText()));
+		}
+		return temp_List;
+	}
+	
+	
+	public String get_static_info_from_GUI() {			
+		String static_info = "";
+		for (int ii = 0; ii < checkboxStaticIdentifiers.size(); ii++) {		//Loop all static identifiers
+			static_info = static_info + ii + " ";
+			for (int j = 0; j < checkboxStaticIdentifiers.get(ii).size(); j++) {		//Loop all elements in each layer
+				String checkboxName = checkboxStaticIdentifiers.get(ii).get(j).getText();
+				if (checkboxName.equals("Even Age")) {
+					checkboxName = "EA";
+				} else if (checkboxName.equals("Group Selection")) {
+					checkboxName = "GS";
+				} else if (checkboxName.equals("Prescribed Burn")) {
+					checkboxName = "PB";
+				} else if (checkboxName.equals("Natural Growth")) {
+					checkboxName = "NG";
+				}
+				
+				//Add checkBox if it is (selected & visible) or disable
+				if ((checkboxStaticIdentifiers.get(ii).get(j).isSelected() && (checkboxStaticIdentifiers.get(ii).get(j).isVisible())
+						|| !checkboxStaticIdentifiers.get(ii).get(j).isEnabled()))	
+					static_info = static_info + checkboxName + " ";
+			}
+			static_info = static_info + ";";
+		}	
+		return static_info;
 	}
 }

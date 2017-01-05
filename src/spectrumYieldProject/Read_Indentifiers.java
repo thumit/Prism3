@@ -119,9 +119,9 @@ public class Read_Indentifiers {
 	public List<String> get_MethodsPeriodsAges_Title() {
 		//Layers title
 		List<String> MethodsPeriodsAges_Title = new ArrayList<String>();
-		MethodsPeriodsAges_Title.add("Silvicultural Methods");
-		MethodsPeriodsAges_Title.add("Time Periods");
-		MethodsPeriodsAges_Title.add("Age Classes");
+		MethodsPeriodsAges_Title.add("Silvicultural Method");
+		MethodsPeriodsAges_Title.add("Time Period");
+		MethodsPeriodsAges_Title.add("Age Class");
 
 		return MethodsPeriodsAges_Title;
 	}
