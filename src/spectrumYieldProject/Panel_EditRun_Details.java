@@ -54,6 +54,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JToggleButton;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.SpinnerNumberModel;
@@ -81,7 +82,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private ButtonGroup radioGroup_Right; 
 	private JRadioButton[] radioButton_Right; 
 	
-	private File currentRunFolder, temporary_RunFolder;
+	private File currentRunFolder;
 	private File file_ExistingStrata, file_Database;
 	private File file_StrataDefinition;
 	private String currentDefinition_location;
@@ -192,13 +193,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 		//Get information from the run and reload inputs-------------------------------------------------------------------------------------------
 		currentRunFolder = RunFolder;	
-
-		temporary_RunFolder = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + currentRunFolder.getName());
-		temporary_RunFolder.deleteOnExit();
-		if (!temporary_RunFolder.exists()) {
-			temporary_RunFolder.mkdirs();		 // Create folder Temporary if it does not exist
-		}
-		
 		reload_inputs_before_creating_GUI();
 		
 		
@@ -302,23 +296,16 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		// Load "StrataDefinition.csv" of the run-------------------------------------------------------
 		File definition_to_load = new File(currentRunFolder.getAbsolutePath() + "/StrataDefinition.csv");
 		if (definition_to_load.exists()) {	//Load if the file exists
-			try {
-				file_StrataDefinition = new File(temporary_RunFolder.getAbsolutePath() + "/StrataDefinition.csv");
-				file_StrataDefinition.deleteOnExit();
-				currentDefinition_location = file_StrataDefinition.getAbsolutePath();
-				
-				Files.copy(definition_to_load.toPath(), file_StrataDefinition.toPath(), StandardCopyOption.REPLACE_EXISTING);
-			} catch (IOException e) {
-				System.err.println(e.getClass().getName() + ": " + e.getMessage());
-			}
+			file_StrataDefinition = definition_to_load;
+			currentDefinition_location = file_StrataDefinition.getAbsolutePath();
 		} 
 		else { 	// If file does not exist then load the default definition
 			System.out.println("File not exists: StrataDefinition.csv - New interface is created using Default StrataDefinition.csv");
 			
 			try {	// Read default "StrataDefinition.csv" file from where this class is located
-				file_StrataDefinition = new File(temporary_RunFolder.getAbsolutePath() + "/StrataDefinition.csv");
+				file_StrataDefinition = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/StrataDefinition.csv");
 				file_StrataDefinition.deleteOnExit();		
-				currentDefinition_location = "Default: " + file_StrataDefinition.getAbsolutePath();
+				currentDefinition_location = "Default Six Layers: " + file_StrataDefinition.getAbsolutePath();
 				
 				InputStream initialStream = getClass().getResourceAsStream("/StrataDefinition.csv");
 				byte[] buffer = new byte[initialStream.available()];
@@ -339,26 +326,14 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		// Load database of the run---------------------------------------------------------------------
 		File exsitingStrata_to_load = new File(currentRunFolder.getAbsolutePath() + "/existingStrata.csv");
 		if (exsitingStrata_to_load.exists()) {	//Load if the file exists
-			try {
-				file_ExistingStrata = new File(temporary_RunFolder.getAbsolutePath() + "/existingStrata.csv");
-				file_ExistingStrata.deleteOnExit();
-				Files.copy(new File(currentRunFolder.getAbsolutePath() + "/existingStrata.csv").toPath(), file_ExistingStrata.toPath(), StandardCopyOption.REPLACE_EXISTING);
-			} catch (IOException e) {
-				System.err.println(e.getClass().getName() + ": " + e.getMessage());
-			}
+			file_ExistingStrata = exsitingStrata_to_load;
 		}		
 		
 			
 		// Load database of the run---------------------------------------------------------------------
 		File database_to_load = new File(currentRunFolder.getAbsolutePath() + "/database.db");
 		if (database_to_load.exists()) {	//Load if the file exists
-			try {
-				file_Database = new File(temporary_RunFolder.getAbsolutePath() + "/database.db");
-				file_Database.deleteOnExit();
-				Files.copy(new File(currentRunFolder.getAbsolutePath() + "/database.db").toPath(), file_Database.toPath(), StandardCopyOption.REPLACE_EXISTING);
-			} catch (IOException e) {
-				System.err.println(e.getClass().getName() + ": " + e.getMessage());
-			}
+			file_Database = database_to_load;
 		}					
 											
 
@@ -1800,7 +1775,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			JLabel label0 = new JLabel("Strata Definition (.csv)");
 			c0.gridx = 0;
 			c0.gridy = 0;
-			c0.weightx = 0.1;
+			c0.weightx = 0;
 			c0.weighty = 1;
 			importPanel.add(label0, c0);
 
@@ -1866,7 +1841,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			JLabel label2 = new JLabel("Database (.db)");
 			c0.gridx = 0;
 			c0.gridy = 2;
-			c0.weightx = 0.1;
+			c0.weightx = 0;
 		    c0.weighty = 1;
 			importPanel.add(label2, c0);
 
@@ -1934,7 +1909,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			JLabel label1 = new JLabel("Existing Strata (.csv)");
 			c0.gridx = 0;
 			c0.gridy = 1;
-			c0.weightx = 0.1;
+			c0.weightx = 0;
 		    c0.weighty = 1;
 			importPanel.add(label1, c0);
 			
@@ -1997,6 +1972,11 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				        //Enable "Import Database"
 				        textField2.setText(null);
 				        button_import_database.setEnabled(true);
+				        if (file_Database != null) {		//Reload database (to get Age Class) if database already exists when new Existing Strata is imported
+				            is_this_the_first_load = true;
+					        button_import_database.doClick();
+					        is_this_the_first_load = false;
+				        }
 					}
 				}
 			});
@@ -2650,7 +2630,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			button_table_Panel.add(btn_Delete, c2);
 			
 			
-			JButton btn_Sort = new JButton();
+			JToggleButton btn_Sort = new JToggleButton();
+			btn_Sort.setSelected(false);
+			btn_Sort.setFocusPainted(false);
 			btn_Sort.setFont(new Font(null, Font.BOLD, 12));
 			btn_Sort.setText("OFF");
 			btn_Sort.setToolTipText("Sorter mode: 'ON' click columns header to sort rows. 'OFF' retrieve original rows position");
@@ -2864,7 +2846,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 												 * 			2	2	2
 												 * 			3		3
 												 * 					4
-												 *  Then the below If would help write out as: 1,1,1	1,1,2	1,1,2	1,1,4	1,2,1	1,2,2	1,2,3	1,2,3	......	
+												 *  Then the below If would help write out as: 1,1,1	1,1,2	1,1,3	1,1,4	1,2,1	1,2,2	1,2,3	1,2,4	......	
 												 *  Please figure out the logic by yourself :))									
 												*/
 												if ( processing_constraint % (selected_Element_Index.size() * total_same_info_constraints) == element_to_add * total_same_info_constraints + j) {							
@@ -3351,27 +3333,31 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	// Get values to pass to other classes
 	
 	//Add all input Files to a list
-	public List<File> get_List_Of_inputFiles () {
-		List<File> inputFiles_list = new ArrayList<File>();	
-		inputFiles_list.add(getGeneralInputFile());
-		inputFiles_list.add(getSelectedStrataFile());
-		inputFiles_list.add(getRequirementsFile());
-		inputFiles_list.add(getMSFireFile());
-		inputFiles_list.add(getSRDisturbancesFile());
-		inputFiles_list.add(getUserConstraintsFile());
-		inputFiles_list.add(getSRDRequirementsFile());
+	public void create_inputFiles_for_thisRun () {
+		create_GeneralInputFile();
+		create_SelectedStrataFile();
+		create_RequirementsFile();
+		create_MSFireFile();
+		create_SRDisturbancesFile();
+		create_UserConstraintsFile();
+		create_SRDRequirementsFile();
 		
-		inputFiles_list.add(getDefinitionFile());
-		inputFiles_list.add(getStrataFile());
-		inputFiles_list.add(getDatabaseFile());
+		create_DefinitionFile();		// Note for those 3 file we just copy overwritten
+		create_StrataFile();
+		create_DatabaseFile();
 		
-		return inputFiles_list;
+//		// Just to save the rename method
+//		File temp = new File(currentRunFolder.getAbsolutePath() + "/" + databaseFile.getName());			
+//		databaseFile.renameTo(temp);
 	}
 	
 
 	
-	private File getGeneralInputFile() {
-		File generalInputFile = new File(temporary_RunFolder.getAbsolutePath() + "/Input 1 - General Inputs.txt");
+	private void create_GeneralInputFile() {
+		File generalInputFile = new File(currentRunFolder.getAbsolutePath() + "/Input 1 - General Inputs.txt");
+		if (generalInputFile.exists()) {
+			generalInputFile.delete();		// Delete the old file before writing new contents
+		}
 		
 		if (data1 != null) {
 			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(generalInputFile))) {
@@ -3390,12 +3376,14 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			}
 		}
-		return generalInputFile;
 	}
 	
 	
-	private File getSelectedStrataFile() {
-		File selectedStrataFile = new File(temporary_RunFolder.getAbsolutePath() + "/Input 2 - Selected Strata.txt");	
+	private void create_SelectedStrataFile() {
+		File selectedStrataFile = new File(currentRunFolder.getAbsolutePath() + "/Input 2 - Selected Strata.txt");	
+		if (selectedStrataFile.exists()) {
+			selectedStrataFile.delete();		// Delete the old file before writing new contents
+		}
 		
 		if (data != null) {
 			//Only print out Strata with implemented methods <> null
@@ -3417,13 +3405,15 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			}
 		}
-		return selectedStrataFile;
 	}
 	
 	
-	private File getRequirementsFile() {
+	private void create_RequirementsFile() {
 		//Only print out if the last column Allowed Options <> null
-		File requirementsFile = new File(temporary_RunFolder.getAbsolutePath() + "/Input 3 - Covertype Conversion (Clear Cuts).txt");
+		File requirementsFile = new File(currentRunFolder.getAbsolutePath() + "/Input 3 - Covertype Conversion (Clear Cuts).txt");
+		if (requirementsFile.exists()) {
+			requirementsFile.delete();		// Delete the old file before writing new contents
+		}
 		
 		if (data4 != null) {
 			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(requirementsFile))) {
@@ -3445,12 +3435,14 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			} 
 		}
-		return requirementsFile;
 	}
 
 	
-	private File getSRDRequirementsFile() {
-		File SRDrequirementsFile = new File(temporary_RunFolder.getAbsolutePath() + "/Input 4 - Covertype Conversion (Replacing Disturbances).txt");	
+	private void create_SRDRequirementsFile() {
+		File SRDrequirementsFile = new File(currentRunFolder.getAbsolutePath() + "/Input 4 - Covertype Conversion (Replacing Disturbances).txt");	
+		if (SRDrequirementsFile.exists()) {
+			SRDrequirementsFile.delete();		// Delete the old file before writing new contents
+		}
 		
 		if (data7 != null) {
 			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(SRDrequirementsFile))) {
@@ -3469,12 +3461,14 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			} 
 		}
-		return SRDrequirementsFile;
 	}	
 	
 	
-	private File getMSFireFile() {
-		File MSFireFile = new File(temporary_RunFolder.getAbsolutePath() + "/Input 5 - Mixed Severity Fire.txt");	
+	private void create_MSFireFile() {
+		File MSFireFile = new File(currentRunFolder.getAbsolutePath() + "/Input 5 - Mixed Severity Fire.txt");	
+		if (MSFireFile.exists()) {
+			MSFireFile.delete();		// Delete the old file before writing new contents
+		}
 		
 		if (data5 != null) {
 			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(MSFireFile))) {
@@ -3493,12 +3487,14 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			} 
 		}
-		return MSFireFile;
 	}	
 	
 	
-	private File getSRDisturbancesFile() {
-		File SRDisturbancesFile = new File(temporary_RunFolder.getAbsolutePath() + "/Input 6 - Replacing Disturbances.txt");	
+	private void create_SRDisturbancesFile() {
+		File SRDisturbancesFile = new File(currentRunFolder.getAbsolutePath() + "/Input 6 - Replacing Disturbances.txt");	
+		if (SRDisturbancesFile.exists()) {
+			SRDisturbancesFile.delete();		// Delete the old file before writing new contents
+		}
 		
 		if (data6 != null) {
 			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(SRDisturbancesFile))) {
@@ -3517,12 +3513,14 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			} 
 		}
-		return SRDisturbancesFile;
 	}	
 	
 	
-	private File getUserConstraintsFile() {
-		File userConstraintsFile = new File(temporary_RunFolder.getAbsolutePath() + "/Input 8 - User Constraints.txt");
+	private void create_UserConstraintsFile() {
+		File userConstraintsFile = new File(currentRunFolder.getAbsolutePath() + "/Input 8 - User Constraints.txt");
+		if (userConstraintsFile.exists()) {
+			userConstraintsFile.delete();		// Delete the old file before writing new contents
+		}
 		
 		if (data2 != null) {
 			//Only print out rows if columns  1, 2 or 4, 6, 7, 8 <> null
@@ -3552,42 +3550,39 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			} 
 		}
-		return userConstraintsFile;	
 	}
 
 	
-	private File getDefinitionFile() {	
-		File definitionFile = new File(temporary_RunFolder.getAbsolutePath() + "/" + "StrataDefinition.csv");
+	private void create_DefinitionFile() {	
+		File definitionFile = new File(currentRunFolder.getAbsolutePath() + "/" + "StrataDefinition.csv");
 		
 		try {
 			if (file_StrataDefinition != null) Files.copy(file_StrataDefinition.toPath(), definitionFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
-		}
-		return definitionFile;	
+		}	
 	}	
 
 	
-	private File getStrataFile() {	
-		File strataFile = new File(temporary_RunFolder.getAbsolutePath() + "/" + "existingStrata.csv");
+	private void create_StrataFile() {	
+		File strataFile = new File(currentRunFolder.getAbsolutePath() + "/" + "existingStrata.csv");
 		
 		try {
 			if (file_ExistingStrata != null) Files.copy(file_ExistingStrata.toPath(), strataFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
-		}
-		return strataFile;	
+		}	
 	}
 	
 	
-	private File getDatabaseFile() {	
-		File databaseFile = new File(temporary_RunFolder.getAbsolutePath() + "/" + "database.db");
+	private void create_DatabaseFile() {	
+		File databaseFile = new File(currentRunFolder.getAbsolutePath() + "/" + "database.db");
 		
 		try {
 			if (file_Database != null) Files.copy(file_Database.toPath(), databaseFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 		}
-		return databaseFile;	
 	}	
+	
 }

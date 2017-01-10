@@ -816,28 +816,21 @@ public class Panel_YieldProject extends JLayeredPane {
 				
 				if (response == 0)		//Yes option
 				{
-					//Delete all files of the edited Runs
+					//Delete all output files of the edited Runs
 					for (int i = 0; i < listOfEditRuns.length; i++) {
 						File[] contents = listOfEditRuns[i].listFiles();
 						if (contents != null) {
 							for (File f : contents) {
-								f.delete();
+								if (f.getName().contains("Output")) {
+									f.delete();
+								}
 							}
 						}
 					}
 					
-					//Create new Input Files for the edited runs			
-					File[][] all_Inputs_from_all_runs = editPanel.getInputFiles();		//Get input files from 2D array:  [edited runs][inputs in each run]
-//					for (int i = 0; i < all_Inputs_from_all_runs.length; i++) {			
-//						for (int j = 0; j < all_Inputs_from_all_runs[i].length; j++) {			
-//							try {
-//								all_Inputs_from_all_runs[i][j].createNewFile();			//Create new for all input files
-//							} catch (IOException e) {
-//								System.err.println(e.getClass().getName() + ": " + e.getMessage());
-//							}
-//						}
-//					}
-					refreshProjectTree(); //Refresh the tree
+					//Create new Input Files for the edited runs & Refresh the tree		
+					editPanel.createInputFiles();	
+					refreshProjectTree();
 				}
 	        }
 			

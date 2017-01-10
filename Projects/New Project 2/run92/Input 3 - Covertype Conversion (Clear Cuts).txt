@@ -1,0 +1,6 @@
+Cover Type before Clear Cut	Cover Type after Clear Cut	Min Age-Class for Clear Cut	Max Age-Class for Clear Cut	Options to be applied	
+P	P	1	24	Yes	
+P	D	20	29	Yes	
+P	W	20	24	Yes	
+P	A	20	63	Yes	
+N	N	20	24	Yes	

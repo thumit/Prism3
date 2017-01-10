@@ -111,9 +111,14 @@ private static int totalLines;
 					String string2 = "";
 					// make it to be: 'rowValue',
 					for (int j = 0; j < rowCount - 1; j++) {
+						currentRow[j] = currentRow[j].replace("'", "''");		//Escape the ' in the variable x_EAe' or x_EAr'
 						string2 = string2 + "'" + currentRow[j] + "'" + ",";
 				}
-					string2 = string2 + "'" + currentRow[rowCount-1] + "'";  //For the last item of the row we don't add ,				
+					currentRow[rowCount-1] = currentRow[rowCount-1].replace("'", "''");				//Escape the ' in the variable x_EAe' or x_EAr'
+					string2 = string2 + "'" + currentRow[rowCount-1] + "'";  //For the last item of the row we don't add ,		
+					
+					
+					
 //					statement = statement + "INSERT INTO " + "\"" + tableName + "\"" + " VALUES (" + string2 + ");";	//Double quote surrounds tableName
 					statement[i] = "INSERT INTO " + "[" + tableName + "]" + " VALUES (" + string2 + ");";	// [] surrounds tableName
 			}

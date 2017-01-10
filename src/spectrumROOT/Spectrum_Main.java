@@ -102,6 +102,7 @@ public class Spectrum_Main extends JFrame {
 					if (info.getName().equals("Nimbus")) {
 						try {
 							UIManager.setLookAndFeel(info.getClassName());
+							UIManager.put("info", new Color(255, 250, 205));		//Change the ugly yellow color of ToolTip --> lemon chiffon
 						} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
 								| UnsupportedLookAndFeelException e1) {
 							System.err.println(e1.getClass().getName() + ": " + e1.getMessage());

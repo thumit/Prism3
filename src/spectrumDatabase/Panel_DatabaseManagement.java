@@ -784,7 +784,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 					// The column count in rsmd starts from 1
 					for (int jj = 0; jj < columnCount; jj++ ) {
 						columnNames[jj] = rsmd.getColumnName(jj+1);		//jj+1 is because rsmd has colum names indexed from 1 to n
-						name_modified = name_modified + "'" + columnNames[jj] + "' TEXT, ";
+						name_modified = name_modified + "[" + columnNames[jj] + "] TEXT, ";
 					}
 					name_modified = name_modified.substring(0, name_modified.lastIndexOf(','));		//Remove the last ","
 					//-----------------------------------------------------------
@@ -805,18 +805,16 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 					
 					//Insert value into tables
 					statement = "";		//reset to make new statement													
-					String[] currentRow = new String[columnCount];			//Make currentrow[row] to be:		'value1', 'value2', .....
-					int row = 0;
+					String currentRow;			//Make currentRow to be:		'value1', 'value2', .....
 					while (rs.next()) {		//Loop through all rows of the copied table
-						currentRow[row] = "";	//This is important to make the first member of this String not "null"
+						currentRow = "";	//This is important to make the first member of this String not "null"
 					    for (int jj = 1; jj < columnCount + 1; jj++) {
-					    	currentRow[row] = currentRow[row] +"'" + rs.getString(jj) +"'" +", ";
+					    	currentRow = currentRow +"'" + rs.getString(jj).replace("'", "''") +"'" +", ";			//Escape the ' (i.e. xEAe') by replace
 					    }
-					    currentRow[row] = currentRow[row].substring(0, currentRow[row].lastIndexOf(','));		//Remove the last "," 				      
+					    currentRow = currentRow.substring(0, currentRow.lastIndexOf(','));		//Remove the last "," 				      
 					   
 					    //Execute the insert
-					    statement ="INSERT INTO " + "[" + copiedTables_names[i] + "]" + " VALUES (" + currentRow[row] + "); ";	// [] surrounds tableName		 				
-						row++;
+					    statement ="INSERT INTO " + "[" + copiedTables_names[i] + "]" + " VALUES (" + currentRow + "); ";	// [] surrounds tableName		 				
 						
 						pst= con_to.prepareStatement(statement);
 						pst.executeUpdate();

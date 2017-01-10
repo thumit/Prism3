@@ -1,4 +1,4 @@
 Strata ID	Layer 1	Layer 2	Layer 3	Layer 4	Layer 5	Layer 6	Total area (acres)	Age Class	Strata in optimization model	
-BNNCDM	B	N	N	C	D	M	540	8	Yes	
-BNNCDP	B	N	N	C	D	P	77	not found	Yes	
-BNNCDS	B	N	N	C	D	S	84	2	Yes	
+BNNCDM	B	N	N	C	D	M	540.0	8	Yes	
+BNNCDP	B	N	N	C	D	P	77.0	not found	Yes	
+BNNCDS	B	N	N	C	D	S	84.0	2	Yes	

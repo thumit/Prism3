@@ -37,15 +37,15 @@ public class ScrollPane_Cost extends JScrollPane {
 	
 		//Setup the table--------------------------------------------------------------------------------------------
 		rowCount = 1;
-		colCount = 5;
+		colCount = 6;
 		data = new Object[rowCount][colCount];
-        columnNames= new String[] {"Description", "Dollars/Acre", "Dollars/Cubic Foot", "Dollars/Board Foot", "Dollars/Live Tree"};
+        columnNames= new String[] {"Action Name", "Action Condition", "Dollars/Acre", "Dollars/Cubic Foot", "Dollars/Board Foot", "Dollars/Live Tree"};
 		
-        data[0][0] = "Base Cost";		
-        data[0][1] = 360;	
-        data[0][2] = 1.2;	
-        data[0][3] = 0.1;	
-        data[0][4] = 1.2;
+        data[0][1] = "Base Cost";		
+        data[0][2] = 360;	
+        data[0][3] = 1.2;	
+        data[0][4] = 0.1;	
+        data[0][5] = 1.2;
         
 
 		//Create a table----------------------------------------------------------------------------------------------------------------
@@ -71,14 +71,17 @@ public class ScrollPane_Cost extends JScrollPane {
 			
 			@Override
 			public Class getColumnClass(int c) {
-				if (c==0) return String.class;      //column 0 accepts only String
-				else if (c>=1 && c<=4) return Double.class;      //column 1 to 4 accept only Double values    
-		        else return (getValueAt(0, c) == null ? Object.class : getValueAt(0, c).getClass());
+				if (c < 2)
+					return String.class; // column 0 and 1 accepts only String
+				else if (c >= 2)
+					return Double.class; // column >=2 only Double values
+				else
+					return (getValueAt(0, c) == null ? Object.class : getValueAt(0, c).getClass());
 			}
 			
 			@Override
 			public boolean isCellEditable(int row, int col) {
-				if (col == 0 && row==0) { // The 1st cell(0,0)) is not editable
+				if (col < 2) { // Columns 0 and 1 are not editable
 					return false;
 				} else {
 					return true;

@@ -32,14 +32,13 @@ public class Read_Indentifiers {
 				list = Files.readAllLines(Paths.get(file_StrataDefinition.getAbsolutePath()), StandardCharsets.UTF_8);
 				String[] a = list.toArray(new String[list.size()]);
 				int totalRows = a.length;
-				int totalCols = 2;
+				int totalCols = 4;
 				String[][] value = new String[totalRows][totalCols];
 
 				// read all values from all rows and columns
 				for (int i = 0; i < totalRows; i++) { // Read from 1st row
 					String[] rowValue = a[i].split(delimited);
 					for (int j = 0; j < totalCols && j < rowValue.length; j++) {
-//						value[i][j] = rowValue[j].replaceAll("\\s+", "");		//Remove all the space in the String   
 						value[i][j] = rowValue[j];		//to make toolTp text separated with space, may need the above line if there is spaces in layer and elements name in the file StrataDefinition.csv
 					}
 				}
@@ -49,41 +48,25 @@ public class Read_Indentifiers {
 				layers_Title_ToolTip = new ArrayList<String>();
 				
 				allLayers = new ArrayList<List<String>>();
-				allLayers_ToolTips = new ArrayList<List<String>>();
-				
+				allLayers_ToolTips = new ArrayList<List<String>>();				
 				
 				//Loop through all rows and add all layers information
-				int i = 0;
-		        while (i < totalRows) {
-		        	//Add Layer title and toolTip    	
-		        	layers_Title.add(value[i][0]);
-		        	layers_Title_ToolTip.add(value[i][1]);
-
-		        	//Get total elements in this layer
-		        	i++;
-		        	int total_elements = Integer.parseInt(value[i][0]);
-		        	
-
-		        	//Create a new Layer Name and toolTips:  2 temporary Lists
-		        	List<String> newLayer = new ArrayList<String>();
-		        	List<String> newLayer_ToolTip = new ArrayList<String>();
-
-		        	//Loop through all elements of this layer name and toolTip
-		        	for (int j = 0; j < total_elements; j++) {
-		        		i++;
-		        		newLayer.add(value[i][0]);
-		        		newLayer_ToolTip.add(value[i][1]);
+				for (int i = 0; i < totalRows; i++) {
+					if (! layers_Title.contains(value[i][0])) {  //If found a new layer
+						//Add Layer title and toolTip    	
+			        	layers_Title.add(value[i][0]);
+			        	layers_Title_ToolTip.add(value[i][1]);
+			        	
+			        	//Add 2 temporary Lists to the allLayers & allLayers_ToolTips
+			        	allLayers.add(new ArrayList<String>());
+			        	allLayers_ToolTips.add(new ArrayList<String>());
 					}
-		        	
-		        	//Add temporary Lists to the allLayers & allLayers_ToolTips
-		        	allLayers.add(newLayer);
-		        	allLayers_ToolTips.add(newLayer_ToolTip);
-		        	
-		        	//Move to the next Layer
-		        	i++;
-		        }
+									
+					allLayers.get(allLayers.size() - 1).add(value[i][2]);		// Add layer's element to the last layer
+					allLayers_ToolTips.get(allLayers_ToolTips.size() - 1).add(value[i][3]);		// Add layer's element's ToolTip to the last layer ToolTip
+				}
 				
-
+				
 			} catch (IOException e) {
 				System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			}
