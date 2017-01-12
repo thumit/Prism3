@@ -30,6 +30,7 @@ public class Read_Indentifiers {
 				// All lines to be in array
 				List<String> list;
 				list = Files.readAllLines(Paths.get(file_StrataDefinition.getAbsolutePath()), StandardCharsets.UTF_8);
+				list.remove(0);		//Remove the 1st row which contains column Names
 				String[] a = list.toArray(new String[list.size()]);
 				int totalRows = a.length;
 				int totalCols = 4;

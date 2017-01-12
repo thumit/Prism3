@@ -326,28 +326,27 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 
 			
 			
-			// Set up problem-------------------------------------------------		//////////////////////////////////////Need to change this is important, better to read from input file //////////////////////////
-			// get the "StrataDefinition.csv" file from where this class is located
-		
-			File file_StrataDefinition = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "StrataDefinition.csv");
-			file_StrataDefinition.deleteOnExit();
-			try {
-				InputStream initialStream = getClass().getResourceAsStream("/StrataDefinition.csv");		//Default definition
-				byte[] buffer = new byte[initialStream.available()];
-				initialStream.read(buffer);
-				
-				 OutputStream outStream = new FileOutputStream(file_StrataDefinition);
-				 outStream.write(buffer);
-				 
-				 initialStream.close();
-				 outStream.close();
-			} catch (FileNotFoundException e1) {
-				System.err.println("Panel Solve Runs - file_StrataDefinition not found error - " + e1.getClass().getName() + ": " + e1.getMessage());
-			} catch (IOException e2) {
-				System.err.println("Panel Solve Runs - file_StrataDefinition read-write stream error - " + e2.getClass().getName() + ": " + e2.getMessage());
-			}
+			// Set up problem-------------------------------------------------			
+			File file_StrataDefinition = new File(runFolder.getAbsolutePath() + "/" + "StrataDefinition.csv");
+			if (! file_StrataDefinition.exists()) {		// If not exist then use the Default Definition
+				try {
+					InputStream initialStream = getClass().getResourceAsStream("/StrataDefinition.csv");		//Default definition
+					byte[] buffer = new byte[initialStream.available()];
+					initialStream.read(buffer);
 					
-			
+					 OutputStream outStream = new FileOutputStream(file_StrataDefinition);
+					 outStream.write(buffer);
+					 
+					 initialStream.close();
+					 outStream.close();
+				} catch (FileNotFoundException e1) {
+					System.err.println("Panel Solve Runs - file_StrataDefinition not found error - " + e1.getClass().getName() + ": " + e1.getMessage());
+				} catch (IOException e2) {
+					System.err.println("Panel Solve Runs - file_StrataDefinition read-write stream error - " + e2.getClass().getName() + ": " + e2.getMessage());
+				}
+			}
+		
+
 			Read_Indentifiers read_Identifiers = new Read_Indentifiers(file_StrataDefinition);		//file_StrataDefinition
 			List<List<String>> allLayers =  read_Identifiers.get_allLayers();
 		

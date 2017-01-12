@@ -685,6 +685,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			colCount1 = 2;
 			data1 = new Object[rowCount1][colCount1];
 			columnNames1 = new String[] { "Input Description", "Selected Option" };
+			
+			// Populate the data matrix
+			data1[0][0] = "Total planning periods (decades)";
+			data1[1][0] = "Solving time limit (minutes)";
+			data1[2][0] = "Annual discount rate (%)";
+			data1[3][0] = "Solver for optimization";
 		}
 			
 		//Create a table-------------------------------------------------------------
@@ -841,7 +847,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
         table3.getTableHeader().setReorderingAllowed(false);		//Disable columns move
         table3.getColumnModel().getColumn(0).setPreferredWidth(250);	//Set width of 1st Column bigger
         table3.setTableHeader(null);
-        table3.setPreferredScrollableViewportSize(new Dimension(400, 100));
+        table3.setPreferredScrollableViewportSize(new Dimension(400, 80));
         table3.setFillsViewportHeight(true);
 	}
 	
@@ -977,7 +983,10 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				setHorizontalAlignment(JLabel.LEFT);
 				// setFont(getFont().deriveFont(Font.BOLD));
                 	
-				setBackground(rowColor[row]);		//Set cell background color
+				setBackground(rowColor[row]);		//Set cell background color	
+				if (isSelected) {
+					setBackground(table4.getSelectionBackground());		//Set background color	for selected row
+				}
 				setIcon(imageIconArray[column]);	// Set icons for cells in some columns
 				setIconTextGap(15);		// Set the distance between icon and the actual data value
 
@@ -1221,6 +1230,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				// setFont(getFont().deriveFont(Font.BOLD));
                 	
 				setBackground(rowColor[row]);		//Set cell background color
+				if (isSelected) {
+					setBackground(table5.getSelectionBackground());		//Set background color	for selected row
+				}
 				setIcon(imageIconArray[column]);	// Set icons for cells in some columns
 				setIconTextGap(15);		// Set the distance between icon and the actual data value
 
@@ -1582,6 +1594,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				// setFont(getFont().deriveFont(Font.BOLD));
                 	
 				setBackground(rowColor[row]);		//Set cell background color
+				if (isSelected) {
+					setBackground(table7.getSelectionBackground());		//Set background color	for selected row
+				}
 				setIcon(imageIconArray[column]);	// Set icons for cells in some columns
 				setIconTextGap(15);		// Set the distance between icon and the actual data value
 
@@ -1640,7 +1655,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	// Panel General Inputs------------------------------------------------------------------------------------------------------	
 	class General_Inputs_GUI extends JLayeredPane {
 		public General_Inputs_GUI() {
-			setLayout(new GridLayout(0,4,30,0));		//2 last numbers are the gaps 			
+			setLayout(new GridLayout(0,4,30,0));		//2 last numbers are the gaps 	
+			create_table1();
+			
 			
 			JLabel label1 = new JLabel("Total planning periods (decades)");
 			JComboBox combo1 = new JComboBox();		
@@ -1652,7 +1669,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			super.add(combo1);
 			
 			JLabel label2 = new JLabel("Solving time limit (minutes)");
-			JSpinner spin2 = new JSpinner (new SpinnerNumberModel(15, 0, 60, 1));
+			JSpinner spin2 = new JSpinner (new SpinnerNumberModel(20, 0, 60, 1));
 			JFormattedTextField SpinnerText = ((DefaultEditor) spin2.getEditor()).getTextField();
 			SpinnerText.setHorizontalAlignment(JTextField.LEFT);
 			super.add(label2);
@@ -1688,11 +1705,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					totalPeriod = Integer.parseInt(combo1.getSelectedItem().toString());
 					
 					// Apply any change in the GUI to the table
-					data1[0][0] = "Total planning periods (decades)";
-					data1[1][0] = "Solving time limit (minutes)";
-					data1[2][0] = "Annual discount rate (%)";
-					data1[3][0] = "Solver for optimization";
-					
 					data1[0][1] = combo1.getSelectedItem().toString();
 					data1[1][1] = (Integer)spin2.getValue();
 					data1[2][1] = combo3.getSelectedItem().toString();
@@ -1725,13 +1737,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		        @Override
 		        public void stateChanged(ChangeEvent e) {
 		        	spin2.setValue(spin2.getValue());
+		        	totalPeriod = Integer.parseInt(combo1.getSelectedItem().toString());
 		        	
 		        	// Apply any change in the GUI to the table
-					data1[0][0] = "Total planning periods (decades)";
-					data1[1][0] = "Solving time limit (minutes)";
-					data1[2][0] = "Annual discount rate (%)";
-					data1[3][0] = "Solver for optimization";
-					
 					data1[0][1] = combo1.getSelectedItem().toString();
 					data1[1][1] = (Integer)spin2.getValue();
 					data1[2][1] = combo3.getSelectedItem().toString();
@@ -1739,13 +1747,15 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					model1.fireTableDataChanged();
 		        }
 		    });
+		    if (is_table1_loaded == false) {
+		    	spin2.setValue(15);		// Load GUI to table if there is no input to load	(15 <> 20 then the listener will be activate)
+		    }
 		}
 	}
 
 	class General_Inputs_Text extends JScrollPane {
 		public General_Inputs_Text() {	
-			create_table1();
-	        setViewportView(table1);
+//	        setViewportView(table1);		// No need to show this table
 		}
 	}
 
@@ -1776,7 +1786,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c0.gridx = 0;
 			c0.gridy = 0;
 			c0.weightx = 0;
-			c0.weighty = 1;
+			c0.weighty = 0;
 			importPanel.add(label0, c0);
 
 			JTextField textField0 = new JTextField(25);
@@ -1785,7 +1795,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c0.gridx = 1;
 			c0.gridy = 0;
 			c0.weightx = 1;
-			c0.weighty = 1;
+			c0.weighty = 0;
 			importPanel.add(textField0, c0);
 
 			JButton button0 = new JButton();
@@ -1811,6 +1821,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						is_table6_loaded = false;
 						is_table7_loaded = false;
 						
+						//Reset data to null
+						availableAcres = 0;
+						file_ExistingStrata = null;
+						file_Database = null;
+						yieldTable_values = null;
+						yieldTable_ColumnNames = null;
 						
 						//Reset all panels except General Inputs
 						panel_Model_Identifiniton_GUI = new Model_Identifiniton_GUI();
@@ -1833,7 +1849,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c0.gridx = 2;
 			c0.gridy = 0;
 			c0.weightx = 0;
-			c0.weighty = 1;
+			c0.weighty = 0;
 			importPanel.add(button0, c0);
 
 				
@@ -1842,7 +1858,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c0.gridx = 0;
 			c0.gridy = 2;
 			c0.weightx = 0;
-		    c0.weighty = 1;
+		    c0.weighty = 0;
 			importPanel.add(label2, c0);
 
 			JTextField textField2 = new JTextField(25);
@@ -1850,7 +1866,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c0.gridx = 1;
 			c0.gridy = 2;
 			c0.weightx = 1;
-		    c0.weighty = 1;
+		    c0.weighty = 0;
 			importPanel.add(textField2, c0);
 
 			
@@ -1901,7 +1917,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c0.gridx = 2;
 			c0.gridy = 2;
 			c0.weightx = 0;
-		    c0.weighty = 1;
+		    c0.weighty = 0;
 			importPanel.add(button_import_database, c0);
 		 			
 					
@@ -1910,7 +1926,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c0.gridx = 0;
 			c0.gridy = 1;
 			c0.weightx = 0;
-		    c0.weighty = 1;
+		    c0.weighty = 0;
 			importPanel.add(label1, c0);
 			
 			JTextField textField1 = new JTextField(25);
@@ -1918,7 +1934,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c0.gridx = 1;
 			c0.gridy = 1;
 			c0.weightx = 1;
-		    c0.weighty = 1;
+		    c0.weighty = 0;
 			importPanel.add(textField1, c0);
 			
 			
@@ -1983,8 +1999,15 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c0.gridx = 2;
 			c0.gridy = 1;
 			c0.weightx = 0;
-		    c0.weighty = 1;
+		    c0.weighty = 0;
 			importPanel.add(button_import_existingStrata, c0);
+			
+			// Add empty Label for everything above not resize
+			c0.gridx = 0;
+			c0.gridy = 3;
+			c0.weightx = 0;
+		    c0.weighty = 1;
+			importPanel.add(new JLabel(), c0);
 			// End of 1st grid -----------------------------------------------------------------------
 			// End of 1st grid -----------------------------------------------------------------------
 			
@@ -2095,7 +2118,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c2.fill = GridBagConstraints.BOTH;
 			c2.weightx = 1;
 		    c2.weighty = 1;
-				
+
 		    
 			// 1st line inside inforPanel
 			create_table3();        
@@ -2104,63 +2127,49 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	        
 		    c2.gridx = 0;
 			c2.gridy = 0;
-			c2.gridwidth = 2;
+			c2.gridwidth = 3;
 			c2.weightx = 1;
 		    c2.weighty = 1;
 			inforPanel.add(overviewScrollPane, c2);
 
 			
-			// 2nd line inside inforPanel includes 2 buttons
-			//button 1		
-			button_select_Strata = new JButton();
-			button_select_Strata.setToolTipText("Add the selected existing strata into optimization model");
-			icon = new ImageIcon(getClass().getResource("/icon_check.png"));
-			scaleImage = icon.getImage().getScaledInstance(20, 20,Image.SCALE_SMOOTH);
-			button_select_Strata.setIcon(new ImageIcon(scaleImage));
-			button_select_Strata.addActionListener(new ActionListener() {
+			// 2nd line inside inforPanel includes 3 buttons
+			//button 1
+			JToggleButton btnStrataFilter = new JToggleButton();
+			btnStrataFilter.setText("OFF");
+			checkPanel.setVisible(false);
+			btnStrataFilter.setToolTipText("Strata Filter");
+			ImageIcon icon = new ImageIcon(getClass().getResource("/icon_binoculars.png"));
+			Image scaleImage = icon.getImage().getScaledInstance(20, 20,Image.SCALE_SMOOTH);
+			btnStrataFilter.setIcon(new ImageIcon(scaleImage));
+			btnStrataFilter.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {
-					String applyText = "Yes";				
-					
-					int[] selectedRow = table.getSelectedRows();	
-					///Convert row index because "Sort" causes problems
-					for (int i = 0; i < selectedRow.length; i++) {
-						selectedRow[i] = table.convertRowIndexToModel(selectedRow[i]);
+			
+					if (btnStrataFilter.getText().equals("OFF")) {
+						btnStrataFilter.setText("ON");
+						checkPanel.setVisible(true);
+						// Get everything show up nicely
+						GUI_Text_splitPanel.setLeftComponent(panel_Model_Identifiniton_GUI);
+					} else {
+						btnStrataFilter.setText("OFF");
+						checkPanel.setVisible(false);
+						// Get everything show up nicely
+						GUI_Text_splitPanel.setLeftComponent(panel_Model_Identifiniton_GUI);
 					}
-					table.clearSelection();	//To help trigger the row refresh: clear then add back the rows
-					for (int i: selectedRow) {
-						data[i][colCount-1] = applyText;
-						table.addRowSelectionInterval(table.convertRowIndexToView(i),table.convertRowIndexToView(i));
-					}	
-					
-					
-					 //Update Models OverView table
-					int modeledStrata = 0;
-					for (int row = 0; row < rowCount; row++) {
-						if (data[row][colCount -1]!=null && data[row][colCount -1].toString().equals("Yes"))	modeledStrata = modeledStrata + 1;
-					}
-			        data3[0][1] = modeledStrata + " vs " + rowCount;
-			        model3.fireTableDataChanged();
-			        
-			        
-			        modeledAcres = 0;
-			        for (int row = 0; row < rowCount; row++) {
-			        	if (data[row][colCount -1]!=null && data[row][colCount -1].toString().equals("Yes"))	modeledAcres = modeledAcres + Double.parseDouble(data[row][colCount - 3].toString());
-					}
-			        data3[1][1] = modeledAcres + " vs " + availableAcres;
-			        model3.fireTableDataChanged();
 				}
 			});
 			c2.gridx = 0;
 			c2.gridy = 1;
 			c2.gridwidth = 1;	
-			c2.weightx = 1;
+			c2.weightx = 0;
 		    c2.weighty = 0;
-			inforPanel.add(button_select_Strata, c2);
+			inforPanel.add(btnStrataFilter, c2);	
+			
 			
 			//button 2
 			JButton remove_Strata = new JButton();
-			remove_Strata.setToolTipText("Remove the selected existing strata from optimization model");
+			remove_Strata.setToolTipText("Remove selected strata from optimization model");
 			icon = new ImageIcon(getClass().getResource("/icon_erase.png"));
 			scaleImage = icon.getImage().getScaledInstance(20, 20,Image.SCALE_SMOOTH);
 			remove_Strata.setIcon(new ImageIcon(scaleImage));
@@ -2203,7 +2212,57 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c2.gridwidth = 1;	
 			c2.weightx = 1;
 		    c2.weighty = 0;
+//		    c2.insets = new Insets(0, 10, 0, 0); // padding top 0, left 15, bottom 0, right 0
 			inforPanel.add(remove_Strata, c2);		
+			
+			
+			//button 3	
+			button_select_Strata = new JButton();
+			button_select_Strata.setToolTipText("Add selected strata to optimization model");
+			icon = new ImageIcon(getClass().getResource("/icon_check.png"));
+			scaleImage = icon.getImage().getScaledInstance(20, 20,Image.SCALE_SMOOTH);
+			button_select_Strata.setIcon(new ImageIcon(scaleImage));
+			button_select_Strata.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent actionEvent) {
+					String applyText = "Yes";				
+					
+					int[] selectedRow = table.getSelectedRows();	
+					///Convert row index because "Sort" causes problems
+					for (int i = 0; i < selectedRow.length; i++) {
+						selectedRow[i] = table.convertRowIndexToModel(selectedRow[i]);
+					}
+					table.clearSelection();	//To help trigger the row refresh: clear then add back the rows
+					for (int i: selectedRow) {
+						data[i][colCount-1] = applyText;
+						table.addRowSelectionInterval(table.convertRowIndexToView(i),table.convertRowIndexToView(i));
+					}	
+					
+					
+					 //Update Models OverView table
+					int modeledStrata = 0;
+					for (int row = 0; row < rowCount; row++) {
+						if (data[row][colCount -1]!=null && data[row][colCount -1].toString().equals("Yes"))	modeledStrata = modeledStrata + 1;
+					}
+			        data3[0][1] = modeledStrata + " vs " + rowCount;
+			        model3.fireTableDataChanged();
+			        
+			        
+			        modeledAcres = 0;
+			        for (int row = 0; row < rowCount; row++) {
+			        	if (data[row][colCount -1]!=null && data[row][colCount -1].toString().equals("Yes"))	modeledAcres = modeledAcres + Double.parseDouble(data[row][colCount - 3].toString());
+					}
+			        data3[1][1] = modeledAcres + " vs " + availableAcres;
+			        model3.fireTableDataChanged();
+				}
+			});
+			c2.gridx = 2;
+			c2.gridy = 1;
+			c2.gridwidth = 1;	
+			c2.weightx = 1;
+		    c2.weighty = 0;
+//		    c2.insets = new Insets(0, 10, 0, 0); // padding top 0, left 15, bottom 0, right 0
+			inforPanel.add(button_select_Strata, c2);
 			// End of 3rd grid -----------------------------------------------------------------------
 			// End of 3rd grid -----------------------------------------------------------------------
 			
