@@ -65,6 +65,7 @@ import org.jfree.ui.RectangleEdge;
 import org.jfree.util.Rotation;
 
 import spectrumConvenienceClasses.FilesHandle;
+import spectrumConvenienceClasses.IconsHandle;
 import spectrumConvenienceClasses.TableModelSpectrum;
 import spectrumROOT.Spectrum_Main;
 @SuppressWarnings("serial")
@@ -74,8 +75,6 @@ public class Panel_YieldProject extends JLayeredPane {
 	private Panel_SolveRun solvePanel;		// This panel only visible when "Start Solving"
 	private Panel_CustomizeOutput customizeOutputPanel;		// This panel only visible when Start "Customize Output"
 	private JButton btnNewRun, btnDeleteRun, btnEditRun, btnRefresh, btnSolveRun, btnCustomizeOutput;
-	private ImageIcon icon;
-	private Image scaleImage;
 	
 	private File[] listOfEditRuns;
 	private File currentProjectFolder, currentRunFolder;
@@ -171,9 +170,7 @@ public class Panel_YieldProject extends JLayeredPane {
 	
 		btnNewRun = new JButton();
 		btnNewRun.setToolTipText("New Run");
-		icon = new ImageIcon(getClass().getResource("/icon_new.png"));
-		scaleImage = icon.getImage().getScaledInstance(25, 25,Image.SCALE_SMOOTH);
-		btnNewRun.setIcon(new ImageIcon(scaleImage));
+		btnNewRun.setIcon(IconsHandle.get_scaledImageIcon(25, 25, "icon_new.png"));
 		btnNewRun.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
@@ -186,9 +183,7 @@ public class Panel_YieldProject extends JLayeredPane {
 		
 		btnDeleteRun = new JButton();
 		btnDeleteRun.setToolTipText("Delete Runs");
-		icon = new ImageIcon(getClass().getResource("/icon_delete.png"));
-		scaleImage = icon.getImage().getScaledInstance(25, 25,Image.SCALE_SMOOTH);
-		btnDeleteRun.setIcon(new ImageIcon(scaleImage));
+		btnDeleteRun.setIcon(IconsHandle.get_scaledImageIcon(25, 25, "icon_delete.png"));
 		btnDeleteRun.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
@@ -200,9 +195,7 @@ public class Panel_YieldProject extends JLayeredPane {
 		
 		btnRefresh = new JButton();
 		btnRefresh.setToolTipText("Refresh");
-		icon = new ImageIcon(getClass().getResource("/icon_refresh.png"));
-		scaleImage = icon.getImage().getScaledInstance(25, 25,Image.SCALE_SMOOTH);
-		btnRefresh.setIcon(new ImageIcon(scaleImage));
+		btnRefresh.setIcon(IconsHandle.get_scaledImageIcon(25, 25, "icon_refresh.png"));
 		btnRefresh.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
@@ -214,9 +207,7 @@ public class Panel_YieldProject extends JLayeredPane {
 		
 		btnEditRun = new JButton();
 		btnEditRun.setToolTipText("Start Editing");
-		icon = new ImageIcon(getClass().getResource("/icon_edit.png"));
-		scaleImage = icon.getImage().getScaledInstance(25, 25,Image.SCALE_SMOOTH);
-		btnEditRun.setIcon(new ImageIcon(scaleImage));
+		btnEditRun.setIcon(IconsHandle.get_scaledImageIcon(25, 25, "icon_edit.png"));
 		btnEditRun.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
@@ -236,9 +227,7 @@ public class Panel_YieldProject extends JLayeredPane {
 		
 		btnSolveRun = new JButton();
 		btnSolveRun.setToolTipText("Start Solving");
-		icon = new ImageIcon(getClass().getResource("/icon_solve.png"));
-		scaleImage = icon.getImage().getScaledInstance(25, 25,Image.SCALE_SMOOTH);
-		btnSolveRun.setIcon(new ImageIcon(scaleImage));
+		btnSolveRun.setIcon(IconsHandle.get_scaledImageIcon(25, 25, "icon_solve.png"));
 		btnSolveRun.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
@@ -250,9 +239,7 @@ public class Panel_YieldProject extends JLayeredPane {
 		
 		btnCustomizeOutput = new JButton();
 		btnCustomizeOutput.setToolTipText("Customize Output");
-		icon = new ImageIcon(getClass().getResource("/icon_customize.png"));
-		scaleImage = icon.getImage().getScaledInstance(25, 25,Image.SCALE_SMOOTH);
-		btnCustomizeOutput.setIcon(new ImageIcon(scaleImage));
+		btnCustomizeOutput.setIcon(IconsHandle.get_scaledImageIcon(25, 25, "icon_customize.png"));
 		btnCustomizeOutput.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
@@ -385,7 +372,7 @@ public class Panel_YieldProject extends JLayeredPane {
 //						scrollPane_Right.setOpaque(false);
 						
 						
-						if (currentInputFile.equals("Output 4 - Management Overview.txt")) {		//show a panel with chart if the selected node name is "Output 4 - Management_Overview.txt"
+						if (currentInputFile.equals("output_04_management_overview.txt")) {		//show a panel with chart if the selected node name is "Output 4 - Management_Overview.txt"
 							scrollPane_Right.setViewportView(new PaneL_Management_Overview(table));
 							
 							table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -461,9 +448,7 @@ public class Panel_YieldProject extends JLayeredPane {
 
 					// All nodes can be refreshed ------------------------------------------------------------
 					final JMenuItem refreshMenuItem = new JMenuItem("Refresh");
-					icon = new ImageIcon(getClass().getResource("/icon_refresh.png"));
-					scaleImage = icon.getImage().getScaledInstance(15, 15,Image.SCALE_SMOOTH);
-					refreshMenuItem.setIcon(new ImageIcon(scaleImage));
+					refreshMenuItem.setIcon(IconsHandle.get_scaledImageIcon(15, 15, "icon_refresh.png"));
 					refreshMenuItem.addActionListener(new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent actionEvent) {
@@ -479,9 +464,7 @@ public class Panel_YieldProject extends JLayeredPane {
 					if ((currentLevel == 1) && NodeCount == 1) {
 						final String Menuname = "New Run";
 						final JMenuItem newMenuItem = new JMenuItem(Menuname);
-						icon = new ImageIcon(getClass().getResource("/icon_new.png"));
-						scaleImage = icon.getImage().getScaledInstance(15, 15,Image.SCALE_SMOOTH);
-						newMenuItem.setIcon(new ImageIcon(scaleImage));
+						newMenuItem.setIcon(IconsHandle.get_scaledImageIcon(15, 15, "icon_new.png"));
 						newMenuItem.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent actionEvent) {
@@ -495,9 +478,7 @@ public class Panel_YieldProject extends JLayeredPane {
 					// Only nodes level 2 (Run) can be Deleted--------------------------
 					if (currentLevel == 2 && rootSelected ==false) {					
 						final JMenuItem deleteMenuItem = new JMenuItem("Delete Runs");
-						icon = new ImageIcon(getClass().getResource("/icon_delete.png"));
-						scaleImage = icon.getImage().getScaledInstance(15, 15,Image.SCALE_SMOOTH);
-						deleteMenuItem.setIcon(new ImageIcon(scaleImage));
+						deleteMenuItem.setIcon(IconsHandle.get_scaledImageIcon(15, 15, "icon_delete.png"));
 						deleteMenuItem.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent actionEvent) {								
@@ -511,9 +492,7 @@ public class Panel_YieldProject extends JLayeredPane {
 					// Only nodes level 2 (Run) can be Edited--------------------------
 					if (currentLevel == 2 && rootSelected ==false) {					
 						final JMenuItem editMenuItem = new JMenuItem("Start Editing");
-						icon = new ImageIcon(getClass().getResource("/icon_edit.png"));
-						scaleImage = icon.getImage().getScaledInstance(15, 15,Image.SCALE_SMOOTH);
-						editMenuItem.setIcon(new ImageIcon(scaleImage));
+						editMenuItem.setIcon(IconsHandle.get_scaledImageIcon(15, 15, "icon_edit.png"));
 						editMenuItem.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent actionEvent) {								
@@ -535,9 +514,7 @@ public class Panel_YieldProject extends JLayeredPane {
 					// Only nodes level 2 (Run) can be Solved--------------------------
 					if (currentLevel == 2 && rootSelected ==false) {					
 						final JMenuItem solveMenuItem = new JMenuItem("Start Solving");
-						icon = new ImageIcon(getClass().getResource("/icon_solve.png"));
-						scaleImage = icon.getImage().getScaledInstance(15, 15,Image.SCALE_SMOOTH);
-						solveMenuItem.setIcon(new ImageIcon(scaleImage));
+						solveMenuItem.setIcon(IconsHandle.get_scaledImageIcon(15, 15, "icon_solve.png"));
 						solveMenuItem.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent actionEvent) {								
@@ -550,9 +527,7 @@ public class Panel_YieldProject extends JLayeredPane {
 					// Only nodes level 2 (Run) can be Customize output--------------------------
 					if (currentLevel == 2 && rootSelected ==false) {					
 						final JMenuItem customizeOutput_MenuItem = new JMenuItem("Customize Output");
-						icon = new ImageIcon(getClass().getResource("/icon_customize.png"));
-						scaleImage = icon.getImage().getScaledInstance(15, 15,Image.SCALE_SMOOTH);
-						customizeOutput_MenuItem.setIcon(new ImageIcon(scaleImage));
+						customizeOutput_MenuItem.setIcon(IconsHandle.get_scaledImageIcon(15, 15, "icon_customize.png"));
 						customizeOutput_MenuItem.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent actionEvent) {								
@@ -779,9 +754,7 @@ public class Panel_YieldProject extends JLayeredPane {
 				
 				btnEditRun.setVisible(true);		
 				btnEditRun.setToolTipText("Stop Editing");
-				icon = new ImageIcon(getClass().getResource("/icon_back.png"));
-				scaleImage = icon.getImage().getScaledInstance(25, 25,Image.SCALE_SMOOTH);
-				btnEditRun.setRolloverIcon(new ImageIcon(scaleImage));
+				btnEditRun.setRolloverIcon(IconsHandle.get_scaledImageIcon(25, 25, "icon_back.png"));
 				btnEditRun.setForeground(Color.RED);
 				super.remove(splitPanel);
 				editPanel = new Panel_EditRun(listOfEditRuns);		// This panel only visible when "Start Editing"	
@@ -796,11 +769,9 @@ public class Panel_YieldProject extends JLayeredPane {
 		else if (btnEditRun.getToolTipText() == "Stop Editing") {
 			
 			
-			icon = new ImageIcon(getClass().getResource("/icon_question.png"));
-	  		scaleImage = icon.getImage().getScaledInstance(50, 50,Image.SCALE_SMOOTH);
 	  		String[] ExitOption = {"Yes","No"};
 			int response = JOptionPane.showOptionDialog(Spectrum_Main.mainFrameReturn(),"Save all changes you made ?", "Stop Editing",
-					JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, new ImageIcon(scaleImage), ExitOption, ExitOption[0]);
+					JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconsHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
 			
 			if (response == 0 || response == 1)				//Yes or No
 			{
@@ -880,9 +851,7 @@ public class Panel_YieldProject extends JLayeredPane {
 				
 				btnSolveRun.setVisible(true);
 				btnSolveRun.setToolTipText("Stop Solving");
-				icon = new ImageIcon(getClass().getResource("/icon_back.png"));
-				scaleImage = icon.getImage().getScaledInstance(25, 25,Image.SCALE_SMOOTH);
-				btnSolveRun.setRolloverIcon(new ImageIcon(scaleImage));
+				btnSolveRun.setRolloverIcon(IconsHandle.get_scaledImageIcon(25, 25, "icon_back.png"));
 				btnSolveRun.setForeground(Color.RED);
 				super.remove(splitPanel);
 				solvePanel = new Panel_SolveRun(listOfEditRuns); // This panel only visible when "Start Solving"
@@ -950,9 +919,7 @@ public class Panel_YieldProject extends JLayeredPane {
 				
 				btnCustomizeOutput.setVisible(true);
 				btnCustomizeOutput.setToolTipText("Return to Main Window");
-				icon = new ImageIcon(getClass().getResource("/icon_back.png"));
-				scaleImage = icon.getImage().getScaledInstance(25, 25,Image.SCALE_SMOOTH);
-				btnCustomizeOutput.setRolloverIcon(new ImageIcon(scaleImage));
+				btnCustomizeOutput.setRolloverIcon(IconsHandle.get_scaledImageIcon(25, 25, "icon_back.png"));
 				btnCustomizeOutput.setForeground(Color.RED);
 				super.remove(splitPanel);
 				customizeOutputPanel = new Panel_CustomizeOutput(listOfEditRuns); // This panel only visible when Start "Customize Output"

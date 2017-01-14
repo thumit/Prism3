@@ -39,7 +39,7 @@ public class ScrollPane_Cost extends JScrollPane {
 		rowCount = 1;
 		colCount = 6;
 		data = new Object[rowCount][colCount];
-        columnNames= new String[] {"Action Name", "Action Condition", "Dollars/Acre", "Dollars/Cubic Foot", "Dollars/Board Foot", "Dollars/Live Tree"};
+        columnNames= new String[] {"management_action", "cost_condition", "dollars_per_acre", "dollars_per_cubicfoot", "dollars_per_boardfoot", "dollars_per_livetree"};
 		
         data[0][1] = "Base Cost";		
         data[0][2] = 360;	

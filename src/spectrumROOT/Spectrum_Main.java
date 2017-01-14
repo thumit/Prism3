@@ -504,7 +504,16 @@ public class Spectrum_Main extends JFrame {
 	//--------------------------------------------------------------------------------------------------------------------------------
 	@Override
 	public Dimension getPreferredSize() {
-		return new Dimension(1600, 900);
+		// Check multi-monitor screen resolution
+		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+		int width = gd.getDisplayMode().getWidth();
+		int height = gd.getDisplayMode().getHeight();
+		
+		if (width >= 1600 && height >= 900) {
+			return new Dimension(1600, 900);
+		} else {
+			return new Dimension((int) (width * 0.85), (int) (height * 0.85));
+		}
 	}
 	
 	//--------------------------------------------------------------------------------------------------------------------------------

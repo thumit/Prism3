@@ -265,24 +265,24 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 	public void SolveProblem(int row, File runFolder) {
 	
 		try {
-			problemFile[row] = new File(runFolder.getAbsolutePath() + "/Problem.lp");
-			solutionFile[row] = new File(runFolder.getAbsolutePath() + "/Solution.lp");
-			output_generalInfo_file[row] = new File(runFolder.getAbsolutePath() + "/Output 1 - General Infomation.txt");	
-			output_variables_file[row] = new File(runFolder.getAbsolutePath() + "/Output 2 - Variables.txt");
-			output_constraints_file[row] = new File(runFolder.getAbsolutePath() + "/Output 3 - Constraints.txt");	
-			output_managementOverview_file[row] = new File(runFolder.getAbsolutePath() + "/Output 4 - Management Overview.txt");
+			problemFile[row] = new File(runFolder.getAbsolutePath() + "/problem.lp");
+			solutionFile[row] = new File(runFolder.getAbsolutePath() + "/solution.lp");
+			output_generalInfo_file[row] = new File(runFolder.getAbsolutePath() + "/output_01_general_infomation.txt");	
+			output_variables_file[row] = new File(runFolder.getAbsolutePath() + "/output_02_variables.txt");
+			output_constraints_file[row] = new File(runFolder.getAbsolutePath() + "/output_03_constraints.txt");	
+			output_managementOverview_file[row] = new File(runFolder.getAbsolutePath() + "/output_04_management_overview.txt");
 			
 			
 		
 			//Read input files to retrieve values later
 			Read_RunInputs read= new Read_RunInputs();
-			read.readGeneralInputs(new File(runFolder.getAbsolutePath() + "/Input 1 - General Inputs.txt"));
-			read.readManagementOptions(new File(runFolder.getAbsolutePath() + "/Input 2 - Selected Strata.txt"));
-			read.readRequirements(new File(runFolder.getAbsolutePath() + "/Input 3 - Covertype Conversion (Clear Cuts).txt"));
-			read.readSRDrequirementFile(new File(runFolder.getAbsolutePath() + "/Input 4 - Covertype Conversion (Replacing Disturbances).txt"));
-			read.readMSFire(new File(runFolder.getAbsolutePath() + "/Input 5 - Mixed Severity Fire.txt"));
-			read.readSRDFile(new File(runFolder.getAbsolutePath() + "/Input 6 - Replacing Disturbances.txt"));
-			read.readUserConstraints(new File(runFolder.getAbsolutePath() + "/Input 8 - User Constraints.txt"));
+			read.readGeneralInputs(new File(runFolder.getAbsolutePath() + "/input_01_general_inputs.txt"));
+			read.readManagementOptions(new File(runFolder.getAbsolutePath() + "/input_02_modeled_strata.txt"));
+			read.readRequirements(new File(runFolder.getAbsolutePath() + "/input_03_clearcut_covertype_conversion.txt"));
+			read.readSRDrequirementFile(new File(runFolder.getAbsolutePath() + "/input_04_ replacingdisturbances_covertype_conversion.txt"));
+			read.readMSFire(new File(runFolder.getAbsolutePath() + "/input_05_mixed_severity_wildfire.txt"));
+			read.readSRDFile(new File(runFolder.getAbsolutePath() + "/input_06_replacing_disturbances.txt"));
+			read.readUserConstraints(new File(runFolder.getAbsolutePath() + "/input_08_user_constraints.txt"));
 			Read_DatabaseTables read_DatabaseTables = new Read_DatabaseTables(new File(runFolder.getAbsolutePath() + "/database.db"));
 			
 			//ManagementOptions info
@@ -2378,7 +2378,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					output_generalInfo_file[row].delete();
 					try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_generalInfo_file[row]))) {
 						// Write variables info
-						fileOut.write("Output Description" + "\t" + "Output Value");
+						fileOut.write("description" + "\t" + "value");
 
 						fileOut.newLine();
 						fileOut.write("Optimization solver" + "\t" + "CPLEX");
@@ -2416,7 +2416,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					output_variables_file[row].delete();
 					try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_variables_file[row]))) {
 						// Write variables info
-						fileOut.write("Index" + "\t" + "Name" + "\t" + "Value" + "\t" + "Reduced Cost");
+						fileOut.write("index" + "\t" + "name" + "\t" + "value" + "\t" + "reduced_cost");
 						for (int i = 0; i < value.length; i++) {
 							if (value[i] != 0) {
 								fileOut.newLine();
@@ -2435,7 +2435,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					output_constraints_file[row].delete();
 					try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_constraints_file[row]))) {
 						// Write constraints info
-						fileOut.write("Index" + "\t" + "Slack" + "\t" + "Dual");
+						fileOut.write("index" + "\t" + "slack" + "\t" + "dual");
 						for (int j = 0; j < dual.length; j++) {
 							if (slack[j] != 0 || dual[j] != 0) {
 								fileOut.newLine();
@@ -2455,9 +2455,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					try (BufferedWriter fileOut = new BufferedWriter(
 							new FileWriter(output_managementOverview_file[row]))) {
 						// Write info
-						fileOut.write("Strata ID" + "\t" + "Layer 1" + "\t" + "Layer 2" + "\t" + "Layer 3" + "\t" + "Layer 4" + "\t" + "Layer 5" + "\t" + "Layer 6" + "\t" 
-						+ "Natural Growth (acres)" + "\t" + "Prescribed Burn (acres)" + "\t" + "Group Selection (acres)" + "\t"
-						+ "Even Age (acres)" + "\t" + "Mixed Severity Wildfire (acres)");
+						fileOut.write("strata_id" + "\t" + "layer1" + "\t" + "layer2" + "\t" + "layer3" + "\t" + "layer4" + "\t" + "layer5" + "\t" + "layer6" + "\t" 
+						+ "natural_growth_acres" + "\t" + "prescribed_burn_acres" + "\t" + "group_selection_acres" + "\t"
+						+ "even_age_acres" + "\t" + "mixed_severity_wildfire_acres");
 
 						for (int s1 = 0; s1 < layer1.size(); s1++) {
 							for (int s2 = 0; s2 < layer2.size(); s2++) {
@@ -2755,7 +2755,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					output_generalInfo_file[row].delete();
 					try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_generalInfo_file[row]))) {
 						// Write variables info
-						fileOut.write("Output Description" + "\t" + "Output Value");
+						fileOut.write("description" + "\t" + "value");
 
 						fileOut.newLine();
 						fileOut.write("Optimization solver" + "\t" + "LPSOLVE");
@@ -2792,7 +2792,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					output_variables_file[row].delete();
 					try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_variables_file[row]))) {
 						// Write variables info
-						fileOut.write("Index" + "\t" + "Name" + "\t" + "Value" + "\t" + "Reduced Cost");
+						fileOut.write("index" + "\t" + "name" + "\t" + "value" + "\t" + "reduced_cost");
 						for (int i = 0; i < value.length; i++) {
 							if (value[i] != 0) {
 								fileOut.newLine();
@@ -2812,7 +2812,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					output_constraints_file[row].delete();
 					try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_constraints_file[row]))) {
 						// Write constraints info
-						fileOut.write("Index" + "\t" + "Slack" + "\t" + "Dual");
+						fileOut.write("index" + "\t" + "slack" + "\t" + "dual");
 //						for (int j = 0; j < dual.length; j++) {
 //							if (slack[j] != 0 || dual[j] != 0) {
 //								fileOut.newLine();
@@ -2832,9 +2832,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					try (BufferedWriter fileOut = new BufferedWriter(
 							new FileWriter(output_managementOverview_file[row]))) {
 						// Write info
-						fileOut.write("Strata ID" + "\t" + "Layer 1" + "\t" + "Layer 2" + "\t" + "Layer 3" + "\t" + "Layer 4" + "\t" + "Layer 5" + "\t" + "Layer 6" + "\t" 
-						+ "Natural Growth (acres)" + "\t" + "Prescribed Burn (acres)" + "\t" + "Group Selection (acres)" + "\t"
-						+ "Even Age (acres)" + "\t" + "Mixed Severity Wildfire (acres)");
+						fileOut.write("strata_id" + "\t" + "layer1" + "\t" + "layer2" + "\t" + "layer3" + "\t" + "layer4" + "\t" + "layer5" + "\t" + "layer6" + "\t" 
+								+ "natural_growth_acres" + "\t" + "prescribed_burn_acres" + "\t" + "group_selection_acres" + "\t"
+								+ "even_age_acres" + "\t" + "mixed_severity_wildfire_acres");
 
 						for (int s1 = 0; s1 < layer1.size(); s1++) {
 							for (int s2 = 0; s2 < layer2.size(); s2++) {

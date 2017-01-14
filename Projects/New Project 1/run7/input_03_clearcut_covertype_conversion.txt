@@ -1,0 +1,6 @@
+covertype_before	covertype_after	rotation_ageclass_min	rotation_ageclass_max	implementation	
+P	A	20	24	true	
+D	C	20	24	true	
+C	A	20	24	true	
+A	A	20	24	true	
+L	A	20	24	true	

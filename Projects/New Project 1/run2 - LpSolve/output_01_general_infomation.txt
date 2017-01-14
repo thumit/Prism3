@@ -1,0 +1,9 @@
+description	value
+Optimization solver	LPSOLVE
+Solution status	0
+Solution algorithm	 
+Simplex iterations	53867
+Solving time (seconds)	430.76
+Total variables	203725
+Total constraints	155792
+Objective value	128677.54

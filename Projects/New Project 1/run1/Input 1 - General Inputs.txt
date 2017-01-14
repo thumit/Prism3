@@ -1,5 +1,0 @@
-Input Description	Selected Option	
-Total planning periods (decades)	10	
-Solving time limit (minutes)	18	
-Annual discount rate (%)	4.0	
-Solver for optimization	CPLEX	

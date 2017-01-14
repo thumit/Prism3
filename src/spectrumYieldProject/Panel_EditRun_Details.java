@@ -41,6 +41,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
@@ -73,6 +74,7 @@ import javax.swing.table.TableRowSorter;
 import javax.swing.text.DefaultFormatter;
 
 import spectrumConvenienceClasses.FilesHandle;
+import spectrumConvenienceClasses.IconsHandle;
 import spectrumConvenienceClasses.TableModelSpectrum;
 import spectrumROOT.Spectrum_Main;
 
@@ -101,9 +103,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private UserConstraints_GUI panel_UserConstraints_GUI;
 	private UserConstraints_Text panel_UserConstraints_Text;	
 	
-
-	private ImageIcon icon;
-	private Image scaleImage;
 	
 	private Read_Strata read_Strata;
 	private Read_DatabaseTables read_DatabaseTables;
@@ -343,7 +342,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		Reload_Table_Info tableLoader;
 		
 		
-		table_file = new File(currentRunFolder.getAbsolutePath() + "/Input 1 - General Inputs.txt");
+		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_01_general_inputs.txt");
 		if (table_file.exists()) {		//Load from input
 			tableLoader = new Reload_Table_Info(table_file);
 			rowCount1 = tableLoader.get_rowCount();
@@ -352,12 +351,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			columnNames1 = tableLoader.get_columnNames();
 			is_table1_loaded = true;
 		} else { // Create a fresh new if Load fail
-			System.err.println("File not exists: Input 1 - General Inputs.txt - New interface is created");
+			System.err.println("File not exists: input_01_general_inputs.txt - New interface is created");
 		}
 			
 		
 		if (file_ExistingStrata == null && is_this_the_first_load == true) {		//If there is no existing strata, still load the selected strata
-			table_file = new File(currentRunFolder.getAbsolutePath() + "/Input 2 - Selected Strata.txt");
+			table_file = new File(currentRunFolder.getAbsolutePath() + "/input_02_modeled_strata.txt");
 			if (table_file.exists()) { // Load from input
 				tableLoader = new Reload_Table_Info(table_file);
 				rowCount = tableLoader.get_rowCount();
@@ -372,12 +371,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	//				data[i][colCount-1] = "Yes";
 	//			}			
 			} else { // Create a fresh new if Load fail
-				System.err.println("File not exists: Input 2 - Selected Strata.txt - New interface is created");
+				System.err.println("File not exists: Input 2 - input_02_modeled_strata.txt - New interface is created");
 			}	
 		}
 		
 															//Need to change later (not here , below) because I didn't write the whole file, just write the yes case
-//		table_file = new File(currentRunFolder.getAbsolutePath() + "/Input 3 - Covertype Conversion (Clear Cuts).txt");
+//		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_03_clearcut_covertype_conversion.txt");
 //		if (table_file.exists()) { // Load from input
 //			tableLoader = new Reload_Table_Info(table_file);
 //			rowCount4 = tableLoader.get_rowCount();
@@ -386,37 +385,37 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 //			columnNames4 = tableLoader.get_columnNames();
 //			is_table4_loaded = true;
 //		} else { // Create a fresh new if Load fail
-//			System.err.println("File not exists: Input 3 - Covertype Conversion (Clear Cuts).txt - New interface is created");
+//			System.err.println("File not exists: input_03_clearcut_covertype_conversion).txt - New interface is created");
 //		}
 
 		
-		table_file = new File(currentRunFolder.getAbsolutePath() + "/Input 4 - Covertype Conversion (Replacing Disturbances).txt");
-		if (table_file.exists()) { // Load from input
-			tableLoader = new Reload_Table_Info(table_file);
-			rowCount7 = tableLoader.get_rowCount();
-			colCount7 = tableLoader.get_colCount();
-			data7 = tableLoader.get_input_data();
-			columnNames7 = tableLoader.get_columnNames();
-			is_table7_loaded = true;
-		} else { // Create a fresh new if Load fail
-			System.err.println("File not exists: Input 4 - Covertype Conversion (Replacing Disturbances).txt - New interface is created");
-		}
+//		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_04_ replacingdisturbances_covertype_conversion.txt");
+//		if (table_file.exists()) { // Load from input
+//			tableLoader = new Reload_Table_Info(table_file);
+//			rowCount7 = tableLoader.get_rowCount();
+//			colCount7 = tableLoader.get_colCount();
+//			data7 = tableLoader.get_input_data();
+//			columnNames7 = tableLoader.get_columnNames();
+//			is_table7_loaded = true;
+//		} else { // Create a fresh new if Load fail
+//			System.err.println("File not exists: input_04_ replacingdisturbances_covertype_conversion.txt - New interface is created");
+//		}
 		
 
-		table_file = new File(currentRunFolder.getAbsolutePath() + "/Input 5 - Mixed Severity Fire.txt");
-		if (table_file.exists()) { // Load from input
-			tableLoader = new Reload_Table_Info(table_file);
-			rowCount5 = tableLoader.get_rowCount();
-			colCount5 = tableLoader.get_colCount();
-			data5 = tableLoader.get_input_data();
-			columnNames5 = tableLoader.get_columnNames();
-			is_table5_loaded = true;
-		} else { // Create a fresh new if Load fail
-			System.err.println("File not exists: Input 5 - Mixed Severity Fire.txt - New interface is created");
-		}
+//		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_05_mixed_severity_wildfire.txt");
+//		if (table_file.exists()) { // Load from input
+//			tableLoader = new Reload_Table_Info(table_file);
+//			rowCount5 = tableLoader.get_rowCount();
+//			colCount5 = tableLoader.get_colCount();
+//			data5 = tableLoader.get_input_data();
+//			columnNames5 = tableLoader.get_columnNames();
+//			is_table5_loaded = true;
+//		} else { // Create a fresh new if Load fail
+//			System.err.println("File not exists: input_05_mixed_severity_wildfire.txt - New interface is created");
+//		}
 		
 		
-		table_file = new File(currentRunFolder.getAbsolutePath() + "/Input 6 - Replacing Disturbances.txt");
+		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_06_replacing_disturbances.txt");
 		if (table_file.exists()) { // Load from input
 			tableLoader = new Reload_Table_Info(table_file);
 			rowCount6 = tableLoader.get_rowCount();
@@ -425,11 +424,11 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			columnNames6 = tableLoader.get_columnNames();
 			is_table6_loaded = true;
 		} else { // Create a fresh new if Load fail
-			System.err.println("File not exists: Input 6 - Replacing Disturbances.txt - New interface is created");
+			System.err.println("File not exists: input_06_replacing_disturbances.txt - New interface is created");
 		}		
 		
 		
-		table_file = new File(currentRunFolder.getAbsolutePath() + "/Input 8 - User Constraints.txt");
+		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_08_user_constraints.txt");
 		if (table_file.exists()) { // Load from input
 			tableLoader = new Reload_Table_Info(table_file);
 			rowCount2 = tableLoader.get_rowCount();
@@ -438,7 +437,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			columnNames2 = tableLoader.get_columnNames();
 			is_table2_loaded = true;
 		} else { // Create a fresh new if Load fail
-			System.err.println("File not exists: Input 8 - User Constraints.txt - New interface is created");
+			System.err.println("File not exists: input_08_user_constraints.txt - New interface is created");
 		}     			
     			 	
     }
@@ -508,7 +507,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			
 			// Find the data match to paste into Existing Strata		
-			table_file = new File(currentRunFolder.getAbsolutePath() + "/Input 2 - Selected Strata.txt");
+			table_file = new File(currentRunFolder.getAbsolutePath() + "/input_02_modeled_strata.txt");
 			if (table_file.exists()) { // Load from input
 				tableLoader = new Reload_Table_Info(table_file);
 				
@@ -528,13 +527,13 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				
 				is_table_loaded = true;		
 			} else { // Create a fresh new if Load fail
-				System.err.println("File not exists: Input 2 - Selected Strata.txt - New interface is created");
+				System.err.println("File not exists: input_02_modeled_strata.txt - New interface is created");
 			}	
 		}
 		
 		
 
-		table_file = new File(currentRunFolder.getAbsolutePath() + "/Input 3 - Covertype Conversion (Clear Cuts).txt");
+		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_03_clearcut_covertype_conversion.txt");
 		if (table_file.exists()) { // Load from input
 			//Reset the "Yes" to be blank
 			for (int i = 0; i < data4.length; i++) {
@@ -554,6 +553,11 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						// Apply temp_data row values to data4 row 
 						for (int jj = 0; jj < data4[ii].length; jj++) {
 							data4[ii][jj] = temp_data[i][jj];
+							if (jj==2 || jj==3) {
+								data4[ii][jj] = Integer.valueOf(String.valueOf(temp_data[i][jj]));	//This is the MinAge, MaxAge Column
+							} else if (jj==4) {
+								data4[ii][jj] = Boolean.valueOf(String.valueOf(temp_data[i][jj]));	//This is the Implementation Column
+							}
 						}		
 					}	
 				}
@@ -561,9 +565,51 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			is_table4_loaded = true;
 		} else { // Create a fresh new if Load fail
-			System.err.println("File not exists: Input 3 - Covertype Conversion (Clear Cuts).txt - New interface is created");
+			System.err.println("File not exists: input_03_clearcut_covertype_conversion.txt - New interface is created");
 		}
-				
+			
+		
+		
+		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_04_ replacingdisturbances_covertype_conversion.txt");
+		if (table_file.exists()) { // Load from input
+			 // Load from input
+			tableLoader = new Reload_Table_Info(table_file);		
+			Object[][] temp_data = tableLoader.get_input_data();
+			for (int i = 0; i < temp_data.length; i++) {	
+				// Apply temp_data row values to data7 row 
+				for (int j = 0; j < data7[i].length; j++) {
+					data7[i][j] = temp_data[i][j];
+					if (j==2) {
+						data7[i][j] = Integer.valueOf(String.valueOf(temp_data[i][j]));		//This is the Weight Column
+					}
+				}	
+			}	
+			is_table7_loaded = true;
+		} else { // Create a fresh new if Load fail
+			System.err.println("File not exists: input_04_ replacingdisturbances_covertype_conversion.txt - New interface is created");
+		}
+		
+		
+		
+		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_05_mixed_severity_wildfire.txt");
+		if (table_file.exists()) { // Load from input
+			 // Load from input
+			tableLoader = new Reload_Table_Info(table_file);		
+			Object[][] temp_data = tableLoader.get_input_data();
+			for (int i = 0; i < temp_data.length; i++) {	
+				// Apply temp_data row values to data5 row 
+				for (int j = 0; j < data5[i].length; j++) {
+					data5[i][j] = temp_data[i][j];
+					if (j==2) {
+						data5[i][j] = Double.valueOf(String.valueOf(temp_data[i][j]));		//This is the Weight Column
+					}
+				}	
+			}	
+			is_table5_loaded = true;
+		} else { // Create a fresh new if Load fail
+			System.err.println("File not exists: input_05_mixed_severity_wildfire.txt - New interface is created");
+		}
+			
 		
 		
 		if (file_Database != null && is_this_the_first_load == true) {
@@ -600,14 +646,14 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			colCount = layers_Title.size() + 4;
 			columnNames = new String[colCount];
 
-			columnNames[0] = "Strata ID";		//add for the name of strata
+			columnNames[0] = "strata_id";		//add for the name of strata
 			for (int i = 0; i < layers_Title.size(); i++) {
 				columnNames[i+1] = layers_Title.get(i);			//add 6 layers to the column header name
 			}
 	         
-			columnNames[colCount - 3] = "Total area (acres)";	//add 3 more columns
-			columnNames[colCount - 2] = "Age Class";
-			columnNames[colCount - 1] = "Strata in optimization model";	
+			columnNames[colCount - 3] = "acres";	//add 3 more columns
+			columnNames[colCount - 2] = "ageclass";
+			columnNames[colCount - 1] = "modeled_strata";	
 		}
 					
 		
@@ -670,8 +716,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);	  
 		table.getTableHeader().setReorderingAllowed(false);		//Disable columns move
 //		table.createDefaultColumnsFromModel(); // Very important code to refresh the number of Columns	shown
-        table.getColumnModel().getColumn(colCount - 3).setPreferredWidth(120);	//Set width of Column "Total area" bigger
-        table.getColumnModel().getColumn(colCount - 1).setPreferredWidth(200);	//Set width of Column "Strata in optimization model" bigger
+        table.getColumnModel().getColumn(colCount - 1).setPreferredWidth(100);	//Set width of Column "Strata in optimization model" bigger
 		
 		table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		table.setFillsViewportHeight(true);
@@ -684,7 +729,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			rowCount1 = 4;
 			colCount1 = 2;
 			data1 = new Object[rowCount1][colCount1];
-			columnNames1 = new String[] { "Input Description", "Selected Option" };
+			columnNames1 = new String[] { "description", "selection" };
 			
 			// Populate the data matrix
 			data1[0][0] = "Total planning periods (decades)";
@@ -725,7 +770,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			rowCount2 = 0;
 			colCount2 = 9;
 			data2 = new Object[rowCount2][colCount2];
-			columnNames2 = new String[] { "Const. Description (optional)", "Const. Type", "LB Value", "Penalty/Unit < LB (SOFT)", "UB Value", "Penalty/Unit > UB (SOFT)", "PARAMETERS Index", "Static identifiers for VARIABLES", "Dynamic identifiers for PARAMETERS"};	         				
+			columnNames2 = new String[] {"constraint_description", "constraint_type", "lowerbound", "lowerbound_perunit_penalty", "upperbound", "upperbound_perunit_penalty", "parameter_index", "static_identifiers", "dynamic_identifiers"};	         				
 		}
 					
 		
@@ -745,6 +790,15 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					return false;
 				} else {
 					return true;
+				}
+			}
+			
+			@Override
+			public void setValueAt(Object value, int row, int col) {
+				data2[row][col] = value;
+				if (col == 1) {
+					fireTableDataChanged();		// When constraint type change then this would register the change and make the selection disappear
+					table2.setRowSelectionInterval(table2.convertRowIndexToView(row), table2.convertRowIndexToView(row));			// select the row again
 				}
 			}
 			
@@ -864,7 +918,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			rowCount4 = total_CoverType*total_CoverType;
 			colCount4 = 5;
 			data4 = new Object[rowCount4][colCount4];
-	        columnNames4= new String[] {"Cover Type before Clear Cut", "Cover Type after Clear Cut", "Min Age-Class for Clear Cut", "Max Age-Class for Clear Cut", "Options to be applied"};
+	        columnNames4= new String[] {"covertype_before", "covertype_after", "rotation_ageclass_min", "rotation_ageclass_max", "implementation"};
 			
 			// Populate the data matrix
 	        int table_row = 0;
@@ -874,7 +928,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					data4[table_row][1] = allLayers.get(4).get(j);	
 					data4[table_row][2] = 20;
 					data4[table_row][3] = 24;
-					if (i==j) data4[table_row][4] = "Yes"; 
+					if (i==j) data4[table_row][4] = true; 
 					table_row++;
 				}
 			}
@@ -886,7 +940,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			@Override
 			public Class getColumnClass(int c) {
 				if (c==0) return String.class;      //column 0 accepts only String
-				else if (c>=2 && c<=3) return Integer.class;      //column 2 and 3 accept only Integer values    
+				else if (c>=2 && c<=3) return Integer.class;      //column 2 and 3 accept only Integer values   
+				else if (c==4) return Boolean.class;	//column 4 accept only Boolean values 
 		        else return (getValueAt(0, c) == null ? Object.class : getValueAt(0, c).getClass());
 			}
 
@@ -902,13 +957,14 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 			@Override
 			public void setValueAt(Object value, int row, int col) {
-				if ((col>=2 && col<=3) && (((Number) value).intValue() < 1 || ((Number) value).intValue() > 100)) {
-					JOptionPane.showMessageDialog(Spectrum_Main.mainFrameReturn(),
-							"Your input has not been accepted. Only age classes in the range 1-100 would be allowed.");
-				} else {
+//				if ((col>=2 && col<=3) && (((Number) value).intValue() < 1 || ((Number) value).intValue() > 100)) {
+//					JOptionPane.showMessageDialog(Spectrum_Main.mainFrameReturn(),
+//							"Your input has not been accepted. Only age classes in the range 1-100 would be allowed.");
+//				} else {
 					data4[row][col] = value;
-					fireTableDataChanged();
-				}
+//					fireTableDataChanged();		// No need this because it will clear the selection, 
+												// With button do task for multiple row we need fire the change outside of this class, so the change can show up in the GUI
+//				}
 			}
 		};
 		
@@ -940,14 +996,10 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		
 		
 		// Define a set of icon for some columns
-		icon = new ImageIcon(getClass().getResource("/icon_main.png"));
-		scaleImage = icon.getImage().getScaledInstance(3, 3, Image.SCALE_SMOOTH);
-		ImageIcon icon_scale = new ImageIcon(scaleImage);
-
 		ImageIcon[] imageIconArray = new ImageIcon[colCount4];
 		for (int i = 0; i < colCount4; i++) {
 			if (i == 2 || i == 3 || i == 4) {
-				imageIconArray[i] = icon_scale;
+				imageIconArray[i] = IconsHandle.get_scaledImageIcon(3, 3, "icon_main.png");
 			}
 		}
 		
@@ -985,7 +1037,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
                 	
 				setBackground(rowColor[row]);		//Set cell background color	
 				if (isSelected) {
-					setBackground(table4.getSelectionBackground());		//Set background color	for selected row
+					setBackground(table.getSelectionBackground());		//Set background color	for selected row
 				}
 				setIcon(imageIconArray[column]);	// Set icons for cells in some columns
 				setIconTextGap(15);		// Set the distance between icon and the actual data value
@@ -994,13 +1046,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
             }
         };
         
-
         
-		for (int i = 0; i < columnNames4.length; i++) {
+        
+		for (int i = 0; i < columnNames4.length - 3; i++) {		//Except the last 3 column
 			table4.getColumnModel().getColumn(i).setCellRenderer(r);
 		}		
 		
-        
 		
 		
 //		// Set up Icon for column headers
@@ -1027,39 +1078,51 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		
 		
 		// Set up Types for each  Columns-------------------------------------------------------------------------------
-//		class comboBox_MinAge extends JComboBox {
-//			public comboBox_MinAge() {
-//				for (int i = 1; i <= 100; i++) {
-//					addItem(i);
-//				}
-//				setSelectedItem((int) 20);
-//			}
-//		}
-//		
-//		class comboBox_MaxAge extends JComboBox {
-//			public comboBox_MaxAge() {
-//				for (int i = 1; i <= 100; i++) {
-//					addItem(i);
-//				}
-//				setSelectedItem((int) 24);
-//			}
-//		}
+		class comboBox_MinAge extends JComboBox {
+			public comboBox_MinAge() {
+				for (int i = 1; i <= 100; i++) {
+					addItem(i);
+				}
+				setSelectedItem((int) 20);
+			}
+		}
 		
-		class comboBox_ConstraintType extends JComboBox {	
-			public comboBox_ConstraintType() {
-			addItem("Yes");
-			addItem(null);	
-//			setSelectedIndex(2);
+		class comboBox_MaxAge extends JComboBox {
+			public comboBox_MaxAge() {
+				for (int i = 1; i <= 100; i++) {
+					addItem(i);
+				}
+				setSelectedItem((int) 24);
+			}
+		}
+		
+		class checkbox_Option extends JCheckBox implements TableCellRenderer {
+			public checkbox_Option() {
+				setHorizontalAlignment(JLabel.CENTER);
+			}
+
+			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+					boolean hasFocus, int row, int column) {
+				if (isSelected) {
+					setForeground(table4.getSelectionForeground());
+					setBackground(table4.getSelectionBackground());
+				} else {
+					setForeground(table4.getForeground());
+					setBackground(table4.getBackground());
+				}
+				setSelected((value != null && ((Boolean) value).booleanValue()));
+				this.setOpaque(true);
+				return this;
 			}
 		}
 		  
-//		table4.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new comboBox_MinAge()));
-//		table4.getColumnModel().getColumn(3).setCellEditor(new DefaultCellEditor(new comboBox_MaxAge()));
-		table4.getColumnModel().getColumn(4).setCellEditor(new DefaultCellEditor(new comboBox_ConstraintType()));
+		table4.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new comboBox_MinAge()));
+		table4.getColumnModel().getColumn(3).setCellEditor(new DefaultCellEditor(new comboBox_MaxAge()));
+		table4.getColumnModel().getColumn(4).setCellEditor(new DefaultCellEditor(new checkbox_Option()));
+		((JComponent) table4.getDefaultRenderer(Boolean.class)).setOpaque(true);	// It's a bug in the synth-installed renderer, quick hack is to force the rendering checkbox opacity to true		
 		// End of Set up Types for each  Columns------------------------------------------------------------------------
 		
-		
-		
+
 		
 		
 //      table4.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -1070,8 +1133,14 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 //      table4.setTableHeader(null);
         table4.setPreferredScrollableViewportSize(new Dimension(400, 120));
         table4.setFillsViewportHeight(true);
-//      TableRowSorter<TableModelSpectrum> sorter = new TableRowSorter<TableModelSpectrum>(model4);	//Add sorter
-//		table4.setRowSorter(sorter);
+        TableRowSorter<TableModelSpectrum> sorter = new TableRowSorter<TableModelSpectrum>(model4);	//Add sorter
+		for (int i = 1; i < colCount4; i++) {
+			sorter.setSortable(i, false);
+			if (i == 0 || i == 1) {			//Only the first 2 columns can be sorted
+				sorter.setSortable(i, true);	
+			}
+		}
+		table4.setRowSorter(sorter);
 	}
 	
 	//--------------------------------------------------------------------------------------------------------------------------
@@ -1088,7 +1157,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			rowCount5 = total_CoverType*total_SizeClass;
 			colCount5 = 3;
 			data5 = new Object[rowCount5][colCount5];
-	        columnNames5= new String[] {"1st Period - Cover Type of Existing Strata", "1st Period - Size Class of Existing Strata", "Proportion (%) sufferred from Mixed Severity Wildfire"};
+	        columnNames5= new String[] {"period1_covertype", "period1_sizeclass", "mixedfire_percentage"};
 			
 			// Populate the data matrix
 	        int table_row = 0;
@@ -1129,7 +1198,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
     						"Your input has not been accepted. Only double values in the range 0-100 (%) would be allowed.");
     			} else {
     				data5[row][col] = value;
-    				fireTableDataChanged();
     			}
     		}
         };
@@ -1187,14 +1255,10 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		
 		
 		// Define a set of icon for some columns
-		icon = new ImageIcon(getClass().getResource("/icon_main.png"));
-		scaleImage = icon.getImage().getScaledInstance(3, 3, Image.SCALE_SMOOTH);
-		ImageIcon icon_scale = new ImageIcon(scaleImage);
-
 		ImageIcon[] imageIconArray = new ImageIcon[colCount5];
 		for (int i = 0; i < colCount5; i++) {
 			if (i == 2) {
-				imageIconArray[i] = icon_scale;
+				imageIconArray[i] = IconsHandle.get_scaledImageIcon(3, 3, "icon_main.png");
 			}
 		}
 		
@@ -1260,7 +1324,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		
       
         for (int i=0; i<columnNames5.length; i++) {
-        	table5.getColumnModel().getColumn(i).setCellRenderer(r);
+        	if (i != 2) {
+        		table5.getColumnModel().getColumn(i).setCellRenderer(r);
+        	} 
         }
        
         
@@ -1289,7 +1355,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			colCount6 = total_CoverType + 1;
 			data6 = new Object[rowCount6][colCount6];
 	        columnNames6= new String[colCount6];
-	        columnNames6[0] = "Age Class of Strata";
+	        columnNames6[0] = "ageclass";
 	        for (int i = 1; i < colCount6; i++) {
 	        	 columnNames6[i] = allLayers.get(4).get(i-1);
 			}		        
@@ -1338,7 +1404,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
     						"Your input has not been accepted. Only double values in the range 0-100 (%) would be allowed.");
     			} else {
     				data6[row][col] = value;
-    				fireTableDataChanged();
     			}
     		}
         };
@@ -1379,16 +1444,11 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		
         
         
-        
-     // Define a set of icon for some columns
-        icon = new ImageIcon(getClass().getResource("/icon_main.png"));
- 		scaleImage = icon.getImage().getScaledInstance(3, 3, Image.SCALE_SMOOTH);
- 		ImageIcon icon_scale = new ImageIcon(scaleImage);
-
+		// Define a set of icon for some columns
  		ImageIcon[] imageIconArray = new ImageIcon[colCount6];
  		for (int i = 0; i < colCount6; i++) {
  			if (i >= 1) {
- 				imageIconArray[i] = icon_scale;
+ 				imageIconArray[i] = IconsHandle.get_scaledImageIcon(3, 3, "icon_main.png");
  			}
  		}
  		
@@ -1441,7 +1501,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			rowCount7 = total_CoverType*total_CoverType;
 			colCount7 = 4;
 			data7 = new Object[rowCount7][colCount7];
-	        columnNames7= new String[] {"Cover Type before Stand Replacing Disturbances", "Cover Type after Stand Replacing Disturbances", "Weight of Regenerated Area", "Percentage Equivalent (%)"};
+	        columnNames7= new String[] {"covertype_before", "covertype_after", "regeneration_weight", "regeneration_percentage"};
 			
 			// Populate the data matrix
 	        int table_row2 = 0;
@@ -1478,39 +1538,34 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
         	@Override
     		public void setValueAt(Object value, int row, int col) {
-    			if (col == 2 && (((Number) value).intValue() < 0 || ((Number) value).intValue() > 1000)) {
-    				JOptionPane.showMessageDialog(Spectrum_Main.mainFrameReturn(),
-    						"Your input has not been accepted. Only integer values in the range 0-1000 would be allowed.");
-    			} else {
-    				data7[row][col] = value;
-    				
-    				read_Identifiers = new Read_Indentifiers(file_StrataDefinition);
-    				List<List<String>> allLayers =  read_Identifiers.get_allLayers();
-    				int total_CoverType = allLayers.get(4).size();		// total number of elements - 1 in layer5 Cover Type (0 to...)
-    				int table_row=0;
-    				double[] total_Weight = new double[total_CoverType];
-    				
-    				//calculate totalWeight
-    				for (int i = 0; i < total_CoverType; i++) {
-    					total_Weight[i] = 0;
-    					for (int j = 0; j < total_CoverType; j++) {					
-    						total_Weight[i] = total_Weight[i] + Double.parseDouble(data7[table_row][2].toString());						
-    						table_row++;
-    					}	
-    				}
-    				
-    				//Calculate and write percentage
-    				table_row=0;
-    				for (int i = 0; i < total_CoverType; i++) {
-    					for (int j = 0; j < total_CoverType; j++) {					
-    						data7[table_row][3]	= Double.parseDouble(data7[table_row][2].toString())/total_Weight[i]*100;			
-    						table_row++;
-    					}	
-    				}
-    				
-    				
-    				fireTableDataChanged();
-    			}
+        		data7[row][col] = value;
+				
+				read_Identifiers = new Read_Indentifiers(file_StrataDefinition);
+				List<List<String>> allLayers =  read_Identifiers.get_allLayers();
+				int total_CoverType = allLayers.get(4).size();		// total number of elements - 1 in layer5 Cover Type (0 to...)
+				int table_row=0;
+				double[] total_Weight = new double[total_CoverType];
+				
+				//calculate totalWeight
+				for (int i = 0; i < total_CoverType; i++) {
+					total_Weight[i] = 0;
+					for (int j = 0; j < total_CoverType; j++) {					
+						total_Weight[i] = total_Weight[i] + Double.parseDouble(data7[table_row][2].toString());						
+						table_row++;
+					}	
+				}
+				
+				//Calculate and write percentage
+				table_row=0;
+				for (int i = 0; i < total_CoverType; i++) {
+					for (int j = 0; j < total_CoverType; j++) {					
+						data7[table_row][3]	= Double.parseDouble(data7[table_row][2].toString())/total_Weight[i]*100;			
+						table_row++;
+					}	
+				}
+				
+				fireTableDataChanged();		// data is updated, but The selected row disappears due to this
+				table7.setRowSelectionInterval(table7.convertRowIndexToView(row), table7.convertRowIndexToView(row));			// select the row again
     		}       	
         };
         
@@ -1550,14 +1605,10 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		
 		
 		// Define a set of icon for some columns
-		icon = new ImageIcon(getClass().getResource("/icon_main.png"));
-		scaleImage = icon.getImage().getScaledInstance(3, 3, Image.SCALE_SMOOTH);
-		ImageIcon icon_scale = new ImageIcon(scaleImage);
-
 		ImageIcon[] imageIconArray = new ImageIcon[colCount7];
 		for (int i = 0; i < colCount7; i++) {
 			if (i == 2) {
-				imageIconArray[i] = icon_scale;
+				imageIconArray[i] = IconsHandle.get_scaledImageIcon(3, 3, "icon_main.png");
 			}
 		}
 		
@@ -1623,8 +1674,25 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 		
 		for (int i = 0; i < columnNames7.length; i++) {
-			table7.getColumnModel().getColumn(i).setCellRenderer(r);
+			if (i != 2) {
+        		table7.getColumnModel().getColumn(i).setCellRenderer(r);
+        	} 
 		}		
+		
+		
+		// Set up Types for each  Columns-------------------------------------------------------------------------------
+		class comboBox_Weight extends JComboBox {
+			public comboBox_Weight() {
+				for (int i = 0; i <= 100; i++) {
+					addItem(i);
+				}
+				setSelectedItem((int) 0);
+			}
+		}
+ 
+		table7.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new comboBox_Weight()));
+		// End of Set up Types for each  Columns------------------------------------------------------------------------		
+		
 		
 		
 //      table7.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -1800,9 +1868,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 			JButton button0 = new JButton();
 			button0.setToolTipText("Import Definition");
-			icon = new ImageIcon(getClass().getResource("/icon_add.png"));
-			scaleImage = icon.getImage().getScaledInstance(16, 16,Image.SCALE_SMOOTH);
-			button0.setIcon(new ImageIcon(scaleImage));
+			button0.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_add.png"));
 			button0.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -1872,9 +1938,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			button_import_database = new JButton();
 			button_import_database.setToolTipText("Import Database");
-			icon = new ImageIcon(getClass().getResource("/icon_add.png"));
-			scaleImage = icon.getImage().getScaledInstance(16, 16,Image.SCALE_SMOOTH);
-			button_import_database.setIcon(new ImageIcon(scaleImage));			
+			button_import_database.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_add.png"));		
 			button_import_database.setEnabled(false);
 			button_import_database.addActionListener(new ActionListener() {
 				@Override
@@ -1940,9 +2004,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			button_import_existingStrata = new JButton();
 			button_import_existingStrata.setToolTipText("Import Strata");
-			icon = new ImageIcon(getClass().getResource("/icon_add.png"));
-			scaleImage = icon.getImage().getScaledInstance(16, 16,Image.SCALE_SMOOTH);
-			button_import_existingStrata.setIcon(new ImageIcon(scaleImage));
+			button_import_existingStrata.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_add.png"));
 			button_import_existingStrata.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -2136,23 +2198,22 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			// 2nd line inside inforPanel includes 3 buttons
 			//button 1
 			JToggleButton btnStrataFilter = new JToggleButton();
-			btnStrataFilter.setText("OFF");
 			checkPanel.setVisible(false);
-			btnStrataFilter.setToolTipText("Strata Filter");
-			ImageIcon icon = new ImageIcon(getClass().getResource("/icon_binoculars.png"));
-			Image scaleImage = icon.getImage().getScaledInstance(20, 20,Image.SCALE_SMOOTH);
-			btnStrataFilter.setIcon(new ImageIcon(scaleImage));
+			btnStrataFilter.setToolTipText("Show Strata Filter");
+			btnStrataFilter.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_show.png"));
 			btnStrataFilter.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {
 			
-					if (btnStrataFilter.getText().equals("OFF")) {
-						btnStrataFilter.setText("ON");
+					if (btnStrataFilter.getToolTipText().equals("Show Strata Filter")) {
+						btnStrataFilter.setToolTipText("Hide Strata Filter");
+						btnStrataFilter.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_hide.png"));
 						checkPanel.setVisible(true);
 						// Get everything show up nicely
 						GUI_Text_splitPanel.setLeftComponent(panel_Model_Identifiniton_GUI);
 					} else {
-						btnStrataFilter.setText("OFF");
+						btnStrataFilter.setToolTipText("Show Strata Filter");
+						btnStrataFilter.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_show.png"));
 						checkPanel.setVisible(false);
 						// Get everything show up nicely
 						GUI_Text_splitPanel.setLeftComponent(panel_Model_Identifiniton_GUI);
@@ -2170,9 +2231,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			//button 2
 			JButton remove_Strata = new JButton();
 			remove_Strata.setToolTipText("Remove selected strata from optimization model");
-			icon = new ImageIcon(getClass().getResource("/icon_erase.png"));
-			scaleImage = icon.getImage().getScaledInstance(20, 20,Image.SCALE_SMOOTH);
-			remove_Strata.setIcon(new ImageIcon(scaleImage));
+			remove_Strata.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_erase.png"));
 			remove_Strata.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {
@@ -2219,9 +2278,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			//button 3	
 			button_select_Strata = new JButton();
 			button_select_Strata.setToolTipText("Add selected strata to optimization model");
-			icon = new ImageIcon(getClass().getResource("/icon_check.png"));
-			scaleImage = icon.getImage().getScaledInstance(20, 20,Image.SCALE_SMOOTH);
-			button_select_Strata.setIcon(new ImageIcon(scaleImage));
+			button_select_Strata.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_check.png"));
 			button_select_Strata.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {
@@ -2342,7 +2399,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		public CovertypeConversion_GUI() {
 			setLayout(new GridBagLayout());
 
-
+			
 			// 1st grid -----------------------------------------------------------------------
 			// 1st grid -----------------------------------------------------------------------
 	        create_table4();
@@ -2365,6 +2422,76 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	        CovertypeConversion_SRD_ScrollPane.setViewportView(table7);						
 			
 		    
+	        
+		    // panel Quick Edit 1 & 2-----------------------------------------------------------------------
+		    // panel Quick Edit 1 @ 2-----------------------------------------------------------------------
+	        
+	        
+	        
+	        
+	        
+	        
+	        
+	        
+	        
+	        
+	        
+	        
+	        
+	        
+	        
+	        
+			
+			// scrollPane Quick Edit 1 & 2-----------------------------------------------------------------------
+			// scrollPane Quick Edit 1 @ 2-----------------------------------------------------------------------		
+			JScrollPane scrollpane_QuickEdit_1 = new JScrollPane();
+			JScrollPane scrollpane_QuickEdit_2 = new JScrollPane();	
+			
+			TitledBorder border = new TitledBorder("Edit selected rows");
+			border.setTitleJustification(TitledBorder.CENTER);
+			scrollpane_QuickEdit_1.setBorder(border);
+			scrollpane_QuickEdit_2.setBorder(border);
+			
+			scrollpane_QuickEdit_1.setViewportView(new JPanel());
+			scrollpane_QuickEdit_2.setViewportView(new JPanel());	
+			
+			scrollpane_QuickEdit_1.setPreferredSize(new Dimension(200, 200));
+			scrollpane_QuickEdit_2.setPreferredSize(new Dimension(200, 200));
+			
+			scrollpane_QuickEdit_1.setVisible(false);
+			scrollpane_QuickEdit_2.setVisible(false);
+			
+			
+			
+			// button Quick Edit -----------------------------------------------------------------------
+			// button Quick Edit -----------------------------------------------------------------------
+			JToggleButton btnQuickEdit = new JToggleButton();
+			btnQuickEdit.setToolTipText("Show Quick Edit Tool");
+			btnQuickEdit.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_show.png"));
+			btnQuickEdit.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent actionEvent) {
+			
+					if (btnQuickEdit.getToolTipText().equals("Show Quick Edit Tool")) {
+						btnQuickEdit.setToolTipText("Hide Quick Edit Tool");
+						btnQuickEdit.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_hide.png"));
+						scrollpane_QuickEdit_1.setVisible(true);
+						scrollpane_QuickEdit_2.setVisible(true);
+						// Get everything show up nicely
+						GUI_Text_splitPanel.setLeftComponent(panel_CovertypeConversion_GUI);
+					} else {
+						btnQuickEdit.setToolTipText("Show Quick Edit Tool");
+						btnQuickEdit.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_show.png"));
+						scrollpane_QuickEdit_1.setVisible(false);
+						scrollpane_QuickEdit_2.setVisible(false);
+						// Get everything show up nicely
+						GUI_Text_splitPanel.setLeftComponent(panel_CovertypeConversion_GUI);
+					}
+				}
+			});
+	        
+	        
+	        
 			// Add all Grids to the Main Grid-----------------------------------------------------------------------
 			// Add all Grids to the Main Grid-----------------------------------------------------------------------
 			GridBagConstraints c = new GridBagConstraints();
@@ -2372,20 +2499,50 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c.weightx = 1;
 		    c.weighty = 1;
 
-			
-			// Add the 1st grid - CovertypeConversion_EA_ScrollPane to the main Grid	
+		    // Add btnQuickEdit	
 			c.gridx = 0;
 			c.gridy = 0;
+			c.weightx = 0;
+		    c.weighty = 0;
 			c.gridwidth = 1;
+			c.gridheight = 1;
+			super.add(btnQuickEdit, c);			
+		    
+			// Add the 1st grid - CovertypeConversion_EA_ScrollPane to the main Grid	
+			c.gridx = 0;
+			c.gridy = 1;
+			c.weightx = 1;
+		    c.weighty = 1;
+			c.gridwidth = 2;
 			c.gridheight = 1;
 			super.add(CovertypeConversion_EA_ScrollPane, c);
 			
-			// Add the 1st grid - CovertypeConversion_SRD_ScrollPane to the main Grid	
-			c.gridx = 0;
+			// Add scrollpane_QuickEdit_1	
+			c.gridx = 2;
 			c.gridy = 1;
+			c.weightx = 0;
+		    c.weighty = 0;
 			c.gridwidth = 1;
 			c.gridheight = 1;
+			super.add(scrollpane_QuickEdit_1, c);			
+			
+			// Add the 2nd grid - CovertypeConversion_SRD_ScrollPane to the main Grid	
+			c.gridx = 0;
+			c.gridy = 2;
+			c.weightx = 1;
+		    c.weighty = 1;
+			c.gridwidth = 2;
+			c.gridheight = 1;
 			super.add(CovertypeConversion_SRD_ScrollPane, c);
+			
+			// Add scrollpane_QuickEdit_2	
+			c.gridx = 2;
+			c.gridy = 2;
+			c.weightx = 0;
+			c.weighty = 0;
+			c.gridwidth = 1;
+			c.gridheight = 1;
+			super.add(scrollpane_QuickEdit_2, c);
 		}
 	}
 	
@@ -2632,9 +2789,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			btn_NewSingle.setFont(new Font(null, Font.BOLD, 14));
 //			btn_NewSingle.setText("NEW SINGLE");
 			btn_NewSingle.setToolTipText("New constraint");
-			icon = new ImageIcon(getClass().getResource("/icon_add.png"));
-			scaleImage = icon.getImage().getScaledInstance(16, 16,Image.SCALE_SMOOTH);
-			btn_NewSingle.setIcon(new ImageIcon(scaleImage));
+			btn_NewSingle.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_add.png"));
 					
 			c2.gridx = 0;
 			c2.gridy = 0;
@@ -2647,9 +2802,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			btn_New_Multiple.setFont(new Font(null, Font.BOLD, 14));
 //			btn_New_Multiple.setText("NEW MULTIPLE");
 			btn_New_Multiple.setToolTipText("New set of constraints");
-			icon = new ImageIcon(getClass().getResource("/icon_add3.png"));
-			scaleImage = icon.getImage().getScaledInstance(16, 16,Image.SCALE_SMOOTH);
-			btn_New_Multiple.setIcon(new ImageIcon(scaleImage));
+			btn_New_Multiple.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_add3.png"));
 					
 			c2.gridx = 0;
 			c2.gridy = 1;
@@ -2661,9 +2814,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 //			btn_Edit.setFont(new Font(null, Font.BOLD, 14));
 //			btn_Edit.setText("EDIT");
 			btn_Edit.setToolTipText("Edit a single constraint: reload info to interface (not yet) & register changes when 'Submit'");
-			icon = new ImageIcon(getClass().getResource("/icon_edit2.png"));
-			scaleImage = icon.getImage().getScaledInstance(16, 16,Image.SCALE_SMOOTH);
-			btn_Edit.setIcon(new ImageIcon(scaleImage));
+			btn_Edit.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_edit2.png"));
 			btn_Edit.setEnabled(false);
 					
 			c2.gridx = 0;
@@ -2677,9 +2828,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			btn_Delete.setFont(new Font(null, Font.BOLD, 14));
 //			btn_Delete.setText("DELETE");
 			btn_Delete.setToolTipText("Delete constraints");
-			icon = new ImageIcon(getClass().getResource("/icon_erase.png"));
-			scaleImage = icon.getImage().getScaledInstance(16, 16,Image.SCALE_SMOOTH);
-			btn_Delete.setIcon(new ImageIcon(scaleImage));
+			btn_Delete.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_erase.png"));
 			btn_Delete.setEnabled(false);
 					
 			c2.gridx = 0;
@@ -2695,9 +2844,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			btn_Sort.setFont(new Font(null, Font.BOLD, 12));
 			btn_Sort.setText("OFF");
 			btn_Sort.setToolTipText("Sorter mode: 'ON' click columns header to sort rows. 'OFF' retrieve original rows position");
-			icon = new ImageIcon(getClass().getResource("/icon_table.png"));
-			scaleImage = icon.getImage().getScaledInstance(16, 16,Image.SCALE_SMOOTH);
-			btn_Sort.setIcon(new ImageIcon(scaleImage));
+			btn_Sort.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_table.png"));
 					
 			c2.gridx = 0;
 			c2.gridy = 4;
@@ -2710,9 +2857,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			btn_Validate.setFont(new Font(null, Font.BOLD, 14));
 //			btn_Validate.setText("VALIDATE");
 			btn_Validate.setToolTipText("Validate constraints");
-			icon = new ImageIcon(getClass().getResource("/icon_magnifier.png"));
-			scaleImage = icon.getImage().getScaledInstance(16, 16,Image.SCALE_SMOOTH);
-			btn_Validate.setIcon(new ImageIcon(scaleImage));
+			btn_Validate.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_magnifier.png"));
 					
 			c2.gridx = 0;
 			c2.gridy = 5;
@@ -2751,13 +2896,13 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				@Override
 				public void mouseReleased(MouseEvent e) {
 					int[] selectedRow = table2.getSelectedRows();
-					if (selectedRow.length == 1 && !table2.isEditing()) {		// Enable Edit	when: 1 row is selected and no cell is editing
+					if (selectedRow.length == 1) {		// Enable Edit	when: 1 row is selected and no cell is editing
 						btn_Edit.setEnabled(true);
 					} else {		// Disable Edit
 						btn_Edit.setEnabled(false);
 					}
 					
-					if (selectedRow.length >= 1 && !table2.isEditing() && table2.isEnabled()) {		// Enable Delete  when: >=1 row is selected, no cell is editing, table is enable (often after Edit button finished its task)
+					if (selectedRow.length >= 1 && table2.isEnabled()) {		// Enable Delete  when: >=1 row is selected, table is enable (often after Edit button finished its task)
 						btn_Delete.setEnabled(true);
 					} else {		// Disable Delete
 						btn_Delete.setEnabled(false);
@@ -2768,13 +2913,13 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			table2.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
 		        public void valueChanged(ListSelectionEvent event) {
 		        	int[] selectedRow = table2.getSelectedRows();
-					if (selectedRow.length == 1 && !table2.isEditing()) {		// Enable Edit	when: 1 row is selected and no cell is editing
+					if (selectedRow.length == 1) {		// Enable Edit	when: 1 row is selected and no cell is editing
 						btn_Edit.setEnabled(true);
 					} else {		// Disable Edit
 						btn_Edit.setEnabled(false);
 					}
 					
-					if (selectedRow.length >= 1 && !table2.isEditing() && table2.isEnabled()) {		// Enable Delete  when: >=1 row is selected, no cell is editing, table is enable (often after Edit button finished its task)
+					if (selectedRow.length >= 1 && table2.isEnabled()) {		// Enable Delete  when: >=1 row is selected,table is enable (often after Edit button finished its task)
 						btn_Delete.setEnabled(true);
 					} else {		// Disable Delete
 						btn_Delete.setEnabled(false);
@@ -2849,12 +2994,10 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						// Ask to confirm adding if there are more than 1000 constraints
 						int response2 = 0;	
 						if (total_Constraints > 1000) {
-							icon = new ImageIcon(getClass().getResource("/icon_warning.png"));
-							scaleImage = icon.getImage().getScaledInstance(50, 50,Image.SCALE_SMOOTH);
 							String ExitOption2[] = {"Yes","No"};
 							String warningText = "You are going to add " + total_Constraints + " constraints. It would take some time. Continue to add ?";
 							response2 = JOptionPane.showOptionDialog(Spectrum_Main.mainFrameReturn(), warningText, "Confirm adding constraints",
-									JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, new ImageIcon(scaleImage), ExitOption2, ExitOption2[1]);
+									JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconsHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption2, ExitOption2[1]);
 							
 						}
 							
@@ -3131,6 +3274,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			btn_Delete.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {	
+					//Cancel editing before delete
+					table2.getCellEditor().cancelCellEditing();
+					
 					// Get selected rows
 					int[] selectedRow = table2.getSelectedRows();	
 					for (int i = 0; i < selectedRow.length; i++) {
@@ -3413,7 +3559,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 	
 	private void create_GeneralInputFile() {
-		File generalInputFile = new File(currentRunFolder.getAbsolutePath() + "/Input 1 - General Inputs.txt");
+		File generalInputFile = new File(currentRunFolder.getAbsolutePath() + "/input_01_general_inputs.txt");
 		if (generalInputFile.exists()) {
 			generalInputFile.delete();		// Delete the old file before writing new contents
 		}
@@ -3439,7 +3585,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 	
 	private void create_SelectedStrataFile() {
-		File selectedStrataFile = new File(currentRunFolder.getAbsolutePath() + "/Input 2 - Selected Strata.txt");	
+		File selectedStrataFile = new File(currentRunFolder.getAbsolutePath() + "/input_02_modeled_strata.txt");	
 		if (selectedStrataFile.exists()) {
 			selectedStrataFile.delete();		// Delete the old file before writing new contents
 		}
@@ -3469,7 +3615,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 	private void create_RequirementsFile() {
 		//Only print out if the last column Allowed Options <> null
-		File requirementsFile = new File(currentRunFolder.getAbsolutePath() + "/Input 3 - Covertype Conversion (Clear Cuts).txt");
+		File requirementsFile = new File(currentRunFolder.getAbsolutePath() + "/input_03_clearcut_covertype_conversion.txt");
 		if (requirementsFile.exists()) {
 			requirementsFile.delete();		// Delete the old file before writing new contents
 		}
@@ -3481,7 +3627,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				}
 
 				for (int i = 0; i < data4.length; i++) {
-					if (String.valueOf(data4[i][colCount4 - 1]).equals("Yes")) { //IF conversion is selected "Yes"
+					if (String.valueOf(data4[i][colCount4 - 1]).equals("true")) { //IF conversion is selected
 						fileOut.newLine();
 						for (int j = 0; j < colCount4; j++) {
 							fileOut.write(data4[i][j] + "\t");
@@ -3498,7 +3644,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 	
 	private void create_SRDRequirementsFile() {
-		File SRDrequirementsFile = new File(currentRunFolder.getAbsolutePath() + "/Input 4 - Covertype Conversion (Replacing Disturbances).txt");	
+		File SRDrequirementsFile = new File(currentRunFolder.getAbsolutePath() + "/input_04_ replacingdisturbances_covertype_conversion.txt");	
 		if (SRDrequirementsFile.exists()) {
 			SRDrequirementsFile.delete();		// Delete the old file before writing new contents
 		}
@@ -3524,7 +3670,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 	
 	private void create_MSFireFile() {
-		File MSFireFile = new File(currentRunFolder.getAbsolutePath() + "/Input 5 - Mixed Severity Fire.txt");	
+		File MSFireFile = new File(currentRunFolder.getAbsolutePath() + "/input_05_mixed_severity_wildfire.txt");	
 		if (MSFireFile.exists()) {
 			MSFireFile.delete();		// Delete the old file before writing new contents
 		}
@@ -3550,7 +3696,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 	
 	private void create_SRDisturbancesFile() {
-		File SRDisturbancesFile = new File(currentRunFolder.getAbsolutePath() + "/Input 6 - Replacing Disturbances.txt");	
+		File SRDisturbancesFile = new File(currentRunFolder.getAbsolutePath() + "/input_06_replacing_disturbances.txt");	
 		if (SRDisturbancesFile.exists()) {
 			SRDisturbancesFile.delete();		// Delete the old file before writing new contents
 		}
@@ -3576,7 +3722,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 	
 	private void create_UserConstraintsFile() {
-		File userConstraintsFile = new File(currentRunFolder.getAbsolutePath() + "/Input 8 - User Constraints.txt");
+		File userConstraintsFile = new File(currentRunFolder.getAbsolutePath() + "/input_08_user_constraints.txt");
 		if (userConstraintsFile.exists()) {
 			userConstraintsFile.delete();		// Delete the old file before writing new contents
 		}
@@ -3591,7 +3737,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				for (int i = 0; i < data2.length; i++) {
 					boolean checkValidity = true;
 					for (int j = 0; j < colCount2; j++) {
-						if (j == 1 || (j == 2 && j == 4) || j == 6 || j == 7 || j == 8) {
+						if (j == 1 || (j == 2 && j == 4) || j == 6 || j == 7 || j == 8) {			//Note this j cannot be both 2 and 4. CHANGE IT
 							if (data2[i][j] == null || String.valueOf(data2[i][j]).equals(""))
 								checkValidity = false;
 						}	

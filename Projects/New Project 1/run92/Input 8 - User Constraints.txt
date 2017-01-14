@@ -1,8 +1,0 @@
-Const. Description (optional)	Const. Type	LB Value	Penalty/Unit < LB (SOFT)	UB Value	Penalty/Unit > UB (SOFT)	PARAMETERS Index	Static identifiers for VARIABLES	Dynamic identifiers for PARAMETERS	
-500 NG	SOFT	500000.0	1.0	500000.0	1.0	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 NG ;7 1 ;	NoIdentifier	
-500 PB	SOFT	500000.0	1.0	500000.0	1.0	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 PB ;7 1 ;	NoIdentifier	
-500 GS	SOFT	500000.0	1.0	500000.0	1.0	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 GS ;7 1 ;	NoIdentifier	
-100 EA	SOFT	100000.0	2.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 EA ;7 1 ;	NoIdentifier	
-1mil CF from P & D	SOFT	1.0E8	2.0	null	null	19 	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 EA GS PB NG ;7 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 ;	99 201.00 221.00 ;	
-1 more extra con	SOFT	550000.0	5.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 NG ;7 1 ;	NoIdentifier	
-100 EA period 2	HARD	100000.0	null	100000.0	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 EA ;7 2 ;	NoIdentifier	

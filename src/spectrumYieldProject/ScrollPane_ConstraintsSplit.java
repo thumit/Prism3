@@ -56,7 +56,7 @@ public class ScrollPane_ConstraintsSplit  extends JScrollPane {
 		TitledBorder border = new TitledBorder("Static Spliters");
 		border.setTitleJustification(TitledBorder.CENTER);
 		staticScrollPane.setBorder(border);
-		staticScrollPane.setPreferredSize(new Dimension(250, 250));
+		staticScrollPane.setPreferredSize(new Dimension(270, 250));
 
 		
 		
@@ -91,7 +91,7 @@ public class ScrollPane_ConstraintsSplit  extends JScrollPane {
 		border = new TitledBorder("Parameter Spliters");
 		border.setTitleJustification(TitledBorder.CENTER);
 		parametersScrollPane.setBorder(border);
-		parametersScrollPane.setPreferredSize(new Dimension(250, 250));		
+		parametersScrollPane.setPreferredSize(new Dimension(270, 250));		
 		
 		
 		
@@ -122,7 +122,7 @@ public class ScrollPane_ConstraintsSplit  extends JScrollPane {
 		border = new TitledBorder("Dynamic Spliters");
 		border.setTitleJustification(TitledBorder.CENTER);
 		dynamicScrollPane.setBorder(border);
-		dynamicScrollPane.setPreferredSize(new Dimension(250, 250));					
+		dynamicScrollPane.setPreferredSize(new Dimension(270, 250));					
 		
 		
 		
@@ -131,7 +131,7 @@ public class ScrollPane_ConstraintsSplit  extends JScrollPane {
 		int rowCount = 1;
 		int colCount = 6;
 		data = new Object[rowCount][colCount];
-		String[] columnNames = new String[] { "Const. Description (optional)", "Const. Type", "LB Value", "Penalty/Unit < LB (SOFT)", "UB Value", "Penalty/Unit > UB (SOFT)"};	         				
+		String[] columnNames = new String[] {"constraint_description", "constraint_type", "lowerbound", "lowerbound_perunit_penalty", "upperbound", "upperbound_perunit_penalty"};	         				
 
 		TableModelSpectrum model = new TableModelSpectrum(rowCount, colCount, data, columnNames) {
 			@Override
@@ -160,10 +160,9 @@ public class ScrollPane_ConstraintsSplit  extends JScrollPane {
 		// Set up Types for each table Columns
 		table.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(new comboBox_ConstraintType()));
 		
-		table.getColumnModel().getColumn(0).setPreferredWidth(200);	//Set width of Column bigger
-		table.getColumnModel().getColumn(1).setPreferredWidth(100);	//Set width of Column bigger
-		table.getColumnModel().getColumn(3).setPreferredWidth(200);	//Set width of Column bigger
-		table.getColumnModel().getColumn(5).setPreferredWidth(200);	//Set width of Column bigger
+		table.getColumnModel().getColumn(0).setPreferredWidth(120);	//Set width of Column bigger
+		table.getColumnModel().getColumn(3).setPreferredWidth(150);	//Set width of Column bigger
+		table.getColumnModel().getColumn(5).setPreferredWidth(150);	//Set width of Column bigger
 
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);  
 		table.getTableHeader().setReorderingAllowed(false);		//Disable columns move

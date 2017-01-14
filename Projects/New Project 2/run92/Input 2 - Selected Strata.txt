@@ -1,4 +1,0 @@
-Strata ID	Layer 1	Layer 2	Layer 3	Layer 4	Layer 5	Layer 6	Total area (acres)	Age Class	Strata in optimization model	
-BNNCAM	B	N	N	C	A	M	63.0	8	Yes	
-BNNCAP	B	N	N	C	A	P	64.0	4	Yes	
-BNNCCL	B	N	N	C	C	L	4121.0	8	Yes	
