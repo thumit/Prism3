@@ -1,0 +1,30 @@
+layer_id,layer_description,element_id,element_description
+layer1,Vegetation Desired Future Condition Area,B,Bitterroot Mtns. (M333D) Breaklands
+layer1,Vegetation Desired Future Condition Area,U,Bitterroot Mtns. (M333D) Uplands
+layer1,Vegetation Desired Future Condition Area,S,Bitterroot Mtns. (M333D) Subalpine
+layer1,Vegetation Desired Future Condition Area,K,Idaho Batholith (M332A) Breaklands
+layer1,Vegetation Desired Future Condition Area,R,Idaho Batholith (M332A) Uplands
+layer1,Vegetation Desired Future Condition Area,C,Idaho Batholith (M332A) Subalpine
+layer2,Roadless Status,R,Roadless and undeveloped
+layer2,Roadless Status,N,Roaded and developed
+layer3,Timber Suitability,N,Not Available or Not Suited; No Timber Harvest Allowed
+layer3,Timber Suitability,O,Generally Suitable for Timber Harvest for other resource objectives; No scheduled output
+layer3,Timber Suitability,P,Generally Suitable for Timber Harvest for other resource objectives; Scheduled output
+layer3,Timber Suitability,S,Suited for Timber Production
+layer4,Resource Condition Zone,L,Lynx habitat - conserve watershed
+layer4,Resource Condition Zone,H,Lynx habitat - restore watershed
+layer4,Resource Condition Zone,C,Non-Lynx habitat - conserve watershed
+layer4,Resource Condition Zone,R,Non-Lynx habitat - restore watershed
+layer5,Vegetation Cover Type,P,WDI or DIP where the indicator tree species is Ponderosa Pine
+layer5,Vegetation Cover Type,D,WDT or DTD where the indicator tree species is Dry Douglas-fir/Grand Fir
+layer5,Vegetation Cover Type,W,MI or MIW where the indicator tree species is Mesic Douglas-fir mix
+layer5,Vegetation Cover Type,C,MT or MTC where the indicator tree species is Grand Fir/Western Red Cedar
+layer5,Vegetation Cover Type,I,SI or SII where the indicator tree species is Cold Douglas-fir mix
+layer5,Vegetation Cover Type,A,ST or STA where the indicator tree species is Subalpine Fir mix
+layer5,Vegetation Cover Type,L,LP or LPP where the indicator tree species is Lodgepole Pine
+layer5,Vegetation Cover Type,N,NS NonStocked
+layer6,Size Class,S,Seedling and Sapling (0" - 5")
+layer6,Size Class,P,Small (5" - 10")
+layer6,Size Class,M,Medium (10" - 15")
+layer6,Size Class,L,Large (15"+)
+layer6,Size Class,N,NonStocked

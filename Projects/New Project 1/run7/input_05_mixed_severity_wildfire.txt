@@ -1,7 +1,7 @@
 period1_covertype	period1_sizeclass	mixedfire_percentage	
 P	S	5.0	
 P	P	5.0	
-P	M	18.0	
+P	M	5.0	
 P	L	5.0	
 P	N	5.0	
 D	S	5.0	

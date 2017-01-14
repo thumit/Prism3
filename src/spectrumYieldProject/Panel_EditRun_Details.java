@@ -1849,7 +1849,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c0.weighty = 1;
 			
 		       
-		 // 1st grid line 0----------------------------
+			// 1st grid line 0----------------------------
 			JLabel label0 = new JLabel("Strata Definition (.csv)");
 			c0.gridx = 0;
 			c0.gridy = 0;
@@ -2405,9 +2405,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	        create_table4();
 	        //Put table4 into CovertypeConversion_EA_ScrollPane
 	        JScrollPane CovertypeConversion_EA_ScrollPane = new JScrollPane();
-	        TitledBorder border2 = new TitledBorder("Requirements of Even Age Method: Cover Type Conversion & Rotation Age-Class");
-			border2.setTitleJustification(TitledBorder.CENTER);
-			CovertypeConversion_EA_ScrollPane.setBorder(border2);
+	        TitledBorder border = new TitledBorder("Requirements of Even Age Method: Cover Type Conversion & Rotation Age-Class");
+			border.setTitleJustification(TitledBorder.CENTER);
+			CovertypeConversion_EA_ScrollPane.setBorder(border);
 	        CovertypeConversion_EA_ScrollPane.setViewportView(table4);									
 		    
 		    
@@ -2416,47 +2416,28 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	        create_table7();
 	        //Put table7 into CovertypeConversion_SRD_ScrollPane
 			JScrollPane CovertypeConversion_SRD_ScrollPane = new JScrollPane();
-			TitledBorder border3 = new TitledBorder("Requirements of Stand Replacing Disturbances: Cover Type Conversion & Proportion (%)");
-			border3.setTitleJustification(TitledBorder.CENTER);
-			CovertypeConversion_SRD_ScrollPane.setBorder(border3);
+			border = new TitledBorder("Requirements of Stand Replacing Disturbances: Cover Type Conversion & Proportion (%)");
+			border.setTitleJustification(TitledBorder.CENTER);
+			CovertypeConversion_SRD_ScrollPane.setBorder(border);
 	        CovertypeConversion_SRD_ScrollPane.setViewportView(table7);						
 			
 		    
-	        
-		    // panel Quick Edit 1 & 2-----------------------------------------------------------------------
-		    // panel Quick Edit 1 @ 2-----------------------------------------------------------------------
+
 	        
 	        
 	        
-	        
-	        
-	        
-	        
-	        
-	        
-	        
-	        
-	        
-	        
-	        
-	        
-	        
-			
 			// scrollPane Quick Edit 1 & 2-----------------------------------------------------------------------
 			// scrollPane Quick Edit 1 @ 2-----------------------------------------------------------------------		
-			JScrollPane scrollpane_QuickEdit_1 = new JScrollPane();
+			JScrollPane scrollpane_QuickEdit_1 = new JScrollPane(new QuickEdit_EA_Conversion_Panel(table4, data4));
 			JScrollPane scrollpane_QuickEdit_2 = new JScrollPane();	
 			
-			TitledBorder border = new TitledBorder("Edit selected rows");
+			border = new TitledBorder("Edit selected rows");
 			border.setTitleJustification(TitledBorder.CENTER);
 			scrollpane_QuickEdit_1.setBorder(border);
 			scrollpane_QuickEdit_2.setBorder(border);
 			
-			scrollpane_QuickEdit_1.setViewportView(new JPanel());
-			scrollpane_QuickEdit_2.setViewportView(new JPanel());	
-			
-			scrollpane_QuickEdit_1.setPreferredSize(new Dimension(200, 200));
-			scrollpane_QuickEdit_2.setPreferredSize(new Dimension(200, 200));
+//			scrollpane_QuickEdit_1.setPreferredSize(new Dimension(210, 200));
+//			scrollpane_QuickEdit_2.setPreferredSize(new Dimension(210, 200));
 			
 			scrollpane_QuickEdit_1.setVisible(false);
 			scrollpane_QuickEdit_2.setVisible(false);
@@ -2857,7 +2838,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			btn_Validate.setFont(new Font(null, Font.BOLD, 14));
 //			btn_Validate.setText("VALIDATE");
 			btn_Validate.setToolTipText("Validate constraints");
-			btn_Validate.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_magnifier.png"));
+			btn_Validate.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_zoom.png"));
 					
 			c2.gridx = 0;
 			c2.gridy = 5;
