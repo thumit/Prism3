@@ -3163,8 +3163,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 								// Convert the new Row to model view and then select it 
 								for (int i = rowCount2 - total_Constraints; i < rowCount2; i++) {
 									int newRow = table2.convertRowIndexToView(i);
+									table2.addRowSelectionInterval(newRow, newRow);
 								}	
-								table2.setRowSelectionInterval(rowCount2 - total_Constraints, rowCount2 - 1);
 							}
 						}
 							
@@ -3275,7 +3275,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {	
 					//Cancel editing before delete
-					table2.getCellEditor().cancelCellEditing();
+					if (table2.isEditing()) {
+						table2.getCellEditor().cancelCellEditing();
+					}				
 					
 					// Get selected rows
 					int[] selectedRow = table2.getSelectedRows();	
