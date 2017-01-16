@@ -55,7 +55,7 @@ public class QuickEdit_EA_Conversion_Panel extends JPanel {
 		
 		// Add button apply
 		JButton btnApplyMin = new JButton();
-		btnApplyMin.setToolTipText("make changes for all selected rows");
+		btnApplyMin.setToolTipText("make changes for all highlighted rows");
 		btnApplyMin.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_left.png"));
 		btnApplyMin.addActionListener(new ActionListener() {
 			@Override
@@ -119,7 +119,7 @@ public class QuickEdit_EA_Conversion_Panel extends JPanel {
 
 		// Add button apply
 		JButton btnApplyMax = new JButton();
-		btnApplyMax.setToolTipText("make changes for all selected rows");
+		btnApplyMax.setToolTipText("make changes for all highlighted rows");
 		btnApplyMax.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_left.png"));
 		btnApplyMax.addActionListener(new ActionListener() {
 			@Override
@@ -173,7 +173,7 @@ public class QuickEdit_EA_Conversion_Panel extends JPanel {
 		
 		// Add button apply
 		JButton btnApplyImplement = new JButton();
-		btnApplyImplement.setToolTipText("make changes for all selected rows");
+		btnApplyImplement.setToolTipText("make changes for all highlighted rows");
 		btnApplyImplement.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_left.png"));
 		btnApplyImplement.addActionListener(new ActionListener() {
 			@Override

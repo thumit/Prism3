@@ -473,8 +473,9 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 											        	} else {
 											        		JOptionPane.showMessageDialog(Spectrum_Main.mainFrameReturn(), "'Min value' must be less than or equal to 'Max value'");														        																							
 											        	}
-													} catch (Exception ee)  {
-									        		JOptionPane.showMessageDialog(Spectrum_Main.mainFrameReturn(), "'Min value' and 'Max value' must be numbers");														        		
+													} catch (Exception ee) {
+														JOptionPane.showMessageDialog(Spectrum_Main.mainFrameReturn(),
+																"'Min value' and 'Max value' must be numbers");
 													}
 												}
 										    });

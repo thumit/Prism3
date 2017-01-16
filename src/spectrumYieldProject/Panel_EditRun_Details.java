@@ -1230,6 +1230,14 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
 					}
 				}
+				else if (colIndex == 2) {
+					try {
+						tip = "Percentage of the existing strata in the first period with cover type "+ getValueAt(rowIndex, 0).toString() 
+								+ " at size class " + getValueAt(rowIndex, 1).toString() + " to be assigned to mixed severity wildfire";
+					} catch (RuntimeException e1) {
+						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+					}
+				}	
 				return tip;
 			}
 			
@@ -1338,6 +1346,14 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 //        table5.setTableHeader(null);
         table5.setPreferredScrollableViewportSize(new Dimension(400, 120));
         table5.setFillsViewportHeight(true);
+        TableRowSorter<TableModelSpectrum> sorter = new TableRowSorter<TableModelSpectrum>(model5);	//Add sorter
+		for (int i = 1; i < colCount5; i++) {
+			sorter.setSortable(i, false);
+			if (i == 0 || i == 1) {			//Only the first 2 columns can be sorted
+				sorter.setSortable(i, true);	
+			}
+		}
+		table5.setRowSorter(sorter);
 	}
 	
 	//--------------------------------------------------------------------------------------------------------------------------
@@ -1479,9 +1495,10 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
         
 //        table6.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        table6.setCellSelectionEnabled(true);
         table6.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         table6.getTableHeader().setReorderingAllowed(false);		//Disable columns move
-        table6.getColumnModel().getColumn(0).setPreferredWidth(300);	//Set width of 1st Column bigger
+        table6.getColumnModel().getColumn(0).setPreferredWidth(150);	//Set width of 1st Column bigger
         
 //        table6.setTableHeader(null);
         table6.setPreferredScrollableViewportSize(new Dimension(400, 120));
@@ -1539,7 +1556,10 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
         	@Override
     		public void setValueAt(Object value, int row, int col) {
         		data7[row][col] = value;
-				
+        		update_Percentage_column();
+    		}   
+        	
+        	public void update_Percentage_column() {     		
 				read_Identifiers = new Read_Indentifiers(file_StrataDefinition);
 				List<List<String>> allLayers =  read_Identifiers.get_allLayers();
 				int total_CoverType = allLayers.get(4).size();		// total number of elements - 1 in layer5 Cover Type (0 to...)
@@ -1564,21 +1584,30 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					}	
 				}
 				
-				fireTableDataChanged();		// data is updated, but The selected row disappears due to this
-				table7.setRowSelectionInterval(table7.convertRowIndexToView(row), table7.convertRowIndexToView(row));			// select the row again
-    		}       	
+				// Get selected rows
+				int[] selectedRow = table7.getSelectedRows();
+				/// Convert row index because "Sort" causes problems
+				for (int i = 0; i < selectedRow.length; i++) {
+					selectedRow[i] = table7.convertRowIndexToModel(selectedRow[i]);
+				}
+				fireTableDataChanged();
+				// Add selected rows back
+				for (int i : selectedRow) {
+					table7.addRowSelectionInterval(table7.convertRowIndexToView(i), table7.convertRowIndexToView(i));
+				}
+			}
         };
         
         
         
-        table7 = new JTable(model7){
+		table7 = new JTable(model7) {
              //Implement table cell tool tips           
 			public String getToolTipText(MouseEvent e) {
 				String tip = null;
 				java.awt.Point p = e.getPoint();
 				int rowIndex = rowAtPoint(p);
 				int colIndex = columnAtPoint(p);
-				if (colIndex < 2) {
+				if (table7.getColumnName(colIndex).equals("covertype_before") || table7.getColumnName(colIndex).equals("covertype_after")) {
 					try {
 						tip = getValueAt(rowIndex, colIndex).toString();
 						for (int i = 0; i < total_CoverType; i++) {
@@ -1589,9 +1618,18 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					}
 				}
 				
-				if (colIndex == 2) {
+				if (table7.getColumnName(colIndex).equals("regeneration_weight")) {
 					try {
 						tip = "Weight of the lost area with cover type "+ getValueAt(rowIndex, 0).toString() 
+								+ " to be regenerated as cover type " + getValueAt(rowIndex, 1).toString();
+					} catch (RuntimeException e1) {
+						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+					}
+				}	
+				
+				if (table7.getColumnName(colIndex).equals("regeneration_percentage")) {
+					try {
+						tip = "Percentage of the lost area with cover type "+ getValueAt(rowIndex, 0).toString() 
 								+ " to be regenerated as cover type " + getValueAt(rowIndex, 1).toString();
 					} catch (RuntimeException e1) {
 						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
@@ -1602,7 +1640,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			}
 		};			
         
-		
+//		table.getColumnName(colIndex) == "regeneration_weight"
 		
 		// Define a set of icon for some columns
 		ImageIcon[] imageIconArray = new ImageIcon[colCount7];
@@ -1703,6 +1741,14 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 //      table7.setTableHeader(null);
         table7.setPreferredScrollableViewportSize(new Dimension(400, 120));
         table7.setFillsViewportHeight(true);
+        TableRowSorter<TableModelSpectrum> sorter = new TableRowSorter<TableModelSpectrum>(model7);	//Add sorter
+		for (int i = 1; i < colCount7; i++) {
+			sorter.setSortable(i, false);
+			if (i == 0) {			//Only the first column can be sorted
+				sorter.setSortable(i, true);	
+			}
+		}
+		table7.setRowSorter(sorter);
 	}
 	
 	
@@ -2230,7 +2276,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			//button 2
 			JButton remove_Strata = new JButton();
-			remove_Strata.setToolTipText("Remove selected strata from optimization model");
+			remove_Strata.setToolTipText("Remove highlighted strata from optimization model");
 			remove_Strata.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_erase.png"));
 			remove_Strata.addActionListener(new ActionListener() {
 				@Override
@@ -2277,7 +2323,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			//button 3	
 			button_select_Strata = new JButton();
-			button_select_Strata.setToolTipText("Add selected strata to optimization model");
+			button_select_Strata.setToolTipText("Add highlighted strata to optimization model");
 			button_select_Strata.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_check.png"));
 			button_select_Strata.addActionListener(new ActionListener() {
 				@Override
@@ -2423,15 +2469,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 		    
 
-	        
-	        
-	        
 			// scrollPane Quick Edit 1 & 2-----------------------------------------------------------------------
 			// scrollPane Quick Edit 1 @ 2-----------------------------------------------------------------------		
 			JScrollPane scrollpane_QuickEdit_1 = new JScrollPane(new QuickEdit_EA_Conversion_Panel(table4, data4));
-			JScrollPane scrollpane_QuickEdit_2 = new JScrollPane();	
+			JScrollPane scrollpane_QuickEdit_2 = new JScrollPane(new QuickEdit_RD_Conversion_Panel(table7, data7));	
 			
-			border = new TitledBorder("Edit selected rows");
+			border = new TitledBorder("Quick edit rows");
 			border.setTitleJustification(TitledBorder.CENTER);
 			scrollpane_QuickEdit_1.setBorder(border);
 			scrollpane_QuickEdit_2.setBorder(border);
@@ -2546,9 +2589,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			create_table5();
 	        //Put table5 into MixedFire_ScrollPane
 	        JScrollPane MixedFire_ScrollPane = new JScrollPane();
-	    	TitledBorder border2 = new TitledBorder("Specify the proportion of exsiting strata area (%) sufferred from Mixed Severity Wildfire across all time periods");
-			border2.setTitleJustification(TitledBorder.CENTER);
-			MixedFire_ScrollPane.setBorder(border2);
+	    	TitledBorder border = new TitledBorder("Specify the proportion of exsiting strata area (%) sufferred from Mixed Severity Wildfire across all time periods");
+			border.setTitleJustification(TitledBorder.CENTER);
+			MixedFire_ScrollPane.setBorder(border);
 	        MixedFire_ScrollPane.setViewportView(table5);			
 			
 		    
@@ -2562,28 +2605,107 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			StandReplacing_ScrollPane.setBorder(border3);
 	        StandReplacing_ScrollPane.setViewportView(table6);
 			
-		    
-			// Add all Grids to the Main Grid-----------------------------------------------------------------------
-			// Add all Grids to the Main Grid-----------------------------------------------------------------------
-			GridBagConstraints c = new GridBagConstraints();
+	        
+	        
+	        
+	        // scrollPane Quick Edit 1 & 2-----------------------------------------------------------------------
+	        // scrollPane Quick Edit 1 @ 2-----------------------------------------------------------------------		
+ 			JScrollPane scrollpane_QuickEdit_1 = new JScrollPane(new QuickEdit_MS_Percentage_Panel(table5, data5));
+ 			JScrollPane scrollpane_QuickEdit_2 = new JScrollPane(new QuickEdit_RD_Percentage_Panel(table6, data6));	
+ 			
+ 			border = new TitledBorder("Quick edit rows");
+ 			border.setTitleJustification(TitledBorder.CENTER);
+ 			scrollpane_QuickEdit_1.setBorder(border);
+ 			scrollpane_QuickEdit_2.setBorder(border);
+ 			
+// 			scrollpane_QuickEdit_1.setPreferredSize(new Dimension(210, 200));
+// 			scrollpane_QuickEdit_2.setPreferredSize(new Dimension(210, 200));
+ 			
+ 			scrollpane_QuickEdit_1.setVisible(false);
+ 			scrollpane_QuickEdit_2.setVisible(false);
+ 			
+ 			
+ 			
+ 			// button Quick Edit -----------------------------------------------------------------------
+ 			// button Quick Edit -----------------------------------------------------------------------
+ 			JToggleButton btnQuickEdit = new JToggleButton();
+ 			btnQuickEdit.setToolTipText("Show Quick Edit Tool");
+ 			btnQuickEdit.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_show.png"));
+ 			btnQuickEdit.addActionListener(new ActionListener() {
+ 				@Override
+ 				public void actionPerformed(ActionEvent actionEvent) {
+ 			
+ 					if (btnQuickEdit.getToolTipText().equals("Show Quick Edit Tool")) {
+ 						btnQuickEdit.setToolTipText("Hide Quick Edit Tool");
+ 						btnQuickEdit.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_hide.png"));
+ 						scrollpane_QuickEdit_1.setVisible(true);
+ 						scrollpane_QuickEdit_2.setVisible(true);
+ 						// Get everything show up nicely
+ 						GUI_Text_splitPanel.setLeftComponent(panel_Disturbances_GUI);
+ 					} else {
+ 						btnQuickEdit.setToolTipText("Show Quick Edit Tool");
+ 						btnQuickEdit.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_show.png"));
+ 						scrollpane_QuickEdit_1.setVisible(false);
+ 						scrollpane_QuickEdit_2.setVisible(false);
+ 						// Get everything show up nicely
+ 						GUI_Text_splitPanel.setLeftComponent(panel_Disturbances_GUI);
+ 					}
+ 				}
+ 			});		
+	     	        
+	        
+	        
+ 			// Add all Grids to the Main Grid-----------------------------------------------------------------------
+ 			// Add all Grids to the Main Grid-----------------------------------------------------------------------
+ 			GridBagConstraints c = new GridBagConstraints();
 			c.fill = GridBagConstraints.BOTH;
 			c.weightx = 1;
 		    c.weighty = 1;
 
-			
-			// Add the 1st grid - MixedFire_ScrollPane to the main Grid	
+		    // Add btnQuickEdit	
 			c.gridx = 0;
 			c.gridy = 0;
+			c.weightx = 0;
+		    c.weighty = 0;
 			c.gridwidth = 1;
+			c.gridheight = 1;
+			super.add(btnQuickEdit, c);			
+		    
+			// Add the 1st grid - CovertypeConversion_EA_ScrollPane to the main Grid	
+			c.gridx = 0;
+			c.gridy = 1;
+			c.weightx = 1;
+		    c.weighty = 1;
+			c.gridwidth = 2;
 			c.gridheight = 1;
 			super.add(MixedFire_ScrollPane, c);
 			
-			// Add the 2nd grid - StandReplacing_ScrollPane to the main Grid	
-			c.gridx = 0;
+			// Add scrollpane_QuickEdit_1	
+			c.gridx = 2;
 			c.gridy = 1;
+			c.weightx = 0;
+		    c.weighty = 0;
 			c.gridwidth = 1;
 			c.gridheight = 1;
+			super.add(scrollpane_QuickEdit_1, c);			
+			
+			// Add the 2nd grid - CovertypeConversion_SRD_ScrollPane to the main Grid	
+			c.gridx = 0;
+			c.gridy = 2;
+			c.weightx = 1;
+		    c.weighty = 1;
+			c.gridwidth = 2;
+			c.gridheight = 1;
 			super.add(StandReplacing_ScrollPane, c);
+			
+			// Add scrollpane_QuickEdit_2	
+			c.gridx = 2;
+			c.gridy = 2;
+			c.weightx = 0;
+			c.weighty = 0;
+			c.gridwidth = 1;
+			c.gridheight = 1;
+			super.add(scrollpane_QuickEdit_2, c);					        
 		}
 
 	}
