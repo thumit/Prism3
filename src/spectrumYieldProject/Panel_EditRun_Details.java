@@ -74,7 +74,7 @@ import javax.swing.table.TableRowSorter;
 import javax.swing.text.DefaultFormatter;
 
 import spectrumConvenienceClasses.FilesHandle;
-import spectrumConvenienceClasses.IconsHandle;
+import spectrumConvenienceClasses.IconHandle;
 import spectrumConvenienceClasses.TableModelSpectrum;
 import spectrumROOT.Spectrum_Main;
 
@@ -180,7 +180,22 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private JTable table6;
 	private TableModelSpectrum model6;
 	private Object[][] data6;
+
+	//Jtable Cost Base
+	private boolean is_table8_loaded = false;
+	private int rowCount8, colCount8;
+	private String[] columnNames8;
+	private JTable table8;
+	private TableModelSpectrum model8;
+	private Object[][] data8;
 	
+	//Jtable Cost Adjustment
+	private boolean is_table9_loaded = false;
+	private int rowCount9, colCount9;
+	private String[] columnNames9;
+	private JTable table9;
+	private TableModelSpectrum model9;
+	private Object[][] data9;
 	
 	private boolean is_this_the_first_load = true;
 	private JButton button_import_database;
@@ -273,7 +288,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 //					GUI_Text_splitPanel.setRightComponent(panel_Disturbances_Text);
 				} else if (j == 4) {
 					GUI_Text_splitPanel.setLeftComponent(panel_Management_Cost_GUI);
-					GUI_Text_splitPanel.setRightComponent(panel_Management_Cost_Text);
+					GUI_Text_splitPanel.setRightComponent(null);
+//					GUI_Text_splitPanel.setRightComponent(panel_Management_Cost_Text);
 				} else if (j == 5) {
 					GUI_Text_splitPanel.setLeftComponent(panel_UserConstraints_GUI);
 					GUI_Text_splitPanel.setRightComponent(null);
@@ -292,21 +308,21 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
     // Reload inputs of the run------------------------------------------------------------------------------------------------ 
 	public void reload_inputs_before_creating_GUI() {
 
-		// Load "StrataDefinition.csv" of the run-------------------------------------------------------
-		File definition_to_load = new File(currentRunFolder.getAbsolutePath() + "/StrataDefinition.csv");
+		// Load "strata_definition.csv" of the run-------------------------------------------------------
+		File definition_to_load = new File(currentRunFolder.getAbsolutePath() + "/strata_definition.csv");
 		if (definition_to_load.exists()) {	//Load if the file exists
 			file_StrataDefinition = definition_to_load;
 			currentDefinition_location = file_StrataDefinition.getAbsolutePath();
 		} 
 		else { 	// If file does not exist then load the default definition
-			System.out.println("File not exists: StrataDefinition.csv - New interface is created using Default StrataDefinition.csv");
+			System.out.println("File not exists: strata_definition.csv - New interface is created using Default strata_definition.csv");
 			
-			try {	// Read default "StrataDefinition.csv" file from where this class is located
-				file_StrataDefinition = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/StrataDefinition.csv");
+			try {	// Read default "strata_definition.csv" file from where this class is located
+				file_StrataDefinition = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/strata_definition.csv");
 				file_StrataDefinition.deleteOnExit();		
 				currentDefinition_location = "Default Six Layers: " + file_StrataDefinition.getAbsolutePath();
 				
-				InputStream initialStream = getClass().getResourceAsStream("/StrataDefinition.csv");
+				InputStream initialStream = getClass().getResourceAsStream("/strata_definition.csv");
 				byte[] buffer = new byte[initialStream.available()];
 				initialStream.read(buffer);
 				
@@ -323,7 +339,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		
 		
 		// Load database of the run---------------------------------------------------------------------
-		File exsitingStrata_to_load = new File(currentRunFolder.getAbsolutePath() + "/existingStrata.csv");
+		File exsitingStrata_to_load = new File(currentRunFolder.getAbsolutePath() + "/existing_strata.csv");
 		if (exsitingStrata_to_load.exists()) {	//Load if the file exists
 			file_ExistingStrata = exsitingStrata_to_load;
 		}		
@@ -428,7 +444,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		}		
 		
 		
-		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_08_user_constraints.txt");
+		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_09_user_constraints.txt");
 		if (table_file.exists()) { // Load from input
 			tableLoader = new Reload_Table_Info(table_file);
 			rowCount2 = tableLoader.get_rowCount();
@@ -437,7 +453,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			columnNames2 = tableLoader.get_columnNames();
 			is_table2_loaded = true;
 		} else { // Create a fresh new if Load fail
-			System.err.println("File not exists: input_08_user_constraints.txt - New interface is created");
+			System.err.println("File not exists: input_09_user_constraints.txt - New interface is created");
 		}     			
     			 	
     }
@@ -758,8 +774,10 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	public void create_table2() {
 		class comboBox_ConstraintType extends JComboBox {	
 			public comboBox_ConstraintType() {
-			addItem("HARD");
-			addItem("SOFT");	
+				addItem("SOFT");
+				addItem("HARD");
+				addItem("SOFT COST");
+				addItem("HARD COST");
 			setSelectedIndex(0);
 			}
 		}
@@ -999,7 +1017,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		ImageIcon[] imageIconArray = new ImageIcon[colCount4];
 		for (int i = 0; i < colCount4; i++) {
 			if (i == 2 || i == 3 || i == 4) {
-				imageIconArray[i] = IconsHandle.get_scaledImageIcon(3, 3, "icon_main.png");
+				imageIconArray[i] = IconHandle.get_scaledImageIcon(3, 3, "icon_main.png");
 			}
 		}
 		
@@ -1266,7 +1284,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		ImageIcon[] imageIconArray = new ImageIcon[colCount5];
 		for (int i = 0; i < colCount5; i++) {
 			if (i == 2) {
-				imageIconArray[i] = IconsHandle.get_scaledImageIcon(3, 3, "icon_main.png");
+				imageIconArray[i] = IconHandle.get_scaledImageIcon(3, 3, "icon_main.png");
 			}
 		}
 		
@@ -1464,7 +1482,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
  		ImageIcon[] imageIconArray = new ImageIcon[colCount6];
  		for (int i = 0; i < colCount6; i++) {
  			if (i >= 1) {
- 				imageIconArray[i] = IconsHandle.get_scaledImageIcon(3, 3, "icon_main.png");
+ 				imageIconArray[i] = IconHandle.get_scaledImageIcon(3, 3, "icon_main.png");
  			}
  		}
  		
@@ -1476,7 +1494,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
                 value, boolean isSelected, boolean hasFocus, int row, int column) {
 				super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-				setHorizontalAlignment(JLabel.LEFT); 
+//				setHorizontalAlignment(JLabel.LEFT); 
 //              setIcon(imageIconArray[column]);	// Set icons for cells in some columns
 // 				setIconTextGap(15);		// Set the distance between icon and the actual data value
  				
@@ -1646,7 +1664,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		ImageIcon[] imageIconArray = new ImageIcon[colCount7];
 		for (int i = 0; i < colCount7; i++) {
 			if (i == 2) {
-				imageIconArray[i] = IconsHandle.get_scaledImageIcon(3, 3, "icon_main.png");
+				imageIconArray[i] = IconHandle.get_scaledImageIcon(3, 3, "icon_main.png");
 			}
 		}
 		
@@ -1752,7 +1770,354 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	}
 	
 	
+	//--------------------------------------------------------------------------------------------------------------------------
+	public void create_table8() {
+		//Setup the table------------------------------------------------------------	
+		if (is_table8_loaded == false) { // Create a fresh new if Load fail	
+			// This all_actions List contains all actions loaded from yield tables------------------------------------------------------------
+			List<String> all_actions = new ArrayList<String>();
+			all_actions.add("Pre-Commercial Thin Type 1");
+			all_actions.add("Pre-Commercial Thin Type 2");
+			all_actions.add("Pre-Commercial Thin Type 3");
+			all_actions.add("Commercial Thin Type 1");
+			all_actions.add("Commercial Thin Type 2");
+			all_actions.add("Commercial Thin Type 3");
+			all_actions.add("Clear Cut Type 1");
+			all_actions.add("Clear Cut Type 2");
+			all_actions.add("Clear Cut Type 3");
+			all_actions.add("Understory Burn Type 1");
+			all_actions.add("Understory Burn Type 2");
+			all_actions.add("Understory Burn Type 3");
+			all_actions.add("Broadcast Burn");
+			all_actions.add("Seed Cut");
+			all_actions.add("Overstory Removal");
+			all_actions.add("Group Openning Type 1");
+			all_actions.add("Group Openning Type 2");
+			all_actions.add("Group Openning Type 3");
+			all_actions.add("Single Tree Openning");
+			all_actions.add("Artificial Regeneration");
+			all_actions.add("Tree Planting");
+			all_actions.add("Weed Treatments");
+			
+			rowCount8 = all_actions.size();			
+			colCount8 = 5;
+			data8 = new Object[rowCount8][colCount8];
+	        columnNames8= new String[] {"action_type", "implemeted_cost_type", "dollars_per_acre", "dollars_per_cubicfoot", "dollars_per_broadfoot"};
+			
+			// Populate the data matrix
+	        int table_row = 0;
+			for (int i = 0; i < all_actions.size(); i++) {
+				data8[table_row][0] = all_actions.get(i);
+				data8[table_row][1] = columnNames8[2];		// implemeted_cost_type
+				data8[table_row][2] = (double) 360;
+				data8[table_row][3] = (double) 1.2;
+				data8[table_row][4] = (double) 0.1;
+				table_row++;
+			}
+		}						
+		
+		
+		//Create a table-------------------------------------------------------------			
+        model8 = new TableModelSpectrum(rowCount8, colCount8, data8, columnNames8) {
+        	@Override
+        	public Class getColumnClass(int c) {
+    			if (c==0 || c==1) return String.class;      //column 0, 1 accepts only String
+				else if (c>1) return Double.class;      //other columns: Double values    
+    	        else return (getValueAt(0, c) == null ? Object.class : getValueAt(0, c).getClass());
+    		}
+
+        	@Override
+    		public boolean isCellEditable(int row, int col) {
+    			if (col==0) { // the 1st column is not editable
+    				return false;
+    			} else {
+    				return true;
+    			}
+    		}
+
+        	@Override
+    		public void setValueAt(Object value, int row, int col) {
+        		if (col > 1 && ((Number) value).doubleValue() < 0) {
+    				JOptionPane.showMessageDialog(Spectrum_Main.mainFrameReturn(),
+    						"Your input has not been accepted. Base cost cannot be negative.");
+    			} else {
+    				data8[row][col] = value;
+    			}
+    		}
+        };
+        
+        
+		table8 = new JTable(model8) {
+			@Override			//These override is to make the width of the cell fit all contents of the cell
+			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+				// For the cells in table								
+				Component component = super.prepareRenderer(renderer, row, column);
+				int rendererWidth = component.getPreferredSize().width;
+				TableColumn tableColumn = getColumnModel().getColumn(column);
+				int maxWidth = Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth());
+				
+				// For the column names
+				TableCellRenderer renderer2 = table8.getTableHeader().getDefaultRenderer();	
+				Component component2 = renderer2.getTableCellRendererComponent(table8,
+			            tableColumn.getHeaderValue(), false, false, -1, column);
+				maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
+				
+				tableColumn.setPreferredWidth(maxWidth);
+				return component;
+			}		
+		};
+				
+		
+		// Set up Types for each  Columns-------------------------------------------------------------------------------
+		class comboBox_CostType extends JComboBox {
+			public comboBox_CostType() {		
+				for (int i = 2; i < columnNames8.length; i++) {
+					addItem(columnNames8[i]);
+				}
+//				setSelectedItem(columnNames8[2]);
+			}
+		}			  
+		table8.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(new comboBox_CostType()));
+		// End of Set up Types for each  Columns------------------------------------------------------------------------		
+        
+		
+		
+		
+//      table8.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        table8.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        table8.getTableHeader().setReorderingAllowed(false);		//Disable columns move
+        
+//      table8.setTableHeader(null);
+        table8.setPreferredScrollableViewportSize(new Dimension(400, 120));
+        table8.setFillsViewportHeight(true);
+        TableRowSorter<TableModelSpectrum> sorter = new TableRowSorter<TableModelSpectrum>(model8);	//Add sorter
+		for (int i = 1; i < colCount8; i++) {
+			sorter.setSortable(i, false);
+			if (i == 0) {			//Only the first column can be sorted
+				sorter.setSortable(i, true);	
+			}
+		}
+		table8.setRowSorter(sorter);
+	}	
 	
+	
+	//--------------------------------------------------------------------------------------------------------------------------
+	public void create_table9() {
+		read_Identifiers = new Read_Indentifiers(file_StrataDefinition);
+		List<List<String>> allLayers =  read_Identifiers.get_allLayers();
+		List<List<String>> allLayers_ToolTips = read_Identifiers.get_allLayers_ToolTips();
+		List<String> layers_Title = read_Identifiers.get_layers_Title();
+		List<String> layers_Title_ToolTip = read_Identifiers.get_layers_Title_ToolTip();	
+		
+		allLayers.remove(allLayers.size() - 1);		// Remove size class
+		
+		//Setup the table------------------------------------------------------------	
+		if (is_table9_loaded == false) { // Create a fresh new if Load fail	
+			// This all_actions List contains all actions loaded from yield tables------------------------------------------------------------
+			List<String> all_actions = new ArrayList<String>();
+			all_actions.add("Pre-Commercial Thin Type 1");
+			all_actions.add("Pre-Commercial Thin Type 2");
+			all_actions.add("Pre-Commercial Thin Type 3");
+			all_actions.add("Commercial Thin Type 1");
+			all_actions.add("Commercial Thin Type 2");
+			all_actions.add("Commercial Thin Type 3");
+			all_actions.add("Clear Cut Type 1");
+			all_actions.add("Clear Cut Type 2");
+			all_actions.add("Clear Cut Type 3");
+			all_actions.add("Understory Burn Type 1");
+			all_actions.add("Understory Burn Type 2");
+			all_actions.add("Understory Burn Type 3");
+			all_actions.add("Broadcast Burn");
+			all_actions.add("Seed Cut");
+			all_actions.add("Overstory Removal");
+			all_actions.add("Group Openning Type 1");
+			all_actions.add("Group Openning Type 2");
+			all_actions.add("Group Openning Type 3");
+			all_actions.add("Single Tree Openning");
+			all_actions.add("Artificial Regeneration");
+			all_actions.add("Tree Planting");
+			all_actions.add("Weed Treatments");
+			
+			rowCount9 = 0;
+			for (int i = 0; i < all_actions.size(); i++) {
+				for (int j = 0; j < allLayers.size(); j++) {
+					for (int k = 0; k < allLayers.get(j).size(); k++) {
+						rowCount9++;
+					}
+				}
+			}		
+			colCount9 = 5;
+			data9 = new Object[rowCount9][colCount9];
+	        columnNames9= new String[] {"action_type", "layer_element_description", "layer_id", "element_id", "adjusted_percentage"};
+			
+			// Populate the data matrix
+	        int table_row = 0;
+			for (int i = 0; i < all_actions.size(); i++) {
+				for (int j = 0; j < allLayers.size(); j++) {
+					for (int k = 0; k < allLayers.get(j).size(); k++) {
+						data9[table_row][0] = all_actions.get(i);
+						data9[table_row][1] = layers_Title_ToolTip.get(j) + "___" + allLayers_ToolTips.get(j).get(k);
+						data9[table_row][2] = layers_Title.get(j);
+						data9[table_row][3] = allLayers.get(j).get(k);
+						data9[table_row][4] = (double) 0;
+						table_row++;
+					}
+				}
+			}
+		}
+		
+		
+		
+		
+		//Create a table-------------------------------------------------------------			
+        model9 = new TableModelSpectrum(rowCount9, colCount9, data9, columnNames9) {
+        	@Override
+        	public Class getColumnClass(int c) {
+    			if (c<4) return String.class;      //column 0, 1, 2 accept only String
+    			else if (c==4) return Double.class;      //column 3 (last column) accept only Double values    
+    	        else return (getValueAt(0, c) == null ? Object.class : getValueAt(0, c).getClass());
+    		}
+
+        	@Override
+    		public boolean isCellEditable(int row, int col) {
+    			if (col < 4) { // Only the last column are editable
+    				return false;
+    			} else {
+    				return true;
+    			}
+    		}
+
+        	@Override
+    		public void setValueAt(Object value, int row, int col) {			
+				if (col == 4 && ((Number) value).doubleValue() < 0) {
+    				JOptionPane.showMessageDialog(Spectrum_Main.mainFrameReturn(),
+    						"Your input has not been accepted. Cost increasement cannot be negative.");
+    			} else {
+    				data9[row][col] = value;
+    			}
+    		}
+        	
+        };
+        
+        
+		table9 = new JTable(model9){
+			@Override				//Implement table cell tool tips 			          
+			public String getToolTipText(MouseEvent e) {
+				String tip = null;
+				java.awt.Point p = e.getPoint();
+				int rowIndex = rowAtPoint(p);
+				int colIndex = columnAtPoint(p);
+				
+				if (colIndex == 2) {
+					try {
+						tip = getValueAt(rowIndex, colIndex).toString();
+						for (int i = 0; i < layers_Title.size(); i++) {
+							if (tip.equals(layers_Title.get(i))) {
+								tip = layers_Title_ToolTip.get(i);	
+							}								
+						}
+					} catch (RuntimeException e1) {
+						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+					}
+				}
+				else if (colIndex == 3) {
+					boolean foundTip = false;
+					try {
+						if (foundTip == false) {
+							tip =  getValueAt(rowIndex, 2).toString();
+							for (int i = 0; i < layers_Title.size(); i++) {	
+								if (tip.equals(layers_Title.get(i))) {
+									tip =  getValueAt(rowIndex, 3).toString();
+									for (int j = 0; j < allLayers.get(i).size(); j++) {
+										if (tip.equals(allLayers.get(i).get(j))) {
+											tip = allLayers_ToolTips.get(i).get(j);	
+											foundTip = true;
+										}								
+									}
+								}								
+							}
+						}	
+					} catch (RuntimeException e1) {
+						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+					}
+				}	
+				
+				else if (colIndex == 4) {
+					try {			
+						tip = "Cost increases by " + getValueAt(rowIndex, 4) + "% of base cost" ;	
+					} catch (RuntimeException e1) {
+						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+					}
+				}	
+				return tip;
+			}
+			
+			@Override			//These override is to make the width of the cell fit all contents of the cell
+			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+				// For the cells in table								
+				Component component = super.prepareRenderer(renderer, row, column);
+				int rendererWidth = component.getPreferredSize().width;
+				TableColumn tableColumn = getColumnModel().getColumn(column);
+				int maxWidth = Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth());
+				
+				// For the column names
+				TableCellRenderer renderer2 = table9.getTableHeader().getDefaultRenderer();	
+				Component component2 = renderer2.getTableCellRendererComponent(table9,
+			            tableColumn.getHeaderValue(), false, false, -1, column);
+				maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
+				
+				tableColumn.setPreferredWidth(maxWidth);
+				return component;
+			}		
+		};
+		
+		// Define a set of background colors
+		Color color1 = new Color(160, 160, 160);
+		Color color2 = new Color(192, 192, 192);	
+				
+		//Set Color and Alignment for Cells
+        DefaultTableCellRenderer r = new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object
+			value, boolean isSelected, boolean hasFocus, int row, int column) {
+				super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+				// setForeground(Color.RED);
+				setHorizontalAlignment(JLabel.LEFT);
+				// setFont(getFont().deriveFont(Font.BOLD));               	
+				setBackground(color2);		//Set cell background color
+				if (isSelected) {
+					setBackground(table9.getSelectionBackground());		//Set background color	for selected row
+				}
+//				setHorizontalAlignment(rowAlignment[row]);			
+                return this;
+            }
+        };						
+		
+		
+		for (int i = 0; i < columnNames9.length; i++) {
+			if (i < 4) {
+				table9.getColumnModel().getColumn(i).setCellRenderer(r);		// 4 first columns are shaded
+			}
+		}
+       
+        
+//        table9.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        table9.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        table9.getTableHeader().setReorderingAllowed(false);		//Disable columns move
+//        table9.getColumnModel().getColumn(0).setPreferredWidth(200);	//Set width of 1st Column bigger
+        
+//        table9.setTableHeader(null);
+        table9.setPreferredScrollableViewportSize(new Dimension(400, 120));
+        table9.setFillsViewportHeight(true);
+        TableRowSorter<TableModelSpectrum> sorter = new TableRowSorter<TableModelSpectrum>(model9);	//Add sorter
+		for (int i = 1; i < colCount9; i++) {
+			sorter.setSortable(i, false);
+			if (i < 2) {			//first 2 columns can be sorted
+				sorter.setSortable(i, true);	
+			}
+		}
+		table9.setRowSorter(sorter);
+	}		
 	
     //--------------------------------------------------------------------------------------------------------------------------
     //--------------------------------------------------------------------------------------------------------------------------  
@@ -1914,12 +2279,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 			JButton button0 = new JButton();
 			button0.setToolTipText("Import Definition");
-			button0.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_add.png"));
+			button0.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_add.png"));
 			button0.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					File tempDefinitionFile = FilesHandle.chosenDefinition();	
-					if (tempDefinitionFile != null) {	//Only change StrataDefinition if the FileChooser return a file that is not Null
+					if (tempDefinitionFile != null) {	//Only change strata_definition if the FileChooser return a file that is not Null
 						file_StrataDefinition = tempDefinitionFile;
 						currentDefinition_location = file_StrataDefinition.getAbsolutePath();
 						
@@ -1984,7 +2349,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			button_import_database = new JButton();
 			button_import_database.setToolTipText("Import Database");
-			button_import_database.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_add.png"));		
+			button_import_database.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_add.png"));		
 			button_import_database.setEnabled(false);
 			button_import_database.addActionListener(new ActionListener() {
 				@Override
@@ -2050,7 +2415,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			button_import_existingStrata = new JButton();
 			button_import_existingStrata.setToolTipText("Import Strata");
-			button_import_existingStrata.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_add.png"));
+			button_import_existingStrata.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_add.png"));
 			button_import_existingStrata.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -2246,20 +2611,20 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			JToggleButton btnStrataFilter = new JToggleButton();
 			checkPanel.setVisible(false);
 			btnStrataFilter.setToolTipText("Show Strata Filter");
-			btnStrataFilter.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_show.png"));
+			btnStrataFilter.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_show.png"));
 			btnStrataFilter.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {
 			
 					if (btnStrataFilter.getToolTipText().equals("Show Strata Filter")) {
 						btnStrataFilter.setToolTipText("Hide Strata Filter");
-						btnStrataFilter.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_hide.png"));
+						btnStrataFilter.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_hide.png"));
 						checkPanel.setVisible(true);
 						// Get everything show up nicely
 						GUI_Text_splitPanel.setLeftComponent(panel_Model_Identifiniton_GUI);
 					} else {
 						btnStrataFilter.setToolTipText("Show Strata Filter");
-						btnStrataFilter.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_show.png"));
+						btnStrataFilter.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_show.png"));
 						checkPanel.setVisible(false);
 						// Get everything show up nicely
 						GUI_Text_splitPanel.setLeftComponent(panel_Model_Identifiniton_GUI);
@@ -2277,7 +2642,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			//button 2
 			JButton remove_Strata = new JButton();
 			remove_Strata.setToolTipText("Remove highlighted strata from optimization model");
-			remove_Strata.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_erase.png"));
+			remove_Strata.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_erase.png"));
 			remove_Strata.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {
@@ -2324,7 +2689,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			//button 3	
 			button_select_Strata = new JButton();
 			button_select_Strata.setToolTipText("Add highlighted strata to optimization model");
-			button_select_Strata.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_check.png"));
+			button_select_Strata.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_check.png"));
 			button_select_Strata.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {
@@ -2451,7 +2816,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	        create_table4();
 	        //Put table4 into CovertypeConversion_EA_ScrollPane
 	        JScrollPane CovertypeConversion_EA_ScrollPane = new JScrollPane();
-	        TitledBorder border = new TitledBorder("Requirements of Even Age Method: Cover Type Conversion & Rotation Age-Class");
+	        TitledBorder border = new TitledBorder("Cover type conversion & rotation ageclass for clear cut");
 			border.setTitleJustification(TitledBorder.CENTER);
 			CovertypeConversion_EA_ScrollPane.setBorder(border);
 	        CovertypeConversion_EA_ScrollPane.setViewportView(table4);									
@@ -2462,7 +2827,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	        create_table7();
 	        //Put table7 into CovertypeConversion_SRD_ScrollPane
 			JScrollPane CovertypeConversion_SRD_ScrollPane = new JScrollPane();
-			border = new TitledBorder("Requirements of Stand Replacing Disturbances: Cover Type Conversion & Proportion (%)");
+			border = new TitledBorder("Cover type conversion & regeneration for replacing disturbance");
 			border.setTitleJustification(TitledBorder.CENTER);
 			CovertypeConversion_SRD_ScrollPane.setBorder(border);
 	        CovertypeConversion_SRD_ScrollPane.setViewportView(table7);						
@@ -2491,21 +2856,21 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			// button Quick Edit -----------------------------------------------------------------------
 			JToggleButton btnQuickEdit = new JToggleButton();
 			btnQuickEdit.setToolTipText("Show Quick Edit Tool");
-			btnQuickEdit.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_show.png"));
+			btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_show.png"));
 			btnQuickEdit.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {
 			
 					if (btnQuickEdit.getToolTipText().equals("Show Quick Edit Tool")) {
 						btnQuickEdit.setToolTipText("Hide Quick Edit Tool");
-						btnQuickEdit.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_hide.png"));
+						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_hide.png"));
 						scrollpane_QuickEdit_1.setVisible(true);
 						scrollpane_QuickEdit_2.setVisible(true);
 						// Get everything show up nicely
 						GUI_Text_splitPanel.setLeftComponent(panel_CovertypeConversion_GUI);
 					} else {
 						btnQuickEdit.setToolTipText("Show Quick Edit Tool");
-						btnQuickEdit.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_show.png"));
+						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_show.png"));
 						scrollpane_QuickEdit_1.setVisible(false);
 						scrollpane_QuickEdit_2.setVisible(false);
 						// Get everything show up nicely
@@ -2589,7 +2954,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			create_table5();
 	        //Put table5 into MixedFire_ScrollPane
 	        JScrollPane MixedFire_ScrollPane = new JScrollPane();
-	    	TitledBorder border = new TitledBorder("Specify the proportion of exsiting strata area (%) sufferred from Mixed Severity Wildfire across all time periods");
+	    	TitledBorder border = new TitledBorder("Proportion (%) of period-one existing strata suffered from mixed severity wildfire across all time periods");
 			border.setTitleJustification(TitledBorder.CENTER);
 			MixedFire_ScrollPane.setBorder(border);
 	        MixedFire_ScrollPane.setViewportView(table5);			
@@ -2600,7 +2965,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	        create_table6();
 	        //Put table6 into StandReplacing_ScrollPane
 	        JScrollPane StandReplacing_ScrollPane = new JScrollPane();
-	        TitledBorder border3 = new TitledBorder("Specify the proportion of strata area (%) lost due to Stand Replacing Disturbances in each time period");
+	        TitledBorder border3 = new TitledBorder("Proportion (%) of existing strata or regeneration strata suffered from replacing disturbance in each time period");
 			border3.setTitleJustification(TitledBorder.CENTER);
 			StandReplacing_ScrollPane.setBorder(border3);
 	        StandReplacing_ScrollPane.setViewportView(table6);
@@ -2630,21 +2995,21 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
  			// button Quick Edit -----------------------------------------------------------------------
  			JToggleButton btnQuickEdit = new JToggleButton();
  			btnQuickEdit.setToolTipText("Show Quick Edit Tool");
- 			btnQuickEdit.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_show.png"));
+ 			btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_show.png"));
  			btnQuickEdit.addActionListener(new ActionListener() {
  				@Override
  				public void actionPerformed(ActionEvent actionEvent) {
  			
  					if (btnQuickEdit.getToolTipText().equals("Show Quick Edit Tool")) {
  						btnQuickEdit.setToolTipText("Hide Quick Edit Tool");
- 						btnQuickEdit.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_hide.png"));
+ 						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_hide.png"));
  						scrollpane_QuickEdit_1.setVisible(true);
  						scrollpane_QuickEdit_2.setVisible(true);
  						// Get everything show up nicely
  						GUI_Text_splitPanel.setLeftComponent(panel_Disturbances_GUI);
  					} else {
  						btnQuickEdit.setToolTipText("Show Quick Edit Tool");
- 						btnQuickEdit.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_show.png"));
+ 						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_show.png"));
  						scrollpane_QuickEdit_1.setVisible(false);
  						scrollpane_QuickEdit_2.setVisible(false);
  						// Get everything show up nicely
@@ -2722,44 +3087,44 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	class Management_Cost_GUI extends JLayeredPane {
 		public Management_Cost_GUI() {
 			
-			// This all_actions List contains all actions loaded from yield tables------------------------------------------------------------
-			List<String> all_actions = new ArrayList<String>();
-			all_actions.add("Pre-Commercial Thin Type 1");
-			all_actions.add("Pre-Commercial Thin Type 2");
-			all_actions.add("Pre-Commercial Thin Type 3");
-			all_actions.add("Commercial Thin Type 1");
-			all_actions.add("Commercial Thin Type 2");
-			all_actions.add("Commercial Thin Type 3");
-			all_actions.add("Clear Cut Type 1");
-			all_actions.add("Clear Cut Type 2");
-			all_actions.add("Clear Cut Type 3");
-			all_actions.add("Understory Burn Type 1");
-			all_actions.add("Understory Burn Type 2");
-			all_actions.add("Understory Burn Type 3");
-			all_actions.add("Broadcast Burn");
-			all_actions.add("Seed Cut");
-			all_actions.add("Overstory Removal");
-			all_actions.add("Group Openning Type 1");
-			all_actions.add("Group Openning Type 2");
-			all_actions.add("Group Openning Type 3");
-			all_actions.add("Single Tree Openning");
-			all_actions.add("Artificial Regeneration");
-			all_actions.add("Tree Planting");
-			all_actions.add("Weed Treatments");
-		
-			JTextArea action_info = new JTextArea();
-			action_info.setBackground(new Color(0,0,0,0));
-			action_info.setEditable(false);
-			action_info.setLineWrap(true);
-			action_info.setWrapStyleWord(true);
-			action_info.append("SpectrumLite is assuming that it found " + all_actions.size() + 
-					" unique management actions across all" /*+ yieldTable_values.length*/ + " yield tables in your database"  + "\n");	
-			action_info.append("All Base Costs are set to default values. Please re-define your true costs");	
-			
-			JScrollPane action_info_scroll = new JScrollPane(action_info); //place the JTextArea in a scroll pane
-			action_info_scroll.setBorder(BorderFactory.createEmptyBorder());
-			action_info_scroll.setPreferredSize(new Dimension(100, 50));
-			// This all_actions List contains all actions loaded from yield tables------------------------------------------------------------
+//			// This all_actions List contains all actions loaded from yield tables------------------------------------------------------------
+//			List<String> all_actions = new ArrayList<String>();
+//			all_actions.add("Pre-Commercial Thin Type 1");
+//			all_actions.add("Pre-Commercial Thin Type 2");
+//			all_actions.add("Pre-Commercial Thin Type 3");
+//			all_actions.add("Commercial Thin Type 1");
+//			all_actions.add("Commercial Thin Type 2");
+//			all_actions.add("Commercial Thin Type 3");
+//			all_actions.add("Clear Cut Type 1");
+//			all_actions.add("Clear Cut Type 2");
+//			all_actions.add("Clear Cut Type 3");
+//			all_actions.add("Understory Burn Type 1");
+//			all_actions.add("Understory Burn Type 2");
+//			all_actions.add("Understory Burn Type 3");
+//			all_actions.add("Broadcast Burn");
+//			all_actions.add("Seed Cut");
+//			all_actions.add("Overstory Removal");
+//			all_actions.add("Group Openning Type 1");
+//			all_actions.add("Group Openning Type 2");
+//			all_actions.add("Group Openning Type 3");
+//			all_actions.add("Single Tree Openning");
+//			all_actions.add("Artificial Regeneration");
+//			all_actions.add("Tree Planting");
+//			all_actions.add("Weed Treatments");
+//		
+//			JTextArea action_info = new JTextArea();
+//			action_info.setBackground(new Color(0,0,0,0));
+//			action_info.setEditable(false);
+//			action_info.setLineWrap(true);
+//			action_info.setWrapStyleWord(true);
+//			action_info.append("SpectrumLite is assuming that it found " + all_actions.size() + 
+//					" unique management actions across all" /*+ yieldTable_values.length*/ + " yield tables in your database"  + "\n");	
+//			action_info.append("All Base Costs are set to default values. Please re-define your true costs");	
+//			
+//			JScrollPane action_info_scroll = new JScrollPane(action_info); //place the JTextArea in a scroll pane
+//			action_info_scroll.setBorder(BorderFactory.createEmptyBorder());
+//			action_info_scroll.setPreferredSize(new Dimension(100, 50));
+//			// This all_actions List contains all actions loaded from yield tables------------------------------------------------------------
 
 			
 		
@@ -2769,68 +3134,130 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			
 			
-	
-			JSplitPane splitPanel = new JSplitPane();
-			// splitPanel.setResizeWeight(0.15);
-//			splitPanel.setOneTouchExpandable(true);
-			splitPanel.setDividerLocation(250);
-			splitPanel.setDividerSize(3);
-			// splitPanel.getComponent(2).setCursor(new Cursor(Cursor.HAND_CURSOR));
+			setLayout(new GridBagLayout());
 
-			
-			// Left split panel--------------------------------------------------------------------------------
-			JScrollPane scrollPane_Left = new JScrollPane();
-			TitledBorder border = new TitledBorder("Management Action List");
+
+			// 1st grid -----------------------------------------------------------------------
+			// 1st grid -----------------------------------------------------------------------
+			create_table8();
+	        //Put table8 into MixedFire_ScrollPane
+	        JScrollPane costBase__ScrollPane = new JScrollPane();
+	    	TitledBorder border = new TitledBorder("Base cost");
 			border.setTitleJustification(TitledBorder.CENTER);
-			scrollPane_Left.setBorder(border);
-			scrollPane_Left.setPreferredSize(new Dimension(250, 250));
-			splitPanel.setLeftComponent(scrollPane_Left);
+			costBase__ScrollPane.setBorder(border);
+	        costBase__ScrollPane.setViewportView(table8);			
 			
-			// Add all selected Runs to radioPanel and add that panel to scrollPane_Left
-			JPanel radioPanel_Left = new JPanel();
-			radioPanel_Left.setLayout(new BoxLayout(radioPanel_Left, BoxLayout.Y_AXIS));
-			ButtonGroup radioGroup_Left = new ButtonGroup();
+		    
+			// 2nd grid -----------------------------------------------------------------------
+			// 2nd grid -----------------------------------------------------------------------
+	        create_table9();
+	        //Put table9 into StandReplacing_ScrollPane
+	        JScrollPane costAdjustment_ScrollPane = new JScrollPane();
+	        TitledBorder border3 = new TitledBorder("Cost adjustment");
+			border3.setTitleJustification(TitledBorder.CENTER);
+			costAdjustment_ScrollPane.setBorder(border3);
+	        costAdjustment_ScrollPane.setViewportView(table9);
 			
-			JRadioButton[] radioButton_Left  = new JRadioButton[all_actions.size()];
-			for (int i = 0; i < all_actions.size(); i++) {
-				radioButton_Left[i] = new JRadioButton(all_actions.get(i));
-					radioGroup_Left.add(radioButton_Left[i]);
-					radioPanel_Left.add(radioButton_Left[i]);
-//					radioButton_Left[i].addActionListener(this);
-			}
-			radioButton_Left[0].setSelected(true);
-			scrollPane_Left.setViewportView(radioPanel_Left);					
-			
-			
-			// Right split panel-------------------------------------------------------------------------------
-			ScrollPane_Cost[] cost_ScrollPanel = new ScrollPane_Cost[all_actions.size()];
-			for (int i = 0; i < all_actions.size(); i++) {
-				String scrollPane_name = "Cost Definition - " + all_actions.get(i);
-				cost_ScrollPanel[i] = new ScrollPane_Cost(read_Identifiers, yieldTable_ColumnNames, scrollPane_name);	
-			}
-			splitPanel.setRightComponent(cost_ScrollPanel[0]);
-			
-			
-		
-			//Listeners for radios----------------------------------------------------------------------------
-			for (int i = 0; i < all_actions.size(); i++) {
-				int currentAction = i;
-				radioButton_Left[i].addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent actionEvent) {
-						if (radioButton_Left[currentAction].isSelected()) {
-							splitPanel.setRightComponent(cost_ScrollPanel[currentAction]);
-						}			
-					}
-				});
-			}
-		
-		
+	        
+        
+	        // scrollPane Quick Edit 1 & 2-----------------------------------------------------------------------
+	        // scrollPane Quick Edit 1 @ 2-----------------------------------------------------------------------		
+ 			JScrollPane scrollpane_QuickEdit_1 = new JScrollPane(new QuickEdit_BaseCost_Panel(table8, data8));
+ 			JScrollPane scrollpane_QuickEdit_2 = new JScrollPane(new QuickEdit_CostAdjustment_Panel(table9, data9));	
+ 			
+ 			border = new TitledBorder("Quick edit rows");
+ 			border.setTitleJustification(TitledBorder.CENTER);
+ 			scrollpane_QuickEdit_1.setBorder(border);
+ 			scrollpane_QuickEdit_2.setBorder(border);
+ 			
+// 			scrollpane_QuickEdit_1.setPreferredSize(new Dimension(210, 200));
+// 			scrollpane_QuickEdit_2.setPreferredSize(new Dimension(210, 200));
+ 			
+ 			scrollpane_QuickEdit_1.setVisible(false);
+ 			scrollpane_QuickEdit_2.setVisible(false);
+ 			
+ 			
+ 			
+ 			// button Quick Edit -----------------------------------------------------------------------
+ 			// button Quick Edit -----------------------------------------------------------------------
+ 			JToggleButton btnQuickEdit = new JToggleButton();
+ 			btnQuickEdit.setToolTipText("Show Quick Edit Tool");
+ 			btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_show.png"));
+ 			btnQuickEdit.addActionListener(new ActionListener() {
+ 				@Override
+ 				public void actionPerformed(ActionEvent actionEvent) {
+ 			
+ 					if (btnQuickEdit.getToolTipText().equals("Show Quick Edit Tool")) {
+ 						btnQuickEdit.setToolTipText("Hide Quick Edit Tool");
+ 						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_hide.png"));
+ 						scrollpane_QuickEdit_1.setVisible(true);
+ 						scrollpane_QuickEdit_2.setVisible(true);
+ 						// Get everything show up nicely
+ 						GUI_Text_splitPanel.setLeftComponent(panel_Management_Cost_GUI);
+ 					} else {
+ 						btnQuickEdit.setToolTipText("Show Quick Edit Tool");
+ 						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_show.png"));
+ 						scrollpane_QuickEdit_1.setVisible(false);
+ 						scrollpane_QuickEdit_2.setVisible(false);
+ 						// Get everything show up nicely
+ 						GUI_Text_splitPanel.setLeftComponent(panel_Management_Cost_GUI);
+ 					}
+ 				}
+ 			});		
+	     	        
+	        
+	        
+ 			// Add all Grids to the Main Grid-----------------------------------------------------------------------
+ 			// Add all Grids to the Main Grid-----------------------------------------------------------------------
+ 			GridBagConstraints c = new GridBagConstraints();
+			c.fill = GridBagConstraints.BOTH;
+			c.weightx = 1;
+		    c.weighty = 1;
 
-			// Add all components to JInternalFrame------------------------------------------------------------
-			setLayout(new BorderLayout(0, 0));
-			add(action_info_scroll, BorderLayout.NORTH);
-			add(splitPanel, BorderLayout.CENTER);
+		    // Add btnQuickEdit	
+			c.gridx = 0;
+			c.gridy = 0;
+			c.weightx = 0;
+		    c.weighty = 0;
+			c.gridwidth = 1;
+			c.gridheight = 1;
+			super.add(btnQuickEdit, c);			
+		    
+			// Add the 1st grid - CovertypeConversion_EA_ScrollPane to the main Grid	
+			c.gridx = 0;
+			c.gridy = 1;
+			c.weightx = 1;
+		    c.weighty = 1;
+			c.gridwidth = 2;
+			c.gridheight = 1;
+			super.add(costBase__ScrollPane, c);
+			
+			// Add scrollpane_QuickEdit_1	
+			c.gridx = 2;
+			c.gridy = 1;
+			c.weightx = 0;
+		    c.weighty = 0;
+			c.gridwidth = 1;
+			c.gridheight = 1;
+			super.add(scrollpane_QuickEdit_1, c);			
+			
+			// Add the 2nd grid - CovertypeConversion_SRD_ScrollPane to the main Grid	
+			c.gridx = 0;
+			c.gridy = 2;
+			c.weightx = 1;
+		    c.weighty = 1;
+			c.gridwidth = 2;
+			c.gridheight = 1;
+			super.add(costAdjustment_ScrollPane, c);
+			
+			// Add scrollpane_QuickEdit_2	
+			c.gridx = 2;
+			c.gridy = 2;
+			c.weightx = 0;
+			c.weighty = 0;
+			c.gridwidth = 1;
+			c.gridheight = 1;
+			super.add(scrollpane_QuickEdit_2, c);	
 		}		
 	}
 
@@ -2892,7 +3319,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			btn_NewSingle.setFont(new Font(null, Font.BOLD, 14));
 //			btn_NewSingle.setText("NEW SINGLE");
 			btn_NewSingle.setToolTipText("New constraint");
-			btn_NewSingle.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_add.png"));
+			btn_NewSingle.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_add.png"));
 					
 			c2.gridx = 0;
 			c2.gridy = 0;
@@ -2905,7 +3332,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			btn_New_Multiple.setFont(new Font(null, Font.BOLD, 14));
 //			btn_New_Multiple.setText("NEW MULTIPLE");
 			btn_New_Multiple.setToolTipText("New set of constraints");
-			btn_New_Multiple.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_add3.png"));
+			btn_New_Multiple.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_add3.png"));
 					
 			c2.gridx = 0;
 			c2.gridy = 1;
@@ -2917,7 +3344,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 //			btn_Edit.setFont(new Font(null, Font.BOLD, 14));
 //			btn_Edit.setText("EDIT");
 			btn_Edit.setToolTipText("Edit a single constraint: reload info to interface (not yet) & register changes when 'Submit'");
-			btn_Edit.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_edit2.png"));
+			btn_Edit.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_edit2.png"));
 			btn_Edit.setEnabled(false);
 					
 			c2.gridx = 0;
@@ -2931,7 +3358,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			btn_Delete.setFont(new Font(null, Font.BOLD, 14));
 //			btn_Delete.setText("DELETE");
 			btn_Delete.setToolTipText("Delete constraints");
-			btn_Delete.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_erase.png"));
+			btn_Delete.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_erase.png"));
 			btn_Delete.setEnabled(false);
 					
 			c2.gridx = 0;
@@ -2947,7 +3374,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			btn_Sort.setFont(new Font(null, Font.BOLD, 12));
 			btn_Sort.setText("OFF");
 			btn_Sort.setToolTipText("Sorter mode: 'ON' click columns header to sort rows. 'OFF' retrieve original rows position");
-			btn_Sort.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_table.png"));
+			btn_Sort.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_table.png"));
 					
 			c2.gridx = 0;
 			c2.gridy = 4;
@@ -2960,7 +3387,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			btn_Validate.setFont(new Font(null, Font.BOLD, 14));
 //			btn_Validate.setText("VALIDATE");
 			btn_Validate.setToolTipText("Validate constraints");
-			btn_Validate.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_zoom.png"));
+			btn_Validate.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_zoom.png"));
 					
 			c2.gridx = 0;
 			c2.gridy = 5;
@@ -3100,7 +3527,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 							String ExitOption2[] = {"Yes","No"};
 							String warningText = "You are going to add " + total_Constraints + " constraints. It would take some time. Continue to add ?";
 							response2 = JOptionPane.showOptionDialog(Spectrum_Main.mainFrameReturn(), warningText, "Confirm adding constraints",
-									JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconsHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption2, ExitOption2[1]);
+									JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption2, ExitOption2[1]);
 							
 						}
 							
@@ -3651,7 +4078,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		create_SRDisturbancesFile();
 		create_UserConstraintsFile();
 		create_SRDRequirementsFile();
-		
+		create_BaseCostFile();
+		create_CostAdjustmentFile();
+			
 		create_DefinitionFile();		// Note for those 3 file we just copy overwritten
 		create_StrataFile();
 		create_DatabaseFile();
@@ -3824,10 +4253,62 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			} 
 		}
 	}	
+
+	
+	private void create_BaseCostFile() {
+		File basecostFile = new File(currentRunFolder.getAbsolutePath() + "/input_07_base_cost.txt");	
+		if (basecostFile.exists()) {
+			basecostFile.delete();		// Delete the old file before writing new contents
+		}
+		
+		if (data8 != null) {
+			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(basecostFile))) {
+				for (int j = 0; j < columnNames8.length; j++) {
+					fileOut.write(columnNames8[j] + "\t");
+				}
+
+				for (int i = 0; i < data8.length; i++) {
+					fileOut.newLine();
+					for (int j = 0; j < colCount8; j++) {
+						fileOut.write(data8[i][j] + "\t");
+					}
+				}
+				fileOut.close();
+			} catch (IOException e) {
+				System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			} 
+		}
+	}
+	
+	
+	private void create_CostAdjustmentFile() {
+		File costAdjustmentFile = new File(currentRunFolder.getAbsolutePath() + "/input_08_cost_adjustment.txt");	
+		if (costAdjustmentFile.exists()) {
+			costAdjustmentFile.delete();		// Delete the old file before writing new contents
+		}
+		
+		if (data9 != null) {
+			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(costAdjustmentFile))) {
+				for (int j = 0; j < columnNames9.length; j++) {
+					fileOut.write(columnNames9[j] + "\t");
+				}
+
+				for (int i = 0; i < data9.length; i++) {
+					fileOut.newLine();
+					for (int j = 0; j < colCount9; j++) {
+						fileOut.write(data9[i][j] + "\t");
+					}
+				}
+				fileOut.close();
+			} catch (IOException e) {
+				System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			} 
+		}
+	}
 	
 	
 	private void create_UserConstraintsFile() {
-		File userConstraintsFile = new File(currentRunFolder.getAbsolutePath() + "/input_08_user_constraints.txt");
+		File userConstraintsFile = new File(currentRunFolder.getAbsolutePath() + "/input_09_user_constraints.txt");
 		if (userConstraintsFile.exists()) {
 			userConstraintsFile.delete();		// Delete the old file before writing new contents
 		}
@@ -3864,7 +4345,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 	
 	private void create_DefinitionFile() {	
-		File definitionFile = new File(currentRunFolder.getAbsolutePath() + "/" + "StrataDefinition.csv");
+		File definitionFile = new File(currentRunFolder.getAbsolutePath() + "/" + "strata_definition.csv");
 		
 		try {
 			if (file_StrataDefinition != null) Files.copy(file_StrataDefinition.toPath(), definitionFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -3875,7 +4356,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 	
 	private void create_StrataFile() {	
-		File strataFile = new File(currentRunFolder.getAbsolutePath() + "/" + "existingStrata.csv");
+		File strataFile = new File(currentRunFolder.getAbsolutePath() + "/" + "existing_strata.csv");
 		
 		try {
 			if (file_ExistingStrata != null) Files.copy(file_ExistingStrata.toPath(), strataFile.toPath(), StandardCopyOption.REPLACE_EXISTING);

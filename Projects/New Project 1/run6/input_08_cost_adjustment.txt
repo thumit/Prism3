@@ -1,0 +1,529 @@
+action_type	layer_element_description	layer_id	element_id	adjusted_percentage	
+Pre-Commercial Thin Type 1	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Breaklands	layer1	B	0.0	
+Pre-Commercial Thin Type 1	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Uplands	layer1	U	0.0	
+Pre-Commercial Thin Type 1	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Subalpine	layer1	S	0.0	
+Pre-Commercial Thin Type 1	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Breaklands	layer1	K	0.0	
+Pre-Commercial Thin Type 1	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Uplands	layer1	R	0.0	
+Pre-Commercial Thin Type 1	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Subalpine	layer1	C	0.0	
+Pre-Commercial Thin Type 1	Roadless Status___Roadless and undeveloped	layer2	R	0.0	
+Pre-Commercial Thin Type 1	Roadless Status___Roaded and developed	layer2	N	0.0	
+Pre-Commercial Thin Type 1	Timber Suitability___Not Available or Not Suited; No Timber Harvest Allowed	layer3	N	0.0	
+Pre-Commercial Thin Type 1	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; No scheduled output	layer3	O	0.0	
+Pre-Commercial Thin Type 1	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; Scheduled output	layer3	P	0.0	
+Pre-Commercial Thin Type 1	Timber Suitability___Suited for Timber Production	layer3	S	0.0	
+Pre-Commercial Thin Type 1	Resource Condition Zone___Lynx habitat - conserve watershed	layer4	L	0.0	
+Pre-Commercial Thin Type 1	Resource Condition Zone___Lynx habitat - restore watershed	layer4	H	0.0	
+Pre-Commercial Thin Type 1	Resource Condition Zone___Non-Lynx habitat - conserve watershed	layer4	C	0.0	
+Pre-Commercial Thin Type 1	Resource Condition Zone___Non-Lynx habitat - restore watershed	layer4	R	0.0	
+Pre-Commercial Thin Type 1	Vegetation Cover Type___WDI or DIP where the indicator tree species is Ponderosa Pine	layer5	P	0.0	
+Pre-Commercial Thin Type 1	Vegetation Cover Type___WDT or DTD where the indicator tree species is Dry Douglas-fir/Grand Fir	layer5	D	0.0	
+Pre-Commercial Thin Type 1	Vegetation Cover Type___MI or MIW where the indicator tree species is Mesic Douglas-fir mix	layer5	W	0.0	
+Pre-Commercial Thin Type 1	Vegetation Cover Type___MT or MTC where the indicator tree species is Grand Fir/Western Red Cedar	layer5	C	0.0	
+Pre-Commercial Thin Type 1	Vegetation Cover Type___SI or SII where the indicator tree species is Cold Douglas-fir mix	layer5	I	0.0	
+Pre-Commercial Thin Type 1	Vegetation Cover Type___ST or STA where the indicator tree species is Subalpine Fir mix	layer5	A	0.0	
+Pre-Commercial Thin Type 1	Vegetation Cover Type___LP or LPP where the indicator tree species is Lodgepole Pine	layer5	L	0.0	
+Pre-Commercial Thin Type 1	Vegetation Cover Type___NS NonStocked	layer5	N	0.0	
+Pre-Commercial Thin Type 2	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Breaklands	layer1	B	0.0	
+Pre-Commercial Thin Type 2	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Uplands	layer1	U	0.0	
+Pre-Commercial Thin Type 2	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Subalpine	layer1	S	0.0	
+Pre-Commercial Thin Type 2	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Breaklands	layer1	K	0.0	
+Pre-Commercial Thin Type 2	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Uplands	layer1	R	0.0	
+Pre-Commercial Thin Type 2	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Subalpine	layer1	C	0.0	
+Pre-Commercial Thin Type 2	Roadless Status___Roadless and undeveloped	layer2	R	0.0	
+Pre-Commercial Thin Type 2	Roadless Status___Roaded and developed	layer2	N	0.0	
+Pre-Commercial Thin Type 2	Timber Suitability___Not Available or Not Suited; No Timber Harvest Allowed	layer3	N	0.0	
+Pre-Commercial Thin Type 2	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; No scheduled output	layer3	O	0.0	
+Pre-Commercial Thin Type 2	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; Scheduled output	layer3	P	0.0	
+Pre-Commercial Thin Type 2	Timber Suitability___Suited for Timber Production	layer3	S	0.0	
+Pre-Commercial Thin Type 2	Resource Condition Zone___Lynx habitat - conserve watershed	layer4	L	0.0	
+Pre-Commercial Thin Type 2	Resource Condition Zone___Lynx habitat - restore watershed	layer4	H	0.0	
+Pre-Commercial Thin Type 2	Resource Condition Zone___Non-Lynx habitat - conserve watershed	layer4	C	0.0	
+Pre-Commercial Thin Type 2	Resource Condition Zone___Non-Lynx habitat - restore watershed	layer4	R	0.0	
+Pre-Commercial Thin Type 2	Vegetation Cover Type___WDI or DIP where the indicator tree species is Ponderosa Pine	layer5	P	0.0	
+Pre-Commercial Thin Type 2	Vegetation Cover Type___WDT or DTD where the indicator tree species is Dry Douglas-fir/Grand Fir	layer5	D	0.0	
+Pre-Commercial Thin Type 2	Vegetation Cover Type___MI or MIW where the indicator tree species is Mesic Douglas-fir mix	layer5	W	0.0	
+Pre-Commercial Thin Type 2	Vegetation Cover Type___MT or MTC where the indicator tree species is Grand Fir/Western Red Cedar	layer5	C	0.0	
+Pre-Commercial Thin Type 2	Vegetation Cover Type___SI or SII where the indicator tree species is Cold Douglas-fir mix	layer5	I	0.0	
+Pre-Commercial Thin Type 2	Vegetation Cover Type___ST or STA where the indicator tree species is Subalpine Fir mix	layer5	A	0.0	
+Pre-Commercial Thin Type 2	Vegetation Cover Type___LP or LPP where the indicator tree species is Lodgepole Pine	layer5	L	0.0	
+Pre-Commercial Thin Type 2	Vegetation Cover Type___NS NonStocked	layer5	N	0.0	
+Pre-Commercial Thin Type 3	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Breaklands	layer1	B	0.0	
+Pre-Commercial Thin Type 3	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Uplands	layer1	U	0.0	
+Pre-Commercial Thin Type 3	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Subalpine	layer1	S	0.0	
+Pre-Commercial Thin Type 3	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Breaklands	layer1	K	0.0	
+Pre-Commercial Thin Type 3	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Uplands	layer1	R	0.0	
+Pre-Commercial Thin Type 3	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Subalpine	layer1	C	0.0	
+Pre-Commercial Thin Type 3	Roadless Status___Roadless and undeveloped	layer2	R	0.0	
+Pre-Commercial Thin Type 3	Roadless Status___Roaded and developed	layer2	N	0.0	
+Pre-Commercial Thin Type 3	Timber Suitability___Not Available or Not Suited; No Timber Harvest Allowed	layer3	N	0.0	
+Pre-Commercial Thin Type 3	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; No scheduled output	layer3	O	0.0	
+Pre-Commercial Thin Type 3	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; Scheduled output	layer3	P	0.0	
+Pre-Commercial Thin Type 3	Timber Suitability___Suited for Timber Production	layer3	S	0.0	
+Pre-Commercial Thin Type 3	Resource Condition Zone___Lynx habitat - conserve watershed	layer4	L	0.0	
+Pre-Commercial Thin Type 3	Resource Condition Zone___Lynx habitat - restore watershed	layer4	H	0.0	
+Pre-Commercial Thin Type 3	Resource Condition Zone___Non-Lynx habitat - conserve watershed	layer4	C	0.0	
+Pre-Commercial Thin Type 3	Resource Condition Zone___Non-Lynx habitat - restore watershed	layer4	R	0.0	
+Pre-Commercial Thin Type 3	Vegetation Cover Type___WDI or DIP where the indicator tree species is Ponderosa Pine	layer5	P	0.0	
+Pre-Commercial Thin Type 3	Vegetation Cover Type___WDT or DTD where the indicator tree species is Dry Douglas-fir/Grand Fir	layer5	D	0.0	
+Pre-Commercial Thin Type 3	Vegetation Cover Type___MI or MIW where the indicator tree species is Mesic Douglas-fir mix	layer5	W	0.0	
+Pre-Commercial Thin Type 3	Vegetation Cover Type___MT or MTC where the indicator tree species is Grand Fir/Western Red Cedar	layer5	C	0.0	
+Pre-Commercial Thin Type 3	Vegetation Cover Type___SI or SII where the indicator tree species is Cold Douglas-fir mix	layer5	I	0.0	
+Pre-Commercial Thin Type 3	Vegetation Cover Type___ST or STA where the indicator tree species is Subalpine Fir mix	layer5	A	0.0	
+Pre-Commercial Thin Type 3	Vegetation Cover Type___LP or LPP where the indicator tree species is Lodgepole Pine	layer5	L	0.0	
+Pre-Commercial Thin Type 3	Vegetation Cover Type___NS NonStocked	layer5	N	0.0	
+Commercial Thin Type 1	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Breaklands	layer1	B	0.0	
+Commercial Thin Type 1	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Uplands	layer1	U	0.0	
+Commercial Thin Type 1	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Subalpine	layer1	S	0.0	
+Commercial Thin Type 1	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Breaklands	layer1	K	0.0	
+Commercial Thin Type 1	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Uplands	layer1	R	0.0	
+Commercial Thin Type 1	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Subalpine	layer1	C	0.0	
+Commercial Thin Type 1	Roadless Status___Roadless and undeveloped	layer2	R	0.0	
+Commercial Thin Type 1	Roadless Status___Roaded and developed	layer2	N	0.0	
+Commercial Thin Type 1	Timber Suitability___Not Available or Not Suited; No Timber Harvest Allowed	layer3	N	0.0	
+Commercial Thin Type 1	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; No scheduled output	layer3	O	0.0	
+Commercial Thin Type 1	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; Scheduled output	layer3	P	0.0	
+Commercial Thin Type 1	Timber Suitability___Suited for Timber Production	layer3	S	0.0	
+Commercial Thin Type 1	Resource Condition Zone___Lynx habitat - conserve watershed	layer4	L	0.0	
+Commercial Thin Type 1	Resource Condition Zone___Lynx habitat - restore watershed	layer4	H	0.0	
+Commercial Thin Type 1	Resource Condition Zone___Non-Lynx habitat - conserve watershed	layer4	C	0.0	
+Commercial Thin Type 1	Resource Condition Zone___Non-Lynx habitat - restore watershed	layer4	R	0.0	
+Commercial Thin Type 1	Vegetation Cover Type___WDI or DIP where the indicator tree species is Ponderosa Pine	layer5	P	0.0	
+Commercial Thin Type 1	Vegetation Cover Type___WDT or DTD where the indicator tree species is Dry Douglas-fir/Grand Fir	layer5	D	0.0	
+Commercial Thin Type 1	Vegetation Cover Type___MI or MIW where the indicator tree species is Mesic Douglas-fir mix	layer5	W	0.0	
+Commercial Thin Type 1	Vegetation Cover Type___MT or MTC where the indicator tree species is Grand Fir/Western Red Cedar	layer5	C	0.0	
+Commercial Thin Type 1	Vegetation Cover Type___SI or SII where the indicator tree species is Cold Douglas-fir mix	layer5	I	0.0	
+Commercial Thin Type 1	Vegetation Cover Type___ST or STA where the indicator tree species is Subalpine Fir mix	layer5	A	0.0	
+Commercial Thin Type 1	Vegetation Cover Type___LP or LPP where the indicator tree species is Lodgepole Pine	layer5	L	0.0	
+Commercial Thin Type 1	Vegetation Cover Type___NS NonStocked	layer5	N	0.0	
+Commercial Thin Type 2	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Breaklands	layer1	B	0.0	
+Commercial Thin Type 2	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Uplands	layer1	U	0.0	
+Commercial Thin Type 2	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Subalpine	layer1	S	0.0	
+Commercial Thin Type 2	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Breaklands	layer1	K	0.0	
+Commercial Thin Type 2	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Uplands	layer1	R	0.0	
+Commercial Thin Type 2	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Subalpine	layer1	C	0.0	
+Commercial Thin Type 2	Roadless Status___Roadless and undeveloped	layer2	R	0.0	
+Commercial Thin Type 2	Roadless Status___Roaded and developed	layer2	N	0.0	
+Commercial Thin Type 2	Timber Suitability___Not Available or Not Suited; No Timber Harvest Allowed	layer3	N	0.0	
+Commercial Thin Type 2	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; No scheduled output	layer3	O	0.0	
+Commercial Thin Type 2	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; Scheduled output	layer3	P	0.0	
+Commercial Thin Type 2	Timber Suitability___Suited for Timber Production	layer3	S	0.0	
+Commercial Thin Type 2	Resource Condition Zone___Lynx habitat - conserve watershed	layer4	L	0.0	
+Commercial Thin Type 2	Resource Condition Zone___Lynx habitat - restore watershed	layer4	H	0.0	
+Commercial Thin Type 2	Resource Condition Zone___Non-Lynx habitat - conserve watershed	layer4	C	0.0	
+Commercial Thin Type 2	Resource Condition Zone___Non-Lynx habitat - restore watershed	layer4	R	0.0	
+Commercial Thin Type 2	Vegetation Cover Type___WDI or DIP where the indicator tree species is Ponderosa Pine	layer5	P	0.0	
+Commercial Thin Type 2	Vegetation Cover Type___WDT or DTD where the indicator tree species is Dry Douglas-fir/Grand Fir	layer5	D	0.0	
+Commercial Thin Type 2	Vegetation Cover Type___MI or MIW where the indicator tree species is Mesic Douglas-fir mix	layer5	W	0.0	
+Commercial Thin Type 2	Vegetation Cover Type___MT or MTC where the indicator tree species is Grand Fir/Western Red Cedar	layer5	C	0.0	
+Commercial Thin Type 2	Vegetation Cover Type___SI or SII where the indicator tree species is Cold Douglas-fir mix	layer5	I	0.0	
+Commercial Thin Type 2	Vegetation Cover Type___ST or STA where the indicator tree species is Subalpine Fir mix	layer5	A	0.0	
+Commercial Thin Type 2	Vegetation Cover Type___LP or LPP where the indicator tree species is Lodgepole Pine	layer5	L	0.0	
+Commercial Thin Type 2	Vegetation Cover Type___NS NonStocked	layer5	N	0.0	
+Commercial Thin Type 3	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Breaklands	layer1	B	0.0	
+Commercial Thin Type 3	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Uplands	layer1	U	0.0	
+Commercial Thin Type 3	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Subalpine	layer1	S	0.0	
+Commercial Thin Type 3	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Breaklands	layer1	K	0.0	
+Commercial Thin Type 3	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Uplands	layer1	R	0.0	
+Commercial Thin Type 3	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Subalpine	layer1	C	0.0	
+Commercial Thin Type 3	Roadless Status___Roadless and undeveloped	layer2	R	0.0	
+Commercial Thin Type 3	Roadless Status___Roaded and developed	layer2	N	0.0	
+Commercial Thin Type 3	Timber Suitability___Not Available or Not Suited; No Timber Harvest Allowed	layer3	N	0.0	
+Commercial Thin Type 3	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; No scheduled output	layer3	O	0.0	
+Commercial Thin Type 3	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; Scheduled output	layer3	P	0.0	
+Commercial Thin Type 3	Timber Suitability___Suited for Timber Production	layer3	S	0.0	
+Commercial Thin Type 3	Resource Condition Zone___Lynx habitat - conserve watershed	layer4	L	0.0	
+Commercial Thin Type 3	Resource Condition Zone___Lynx habitat - restore watershed	layer4	H	0.0	
+Commercial Thin Type 3	Resource Condition Zone___Non-Lynx habitat - conserve watershed	layer4	C	0.0	
+Commercial Thin Type 3	Resource Condition Zone___Non-Lynx habitat - restore watershed	layer4	R	0.0	
+Commercial Thin Type 3	Vegetation Cover Type___WDI or DIP where the indicator tree species is Ponderosa Pine	layer5	P	0.0	
+Commercial Thin Type 3	Vegetation Cover Type___WDT or DTD where the indicator tree species is Dry Douglas-fir/Grand Fir	layer5	D	0.0	
+Commercial Thin Type 3	Vegetation Cover Type___MI or MIW where the indicator tree species is Mesic Douglas-fir mix	layer5	W	0.0	
+Commercial Thin Type 3	Vegetation Cover Type___MT or MTC where the indicator tree species is Grand Fir/Western Red Cedar	layer5	C	0.0	
+Commercial Thin Type 3	Vegetation Cover Type___SI or SII where the indicator tree species is Cold Douglas-fir mix	layer5	I	0.0	
+Commercial Thin Type 3	Vegetation Cover Type___ST or STA where the indicator tree species is Subalpine Fir mix	layer5	A	0.0	
+Commercial Thin Type 3	Vegetation Cover Type___LP or LPP where the indicator tree species is Lodgepole Pine	layer5	L	0.0	
+Commercial Thin Type 3	Vegetation Cover Type___NS NonStocked	layer5	N	0.0	
+Clear Cut Type 1	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Breaklands	layer1	B	0.0	
+Clear Cut Type 1	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Uplands	layer1	U	0.0	
+Clear Cut Type 1	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Subalpine	layer1	S	0.0	
+Clear Cut Type 1	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Breaklands	layer1	K	0.0	
+Clear Cut Type 1	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Uplands	layer1	R	0.0	
+Clear Cut Type 1	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Subalpine	layer1	C	0.0	
+Clear Cut Type 1	Roadless Status___Roadless and undeveloped	layer2	R	0.0	
+Clear Cut Type 1	Roadless Status___Roaded and developed	layer2	N	0.0	
+Clear Cut Type 1	Timber Suitability___Not Available or Not Suited; No Timber Harvest Allowed	layer3	N	0.0	
+Clear Cut Type 1	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; No scheduled output	layer3	O	0.0	
+Clear Cut Type 1	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; Scheduled output	layer3	P	0.0	
+Clear Cut Type 1	Timber Suitability___Suited for Timber Production	layer3	S	0.0	
+Clear Cut Type 1	Resource Condition Zone___Lynx habitat - conserve watershed	layer4	L	0.0	
+Clear Cut Type 1	Resource Condition Zone___Lynx habitat - restore watershed	layer4	H	0.0	
+Clear Cut Type 1	Resource Condition Zone___Non-Lynx habitat - conserve watershed	layer4	C	0.0	
+Clear Cut Type 1	Resource Condition Zone___Non-Lynx habitat - restore watershed	layer4	R	0.0	
+Clear Cut Type 1	Vegetation Cover Type___WDI or DIP where the indicator tree species is Ponderosa Pine	layer5	P	0.0	
+Clear Cut Type 1	Vegetation Cover Type___WDT or DTD where the indicator tree species is Dry Douglas-fir/Grand Fir	layer5	D	0.0	
+Clear Cut Type 1	Vegetation Cover Type___MI or MIW where the indicator tree species is Mesic Douglas-fir mix	layer5	W	0.0	
+Clear Cut Type 1	Vegetation Cover Type___MT or MTC where the indicator tree species is Grand Fir/Western Red Cedar	layer5	C	0.0	
+Clear Cut Type 1	Vegetation Cover Type___SI or SII where the indicator tree species is Cold Douglas-fir mix	layer5	I	0.0	
+Clear Cut Type 1	Vegetation Cover Type___ST or STA where the indicator tree species is Subalpine Fir mix	layer5	A	0.0	
+Clear Cut Type 1	Vegetation Cover Type___LP or LPP where the indicator tree species is Lodgepole Pine	layer5	L	0.0	
+Clear Cut Type 1	Vegetation Cover Type___NS NonStocked	layer5	N	0.0	
+Clear Cut Type 2	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Breaklands	layer1	B	0.0	
+Clear Cut Type 2	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Uplands	layer1	U	0.0	
+Clear Cut Type 2	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Subalpine	layer1	S	0.0	
+Clear Cut Type 2	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Breaklands	layer1	K	0.0	
+Clear Cut Type 2	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Uplands	layer1	R	0.0	
+Clear Cut Type 2	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Subalpine	layer1	C	0.0	
+Clear Cut Type 2	Roadless Status___Roadless and undeveloped	layer2	R	0.0	
+Clear Cut Type 2	Roadless Status___Roaded and developed	layer2	N	0.0	
+Clear Cut Type 2	Timber Suitability___Not Available or Not Suited; No Timber Harvest Allowed	layer3	N	0.0	
+Clear Cut Type 2	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; No scheduled output	layer3	O	0.0	
+Clear Cut Type 2	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; Scheduled output	layer3	P	0.0	
+Clear Cut Type 2	Timber Suitability___Suited for Timber Production	layer3	S	0.0	
+Clear Cut Type 2	Resource Condition Zone___Lynx habitat - conserve watershed	layer4	L	0.0	
+Clear Cut Type 2	Resource Condition Zone___Lynx habitat - restore watershed	layer4	H	0.0	
+Clear Cut Type 2	Resource Condition Zone___Non-Lynx habitat - conserve watershed	layer4	C	0.0	
+Clear Cut Type 2	Resource Condition Zone___Non-Lynx habitat - restore watershed	layer4	R	0.0	
+Clear Cut Type 2	Vegetation Cover Type___WDI or DIP where the indicator tree species is Ponderosa Pine	layer5	P	0.0	
+Clear Cut Type 2	Vegetation Cover Type___WDT or DTD where the indicator tree species is Dry Douglas-fir/Grand Fir	layer5	D	0.0	
+Clear Cut Type 2	Vegetation Cover Type___MI or MIW where the indicator tree species is Mesic Douglas-fir mix	layer5	W	0.0	
+Clear Cut Type 2	Vegetation Cover Type___MT or MTC where the indicator tree species is Grand Fir/Western Red Cedar	layer5	C	0.0	
+Clear Cut Type 2	Vegetation Cover Type___SI or SII where the indicator tree species is Cold Douglas-fir mix	layer5	I	0.0	
+Clear Cut Type 2	Vegetation Cover Type___ST or STA where the indicator tree species is Subalpine Fir mix	layer5	A	0.0	
+Clear Cut Type 2	Vegetation Cover Type___LP or LPP where the indicator tree species is Lodgepole Pine	layer5	L	0.0	
+Clear Cut Type 2	Vegetation Cover Type___NS NonStocked	layer5	N	0.0	
+Clear Cut Type 3	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Breaklands	layer1	B	0.0	
+Clear Cut Type 3	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Uplands	layer1	U	0.0	
+Clear Cut Type 3	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Subalpine	layer1	S	0.0	
+Clear Cut Type 3	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Breaklands	layer1	K	0.0	
+Clear Cut Type 3	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Uplands	layer1	R	0.0	
+Clear Cut Type 3	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Subalpine	layer1	C	0.0	
+Clear Cut Type 3	Roadless Status___Roadless and undeveloped	layer2	R	0.0	
+Clear Cut Type 3	Roadless Status___Roaded and developed	layer2	N	0.0	
+Clear Cut Type 3	Timber Suitability___Not Available or Not Suited; No Timber Harvest Allowed	layer3	N	0.0	
+Clear Cut Type 3	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; No scheduled output	layer3	O	0.0	
+Clear Cut Type 3	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; Scheduled output	layer3	P	0.0	
+Clear Cut Type 3	Timber Suitability___Suited for Timber Production	layer3	S	0.0	
+Clear Cut Type 3	Resource Condition Zone___Lynx habitat - conserve watershed	layer4	L	0.0	
+Clear Cut Type 3	Resource Condition Zone___Lynx habitat - restore watershed	layer4	H	0.0	
+Clear Cut Type 3	Resource Condition Zone___Non-Lynx habitat - conserve watershed	layer4	C	0.0	
+Clear Cut Type 3	Resource Condition Zone___Non-Lynx habitat - restore watershed	layer4	R	0.0	
+Clear Cut Type 3	Vegetation Cover Type___WDI or DIP where the indicator tree species is Ponderosa Pine	layer5	P	0.0	
+Clear Cut Type 3	Vegetation Cover Type___WDT or DTD where the indicator tree species is Dry Douglas-fir/Grand Fir	layer5	D	0.0	
+Clear Cut Type 3	Vegetation Cover Type___MI or MIW where the indicator tree species is Mesic Douglas-fir mix	layer5	W	0.0	
+Clear Cut Type 3	Vegetation Cover Type___MT or MTC where the indicator tree species is Grand Fir/Western Red Cedar	layer5	C	0.0	
+Clear Cut Type 3	Vegetation Cover Type___SI or SII where the indicator tree species is Cold Douglas-fir mix	layer5	I	0.0	
+Clear Cut Type 3	Vegetation Cover Type___ST or STA where the indicator tree species is Subalpine Fir mix	layer5	A	0.0	
+Clear Cut Type 3	Vegetation Cover Type___LP or LPP where the indicator tree species is Lodgepole Pine	layer5	L	0.0	
+Clear Cut Type 3	Vegetation Cover Type___NS NonStocked	layer5	N	0.0	
+Understory Burn Type 1	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Breaklands	layer1	B	0.0	
+Understory Burn Type 1	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Uplands	layer1	U	0.0	
+Understory Burn Type 1	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Subalpine	layer1	S	0.0	
+Understory Burn Type 1	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Breaklands	layer1	K	0.0	
+Understory Burn Type 1	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Uplands	layer1	R	0.0	
+Understory Burn Type 1	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Subalpine	layer1	C	0.0	
+Understory Burn Type 1	Roadless Status___Roadless and undeveloped	layer2	R	0.0	
+Understory Burn Type 1	Roadless Status___Roaded and developed	layer2	N	0.0	
+Understory Burn Type 1	Timber Suitability___Not Available or Not Suited; No Timber Harvest Allowed	layer3	N	0.0	
+Understory Burn Type 1	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; No scheduled output	layer3	O	0.0	
+Understory Burn Type 1	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; Scheduled output	layer3	P	0.0	
+Understory Burn Type 1	Timber Suitability___Suited for Timber Production	layer3	S	0.0	
+Understory Burn Type 1	Resource Condition Zone___Lynx habitat - conserve watershed	layer4	L	0.0	
+Understory Burn Type 1	Resource Condition Zone___Lynx habitat - restore watershed	layer4	H	0.0	
+Understory Burn Type 1	Resource Condition Zone___Non-Lynx habitat - conserve watershed	layer4	C	0.0	
+Understory Burn Type 1	Resource Condition Zone___Non-Lynx habitat - restore watershed	layer4	R	0.0	
+Understory Burn Type 1	Vegetation Cover Type___WDI or DIP where the indicator tree species is Ponderosa Pine	layer5	P	0.0	
+Understory Burn Type 1	Vegetation Cover Type___WDT or DTD where the indicator tree species is Dry Douglas-fir/Grand Fir	layer5	D	0.0	
+Understory Burn Type 1	Vegetation Cover Type___MI or MIW where the indicator tree species is Mesic Douglas-fir mix	layer5	W	0.0	
+Understory Burn Type 1	Vegetation Cover Type___MT or MTC where the indicator tree species is Grand Fir/Western Red Cedar	layer5	C	0.0	
+Understory Burn Type 1	Vegetation Cover Type___SI or SII where the indicator tree species is Cold Douglas-fir mix	layer5	I	0.0	
+Understory Burn Type 1	Vegetation Cover Type___ST or STA where the indicator tree species is Subalpine Fir mix	layer5	A	0.0	
+Understory Burn Type 1	Vegetation Cover Type___LP or LPP where the indicator tree species is Lodgepole Pine	layer5	L	0.0	
+Understory Burn Type 1	Vegetation Cover Type___NS NonStocked	layer5	N	0.0	
+Understory Burn Type 2	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Breaklands	layer1	B	0.0	
+Understory Burn Type 2	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Uplands	layer1	U	0.0	
+Understory Burn Type 2	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Subalpine	layer1	S	0.0	
+Understory Burn Type 2	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Breaklands	layer1	K	0.0	
+Understory Burn Type 2	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Uplands	layer1	R	0.0	
+Understory Burn Type 2	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Subalpine	layer1	C	0.0	
+Understory Burn Type 2	Roadless Status___Roadless and undeveloped	layer2	R	0.0	
+Understory Burn Type 2	Roadless Status___Roaded and developed	layer2	N	0.0	
+Understory Burn Type 2	Timber Suitability___Not Available or Not Suited; No Timber Harvest Allowed	layer3	N	0.0	
+Understory Burn Type 2	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; No scheduled output	layer3	O	0.0	
+Understory Burn Type 2	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; Scheduled output	layer3	P	0.0	
+Understory Burn Type 2	Timber Suitability___Suited for Timber Production	layer3	S	0.0	
+Understory Burn Type 2	Resource Condition Zone___Lynx habitat - conserve watershed	layer4	L	0.0	
+Understory Burn Type 2	Resource Condition Zone___Lynx habitat - restore watershed	layer4	H	0.0	
+Understory Burn Type 2	Resource Condition Zone___Non-Lynx habitat - conserve watershed	layer4	C	0.0	
+Understory Burn Type 2	Resource Condition Zone___Non-Lynx habitat - restore watershed	layer4	R	0.0	
+Understory Burn Type 2	Vegetation Cover Type___WDI or DIP where the indicator tree species is Ponderosa Pine	layer5	P	0.0	
+Understory Burn Type 2	Vegetation Cover Type___WDT or DTD where the indicator tree species is Dry Douglas-fir/Grand Fir	layer5	D	0.0	
+Understory Burn Type 2	Vegetation Cover Type___MI or MIW where the indicator tree species is Mesic Douglas-fir mix	layer5	W	0.0	
+Understory Burn Type 2	Vegetation Cover Type___MT or MTC where the indicator tree species is Grand Fir/Western Red Cedar	layer5	C	0.0	
+Understory Burn Type 2	Vegetation Cover Type___SI or SII where the indicator tree species is Cold Douglas-fir mix	layer5	I	0.0	
+Understory Burn Type 2	Vegetation Cover Type___ST or STA where the indicator tree species is Subalpine Fir mix	layer5	A	0.0	
+Understory Burn Type 2	Vegetation Cover Type___LP or LPP where the indicator tree species is Lodgepole Pine	layer5	L	0.0	
+Understory Burn Type 2	Vegetation Cover Type___NS NonStocked	layer5	N	0.0	
+Understory Burn Type 3	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Breaklands	layer1	B	0.0	
+Understory Burn Type 3	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Uplands	layer1	U	0.0	
+Understory Burn Type 3	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Subalpine	layer1	S	0.0	
+Understory Burn Type 3	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Breaklands	layer1	K	0.0	
+Understory Burn Type 3	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Uplands	layer1	R	0.0	
+Understory Burn Type 3	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Subalpine	layer1	C	0.0	
+Understory Burn Type 3	Roadless Status___Roadless and undeveloped	layer2	R	0.0	
+Understory Burn Type 3	Roadless Status___Roaded and developed	layer2	N	0.0	
+Understory Burn Type 3	Timber Suitability___Not Available or Not Suited; No Timber Harvest Allowed	layer3	N	0.0	
+Understory Burn Type 3	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; No scheduled output	layer3	O	0.0	
+Understory Burn Type 3	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; Scheduled output	layer3	P	0.0	
+Understory Burn Type 3	Timber Suitability___Suited for Timber Production	layer3	S	0.0	
+Understory Burn Type 3	Resource Condition Zone___Lynx habitat - conserve watershed	layer4	L	0.0	
+Understory Burn Type 3	Resource Condition Zone___Lynx habitat - restore watershed	layer4	H	0.0	
+Understory Burn Type 3	Resource Condition Zone___Non-Lynx habitat - conserve watershed	layer4	C	0.0	
+Understory Burn Type 3	Resource Condition Zone___Non-Lynx habitat - restore watershed	layer4	R	0.0	
+Understory Burn Type 3	Vegetation Cover Type___WDI or DIP where the indicator tree species is Ponderosa Pine	layer5	P	0.0	
+Understory Burn Type 3	Vegetation Cover Type___WDT or DTD where the indicator tree species is Dry Douglas-fir/Grand Fir	layer5	D	0.0	
+Understory Burn Type 3	Vegetation Cover Type___MI or MIW where the indicator tree species is Mesic Douglas-fir mix	layer5	W	0.0	
+Understory Burn Type 3	Vegetation Cover Type___MT or MTC where the indicator tree species is Grand Fir/Western Red Cedar	layer5	C	0.0	
+Understory Burn Type 3	Vegetation Cover Type___SI or SII where the indicator tree species is Cold Douglas-fir mix	layer5	I	0.0	
+Understory Burn Type 3	Vegetation Cover Type___ST or STA where the indicator tree species is Subalpine Fir mix	layer5	A	0.0	
+Understory Burn Type 3	Vegetation Cover Type___LP or LPP where the indicator tree species is Lodgepole Pine	layer5	L	0.0	
+Understory Burn Type 3	Vegetation Cover Type___NS NonStocked	layer5	N	0.0	
+Broadcast Burn	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Breaklands	layer1	B	0.0	
+Broadcast Burn	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Uplands	layer1	U	0.0	
+Broadcast Burn	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Subalpine	layer1	S	0.0	
+Broadcast Burn	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Breaklands	layer1	K	0.0	
+Broadcast Burn	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Uplands	layer1	R	0.0	
+Broadcast Burn	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Subalpine	layer1	C	0.0	
+Broadcast Burn	Roadless Status___Roadless and undeveloped	layer2	R	0.0	
+Broadcast Burn	Roadless Status___Roaded and developed	layer2	N	0.0	
+Broadcast Burn	Timber Suitability___Not Available or Not Suited; No Timber Harvest Allowed	layer3	N	0.0	
+Broadcast Burn	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; No scheduled output	layer3	O	0.0	
+Broadcast Burn	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; Scheduled output	layer3	P	0.0	
+Broadcast Burn	Timber Suitability___Suited for Timber Production	layer3	S	0.0	
+Broadcast Burn	Resource Condition Zone___Lynx habitat - conserve watershed	layer4	L	0.0	
+Broadcast Burn	Resource Condition Zone___Lynx habitat - restore watershed	layer4	H	0.0	
+Broadcast Burn	Resource Condition Zone___Non-Lynx habitat - conserve watershed	layer4	C	0.0	
+Broadcast Burn	Resource Condition Zone___Non-Lynx habitat - restore watershed	layer4	R	0.0	
+Broadcast Burn	Vegetation Cover Type___WDI or DIP where the indicator tree species is Ponderosa Pine	layer5	P	0.0	
+Broadcast Burn	Vegetation Cover Type___WDT or DTD where the indicator tree species is Dry Douglas-fir/Grand Fir	layer5	D	0.0	
+Broadcast Burn	Vegetation Cover Type___MI or MIW where the indicator tree species is Mesic Douglas-fir mix	layer5	W	0.0	
+Broadcast Burn	Vegetation Cover Type___MT or MTC where the indicator tree species is Grand Fir/Western Red Cedar	layer5	C	0.0	
+Broadcast Burn	Vegetation Cover Type___SI or SII where the indicator tree species is Cold Douglas-fir mix	layer5	I	0.0	
+Broadcast Burn	Vegetation Cover Type___ST or STA where the indicator tree species is Subalpine Fir mix	layer5	A	0.0	
+Broadcast Burn	Vegetation Cover Type___LP or LPP where the indicator tree species is Lodgepole Pine	layer5	L	0.0	
+Broadcast Burn	Vegetation Cover Type___NS NonStocked	layer5	N	0.0	
+Seed Cut	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Breaklands	layer1	B	0.0	
+Seed Cut	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Uplands	layer1	U	0.0	
+Seed Cut	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Subalpine	layer1	S	0.0	
+Seed Cut	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Breaklands	layer1	K	0.0	
+Seed Cut	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Uplands	layer1	R	0.0	
+Seed Cut	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Subalpine	layer1	C	0.0	
+Seed Cut	Roadless Status___Roadless and undeveloped	layer2	R	0.0	
+Seed Cut	Roadless Status___Roaded and developed	layer2	N	0.0	
+Seed Cut	Timber Suitability___Not Available or Not Suited; No Timber Harvest Allowed	layer3	N	0.0	
+Seed Cut	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; No scheduled output	layer3	O	0.0	
+Seed Cut	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; Scheduled output	layer3	P	0.0	
+Seed Cut	Timber Suitability___Suited for Timber Production	layer3	S	0.0	
+Seed Cut	Resource Condition Zone___Lynx habitat - conserve watershed	layer4	L	0.0	
+Seed Cut	Resource Condition Zone___Lynx habitat - restore watershed	layer4	H	0.0	
+Seed Cut	Resource Condition Zone___Non-Lynx habitat - conserve watershed	layer4	C	0.0	
+Seed Cut	Resource Condition Zone___Non-Lynx habitat - restore watershed	layer4	R	0.0	
+Seed Cut	Vegetation Cover Type___WDI or DIP where the indicator tree species is Ponderosa Pine	layer5	P	0.0	
+Seed Cut	Vegetation Cover Type___WDT or DTD where the indicator tree species is Dry Douglas-fir/Grand Fir	layer5	D	0.0	
+Seed Cut	Vegetation Cover Type___MI or MIW where the indicator tree species is Mesic Douglas-fir mix	layer5	W	0.0	
+Seed Cut	Vegetation Cover Type___MT or MTC where the indicator tree species is Grand Fir/Western Red Cedar	layer5	C	0.0	
+Seed Cut	Vegetation Cover Type___SI or SII where the indicator tree species is Cold Douglas-fir mix	layer5	I	0.0	
+Seed Cut	Vegetation Cover Type___ST or STA where the indicator tree species is Subalpine Fir mix	layer5	A	0.0	
+Seed Cut	Vegetation Cover Type___LP or LPP where the indicator tree species is Lodgepole Pine	layer5	L	0.0	
+Seed Cut	Vegetation Cover Type___NS NonStocked	layer5	N	0.0	
+Overstory Removal	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Breaklands	layer1	B	0.0	
+Overstory Removal	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Uplands	layer1	U	0.0	
+Overstory Removal	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Subalpine	layer1	S	0.0	
+Overstory Removal	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Breaklands	layer1	K	0.0	
+Overstory Removal	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Uplands	layer1	R	0.0	
+Overstory Removal	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Subalpine	layer1	C	0.0	
+Overstory Removal	Roadless Status___Roadless and undeveloped	layer2	R	0.0	
+Overstory Removal	Roadless Status___Roaded and developed	layer2	N	0.0	
+Overstory Removal	Timber Suitability___Not Available or Not Suited; No Timber Harvest Allowed	layer3	N	0.0	
+Overstory Removal	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; No scheduled output	layer3	O	0.0	
+Overstory Removal	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; Scheduled output	layer3	P	0.0	
+Overstory Removal	Timber Suitability___Suited for Timber Production	layer3	S	0.0	
+Overstory Removal	Resource Condition Zone___Lynx habitat - conserve watershed	layer4	L	0.0	
+Overstory Removal	Resource Condition Zone___Lynx habitat - restore watershed	layer4	H	0.0	
+Overstory Removal	Resource Condition Zone___Non-Lynx habitat - conserve watershed	layer4	C	0.0	
+Overstory Removal	Resource Condition Zone___Non-Lynx habitat - restore watershed	layer4	R	0.0	
+Overstory Removal	Vegetation Cover Type___WDI or DIP where the indicator tree species is Ponderosa Pine	layer5	P	0.0	
+Overstory Removal	Vegetation Cover Type___WDT or DTD where the indicator tree species is Dry Douglas-fir/Grand Fir	layer5	D	0.0	
+Overstory Removal	Vegetation Cover Type___MI or MIW where the indicator tree species is Mesic Douglas-fir mix	layer5	W	0.0	
+Overstory Removal	Vegetation Cover Type___MT or MTC where the indicator tree species is Grand Fir/Western Red Cedar	layer5	C	0.0	
+Overstory Removal	Vegetation Cover Type___SI or SII where the indicator tree species is Cold Douglas-fir mix	layer5	I	0.0	
+Overstory Removal	Vegetation Cover Type___ST or STA where the indicator tree species is Subalpine Fir mix	layer5	A	0.0	
+Overstory Removal	Vegetation Cover Type___LP or LPP where the indicator tree species is Lodgepole Pine	layer5	L	0.0	
+Overstory Removal	Vegetation Cover Type___NS NonStocked	layer5	N	0.0	
+Group Openning Type 1	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Breaklands	layer1	B	0.0	
+Group Openning Type 1	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Uplands	layer1	U	0.0	
+Group Openning Type 1	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Subalpine	layer1	S	0.0	
+Group Openning Type 1	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Breaklands	layer1	K	0.0	
+Group Openning Type 1	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Uplands	layer1	R	0.0	
+Group Openning Type 1	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Subalpine	layer1	C	0.0	
+Group Openning Type 1	Roadless Status___Roadless and undeveloped	layer2	R	0.0	
+Group Openning Type 1	Roadless Status___Roaded and developed	layer2	N	0.0	
+Group Openning Type 1	Timber Suitability___Not Available or Not Suited; No Timber Harvest Allowed	layer3	N	0.0	
+Group Openning Type 1	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; No scheduled output	layer3	O	0.0	
+Group Openning Type 1	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; Scheduled output	layer3	P	0.0	
+Group Openning Type 1	Timber Suitability___Suited for Timber Production	layer3	S	0.0	
+Group Openning Type 1	Resource Condition Zone___Lynx habitat - conserve watershed	layer4	L	0.0	
+Group Openning Type 1	Resource Condition Zone___Lynx habitat - restore watershed	layer4	H	0.0	
+Group Openning Type 1	Resource Condition Zone___Non-Lynx habitat - conserve watershed	layer4	C	0.0	
+Group Openning Type 1	Resource Condition Zone___Non-Lynx habitat - restore watershed	layer4	R	0.0	
+Group Openning Type 1	Vegetation Cover Type___WDI or DIP where the indicator tree species is Ponderosa Pine	layer5	P	0.0	
+Group Openning Type 1	Vegetation Cover Type___WDT or DTD where the indicator tree species is Dry Douglas-fir/Grand Fir	layer5	D	0.0	
+Group Openning Type 1	Vegetation Cover Type___MI or MIW where the indicator tree species is Mesic Douglas-fir mix	layer5	W	0.0	
+Group Openning Type 1	Vegetation Cover Type___MT or MTC where the indicator tree species is Grand Fir/Western Red Cedar	layer5	C	0.0	
+Group Openning Type 1	Vegetation Cover Type___SI or SII where the indicator tree species is Cold Douglas-fir mix	layer5	I	0.0	
+Group Openning Type 1	Vegetation Cover Type___ST or STA where the indicator tree species is Subalpine Fir mix	layer5	A	0.0	
+Group Openning Type 1	Vegetation Cover Type___LP or LPP where the indicator tree species is Lodgepole Pine	layer5	L	0.0	
+Group Openning Type 1	Vegetation Cover Type___NS NonStocked	layer5	N	0.0	
+Group Openning Type 2	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Breaklands	layer1	B	0.0	
+Group Openning Type 2	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Uplands	layer1	U	0.0	
+Group Openning Type 2	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Subalpine	layer1	S	0.0	
+Group Openning Type 2	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Breaklands	layer1	K	0.0	
+Group Openning Type 2	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Uplands	layer1	R	0.0	
+Group Openning Type 2	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Subalpine	layer1	C	0.0	
+Group Openning Type 2	Roadless Status___Roadless and undeveloped	layer2	R	0.0	
+Group Openning Type 2	Roadless Status___Roaded and developed	layer2	N	0.0	
+Group Openning Type 2	Timber Suitability___Not Available or Not Suited; No Timber Harvest Allowed	layer3	N	0.0	
+Group Openning Type 2	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; No scheduled output	layer3	O	0.0	
+Group Openning Type 2	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; Scheduled output	layer3	P	0.0	
+Group Openning Type 2	Timber Suitability___Suited for Timber Production	layer3	S	0.0	
+Group Openning Type 2	Resource Condition Zone___Lynx habitat - conserve watershed	layer4	L	0.0	
+Group Openning Type 2	Resource Condition Zone___Lynx habitat - restore watershed	layer4	H	0.0	
+Group Openning Type 2	Resource Condition Zone___Non-Lynx habitat - conserve watershed	layer4	C	0.0	
+Group Openning Type 2	Resource Condition Zone___Non-Lynx habitat - restore watershed	layer4	R	0.0	
+Group Openning Type 2	Vegetation Cover Type___WDI or DIP where the indicator tree species is Ponderosa Pine	layer5	P	0.0	
+Group Openning Type 2	Vegetation Cover Type___WDT or DTD where the indicator tree species is Dry Douglas-fir/Grand Fir	layer5	D	0.0	
+Group Openning Type 2	Vegetation Cover Type___MI or MIW where the indicator tree species is Mesic Douglas-fir mix	layer5	W	0.0	
+Group Openning Type 2	Vegetation Cover Type___MT or MTC where the indicator tree species is Grand Fir/Western Red Cedar	layer5	C	0.0	
+Group Openning Type 2	Vegetation Cover Type___SI or SII where the indicator tree species is Cold Douglas-fir mix	layer5	I	0.0	
+Group Openning Type 2	Vegetation Cover Type___ST or STA where the indicator tree species is Subalpine Fir mix	layer5	A	0.0	
+Group Openning Type 2	Vegetation Cover Type___LP or LPP where the indicator tree species is Lodgepole Pine	layer5	L	0.0	
+Group Openning Type 2	Vegetation Cover Type___NS NonStocked	layer5	N	0.0	
+Group Openning Type 3	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Breaklands	layer1	B	0.0	
+Group Openning Type 3	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Uplands	layer1	U	0.0	
+Group Openning Type 3	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Subalpine	layer1	S	0.0	
+Group Openning Type 3	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Breaklands	layer1	K	0.0	
+Group Openning Type 3	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Uplands	layer1	R	0.0	
+Group Openning Type 3	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Subalpine	layer1	C	0.0	
+Group Openning Type 3	Roadless Status___Roadless and undeveloped	layer2	R	0.0	
+Group Openning Type 3	Roadless Status___Roaded and developed	layer2	N	0.0	
+Group Openning Type 3	Timber Suitability___Not Available or Not Suited; No Timber Harvest Allowed	layer3	N	0.0	
+Group Openning Type 3	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; No scheduled output	layer3	O	0.0	
+Group Openning Type 3	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; Scheduled output	layer3	P	0.0	
+Group Openning Type 3	Timber Suitability___Suited for Timber Production	layer3	S	0.0	
+Group Openning Type 3	Resource Condition Zone___Lynx habitat - conserve watershed	layer4	L	0.0	
+Group Openning Type 3	Resource Condition Zone___Lynx habitat - restore watershed	layer4	H	0.0	
+Group Openning Type 3	Resource Condition Zone___Non-Lynx habitat - conserve watershed	layer4	C	0.0	
+Group Openning Type 3	Resource Condition Zone___Non-Lynx habitat - restore watershed	layer4	R	0.0	
+Group Openning Type 3	Vegetation Cover Type___WDI or DIP where the indicator tree species is Ponderosa Pine	layer5	P	0.0	
+Group Openning Type 3	Vegetation Cover Type___WDT or DTD where the indicator tree species is Dry Douglas-fir/Grand Fir	layer5	D	0.0	
+Group Openning Type 3	Vegetation Cover Type___MI or MIW where the indicator tree species is Mesic Douglas-fir mix	layer5	W	0.0	
+Group Openning Type 3	Vegetation Cover Type___MT or MTC where the indicator tree species is Grand Fir/Western Red Cedar	layer5	C	0.0	
+Group Openning Type 3	Vegetation Cover Type___SI or SII where the indicator tree species is Cold Douglas-fir mix	layer5	I	0.0	
+Group Openning Type 3	Vegetation Cover Type___ST or STA where the indicator tree species is Subalpine Fir mix	layer5	A	0.0	
+Group Openning Type 3	Vegetation Cover Type___LP or LPP where the indicator tree species is Lodgepole Pine	layer5	L	0.0	
+Group Openning Type 3	Vegetation Cover Type___NS NonStocked	layer5	N	0.0	
+Single Tree Openning	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Breaklands	layer1	B	0.0	
+Single Tree Openning	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Uplands	layer1	U	0.0	
+Single Tree Openning	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Subalpine	layer1	S	0.0	
+Single Tree Openning	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Breaklands	layer1	K	0.0	
+Single Tree Openning	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Uplands	layer1	R	0.0	
+Single Tree Openning	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Subalpine	layer1	C	0.0	
+Single Tree Openning	Roadless Status___Roadless and undeveloped	layer2	R	0.0	
+Single Tree Openning	Roadless Status___Roaded and developed	layer2	N	0.0	
+Single Tree Openning	Timber Suitability___Not Available or Not Suited; No Timber Harvest Allowed	layer3	N	0.0	
+Single Tree Openning	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; No scheduled output	layer3	O	0.0	
+Single Tree Openning	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; Scheduled output	layer3	P	0.0	
+Single Tree Openning	Timber Suitability___Suited for Timber Production	layer3	S	0.0	
+Single Tree Openning	Resource Condition Zone___Lynx habitat - conserve watershed	layer4	L	0.0	
+Single Tree Openning	Resource Condition Zone___Lynx habitat - restore watershed	layer4	H	0.0	
+Single Tree Openning	Resource Condition Zone___Non-Lynx habitat - conserve watershed	layer4	C	0.0	
+Single Tree Openning	Resource Condition Zone___Non-Lynx habitat - restore watershed	layer4	R	0.0	
+Single Tree Openning	Vegetation Cover Type___WDI or DIP where the indicator tree species is Ponderosa Pine	layer5	P	0.0	
+Single Tree Openning	Vegetation Cover Type___WDT or DTD where the indicator tree species is Dry Douglas-fir/Grand Fir	layer5	D	0.0	
+Single Tree Openning	Vegetation Cover Type___MI or MIW where the indicator tree species is Mesic Douglas-fir mix	layer5	W	0.0	
+Single Tree Openning	Vegetation Cover Type___MT or MTC where the indicator tree species is Grand Fir/Western Red Cedar	layer5	C	0.0	
+Single Tree Openning	Vegetation Cover Type___SI or SII where the indicator tree species is Cold Douglas-fir mix	layer5	I	0.0	
+Single Tree Openning	Vegetation Cover Type___ST or STA where the indicator tree species is Subalpine Fir mix	layer5	A	0.0	
+Single Tree Openning	Vegetation Cover Type___LP or LPP where the indicator tree species is Lodgepole Pine	layer5	L	0.0	
+Single Tree Openning	Vegetation Cover Type___NS NonStocked	layer5	N	0.0	
+Artificial Regeneration	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Breaklands	layer1	B	0.0	
+Artificial Regeneration	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Uplands	layer1	U	0.0	
+Artificial Regeneration	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Subalpine	layer1	S	0.0	
+Artificial Regeneration	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Breaklands	layer1	K	0.0	
+Artificial Regeneration	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Uplands	layer1	R	0.0	
+Artificial Regeneration	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Subalpine	layer1	C	0.0	
+Artificial Regeneration	Roadless Status___Roadless and undeveloped	layer2	R	0.0	
+Artificial Regeneration	Roadless Status___Roaded and developed	layer2	N	0.0	
+Artificial Regeneration	Timber Suitability___Not Available or Not Suited; No Timber Harvest Allowed	layer3	N	0.0	
+Artificial Regeneration	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; No scheduled output	layer3	O	0.0	
+Artificial Regeneration	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; Scheduled output	layer3	P	0.0	
+Artificial Regeneration	Timber Suitability___Suited for Timber Production	layer3	S	0.0	
+Artificial Regeneration	Resource Condition Zone___Lynx habitat - conserve watershed	layer4	L	0.0	
+Artificial Regeneration	Resource Condition Zone___Lynx habitat - restore watershed	layer4	H	0.0	
+Artificial Regeneration	Resource Condition Zone___Non-Lynx habitat - conserve watershed	layer4	C	0.0	
+Artificial Regeneration	Resource Condition Zone___Non-Lynx habitat - restore watershed	layer4	R	0.0	
+Artificial Regeneration	Vegetation Cover Type___WDI or DIP where the indicator tree species is Ponderosa Pine	layer5	P	0.0	
+Artificial Regeneration	Vegetation Cover Type___WDT or DTD where the indicator tree species is Dry Douglas-fir/Grand Fir	layer5	D	0.0	
+Artificial Regeneration	Vegetation Cover Type___MI or MIW where the indicator tree species is Mesic Douglas-fir mix	layer5	W	0.0	
+Artificial Regeneration	Vegetation Cover Type___MT or MTC where the indicator tree species is Grand Fir/Western Red Cedar	layer5	C	0.0	
+Artificial Regeneration	Vegetation Cover Type___SI or SII where the indicator tree species is Cold Douglas-fir mix	layer5	I	0.0	
+Artificial Regeneration	Vegetation Cover Type___ST or STA where the indicator tree species is Subalpine Fir mix	layer5	A	0.0	
+Artificial Regeneration	Vegetation Cover Type___LP or LPP where the indicator tree species is Lodgepole Pine	layer5	L	0.0	
+Artificial Regeneration	Vegetation Cover Type___NS NonStocked	layer5	N	0.0	
+Tree Planting	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Breaklands	layer1	B	0.0	
+Tree Planting	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Uplands	layer1	U	0.0	
+Tree Planting	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Subalpine	layer1	S	0.0	
+Tree Planting	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Breaklands	layer1	K	0.0	
+Tree Planting	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Uplands	layer1	R	0.0	
+Tree Planting	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Subalpine	layer1	C	0.0	
+Tree Planting	Roadless Status___Roadless and undeveloped	layer2	R	0.0	
+Tree Planting	Roadless Status___Roaded and developed	layer2	N	0.0	
+Tree Planting	Timber Suitability___Not Available or Not Suited; No Timber Harvest Allowed	layer3	N	0.0	
+Tree Planting	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; No scheduled output	layer3	O	0.0	
+Tree Planting	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; Scheduled output	layer3	P	0.0	
+Tree Planting	Timber Suitability___Suited for Timber Production	layer3	S	0.0	
+Tree Planting	Resource Condition Zone___Lynx habitat - conserve watershed	layer4	L	0.0	
+Tree Planting	Resource Condition Zone___Lynx habitat - restore watershed	layer4	H	0.0	
+Tree Planting	Resource Condition Zone___Non-Lynx habitat - conserve watershed	layer4	C	0.0	
+Tree Planting	Resource Condition Zone___Non-Lynx habitat - restore watershed	layer4	R	0.0	
+Tree Planting	Vegetation Cover Type___WDI or DIP where the indicator tree species is Ponderosa Pine	layer5	P	0.0	
+Tree Planting	Vegetation Cover Type___WDT or DTD where the indicator tree species is Dry Douglas-fir/Grand Fir	layer5	D	0.0	
+Tree Planting	Vegetation Cover Type___MI or MIW where the indicator tree species is Mesic Douglas-fir mix	layer5	W	0.0	
+Tree Planting	Vegetation Cover Type___MT or MTC where the indicator tree species is Grand Fir/Western Red Cedar	layer5	C	0.0	
+Tree Planting	Vegetation Cover Type___SI or SII where the indicator tree species is Cold Douglas-fir mix	layer5	I	0.0	
+Tree Planting	Vegetation Cover Type___ST or STA where the indicator tree species is Subalpine Fir mix	layer5	A	0.0	
+Tree Planting	Vegetation Cover Type___LP or LPP where the indicator tree species is Lodgepole Pine	layer5	L	0.0	
+Tree Planting	Vegetation Cover Type___NS NonStocked	layer5	N	0.0	
+Weed Treatments	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Breaklands	layer1	B	0.0	
+Weed Treatments	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Uplands	layer1	U	0.0	
+Weed Treatments	Vegetation Desired Future Condition Area___Bitterroot Mtns. (M333D) Subalpine	layer1	S	0.0	
+Weed Treatments	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Breaklands	layer1	K	0.0	
+Weed Treatments	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Uplands	layer1	R	0.0	
+Weed Treatments	Vegetation Desired Future Condition Area___Idaho Batholith (M332A) Subalpine	layer1	C	0.0	
+Weed Treatments	Roadless Status___Roadless and undeveloped	layer2	R	0.0	
+Weed Treatments	Roadless Status___Roaded and developed	layer2	N	0.0	
+Weed Treatments	Timber Suitability___Not Available or Not Suited; No Timber Harvest Allowed	layer3	N	0.0	
+Weed Treatments	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; No scheduled output	layer3	O	0.0	
+Weed Treatments	Timber Suitability___Generally Suitable for Timber Harvest for other resource objectives; Scheduled output	layer3	P	0.0	
+Weed Treatments	Timber Suitability___Suited for Timber Production	layer3	S	0.0	
+Weed Treatments	Resource Condition Zone___Lynx habitat - conserve watershed	layer4	L	0.0	
+Weed Treatments	Resource Condition Zone___Lynx habitat - restore watershed	layer4	H	0.0	
+Weed Treatments	Resource Condition Zone___Non-Lynx habitat - conserve watershed	layer4	C	0.0	
+Weed Treatments	Resource Condition Zone___Non-Lynx habitat - restore watershed	layer4	R	0.0	
+Weed Treatments	Vegetation Cover Type___WDI or DIP where the indicator tree species is Ponderosa Pine	layer5	P	0.0	
+Weed Treatments	Vegetation Cover Type___WDT or DTD where the indicator tree species is Dry Douglas-fir/Grand Fir	layer5	D	0.0	
+Weed Treatments	Vegetation Cover Type___MI or MIW where the indicator tree species is Mesic Douglas-fir mix	layer5	W	0.0	
+Weed Treatments	Vegetation Cover Type___MT or MTC where the indicator tree species is Grand Fir/Western Red Cedar	layer5	C	0.0	
+Weed Treatments	Vegetation Cover Type___SI or SII where the indicator tree species is Cold Douglas-fir mix	layer5	I	0.0	
+Weed Treatments	Vegetation Cover Type___ST or STA where the indicator tree species is Subalpine Fir mix	layer5	A	0.0	
+Weed Treatments	Vegetation Cover Type___LP or LPP where the indicator tree species is Lodgepole Pine	layer5	L	0.0	
+Weed Treatments	Vegetation Cover Type___NS NonStocked	layer5	N	0.0	

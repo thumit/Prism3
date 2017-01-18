@@ -14,7 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 
-import spectrumConvenienceClasses.IconsHandle;
+import spectrumConvenienceClasses.IconHandle;
 
 public class QuickEdit_RD_Conversion_Panel extends JPanel {
 	public QuickEdit_RD_Conversion_Panel(JTable table, Object[][] data) {
@@ -56,7 +56,7 @@ public class QuickEdit_RD_Conversion_Panel extends JPanel {
 		// Add button apply
 		JButton btnApplyWeight = new JButton();
 		btnApplyWeight.setToolTipText("make changes for all highlighted rows");
-		btnApplyWeight.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_left.png"));
+		btnApplyWeight.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_left.png"));
 		btnApplyWeight.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {

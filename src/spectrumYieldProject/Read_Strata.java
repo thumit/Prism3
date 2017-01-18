@@ -19,6 +19,7 @@ public class Read_Strata {
 				// All lines to be in array
 				List<String> list;
 				list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
+				list.remove(0);		//Remove the 1st row which contains column Names
 				String[] a = list.toArray(new String[list.size()]);
 							
 				//Read the first row 

@@ -282,7 +282,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			read.readSRDrequirementFile(new File(runFolder.getAbsolutePath() + "/input_04_ replacingdisturbances_covertype_conversion.txt"));
 			read.readMSFire(new File(runFolder.getAbsolutePath() + "/input_05_mixed_severity_wildfire.txt"));
 			read.readSRDFile(new File(runFolder.getAbsolutePath() + "/input_06_replacing_disturbances.txt"));
-			read.readUserConstraints(new File(runFolder.getAbsolutePath() + "/input_08_user_constraints.txt"));
+			read.readUserConstraints(new File(runFolder.getAbsolutePath() + "/input_09_user_constraints.txt"));
 			Read_DatabaseTables read_DatabaseTables = new Read_DatabaseTables(new File(runFolder.getAbsolutePath() + "/database.db"));
 			
 			//ManagementOptions info
@@ -327,10 +327,10 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			
 			
 			// Set up problem-------------------------------------------------			
-			File file_StrataDefinition = new File(runFolder.getAbsolutePath() + "/" + "StrataDefinition.csv");
+			File file_StrataDefinition = new File(runFolder.getAbsolutePath() + "/" + "strata_definition.csv");
 			if (! file_StrataDefinition.exists()) {		// If not exist then use the Default Definition
 				try {
-					InputStream initialStream = getClass().getResourceAsStream("/StrataDefinition.csv");		//Default definition
+					InputStream initialStream = getClass().getResourceAsStream("/strata_definition.csv");		//Default definition
 					byte[] buffer = new byte[initialStream.available()];
 					initialStream.read(buffer);
 					

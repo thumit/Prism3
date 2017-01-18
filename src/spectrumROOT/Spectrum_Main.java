@@ -218,7 +218,7 @@ public class Spectrum_Main extends JFrame {
 						
 						
 						boolean stop_naming = false;
-						String titleText = "Type your project's name";
+						String titleText = "Project's name";
 						while (stop_naming == false) {
 							icon = new ImageIcon(getClass().getResource("/icon_question.png"));
 					  		scaleImage = icon.getImage().getScaledInstance(50, 50,Image.SCALE_SMOOTH);
@@ -253,7 +253,7 @@ public class Spectrum_Main extends JFrame {
 										stop_naming = true;
 									}
 								} else {
-									titleText = "Name already exists or contains special characters. Please try a new name:";									
+									titleText = "Name already exists or contains special characters. Try a different name:";									
 								}
 							} 		
 							
@@ -441,8 +441,8 @@ public class Spectrum_Main extends JFrame {
 
 		    	icon = new ImageIcon(getClass().getResource("/icon_question.png"));
 		  		scaleImage = icon.getImage().getScaledInstance(50, 50,Image.SCALE_SMOOTH);
-		  		String ExitOption[] = {"Yes","No"};
-				int response = JOptionPane.showOptionDialog(Spectrum_Main.mainFrameReturn(),"Your changes would not be saved if closing project while editing. Would you like to close this project ?", "Close Project",
+		  		String ExitOption[] = {"Close","Cancel"};
+				int response = JOptionPane.showOptionDialog(Spectrum_Main.mainFrameReturn(),"Stop Editing can save changes you made. Close project ?", "Close Project",
 						JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, new ImageIcon(scaleImage), ExitOption, ExitOption[0]);
 				if (response == 0)
 				{
@@ -476,9 +476,8 @@ public class Spectrum_Main extends JFrame {
 	public void exitSpectrumLite() {
 		icon = new ImageIcon(getClass().getResource("/icon_question.png"));
 		scaleImage = icon.getImage().getScaledInstance(50, 50,Image.SCALE_SMOOTH);
-//		String ExitOption[] = {"Yes","No","Cancel"};
-		String ExitOption[] = {"Yes","No"};
-		int response = JOptionPane.showOptionDialog(Spectrum_Main.mainFrameReturn(),"Your changes would not be saved if exit while editing. Would you like to exit SpectrumLite ?", "Exit SpectrumLite",
+		String ExitOption[] = {"Exit","Cancel"};
+		int response = JOptionPane.showOptionDialog(Spectrum_Main.mainFrameReturn(),"Stop Editing can save changes you made. Exit SpectrumLite ?", "Exit SpectrumLite",
 				JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, new ImageIcon(scaleImage), ExitOption, ExitOption[0]);
 		if (response == 0)
 		{

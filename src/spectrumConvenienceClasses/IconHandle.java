@@ -4,8 +4,8 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 import spectrumROOT.Spectrum_Main;
 
-public class IconsHandle {
-	public IconsHandle() {
+public class IconHandle {
+	public IconHandle() {
 
 	}
 

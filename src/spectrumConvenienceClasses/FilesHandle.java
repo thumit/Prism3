@@ -179,10 +179,10 @@ public class FilesHandle {
 		if (response == 1)	
 		{
 			try {
-				File file_StrataDefinition = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "StrataDefinition.csv");	
+				File file_StrataDefinition = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "strata_definition.csv");	
 				file_StrataDefinition.deleteOnExit();
 					
-				InputStream initialStream = Panel_EditRun_Details.class.getResourceAsStream("/StrataDefinition.csv");		//Default definition
+				InputStream initialStream = Panel_EditRun_Details.class.getResourceAsStream("/strata_definition.csv");		//Default definition
 				byte[] buffer = new byte[initialStream.available()];
 				initialStream.read(buffer);
 

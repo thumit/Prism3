@@ -15,7 +15,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import spectrumConvenienceClasses.IconsHandle;
+import spectrumConvenienceClasses.IconHandle;
 
 public class QuickEdit_MS_Percentage_Panel extends JPanel {
 	public QuickEdit_MS_Percentage_Panel(JTable table, Object[][] data) {
@@ -47,7 +47,7 @@ public class QuickEdit_MS_Percentage_Panel extends JPanel {
 						if (!text.matches("\\d*(\\.\\d{0,2})?")) {		//	used regex: \\d*(\\.\\d{0,2})? because two decimal places is enough
 							formatedTextfield.setText(text.substring(0, text.length() - 1));
 						} else {
-							if (!text.isEmpty() && (Double.valueOf(text) < (double) 0 || Double.valueOf(text) > (double) 100)) {		// If the added String make value <0 or >100 then delete that String
+							if (!text.isEmpty() && !text.equals(".") && (Double.valueOf(text) < (double) 0 || Double.valueOf(text) > (double) 100)) {		// If the added String make value <0 or >100 then delete that String
 								formatedTextfield.setText(text.substring(0, text.length() - 1));
 							}
 						}	
@@ -77,10 +77,10 @@ public class QuickEdit_MS_Percentage_Panel extends JPanel {
 		
 		
 		// Add button apply
-		JButton btnApplyMin = new JButton();
-		btnApplyMin.setToolTipText("make changes for all highlighted rows");
-		btnApplyMin.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_left.png"));
-		btnApplyMin.addActionListener(new ActionListener() {
+		JButton btnApplyPercentage = new JButton();
+		btnApplyPercentage.setToolTipText("make changes for all highlighted rows");
+		btnApplyPercentage.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_left.png"));
+		btnApplyPercentage.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				// Get selected rows
@@ -91,7 +91,7 @@ public class QuickEdit_MS_Percentage_Panel extends JPanel {
 				}
 				table.clearSelection(); // To help trigger the row refresh: clear then add back the rows
 				for (int i : selectedRow) {
-					if (!formatedTextfield.getText().isEmpty()) {	// Only apply the changes to selected rows when the text is not empty
+					if (!formatedTextfield.getText().isEmpty() && !formatedTextfield.getText().equals(".")) {	// Only apply the changes to selected rows when the text is not empty
 						data[i][2] = Double.valueOf(formatedTextfield.getText());
 					}
 					table.addRowSelectionInterval(table.convertRowIndexToView(i), table.convertRowIndexToView(i));
@@ -105,6 +105,6 @@ public class QuickEdit_MS_Percentage_Panel extends JPanel {
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		c.fill = GridBagConstraints.BOTH;
-		add(btnApplyMin, c);
+		add(btnApplyPercentage, c);
 	}
 }

@@ -14,7 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 
-import spectrumConvenienceClasses.IconsHandle;
+import spectrumConvenienceClasses.IconHandle;
 
 public class QuickEdit_EA_Conversion_Panel extends JPanel {
 	public QuickEdit_EA_Conversion_Panel(JTable table, Object[][] data) {
@@ -56,7 +56,7 @@ public class QuickEdit_EA_Conversion_Panel extends JPanel {
 		// Add button apply
 		JButton btnApplyMin = new JButton();
 		btnApplyMin.setToolTipText("make changes for all highlighted rows");
-		btnApplyMin.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_left.png"));
+		btnApplyMin.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_left.png"));
 		btnApplyMin.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
@@ -120,7 +120,7 @@ public class QuickEdit_EA_Conversion_Panel extends JPanel {
 		// Add button apply
 		JButton btnApplyMax = new JButton();
 		btnApplyMax.setToolTipText("make changes for all highlighted rows");
-		btnApplyMax.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_left.png"));
+		btnApplyMax.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_left.png"));
 		btnApplyMax.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
@@ -174,7 +174,7 @@ public class QuickEdit_EA_Conversion_Panel extends JPanel {
 		// Add button apply
 		JButton btnApplyImplement = new JButton();
 		btnApplyImplement.setToolTipText("make changes for all highlighted rows");
-		btnApplyImplement.setIcon(IconsHandle.get_scaledImageIcon(16, 16, "icon_left.png"));
+		btnApplyImplement.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_left.png"));
 		btnApplyImplement.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
