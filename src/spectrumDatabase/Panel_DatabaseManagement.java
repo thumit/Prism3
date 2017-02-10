@@ -1268,11 +1268,6 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		
 		
 		try {
-			Class.forName("org.sqlite.JDBC").newInstance();
-			conn = DriverManager.getConnection("jdbc:sqlite:" + databasesFolder + seperator + currentDatabase);
-			conn.setAutoCommit(false);
-			PreparedStatement pst = null;
-			
 			if (selectionPaths != null) {		//at least 1 database or table has to be selected 
 				//Ask to delete 
 				int response = JOptionPane.showConfirmDialog(this, "Delete highlighted tables & all tables in highlighted databases ?", "Confirm Delete",
@@ -1283,56 +1278,66 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 				} else if (response == JOptionPane.YES_OPTION) {
 					DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();	
 						
-				    for (TreePath selectionPath : selectionPaths) {		//Loop through all and delete all level 3 nodes
-						currentLevel = selectionPath.getPathCount();
-						processingNode = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
-						DatabaseTree.setSelectionPath(null);
-							
-						if (currentLevel == 3) {		//DELETE Tables						
-							//Find all notes that share the same parent (same database) and currently in the selectionPath, group them into 1 delete transection						
-								
-								
-							String nextDatabase = processingNode.getParent().toString();
-							currenTableName = processingNode.getUserObject().toString();
-							model.removeNodeFromParent(processingNode);
-							
-							if (!nextDatabase.equals(currentDatabase)) {
-								pst = conn.prepareStatement("DROP TABLE IF EXISTS " + "[" + currenTableName + "]");
-								pst.executeUpdate();
-								
-								conn.commit(); // commit all prepared execution, this is important
-								conn.close();
-								
-								currentDatabase = nextDatabase;
-								conn = DriverManager.getConnection("jdbc:sqlite:" + databasesFolder + seperator + currentDatabase);		
-								conn.setAutoCommit(false);						
-							} else {
-								pst = conn.prepareStatement("DROP TABLE IF EXISTS " + "[" + currenTableName + "]");
-								pst.executeUpdate();
-							}
-										
-						}
-					}
-						
-				    //Commit execution-------------------------------------------------
-					pst.close();
-					conn.commit(); // commit all prepared execution, this is important
-					conn.close();
-					showNothing();
-						
-							
+					
 					for (TreePath selectionPath : selectionPaths) { // Loop through all again and delete all level 2 nodes (databases)
 						currentLevel = selectionPath.getPathCount();
 						DefaultMutableTreeNode processingNode = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
-						DatabaseTree.setSelectionPath(null);
 						if (currentLevel == 2) { // DELETE Databases
 							currentDatabase = processingNode.getUserObject().toString();
 							model.removeNodeFromParent(processingNode);
 							File file = new File(databasesFolder + seperator + currentDatabase);
-							file.delete();
-							showNothing();
+							file.delete();							
 						}
 					}
+					
+					
+					
+					selectionPaths = DatabaseTree.getSelectionPaths();			//This is very important to get the most recent selected paths
+					if (selectionPaths != null) {		//at least 1 database or table has to be selected 
+						Class.forName("org.sqlite.JDBC").newInstance();
+						conn = DriverManager.getConnection("jdbc:sqlite:" + databasesFolder + seperator + currentDatabase);
+						conn.setAutoCommit(false);
+						PreparedStatement pst = null;
+						
+						
+					    for (TreePath selectionPath : selectionPaths) {		//Loop through all and delete all level 3 nodes
+							currentLevel = selectionPath.getPathCount();
+							processingNode = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
+								
+							if (currentLevel == 3) {		//DELETE Tables						
+								//Find all notes that share the same parent (same database) and currently in the selectionPath, group them into 1 delete transection						
+									
+									
+								String nextDatabase = processingNode.getParent().toString();
+								currenTableName = processingNode.getUserObject().toString();
+								model.removeNodeFromParent(processingNode);
+								
+								if (!nextDatabase.equals(currentDatabase)) {
+									conn.commit(); // commit all prepared execution, this is important
+									conn.close();
+									
+									currentDatabase = nextDatabase;
+									conn = DriverManager.getConnection("jdbc:sqlite:" + databasesFolder + seperator + currentDatabase);		
+									conn.setAutoCommit(false);	
+									
+									pst = conn.prepareStatement("DROP TABLE IF EXISTS " + "[" + currenTableName + "]");
+									pst.executeUpdate();
+								} else {
+									pst = conn.prepareStatement("DROP TABLE IF EXISTS " + "[" + currenTableName + "]");
+									pst.executeUpdate();
+								}
+											
+							}
+						}
+							
+					    //Commit execution-------------------------------------------------
+						pst.close();
+						conn.commit(); // commit all prepared execution, this is important
+						conn.close();
+						showNothing();
+					}
+					
+					
 
 				} else if (response == JOptionPane.CLOSED_OPTION) {
 				}
