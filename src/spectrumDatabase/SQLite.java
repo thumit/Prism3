@@ -7,6 +7,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
+import spectrumConvenienceClasses.StringHandle;
+
 public class SQLite {
 	
 private static String delimited;
@@ -48,7 +50,7 @@ private static int totalLines;
 					int value =0;
 					for (int j = i + 1; j < itemCount; j++) {						
 						if (nameChecked[i] == false && nameChecked[j] == false) {
-							if (columnName[i].toUpperCase().equals(columnName[j].toUpperCase())) {			//This isVERY IMPORTANT FOR COMPARISON STRINGS
+							if (columnName[i].equalsIgnoreCase(columnName[j])) {			//This is IMPORTANT FOR COMPARISON STRINGS
 								value++;
 								numberadded[j] = value;
 	
@@ -78,7 +80,8 @@ private static int totalLines;
 				// make it to be:	'ColumnName' TEXT
 				String[] c = new String[itemCount];
 				for (int i = 0; i < itemCount; i++) {
-					String str = ("'" + columnName[i] + "'");
+//					String str = ("'" + columnName[i] + "'");
+					String str = ("'" + StringHandle.normalize(columnName[i]).toLowerCase() + "'");			// TO NORMALIZE COLUMNS NAMES
 					c[i] = str + " " + b[i];
 				}
 							

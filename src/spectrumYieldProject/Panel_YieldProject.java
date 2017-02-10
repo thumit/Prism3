@@ -137,8 +137,7 @@ public class Panel_YieldProject extends JLayeredPane {
 	
 		projectTree.addFocusListener(new FocusListener(){		//change name whenever node stopped editing
 	         public void focusGained(FocusEvent e) {  
-				JTree tree = (JTree)e.getSource();
-	        	if ((runName_Edit_HasChanged == true || renaming == true) && !tree.isEditing())		{ applyNamechange(); }
+	        	if ((runName_Edit_HasChanged == true || renaming == true) && !projectTree.isEditing())		{ applyNamechange(); }
 	         }
 	         public void focusLost(FocusEvent e) {               
 	         }
@@ -159,9 +158,7 @@ public class Panel_YieldProject extends JLayeredPane {
 		displayTextField.setEditable(false);
 
 		// projectToolBar at North-------------------------------------------------------------------------
-//		icon = new ImageIcon(getClass().getResource("/spectrumlite.png"));
-//		scaleImage = icon.getImage().getScaledInstance(250, 30,Image.SCALE_SMOOTH);
-//		projectToolBar = new ToolBarWithBgImage("Project Tools", JToolBar.HORIZONTAL, new ImageIcon(scaleImage));
+//		projectToolBar = new ToolBarWithBgImage("Project Tools", JToolBar.HORIZONTAL, IconHandle.get_scaledImageIcon(250, 25, "spectrumlite.png"));
 		projectToolBar = new ToolBarWithBgImage("Project Tools", JToolBar.HORIZONTAL, null);
 		projectToolBar.setFloatable(false);	//to make a tool bar immovable
 		projectToolBar.setRollover(true);	//to visually indicate tool bar buttons when the user passes over them with the cursor
@@ -475,20 +472,6 @@ public class Panel_YieldProject extends JLayeredPane {
 					}
 				
 					
-					// Only nodes level 2 (Run) can be Deleted--------------------------
-					if (currentLevel == 2 && rootSelected ==false) {					
-						final JMenuItem deleteMenuItem = new JMenuItem("Delete Runs");
-						deleteMenuItem.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_delete.png"));
-						deleteMenuItem.addActionListener(new ActionListener() {
-							@Override
-							public void actionPerformed(ActionEvent actionEvent) {								
-								delete_Runs();
-							}
-						});
-						popup.add(deleteMenuItem);
-					}
-					
-					
 					// Only nodes level 2 (Run) can be Edited--------------------------
 					if (currentLevel == 2 && rootSelected ==false) {					
 						final JMenuItem editMenuItem = new JMenuItem("Start Editing");
@@ -509,7 +492,7 @@ public class Panel_YieldProject extends JLayeredPane {
 						});
 						popup.add(editMenuItem);
 					}
-					
+									
 					
 					// Only nodes level 2 (Run) can be Solved--------------------------
 					if (currentLevel == 2 && rootSelected ==false) {					
@@ -524,6 +507,7 @@ public class Panel_YieldProject extends JLayeredPane {
 						popup.add(solveMenuItem);
 					}	
 					
+					
 					// Only nodes level 2 (Run) can be Customize output--------------------------
 					if (currentLevel == 2 && rootSelected ==false) {					
 						final JMenuItem customizeOutput_MenuItem = new JMenuItem("Customize Output");
@@ -536,6 +520,21 @@ public class Panel_YieldProject extends JLayeredPane {
 						});
 						popup.add(customizeOutput_MenuItem);
 					}
+					
+					
+					// Only nodes level 2 (Run) can be Deleted--------------------------
+					if (currentLevel == 2 && rootSelected ==false) {					
+						final JMenuItem deleteMenuItem = new JMenuItem("Delete Runs");
+						deleteMenuItem.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_delete.png"));
+						deleteMenuItem.addActionListener(new ActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent actionEvent) {								
+								delete_Runs();
+							}
+						});
+						popup.add(deleteMenuItem);
+					}
+					
 					
 					// Show the JmenuItems on selected node when it is right clicked
 					popup.show(projectTree, e.getX(), e.getY());
@@ -597,12 +596,14 @@ public class Panel_YieldProject extends JLayeredPane {
 			} // end of For loop
 		}
 				projectTree.expandPath(new TreePath(root.getPath()));	//Expand the root	
-				if (scrollPane_Right != null) showNothing();
+				if (scrollPane_Right != null) {
+					scrollPane_Right.setViewportView(null);
+				}
 	} // end of Refresh()
 		
 	// --------------------------------------------------------------------------------------------------------------------------------
 	public void new_Run() {
-		final String NodeName = "New Run";
+		final String NodeName = "new_run";
 		DefaultTreeModel model = (DefaultTreeModel) projectTree.getModel();
 		DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(NodeName);
 		model.insertNodeInto(newNode, processingNode, processingNode.getChildCount());
@@ -631,7 +632,7 @@ public class Panel_YieldProject extends JLayeredPane {
 		currentRunFolder = new File(currentProjectFolder + "/" + editingName);
 		try {
 			if (currentRunFolder.mkdirs()) {
-				temptext = "New Run has been Created";		
+				temptext = "New Run has been created";		
 			} else {
 				temptext = "New Run has not been created: Run with the same name exists, or name typed contains special characters";
 			}
@@ -698,8 +699,8 @@ public class Panel_YieldProject extends JLayeredPane {
 						File file = new File(currentProjectFolder + seperator + currentRun);
 						File[] contents = file.listFiles();		//Delete all input files inside a Run
 					    if (contents != null) {
-					        for (File f : contents) {
-					        	f.delete();
+							for (File f : contents) {
+								f.delete();
 					        }
 					    }
 						file.delete();		//Here, the Run folder is deleted

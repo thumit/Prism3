@@ -41,7 +41,7 @@ import javax.swing.event.MenuListener;
 import spectrumConvenienceClasses.ColorUtil;
 import spectrumConvenienceClasses.ComponentResizer;
 import spectrumConvenienceClasses.FilesHandle;
-import spectrumConvenienceClasses.NameHandle;
+import spectrumConvenienceClasses.StringHandle;
 import spectrumConvenienceClasses.RequestFocusListener;
 import spectrumConvenienceClasses.WindowAppearanceHandle;
 import spectrumDatabase.Panel_DatabaseManagement;
@@ -213,7 +213,7 @@ public class Spectrum_Main extends JFrame {
 								currentProjectName = projectName_JTextField.getText().trim();		//Trim spaces at the begin and end of the string
 							}
 						});
-						projectName_JTextField.setText("New Project");		//default name
+						projectName_JTextField.setText("new_project");		//default name
 						projectName_JTextField.addAncestorListener( new RequestFocusListener());	//Set focus (mouse cursor on the JTextField)
 						
 						
@@ -247,7 +247,7 @@ public class Spectrum_Main extends JFrame {
 								}
 												
 								//if Name is valid and existing projects do not contain this Name
-								if (NameHandle.nameIsValid(currentProjectName)==true && !existingName_list.contains(currentProjectName)) {
+								if (StringHandle.nameIsValid(currentProjectName)==true && !existingName_list.contains(currentProjectName)) {
 									if (new File(FilesHandle.get_projectsFolder().getAbsolutePath() + "/" + currentProjectName).mkdir()) {		//try if can create a folder with the existing project name
 										createNewJInternalFrame();		//create new internal frame for this existing project
 										stop_naming = true;

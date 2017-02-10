@@ -33,6 +33,7 @@ public class GetParameter_totalValue {
 						
 	
 			String tableName_toFind = s5 + s6 + silviculturalMethod + timingChoice;
+			tableName_toFind = tableName_toFind.toLowerCase();
 	//		String[] string_yieldTable_Name = Arrays.stream(yieldTable_Name).toArray(String[]::new);		
 			boolean foundtable = false;
 			

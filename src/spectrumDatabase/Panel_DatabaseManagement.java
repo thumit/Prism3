@@ -1,6 +1,9 @@
 package spectrumDatabase;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -10,8 +13,6 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
@@ -27,6 +28,8 @@ import java.util.Enumeration;
 import java.util.List;
 
 import javax.swing.AbstractAction;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLayeredPane;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -35,17 +38,21 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.JToolBar;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import spectrumConvenienceClasses.FilesHandle;
-import spectrumROOT.Spectrum_Main;
+import spectrumConvenienceClasses.IconHandle;
 
 @SuppressWarnings("serial")
 public class Panel_DatabaseManagement extends JLayeredPane {
@@ -60,13 +67,16 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 	private int currentLevel;
 	private TreePath[] selectionPaths;
 	private TreePath editingPath;
-	private File newfile, oldfile;
+	private File oldfile;
 	private static String fileDelimited;
 	private Boolean Database_Name_Edit_HasChanged = false;
-	private Boolean renaming = false;
+	private Boolean renamingDatabase = false;
 	private Boolean renamingTable = false;
 	private Boolean errorCAUGHT = false;
 
+	private ToolBarWithBgImage databaseToolBar;
+	private JScrollPane scrollPane_Left, scrollPane_Right;
+	private JButton btnNewDatabase, btnDelete, btnEdit, btnRefresh;
 
 	public Panel_DatabaseManagement() {
 		super.setLayout(new BorderLayout(0, 0));
@@ -82,7 +92,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		
 		
 		//Left split panel-----------------------------------
-		JScrollPane scrollPane_Left = new JScrollPane();
+		scrollPane_Left = new JScrollPane();
 		splitPane.setLeftComponent(scrollPane_Left);
 		root = new DefaultMutableTreeNode("Databases");
 		DatabaseTree = new JTree(root);	//Add the root of DatabaseTree
@@ -93,7 +103,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 			public void mousePressed(MouseEvent e) {
 				DatabaseTree.setEnabled(true);
 				queryTextField.setText("Type your queries here");
-				doMouseClicked(e);
+				doMousePressed(e);
 			}
 		});
 		
@@ -103,44 +113,95 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 //			}
 //		});	
 	
-		DatabaseTree.addFocusListener(new FocusListener(){		//change name whenever node stopped editing
+		DatabaseTree.addFocusListener(new FocusListener() {	//change name whenever node stopped editing
 	         public void focusGained(FocusEvent e) {  
-				JTree tree = (JTree)e.getSource();
-	        	if ((Database_Name_Edit_HasChanged == true || renaming == true) && !tree.isEditing())		{ applyDatabase_Namechange(); }
-	        	if ( renamingTable == true && !tree.isEditing())											{ applyTable_Namechange(); }
+	        	if ((Database_Name_Edit_HasChanged == true || renamingDatabase == true) && !DatabaseTree.isEditing())		{ applyDatabase_Namechange(); }
+	        	if ( renamingTable == true && !DatabaseTree.isEditing())											{ applyTable_Namechange(); }
 	         }
 	         public void focusLost(FocusEvent e) {               
 	         }
-	     });//end addFocusListener		
-		refreshDatabaseTree();	//Refresh the tree
+		});	// end addFocusListener
+		refreshDatabaseTree(); // Refresh the tree
 		scrollPane_Left.setViewportView(DatabaseTree);
 					
 		
 		//Right split panel-----------------------------------
-		JScrollPane scrollPane_Right = new JScrollPane();
+		scrollPane_Right = new JScrollPane();
 		splitPane.setRightComponent(scrollPane_Right);
-		DatabaseTable = new JTable();
+		DatabaseTable = new JTable() {
+			@Override			//These override is to make the width of the cell fit all contents of the cell
+			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+				// For the cells in table								
+				Component component = super.prepareRenderer(renderer, row, column);
+				int rendererWidth = component.getPreferredSize().width;
+				TableColumn tableColumn = getColumnModel().getColumn(column);
+				int maxWidth = Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth());
+				
+				// For the column names
+				TableCellRenderer renderer2 = DatabaseTable.getTableHeader().getDefaultRenderer();	
+				Component component2 = renderer2.getTableCellRendererComponent(DatabaseTable,
+			            tableColumn.getHeaderValue(), false, false, -1, column);
+				maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
+				
+				tableColumn.setPreferredWidth(maxWidth);
+				return component;
+			}
+		};
 		DatabaseTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); // this solve problems when resizing --> column width of the table becomes too narrow 
 //		DatabaseTable.setColumnSelectionAllowed(true);
 //		DatabaseTable.setRowSelectionAllowed(false);
+		DatabaseTable.setDefaultEditor(Object.class, null);		//make the data un-editable
 		scrollPane_Right.setViewportView(DatabaseTable);
 		
 		// TextField at South----------------------------------------------
 		dataDisplayTextField = new JTextField("", 0);
 		dataDisplayTextField.setEditable(false);
 		
-		// DatabaseTextField at North--------------------------------------
-		queryTextField = new JTextField("Type your queries here", 0);				
-	
-		queryTextField.addFocusListener(new FocusListener(){		//reset text when textfield is focused
-	         public void focusGained(FocusEvent e) {  
-	        	 queryTextField.setText(null);	
-	         }
-	         public void focusLost(FocusEvent e) {
-	             
-	         }
-	     });//end addFocusListener
+		// databaseToolBar & queryTextField at North----------------------------------------------------
+		databaseToolBar = new ToolBarWithBgImage("Project Tools", JToolBar.HORIZONTAL, null);
+		databaseToolBar.setFloatable(false);	//to make a tool bar immovable
+		databaseToolBar.setRollover(true);	//to visually indicate tool bar buttons when the user passes over them with the cursor		
 		
+		
+		btnNewDatabase = new JButton();
+		btnNewDatabase.setToolTipText("New Database");
+		btnNewDatabase.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_new.png"));
+		btnNewDatabase.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				refreshDatabaseTree();
+				processingNode = root;
+				currentLevel = 1;
+				new_Database_or_Table();
+			}
+		});
+		databaseToolBar.add(btnNewDatabase);
+		
+		btnDelete = new JButton();
+		btnDelete.setToolTipText("Delete");
+		btnDelete.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_delete.png"));
+		btnDelete.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				delete_Databases_or_Tables();
+			}
+		});
+		databaseToolBar.add(btnDelete);
+		
+		
+		btnRefresh = new JButton();
+		btnRefresh.setToolTipText("Refresh");
+		btnRefresh.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_refresh.png"));
+		btnRefresh.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				refreshDatabaseTree();
+			}
+		});
+		databaseToolBar.add(btnRefresh);
+		
+		
+		queryTextField = new JTextField("Type your queries here", 1000);					
 		queryTextField.addMouseListener(new MouseAdapter(){			//When user click on queryTextField
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -156,21 +217,21 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 			public void actionPerformed(ActionEvent e) {
 				currentSQLstatement = queryTextField.getText();	
 				doQuery(currentSQLstatement);
-				queryTextField.setText(null);
+				scrollPane_Right.setViewportView(DatabaseTable);
 			}
 	     });//end addActionListener
-		
+		databaseToolBar.add(queryTextField);
 			
 	
 		// Add all components to JInternalFrame-----------------------------		
-		super.add(queryTextField, BorderLayout.NORTH);
+		super.add(databaseToolBar, BorderLayout.NORTH);
 		super.add(dataDisplayTextField, BorderLayout.SOUTH);
 		super.add(splitPane, BorderLayout.CENTER);
 		super.setOpaque(false);
 	} // end Panel_DatabaseManagement()	
 	
 	// --------------------------------------------------------------------------------------------------------------------------------
-	public void doMouseClicked(MouseEvent e) {     	
+	public void doMousePressed(MouseEvent e) {     	
 	
 		TreePath path = DatabaseTree.getPathForLocation(e.getX(), e.getY());
 		if (path == null) {
@@ -206,6 +267,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 				
 				// ------------Only show DatabaseTable if the node level is 3
 				if (currentLevel == 3) {	//selected node is a table
+					scrollPane_Right.setViewportView(DatabaseTable);
 					 // Get the URL of the current selected node			
 					currenTableName = selectedNode.getUserObject().toString();
 					// Get the parent node which is the database that contains the selected table
@@ -214,6 +276,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 					doQuery(currentSQLstatement);
 							
 				} else if (currentLevel != 3) {		
+					scrollPane_Right.setViewportView(null);
 					if (currentLevel == 2) currentDatabase = selectedNode.getUserObject().toString();	// the selected node is a database
 					if (currentLevel == 1) currentDatabase = selectedNode.getUserObject().toString();	// the selected node is Root
 				}
@@ -232,12 +295,19 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 					if (processingNode.isRoot()) rootSelected = true;
 					NodeCount++;		
 					}
+				
 				//Deselect the root if this is a multiple Nodes selection and root is selected
 				TreePath rootpath = new TreePath(root);
 				if (NodeCount>1 && rootSelected==true) {
 					DatabaseTree.getSelectionModel().removeSelectionPath(rootpath);
 					rootSelected =false;
 					NodeCount = NodeCount -1;
+				}
+				
+				//Reselect all nodes left
+				selectionPaths = DatabaseTree.getSelectionPaths();
+				for (TreePath selectionPath : selectionPaths) { //Loop through all selected nodes	
+					currentLevel = selectionPath.getPathCount();
 				}
 				//End of set up---------------------------------------------------------------
 				
@@ -251,6 +321,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 					
 					// All nodes can be refreshed ------------------------------------------------------------
 					final JMenuItem refreshMenuItem = new JMenuItem("Refresh");
+					refreshMenuItem.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_refresh.png"));
 					refreshMenuItem.addActionListener(new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent actionEvent) {
@@ -264,13 +335,18 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 					// Only nodes level 1 (root) and 2 (databases) can have "New"--------------------------
 					// and this menuItem only shows up when 1 node is selected																	
 					if ((currentLevel == 1 || currentLevel == 2) && NodeCount==1) {
-						final String Menuname;	
-						if (currentLevel == 1) Menuname = "New database"; else Menuname = "New table";				
-						final JMenuItem newMenuItem = new JMenuItem(Menuname);
+						final JMenuItem newMenuItem = new JMenuItem();
+						if (currentLevel == 1) {
+							newMenuItem.setText("New database");
+							newMenuItem.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_new.png"));
+						} else { 
+							newMenuItem.setText("New table");		
+							newMenuItem.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_new1.png"));
+						}
 						newMenuItem.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent actionEvent) {										
-								new_Database_or_Table ();
+								new_Database_or_Table();
 							}
 						});
 						popup.add(newMenuItem);
@@ -282,6 +358,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 					// and this menuItem only shows up when 1 node is selected	
 					if (currentLevel == 1 && NodeCount==1) {
 						final JMenuItem importDBMenuItem = new JMenuItem("Import databases");
+						importDBMenuItem.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_add.png"));
 						importDBMenuItem.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent actionEvent) {								
@@ -294,6 +371,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 					// and this menuItem only shows up when 1 node is selected	
 					if (currentLevel == 2  && NodeCount==1) {
 						final JMenuItem importTableMenuItem = new JMenuItem("Import tables");
+						importTableMenuItem.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_add4.png"));
 						importTableMenuItem.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent actionEvent) {								
@@ -304,11 +382,26 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 					}
 					
 					
+					// Only nodes level 3 (table) can be combined--------------------------
+					// and this menuItem only shows up when >= 2 nodes are selected
+					if (currentLevel == 3 && NodeCount >= 2) {
+						final JMenuItem combineMenuItem = new JMenuItem("Combine");
+						combineMenuItem.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_layer.png"));
+						combineMenuItem.addActionListener(new ActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent actionEvent) {								
+								combine_Tables();
+							}
+						});
+						popup.add(combineMenuItem);
+					}
+					
 					
 					// Only nodes level 2 (database) and 3 (table) can be renamed--------------------------
 					// and this menuItem only shows up when 1 node is selected	
 					if ((currentLevel == 2 || currentLevel == 3) && NodeCount==1) {
 						final JMenuItem renameMenuItem = new JMenuItem("Rename");
+						renameMenuItem.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_rename.png"));
 						renameMenuItem.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent actionEvent) {								
@@ -323,6 +416,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 					// Only nodes level 2 (database) and 3 (table) can have "copy"--------------------------
 					if (currentLevel == 2 || currentLevel == 3 || rootSelected ==false) {
 						final JMenuItem copyMenuItem = new JMenuItem("Copy");
+						copyMenuItem.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_copy.png"));
 						copyMenuItem.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent actionEvent) {								
@@ -336,6 +430,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 					// Only nodes level 2 (database) and 3 (table) can be deleted--------------------------
 					if (currentLevel == 2 || currentLevel == 3 || rootSelected ==false) {					
 						final JMenuItem deleteMenuItem = new JMenuItem("Delete");
+						deleteMenuItem.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_delete.png"));
 						deleteMenuItem.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent actionEvent) {								
@@ -422,8 +517,8 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public void refreshDatabaseTree() {
 		// Remove all children nodes from the root of DatabaseTree, and reload the tree
-		DefaultTreeModel model = (DefaultTreeModel)DatabaseTree.getModel();
-		DefaultMutableTreeNode root = (DefaultMutableTreeNode)model.getRoot();
+		DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();
+		DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
 		root.removeAllChildren();
 		model.reload(root);
 
@@ -464,17 +559,21 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 				}		
 			} // end of If
 		} // end of For loop		
-		DatabaseTree.expandPath(new TreePath(root.getPath()));	//Expand the root		
+		DatabaseTree.expandPath(new TreePath(root.getPath()));	//Expand the root
+		if (scrollPane_Right != null) {
+			scrollPane_Right.setViewportView(null);
+		}
 	} // end of update_DatabaseTree()
 	
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public void new_Database_or_Table() {
-		final String NodeName;
-		if (currentLevel == 1) NodeName = "New database"; else NodeName = "New table";
+		String nodeName = null;
+		if (currentLevel == 1) nodeName = "new_database";
+		if (currentLevel == 2) nodeName = "new_table";
 		
-		if (processingNode != null && currentLevel == 1) {		//New Database
+		if (nodeName.equals("new_database")) {		//New Database
 			DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();	
-			DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(NodeName);
+			DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(nodeName);
 			model.insertNodeInto(newNode, processingNode, processingNode.getChildCount());
 			TreeNode[] nodes = model.getPathToRoot(newNode);
 			TreePath path = new TreePath(nodes);
@@ -485,9 +584,6 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 			editingPath = path;	
 			try {
 			dataDisplayTextField.setText("Type your new database name");
-			Class.forName("org.sqlite.JDBC");
-			conn = DriverManager.getConnection("jdbc:sqlite:" + databasesFolder + seperator + "empty.db");
-			conn.close();
 			Database_Name_Edit_HasChanged = true;
 		} catch (Exception e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -495,9 +591,9 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		} else 
 			
 												
-		if (processingNode != null && currentLevel == 2) {		//New Table									
+		if (nodeName.equals("new_table")) {		//New Table									
 			try {
-			dataDisplayTextField.setText("Sorry, this function is currently NOT supported");
+			dataDisplayTextField.setText("This function is currently not supported");
 			
 		} catch (Exception e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -518,24 +614,19 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 			DatabaseTree.startEditingAtPath(path);
 			editingPath = path;	
 			try {
-			dataDisplayTextField.setText("Type your new database name");
-
-			// Rename the current database to be "empty.db"
-			DefaultMutableTreeNode editingNode = (DefaultMutableTreeNode) editingPath.getLastPathComponent();  	
-	    	String nameWOext = editingNode.getUserObject().toString();		//Get the user typed name
-	    	if(nameWOext.contains(".")) nameWOext= nameWOext.substring(0, nameWOext.lastIndexOf('.'));		//Remove extension if the name has it
-	    	String editingName = databasesFolder + seperator + nameWOext + ".db";	//Add .db to the name
-	    	oldfile = new File(editingName);
-	    	newfile = new File(editingName);
-	    	File file = new File(databasesFolder + seperator + "empty.db");	
-	    	newfile.renameTo(file);
-	    	// Then make perform:	applyDatabase_Namechange
-			
-			Database_Name_Edit_HasChanged = true;
-			renaming = true;
-		} catch (Exception e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage());
-			}	
+				// Get and save the old database name
+				DefaultMutableTreeNode editingNode = (DefaultMutableTreeNode) editingPath.getLastPathComponent();  	
+		    	String nameWOext = editingNode.getUserObject().toString();		//Get the user typed name
+		    	if(nameWOext.contains(".")) nameWOext= nameWOext.substring(0, nameWOext.lastIndexOf('.'));		//Remove extension if the name has it
+		    	String editingName = databasesFolder + seperator + nameWOext + ".db";	//Add .db to the name
+		    	oldfile = new File(editingName);
+		    	// Then perform:	applyDatabase_Namechange
+				
+		    	dataDisplayTextField.setText("Type your new database name");
+				renamingDatabase = true;
+			} catch (Exception e) {
+				System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			}
 		} else 
 			
 		
@@ -550,7 +641,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 			editingPath = path;
 			try {
 				dataDisplayTextField.setText("Type your new Table name");
-				renamingTable = true;			//For "rename" option only
+				renamingTable = true; // For "rename" option only
 			} catch (Exception e) {
 				System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			}
@@ -558,56 +649,39 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 	}
 		
 	//--------------------------------------------------------------------------------------------------------------------------------
-	public void applyDatabase_Namechange (){
+	public void applyDatabase_Namechange() {
 		//----------------------------------------------------
- 		// This is the new Database name being applied after you finished the naming edit  
-			//Simulate 1 enter
-//			try {
-//				Robot r = new Robot();
-//				r.keyPress(KeyEvent.VK_ENTER);
-//				r.keyRelease(KeyEvent.VK_ENTER);
-//				refreshDatabaseTree();
-//			} catch (AWTException e) {
-//			}	
-					
-    	DefaultMutableTreeNode editingNode = (DefaultMutableTreeNode) editingPath.getLastPathComponent();  	
+ 		// This is the new Database name being applied after you finished the naming edit  	
+		DefaultMutableTreeNode editingNode = (DefaultMutableTreeNode) editingPath.getLastPathComponent();  	
     	String nameWOext = editingNode.getUserObject().toString();		//Get the user typed name
     	if(nameWOext.contains(".")) nameWOext= nameWOext.substring(0, nameWOext.lastIndexOf('.'));		//Remove extension if the name has it
     	String editingName = databasesFolder + seperator + nameWOext + ".db";	//Add .db to the name
-    	newfile = new File(editingName);
- 			
-		File file = new File(databasesFolder + seperator + "empty.db");		//temporary empty database for New option					
-		File file2 = new File(databasesFolder + seperator + "empty.db");	//For "rename" option only
-		
-		
-		File deskFile = newfile;
-		// Copy and paste
-		String temptext = null;
-
-		if (deskFile.exists() == false) {
-			file.renameTo(newfile); // Then replace the file name
-			temptext = "'" + deskFile.getName() + "' has been created";
-		} else if (deskFile.exists() == true) {
-			int response = JOptionPane.showConfirmDialog(this,
-					"Do you want to overwrite the existing database " + deskFile.getName() + " ?", "Confirm",
-					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-			if (response == JOptionPane.NO_OPTION) {
-				temptext = "The existing database '" + deskFile.getName() + "' has not been overwritten";
-			} else if (response == JOptionPane.YES_OPTION) {
-				deskFile.delete();
-				file.renameTo(newfile); // Then replace the file name
-				temptext = "Existing database '" + deskFile.getName() + "' has been overwritten";
-			} else if (response == JOptionPane.CLOSED_OPTION) {
-				temptext = "'" + deskFile.getName() + "' has not been overwritten";
+    	File newfile = new File(editingName);
+    	String temptext = null;
+    	
+    	
+    	//For "rename database"
+		if (renamingDatabase == true) {
+			if (renamingDatabase == true) {
+				oldfile.renameTo(newfile);
+				temptext = oldfile.getName() + " has been renamed to " + newfile.getName();	
+			} 
+			// For "new database"
+		} else {
+			try {
+				if (newfile.createNewFile()) {
+					temptext = "New database has been created";		
+				} else {
+					temptext = "New database has not been created: database with the same name exists, or name typed contains special characters";
+				}
+			} catch (Exception e) {
+				System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			}
 		}
+    	
 
-		if (renaming == true) file2.renameTo(oldfile);				//For "rename" option only
-		if (Database_Name_Edit_HasChanged == true) file2.delete(); // delete the temporary empty.db		//For "new" option
-		
-		
-		// Make the new Databases appear on the TREE----------->YEAHHHHHHHHHHHHHHH
-		String DatabaseName = deskFile.getName();
+		// Make the new or renamed database appeared on the tree
+		String DatabaseName = newfile.getName();
 		refreshDatabaseTree();
 		@SuppressWarnings("unchecked")
 		Enumeration<DefaultMutableTreeNode> e1 = root.depthFirstEnumeration();
@@ -627,11 +701,11 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		dataDisplayTextField.setText(temptext);
 		DatabaseTree.setEditable(false);			// Disable editing
 		Database_Name_Edit_HasChanged = false;
-		renaming = false;			//For "rename" option only
+		renamingDatabase = false;
 	}
 			
 	//--------------------------------------------------------------------------------------------------------------------------------
-	public void applyTable_Namechange (){	
+	public void applyTable_Namechange() {	
 		String temptext = null;
 		DefaultMutableTreeNode editingNode = (DefaultMutableTreeNode) editingPath.getLastPathComponent();  	
     	String nameWOext = editingNode.getUserObject().toString();		//Get the user typed name
@@ -690,7 +764,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 				
 		String initialSelection = listNames[0];			//First database shows up
 		String selection = (String) JOptionPane.showInputDialog(this,
-				"Selected tables and selected databases (including all tables in selected databases) will be copied and pasted into", "Please select a database as destination to paste",
+				"Copy highlighted tables & all tables in highlighted databases, and paste into", "Select a database as destination to paste",
 				JOptionPane.QUESTION_MESSAGE, null, listNames, initialSelection);
 		
 		
@@ -930,19 +1004,19 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 			for (int i = 0; i < files.length; i++) {
 				if (files[i].isFile()) {
 					File currentfile = files[i];
-					String extension = null;
-					fileDelimited = null;
+					String extension = "";
+					fileDelimited = "";
 					int jj = currentfile.getName().lastIndexOf('.');
 					if (jj > 0) {
 						extension = currentfile.getName().substring(jj + 1);
 					}
-					if (extension.toUpperCase().equals("CSV")) {
+					if (extension.equalsIgnoreCase("csv")) {
 						fileDelimited = ",";
-						extentionList.add("CSV");
+						extentionList.add("csv");
 						delimitedList.add(",");
-					} else if (extension.toUpperCase().equals("YLD")) {
+					} else if (extension.equalsIgnoreCase("yld")) {
 						fileDelimited = "\\s+";
-						extentionList.add("YLD");
+						extentionList.add("yld");
 						delimitedList.add("\\s+");
 					} else if (!extentionList.contains(extension.toUpperCase())) {
 						// Choose the right delimited
@@ -952,8 +1026,8 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 
 						Object[] selectionValues = { "Comma", "Space", "Tab" };
 						String initialSelection = "Comma";
-						String selection = (String) JOptionPane.showInputDialog(this, "The delimited type for all of your '." + extension + "' files (i.e. " + currentfile.getName() + ") would be",
-								"Please help SpectrumLite identify delimited type", JOptionPane.QUESTION_MESSAGE, null, selectionValues, initialSelection);
+						String selection = (String) JOptionPane.showInputDialog(this, "The delimited type for all '." + extension + "' files (i.e. " + currentfile.getName() + ") is",
+								"Specify delimited type", JOptionPane.QUESTION_MESSAGE, null, selectionValues, initialSelection);
 							
 						if (selection == "Comma") {
 							fileDelimited = ",";
@@ -1021,7 +1095,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 			
 		
 			
-			//Commit execution-------------------------------------------------
+				//Commit execution-------------------------------------------------
 				pst.close();
 				conn.commit(); // commit all prepared execution, this is important
 				conn.close();
@@ -1084,193 +1158,225 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 	}
 
 	//--------------------------------------------------------------------------------------------------------------------------------
-	public void delete_Databases_or_Tables() {
-		
+	public void combine_Tables() {	
 		//Some set up ---------------------------------------------------------------
-		int node_Level;
-		for (TreePath selectionPath : selectionPaths) {		//Loop through all selected nodes
+		int node_Level = 0;
+		List<String> selected_databases_list = new ArrayList<String>();
+		for (TreePath selectionPath : selectionPaths) { // Loop through all selected nodes
 			processingNode = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
 			node_Level = selectionPath.getPathCount();
-			if (node_Level==2 && processingNode.getChildCount() >= 0) {		//If node is a database and has childs then deselect all of its childs				
-				for (Enumeration e = processingNode.children(); e.hasMoreElements();) {
-					TreeNode child = (TreeNode) e.nextElement();
-					DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();	
-					TreeNode[] nodes = model.getPathToRoot(child);
-					TreePath path = new TreePath(nodes);
-					DatabaseTree.getSelectionModel().removeSelectionPath(path); // Deselect childs
-				}
-				DatabaseTree.collapsePath(new TreePath(processingNode.getPath()));	//Collapse the selected database				
-			}	
+			if (node_Level == 2) { // If node is a database then add to the list and deselect the database
+				selected_databases_list.add(processingNode.toString());
+				DatabaseTree.getSelectionModel().removeSelectionPath(selectionPath);	
+			} else if ((node_Level == 3) && !selected_databases_list.contains(processingNode.getParent().toString())) { // If node is a table then add is parent (database) to the list if not added yet
+				selected_databases_list.add(processingNode.getParent().toString());
+			}
 		}
+		int total_databases = selected_databases_list.size();
 		selectionPaths = DatabaseTree.getSelectionPaths();			//This is very important to get the most recent selected paths
+		// End of set up---------------------------------------------------------------		
+		
+		
+		// Combines tables only if total_databases = 1 and there are at least 2 selected tables
+		if (total_databases == 1 && selectionPaths.length >= 2) {
+			currentDatabase = selected_databases_list.get(0);
+			DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();
+			String queryText = "CREATE TABLE combine_table AS";
+			for (TreePath selectionPath : selectionPaths) {		//Loop through all nodes	
+				processingNode = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
+				currenTableName = processingNode.getUserObject().toString();
+				queryText = queryText + " SELECT * FROM [" + currenTableName + "] UNION";			
+			}
+			queryText= queryText.substring(0, queryText.lastIndexOf(" "));			
+			doQuery(queryText);
+			
+			
+			if (errorCAUGHT.equals(false)) {
+				// Make the combine_table appeared on the tree
+				refreshDatabaseTree();
+				@SuppressWarnings("unchecked")
+				Enumeration<DefaultMutableTreeNode> e = root.depthFirstEnumeration();
+				while (e.hasMoreElements()) { // Search for the name that match
+					DefaultMutableTreeNode node = e.nextElement();
+					if (node.toString().equalsIgnoreCase(currentDatabase) && root.isNodeChild(node)) {		//Name match, and node is child of root
+						Enumeration<DefaultMutableTreeNode> e2 = node.depthFirstEnumeration();
+						
+						while (e2.hasMoreElements()) { // Search for the name that match
+							DefaultMutableTreeNode newNode = e2.nextElement();
+							if (newNode.toString().equalsIgnoreCase("combine_table") && node.isNodeChild(newNode)) {		//Name match, and node is child of the database
+								/*DefaultTreeModel */model = (DefaultTreeModel) DatabaseTree.getModel();
+								TreeNode[] nodes = model.getPathToRoot(newNode);
+								TreePath path = new TreePath(nodes);
+								DatabaseTree.scrollPathToVisible(path);
+								DatabaseTree.setSelectionPath(path);
+								editingPath = path;
+								
+								processingNode = newNode;
+								currenTableName = "combine_table";
+								doQuery("SELECT * FROM combine_table");
+								scrollPane_Right.setViewportView(DatabaseTable);
+							}
+						}
+						
+					}
+				}
+			}
+			errorCAUGHT = false;
+			
+			
+//			//Show the combine_table-----------------------------------------------------------------------
+//			if (errorCAUGHT.equals(false)) {
+//				/*DefaultTreeModel */model = (DefaultTreeModel) DatabaseTree.getModel();
+//				DefaultMutableTreeNode newNode = new DefaultMutableTreeNode("combine_table");
+//				model.insertNodeInto(newNode, (DefaultMutableTreeNode) processingNode.getParent(), processingNode.getChildCount());
+//				TreeNode[] nodes = model.getPathToRoot(newNode);
+//				TreePath path = new TreePath(nodes);
+//				DatabaseTree.scrollPathToVisible(path);
+//				DatabaseTree.setSelectionPath(path);
+//				editingPath = path;
+//				
+//				processingNode = newNode;
+//				currenTableName = "combine_table";
+//			}
+//			errorCAUGHT = false;
+		}
+	}	
+		
+	//--------------------------------------------------------------------------------------------------------------------------------
+	public void delete_Databases_or_Tables() {	
+		//Some set up ---------------------------------------------------------------
+		if (selectionPaths != null) {
+			int node_Level;
+			for (TreePath selectionPath : selectionPaths) {		//Loop through all selected nodes
+				processingNode = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
+				node_Level = selectionPath.getPathCount();
+				if (node_Level==2 && processingNode.getChildCount() >= 0) {		//If node is a database and has childs then deselect all of its childs				
+					for (Enumeration e = processingNode.children(); e.hasMoreElements();) {
+						TreeNode child = (TreeNode) e.nextElement();
+						DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();	
+						TreeNode[] nodes = model.getPathToRoot(child);
+						TreePath path = new TreePath(nodes);
+						DatabaseTree.getSelectionModel().removeSelectionPath(path); // Deselect childs
+					}
+					DatabaseTree.collapsePath(new TreePath(processingNode.getPath()));	//Collapse the selected database				
+				}	
+			}
+			selectionPaths = DatabaseTree.getSelectionPaths();			//This is very important to get the most recent selected paths
+		}
 		//End of set up---------------------------------------------------------------
 		
 		
 		
-		//Ask to delete 
-		int response = JOptionPane.showConfirmDialog(this, "Selected tables and selected databases (including all tables in selected databases) will be deleted ?", "Confirm Delete",
-		        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-		    if (response == JOptionPane.NO_OPTION) {
-		      
-		    } else if (response == JOptionPane.YES_OPTION) {
-		    	DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();	
+		try {
+			Class.forName("org.sqlite.JDBC").newInstance();
+			conn = DriverManager.getConnection("jdbc:sqlite:" + databasesFolder + seperator + currentDatabase);
+			conn.setAutoCommit(false);
+			PreparedStatement pst = null;
+			
+			if (selectionPaths != null) {		//at least 1 database or table has to be selected 
+				//Ask to delete 
+				int response = JOptionPane.showConfirmDialog(this, "Delete highlighted tables & all tables in highlighted databases ?", "Confirm Delete",
+				        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 				
-				
-		    	for (TreePath selectionPath : selectionPaths) {		//Loop through all and delete all level 3 nodes
-					currentLevel = selectionPath.getPathCount();
-					processingNode = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
-					DatabaseTree.setSelectionPath(null);
+				if (response == JOptionPane.NO_OPTION) {
 					
-					if (currentLevel == 3) {		//DELETE Tables						
-						//Find all notes that share the same parent (same database) and currently in the selectionPath, group them into 1 delete transection						
+				} else if (response == JOptionPane.YES_OPTION) {
+					DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();	
 						
-						
-						currentDatabase = processingNode.getParent().toString(); 
-						currenTableName = processingNode.getUserObject().toString();
-						model.removeNodeFromParent(processingNode);
-						doQuery("DROP TABLE IF EXISTS " + "[" + currenTableName + "]");
-						showNothing();
+				    for (TreePath selectionPath : selectionPaths) {		//Loop through all and delete all level 3 nodes
+						currentLevel = selectionPath.getPathCount();
+						processingNode = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
+						DatabaseTree.setSelectionPath(null);
+							
+						if (currentLevel == 3) {		//DELETE Tables						
+							//Find all notes that share the same parent (same database) and currently in the selectionPath, group them into 1 delete transection						
+								
+								
+							String nextDatabase = processingNode.getParent().toString();
+							currenTableName = processingNode.getUserObject().toString();
+							model.removeNodeFromParent(processingNode);
+							
+							if (!nextDatabase.equals(currentDatabase)) {
+								pst = conn.prepareStatement("DROP TABLE IF EXISTS " + "[" + currenTableName + "]");
+								pst.executeUpdate();
+								
+								conn.commit(); // commit all prepared execution, this is important
+								conn.close();
+								
+								currentDatabase = nextDatabase;
+								conn = DriverManager.getConnection("jdbc:sqlite:" + databasesFolder + seperator + currentDatabase);		
+								conn.setAutoCommit(false);						
+							} else {
+								pst = conn.prepareStatement("DROP TABLE IF EXISTS " + "[" + currenTableName + "]");
+								pst.executeUpdate();
+							}
+										
+						}
 					}
-				}	
-				
-				
-				
-				
-		    	
-		 
-		    	
-		    	
-		    	
-		    	
-		    	
-		    	
-		    	
-		    	
-//				try {
-//					Class.forName("org.sqlite.JDBC").newInstance();
-//					int connCount =0;		//Total number of databases as parents of selected tables, also total number of connections we need for DELETE 
-//					String[] conDeleteString = new String[1000];
-//					Connection[] conDelete = new Connection[1000];
-//					PreparedStatement[] pst = new PreparedStatement[1000];
-//					conDelete[connCount] = null;
-//					conDeleteString[connCount] = null;
-//					pst[connCount] = null;
-//					
-//					
-//					// prepared execution
-//					
-//					for (TreePath selectionPath : selectionPaths) {		//Loop through all and delete all level 3 nodes
-//						currentLevel = selectionPath.getPathCount();
-//						processingNode = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
-//						DatabaseTree.setSelectionPath(null);
-//						
-//						if (currentLevel == 3) {		//DELETE Tables						
-//							currentDatabase = processingNode.getParent().toString(); 
-//							currenTableName = processingNode.getUserObject().toString();
-//							model.removeNodeFromParent(processingNode);
-//							
-//							
-//							if (conDeleteString[connCount] != ("jdbc:sqlite:" + databasesFolder + seperator + currentDatabase)) {		//check if connection has changed
-//								connCount++;		//connection will start from connCount=1
-//								
-//								conDeleteString[connCount] = ("jdbc:sqlite:" + databasesFolder + seperator + currentDatabase);
-//								conDelete[connCount] = DriverManager.getConnection("jdbc:sqlite:" + databasesFolder + seperator + currentDatabase);
-//								conDelete[connCount].setAutoCommit(false);	
-//							}
-//															
-//							pst[connCount] = conDelete[connCount].prepareStatement("DROP TABLE IF EXISTS " + "[" + currenTableName + "]");
-//							pst[connCount].executeUpdate();					
-//						} 
-//					}		
-//					
-//					
-//					if (connCount>=1) {
-//						//Now loop through all the connections to commit DELETE
-//						for (int i = 1; i <= connCount; i++) { //Loop starts from 1 not 0, because connection started from 1 (see above)
-//							pst[connCount].close();
-//							conDelete[i].commit(); //commit all prepared execution, this is important
-//							conDelete[i].close();
-//							showNothing();
-//						}			
-//					}	
-//					
-//					
-//	
-//					
-//					
-//					
-//					
-//				} catch (InstantiationException e) {
-//					JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
-//					errorCAUGHT=true;
-//				} catch (IllegalAccessException e) {
-//					JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
-//					errorCAUGHT=true;
-//				} catch (ClassNotFoundException e) {
-//					JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
-//					errorCAUGHT=true;
-//				} catch (SQLException e) {
-//					JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
-//					errorCAUGHT=true;
-//				}
-					
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-	
-		    	
-		    	
-		    	
-		    	
-		    	
-		    	
-		    	
-		    	
-				
-				
-				
-				for (TreePath selectionPath : selectionPaths) {		//Loop through all again and delete all level 2 nodes (databases)
-					currentLevel = selectionPath.getPathCount();
-					DefaultMutableTreeNode processingNode = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
-					DatabaseTree.setSelectionPath(null);	
-					if (currentLevel == 2) {		//DELETE Databases
-						currentDatabase = processingNode.getUserObject().toString(); 
-						model.removeNodeFromParent(processingNode);
-						File file = new File(databasesFolder + seperator + currentDatabase);
-						file.delete();
-						showNothing();
-					}			
+						
+				    //Commit execution-------------------------------------------------
+					pst.close();
+					conn.commit(); // commit all prepared execution, this is important
+					conn.close();
+					showNothing();
+						
+							
+					for (TreePath selectionPath : selectionPaths) { // Loop through all again and delete all level 2 nodes (databases)
+						currentLevel = selectionPath.getPathCount();
+						DefaultMutableTreeNode processingNode = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
+						DatabaseTree.setSelectionPath(null);
+						if (currentLevel == 2) { // DELETE Databases
+							currentDatabase = processingNode.getUserObject().toString();
+							model.removeNodeFromParent(processingNode);
+							File file = new File(databasesFolder + seperator + currentDatabase);
+							file.delete();
+							showNothing();
+						}
+					}
+
+				} else if (response == JOptionPane.CLOSED_OPTION) {
 				}
-		    	
-		    } else if (response == JOptionPane.CLOSED_OPTION) {
-		}
+			}
+
+		} catch (InstantiationException e) {
+			JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
+			errorCAUGHT = true;
+		} catch (IllegalAccessException e) {
+			JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
+			errorCAUGHT = true;
+		} catch (ClassNotFoundException e) {
+			JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
+			errorCAUGHT = true;
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
+			errorCAUGHT = true;
+		}	
 	}
 
+	
+	// Tool bar with background image--------------------------------------------------------------------------------------------------------------------------------
+	class ToolBarWithBgImage extends JToolBar {	  
+		private ImageIcon bgImage;
+
+		ToolBarWithBgImage(String name, int orientation, ImageIcon ii) {
+			super(name, orientation);
+			this.bgImage = ii;
+			setOpaque(true);
+		}
+	  
+		public void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			if (bgImage != null) {
+				Dimension size = this.getSize();
+	            g.drawImage(bgImage.getImage(), size.width - bgImage.getIconWidth(), (size.height - bgImage.getIconHeight())/2, bgImage.getIconWidth(), bgImage.getIconHeight(), this);
+			}
+		}
+	}	
+		
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public void showNothing () {
-		dataDisplayTextField.setText(null);	//Show nothing on the TextField
-		// show nothing (a table with 0 row and 0 column) if no node is  currently selected
-		DefaultTableModel tm = (DefaultTableModel) DatabaseTable.getModel();
-		tm.setColumnCount(0);
-		tm.setRowCount(0);
-		tm.fireTableDataChanged();
+//		dataDisplayTextField.setText(null);	//Show nothing on the TextField
+		scrollPane_Right.setViewportView(null);
 	}
 	
 	//--------------------------------------------------------------------------------------------------------------------------------

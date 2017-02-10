@@ -1,6 +1,9 @@
 package spectrumConvenienceClasses;
 
-public class NameHandle {
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class StringHandle {
 	public static boolean nameIsValid(String s) {
 		boolean isNameValid = true;
 
@@ -20,4 +23,15 @@ public class NameHandle {
 
 		return isNameValid;
 	}
+	
+	public static String normalize(String s) {
+		Pattern pt = Pattern.compile("[^a-zA-Z0-9]");
+		Matcher match = pt.matcher(s);
+		while (match.find()) {
+			String c = match.group();
+			s = s.replaceAll("\\" + c, "_");
+		}
+		return s;
+	}
+	
 }

@@ -1,0 +1,23 @@
+action_type	implemeted_cost_type	dollars_per_acre	dollars_per_cubicfoot	dollars_per_broadfoot	
+Pre-Commercial Thin Type 1	dollars_per_acre	360.0	1.2	0.1	
+Pre-Commercial Thin Type 2	dollars_per_acre	360.0	1.2	0.1	
+Pre-Commercial Thin Type 3	dollars_per_acre	360.0	1.2	0.1	
+Commercial Thin Type 1	dollars_per_acre	360.0	1.2	0.1	
+Commercial Thin Type 2	dollars_per_acre	360.0	1.2	0.1	
+Commercial Thin Type 3	dollars_per_acre	360.0	1.2	0.1	
+Clear Cut Type 1	dollars_per_acre	360.0	1.2	0.1	
+Clear Cut Type 2	dollars_per_acre	360.0	1.2	0.1	
+Clear Cut Type 3	dollars_per_acre	360.0	1.2	0.1	
+Understory Burn Type 1	dollars_per_acre	360.0	1.2	0.1	
+Understory Burn Type 2	dollars_per_acre	360.0	1.2	0.1	
+Understory Burn Type 3	dollars_per_acre	360.0	1.2	0.1	
+Broadcast Burn	dollars_per_acre	360.0	1.2	0.1	
+Seed Cut	dollars_per_acre	360.0	1.2	0.1	
+Overstory Removal	dollars_per_acre	360.0	1.2	0.1	
+Group Openning Type 1	dollars_per_acre	360.0	1.2	0.1	
+Group Openning Type 2	dollars_per_acre	360.0	1.2	0.1	
+Group Openning Type 3	dollars_per_acre	360.0	1.2	0.1	
+Single Tree Openning	dollars_per_acre	360.0	1.2	0.1	
+Artificial Regeneration	dollars_per_acre	360.0	1.2	0.1	
+Tree Planting	dollars_per_acre	360.0	1.2	0.1	
+Weed Treatments	dollars_per_acre	360.0	1.2	0.1	

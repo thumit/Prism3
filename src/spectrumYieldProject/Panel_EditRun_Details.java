@@ -2261,7 +2261,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 		       
 			// 1st grid line 0----------------------------
-			JLabel label0 = new JLabel("Strata Definition (.csv)");
+			JLabel label0 = new JLabel("Strata Definition");
 			c0.gridx = 0;
 			c0.gridy = 0;
 			c0.weightx = 0;
@@ -2331,7 +2331,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 				
 			// 1st grid line 2----------------------------
-			JLabel label2 = new JLabel("Database (.db)");
+			JLabel label2 = new JLabel("Database");
 			c0.gridx = 0;
 			c0.gridy = 2;
 			c0.weightx = 0;
@@ -2397,7 +2397,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		 			
 					
 			// 1st grid line 1----------------------
-			JLabel label1 = new JLabel("Existing Strata (.csv)");
+			JLabel label1 = new JLabel("Existing Strata");
 			c0.gridx = 0;
 			c0.gridy = 1;
 			c0.weightx = 0;
