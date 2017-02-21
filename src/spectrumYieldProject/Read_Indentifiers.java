@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import spectrumConvenienceClasses.FilesHandle;
+import spectrumConvenienceClasses.StringHandle;
 
 public class Read_Indentifiers {
 	private List<String> layers_Title;
@@ -114,10 +115,11 @@ public class Read_Indentifiers {
 	public List<List<String>> get_MethodsPeriodsAges() {
 		//Layers element name
 		List<String> layer1 = new ArrayList<String>();			//Silvicultural methods
-		layer1.add("Even Age");
-		layer1.add("Group Selection");
-		layer1.add("Prescribed Burn");
 		layer1.add("Natural Growth");
+		layer1.add("Prescribed Burn");
+		layer1.add("Group Selection");
+		layer1.add("Even Age");
+		layer1.add("Mixed Severity Wildfire");
 
 		
 		List<String> layer2 = new ArrayList<String>();		//Time Periods
@@ -187,8 +189,11 @@ public class Read_Indentifiers {
 //					value[i][j] = rowValue[j].replaceAll("\\s+", "");		//Remove all the space in the String   
 					value[i][j] = rowValue[j];		//to make toolTp text separated with space, may need the above line if there is spaces in layer and elements name in the file StrataDefinition.csv
 				
+				}				
+				//Tool tip identified by comparing the name before and after normalization
+				if (yt_columnName.equals(value[i][0]) || StringHandle.normalize(yt_columnName).equals(StringHandle.normalize(value[i][0]))) {
+					toolTip = value[i][1];
 				}
-				if (yt_columnName.equals(value[i][0])) toolTip = value[i][1];
 			}	
 		} catch (IOException e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());

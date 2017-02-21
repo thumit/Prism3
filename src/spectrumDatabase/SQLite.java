@@ -81,7 +81,7 @@ private static int totalLines;
 				String[] c = new String[itemCount];
 				for (int i = 0; i < itemCount; i++) {
 //					String str = ("'" + columnName[i] + "'");
-					String str = ("'" + StringHandle.normalize(columnName[i]).toLowerCase() + "'");			// TO NORMALIZE COLUMNS NAMES
+					String str = ("'" + StringHandle.normalize(columnName[i]) + "'");			// TO NORMALIZE COLUMNS NAMES
 					c[i] = str + " " + b[i];
 				}
 							

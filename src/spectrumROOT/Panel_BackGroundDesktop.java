@@ -17,7 +17,7 @@ public class Panel_BackGroundDesktop extends JDesktopPane {
 		try {
 //			img = ImageIO.read(new URL("https://scontent-iad3-1.xx.fbcdn.net/t31.0-8/705097_4557689934155_1784248166_o.jpg"));			   
 //			img = ImageIO.read(new File("C:\\Users\\Public\\Pictures\\Sample Pictures\\Desert.jpg"));
-			img = ImageIO.read(getClass().getResource("/spectrumlite.png"));
+			img = ImageIO.read(getClass().getResource("/spectrumlite2.png"));
 			BufferedImage bg = img;
 			
 
@@ -25,8 +25,9 @@ public class Panel_BackGroundDesktop extends JDesktopPane {
 			final float FACTOR  = 4f;
 			int scaleX = (int) (bg.getWidth() * FACTOR);
 			int scaleY = (int) (bg.getHeight() * FACTOR);
-			Image scaleImage = bg.getScaledInstance(3000, 60, Image.SCALE_SMOOTH);		//For Spectrumlite Demo
-//			Image scaleImage = bg.getScaledInstance(5000, 80, Image.SCALE_SMOOTH);
+//			Image scaleImage = bg.getScaledInstance(3000, 60, Image.SCALE_SMOOTH);		//For spectrumlite
+//			Image scaleImage = bg.getScaledInstance(1800, 100, Image.SCALE_SMOOTH);		//For spectrumlite1
+			Image scaleImage = bg.getScaledInstance(200, 40, Image.SCALE_SMOOTH);		//For spectrumlite2
 			BufferedImage bg2 = new BufferedImage(scaleX, scaleY, BufferedImage.TYPE_INT_ARGB);
 			bg2.getGraphics().drawImage(scaleImage, 0, 0 , null);
 			//End of Rescaling buffered image-----------------
@@ -80,9 +81,21 @@ public class Panel_BackGroundDesktop extends JDesktopPane {
 //			g.drawImage(bg, x, y, this);
 			
 			
-			int x = (int) 10;
-			int y = (int) 10;
-			g.drawImage(bg, x, y, getWidth(), getWidth()/2, this);
+//			int x = (int) 10;
+//			int y = (int) 10;
+//			g.drawImage(bg, x, y, getWidth(), getWidth()/2, this);
+			
+			
+			//Fore spectrumlie2 picture only
+//			int x = (int) 10;
+//			int y = (int) getHeight() - 7;			
+//			int x = (int) getWidth() - getWidth()/2 - 205;
+//			int y = (int) getHeight() - 7;		
+//			int x = (int) getWidth() - 205;
+//			int y = (int) 7;
+			int x = (int) getWidth() - 205;
+			int y = (int) getHeight() - 47;
+			g.drawImage(bg, x, y, this);
 
 		}
 	}

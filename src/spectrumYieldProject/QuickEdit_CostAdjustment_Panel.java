@@ -47,7 +47,7 @@ public class QuickEdit_CostAdjustment_Panel extends JPanel {
 		add(percentage_Textfield, c);
 		
 		// Add button apply
-		Spectrum_ApplyButton btnApply_percentage = new Spectrum_ApplyButton(table, data, 4, percentage_Textfield);		// 4 is the column to change
+		Spectrum_ApplyButton btnApply_percentage = new Spectrum_ApplyButton(table, data, 3, percentage_Textfield);		// 3 is the column to change
 		c.gridx = 0;
 		c.gridy = 1;
 		c.weightx = 0;

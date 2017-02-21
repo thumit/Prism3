@@ -165,6 +165,8 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 					checkboxName = "PB";
 				} else if (checkboxName.equals("Natural Growth")) {
 					checkboxName = "NG";
+				} else if (checkboxName.equals("Mixed Severity Wildfire")) {
+					checkboxName = "MS";
 				}
 				
 				//Add checkBox if it is (selected & visible) or disable

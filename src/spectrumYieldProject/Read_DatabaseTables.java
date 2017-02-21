@@ -2,9 +2,7 @@ package spectrumYieldProject;
 
 import java.io.File;
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
@@ -12,19 +10,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import spectrumDatabase.SQLite;
-
 public class Read_DatabaseTables {
 	private Object[][][] table_values;			// Note: indexes start from 0 
 	private Object[] nameOftable;
 	private String[] table_ColumnNames;
+	private String[] action_type;
 	
 	
 	public Read_DatabaseTables(File file) {
 		try {
 			Connection conn;
 			Class.forName("org.sqlite.JDBC").newInstance();
-			conn = DriverManager.getConnection("jdbc:sqlite:" + file);
+			conn = (file.exists()) ? DriverManager.getConnection("jdbc:sqlite:" + file) : null;	//to not create an empty database.db if file not exists
 			Statement st = conn.createStatement();	
 			ResultSet rs;
 			
@@ -36,7 +33,15 @@ public class Read_DatabaseTables {
 				tableCount = rs.getInt(1);	//column 1
 			}
 			
+			// get total action types
+			int actionCount = 0;				
+			rs = st.executeQuery("SELECT COUNT(DISTINCT action_type) FROM yield_tables;");		//This only have 1 row and 1 column, the value is total number of unique action_type
+			while (rs.next()) {
+				actionCount = rs.getInt(1);	//column 1
+			}			
+			
 			nameOftable = new Object[tableCount];
+			action_type = new String[actionCount];
 			table_values = new Object[tableCount][][];
 			
 			
@@ -46,6 +51,15 @@ public class Read_DatabaseTables {
 			while (rs.next()) {
 				nameOftable[tbl] = rs.getString(1);		//column 1
 				tbl++;
+			}
+			
+			
+			//get action types and put into array "action_type"
+			rs = st.executeQuery("SELECT DISTINCT action_type FROM yield_tables ORDER BY action_type ASC;");			
+			int type_count = 0;
+			while (rs.next()) {
+				action_type[type_count] = rs.getString(1);		//column 1
+				type_count++;
 			}
 			
 			
@@ -99,7 +113,7 @@ public class Read_DatabaseTables {
 			rs.close();
 			conn.close();
 		} catch (Exception e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Read_DatabaseTables   -   Database connection error");
 		}		
 	}
 	
@@ -115,6 +129,10 @@ public class Read_DatabaseTables {
 
 	public Object[] get_nameOftable() {
 		return nameOftable;
+	}
+	
+	public String[] get_action_type() {
+		return action_type;
 	}
 	
 	public List<String> getColumnUniqueValues(int columnIndex) {
@@ -160,7 +178,7 @@ public class Read_DatabaseTables {
 			valueReturn = table_values[index][0][2].toString();			//row 0 is the first period (1sr row), column 2 is "st_age_10"
 		} catch (Exception e) {
 			valueReturn = "not found";
-			System.err.println(e.getClass().getName() + ": " + e.getMessage() + " not found age class from yield table: " + tableName_toFind);
+			System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Not found age class from yield table: " + tableName_toFind);
 		}
 		
 		return valueReturn;	

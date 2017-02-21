@@ -115,6 +115,13 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private int totalPeriod;
 	
 	
+	private boolean is_table_loaded = false;
+	private int rowCount, colCount;
+	private String[] columnNames;
+	private JTable table;
+	private TableModelSpectrum model;
+	private Object[][] data;
+	
 	
 	private boolean is_table1_loaded = false;
 	private int rowCount1, colCount1;
@@ -123,14 +130,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private TableModelSpectrum model1;
 	private Object[][] data1;
 	
-	
-	private boolean is_table_loaded = false;
-	private int rowCount, colCount;
-	private String[] columnNames;
-	private JTable table;
-	private TableModelSpectrum model;
-	private Object[][] data;
-
 
 	private boolean is_table2_loaded = false;
 	private int rowCount2, colCount2;
@@ -371,25 +370,25 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		}
 			
 		
-		if (file_ExistingStrata == null && is_this_the_first_load == true) {		//If there is no existing strata, still load the selected strata
-			table_file = new File(currentRunFolder.getAbsolutePath() + "/input_02_modeled_strata.txt");
-			if (table_file.exists()) { // Load from input
-				tableLoader = new Reload_Table_Info(table_file);
-				rowCount = tableLoader.get_rowCount();
-				colCount = tableLoader.get_colCount();
-				data = tableLoader.get_input_data();
-				columnNames = tableLoader.get_columnNames();
-				is_table_loaded = true;
-				
-	
-	//			//This is strange when only this 1 I have to register the "Yes" - in case we don't use String.ValueOf to compare data (see last lines)
-	//			for (int i = 0; i < rowCount; i++) {
-	//				data[i][colCount-1] = "Yes";
-	//			}			
-			} else { // Create a fresh new if Load fail
-				System.err.println("File not exists: Input 2 - input_02_modeled_strata.txt - New interface is created");
-			}	
-		}
+//		if (file_ExistingStrata == null && is_this_the_first_load == true) {		//If there is no existing strata, still load the selected strata
+//			table_file = new File(currentRunFolder.getAbsolutePath() + "/input_02_modeled_strata.txt");
+//			if (table_file.exists()) { // Load from input
+//				tableLoader = new Reload_Table_Info(table_file);
+//				rowCount = tableLoader.get_rowCount();
+//				colCount = tableLoader.get_colCount();
+//				data = tableLoader.get_input_data();
+//				columnNames = tableLoader.get_columnNames();
+//				is_table_loaded = true;
+//				
+//	
+//	//			//This is strange when only this 1 I have to register the "Yes" - in case we don't use String.ValueOf to compare data (see last lines)
+//	//			for (int i = 0; i < rowCount; i++) {
+//	//				data[i][colCount-1] = "Yes";
+//	//			}			
+//			} else { // Create a fresh new if Load fail
+//				System.err.println("File not exists: Input 2 - input_02_modeled_strata.txt - New interface is created");
+//			}	
+//		}
 		
 															//Need to change later (not here , below) because I didn't write the whole file, just write the yes case
 //		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_03_clearcut_covertype_conversion.txt");
@@ -405,7 +404,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 //		}
 
 		
-//		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_04_ replacingdisturbances_covertype_conversion.txt");
+//		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_04_replacingdisturbances_covertype_conversion.txt");
 //		if (table_file.exists()) { // Load from input
 //			tableLoader = new Reload_Table_Info(table_file);
 //			rowCount7 = tableLoader.get_rowCount();
@@ -414,7 +413,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 //			columnNames7 = tableLoader.get_columnNames();
 //			is_table7_loaded = true;
 //		} else { // Create a fresh new if Load fail
-//			System.err.println("File not exists: input_04_ replacingdisturbances_covertype_conversion.txt - New interface is created");
+//			System.err.println("File not exists: input_04_replacingdisturbances_covertype_conversion.txt - New interface is created");
 //		}
 		
 
@@ -431,17 +430,17 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 //		}
 		
 		
-		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_06_replacing_disturbances.txt");
-		if (table_file.exists()) { // Load from input
-			tableLoader = new Reload_Table_Info(table_file);
-			rowCount6 = tableLoader.get_rowCount();
-			colCount6 = tableLoader.get_colCount();
-			data6 = tableLoader.get_input_data();
-			columnNames6 = tableLoader.get_columnNames();
-			is_table6_loaded = true;
-		} else { // Create a fresh new if Load fail
-			System.err.println("File not exists: input_06_replacing_disturbances.txt - New interface is created");
-		}		
+//		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_06_replacing_disturbances.txt");
+//		if (table_file.exists()) { // Load from input
+//			tableLoader = new Reload_Table_Info(table_file);
+//			rowCount6 = tableLoader.get_rowCount();
+//			colCount6 = tableLoader.get_colCount();
+//			data6 = tableLoader.get_input_data();
+//			columnNames6 = tableLoader.get_columnNames();
+//			is_table6_loaded = true;
+//		} else { // Create a fresh new if Load fail
+//			System.err.println("File not exists: input_06_replacing_disturbances.txt - New interface is created");
+//		}		
 		
 		
 		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_09_user_constraints.txt");
@@ -586,7 +585,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 		
 		
-		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_04_ replacingdisturbances_covertype_conversion.txt");
+		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_04_replacingdisturbances_covertype_conversion.txt");
 		if (table_file.exists()) { // Load from input
 			 // Load from input
 			tableLoader = new Reload_Table_Info(table_file);		
@@ -602,7 +601,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			}	
 			is_table7_loaded = true;
 		} else { // Create a fresh new if Load fail
-			System.err.println("File not exists: input_04_ replacingdisturbances_covertype_conversion.txt - New interface is created");
+			System.err.println("File not exists: input_04_replacingdisturbances_covertype_conversion.txt - New interface is created");
 		}
 		
 		
@@ -626,6 +625,68 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			System.err.println("File not exists: input_05_mixed_severity_wildfire.txt - New interface is created");
 		}
 			
+		
+		
+		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_06_replacing_disturbances.txt");
+		if (table_file.exists()) { // Load from input
+			// Load from input
+			tableLoader = new Reload_Table_Info(table_file);		
+			Object[][] temp_data = tableLoader.get_input_data();
+			for (int i = 0; i < temp_data.length; i++) {	
+				// Apply temp_data row values to data8 row 
+				for (int j = 0; j < data6[i].length; j++) {
+					data6[i][j] = temp_data[i][j];
+					if (j>0) {
+						data6[i][j] = Double.valueOf(String.valueOf(temp_data[i][j]));		//These are all columns except 'ageclass'
+					}
+				}	
+			}	
+			is_table6_loaded = true;
+		} else { // Create a fresh new if Load fail
+			System.err.println("File not exists: input_07_base_cost.txt - New interface is created");
+		}		
+		
+		
+		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_07_base_cost.txt");
+		if (table_file.exists()) { // Load from input
+			 // Load from input
+			tableLoader = new Reload_Table_Info(table_file);		
+			Object[][] temp_data = tableLoader.get_input_data();
+			for (int i = 0; i < temp_data.length; i++) {	
+				// Apply temp_data row values to data8 row 
+				for (int j = 0; j < data8[i].length; j++) {
+					data8[i][j] = temp_data[i][j];
+					if (j>0) {
+						data8[i][j] = Double.valueOf(String.valueOf(temp_data[i][j]));		//These are all columns except 'action_list'
+					}
+				}	
+			}	
+			is_table8_loaded = true;
+		} else { // Create a fresh new if Load fail
+			System.err.println("File not exists: input_07_base_cost.txt - New interface is created");
+		}
+		
+		
+		
+		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_08_cost_adjustment.txt");
+		if (table_file.exists()) { // Load from input
+			 // Load from input
+			tableLoader = new Reload_Table_Info(table_file);		
+			Object[][] temp_data = tableLoader.get_input_data();
+			for (int i = 0; i < temp_data.length; i++) {	
+				// Apply temp_data row values to data9 row 
+				for (int j = 0; j < data9[i].length; j++) {
+					data9[i][j] = temp_data[i][j];
+					if (j==3) {
+						data9[i][j] = Double.valueOf(String.valueOf(temp_data[i][j]));		//This is the 'adjusted_percentage' Column
+					}
+				}	
+			}	
+			is_table9_loaded = true;
+		} else { // Create a fresh new if Load fail
+			System.err.println("File not exists: input_08_cost_adjustment.txt - New interface is created");
+		}
+		
 		
 		
 		if (file_Database != null && is_this_the_first_load == true) {
@@ -776,9 +837,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			public comboBox_ConstraintType() {
 				addItem("SOFT");
 				addItem("HARD");
-				addItem("SOFT COST");
-				addItem("HARD COST");
-			setSelectedIndex(0);
+				setSelectedIndex(0);
 			}
 		}
 		
@@ -932,7 +991,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 
 		//Setup the table------------------------------------------------------------	
-//		if (is_table4_loaded == false) { // Create a fresh new if Load fail				
+		if (is_table4_loaded == false) { // Create a fresh new if Load fail				
 			rowCount4 = total_CoverType*total_CoverType;
 			colCount4 = 5;
 			data4 = new Object[rowCount4][colCount4];
@@ -950,7 +1009,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					table_row++;
 				}
 			}
-//		}
+		}
 			
 		
 		//Create a table-------------------------------------------------------------
@@ -1512,13 +1571,13 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
        
 
         
-//        table6.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+//      table6.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         table6.setCellSelectionEnabled(true);
         table6.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         table6.getTableHeader().setReorderingAllowed(false);		//Disable columns move
         table6.getColumnModel().getColumn(0).setPreferredWidth(150);	//Set width of 1st Column bigger
         
-//        table6.setTableHeader(null);
+//      table6.setTableHeader(null);
         table6.setPreferredScrollableViewportSize(new Dimension(400, 120));
         table6.setFillsViewportHeight(true);
 	}
@@ -1775,54 +1834,59 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		//Setup the table------------------------------------------------------------	
 		if (is_table8_loaded == false) { // Create a fresh new if Load fail	
 			// This all_actions List contains all actions loaded from yield tables------------------------------------------------------------
-			List<String> all_actions = new ArrayList<String>();
-			all_actions.add("Pre-Commercial Thin Type 1");
-			all_actions.add("Pre-Commercial Thin Type 2");
-			all_actions.add("Pre-Commercial Thin Type 3");
-			all_actions.add("Commercial Thin Type 1");
-			all_actions.add("Commercial Thin Type 2");
-			all_actions.add("Commercial Thin Type 3");
-			all_actions.add("Clear Cut Type 1");
-			all_actions.add("Clear Cut Type 2");
-			all_actions.add("Clear Cut Type 3");
-			all_actions.add("Understory Burn Type 1");
-			all_actions.add("Understory Burn Type 2");
-			all_actions.add("Understory Burn Type 3");
-			all_actions.add("Broadcast Burn");
-			all_actions.add("Seed Cut");
-			all_actions.add("Overstory Removal");
-			all_actions.add("Group Openning Type 1");
-			all_actions.add("Group Openning Type 2");
-			all_actions.add("Group Openning Type 3");
-			all_actions.add("Single Tree Openning");
-			all_actions.add("Artificial Regeneration");
-			all_actions.add("Tree Planting");
-			all_actions.add("Weed Treatments");
+			List<String> action_list = new ArrayList<String>();
+			if (yieldTable_ColumnNames != null) {	//create table with column include yield tables columns
+				read_DatabaseTables = new Read_DatabaseTables(file_Database);
+				for (String action: read_DatabaseTables.get_action_type()) {
+					action_list.add(action);					
+				}	
+				
+				rowCount8 = action_list.size();			
+				colCount8 = 2 + yieldTable_ColumnNames.length;
+				data8 = new Object[rowCount8][colCount8];
+				columnNames8 = new String[2 + yieldTable_ColumnNames.length];
+				columnNames8[0] = "action_list";
+				columnNames8[1] = "acres";
+				for (int i = 2; i < columnNames8.length; i++) {
+					columnNames8[i] = yieldTable_ColumnNames[i - 2];				
+				}	
+			} else {
+				rowCount8 = action_list.size();			
+				colCount8 = 2;
+				data8 = new Object[rowCount8][colCount8];
+				columnNames8= new String[] {"action_list", "acres"};
+			}			
 			
-			rowCount8 = all_actions.size();			
-			colCount8 = 5;
-			data8 = new Object[rowCount8][colCount8];
-	        columnNames8= new String[] {"action_type", "implemeted_cost_type", "dollars_per_acre", "dollars_per_cubicfoot", "dollars_per_broadfoot"};
-			
+	       			
 			// Populate the data matrix
-	        int table_row = 0;
-			for (int i = 0; i < all_actions.size(); i++) {
-				data8[table_row][0] = all_actions.get(i);
-				data8[table_row][1] = columnNames8[2];		// implemeted_cost_type
-				data8[table_row][2] = (double) 360;
-				data8[table_row][3] = (double) 1.2;
-				data8[table_row][4] = (double) 0.1;
-				table_row++;
+			for (int i = 0; i < rowCount8; i++) {
+				data8[i][0] = action_list.get(i);
+				data8[i][1] = (action_list.get(i).equalsIgnoreCase("no_action")) ? (double) 0 : (double) 360; 
+				for (int j = 2; j < colCount8; j++) {
+					data8[i][j] = (double) 0;				
+				}
 			}
-		}						
+		}		
 		
+		
+        //Header ToolTIp
+		String[] headerToolTips = new String[colCount8];
+		headerToolTips[0] = "all unique actions loaded from yield tables";
+        headerToolTips[1] = "acres identified by the variable in User Constraints window";
+		if (yieldTable_ColumnNames != null) {      
+	        for (int i = 2; i < colCount8; i++) {
+	        	int yt_col = i - 2;
+	        	headerToolTips[i] = read_Identifiers.get_ParameterToolTip(yieldTable_ColumnNames[yt_col]) + " (Column index: " + yt_col + ")";	
+			}
+		}
+	
 		
 		//Create a table-------------------------------------------------------------			
         model8 = new TableModelSpectrum(rowCount8, colCount8, data8, columnNames8) {
         	@Override
         	public Class getColumnClass(int c) {
-    			if (c==0 || c==1) return String.class;      //column 0, 1 accepts only String
-				else if (c>1) return Double.class;      //other columns: Double values    
+    			if (c==0) return String.class;      //column 0 accepts only String
+				else if (c>0) return Double.class;      //other columns: Double values    
     	        else return (getValueAt(0, c) == null ? Object.class : getValueAt(0, c).getClass());
     		}
 
@@ -1837,7 +1901,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
         	@Override
     		public void setValueAt(Object value, int row, int col) {
-        		if (col > 1 && ((Number) value).doubleValue() < 0) {
+        		if (col > 0 && ((Number) value).doubleValue() < 0) {
     				JOptionPane.showMessageDialog(Spectrum_Main.mainFrameReturn(),
     						"Your input has not been accepted. Base cost cannot be negative.");
     			} else {
@@ -1848,6 +1912,19 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
         
         
 		table8 = new JTable(model8) {
+			@Override			//Implement table header tool tips. 
+            protected JTableHeader createDefaultTableHeader() {
+                return new JTableHeader(columnModel) {
+                    public String getToolTipText(MouseEvent e) {
+                        String tip = null;
+                        java.awt.Point p = e.getPoint();
+                        int index = columnModel.getColumnIndexAtX(p.x);
+                        int realIndex = columnModel.getColumn(index).getModelIndex();
+                        return headerToolTips[realIndex];
+                    }
+                };
+            }					
+			
 			@Override			//These override is to make the width of the cell fit all contents of the cell
 			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
 				// For the cells in table								
@@ -1866,24 +1943,40 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				return component;
 			}		
 		};
-				
-		
-		// Set up Types for each  Columns-------------------------------------------------------------------------------
-		class comboBox_CostType extends JComboBox {
-			public comboBox_CostType() {		
-				for (int i = 2; i < columnNames8.length; i++) {
-					addItem(columnNames8[i]);
-				}
-//				setSelectedItem(columnNames8[2]);
-			}
-		}			  
-		table8.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(new comboBox_CostType()));
-		// End of Set up Types for each  Columns------------------------------------------------------------------------		
-        
 		
 		
+//		// Define a set of background colors
+//		Color color1 = new Color(160, 160, 160);
+//		Color color2 = new Color(192, 192, 192);	
+//				
+//		//Set Color and Alignment for Cells
+//        DefaultTableCellRenderer r = new DefaultTableCellRenderer() {
+//            @Override
+//            public Component getTableCellRendererComponent(JTable table, Object
+//			value, boolean isSelected, boolean hasFocus, int row, int column) {
+//				super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+//				// setForeground(Color.RED);
+//				setHorizontalAlignment(JLabel.LEFT);
+//				// setFont(getFont().deriveFont(Font.BOLD));               	
+//				setBackground(color2);		//Set cell background color
+//				if (isSelected) {
+//					setBackground(table8.getSelectionBackground());		//Set background color	for selected row
+//				}
+////				setHorizontalAlignment(rowAlignment[row]);			
+//                return this;
+//            }
+//        };						
+//		
+//		
+//		for (int i = 0; i < columnNames8.length; i++) {
+//			if (i == 0) {
+//				table8.getColumnModel().getColumn(i).setCellRenderer(r);		// first column is shaded
+//			}
+//		}
+			
 		
-//      table8.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		if (yieldTable_ColumnNames != null) table8.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		table8.setCellSelectionEnabled(true);
         table8.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         table8.getTableHeader().setReorderingAllowed(false);		//Disable columns move
         
@@ -1914,73 +2007,56 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		//Setup the table------------------------------------------------------------	
 		if (is_table9_loaded == false) { // Create a fresh new if Load fail	
 			// This all_actions List contains all actions loaded from yield tables------------------------------------------------------------
-			List<String> all_actions = new ArrayList<String>();
-			all_actions.add("Pre-Commercial Thin Type 1");
-			all_actions.add("Pre-Commercial Thin Type 2");
-			all_actions.add("Pre-Commercial Thin Type 3");
-			all_actions.add("Commercial Thin Type 1");
-			all_actions.add("Commercial Thin Type 2");
-			all_actions.add("Commercial Thin Type 3");
-			all_actions.add("Clear Cut Type 1");
-			all_actions.add("Clear Cut Type 2");
-			all_actions.add("Clear Cut Type 3");
-			all_actions.add("Understory Burn Type 1");
-			all_actions.add("Understory Burn Type 2");
-			all_actions.add("Understory Burn Type 3");
-			all_actions.add("Broadcast Burn");
-			all_actions.add("Seed Cut");
-			all_actions.add("Overstory Removal");
-			all_actions.add("Group Openning Type 1");
-			all_actions.add("Group Openning Type 2");
-			all_actions.add("Group Openning Type 3");
-			all_actions.add("Single Tree Openning");
-			all_actions.add("Artificial Regeneration");
-			all_actions.add("Tree Planting");
-			all_actions.add("Weed Treatments");
+			List<String> action_list = new ArrayList<String>();
+			if (yieldTable_ColumnNames != null) {
+				read_DatabaseTables = new Read_DatabaseTables(file_Database);
+				for (String action: read_DatabaseTables.get_action_type()) {
+					action_list.add(action);					
+				}	
+			}			
 			
 			rowCount9 = 0;
-			for (int i = 0; i < all_actions.size(); i++) {
+			for (int i = 0; i < action_list.size(); i++) {
 				for (int j = 0; j < allLayers.size(); j++) {
 					for (int k = 0; k < allLayers.get(j).size(); k++) {
 						rowCount9++;
 					}
 				}
 			}		
-			colCount9 = 5;
+			colCount9 = 4;
 			data9 = new Object[rowCount9][colCount9];
-	        columnNames9= new String[] {"action_type", "layer_element_description", "layer_id", "element_id", "adjusted_percentage"};
+	        columnNames9= new String[] {"action_list", "layer_id", "element_id", "adjusted_percentage"};
 			
 			// Populate the data matrix
 	        int table_row = 0;
-			for (int i = 0; i < all_actions.size(); i++) {
-				for (int j = 0; j < allLayers.size(); j++) {
-					for (int k = 0; k < allLayers.get(j).size(); k++) {
-						data9[table_row][0] = all_actions.get(i);
-						data9[table_row][1] = layers_Title_ToolTip.get(j) + "___" + allLayers_ToolTips.get(j).get(k);
-						data9[table_row][2] = layers_Title.get(j);
-						data9[table_row][3] = allLayers.get(j).get(k);
-						data9[table_row][4] = (double) 0;
+	        for (int j = 0; j < allLayers.size(); j++) {
+				for (int k = 0; k < allLayers.get(j).size(); k++) {
+					for (int i = 0; i < action_list.size(); i++) {
+						data9[table_row][0] = action_list.get(i);
+//						data9[table_row][1] = layers_Title_ToolTip.get(j) + "___" + allLayers_ToolTips.get(j).get(k);
+						data9[table_row][1] = layers_Title.get(j);
+						data9[table_row][2] = allLayers.get(j).get(k);
+						data9[table_row][3] = (double) 0;
 						table_row++;
 					}
 				}
 			}
 		}
 		
-		
-		
+				
 		
 		//Create a table-------------------------------------------------------------			
         model9 = new TableModelSpectrum(rowCount9, colCount9, data9, columnNames9) {
         	@Override
         	public Class getColumnClass(int c) {
-    			if (c<4) return String.class;      //column 0, 1, 2 accept only String
-    			else if (c==4) return Double.class;      //column 3 (last column) accept only Double values    
+    			if (c<3) return String.class;      //column 0, 1, 2 accept only String
+    			else if (c==3) return Double.class;      //column 3 (last column) accept only Double values    
     	        else return (getValueAt(0, c) == null ? Object.class : getValueAt(0, c).getClass());
     		}
 
         	@Override
     		public boolean isCellEditable(int row, int col) {
-    			if (col < 4) { // Only the last column are editable
+    			if (col < 3) { // Only the last column is editable
     				return false;
     			} else {
     				return true;
@@ -1989,7 +2065,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
         	@Override
     		public void setValueAt(Object value, int row, int col) {			
-				if (col == 4 && ((Number) value).doubleValue() < 0) {
+				if (col == 3 && ((Number) value).doubleValue() < 0) {
     				JOptionPane.showMessageDialog(Spectrum_Main.mainFrameReturn(),
     						"Your input has not been accepted. Cost increasement cannot be negative.");
     			} else {
@@ -2008,7 +2084,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				int rowIndex = rowAtPoint(p);
 				int colIndex = columnAtPoint(p);
 				
-				if (colIndex == 2) {
+				if (colIndex == 1) {
 					try {
 						tip = getValueAt(rowIndex, colIndex).toString();
 						for (int i = 0; i < layers_Title.size(); i++) {
@@ -2020,14 +2096,14 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
 					}
 				}
-				else if (colIndex == 3) {
+				else if (colIndex == 2) {
 					boolean foundTip = false;
 					try {
 						if (foundTip == false) {
-							tip =  getValueAt(rowIndex, 2).toString();
+							tip =  getValueAt(rowIndex, 1).toString();
 							for (int i = 0; i < layers_Title.size(); i++) {	
 								if (tip.equals(layers_Title.get(i))) {
-									tip =  getValueAt(rowIndex, 3).toString();
+									tip =  getValueAt(rowIndex, 2).toString();
 									for (int j = 0; j < allLayers.get(i).size(); j++) {
 										if (tip.equals(allLayers.get(i).get(j))) {
 											tip = allLayers_ToolTips.get(i).get(j);	
@@ -2042,9 +2118,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					}
 				}	
 				
-				else if (colIndex == 4) {
+				else if (colIndex == 3) {
 					try {			
-						tip = "Cost increases by " + getValueAt(rowIndex, 4) + "% of base cost" ;	
+						tip = "Cost increases by " + getValueAt(rowIndex, 3) + "% of base cost" ;	
 					} catch (RuntimeException e1) {
 						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
 					}
@@ -2071,34 +2147,34 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			}		
 		};
 		
-		// Define a set of background colors
-		Color color1 = new Color(160, 160, 160);
-		Color color2 = new Color(192, 192, 192);	
-				
-		//Set Color and Alignment for Cells
-        DefaultTableCellRenderer r = new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object
-			value, boolean isSelected, boolean hasFocus, int row, int column) {
-				super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-				// setForeground(Color.RED);
-				setHorizontalAlignment(JLabel.LEFT);
-				// setFont(getFont().deriveFont(Font.BOLD));               	
-				setBackground(color2);		//Set cell background color
-				if (isSelected) {
-					setBackground(table9.getSelectionBackground());		//Set background color	for selected row
-				}
-//				setHorizontalAlignment(rowAlignment[row]);			
-                return this;
-            }
-        };						
-		
-		
-		for (int i = 0; i < columnNames9.length; i++) {
-			if (i < 4) {
-				table9.getColumnModel().getColumn(i).setCellRenderer(r);		// 4 first columns are shaded
-			}
-		}
+//		// Define a set of background colors
+//		Color color1 = new Color(160, 160, 160);
+//		Color color2 = new Color(192, 192, 192);	
+//				
+//		//Set Color and Alignment for Cells
+//        DefaultTableCellRenderer r = new DefaultTableCellRenderer() {
+//            @Override
+//            public Component getTableCellRendererComponent(JTable table, Object
+//			value, boolean isSelected, boolean hasFocus, int row, int column) {
+//				super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+//				// setForeground(Color.RED);
+//				setHorizontalAlignment(JLabel.LEFT);
+//				// setFont(getFont().deriveFont(Font.BOLD));               	
+//				setBackground(color2);		//Set cell background color
+//				if (isSelected) {
+//					setBackground(table9.getSelectionBackground());		//Set background color	for selected row
+//				}
+////				setHorizontalAlignment(rowAlignment[row]);			
+//                return this;
+//            }
+//        };						
+//		
+//		
+//		for (int i = 0; i < columnNames9.length; i++) {
+//			if (i < 3) {
+//				table9.getColumnModel().getColumn(i).setCellRenderer(r);		// first 3 columns are shaded
+//			}
+//		}
        
         
 //        table9.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -2112,7 +2188,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
         TableRowSorter<TableModelSpectrum> sorter = new TableRowSorter<TableModelSpectrum>(model9);	//Add sorter
 		for (int i = 1; i < colCount9; i++) {
 			sorter.setSortable(i, false);
-			if (i < 2) {			//first 2 columns can be sorted
+			if (i < 3) {			//first 3 columns can be sorted
 				sorter.setSortable(i, true);	
 			}
 		}
@@ -2382,6 +2458,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				        data3[3][1] = total_yieldtable;
 				        model3.fireTableDataChanged();
 				        
+				        //create 2 new instances of this Panel 
+						panel_Management_Cost_GUI = new Management_Cost_GUI();
+						panel_Management_Cost_Text = new Management_Cost_Text();
 						
 						//create 2 new instances of this Panel 
 						panel_UserConstraints_GUI = new UserConstraints_GUI();
@@ -3142,7 +3221,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			create_table8();
 	        //Put table8 into MixedFire_ScrollPane
 	        JScrollPane costBase__ScrollPane = new JScrollPane();
-	    	TitledBorder border = new TitledBorder("Base cost");
+	    	TitledBorder border = new TitledBorder("Base cost per unit");
 			border.setTitleJustification(TitledBorder.CENTER);
 			costBase__ScrollPane.setBorder(border);
 	        costBase__ScrollPane.setViewportView(table8);			
@@ -3153,7 +3232,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	        create_table9();
 	        //Put table9 into StandReplacing_ScrollPane
 	        JScrollPane costAdjustment_ScrollPane = new JScrollPane();
-	        TitledBorder border3 = new TitledBorder("Cost adjustment");
+	        TitledBorder border3 = new TitledBorder("Cost adjustment (increment) by % of Base cost - currently support adjustment by 5 static identifiers (dynamic: future)");
 			border3.setTitleJustification(TitledBorder.CENTER);
 			costAdjustment_ScrollPane.setBorder(border3);
 	        costAdjustment_ScrollPane.setViewportView(table9);
@@ -4098,7 +4177,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			generalInputFile.delete();		// Delete the old file before writing new contents
 		}
 		
-		if (data1 != null) {
+		if (data1 != null && data1.length > 0) {
 			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(generalInputFile))) {
 				for (int j = 0; j < columnNames1.length; j++) {
 					fileOut.write(columnNames1[j] + "\t");
@@ -4124,7 +4203,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			selectedStrataFile.delete();		// Delete the old file before writing new contents
 		}
 		
-		if (data != null) {
+		if (data != null && modeledAcres > 0) {
 			//Only print out Strata with implemented methods <> null
 			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(selectedStrataFile))) {
 				for (int j = 0; j < columnNames.length; j++) { //Note: colCount = columnNames.length
@@ -4154,7 +4233,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			requirementsFile.delete();		// Delete the old file before writing new contents
 		}
 		
-		if (data4 != null) {
+		if (data4 != null && data4.length > 0) {
 			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(requirementsFile))) {
 				for (int j = 0; j < columnNames4.length; j++) {
 					fileOut.write(columnNames4[j] + "\t");
@@ -4178,12 +4257,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 	
 	private void create_SRDRequirementsFile() {
-		File SRDrequirementsFile = new File(currentRunFolder.getAbsolutePath() + "/input_04_ replacingdisturbances_covertype_conversion.txt");	
+		File SRDrequirementsFile = new File(currentRunFolder.getAbsolutePath() + "/input_04_replacingdisturbances_covertype_conversion.txt");	
 		if (SRDrequirementsFile.exists()) {
 			SRDrequirementsFile.delete();		// Delete the old file before writing new contents
 		}
 		
-		if (data7 != null) {
+		if (data7 != null && data7.length > 0) {
 			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(SRDrequirementsFile))) {
 				for (int j = 0; j < columnNames7.length; j++) {
 					fileOut.write(columnNames7[j] + "\t");
@@ -4209,7 +4288,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			MSFireFile.delete();		// Delete the old file before writing new contents
 		}
 		
-		if (data5 != null) {
+		if (data5 != null && data5.length > 0) {
 			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(MSFireFile))) {
 				for (int j = 0; j < columnNames5.length; j++) {
 					fileOut.write(columnNames5[j] + "\t");
@@ -4235,7 +4314,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			SRDisturbancesFile.delete();		// Delete the old file before writing new contents
 		}
 		
-		if (data6 != null) {
+		if (data6 != null && data6.length > 0) {
 			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(SRDisturbancesFile))) {
 				for (int j = 0; j < columnNames6.length; j++) {
 					fileOut.write(columnNames6[j] + "\t");
@@ -4261,7 +4340,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			basecostFile.delete();		// Delete the old file before writing new contents
 		}
 		
-		if (data8 != null) {
+		if (data8 != null && data8.length > 0) {
 			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(basecostFile))) {
 				for (int j = 0; j < columnNames8.length; j++) {
 					fileOut.write(columnNames8[j] + "\t");
@@ -4287,7 +4366,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			costAdjustmentFile.delete();		// Delete the old file before writing new contents
 		}
 		
-		if (data9 != null) {
+		if (data9 != null && data9.length > 0) {
 			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(costAdjustmentFile))) {
 				for (int j = 0; j < columnNames9.length; j++) {
 					fileOut.write(columnNames9[j] + "\t");
@@ -4313,7 +4392,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			userConstraintsFile.delete();		// Delete the old file before writing new contents
 		}
 		
-		if (data2 != null) {
+		if (data2 != null && data2.length > 0) {
 			//Only print out rows if columns  1, 2 or 4, 6, 7, 8 <> null
 			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(userConstraintsFile))) {
 				for (int j = 0; j < columnNames2.length; j++) {

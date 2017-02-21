@@ -53,6 +53,7 @@ import javax.swing.tree.TreePath;
 
 import spectrumConvenienceClasses.FilesHandle;
 import spectrumConvenienceClasses.IconHandle;
+import spectrumYieldProject.Read_Indentifiers;
 
 @SuppressWarnings("serial")
 public class Panel_DatabaseManagement extends JLayeredPane {
@@ -308,6 +309,15 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 				selectionPaths = DatabaseTree.getSelectionPaths();
 				for (TreePath selectionPath : selectionPaths) { //Loop through all selected nodes	
 					currentLevel = selectionPath.getPathCount();
+					
+					DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) path.getLastPathComponent();
+					if (currentLevel == 3) {	//selected node is a table						
+						currenTableName = selectedNode.getUserObject().toString();
+						currentDatabase = selectedNode.getParent().toString();          			
+					} else if (currentLevel ==2) {		
+						scrollPane_Right.setViewportView(null);
+						selectedNode.getUserObject().toString();	// the selected node is a database
+					}
 				}
 				//End of set up---------------------------------------------------------------
 				
@@ -438,6 +448,34 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 							}
 						});
 						popup.add(deleteMenuItem);
+					}
+					
+					
+					// and this menuItem only shows up when 1 node is selected	(only use for me and will be removed)
+					if (currentLevel == 3 && currenTableName.equalsIgnoreCase("yield_tables") && NodeCount==1) {
+						final JMenuItem sampleMenuItem = new JMenuItem("Update yield tables definition");
+						sampleMenuItem.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_script.png"));
+						sampleMenuItem.addActionListener(new ActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent actionEvent) {								
+								update_YTdefinition();
+							}
+						});
+						popup.add(sampleMenuItem);
+					}
+					
+					
+					// and this menuItem only shows up when 1 node is selected	(only use for me and will be removed)
+					if (currentLevel == 3 && currenTableName.equalsIgnoreCase("yield_tables") && NodeCount==1) {
+						final JMenuItem sampleMenuItem = new JMenuItem("Create sample testing data - Do not use this, developers only");
+						sampleMenuItem.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_warning.png"));
+						sampleMenuItem.addActionListener(new ActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent actionEvent) {								
+								create_sample();
+							}
+						});
+						popup.add(sampleMenuItem);
 					}
 				
 									
@@ -882,8 +920,9 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 					String currentRow;			//Make currentRow to be:		'value1', 'value2', .....
 					while (rs.next()) {		//Loop through all rows of the copied table
 						currentRow = "";	//This is important to make the first member of this String not "null"
-					    for (int jj = 1; jj < columnCount + 1; jj++) {
-					    	currentRow = currentRow +"'" + rs.getString(jj).replace("'", "''") +"'" +", ";			//Escape the ' (i.e. xEAe') by replace
+					    for (int jj = 1; jj < columnCount + 1; jj++) {		
+							currentRow = (rs.getString(jj) == null) ? currentRow + "null, "
+					    			: currentRow + "'" + rs.getString(jj).replace("'", "''") +"'" +", "; 	//Escape the ' (i.e. xEAe') by replace
 					    }
 					    currentRow = currentRow.substring(0, currentRow.lastIndexOf(','));		//Remove the last "," 				      
 					   
@@ -1117,7 +1156,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 			
 		
 			
-			//Show new impoted tables-----------------------------------------------------------------------
+			//Show new imported tables-----------------------------------------------------------------------
 			int count = 0; // just help to know how many tables have been added
 			for (int i = 0; i < files.length; i++) {
 				if (files[i].isFile()) {
@@ -1357,6 +1396,163 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 			errorCAUGHT = true;
 		}	
 	}
+	
+	//--------------------------------------------------------------------------------------------------------------------------------
+	public void update_YTdefinition() {
+		
+		//Establish connection to the last node's database	
+		try {
+			conn = DriverManager.getConnection("jdbc:sqlite:" + databasesFolder + seperator + currentDatabase);
+			conn.setAutoCommit(false);
+			PreparedStatement pst = null;
+			
+			try {
+				//Create table with unique 'term'
+				pst = conn.prepareStatement("CREATE TABLE IF NOT EXISTS yield_tables_definition (col_index INTEGER, col_name TEXT, description TEXT, unit TEXT, data_type, UNIQUE(col_name));");
+				pst.executeUpdate();
+				
+				//insert term = table_ColumnNames, description = from default library, data_type = TEXT: 
+				//INSERT OR IGNORE works with unique 'term' so if we run the codes another time, it will not insert the current 'term'
+				ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM yield_tables LIMIT 1;");	
+				ResultSetMetaData rsmd = rs.getMetaData();
+				int colCount = rsmd.getColumnCount();
+				String[] table_ColumnNames = new String[colCount];
+				for (int i = 1; i <= colCount; i++) {		//this start from 1
+					table_ColumnNames[i-1] = rsmd.getColumnName(i);			//Note that tableColumnNames start from 0
+				}
+				rs.close();
+				Read_Indentifiers read_Identifiers = new Read_Indentifiers(new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/strata_definition.csv"));
+				for (int i = 0; i < colCount; i++) {	
+					pst = conn.prepareStatement("INSERT OR IGNORE INTO yield_tables_definition (col_index, col_name, description, data_type) VALUES(" 
+									+ i + ", '" + table_ColumnNames[i] + "', '" + read_Identifiers.get_ParameterToolTip(table_ColumnNames[i]) + "', 'TEXT');");
+					pst.executeUpdate();
+				}
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
+			}
+			
+			
+			//Commit execution-------------------------------------------------
+			pst.close();
+			conn.commit(); // commit all prepared execution, this is important
+			conn.close();						
+			
+			
+			//Show the yield_tables_definition
+			if (errorCAUGHT.equals(false)) {
+				// Make the combine_table appeared on the tree
+				refreshDatabaseTree();
+				@SuppressWarnings("unchecked")
+				Enumeration<DefaultMutableTreeNode> e = root.depthFirstEnumeration();
+				while (e.hasMoreElements()) { // Search for the name that match
+					DefaultMutableTreeNode node = e.nextElement();
+					if (node.toString().equalsIgnoreCase(currentDatabase) && root.isNodeChild(node)) {		//Name match, and node is child of root
+						Enumeration<DefaultMutableTreeNode> e2 = node.depthFirstEnumeration();
+						
+						while (e2.hasMoreElements()) { // Search for the name that match
+							DefaultMutableTreeNode newNode = e2.nextElement();
+							if (newNode.toString().equalsIgnoreCase("yield_tables_definition") && node.isNodeChild(newNode)) {		//Name match, and node is child of the database
+								DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();
+								TreeNode[] nodes = model.getPathToRoot(newNode);
+								TreePath path = new TreePath(nodes);
+								DatabaseTree.scrollPathToVisible(path);
+								DatabaseTree.setSelectionPath(path);
+								editingPath = path;
+								
+								processingNode = newNode;
+								currenTableName = "yield_tables_definition";
+								doQuery("SELECT * FROM yield_tables_definition");
+								scrollPane_Right.setViewportView(DatabaseTable);
+							}
+						}
+						
+					}
+				}
+			}
+			errorCAUGHT = false;				
+		} catch (SQLException e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+		}			
+	}		
+	
+	//--------------------------------------------------------------------------------------------------------------------------------
+	public void create_sample() {
+		
+		//Establish connection to the last node's database	
+		try {
+			conn = DriverManager.getConnection("jdbc:sqlite:" + databasesFolder + seperator + currentDatabase);
+			conn.setAutoCommit(false);
+			PreparedStatement pst = null;
+			
+			try {
+				//add action_id
+				pst = conn.prepareStatement("ALTER TABLE yield_tables ADD COLUMN action_id TEXT;");
+				pst.executeUpdate();
+
+				//action_id = random number (max = total actions)
+				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = 1 + ABS (RANDOM() % (SELECT COUNT(action_id) FROM management_actions));");	
+				pst.executeUpdate();
+			
+				//join tables to yield_tables2
+				pst = conn.prepareStatement("CREATE TABLE yield_tables2 AS SELECT * FROM yield_tables JOIN management_actions USING (action_id);");
+				pst.executeUpdate();
+				
+				//delete yield_tables
+				pst = conn.prepareStatement("DROP TABLE yield_tables;");
+				pst.executeUpdate();
+				
+				//rename yield_tables2 to yield_tables
+				pst = conn.prepareStatement("ALTER TABLE yield_tables2 RENAME TO yield_tables;");
+				pst.executeUpdate();
+				
+				//no_action if trt_acres = 0.00  or method = Natural Growth 
+				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = '0', action_type = 'no_action' WHERE trt_acres = '0.00' OR strata LIKE '%a0%';");
+				pst.executeUpdate();			
+
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
+			}
+			
+			
+			//Commit execution-------------------------------------------------
+			pst.close();
+			conn.commit(); // commit all prepared execution, this is important
+			conn.close();			
+			
+			
+			//Show the yield_tables
+			scrollPane_Right.setViewportView(DatabaseTable);
+			doQuery("SELECT * FROM yield_tables");
+		} catch (SQLException e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+		}		
+	}		
 
 	
 	// Tool bar with background image--------------------------------------------------------------------------------------------------------------------------------

@@ -93,10 +93,10 @@ PBd.Gp4Ss, Proportion Cut/Board Feet per Acre/All Species/Sapling Size Classes
 
 _STNDAGE0, Stand Age
 _AGEINT0, Stand Age Interval - 10 years
-_CC00P, Canopy Cover O" plus
-_CC10P, Canopy Cover 1O" plus
+_CC00P, Canopy Cover 0" plus
+_CC10P, Canopy Cover 10" plus
 _CC15P, Canopy Cover 15" plus
-_CC20P, Canopy Cover 2O" plus		
+_CC20P, Canopy Cover 20" plus		
 _LYNX, Lynx Habitat
 
 

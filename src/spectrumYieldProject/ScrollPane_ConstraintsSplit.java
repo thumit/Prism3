@@ -153,9 +153,7 @@ public class ScrollPane_ConstraintsSplit  extends JScrollPane {
 			public comboBox_ConstraintType() {
 				addItem("SOFT");
 				addItem("HARD");
-				addItem("SOFT COST");
-				addItem("HARD COST");
-			setSelectedIndex(0);
+				setSelectedIndex(0);
 			}
 		}
 		

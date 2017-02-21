@@ -10,7 +10,9 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class Read_RunInputs {
-	//For readGeneralInputs
+	
+	//-------------------------------------------------------------------------------------------------------------------------------------------------	
+	//For input_01_general_inputs.txt
 	private int GI_totalRows, GI_totalColumns;
 	private String[][] GI_value;
 
@@ -57,8 +59,9 @@ public class Read_RunInputs {
 	public String get_Solver () {
 		return GI_value[3][1].toString();
 	}
-//-------------------------------------------------------------------------------------------------------------------------------------------------	
-	//For readManagementOptions
+	
+	//-------------------------------------------------------------------------------------------------------------------------------------------------	
+	//For input_02_modeled_strata
 	private int MO_totalRows, MO_totalColumns;
 	private String[][] MO_value;
 		
@@ -131,8 +134,238 @@ public class Read_RunInputs {
 		}
 		return get_modeled_strata_withoutSizeClassandCoverType;
 	}
-//-------------------------------------------------------------------------------------------------------------------------------------------------
-	//For readUserConstraints
+		
+	//-------------------------------------------------------------------------------------------------------------------------------------------------	
+	//For input_03_clearcut_covertype_conversion
+	private List<String> coverTypeConversions_and_RotationAges_list;	
+	private List<String> coverTypeConversions_list;	
+	
+	public void readRequirements (File file) {
+		try {
+			// All lines except the 1st line to be in a list;		
+			List<String> list;	
+			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
+			list.remove(0);	//Remove the first row (Column names)
+		
+			coverTypeConversions_and_RotationAges_list = new ArrayList<String>();
+			coverTypeConversions_list = new ArrayList<String>();
+			
+			for (int i = 0; i < list.size(); i++) {
+				String[] values = list.get(i).split("\t");
+				String listname = values[0] + " " + values[1];
+				coverTypeConversions_list.add(listname);
+
+				int RA_min = Integer.parseInt(values[2]);
+				int RA_max = Integer.parseInt(values[3]);
+
+				for (int age = RA_min; age <= RA_max; age++) {
+					String listname2 = values[0] + " " + values[1] + " " + age;
+					coverTypeConversions_and_RotationAges_list.add(listname2);
+				}
+			}
+			
+		} catch (IOException e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+		}
+	}
+	
+	public List<String> getcoverTypeConversions_and_RotationAges () {
+		return coverTypeConversions_and_RotationAges_list;
+	}		
+	
+	public List<String> getCoverTypeConversions () {
+		return coverTypeConversions_list;
+	}
+
+	//-------------------------------------------------------------------------------------------------------------------------------------------------		
+	//For input_04_replacingdisturbances_covertype_conversion
+	private List<Double> SRDrequirementProportion_list;	
+	
+	public void readRDCovertypeProportion (File file) {
+		try {
+			// All lines except the 1st line to be in a list;		
+			List<String> list;	
+			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
+			list.remove(0);	//Remove the first row (Column names)
+		
+			SRDrequirementProportion_list = new ArrayList<Double>();		
+			for (int i = 0; i < list.size(); i++) {
+				String[] values = list.get(i).split("\t");				
+				SRDrequirementProportion_list.add(Double.parseDouble(values[3]));
+			}
+			
+		} catch (IOException e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+		}
+	}		
+							
+	public double[] getSRDrequirementProportion () {		
+		double[] array = Stream.of(SRDrequirementProportion_list.toArray(new Double[SRDrequirementProportion_list.size()])).mapToDouble(Double::doubleValue).toArray();
+		return array;
+	}	
+	
+	//-------------------------------------------------------------------------------------------------------------------------------------------------	
+	//For input_05_mixed_severity_wildfire
+	private List<Double> msFireProportion_list;	
+	
+	public void readMSPercent (File file) {
+		try {
+			// All lines except the 1st line to be in a list;		
+			List<String> list;	
+			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
+			list.remove(0);	//Remove the first row (Column names)
+		
+			msFireProportion_list = new ArrayList<Double>();		
+			for (int i = 0; i < list.size(); i++) {
+				String[] values = list.get(i).split("\t");				
+				msFireProportion_list.add(Double.parseDouble(values[2]));
+			}
+			
+		} catch (IOException e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+		}
+	}		
+							
+	public double[] getMSFireProportion () {		
+		double[] array = Stream.of(msFireProportion_list.toArray(new Double[msFireProportion_list.size()])).mapToDouble(Double::doubleValue).toArray();
+		return array;
+	}	
+	
+	//-------------------------------------------------------------------------------------------------------------------------------------------------	
+	//For input_06_replacing_disturbances
+	private double[][] SRDProportion;	
+	
+	public void readRDPercent (File file) {
+		try {
+			// All lines except the 1st line to be in a list;		
+			List<String> list;	
+			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
+			list.remove(0);	//Remove the first row (Column names)
+			int ageClass = 0;
+			int s5 = 0;
+		
+			//Define the size of array
+			String[] firstRowValue = list.get(0).split("\t");
+			int totalRows = list.size();
+			int totalColumns = firstRowValue.length;	
+			SRDProportion = new double[totalColumns - 1][totalRows + 1];		//This is 	P(s5,a)				since age = row + 1 the size should be [totalRows + 1]			
+																											// - 1st column which is the age class column	
+			
+			//Put the values to arrays
+			for (int i = 0; i < totalRows; i++) {
+				ageClass = i + 1;
+				String[] values = list.get(i).split("\t");	
+				for (int j = 1; j < totalColumns; j++) {
+					s5 = j - 1;
+					SRDProportion[s5][ageClass] = Double.parseDouble(values[j]);							
+				}
+			}
+			
+		} catch (IOException e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+		}
+	}		
+							
+	public double[][] getSRDProportion () {		
+		return SRDProportion;
+	}			
+	
+	//-------------------------------------------------------------------------------------------------------------------------------------------------	
+	//For input_07_base_cost
+	private List<Double> baseCost_acres;
+	private double[][] baseCost_yieldtables;	
+	private List<String> action_type_list;
+	
+	public void readBaseCost (File file) {
+		try {
+			// All lines except the 1st line to be in a list;		
+			List<String> list;	
+			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
+			list.remove(0);	//Remove the first row (Column names)
+		
+			//Define the size of array
+			String[] firstRowValue = list.get(0).split("\t");
+			int totalRows = list.size();
+			int totalColumns = firstRowValue.length;
+			baseCost_yieldtables = new double[totalRows][totalColumns - 2];			// - 2 columns which are action_type & acres
+			
+			//Define lists
+			baseCost_acres = new ArrayList<Double>();
+			action_type_list = new ArrayList<String>();
+						
+			//Put the values to arrays and lists
+			for (int i = 0; i < totalRows; i++) {
+				String[] values = list.get(i).split("\t");	
+				
+				action_type_list.add(values[0]);						//1st column is action_type
+				baseCost_acres.add(Double.parseDouble(values[1]));		//2nd column is base cost for acres
+				
+				for (int j = 2; j < totalColumns; j++) {
+					baseCost_yieldtables[i][j - 2] = Double.parseDouble(values[j]);							
+				}
+			}
+			
+		} catch (IOException e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+		}
+	}		
+	
+	public List<String> get_action_type_list() {
+		return action_type_list;
+	}
+	
+	public double[] getbaseCost_acres() {		
+		double[] array = Stream.of(baseCost_acres.toArray(new Double[baseCost_acres.size()])).mapToDouble(Double::doubleValue).toArray();
+		return array;
+	}	
+	
+	public double[][] getbaseCost_yieldtables() {		
+		return baseCost_yieldtables;
+	}			
+
+	//-------------------------------------------------------------------------------------------------------------------------------------------------	
+	//For input_07_base_cost
+	private List<String> cost_staticCondition_list;
+	private double[] cost_adjusted_percentage;	
+	
+	public void readCostAdjustment (File file) {
+		try {
+			// All lines except the 1st line to be in a list;		
+			List<String> list;	
+			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
+			list.remove(0);	//Remove the first row (Column names)
+		
+			//Define the size of array
+			String[] firstRowValue = list.get(0).split("\t");
+			int totalRows = list.size();
+			int totalColumns = firstRowValue.length;
+			cost_adjusted_percentage = new double[totalRows];
+			
+			//Define list
+			cost_staticCondition_list = new ArrayList<String>();
+						
+			//Put the values to arrays and lists
+			for (int i = 0; i < totalRows; i++) {
+				String[] values = list.get(i).split("\t");				
+				cost_staticCondition_list.add(values[0] + values[1] +values[2]);	// action_list + layer_id + element_id
+				cost_adjusted_percentage[i] = Double.parseDouble(values[3]);		//4th column is the cost_adjusted_percentage  Double.parseDouble(values[1]));		
+			}
+			
+		} catch (IOException e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+		}
+	}		
+	
+	public List<String> get_cost_staticCondition_list() {
+		return cost_staticCondition_list;
+	}
+	
+	public double[] get_cost_adjusted_percentage() {		
+		return cost_adjusted_percentage;
+	}		
+	
+	//-------------------------------------------------------------------------------------------------------------------------------------------------
+	//For input_09_user_constraints
 	private int UC_totalRows, UC_totalColumns;
 	private String[][] UC_value;
 
@@ -392,8 +625,6 @@ public class Read_RunInputs {
 	}	
 	
 	
-	
-	
 	public List<String> get_Parameters_indexes_list (int row) {	
 		List<String> parameters_indexes_list = new ArrayList<String>();
 		
@@ -404,141 +635,5 @@ public class Read_RunInputs {
 		}				
 		return parameters_indexes_list;
 	}	
-//-------------------------------------------------------------------------------------------------------------------------------------------------	
-	//For readRequirements
-	private List<String> coverTypeConversions_and_RotationAges_list;	
-	private List<String> coverTypeConversions_list;	
-	
-	public void readRequirements (File file) {
-		try {
-			// All lines except the 1st line to be in a list;		
-			List<String> list;	
-			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
-			list.remove(0);	//Remove the first row (Column names)
-		
-			coverTypeConversions_and_RotationAges_list = new ArrayList<String>();
-			coverTypeConversions_list = new ArrayList<String>();
-			
-			for (int i = 0; i < list.size(); i++) {
-				String[] values = list.get(i).split("\t");
-				String listname = values[0] + " " + values[1];
-				coverTypeConversions_list.add(listname);
-
-				int RA_min = Integer.parseInt(values[2]);
-				int RA_max = Integer.parseInt(values[3]);
-
-				for (int age = RA_min; age <= RA_max; age++) {
-					String listname2 = values[0] + " " + values[1] + " " + age;
-					coverTypeConversions_and_RotationAges_list.add(listname2);
-				}
-			}
-			
-		} catch (IOException e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage());
-		}
-	}
-	
-	public List<String> getcoverTypeConversions_and_RotationAges () {
-		return coverTypeConversions_and_RotationAges_list;
-	}		
-	
-	public List<String> getCoverTypeConversions () {
-		return coverTypeConversions_list;
-	}
-
-	
-	
-//-------------------------------------------------------------------------------------------------------------------------------------------------	
-	//For readMSFire
-	private List<Double> msFireProportion_list;	
-	
-	public void readMSFire (File file) {
-		try {
-			// All lines except the 1st line to be in a list;		
-			List<String> list;	
-			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
-			list.remove(0);	//Remove the first row (Column names)
-		
-			msFireProportion_list = new ArrayList<Double>();		
-			for (int i = 0; i < list.size(); i++) {
-				String[] values = list.get(i).split("\t");				
-				msFireProportion_list.add(Double.parseDouble(values[2]));
-			}
-			
-		} catch (IOException e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage());
-		}
-	}		
-							
-	public double[] getMSFireProportion () {		
-		double[] array = Stream.of(msFireProportion_list.toArray(new Double[msFireProportion_list.size()])).mapToDouble(Double::doubleValue).toArray();
-		return array;
-	}	
-	
-	//-------------------------------------------------------------------------------------------------------------------------------------------------	
-	//For readSRDFile
-	private double[][] SRDProportion;	
-	
-	public void readSRDFile (File file) {
-		try {
-			// All lines except the 1st line to be in a list;		
-			List<String> list;	
-			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
-			list.remove(0);	//Remove the first row (Column names)
-			int ageClass = 0;
-			int s5 = 0;
-		
-			//Define the size of array
-			String[] firstRowValue = list.get(0).split("\t");
-			int totalRows = list.size();
-			int totalColumns = firstRowValue.length;	
-			SRDProportion = new double[totalColumns - 1][totalRows + 1];		//This is 	P(s5,a)				since age = row + 1 the size should be [totalRows + 1]			
-																											// - 1st column which is the age class column	
-			
-			//Put the values to arrays
-			for (int i = 0; i < totalRows; i++) {
-				ageClass = i + 1;
-				String[] values = list.get(i).split("\t");	
-				for (int j = 1; j < totalColumns; j++) {
-					s5 = j - 1;
-					SRDProportion[s5][ageClass] = Double.parseDouble(values[j]);							
-				}
-			}
-			
-		} catch (IOException e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage());
-		}
-	}		
-							
-	public double[][] getSRDProportion () {		
-		return SRDProportion;
-	}			
-
-	//-------------------------------------------------------------------------------------------------------------------------------------------------		
-	//For readSRDrequirementFile
-	private List<Double> SRDrequirementProportion_list;	
-	
-	public void readSRDrequirementFile (File file) {
-		try {
-			// All lines except the 1st line to be in a list;		
-			List<String> list;	
-			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
-			list.remove(0);	//Remove the first row (Column names)
-		
-			SRDrequirementProportion_list = new ArrayList<Double>();		
-			for (int i = 0; i < list.size(); i++) {
-				String[] values = list.get(i).split("\t");				
-				SRDrequirementProportion_list.add(Double.parseDouble(values[3]));
-			}
-			
-		} catch (IOException e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage());
-		}
-	}		
-							
-	public double[] getSRDrequirementProportion () {		
-		double[] array = Stream.of(SRDrequirementProportion_list.toArray(new Double[SRDrequirementProportion_list.size()])).mapToDouble(Double::doubleValue).toArray();
-		return array;
-	}		
 	
 }

@@ -31,7 +31,7 @@ public class StringHandle {
 			String c = match.group();
 			s = s.replaceAll("\\" + c, "_");
 		}
-		return s;
+		return s.toLowerCase();
 	}
 	
 }

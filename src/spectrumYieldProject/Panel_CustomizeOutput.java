@@ -137,8 +137,8 @@ public class Panel_CustomizeOutput extends JLayeredPane implements ActionListene
 //			ImageIcon icon2 = new ImageIcon("C:\\pikachuHat.jpg");
 			ImageIcon icon2 = new ImageIcon(new URL("http://orig11.deviantart.net/b288/f/2009/260/9/5/pikachu_vector_by_elfaceitoso.png"));		
 			
-			Image scaleImage = icon.getImage().getScaledInstance(200, 150,Image.SCALE_DEFAULT);
-			Image scaleImage2 = icon2.getImage().getScaledInstance(150, 150,Image.SCALE_DEFAULT);
+			Image scaleImage = icon.getImage().getScaledInstance(200, 150,Image.SCALE_SMOOTH);
+			Image scaleImage2 = icon2.getImage().getScaledInstance(150, 150,Image.SCALE_SMOOTH);
 		
 			runStatButton = new JButton(new ImageIcon(scaleImage2));
 			runStatButton.setDisabledIcon(new ImageIcon(scaleImage));

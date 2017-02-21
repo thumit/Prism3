@@ -21,6 +21,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 
 import spectrumConvenienceClasses.ColorUtil;
+import spectrumConvenienceClasses.IconHandle;
 
 public class JMenuBarCustomize extends JMenuBar implements MouseListener, MouseMotionListener {
 	private ImageIcon icon;
@@ -37,10 +38,13 @@ public class JMenuBarCustomize extends JMenuBar implements MouseListener, MouseM
 
 		//Shift all below components to the right by some glue boxes
 		add(Box.createGlue());
-		add(new JLabel("SpectrumLite Demo Version 1.16"));
+		JLabel title = new JLabel("SpectrumLite pre-alpha version 1.16");
+//		title.setIcon(IconHandle.get_scaledImageIcon(100, 20, "spectrumlite1.png"));
+		add(title);
 		add(Box.createGlue());
-
 //		add(Box.createHorizontalGlue());
+		
+		
 		
 		// this button will be shifted right on the menubar
 		Action actionMinimize = new AbstractAction() {
@@ -50,10 +54,8 @@ public class JMenuBarCustomize extends JMenuBar implements MouseListener, MouseM
 		};
 		buttonMinimize = new JButton(actionMinimize);
 		buttonMinimize.setToolTipText("Minimize");
-		icon = new ImageIcon(getClass().getResource("/icon_minimize.png"));
-		scaleImage = icon.getImage().getScaledInstance(15, 15,Image.SCALE_SMOOTH);
-		buttonMinimize.setIcon(new ImageIcon(scaleImage));
-//		buttonMinimize.setContentAreaFilled(false);
+		buttonMinimize.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_minimize.png"));
+		buttonMinimize.setContentAreaFilled(false);
 		add(buttonMinimize);
 		
 		
@@ -71,10 +73,8 @@ public class JMenuBarCustomize extends JMenuBar implements MouseListener, MouseM
 		};
 		buttonMaximize = new JButton(actionMaximize);
 		buttonMaximize.setToolTipText("Maximize");
-		icon = new ImageIcon(getClass().getResource("/icon_maximize.png"));
-		scaleImage = icon.getImage().getScaledInstance(15, 15,Image.SCALE_SMOOTH);
-		buttonMaximize.setIcon(new ImageIcon(scaleImage));
-//		buttonMaximize.setContentAreaFilled(false);
+		buttonMaximize.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_maximize.png"));
+		buttonMaximize.setContentAreaFilled(false);
 		add(buttonMaximize);
 		
 		
@@ -87,10 +87,8 @@ public class JMenuBarCustomize extends JMenuBar implements MouseListener, MouseM
 		};
 		buttonExit = new JButton(actionExit);
 		buttonExit.setToolTipText("Exit");
-		icon = new ImageIcon(getClass().getResource("/icon_erase.png"));
-		scaleImage = icon.getImage().getScaledInstance(15, 15,Image.SCALE_SMOOTH);
-		buttonExit.setIcon(new ImageIcon(scaleImage));
-//		buttonExit.setContentAreaFilled(false);
+		buttonExit.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_erase.png"));
+		buttonExit.setContentAreaFilled(false);
 		add(buttonExit);
 	
 		//Add mouseListener to JMenuBar

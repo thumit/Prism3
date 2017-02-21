@@ -14,7 +14,7 @@ import javax.swing.JScrollPane;
 import spectrumROOT.Spectrum_Main;
 
 public class ScrollPane_Parameters extends JScrollPane {	
-	private JCheckBox checkboxNoParameter;
+	private JCheckBox checkboxNoParameter, checkboxCostParameter;
 	private List<JCheckBox> checkboxParameter;
 	
 	public ScrollPane_Parameters(Read_Indentifiers read_Identifiers, String[] yieldTable_ColumnNames) {				
@@ -38,19 +38,17 @@ public class ScrollPane_Parameters extends JScrollPane {
 				
 				// add checkboxParameter to the Panel
 			    c2.gridx = 0;
-			    c2.gridy = 1 + i;
+			    c2.gridy = 2 + i;
 				c2.weightx = 1;
 			    c2.weighty = 1;
 				parametersPanel.add(checkboxParameter.get(i), c2);
 			}
 			
 			
-			//Add an extra checkbox for the option of not using any Column, use 1 instead as multiplier
-			//This is also the checkbox for the option of not using any Column as dynamic identifier
-			checkboxNoParameter = new JCheckBox();		//add checkbox			
+			//Add checkboxNoParameter for the option of not using any Column, use 1 instead as multiplier
+			checkboxNoParameter = new JCheckBox();			
 			checkboxNoParameter.setText("NoParameter");		
 			checkboxNoParameter.setToolTipText("1 is used as multiplier (parameter), no column will be used as parameter");		//set toolTip
-			
 			// add the checkBox to the Panel
 			c2.gridx = 0;
 			c2.gridy = 0;
@@ -58,17 +56,45 @@ public class ScrollPane_Parameters extends JScrollPane {
 			c2.weighty = 1;
 			parametersPanel.add(checkboxNoParameter, c2);
 			
+			
+			//Add checkboxCostParameter for the option of using cost info
+			checkboxCostParameter = new JCheckBox();			
+			checkboxCostParameter.setText("CostParameter");		
+			checkboxCostParameter.setToolTipText("CostParameter details are based on Management Cost window");		//set toolTip			
+			// add the checkBox to the Panel
+			c2.gridx = 0;
+			c2.gridy = 1;
+			c2.weightx = 1;
+			c2.weighty = 1;
+			parametersPanel.add(checkboxCostParameter, c2);			
+			
+			
 			// Add listeners to de-select all other checkBoxes
 			checkboxNoParameter.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {
 					if (checkboxNoParameter.isSelected()) {
+						checkboxCostParameter.setSelected(false);
 						for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
 							checkboxParameter.get(i).setSelected(false);
 						} 
 					}
 				}
-			});								
+			});		
+			
+			
+			// Add listeners to de-select all other checkBoxes
+			checkboxCostParameter.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent actionEvent) {
+					if (checkboxCostParameter.isSelected()) {
+						checkboxNoParameter.setSelected(false);
+						for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
+							checkboxParameter.get(i).setSelected(false);
+						} 
+					}
+				}
+			});				
 			
 			
 			// Add listeners to checkBox so if then name has AllSx then other checkbox would be deselected 
@@ -79,18 +105,19 @@ public class ScrollPane_Parameters extends JScrollPane {
 				checkboxParameter.get(i).addActionListener(new ActionListener() {	
 					@Override
 					public void actionPerformed(ActionEvent actionEvent) {
-						//Deselect the NoParameter checkBox
+						//Deselect the checkboxNoParameter & checkboxCostParameter
 						checkboxNoParameter.setSelected(false);
+						checkboxCostParameter.setSelected(false);
 						
-						if (currentCheckBoxName.contains("AllSx")) {
-							for (int j = 0; j < yieldTable_ColumnNames.length; j++) {		
-								if (j!=currentCheckBoxIndex) 	checkboxParameter.get(j).setSelected(false);
-							}
-						} else {
-							for (int j = 0; j < yieldTable_ColumnNames.length; j++) {		
-								if (checkboxParameter.get(j).getText().contains("AllSx")) 	checkboxParameter.get(j).setSelected(false);
-							}
-						}					
+//						if (currentCheckBoxName.contains("AllSx")) {
+//							for (int j = 0; j < yieldTable_ColumnNames.length; j++) {		
+//								if (j!=currentCheckBoxIndex) 	checkboxParameter.get(j).setSelected(false);
+//							}
+//						} else {
+//							for (int j = 0; j < yieldTable_ColumnNames.length; j++) {		
+//								if (checkboxParameter.get(j).getText().contains("AllSx")) 	checkboxParameter.get(j).setSelected(false);
+//							}
+//						}					
 					}
 				});
 			}
@@ -103,6 +130,10 @@ public class ScrollPane_Parameters extends JScrollPane {
 	
 	public JCheckBox get_checkboxNoParameter() {
 		return checkboxNoParameter;
+	}
+	
+	public JCheckBox get_checkboxCostParameter() {
+		return checkboxCostParameter;
 	}
 	
 	public List<JCheckBox> get_checkboxParameter() {
@@ -120,6 +151,11 @@ public class ScrollPane_Parameters extends JScrollPane {
 		if (parameters_info.equals("") || checkboxNoParameter.isSelected()) {
 			parameters_info = "NoParameter";		//= parametersScrollPanel.checkboxNoParameter.getText();
 		}		
+		
+		if (checkboxCostParameter.isSelected()) {
+			parameters_info = "CostParameter";		//= parametersScrollPanel.checkboxCostParameter.getText();
+		}	
+		
 		return parameters_info;
 	}
 }
