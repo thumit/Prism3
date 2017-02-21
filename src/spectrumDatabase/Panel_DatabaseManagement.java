@@ -1524,20 +1524,105 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = '0', action_type = 'no_action' WHERE trt_acres = '0.00' OR strata LIKE '%a0%';");
 				pst.executeUpdate();			
 
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
 			} catch (Exception e) {
 				JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
 			}
+			
+			
+			try {
+				//get the strata name and put into a list		
+				List<String> strata_list = new ArrayList<String>();	
+				pst = conn.prepareStatement("SELECT DISTINCT strata FROM yield_tables;");
+				ResultSet rs = pst.executeQuery();			
+				while (rs.next()) {
+					strata_list.add(rs.getString(1));		//column 1
+				}
+				rs.close();
+				
+				//new strata name
+				List<String> new_strata_list = new ArrayList<String>();	
+				String covertype, sizeclass, method, timing_choice, forest_status, new_name;
+				for (String strata: strata_list) {
+					if (strata.substring(0,1).equalsIgnoreCase("v")) {
+						covertype = strata.substring(0, 4);
+						sizeclass = strata.substring(4, 6);
+						method = strata.substring(6, 7);
+						timing_choice = strata.substring(7, 8);
+						forest_status = strata.substring(8, 9);
+						
+						if (covertype.equalsIgnoreCase("VDIP")) covertype = "P";
+						if (covertype.equalsIgnoreCase("VDTD")) covertype = "D";
+						if (covertype.equalsIgnoreCase("VMIW")) covertype = "W";
+						if (covertype.equalsIgnoreCase("VMTC")) covertype = "C";
+						if (covertype.equalsIgnoreCase("VSII")) covertype = "I";
+						if (covertype.equalsIgnoreCase("VSTA")) covertype = "A";
+						if (covertype.equalsIgnoreCase("VLPP")) covertype = "L";
+						if (covertype.equalsIgnoreCase("NS")) covertype = "N";					
+						
+						if (sizeclass.equalsIgnoreCase("50")) sizeclass = "N";
+						if (sizeclass.equalsIgnoreCase("30")) sizeclass = "S";
+						if (sizeclass.equalsIgnoreCase("20")) sizeclass = "P";
+						if (sizeclass.equalsIgnoreCase("13")) sizeclass = "M";
+						if (sizeclass.equalsIgnoreCase("12")) sizeclass = "L";	
+						
+						if (method.equalsIgnoreCase("A")) method = "NG";
+						if (method.equalsIgnoreCase("B")) method = "EA";
+						if (method.equalsIgnoreCase("C")) method = "GS";
+						if (method.equalsIgnoreCase("D")) method = "PB";
+						if (method.equalsIgnoreCase("E")) method = "MS";
+									
+						//Update strata with new name					
+						new_name = covertype + "_" + sizeclass + "_" + method + "_" + timing_choice + "_" + forest_status;
+						new_name = new_name.toUpperCase();
+						new_strata_list.add(new_name);
+						pst = conn.prepareStatement("UPDATE yield_tables SET strata = '" + new_name + "' WHERE strata = '" + strata + "';");
+						pst.executeUpdate();
+					}
+				}		
+				
+				//Create MS tables based on PB tables
+				pst = conn.prepareStatement("CREATE TABLE ms_tables AS SELECT * FROM yield_tables WHERE strata LIKE '%PB%';");
+				pst.executeUpdate();	
+				for (String new_strata: new_strata_list) {
+					pst = conn.prepareStatement("UPDATE ms_tables SET strata = '" + new_strata.replace("PB", "MS") + "' WHERE strata = '" + new_strata + "';");
+					pst.executeUpdate();
+				}
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
+			}
+					
+			
+			try {			
+				//Combine yield_tables & ms_tables
+				pst = conn.prepareStatement("CREATE TABLE combine_table AS SELECT * FROM yield_tables union SELECT * FROM ms_tables;");
+				pst.executeUpdate();		
+				
+				//delete yield_tables & ms_tables
+				pst = conn.prepareStatement("DROP TABLE yield_tables;");
+				pst.executeUpdate();
+				
+				pst = conn.prepareStatement("DROP TABLE ms_tables;");
+				pst.executeUpdate();
+				
+				//rename combine_table to yield_tables
+				pst = conn.prepareStatement("ALTER TABLE combine_table RENAME TO yield_tables;");
+				pst.executeUpdate();
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
+			}
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 			
 			
 			//Commit execution-------------------------------------------------

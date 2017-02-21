@@ -4,7 +4,7 @@ import java.util.List;
 
 public class GetParameter_totalValue {
 
-	public double getValue(String s5, String s6, String silviculturalMethod, String timingChoice, 
+	public double getValue(String cover_type, String size_class, String method, String timing_choice, 
 			Object[] yieldTable_Name, Object[][][] yieldTable_values, List<String> parameters_indexes_list,
 			List<String> all_dynamicIdentifiers_columnIndexes, List<List<String>> all_dynamicIdentifiers, int period, int row,
 			List<String> action_type_list, double[] baseCost_acres, double[][] baseCost_yieldtables,
@@ -18,30 +18,13 @@ public class GetParameter_totalValue {
 			value_to_return = 1;
 		} 
 		else {		// Check the yield table 		
-		
-			if (s5.equals("P")) s5 = "VDIP";
-			if (s5.equals("D")) s5 = "VDTD";
-			if (s5.equals("W")) s5 = "VMIW";
-			if (s5.equals("C")) s5 = "VMTC";
-			if (s5.equals("I")) s5 = "VSII";
-			if (s5.equals("A")) s5 = "VSTA";
-			if (s5.equals("L")) s5 = "VLPP";
-			if (s5.equals("N")) s5 = "NS";
-			
-			if (s6.equals("N")) s6 = "50";
-			if (s6.equals("S")) s6 = "30";
-			if (s6.equals("P")) s6 = "20";
-			if (s6.equals("M")) s6 = "13";
-			if (s6.equals("L")) s6 = "12";
-						
-	
-			String tableName_toFind = s5 + s6 + silviculturalMethod + timingChoice  + "e";
-			tableName_toFind = tableName_toFind.toLowerCase();
-	//		String[] string_yieldTable_Name = Arrays.stream(yieldTable_Name).toArray(String[]::new);		
+
+			String forest_status = "E";
+			String tableName_toFind = cover_type + "_" + size_class + "_" + method + "_" + timing_choice + "_" + forest_status;			
 			boolean foundtable = false;
 			
 			for (int i = 0; i < yieldTable_Name.length; i++) {
-				if (yieldTable_Name[i].toString().equals(tableName_toFind) && row < yieldTable_values[i].length) {		// If yield table Name match && table has that row index						
+				if (yieldTable_Name[i].toString().equalsIgnoreCase(tableName_toFind) && row < yieldTable_values[i].length) {		// If yield table Name match && table has that row index						
 					foundtable = true;
 					
 					boolean add_dynamicIdentifiers_match = true;	//always true if No dynamic Identifier				

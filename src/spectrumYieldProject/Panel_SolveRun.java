@@ -23,6 +23,7 @@ import java.io.PrintStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -2061,7 +2062,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 															current_var_static_condition.add(layers_Title.get(3) + layer4.get(s4));		// layer + element
 															current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
 																							
-															para_value = getParameter_totalValues.getValue(layer5.get(s5), layer6.get(s6), "A", "0", 
+															para_value = getParameter_totalValues.getValue(layer5.get(s5), layer6.get(s6), "NG", "0", 
 																	yieldTable_Name, yieldTable_values, parameters_indexes_list,
 																	all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers, current_period, current_row,
 																	action_type_list, baseCost_acres, baseCost_yieldtables,
@@ -2111,7 +2112,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																current_var_static_condition.add(layers_Title.get(3) + layer4.get(s4));		// layer + element
 																current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
 																				
-																para_value = getParameter_totalValues.getValue(layer5.get(s5), layer6.get(s6), "D", Integer.toString(ii), 
+																para_value = getParameter_totalValues.getValue(layer5.get(s5), layer6.get(s6), "PB", Integer.toString(ii), 
 																		yieldTable_Name, yieldTable_values, parameters_indexes_list,
 																		all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers, current_period, current_row,
 																		action_type_list, baseCost_acres, baseCost_yieldtables, 
@@ -2162,7 +2163,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																current_var_static_condition.add(layers_Title.get(3) + layer4.get(s4));		// layer + element
 																current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
 																
-																para_value = getParameter_totalValues.getValue(layer5.get(s5), layer6.get(s6), "E", Integer.toString(ii), 
+																para_value = getParameter_totalValues.getValue(layer5.get(s5), layer6.get(s6), "MS", Integer.toString(ii), 
 																		yieldTable_Name, yieldTable_values, parameters_indexes_list,
 																		all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers, current_period, current_row,
 																		action_type_list, baseCost_acres, baseCost_yieldtables, 
@@ -2213,7 +2214,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																current_var_static_condition.add(layers_Title.get(3) + layer4.get(s4));		// layer + element
 																current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
 																		
-																para_value = getParameter_totalValues.getValue(layer5.get(s5), layer6.get(s6), "C", Integer.toString(ii), 
+																para_value = getParameter_totalValues.getValue(layer5.get(s5), layer6.get(s6), "GS", Integer.toString(ii), 
 																		yieldTable_Name, yieldTable_values, parameters_indexes_list,
 																		all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers, current_period, current_row,
 																		action_type_list, baseCost_acres, baseCost_yieldtables, 
@@ -2270,7 +2271,13 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																		current_var_static_condition.add(layers_Title.get(3) + layer4.get(s4));		// layer + element
 																		current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
 																				
-																		para_value = getParameter_totalValues.getValue(layer5.get(s5), layer6.get(s6), "B", "AgeClassShouldBeHere", 
+																		
+																		//3 lines to random EA table picking  ----change change change later
+																		Random rand = new Random();
+																	    //int s6 = rand.nextInt(layer6.size());
+																	    int timingchoice = rand.nextInt(4);
+																	    para_value = getParameter_totalValues.getValue(layer5.get(s5), layer6.get(s6), "EA", Integer.toString(timingchoice), 
+//																		para_value = getParameter_totalValues.getValue(layer5.get(s5), layer6.get(s6), "EA", "AgeClassShouldBeHere", 
 																				yieldTable_Name, yieldTable_values, parameters_indexes_list,
 																				all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers, current_period, current_row,
 																				action_type_list, baseCost_acres, baseCost_yieldtables, 
@@ -2323,7 +2330,13 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																		current_var_static_condition.add(layers_Title.get(3) + layer4.get(s4));		// layer + element
 																		current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
 																				
-																		para_value = getParameter_totalValues.getValue(layer5.get(s5), "notNeeded", "B", "AgeClassShouldBeHere", 
+																		
+																		//3 lines to random EA table picking  ----change change change later
+																		Random rand = new Random();
+																	    int s6 = rand.nextInt(layer6.size());
+																	    int timingchoice = rand.nextInt(4);
+																	    para_value = getParameter_totalValues.getValue(layer5.get(s5), layer6.get(s6), "EA", Integer.toString(timingchoice), 
+//																		para_value = getParameter_totalValues.getValue(layer5.get(s5), "notNeeded", "EA", "AgeClassShouldBeHere", 
 																				yieldTable_Name, yieldTable_values, parameters_indexes_list,
 																				all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers, current_period, current_row,
 																				action_type_list, baseCost_acres, baseCost_yieldtables, 
@@ -2376,8 +2389,14 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																current_var_static_condition.add(layers_Title.get(2) + layer3.get(s3));		// layer + element
 																current_var_static_condition.add(layers_Title.get(3) + layer4.get(s4));		// layer + element
 																current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
-																		
-																para_value = getParameter_totalValues.getValue(layer5.get(s5), "notNeeded", "A", "AgeClassShouldBeHere", 
+																
+																
+																//3 lines to random EA table picking  ----change change change later
+																Random rand = new Random();
+															    int s6 = rand.nextInt(layer6.size());
+															    int timingchoice = rand.nextInt(4);
+															    para_value = getParameter_totalValues.getValue(layer5.get(s5), layer6.get(s6), "EA", Integer.toString(timingchoice), 
+//																para_value = getParameter_totalValues.getValue(layer5.get(s5), "notNeeded", "EA", "AgeClassShouldBeHere", 
 																		yieldTable_Name, yieldTable_values, parameters_indexes_list,
 																		all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers, current_period, current_row,
 																		action_type_list, baseCost_acres, baseCost_yieldtables, 

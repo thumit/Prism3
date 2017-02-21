@@ -150,29 +150,14 @@ public class Read_DatabaseTables {
 	}
 	
 	
-	public String get_stratingAgeClass(String s5, String s6, String silviculturalMethod, String timingChoice) {
-		if (s5.equals("P")) s5 = "VDIP";
-		if (s5.equals("D")) s5 = "VDTD";
-		if (s5.equals("W")) s5 = "VMIW";
-		if (s5.equals("C")) s5 = "VMTC";
-		if (s5.equals("I")) s5 = "VSII";
-		if (s5.equals("A")) s5 = "VSTA";
-		if (s5.equals("L")) s5 = "VLPP";
-		if (s5.equals("N")) s5 = "NS";
+	public String get_stratingAgeClass(String cover_type, String size_class, String method, String timing_choice) {
+		method = "NG";	//only use NG table to find starting age class
+		timing_choice ="0";
+		String forest_status = "E";
+		String tableName_toFind = cover_type + "_" + size_class + "_" + method + "_" + timing_choice + "_" + forest_status;
+		tableName_toFind = tableName_toFind.toUpperCase();
 		
-		if (s6.equals("N")) s6 = "50";
-		if (s6.equals("S")) s6 = "30";
-		if (s6.equals("P")) s6 = "20";
-		if (s6.equals("M")) s6 = "13";
-		if (s6.equals("L")) s6 = "12";
-		
-		silviculturalMethod = "A";	//only use NG table
-		timingChoice ="0";
-		
-		String tableName_toFind = s5 + s6 + silviculturalMethod + timingChoice + "e";
-		tableName_toFind = tableName_toFind.toLowerCase();
 		String valueReturn = null;
-		
 		try {
 			int index = Arrays.asList(nameOftable).indexOf(tableName_toFind);
 			valueReturn = table_values[index][0][2].toString();			//row 0 is the first period (1sr row), column 2 is "st_age_10"
