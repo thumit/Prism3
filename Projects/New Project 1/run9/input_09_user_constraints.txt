@@ -1,6 +1,41 @@
 constraint_description	constraint_type	lowerbound	lowerbound_perunit_penalty	upperbound	upperbound_perunit_penalty	parameter_index	static_identifiers	dynamic_identifiers	
-500 NG	SOFT	500000.0	1.0	500000.0	1.0	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 NG ;7 1 ;	NoIdentifier	
-500 PB	SOFT	500000.0	1.0	500000.0	1.0	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 PB ;7 1 ;	NoIdentifier	
-500 GS	SOFT	500000.0	1.0	500000.0	1.0	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 GS ;7 1 ;	NoIdentifier	
-100 EA	HARD	100000.0	null	100000.0	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 EA ;7 1 ;	NoIdentifier	
-10mil CF from P & D	SOFT	1.0E7	2.0	null	null	19 	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 EA GS PB NG ;7 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 ;	99 201.00 221.00 ;	
+400k acres all 1 - silvicultural method NG - time period 1	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 NG ;7 1 ;	NoIdentifier	
+400k acres all 2 - silvicultural method NG - time period 2	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 NG ;7 2 ;	NoIdentifier	
+400k acres all 3 - silvicultural method NG - time period 3	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 NG ;7 3 ;	NoIdentifier	
+400k acres all 4 - silvicultural method NG - time period 4	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 NG ;7 4 ;	NoIdentifier	
+400k acres all 5 - silvicultural method NG - time period 5	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 NG ;7 5 ;	NoIdentifier	
+400k acres all 6 - silvicultural method NG - time period 6	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 NG ;7 6 ;	NoIdentifier	
+400k acres all 7 - silvicultural method NG - time period 7	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 NG ;7 7 ;	NoIdentifier	
+400k acres all 8 - silvicultural method NG - time period 8	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 NG ;7 8 ;	NoIdentifier	
+400k acres all 9 - silvicultural method NG - time period 9	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 NG ;7 9 ;	NoIdentifier	
+400k acres all 10 - silvicultural method NG - time period 10	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 NG ;7 10 ;	NoIdentifier	
+400k acres all 11 - silvicultural method PB - time period 1	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 PB ;7 1 ;	NoIdentifier	
+400k acres all 12 - silvicultural method PB - time period 2	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 PB ;7 2 ;	NoIdentifier	
+400k acres all 13 - silvicultural method PB - time period 3	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 PB ;7 3 ;	NoIdentifier	
+400k acres all 14 - silvicultural method PB - time period 4	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 PB ;7 4 ;	NoIdentifier	
+400k acres all 15 - silvicultural method PB - time period 5	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 PB ;7 5 ;	NoIdentifier	
+400k acres all 16 - silvicultural method PB - time period 6	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 PB ;7 6 ;	NoIdentifier	
+400k acres all 17 - silvicultural method PB - time period 7	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 PB ;7 7 ;	NoIdentifier	
+400k acres all 18 - silvicultural method PB - time period 8	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 PB ;7 8 ;	NoIdentifier	
+400k acres all 19 - silvicultural method PB - time period 9	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 PB ;7 9 ;	NoIdentifier	
+400k acres all 20 - silvicultural method PB - time period 10	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 PB ;7 10 ;	NoIdentifier	
+400k acres all 21 - silvicultural method GS - time period 1	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 GS ;7 1 ;	NoIdentifier	
+400k acres all 22 - silvicultural method GS - time period 2	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 GS ;7 2 ;	NoIdentifier	
+400k acres all 23 - silvicultural method GS - time period 3	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 GS ;7 3 ;	NoIdentifier	
+400k acres all 24 - silvicultural method GS - time period 4	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 GS ;7 4 ;	NoIdentifier	
+400k acres all 25 - silvicultural method GS - time period 5	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 GS ;7 5 ;	NoIdentifier	
+400k acres all 26 - silvicultural method GS - time period 6	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 GS ;7 6 ;	NoIdentifier	
+400k acres all 27 - silvicultural method GS - time period 7	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 GS ;7 7 ;	NoIdentifier	
+400k acres all 28 - silvicultural method GS - time period 8	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 GS ;7 8 ;	NoIdentifier	
+400k acres all 29 - silvicultural method GS - time period 9	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 GS ;7 9 ;	NoIdentifier	
+400k acres all 30 - silvicultural method GS - time period 10	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 GS ;7 10 ;	NoIdentifier	
+400k acres all 31 - silvicultural method EA - time period 1	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 EA ;7 1 ;	NoIdentifier	
+400k acres all 32 - silvicultural method EA - time period 2	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 EA ;7 2 ;	NoIdentifier	
+400k acres all 33 - silvicultural method EA - time period 3	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 EA ;7 3 ;	NoIdentifier	
+400k acres all 34 - silvicultural method EA - time period 4	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 EA ;7 4 ;	NoIdentifier	
+400k acres all 35 - silvicultural method EA - time period 5	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 EA ;7 5 ;	NoIdentifier	
+400k acres all 36 - silvicultural method EA - time period 6	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 EA ;7 6 ;	NoIdentifier	
+400k acres all 37 - silvicultural method EA - time period 7	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 EA ;7 7 ;	NoIdentifier	
+400k acres all 38 - silvicultural method EA - time period 8	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 EA ;7 8 ;	NoIdentifier	
+400k acres all 39 - silvicultural method EA - time period 9	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 EA ;7 9 ;	NoIdentifier	
+400k acres all 40 - silvicultural method EA - time period 10	SOFT	400000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 EA ;7 10 ;	NoIdentifier	

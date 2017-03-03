@@ -26,10 +26,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import spectrumConvenienceClasses.IconHandle;
 import spectrumROOT.Spectrum_Main;
 
 public class ScrollPane_DynamicIdentifiers extends JScrollPane {	
@@ -91,6 +93,8 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 			//Add an extra checkBox for the option of not using any Column as dynamic identifier
 			checkboxNoIdentifier = new JCheckBox();		//add checkBox		
 			checkboxNoIdentifier.setText("NoIdentifier");	
+			checkboxNoIdentifier.setRolloverIcon(UIManager.getIcon("CheckBox.icon"));
+			checkboxNoIdentifier.setSelectedIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_check.png"));
 			checkboxNoIdentifier.setToolTipText("No column will be used as dynamic identifier");		//set toolTip
 			
 			// add the checkBox to the Panel

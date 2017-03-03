@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -324,7 +325,7 @@ public class Read_RunInputs {
 	}			
 
 	//-------------------------------------------------------------------------------------------------------------------------------------------------	
-	//For input_07_base_cost
+	//For input_08_cost_adjustment
 	private List<String> cost_staticCondition_list;
 	private double[] cost_adjusted_percentage;	
 	
@@ -366,8 +367,11 @@ public class Read_RunInputs {
 	
 	//-------------------------------------------------------------------------------------------------------------------------------------------------
 	//For input_09_user_constraints
+	private List<String> constraint_column_names_list;
 	private int UC_totalRows, UC_totalColumns;
 	private String[][] UC_value;
+	private int constraint_description_col, constraint_type_col, lowerbound_col, lowerbound_perunit_penalty_col,
+			upperbound_col, upperbound_perunit_penalty_col, parameter_index_col, static_identifiers_col, dynamic_identifiers_col;
 
 	public void readUserConstraints (File file) {
 		String delimited = "\t";		// tab delimited
@@ -380,6 +384,20 @@ public class Read_RunInputs {
 						
 			//Read the first row into array. This will be Column names
 			String[] columnName = a[0].split(delimited);
+			
+			//List of constraint column names
+			constraint_column_names_list = Arrays.asList(columnName);	
+			constraint_description_col = constraint_column_names_list.indexOf("description");
+			constraint_type_col = constraint_column_names_list.indexOf("type");
+			lowerbound_col = constraint_column_names_list.indexOf("lowerbound");
+			lowerbound_perunit_penalty_col = constraint_column_names_list.indexOf("lowerbound_perunit_penalty");
+			upperbound_col = constraint_column_names_list.indexOf("upperbound");
+			upperbound_perunit_penalty_col = constraint_column_names_list.indexOf("upperbound_perunit_penalty");
+			parameter_index_col = constraint_column_names_list.indexOf("parameter_index");
+			static_identifiers_col = constraint_column_names_list.indexOf("static_identifiers");
+			dynamic_identifiers_col = constraint_column_names_list.indexOf("dynamic_identifiers");	
+			
+			//Values in all rows and columns
 			UC_totalRows = a.length;
 			UC_totalColumns = columnName.length;				
 			UC_value = new String[UC_totalRows][UC_totalColumns];
@@ -396,6 +414,10 @@ public class Read_RunInputs {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 		}
 	}	
+
+	public List<String> get_constraint_column_names_list() {
+		return constraint_column_names_list;
+	}
 	
 	public String[][] get_UC_Values () {
 		return UC_value;
@@ -411,9 +433,9 @@ public class Read_RunInputs {
 		
 	
 	public int get_total_hardConstraints () {
-		int total =0;		
+		int total =0;	
 		for (int i = 1; i < UC_totalRows; i++) {		//From 2nd row			
-			if (UC_value[i][1].equals("HARD")) total++;
+			if (UC_value[i][constraint_type_col].equals("HARD")) total++;
 		}	
 		return total;
 	}	
@@ -421,8 +443,8 @@ public class Read_RunInputs {
 	public double[] get_hardConstraints_LB () {	
 		List<Double> list = new ArrayList<Double>();
 		for (int i = 1; i < UC_totalRows; i++) {		//From 2nd row			
-			if (UC_value[i][1].equals("HARD") && !UC_value[i][2].equals("null")) list.add(Double.parseDouble(UC_value[i][2]));
-			if (UC_value[i][1].equals("HARD") && UC_value[i][2].equals("null")) list.add((double) 0);		//Change "null" value of LB to 0
+			if (UC_value[i][constraint_type_col].equals("HARD") && !UC_value[i][lowerbound_col].equals("null")) list.add(Double.parseDouble(UC_value[i][lowerbound_col]));
+			if (UC_value[i][constraint_type_col].equals("HARD") && UC_value[i][lowerbound_col].equals("null")) list.add((double) 0);		//Change "null" value of LB to 0
 		}			
 		double[] array = Stream.of(list.toArray(new Double[list.size()])).mapToDouble(Double::doubleValue).toArray();
 		return array;
@@ -431,17 +453,17 @@ public class Read_RunInputs {
 	public double[] get_hardConstraints_UB () {	
 		List<Double> list = new ArrayList<Double>();
 		for (int i = 1; i < UC_totalRows; i++) {		//From 2nd row			
-			if (UC_value[i][1].equals("HARD")  && !UC_value[i][4].equals("null")) list.add(Double.parseDouble(UC_value[i][4]));
-			if (UC_value[i][1].equals("HARD")  && UC_value[i][4].equals("null")) list.add(Double.MAX_VALUE);	//Change "null" value of UB to Double.Max_Value
+			if (UC_value[i][constraint_type_col].equals("HARD")  && !UC_value[i][upperbound_col].equals("null")) list.add(Double.parseDouble(UC_value[i][upperbound_col]));
+			if (UC_value[i][constraint_type_col].equals("HARD")  && UC_value[i][upperbound_col].equals("null")) list.add(Double.MAX_VALUE);	//Change "null" value of UB to Double.Max_Value
 		}			
 		double[] array = Stream.of(list.toArray(new Double[list.size()])).mapToDouble(Double::doubleValue).toArray();
 		return array;
 	}
 	
 	public int get_total_softConstraints () {
-		int total =0;		
+		int total =0;	
 		for (int i = 1; i < UC_totalRows; i++) {		//From 2nd row			
-			if (UC_value[i][1].equals("SOFT")) total++;
+			if (UC_value[i][constraint_type_col].equals("SOFT")) total++;
 		}	
 		return total;
 	}		
@@ -450,8 +472,8 @@ public class Read_RunInputs {
 	public double[] get_softConstraints_LB () {	
 		List<Double> list = new ArrayList<Double>();
 		for (int i = 1; i < UC_totalRows; i++) {		//From 2nd row			
-			if (UC_value[i][1].equals("SOFT") && !UC_value[i][2].equals("null")) list.add(Double.parseDouble(UC_value[i][2]));
-			if (UC_value[i][1].equals("SOFT") && UC_value[i][2].equals("null")) list.add((double) 0);		//Change "null" value of LB to 0
+			if (UC_value[i][constraint_type_col].equals("SOFT") && !UC_value[i][lowerbound_col].equals("null")) list.add(Double.parseDouble(UC_value[i][lowerbound_col]));
+			if (UC_value[i][constraint_type_col].equals("SOFT") && UC_value[i][lowerbound_col].equals("null")) list.add((double) 0);		//Change "null" value of LB to 0
 		}				
 		double[] array = Stream.of(list.toArray(new Double[list.size()])).mapToDouble(Double::doubleValue).toArray();
 		return array;
@@ -460,8 +482,8 @@ public class Read_RunInputs {
 	public double[] get_softConstraints_UB () {	
 		List<Double> list = new ArrayList<Double>();
 		for (int i = 1; i < UC_totalRows; i++) {		//From 2nd row			
-			if (UC_value[i][1].equals("SOFT")  && !UC_value[i][4].equals("null")) list.add(Double.parseDouble(UC_value[i][4]));
-			if (UC_value[i][1].equals("SOFT")  && UC_value[i][4].equals("null")) list.add(Double.MAX_VALUE);	//Change "null" value of UB to Double.Max_Value
+			if (UC_value[i][constraint_type_col].equals("SOFT")  && !UC_value[i][upperbound_col].equals("null")) list.add(Double.parseDouble(UC_value[i][upperbound_col]));
+			if (UC_value[i][constraint_type_col].equals("SOFT")  && UC_value[i][upperbound_col].equals("null")) list.add(Double.MAX_VALUE);	//Change "null" value of UB to Double.Max_Value
 		}			
 		double[] array = Stream.of(list.toArray(new Double[list.size()])).mapToDouble(Double::doubleValue).toArray();
 		return array;
@@ -470,8 +492,8 @@ public class Read_RunInputs {
 	public double[] get_softConstraints_LB_Weight () {	
 		List<Double> list = new ArrayList<Double>();
 		for (int i = 1; i < UC_totalRows; i++) {		//From 2nd row			
-			if (UC_value[i][1].equals("SOFT") && !UC_value[i][3].equals("null")) list.add(Double.parseDouble(UC_value[i][3]));
-			if (UC_value[i][1].equals("SOFT") && UC_value[i][3].equals("null")) list.add((double) 0);		//Change "null" value of LB_Weight to 0
+			if (UC_value[i][constraint_type_col].equals("SOFT") && !UC_value[i][lowerbound_perunit_penalty_col].equals("null")) list.add(Double.parseDouble(UC_value[i][lowerbound_perunit_penalty_col]));
+			if (UC_value[i][constraint_type_col].equals("SOFT") && UC_value[i][lowerbound_perunit_penalty_col].equals("null")) list.add((double) 0);		//Change "null" value of LB_Weight to 0
 		}			
 		double[] array = Stream.of(list.toArray(new Double[list.size()])).mapToDouble(Double::doubleValue).toArray();
 		return array;
@@ -480,8 +502,8 @@ public class Read_RunInputs {
 	public double[] get_softConstraints_UB_Weight () {	
 		List<Double> list = new ArrayList<Double>();
 		for (int i = 1; i < UC_totalRows; i++) {		//From 2nd row			
-			if (UC_value[i][1].equals("SOFT") && !UC_value[i][5].equals("null")) list.add(Double.parseDouble(UC_value[i][5]));
-			if (UC_value[i][1].equals("SOFT") && UC_value[i][5].equals("null")) list.add((double) 0);		//Change "null" value of UB_Weight to 0
+			if (UC_value[i][constraint_type_col].equals("SOFT") && !UC_value[i][upperbound_perunit_penalty_col].equals("null")) list.add(Double.parseDouble(UC_value[i][upperbound_perunit_penalty_col]));
+			if (UC_value[i][constraint_type_col].equals("SOFT") && UC_value[i][upperbound_perunit_penalty_col].equals("null")) list.add((double) 0);		//Change "null" value of UB_Weight to 0
 		}			
 		double[] array = Stream.of(list.toArray(new Double[list.size()])).mapToDouble(Double::doubleValue).toArray();
 		return array;
@@ -494,7 +516,7 @@ public class Read_RunInputs {
 		List<List<String>> all_staticIdentifiers = new ArrayList<List<String>>();
 		
 		//Read the whole cell into array
-		String[] staticLayer_Info = UC_value[row][7].split(";");		//Note: row 0 is the title only, row 1 is constraint 1,.....
+		String[] staticLayer_Info = UC_value[row][static_identifiers_col].split(";");		//Note: row 0 is the title only, row 1 is constraint 1,.....
 		int total_staticIdentifiers = staticLayer_Info.length;
 		
 		//Get all static Identifiers to be in the list
@@ -587,7 +609,7 @@ public class Read_RunInputs {
 		List<List<String>> all_dynamicIdentifiers = new ArrayList<List<String>>();
 		
 		//Read the whole cell into array
-		String[] dynamicLayer_Info = UC_value[row][8].split(";");		//Note: row 0 is the title only, row 1 is constraint 1,.....
+		String[] dynamicLayer_Info = UC_value[row][dynamic_identifiers_col].split(";");		//Note: row 0 is the title only, row 1 is constraint 1,.....
 		int total_dynamicIdentifiers = dynamicLayer_Info.length;
 	
 		
@@ -611,7 +633,7 @@ public class Read_RunInputs {
 		List<String> all_dynamicIdentifiers_columnIndexes = new ArrayList<String>();
 			
 		//Read the whole cell into array
-		String[] dynamicLayer_Info = UC_value[row][8].split(";");		//Note: row 0 is the title only, row 1 is constraint 1,.....
+		String[] dynamicLayer_Info = UC_value[row][dynamic_identifiers_col].split(";");		//Note: row 0 is the title only, row 1 is constraint 1,.....
 		int total_dynamicIdentifiers = dynamicLayer_Info.length;
 
 		//Get all dynamic Identifiers to be in the list
@@ -629,7 +651,7 @@ public class Read_RunInputs {
 		List<String> parameters_indexes_list = new ArrayList<String>();
 		
 		//Read the whole cell into array
-		String[] parameter_Info = UC_value[row][6].split("\\s+");			
+		String[] parameter_Info = UC_value[row][parameter_index_col].split("\\s+");			
 		for (int i = 0; i < parameter_Info.length; i++) {	
 			parameters_indexes_list.add(parameter_Info[i].replaceAll("\\s+",""));
 		}				

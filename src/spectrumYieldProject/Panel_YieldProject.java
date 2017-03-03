@@ -7,7 +7,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -64,6 +63,8 @@ import org.jfree.data.general.PieDataset;
 import org.jfree.ui.RectangleEdge;
 import org.jfree.util.Rotation;
 
+import net.coderazzi.filters.gui.AutoChoices;
+import net.coderazzi.filters.gui.TableFilterHeader;
 import spectrumConvenienceClasses.FilesHandle;
 import spectrumConvenienceClasses.IconHandle;
 import spectrumConvenienceClasses.TableModelSpectrum;
@@ -101,6 +102,7 @@ public class Panel_YieldProject extends JLayeredPane {
 	private JTable table;
 	private TableModelSpectrum model;
 	private Object[][] data;	
+	private TableFilterHeader filterHeader = new TableFilterHeader(table, AutoChoices.ENABLED);
 	
 	public Panel_YieldProject() {
 		super.setLayout(new BorderLayout(0, 0));
@@ -254,8 +256,7 @@ public class Panel_YieldProject extends JLayeredPane {
 	} // end Panel_Project()
 
 	// --------------------------------------------------------------------------------------------------------------------------------
-	public void doMousePressed(MouseEvent e) {
-		
+	public void doMousePressed(MouseEvent e) {	
 		TreePath path = projectTree.getPathForLocation(e.getX(), e.getY());
 		if (path == null) {
 			projectTree.clearSelection();		//clear selection whenever mouse click is performed not on Jtree nodes	
@@ -282,6 +283,8 @@ public class Panel_YieldProject extends JLayeredPane {
 			projectTree.setSelectionPath(path);
 		}
 	
+		
+		filterHeader.setTable(null);		//set null filter after each mouse click: this is important
 		if (SwingUtilities.isLeftMouseButton(e)) {
 			if (e.getClickCount() == 1) {
 				// Show node information of the last selected node
@@ -372,7 +375,7 @@ public class Panel_YieldProject extends JLayeredPane {
 						if (currentInputFile.equals("output_04_management_overview.txt")) {		//show a panel with chart if the selected node name is "Output 4 - Management_Overview.txt"
 							scrollPane_Right.setViewportView(new PaneL_Management_Overview(table));
 							
-							table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+							table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 							table.addMouseListener(new MouseAdapter() { // Add listener
 								public void mouseReleased(MouseEvent e) {
 									scrollPane_Right.setViewportView(new PaneL_Management_Overview(table));
@@ -398,6 +401,12 @@ public class Panel_YieldProject extends JLayeredPane {
 				}
 			} else if (e.getClickCount() == 2) {
 				// Do something here
+				if (currentLevel == 3) {		
+					//show the filter only when double left click
+					filterHeader = new TableFilterHeader(table, AutoChoices.ENABLED);
+					filterHeader.setTable(table);
+					filterHeader.setFilterOnUpdates(true);
+				}
 			}
 		} else if (SwingUtilities.isRightMouseButton(e)) {
 			if (e.getClickCount() == 1) {				
@@ -549,6 +558,8 @@ public class Panel_YieldProject extends JLayeredPane {
 	
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public void refreshProjectTree() {
+		filterHeader.setTable(null);		//set null filter after refresh: this is important
+		
 		// Remove all children nodes from the root of DatabaseTree, and reload the tree
 		DefaultTreeModel model = (DefaultTreeModel)projectTree.getModel();
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode)model.getRoot();
@@ -958,7 +969,7 @@ public class Panel_YieldProject extends JLayeredPane {
 		    //---------------------------------------------------------------
 		    //Create a chart
 		    PieDataset dataset = create_ManagementOverview_dataset();
-	        JFreeChart chart = createChart(dataset, "Management decisions at the start of planning horizon for " + rowCount + " EXISTING STRATA");
+	        JFreeChart chart = createChart(dataset, "Management decisions at the start of planning horizon for " + rowCount + " existing strata");
 
 	        // add the chart to a panel...
 	        ChartPanel chartPanel = new ChartPanel(chart);
@@ -977,6 +988,9 @@ public class Panel_YieldProject extends JLayeredPane {
 	        //Create a chart
 		    PieDataset dataset2 = create_strataOverview_dataset();
 	        JFreeChart chart2 = createChart(dataset2, "Management decisions at the start of planning horizon for '" + strataName + "' ");
+	        if (thisTable.getSelectedRows().length > 1) {	//Change chart title if multiple strata are selected
+				chart2.setTitle("Management decisions at the start of planning horizon for "  + thisTable.getSelectedRows().length + " existing strata");
+			}	
 
 	        // add the chart to a panel...
         	ChartPanel chartPanel2 = new ChartPanel(chart2);
@@ -1053,12 +1067,20 @@ public class Panel_YieldProject extends JLayeredPane {
 				double total_EA = 0;
 				double total_MS = 0;
 					
-				total_NG = total_NG + Double.parseDouble(data[table.getSelectedRow()][7].toString());
-				total_PB = total_PB + Double.parseDouble(data[table.getSelectedRow()][8].toString());
-				total_GS = total_GS + Double.parseDouble(data[table.getSelectedRow()][9].toString());
-				total_EA = total_EA + Double.parseDouble(data[table.getSelectedRow()][10].toString());
-				total_MS = total_MS + Double.parseDouble(data[table.getSelectedRow()][11].toString());
-
+				
+				
+				int[] selectedRow = table.getSelectedRows();	
+				for (int i = 0; i < selectedRow.length; i++) {
+					selectedRow[i] = table.convertRowIndexToModel(selectedRow[i]);	///Convert row index because "Sort" causes problems
+				}
+				
+				for (int i: selectedRow) {
+					total_NG = total_NG + Double.parseDouble(data[i][7].toString());
+					total_PB = total_PB + Double.parseDouble(data[i][8].toString());
+					total_GS = total_GS + Double.parseDouble(data[i][9].toString());
+					total_EA = total_EA + Double.parseDouble(data[i][10].toString());
+					total_MS = total_MS + Double.parseDouble(data[i][11].toString());
+				}					
 			
 				dataset.setValue("Natural Growth", total_NG);
 				dataset.setValue("Prescribed Burn", total_PB);
@@ -1090,7 +1112,7 @@ public class Panel_YieldProject extends JLayeredPane {
 	        plot.setDirection(Rotation.CLOCKWISE);
 	        plot.setForegroundAlpha(0.6f);
 	        plot.setBackgroundPaint(null);
-			plot.setNoDataMessage("Select an existing strata in the table below to view chart");
+			plot.setNoDataMessage("Highlight single or multiple existing strata to view chart");
 			plot.setExplodePercent(1, 0.1);
 			
 			PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(

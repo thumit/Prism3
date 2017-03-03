@@ -150,7 +150,7 @@ public class Read_DatabaseTables {
 	}
 	
 	
-	public String get_stratingAgeClass(String cover_type, String size_class, String method, String timing_choice) {
+	public String get_startingAgeClass(String cover_type, String size_class, String method, String timing_choice) {
 		method = "NG";	//only use NG table to find starting age class
 		timing_choice ="0";
 		String forest_status = "E";
@@ -162,7 +162,7 @@ public class Read_DatabaseTables {
 			int index = Arrays.asList(nameOftable).indexOf(tableName_toFind);
 			valueReturn = table_values[index][0][2].toString();			//row 0 is the first period (1sr row), column 2 is "st_age_10"
 		} catch (Exception e) {
-			valueReturn = "not found";
+			valueReturn = null;
 			System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Not found age class from yield table: " + tableName_toFind);
 		}
 		

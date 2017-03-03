@@ -1,4 +1,4 @@
-constraint_description	constraint_type	lowerbound	lowerbound_perunit_penalty	upperbound	upperbound_perunit_penalty	parameter_index	static_identifiers	dynamic_identifiers	
+description	type	lowerbound	lowerbound_perunit_penalty	upperbound	upperbound_perunit_penalty	parameter_index	static_identifiers	dynamic_identifiers	
 500 NG	SOFT	500000.0	1.0	500000.0	1.0	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 NG ;7 1 ;	NoIdentifier	
 500 PB	SOFT	500000.0	1.0	500000.0	1.0	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 PB ;7 1 ;	NoIdentifier	
 500 GS	SOFT	500000.0	1.0	500000.0	1.0	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 GS ;7 1 ;	NoIdentifier	

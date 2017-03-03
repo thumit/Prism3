@@ -22,10 +22,10 @@ public class Read_Strata {
 				list.remove(0);		//Remove the 1st row which contains column Names
 				String[] a = list.toArray(new String[list.size()]);
 							
-				//Read the first row 
-				String[] columnName = a[0].split(delimited);
+				//Read the first row after remove column names already
+				String[] firstrow = a[0].split(delimited);
 				totalRows = a.length;
-				totalColumns = columnName.length;				
+				totalColumns = firstrow.length;				
 				value = new String[totalRows][totalColumns];
 			
 				// read all values from all rows and columns

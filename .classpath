@@ -7,5 +7,6 @@
 	<classpathentry kind="lib" path="C:/SpectrumLite_Documents/Setup/lp_solve_5.5_java/lib/lpsolve55j.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="lib" path="C:/SpectrumLite_Documents/Setup/x64_win64(CPLEX 1261)/cplex.jar"/>
+	<classpathentry kind="lib" path="C:/SpectrumLite_Documents/Setup/tablefilter-swing-5.3.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

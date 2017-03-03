@@ -56,7 +56,7 @@ public class ScrollPane_ConstraintsSplit  extends JScrollPane {
 		TitledBorder border = new TitledBorder("Static Spliters");
 		border.setTitleJustification(TitledBorder.CENTER);
 		staticScrollPane.setBorder(border);
-		staticScrollPane.setPreferredSize(new Dimension(270, 250));
+		staticScrollPane.setPreferredSize(new Dimension(300, 250));
 
 		
 		
@@ -91,7 +91,7 @@ public class ScrollPane_ConstraintsSplit  extends JScrollPane {
 		border = new TitledBorder("Parameter Spliters");
 		border.setTitleJustification(TitledBorder.CENTER);
 		parametersScrollPane.setBorder(border);
-		parametersScrollPane.setPreferredSize(new Dimension(270, 250));		
+		parametersScrollPane.setPreferredSize(new Dimension(300, 250));		
 		
 		
 		
@@ -122,47 +122,54 @@ public class ScrollPane_ConstraintsSplit  extends JScrollPane {
 		border = new TitledBorder("Dynamic Spliters");
 		border.setTitleJustification(TitledBorder.CENTER);
 		dynamicScrollPane.setBorder(border);
-		dynamicScrollPane.setPreferredSize(new Dimension(270, 250));					
+		dynamicScrollPane.setPreferredSize(new Dimension(300, 250));					
 		
 		
 		
 		
 		// tableScrollPane	------------------------------------------------------------------------------	
 		int rowCount = 1;
-		int colCount = 6;
+		int colCount = 8;
 		data = new Object[rowCount][colCount];
-		String[] columnNames = new String[] {"constraint_description", "constraint_type", "lowerbound", "lowerbound_perunit_penalty", "upperbound", "upperbound_perunit_penalty"};	         				
+		String[] columnNames = new String[] {"id", "description", "type",  "multiplier", "lowerbound", "lowerbound_perunit_penalty", "upperbound", "upperbound_perunit_penalty"};	         				
 
 		TableModelSpectrum model = new TableModelSpectrum(rowCount, colCount, data, columnNames) {
 			@Override
 			public Class getColumnClass(int c) {
-				if (c==0) return String.class;      //column 0 accepts only String
-				else if (c>=2 && c<=5) return Double.class;      //column 2 to 5 accept only Double values   
+				if (c == 0) return Integer.class;      //column 0 accepts only Integer
+				else if (c >= 3 && c <= 7) return Double.class;      //column 3 to 7 accept only Double values   
 				else return String.class;				//Just because delete all rows make JTable fail, otherwise we should use the below line
 			}
 			
 			@Override
 			public boolean isCellEditable(int row, int col) {
-				return true; // all cells are allowed for editing
+				if (col == 0) { //  The first column is un-editable
+					return false;
+				} else {
+					return true;
+				}
 			}
 		};
 		
 		JTable table = new JTable(model);
 		
-		class comboBox_ConstraintType extends JComboBox {	
-			public comboBox_ConstraintType() {
+		class comboBox_constraint_type extends JComboBox {	
+			public comboBox_constraint_type() {
 				addItem("SOFT");
 				addItem("HARD");
+				addItem("FREE");
 				setSelectedIndex(0);
 			}
 		}
 		
-		// Set up Types for each table Columns
-		table.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(new comboBox_ConstraintType()));
+		// Set up Type for each column 2
+		table.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new comboBox_constraint_type()));
 		
-		table.getColumnModel().getColumn(0).setPreferredWidth(120);	//Set width of Column bigger
-		table.getColumnModel().getColumn(3).setPreferredWidth(150);	//Set width of Column bigger
-		table.getColumnModel().getColumn(5).setPreferredWidth(150);	//Set width of Column bigger
+		table.getColumnModel().getColumn(1).setPreferredWidth(200);	//Set width of Column bigger
+		table.getColumnModel().getColumn(4).setPreferredWidth(100);	//Set width of Column bigger
+		table.getColumnModel().getColumn(5).setPreferredWidth(200);	//Set width of Column bigger
+		table.getColumnModel().getColumn(6).setPreferredWidth(100);	//Set width of Column bigger
+		table.getColumnModel().getColumn(7).setPreferredWidth(200);	//Set width of Column bigger
 
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);  
 		table.getTableHeader().setReorderingAllowed(false);		//Disable columns move
@@ -172,15 +179,12 @@ public class ScrollPane_ConstraintsSplit  extends JScrollPane {
 		border.setTitleJustification(TitledBorder.CENTER);
 		tableScrollPane.setBorder(border);
 		tableScrollPane.setPreferredSize(new Dimension(600, 100));		// only the 150 matters, 650 does not matter
-				
-		
-		
-		
-		
-		
-		
+		//Hide the id column	
+		table.removeColumn(table.getColumnModel().getColumn(0));		// The data is not changed anyway
 		
 
+		
+		
 		// Add all to a Panel------------------------------------------------------------------------------	
 		JPanel popupPanel = new JPanel();	
 		//	These codes make the popupPanel resizable --> the Big ScrollPane resizable --> JOptionPane resizable

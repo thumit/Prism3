@@ -10,7 +10,9 @@ import java.util.List;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.UIManager;
 
+import spectrumConvenienceClasses.IconHandle;
 import spectrumROOT.Spectrum_Main;
 
 public class ScrollPane_Parameters extends JScrollPane {	
@@ -47,7 +49,9 @@ public class ScrollPane_Parameters extends JScrollPane {
 			
 			//Add checkboxNoParameter for the option of not using any Column, use 1 instead as multiplier
 			checkboxNoParameter = new JCheckBox();			
-			checkboxNoParameter.setText("NoParameter");		
+			checkboxNoParameter.setText("NoParameter");	
+			checkboxNoParameter.setRolloverIcon(UIManager.getIcon("CheckBox.icon"));
+			checkboxNoParameter.setSelectedIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_check.png"));
 			checkboxNoParameter.setToolTipText("1 is used as multiplier (parameter), no column will be used as parameter");		//set toolTip
 			// add the checkBox to the Panel
 			c2.gridx = 0;
@@ -59,7 +63,9 @@ public class ScrollPane_Parameters extends JScrollPane {
 			
 			//Add checkboxCostParameter for the option of using cost info
 			checkboxCostParameter = new JCheckBox();			
-			checkboxCostParameter.setText("CostParameter");		
+			checkboxCostParameter.setText("CostParameter");	
+			checkboxCostParameter.setRolloverIcon(UIManager.getIcon("CheckBox.icon"));
+			checkboxCostParameter.setSelectedIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_check.png"));
 			checkboxCostParameter.setToolTipText("CostParameter details are based on Management Cost window");		//set toolTip			
 			// add the checkBox to the Panel
 			c2.gridx = 0;

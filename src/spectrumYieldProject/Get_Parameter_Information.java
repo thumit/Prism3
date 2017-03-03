@@ -2,9 +2,9 @@ package spectrumYieldProject;
 
 import java.util.List;
 
-public class GetParameter_totalValue {
+public class Get_Parameter_Information {
 
-	public double getValue(String cover_type, String size_class, String method, String timing_choice, 
+	public double get_total_value(String cover_type, String size_class, String method, String timing_choice, 
 			Object[] yieldTable_Name, Object[][][] yieldTable_values, List<String> parameters_indexes_list,
 			List<String> all_dynamicIdentifiers_columnIndexes, List<List<String>> all_dynamicIdentifiers, int period, int row,
 			List<String> action_type_list, double[] baseCost_acres, double[][] baseCost_yieldtables,

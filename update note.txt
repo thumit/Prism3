@@ -1,0 +1,17 @@
+1. DB connection changed to close properly (doQuerry): put close on finally at the end of try catch.
+2. Fixed error import tables the 1st time when open 'database management' since it requires to left click to identify current level and current database. Now any click would identify those two.
+3. Move get_parameter_tooltip from Read_Identifiers to Get_Parameter_Information to avoid read "strata_definition" file each time we need YT column's tooltip
+4. Table Filter applied on all tables (when double left click) in main window and database management window 
+5. Management overview now support viewing chart summary for multiple existing strata
+6. Fixed showing MS abbreviation after adding split constraints
+7. Change UI for NoParameter, NoIdentifier, CostParameter
+8. fix Read Strata.
+9. Add matchDataType for all 9 tables to get rid of the codes defining data type in "Reload after creating GUI"
+10. modeled_strata column is changed to boolean check box and is editable
+11. change ageclass "not found" --> null
+12. Change code to trigger refreshing info of the model overview table 
+13. readUserConstraints: change finding index to search column name to find index
+14. Add id column, add FREE type, and add multiplier to user constraints table (the id is unique --> to prepare for flow constraints)
+15. Move the the first added constraint after add new
+
+

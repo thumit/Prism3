@@ -320,7 +320,7 @@ public class Panel_CustomizeOutput extends JLayeredPane implements ActionListene
 //			//Database Info
 //			Object[][][] yieldTable_values = read_DatabaseTables.getTableArrays();
 //			Object[] yieldTable_Name = read_DatabaseTables.get_nameOftable();
-//			GetParameter_totalValue getParameter_totalValues = new GetParameter_totalValue();
+//			Get_Parameter_Information getParameter_totalValues = new Get_Parameter_Information();
 //			
 //
 //			

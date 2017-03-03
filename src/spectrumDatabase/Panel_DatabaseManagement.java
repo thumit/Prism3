@@ -47,10 +47,11 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
+import net.coderazzi.filters.gui.AutoChoices;
+import net.coderazzi.filters.gui.TableFilterHeader;
 import spectrumConvenienceClasses.FilesHandle;
 import spectrumConvenienceClasses.IconHandle;
 import spectrumYieldProject.Read_Indentifiers;
@@ -63,6 +64,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 	private DefaultMutableTreeNode root, processingNode;
 	private JTextField dataDisplayTextField, queryTextField;
 	private JTable DatabaseTable;
+	private TableFilterHeader filterHeader = new TableFilterHeader(DatabaseTable, AutoChoices.ENABLED);
 	private Connection conn;
 	private String currenTableName, currentDatabase, currentSQLstatement;
 	private int currentLevel;
@@ -218,7 +220,6 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 			public void actionPerformed(ActionEvent e) {
 				currentSQLstatement = queryTextField.getText();	
 				doQuery(currentSQLstatement);
-				scrollPane_Right.setViewportView(DatabaseTable);
 			}
 	     });//end addActionListener
 		databaseToolBar.add(queryTextField);
@@ -233,7 +234,6 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 	
 	// --------------------------------------------------------------------------------------------------------------------------------
 	public void doMousePressed(MouseEvent e) {     	
-	
 		TreePath path = DatabaseTree.getPathForLocation(e.getX(), e.getY());
 		if (path == null) {
 			DatabaseTree.clearSelection();		//clear selection whenever mouse click is performed not on Jtree nodes	
@@ -260,29 +260,40 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 			DatabaseTree.setSelectionPath(path);
 		}
 	
+		
+		// Calculate current level and currentDatabaseof the last selected node		
+		currentLevel = path.getPathCount();
+		if (currentLevel == 3) {	//selected node is a table		
+			DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) path.getLastPathComponent();
+			currenTableName = selectedNode.getUserObject().toString();	// Get the URL of the current selected node			
+			currentDatabase = selectedNode.getParent().toString();    	// Get the parent node which is the database that contains the selected table      					
+		} else if (currentLevel != 3) {		
+			DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) path.getLastPathComponent();
+			if (currentLevel == 2) currentDatabase = selectedNode.getUserObject().toString();	// the selected node is a database
+			if (currentLevel == 1) currentDatabase = selectedNode.getUserObject().toString();	// the selected node is Root
+		}
+		
+		
+		
+		filterHeader.setTable(null);		//set null filter after each mouse click: this is important
 		if (SwingUtilities.isLeftMouseButton(e)) {
 			if (e.getClickCount() == 1) {
-				// Show node information of the last selected node		
-				DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) path.getLastPathComponent();
-				currentLevel = path.getPathCount();
-				
 				// ------------Only show DatabaseTable if the node level is 3
 				if (currentLevel == 3) {	//selected node is a table
-					scrollPane_Right.setViewportView(DatabaseTable);
-					 // Get the URL of the current selected node			
-					currenTableName = selectedNode.getUserObject().toString();
-					// Get the parent node which is the database that contains the selected table
-					currentDatabase = selectedNode.getParent().toString();          
+					scrollPane_Right.setViewportView(DatabaseTable);  
 					currentSQLstatement = "SELECT * FROM " + "[" + currenTableName + "];";		//this query show the whole table information
-					doQuery(currentSQLstatement);
-							
+					doQuery(currentSQLstatement);	
 				} else if (currentLevel != 3) {		
 					scrollPane_Right.setViewportView(null);
-					if (currentLevel == 2) currentDatabase = selectedNode.getUserObject().toString();	// the selected node is a database
-					if (currentLevel == 1) currentDatabase = selectedNode.getUserObject().toString();	// the selected node is Root
 				}
 			} else if (e.getClickCount() == 2) {
 				// Do something here
+				if (currentLevel == 3) {		
+					//show the filter only when double left click
+					filterHeader = new TableFilterHeader(DatabaseTable, AutoChoices.ENABLED);
+					filterHeader.setTable(DatabaseTable);
+					filterHeader.setFilterOnUpdates(true);
+				}
 			}
 		} else if (SwingUtilities.isRightMouseButton(e)) {
 			if (e.getClickCount() == 1) {				
@@ -492,13 +503,17 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 	
 	// --------------------------------------------------------------------------------------------------------------------------------
 	public void doQuery(String query) {		//Note a statement not starting with SELECT is not a Query
-		if (query.substring(0, 6).toUpperCase().equals("SELECT")) {		//If this is a query
-			try {
-				Class.forName("org.sqlite.JDBC").newInstance();
-				conn = DriverManager.getConnection("jdbc:sqlite:" + databasesFolder + seperator + currentDatabase);
-
-				Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery(query);
+		conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;		
+		
+		try {
+			Class.forName("org.sqlite.JDBC").newInstance();
+			conn = DriverManager.getConnection("jdbc:sqlite:" + databasesFolder + seperator + currentDatabase);
+			stmt = conn.createStatement();	
+			
+			if (query.toUpperCase().startsWith("SELECT")) {		//If this is a query	
+				rs = stmt.executeQuery(query);
 
 				// get columns info
 				ResultSetMetaData rsmd = rs.getMetaData();
@@ -527,33 +542,27 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 					tm.addRow(a);
 				}
 				tm.fireTableDataChanged();
-
-				rs.close();
-				stmt.close();
-				conn.close();
-			} catch (Exception ex) {
-				System.err.println(ex.getClass().getName() + ": " + ex.getMessage());
-				JOptionPane.showMessageDialog(this, ex, ex.getMessage(), WIDTH, null);
-				errorCAUGHT=true;
-			}
-		} else { // a statement that is not a query: INSERT, DELETE,...
-			try {
-				Class.forName("org.sqlite.JDBC").newInstance();
-				conn = DriverManager.getConnection("jdbc:sqlite:" + databasesFolder + seperator + currentDatabase);
-				Statement stmt = conn.createStatement();
+			} else { // a statement that is not a query: INSERT, DELETE,...
 				stmt.executeUpdate(query);
-				stmt.close();
-				conn.close();
-			} catch (Exception ex) {
-				System.err.println(ex.getClass().getName() + ": " + ex.getMessage());
-				JOptionPane.showMessageDialog(this, ex, ex.getMessage(), WIDTH, null);
-				errorCAUGHT=true;
 			}
-		}
+			
+			scrollPane_Right.setViewportView(DatabaseTable);
+		} catch (Exception e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
+			errorCAUGHT=true;
+		}  finally {
+		    try { rs.close(); } catch (Exception e) { /* ignored */ }
+		    try { stmt.close(); } catch (Exception e) { /* ignored */ }
+		    try { conn.close(); } catch (Exception e) { /* ignored */ }
+			errorCAUGHT = false;
+		}		
 	}
 		
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public void refreshDatabaseTree() {
+		filterHeader.setTable(null);		//set null filter after refresh: this is important
+		
 		// Remove all children nodes from the root of DatabaseTree, and reload the tree
 		DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();

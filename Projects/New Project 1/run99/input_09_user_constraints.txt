@@ -1,5 +1,0 @@
-constraint_description	constraint_type	lowerbound	lowerbound_perunit_penalty	upperbound	upperbound_perunit_penalty	parameter_index	static_identifiers	dynamic_identifiers	
-500k 1 - silvicultural method EA	SOFT	500000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 EA ;7 1 ;	NoIdentifier	
-500k 2 - silvicultural method GS	SOFT	500000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 GS ;7 1 ;	NoIdentifier	
-500k 3 - silvicultural method PB	SOFT	500000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 PB ;7 1 ;	NoIdentifier	
-500k 4 - silvicultural method NG	SOFT	500000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 NG ;7 1 ;	NoIdentifier	
