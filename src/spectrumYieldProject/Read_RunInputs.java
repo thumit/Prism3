@@ -510,6 +510,13 @@ public class Read_RunInputs {
 	}		
 
 	
+	public int get_total_freeConstraints () {
+		int total =0;	
+		for (int i = 1; i < UC_totalRows; i++) {		//From 2nd row			
+			if (UC_value[i][constraint_type_col].equals("FREE")) total++;
+		}	
+		return total;
+	}	
 	
 	
 	public List<List<String>> get_all_staticIdentifiers_in_row (int row) {	//Column 7 in the GUI table "Static identifiers". The whole is contained by UC_value[i][7]

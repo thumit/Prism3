@@ -1,0 +1,21 @@
+id	description	type	multiplier	lowerbound	lowerbound_perunit_penalty	upperbound	upperbound_perunit_penalty	parameter_index	static_identifiers	dynamic_identifiers	
+1	300k 1 - silvicultural method NG - time period 1	SOFT	1.0	300000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 NG ;7 1 ;	NoIdentifier	
+2	300k 2 - silvicultural method NG - time period 2	SOFT	1.0	300000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 NG ;7 2 ;	NoIdentifier	
+3	300k 3 - silvicultural method NG - time period 3	SOFT	1.0	300000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 NG ;7 3 ;	NoIdentifier	
+4	300k 4 - silvicultural method NG - time period 4	SOFT	1.0	300000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 NG ;7 4 ;	NoIdentifier	
+5	300k 5 - silvicultural method NG - time period 5	SOFT	1.0	300000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 NG ;7 5 ;	NoIdentifier	
+6	300k 6 - silvicultural method PB - time period 1	SOFT	1.0	300000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 PB ;7 1 ;	NoIdentifier	
+7	300k 7 - silvicultural method PB - time period 2	SOFT	1.0	300000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 PB ;7 2 ;	NoIdentifier	
+8	300k 8 - silvicultural method PB - time period 3	SOFT	1.0	300000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 PB ;7 3 ;	NoIdentifier	
+9	300k 9 - silvicultural method PB - time period 4	SOFT	1.0	300000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 PB ;7 4 ;	NoIdentifier	
+10	300k 10 - silvicultural method PB - time period 5	SOFT	1.0	300000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 PB ;7 5 ;	NoIdentifier	
+11	300k 11 - silvicultural method GS - time period 1	SOFT	1.0	300000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 GS ;7 1 ;	NoIdentifier	
+12	300k 12 - silvicultural method GS - time period 2	SOFT	1.0	300000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 GS ;7 2 ;	NoIdentifier	
+13	300k 13 - silvicultural method GS - time period 3	SOFT	1.0	300000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 GS ;7 3 ;	NoIdentifier	
+14	300k 14 - silvicultural method GS - time period 4	SOFT	1.0	300000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 GS ;7 4 ;	NoIdentifier	
+15	300k 15 - silvicultural method GS - time period 5	SOFT	1.0	300000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 GS ;7 5 ;	NoIdentifier	
+16	300k 16 - silvicultural method EA - time period 1	SOFT	1.0	300000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 EA ;7 1 ;	NoIdentifier	
+17	300k 17 - silvicultural method EA - time period 2	SOFT	1.0	300000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 EA ;7 2 ;	NoIdentifier	
+18	300k 18 - silvicultural method EA - time period 3	SOFT	1.0	300000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 EA ;7 3 ;	NoIdentifier	
+19	300k 19 - silvicultural method EA - time period 4	SOFT	1.0	300000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 EA ;7 4 ;	NoIdentifier	
+20	300k 20 - silvicultural method EA - time period 5	SOFT	1.0	300000.0	1.0	null	null	NoParameter	0 B U S K R C ;1 R N ;2 N O P S ;3 L H C R ;4 P D W C I A L N ;5 S P M L N ;6 EA ;7 5 ;	NoIdentifier	

@@ -12,6 +12,16 @@
 12. Change code to trigger refreshing info of the model overview table 
 13. readUserConstraints: change finding index to search column name to find index
 14. Add id column, add FREE type, and add multiplier to user constraints table (the id is unique --> to prepare for flow constraints)
-15. Move the the first added constraint after add new
+15. Move to the first added constraint after add new
+--------------------------------------------------------------------------
 
-
+16. Auto generate constraint unique id whenever a constraint or set of contraints are added
+17. Free constraint is added into model as v(n)
+18. multiplier is now activated when running model
+19. Improve readDataBaseTables speed by getting rid of duplicated reads
+20. User Constraints --> Basic Constraints
+21. Add icon help for all panels. Move all icons to helpToolBar and put it to the top right of each panel.
+22. Add rollover effect for 3 icons in the background window
+23. Add Quick Edit for Basic Constraints window, this Quick Edit needs data to be update constantly after each New, New Set, or Delete Constraints.
+24. General Inputs Layout --> GridBag
+25. Advanced Constraints (flow only): arrangement, sources, tables, auto check before add new, reload, updateID, Quick Edit, Mouse Interaction Menu, etc...

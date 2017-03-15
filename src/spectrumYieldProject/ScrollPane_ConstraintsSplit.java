@@ -132,7 +132,8 @@ public class ScrollPane_ConstraintsSplit  extends JScrollPane {
 		int colCount = 8;
 		data = new Object[rowCount][colCount];
 		String[] columnNames = new String[] {"id", "description", "type",  "multiplier", "lowerbound", "lowerbound_perunit_penalty", "upperbound", "upperbound_perunit_penalty"};	         				
-
+		data[0][3] = (double) 1;
+		
 		TableModelSpectrum model = new TableModelSpectrum(rowCount, colCount, data, columnNames) {
 			@Override
 			public Class getColumnClass(int c) {

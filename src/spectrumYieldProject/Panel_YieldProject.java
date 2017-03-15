@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -24,7 +23,6 @@ import java.util.Enumeration;
 import java.util.List;
 
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLayeredPane;
 import javax.swing.JMenuItem;
@@ -68,6 +66,7 @@ import net.coderazzi.filters.gui.TableFilterHeader;
 import spectrumConvenienceClasses.FilesHandle;
 import spectrumConvenienceClasses.IconHandle;
 import spectrumConvenienceClasses.TableModelSpectrum;
+import spectrumConvenienceClasses.ToolBarWithBgImage;
 import spectrumROOT.Spectrum_Main;
 @SuppressWarnings("serial")
 public class Panel_YieldProject extends JLayeredPane {
@@ -1131,26 +1130,7 @@ public class Panel_YieldProject extends JLayeredPane {
 			return chart;
 		}				
 	}	
-	
-	// Tool bar with background image--------------------------------------------------------------------------------------------------------------------------------
-	class ToolBarWithBgImage extends JToolBar {	  
-	      private ImageIcon bgImage;
-	  
-	      ToolBarWithBgImage(String name, int orientation, ImageIcon ii) {
-	         super(name, orientation);
-	         this.bgImage = ii;
-	         setOpaque(true);
-	      }
-	  
-	      public void paintComponent(Graphics g) {
-	         super.paintComponent(g);
-	         if (bgImage != null) {
-	            Dimension size = this.getSize();
-	            g.drawImage(bgImage.getImage(), size.width - bgImage.getIconWidth(), (size.height - bgImage.getIconHeight())/2, bgImage.getIconWidth(), bgImage.getIconHeight(), this);
-	         }
-	      }
-	   }
-	
+
 	// --------------------------------------------------------------------------------------------------------------------------------		
 	public void showNothing() {
 //		displayTextField.setText(null); // Show nothing on the TextField

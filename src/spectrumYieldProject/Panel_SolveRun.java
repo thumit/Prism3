@@ -285,7 +285,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			read.readRDPercent(new File(runFolder.getAbsolutePath() + "/input_06_replacing_disturbances.txt"));
 			read.readBaseCost(new File(runFolder.getAbsolutePath() + "/input_07_base_cost.txt"));
 			read.readCostAdjustment(new File(runFolder.getAbsolutePath() + "/input_08_cost_adjustment.txt"));
-			read.readUserConstraints(new File(runFolder.getAbsolutePath() + "/input_09_user_constraints.txt"));
+			read.readUserConstraints(new File(runFolder.getAbsolutePath() + "/input_09_basic_constraints.txt"));
 			Read_DatabaseTables read_DatabaseTables = new Read_DatabaseTables(new File(runFolder.getAbsolutePath() + "/database.db"));
 			
 			
@@ -318,7 +318,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			List<String> cost_staticCondition_list = read.get_cost_staticCondition_list(); 
 			double[] cost_adjusted_percentage = read.get_cost_adjusted_percentage();
 		
-			//Get info:	input_09_user_constraints
+			//Get info:	input_09_basic_constraints
 			List<String> constraint_column_names_list = read.get_constraint_column_names_list();
 			String[][] UC_Value = read.get_UC_Values();		
 			int total_softConstraints = read.get_total_softConstraints();
@@ -329,6 +329,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			int total_hardConstraints = read.get_total_hardConstraints();
 			double[] hardConstraints_LB = read.get_hardConstraints_LB();
 			double[] hardConstraints_UB = read.get_hardConstraints_UB();	
+			int total_freeConstraints = read.get_total_freeConstraints();
 			
 			//Database Info
 			Object[][][] yieldTable_values = read_DatabaseTables.getTableArrays();
@@ -397,6 +398,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			int[] l = new int [total_softConstraints];	//l(j)
 			int[] u = new int [total_softConstraints];	//u(j)
 			int[] z = new int [total_hardConstraints];	//z(k)
+			int[] v = new int [total_freeConstraints];	//v(n)
 			
 			int[][][][][][][] x = new int[layer1.size()][layer2.size()][layer3.size()][layer4.size()][layer5.size()][layer6.size()][total_methods];		//x(s1,s2,s3,s4,s5,s6)(q)
 			int[][][][][][][] xNG = new int[layer1.size()][layer2.size()][layer3.size()][layer4.size()][layer5.size()][layer6.size()][total_Periods + 1];						//xNG(s1,s2,s3,s4,s5,s6)(t)
@@ -531,12 +533,25 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 //				vnamelist.add("z(" + k + ")");
 				vnamelist.add("z_" + k);
 				vlblist.add(hardConstraints_LB[k]);				// Constraints 4 is set here as LB
-				vublist.add(hardConstraints_UB[k]);					// Constraints 5 is set here as UB
+				vublist.add(hardConstraints_UB[k]);				// Constraints 5 is set here as UB
 				vtlist.add(IloNumVarType.Float);
 				z[k] = nvars;
 				nvars++;				
 			}
-			nV = nvars;			
+			nV = nvars;	
+			
+			// Create free constraint decision variables v(n)			
+			for (int n = 0; n < total_freeConstraints; n++) {
+				objlist.add((double) 0);
+//				vnamelist.add("v(" + n + ")");
+				vnamelist.add("v_" + n);
+				vlblist.add((double) 0);				// 0 is LB
+				vublist.add(Double.MAX_VALUE);			// MAX_VALUE is UB
+				vtlist.add(IloNumVarType.Float);
+				v[n] = nvars;
+				nvars++;				
+			}
+			nV = nvars;	
 						
 			// Create decision variables x(s1,s2,s3,s4,s5,s6)(q)			
 			for (int s1 = 0; s1 < layer1.size(); s1++) {
@@ -1988,15 +2003,17 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			List<Double> c15_ublist = new ArrayList<Double>();
 			int c15_num =0;
 			
+			int current_freeConstraint =0;
 			int current_softConstraint =0;
 			int current_hardConstraint =0;	
 			int current_period;
 			int current_row;
 			double currentDiscountValue;
 			double para_value;
+			double multiplier;
 				
 			//Add -y(j) + user constraint = 0		or 			-z(k) + user constraint = 0
-			for (int i = 1; i < total_softConstraints + total_hardConstraints + 1; i++) {	//Loop from 1 because the first row of the userConstraint file is just title
+			for (int i = 1; i < total_freeConstraints + total_softConstraints + total_hardConstraints + 1; i++) {	//Loop from 1 because the first row of the userConstraint file is just title
 				
 				//Get the parameter indexes list
 				List<String> parameters_indexes_list = read.get_Parameters_indexes_list(i);
@@ -2010,8 +2027,15 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				c15_indexlist.add(new ArrayList<Integer>());
 				c15_valuelist.add(new ArrayList<Double>());
 
-				//Add -y(j) or -z(k)
+				//Add -v(n) or -y(j) or -z(k)
 				int constraint_type_col = constraint_column_names_list.indexOf("type");
+				
+				if (UC_Value[i][constraint_type_col].equals("FREE")) {
+					c15_indexlist.get(c15_num).add(v[current_freeConstraint]);
+					c15_valuelist.get(c15_num).add((double) -1);
+					current_freeConstraint++;
+				}
+				
 				if (UC_Value[i][constraint_type_col].equals("SOFT")) {
 					c15_indexlist.get(c15_num).add(y[current_softConstraint]);
 					c15_valuelist.get(c15_num).add((double) -1);
@@ -2033,7 +2057,10 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				List<String> static_strata = read.get_static_strata(i);
 				List<String> static_strata_withoutSizeClassandCoverType = read.get_static_strata_withoutSizeClassandCoverType(i);
 				
-								
+				int multiplier_col = constraint_column_names_list.indexOf("multiplier");
+				multiplier = (!UC_Value[i][multiplier_col].equals("null")) ?  Double.parseDouble(UC_Value[i][multiplier_col]) : 0;	//if multiplier = null --> 0
+				
+				
 				//Add xNG and xEAe				currently using Eq. 11 so we don't need to add xEAe, only add xNG
 				if (static_SilvivulturalMethods.contains("NG")) {	
 					for (int s1 = 0; s1 < layer1.size(); s1++) {
@@ -2070,7 +2097,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																	action_type_list, baseCost_acres, baseCost_yieldtables,
 																	cost_staticCondition_list, cost_adjusted_percentage,
 																	current_var_static_condition);
-															para_value = para_value * currentDiscountValue;
+															para_value = para_value * currentDiscountValue * multiplier;
 
 															//Add xNG(s1,s2,s3,s4,s5,s6)(t)
 															c15_indexlist.get(c15_num).add(xNG[s1][s2][s3][s4][s5][s6][t]);
@@ -2120,7 +2147,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																		action_type_list, baseCost_acres, baseCost_yieldtables, 
 																		cost_staticCondition_list, cost_adjusted_percentage,
 																		current_var_static_condition);
-																para_value = para_value * currentDiscountValue;
+																para_value = para_value * currentDiscountValue * multiplier;
 																
 																//Add xPB[s1][s2][s3][s4][s5][s6][ii][t]
 																c15_indexlist.get(c15_num).add(xPB[s1][s2][s3][s4][s5][s6][ii][t]);
@@ -2171,7 +2198,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																		action_type_list, baseCost_acres, baseCost_yieldtables, 
 																		cost_staticCondition_list, cost_adjusted_percentage,
 																		current_var_static_condition);
-																para_value = para_value * currentDiscountValue;
+																para_value = para_value * currentDiscountValue * multiplier;
 																
 																//Add xMS[s1][s2][s3][s4][s5][s6][ii][t]
 																c15_indexlist.get(c15_num).add(xMS[s1][s2][s3][s4][s5][s6][ii][t]);
@@ -2222,7 +2249,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																		action_type_list, baseCost_acres, baseCost_yieldtables, 
 																		cost_staticCondition_list, cost_adjusted_percentage,
 																		current_var_static_condition);
-																para_value = para_value * currentDiscountValue;
+																para_value = para_value * currentDiscountValue * multiplier;
 																
 																//Add xGS[s1][s2][s3][s4][s5][s6][ii][t]
 																c15_indexlist.get(c15_num).add(xGS[s1][s2][s3][s4][s5][s6][ii][t]);
@@ -2285,7 +2312,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																				action_type_list, baseCost_acres, baseCost_yieldtables, 
 																				cost_staticCondition_list, cost_adjusted_percentage,
 																				current_var_static_condition);
-																		para_value = para_value * currentDiscountValue;
+																		para_value = para_value * currentDiscountValue * multiplier;
 																		
 																		//Add xEAe'(s1,s2,s3,s4,s5,s6)(t)(c)(tR)	final cut at t but we need parameter at time tR
 																		c15_indexlist.get(c15_num).add(xEAeCut[s1][s2][s3][s4][s5][s6][t][c][tR]);
@@ -2344,7 +2371,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																				action_type_list, baseCost_acres, baseCost_yieldtables, 
 																				cost_staticCondition_list, cost_adjusted_percentage,
 																				current_var_static_condition);
-																		para_value = para_value * currentDiscountValue;
+																		para_value = para_value * currentDiscountValue * multiplier;
 																		
 																		//Add xEAr'(s1,s2,s3,s4,s5)(t)(a)(c)(tR)		final cut at t but we need parameter at time tR
 																		c15_indexlist.get(c15_num).add(xEArCut[s1][s2][s3][s4][s5][t][a][c][tR]);
@@ -2404,7 +2431,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																		action_type_list, baseCost_acres, baseCost_yieldtables, 
 																		cost_staticCondition_list, cost_adjusted_percentage,
 																		current_var_static_condition);
-																para_value = para_value * currentDiscountValue;
+																para_value = para_value * currentDiscountValue * multiplier;
 																parameter = parameter + para_value;			
 															}
 														}

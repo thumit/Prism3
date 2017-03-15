@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -56,6 +57,15 @@ public class JMenuBarCustomize extends JMenuBar implements MouseListener, MouseM
 		buttonMinimize.setToolTipText("Minimize");
 		buttonMinimize.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_minimize.png"));
 		buttonMinimize.setContentAreaFilled(false);
+		buttonMinimize.addMouseListener(new MouseAdapter() {
+		    public void mouseEntered(MouseEvent e) {
+		    	buttonMinimize.setContentAreaFilled(true);
+		    }
+
+		    public void mouseExited(MouseEvent e) {
+		    	buttonMinimize.setContentAreaFilled(false);
+		    }
+		});
 		add(buttonMinimize);
 		
 		
@@ -75,6 +85,15 @@ public class JMenuBarCustomize extends JMenuBar implements MouseListener, MouseM
 		buttonMaximize.setToolTipText("Maximize");
 		buttonMaximize.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_maximize.png"));
 		buttonMaximize.setContentAreaFilled(false);
+		buttonMaximize.addMouseListener(new MouseAdapter() {
+		    public void mouseEntered(MouseEvent e) {
+		    	buttonMaximize.setContentAreaFilled(true);
+		    }
+
+		    public void mouseExited(MouseEvent e) {
+		    	buttonMaximize.setContentAreaFilled(false);
+		    }
+		});
 		add(buttonMaximize);
 		
 		
@@ -89,6 +108,15 @@ public class JMenuBarCustomize extends JMenuBar implements MouseListener, MouseM
 		buttonExit.setToolTipText("Exit");
 		buttonExit.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_erase.png"));
 		buttonExit.setContentAreaFilled(false);
+		buttonExit.addMouseListener(new MouseAdapter() {
+		    public void mouseEntered(MouseEvent e) {
+		    	buttonExit.setContentAreaFilled(true);
+		    }
+
+		    public void mouseExited(MouseEvent e) {
+		    	buttonExit.setContentAreaFilled(false);
+		    }
+		});
 		add(buttonExit);
 	
 		//Add mouseListener to JMenuBar
