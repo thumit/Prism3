@@ -11,9 +11,14 @@ import javax.swing.JDesktopPane;
 
 
 @SuppressWarnings("serial")
-public class Panel_BackGroundDesktop extends JDesktopPane {
+public class DesktopPanel_BackGround extends JDesktopPane {
 
-	public Panel_BackGroundDesktop() {
+	public DesktopPanel_BackGround() {
+		
+	}
+	
+	
+	public void process_image() {
 		try {
 //			img = ImageIO.read(new URL("https://scontent-iad3-1.xx.fbcdn.net/t31.0-8/705097_4557689934155_1784248166_o.jpg"));			   
 //			img = ImageIO.read(new File("C:\\Users\\Public\\Pictures\\Sample Pictures\\Desert.jpg"));

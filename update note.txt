@@ -25,3 +25,13 @@
 23. Add Quick Edit for Basic Constraints window, this Quick Edit needs data to be update constantly after each New, New Set, or Delete Constraints.
 24. General Inputs Layout --> GridBag
 25. Advanced Constraints (flow only): arrangement, sources, tables, auto check before add new, reload, updateID, Quick Edit, Mouse Interaction Menu, etc...
+--------------------------------------------------------------------------
+
+26. Show/Hied Logo feature
+27. Change Font feature
+28. Regain focus on the table when showing 2 Charts, change mouse listener to selection listener for showing the 2nd chart (Ctrl A works)
+29. Chnage minimum size of MAIN in ComponentResizer to 600x35
+30. Change the way writing parameters, static identifiers, dynamic identifiers to the basic constraints table
+31. Change element_id --> attribute_id (input08 & strata_definition)
+32. Change relaxed_perrcentage (Advanced Constraints) to 0-100%
+33. Show/hide columns feature (Base Cost): 2 Preset selection: show default columns & show active columns

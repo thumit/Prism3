@@ -3,7 +3,6 @@ package spectrumROOT;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -13,7 +12,6 @@ import java.awt.event.MouseMotionListener;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Box;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -24,14 +22,12 @@ import javax.swing.ToolTipManager;
 import spectrumConvenienceClasses.ColorUtil;
 import spectrumConvenienceClasses.IconHandle;
 
-public class JMenuBarCustomize extends JMenuBar implements MouseListener, MouseMotionListener {
-	private ImageIcon icon;
-	private Image scaleImage;
+public class MenuBar_Customize extends JMenuBar implements MouseListener, MouseMotionListener {
 	private JButton buttonMinimize, buttonMaximize, buttonExit;
 	private int pX,pY;
 	
 	
-	public JMenuBarCustomize() {
+	public MenuBar_Customize() {
 		ToolTipManager.sharedInstance().setInitialDelay(0);		//Show toolTip immediately
 	}	
 	
@@ -39,11 +35,10 @@ public class JMenuBarCustomize extends JMenuBar implements MouseListener, MouseM
 
 		//Shift all below components to the right by some glue boxes
 		add(Box.createGlue());
-		JLabel title = new JLabel("SpectrumLite pre-alpha version 1.17");
+		JLabel title = new JLabel("SpectrumLite pre-alpha version 1.18");
 //		title.setIcon(IconHandle.get_scaledImageIcon(100, 20, "spectrumlite1.png"));
 		add(title);
 		add(Box.createGlue());
-//		add(Box.createHorizontalGlue());
 		
 		
 		
@@ -181,9 +176,10 @@ public class JMenuBarCustomize extends JMenuBar implements MouseListener, MouseM
 	public void mouseDragged(MouseEvent event) {
 		if (Spectrum_Main.mainReturn().getExtendedState() != JFrame.NORMAL) {
 			Spectrum_Main.mainReturn().setExtendedState(JFrame.NORMAL);		//Set normal Jframe size when start dragging
-			//These 2 lines are very smart lol, cuz its my codes (help to make the JFrame have the top center move to the cursor location)
-			pX = event.getX() - pX + Spectrum_Main.mainReturn().getWidth()/2;
-			pY = event.getY() - pY;
+			//make the JFrame have the top center move to the cursor location)
+			if (pX > Spectrum_Main.mainReturn().getWidth()/2) {
+				pX =  Spectrum_Main.mainReturn().getWidth()/2;
+			} 	
 		} else {		
 		Spectrum_Main.mainReturn().setLocation(Spectrum_Main.mainReturn().getLocation().x + event.getX() - pX, 
 				Spectrum_Main.mainReturn().getLocation().y + event.getY() - pY);		//when dragged, move the frame

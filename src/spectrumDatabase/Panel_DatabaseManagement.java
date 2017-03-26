@@ -1829,7 +1829,12 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 //	}		
 		
 		
+
 		
+//		//Make everything transparent for a table
+//		renderer.setOpaque(false);
+//		table.setOpaque(false);
+//		scrollPane_Right.setOpaque(false);
 		
 		
 	}

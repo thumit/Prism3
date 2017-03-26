@@ -1773,13 +1773,16 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
                     public String getToolTipText(MouseEvent e) {
                         String tip = null;
                         java.awt.Point p = e.getPoint();
-                        int index = columnModel.getColumnIndexAtX(p.x);
-                        int realIndex = columnModel.getColumn(index).getModelIndex();
-                        return headerToolTips[realIndex];
-                    }
-                };
-            }
-        };
+                        if (columnModel.getColumnIndexAtX(p.x) > 0) {
+                        	int index = columnModel.getColumnIndexAtX(p.x);
+                            int realIndex = columnModel.getColumn(index).getModelIndex();
+                            tip = headerToolTips[realIndex];
+                        }
+                        return tip;
+					}
+				};
+			}
+		};
 		
         
         
@@ -1931,9 +1934,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
                     public String getToolTipText(MouseEvent e) {
                         String tip = null;
                         java.awt.Point p = e.getPoint();
-                        int index = columnModel.getColumnIndexAtX(p.x);
-                        int realIndex = columnModel.getColumn(index).getModelIndex();
-                        return headerToolTips[realIndex];
+						if (columnModel.getColumnIndexAtX(p.x) > 0) {
+                        	int index = columnModel.getColumnIndexAtX(p.x);
+                            int realIndex = columnModel.getColumn(index).getModelIndex();
+                            tip = headerToolTips[realIndex];
+                        }
+                        return tip;
                     }
                 };
             }					
@@ -2037,7 +2043,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			}		
 			colCount8 = 4;
 			data8 = new Object[rowCount8][colCount8];
-	        columnNames8= new String[] {"action_list", "layer_id", "element_id", "adjusted_percentage"};
+	        columnNames8= new String[] {"action_list", "layer_id", "attribute_id", "adjusted_percentage"};
 			
 			// Populate the data matrix
 	        int table_row = 0;
@@ -2202,12 +2208,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 //		}
        
         
-//        table8.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+//      table8.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         table8.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         table8.getTableHeader().setReorderingAllowed(false);		//Disable columns move
-//        table8.getColumnModel().getColumn(0).setPreferredWidth(200);	//Set width of 1st Column bigger
+//      table8.getColumnModel().getColumn(0).setPreferredWidth(200);	//Set width of 1st Column bigger
         
-//        table8.setTableHeader(null);
+//      table8.setTableHeader(null);
         table8.setPreferredScrollableViewportSize(new Dimension(400, 120));
         table8.setFillsViewportHeight(true);
         TableRowSorter<TableModelSpectrum> sorter = new TableRowSorter<TableModelSpectrum>(model8);	//Add sorter
@@ -2793,7 +2799,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 				
 			// 1st grid line 2----------------------------
-			JLabel label2 = new JLabel("Database");
+			JLabel label2 = new JLabel("Yield Database");
 			c0.gridx = 0;
 			c0.gridy = 2;
 			c0.weightx = 0;
@@ -3603,56 +3609,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	// Panel Management_Cost------------------------------------------------------------------------------------------------------	
 	class Management_Cost_GUI extends JLayeredPane {
 		public Management_Cost_GUI() {
-			
-//			// This all_actions List contains all actions loaded from yield tables------------------------------------------------------------
-//			List<String> all_actions = new ArrayList<String>();
-//			all_actions.add("Pre-Commercial Thin Type 1");
-//			all_actions.add("Pre-Commercial Thin Type 2");
-//			all_actions.add("Pre-Commercial Thin Type 3");
-//			all_actions.add("Commercial Thin Type 1");
-//			all_actions.add("Commercial Thin Type 2");
-//			all_actions.add("Commercial Thin Type 3");
-//			all_actions.add("Clear Cut Type 1");
-//			all_actions.add("Clear Cut Type 2");
-//			all_actions.add("Clear Cut Type 3");
-//			all_actions.add("Understory Burn Type 1");
-//			all_actions.add("Understory Burn Type 2");
-//			all_actions.add("Understory Burn Type 3");
-//			all_actions.add("Broadcast Burn");
-//			all_actions.add("Seed Cut");
-//			all_actions.add("Overstory Removal");
-//			all_actions.add("Group Openning Type 1");
-//			all_actions.add("Group Openning Type 2");
-//			all_actions.add("Group Openning Type 3");
-//			all_actions.add("Single Tree Openning");
-//			all_actions.add("Artificial Regeneration");
-//			all_actions.add("Tree Planting");
-//			all_actions.add("Weed Treatments");
-//		
-//			JTextArea action_info = new JTextArea();
-//			action_info.setBackground(new Color(0,0,0,0));
-//			action_info.setEditable(false);
-//			action_info.setLineWrap(true);
-//			action_info.setWrapStyleWord(true);
-//			action_info.append("SpectrumLite is assuming that it found " + all_actions.size() + 
-//					" unique management actions across all" /*+ yieldTable_values.length*/ + " yield tables in your database"  + "\n");	
-//			action_info.append("All Base Costs are set to default values. Please re-define your true costs");	
-//			
-//			JScrollPane action_info_scroll = new JScrollPane(action_info); //place the JTextArea in a scroll pane
-//			action_info_scroll.setBorder(BorderFactory.createEmptyBorder());
-//			action_info_scroll.setPreferredSize(new Dimension(100, 50));
-//			// This all_actions List contains all actions loaded from yield tables------------------------------------------------------------
-
-			
-		
-			
-			
-			
-			
-			
-			
 			setLayout(new GridBagLayout());
-
+			
 
 			// 1st grid -----------------------------------------------------------------------
 			// 1st grid -----------------------------------------------------------------------
@@ -3679,7 +3637,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
         
 	        // scrollPane Quick Edit 1 & 2-----------------------------------------------------------------------
 	        // scrollPane Quick Edit 1 @ 2-----------------------------------------------------------------------		
- 			JScrollPane scrollpane_QuickEdit_1 = new JScrollPane(new QuickEdit_BaseCost_Panel(table7, data7));
+ 			JScrollPane scrollpane_QuickEdit_1 = new JScrollPane(new QuickEdit_BaseCost_Panel(table7, data7, columnNames7, read_Identifiers));
  			JScrollPane scrollpane_QuickEdit_2 = new JScrollPane(new QuickEdit_CostAdjustment_Panel(table8, data8));	
  			
  			border = new TitledBorder("Quick Edit ");
@@ -4179,9 +4137,14 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 									}
 									
 									
-									
-									static_info[processing_constraint] = static_info[processing_constraint] + ";";
+									if (!static_info[processing_constraint].equals("")) {
+										static_info[processing_constraint] = static_info[processing_constraint].substring(0, static_info[processing_constraint].length() - 1) + ";";		// remove the last space, and add ;
+									}
 								}	
+								
+								if (!static_info[processing_constraint].equals("")) {
+									static_info[processing_constraint] = static_info[processing_constraint].substring(0, static_info[processing_constraint].length() - 1);		// remove the last ;
+								}
 							}
 							
 							
@@ -4620,7 +4583,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c.gridwidth = 2;
 			c.gridheight = 1;
 			c.weightx = 0.2;
-		    c.weighty = 0.1;
+		    c.weighty = 0;
 			super.add(static_identifiersScrollPanel, c);				
 		    		
 			// Add dynamic_identifiersPanel to the main Grid
@@ -5002,20 +4965,22 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						int selectedRow = table10.getSelectedRow();
 						selectedRow = table10.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems										
 						
-						data10[selectedRow][2] = flow_scrollPane.get_flow_info_from_GUI();					
-						model10.fireTableDataChanged();	
-						
-						// Convert the edited Row to model view and then select it 
-						int editRow = table10.convertRowIndexToView(selectedRow);
-						table10.setRowSelectionInterval(editRow, editRow);
-						
+						if (flow_scrollPane.get_flow_info_from_GUI().contains(";")) {	// Edit is accepted if there are at least 2 terms separated by ;
+							data10[selectedRow][2] = flow_scrollPane.get_flow_info_from_GUI();					
+							model10.fireTableDataChanged();	
+							
+							// Convert the edited Row to model view and then select it 
+							int editRow = table10.convertRowIndexToView(selectedRow);
+							table10.setRowSelectionInterval(editRow, editRow);
+						}		
+							
 						// Enable buttons and table10
 						table10.setEnabled(true);
 						btn_NewSingle.setEnabled(true);
 						btn_Delete.setEnabled(true);
 						btn_Sort.setEnabled(true);
 						btn_Validate.setEnabled(true);	
-						btn_Edit.setText(null);
+						btn_Edit.setText(null);				
 					}
 				}
 			});
@@ -5168,8 +5133,32 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					
 				}
 			});
-			
+						
+			// spinner
+			JLabel label = new JLabel("Number of Sigma");
+			JSpinner spin = new JSpinner (new SpinnerNumberModel(5, 0, 1000, 1));
+			spin.setToolTipText("Total number of Sigma");
+			JFormattedTextField SpinnerText = ((DefaultEditor) spin.getEditor()).getTextField();
+			SpinnerText.setHorizontalAlignment(JTextField.LEFT);		
+			DefaultFormatter formatter = (DefaultFormatter) SpinnerText.getFormatter();
+		    formatter.setCommitsOnValidEdit(true);
+		    spin.addChangeListener(new ChangeListener() {
+		        @Override
+		        public void stateChanged(ChangeEvent e) {
+		        	spin.setValue(spin.getValue());
+		        	int total_sigma = (int) spin.getValue();
+		        	DefaultListModel[] list_model = new DefaultListModel[total_sigma];
+					for (int i = 0; i < total_sigma; i++) {
+						list_model[i] = new DefaultListModel<>();				
+					}
+					flow_scrollPane.create_flow_arrangement_UI(list_model);
+		        	
+		        }
+		    });	
+						
+						
 			// Add all buttons to flow_panel
+		    helpToolBar.add(spin);
 			helpToolBar.add(Box.createGlue());	//Add glue for Right alignment
 			helpToolBar.add(btnQuickEdit);
 			helpToolBar.add(btnHelp);
@@ -5337,6 +5326,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				for (int j = 0; j < columnNames2.length; j++) { //Note: colCount = columnNames.length
 					fileOut.write(columnNames2[j] + "\t");
 				}
+				
+//				String temp = String.join("\t", columnNames2);
+//				fileOut.write(temp);
 
 				for (int i = 0; i < data2.length; i++) {				//Note: String.ValueOf   is so important to get the String from Object
 					if (String.valueOf(data2[i][colCount2 - 1]).equals("true")) { //IF strata is in optimization model		

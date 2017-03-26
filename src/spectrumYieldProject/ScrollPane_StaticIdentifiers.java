@@ -172,10 +172,18 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 				//Add checkBox if it is (selected & visible) or disable
 				if ((checkboxStaticIdentifiers.get(ii).get(j).isSelected() && (checkboxStaticIdentifiers.get(ii).get(j).isVisible())
 						|| !checkboxStaticIdentifiers.get(ii).get(j).isEnabled()))	
-					static_info = static_info + checkboxName + " ";
+					static_info = static_info + checkboxName + " ";	
 			}
-			static_info = static_info + ";";
+						
+			if (!static_info.equals("")) {
+				static_info = static_info.substring(0, static_info.length() - 1) + ";";		// remove the last space, and add ;
+			}
 		}	
+		
+		if (!static_info.equals("")) {
+			static_info = static_info.substring(0, static_info.length() - 1);		// remove the last ;
+		}
+				
 		return static_info;
 	}
 }

@@ -1,32 +1,68 @@
 package spectrumYieldProject;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import spectrumConvenienceClasses.IconHandle;
+import spectrumConvenienceClasses.TableColumnsHandle;
+import spectrumROOT.Spectrum_Main;
 
 public class QuickEdit_BaseCost_Panel extends JPanel {
-	public QuickEdit_BaseCost_Panel(JTable table, Object[][] data) {
-
+	
+	public QuickEdit_BaseCost_Panel(JTable table, Object[][] data, String[] columnNames, Read_Indentifiers read_Identifiers) {
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
-
+		
+		
+		// Add Button-------------------------------------------------------------------------------------------------
+		Spectrum_ApplyButton btnApply_multiplier = new Spectrum_ApplyButton(table, data, columnNames, read_Identifiers);
+		c.gridx = 0;
+		c.gridy = 1;
+		c.weightx = 0;
+		c.weighty = 0;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		c.fill = GridBagConstraints.BOTH;
+		add(btnApply_multiplier, c);	
+		
+		// Add empty Label to organize
+		c.gridx = 1;
+		c.gridy = 1;
+		c.weightx = 1;
+		c.weighty = 0;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		c.fill = GridBagConstraints.BOTH;
+		add(new JLabel(), c);
+		
+		
 		// Add Label-------------------------------------------------------------------------------------------------
 		c.gridx = 1;
-		c.gridy = 0;
+		c.gridy = 2;
 		c.weightx = 0;
 		c.weighty = 0;
 		c.gridwidth = 1;
@@ -68,7 +104,7 @@ public class QuickEdit_BaseCost_Panel extends JPanel {
 			}
 		});
 		c.gridx = 1;
-		c.gridy = 1;
+		c.gridy = 3;
 		c.weightx = 1;
 		c.weighty = 0;
 		c.gridwidth = 1;
@@ -110,7 +146,7 @@ public class QuickEdit_BaseCost_Panel extends JPanel {
 			}
 		});
 		c.gridx = 0;
-		c.gridy = 1;
+		c.gridy = 3;
 		c.weightx = 0;
 		c.weighty = 0;
 		c.gridwidth = 1;
@@ -118,7 +154,189 @@ public class QuickEdit_BaseCost_Panel extends JPanel {
 		c.fill = GridBagConstraints.BOTH;
 		add(btnApplyPercentage, c);
 	}
-		
+	
+	
+	private class Spectrum_ApplyButton extends JButton {
+		public Spectrum_ApplyButton(JTable table,  Object[][] data, String[] columnNames, Read_Indentifiers read_Identifiers) {
+
+			
+			// Must set this show/hide column method when all columns are still visible------------------------------------------------------
+			TableColumnsHandle column_handle = new TableColumnsHandle(table);
+			
+						
+			// Create a radio buttons-----------------------------------------------------------------------------
+			JRadioButton[] radioButton = new JRadioButton[2];		
+			radioButton[0] = new JRadioButton("Select default columns (acres and harvested volume in cubic feet per acre)");
+			radioButton[1] = new JRadioButton("Select active columns (active column has at least one cell with non-zero value)");
+			
+			
+			// Create a radio group
+			ButtonGroup radioGroup = new ButtonGroup();
+			radioGroup.add(radioButton[0]);
+			radioGroup.add(radioButton[1]);
+				
+			
+			// Create a radio panel
+			JPanel radio_panel = new JPanel();
+			radio_panel.setLayout(new GridLayout(0, 1));
+			radio_panel.setBorder(BorderFactory.createTitledBorder("Preset columns"));
+			radio_panel.add(radioButton[0]);
+			radio_panel.add(radioButton[1]);
+						
+						
+			// Create a list of JCheckBox-------------------------------------------------------------------------
+			List<JCheckBox> column_checkboxes = new ArrayList<JCheckBox>();		
+			for (int i = 0; i < table.getColumnModel().getColumnCount(); i++) {
+				if (i > 1) {	// ignore columns 0 and 1: action_list & acres
+					column_checkboxes.add(new JCheckBox(table.getColumnName(i)));
+					column_checkboxes.get(i - 2).setSelected(true);		// -2 because we ignore 2 columns
+									
+					String tip = read_Identifiers.get_ParameterToolTip(column_checkboxes.get(i - 2).getText()) + " (Column index: " + (int) (i - 2) + ")";
+					column_checkboxes.get(i - 2).setToolTipText(tip);
+				}
+			}
+			
+			
+			// Add listener for JCheckBoxes
+			for (JCheckBox i: column_checkboxes) {
+				i.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent actionEvent) {
+						radioGroup.clearSelection();
+					}
+				});
+				
+				i.addChangeListener(new ChangeListener() {
+					@Override
+					public void stateChanged(ChangeEvent changeEvent) {
+						if (i.isSelected()) {
+							column_handle.setColumnVisible(i.getText(), true);	// show column
+						} else {
+							column_handle.setColumnVisible(i.getText(), false);	// hide column
+						}
+						
+//						if (total_checks_count() < 10) {
+//							table.setAutoResizeMode(1);		// table's auto resize is on
+//						} else {
+//							table.setAutoResizeMode(0);		// table's auto resize is off
+//						}
+					}
+				
+					// Count the total check boxes that are checked
+					public int total_checks_count() {
+						int count = 0;
+						for (JCheckBox i : column_checkboxes) {
+							if (i.isSelected()) {
+								count++;
+							}
+						}
+						return count;
+					}
+				});
+			}
+			
+
+			// Add JCheckBoxes to check_panel
+			JPanel check_panel = new JPanel();
+			check_panel.setLayout(new GridLayout(0, 4));
+			for (JCheckBox i: column_checkboxes) {
+				check_panel.add(i);
+			}
+			
+			
+			// Add check_panel to a scroll panel
+			JScrollPane scrollPane = new JScrollPane(check_panel);				
+			scrollPane.setBorder(BorderFactory.createTitledBorder("Available columns"));
+			scrollPane.setPreferredSize(new Dimension(600, 300));
+			
+			
+			// Add listeners for radio buttons			
+			// Listener 1		
+			radioButton[0].addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent event) {													
+					for (JCheckBox i: column_checkboxes) {
+						i.setSelected(true);		// true then false to activate the ChangeListener
+						i.setSelected(false);
+						if (i.getText().equalsIgnoreCase("action_list") || i.getText().equalsIgnoreCase("acres") || i.getText().equalsIgnoreCase("hca_allsx")) {
+							i.setSelected(true);	//3 columns at start only
+						}
+					}	
+				}
+			});
+			radioButton[0].doClick();		// Start with default 3 columns
+			
+			// Listener 2	
+			radioButton[1].addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent event) {																	
+					List<Integer> active_col_id = new ArrayList<Integer>();		// List of active columns: at least 1 cell > 0			
+					for (int i = 0; i < data.length; i++) {
+						for (int j = 0; j < data[i].length; j++) {
+							if (data[i][j].getClass().equals(Double.class)) {		// Check if column class is Double
+								if ((double) data[i][j] > 0 && !active_col_id.contains(j)) {
+									active_col_id.add(j);
+								}
+							}
+						}	
+					}
+					
+					// For only acres column (No check boxes so we have to set visible/invisible manually)
+					if (active_col_id.contains(1)) {	// if acres is active column
+						column_handle.setColumnVisible(columnNames[1], true);	// show column
+					} else {
+						column_handle.setColumnVisible(columnNames[1], false);	// hide column
+					}
+						
+					// For columns > 1 (Have check boxes to we only have to check/uncheck)
+					for (int i = 0; i < columnNames.length; i++) {						
+						if (i > 1) {	// ignore columns 0 and 1: action_list & acres	
+							column_checkboxes.get(i - 2).setSelected(false);		// -2 because we ignore 2 columns
+							if (active_col_id.contains(i)) {
+								column_checkboxes.get(i - 2).setSelected(true);		// -2 because we ignore 2 columns
+							}			
+						}
+					}
+				}
+			});
+			
+			
+			
+			
+			
+			// Add radioPanel & scrollPane to a panel				
+			JPanel combined_panel = new JPanel(new BorderLayout());
+			combined_panel.add(radio_panel, BorderLayout.NORTH);
+			combined_panel.add(scrollPane, BorderLayout.CENTER);
+			
+			
+	
+			
+			
+			// Listener for this button class------------------------------------------------------------------------------------------------------
+			if (column_checkboxes.size() > 2) {
+				setEnabled(true);	// Enable only when the yield columns are loaded
+			} else {
+				setEnabled(false);
+			}
+			setToolTipText("show/hide yield tables columns");
+			setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_binoculars.png"));
+			addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent actionEvent) {
+					radioGroup.clearSelection();
+					String ExitOption[] = { "Ok" };
+					int response = JOptionPane.showOptionDialog(Spectrum_Main.mainFrameReturn(), combined_panel,
+							"Select yield tables columns to show", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
+							IconHandle.get_scaledImageIcon(50, 50, "icon_binoculars.png"), ExitOption, ExitOption[0]);
+
+					if (response == 0) {
+
+					}
+				}
+			});
+		}
+	}	
+	
+	
 }
 
 

@@ -2,13 +2,11 @@ package spectrumROOT;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 
-import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -17,12 +15,13 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import spectrumConvenienceClasses.IconHandle;
+
 public class MenuItem_SetTransparency extends JMenuItem {
-	private ImageIcon icon;
-	private Image scaleImage;
 
 	public MenuItem_SetTransparency(Spectrum_Main main) {
-		setText("Change Window Transparency");
+		setText("Change Transparency");
+		setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_glassy.png"));
 
 		addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
@@ -61,12 +60,10 @@ public class MenuItem_SetTransparency extends JMenuItem {
 
 				
 				// Add sliderPanel to a Popup Panel
-				icon = new ImageIcon(getClass().getResource("/icon_question.png"));
-				scaleImage = icon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
 				String ExitOption[] = { "Ok" };
 				int response = JOptionPane.showOptionDialog(Spectrum_Main.mainFrameReturn(), sliderPanel,
 						"Drag the slider to change transparency", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
-						new ImageIcon(scaleImage), ExitOption, ExitOption[0]);
+						IconHandle.get_scaledImageIcon(40, 40, "icon_glassy.png"), ExitOption, ExitOption[0]);
 
 				if (response == 0) {
 

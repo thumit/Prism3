@@ -15,7 +15,7 @@ import spectrumROOT.Spectrum_Main;
  */
 public class ComponentResizer extends MouseAdapter
 {
-	private final static Dimension MINIMUM_SIZE = new Dimension(10, 10);
+	private final static Dimension MINIMUM_SIZE = new Dimension(600, 35);			// Original is 10, 10
 	private final static Dimension MAXIMUM_SIZE =
 		new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE);
 
@@ -357,26 +357,26 @@ public class ComponentResizer extends MouseAdapter
 		Point dragged = e.getPoint();
 		SwingUtilities.convertPointToScreen(dragged, source);
 
-//		changeBounds(source, direction, bounds, pressed, dragged);			//Original code, changed by Dung's code below
+		changeBounds(source, direction, bounds, pressed, dragged);			//Original code, changed by Dung's code below
 		
 
-		//Dung's codes: ---------------------------------add to manage the resize of Look and Feels ---------------------------------
-		//Only Metal & Nimbus (when firstly opened) has title bar
-		//In these 2 cases, the Component Resizer will be set to inActive for the North so main.autoResize can work on that title bar
-		if (UIManager.getLookAndFeel().getName().equals("Metal") || MenuItem_SetLookAndFeel.is_Nimbus_Without_titleBar() == false) {
-			if (NORTH == (direction & NORTH)) // Dung's codes: add to manage the resize of Look and Feels
-			{
-				
-			}
-		} else {
-			Spectrum_Main.mainReturn().setResizable(false);	
-			changeBounds(source, direction, bounds, pressed, dragged);
-		}
-		
-		Spectrum_Main.mainReturn().setResizable(true);							
-		//End of Dung's added codes --------------------------------------------------------------------------------------------------
-		
-		
+//		//Dung's codes: ---------------------------------add to manage the resize of Look and Feels ---------------------------------
+//		//Only Metal & Nimbus (when firstly opened) has title bar
+//		//In these 2 cases, the Component Resizer will be set to inActive for the North so main.autoResize can work on that title bar
+//		if (UIManager.getLookAndFeel().getName().equals("Metal") || MenuItem_SetLookAndFeel.is_Nimbus_Without_titleBar() == false) {
+//			if (NORTH == (direction & NORTH)) // Dung's codes: add to manage the resize of Look and Feels
+//			{
+//				
+//			}
+//		} else {
+//			Spectrum_Main.mainReturn().setResizable(false);	
+//			changeBounds(source, direction, bounds, pressed, dragged);
+//		}
+//		
+//		Spectrum_Main.mainReturn().setResizable(true);							
+//		//End of Dung's added codes --------------------------------------------------------------------------------------------------
+//		
+//		
 		
 	}
 

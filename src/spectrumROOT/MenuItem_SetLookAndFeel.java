@@ -1,13 +1,11 @@
 package spectrumROOT;
 
 import java.awt.Dimension;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -19,10 +17,9 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import spectrumConvenienceClasses.ComponentResizer;
+import spectrumConvenienceClasses.IconHandle;
 
 public class MenuItem_SetLookAndFeel extends JMenuItem {
-	private ImageIcon icon;
-	private Image scaleImage;
 	private static boolean is_Nimbus_Without_titleBar = true;		//Set this to false if in the void main(String[] args), we do the following:
 																	//1: activate this line			setDefaultLookAndFeelDecorated(true);
 																	//2: deactivate this line		main.setUndecorated(true);
@@ -31,6 +28,7 @@ public class MenuItem_SetLookAndFeel extends JMenuItem {
 	
 	public MenuItem_SetLookAndFeel (Spectrum_Main main, ComponentResizer cr) {
 		setText("Change Look and Feel");
+		setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_laf.png"));
 		
 		addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
@@ -74,15 +72,9 @@ public class MenuItem_SetLookAndFeel extends JMenuItem {
 											is_Nimbus_Without_titleBar = true;
 										}
 																													
-										UIManager.setLookAndFeel(info.getClassName());
-										
+										UIManager.setLookAndFeel(info.getClassName());									
 										cr.deregisterComponent(main);
 										cr.registerComponent(main);
-
-										
-//										//2 more Look and Feels
-//										UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-//										UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 
 									} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
 											| UnsupportedLookAndFeelException ex) {
@@ -102,15 +94,12 @@ public class MenuItem_SetLookAndFeel extends JMenuItem {
 				JScrollPane scrollPane = new JScrollPane(radioPanel);
 				scrollPane.setPreferredSize(new Dimension(450, 30));
 				scrollPane.setBorder(null);
-
 				
 				// Add lookfeelPanel to a Popup Panel
-				icon = new ImageIcon(getClass().getResource("/icon_question.png"));
-				scaleImage = icon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
 				String ExitOption[] = { "Ok" };
 				int response = JOptionPane.showOptionDialog(Spectrum_Main.mainFrameReturn(), scrollPane,
 						"Select a Look and Feel", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
-						new ImageIcon(scaleImage), ExitOption, ExitOption[0]);
+						IconHandle.get_scaledImageIcon(40, 40, "icon_laf.png"), ExitOption, ExitOption[0]);
 
 				if (response == 0) {
 

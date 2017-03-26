@@ -348,7 +348,7 @@ public class Read_RunInputs {
 			//Put the values to arrays and lists
 			for (int i = 0; i < totalRows; i++) {
 				String[] values = list.get(i).split("\t");				
-				cost_staticCondition_list.add(values[0] + values[1] +values[2]);	// action_list + layer_id + element_id
+				cost_staticCondition_list.add(values[0] + values[1] +values[2]);	// action_list + layer_id + attribute_id
 				cost_adjusted_percentage[i] = Double.parseDouble(values[3]);		//4th column is the cost_adjusted_percentage  Double.parseDouble(values[1]));		
 			}
 			

@@ -641,13 +641,19 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 							|| !checkboxDynamicIdentifiers.get(ii).get(j).isEnabled()))
 						dynamic_info = dynamic_info + checkboxName + " ";
 				}
-				dynamic_info = dynamic_info + ";";
+				
+				if (!dynamic_info.equals("")) {
+					dynamic_info = dynamic_info.substring(0, dynamic_info.length() - 1) + ";";		// remove the last space, and add ;
+				}
 			}
 		}	
 		
 		if (dynamic_info.equals("") || checkboxNoIdentifier.isSelected()) {
 			dynamic_info = "NoIdentifier";			//= checkboxNoIdentifier.getText();
-		}	
+		} else {
+			dynamic_info = dynamic_info.substring(0, dynamic_info.length() - 1);		// remove the last ;
+		}
+		
 		return dynamic_info;
 	}
 		

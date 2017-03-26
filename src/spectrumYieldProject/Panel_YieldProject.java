@@ -40,6 +40,8 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -291,11 +293,10 @@ public class Panel_YieldProject extends JLayeredPane {
 				currentLevel = path.getPathCount();
 				
 				// ------------Only show currentInputFile when the node level is 3
-				if (currentLevel == 3) {	//selected node is an InputFile
-					// Get the URL of the current selected node			
-					currentInputFile = selectedNode.getUserObject().toString();
-					// Get the parent node which is the Run that contains the selected InputFile
-					currentRun = selectedNode.getParent().toString();          
+				if (currentLevel == 3) {	// Selected node is an Input or Output
+							
+					currentInputFile = selectedNode.getUserObject().toString();	// Get the URL of the current selected node			
+					currentRun = selectedNode.getParent().toString();    // Get the parent node which is the Run that contains the selected InputFile      
 					// Show the GUI for the currentInputFile here....	
 //					try {
 //						FileReader reader;
@@ -314,7 +315,7 @@ public class Panel_YieldProject extends JLayeredPane {
 						list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);			
 						String[] a = list.toArray(new String[list.size()]);					
 														
-						//Setup the table--------------------------------------------------------------------------------
+						// Setup the table--------------------------------------------------------------------------------
 						columnNames = a[0].split(delimited);		//tab delimited		//Read the first row	
 						rowCount = a.length - 1;  // - 1st row which is the column name
 						colCount = columnNames.length;
@@ -330,7 +331,7 @@ public class Panel_YieldProject extends JLayeredPane {
 						}	
 						
 						
-						//Create a table
+						// Create a table
 						model = new TableModelSpectrum(rowCount, colCount, data, columnNames);
 						table = new JTable(model) {
 							@Override			//These override is to make the width of the cell fit all contents of the cell
@@ -351,47 +352,24 @@ public class Panel_YieldProject extends JLayeredPane {
 								return component;
 							}
 						};
-						
-						
+												
 						DefaultTableCellRenderer renderer = (DefaultTableCellRenderer)table.getDefaultRenderer(Object.class);
 						renderer.setHorizontalAlignment(SwingConstants.LEFT);		// Set alignment of values in the table to the left side
 						table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 			     		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-//						table.getColumnModel().getColumn(1).setPreferredWidth(100);	//Set width of Column 1
-			     		
-//						table.setPreferredScrollableViewportSize(new Dimension(400, 100));
-//						table.setFillsViewportHeight(true);
-
-						
-
 				
-//						//Make everything transparent
-//						renderer.setOpaque(false);
-//						table.setOpaque(false);
-//						scrollPane_Right.setOpaque(false);
-						
-						
-						if (currentInputFile.equals("output_04_management_overview.txt")) {		//show a panel with chart if the selected node name is "Output 4 - Management_Overview.txt"
-							scrollPane_Right.setViewportView(new PaneL_Management_Overview(table));
-							
-							table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-							table.addMouseListener(new MouseAdapter() { // Add listener
-								public void mouseReleased(MouseEvent e) {
-									scrollPane_Right.setViewportView(new PaneL_Management_Overview(table));
-								}
-							});
-							
+						// Show table on the scroll panel
+						if (currentInputFile.equals("output_04_management_overview.txt")) {		//show a panel with 2 charts
+							PaneL_Management_Overview chart_panel = new PaneL_Management_Overview(table);
+							scrollPane_Right.setViewportView(chart_panel);
 						} else {		//Show the file as table
 							scrollPane_Right.setViewportView(table); 
-						}
-						
+						}				
 					} catch (IOException e1) {
 						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
 					}				
 										
 
-						
-			
 				} else if (currentLevel != 3) {		
 					rightPanelTextArea.setText("");
 					showNothing();
@@ -410,7 +388,7 @@ public class Panel_YieldProject extends JLayeredPane {
 		} else if (SwingUtilities.isRightMouseButton(e)) {
 			if (e.getClickCount() == 1) {				
 				
-				//Some set up when there is a right click---------------------------------------------------------------
+				// Some set up when there is a right click---------------------------------------------------------------
 				Boolean rootSelected =false;			
 				selectionPaths = projectTree.getSelectionPaths();			//This is very important to get the most recent selected paths
 				int NodeCount=0;		//Count the number of nodes in selectionPaths
@@ -419,7 +397,7 @@ public class Panel_YieldProject extends JLayeredPane {
 					if (processingNode.isRoot()) rootSelected = true;
 					NodeCount++;		
 					}
-				//Deselect the root if this is a multiple Nodes selection and root is selected
+				// Deselect the root if this is a multiple Nodes selection and root is selected
 				TreePath rootpath = new TreePath(root);
 				if (NodeCount>1 && rootSelected==true) {
 					projectTree.getSelectionModel().removeSelectionPath(rootpath);
@@ -427,7 +405,7 @@ public class Panel_YieldProject extends JLayeredPane {
 					NodeCount = NodeCount -1;
 				}
 				
-				//Deselect all level3 nodes if this is a multiple Nodes selection
+				// Deselect all level3 nodes if this is a multiple Nodes selection
 				selectionPaths = projectTree.getSelectionPaths();
 				for (TreePath selectionPath : selectionPaths) { //Loop through all selected nodes
 					if (NodeCount>1 && selectionPath.getPathCount() == 3) {
@@ -438,7 +416,7 @@ public class Panel_YieldProject extends JLayeredPane {
 					}
 				} 
 							
-				//Reselect all nodes left
+				// Reselect all nodes left
 				selectionPaths = projectTree.getSelectionPaths();
 				for (TreePath selectionPath : selectionPaths) { //Loop through all selected nodes	
 					currentLevel = selectionPath.getPathCount();
@@ -446,8 +424,8 @@ public class Panel_YieldProject extends JLayeredPane {
 				//End of set up---------------------------------------------------------------
 							
 
-				// right clicked MenuItems only appear on nodes level 1, 2, or 3 (single or multiple nodes selection)
-				if /* (clickedNode.isRoot()) { */ (currentLevel == 1 || currentLevel == 2 || currentLevel == 3) {
+				// Right clicked MenuItems only appear on nodes level 1, 2, or 3 (single or multiple nodes selection)
+				if (currentLevel == 1 || currentLevel == 2 || currentLevel == 3) {
 					// A popup that holds all JmenuItems
 					JPopupMenu popup = new JPopupMenu();
 
@@ -981,23 +959,37 @@ public class Panel_YieldProject extends JLayeredPane {
 	        
 	        
 	        //---------------------------------------------------------------
-	        String strataName = "";
-	        if (thisTable.getSelectedRow() >= 0) 	strataName = data[thisTable.getSelectedRow()][0].toString();
+	        JScrollPane scroll_chart2 = new JScrollPane();
+	        scroll_chart2.setBorder(null);
 	        
-	        //Create a chart
-		    PieDataset dataset2 = create_strataOverview_dataset();
-	        JFreeChart chart2 = createChart(dataset2, "Management decisions at the start of planning horizon for '" + strataName + "' ");
-	        if (thisTable.getSelectedRows().length > 1) {	//Change chart title if multiple strata are selected
-				chart2.setTitle("Management decisions at the start of planning horizon for "  + thisTable.getSelectedRows().length + " existing strata");
-			}	
+	        thisTable.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+		        public void valueChanged(ListSelectionEvent event) {
+		        	 String strataName = "";
+		 	        if (thisTable.getSelectedRow() >= 0) 	strataName = data[thisTable.getSelectedRow()][0].toString();
+		 	        
+		 	        //Create a chart
+		 		    PieDataset dataset2 = create_strataOverview_dataset();
+		 	        JFreeChart chart2 = createChart(dataset2, "Management decisions at the start of planning horizon for '" + strataName + "' ");
+		 	        if (thisTable.getSelectedRows().length > 1) {	//Change chart title if multiple strata are selected
+		 				chart2.setTitle("Management decisions at the start of planning horizon for "  + thisTable.getSelectedRows().length + " existing strata");
+		 			}	
 
-	        // add the chart to a panel...
-        	ChartPanel chartPanel2 = new ChartPanel(chart2);
-	        chart2.getLegend().setFrame(BlockBorder.NONE);	//Remove the ugly border surrounded Legend
-	        TitledBorder border2 = new TitledBorder("");
-			border2.setTitleJustification(TitledBorder.CENTER);
-			chartPanel2.setBorder(border2);
-	        chartPanel2.setPreferredSize(new Dimension(600, 350));
+		 	        // add the chart to a panel...
+		         	ChartPanel chartPanel2 = new ChartPanel(chart2);
+		 	        chart2.getLegend().setFrame(BlockBorder.NONE);	//Remove the ugly border surrounded Legend
+		 	        TitledBorder border2 = new TitledBorder("");
+		 			border2.setTitleJustification(TitledBorder.CENTER);
+		 			chartPanel2.setBorder(border2);
+		 	        chartPanel2.setPreferredSize(new Dimension(600, 350));
+
+		 	        // Add panel to scroll panel
+					scroll_chart2.setViewportView(chartPanel2);
+		        }
+	        });
+	        
+	        // Trigger the value changed listener of the table
+	        thisTable.setRowSelectionInterval(0, 0);
+	        thisTable.clearSelection();
 	        //---------------------------------------------------------------
 	        
 	        
@@ -1015,7 +1007,7 @@ public class Panel_YieldProject extends JLayeredPane {
 			c.gridwidth = 1;
 			c.weightx = 0;
 			c.weighty = 0;
-			super.add(chartPanel2, c);			
+			super.add(scroll_chart2, c);			
 			
 			// Add the 3rd grid - table
 			c.gridx = 0;

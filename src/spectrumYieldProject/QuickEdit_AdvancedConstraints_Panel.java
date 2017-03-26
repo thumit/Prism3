@@ -131,7 +131,7 @@ public class QuickEdit_AdvancedConstraints_Panel extends JPanel {
 	
 	private class Spectrum_FormatedTextfield extends JFormattedTextField {
 		public Spectrum_FormatedTextfield() {
-			setToolTipText("from 0 to 30 (%) with maximum 2 digits after the dot");
+			setToolTipText("from 0 to 100 (%) with maximum 2 digits after the dot");
 			getDocument().addDocumentListener(new DocumentListener() {
 				@Override
 				public void insertUpdate(DocumentEvent e) {
@@ -142,7 +142,7 @@ public class QuickEdit_AdvancedConstraints_Panel extends JPanel {
 							if (!text.matches("\\d*(\\.\\d{0,2})?")) {		//	used regex: \\d*(\\.\\d{0,2})? because two decimal places is enough
 								setText(text.substring(0, text.length() - 1));
 							} else {
-								if (!text.isEmpty() && !text.equals(".") && (Double.valueOf(text) < (double) 0 || Double.valueOf(text) > (double) 30)) {		// If the added String make value <0 or >30   then delete that String
+								if (!text.isEmpty() && !text.equals(".") && (Double.valueOf(text) < (double) 0 || Double.valueOf(text) > (double) 100)) {		// If the added String make value <0 or >100   then delete that String
 									setText(text.substring(0, text.length() - 1));
 								}
 							}	

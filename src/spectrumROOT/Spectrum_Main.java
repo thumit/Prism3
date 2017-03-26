@@ -5,10 +5,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsDevice.WindowTranslucency;
 import java.awt.GraphicsEnvironment;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -37,12 +37,14 @@ import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
+import javax.swing.plaf.FontUIResource;
 
 import spectrumConvenienceClasses.ColorUtil;
 import spectrumConvenienceClasses.ComponentResizer;
 import spectrumConvenienceClasses.FilesHandle;
-import spectrumConvenienceClasses.StringHandle;
+import spectrumConvenienceClasses.IconHandle;
 import spectrumConvenienceClasses.RequestFocusListener;
+import spectrumConvenienceClasses.StringHandle;
 import spectrumConvenienceClasses.WindowAppearanceHandle;
 import spectrumDatabase.Panel_DatabaseManagement;
 import spectrumYieldProject.Panel_YieldProject;
@@ -50,21 +52,20 @@ import spectrumYieldProject.Panel_YieldProject;
 @SuppressWarnings("serial")
 public class Spectrum_Main extends JFrame {
 	// Define variables------------------------------------------------------------------------
-	private ImageIcon 		icon;
-	private Image 			scaleImage;
-	
-	private JMenuBarCustomize 	spectrum_Menubar;
+	private MenuBar_Customize 	spectrum_Menubar;
 	private JMenu 				menuFile, menuUtility, menuWindow, menuHelp,
 								menuOpenProject;
-	private JMenuItem 			newProject, exitSoftware, //Children of MenuFile
-								existingProject, //For menuOpenProject
-								DatabaseManagement, //For MenuUtility
-								contents, update, contact, about; //For MenuMenuHelp
+	private JMenuItem 			newProject, exitSoftware, 			// For MenuFile
+								existingProject, 					// For menuOpenProject
+								DatabaseManagement, 				// For MenuUtility
+								contents, update, contact, about; 	// For MenuMenuHelp
 	
-	private MenuItem_SetTransparency 	setTransparency;	//For menuWindow
-	private MenuItem_SetLookAndFeel 	setLookAndFeel;		//For menuWindow
+	private JMenuItem					setLogo; 			// For menuWindow
+	private MenuItem_SetFont 			setFont;			// For menuWindow
+	private MenuItem_SetTransparency 	setTransparency;	// For menuWindow
+	private MenuItem_SetLookAndFeel 	setLookAndFeel;		// For menuWindow
 		
-	private static Panel_BackGroundDesktop 	spectrumDesktopPane;
+	private static DesktopPanel_BackGround 	spectrumDesktopPane;
 	private static String 					currentProjectName;
 	private static Spectrum_Main 			main;
 	private static ComponentResizer 		cr;
@@ -73,13 +74,13 @@ public class Spectrum_Main extends JFrame {
 	public static void main(String[] args) {
 //		new Spectrum_Main();
 			
-		// For translucent windows
+		
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice gd = ge.getDefaultScreenDevice();
 		if (gd.isWindowTranslucencySupported(WindowTranslucency.TRANSLUCENT)) {
 //			setDefaultLookAndFeelDecorated(true);
 			main = new Spectrum_Main();
-		 	main.setUndecorated(true);
+		 	main.setUndecorated(true);		// to help make translucent windows
 			main.setOpacity(0.95f);
 			
 			//Need border so cr can work
@@ -97,34 +98,41 @@ public class Spectrum_Main extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-			
+	
 				for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 					if (info.getName().equals("Nimbus")) {
 						try {
 							UIManager.setLookAndFeel(info.getClassName());
-							UIManager.put("info", new Color(255, 250, 205));		//Change the ugly yellow color of ToolTip --> lemon chiffon
+							UIManager.getLookAndFeelDefaults().put("info", new Color(255, 250, 205));		// Change the ugly yellow color of ToolTip --> lemon chiffon
+//							UIManager.getLookAndFeelDefaults().put("defaultFont", new Font("Century Schoolbook", Font.PLAIN, 12));
+							WindowAppearanceHandle.setUIFont(new FontUIResource("Century Schoolbook", Font.PLAIN, 12));		//Change Font for the current LAF
 						} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
 								| UnsupportedLookAndFeelException e1) {
 							System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
 						}
 					}
 				}		
-//				setExtendedState(JFrame.MAXIMIZED_BOTH); 	//make SpectrumLite Main full screen
-				setMinimumSize(new Dimension(600, 300));
+
 				
-				
-//				setTitle("SpectrumLite Demo Version 1.10");
 				setIconImage(new ImageIcon(getClass().getResource("/icon_main.png")).getImage());
 				//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 				addWindowListener(new WindowAdapter() {@Override public void windowClosing(WindowEvent e){exitSpectrumLite();}});				
 				getContentPane().setLayout(new BorderLayout());	
 
+				
+				spectrumDesktopPane = new DesktopPanel_BackGround();
+				spectrumDesktopPane.process_image();
+				spectrum_Menubar = new MenuBar_Customize();
+				
+								
 				// Define components: Menubar, Menus, MenuItems----------------------------------
 				newProject = new JMenuItem("New");
 				menuOpenProject = new JMenu("Open");
 				exitSoftware = new JMenuItem("Exit");
 				DatabaseManagement = new JMenuItem("Database Management");
+				setLogo = new JMenuItem("Hide Logo");
+				setFont = new MenuItem_SetFont(main);
 				setTransparency = new MenuItem_SetTransparency(main);
 				setLookAndFeel = new MenuItem_SetLookAndFeel(main, cr);
 				contents = new JMenuItem("Contents");
@@ -138,15 +146,13 @@ public class Spectrum_Main extends JFrame {
 				menuHelp = new JMenu("Help");
 
 				
-				spectrumDesktopPane = new Panel_BackGroundDesktop();
-				spectrum_Menubar = new JMenuBarCustomize();
-							
-				
 				// Add components: Menubar, Menus, MenuItems----------------------------------
 				menuFile.add(newProject);
 				menuFile.add(menuOpenProject);
 				menuFile.add(exitSoftware);
 				menuUtility.add(DatabaseManagement);
+				menuWindow.add(setLogo);
+				menuWindow.add(setFont);
 				menuWindow.add(setTransparency);
 				menuWindow.add(setLookAndFeel);
 				menuHelp.add(contents);
@@ -170,7 +176,6 @@ public class Spectrum_Main extends JFrame {
 				setVisible(true);
 
 				
-				// Add listeners for MenuItems------------------------------------------------
 				
 				// Add listener for "Window"------------------------------------------------
 				menuWindow.addMenuListener(new MenuListener() {
@@ -220,11 +225,9 @@ public class Spectrum_Main extends JFrame {
 						boolean stop_naming = false;
 						String titleText = "Project's name";
 						while (stop_naming == false) {
-							icon = new ImageIcon(getClass().getResource("/icon_question.png"));
-					  		scaleImage = icon.getImage().getScaledInstance(50, 50,Image.SCALE_SMOOTH);
 					  		String ExitOption[] = {"OK","Cancel"};
 							int response = JOptionPane.showOptionDialog(Spectrum_Main.mainFrameReturn(), projectName_JTextField, titleText,
-									JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, new ImageIcon(scaleImage), ExitOption, ExitOption[0]);
+									JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
 							if (response == 0) 
 							{
 								// Find all the existing projects in the "Projects" folder		
@@ -270,7 +273,7 @@ public class Spectrum_Main extends JFrame {
 				menuOpenProject.addMenuListener(new MenuListener() {
 					@Override
 			        public void menuSelected(MenuEvent e) {					
-						menuOpenProject.removeAll();			//REMOVE ALL existing projects
+						menuOpenProject.removeAll();			// Remove all existing projects
 										
 						// Find all the existing projects in the "Projects" folder		
 						File[] listOfFiles = FilesHandle.get_projectsFolder().listFiles(new FilenameFilter() {
@@ -286,19 +289,19 @@ public class Spectrum_Main extends JFrame {
 									String fileName;
 									fileName = listOfFiles[i].getName();
 									existingProject = new JMenuItem(fileName);
-									menuOpenProject.add(existingProject);			//ADD ALL existing projects
+									menuOpenProject.add(existingProject);			// Add all existing projects
 
 									existingProject.addActionListener(new ActionListener() {
 										public void actionPerformed(ActionEvent event) {
 											currentProjectName = fileName;
 											
-											JInternalFrame[] opened_InternalFrames = Spectrum_Main.mainFrameReturn().getAllFrames();	//All displayed internalFrames
-											List<String> openedFrames_list = new ArrayList<String>();					//List of Frames Names					
+											JInternalFrame[] opened_InternalFrames = Spectrum_Main.mainFrameReturn().getAllFrames();	// All displayed internalFrames
+											List<String> openedFrames_list = new ArrayList<String>();					// List of Frames Names					
 											for (int i = 0; i < opened_InternalFrames.length; i++) {
-												openedFrames_list.add(opened_InternalFrames[i].getTitle());		//Loop all displayed IFrames to get Names and add to the list
+												openedFrames_list.add(opened_InternalFrames[i].getTitle());		// Loop all displayed IFrames to get Names and add to the list
 											}
 											
-											//Only open if it is not opened yet
+											// Only open if it is not opened yet
 											if (openedFrames_list.contains(fileName)) {
 												for (int i = 0; i < opened_InternalFrames.length; i++) {
 													if (opened_InternalFrames[i].getTitle().equals(fileName)) { 
@@ -319,7 +322,6 @@ public class Spectrum_Main extends JFrame {
 								}
 							}
 						}
-
 					}
 					
 					@Override
@@ -331,6 +333,21 @@ public class Spectrum_Main extends JFrame {
 			        }
 					
 				});	
+				
+				
+				// Add listeners "setLogo"-----------------------------------------------------
+				setLogo.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_main.png"));
+				setLogo.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent event) {
+						if (spectrumDesktopPane.getBackgroundImage() != null) {
+							spectrumDesktopPane.setBackgroundImage(null);
+							setLogo.setText("Show Logo");
+						} else {
+							spectrumDesktopPane.process_image();
+							setLogo.setText("Hide Logo");
+						}						
+					}
+				});
 				
 				
 				// Add listeners "ExitSoftware"-----------------------------------------------------
@@ -399,8 +416,7 @@ public class Spectrum_Main extends JFrame {
 							} // end method actionPerformed
 						} // end anonymous inner class
 				); // end call to addActionListener	
-				
-				
+							
 			} //end public void run()					
 		}); // end EventQueue.invokeLater
 	} // end public Spectrum_Main
@@ -438,12 +454,9 @@ public class Spectrum_Main extends JFrame {
 		      }
 
 		      public void internalFrameClosing(InternalFrameEvent e) {
-
-		    	icon = new ImageIcon(getClass().getResource("/icon_question.png"));
-		  		scaleImage = icon.getImage().getScaledInstance(50, 50,Image.SCALE_SMOOTH);
 		  		String ExitOption[] = {"Close","Cancel"};
 				int response = JOptionPane.showOptionDialog(Spectrum_Main.mainFrameReturn(),"Stop Editing can save changes you made. Close project ?", "Close Project",
-						JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, new ImageIcon(scaleImage), ExitOption, ExitOption[0]);
+						JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
 				if (response == 0)
 				{
 					 ProjectInternalFrame.dispose();
@@ -474,11 +487,9 @@ public class Spectrum_Main extends JFrame {
 	 
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public void exitSpectrumLite() {
-		icon = new ImageIcon(getClass().getResource("/icon_question.png"));
-		scaleImage = icon.getImage().getScaledInstance(50, 50,Image.SCALE_SMOOTH);
 		String ExitOption[] = {"Exit","Cancel"};
 		int response = JOptionPane.showOptionDialog(Spectrum_Main.mainFrameReturn(),"Stop Editing can save changes you made. Exit SpectrumLite ?", "Exit SpectrumLite",
-				JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, new ImageIcon(scaleImage), ExitOption, ExitOption[0]);
+				JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
 		if (response == 0)
 		{
 			System.exit(0);
@@ -516,7 +527,7 @@ public class Spectrum_Main extends JFrame {
 	}
 	
 	//--------------------------------------------------------------------------------------------------------------------------------
-	public static Panel_BackGroundDesktop mainFrameReturn() {
+	public static DesktopPanel_BackGround mainFrameReturn() {
 		return spectrumDesktopPane;
 	}
 	
@@ -528,5 +539,5 @@ public class Spectrum_Main extends JFrame {
 	public static String getProjectName() {
 		return currentProjectName;
 	}
-
+	
 }

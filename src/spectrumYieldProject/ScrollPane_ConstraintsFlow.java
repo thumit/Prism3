@@ -41,9 +41,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.beans.PropertyVetoException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.Action;
 import javax.swing.ActionMap;
@@ -51,21 +48,28 @@ import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.DropMode;
-import javax.swing.JInternalFrame;
+import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
+import javax.swing.JSpinner.DefaultEditor;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.text.DefaultFormatter;
 
 import spectrumConvenienceClasses.ArrayListTransferHandler;
 import spectrumConvenienceClasses.IconHandle;
-import spectrumROOT.Spectrum_Main;
 
 
 
@@ -181,6 +185,39 @@ public class ScrollPane_ConstraintsFlow  extends JScrollPane {
 		panel.removeAll();
 		int total_Flow = (new_list_model != null) ? new_list_model.length : 5;			// new or reload
 		
+		
+		
+		
+//		// spinner
+//		JLabel label = new JLabel("Number of Sigma");
+//		JSpinner spin = new JSpinner (new SpinnerNumberModel(total_Flow, 0, 1000, 1));
+//		spin.setToolTipText("Total number of Sigma");
+//		JFormattedTextField SpinnerText = ((DefaultEditor) spin.getEditor()).getTextField();
+//		SpinnerText.setHorizontalAlignment(JTextField.LEFT);		
+//		DefaultFormatter formatter = (DefaultFormatter) SpinnerText.getFormatter();
+//	    formatter.setCommitsOnValidEdit(true);
+//	    spin.addChangeListener(new ChangeListener() {
+//	        @Override
+//	        public void stateChanged(ChangeEvent e) {
+//	        	spin.setValue(spin.getValue());
+//	        	int total_sigma = (int) spin.getValue();
+//	        	DefaultListModel[] list_model = new DefaultListModel[total_sigma];
+//				for (int i = 0; i < total_sigma; i++) {
+//					list_model[i] = new DefaultListModel<>();				
+//				}
+//				create_flow_arrangement_UI(list_model);	        	
+//	        }
+//	    });				
+//		
+//	    panel.add(label);
+//	    panel.add(spin);
+//	    panel.add(new JLabel());
+
+		
+		
+		
+		
+		
 				
 		// List of flows container
 		flow_list = new JList[total_Flow];
@@ -195,7 +232,6 @@ public class ScrollPane_ConstraintsFlow  extends JScrollPane {
 			flow_list[i].setLayoutOrientation(JList.HORIZONTAL_WRAP);	// For horizontal element order
 			flow_list[i].setVisibleRowCount(-1);							// For horizontal element order
 			flow_list[i].setCellRenderer(new SelectedListCellRenderer());	//Change selected items color
-			flow_list[i].addMouseListener(mouse_listener);	// Add mouse listeners
 
 			flow_list[i].setDragEnabled(true);
 			flow_list[i].setTransferHandler(lh);
@@ -204,8 +240,12 @@ public class ScrollPane_ConstraintsFlow  extends JScrollPane {
 
 			list_scrollpane[i] = new JScrollPane(flow_list[i]);
 			list_scrollpane[i].setBorder(BorderFactory.createTitledBorder("Sigma " + (int) (i + 1)));
-			list_scrollpane[i].setPreferredSize(new Dimension(80, 80));
+			list_scrollpane[i].setPreferredSize(new Dimension(80, 80));			
 			panel.add(list_scrollpane[i]);
+			
+			// Add mouse listeners
+			flow_list[i].addMouseListener(mouse_listener);	
+			list_scrollpane[i].addMouseListener(mouse_listener);
 			
 			// Make transparent inside each list_scrollpane[i]
 			flow_list[i].setOpaque(false);
