@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JFormattedTextField;
+import javax.swing.JInternalFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -18,6 +19,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JSpinner.DefaultEditor;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
@@ -28,7 +30,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.text.DefaultFormatter;
 
-import spectrumConvenienceClasses.ComponentResizer;
+import spectrumConvenienceClasses.ColorUtil;
 import spectrumConvenienceClasses.IconHandle;
 import spectrumConvenienceClasses.WindowAppearanceHandle;
 
@@ -41,7 +43,8 @@ public class MenuItem_SetFont extends JMenuItem {
 		
 		addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
-			
+				
+				//--------------------------------------------------------------------------------------------------------------------
 				GraphicsEnvironment e = GraphicsEnvironment.getLocalGraphicsEnvironment();
 				Font[] allFonts = e.getAllFonts();
 			
@@ -92,6 +95,7 @@ public class MenuItem_SetFont extends JMenuItem {
 				scrollPane.setPreferredSize(new Dimension(600, 300));
 
 				
+				//--------------------------------------------------------------------------------------------------------------------
 				spin = new JSpinner (new SpinnerNumberModel(12, 6, 16, 1));
 				spin.setBorder(BorderFactory.createTitledBorder("Font size"));
 				spin.setValue(UIManager.getLookAndFeelDefaults().getFont("MenuBar.font").getSize());		
@@ -123,22 +127,36 @@ public class MenuItem_SetFont extends JMenuItem {
 					}
 			    });
 			    
-				
-				// Add Font size & type to a panel				
+			    
+			    //-------------------------------------------------------------------------------------------------------------------- 
+			    JTextArea textarea = new JTextArea();
+			    textarea.setLineWrap(true);
+			    textarea.setWrapStyleWord(true);
+			    textarea.setBackground(ColorUtil.makeTransparent(scrollPane.getBackground(), 255));
+			    textarea.setBorder(BorderFactory.createTitledBorder(""));
+			    textarea.append("All internal windows must be closed to retrieve SpectrumLite's standard behavior. ");
+			    textarea.append("If editing, 'close later' is recommended so you can save your edits.");
+			    
+			    
+			    //--------------------------------------------------------------------------------------------------------------------
+				// Add Font size & type to a panel
 				JPanel combined_panel = new JPanel(new BorderLayout());
 				combined_panel.add(spin, BorderLayout.NORTH);
 				combined_panel.add(scrollPane, BorderLayout.CENTER);
+				combined_panel.add(textarea, BorderLayout.SOUTH);
+				
 				
 				// Add the panel to a pop-up panel
-				String ExitOption[] = { "Ok" };
+				String ExitOption[] = { "Close now", "Close later"};
 				int response = JOptionPane.showOptionDialog(Spectrum_Main.mainFrameReturn(), combined_panel,
 						"Select a Font", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
 						IconHandle.get_scaledImageIcon(40, 40, "icon_font.png"), ExitOption, ExitOption[0]);
 
 				if (response == 0) {
-
+					for (JInternalFrame i: Spectrum_Main.mainFrameReturn().getAllFrames()) {
+						i.dispose();
+					}
 				}
-
 	
 			}
 		});

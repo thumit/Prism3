@@ -19,3 +19,8 @@ id	description	type	multiplier	lowerbound	lowerbound_perunit_penalty	upperbound	
 18	300k 18 - silvicultural method EA - time period 3	SOFT	1.0	300000.0	1.0	300000.0	0.0	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EA;7 3	NoIdentifier	
 19	300k 19 - silvicultural method EA - time period 4	SOFT	1.0	300000.0	1.0	300000.0	0.0	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EA;7 4	NoIdentifier	
 20	300k 20 - silvicultural method EA - time period 5	SOFT	1.0	300000.0	1.0	300000.0	0.0	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EA;7 5	NoIdentifier	
+21	Cost set free 1 - time period 1	FREE	1.0	null	null	null	null	CostParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NG PB GS EA MS;7 1	NoIdentifier	
+22	Cost set free 2 - time period 2	FREE	1.0	null	null	null	null	CostParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NG PB GS EA MS;7 2	NoIdentifier	
+23	Cost set free 3 - time period 3	FREE	1.0	null	null	null	null	CostParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NG PB GS EA MS;7 3	NoIdentifier	
+24	Cost set free 4 - time period 4	FREE	1.0	null	null	null	null	CostParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NG PB GS EA MS;7 4	NoIdentifier	
+25	Cost set free 5 - time period 5	FREE	1.0	null	null	null	null	CostParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NG PB GS EA MS;7 5	NoIdentifier	

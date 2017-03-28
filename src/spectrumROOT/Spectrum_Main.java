@@ -389,11 +389,11 @@ public class Spectrum_Main extends JFrame {
 								      }
 
 								      public void internalFrameClosed(InternalFrameEvent e) {
-							
+								    	  DatabaseManagement.setEnabled(true); //Enable
 								      }
 
 								      public void internalFrameClosing(InternalFrameEvent e) {							 
-								    	  DatabaseManagement.setEnabled(true); //Enable
+
 								      }
 
 								      public void internalFrameDeactivated(InternalFrameEvent e) {

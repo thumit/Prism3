@@ -30,8 +30,11 @@
 26. Show/Hied Logo feature
 27. Change Font feature
 28. Regain focus on the table when showing 2 Charts, change mouse listener to selection listener for showing the 2nd chart (Ctrl A works)
-29. Chnage minimum size of MAIN in ComponentResizer to 600x35
-30. Change the way writing parameters, static identifiers, dynamic identifiers to the basic constraints table
+29. Change minimum size of MAIN in ComponentResizer to 600x35
+30. Change the way writing parameters, static identifiers, dynamic identifiers to the basic constraints table (to prepare for constraint reload)
 31. Change element_id --> attribute_id (input08 & strata_definition)
 32. Change relaxed_perrcentage (Advanced Constraints) to 0-100%
-33. Show/hide columns feature (Base Cost): 2 Preset selection: show default columns & show active columns
+33. Show/hide columns feature (Base Cost): 2 Preset selection choices: show default columns & show active columns. 
+34. Disable columns that are not "per acre" to prevent users' mistakes (Base Cost & Parameters in Basic Constraints)
+35. Trim all read_Identifiers --> read only once before reload GUI or add new strata_definition
+36. Flow constraints are now active in the model

@@ -358,6 +358,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			}
 		}
+		read_Identifiers = new Read_Indentifiers(file_StrataDefinition);
 		
 		
 		
@@ -791,7 +792,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	public void create_table2() {
 		//Setup the table------------------------------------------------------------	
 		if (is_table2_loaded == false) { // Create a fresh new if Load fail				
-			read_Identifiers = new Read_Indentifiers(file_StrataDefinition);
 			List<String> layers_Title = read_Identifiers.get_layers_Title();
 			List<String> layers_Title_ToolTip = read_Identifiers.get_layers_Title_ToolTip();
 	         
@@ -918,7 +918,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 	//--------------------------------------------------------------------------------------------------------------------------
 	public void create_table3() {
-		read_Identifiers = new Read_Indentifiers(file_StrataDefinition);
 		List<List<String>> allLayers = read_Identifiers.get_allLayers();
 		List<List<String>> allLayers_ToolTips = read_Identifiers.get_allLayers_ToolTips();
 		int total_CoverType = allLayers.get(4).size();		// total number of elements - 1 in layer5 Cover Type (0 to...)
@@ -1174,7 +1173,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 	//--------------------------------------------------------------------------------------------------------------------------
 	public void create_table4() {
-		read_Identifiers = new Read_Indentifiers(file_StrataDefinition);
 		List<List<String>> allLayers = read_Identifiers.get_allLayers();
 		List<List<String>> allLayers_ToolTips = read_Identifiers.get_allLayers_ToolTips();
 		int total_CoverType = allLayers.get(4).size();		// total number of elements - 1 in layer5 Cover Type (0 to...)
@@ -1246,7 +1244,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			}
         	
         	public void update_Percentage_column() {     		
-				read_Identifiers = new Read_Indentifiers(file_StrataDefinition);
 				List<List<String>> allLayers =  read_Identifiers.get_allLayers();
 				int total_CoverType = allLayers.get(4).size();		// total number of elements - 1 in layer5 Cover Type (0 to...)
 				int table_row=0;
@@ -1440,7 +1437,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 	//--------------------------------------------------------------------------------------------------------------------------
 	public void create_table5() {
-		read_Identifiers = new Read_Indentifiers(file_StrataDefinition);
 		List<List<String>> allLayers =  read_Identifiers.get_allLayers();
 		List<List<String>> allLayers_ToolTips = read_Identifiers.get_allLayers_ToolTips();
 		int total_CoverType = allLayers.get(4).size();		// total number of elements - 1 in layer5 Cover Type (0 to...)
@@ -1667,7 +1663,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 	//--------------------------------------------------------------------------------------------------------------------------
 	public void create_table6() {
-		read_Identifiers = new Read_Indentifiers(file_StrataDefinition);
 		List<List<String>> allLayers =  read_Identifiers.get_allLayers();
 		List<List<String>> allLayers_ToolTips = read_Identifiers.get_allLayers_ToolTips();
 		int total_CoverType = allLayers.get(4).size();		// total number of elements - 1 in layer5 Cover Type (0 to...)
@@ -2015,13 +2010,17 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 	//--------------------------------------------------------------------------------------------------------------------------
 	public void create_table8() {
-		read_Identifiers = new Read_Indentifiers(file_StrataDefinition);
-		List<List<String>> allLayers =  read_Identifiers.get_allLayers();
-		List<List<String>> allLayers_ToolTips = read_Identifiers.get_allLayers_ToolTips();
-		List<String> layers_Title = read_Identifiers.get_layers_Title();
-		List<String> layers_Title_ToolTip = read_Identifiers.get_layers_Title_ToolTip();	
-		
-		allLayers.remove(allLayers.size() - 1);		// Remove size class
+		List<List<String>> allLayers = new ArrayList<List<String>>();
+		List<List<String>> allLayers_ToolTips = new ArrayList<List<String>>();
+		List<String> layers_Title = new ArrayList<String>();
+		List<String> layers_Title_ToolTip = new ArrayList<String>();	
+				
+		allLayers.addAll(read_Identifiers.get_allLayers());
+		allLayers_ToolTips.addAll(read_Identifiers.get_allLayers_ToolTips());
+		layers_Title.addAll(read_Identifiers.get_layers_Title());
+		layers_Title_ToolTip.addAll(read_Identifiers.get_layers_Title_ToolTip());
+			
+		allLayers.remove(allLayers.size() - 1);		// Remove size class: BECAUSE OF THIS REMOVE, WE HAVE TO clone original Lists by add all method
 		
 		//Setup the table------------------------------------------------------------	
 		if (is_table8_loaded == false) { // Create a fresh new if Load fail	
@@ -2756,7 +2755,10 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						file_StrataDefinition = tempDefinitionFile;
 						currentDefinition_location = file_StrataDefinition.getAbsolutePath();
 						
-						//create 4 new instances of the 2 Panels 
+						// Reset Read Identifiers
+						read_Identifiers = new Read_Indentifiers(file_StrataDefinition);
+						
+						// create 4 new instances of the 2 Panels 
 						is_table2_loaded = false;
 						is_table1_loaded = false;
 						is_table9_loaded = false;
@@ -2766,14 +2768,14 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						is_table6_loaded = false;
 						is_table4_loaded = false;
 						
-						//Reset data to null
+						// Reset data to null
 						availableAcres = 0;
 						file_ExistingStrata = null;
 						file_Database = null;
 						yieldTable_values = null;
 						yieldTable_ColumnNames = null;
 						
-						//Reset all panels except General Inputs
+						// Reset all panels except General Inputs
 						panel_Model_Identifiniton_GUI = new Model_Identifiniton_GUI();
 						panel_Model_Identification_Text = new Model_Identification_Text();
 						panel_Covertype_Conversion_GUI = new Covertype_Conversion_GUI();
@@ -2785,7 +2787,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						panel_Basic_Constraints_GUI = new Basic_Constraints_GUI();
 						panel_Basic_Constraints_Text = new Basic_Constraints_Text();
 						
-						//and show the 2 new instances of Model_Definition Panel
+						// And show the 2 new instances of Model_Definition Panel
 						GUI_Text_splitPanel.setLeftComponent(panel_Model_Identifiniton_GUI);
 						GUI_Text_splitPanel.setRightComponent(panel_Model_Identification_Text);	
 					}
@@ -2964,8 +2966,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			// 2nd grid -----------------------------------------------------------------------
 			// 2nd grid -----------------------------------------------------------------------						
-			read_Identifiers = new Read_Indentifiers(file_StrataDefinition);
-			
 			List<String> layers_Title = read_Identifiers.get_layers_Title();
 			List<String> layers_Title_ToolTip = read_Identifiers.get_layers_Title_ToolTip();
 			List<List<String>> allLayers =  read_Identifiers.get_allLayers();
@@ -3637,7 +3637,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
         
 	        // scrollPane Quick Edit 1 & 2-----------------------------------------------------------------------
 	        // scrollPane Quick Edit 1 @ 2-----------------------------------------------------------------------		
- 			JScrollPane scrollpane_QuickEdit_1 = new JScrollPane(new QuickEdit_BaseCost_Panel(table7, data7, columnNames7, read_Identifiers));
+ 			JScrollPane scrollpane_QuickEdit_1 = new JScrollPane(new QuickEdit_BaseCost_Panel(table7, data7, columnNames7));
  			JScrollPane scrollpane_QuickEdit_2 = new JScrollPane(new QuickEdit_CostAdjustment_Panel(table8, data8));	
  			
  			border = new TitledBorder("Quick Edit ");
@@ -3793,8 +3793,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				
 					
 			// 3rd grid ------------------------------------------------------------------------------		// Parameters
-			parametersScrollPanel = new ScrollPane_Parameters(read_Identifiers, yieldTable_ColumnNames);
-			TitledBorder border = new TitledBorder("PARAMETERS (yield columns)");
+			parametersScrollPanel = new ScrollPane_Parameters(yieldTable_ColumnNames);
+			TitledBorder border = new TitledBorder("PARAMETERS");
 			border.setTitleJustification(TitledBorder.CENTER);
 			parametersScrollPanel.setBorder(border);
 	    	parametersScrollPanel.setPreferredSize(new Dimension(200, 100));
@@ -4582,7 +4582,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c.gridy = 1;
 			c.gridwidth = 2;
 			c.gridheight = 1;
-			c.weightx = 0.2;
+			c.weightx = 0.3;
 		    c.weighty = 0;
 			super.add(static_identifiersScrollPanel, c);				
 		    		
@@ -4637,7 +4637,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	    	
 	       	//Update Parameter Panel
 	    	if (yieldTable_ColumnNames != null && parametersScrollPanel.get_checkboxParameter() == null) {
-	    		parametersScrollPanel = new ScrollPane_Parameters(read_Identifiers, yieldTable_ColumnNames);	//"Get parameters from YT columns"
+	    		parametersScrollPanel = new ScrollPane_Parameters(yieldTable_ColumnNames);	//"Get parameters from YT columns"
 	    	}
 	    	
 	      	//Update Dynamic Identifier Panel
@@ -4763,7 +4763,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			
 			JScrollPane basic_table_scrollPane = new JScrollPane(basic_table);
-	        TitledBorder border = new TitledBorder("Sources (Basic Constraints) for building Advanced Constraints");
+	        TitledBorder border = new TitledBorder("Sources (Basic Constraints)");
 			border.setTitleJustification(TitledBorder.CENTER);
 			basic_table_scrollPane.setBorder(border);	
 			basic_table_scrollPane.setPreferredSize(new Dimension(400, 250));

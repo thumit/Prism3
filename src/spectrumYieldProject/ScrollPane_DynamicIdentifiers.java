@@ -130,7 +130,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 					String YTcolumnName = allDynamicIdentifiers.get(i).getText();		
 					allDynamicIdentifiers_ScrollPane.add(new JScrollPane());			//Add ScrollPane
 					allDynamicIdentifiers_ScrollPane.get(i).setBorder(new TitledBorder(YTcolumnName));	//set Title
-					allDynamicIdentifiers_ScrollPane.get(i).setPreferredSize(new Dimension(150, 100));
+					allDynamicIdentifiers_ScrollPane.get(i).setPreferredSize(new Dimension(200, 100));
 //					allDynamicIdentifiers_ScrollPane.get(i).setToolTipText(read_Identifiers.get_ParameterToolTip(YTcolumnName) + " (Column index: " + i + ")");		//add toolTip										
 					allDynamicIdentifiers_ScrollPane.get(i).setVisible(false);		//Set invisible
 					

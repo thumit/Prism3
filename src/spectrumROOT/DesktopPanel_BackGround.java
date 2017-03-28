@@ -76,6 +76,8 @@ public class DesktopPanel_BackGround extends JDesktopPane {
 
 	@Override
 	protected void paintComponent(Graphics g) {
+//		g.setColor(getBackground());
+//		g.fillRect(0, 0, getWidth(), getHeight());
 		super.paintComponent(g);
 		BufferedImage bg = getBackgroundImage();
 		if (bg != null) {

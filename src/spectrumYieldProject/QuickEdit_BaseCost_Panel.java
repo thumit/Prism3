@@ -33,13 +33,13 @@ import spectrumROOT.Spectrum_Main;
 
 public class QuickEdit_BaseCost_Panel extends JPanel {
 	
-	public QuickEdit_BaseCost_Panel(JTable table, Object[][] data, String[] columnNames, Read_Indentifiers read_Identifiers) {
+	public QuickEdit_BaseCost_Panel(JTable table, Object[][] data, String[] columnNames) {
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		
 		
 		// Add Button-------------------------------------------------------------------------------------------------
-		Spectrum_ApplyButton btnApply_multiplier = new Spectrum_ApplyButton(table, data, columnNames, read_Identifiers);
+		Spectrum_ApplyButton btnApply_multiplier = new Spectrum_ApplyButton(table, data, columnNames);
 		c.gridx = 0;
 		c.gridy = 1;
 		c.weightx = 0;
@@ -157,11 +157,12 @@ public class QuickEdit_BaseCost_Panel extends JPanel {
 	
 	
 	private class Spectrum_ApplyButton extends JButton {
-		public Spectrum_ApplyButton(JTable table,  Object[][] data, String[] columnNames, Read_Indentifiers read_Identifiers) {
+		public Spectrum_ApplyButton(JTable table,  Object[][] data, String[] columnNames) {
 
 			
 			// Must set this show/hide column method when all columns are still visible------------------------------------------------------
 			TableColumnsHandle column_handle = new TableColumnsHandle(table);
+			Read_Indentifiers read_Identifiers = new Read_Indentifiers(null);
 			
 						
 			// Create a radio buttons-----------------------------------------------------------------------------
@@ -192,7 +193,10 @@ public class QuickEdit_BaseCost_Panel extends JPanel {
 					column_checkboxes.get(i - 2).setSelected(true);		// -2 because we ignore 2 columns
 									
 					String tip = read_Identifiers.get_ParameterToolTip(column_checkboxes.get(i - 2).getText()) + " (Column index: " + (int) (i - 2) + ")";
-					column_checkboxes.get(i - 2).setToolTipText(tip);
+					column_checkboxes.get(i - 2).setToolTipText(tip);				
+					if (!tip.contains("per Acre")) {	// Disable check box if unit is not per Acre
+						column_checkboxes.get(i - 2).setEnabled(false);
+					}
 				}
 			}
 			
@@ -246,21 +250,23 @@ public class QuickEdit_BaseCost_Panel extends JPanel {
 			
 			// Add check_panel to a scroll panel
 			JScrollPane scrollPane = new JScrollPane(check_panel);				
-			scrollPane.setBorder(BorderFactory.createTitledBorder("Available columns"));
+			scrollPane.setBorder(BorderFactory.createTitledBorder("Available columns (disable if unit is not per acre)"));
 			scrollPane.setPreferredSize(new Dimension(600, 300));
 			
 			
 			// Add listeners for radio buttons			
 			// Listener 1		
 			radioButton[0].addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent event) {													
+				public void actionPerformed(ActionEvent event) {		//3 columns at start only
+					column_handle.setColumnVisible("action_list", true);	// show column acres
+					column_handle.setColumnVisible("acres", true);	// show column acres
 					for (JCheckBox i: column_checkboxes) {
 						i.setSelected(true);		// true then false to activate the ChangeListener
 						i.setSelected(false);
-						if (i.getText().equalsIgnoreCase("action_list") || i.getText().equalsIgnoreCase("acres") || i.getText().equalsIgnoreCase("hca_allsx")) {
-							i.setSelected(true);	//3 columns at start only
+						if (i.getText().equalsIgnoreCase("hca_allsx")) {
+							i.setSelected(true);							
 						}
-					}	
+					}						
 				}
 			});
 			radioButton[0].doClick();		// Start with default 3 columns

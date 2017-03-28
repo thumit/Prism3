@@ -285,7 +285,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			read.readRDPercent(new File(runFolder.getAbsolutePath() + "/input_06_replacing_disturbances.txt"));
 			read.readBaseCost(new File(runFolder.getAbsolutePath() + "/input_07_base_cost.txt"));
 			read.readCostAdjustment(new File(runFolder.getAbsolutePath() + "/input_08_cost_adjustment.txt"));
-			read.readUserConstraints(new File(runFolder.getAbsolutePath() + "/input_09_basic_constraints.txt"));
+			read.read_basic_constraints(new File(runFolder.getAbsolutePath() + "/input_09_basic_constraints.txt"));
+			read.read_flow_constraints(new File(runFolder.getAbsolutePath() + "/input_10_flow_constraints.txt"));
 			Read_DatabaseTables read_DatabaseTables = new Read_DatabaseTables(new File(runFolder.getAbsolutePath() + "/database.db"));
 			
 			
@@ -320,7 +321,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 		
 			//Get info:	input_09_basic_constraints
 			List<String> constraint_column_names_list = read.get_constraint_column_names_list();
-			String[][] UC_Value = read.get_UC_Values();		
+			String[][] BC_value = read.get_BC_Values();		
 			int total_softConstraints = read.get_total_softConstraints();
 			double[] softConstraints_LB = read.get_softConstraints_LB();
 			double[] softConstraints_UB = read.get_softConstraints_UB();
@@ -330,6 +331,13 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			double[] hardConstraints_LB = read.get_hardConstraints_LB();
 			double[] hardConstraints_UB = read.get_hardConstraints_UB();	
 			int total_freeConstraints = read.get_total_freeConstraints();
+			
+			//Get info:	input_10_flow_constraints
+			List<String> flow_column_names_list = read.get_flow_column_names_list();
+			String[][] flow_value = read.get_flow_values();		
+			List<List<List<Integer>>> flow_set_list = read.get_flow_set_list();
+			List<String> flow_type_list = read.get_flow_type_list();
+			List<Double> flow_relaxed_percentage_list =read.get_flow_relaxed_percentage_list();
 			
 			//Database Info
 			Object[][][] yieldTable_values = read_DatabaseTables.getTableArrays();
@@ -877,7 +885,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			// CREATE CONSTRAINTS-------------------------------------------------
 			// CREATE CONSTRAINTS-------------------------------------------------
 			
-			// Constraints 2-------------------------------------------------
+			
+			// Constraints 2---------------------------------------------------
 			List<List<Integer>> c2_indexlist = new ArrayList<List<Integer>>();	
 			List<List<Double>> c2_valuelist = new ArrayList<List<Double>>();
 			List<Double> c2_lblist = new ArrayList<Double>();	
@@ -939,7 +948,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				c3_valuelist.get(c3_num).add((double) -1);
 
 				// add bounds
-				c3_lblist.add((double) 0);			// Lower bound set to 0	because y[j]>=u[j]
+				c3_lblist.add((double) 0);			// Lower bound set to 0	because y[j] >= u[j]
 				c3_ublist.add(softConstraints_UB[j]);		// Upper bound of the soft constraint
 				c3_num++;
 			}			
@@ -956,13 +965,99 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					c3_index[i][j] = c3_indexlist.get(i).get(j);
 					c3_value[i][j] = c3_valuelist.get(i).get(j);			
 				}
-			}										
+			}												
 			
 			
-			
-			// Constraints 4 and 5-------------------------------------------------
+			// Constraints 4ab  (hard) and 4cd (free)------------------------------
 			// are set as the bounds of variables
 			
+			
+			// Constraints 5 (flow)------------------------------------------------
+			int current_freeConstraint = 0;
+			int current_softConstraint = 0;
+			int current_hardConstraint = 0;	
+			int constraint_type_col = constraint_column_names_list.indexOf("type");				
+			
+			
+			List<Integer> bookkeeping_ID_list = new ArrayList<Integer>();	// This list contains all IDs of the Basic Constraints
+			List<Integer> bookkeeping_Var_list = new ArrayList<Integer>();			// This list contains all Variables of the Basic Constraints
+			for (int i = 1; i < total_freeConstraints + total_softConstraints + total_hardConstraints + 1; i++) {	// Loop from 1 because the first row of the Basic Constraints file is just title				
+				int constraint_id_col = constraint_column_names_list.indexOf("id");							
+				int ID = Integer.parseInt(BC_value[i][constraint_id_col]);
+				bookkeeping_ID_list.add(ID);		
+								
+				if (BC_value[i][constraint_type_col].equals("SOFT")) {
+					bookkeeping_Var_list.add(y[current_softConstraint]);
+					current_softConstraint++;
+				}
+				
+				if (BC_value[i][constraint_type_col].equals("HARD")) {
+					bookkeeping_Var_list.add(z[current_hardConstraint]);
+					current_hardConstraint++;
+				}
+				
+				if (BC_value[i][constraint_type_col].equals("FREE")) {
+					bookkeeping_Var_list.add(v[current_freeConstraint]);
+					current_freeConstraint++;
+				}	
+			}
+			
+			
+			List<List<Integer>> c5_indexlist = new ArrayList<List<Integer>>();
+			List<List<Double>> c5_valuelist = new ArrayList<List<Double>>();
+			List<Double> c5_lblist = new ArrayList<Double>();
+			List<Double> c5_ublist = new ArrayList<Double>();
+			int c5_num = 0;
+						
+			
+			for (int i = 0; i < flow_set_list.size(); i++) {		// loop each flow set (or each row of the flow_constraints_table)
+				if (flow_type_list.get(i).equals("HARD")) {		// ONly add constraint if flow type is HARD
+					int this_set_total_constraints = flow_set_list.get(i).size() - 1;
+					for (int j = 0; j < this_set_total_constraints; j++) {
+						
+						// Add constraint				Right term - % * Left term >= 0
+						c5_indexlist.add(new ArrayList<Integer>());
+						c5_valuelist.add(new ArrayList<Double>());
+						
+						// Add Right term including all IDs in the (j+1) term
+						for (int ID : flow_set_list.get(i).get(j + 1)) {
+							if (bookkeeping_ID_list.contains(ID)) {		// Add book keeping variable
+								int id_var_index = bookkeeping_ID_list.indexOf(ID);
+								c5_indexlist.get(c5_num).add(bookkeeping_Var_list.get(id_var_index));
+								c5_valuelist.get(c5_num).add((double) 1);
+							}
+						}
+						
+						// Add - % * Left term including all IDs in the (j) term
+						for (int ID : flow_set_list.get(i).get(j)) {
+							if (bookkeeping_ID_list.contains(ID)) {		// Add book keeping variable
+								int id_var_index = bookkeeping_ID_list.indexOf(ID);
+								c5_indexlist.get(c5_num).add(bookkeeping_Var_list.get(id_var_index));
+								c5_valuelist.get(c5_num).add((double) -flow_relaxed_percentage_list.get(i) / 100);		// -1 * relaxed_percentage here
+							}
+						}
+						
+						// add bounds
+						c5_lblist.add((double) 0);			// Lower bound set to 0	
+						c5_ublist.add(Double.MAX_VALUE);		// Upper bound set to max
+						c5_num++;
+					}
+				}
+			}			
+			
+			double[] c5_lb = Stream.of(c5_lblist.toArray(new Double[c5_lblist.size()])).mapToDouble(Double::doubleValue).toArray();
+			double[] c5_ub = Stream.of(c5_ublist.toArray(new Double[c5_ublist.size()])).mapToDouble(Double::doubleValue).toArray();		
+			int[][] c5_index = new int[c5_num][];
+			double[][] c5_value = new double[c5_num][];
+		
+			for (int i = 0; i < c5_num; i++) {
+				c5_index[i] = new int[c5_indexlist.get(i).size()];
+				c5_value[i] = new double[c5_indexlist.get(i).size()];
+				for (int j = 0; j < c5_indexlist.get(i).size(); j++) {
+					c5_index[i][j] = c5_indexlist.get(i).get(j);
+					c5_value[i][j] = c5_valuelist.get(i).get(j);			
+				}
+			}				
 			
 			
 			// Constraints 6-------------------------------------------------
@@ -1996,60 +2091,60 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			}				
 			
 			
-			// Constraints 15------------------------------------------------- for y(j) and z(k)
-			List<List<Integer>> c15_indexlist = new ArrayList<List<Integer>>();	
+			// Constraints 15------------------------------------------------- for y(j) and z(k) and v(n)
+			List<List<Integer>> c15_indexlist = new ArrayList<List<Integer>>();
 			List<List<Double>> c15_valuelist = new ArrayList<List<Double>>();
-			List<Double> c15_lblist = new ArrayList<Double>();	
+			List<Double> c15_lblist = new ArrayList<Double>();
 			List<Double> c15_ublist = new ArrayList<Double>();
-			int c15_num =0;
-			
-			int current_freeConstraint =0;
-			int current_softConstraint =0;
-			int current_hardConstraint =0;	
+			int c15_num = 0;
+
+			current_freeConstraint = 0;
+			current_softConstraint = 0;
+			current_hardConstraint = 0;	
 			int current_period;
 			int current_row;
 			double currentDiscountValue;
 			double para_value;
 			double multiplier;
 				
-			//Add -y(j) + user constraint = 0		or 			-z(k) + user constraint = 0
+			// Add -y(j) + user_defined_variables = 0		or 			-z(k) + user_defined_variables = 0		or 			-v(n) + user_defined_variables = 0
 			for (int i = 1; i < total_freeConstraints + total_softConstraints + total_hardConstraints + 1; i++) {	//Loop from 1 because the first row of the userConstraint file is just title
 				
-				//Get the parameter indexes list
+				// Get the parameter indexes list
 				List<String> parameters_indexes_list = read.get_Parameters_indexes_list(i);
-				//Get the dynamic identifiers indexes list
+				// Get the dynamic identifiers indexes list
 				List<String> all_dynamicIdentifiers_columnIndexes = read.get_all_dynamicIdentifiers_columnsIndexes_in_row(i);
 				List<List<String>> all_dynamicIdentifiers = read.get_all_dynamicIdentifiers_in_row(i);
 				
 				
 						
-				//Add constraint
+				// Add constraint
 				c15_indexlist.add(new ArrayList<Integer>());
 				c15_valuelist.add(new ArrayList<Double>());
 
-				//Add -v(n) or -y(j) or -z(k)
-				int constraint_type_col = constraint_column_names_list.indexOf("type");
+				// Add -y(j) or -z(k) or -v(n)
+				constraint_type_col = constraint_column_names_list.indexOf("type");				
 				
-				if (UC_Value[i][constraint_type_col].equals("FREE")) {
-					c15_indexlist.get(c15_num).add(v[current_freeConstraint]);
-					c15_valuelist.get(c15_num).add((double) -1);
-					current_freeConstraint++;
-				}
-				
-				if (UC_Value[i][constraint_type_col].equals("SOFT")) {
+				if (BC_value[i][constraint_type_col].equals("SOFT")) {
 					c15_indexlist.get(c15_num).add(y[current_softConstraint]);
 					c15_valuelist.get(c15_num).add((double) -1);
 					current_softConstraint++;
 				}
 				
-				if (UC_Value[i][constraint_type_col].equals("HARD")) {
+				if (BC_value[i][constraint_type_col].equals("HARD")) {
 					c15_indexlist.get(c15_num).add(z[current_hardConstraint]);
 					c15_valuelist.get(c15_num).add((double) -1);
 					current_hardConstraint++;
 				}
+				
+				if (BC_value[i][constraint_type_col].equals("FREE")) {
+					c15_indexlist.get(c15_num).add(v[current_freeConstraint]);
+					c15_valuelist.get(c15_num).add((double) -1);
+					current_freeConstraint++;
+				}
 									
 				
-				//Add user constraint - variables and parameters------------------------------------
+				// Add user_defined_variables and parameters------------------------------------
 				List<String> static_SilvivulturalMethods = read.get_static_SilvivulturalMethods(i);
 				List<String> static_timePeriods = read.get_static_timePeriods(i);
 				List<Integer> integer_static_timePeriods = static_timePeriods.stream().map(Integer::parseInt).collect(Collectors.toList());
@@ -2058,7 +2153,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				List<String> static_strata_withoutSizeClassandCoverType = read.get_static_strata_withoutSizeClassandCoverType(i);
 				
 				int multiplier_col = constraint_column_names_list.indexOf("multiplier");
-				multiplier = (!UC_Value[i][multiplier_col].equals("null")) ?  Double.parseDouble(UC_Value[i][multiplier_col]) : 0;	//if multiplier = null --> 0
+				multiplier = (!BC_value[i][multiplier_col].equals("null")) ?  Double.parseDouble(BC_value[i][multiplier_col]) : 0;	//if multiplier = null --> 0
 				
 				
 				//Add xNG and xEAe				currently using Eq. 11 so we don't need to add xEAe, only add xNG
@@ -2537,6 +2632,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				// Add constraints
 				lp.addRows(c2_lb, c2_ub, c2_index, c2_value); // Constraints 2
 				lp.addRows(c3_lb, c3_ub, c3_index, c3_value); // Constraints 3
+				lp.addRows(c5_lb, c5_ub, c5_index, c5_value); // Constraints 5 (flow)
 				lp.addRows(c6_lb, c6_ub, c6_index, c6_value); // Constraints 6
 				lp.addRows(c7_lb, c7_ub, c7_index, c7_value); // Constraints 7
 				lp.addRows(c8_lb, c8_ub, c8_index, c8_value); // Constraints 8

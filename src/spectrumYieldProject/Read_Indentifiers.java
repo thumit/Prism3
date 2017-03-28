@@ -26,7 +26,7 @@ public class Read_Indentifiers {
 		
 		String delimited = ","; // 		","		comma delimited			"\\s+"		space delimited		"\t"	tab delimited
 	
-		if (delimited != null) {
+		if (file_StrataDefinition != null) {
 			try {
 				// All lines to be in array
 				List<String> list;

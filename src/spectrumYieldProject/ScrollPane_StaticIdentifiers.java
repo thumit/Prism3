@@ -26,7 +26,7 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 	public ScrollPane_StaticIdentifiers (File file_StrataDefinition) {
 	
 		
-		Read_Indentifiers read_Identifiers = new Read_Indentifiers(file_StrataDefinition);
+		Read_Indentifiers read_Identifiers = new Read_Indentifiers(file_StrataDefinition);		// New instance so we can add some more layers, it does not change read_Identifiers in the 'Panel_EditRun_Details" 
 
 		List<String> layers_Title = read_Identifiers.get_layers_Title();
 		List<String> layers_Title_ToolTip = read_Identifiers.get_layers_Title_ToolTip();
