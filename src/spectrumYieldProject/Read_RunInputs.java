@@ -672,9 +672,6 @@ public class Read_RunInputs {
 	private int flow_totalRows, flow_totalColumns;
 	private String[][] flow_value;
 	private int flow_id_col, flow_description_col, flow_arrangement_col, flow_type_col, relaxed_percentage_col;		
-	private List<List<List<Integer>>> flow_set_list;
-	private List<String> flow_type_list;
-	private List<Double> flow_relaxed_percentage_list;
 
 	public void read_flow_constraints (File file) {
 		String delimited = "\t";		// tab delimited
@@ -710,37 +707,6 @@ public class Read_RunInputs {
 				}
 			}
 			
-			// add value to the following lists: 	type	relaxed_percentage
-			flow_type_list = new ArrayList<String>();	
-			flow_relaxed_percentage_list = new ArrayList<Double>();
-			for (int i = 1; i < flow_totalRows; i++) {		// from 2nd row			
-				flow_type_list.add(flow_value[i][flow_type_col]);
-				flow_relaxed_percentage_list.add(Double.parseDouble(flow_value[i][relaxed_percentage_col]));
-			}
-
-			
-			// add value to 3D flow_set_list
-			flow_set_list = new ArrayList<List<List<Integer>>>();	
-			for (int i = 1; i < flow_totalRows; i++) {		// from 2nd row			
-				List<List<Integer>> this_set = new ArrayList<List<Integer>>();				
-				String[] flow_arrangement_info = flow_value[i][flow_arrangement_col].split(";");	// Read the whole cell 'flow_arrangement'
-				int this_set_size = flow_arrangement_info.length;
-				
-				for (int j = 0; j < this_set_size; j++) {
-					List<Integer> this_term = new ArrayList<Integer>();
-					String[] this_term_info = flow_arrangement_info[j].split("\\s+");		// Read each term in this arrangement
-					int this_term_size = this_term_info.length;	
-									
-					for (int k = 0; k < this_term_size; k++) {
-						this_term.add(Integer.parseInt(this_term_info[k]));										
-					}
-					this_set.add(this_term);
-				}
-				flow_set_list.add(this_set);
-			}
-			
-			
-
 		} catch (IOException e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 		}
@@ -763,14 +729,40 @@ public class Read_RunInputs {
 	}
 		
 	public List<String> get_flow_type_list() {
+		List<String> flow_type_list = new ArrayList<String>();	
+		for (int i = 1; i < flow_totalRows; i++) {		// from 2nd row			
+			flow_type_list.add(flow_value[i][flow_type_col]);
+		}
 		return flow_type_list;
 	}
 	
 	public List<Double> get_flow_relaxed_percentage_list() {
+		List<Double> flow_relaxed_percentage_list = new ArrayList<Double>();
+		for (int i = 1; i < flow_totalRows; i++) {		// from 2nd row			
+			flow_relaxed_percentage_list.add(Double.parseDouble(flow_value[i][relaxed_percentage_col]));
+		}
 		return flow_relaxed_percentage_list;
 	}
 	
 	public List<List<List<Integer>>> get_flow_set_list () {	
+		List<List<List<Integer>>> flow_set_list = new ArrayList<List<List<Integer>>>();	
+		for (int i = 1; i < flow_totalRows; i++) {		// from 2nd row			
+			List<List<Integer>> this_set = new ArrayList<List<Integer>>();				
+			String[] flow_arrangement_info = flow_value[i][flow_arrangement_col].split(";");	// Read the whole cell 'flow_arrangement'
+			int this_set_size = flow_arrangement_info.length;
+			
+			for (int j = 0; j < this_set_size; j++) {
+				List<Integer> this_term = new ArrayList<Integer>();
+				String[] this_term_info = flow_arrangement_info[j].split("\\s+");		// Read each term in this arrangement
+				int this_term_size = this_term_info.length;	
+								
+				for (int k = 0; k < this_term_size; k++) {
+					this_term.add(Integer.parseInt(this_term_info[k]));										
+				}
+				this_set.add(this_term);
+			}
+			flow_set_list.add(this_set);
+		}
 		return flow_set_list;
 	}	
 }

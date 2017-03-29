@@ -38,3 +38,6 @@
 34. Disable columns that are not "per acre" to prevent users' mistakes (Base Cost & Parameters in Basic Constraints)
 35. Trim all read_Identifiers --> read only once before reload GUI or add new strata_definition
 36. Flow constraints are now active in the model
+--------------------------------------------------------------------------
+
+37. Fix: now SpectrumLite can run without having any flow constraint set up

@@ -973,77 +973,79 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			
 			
 			// Constraints 5 (flow)------------------------------------------------
-			int current_freeConstraint = 0;
-			int current_softConstraint = 0;
-			int current_hardConstraint = 0;	
-			int constraint_type_col = constraint_column_names_list.indexOf("type");				
-			
-			
-			List<Integer> bookkeeping_ID_list = new ArrayList<Integer>();	// This list contains all IDs of the Basic Constraints
-			List<Integer> bookkeeping_Var_list = new ArrayList<Integer>();			// This list contains all Variables of the Basic Constraints
-			for (int i = 1; i < total_freeConstraints + total_softConstraints + total_hardConstraints + 1; i++) {	// Loop from 1 because the first row of the Basic Constraints file is just title				
-				int constraint_id_col = constraint_column_names_list.indexOf("id");							
-				int ID = Integer.parseInt(BC_value[i][constraint_id_col]);
-				bookkeeping_ID_list.add(ID);		
-								
-				if (BC_value[i][constraint_type_col].equals("SOFT")) {
-					bookkeeping_Var_list.add(y[current_softConstraint]);
-					current_softConstraint++;
-				}
-				
-				if (BC_value[i][constraint_type_col].equals("HARD")) {
-					bookkeeping_Var_list.add(z[current_hardConstraint]);
-					current_hardConstraint++;
-				}
-				
-				if (BC_value[i][constraint_type_col].equals("FREE")) {
-					bookkeeping_Var_list.add(v[current_freeConstraint]);
-					current_freeConstraint++;
-				}	
-			}
-			
-			
 			List<List<Integer>> c5_indexlist = new ArrayList<List<Integer>>();
 			List<List<Double>> c5_valuelist = new ArrayList<List<Double>>();
 			List<Double> c5_lblist = new ArrayList<Double>();
 			List<Double> c5_ublist = new ArrayList<Double>();
 			int c5_num = 0;
 						
-			
-			for (int i = 0; i < flow_set_list.size(); i++) {		// loop each flow set (or each row of the flow_constraints_table)
-				if (flow_type_list.get(i).equals("HARD")) {		// ONly add constraint if flow type is HARD
-					int this_set_total_constraints = flow_set_list.get(i).size() - 1;
-					for (int j = 0; j < this_set_total_constraints; j++) {
-						
-						// Add constraint				Right term - % * Left term >= 0
-						c5_indexlist.add(new ArrayList<Integer>());
-						c5_valuelist.add(new ArrayList<Double>());
-						
-						// Add Right term including all IDs in the (j+1) term
-						for (int ID : flow_set_list.get(i).get(j + 1)) {
-							if (bookkeeping_ID_list.contains(ID)) {		// Add book keeping variable
-								int id_var_index = bookkeeping_ID_list.indexOf(ID);
-								c5_indexlist.get(c5_num).add(bookkeeping_Var_list.get(id_var_index));
-								c5_valuelist.get(c5_num).add((double) 1);
+			if (flow_set_list.size() > 0) {		// Add flow constraints if there is at least a flow set
+				int current_freeConstraint = 0;
+				int current_softConstraint = 0;
+				int current_hardConstraint = 0;	
+				int constraint_type_col = constraint_column_names_list.indexOf("type");				
+				
+				
+				List<Integer> bookkeeping_ID_list = new ArrayList<Integer>();	// This list contains all IDs of the Basic Constraints
+				List<Integer> bookkeeping_Var_list = new ArrayList<Integer>();			// This list contains all Variables of the Basic Constraints
+				for (int i = 1; i < total_freeConstraints + total_softConstraints + total_hardConstraints + 1; i++) {	// Loop from 1 because the first row of the Basic Constraints file is just title				
+					int constraint_id_col = constraint_column_names_list.indexOf("id");							
+					int ID = Integer.parseInt(BC_value[i][constraint_id_col]);
+					bookkeeping_ID_list.add(ID);		
+									
+					if (BC_value[i][constraint_type_col].equals("SOFT")) {
+						bookkeeping_Var_list.add(y[current_softConstraint]);
+						current_softConstraint++;
+					}
+					
+					if (BC_value[i][constraint_type_col].equals("HARD")) {
+						bookkeeping_Var_list.add(z[current_hardConstraint]);
+						current_hardConstraint++;
+					}
+					
+					if (BC_value[i][constraint_type_col].equals("FREE")) {
+						bookkeeping_Var_list.add(v[current_freeConstraint]);
+						current_freeConstraint++;
+					}	
+				}
+								
+				
+				// Add constraints for each flow set
+				for (int i = 0; i < flow_set_list.size(); i++) {		// loop each flow set (or each row of the flow_constraints_table)
+					if (flow_type_list.get(i).equals("HARD")) {		// ONly add constraint if flow type is HARD
+						int this_set_total_constraints = flow_set_list.get(i).size() - 1;
+						for (int j = 0; j < this_set_total_constraints; j++) {
+							
+							// Add constraint				Right term - % * Left term >= 0
+							c5_indexlist.add(new ArrayList<Integer>());
+							c5_valuelist.add(new ArrayList<Double>());
+							
+							// Add Right term including all IDs in the (j+1) term
+							for (int ID : flow_set_list.get(i).get(j + 1)) {
+								if (bookkeeping_ID_list.contains(ID)) {		// Add book keeping variable
+									int id_var_index = bookkeeping_ID_list.indexOf(ID);
+									c5_indexlist.get(c5_num).add(bookkeeping_Var_list.get(id_var_index));
+									c5_valuelist.get(c5_num).add((double) 1);
+								}
 							}
-						}
-						
-						// Add - % * Left term including all IDs in the (j) term
-						for (int ID : flow_set_list.get(i).get(j)) {
-							if (bookkeeping_ID_list.contains(ID)) {		// Add book keeping variable
-								int id_var_index = bookkeeping_ID_list.indexOf(ID);
-								c5_indexlist.get(c5_num).add(bookkeeping_Var_list.get(id_var_index));
-								c5_valuelist.get(c5_num).add((double) -flow_relaxed_percentage_list.get(i) / 100);		// -1 * relaxed_percentage here
+							
+							// Add - % * Left term including all IDs in the (j) term
+							for (int ID : flow_set_list.get(i).get(j)) {
+								if (bookkeeping_ID_list.contains(ID)) {		// Add book keeping variable
+									int id_var_index = bookkeeping_ID_list.indexOf(ID);
+									c5_indexlist.get(c5_num).add(bookkeeping_Var_list.get(id_var_index));
+									c5_valuelist.get(c5_num).add((double) -flow_relaxed_percentage_list.get(i) / 100);		// -1 * relaxed_percentage here
+								}
 							}
+							
+							// add bounds
+							c5_lblist.add((double) 0);			// Lower bound set to 0	
+							c5_ublist.add(Double.MAX_VALUE);		// Upper bound set to max
+							c5_num++;
 						}
-						
-						// add bounds
-						c5_lblist.add((double) 0);			// Lower bound set to 0	
-						c5_ublist.add(Double.MAX_VALUE);		// Upper bound set to max
-						c5_num++;
 					}
 				}
-			}			
+			}
 			
 			double[] c5_lb = Stream.of(c5_lblist.toArray(new Double[c5_lblist.size()])).mapToDouble(Double::doubleValue).toArray();
 			double[] c5_ub = Stream.of(c5_ublist.toArray(new Double[c5_ublist.size()])).mapToDouble(Double::doubleValue).toArray();		
@@ -2098,9 +2100,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			List<Double> c15_ublist = new ArrayList<Double>();
 			int c15_num = 0;
 
-			current_freeConstraint = 0;
-			current_softConstraint = 0;
-			current_hardConstraint = 0;	
+			int current_freeConstraint = 0;
+			int current_softConstraint = 0;
+			int current_hardConstraint = 0;	
 			int current_period;
 			int current_row;
 			double currentDiscountValue;
@@ -2123,7 +2125,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				c15_valuelist.add(new ArrayList<Double>());
 
 				// Add -y(j) or -z(k) or -v(n)
-				constraint_type_col = constraint_column_names_list.indexOf("type");				
+				int constraint_type_col = constraint_column_names_list.indexOf("type");				
 				
 				if (BC_value[i][constraint_type_col].equals("SOFT")) {
 					c15_indexlist.get(c15_num).add(y[current_softConstraint]);
@@ -2659,11 +2661,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				model.fireTableDataChanged();
 				
 				
-//				cplex.exportModel(problemFile[row].getAbsolutePath());
+				cplex.exportModel(problemFile[row].getAbsolutePath());
 				long time_start = System.currentTimeMillis();		//measure time before solving
 				if (cplex.solve()) {
 					long time_end = System.currentTimeMillis();		//measure time after solving
-//					cplex.writeSolution(solutionFile[row].getAbsolutePath());
+					cplex.writeSolution(solutionFile[row].getAbsolutePath());
 
 					//Get output info to array
 					double[] value = cplex.getValues(lp);
