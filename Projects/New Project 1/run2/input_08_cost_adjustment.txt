@@ -1,4 +1,4 @@
-action_list	layer_id	element_id	adjusted_percentage	
+action_list	layer_id	attribute_id	adjusted_percentage	
 artificial_regeneration	layer1	B	0.0	
 broadcast_burn_1	layer1	B	0.0	
 broadcast_burn_2	layer1	B	0.0	

@@ -19,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -55,9 +56,14 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.block.BlockBorder;
 import org.jfree.chart.labels.PieSectionLabelGenerator;
+import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
 import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
+import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PieLabelLinkStyle;
 import org.jfree.chart.plot.PiePlot3D;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.category.BarRenderer;
+import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
 import org.jfree.ui.RectangleEdge;
@@ -359,8 +365,12 @@ public class Panel_YieldProject extends JLayeredPane {
 			     		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 				
 						// Show table on the scroll panel
-						if (currentInputFile.equals("output_04_management_overview.txt")) {		//show a panel with 2 charts
-							PaneL_Management_Overview chart_panel = new PaneL_Management_Overview(table);
+						if (currentInputFile.equals("output_04_management_overview.txt")) {		//show a panel with 2 pie charts
+							Panel_Management_Overview chart_panel = new Panel_Management_Overview(table);
+							scrollPane_Right.setViewportView(chart_panel);
+						} else if (currentInputFile.equals("output_07_flow_constraints.txt")) {		//show a panel with bar and line charts
+							table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+							Panel_Flow_Constraints chart_panel = new Panel_Flow_Constraints(table, data);
 							scrollPane_Right.setViewportView(chart_panel);
 						} else {		//Show the file as table
 							scrollPane_Right.setViewportView(table); 
@@ -568,7 +578,7 @@ public class Panel_YieldProject extends JLayeredPane {
 					File[] listOfFiles2 = listOfFiles[i].listFiles(new FilenameFilter() {
 						@Override
 						public boolean accept(File dir, String name) {
-							return name.endsWith(".txt") || name.endsWith(".lp");
+							return name.endsWith(".txt") || name.endsWith(".lp") || name.endsWith(".sol");
 						}
 					});
 					
@@ -776,12 +786,12 @@ public class Panel_YieldProject extends JLayeredPane {
 				
 				if (response == 0)		//Yes option
 				{
-					//Delete all output files of the edited Runs
+					//Delete all output files, problem file, and solution file of the edited Runs
 					for (int i = 0; i < listOfEditRuns.length; i++) {
 						File[] contents = listOfEditRuns[i].listFiles();
 						if (contents != null) {
 							for (File f : contents) {
-								if (f.getName().contains("output")) {
+								if (f.getName().contains("output") || f.getName().contains("problem") || f.getName().contains("solution")) {
 									f.delete();
 								}
 							}
@@ -935,8 +945,8 @@ public class Panel_YieldProject extends JLayeredPane {
 
 
 	// Panel Management Overview-----------------------------------------------------------------------------	
-	class PaneL_Management_Overview extends JLayeredPane {
-		public PaneL_Management_Overview(JTable thisTable) {
+	class Panel_Management_Overview extends JLayeredPane {
+		public Panel_Management_Overview(JTable thisTable) {
 			setLayout(new GridBagLayout());
 			GridBagConstraints c = new GridBagConstraints();
 			c.fill = GridBagConstraints.NONE;
@@ -964,7 +974,7 @@ public class Panel_YieldProject extends JLayeredPane {
 	        
 	        thisTable.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
 		        public void valueChanged(ListSelectionEvent event) {
-		        	 String strataName = "";
+		        	String strataName = "";
 		 	        if (thisTable.getSelectedRow() >= 0) 	strataName = data[thisTable.getSelectedRow()][0].toString();
 		 	        
 		 	        //Create a chart
@@ -1120,7 +1130,169 @@ public class Panel_YieldProject extends JLayeredPane {
 //			plot.setLabelGenerator(null);
 //			plot.setSimpleLabels(true);
 			return chart;
-		}				
+		}		
+	}	
+	
+	
+	// Panel_Flow_Constraints--------------------------------------------------------------------------------	
+	class Panel_Flow_Constraints extends JLayeredPane {
+		public Panel_Flow_Constraints(JTable this_table, Object[][] this_data) {
+			setLayout(new GridBagLayout());
+			GridBagConstraints c = new GridBagConstraints();
+			c.fill = GridBagConstraints.NONE;
+			c.weightx = 1;
+		    c.weighty = 1;
+		    
+		    //---------------------------------------------------------------
+	        JScrollPane scroll_bar_chart = new JScrollPane();
+	        scroll_bar_chart.setBorder(null);
+	        
+	        //---------------------------------------------------------------
+	        JScrollPane scroll_line_chart = new JScrollPane();
+	        scroll_line_chart.setBorder(null);
+	        
+	        //---------------------------------------------------------------
+	        this_table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+				public void valueChanged(ListSelectionEvent event) {
+					// Create a chart						
+					JFreeChart chart1 = createBarChart3D(this_table, this_data);	 	        
+		 	        
+					// add the chart to a panel...
+		         	ChartPanel chart_panel1 = new ChartPanel(chart1);
+		 	        chart1.getLegend().setFrame(BlockBorder.NONE);	//Remove the ugly border surrounded Legend
+		 	        TitledBorder border1 = new TitledBorder("");
+		 			border1.setTitleJustification(TitledBorder.CENTER);
+		 			chart_panel1.setBorder(border1);
+		 	        chart_panel1.setPreferredSize(new Dimension(600, 350));
+
+		 	        // Add panel to scroll panel
+		 	       scroll_bar_chart.setViewportView(chart_panel1);
+	        	}       
+	        });
+	        
+	        // Trigger the value changed listener of the table
+	        this_table.setRowSelectionInterval(0, 0);
+	        this_table.clearSelection();
+	        //---------------------------------------------------------------
+	        
+	        
+		    // Add the 1st grid - bar chart
+			c.gridx = 0;
+			c.gridy = 0;
+			c.gridwidth = 1;
+			c.weightx = 0;
+		    c.weighty = 0;
+			super.add(scroll_bar_chart, c);
+			
+		    // Add the 2nd grid - line chart
+			c.gridx = 1;
+			c.gridy = 0;
+			c.gridwidth = 1;
+			c.weightx = 0;
+			c.weighty = 0;
+			super.add(scroll_line_chart, c);			
+			
+			// Add the 3rd grid - table
+			c.gridx = 0;
+			c.gridy = 1;
+			c.gridwidth = 2;
+			c.weightx = 0;
+		    c.weighty = 1;
+			c.fill = GridBagConstraints.VERTICAL;
+			this_table.setPreferredScrollableViewportSize(new Dimension(1216, 100));			
+			JScrollPane table_scroll_panel = new JScrollPane(this_table);
+			table_scroll_panel.setBorder(BorderFactory.createEmptyBorder());	// Hide the border line surrounded scrollPane
+			super.add(table_scroll_panel, c);
+		}
+	
+	
+		@SuppressWarnings("deprecation")
+		private JFreeChart createBarChart3D(JTable this_table, Object[][] this_data) {			
+			final String fait = "FAIT";
+			final String audi = "AUDI";
+			final String ford = "FORD";
+			final String speed = "Speed";
+			final String popular = "Popular";
+			final String mailage = "Mailage";
+			final String userrating = "User Rating";
+			final String safty = "safty";
+			final DefaultCategoryDataset dataset = new DefaultCategoryDataset( );
+
+			
+			String chart_name = "Highlight a flow to show chart";
+			if (this_table.getSelectedRow() >= 0) {
+				// Get the current selected row
+	        	int selectedRow = this_table.getSelectedRow();
+				selectedRow = this_table.convertRowIndexToModel(selectedRow);		///Convert row index because "Sort" causes problems	
+				chart_name = this_data[selectedRow][1].toString() + " - " + this_data[selectedRow][3].toString();
+								
+				// Read flow_arrangement
+				String[] flow_arrangement_info = this_data[selectedRow][2].toString().split(";");	// Read the whole cell 'flow_arrangement'
+				List<String> flow_arrangement = new ArrayList<String>();
+				for (int i = 0; i < flow_arrangement_info.length; i++) {
+					flow_arrangement.add(flow_arrangement_info[i]);
+				}
+				
+				// Read flow_output_original
+				String[] flow_output_original_info = this_data[selectedRow][5].toString().split(";");	// Read the whole cell 'flow_output_original'
+				List<Double> flow_output_original = new ArrayList<Double>();
+				for (int i = 0; i < flow_output_original_info.length; i++) {
+					flow_output_original.add(Double.parseDouble(flow_output_original_info[i]));
+				}
+				
+				// Read flow_output_relaxed
+				String[] flow_output_relaxed_info = this_data[selectedRow][6].toString().split(";");	// Read the whole cell 'flow_output_relaxed'
+				List<Double> flow_output_relaxed = new ArrayList<Double>();
+				for (int i = 0; i < flow_output_relaxed_info.length; i++) {
+					flow_output_relaxed.add(Double.parseDouble(flow_output_relaxed_info[i]));
+				}
+				
+				
+				// Put all into dataset
+				for (int i = 0; i < flow_arrangement_info.length; i++) {
+//					dataset.addValue(flow_output_original.get(i), "Original", flow_arrangement.get(i));
+//					dataset.addValue(flow_output_relaxed.get(i), "Relaxed", flow_arrangement.get(i));
+					dataset.addValue(flow_output_original.get(i), "Original", flow_arrangement.get(i).replaceAll("\\s+", "+"));
+					dataset.addValue(flow_output_relaxed.get(i), "Relaxed", flow_arrangement.get(i).replaceAll("\\s+", "+"));
+				}
+			}			
+										
+			// Create 3D bar chart
+			JFreeChart chart = ChartFactory.createBarChart3D(chart_name, "Flow Arrangement", "Flow Value",
+					dataset, PlotOrientation.VERTICAL, true, true, false);		
+			chart.setBorderVisible(true);
+			chart.setBackgroundPaint(Color.LIGHT_GRAY);
+			chart.getLegend().setBackgroundPaint(null);
+			chart.getLegend().setPosition(RectangleEdge.BOTTOM);
+			chart.getLegend().setItemFont(new java.awt.Font("defaultFont", java.awt.Font.PLAIN, 13));
+			chart.getTitle().setFont(new java.awt.Font("defaultFont", java.awt.Font.BOLD, 14));
+					
+			// Set color for each different bar
+			CategoryPlot plot = chart.getCategoryPlot();
+			BarRenderer renderer = (BarRenderer) plot.getRenderer();
+			Color color = null;
+			for (int i = 0; i < dataset.getRowCount(); i++){
+			    switch (i) {
+			    case 0:
+			        color = new Color(255, 0, 0);
+			        break;
+			    case 1:
+			        color = new Color(0, 255, 0);
+			        break;
+			    default:
+			        color = new Color(255, 255, 51);
+			        break;
+			    }
+			    renderer.setSeriesPaint(i, color);
+			    renderer.setItemMargin(0.1);			    
+				renderer.setItemLabelGenerator(
+						new StandardCategoryItemLabelGenerator("{0}: {1} ({2})", new DecimalFormat("0.00 acres"), new DecimalFormat("0.0%")));
+				renderer.setBaseItemLabelsVisible(true);
+			}	
+			
+			
+			return chart;
+		}			
 	}	
 
 	// --------------------------------------------------------------------------------------------------------------------------------		

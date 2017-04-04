@@ -65,7 +65,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 	private File[] listOfEditRuns ;
 	private JScrollPane scrollPane_Left, scrollPane_Right;
 	
-	private File[] problemFile, solutionFile, output_generalInfo_file, output_variables_file, output_constraints_file, output_managementOverview_file;
+	private File[] 	problemFile, solutionFile, output_generalInfo_file, output_variables_file, output_constraints_file,
+					output_managementOverview_file, output_flow_constraints_file;
 	
 	private DecimalFormat twoDForm = new DecimalFormat("#.##");	 //Only get 2 decimal will be assess
 	
@@ -161,6 +162,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					output_constraints_file = new File[rowCount];
 					output_generalInfo_file = new File[rowCount];
 					output_managementOverview_file = new File[rowCount];
+					output_flow_constraints_file = new File[rowCount];
 					
 
 					// Open 2 new parallel threads: 1 for running CPLEX, 1 for redirecting console to displayTextArea
@@ -268,11 +270,12 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 	
 		try {
 			problemFile[row] = new File(runFolder.getAbsolutePath() + "/problem.lp");
-			solutionFile[row] = new File(runFolder.getAbsolutePath() + "/solution.lp");
+			solutionFile[row] = new File(runFolder.getAbsolutePath() + "/solution.sol");
 			output_generalInfo_file[row] = new File(runFolder.getAbsolutePath() + "/output_01_general_infomation.txt");	
 			output_variables_file[row] = new File(runFolder.getAbsolutePath() + "/output_02_variables.txt");
 			output_constraints_file[row] = new File(runFolder.getAbsolutePath() + "/output_03_constraints.txt");	
-			output_managementOverview_file[row] = new File(runFolder.getAbsolutePath() + "/output_04_management_overview.txt");
+			output_managementOverview_file[row] = new File(runFolder.getAbsolutePath() + "/output_04_management_overview.txt");		
+			output_flow_constraints_file[row] = new File(runFolder.getAbsolutePath() + "/output_07_flow_constraints.txt");
 			
 				
 			//Read input files to retrieve values later
@@ -332,10 +335,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			double[] hardConstraints_UB = read.get_hardConstraints_UB();	
 			int total_freeConstraints = read.get_total_freeConstraints();
 			
-			//Get info:	input_10_flow_constraints
-			List<String> flow_column_names_list = read.get_flow_column_names_list();
-			String[][] flow_value = read.get_flow_values();		
+			//Get info:	input_10_flow_constraints	
 			List<List<List<Integer>>> flow_set_list = read.get_flow_set_list();
+			List<Integer> flow_id_list = read.get_flow_id_list();
+			List<String> flow_description_list = read.get_flow_description_list();
+			List<String> flow_arrangement_list = read.get_flow_arrangement_list();
 			List<String> flow_type_list = read.get_flow_type_list();
 			List<Double> flow_relaxed_percentage_list =read.get_flow_relaxed_percentage_list();
 			
@@ -381,8 +385,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						
 			
 			
-			double annualDiscountRate = read.get_total_Periods()/100;
-			int total_Periods = read.get_total_Periods();
+			double annualDiscountRate = read.get_total_periods()/100;
+			int total_Periods = read.get_total_periods();
 			int total_AgeClasses = total_Periods-1;		//loop from age 1 to age total_AgeClasses (set total_AgeClasses=total_Periods-1)
 			int total_methods = 5;
 			int total_PB_Prescriptions = 5;
@@ -978,18 +982,18 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			List<Double> c5_lblist = new ArrayList<Double>();
 			List<Double> c5_ublist = new ArrayList<Double>();
 			int c5_num = 0;
-						
+					
+			
+			List<Integer> bookkeeping_ID_list = new ArrayList<Integer>();	// This list contains all GUI - IDs of the Basic Constraints
+			List<Integer> bookkeeping_Var_list = new ArrayList<Integer>();			// This list contains all SOLVER Variables - IDs of the Basic Constraints
 			if (flow_set_list.size() > 0) {		// Add flow constraints if there is at least a flow set
 				int current_freeConstraint = 0;
 				int current_softConstraint = 0;
 				int current_hardConstraint = 0;	
-				int constraint_type_col = constraint_column_names_list.indexOf("type");				
+				int constraint_type_col = constraint_column_names_list.indexOf("bc_type");				
+				int constraint_id_col = constraint_column_names_list.indexOf("bc_id");
 				
-				
-				List<Integer> bookkeeping_ID_list = new ArrayList<Integer>();	// This list contains all IDs of the Basic Constraints
-				List<Integer> bookkeeping_Var_list = new ArrayList<Integer>();			// This list contains all Variables of the Basic Constraints
-				for (int i = 1; i < total_freeConstraints + total_softConstraints + total_hardConstraints + 1; i++) {	// Loop from 1 because the first row of the Basic Constraints file is just title				
-					int constraint_id_col = constraint_column_names_list.indexOf("id");							
+				for (int i = 1; i < total_freeConstraints + total_softConstraints + total_hardConstraints + 1; i++) {	// Loop from 1 because the first row of the Basic Constraints file is just title												
 					int ID = Integer.parseInt(BC_value[i][constraint_id_col]);
 					bookkeeping_ID_list.add(ID);		
 									
@@ -1023,8 +1027,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 							// Add Right term including all IDs in the (j+1) term
 							for (int ID : flow_set_list.get(i).get(j + 1)) {
 								if (bookkeeping_ID_list.contains(ID)) {		// Add book keeping variable
-									int id_var_index = bookkeeping_ID_list.indexOf(ID);
-									c5_indexlist.get(c5_num).add(bookkeeping_Var_list.get(id_var_index));
+									int gui_table_id = bookkeeping_ID_list.indexOf(ID);		
+									int var_id = bookkeeping_Var_list.get(gui_table_id);
+									c5_indexlist.get(c5_num).add(var_id);
 									c5_valuelist.get(c5_num).add((double) 1);
 								}
 							}
@@ -1032,8 +1037,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 							// Add - % * Left term including all IDs in the (j) term
 							for (int ID : flow_set_list.get(i).get(j)) {
 								if (bookkeeping_ID_list.contains(ID)) {		// Add book keeping variable
-									int id_var_index = bookkeeping_ID_list.indexOf(ID);
-									c5_indexlist.get(c5_num).add(bookkeeping_Var_list.get(id_var_index));
+									int gui_table_id = bookkeeping_ID_list.indexOf(ID);		
+									int var_id = bookkeeping_Var_list.get(gui_table_id);
+									c5_indexlist.get(c5_num).add(var_id);
 									c5_valuelist.get(c5_num).add((double) -flow_relaxed_percentage_list.get(i) / 100);		// -1 * relaxed_percentage here
 								}
 							}
@@ -2125,7 +2131,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				c15_valuelist.add(new ArrayList<Double>());
 
 				// Add -y(j) or -z(k) or -v(n)
-				int constraint_type_col = constraint_column_names_list.indexOf("type");				
+				int constraint_type_col = constraint_column_names_list.indexOf("bc_type");				
 				
 				if (BC_value[i][constraint_type_col].equals("SOFT")) {
 					c15_indexlist.get(c15_num).add(y[current_softConstraint]);
@@ -2154,7 +2160,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				List<String> static_strata = read.get_static_strata(i);
 				List<String> static_strata_withoutSizeClassandCoverType = read.get_static_strata_withoutSizeClassandCoverType(i);
 				
-				int multiplier_col = constraint_column_names_list.indexOf("multiplier");
+				int multiplier_col = constraint_column_names_list.indexOf("bc_multiplier");
 				multiplier = (!BC_value[i][multiplier_col].equals("null")) ?  Double.parseDouble(BC_value[i][multiplier_col]) : 0;	//if multiplier = null --> 0
 				
 				
@@ -2613,7 +2619,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			
 			
 			
-			if (read.get_Solver().equals("CPLEX")) {
+			if (read.get_solver().equals("CPLEX")) {
 				
 				//Add the Cplex native library path dynamically at run time
 				try {
@@ -2650,7 +2656,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				cplex.addMinimize(cplex.scalProd(var, objvals)); // Set objective function to minimize
 				cplex.setParam(IloCplex.Param.RootAlgorithm, IloCplex.Algorithm.Auto); // Auto choose optimization method
 //				cplex.setParam(IloCplex.DoubleParam.EpGap, 0.00); // Gap is 0%
-				int solvingTimeLimit = read.get_SolvingTimeLimit() * 60; //Get time Limit in minute * 60 = seconds
+				int solvingTimeLimit = read.get_solving_time() * 60; //Get time Limit in minute * 60 = seconds
 				cplex.setParam(IloCplex.DoubleParam.TimeLimit, solvingTimeLimit); // Set Time limit
 //				cplex.setParam(IloCplex.BooleanParam.PreInd, false);	// Turn off preSolve to see full variables and constraints
 				
@@ -2661,11 +2667,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				model.fireTableDataChanged();
 				
 				
-				cplex.exportModel(problemFile[row].getAbsolutePath());
+				if (read.get_export_problem()) cplex.exportModel(problemFile[row].getAbsolutePath());
 				long time_start = System.currentTimeMillis();		//measure time before solving
 				if (cplex.solve()) {
 					long time_end = System.currentTimeMillis();		//measure time after solving
-					cplex.writeSolution(solutionFile[row].getAbsolutePath());
+					if (read.get_export_solution()) cplex.writeSolution(solutionFile[row].getAbsolutePath());
 
 					//Get output info to array
 					double[] value = cplex.getValues(lp);
@@ -2719,10 +2725,10 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						// Write variables info
 						fileOut.write("index" + "\t" + "name" + "\t" + "value" + "\t" + "reduced_cost");
 						for (int i = 0; i < value.length; i++) {
-							if (value[i] != 0) {
+//							if (value[i] != 0) {
 								fileOut.newLine();
 								fileOut.write(i + "\t" + vname[i] + "\t" +  Double.valueOf(twoDForm.format(value[i])) + "\t" +  Double.valueOf(twoDForm.format(reduceCost[i])));
-							}
+//							}
 						}
 
 						fileOut.close();
@@ -2738,10 +2744,10 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						// Write constraints info
 						fileOut.write("index" + "\t" + "slack" + "\t" + "dual");
 						for (int j = 0; j < dual.length; j++) {
-							if (slack[j] != 0 || dual[j] != 0) {
+//							if (slack[j] != 0 || dual[j] != 0) {
 								fileOut.newLine();
 								fileOut.write(j + "\t" + Double.valueOf(twoDForm.format(slack[j])) + "\t" + Double.valueOf(twoDForm.format(dual[j])));
-							}
+//							}
 						}
 
 						fileOut.close();
@@ -2793,7 +2799,60 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						System.err.println("Panel Solve Runs - FileWriter(output_managementOverview_file[row]) error - " + e.getClass().getName() + ": " + e.getMessage());
 					}
 					output_managementOverview_file[row].createNewFile();
-
+					
+					
+					// flow_constraints 					
+					if (flow_set_list.size() > 0) {		// write flow constraints if there is at least a flow set
+						output_flow_constraints_file[row].delete();
+						try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_flow_constraints_file[row]))) {
+							// Write info
+							fileOut.write("flow_id" + "\t" + "flow_description" + "\t" + "flow_arrangement" + "\t"
+									+ "flow_type" + "\t" + "relaxed_percentage" + "\t" + "flow_output_original" + "\t"
+									+ "flow_output_relaxed");
+							// Add constraints for each flow set
+							for (int i = 0; i < flow_set_list.size(); i++) {		// loop each flow set (or each row of the flow_constraints_table)								
+								String temp = flow_id_list.get(i) + "\t" + flow_description_list.get(i) + "\t"
+										+ flow_arrangement_list.get(i) + "\t" + flow_type_list.get(i) + "\t"
+										+ flow_relaxed_percentage_list.get(i) + "\t";
+										
+								// write flow_original
+								for (int j = 0; j < flow_set_list.get(i).size(); j++) {		
+									double aggragated_value = 0;
+									for (int ID : flow_set_list.get(i).get(j)) {																			
+										int gui_table_id = bookkeeping_ID_list.indexOf(ID);		
+										int var_id = bookkeeping_Var_list.get(gui_table_id);
+										aggragated_value = aggragated_value + value[var_id];
+									}
+									temp = temp + Double.valueOf(twoDForm.format(aggragated_value)) + ";";	
+								}	
+								temp = temp.substring(0, temp.length() - 1) + "\t";		// remove the last ; and add a tab
+								
+								// write flow_relaxed
+								for (int j = 0; j < flow_set_list.get(i).size(); j++) {		
+									double aggragated_value = 0;
+									for (int ID : flow_set_list.get(i).get(j)) {																			
+										int gui_table_id = bookkeeping_ID_list.indexOf(ID);		
+										int var_id = bookkeeping_Var_list.get(gui_table_id);
+										aggragated_value = aggragated_value + value[var_id] * flow_relaxed_percentage_list.get(i) / 100;
+									}
+									temp = temp + Double.valueOf(twoDForm.format(aggragated_value)) + ";";	
+								}	
+								temp = temp.substring(0, temp.length() - 1);		// remove the last ;
+								
+								
+								// write the whole line
+								fileOut.newLine();
+								fileOut.write(temp);
+							}
+							fileOut.close();
+						} catch (IOException e) {
+							System.err.println("Panel Solve Runs - FileWriter(output__flow_constraints_file[row]) error - " + e.getClass().getName() + ": " + e.getMessage());
+						}
+						output_flow_constraints_file[row].createNewFile();
+					}
+					
+					
+					
 					//Show successful or fail in the GUI
 					data[row][1] = "valid";
 					data[row][4] = "successful";
@@ -2825,7 +2884,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			
 			
 			
-			if (read.get_Solver().equals("LPSOLVE")) {				//Reference for all LPsolve classes here:		http://lpsolve.sourceforge.net/5.5/Java/docs/api/lpsolve/LpSolve.html
+			if (read.get_solver().equals("LPSOLVE")) {				//Reference for all LPsolve classes here:		http://lpsolve.sourceforge.net/5.5/Java/docs/api/lpsolve/LpSolve.html
 				
 				//Add the LPsolve native library path dynamically at run time
 				try {

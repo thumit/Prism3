@@ -131,7 +131,7 @@ public class ScrollPane_ConstraintsSplit  extends JScrollPane {
 		int rowCount = 1;
 		int colCount = 8;
 		data = new Object[rowCount][colCount];
-		String[] columnNames = new String[] {"id", "description", "type",  "multiplier", "lowerbound", "lowerbound_perunit_penalty", "upperbound", "upperbound_perunit_penalty"};	         				
+		String[] columnNames = new String[] {"bc_id", "bc_description", "bc_type",  "bc_multiplier", "lowerbound", "lowerbound_perunit_penalty", "upperbound", "upperbound_perunit_penalty"};	         				
 		data[0][3] = (double) 1;
 		
 		TableModelSpectrum model = new TableModelSpectrum(rowCount, colCount, data, columnNames) {
@@ -167,6 +167,7 @@ public class ScrollPane_ConstraintsSplit  extends JScrollPane {
 		table.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new comboBox_constraint_type()));
 		
 		table.getColumnModel().getColumn(1).setPreferredWidth(200);	//Set width of Column bigger
+		table.getColumnModel().getColumn(3).setPreferredWidth(100);	//Set width of Column bigger
 		table.getColumnModel().getColumn(4).setPreferredWidth(100);	//Set width of Column bigger
 		table.getColumnModel().getColumn(5).setPreferredWidth(200);	//Set width of Column bigger
 		table.getColumnModel().getColumn(6).setPreferredWidth(100);	//Set width of Column bigger

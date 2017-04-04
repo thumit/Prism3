@@ -33,7 +33,7 @@ public class QuickEdit_BasicConstraints_Panel extends JPanel {
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		c.fill = GridBagConstraints.CENTER;
-		add(new JLabel("type"), c);
+		add(new JLabel("bc_type"), c);
 	
 		// Add comboBox
 		class comboBox_constraint_type extends JComboBox {	
@@ -92,7 +92,7 @@ public class QuickEdit_BasicConstraints_Panel extends JPanel {
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		c.fill = GridBagConstraints.CENTER;
-		add(new JLabel("multiplier"), c);
+		add(new JLabel("bc_multiplier"), c);
 	
 		// Add JTextfield
 		Spectrum_FormatedTextfield multiplier_Textfield = new Spectrum_FormatedTextfield();

@@ -44,22 +44,31 @@ public class Read_RunInputs {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 		}
 	}
-	
-	public int get_total_Periods () {
+
+	public int get_total_periods() {
 		return Integer.parseInt(GI_value[0][1]);
 	}
-	
-	public int get_SolvingTimeLimit () {
-		return Integer.parseInt(GI_value[1][1]);
+
+	public double get_discount_rate() {
+		return Double.parseDouble(GI_value[1][1]);
+	}
+
+	public String get_solver() {
+		return GI_value[2][1].toString();
+	}
+
+	public int get_solving_time() {
+		return Integer.parseInt(GI_value[3][1]);
+	}
+
+	public boolean get_export_problem() {
+		return Boolean.parseBoolean(GI_value[4][1]);
+	}
+
+	public boolean get_export_solution() {
+		return Boolean.parseBoolean(GI_value[5][1]);
 	}
 	
-	public double get_AnnualDiscountRate () {
-		return Double.parseDouble(GI_value[2][1]);
-	}
-	
-	public String get_Solver () {
-		return GI_value[3][1].toString();
-	}
 	
 	//-------------------------------------------------------------------------------------------------------------------------------------------------	
 	//For input_02_modeled_strata
@@ -370,7 +379,7 @@ public class Read_RunInputs {
 	private List<String> constraint_column_names_list;
 	private int BC_totalRows, BC_totalColumns;
 	private String[][] BC_value;
-	private int constraint_id_col, constraint_description_col, constraint_type_col, lowerbound_col, lowerbound_perunit_penalty_col,
+	private int constraint_id_col, constraint_description_col, constraint_type_col, constraint_multiplier_col, lowerbound_col, lowerbound_perunit_penalty_col,
 			upperbound_col, upperbound_perunit_penalty_col, parameter_index_col, static_identifiers_col, dynamic_identifiers_col;
 
 	public void read_basic_constraints (File file) {
@@ -387,9 +396,10 @@ public class Read_RunInputs {
 			
 			//List of constraint column names
 			constraint_column_names_list = Arrays.asList(columnName);	
-			constraint_id_col = constraint_column_names_list.indexOf("id");
-			constraint_description_col = constraint_column_names_list.indexOf("description");
-			constraint_type_col = constraint_column_names_list.indexOf("type");
+			constraint_id_col = constraint_column_names_list.indexOf("bc_id");
+			constraint_description_col = constraint_column_names_list.indexOf("bc_description");
+			constraint_type_col = constraint_column_names_list.indexOf("bc_type");
+			constraint_multiplier_col = constraint_column_names_list.indexOf("bc_multiplier");
 			lowerbound_col = constraint_column_names_list.indexOf("lowerbound");
 			lowerbound_perunit_penalty_col = constraint_column_names_list.indexOf("lowerbound_perunit_penalty");
 			upperbound_col = constraint_column_names_list.indexOf("upperbound");
@@ -687,10 +697,10 @@ public class Read_RunInputs {
 			
 			// list of constraint column names
 			flow_column_names_list = Arrays.asList(columnName);	
-			flow_id_col = flow_column_names_list.indexOf("id");
-			flow_description_col = flow_column_names_list.indexOf("description");
+			flow_id_col = flow_column_names_list.indexOf("flow_id");
+			flow_description_col = flow_column_names_list.indexOf("flow_description");
 			flow_arrangement_col = flow_column_names_list.indexOf("flow_arrangement");
-			flow_type_col = flow_column_names_list.indexOf("type");
+			flow_type_col = flow_column_names_list.indexOf("flow_type");
 			relaxed_percentage_col = flow_column_names_list.indexOf("relaxed_percentage");
 
 			
@@ -728,6 +738,30 @@ public class Read_RunInputs {
 		return flow_totalColumns;
 	}
 		
+	public List<Integer> get_flow_id_list() {
+		List<Integer> get_flow_id_list = new ArrayList<Integer>();
+		for (int i = 1; i < flow_totalRows; i++) {		// from 2nd row			
+			get_flow_id_list.add(Integer.parseInt(flow_value[i][flow_id_col]));
+		}
+		return get_flow_id_list;
+	}
+	
+	public List<String> get_flow_description_list() {
+		List<String> flow_description_list = new ArrayList<String>();	
+		for (int i = 1; i < flow_totalRows; i++) {		// from 2nd row			
+			flow_description_list.add(flow_value[i][flow_description_col]);
+		}
+		return flow_description_list;
+	}
+	
+	public List<String> get_flow_arrangement_list() {
+		List<String> flow_arrangement_list = new ArrayList<String>();	
+		for (int i = 1; i < flow_totalRows; i++) {		// from 2nd row			
+			flow_arrangement_list.add(flow_value[i][flow_arrangement_col]);
+		}
+		return flow_arrangement_list;
+	}
+	
 	public List<String> get_flow_type_list() {
 		List<String> flow_type_list = new ArrayList<String>();	
 		for (int i = 1; i < flow_totalRows; i++) {		// from 2nd row			

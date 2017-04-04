@@ -759,16 +759,18 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	public void create_table1() {	
 		//Setup the table------------------------------------------------------------	
 		if (is_table1_loaded == false) { // Create a fresh new if Load fail
-			rowCount1 = 4;
+			rowCount1 = 6;
 			colCount1 = 2;
 			data1 = new Object[rowCount1][colCount1];
 			columnNames1 = new String[] { "description", "selection" };
 			
 			// Populate the data matrix
-			data1[0][0] = "Total planning periods (decades)";
-			data1[1][0] = "Solving time limit (minutes)";
-			data1[2][0] = "Annual discount rate (%)";
-			data1[3][0] = "Solver for optimization";
+			data1[0][0] = "Total planning periods (decades)";			
+			data1[1][0] = "Annual discount rate (%)";
+			data1[2][0] = "Solver for optimization";
+			data1[3][0] = "Maximum solving time (minutes)";
+			data1[4][0] = "Export original problem file";
+			data1[5][0] = "Export original solution file";
 		}
 			
 		//Create a table-------------------------------------------------------------
@@ -2243,7 +2245,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			rowCount9 = 0;
 			colCount9 = 11;
 			data9 = new Object[rowCount9][colCount9];
-			columnNames9 = new String[] {"id", "description", "type",  "multiplier", "lowerbound", "lowerbound_perunit_penalty", "upperbound", "upperbound_perunit_penalty", "parameter_index", "static_identifiers", "dynamic_identifiers"};	         				
+			columnNames9 = new String[] {"bc_id", "bc_description", "bc_type",  "bc_multiplier", "lowerbound", "lowerbound_perunit_penalty", "upperbound", "upperbound_perunit_penalty", "parameter_index", "static_identifiers", "dynamic_identifiers"};	         				
 		}
 					
 		
@@ -2373,7 +2375,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			rowCount10 = 0;
 			colCount10 = 5;
 			data10 = new Object[rowCount10][colCount10];
-			columnNames10 = new String[] {"id", "description", "flow_arrangement", "type", "relaxed_percentage"};	         				
+			columnNames10 = new String[] {"flow_id", "flow_description", "flow_arrangement", "flow_type", "relaxed_percentage"};	         				
 		}
 					
 		
@@ -2492,43 +2494,56 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
     
 	// Panel General Inputs------------------------------------------------------------------------------------------------------	
 	class General_Inputs_GUI extends JLayeredPane {
+		private JLabel label1, label2, label3, label4, label5, label6;
+		private JComboBox combo1, combo2, combo3;
+		private JSpinner spin4;
+		private JCheckBox check5, check6;
+		
 		public General_Inputs_GUI() {
 			setLayout(new GridBagLayout());
 			create_table1();
 			
 			
 			//-----------------------------------------------------
-			JLabel label1 = new JLabel("Total planning periods (1 period = 10 years)");
-			JComboBox combo1 = new JComboBox();		
+			label1 = new JLabel("Total planning periods (1 period = 10 years)");
+			combo1 = new JComboBox();		
 			for (int i = 1; i <= 50; i++) {
 				combo1.addItem(i);
 			}
 			combo1.setSelectedItem((int) 5);
-			//-----------------------------------------------------						
-			JLabel label2 = new JLabel("Maximum solving time (minutes)");
-			JSpinner spin2 = new JSpinner (new SpinnerNumberModel(20, 0, 60, 1));
-			JFormattedTextField SpinnerText = ((DefaultEditor) spin2.getEditor()).getTextField();
-			SpinnerText.setHorizontalAlignment(JTextField.LEFT);
 			//-----------------------------------------------------
-			JLabel label3 = new JLabel("Annual discount rate (%)");
-			JComboBox combo3 = new JComboBox();		
+			label2 = new JLabel("Annual discount rate (%)");
+			combo2 = new JComboBox();		
 			for (int i = 0; i <= 100; i++) {
 				double value = (double) i/10;
-				combo3.addItem(value);
+				combo2.addItem(value);
 			}
-			combo3.setSelectedItem((double) 3.5);
+			combo2.setSelectedItem((double) 3.5);
+			//-----------------------------------------------------						
+			label3 = new JLabel("Solver for optimization");
+			combo3 = new JComboBox();
+			combo3.addItem("CPLEX");
+			combo3.addItem("LPSOLVE");
+			combo3.addItem("CBC");
+			combo3.addItem("CLP");
+			combo3.addItem("GUROBI");
+			combo3.addItem("GLPK");
+			combo3.addItem("SPCIP");
+			combo3.addItem("SOPLEX");
+			combo3.addItem("XPRESS");	
 			//-----------------------------------------------------
-			JLabel label4 = new JLabel("Solver for optimization");
-			JComboBox  combo4 = new JComboBox();
-			combo4.addItem("CPLEX");
-			combo4.addItem("LPSOLVE");
-			combo4.addItem("CBC");
-			combo4.addItem("CLP");
-			combo4.addItem("GUROBI");
-			combo4.addItem("GLPK");
-			combo4.addItem("SPCIP");
-			combo4.addItem("SOPLEX");
-			combo4.addItem("XPRESS");	
+			label4 = new JLabel("Maximum solving time (minutes)");
+			spin4 = new JSpinner (new SpinnerNumberModel(20, 0, 60, 1));
+			JFormattedTextField SpinnerText = ((DefaultEditor) spin4.getEditor()).getTextField();
+			SpinnerText.setHorizontalAlignment(JTextField.LEFT);
+			//-----------------------------------------------------
+			label5 = new JLabel("Export original problem file");
+			check5 = new JCheckBox();
+			check5.setSelected(false);
+			//-----------------------------------------------------
+			label6 = new JLabel("Export original solution file");
+			check6 = new JCheckBox();
+			check6.setSelected(false);
 			//-----------------------------------------------------
 			// ToolBar Panel
 			ToolBarWithBgImage helpToolBar = new ToolBarWithBgImage("Project Tools", JToolBar.HORIZONTAL, null);
@@ -2559,10 +2574,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					totalPeriod = Integer.parseInt(combo1.getSelectedItem().toString());
 					
 					// Apply any change in the GUI to the table
-					data1[0][1] = combo1.getSelectedItem().toString();
-					data1[1][1] = (Integer)spin2.getValue();
+					data1[0][1] = combo1.getSelectedItem().toString();				
+					data1[1][1] = combo2.getSelectedItem().toString();
 					data1[2][1] = combo3.getSelectedItem().toString();
-					data1[3][1] = combo4.getSelectedItem().toString();
+					data1[3][1] = (Integer)spin4.getValue();
+					data1[4][1] = (check5.isSelected()) ? "true" : "false";
+					data1[5][1] = (check6.isSelected()) ? "true" : "false";
 					model1.fireTableDataChanged();
 
 				}
@@ -2574,35 +2591,42 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				if (! String.valueOf(data1[0][1]).equals("null")) {
 					combo1.setSelectedItem(Integer.valueOf((String) data1[0][1]));
 					totalPeriod = Integer.valueOf((String) data1[0][1]);
-				}
-				if (! String.valueOf(data1[1][1]).equals("null")) spin2.setValue(Integer.valueOf((String) data1[1][1]));
-				if (! String.valueOf(data1[2][1]).equals("null")) combo3.setSelectedItem(Double.valueOf((String) data1[2][1]));
-				if (! String.valueOf(data1[3][1]).equals("null")) combo4.setSelectedItem(String.valueOf(data1[3][1]));
+				}				
+				if (! String.valueOf(data1[1][1]).equals("null")) combo2.setSelectedItem(Double.valueOf((String) data1[1][1]));
+				if (! String.valueOf(data1[2][1]).equals("null")) combo3.setSelectedItem(String.valueOf(data1[2][1]));
+				if (! String.valueOf(data1[3][1]).equals("null")) spin4.setValue(Integer.valueOf((String) data1[3][1]));					
+				if (! String.valueOf(data1[4][1]).equals("null")) check5.setSelected(Boolean.valueOf(String.valueOf(data1[4][1])));
+				if (! String.valueOf(data1[5][1]).equals("null")) check6.setSelected(Boolean.valueOf(String.valueOf(data1[5][1])));
 			}
 			
 			
 			combo1.addActionListener(apply);
+			combo2.addActionListener(apply);
 			combo3.addActionListener(apply);
-			combo4.addActionListener(apply);
+			check5.addActionListener(apply);
+			check6.addActionListener(apply);
+			
 			
 			DefaultFormatter formatter = (DefaultFormatter) SpinnerText.getFormatter();
 		    formatter.setCommitsOnValidEdit(true);
-		    spin2.addChangeListener(new ChangeListener() {
+		    spin4.addChangeListener(new ChangeListener() {
 		        @Override
 		        public void stateChanged(ChangeEvent e) {
-		        	spin2.setValue(spin2.getValue());
+		        	spin4.setValue(spin4.getValue());
 		        	totalPeriod = Integer.parseInt(combo1.getSelectedItem().toString());
 		        	
 		        	// Apply any change in the GUI to the table
-					data1[0][1] = combo1.getSelectedItem().toString();
-					data1[1][1] = (Integer)spin2.getValue();
+		        	data1[0][1] = combo1.getSelectedItem().toString();				
+					data1[1][1] = combo2.getSelectedItem().toString();
 					data1[2][1] = combo3.getSelectedItem().toString();
-					data1[3][1] = combo4.getSelectedItem().toString();
+					data1[3][1] = (Integer)spin4.getValue();
+					data1[4][1] = (check5.isSelected()) ? "true" : "false";
+					data1[5][1] = (check6.isSelected()) ? "true" : "false";
 					model1.fireTableDataChanged();
 		        }
 		    });
 		    if (is_table1_loaded == false) {
-		    	spin2.setValue(15);		// Load GUI to table if there is no input to load	(15 <> 20 then the listener will be activate)
+		    	spin4.setValue(15);		// Load GUI to table if there is no input to load	(15 <> 20 then the listener will be activate)
 		    }
 		    
 
@@ -2649,7 +2673,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
  		    c.weighty = 0;
  			c.gridwidth = 1;
  			c.gridheight = 1;
- 			super.add(label3, c);
+ 			super.add(label2, c);
  			
  			// Add 	
  			c.gridx = 1;
@@ -2658,7 +2682,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
  			c.weighty = 0;
  			c.gridwidth = 1;
  			c.gridheight = 1;
- 			super.add(combo3, c);	
+ 			super.add(combo2, c);	
  			
  			// Add 
  			c.gridx = 0;
@@ -2667,7 +2691,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
  		    c.weighty = 0;
  			c.gridwidth = 1;
  			c.gridheight = 1;
- 			super.add(label2, c);
+ 			super.add(label3, c);
  			
  			// Add 	
  			c.gridx = 1;
@@ -2676,7 +2700,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
  			c.weighty = 0;
  			c.gridwidth = 1;
  			c.gridheight = 1;
- 			super.add(spin2, c);
+ 			super.add(combo3, c);
  			
  			// Add 
  			c.gridx = 0;
@@ -2694,7 +2718,43 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
  			c.weighty = 0;
  			c.gridwidth = 1;
  			c.gridheight = 1;
- 			super.add(combo4, c);
+ 			super.add(spin4, c);
+ 			
+ 			// Add 
+ 			c.gridx = 0;
+ 			c.gridy = 5;
+ 			c.weightx = 0;
+ 		    c.weighty = 0;
+ 			c.gridwidth = 1;
+ 			c.gridheight = 1;
+ 			super.add(label5, c);
+ 			
+ 			// Add 	
+ 			c.gridx = 1;
+ 			c.gridy = 5;
+ 			c.weightx = 0;
+ 			c.weighty = 0;
+ 			c.gridwidth = 1;
+ 			c.gridheight = 1;
+ 			super.add(check5, c);
+ 			
+ 			// Add 
+ 			c.gridx = 0;
+ 			c.gridy = 6;
+ 			c.weightx = 0;
+ 		    c.weighty = 0;
+ 			c.gridwidth = 1;
+ 			c.gridheight = 1;
+ 			super.add(label6, c);
+ 			
+ 			// Add 	
+ 			c.gridx = 1;
+ 			c.gridy = 6;
+ 			c.weightx = 0;
+ 			c.weighty = 0;
+ 			c.gridwidth = 1;
+ 			c.gridheight = 1;
+ 			super.add(check6, c);
 		}
 	}
 
@@ -4918,7 +4978,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 							}	
 						}
 										
-						data10[rowCount10 - 1][2] = flow_scrollPane.get_flow_info_from_GUI();					
+						data10[rowCount10 - 1][2] = flow_scrollPane.get_flow_info_from_GUI();	
+						data10[rowCount10 - 1][4] = (double) 100;
 						model10.updateTableModelSpectrum(rowCount10, colCount10, data10, columnNames10);
 						update_id();
 						model10.fireTableDataChanged();
@@ -5280,6 +5341,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		create_file_definition();		// Note for those 3 files we just copy overwritten
 		create_file_existing_strata();
 		create_file_database();
+		
+		
 		
 //		// Just to save the rename method
 //		File temp = new File(currentRunFolder.getAbsolutePath() + "/" + databaseFile.getName());			

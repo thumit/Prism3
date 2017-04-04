@@ -1,4 +1,4 @@
-id	description	flow_arrangement	type	relaxed_percentage	
+flow_id	flow_description	flow_arrangement	flow_type	relaxed_percentage	
 1	NG period (1-4)	1;2;3;4	FREE	10.0	
 2	NG - PB - GS - EA  (1-5)	1 2 3 4 5;6 7 8 9 10;11 12 13 14 15;16 17 18 19 20	FREE	5.0	
 3	NG - PB - GS (1-3)	1 2;6 7;11 12	FREE	8.0	

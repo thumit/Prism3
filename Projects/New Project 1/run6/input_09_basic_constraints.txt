@@ -1,4 +1,4 @@
-id	description	type	multiplier	lowerbound	lowerbound_perunit_penalty	upperbound	upperbound_perunit_penalty	parameter_index	static_identifiers	dynamic_identifiers	
+bc_id	bc_description	bc_type	bc_multiplier	lowerbound	lowerbound_perunit_penalty	upperbound	upperbound_perunit_penalty	parameter_index	static_identifiers	dynamic_identifiers	
 1	300k 1 - silvicultural method NG - time period 1	SOFT	1.0	300000.0	1.0	300000.0	0.0	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NG;7 1	NoIdentifier	
 2	300k 2 - silvicultural method NG - time period 2	SOFT	1.0	300000.0	1.0	300000.0	0.0	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NG;7 2	NoIdentifier	
 3	300k 3 - silvicultural method NG - time period 3	SOFT	1.0	300000.0	1.0	300000.0	0.0	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NG;7 3	NoIdentifier	

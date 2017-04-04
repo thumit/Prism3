@@ -41,3 +41,9 @@
 --------------------------------------------------------------------------
 
 37. Fix: now SpectrumLite can run without having any flow constraint set up
+38. Re-arrange General Inputs
+39. Change index of basic constraints (id, description, type, multiplier --> add bc_) and flow constraints (id, type --> add flow_) to avoid confusion
+40. New output: flow_constraint with table and graph visualization
+41. General Inputs: alow options of exporting original problem & solution files. Change solution to .sol extension
+42. Flow: add new automatically set relaxed_percentage to 100%
+
