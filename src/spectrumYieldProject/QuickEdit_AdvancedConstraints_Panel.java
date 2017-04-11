@@ -33,7 +33,7 @@ public class QuickEdit_AdvancedConstraints_Panel extends JPanel {
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		c.fill = GridBagConstraints.CENTER;
-		add(new JLabel("type"), c);
+		add(new JLabel("flow_type"), c);
 	
 		// Add comboBox
 		class comboBox_constraint_type extends JComboBox {	
@@ -92,10 +92,10 @@ public class QuickEdit_AdvancedConstraints_Panel extends JPanel {
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		c.fill = GridBagConstraints.CENTER;
-		add(new JLabel("relaxed_percentage"), c);
+		add(new JLabel("lowerbound_percentage"), c);
 	
 		// Add JTextfield
-		Spectrum_FormatedTextfield multiplier_Textfield = new Spectrum_FormatedTextfield();
+		Spectrum_FormatedTextfield lb_percentage = new Spectrum_FormatedTextfield();
 		c.gridx = 1;
 		c.gridy = 3;
 		c.weightx = 1;
@@ -103,10 +103,10 @@ public class QuickEdit_AdvancedConstraints_Panel extends JPanel {
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		c.fill = GridBagConstraints.BOTH;
-		add(multiplier_Textfield, c);
+		add(lb_percentage, c);
 		
 		// Add button apply
-		Spectrum_ApplyButton btnApply_multiplier = new Spectrum_ApplyButton(table, data, 4, multiplier_Textfield);		// 4 is the column to change
+		Spectrum_ApplyButton apply_lb_percentage = new Spectrum_ApplyButton(table, data, 4, lb_percentage);		// 4 is the column to change
 		c.gridx = 0;
 		c.gridy = 3;
 		c.weightx = 0;
@@ -114,12 +114,44 @@ public class QuickEdit_AdvancedConstraints_Panel extends JPanel {
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		c.fill = GridBagConstraints.BOTH;
-		add(btnApply_multiplier, c);
+		add(apply_lb_percentage, c);
 		
+		
+		// Add Label-------------------------------------------------------------------------------------------------
+		c.gridx = 1;
+		c.gridy = 4;
+		c.weightx = 0;
+		c.weighty = 0;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		c.fill = GridBagConstraints.CENTER;
+		add(new JLabel("upperbound_percentage"), c);
+	
+		// Add JTextfield
+		Spectrum_FormatedTextfield ub_percentage = new Spectrum_FormatedTextfield();
+		c.gridx = 1;
+		c.gridy = 5;
+		c.weightx = 1;
+		c.weighty = 0;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		c.fill = GridBagConstraints.BOTH;
+		add(ub_percentage, c);
+		
+		// Add button apply
+		Spectrum_ApplyButton apply_ub_percentage = new Spectrum_ApplyButton(table, data, 5, ub_percentage);		// 5 is the column to change
+		c.gridx = 0;
+		c.gridy = 5;
+		c.weightx = 0;
+		c.weighty = 0;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		c.fill = GridBagConstraints.BOTH;
+		add(apply_ub_percentage, c);		
 				
 		// Add empty Label to push other component up top------------------------------------------------------------
 		c.gridx = 0;
-		c.gridy = 4;
+		c.gridy = 6;
 		c.weightx = 0;
 		c.weighty = 1;
 		c.gridwidth = 1;
@@ -131,7 +163,7 @@ public class QuickEdit_AdvancedConstraints_Panel extends JPanel {
 	
 	private class Spectrum_FormatedTextfield extends JFormattedTextField {
 		public Spectrum_FormatedTextfield() {
-			setToolTipText("from 0 to 100 (%) with maximum 2 digits after the dot");
+			setToolTipText("greater than 0 with maximum 2 digits after the dot");
 			getDocument().addDocumentListener(new DocumentListener() {
 				@Override
 				public void insertUpdate(DocumentEvent e) {
@@ -142,7 +174,7 @@ public class QuickEdit_AdvancedConstraints_Panel extends JPanel {
 							if (!text.matches("\\d*(\\.\\d{0,2})?")) {		//	used regex: \\d*(\\.\\d{0,2})? because two decimal places is enough
 								setText(text.substring(0, text.length() - 1));
 							} else {
-								if (!text.isEmpty() && !text.equals(".") && (Double.valueOf(text) < (double) 0 || Double.valueOf(text) > (double) 100)) {		// If the added String make value <0 or >100   then delete that String
+								if (!text.isEmpty() && !text.equals(".") && (Double.valueOf(text) < (double) 0)) {		// If the added String make value <0   then delete that String
 									setText(text.substring(0, text.length() - 1));
 								}
 							}	
@@ -182,6 +214,8 @@ public class QuickEdit_AdvancedConstraints_Panel extends JPanel {
 					for (int i : selectedRow) {
 						if (!formatedTextField.getText().isEmpty() && !formatedTextField.getText().equals(".")) {	// Only apply the changes to selected rows when the text is not empty
 							data[i][column_to_change] = Double.valueOf(formatedTextField.getText());
+						} else {
+							data[i][column_to_change] = null;
 						}
 						table.addRowSelectionInterval(table.convertRowIndexToView(i), table.convertRowIndexToView(i));
 					}

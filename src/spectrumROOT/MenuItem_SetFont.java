@@ -129,13 +129,13 @@ public class MenuItem_SetFont extends JMenuItem {
 			    
 			    
 			    //-------------------------------------------------------------------------------------------------------------------- 
-			    JTextArea textarea = new JTextArea();
-			    textarea.setLineWrap(true);
-			    textarea.setWrapStyleWord(true);
-			    textarea.setBackground(ColorUtil.makeTransparent(scrollPane.getBackground(), 255));
-			    textarea.setBorder(BorderFactory.createTitledBorder(""));
-			    textarea.append("All internal windows must be closed to retrieve SpectrumLite's standard behavior. ");
-			    textarea.append("If editing, 'close later' is recommended so you can save your edits.");
+//			    JTextArea textarea = new JTextArea();
+//			    textarea.setLineWrap(true);
+//			    textarea.setWrapStyleWord(true);
+//			    textarea.setBackground(ColorUtil.makeTransparent(scrollPane.getBackground(), 255));
+//			    textarea.setBorder(BorderFactory.createTitledBorder(""));
+//			    textarea.append("All internal windows must be closed to retrieve SpectrumLite's standard behavior. ");
+//			    textarea.append("If editing, 'close later' is recommended so you can save your edits.");
 			    
 			    
 			    //--------------------------------------------------------------------------------------------------------------------
@@ -143,19 +143,19 @@ public class MenuItem_SetFont extends JMenuItem {
 				JPanel combined_panel = new JPanel(new BorderLayout());
 				combined_panel.add(spin, BorderLayout.NORTH);
 				combined_panel.add(scrollPane, BorderLayout.CENTER);
-				combined_panel.add(textarea, BorderLayout.SOUTH);
+//				combined_panel.add(textarea, BorderLayout.SOUTH);
 				
 				
 				// Add the panel to a pop-up panel
-				String ExitOption[] = { "Close now", "Close later"};
+				String ExitOption[] = { "Ok"};
 				int response = JOptionPane.showOptionDialog(Spectrum_Main.mainFrameReturn(), combined_panel,
 						"Select a Font", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
 						IconHandle.get_scaledImageIcon(40, 40, "icon_font.png"), ExitOption, ExitOption[0]);
 
 				if (response == 0) {
-					for (JInternalFrame i: Spectrum_Main.mainFrameReturn().getAllFrames()) {
-						i.dispose();
-					}
+//					for (JInternalFrame i: Spectrum_Main.mainFrameReturn().getAllFrames()) {
+//						i.dispose();
+//					}
 				}
 	
 			}

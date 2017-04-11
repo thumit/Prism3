@@ -1,9 +1,0 @@
-covertype_before	covertype_after	rotation_ageclass_min	rotation_ageclass_max	implementation	
-P	P	2	6	true	
-D	D	2	6	true	
-W	W	2	6	true	
-C	C	2	6	true	
-I	I	2	6	true	
-A	A	2	6	true	
-L	L	2	6	true	
-N	N	2	6	true	

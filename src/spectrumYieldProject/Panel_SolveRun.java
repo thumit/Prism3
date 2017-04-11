@@ -23,7 +23,6 @@ import java.io.PrintStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -66,7 +65,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 	private JScrollPane scrollPane_Left, scrollPane_Right;
 	
 	private File[] 	problemFile, solutionFile, output_generalInfo_file, output_variables_file, output_constraints_file,
-					output_managementOverview_file, output_flow_constraints_file;
+					output_managementOverview_file, output_basic_constraints_file, output_flow_constraints_file;
 	
 	private DecimalFormat twoDForm = new DecimalFormat("#.##");	 //Only get 2 decimal will be assess
 	
@@ -163,6 +162,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					output_generalInfo_file = new File[rowCount];
 					output_managementOverview_file = new File[rowCount];
 					output_flow_constraints_file = new File[rowCount];
+					output_basic_constraints_file = new File[rowCount];
 					
 
 					// Open 2 new parallel threads: 1 for running CPLEX, 1 for redirecting console to displayTextArea
@@ -275,6 +275,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			output_variables_file[row] = new File(runFolder.getAbsolutePath() + "/output_02_variables.txt");
 			output_constraints_file[row] = new File(runFolder.getAbsolutePath() + "/output_03_constraints.txt");	
 			output_managementOverview_file[row] = new File(runFolder.getAbsolutePath() + "/output_04_management_overview.txt");		
+			output_basic_constraints_file[row] = new File(runFolder.getAbsolutePath() + "/output_06_basic_constraints.txt");
 			output_flow_constraints_file[row] = new File(runFolder.getAbsolutePath() + "/output_07_flow_constraints.txt");
 			
 				
@@ -341,8 +342,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			List<String> flow_description_list = read.get_flow_description_list();
 			List<String> flow_arrangement_list = read.get_flow_arrangement_list();
 			List<String> flow_type_list = read.get_flow_type_list();
-			List<Double> flow_relaxed_percentage_list =read.get_flow_relaxed_percentage_list();
-			
+			List<Double> flow_lowerbound_percentage_list = read.get_flow_lowerbound_percentage_list();
+			List<Double> flow_upperbound_percentage_list = read.get_flow_upperbound_percentage_list();
+
 			//Database Info
 			Object[][][] yieldTable_values = read_DatabaseTables.getTableArrays();
 			Object[] yieldTable_Name = read_DatabaseTables.get_nameOftable();
@@ -385,9 +387,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						
 			
 			
-			double annualDiscountRate = read.get_total_periods()/100;
+			double annualDiscountRate = read.get_discount_rate() / 100;
 			int total_Periods = read.get_total_periods();
-			int total_AgeClasses = total_Periods-1;		//loop from age 1 to age total_AgeClasses (set total_AgeClasses=total_Periods-1)
+			int total_AgeClasses = total_Periods - 1;		//loop from age 1 to age total_AgeClasses (set total_AgeClasses=total_Periods-1)
 			int total_methods = 5;
 			int total_PB_Prescriptions = 5;
 			int total_GS_Prescriptions = 5;
@@ -402,7 +404,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			List<IloNumVarType> vtlist = new ArrayList<IloNumVarType>();//variable type
 			
 			int nvars = 0;
-			int nV=0;
+			int nV = 0;
 	
 			
 			// Declare arrays to keep variables	
@@ -557,7 +559,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				objlist.add((double) 0);
 //				vnamelist.add("v(" + n + ")");
 				vnamelist.add("v_" + n);
-				vlblist.add((double) 0);				// 0 is LB
+				vlblist.add((double) 0);				// 0 if not allow negative multiplier
+//				vlblist.add(-Double.MAX_VALUE);			// -MAX_VALUE if allow negative multiplier, need to redesign flow logic
 				vublist.add(Double.MAX_VALUE);			// MAX_VALUE is UB
 				vtlist.add(IloNumVarType.Float);
 				v[n] = nvars;
@@ -1020,34 +1023,68 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						int this_set_total_constraints = flow_set_list.get(i).size() - 1;
 						for (int j = 0; j < this_set_total_constraints; j++) {
 							
-							// Add constraint				Right term - % * Left term >= 0
-							c5_indexlist.add(new ArrayList<Integer>());
-							c5_valuelist.add(new ArrayList<Double>());
-							
-							// Add Right term including all IDs in the (j+1) term
-							for (int ID : flow_set_list.get(i).get(j + 1)) {
-								if (bookkeeping_ID_list.contains(ID)) {		// Add book keeping variable
-									int gui_table_id = bookkeeping_ID_list.indexOf(ID);		
-									int var_id = bookkeeping_Var_list.get(gui_table_id);
-									c5_indexlist.get(c5_num).add(var_id);
-									c5_valuelist.get(c5_num).add((double) 1);
+							if (flow_lowerbound_percentage_list.get(i) != null) {	// add when lowerbound_percentage is not null
+								// Add constraint				Right term - lowerbound % * Left term >= 0
+								c5_indexlist.add(new ArrayList<Integer>());
+								c5_valuelist.add(new ArrayList<Double>());
+								
+								// Add Right term including all IDs in the (j+1) term
+								for (int ID : flow_set_list.get(i).get(j + 1)) {
+									if (bookkeeping_ID_list.contains(ID)) {		// Add book keeping variable
+										int gui_table_id = bookkeeping_ID_list.indexOf(ID);		
+										int var_id = bookkeeping_Var_list.get(gui_table_id);
+										c5_indexlist.get(c5_num).add(var_id);
+										c5_valuelist.get(c5_num).add((double) 1);
+									}
 								}
+								
+								// Add - % * Left term including all IDs in the (j) term
+								for (int ID : flow_set_list.get(i).get(j)) {
+									if (bookkeeping_ID_list.contains(ID)) {		// Add book keeping variable
+										int gui_table_id = bookkeeping_ID_list.indexOf(ID);		
+										int var_id = bookkeeping_Var_list.get(gui_table_id);
+										c5_indexlist.get(c5_num).add(var_id);
+										c5_valuelist.get(c5_num).add((double) -flow_lowerbound_percentage_list.get(i) / 100);		// -1 * lowerbound_percentage here
+									}
+								}
+								
+								// add bounds
+								c5_lblist.add((double) 0);			// Lower bound set to 0	
+								c5_ublist.add(Double.MAX_VALUE);		// Upper bound set to max
+								c5_num++;
 							}
 							
-							// Add - % * Left term including all IDs in the (j) term
-							for (int ID : flow_set_list.get(i).get(j)) {
-								if (bookkeeping_ID_list.contains(ID)) {		// Add book keeping variable
-									int gui_table_id = bookkeeping_ID_list.indexOf(ID);		
-									int var_id = bookkeeping_Var_list.get(gui_table_id);
-									c5_indexlist.get(c5_num).add(var_id);
-									c5_valuelist.get(c5_num).add((double) -flow_relaxed_percentage_list.get(i) / 100);		// -1 * relaxed_percentage here
-								}
-							}
 							
-							// add bounds
-							c5_lblist.add((double) 0);			// Lower bound set to 0	
-							c5_ublist.add(Double.MAX_VALUE);		// Upper bound set to max
-							c5_num++;
+							if (flow_upperbound_percentage_list.get(i) != null) {	// add when upperbound_percentage is not null
+								// Add constraint				Right term - upperbound % * Left term <= 0
+								c5_indexlist.add(new ArrayList<Integer>());
+								c5_valuelist.add(new ArrayList<Double>());
+								
+								// Add Right term including all IDs in the (j+1) term
+								for (int ID : flow_set_list.get(i).get(j + 1)) {
+									if (bookkeeping_ID_list.contains(ID)) {		// Add book keeping variable
+										int gui_table_id = bookkeeping_ID_list.indexOf(ID);		
+										int var_id = bookkeeping_Var_list.get(gui_table_id);
+										c5_indexlist.get(c5_num).add(var_id);
+										c5_valuelist.get(c5_num).add((double) 1);
+									}
+								}
+								
+								// Add - % * Left term including all IDs in the (j) term
+								for (int ID : flow_set_list.get(i).get(j)) {
+									if (bookkeeping_ID_list.contains(ID)) {		// Add book keeping variable
+										int gui_table_id = bookkeeping_ID_list.indexOf(ID);		
+										int var_id = bookkeeping_Var_list.get(gui_table_id);
+										c5_indexlist.get(c5_num).add(var_id);
+										c5_valuelist.get(c5_num).add((double) -flow_upperbound_percentage_list.get(i) / 100);		// -1 * upperbound_percentage here
+									}
+								}
+								
+								// add bounds
+								c5_lblist.add(-Double.MAX_VALUE);	// lower bound set to min	
+								c5_ublist.add((double) 0);			// Upper bound set to 0
+								c5_num++;
+							}							
 						}
 					}
 				}
@@ -2404,10 +2441,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																		current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
 																				
 																		
-																		//3 lines to random EA table picking  ----change change change later
-																		Random rand = new Random();
-																	    //int s6 = rand.nextInt(layer6.size());
-																	    int timingchoice = rand.nextInt(4);
+																		//1 line to pick a fixed EA table  ----change change change later
+																	    int timingchoice = 1;
 																	    para_value = getParameter_totalValues.get_total_value(layer5.get(s5), layer6.get(s6), "EA", Integer.toString(timingchoice), 
 //																		para_value = getParameter_totalValues.getValue(layer5.get(s5), layer6.get(s6), "EA", "AgeClassShouldBeHere", 
 																				yieldTable_Name, yieldTable_values, parameters_indexes_list,
@@ -2463,10 +2498,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																		current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
 																				
 																		
-																		//3 lines to random EA table picking  ----change change change later
-																		Random rand = new Random();
-																	    int s6 = rand.nextInt(layer6.size());
-																	    int timingchoice = rand.nextInt(4);
+																		//2 lines to pick a fixed EA table  ----change change change later
+																	    int s6 = 0;
+																	    int timingchoice = 1;
 																	    para_value = getParameter_totalValues.get_total_value(layer5.get(s5), layer6.get(s6), "EA", Integer.toString(timingchoice), 
 //																		para_value = getParameter_totalValues.getValue(layer5.get(s5), "notNeeded", "EA", "AgeClassShouldBeHere", 
 																				yieldTable_Name, yieldTable_values, parameters_indexes_list,
@@ -2523,10 +2557,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
 																
 																
-																//3 lines to random EA table picking  ----change change change later
-																Random rand = new Random();
-															    int s6 = rand.nextInt(layer6.size());
-															    int timingchoice = rand.nextInt(4);
+																//2 lines to pick a fixed EA table  ----change change change later
+															    int s6 = 0;
+															    int timingchoice = 1;
 															    para_value = getParameter_totalValues.get_total_value(layer5.get(s5), layer6.get(s6), "EA", Integer.toString(timingchoice), 
 //																para_value = getParameter_totalValues.getValue(layer5.get(s5), "notNeeded", "EA", "AgeClassShouldBeHere", 
 																		yieldTable_Name, yieldTable_values, parameters_indexes_list,
@@ -2658,7 +2691,23 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 //				cplex.setParam(IloCplex.DoubleParam.EpGap, 0.00); // Gap is 0%
 				int solvingTimeLimit = read.get_solving_time() * 60; //Get time Limit in minute * 60 = seconds
 				cplex.setParam(IloCplex.DoubleParam.TimeLimit, solvingTimeLimit); // Set Time limit
-//				cplex.setParam(IloCplex.BooleanParam.PreInd, false);	// Turn off preSolve to see full variables and constraints
+//				cplex.setParam(IloCplex.BooleanParam.PreInd, false);	// page 40: sets the Boolean parameter PreInd to false, instructing CPLEX not to apply presolve before solving the problem.
+				
+//				// turn off presolve to prevent it from completely solving the model before entering the actual LP optimizer (same as above ???)
+//				cplex.setParam(IloCplex.Param.Preprocessing.Presolve, false);
+		         
+						
+//				cplex.setParam(IloCplex.Param.Emphasis.Numerical, true);		// page 94: https://www.ibm.com/support/knowledgecenter/SSSA5P_12.6.3/ilog.odms.studio.help/pdf/paramcplex.pdf
+//																				// true --> Exercise extreme caution in computation
+//																				// false --> Do not emphasize numerical precision; default
+				
+				
+//				numericcplex.setParam(IloCplex.Param.Read.Scale, 0);		// -1 no scaling	0 Equilibration scaling; default	1 More aggressive scaling (page 132)
+				
+				
+//				cplex.setParam(IloCplex.DoubleParam.EpMrk, 0.99999);	// Markowitz tolerance
+//																		// page 152, 154: https://www.ibm.com/support/knowledgecenter/SSSA5P_12.7.0/ilog.odms.studio.help/pdf/usrcplex.pdf
+//																		// https://www.ibm.com/support/knowledgecenter/en/SS9UKU_12.5.0/com.ibm.cplex.zos.help/UsrMan/topics/cont_optim/simplex/20_num_difficulty.html
 				
 				//Add table info
 				data[row][2] = cplex.getNcols();
@@ -2719,11 +2768,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					output_generalInfo_file[row].createNewFile();
 
 					
-					//Variables if value <> 0
+					// Variables if value <> 0
 					output_variables_file[row].delete();
 					try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_variables_file[row]))) {
 						// Write variables info
-						fileOut.write("index" + "\t" + "name" + "\t" + "value" + "\t" + "reduced_cost");
+						fileOut.write("var_id" + "\t" + "var_name" + "\t" + "var_value" + "\t" + "var_reduced_cost");
 						for (int i = 0; i < value.length; i++) {
 //							if (value[i] != 0) {
 								fileOut.newLine();
@@ -2738,11 +2787,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					output_variables_file[row].createNewFile();
 
 					
-					//Constraints  if dual or slack <> 0
+					// Constraints  if dual or slack <> 0
 					output_constraints_file[row].delete();
 					try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_constraints_file[row]))) {
 						// Write constraints info
-						fileOut.write("index" + "\t" + "slack" + "\t" + "dual");
+						fileOut.write("cons_index" + "\t" + "cons_slack" + "\t" + "cons_dual");
 						for (int j = 0; j < dual.length; j++) {
 //							if (slack[j] != 0 || dual[j] != 0) {
 								fileOut.newLine();
@@ -2757,7 +2806,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					output_constraints_file[row].createNewFile();
 
 					
-					//Management Overview
+					// management_overview
 					output_managementOverview_file[row].delete();
 					try (BufferedWriter fileOut = new BufferedWriter(
 							new FileWriter(output_managementOverview_file[row]))) {
@@ -2801,19 +2850,83 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					output_managementOverview_file[row].createNewFile();
 					
 					
+					// basic_constraints
+					output_basic_constraints_file[row].delete();
+					try (BufferedWriter fileOut = new BufferedWriter(
+							new FileWriter(output_basic_constraints_file[row]))) {
+						// Write info
+						fileOut.write("bc_id" + "\t" + "bc_description" + "\t" + "bc_type" + "\t" + "bc_multiplier" + "\t" + "lowerbound" + "\t" 
+						+ "lowerbound_perunit_penalty" + "\t" + "upperbound" + "\t" + "upperbound_perunit_penalty" + "\t"
+						+ "bookeeping_var_id" + "\t" + "bookeeping_var_name" + "\t" + "bookeeping_var_value" + "\t" + "bookeeping_var_reduced_cost" + "\t" + "total_penalty");
+
+						current_freeConstraint = 0;
+						current_softConstraint = 0;
+						current_hardConstraint = 0;	
+						int constraint_type_col = constraint_column_names_list.indexOf("bc_type");	
+						int lowerbound_col = constraint_column_names_list.indexOf("lowerbound");
+						int lowerbound_perunit_penalty_col = constraint_column_names_list.indexOf("lowerbound_perunit_penalty");
+						int upperbound_col = constraint_column_names_list.indexOf("upperbound");
+						int upperbound_perunit_penalty_col = constraint_column_names_list.indexOf("upperbound_perunit_penalty");
+						
+						for (int i = 1; i < total_freeConstraints + total_softConstraints + total_hardConstraints + 1; i++) {	// Loop from 1 because the first row of the Basic Constraints file is just title												
+							fileOut.newLine();
+							for (int j = 0; j < 8; j++) { //just print the first 7 columns of basic constraints
+								fileOut.write(BC_value[i][j] + "\t");
+							}
+							
+							int var_id = 0;
+							if (BC_value[i][constraint_type_col].equals("SOFT")) {
+								var_id = y[current_softConstraint];
+								current_softConstraint++;
+							}
+							
+							if (BC_value[i][constraint_type_col].equals("HARD")) {
+								var_id = z[current_hardConstraint];
+								current_hardConstraint++;
+							}
+							
+							if (BC_value[i][constraint_type_col].equals("FREE")) {
+								var_id = v[current_freeConstraint];
+								current_freeConstraint++;
+							}		
+							
+							double total_penalty = 0;
+							if (BC_value[i][constraint_type_col].equals("SOFT")) {
+								double lowerbound = (!BC_value[i][lowerbound_col].equals("null")) ? Double.parseDouble(BC_value[i][lowerbound_col]) : 0;
+								double lowerbound_perunit_penalty = (!BC_value[i][lowerbound_perunit_penalty_col].equals("null")) ? Double.parseDouble(BC_value[i][lowerbound_perunit_penalty_col]) : 0;
+								double upperbound = (!BC_value[i][upperbound_col].equals("null")) ? Double.parseDouble(BC_value[i][upperbound_col]) : 0;
+								double upperbound_perunit_penalty = (!BC_value[i][upperbound_perunit_penalty_col].equals("null")) ? Double.parseDouble(BC_value[i][upperbound_perunit_penalty_col]) : 0;
+								
+								if (lowerbound != 0 && lowerbound_perunit_penalty != 0 && value[var_id] < lowerbound) {
+									total_penalty = (lowerbound - value[var_id]) * lowerbound_perunit_penalty;
+								}
+								
+								if (upperbound != 0 && upperbound_perunit_penalty != 0 && value[var_id] > upperbound) {
+									total_penalty = (value[var_id] - upperbound) * upperbound_perunit_penalty;
+								}	
+							}
+
+							fileOut.write(var_id + "\t" + vname[var_id] + "\t" + value[var_id]  + "\t" + reduceCost[var_id] + "\t" + total_penalty);
+						}
+						fileOut.close();
+					} catch (IOException e) {
+						System.err.println("Panel Solve Runs - FileWriter(output_basic_constraints_file[row]) error - " + e.getClass().getName() + ": " + e.getMessage());
+					}
+					output_basic_constraints_file[row].createNewFile();					
+													
+					
 					// flow_constraints 					
 					if (flow_set_list.size() > 0) {		// write flow constraints if there is at least a flow set
 						output_flow_constraints_file[row].delete();
 						try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_flow_constraints_file[row]))) {
 							// Write info
 							fileOut.write("flow_id" + "\t" + "flow_description" + "\t" + "flow_arrangement" + "\t"
-									+ "flow_type" + "\t" + "relaxed_percentage" + "\t" + "flow_output_original" + "\t"
-									+ "flow_output_relaxed");
+									+ "flow_type" + "\t" + "lowerbound_percentage" + "\t" + "upperbound_percentage" + "\t" + "flow_output_original");
 							// Add constraints for each flow set
 							for (int i = 0; i < flow_set_list.size(); i++) {		// loop each flow set (or each row of the flow_constraints_table)								
 								String temp = flow_id_list.get(i) + "\t" + flow_description_list.get(i) + "\t"
 										+ flow_arrangement_list.get(i) + "\t" + flow_type_list.get(i) + "\t"
-										+ flow_relaxed_percentage_list.get(i) + "\t";
+										+ flow_lowerbound_percentage_list.get(i) + "\t" + flow_upperbound_percentage_list.get(i) + "\t";
 										
 								// write flow_original
 								for (int j = 0; j < flow_set_list.get(i).size(); j++) {		
@@ -2825,20 +2938,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									}
 									temp = temp + Double.valueOf(twoDForm.format(aggragated_value)) + ";";	
 								}	
-								temp = temp.substring(0, temp.length() - 1) + "\t";		// remove the last ; and add a tab
-								
-								// write flow_relaxed
-								for (int j = 0; j < flow_set_list.get(i).size(); j++) {		
-									double aggragated_value = 0;
-									for (int ID : flow_set_list.get(i).get(j)) {																			
-										int gui_table_id = bookkeeping_ID_list.indexOf(ID);		
-										int var_id = bookkeeping_Var_list.get(gui_table_id);
-										aggragated_value = aggragated_value + value[var_id] * flow_relaxed_percentage_list.get(i) / 100;
-									}
-									temp = temp + Double.valueOf(twoDForm.format(aggragated_value)) + ";";	
-								}	
-								temp = temp.substring(0, temp.length() - 1);		// remove the last ;
-								
+								temp = temp.substring(0, temp.length() - 1) + "\t";		// remove the last ; and add a tab									
+								temp = temp.substring(0, temp.length() - 1);		// remove the last ;								
 								
 								// write the whole line
 								fileOut.newLine();
@@ -2972,7 +3073,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 		        solver.setAddRowmode(true);	//perform much better addConstraintex -----------------------------------------------------------
 //		        // Constraints 2   
 //				for (int i = 0; i < c2_num; ++i) {
-//					if (c2_lb[i] != Double.MIN_VALUE) {
+//					if (c2_lb[i] != -Double.MAX_VALUE) {
 //						solver.addConstraint(pad1ZeroInfront(withoutZero_To_WithZero(nV, c2_value[i], c2_index[i])), LpSolve.GE, c2_lb[i]);
 //					}	
 //				}	
@@ -3027,7 +3128,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 		        //Add addConstraintex much more faster than addConstraint.		Reference:		http://lpsolve.sourceforge.net/5.5/add_constraint.htm
 		        // Constraints 2   
 				for (int i = 0; i < c2_num; ++i) {
-					if (c2_lb[i] != Double.MIN_VALUE) {			
+					if (c2_lb[i] != -Double.MAX_VALUE) {			
 						solver.addConstraintex(c2_value[i].length, c2_value[i], plus1toIndex(c2_index[i]), LpSolve.GE, c2_lb[i]);
 					}	
 				}	
@@ -3152,7 +3253,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					output_variables_file[row].delete();
 					try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_variables_file[row]))) {
 						// Write variables info
-						fileOut.write("index" + "\t" + "name" + "\t" + "value" + "\t" + "reduced_cost");
+						fileOut.write("var_id" + "\t" + "var_name" + "\t" + "var_value" + "\t" + "var_reduced_cost");
 						for (int i = 0; i < value.length; i++) {
 							if (value[i] != 0) {
 								fileOut.newLine();
@@ -3172,7 +3273,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					output_constraints_file[row].delete();
 					try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_constraints_file[row]))) {
 						// Write constraints info
-						fileOut.write("index" + "\t" + "slack" + "\t" + "dual");
+						fileOut.write("cons_index" + "\t" + "cons_slack" + "\t" + "cons_dual");
 //						for (int j = 0; j < dual.length; j++) {
 //							if (slack[j] != 0 || dual[j] != 0) {
 //								fileOut.newLine();

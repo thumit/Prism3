@@ -46,4 +46,15 @@
 40. New output: flow_constraint with table and graph visualization
 41. General Inputs: alow options of exporting original problem & solution files. Change solution to .sol extension
 42. Flow: add new automatically set relaxed_percentage to 100%
+--------------------------------------------------------------------------
+
+43. Add more details for the flow grapth description
+44. Bug fixed (problem 2): due to a random function to pick EA table.
+45. Change horizental resize in input4 and input7
+46. Using Double.MIN_VALUE cause problem with flow upperbound_percentage constraint (Concert error incompatible bounds). Double.MAX_VALUE sounds to be unaffected. To make everything safe, 1 change was made for the whole modeling system: 1) Double.MIN_VALUE ---> - Double.MAX_VALUE
+47. Set Font is now only available when all internal windows are closed
+48. Bug fixed: read the correct annual discount rate (bug: read period instead of rate. This might happen during refactoring input01)
+49. Currenly flow logic only support positive multipliers, the use of negative multipliers is prohibited.
+50. introduce output06_basic_constraints
+
 

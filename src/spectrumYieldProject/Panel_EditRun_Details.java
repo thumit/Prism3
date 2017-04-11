@@ -429,44 +429,67 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 //		}
 
 		
-//		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_04_replacingdisturbances_covertype_conversion.txt");
-//		if (table_file.exists()) { // Load from input
-//			tableLoader = new Reload_Table_Info(table_file);
-//			rowCount4 = tableLoader.get_rowCount();
-//			colCount4 = tableLoader.get_colCount();
-//			data4 = tableLoader.get_input_data();
-//			columnNames4 = tableLoader.get_columnNames();
-//			is_table4_loaded = true;
-//		} else { // Create a fresh new if Load fail
-//			System.err.println("File not exists: input_04_replacingdisturbances_covertype_conversion.txt - New interface is created");
-//		}
+		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_04_replacingdisturbances_covertype_conversion.txt");
+		if (table_file.exists()) { // Load from input
+			tableLoader = new Reload_Table_Info(table_file);
+			rowCount4 = tableLoader.get_rowCount();
+			colCount4 = tableLoader.get_colCount();
+			data4 = tableLoader.get_input_data();
+			columnNames4 = tableLoader.get_columnNames();
+			is_table4_loaded = true;
+		} else { // Create a fresh new if Load fail
+			System.err.println("File not exists: input_04_replacingdisturbances_covertype_conversion.txt - New interface is created");
+		}
 		
 
-//		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_05_mixed_severity_wildfire.txt");
-//		if (table_file.exists()) { // Load from input
-//			tableLoader = new Reload_Table_Info(table_file);
-//			rowCount5 = tableLoader.get_rowCount();
-//			colCount5 = tableLoader.get_colCount();
-//			data5 = tableLoader.get_input_data();
-//			columnNames5 = tableLoader.get_columnNames();
-//			is_table5_loaded = true;
-//		} else { // Create a fresh new if Load fail
-//			System.err.println("File not exists: input_05_mixed_severity_wildfire.txt - New interface is created");
-//		}
+		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_05_mixed_severity_wildfire.txt");
+		if (table_file.exists()) { // Load from input
+			tableLoader = new Reload_Table_Info(table_file);
+			rowCount5 = tableLoader.get_rowCount();
+			colCount5 = tableLoader.get_colCount();
+			data5 = tableLoader.get_input_data();
+			columnNames5 = tableLoader.get_columnNames();
+			is_table5_loaded = true;
+		} else { // Create a fresh new if Load fail
+			System.err.println("File not exists: input_05_mixed_severity_wildfire.txt - New interface is created");
+		}
 		
 		
-//		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_06_replacing_disturbances.txt");
-//		if (table_file.exists()) { // Load from input
-//			tableLoader = new Reload_Table_Info(table_file);
-//			rowCount6 = tableLoader.get_rowCount();
-//			colCount6 = tableLoader.get_colCount();
-//			data6 = tableLoader.get_input_data();
-//			columnNames6 = tableLoader.get_columnNames();
-//			is_table6_loaded = true;
-//		} else { // Create a fresh new if Load fail
-//			System.err.println("File not exists: input_06_replacing_disturbances.txt - New interface is created");
-//		}		
+		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_06_replacing_disturbances.txt");
+		if (table_file.exists()) { // Load from input
+			tableLoader = new Reload_Table_Info(table_file);
+			rowCount6 = tableLoader.get_rowCount();
+			colCount6 = tableLoader.get_colCount();
+			data6 = tableLoader.get_input_data();
+			columnNames6 = tableLoader.get_columnNames();
+			is_table6_loaded = true;
+		} else { // Create a fresh new if Load fail
+			System.err.println("File not exists: input_06_replacing_disturbances.txt - New interface is created");
+		}		
+
+		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_07_base_cost.txt");
+		if (table_file.exists()) { // Load from input
+			tableLoader = new Reload_Table_Info(table_file);
+			rowCount7 = tableLoader.get_rowCount();
+			colCount7 = tableLoader.get_colCount();
+			data7 = tableLoader.get_input_data();
+			columnNames7 = tableLoader.get_columnNames();
+			is_table7_loaded = true;
+		} else { // Create a fresh new if Load fail
+			System.err.println("File not exists: input_07_base_cost.txt - New interface is created");
+		}
 		
+		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_08_cost_adjustment.txt");
+		if (table_file.exists()) { // Load from input
+			tableLoader = new Reload_Table_Info(table_file);
+			rowCount8 = tableLoader.get_rowCount();
+			colCount8 = tableLoader.get_colCount();
+			data8 = tableLoader.get_input_data();
+			columnNames8 = tableLoader.get_columnNames();
+			is_table8_loaded = true;
+		} else { // Create a fresh new if Load fail
+			System.err.println("File not exists: input_08_cost_adjustment.txt - New interface is created");
+		}		
 		
 		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_09_basic_constraints.txt");
 		if (table_file.exists()) { // Load from input
@@ -554,7 +577,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		
 		if (file_ExistingStrata != null && is_this_the_first_load == true) {
 			button_import_existingStrata.setEnabled(true);
-			button_import_existingStrata.doClick();
+			button_import_existingStrata.doClick();		// this also trigger   button_import_database.doClick()  if  file_Database != null
 			
 			
 			// Find the data match to paste into Existing Strata		
@@ -612,100 +635,93 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 		
 		
-		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_04_replacingdisturbances_covertype_conversion.txt");
-		if (table_file.exists()) { // Load from input
-			 // Load from input
-			tableLoader = new Reload_Table_Info(table_file);		
-			Object[][] temp_data = tableLoader.get_input_data();
-			for (int i = 0; i < temp_data.length; i++) {	
-				// Apply temp_data row values to data4 row 
-				for (int j = 0; j < data4[i].length; j++) {
-					data4[i][j] = temp_data[i][j];
-				}	
-			}	
-			is_table4_loaded = true;
-		} else { // Create a fresh new if Load fail
-			System.err.println("File not exists: input_04_replacingdisturbances_covertype_conversion.txt - New interface is created");
-		}
+//		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_04_replacingdisturbances_covertype_conversion.txt");
+//		if (table_file.exists()) { // Load from input
+//			 // Load from input
+//			tableLoader = new Reload_Table_Info(table_file);		
+//			Object[][] temp_data = tableLoader.get_input_data();
+//			for (int i = 0; i < temp_data.length; i++) {	
+//				// Apply temp_data row values to data4 row 
+//				for (int j = 0; j < data4[i].length; j++) {
+//					data4[i][j] = temp_data[i][j];
+//				}	
+//			}	
+//			is_table4_loaded = true;
+//		} else { // Create a fresh new if Load fail
+//			System.err.println("File not exists: input_04_replacingdisturbances_covertype_conversion.txt - New interface is created");
+//		}
 		
 		
 		
-		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_05_mixed_severity_wildfire.txt");
-		if (table_file.exists()) { // Load from input
-			 // Load from input
-			tableLoader = new Reload_Table_Info(table_file);		
-			Object[][] temp_data = tableLoader.get_input_data();
-			for (int i = 0; i < temp_data.length; i++) {	
-				// Apply temp_data row values to data5 row 
-				for (int j = 0; j < data5[i].length; j++) {
-					data5[i][j] = temp_data[i][j];
-				}	
-			}	
-			is_table5_loaded = true;
-		} else { // Create a fresh new if Load fail
-			System.err.println("File not exists: input_05_mixed_severity_wildfire.txt - New interface is created");
-		}
+//		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_05_mixed_severity_wildfire.txt");
+//		if (table_file.exists()) { // Load from input
+//			 // Load from input
+//			tableLoader = new Reload_Table_Info(table_file);		
+//			Object[][] temp_data = tableLoader.get_input_data();
+//			for (int i = 0; i < temp_data.length; i++) {	
+//				// Apply temp_data row values to data5 row 
+//				for (int j = 0; j < data5[i].length; j++) {
+//					data5[i][j] = temp_data[i][j];
+//				}	
+//			}	
+//			is_table5_loaded = true;
+//		} else { // Create a fresh new if Load fail
+//			System.err.println("File not exists: input_05_mixed_severity_wildfire.txt - New interface is created");
+//		}
 			
 		
 		
-		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_06_replacing_disturbances.txt");
-		if (table_file.exists()) { // Load from input
-			// Load from input
-			tableLoader = new Reload_Table_Info(table_file);		
-			Object[][] temp_data = tableLoader.get_input_data();
-			for (int i = 0; i < temp_data.length; i++) {	
-				// Apply temp_data row values to data7 row 
-				for (int j = 0; j < data6[i].length; j++) {
-					data6[i][j] = temp_data[i][j];
-				}	
-			}	
-			is_table6_loaded = true;
-		} else { // Create a fresh new if Load fail
-			System.err.println("File not exists: input_06_replacing_disturbances.txt - New interface is created");
-		}		
+//		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_06_replacing_disturbances.txt");
+//		if (table_file.exists()) { // Load from input
+//			// Load from input
+//			tableLoader = new Reload_Table_Info(table_file);		
+//			Object[][] temp_data = tableLoader.get_input_data();
+//			for (int i = 0; i < temp_data.length; i++) {	
+//				// Apply temp_data row values to data7 row 
+//				for (int j = 0; j < data6[i].length; j++) {
+//					data6[i][j] = temp_data[i][j];
+//				}	
+//			}	
+//			is_table6_loaded = true;
+//		} else { // Create a fresh new if Load fail
+//			System.err.println("File not exists: input_06_replacing_disturbances.txt - New interface is created");
+//		}		
 		
 		
-		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_07_base_cost.txt");
-		if (table_file.exists()) { // Load from input
-			 // Load from input
-			tableLoader = new Reload_Table_Info(table_file);		
-			Object[][] temp_data = tableLoader.get_input_data();
-			for (int i = 0; i < temp_data.length; i++) {	
-				// Apply temp_data row values to data7 row 
-				for (int j = 0; j < data7[i].length; j++) {
-					data7[i][j] = temp_data[i][j];
-				}	
-			}	
-			is_table7_loaded = true;
-		} else { // Create a fresh new if Load fail
-			System.err.println("File not exists: input_07_base_cost.txt - New interface is created");
-		}
-		
-		
-		
-		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_08_cost_adjustment.txt");
-		if (table_file.exists()) { // Load from input
-			 // Load from input
-			tableLoader = new Reload_Table_Info(table_file);		
-			Object[][] temp_data = tableLoader.get_input_data();
-			for (int i = 0; i < temp_data.length; i++) {	
-				// Apply temp_data row values to data8 row 
-				for (int j = 0; j < data8[i].length; j++) {
-					data8[i][j] = temp_data[i][j];
-				}	
-			}	
-			is_table8_loaded = true;
-		} else { // Create a fresh new if Load fail
-			System.err.println("File not exists: input_08_cost_adjustment.txt - New interface is created");
-		}
+//		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_07_base_cost.txt");
+//		if (table_file.exists()) { // Load from input
+//			 // Load from input
+//			tableLoader = new Reload_Table_Info(table_file);		
+//			Object[][] temp_data = tableLoader.get_input_data();
+//			for (int i = 0; i < temp_data.length; i++) {	
+//				// Apply temp_data row values to data7 row 
+//				for (int j = 0; j < data7[i].length; j++) {
+//					data7[i][j] = temp_data[i][j];
+//				}	
+//			}	
+//			is_table7_loaded = true;
+//		} else { // Create a fresh new if Load fail
+//			System.err.println("File not exists: input_07_base_cost.txt - New interface is created");
+//		}
 		
 		
 		
-		if (file_Database != null && is_this_the_first_load == true) {
-			button_import_database.setEnabled(true);
-			button_import_database.doClick();
-		}
-		
+//		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_08_cost_adjustment.txt");
+//		if (table_file.exists()) { // Load from input
+//			 // Load from input
+//			tableLoader = new Reload_Table_Info(table_file);		
+//			Object[][] temp_data = tableLoader.get_input_data();
+//			for (int i = 0; i < temp_data.length; i++) {	
+//				// Apply temp_data row values to data8 row 
+//				for (int j = 0; j < data8[i].length; j++) {
+//					data8[i][j] = temp_data[i][j];
+//				}	
+//			}	
+//			is_table8_loaded = true;
+//		} else { // Create a fresh new if Load fail
+//			System.err.println("File not exists: input_08_cost_adjustment.txt - New interface is created");
+//		}
+				
 		
 				
 		//Matching data types after finishing reloads
@@ -2373,9 +2389,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		//Setup the table------------------------------------------------------------	
 		if (is_table10_loaded == false) { // Create a fresh new if Load fail				
 			rowCount10 = 0;
-			colCount10 = 5;
+			colCount10 = 6;
 			data10 = new Object[rowCount10][colCount10];
-			columnNames10 = new String[] {"flow_id", "flow_description", "flow_arrangement", "flow_type", "relaxed_percentage"};	         				
+			columnNames10 = new String[] {"flow_id", "flow_description", "flow_arrangement", "flow_type", "lowerbound_percentage", "upperbound_percentage"};	         				
 		}
 					
 		
@@ -2385,7 +2401,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			public Class getColumnClass(int c) {
 				if (c == 0) return Integer.class;      //column 0 accepts only Integer
 				else if (c == 1 && c == 2) return String.class;      
-				else if (c ==4) return Double.class;       
+				else if (c == 4 || c == 5) return Double.class;       
 				else return String.class;				
 			}
 			
@@ -2420,7 +2436,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 								} catch (NumberFormatException e) {
 									System.err.println(e.getClass().getName() + ": " + e.getMessage() + " Fail to convert String to Integer values in create_table10");
 								}	
-							} else if (col == 4) {			//Column 4 is Double
+							} else if (col == 4 || col == 5) {			//Column 4 and 5 are Double
 								try {
 									data10[row][col] = Double.valueOf(String.valueOf(data10[row][col]));
 								} catch (NumberFormatException e) {
@@ -4980,6 +4996,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 										
 						data10[rowCount10 - 1][2] = flow_scrollPane.get_flow_info_from_GUI();	
 						data10[rowCount10 - 1][4] = (double) 100;
+						data10[rowCount10 - 1][5] = (double) 100;
 						model10.updateTableModelSpectrum(rowCount10, colCount10, data10, columnNames10);
 						update_id();
 						model10.fireTableDataChanged();

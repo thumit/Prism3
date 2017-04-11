@@ -131,6 +131,7 @@ public class Spectrum_Main extends JFrame {
 				menuOpenProject = new JMenu("Open");
 				exitSoftware = new JMenuItem("Exit");
 				DatabaseManagement = new JMenuItem("Database Management");
+				DatabaseManagement.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_database.png"));
 				setLogo = new JMenuItem("Hide Logo");
 				setFont = new MenuItem_SetFont(main);
 				setTransparency = new MenuItem_SetTransparency(main);
@@ -184,8 +185,10 @@ public class Spectrum_Main extends JFrame {
 						//Only allow to change look and feel if No Frame is opened, this is to prevent fail performance of the components after changing look and feel
 						if (Spectrum_Main.mainFrameReturn().getAllFrames().length ==  0) {
 							setLookAndFeel.setEnabled(true);
+							setFont.setEnabled(true);
 						} else {
 							setLookAndFeel.setEnabled(false);
+							setFont.setEnabled(false);
 						}		
 					}
 

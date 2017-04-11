@@ -681,7 +681,7 @@ public class Read_RunInputs {
 	private List<String> flow_column_names_list;
 	private int flow_totalRows, flow_totalColumns;
 	private String[][] flow_value;
-	private int flow_id_col, flow_description_col, flow_arrangement_col, flow_type_col, relaxed_percentage_col;		
+	private int flow_id_col, flow_description_col, flow_arrangement_col, flow_type_col, lowerbound_percentage_col, upperbound_percentage_col;		
 
 	public void read_flow_constraints (File file) {
 		String delimited = "\t";		// tab delimited
@@ -701,7 +701,8 @@ public class Read_RunInputs {
 			flow_description_col = flow_column_names_list.indexOf("flow_description");
 			flow_arrangement_col = flow_column_names_list.indexOf("flow_arrangement");
 			flow_type_col = flow_column_names_list.indexOf("flow_type");
-			relaxed_percentage_col = flow_column_names_list.indexOf("relaxed_percentage");
+			lowerbound_percentage_col = flow_column_names_list.indexOf("lowerbound_percentage");
+			upperbound_percentage_col = flow_column_names_list.indexOf("upperbound_percentage");
 
 			
 			// values in all rows and columns
@@ -770,13 +771,29 @@ public class Read_RunInputs {
 		return flow_type_list;
 	}
 	
-	public List<Double> get_flow_relaxed_percentage_list() {
-		List<Double> flow_relaxed_percentage_list = new ArrayList<Double>();
+	public List<Double> get_flow_lowerbound_percentage_list() {
+		List<Double> flow_lowerbound_percentage_list = new ArrayList<Double>();
 		for (int i = 1; i < flow_totalRows; i++) {		// from 2nd row			
-			flow_relaxed_percentage_list.add(Double.parseDouble(flow_value[i][relaxed_percentage_col]));
+			if (!flow_value[i][lowerbound_percentage_col].equals("null")) {
+				flow_lowerbound_percentage_list.add(Double.parseDouble(flow_value[i][lowerbound_percentage_col]));
+			} else {
+				flow_lowerbound_percentage_list.add(null);
+			}
 		}
-		return flow_relaxed_percentage_list;
+		return flow_lowerbound_percentage_list;
 	}
+	
+	public List<Double> get_flow_upperbound_percentage_list() {
+		List<Double> flow_upperbound_percentage_list = new ArrayList<Double>();
+		for (int i = 1; i < flow_totalRows; i++) {		// from 2nd row						
+			if (!flow_value[i][upperbound_percentage_col].equals("null")) {
+				flow_upperbound_percentage_list.add(Double.parseDouble(flow_value[i][upperbound_percentage_col]));
+			} else {
+				flow_upperbound_percentage_list.add(null);
+			}
+		}
+		return flow_upperbound_percentage_list;
+	}	
 	
 	public List<List<List<Integer>>> get_flow_set_list () {	
 		List<List<List<Integer>>> flow_set_list = new ArrayList<List<List<Integer>>>();	
