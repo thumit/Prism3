@@ -17,7 +17,7 @@ public class FilesChooser {
 		chooser.setApproveButtonText("Import");
 		chooser.setApproveButtonToolTipText("Import files as table");
 		
-		int returnValue = chooser.showOpenDialog(Spectrum_Main.mainFrameReturn());
+		int returnValue = chooser.showOpenDialog(Spectrum_Main.get_spectrumDesktopPane());
 		File[] files = null;
 		if (returnValue == JFileChooser.APPROVE_OPTION) {
 
@@ -37,7 +37,7 @@ public class FilesChooser {
 		chooser.setFileFilter(filter);
 		chooser.setAcceptAllFileFilterUsed(false);
 		
-		int returnValue = chooser.showOpenDialog(Spectrum_Main.mainFrameReturn());
+		int returnValue = chooser.showOpenDialog(Spectrum_Main.get_spectrumDesktopPane());
 		File[] files = null;
 		if (returnValue == JFileChooser.APPROVE_OPTION) {
 

@@ -3,10 +3,6 @@ package spectrumYieldProject;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GradientPaint;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -19,14 +15,10 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -41,11 +33,7 @@ import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.Timer;
 import javax.swing.ToolTipManager;
-import javax.swing.border.TitledBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -53,24 +41,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
-
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.block.BlockBorder;
-import org.jfree.chart.labels.PieSectionLabelGenerator;
-import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
-import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
-import org.jfree.chart.plot.CategoryPlot;
-import org.jfree.chart.plot.PieLabelLinkStyle;
-import org.jfree.chart.plot.PiePlot3D;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.renderer.category.BarRenderer;
-import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.data.general.DefaultPieDataset;
-import org.jfree.data.general.PieDataset;
-import org.jfree.ui.RectangleEdge;
-import org.jfree.util.Rotation;
 
 import net.coderazzi.filters.gui.AutoChoices;
 import net.coderazzi.filters.gui.TableFilterHeader;
@@ -85,7 +55,11 @@ public class Panel_YieldProject extends JLayeredPane {
 	private Panel_EditRun editPanel;		// This panel only visible when "Start Editing"
 	private Panel_SolveRun solvePanel;		// This panel only visible when "Start Solving"
 	private Panel_CustomizeOutput customizeOutputPanel;		// This panel only visible when Start "Customize Output"
-	private JButton btnNewRun, btnDeleteRun, btnEditRun, btnRefresh, btnSolveRun, btnCustomizeOutput;
+	private JButton btnNewRun, btnDeleteRun;
+	private static JButton btnEditRun;
+	private JButton btnRefresh;
+	private JButton btnSolveRun;
+	private JButton btnCustomizeOutput;
 	
 	private File[] listOfEditRuns;
 	private File currentProjectFolder, currentRunFolder;
@@ -114,6 +88,8 @@ public class Panel_YieldProject extends JLayeredPane {
 	private Object[][] data;	
 	private TableFilterHeader filterHeader = new TableFilterHeader(table, AutoChoices.ENABLED);
 	
+	private Thread thread_management_details;
+	
 	public Panel_YieldProject() {
 		super.setLayout(new BorderLayout(0, 0));
 		ToolTipManager.sharedInstance().setInitialDelay(0);		//Show toolTip immediately
@@ -129,14 +105,17 @@ public class Panel_YieldProject extends JLayeredPane {
 		scrollPane_Left = new JScrollPane();
 		splitPanel.setLeftComponent(scrollPane_Left);
 		root = new DefaultMutableTreeNode("Runs");
-		projectTree = new JTree(root); // Add the root of DatabaseTree
+		projectTree = new JTree(root); // Add the root of projectTree
 		// projectTree.setEditable(true);
 		projectTree.setInvokesStopCellEditing(true); // Even when we leave the node by clicking mouse, the name editing will be kept
 
 	
 		
-		projectTree.addMouseListener(new MouseAdapter() { // Add listener to DatabaseTree
+		projectTree.addMouseListener(new MouseAdapter() { // Add listener to projectTree
 			public void mousePressed(MouseEvent e) {
+				if (thread_management_details != null && !thread_management_details.isInterrupted()) {
+					thread_management_details.interrupt();	// stop the thread which creating the panel for output5
+				}
 				doMousePressed(e);
 			}
 		});
@@ -220,15 +199,15 @@ public class Panel_YieldProject extends JLayeredPane {
 		btnEditRun.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
-				Thread thread1 = new Thread() {			// Make a thread so JFrame will not be frozen
+				Thread thread = new Thread() {			// Make a thread so JFrame will not be frozen
 					public void run() {
 						edit_Runs();
-						Spectrum_Main.mainFrameReturn().getSelectedFrame().revalidate();
-						Spectrum_Main.mainFrameReturn().getSelectedFrame().repaint();
+						Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().revalidate();
+						Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().repaint();
 						this.interrupt();
 					}
 				};
-				thread1.start();
+				thread.start();
 			}
 		});
 		projectToolBar.add(btnEditRun);
@@ -369,11 +348,21 @@ public class Panel_YieldProject extends JLayeredPane {
 				
 						// Show table on the scroll panel
 						if (currentInputFile.equals("output_04_management_overview.txt")) {		//show a panel with 2 pie charts
-							Panel_Management_Overview chart_panel = new Panel_Management_Overview(table);
+							Output_Panel_Management_Overview chart_panel = new Output_Panel_Management_Overview(table, data);
 							scrollPane_Right.setViewportView(chart_panel);
+						} else if (currentInputFile.equals("output_05_management_details.txt")) {							
+							scrollPane_Right.setViewportView(table);
+							thread_management_details = new Thread() {			// Make a thread for output5
+								public void run() {
+									Output_Panel_Management_Details management_details_panel = new Output_Panel_Management_Details(currentProjectFolder, currentRun, table, data, model);
+									scrollPane_Right.setViewportView(management_details_panel);
+									this.interrupt();
+								}
+							};
+							thread_management_details.start();
 						} else if (currentInputFile.equals("output_07_flow_constraints.txt")) {		//show a panel with bar and line charts
 							table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-							Panel_Flow_Constraints chart_panel = new Panel_Flow_Constraints(table, data);
+							Output_Panel_Flow_Constraints chart_panel = new Output_Panel_Flow_Constraints(table, data);
 							scrollPane_Right.setViewportView(chart_panel);
 						} else {		//Show the file as table
 							scrollPane_Right.setViewportView(table); 
@@ -478,15 +467,15 @@ public class Panel_YieldProject extends JLayeredPane {
 						editMenuItem.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent actionEvent) {								
-								Thread thread2 = new Thread() {			// Make a thread so JFrame will not be frozen
+								Thread thread = new Thread() {			// Make a thread so JFrame will not be frozen
 									public void run() {
 										edit_Runs();
-										Spectrum_Main.mainFrameReturn().getSelectedFrame().revalidate();
-										Spectrum_Main.mainFrameReturn().getSelectedFrame().repaint();
+										Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().revalidate();
+										Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().repaint();
 										this.interrupt();
 									}
 								};
-								thread2.start();
+								thread.start();
 							}
 						});
 						popup.add(editMenuItem);
@@ -550,17 +539,17 @@ public class Panel_YieldProject extends JLayeredPane {
 	public void refreshProjectTree() {
 		filterHeader.setTable(null);		//set null filter after refresh: this is important
 		
-		// Remove all children nodes from the root of DatabaseTree, and reload the tree
+		// Remove all children nodes from the root of projectTree, and reload the tree
 		DefaultTreeModel model = (DefaultTreeModel)projectTree.getModel();
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode)model.getRoot();
 		root.removeAllChildren();
 		model.reload(root);
 
 		// CurrentProjectFolder will be referred to the currently opened and selected JinternalFrame title 
-		currentProjectFolder= new File(FilesHandle.get_projectsFolder().getAbsolutePath() + "/" + Spectrum_Main.mainFrameReturn().getSelectedFrame().getTitle());	
+		currentProjectFolder= new File(FilesHandle.get_projectsFolder().getAbsolutePath() + "/" + Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().getTitle());	
 //		currentProjectFolder = new File(workingLocation + "/Projects/" + Spectrum_Main.getProjectName());	//IF pack JInternal Frame in Spectrum_main then we need this	
 	
-		// Find all the Runs folders in the "Projects" folder to add into DatabaseTree	
+		// Find all the Runs folders in the "Projects" folder to add into projectTree	
 		String fileName;
 		File[] listOfFiles = currentProjectFolder.listFiles(new FilenameFilter() {
 			@Override
@@ -772,7 +761,7 @@ public class Panel_YieldProject extends JLayeredPane {
 			
 			
 			String[] ExitOption = { "Save", "Don't Save", "Cancel"};
-			int response = JOptionPane.showOptionDialog(Spectrum_Main.mainFrameReturn(),"Save all changes you made ?", "Stop Editing",
+			int response = JOptionPane.showOptionDialog(Spectrum_Main.get_spectrumDesktopPane(),"Save all changes you made ?", "Stop Editing",
 					JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
 			
 			if (response == 0 || response == 1)				//Yes or No
@@ -945,468 +934,15 @@ public class Panel_YieldProject extends JLayeredPane {
 			refreshProjectTree(); //Refresh the tree
 		}
 	}
-
-
-	// Panel Management Overview-----------------------------------------------------------------------------	
-	class Panel_Management_Overview extends JLayeredPane {
-		public Panel_Management_Overview(JTable this_table) {
-			setLayout(new GridBagLayout());
-			GridBagConstraints c = new GridBagConstraints();
-			c.fill = GridBagConstraints.NONE;
-			c.weightx = 1;
-		    c.weighty = 1;
-		    
-		    //---------------------------------------------------------------
-		    //Create a chart
-		    PieDataset dataset = create_all_strata_dataset();
-	        JFreeChart chart = createChart(dataset, "Management decisions at the start of planning horizon for " + rowCount + " existing strata");
-	        chart.getLegend().setFrame(BlockBorder.NONE);	//Remove the ugly border surrounded Legend	        
-
-	        // add the chart to a panel...
-	        ChartPanel chartPanel = new ChartPanel(chart);        
-	        TitledBorder border = new TitledBorder("");
-			border.setTitleJustification(TitledBorder.CENTER);
-			chartPanel.setBorder(border);
-	        chartPanel.setPreferredSize(new Dimension(600, 350));
-	        
-	    	// Rotation effect
-	        final Rotator rotator = new Rotator((PiePlot3D) chart.getPlot());
-	        rotator.start();           
-	        chartPanel.addMouseListener(new MouseAdapter() { // Add listener to DatabaseTree
-				boolean is_rotating = true;
-				public void mousePressed(MouseEvent e) {
-					if (SwingUtilities.isLeftMouseButton(e)) {
-						if (is_rotating) {
-							rotator.stop();
-							is_rotating = false;
-						} else {
-							rotator.start();
-							is_rotating = true;
-						}
-					}
-				}
-			});
-	    
-	        // Add panel to scroll panel
-	        JScrollPane scroll_chart1 = new JScrollPane();
-	        scroll_chart1.setBorder(null);	      
-			scroll_chart1.setViewportView(chartPanel);
-						
-	        //---------------------------------------------------------------
-	        JScrollPane scroll_chart2 = new JScrollPane();
-	        scroll_chart2.setBorder(null);
-	        
-	        this_table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
-		        public void valueChanged(ListSelectionEvent event) {
-		        	String strataName = "";
-		 	        if (this_table.getSelectedRow() >= 0) 	strataName = data[this_table.getSelectedRow()][0].toString();
-		 	        
-		 	        //Create a chart
-		 		    PieDataset dataset2 = create_selected_strata_dataset();
-		 	        JFreeChart chart2 = createChart(dataset2, "Management decisions at the start of planning horizon for '" + strataName + "' ");
-		 	        if (this_table.getSelectedRows().length > 1) {	//Change chart title if multiple strata are selected
-		 				chart2.setTitle("Management decisions at the start of planning horizon for "  + this_table.getSelectedRows().length + " existing strata");
-		 			}	
-
-		 	        // add the chart to a panel...
-		         	ChartPanel chartPanel2 = new ChartPanel(chart2);
-		 	        chart2.getLegend().setFrame(BlockBorder.NONE);	//Remove the ugly border surrounded Legend
-		 	        TitledBorder border2 = new TitledBorder("");
-		 			border2.setTitleJustification(TitledBorder.CENTER);
-		 			chartPanel2.setBorder(border2);
-		 	        chartPanel2.setPreferredSize(new Dimension(600, 350));
-		 	        
-		 	        // Rotation effect 
-		 	        final Rotator rotator = new Rotator((PiePlot3D) chart2.getPlot()); 	 	     
-		 	        if (dataset2 != null) {
-				        chartPanel2.addMouseListener(new MouseAdapter() { // Add listener to DatabaseTree
-							boolean is_rotating = false;
-							public void mousePressed(MouseEvent e) {
-								if (SwingUtilities.isLeftMouseButton(e)) {
-									if (is_rotating) {
-										rotator.stop();
-										is_rotating = false;
-									} else {
-										rotator.start();
-										is_rotating = true;
-									}
-								}
-							}
-						});
-		 	        }
-
-		 	        // Add panel to scroll panel
-					scroll_chart2.setViewportView(chartPanel2);
-		        }
-	        });
-	        
-	        // Trigger the value changed listener of the table
-	        this_table.setRowSelectionInterval(0, 0);
-	        this_table.clearSelection();
-	        //---------------------------------------------------------------
-	        
-	        
-		    // Add the 1st grid - chartPanel for all Strata
-			c.gridx = 0;
-			c.gridy = 0;
-			c.gridwidth = 1;
-			c.weightx = 0;
-		    c.weighty = 0;
-			super.add(scroll_chart1, c);
 			
-		    // Add the 2nd grid - chartPanel for the selected Strata
-			c.gridx = 1;
-			c.gridy = 0;
-			c.gridwidth = 1;
-			c.weightx = 0;
-			c.weighty = 0;
-			super.add(scroll_chart2, c);
-			
-			// Add empty label
-			c.fill = GridBagConstraints.BOTH;
-			c.gridx = 2;
-			c.gridy = 0;
-			c.gridwidth = 1;
-			c.weightx = 1;
-			c.weighty = 0;
-			super.add(new JLabel(), c);		
-			
-			// Add the 3rd grid - table
-			c.gridx = 0;
-			c.gridy = 1;
-			c.gridwidth =3;
-			c.weightx = 1;
-		    c.weighty = 1;			
-			this_table.setPreferredScrollableViewportSize(new Dimension(0, 0));		// 1216	
-			JScrollPane table_scroll_panel = new JScrollPane(this_table);
-			table_scroll_panel.setBorder(BorderFactory.createEmptyBorder());	//Hide the border line surrounded scrollPane
-			table_scroll_panel.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-			super.add(table_scroll_panel, c);
-		}
 	
-				
-		private PieDataset create_all_strata_dataset() {
-			DefaultPieDataset dataset = new DefaultPieDataset();
-
-			double total_NG = 0;
-			double total_PB = 0;
-			double total_GS = 0;
-			double total_EA = 0;
-			double total_MS = 0;
-			for (int i = 0; i < data.length; i++) { // Loop table rows
-				total_NG = total_NG + Double.parseDouble(data[i][7].toString());
-				total_PB = total_PB + Double.parseDouble(data[i][8].toString());
-				total_GS = total_GS + Double.parseDouble(data[i][9].toString());
-				total_EA = total_EA + Double.parseDouble(data[i][10].toString());
-				total_MS = total_MS + Double.parseDouble(data[i][11].toString());
-			}
-		
-			dataset.setValue("Natural Growth", total_NG);
-			dataset.setValue("Prescribed Burn", total_PB);
-			dataset.setValue("Group Selection", total_GS);
-			dataset.setValue("Even Age", total_EA);
-			dataset.setValue("Mixed Severity Wildfire", total_MS);
-			
-			return dataset;
-		}
-
-		private PieDataset create_selected_strata_dataset() {
-			DefaultPieDataset dataset = new DefaultPieDataset();
-
-			if (table.getSelectedRow() >= 0) {
-				double total_NG = 0;
-				double total_PB = 0;
-				double total_GS = 0;
-				double total_EA = 0;
-				double total_MS = 0;
-					
-				int[] selectedRow = table.getSelectedRows();	
-				for (int i = 0; i < selectedRow.length; i++) {
-					selectedRow[i] = table.convertRowIndexToModel(selectedRow[i]);	///Convert row index because "Sort" causes problems
-				}
-				
-				for (int i: selectedRow) {
-					total_NG = total_NG + Double.parseDouble(data[i][7].toString());
-					total_PB = total_PB + Double.parseDouble(data[i][8].toString());
-					total_GS = total_GS + Double.parseDouble(data[i][9].toString());
-					total_EA = total_EA + Double.parseDouble(data[i][10].toString());
-					total_MS = total_MS + Double.parseDouble(data[i][11].toString());
-				}					
-			
-				dataset.setValue("Natural Growth", total_NG);
-				dataset.setValue("Prescribed Burn", total_PB);
-				dataset.setValue("Group Selection", total_GS);
-				dataset.setValue("Even Age", total_EA);
-				dataset.setValue("Mixed Severity Wildfire", total_MS);
-			} else {
-				dataset = null;
-			}
-
-			return dataset;
-		}		
-		
-		
-		@SuppressWarnings("deprecation")
-		private JFreeChart createChart(PieDataset dataset, String chartName) {
-			JFreeChart chart = ChartFactory.createPieChart3D(chartName, // chart title
-					dataset, // dataset
-					true, // include legend
-					true, false);		
-			chart.setBorderVisible(true);
-			chart.setBackgroundPaint(Color.LIGHT_GRAY);
-			chart.getLegend().setBackgroundPaint(null);
-			chart.getLegend().setPosition(RectangleEdge.BOTTOM);
-			chart.getLegend().setItemFont(new java.awt.Font("defaultFont", java.awt.Font.PLAIN, 13));
-			chart.getTitle().setFont(new java.awt.Font("defaultFont", java.awt.Font.BOLD, 14));
-
-			PiePlot3D plot = (PiePlot3D) chart.getPlot();
-			plot.setOutlinePaint(null);
-			plot.setStartAngle(135);
-	        plot.setDirection(Rotation.CLOCKWISE);
-	        plot.setForegroundAlpha(0.6f);
-	        plot.setBackgroundPaint(null);
-			plot.setNoDataMessage("Highlight single or multiple existing strata to view chart");
-			plot.setExplodePercent(1, 0.1);
-			
-			PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(
-		            "{0}: {1} ({2})", new DecimalFormat("0.00 acres"), new DecimalFormat("0.0%"));			// "{0}: {1} ({2})"
-		    plot.setLabelGenerator(gen);	    
-		    plot.setLabelBackgroundPaint(null);
-		    plot.setLabelShadowPaint(null);
-		    plot.setLabelOutlinePaint(null);
-		    plot.setLabelLinkStyle(PieLabelLinkStyle.QUAD_CURVE);
-		    
-		    // Customize colors
-		    plot.setSectionPaint("Natural Growth", new Color(0, 255, 0));
-			plot.setSectionPaint("Prescribed Burn", new Color(255, 255, 0));
-			plot.setSectionPaint("Group Selection", new Color(240, 248, 255));
-		    plot.setSectionPaint("Even Age", new Color(51, 255, 255));
-		    plot.setSectionPaint("Mixed Severity Wildfire", new Color(255, 51, 0));
-		    		    
-//		    plot.setLabelLinksVisible(false);
-//			plot.setLabelGenerator(null);
-//			plot.setSimpleLabels(true);
-			return chart;
-		}	
-		
-		// ****************************************************************************
-		// * JFREECHART DEVELOPER GUIDE                                               *
-		// * The JFreeChart Developer Guide, written by David Gilbert, is available   *
-		// * to purchase from Object Refinery Limited:                                *
-		// *                                                                          *
-		// * http://www.object-refinery.com/jfreechart/guide.html                     *
-		// *                                                                          *
-		// * Sales are used to provide funding for the JFreeChart project - please    * 
-		// * support us so that we can continue developing free software.             *
-		// ****************************************************************************
-		// The rotator.
-
-		private class Rotator extends Timer implements ActionListener {
-
-		    /** The plot. */
-		    private PiePlot3D plot;
-
-		    /** The angle. */
-		    private double angle = 135;
-
-		    /**
-		     * Constructor.
-		     *
-		     * @param plot  the plot.
-		     */
-		    Rotator(final PiePlot3D plot) {
-		        super(15, null);
-		        this.plot = plot;
-		        addActionListener(this);
-		    }
-
-		    /**
-		     * Modifies the starting angle.
-		     *
-		     * @param event  the action event.
-		     */
-		    public void actionPerformed(final ActionEvent event) {
-		        this.plot.setStartAngle(this.angle);
-		        this.angle = this.angle + (double) 0.1;
-		        if (this.angle == 360) {
-		            this.angle = 0;
-		        }
-		    }
-
-		}
-	}	
-	
-	
-	// Panel_Flow_Constraints--------------------------------------------------------------------------------	
-	class Panel_Flow_Constraints extends JLayeredPane {
-		public Panel_Flow_Constraints(JTable this_table, Object[][] this_data) {
-			setLayout(new GridBagLayout());
-			GridBagConstraints c = new GridBagConstraints();
-			c.fill = GridBagConstraints.NONE;
-			c.weightx = 1;
-		    c.weighty = 1;
-		    
-		    //---------------------------------------------------------------
-	        JScrollPane scroll_bar_chart = new JScrollPane();
-	        scroll_bar_chart.setBorder(null);
-	        
-	        //---------------------------------------------------------------
-	        JScrollPane scroll_line_chart = new JScrollPane();
-	        scroll_line_chart.setBorder(null);
-	        
-	        //---------------------------------------------------------------
-	        this_table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
-				public void valueChanged(ListSelectionEvent event) {
-					// Create a chart						
-					JFreeChart chart1 = createBarChart3D(this_table, this_data);	 	        
-		 	        
-					// add the chart to a panel...
-		         	ChartPanel chart_panel1 = new ChartPanel(chart1);
-		 	        chart1.getLegend().setFrame(BlockBorder.NONE);	//Remove the ugly border surrounded Legend
-		 	        TitledBorder border1 = new TitledBorder("");
-		 			border1.setTitleJustification(TitledBorder.CENTER);
-		 			chart_panel1.setBorder(border1);
-		 	        chart_panel1.setPreferredSize(new Dimension(600, 350));
-
-		 	        // Add panel to scroll panel
-		 	       scroll_bar_chart.setViewportView(chart_panel1);
-	        	}       
-	        });
-	        
-	        // Trigger the value changed listener of the table
-	        this_table.setRowSelectionInterval(0, 0);
-	        this_table.clearSelection();
-	        //---------------------------------------------------------------
-	        
-	        
-		    // Add the 1st grid - bar chart
-			c.gridx = 0;
-			c.gridy = 0;
-			c.gridwidth = 1;
-			c.weightx = 0;
-		    c.weighty = 0;
-			super.add(scroll_bar_chart, c);
-			
-		    // Add the 2nd grid - line chart
-			c.gridx = 1;
-			c.gridy = 0;
-			c.gridwidth = 1;
-			c.weightx = 0;
-			c.weighty = 0;
-			super.add(scroll_line_chart, c);			
-			
-			// Add empty label
-			c.fill = GridBagConstraints.BOTH;
-			c.gridx = 2;
-			c.gridy = 0;
-			c.gridwidth = 1;
-			c.weightx = 1;
-			c.weighty = 0;
-			super.add(new JLabel(), c);							
-						
-			// Add the 3rd grid - table
-			c.gridx = 0;
-			c.gridy = 1;
-			c.gridwidth = 3;
-			c.weightx = 0;
-		    c.weighty = 1;
-			this_table.setPreferredScrollableViewportSize(new Dimension(0, 0));			
-			JScrollPane table_scroll_panel = new JScrollPane(this_table);
-			table_scroll_panel.setBorder(BorderFactory.createEmptyBorder());	// Hide the border line surrounded scrollPane
-			table_scroll_panel.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-			super.add(table_scroll_panel, c);
-		}
-	
-	
-		@SuppressWarnings("deprecation")
-		private JFreeChart createBarChart3D(JTable this_table, Object[][] this_data) {			
-			final DefaultCategoryDataset dataset = new DefaultCategoryDataset( );
-			
-			String chart_name = "Highlight a flow to view chart";
-			if (this_table.getSelectedRow() >= 0) {
-				// Get the current selected row
-	        	int selectedRow = this_table.getSelectedRow();
-				selectedRow = this_table.convertRowIndexToModel(selectedRow);		///Convert row index because "Sort" causes problems	
-				chart_name = this_data[selectedRow][1].toString() + " - " + this_data[selectedRow][3].toString();
-								
-				// Read flow_arrangement
-				String[] flow_arrangement_info = this_data[selectedRow][2].toString().split(";");	// Read the whole cell 'flow_arrangement'
-				List<String> flow_arrangement = new ArrayList<String>();
-				for (int i = 0; i < flow_arrangement_info.length; i++) {
-					flow_arrangement.add(flow_arrangement_info[i]);
-				}
-				
-				// Read flow_output_original
-				String[] flow_output_original_info = this_data[selectedRow][6].toString().split(";");	// Read the whole cell 'flow_output_original'
-				List<Double> flow_output_original = new ArrayList<Double>();
-				for (int i = 0; i < flow_output_original_info.length; i++) {
-					flow_output_original.add(Double.parseDouble(flow_output_original_info[i]));
-				}				
-								
-				// Put all into dataset				
-				for (int i = 0; i < flow_arrangement_info.length; i++) {
-//					dataset.addValue(flow_output_original.get(i), "Original", flow_arrangement.get(i));
-//					dataset.addValue(flow_output_relaxed.get(i), "Relaxed", flow_arrangement.get(i));
-					dataset.addValue(flow_output_original.get(i), "Original", flow_arrangement.get(i).replaceAll("\\s+", "+"));
-					if (!this_data[selectedRow][4].toString().equals("null")) {
-						double lb_value = Double.parseDouble(this_data[selectedRow][4].toString()) * flow_output_original.get(i) / 100;	
-						dataset.addValue(lb_value, "LB: " + this_data[selectedRow][4].toString() + "% of Original", flow_arrangement.get(i).replaceAll("\\s+", "+"));						
-					}
-					if (!this_data[selectedRow][5].toString().equals("null")) {
-						double ub_value = Double.parseDouble(this_data[selectedRow][5].toString()) * flow_output_original.get(i) / 100;	
-						dataset.addValue(ub_value, "UB: " + this_data[selectedRow][5].toString() + "% of Original", flow_arrangement.get(i).replaceAll("\\s+", "+"));						
-					}
-				}
-			}
-						
-			// Create 3D bar chart
-			JFreeChart chart = ChartFactory.createBarChart(chart_name, "Flow Arrangement: labeled by IDs of basic constraints: bc_id", "Flow Value",
-					dataset, PlotOrientation.VERTICAL, true, true, false);		
-			chart.setBorderVisible(true);
-			chart.setBackgroundPaint(Color.LIGHT_GRAY);
-			chart.getLegend().setBackgroundPaint(null);
-			chart.getLegend().setPosition(RectangleEdge.BOTTOM);
-			chart.getLegend().setItemFont(new java.awt.Font("defaultFont", java.awt.Font.PLAIN, 13));
-			chart.getTitle().setFont(new java.awt.Font("defaultFont", java.awt.Font.BOLD, 14));
-					
-			// Set color for each different bar
-			CategoryPlot plot = chart.getCategoryPlot();
-			BarRenderer renderer = (BarRenderer) plot.getRenderer();
-			Color color = null;
-			GradientPaint gp = null;
-			for (int i = 0; i < dataset.getRowCount(); i++){
-			    switch (i) {
-			    case 0:
-			        color = new Color(255, 0, 0);
-			        gp = new GradientPaint(0.0f, 0.0f, Color.red, 0.0f, 0.0f, new Color(64, 0, 0));  
-			        break;
-			    case 1:
-			        color = new Color(0, 255, 0);
-			        gp = new GradientPaint(0.0f, 0.0f, Color.green, 0.0f, 0.0f, new Color(0, 64, 0));
-			        break;
-			    default:
-			        color = new Color(255, 255, 51);
-			        gp = new GradientPaint(0.0f, 0.0f, Color.blue, 0.0f, 0.0f, new Color(0, 0, 64));
-			        break;
-			    }
-			    renderer.setSeriesPaint(i, gp);		// use gradient and 2D is better than color and 3D
-			    renderer.setItemMargin(0.08);			    
-				renderer.setItemLabelGenerator(
-						new StandardCategoryItemLabelGenerator("{0}: {1} ({2})", new DecimalFormat("0.00 acres"), new DecimalFormat("0.0%")));
-//				renderer.setBaseItemLabelsVisible(true);
-				renderer.setDrawBarOutline(false);
-				
-			}	
-			plot.setOutlineVisible(false);
-									
-			return chart;
-		}			
-	}	
-
 	// --------------------------------------------------------------------------------------------------------------------------------		
 	public void showNothing() {
 //		displayTextField.setText(null); // Show nothing on the TextField
 		scrollPane_Right.setViewportView(null);
 	}
-
+	
+	public static JButton get_btnEditRun() {
+		return btnEditRun;
+	}
 }

@@ -281,9 +281,33 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		super.setOpaque(false);
 		ToolTipManager.sharedInstance().setInitialDelay(0);		//Show toolTip immediately
 		
-		
-		reload_inputs_after_creating_GUI();
-		is_this_the_first_load = false;	
+		Thread thread = new Thread() {			// Make a thread so JFrame will not be frozen
+			public void run() {
+				Panel_YieldProject.get_btnEditRun().setEnabled(false);
+//				radioButton_Right[1].setEnabled(false);
+//				radioButton_Right[2].setEnabled(false);
+//				radioButton_Right[3].setEnabled(false);
+//				radioButton_Right[4].setEnabled(false);
+				radioButton_Right[5].setEnabled(false);
+				radioButton_Right[6].setEnabled(false);
+							
+				reload_inputs_after_creating_GUI();
+				is_this_the_first_load = false;	
+				Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().revalidate();
+				Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().repaint();
+				
+				Panel_YieldProject.get_btnEditRun().setEnabled(true);
+				radioButton_Right[1].setEnabled(true);
+				radioButton_Right[2].setEnabled(true);
+				radioButton_Right[3].setEnabled(true);
+				radioButton_Right[4].setEnabled(true);
+				radioButton_Right[5].setEnabled(true);
+				radioButton_Right[6].setEnabled(true);
+				
+				this.interrupt();
+			}
+		};
+		thread.start();
 	} // End Of Panel_EditRun_Details()
 
 		
@@ -320,14 +344,14 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				}
 				
 				// Get everything show up nicely
-				Spectrum_Main.mainFrameReturn().getSelectedFrame().setSize(Spectrum_Main.mainFrameReturn().getSelectedFrame().getSize());	//this can replace the below 2 lines
+				Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().setSize(Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().getSize());	//this can replace the below 2 lines
 //				Spectrum_Main.mainFrameReturn().getSelectedFrame().revalidate();
 //		    	Spectrum_Main.mainFrameReturn().getSelectedFrame().repaint(); 
 			}
 		}
 	}
- 
-    
+
+
     // Reload inputs of the run------------------------------------------------------------------------------------------------ 
 	public void reload_inputs_before_creating_GUI() {
 
@@ -336,8 +360,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		if (definition_to_load.exists()) {	//Load if the file exists
 			file_StrataDefinition = definition_to_load;
 			currentDefinition_location = file_StrataDefinition.getAbsolutePath();
-		} 
-		else { 	// If file does not exist then load the default definition
+		} else { 	// If file does not exist then load the default definition
 			System.out.println("File not exists: strata_definition.csv - New interface is created using Default strata_definition.csv");
 			
 			try {	// Read default "strata_definition.csv" file from where this class is located
@@ -1496,7 +1519,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
         	@Override
     		public void setValueAt(Object value, int row, int col) {
     			if (col == 2 && (((Number) value).doubleValue() < 0 || ((Number) value).doubleValue() > 100)) {
-    				JOptionPane.showMessageDialog(Spectrum_Main.mainFrameReturn(),
+    				JOptionPane.showMessageDialog(Spectrum_Main.get_spectrumDesktopPane(),
     						"Your input has not been accepted. Only double values in the range 0-100 (%) would be allowed.");
     			} else {
     				data5[row][col] = value;
@@ -1731,7 +1754,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
         	@Override
     		public void setValueAt(Object value, int row, int col) {
     			if (col > 0 && (((Number) value).doubleValue() < 0 || ((Number) value).doubleValue() > 100)) {
-    				JOptionPane.showMessageDialog(Spectrum_Main.mainFrameReturn(),
+    				JOptionPane.showMessageDialog(Spectrum_Main.get_spectrumDesktopPane(),
     						"Your input has not been accepted. Only double values in the range 0-100 (%) would be allowed.");
     			} else {
     				data6[row][col] = value;
@@ -1910,7 +1933,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
         	@Override
     		public void setValueAt(Object value, int row, int col) {
         		if (col > 0 && ((Number) value).doubleValue() < 0) {
-    				JOptionPane.showMessageDialog(Spectrum_Main.mainFrameReturn(),
+    				JOptionPane.showMessageDialog(Spectrum_Main.get_spectrumDesktopPane(),
     						"Your input has not been accepted. Base cost cannot be negative.");
     			} else {
     				data7[row][col] = value;
@@ -2094,7 +2117,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
         	@Override
     		public void setValueAt(Object value, int row, int col) {			
 				if (col == 3 && ((Number) value).doubleValue() < 0) {
-    				JOptionPane.showMessageDialog(Spectrum_Main.mainFrameReturn(),
+    				JOptionPane.showMessageDialog(Spectrum_Main.get_spectrumDesktopPane(),
     						"Your input has not been accepted. Cost increasement cannot be negative.");
     			} else {
     				data8[row][col] = value;
@@ -4079,7 +4102,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					
 					
 					String ExitOption[] = {"Add Constraints","Cancel"};
-					int response = JOptionPane.showOptionDialog(Spectrum_Main.mainFrameReturn(), constraint_split_ScrollPanel, "Create multiple constraints",
+					int response = JOptionPane.showOptionDialog(Spectrum_Main.get_spectrumDesktopPane(), constraint_split_ScrollPanel, "Create multiple constraints",
 							JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, ExitOption, ExitOption[1]);
 					if (response == 0)	// Add Constraints
 					{		
@@ -4106,7 +4129,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						if (total_Constraints > 1000) {
 							String ExitOption2[] = {"Yes","No"};
 							String warningText = "You are going to add " + total_Constraints + " constraints. It would take some time. Continue to add ?";
-							response2 = JOptionPane.showOptionDialog(Spectrum_Main.mainFrameReturn(), warningText, "Confirm adding constraints",
+							response2 = JOptionPane.showOptionDialog(Spectrum_Main.get_spectrumDesktopPane(), warningText, "Confirm adding constraints",
 									JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption2, ExitOption2[1]);
 							
 						}
@@ -4605,14 +4628,14 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
  						scrollpane_QuickEdit.setVisible(true);
  						// Get everything show up nicely
  						GUI_Text_splitPanel.setLeftComponent(panel_Basic_Constraints_GUI);
- 						Spectrum_Main.mainFrameReturn().getSelectedFrame().setSize(Spectrum_Main.mainFrameReturn().getSelectedFrame().getSize());
+ 						Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().setSize(Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().getSize());
  					} else {
  						btnQuickEdit.setToolTipText("Show Quick Edit Tool");
  						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
  						scrollpane_QuickEdit.setVisible(false);
  						// Get everything show up nicely
  						GUI_Text_splitPanel.setLeftComponent(panel_Basic_Constraints_GUI);
- 						Spectrum_Main.mainFrameReturn().getSelectedFrame().setSize(Spectrum_Main.mainFrameReturn().getSelectedFrame().getSize());
+ 						Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().setSize(Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().getSize());
  					}
  				}
  			});				
@@ -5189,14 +5212,14 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
  						scrollpane_QuickEdit.setVisible(true);
  						// Get everything show up nicely
  						GUI_Text_splitPanel.setLeftComponent(panel_Advanced_Constraints_GUI);
- 						Spectrum_Main.mainFrameReturn().getSelectedFrame().setSize(Spectrum_Main.mainFrameReturn().getSelectedFrame().getSize());
+ 						Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().setSize(Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().getSize());
  					} else {
  						btnQuickEdit.setToolTipText("Show Quick Edit Tool");
  						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
  						scrollpane_QuickEdit.setVisible(false);
  						// Get everything show up nicely
  						GUI_Text_splitPanel.setLeftComponent(panel_Advanced_Constraints_GUI);
- 						Spectrum_Main.mainFrameReturn().getSelectedFrame().setSize(Spectrum_Main.mainFrameReturn().getSelectedFrame().getSize());
+ 						Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().setSize(Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().getSize());
  					}
  				}
  			});				

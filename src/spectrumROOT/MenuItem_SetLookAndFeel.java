@@ -97,7 +97,7 @@ public class MenuItem_SetLookAndFeel extends JMenuItem {
 				
 				// Add lookfeelPanel to a Popup Panel
 				String ExitOption[] = { "Ok" };
-				int response = JOptionPane.showOptionDialog(Spectrum_Main.mainFrameReturn(), scrollPane,
+				int response = JOptionPane.showOptionDialog(Spectrum_Main.get_spectrumDesktopPane(), scrollPane,
 						"Select a Look and Feel", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
 						IconHandle.get_scaledImageIcon(40, 40, "icon_laf.png"), ExitOption, ExitOption[0]);
 

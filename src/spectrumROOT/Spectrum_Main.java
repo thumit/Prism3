@@ -183,7 +183,7 @@ public class Spectrum_Main extends JFrame {
 					@Override
 			        public void menuSelected(MenuEvent e) {						
 						//Only allow to change look and feel if No Frame is opened, this is to prevent fail performance of the components after changing look and feel
-						if (Spectrum_Main.mainFrameReturn().getAllFrames().length ==  0) {
+						if (Spectrum_Main.get_spectrumDesktopPane().getAllFrames().length ==  0) {
 							setLookAndFeel.setEnabled(true);
 							setFont.setEnabled(true);
 						} else {
@@ -229,7 +229,7 @@ public class Spectrum_Main extends JFrame {
 						String titleText = "Project's name";
 						while (stop_naming == false) {
 					  		String ExitOption[] = {"OK","Cancel"};
-							int response = JOptionPane.showOptionDialog(Spectrum_Main.mainFrameReturn(), projectName_JTextField, titleText,
+							int response = JOptionPane.showOptionDialog(Spectrum_Main.get_spectrumDesktopPane(), projectName_JTextField, titleText,
 									JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
 							if (response == 0) 
 							{
@@ -298,7 +298,7 @@ public class Spectrum_Main extends JFrame {
 										public void actionPerformed(ActionEvent event) {
 											currentProjectName = fileName;
 											
-											JInternalFrame[] opened_InternalFrames = Spectrum_Main.mainFrameReturn().getAllFrames();	// All displayed internalFrames
+											JInternalFrame[] opened_InternalFrames = Spectrum_Main.get_spectrumDesktopPane().getAllFrames();	// All displayed internalFrames
 											List<String> openedFrames_list = new ArrayList<String>();					// List of Frames Names					
 											for (int i = 0; i < opened_InternalFrames.length; i++) {
 												openedFrames_list.add(opened_InternalFrames[i].getTitle());		// Loop all displayed IFrames to get Names and add to the list
@@ -374,8 +374,8 @@ public class Spectrum_Main extends JFrame {
 								DatabaseManagement_Frame.setSize((int) (getWidth()/1.08),(int) (getHeight()/1.25));
 								DatabaseManagement_Frame.setLocation((int) ((getWidth() - DatabaseManagement_Frame.getWidth())/2),
 										((int) ((getHeight() - DatabaseManagement_Frame.getHeight())/2.5)));	//Set the DatabaseManagement_Frame near the center of the Main frame
-								if (Spectrum_Main.mainFrameReturn().getSelectedFrame() != null) {	//or Set the DatabaseManagement_Frame near the recently opened JInternalFrame
-									DatabaseManagement_Frame.setLocation(Spectrum_Main.mainFrameReturn().getSelectedFrame().getX() + 30, Spectrum_Main.mainFrameReturn().getSelectedFrame().getY() + 30);
+								if (Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame() != null) {	//or Set the DatabaseManagement_Frame near the recently opened JInternalFrame
+									DatabaseManagement_Frame.setLocation(Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().getX() + 30, Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().getY() + 30);
 								}
 								
 								// Note: visible first for the JIframe to be selected, pack at the end would be fail for JIframe to be selected (Spectrum_Main.mainFrameReturn().getSelectedFrame = null)
@@ -436,8 +436,8 @@ public class Spectrum_Main extends JFrame {
 		ProjectInternalFrame.setSize((int) (getWidth()/1.08),(int) (getHeight()/1.25));		
 		ProjectInternalFrame.setLocation((int) ((getWidth() - ProjectInternalFrame.getWidth())/2),
 				((int) ((getHeight() - ProjectInternalFrame.getHeight())/2.5)));	//Set the ProjectInternalFrame near the center of the Main frame
-		if (Spectrum_Main.mainFrameReturn().getSelectedFrame() != null) {	//or Set the ProjectInternalFrame near the recently opened JInternalFrame
-			ProjectInternalFrame.setLocation(Spectrum_Main.mainFrameReturn().getSelectedFrame().getX() + 30, Spectrum_Main.mainFrameReturn().getSelectedFrame().getY() + 30);
+		if (Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame() != null) {	//or Set the ProjectInternalFrame near the recently opened JInternalFrame
+			ProjectInternalFrame.setLocation(Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().getX() + 30, Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().getY() + 30);
 		}
 			
 		// Note: visible first for the JIframe to be selected, pack at the end would be fail for JIframe to be selected (Spectrum_Main.mainFrameReturn().getSelectedFrame = null)
@@ -458,7 +458,7 @@ public class Spectrum_Main extends JFrame {
 
 		      public void internalFrameClosing(InternalFrameEvent e) {
 		  		String ExitOption[] = {"Close","Cancel"};
-				int response = JOptionPane.showOptionDialog(Spectrum_Main.mainFrameReturn(),"Stop Editing can save changes you made. Close project ?", "Close Project",
+				int response = JOptionPane.showOptionDialog(Spectrum_Main.get_spectrumDesktopPane(),"Stop Editing can save changes you made. Close project ?", "Close Project",
 						JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
 				if (response == 0)
 				{
@@ -491,7 +491,7 @@ public class Spectrum_Main extends JFrame {
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public void exitSpectrumLite() {
 		String ExitOption[] = {"Exit","Cancel"};
-		int response = JOptionPane.showOptionDialog(Spectrum_Main.mainFrameReturn(),"Stop Editing can save changes you made. Exit SpectrumLite ?", "Exit SpectrumLite",
+		int response = JOptionPane.showOptionDialog(Spectrum_Main.get_spectrumDesktopPane(),"Stop Editing can save changes you made. Exit SpectrumLite ?", "Exit SpectrumLite",
 				JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
 		if (response == 0)
 		{
@@ -530,11 +530,11 @@ public class Spectrum_Main extends JFrame {
 	}
 	
 	//--------------------------------------------------------------------------------------------------------------------------------
-	public static DesktopPanel_BackGround mainFrameReturn() {
+	public static DesktopPanel_BackGround get_spectrumDesktopPane() {
 		return spectrumDesktopPane;
 	}
 	
-	public static Spectrum_Main mainReturn() {
+	public static Spectrum_Main get_main() {
 		return main;
 	}
 	

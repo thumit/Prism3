@@ -35,7 +35,7 @@ public class MenuBar_Customize extends JMenuBar implements MouseListener, MouseM
 
 		//Shift all below components to the right by some glue boxes
 		add(Box.createGlue());
-		JLabel title = new JLabel("SpectrumLite pre-alpha version 1.20");
+		JLabel title = new JLabel("SpectrumLite pre-alpha version 1.21");
 //		title.setIcon(IconHandle.get_scaledImageIcon(100, 20, "spectrumlite1.png"));
 		add(title);
 		add(Box.createGlue());
@@ -45,7 +45,7 @@ public class MenuBar_Customize extends JMenuBar implements MouseListener, MouseM
 		// this button will be shifted right on the menubar
 		Action actionMinimize = new AbstractAction() {
 			public void actionPerformed(ActionEvent evt) {
-				Spectrum_Main.mainReturn().minimize();
+				Spectrum_Main.get_main().minimize();
 			}
 		};
 		buttonMinimize = new JButton(actionMinimize);
@@ -68,7 +68,7 @@ public class MenuBar_Customize extends JMenuBar implements MouseListener, MouseM
 		// this button will be shifted right on the menubar
 		Action actionMaximize = new AbstractAction() {
 			public void actionPerformed(ActionEvent evt) {
-				Spectrum_Main.mainReturn().restore();
+				Spectrum_Main.get_main().restore();
 				if (buttonMaximize.getToolTipText().equals("Maximize")) {
 					buttonMaximize.setToolTipText("Restore");
 				} else {
@@ -96,7 +96,7 @@ public class MenuBar_Customize extends JMenuBar implements MouseListener, MouseM
 		// this button will be shifted right on the menubar
 		Action actionExit = new AbstractAction() {
 			public void actionPerformed(ActionEvent evt) {
-				Spectrum_Main.mainReturn().exitSpectrumLite();
+				Spectrum_Main.get_main().exitSpectrumLite();
 			}
 		};
 		buttonExit = new JButton(actionExit);
@@ -134,7 +134,7 @@ public class MenuBar_Customize extends JMenuBar implements MouseListener, MouseM
 	public void mouseClicked(MouseEvent e) {
 		if (SwingUtilities.isLeftMouseButton(e)) {
 			if (e.getClickCount() == 2) {
-				Spectrum_Main.mainReturn().restore();
+				Spectrum_Main.get_main().restore();
 				if (buttonMaximize.getToolTipText().equals("Maximize")) {
 					buttonMaximize.setToolTipText("Restore");
 				} else {
@@ -174,15 +174,15 @@ public class MenuBar_Customize extends JMenuBar implements MouseListener, MouseM
 	//For mouse motion listener
 	@Override
 	public void mouseDragged(MouseEvent event) {
-		if (Spectrum_Main.mainReturn().getExtendedState() != JFrame.NORMAL) {
-			Spectrum_Main.mainReturn().setExtendedState(JFrame.NORMAL);		//Set normal Jframe size when start dragging
+		if (Spectrum_Main.get_main().getExtendedState() != JFrame.NORMAL) {
+			Spectrum_Main.get_main().setExtendedState(JFrame.NORMAL);		//Set normal Jframe size when start dragging
 			//make the JFrame have the top center move to the cursor location)
-			if (pX > Spectrum_Main.mainReturn().getWidth()/2) {
-				pX =  Spectrum_Main.mainReturn().getWidth()/2;
+			if (pX > Spectrum_Main.get_main().getWidth()/2) {
+				pX =  Spectrum_Main.get_main().getWidth()/2;
 			} 	
 		} else {		
-		Spectrum_Main.mainReturn().setLocation(Spectrum_Main.mainReturn().getLocation().x + event.getX() - pX, 
-				Spectrum_Main.mainReturn().getLocation().y + event.getY() - pY);		//when dragged, move the frame
+		Spectrum_Main.get_main().setLocation(Spectrum_Main.get_main().getLocation().x + event.getX() - pX, 
+				Spectrum_Main.get_main().getLocation().y + event.getY() - pY);		//when dragged, move the frame
 		}
 	}
 

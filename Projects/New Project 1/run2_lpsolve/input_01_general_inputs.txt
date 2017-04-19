@@ -4,4 +4,4 @@ Annual discount rate (%)	3.5
 Solver for optimization	LPSOLVE	
 Solving time limit (minutes)	15	
 Export original problem file	false	
-Export original solution file	true	
+Export original solution file	false	

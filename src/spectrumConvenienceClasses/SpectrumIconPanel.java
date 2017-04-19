@@ -45,16 +45,16 @@ public class SpectrumIconPanel extends JPanel{
 					btnIconify.setText("ON");
 					scrollPane.setViewportView(nestedCOmponent);
 					// Get everything show up nicely
-					Spectrum_Main.mainFrameReturn().getSelectedFrame().setSize(Spectrum_Main.mainFrameReturn().getSelectedFrame().getSize());	//this can replace the below 2 lines
-					Spectrum_Main.mainFrameReturn().getSelectedFrame().revalidate();
-					Spectrum_Main.mainFrameReturn().getSelectedFrame().repaint();
+					Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().setSize(Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().getSize());	//this can replace the below 2 lines
+					Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().revalidate();
+					Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().repaint();
 				} else {
 					btnIconify.setText("OFF");
 					scrollPane.setViewportView(null);
 					// Get everything show up nicely
-					Spectrum_Main.mainFrameReturn().getSelectedFrame().setSize(Spectrum_Main.mainFrameReturn().getSelectedFrame().getSize());	//this can replace the below 2 lines
-					Spectrum_Main.mainFrameReturn().getSelectedFrame().revalidate();
-					Spectrum_Main.mainFrameReturn().getSelectedFrame().repaint();
+					Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().setSize(Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().getSize());	//this can replace the below 2 lines
+					Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().revalidate();
+					Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().repaint();
 				}
 			}
 		});

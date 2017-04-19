@@ -56,5 +56,11 @@
 48. Bug fixed: read the correct annual discount rate (bug: read period instead of rate. This might happen during refactoring input01)
 49. Currenly flow logic only support positive multipliers, the use of negative multipliers is prohibited.
 50. introduce output06_basic_constraints
+--------------------------------------------------------------------------
 
-
+51. Allow to write solution without requiring any basic constraint set up
+52. Multi-threads method is applied whenever start editting --> improve User experience with significant increase in reloading speed.
+53. Move 3 output panel outside of Panel_Yield_Project
+54. Introduce output5_management_details
+55. Multi-threads method is apply for output5
+56. Customize output is integrated into output5 (still not completed yet)

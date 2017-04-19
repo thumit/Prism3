@@ -61,7 +61,7 @@ public class MenuItem_SetTransparency extends JMenuItem {
 				
 				// Add sliderPanel to a Popup Panel
 				String ExitOption[] = { "Ok" };
-				int response = JOptionPane.showOptionDialog(Spectrum_Main.mainFrameReturn(), sliderPanel,
+				int response = JOptionPane.showOptionDialog(Spectrum_Main.get_spectrumDesktopPane(), sliderPanel,
 						"Drag the slider to change transparency", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
 						IconHandle.get_scaledImageIcon(40, 40, "icon_glassy.png"), ExitOption, ExitOption[0]);
 

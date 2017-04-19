@@ -1,4 +1,4 @@
-index	name	value	reduced_cost
+var_id	var_name	var_value	var_reduced_cost
 0	y_0	628677.54	 
 1	y_1	500000.0	 
 2	y_2	500000.0	 

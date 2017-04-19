@@ -114,7 +114,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 							allDynamicIdentifiers_ScrollPane.get(i).setVisible(false);		//Set invisible all scrollPanes of dynamic identifiers
 							
 							//Do a resize to same size for JInteral Frame of the project to help repaint					
-							Spectrum_Main.mainFrameReturn().getSelectedFrame().setSize(Spectrum_Main.mainFrameReturn().getSelectedFrame().getSize());	
+							Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().setSize(Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().getSize());	
 						} 
 					}
 				}
@@ -475,10 +475,10 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 												        	// Apply change to the GUI
 															defineScrollPane.setViewportView(rangePanel);	
 											        	} else {
-											        		JOptionPane.showMessageDialog(Spectrum_Main.mainFrameReturn(), "'Min value' must be less than or equal to 'Max value'");														        																							
+											        		JOptionPane.showMessageDialog(Spectrum_Main.get_spectrumDesktopPane(), "'Min value' must be less than or equal to 'Max value'");														        																							
 											        	}
 													} catch (Exception ee) {
-														JOptionPane.showMessageDialog(Spectrum_Main.mainFrameReturn(),
+														JOptionPane.showMessageDialog(Spectrum_Main.get_spectrumDesktopPane(),
 																"'Min value' and 'Max value' must be numbers");
 													}
 												}
@@ -537,7 +537,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 								popupPanel.add(defineScrollPane, c_popup);
 								//---------------------------------------------------------------------------------------------------
 								
-								int response = JOptionPane.showConfirmDialog(Spectrum_Main.mainFrameReturn(), popupPanel,
+								int response = JOptionPane.showConfirmDialog(Spectrum_Main.get_spectrumDesktopPane(), popupPanel,
 										"Add   '" + currentCheckBoxName + "'   to the set of dynamic identifiers ?", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null);
 								if (response == JOptionPane.NO_OPTION) {
 									allDynamicIdentifiers.get(currentCheckBoxIndex).setSelected(false);
@@ -577,14 +577,14 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 							}
 						
 							//Do a resize to same size for JInteral Frame of the project to help repaint the identifier ScrollPane added or removed					
-							Spectrum_Main.mainFrameReturn().getSelectedFrame().setSize(Spectrum_Main.mainFrameReturn().getSelectedFrame().getSize());
+							Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().setSize(Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().getSize());
 						}
 					});
 				}		
 			}
 						
 			//Do a resize to same size for JInteral Frame of the project to help repaint the checkboxes added					
-			Spectrum_Main.mainFrameReturn().getSelectedFrame().setSize(Spectrum_Main.mainFrameReturn().getSelectedFrame().getSize());	
+			Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().setSize(Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().getSize());	
 		}
 		
 

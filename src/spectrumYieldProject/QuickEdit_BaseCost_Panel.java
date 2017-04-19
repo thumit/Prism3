@@ -330,7 +330,7 @@ public class QuickEdit_BaseCost_Panel extends JPanel {
 				public void actionPerformed(ActionEvent actionEvent) {
 					radioGroup.clearSelection();
 					String ExitOption[] = { "Ok" };
-					int response = JOptionPane.showOptionDialog(Spectrum_Main.mainFrameReturn(), combined_panel,
+					int response = JOptionPane.showOptionDialog(Spectrum_Main.get_spectrumDesktopPane(), combined_panel,
 							"Select yield tables columns to show", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
 							IconHandle.get_scaledImageIcon(50, 50, "icon_binoculars.png"), ExitOption, ExitOption[0]);
 

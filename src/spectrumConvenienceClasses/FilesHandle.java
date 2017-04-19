@@ -31,7 +31,7 @@ public class FilesHandle {
 		String workingLocation;
 
 		// Get working location of the IDE project, or runnable jar file
-		final File jarFile = new File(Spectrum_Main.mainFrameReturn().getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
+		final File jarFile = new File(Spectrum_Main.get_spectrumDesktopPane().getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
 		workingLocation = jarFile.getParentFile().toString();
 
 		// Make the working location with correct name
@@ -118,7 +118,7 @@ public class FilesHandle {
 		chooser.setFileFilter(filter);
 		chooser.setAcceptAllFileFilterUsed(false);
 		
-		int returnValue = chooser.showOpenDialog(Spectrum_Main.mainFrameReturn());
+		int returnValue = chooser.showOpenDialog(Spectrum_Main.get_spectrumDesktopPane());
 		File file = null;
 		if (returnValue == JFileChooser.APPROVE_OPTION) {
 			file = chooser.getSelectedFile();
@@ -140,7 +140,7 @@ public class FilesHandle {
 		chooser.setFileFilter(filter);
 		chooser.setAcceptAllFileFilterUsed(false);
 		
-		int returnValue = chooser.showOpenDialog(Spectrum_Main.mainFrameReturn());
+		int returnValue = chooser.showOpenDialog(Spectrum_Main.get_spectrumDesktopPane());
 		File file = null;
 		if (returnValue == JFileChooser.APPROVE_OPTION) {
 			file = chooser.getSelectedFile();
@@ -153,10 +153,10 @@ public class FilesHandle {
 	public static File chosenDefinition() {
 		File file = null;
 			
-		ImageIcon icon = new ImageIcon(Spectrum_Main.mainFrameReturn().getClass().getResource("/icon_question.png"));
+		ImageIcon icon = new ImageIcon(Spectrum_Main.get_spectrumDesktopPane().getClass().getResource("/icon_question.png"));
 		Image scaleImage = icon.getImage().getScaledInstance(50, 50,Image.SCALE_SMOOTH);
 		String ExitOption[] = {"New definition","Default definition","Cancel"};
-		int response = JOptionPane.showOptionDialog(Spectrum_Main.mainFrameReturn(),"Except General Inputs, everything will be reset. Your option ?", "Import Strata Definition",
+		int response = JOptionPane.showOptionDialog(Spectrum_Main.get_spectrumDesktopPane(),"Except General Inputs, everything will be reset. Your option ?", "Import Strata Definition",
 				JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, new ImageIcon(scaleImage), ExitOption, ExitOption[2]);
 		if (response == 0)
 		{
@@ -171,7 +171,7 @@ public class FilesHandle {
 			chooser.setFileFilter(filter);
 			chooser.setAcceptAllFileFilterUsed(false);
 			
-			int returnValue = chooser.showOpenDialog(Spectrum_Main.mainFrameReturn());
+			int returnValue = chooser.showOpenDialog(Spectrum_Main.get_spectrumDesktopPane());
 			if (returnValue == JFileChooser.APPROVE_OPTION) {	//Return the new Definition as in the selected file
 				file = chooser.getSelectedFile();
 			}

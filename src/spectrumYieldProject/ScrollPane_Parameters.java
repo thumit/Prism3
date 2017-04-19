@@ -134,7 +134,7 @@ public class ScrollPane_Parameters extends JScrollPane {
 			}
 
 			//Do a resize to same size for JInteral Frame of the project to help repaint the checkboxVariables added					
-			Spectrum_Main.mainFrameReturn().getSelectedFrame().setSize(Spectrum_Main.mainFrameReturn().getSelectedFrame().getSize());	
+			Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().setSize(Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().getSize());	
 		}
 
 	}

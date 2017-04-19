@@ -1,0 +1,38 @@
+layer_id,layer_description,attribute_id,attribute_description
+layer1,GeoArea,M,Montane
+layer1,GeoArea,P,Prairie
+layer2,NotUsed,R,NotUsed
+layer3,Timber Suitability,1,MAG1
+layer3,Timber Suitability,2,MAG2
+layer3,Timber Suitability,3,MAG3
+layer3,Timber Suitability,4,MAG4
+layer3,Timber Suitability,5,MAG5
+layer3,Timber Suitability,6,MAG6
+layer4,Wildlife Strata,L,Occ Lynx No Griz
+layer4,Wildlife Strata,B,Occ Lynx AND Griz
+layer4,Wildlife Strata,W,Unocc Lynx AND Griz
+layer4,Wildlife Strata,U,Unocc Lynx NOT Griz
+layer4,Wildlife Strata,G,Griz core only
+layer4,Wildlife Strata,O,Other
+layer5,Vegetation Cover Type,B,Prairie
+layer5,Vegetation Cover Type,C,wdpp
+layer5,Vegetation Cover Type,D,wddf
+layer5,Vegetation Cover Type,E,wdlp
+layer5,Vegetation Cover Type,F,cmdf
+layer5,Vegetation Cover Type,G,cmlp
+layer5,Vegetation Cover Type,H,cmsf
+layer5,Vegetation Cover Type,I,cold
+layer6,Size Class,F,SeedspLo
+layer6,Size Class,G,SeedspMH
+layer6,Size Class,H,SmallLo
+layer6,Size Class,I,SmallLoM
+layer6,Size Class,J,SmallMHi
+layer6,Size Class,K,SmallHi
+layer6,Size Class,L,MedLo
+layer6,Size Class,M,MedLoM
+layer6,Size Class,N,MedModHi
+layer6,Size Class,O,MedHigh
+layer6,Size Class,P,LargeLow
+layer6,Size Class,Q,LargeLoM
+layer6,Size Class,R,LargeMHi
+layer6,Size Class,S,LargeHi

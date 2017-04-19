@@ -148,7 +148,7 @@ public class MenuItem_SetFont extends JMenuItem {
 				
 				// Add the panel to a pop-up panel
 				String ExitOption[] = { "Ok"};
-				int response = JOptionPane.showOptionDialog(Spectrum_Main.mainFrameReturn(), combined_panel,
+				int response = JOptionPane.showOptionDialog(Spectrum_Main.get_spectrumDesktopPane(), combined_panel,
 						"Select a Font", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
 						IconHandle.get_scaledImageIcon(40, 40, "icon_font.png"), ExitOption, ExitOption[0]);
 
