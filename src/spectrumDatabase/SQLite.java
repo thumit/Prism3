@@ -11,17 +11,15 @@ import spectrumConvenienceClasses.StringHandle;
 
 public class SQLite {
 	
-private static String delimited;
 private static String[] statement;
 private static int totalLines;
 	
-	public static void create_importTable_Stm (File file) {
+	public static void create_importTable_Stm (File file, String delimited) {
 		// Read the whole file to array, create statement query to create table using the first line as column names
 	//	delimited = ",";		// comma delimited
 	//	delimited = "\\s+";		// space delimited
 	//	delimited = "\t";		// tab delimited
-		delimited = Panel_DatabaseManagement.getDelimited();
-				
+
 		if (delimited != null) {
 			try {		
 				// All lines to be in array

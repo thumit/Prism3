@@ -1,33 +1,40 @@
 package spectrumYieldProject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Get_Parameter_Information {
 
-	public static double get_total_value(String cover_type, String size_class, String method, String timing_choice, 
+	public static double get_total_value(String var_name, 
 			Object[] yieldTable_Name, Object[][][] yieldTable_values, List<String> parameters_indexes_list,
-			List<String> all_dynamicIdentifiers_columnIndexes, List<List<String>> all_dynamicIdentifiers, int period, int row,
+			List<String> all_dynamicIdentifiers_columnIndexes, List<List<String>> all_dynamicIdentifiers,
 			List<String> action_type_list, double[] baseCost_acres, double[][] baseCost_yieldtables,
 			List<String> cost_staticCondition_list, double[] cost_adjusted_percentage,
 			List<String> current_var_static_condition) {
 		
+		
 		double value_to_return = 0;
 		
-		//This is the only case when we don't need to check yield table
+		
+				
+		// This is the only case when we don't need to check yield table
 		if (all_dynamicIdentifiers_columnIndexes.contains("NoIdentifier") && parameters_indexes_list.contains("NoParameter")) {
 			value_to_return = 1;
-		} 
-		else {		// Check the yield table 		
-
-			String forest_status = "E";
-			String tableName_toFind = cover_type + "_" + size_class + "_" + method + "_" + timing_choice + "_" + forest_status;			
-			boolean foundtable = false;
+		} else {	// Check the yield table 				
+			List<String> yieldTable_Name_list = new ArrayList<String>() {{ for (Object i : yieldTable_Name) add(i.toString());}};		// Convert Object array to String list
+			String yield_table_name_to_find = Get_Variable_Information.get_yield_table_name_to_find(var_name);	
+			int row_index_to_find  = Get_Variable_Information.get_yield_table_row_index_to_find(var_name);
 			
-			for (int i = 0; i < yieldTable_Name.length; i++) {
-				if (yieldTable_Name[i].toString().equalsIgnoreCase(tableName_toFind) && row < yieldTable_values[i].length) {		// If yield table Name match && table has that row index						
-					foundtable = true;
-					
+			
+			if (yieldTable_Name_list.contains(yield_table_name_to_find)) {		// If yield table name exists						
+				int table_id = yieldTable_Name_list.indexOf(yield_table_name_to_find);
+				
+				
+				if (row_index_to_find < yieldTable_values[table_id].length) {
 					boolean add_dynamicIdentifiers_match = true;	//always true if No dynamic Identifier				
+					
+					
+					
 					if (!all_dynamicIdentifiers_columnIndexes.contains("NoIdentifier")) {	//If there are dynamic identifiers
 						//Check if in the same row of this yield table we have all the dynamic identifiers match				
 						for (int dynamic_count = 0; dynamic_count < all_dynamicIdentifiers_columnIndexes.size(); dynamic_count++) {
@@ -36,33 +43,25 @@ public class Get_Parameter_Information {
 							
 							
 							if (all_dynamicIdentifiers.get(dynamic_count).get(0).contains(",")) {	//if this is a range identifier (the 1st element of this identifier contains ",")							
-								double yt_value = Double.parseDouble(yieldTable_values[i][row][current_dynamic_column].toString());
-									
-										
+								double yt_value = Double.parseDouble(yieldTable_values[table_id][row_index_to_find][current_dynamic_column].toString());
+																		
 								for (int element = 0; element < all_dynamicIdentifiers.get(dynamic_count).size(); element++) {	//Loop all elements (all ranges) of this range identifier
-									String[] min_and_max = all_dynamicIdentifiers.get(dynamic_count).get(element).split(",");
-									
-									double minValue = Double.parseDouble(min_and_max[0].replace("[", ""));
-									double maxValue = Double.parseDouble(min_and_max[1].replace(")", ""));
-																	
-									if ((minValue <= yt_value) && (yt_value<maxValue))	add_dynamicIdentifiers_match = true;
+									String[] min_and_max = all_dynamicIdentifiers.get(dynamic_count).get(element).split(",");									
+									double min_value = Double.parseDouble(min_and_max[0].replace("[", ""));
+									double max_value = Double.parseDouble(min_and_max[1].replace(")", ""));																	
+									if ((min_value <= yt_value) && (yt_value<max_value))	add_dynamicIdentifiers_match = true;
 								}
-															
-								
-								
-								
+									
 								
 							} else {	//if this is a discrete identifier
-								if (all_dynamicIdentifiers.get(dynamic_count).contains(yieldTable_values[i][row][current_dynamic_column].toString())) 	{	//If all selected items in this list contain the value in the same column (This is String comparison, we may need to change to present data manually change by users, ex. ponderosa 221 vs 221.00) 
+								if (all_dynamicIdentifiers.get(dynamic_count).contains(yieldTable_values[table_id][row_index_to_find][current_dynamic_column].toString())) 	{	//If all selected items in this list contain the value in the same column (This is String comparison, we may need to change to present data manually change by users, ex. ponderosa 221 vs 221.00) 
 									add_dynamicIdentifiers_match = true;			
 								}
-							}				
-								
-							
-							
-								
+							}					
 						}
 					}
+					
+					
 					
 					
 					if (add_dynamicIdentifiers_match==true) {
@@ -71,8 +70,9 @@ public class Get_Parameter_Information {
 							value_to_return = 1;
 							
 						} else if (parameters_indexes_list.contains("CostParameter")) {			//If this is a cost constraint	
-							int action_type_YTindex = yieldTable_values[i][row].length - 1;		// 'action_type' is the last column of each yield table
-							String current_YTrow_action = yieldTable_values[i][row][action_type_YTindex].toString();
+							int action_type_YTindex = yieldTable_values[table_id][row_index_to_find].length - 1;		// 'action_type' is the last column of each yield table
+							String current_YTrow_action = yieldTable_values[table_id][row_index_to_find][action_type_YTindex].toString();
+							
 							
 							if (action_type_list.contains(current_YTrow_action)) {
 								int baseCost_row = action_type_list.indexOf(current_YTrow_action);
@@ -84,13 +84,9 @@ public class Get_Parameter_Information {
 								
 								//Add baseCost_yieldtables
 								for (int j = 0; j < baseCost_yieldtables[baseCost_row].length; j++) {		//loop all yield table columns (or baseCost_yieldtables columns)
-									try {		//this try because some tables have not enough rows to match the total periods
-										int col = j;	
-										if (baseCost_yieldtables[baseCost_row][col] > 0) {		
-											value_to_return = value_to_return + baseCost_yieldtables[baseCost_row][col] * Double.parseDouble(yieldTable_values[i][row][col].toString());		// then add base_cost * parameter
-										}
-									} catch (Exception e) {
-										System.err.println("Cannot get access to table " + yieldTable_Name[i].toString() + " Row Index " + row + " Exception " + e);
+									int col = j;	
+									if (baseCost_yieldtables[baseCost_row][col] > 0) {		
+										value_to_return = value_to_return + baseCost_yieldtables[baseCost_row][col] * Double.parseDouble(yieldTable_values[table_id][row_index_to_find][col].toString());		// then add base_cost * parameter
 									}
 								}
 								
@@ -103,35 +99,27 @@ public class Get_Parameter_Information {
 										value_to_return = value_to_return + basecost * cost_adjusted_percentage[value_index] / 100;
 									}
 								}
-								
-								
-								
-								
-								
 							}
+							
 							
 						} else {			//If this is regular constraint with parameters		
 							for (int j = 0; j < parameters_indexes_list.size(); j++) {		//loop all parameters_indexes_list 	
-								try {		//this try because some tables have not enough rows to match the total periods
-									int col = Integer.parseInt(parameters_indexes_list.get(j));						
-									value_to_return = value_to_return + Double.parseDouble(yieldTable_values[i][row][col].toString());		// then add to the total of all parameters found
-								} catch (Exception e) {
-									System.err.println("Cannot get access to table " + yieldTable_Name[i].toString() + " Row Index " + row + " Exception " + e);
-								}
+								int col = Integer.parseInt(parameters_indexes_list.get(j));						
+								value_to_return = value_to_return + Double.parseDouble(yieldTable_values[table_id][row_index_to_find][col].toString());		// then add to the total of all parameters found
 							}
 						}
 						
-					}
+					}		
 					
 					
-				} else { //If yield table Name does not match or table does not have that row	
-
-				}
+					
+				} else {	//If this yield table does not have the row to find
+//					System.out.println("Not found row id = " + row_index_to_find + " of the yield table "+ yield_table_name_to_find);
+				}	
+			} else { //If this yield table name does not exist
+//				System.out.println("Not found table " + yield_table_name_to_find);
 			}
 			
-			if (!foundtable) {	//If not found table
-//				System.out.println("Not found table " + tableName_toFind);
-			}
 		}
 		return value_to_return;
 	}

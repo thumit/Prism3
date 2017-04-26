@@ -3,4 +3,4 @@ bc_id	bc_description	bc_type	bc_multiplier	lowerbound	lowerbound_perunit_penalty
 2	500 PB	SOFT	1.0	500000.0	1.0	500000.0	1.0	1	y_1	628677.5399999995	0.0	128677.53999999946
 3	500 GS	SOFT	1.0	500000.0	1.0	500000.0	1.0	2	y_2	500000.0	0.0	0.0
 4	100 EA	HARD	1.0	100000.0	null	100000.0	null	12	z_0	100000.0	-1.0	0.0
-5	10mil CF from P & D	SOFT	1.0	1.0E7	2.0	null	null	3	y_3	2.5291262193782416E8	0.0	0.0
+5	10mil CF from P & D	SOFT	1.0	1.0E7	2.0	null	null	3	y_3	3.044183279276618E8	0.0	0.0

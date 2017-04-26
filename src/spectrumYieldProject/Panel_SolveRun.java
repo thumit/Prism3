@@ -293,7 +293,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			read.readCostAdjustment(new File(runFolder.getAbsolutePath() + "/input_08_cost_adjustment.txt"));
 			read.read_basic_constraints(new File(runFolder.getAbsolutePath() + "/input_09_basic_constraints.txt"));
 			read.read_flow_constraints(new File(runFolder.getAbsolutePath() + "/input_10_flow_constraints.txt"));
-			Read_DatabaseTables read_DatabaseTables = new Read_DatabaseTables(new File(runFolder.getAbsolutePath() + "/database.db"));
+			Read_Database_Yield_Tables read_DatabaseTables = new Read_Database_Yield_Tables(new File(runFolder.getAbsolutePath() + "/database.db"));
 			
 			
 			//Get info: input_02_modeled_strata
@@ -303,9 +303,10 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			modeled_strata_withoutSizeClassandCoverType = read.get_modeled_strata_withoutSizeClassandCoverType(); 
 						
 			//Get Info: input_03_clearcut_covertype_conversion
-			List<String> coverTypeConversions, coverTypeConversions_and_RotationAges = new ArrayList<String>();
-			coverTypeConversions = read.getCoverTypeConversions();
-			coverTypeConversions_and_RotationAges = read.getcoverTypeConversions_and_RotationAges();			
+			List<String> covertype_conversions, covertype_conversions_and_existing_rotation_ages, covertype_conversions_and_regeneration_rotation_ages = new ArrayList<String>();
+			covertype_conversions = read.get_covertype_conversions();
+			covertype_conversions_and_existing_rotation_ages = read.get_covertype_conversions_and_existing_rotation_ages();	
+			covertype_conversions_and_regeneration_rotation_ages = read.get_covertype_conversions_and_regeneration_rotation_ages();
 
 			//Get Info: input_04_replacingdisturbances_covertype_conversion
 			double[] SRDrequirementProportion = read.getSRDrequirementProportion(); 
@@ -348,8 +349,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			List<Double> flow_upperbound_percentage_list = read.get_flow_upperbound_percentage_list();
 
 			//Database Info
-			Object[][][] yieldTable_values = read_DatabaseTables.getTableArrays();
-			Object[] yieldTable_Name = read_DatabaseTables.get_nameOftable();			
+			Object[][][] yieldTable_values = read_DatabaseTables.get_yield_tables_values();
+			Object[] yieldTable_Name = read_DatabaseTables.get_yield_tables_names();			
 
 			
 			
@@ -430,11 +431,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			
 			int[][][][][][][] xEAr = new int
 					[layer1.size()][layer2.size()][layer3.size()][layer4.size()][layer5.size()]
-							[total_Periods + 1][total_AgeClasses+1];		//xEAr(s1,s2,s3,s4,s5)(t)(a)
+							[total_Periods + 1][total_AgeClasses + 1];		//xEAr(s1,s2,s3,s4,s5)(t)(a)
 									// total_Periods + 1 because t starts from 1 to total_Periods, ignore the 0
 			int[][][][][][][][][] xEArCut = new int
 					[layer1.size()][layer2.size()][layer3.size()][layer4.size()][layer5.size()]
-							[total_Periods + 1][total_AgeClasses+1][layer5.size()][total_Periods+1];		//xEAr'(s1,s2,s3,s4,s5)(t)(a)(c)(tR)
+							[total_Periods + 1][total_AgeClasses + 1][layer5.size()][total_Periods + 1];		//xEAr'(s1,s2,s3,s4,s5)(t)(a)(c)(tR)
 									// total_Periods + 1 because t starts from 1 to total_Periods, ignore the 0
 			
 			
@@ -755,7 +756,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 											for (int c = 0; c < layer5.size(); c++) {
 												int processingAge = t + StartingAge[s1][s2][s3][s4][s5][s6] - 1;
 												String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(c) + " " + processingAge;						
-												if (coverTypeConversions_and_RotationAges.contains(thisCoverTypeconversion_and_RotationAge)) {
+												if (covertype_conversions_and_existing_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
 													for (int tR = 1; tR <= t; tR++) {
 														objlist.add((double) 0);
 	//													vnamelist.add("xEAe'(" + s1 + "," + s2 + "," + s3 + "," + s4 + "," + s5 + "," + s6 + ")(" + t + ")(" + c + ")");
@@ -818,7 +819,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										for (int a = 1; a <= t - 1; a++) {
 											for (int c = 0; c < layer5.size(); c++) {
 												String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(c) + " " + a;						
-												if (coverTypeConversions_and_RotationAges.contains(thisCoverTypeconversion_and_RotationAge)) {
+												if (covertype_conversions_and_regeneration_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
 													for (int tR = t-a+1; tR <= t; tR++) {
 														objlist.add((double) 0);
 	//													vnamelist.add("xEAr'(" + s1 + "," + s2 + "," + s3 + "," + s4 + "," + s5 + ")(" + t + ")(" + a + ")(" + c + ")");
@@ -1163,8 +1164,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										c6_valuelist.get(c6_num).add((double) 1);
 
 										// add bounds
-										c6_lblist.add((double) msFirePercent[s5][s6]/100*StrataArea[s1][s2][s3][s4][s5][s6]);
-										c6_ublist.add((double) msFirePercent[s5][s6]/100*StrataArea[s1][s2][s3][s4][s5][s6]);
+										c6_lblist.add((double) msFirePercent[s5][s6] / 100 * StrataArea[s1][s2][s3][s4][s5][s6]);
+										c6_ublist.add((double) msFirePercent[s5][s6] / 100 * StrataArea[s1][s2][s3][s4][s5][s6]);
 										c6_num++;
 									}
 								}
@@ -1288,10 +1289,10 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 											if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
 											
 											c7_indexlist.get(c7_num).add(xNG[s1][s2][s3][s4][s5][s6][t]);
-											c7_valuelist.get(c7_num).add((double) 1 - SRD_percent[s5][SRDage]/100);		//SR Fire loss Rate = P(s5,a)/100
+											c7_valuelist.get(c7_num).add((double) 1 - SRD_percent[s5][SRDage] / 100);	//SR Fire loss Rate = P(s5,a)/100
 									
-											//Add -xNG(s1,s2,s3,s4,s5,s6)(t+1)
-											c7_indexlist.get(c7_num).add(xNG[s1][s2][s3][s4][s5][s6][t+1]);
+											// Add -xNG(s1,s2,s3,s4,s5,s6)(t+1)
+											c7_indexlist.get(c7_num).add(xNG[s1][s2][s3][s4][s5][s6][t + 1]);
 											c7_valuelist.get(c7_num).add((double) -1);											
 																					
 											//add bounds
@@ -1387,10 +1388,10 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 												if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
 												
 												c8_indexlist.get(c8_num).add(xPB[s1][s2][s3][s4][s5][s6][i][t]);
-												c8_valuelist.get(c8_num).add((double) 1 - SRD_percent[s5][SRDage]/100);		//SR Fire loss Rate = P(s5,a)/100
+												c8_valuelist.get(c8_num).add((double) 1 - SRD_percent[s5][SRDage] / 100);		//SR Fire loss Rate = P(s5,a)/100
 												
 												//Add -xPB(s1,s2,s3,s4,s5,s6)[i][t+1]
-												c8_indexlist.get(c8_num).add(xPB[s1][s2][s3][s4][s5][s6][i][t+1]);
+												c8_indexlist.get(c8_num).add(xPB[s1][s2][s3][s4][s5][s6][i][t + 1]);
 												c8_valuelist.get(c8_num).add((double) -1);
 												
 												//add bounds
@@ -1486,10 +1487,10 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 												if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
 									
 												c9_indexlist.get(c9_num).add(xGS[s1][s2][s3][s4][s5][s6][i][t]);
-												c9_valuelist.get(c9_num).add((double) 1 - SRD_percent[s5][SRDage]/100);		//SR Fire loss Rate = P(s5,a)/100
+												c9_valuelist.get(c9_num).add((double) 1 - SRD_percent[s5][SRDage] / 100);		//SR Fire loss Rate = P(s5,a)/100
 												
 												//Add -xGS(s1,s2,s3,s4,s5,s6)[i][t+1]
-												c9_indexlist.get(c9_num).add(xGS[s1][s2][s3][s4][s5][s6][i][t+1]);
+												c9_indexlist.get(c9_num).add(xGS[s1][s2][s3][s4][s5][s6][i][t + 1]);
 												c9_valuelist.get(c9_num).add((double) -1);												
 												
 												//add bounds
@@ -1554,7 +1555,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 											for (int c = 0; c < layer5.size(); c++) {
 												int processingAge = t + StartingAge[s1][s2][s3][s4][s5][s6] - 1;
 												String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(c) + " " + processingAge;						
-												if (coverTypeConversions_and_RotationAges.contains(thisCoverTypeconversion_and_RotationAge)) {
+												if (covertype_conversions_and_existing_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
 													c10_indexlist.get(c10_num).add(xEAeCut[s1][s2][s3][s4][s5][s6][t][c][1]);
 													c10_valuelist.get(c10_num).add((double) -1);
 												}
@@ -1614,10 +1615,10 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 											if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
 								
 											c11_indexlist.get(c11_num).add(xEAe[s1][s2][s3][s4][s5][s6][t]);
-											c11_valuelist.get(c11_num).add((double) 1 - SRD_percent[s5][SRDage]/100);		//SR Fire loss Rate = P(s5,a)/100											
+											c11_valuelist.get(c11_num).add((double) 1 - SRD_percent[s5][SRDage] / 100);		//SR Fire loss Rate = P(s5,a)/100											
 											
 											//Add - xEAe(s1,s2,s3,s4,s5,s6)[t+1]		
-											c11_indexlist.get(c11_num).add(xEAe[s1][s2][s3][s4][s5][s6][t+1]);
+											c11_indexlist.get(c11_num).add(xEAe[s1][s2][s3][s4][s5][s6][t + 1]);
 											c11_valuelist.get(c11_num).add((double) -1);																					
 											
 											//add bounds
@@ -1646,7 +1647,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 											for (int c = 0; c < layer5.size(); c++) {
 												int processingAge = t + StartingAge[s1][s2][s3][s4][s5][s6] - 1;
 												String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(c) + " " + processingAge;					
-												if (coverTypeConversions_and_RotationAges.contains(thisCoverTypeconversion_and_RotationAge)) {
+												if (covertype_conversions_and_existing_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
 													for (int tR = 1; tR <= t-1; tR++) {
 														//Add constraint
 														c11_indexlist.add(new ArrayList<Integer>());
@@ -1657,10 +1658,10 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 														if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
 												
 														c11_indexlist.get(c11_num).add(xEAeCut[s1][s2][s3][s4][s5][s6][t][c][tR]);
-														c11_valuelist.get(c11_num).add((double) 1 - SRD_percent[s5][SRDage]/100);		//SR Fire loss Rate = P(s5,a)/100																											
+														c11_valuelist.get(c11_num).add((double) 1 - SRD_percent[s5][SRDage] / 100);		//SR Fire loss Rate = P(s5,a)/100																											
 														
 														//Add - xEAe'(s1,s2,s3,s4,s5,s6)[t][c][tR+1]		
-														c11_indexlist.get(c11_num).add(xEAeCut[s1][s2][s3][s4][s5][s6][t][c][tR+1]);
+														c11_indexlist.get(c11_num).add(xEAeCut[s1][s2][s3][s4][s5][s6][t][c][tR + 1]);
 														c11_valuelist.get(c11_num).add((double) -1);																					
 														
 														//add bounds
@@ -1759,7 +1760,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 												if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
 										
 												c12_indexlist.get(c12_num).add(xNG[s1][s2][s3][s4][s5][s6][t]);
-												c12_valuelist.get(c12_num).add((double) - SRD_percent[s5][SRDage]/100);		//SR Fire loss Rate = P(s5,a)/100	
+												c12_valuelist.get(c12_num).add((double) - SRD_percent[s5][SRDage] / 100);		//SR Fire loss Rate = P(s5,a)/100	
 											}
 										}
 										
@@ -1772,7 +1773,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 													if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
 											
 													c12_indexlist.get(c12_num).add(xPB[s1][s2][s3][s4][s5][s6][i][t]);
-													c12_valuelist.get(c12_num).add((double) - SRD_percent[s5][SRDage]/100);		//SR Fire loss Rate = P(s5,a)/100	
+													c12_valuelist.get(c12_num).add((double) - SRD_percent[s5][SRDage] / 100);		//SR Fire loss Rate = P(s5,a)/100	
 												}
 											}
 										}
@@ -1786,7 +1787,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 													if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
 											
 													c12_indexlist.get(c12_num).add(xGS[s1][s2][s3][s4][s5][s6][i][t]);
-													c12_valuelist.get(c12_num).add((double) - SRD_percent[s5][SRDage]/100);		//SR Fire loss Rate = P(s5,a)/100	
+													c12_valuelist.get(c12_num).add((double) - SRD_percent[s5][SRDage] / 100);		//SR Fire loss Rate = P(s5,a)/100	
 												}
 											}
 										}
@@ -1799,7 +1800,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 												if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
 										
 												c12_indexlist.get(c12_num).add(xEAe[s1][s2][s3][s4][s5][s6][t]);
-												c12_valuelist.get(c12_num).add((double) - SRD_percent[s5][SRDage]/100);		//SR Fire loss Rate = P(s5,a)/100	
+												c12_valuelist.get(c12_num).add((double) - SRD_percent[s5][SRDage] / 100);		//SR Fire loss Rate = P(s5,a)/100	
 											}
 										}						
 							
@@ -1811,14 +1812,14 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 													for (int ccc = 0; ccc < layer5.size(); ccc++) {		//c''
 														int processingAge = ttt + StartingAge[s1][s2][s3][s4][s5][s6] - 1;
 														String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(ccc) + " " + processingAge;								
-														if (coverTypeConversions_and_RotationAges.contains(thisCoverTypeconversion_and_RotationAge)) {
+														if (covertype_conversions_and_existing_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
 															for (int tR = 1; tR <= ttt; tR++) {					
 																if (tR == t) {
 																	SRDage = StartingAge[s1][s2][s3][s4][s5][s6] + tR - 1; 
 																	if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
 															
 																	c12_indexlist.get(c12_num).add(xEAeCut[s1][s2][s3][s4][s5][s6][ttt][ccc][tR]);
-																	c12_valuelist.get(c12_num).add((double) - SRD_percent[s5][SRDage]/100);		//SR Fire loss Rate = P(s5,a)/100	
+																	c12_valuelist.get(c12_num).add((double) - SRD_percent[s5][SRDage] / 100);		//SR Fire loss Rate = P(s5,a)/100	
 																}						
 															}
 														}
@@ -1834,7 +1835,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 												if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %									
 												
 												c12_indexlist.get(c12_num).add(xEAr[s1][s2][s3][s4][s5][t][a]);
-												c12_valuelist.get(c12_num).add((double) - SRD_percent[s5][SRDage]/100);		//SR Fire loss Rate = P(s5,a)/100	
+												c12_valuelist.get(c12_num).add((double) - SRD_percent[s5][SRDage] / 100);		//SR Fire loss Rate = P(s5,a)/100	
 											}
 										}
 
@@ -1844,14 +1845,14 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 												for (int a = 1; a <= ttt - 1; a++) {
 													for (int ccc = 0; ccc < layer5.size(); ccc++) {		//c''
 														String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(ccc) + " " + a;						
-														if (coverTypeConversions_and_RotationAges.contains(thisCoverTypeconversion_and_RotationAge)) {
+														if (covertype_conversions_and_regeneration_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
 															for (int tR = 1; tR <= ttt; tR++) {					
 																if (tR == t && tR==ttt-a+1) {
 																	SRDage = a - ttt + tR; 
 																	if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %																									
 																	
 																	c12_indexlist.get(c12_num).add(xEArCut[s1][s2][s3][s4][s5][ttt][a][ccc][tR]);
-																	c12_valuelist.get(c12_num).add((double) - SRD_percent[s5][SRDage]/100);		//SR Fire loss Rate = P(s5,a)/100																				
+																	c12_valuelist.get(c12_num).add((double) - SRD_percent[s5][SRDage] / 100);		//SR Fire loss Rate = P(s5,a)/100																				
 																}
 															}
 														}
@@ -1890,13 +1891,13 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 											
 											//Add fire[s1][s2][s3][s4][s5][t][c]	*		1-P(s5,c')/100
 											c12_indexlist.get(c12_num).add(fire[s1][s2][s3][s4][s5][t][c]);
-											c12_valuelist.get(c12_num).add((double) 1-SRDrequirementPercent[s5][c]/100);	//Group the parameters here for the case c = c'	
+											c12_valuelist.get(c12_num).add((double) 1-SRDrequirementPercent[s5][c] / 100);	//Group the parameters here for the case c = c'	
 											
 											//Add fire[s1][s2][s3][s4][s5][t][c']
 											for (int cc = 0; cc < layer5.size(); cc++) {
 												if (cc != c) {
 													c12_indexlist.get(c12_num).add(fire[s1][s2][s3][s4][s5][t][cc]);
-													c12_valuelist.get(c12_num).add((double) -SRDrequirementPercent[s5][c]/100);
+													c12_valuelist.get(c12_num).add((double) -SRDrequirementPercent[s5][c] / 100);
 												}
 											}
 											
@@ -1953,7 +1954,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										//Add sigma(s5) fire(s1,s2,s3,s4,s5)[t][c]
 										for (int s5 = 0; s5 < layer5.size(); s5++) {
 											String thisCoverTypeconversion = layer5.get(s5) + " " + layer5.get(c);						
-											if (coverTypeConversions.contains(thisCoverTypeconversion)) {
+											if (covertype_conversions.contains(thisCoverTypeconversion)) {
 												c13_indexlist.get(c13_num).add(fire[s1][s2][s3][s4][s5][t][c]);
 												c13_valuelist.get(c13_num).add((double) 1);
 											}
@@ -1967,7 +1968,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 												String strataName = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4) + layer5.get(s5) + layer6.get(s6);
 												int processingAge = t + StartingAge[s1][s2][s3][s4][s5][s6] - 1;
 												String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(c) + " " + processingAge;						
-												if (modeled_strata.contains(strataName) && coverTypeConversions_and_RotationAges.contains(thisCoverTypeconversion_and_RotationAge)) {
+												if (modeled_strata.contains(strataName) && covertype_conversions_and_existing_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
 													c13_indexlist.get(c13_num).add(xEAeCut[s1][s2][s3][s4][s5][s6][t][c][t]);
 													c13_valuelist.get(c13_num).add((double) 1);
 												}
@@ -1979,7 +1980,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 											for (int s5 = 0; s5 < layer5.size(); s5++) {
 												for (int a = 1; a <= t - 1; a++) {
 													String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(c) + " " + a;						
-													if (coverTypeConversions_and_RotationAges.contains(thisCoverTypeconversion_and_RotationAge)) {
+													if (covertype_conversions_and_regeneration_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
 														c13_indexlist.get(c13_num).add(xEArCut[s1][s2][s3][s4][s5][t][a][c][t]);
 														c13_valuelist.get(c13_num).add((double) 1);
 													}
@@ -1996,8 +1997,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 											for (int cc = 0; cc < layer5.size(); cc++) {
 												int processingAge = tt - t;	
 												String thisCoverTypeconversion_and_RotationAge = layer5.get(c) + " " + layer5.get(cc) + " " + processingAge;						
-												if (coverTypeConversions_and_RotationAges.contains(thisCoverTypeconversion_and_RotationAge)) {
-													c13_indexlist.get(c13_num).add(xEArCut[s1][s2][s3][s4][c][tt][tt-t][cc][t+1]);
+												if (covertype_conversions_and_regeneration_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
+													c13_indexlist.get(c13_num).add(xEArCut[s1][s2][s3][s4][c][tt][tt - t][cc][t + 1]);
 													c13_valuelist.get(c13_num).add((double) -1);
 												}
 											}
@@ -2057,10 +2058,10 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 											if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %									
 											
 											c14_indexlist.get(c14_num).add(xEAr[s1][s2][s3][s4][s5][t][a]);
-											c14_valuelist.get(c14_num).add((double) 1 - SRD_percent[s5][SRDage]/100);		//SR Fire loss Rate = P(s5,a)/100
+											c14_valuelist.get(c14_num).add((double) 1 - SRD_percent[s5][SRDage] / 100);		//SR Fire loss Rate = P(s5,a)/100
 											
 											//Add - xEAr(s1,s2,s3,s4,s5)[t+1][a+1]
-											c14_indexlist.get(c14_num).add(xEAr[s1][s2][s3][s4][s5][t+1][a+1]);
+											c14_indexlist.get(c14_num).add(xEAr[s1][s2][s3][s4][s5][t + 1][a + 1]);
 											c14_valuelist.get(c14_num).add((double) -1);										
 											
 											//add bounds
@@ -2088,7 +2089,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										for (int a = 1; a <= t-1; a++) {									
 											for (int c = 0; c < layer5.size(); c++) {
 												String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(c) + " " + a;						
-												if (coverTypeConversions_and_RotationAges.contains(thisCoverTypeconversion_and_RotationAge)) {
+												if (covertype_conversions_and_regeneration_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
 													for (int tR = t-a+1; tR <= t-1; tR++) {
 														//Add constraint
 														c14_indexlist.add(new ArrayList<Integer>());
@@ -2099,10 +2100,10 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 														if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %									
 														
 														c14_indexlist.get(c14_num).add(xEArCut[s1][s2][s3][s4][s5][t][a][c][tR]);
-														c14_valuelist.get(c14_num).add((double) 1 - SRD_percent[s5][SRDage]/100);		//SR Fire loss Rate = P(s5,a)/100													
+														c14_valuelist.get(c14_num).add((double) 1 - SRD_percent[s5][SRDage] / 100);		//SR Fire loss Rate = P(s5,a)/100													
 												
 														//Add - xEAr'(s1,s2,s3,s4,s5,s6)[t][a][c][tR+1]		
-														c14_indexlist.get(c14_num).add(xEArCut[s1][s2][s3][s4][s5][t][a][c][tR+1]);
+														c14_indexlist.get(c14_num).add(xEArCut[s1][s2][s3][s4][s5][t][a][c][tR + 1]);
 														c14_valuelist.get(c14_num).add((double) -1);																					
 														
 														//add bounds
@@ -2231,9 +2232,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 															current_var_static_condition.add(layers_Title.get(3) + layer4.get(s4));		// layer + element
 															current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
 																							
-															para_value = Get_Parameter_Information.get_total_value(layer5.get(s5), layer6.get(s6), "NG", "0", 
+															para_value = Get_Parameter_Information.get_total_value(vname[xNG[s1][s2][s3][s4][s5][s6][t]], 
 																	yieldTable_Name, yieldTable_values, parameters_indexes_list,
-																	all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers, current_period, current_row,
+																	all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers,
 																	action_type_list, baseCost_acres, baseCost_yieldtables,
 																	cost_staticCondition_list, cost_adjusted_percentage,
 																	current_var_static_condition);
@@ -2281,9 +2282,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																current_var_static_condition.add(layers_Title.get(3) + layer4.get(s4));		// layer + element
 																current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
 																				
-																para_value = Get_Parameter_Information.get_total_value(layer5.get(s5), layer6.get(s6), "PB", Integer.toString(ii), 
+																para_value = Get_Parameter_Information.get_total_value(vname[xPB[s1][s2][s3][s4][s5][s6][ii][t]], 
 																		yieldTable_Name, yieldTable_values, parameters_indexes_list,
-																		all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers, current_period, current_row,
+																		all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers,
 																		action_type_list, baseCost_acres, baseCost_yieldtables, 
 																		cost_staticCondition_list, cost_adjusted_percentage,
 																		current_var_static_condition);
@@ -2332,9 +2333,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																current_var_static_condition.add(layers_Title.get(3) + layer4.get(s4));		// layer + element
 																current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
 																
-																para_value = Get_Parameter_Information.get_total_value(layer5.get(s5), layer6.get(s6), "MS", Integer.toString(ii), 
+																para_value = Get_Parameter_Information.get_total_value(vname[xMS[s1][s2][s3][s4][s5][s6][ii][t]], 
 																		yieldTable_Name, yieldTable_values, parameters_indexes_list,
-																		all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers, current_period, current_row,
+																		all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers,
 																		action_type_list, baseCost_acres, baseCost_yieldtables, 
 																		cost_staticCondition_list, cost_adjusted_percentage,
 																		current_var_static_condition);
@@ -2383,9 +2384,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																current_var_static_condition.add(layers_Title.get(3) + layer4.get(s4));		// layer + element
 																current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
 																		
-																para_value = Get_Parameter_Information.get_total_value(layer5.get(s5), layer6.get(s6), "GS", Integer.toString(ii), 
+																para_value = Get_Parameter_Information.get_total_value(vname[xGS[s1][s2][s3][s4][s5][s6][ii][t]], 
 																		yieldTable_Name, yieldTable_values, parameters_indexes_list,
-																		all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers, current_period, current_row,
+																		all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers,
 																		action_type_list, baseCost_acres, baseCost_yieldtables, 
 																		cost_staticCondition_list, cost_adjusted_percentage,
 																		current_var_static_condition);
@@ -2424,7 +2425,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 													for (int c = 0; c < layer5.size(); c++) {	
 														int processingAge = t + StartingAge[s1][s2][s3][s4][s5][s6] - 1;
 														String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(c) + " " + processingAge;	
-														if (coverTypeConversions_and_RotationAges.contains(thisCoverTypeconversion_and_RotationAge)) {
+														if (covertype_conversions_and_existing_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
 															if (integer_static_timePeriods.size() > 0) {	
 																for (int tR : integer_static_timePeriods) {		//Loop all periods, 	final cut at t but we need parameter at time tR
 																	if (tR<=t) {
@@ -2439,14 +2440,10 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																		current_var_static_condition.add(layers_Title.get(2) + layer3.get(s3));		// layer + element
 																		current_var_static_condition.add(layers_Title.get(3) + layer4.get(s4));		// layer + element
 																		current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
-																				
-																		
-																		//1 line to pick a fixed EA table  ----change change change later
-																	    int timingchoice = 1;
-																	    para_value = Get_Parameter_Information.get_total_value(layer5.get(s5), layer6.get(s6), "EA", Integer.toString(timingchoice), 
-//																		para_value = Get_Parameter_Information.getValue(layer5.get(s5), layer6.get(s6), "EA", "AgeClassShouldBeHere", 
+																																						
+																	    para_value = Get_Parameter_Information.get_total_value(vname[xEAeCut[s1][s2][s3][s4][s5][s6][t][c][tR]], 
 																				yieldTable_Name, yieldTable_values, parameters_indexes_list,
-																				all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers, current_period, current_row,
+																				all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers,
 																				action_type_list, baseCost_acres, baseCost_yieldtables, 
 																				cost_staticCondition_list, cost_adjusted_percentage,
 																				current_var_static_condition);
@@ -2481,7 +2478,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 												for (int a = 1; a <= t - 1; a++) {
 													for (int c = 0; c < layer5.size(); c++) {
 														String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(c) + " " + a;						
-														if (coverTypeConversions_and_RotationAges.contains(thisCoverTypeconversion_and_RotationAge)) {
+														if (covertype_conversions_and_regeneration_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
 															if (integer_static_timePeriods.size() > 0) {	
 																for (int tR : integer_static_timePeriods) {		//Loop all periods, 	final cut at t but we need parameter at time tR
 																	if (tR >= (t-a+1) && tR<=t) {
@@ -2497,14 +2494,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																		current_var_static_condition.add(layers_Title.get(3) + layer4.get(s4));		// layer + element
 																		current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
 																				
-																		
-																		//2 lines to pick a fixed EA table  ----change change change later
-																	    int s6 = 0;
-																	    int timingchoice = 1;
-																	    para_value = Get_Parameter_Information.get_total_value(layer5.get(s5), layer6.get(s6), "EA", Integer.toString(timingchoice), 
-//																		para_value = Get_Parameter_Information.getValue(layer5.get(s5), "notNeeded", "EA", "AgeClassShouldBeHere", 
+																	    para_value = Get_Parameter_Information.get_total_value(vname[xEArCut[s1][s2][s3][s4][s5][t][a][c][tR]], 
 																				yieldTable_Name, yieldTable_values, parameters_indexes_list,
-																				all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers, current_period, current_row,
+																				all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers,
 																				action_type_list, baseCost_acres, baseCost_yieldtables, 
 																				cost_staticCondition_list, cost_adjusted_percentage,
 																				current_var_static_condition);
@@ -2556,14 +2548,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																current_var_static_condition.add(layers_Title.get(3) + layer4.get(s4));		// layer + element
 																current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
 																
-																
-																//2 lines to pick a fixed EA table  ----change change change later
-															    int s6 = 0;
-															    int timingchoice = 1;
-															    para_value = Get_Parameter_Information.get_total_value(layer5.get(s5), layer6.get(s6), "EA", Integer.toString(timingchoice), 
-//																para_value = Get_Parameter_Information.getValue(layer5.get(s5), "notNeeded", "EA", "AgeClassShouldBeHere", 
+															    para_value = Get_Parameter_Information.get_total_value(vname[xEAr[s1][s2][s3][s4][s5][tt][a]], 
 																		yieldTable_Name, yieldTable_values, parameters_indexes_list,
-																		all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers, current_period, current_row,
+																		all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers,
 																		action_type_list, baseCost_acres, baseCost_yieldtables, 
 																		cost_staticCondition_list, cost_adjusted_percentage,
 																		current_var_static_condition);

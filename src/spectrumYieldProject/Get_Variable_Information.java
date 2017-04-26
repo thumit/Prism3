@@ -177,6 +177,11 @@ public class Get_Variable_Information {
 		return layer5;
 	}
 	
+	public static String get_layer6(String var_name) {
+		get_all_terms_from_name(var_name);
+		return layer6;
+	}
+	
 	public static String get_method(String var_name) {
 		get_all_terms_from_name(var_name);
 		return method;

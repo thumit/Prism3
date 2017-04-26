@@ -63,4 +63,15 @@
 53. Move 3 output panel outside of Panel_Yield_Project
 54. Introduce output5_management_details
 55. Multi-threads method is apply for output5
-56. Customize output is integrated into output5 (still not completed yet)
+56. Customize output is integrated into output5 (need more functionality)
+--------------------------------------------------------------------------
+
+57. output5 is now having a much more faster Filter method applied
+58. Move MS Fire method to above Even Age method
+59. Deselect or select static identifiers will only work with visible checkboxes --> to prevent select or de-select invisible periods which slow the Table Filter
+60 Users are allowed to set up min and max rotation age for both existing and regeneration strata
+61. Allow capture images of GUI components (Ctrl + 1)
+62. Clear 17 Bugs identified by FindBugs. The codes is now technically bug-free. The logic Bugs however may exist (Hopefully I am not that unlucky)
+63. Database import has a security check to deny database that is not following SpectrumLite's data requirements
+64. All existing strata that is not linked to Natural Growth table (-->not found starting ageclass) will not be selectable for modeled_strata. The codes change is located in the update_management_overview (table model overview)
+65. Many shortcut keys have been applied

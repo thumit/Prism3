@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -30,6 +32,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.JTree;
+import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
@@ -86,7 +89,7 @@ public class Panel_YieldProject extends JLayeredPane {
 	private JTable table;
 	private TableModelSpectrum model;
 	private Object[][] data;	
-	private TableFilterHeader filterHeader = new TableFilterHeader(table, AutoChoices.ENABLED);
+	private TableFilterHeader filterHeader = new TableFilterHeader();
 	
 	private Thread thread_management_details;
 	
@@ -245,7 +248,9 @@ public class Panel_YieldProject extends JLayeredPane {
 	} // end Panel_Project()
 
 	// --------------------------------------------------------------------------------------------------------------------------------
-	public void doMousePressed(MouseEvent e) {	
+	public void doMousePressed(MouseEvent e) {
+		filterHeader.setTable(null);		//set null filter after each mouse click: this is important
+		
 		TreePath path = projectTree.getPathForLocation(e.getX(), e.getY());
 		if (path == null) {
 			projectTree.clearSelection();		//clear selection whenever mouse click is performed not on Jtree nodes	
@@ -272,8 +277,7 @@ public class Panel_YieldProject extends JLayeredPane {
 			projectTree.setSelectionPath(path);
 		}
 	
-		
-		filterHeader.setTable(null);		//set null filter after each mouse click: this is important
+				
 		if (SwingUtilities.isLeftMouseButton(e)) {
 			if (e.getClickCount() == 1) {
 				// Show node information of the last selected node
@@ -434,6 +438,7 @@ public class Panel_YieldProject extends JLayeredPane {
 					// All nodes can be refreshed ------------------------------------------------------------
 					final JMenuItem refreshMenuItem = new JMenuItem("Refresh");
 					refreshMenuItem.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_refresh.png"));
+					refreshMenuItem.setMnemonic(KeyEvent.VK_R);
 					refreshMenuItem.addActionListener(new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent actionEvent) {
@@ -450,6 +455,7 @@ public class Panel_YieldProject extends JLayeredPane {
 						final String Menuname = "New Run";
 						final JMenuItem newMenuItem = new JMenuItem(Menuname);
 						newMenuItem.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_new.png"));
+						newMenuItem.setMnemonic(KeyEvent.VK_N);
 						newMenuItem.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent actionEvent) {
@@ -464,6 +470,7 @@ public class Panel_YieldProject extends JLayeredPane {
 					if (currentLevel == 2 && rootSelected ==false) {					
 						final JMenuItem editMenuItem = new JMenuItem("Start Editing");
 						editMenuItem.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_edit.png"));
+						editMenuItem.setMnemonic(KeyEvent.VK_E);
 						editMenuItem.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent actionEvent) {								
@@ -486,6 +493,7 @@ public class Panel_YieldProject extends JLayeredPane {
 					if (currentLevel == 2 && rootSelected ==false) {					
 						final JMenuItem solveMenuItem = new JMenuItem("Start Solving");
 						solveMenuItem.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_solve.png"));
+						solveMenuItem.setMnemonic(KeyEvent.VK_S);
 						solveMenuItem.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent actionEvent) {								
@@ -500,6 +508,7 @@ public class Panel_YieldProject extends JLayeredPane {
 					if (currentLevel == 2 && rootSelected ==false) {					
 						final JMenuItem customizeOutput_MenuItem = new JMenuItem("Customize Output");
 						customizeOutput_MenuItem.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_customize.png"));
+						customizeOutput_MenuItem.setMnemonic(KeyEvent.VK_C);
 						customizeOutput_MenuItem.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent actionEvent) {								
@@ -514,6 +523,7 @@ public class Panel_YieldProject extends JLayeredPane {
 					if (currentLevel == 2 && rootSelected ==false) {					
 						final JMenuItem deleteMenuItem = new JMenuItem("Delete Runs");
 						deleteMenuItem.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_delete.png"));
+						deleteMenuItem.setMnemonic(KeyEvent.VK_D);
 						deleteMenuItem.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent actionEvent) {								

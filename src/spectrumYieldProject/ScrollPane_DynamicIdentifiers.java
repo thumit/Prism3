@@ -42,7 +42,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 	private JScrollPane defineScrollPane;		//for Definition of dynamic identifier
 
 	
-	public ScrollPane_DynamicIdentifiers(int option, Read_DatabaseTables read_DatabaseTables, Read_Indentifiers read_Identifiers,
+	public ScrollPane_DynamicIdentifiers(int option, Read_Database_Yield_Tables read_DatabaseTables, Read_Indentifiers read_Identifiers,
 			String[] yieldTable_ColumnNames, Object[][][] yieldTable_values) {
 		
 		
@@ -188,7 +188,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 								c_list.weighty = 1;
 								
 								
-								List<String> uniqueValueList = read_DatabaseTables.getColumnUniqueValues(currentCheckBoxIndex);									
+								List<String> uniqueValueList = read_DatabaseTables.get_col_unique_values_list(currentCheckBoxIndex);									
 								//Sort the list	
 								try {	//Sort Double
 									Collections.sort(uniqueValueList,new Comparator<String>() {
@@ -477,7 +477,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 											        	} else {
 											        		JOptionPane.showMessageDialog(Spectrum_Main.get_spectrumDesktopPane(), "'Min value' must be less than or equal to 'Max value'");														        																							
 											        	}
-													} catch (Exception ee) {
+													} catch (NumberFormatException ex) {
 														JOptionPane.showMessageDialog(Spectrum_Main.get_spectrumDesktopPane(),
 																"'Min value' and 'Max value' must be numbers");
 													}

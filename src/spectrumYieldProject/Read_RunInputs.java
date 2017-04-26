@@ -147,8 +147,9 @@ public class Read_RunInputs {
 		
 	//-------------------------------------------------------------------------------------------------------------------------------------------------	
 	//For input_03_clearcut_covertype_conversion
-	private List<String> coverTypeConversions_and_RotationAges_list;	
-	private List<String> coverTypeConversions_list;	
+	private List<String> covertype_conversions_and_existing_rotation_ages_list;	
+	private List<String> covertype_conversions_and_regeneration_rotation_ages_list;	
+	private List<String> covertype_conversions_list;	
 	
 	public void readRequirements (File file) {
 		try {
@@ -157,20 +158,28 @@ public class Read_RunInputs {
 			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
 			list.remove(0);	//Remove the first row (Column names)
 		
-			coverTypeConversions_and_RotationAges_list = new ArrayList<String>();
-			coverTypeConversions_list = new ArrayList<String>();
+			covertype_conversions_and_existing_rotation_ages_list = new ArrayList<String>();
+			covertype_conversions_and_regeneration_rotation_ages_list = new ArrayList<String>();
+			covertype_conversions_list = new ArrayList<String>();
 			
 			for (int i = 0; i < list.size(); i++) {
 				String[] values = list.get(i).split("\t");
 				String listname = values[0] + " " + values[1];
-				coverTypeConversions_list.add(listname);
+				covertype_conversions_list.add(listname);
 
-				int RA_min = Integer.parseInt(values[2]);
-				int RA_max = Integer.parseInt(values[3]);
+				int e_RA_min = Integer.parseInt(values[2]);
+				int e_RA_max = Integer.parseInt(values[3]);
+				int r_RA_min = Integer.parseInt(values[4]);
+				int r_RA_max = Integer.parseInt(values[5]);
 
-				for (int age = RA_min; age <= RA_max; age++) {
-					String listname2 = values[0] + " " + values[1] + " " + age;
-					coverTypeConversions_and_RotationAges_list.add(listname2);
+				for (int age = e_RA_min; age <= e_RA_max; age++) {
+					String temp = values[0] + " " + values[1] + " " + age;
+					covertype_conversions_and_existing_rotation_ages_list.add(temp);
+				}
+				
+				for (int age = r_RA_min; age <= r_RA_max; age++) {
+					String temp = values[0] + " " + values[1] + " " + age;
+					covertype_conversions_and_regeneration_rotation_ages_list.add(temp);
 				}
 			}
 			
@@ -179,12 +188,16 @@ public class Read_RunInputs {
 		}
 	}
 	
-	public List<String> getcoverTypeConversions_and_RotationAges () {
-		return coverTypeConversions_and_RotationAges_list;
-	}		
+	public List<String> get_covertype_conversions_and_existing_rotation_ages() {
+		return covertype_conversions_and_existing_rotation_ages_list;
+	}	
 	
-	public List<String> getCoverTypeConversions () {
-		return coverTypeConversions_list;
+	public List<String> get_covertype_conversions_and_regeneration_rotation_ages() {
+		return covertype_conversions_and_regeneration_rotation_ages_list;
+	}
+	
+	public List<String> get_covertype_conversions() {
+		return covertype_conversions_list;
 	}
 
 	//-------------------------------------------------------------------------------------------------------------------------------------------------		

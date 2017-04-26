@@ -48,25 +48,16 @@ import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.DropMode;
-import javax.swing.JFormattedTextField;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
-import javax.swing.JSpinner;
-import javax.swing.JSpinner.DefaultEditor;
-import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.text.DefaultFormatter;
 
 import spectrumConvenienceClasses.ArrayListTransferHandler;
 import spectrumConvenienceClasses.IconHandle;
@@ -77,7 +68,7 @@ public class ScrollPane_ConstraintsFlow  extends JScrollPane {
 	private ArrayListTransferHandler lh;
 	private JList[] flow_list;
 	private JList id_list;
-	private DefaultListModel[] list_model;
+	private DefaultListModel[] list_model = null;
 	private JPanel panel;
 	private JScrollPane list_scroll;
 	

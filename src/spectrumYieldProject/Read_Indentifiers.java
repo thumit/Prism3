@@ -118,8 +118,8 @@ public class Read_Indentifiers {
 		layer1.add("Natural Growth");
 		layer1.add("Prescribed Burn");
 		layer1.add("Group Selection");
-		layer1.add("Even Age");
 		layer1.add("Mixed Severity Wildfire");
+		layer1.add("Even Age");	
 
 		
 		List<String> layer2 = new ArrayList<String>();		//Time Periods

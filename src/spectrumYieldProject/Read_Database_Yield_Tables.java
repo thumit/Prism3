@@ -1,0 +1,180 @@
+package spectrumYieldProject;
+
+import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class Read_Database_Yield_Tables {
+	private Object[][][] yield_tables_values;			// Note: indexes start from 0 
+	private Object[] yield_tables_names;
+	private String[] yield_tables_column_names;
+	private String[] action_type;
+	
+	
+	public Read_Database_Yield_Tables(File file) {
+		try {
+			Connection conn;
+			
+			Class.forName("org.sqlite.JDBC").newInstance();
+			if (file.exists()) {
+				conn = DriverManager.getConnection("jdbc:sqlite:" + file);
+				Statement st = conn.createStatement();
+				ResultSet rs;
+				
+				
+				// get total yield tables
+				int tableCount = 0;				
+				rs = st.executeQuery("SELECT COUNT(DISTINCT strata) FROM yield_tables;");		//This only have 1 row and 1 column, the value is total number of unique strata
+				while (rs.next()) {
+					tableCount = rs.getInt(1);	//column 1
+				}
+				
+				// get total action types
+				int actionCount = 0;				
+				rs = st.executeQuery("SELECT COUNT(DISTINCT action_type) FROM yield_tables;");		//This only have 1 row and 1 column, the value is total number of unique action_type
+				while (rs.next()) {
+					actionCount = rs.getInt(1);	//column 1
+				}			
+				
+				yield_tables_names = new Object[tableCount];
+				action_type = new String[actionCount];
+				yield_tables_values = new Object[tableCount][][];
+				
+				
+				//get the table name and put into array "nameOftable"
+				rs = st.executeQuery("SELECT DISTINCT strata FROM yield_tables;");			
+				int tbl = 0;
+				while (rs.next()) {
+					yield_tables_names[tbl] = rs.getString(1);		//column 1
+					tbl++;
+				}
+				
+				
+				//get action types and put into array "action_type"
+				rs = st.executeQuery("SELECT DISTINCT action_type FROM yield_tables ORDER BY action_type ASC;");			
+				int type_count = 0;
+				while (rs.next()) {
+					action_type[type_count] = rs.getString(1);		//column 1
+					type_count++;
+				}
+				
+				
+				// get total columns and "table_ColumnNames" for each yield table
+				rs = st.executeQuery("SELECT * FROM yield_tables;");	
+				ResultSetMetaData rsmd = rs.getMetaData();
+				int colCount = rsmd.getColumnCount();
+				yield_tables_column_names = new String[colCount];
+				for (int i = 1; i <= colCount; i++) {		//this start from 1
+					yield_tables_column_names[i-1] = rsmd.getColumnName(i);			//Note that tableColumnNames start from 0
+				}
+				
+				
+				// get total rows for each yield table
+				int[] rowCount = new int[tableCount];
+				for (int i = 0; i < tableCount; i++) {				
+					rowCount[i] = 0;
+				}
+				while (rs.next()) {
+					for (int i = 0; i < tableCount; i++) {				
+						if (rs.getString(1).equals(yield_tables_names[i])) {
+							rowCount[i]++;
+						}
+					}		
+				}	
+				
+				
+				// loop through all yield tables , get value of each table and put into array table_values[][][]
+				for (int i = 0; i < tableCount; i++) {				
+					//re-define table dimensions	--->	VERY IMPORTANT CODES
+					yield_tables_values[i] = new Object[rowCount[i]][];
+					for (int row = 0; row < rowCount[i]; row++) {
+						yield_tables_values[i][row] = new Object[colCount];
+					}
+				}
+					
+						
+				// get values for each table
+				rs = st.executeQuery("SELECT * FROM yield_tables;");
+				for (int i = 0; i < tableCount; i++) {
+					for (int row = 0; row < rowCount[i]; row++) {
+						rs.next();
+						for (int col = 0; col < colCount; col++) {
+							yield_tables_values[i][row][col] = rs.getString(col + 1);
+						}
+					}
+				}							
+				
+				
+				st.close();
+				rs.close();
+				conn.close();	
+			}
+
+		} catch (Exception e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Read_DatabaseTables   -   Database connection error");
+		}		
+	}
+	
+	
+	public Object[][][] get_yield_tables_values() {	
+		return yield_tables_values;
+	}
+	
+	
+	public String[] get_yield_tables_column_names() {
+		return yield_tables_column_names;
+	}
+
+	public Object[] get_yield_tables_names() {
+		return yield_tables_names;
+	}
+	
+	public String[] get_action_type() {
+		return action_type;
+	}
+	
+	public List<String> get_col_unique_values_list(int columnIndex) {
+		List<String> listOfUniqueValues = new ArrayList<String>();
+		
+		for (int tb = 0; tb < yield_tables_values.length; tb++) {
+			for (int rowIndex = 0; rowIndex < yield_tables_values[tb].length; rowIndex++) {
+				if (!listOfUniqueValues.contains(yield_tables_values[tb][rowIndex][columnIndex].toString())) {	// only add to list if list does not contain the value
+					listOfUniqueValues.add(yield_tables_values[tb][rowIndex][columnIndex].toString());
+				}
+			}
+		}
+
+		return listOfUniqueValues;
+	}
+	
+	
+	public String get_starting_ageclass(String cover_type, String size_class, String method, String timing_choice) {
+		method = "NG";	//only use NG table to find starting age class
+		timing_choice ="0";
+		String forest_status = "E";
+		String tableName_toFind = cover_type + "_" + size_class + "_" + method + "_" + timing_choice + "_" + forest_status;
+		tableName_toFind = tableName_toFind.toUpperCase();
+		
+		String valueReturn = null;
+		try {
+			int index = Arrays.asList(yield_tables_names).indexOf(tableName_toFind);
+			valueReturn = yield_tables_values[index][0][2].toString();			// row 0 is the first period (1st row), column 2 is "st_age_10"
+		} catch (Exception e) {
+			valueReturn = null;
+			System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Not found age class from yield table: " + tableName_toFind);
+		}
+		
+		return valueReturn;	
+	}
+	
+	
+	
+	
+	
+}

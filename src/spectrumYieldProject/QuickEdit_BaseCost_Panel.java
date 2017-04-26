@@ -226,16 +226,16 @@ public class QuickEdit_BaseCost_Panel extends JPanel {
 //						}
 					}
 				
-					// Count the total check boxes that are checked
-					public int total_checks_count() {
-						int count = 0;
-						for (JCheckBox i : column_checkboxes) {
-							if (i.isSelected()) {
-								count++;
-							}
-						}
-						return count;
-					}
+//					// Count the total check boxes that are checked
+//					public int total_checks_count() {
+//						int count = 0;
+//						for (JCheckBox i : column_checkboxes) {
+//							if (i.isSelected()) {
+//								count++;
+//							}
+//						}
+//						return count;
+//					}
 				});
 			}
 			

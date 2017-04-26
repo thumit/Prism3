@@ -1,9 +1,9 @@
-covertype_before	covertype_after	rotation_ageclass_min	rotation_ageclass_max	implementation	
-B	B	2	8	true	
-C	C	2	8	true	
-D	D	2	8	true	
-E	E	2	8	true	
-F	F	2	8	true	
-G	G	2	8	true	
-H	H	2	8	true	
-I	I	2	8	true	
+covertype_before_cut	covertype_after_cut	min_age_cut_existing	max_age_cut_existing	min_age_cut_regeneration	max_age_cut_regeneration	implementation	
+B	B	2	8	10	15	true	
+C	C	2	8	10	15	true	
+D	D	2	8	10	15	true	
+E	E	2	8	10	15	true	
+F	F	2	8	10	15	true	
+G	G	2	8	10	15	true	
+H	H	2	8	10	15	true	
+I	I	2	8	10	15	true	

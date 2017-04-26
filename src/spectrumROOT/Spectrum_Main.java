@@ -11,6 +11,8 @@ import java.awt.GraphicsDevice.WindowTranslucency;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyVetoException;
@@ -27,6 +29,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -62,8 +65,9 @@ public class Spectrum_Main extends JFrame {
 	
 	private JMenuItem					setLogo; 			// For menuWindow
 	private MenuItem_SetFont 			setFont;			// For menuWindow
-	private MenuItem_SetTransparency 	setTransparency;	// For menuWindow
 	private MenuItem_SetLookAndFeel 	setLookAndFeel;		// For menuWindow
+	private MenuItem_SetTransparency 	setTransparency;	// For menuWindow
+	private MenuItem_CaptureGUI 		captureGUI;	// For menuWindow
 		
 	private static DesktopPanel_BackGround 	spectrumDesktopPane;
 	private static String 					currentProjectName;
@@ -136,6 +140,7 @@ public class Spectrum_Main extends JFrame {
 				setFont = new MenuItem_SetFont(main);
 				setTransparency = new MenuItem_SetTransparency(main);
 				setLookAndFeel = new MenuItem_SetLookAndFeel(main, cr);
+				captureGUI = new MenuItem_CaptureGUI(main);
 				contents = new JMenuItem("Contents");
 				update = new JMenuItem("Check for updates");
 				contact = new JMenuItem("Contact us");
@@ -152,10 +157,13 @@ public class Spectrum_Main extends JFrame {
 				menuFile.add(menuOpenProject);
 				menuFile.add(exitSoftware);
 				menuUtility.add(DatabaseManagement);
-				menuWindow.add(setLogo);
-				menuWindow.add(setFont);
+				menuWindow.add(captureGUI);
+				menuWindow.add(setLogo);	
 				menuWindow.add(setTransparency);
+				menuWindow.add(setFont);
 				menuWindow.add(setLookAndFeel);
+				
+				
 				menuHelp.add(contents);
 				menuHelp.add(update);
 				menuHelp.add(contact);
@@ -205,6 +213,7 @@ public class Spectrum_Main extends JFrame {
 				
 				
 				// Add listeners "New"------------------------------------------------
+//				newProject.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));	// CTRL on Windows, *** on MAC-OS
 				newProject.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent event) {
 						//JtextField to type name
@@ -273,6 +282,7 @@ public class Spectrum_Main extends JFrame {
 
 				
 				// Add listeners "Open"------------------------------------------------
+				menuOpenProject.setMnemonic(KeyEvent.VK_O);
 				menuOpenProject.addMenuListener(new MenuListener() {
 					@Override
 			        public void menuSelected(MenuEvent e) {					
@@ -340,6 +350,7 @@ public class Spectrum_Main extends JFrame {
 				
 				// Add listeners "setLogo"-----------------------------------------------------
 				setLogo.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_main.png"));
+				setLogo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_2, InputEvent.CTRL_DOWN_MASK));
 				setLogo.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent event) {
 						if (spectrumDesktopPane.getBackgroundImage() != null) {
@@ -354,6 +365,7 @@ public class Spectrum_Main extends JFrame {
 				
 				
 				// Add listeners "ExitSoftware"-----------------------------------------------------
+				exitSoftware.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, InputEvent.ALT_DOWN_MASK));
 				exitSoftware.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent event) {
 						exitSpectrumLite();

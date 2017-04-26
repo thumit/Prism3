@@ -1,421 +1,81 @@
 var_id	var_name	var_value	var_reduced_cost	db_strata_tofind	db_row_id_tofind	db_status
-105	xNG_M,R,2,W,I,O,1	1145.7	0.0	I_O_NG_0_E	0	missing yield table
-106	xNG_M,R,2,W,I,O,2	1143.41	0.0	I_O_NG_0_E	1	missing yield table
-107	xNG_M,R,2,W,I,O,3	1141.12	0.0	I_O_NG_0_E	2	missing yield table
-108	xNG_M,R,2,W,I,O,4	1138.84	0.0	I_O_NG_0_E	3	missing yield table
-109	xNG_M,R,2,W,I,O,5	1136.56	0.0	I_O_NG_0_E	4	missing yield table
-110	xNG_M,R,2,O,E,K,1	908.2	0.0	E_K_NG_0_E	0	missing yield table
-111	xNG_M,R,2,O,E,K,2	906.38	0.0	E_K_NG_0_E	1	missing yield table
-112	xNG_M,R,2,O,E,K,3	904.57	0.0	E_K_NG_0_E	2	missing yield table
-113	xNG_M,R,2,O,E,K,4	902.76	0.0	E_K_NG_0_E	3	missing yield table
-114	xNG_M,R,2,O,E,K,5	900.96	0.0	E_K_NG_0_E	4	missing yield table
-115	xNG_M,R,2,O,I,R,1	681.15	0.0	I_R_NG_0_E	0	missing yield table
-116	xNG_M,R,2,O,I,R,2	679.79	0.0	I_R_NG_0_E	1	missing yield table
-117	xNG_M,R,2,O,I,R,3	678.43	0.0	I_R_NG_0_E	2	missing yield table
-118	xNG_M,R,2,O,I,R,4	677.07	0.0	I_R_NG_0_E	3	missing yield table
-119	xNG_M,R,2,O,I,R,5	675.72	0.0	I_R_NG_0_E	4	missing yield table
-120	xNG_M,R,4,G,E,K,1	1568.45	0.0	E_K_NG_0_E	0	missing yield table
-121	xNG_M,R,4,G,E,K,2	1565.31	0.0	E_K_NG_0_E	1	missing yield table
-122	xNG_M,R,4,G,E,K,3	1562.18	0.0	E_K_NG_0_E	2	missing yield table
-123	xNG_M,R,4,G,E,K,4	1559.06	0.0	E_K_NG_0_E	3	missing yield table
-124	xNG_M,R,4,G,E,K,5	1555.94	0.0	E_K_NG_0_E	4	missing yield table
-125	xNG_M,R,5,L,G,J,1	957.6	0.0	G_J_NG_0_E	0	missing yield table
-126	xNG_M,R,5,L,G,J,2	955.68	0.0	G_J_NG_0_E	1	missing yield table
-127	xNG_M,R,5,L,G,J,3	953.77	0.0	G_J_NG_0_E	2	missing yield table
-128	xNG_M,R,5,L,G,J,4	951.87	0.0	G_J_NG_0_E	3	missing yield table
-129	xNG_M,R,5,L,G,J,5	949.96	0.0	G_J_NG_0_E	4	missing yield table
-130	xNG_M,R,6,U,I,O,1	1529.5	0.0	I_O_NG_0_E	0	missing yield table
-131	xNG_M,R,6,U,I,O,2	1526.44	0.0	I_O_NG_0_E	1	missing yield table
-132	xNG_M,R,6,U,I,O,3	1523.39	0.0	I_O_NG_0_E	2	missing yield table
-133	xNG_M,R,6,U,I,O,4	1520.34	0.0	I_O_NG_0_E	3	missing yield table
-134	xNG_M,R,6,U,I,O,5	1517.3	0.0	I_O_NG_0_E	4	missing yield table
-135	xNG_P,R,1,O,B,M,1	1033.6	0.0	B_M_NG_0_E	0	missing yield table
-136	xNG_P,R,1,O,B,M,2	1031.53	0.0	B_M_NG_0_E	1	missing yield table
-137	xNG_P,R,1,O,B,M,3	1029.47	0.0	B_M_NG_0_E	2	missing yield table
-138	xNG_P,R,1,O,B,M,4	1027.41	0.0	B_M_NG_0_E	3	missing yield table
-139	xNG_P,R,1,O,B,M,5	1025.36	0.0	B_M_NG_0_E	4	missing yield table
-140	xNG_P,R,2,L,H,M,1	1430.7	0.0	H_M_NG_0_E	0	missing yield table
-141	xNG_P,R,2,L,H,M,2	1427.84	0.0	H_M_NG_0_E	1	missing yield table
-142	xNG_P,R,2,L,H,M,3	1424.98	0.0	H_M_NG_0_E	2	missing yield table
-143	xNG_P,R,2,L,H,M,4	1422.13	0.0	H_M_NG_0_E	3	missing yield table
-144	xNG_P,R,2,L,H,M,5	1419.29	0.0	H_M_NG_0_E	4	missing yield table
-145	xNG_P,R,2,B,G,O,1	1882.9	0.0	G_O_NG_0_E	0	missing yield table
-146	xNG_P,R,2,B,G,O,2	1879.13	0.0	G_O_NG_0_E	1	missing yield table
-147	xNG_P,R,2,B,G,O,3	1875.38	0.0	G_O_NG_0_E	2	missing yield table
-148	xNG_P,R,2,B,G,O,4	1871.63	0.0	G_O_NG_0_E	3	missing yield table
-149	xNG_P,R,2,B,G,O,5	1867.88	0.0	G_O_NG_0_E	4	missing yield table
-150	xNG_P,R,2,U,I,G,1	1158.05	0.0	I_G_NG_0_E	0	missing yield table
-151	xNG_P,R,2,U,I,G,2	1155.73	0.0	I_G_NG_0_E	1	missing yield table
-152	xNG_P,R,2,U,I,G,3	1153.42	0.0	I_G_NG_0_E	2	missing yield table
-153	xNG_P,R,2,U,I,G,4	1151.12	0.0	I_G_NG_0_E	3	missing yield table
-154	xNG_P,R,2,U,I,G,5	1148.81	0.0	I_G_NG_0_E	4	missing yield table
-155	xNG_P,R,3,U,B,M,1	1084.9	0.0	B_M_NG_0_E	0	missing yield table
-156	xNG_P,R,3,U,B,M,2	1082.73	0.0	B_M_NG_0_E	1	missing yield table
-157	xNG_P,R,3,U,B,M,3	1080.56	0.0	B_M_NG_0_E	2	missing yield table
-158	xNG_P,R,3,U,B,M,4	1078.4	0.0	B_M_NG_0_E	3	missing yield table
-159	xNG_P,R,3,U,B,M,5	1076.25	0.0	B_M_NG_0_E	4	missing yield table
-160	xNG_P,R,4,W,I,S,1	1836.35	0.0	I_S_NG_0_E	0	good
-161	xNG_P,R,4,W,I,S,2	1832.68	0.0	I_S_NG_0_E	1	good
-162	xNG_P,R,4,W,I,S,3	1829.01	0.0	I_S_NG_0_E	2	good
-163	xNG_P,R,4,W,I,S,4	1825.35	0.0	I_S_NG_0_E	3	good
-164	xNG_P,R,4,W,I,S,5	1821.7	0.0	I_S_NG_0_E	4	good
-165	xNG_P,R,4,U,B,R,1	808.45	0.0	B_R_NG_0_E	0	missing yield table
-166	xNG_P,R,4,U,B,R,2	806.83	0.0	B_R_NG_0_E	1	missing yield table
-167	xNG_P,R,4,U,B,R,3	805.22	0.0	B_R_NG_0_E	2	missing yield table
-168	xNG_P,R,4,U,B,R,4	803.61	0.0	B_R_NG_0_E	3	missing yield table
-169	xNG_P,R,4,U,B,R,5	802.0	0.0	B_R_NG_0_E	4	missing yield table
-170	xNG_P,R,4,U,C,S,1	1140.95	0.0	C_S_NG_0_E	0	good
-171	xNG_P,R,4,U,C,S,2	1138.67	0.0	C_S_NG_0_E	1	good
-172	xNG_P,R,4,U,C,S,3	1136.39	0.0	C_S_NG_0_E	2	good
-173	xNG_P,R,4,U,C,S,4	1134.12	0.0	C_S_NG_0_E	3	good
-174	xNG_P,R,4,U,C,S,5	1131.85	0.0	C_S_NG_0_E	4	good
-175	xNG_P,R,4,U,D,M,1	1825.9	0.0	D_M_NG_0_E	0	good
-176	xNG_P,R,4,U,D,M,2	1822.25	0.0	D_M_NG_0_E	1	good
-177	xNG_P,R,4,U,D,M,3	1818.6	0.0	D_M_NG_0_E	2	good
-178	xNG_P,R,4,U,D,M,4	1814.97	0.0	D_M_NG_0_E	3	good
-179	xNG_P,R,4,U,D,M,5	1811.34	0.0	D_M_NG_0_E	4	good
-180	xNG_P,R,4,G,B,Q,1	1589.35	0.0	B_Q_NG_0_E	0	missing yield table
-181	xNG_P,R,4,G,B,Q,2	1586.17	0.0	B_Q_NG_0_E	1	missing yield table
-182	xNG_P,R,4,G,B,Q,3	1583.0	0.0	B_Q_NG_0_E	2	missing yield table
-183	xNG_P,R,4,G,B,Q,4	1579.83	0.0	B_Q_NG_0_E	3	missing yield table
-184	xNG_P,R,4,G,B,Q,5	1576.67	0.0	B_Q_NG_0_E	4	missing yield table
-185	xNG_P,R,5,L,I,S,1	1616.9	0.0	I_S_NG_0_E	0	good
-186	xNG_P,R,5,L,I,S,2	1613.67	0.0	I_S_NG_0_E	1	good
-187	xNG_P,R,5,L,I,S,3	1610.44	0.0	I_S_NG_0_E	2	good
-188	xNG_P,R,5,L,I,S,4	1607.22	0.0	I_S_NG_0_E	3	good
-189	xNG_P,R,5,L,I,S,5	1604.0	0.0	I_S_NG_0_E	4	good
-190	xNG_P,R,5,G,F,P,1	689.7	0.0	F_P_NG_0_E	0	missing yield table
-191	xNG_P,R,5,G,F,P,2	688.32	0.0	F_P_NG_0_E	1	missing yield table
-192	xNG_P,R,5,G,F,P,3	686.94	0.0	F_P_NG_0_E	2	missing yield table
-193	xNG_P,R,5,G,F,P,4	685.57	0.0	F_P_NG_0_E	3	missing yield table
-194	xNG_P,R,5,G,F,P,5	684.2	0.0	F_P_NG_0_E	4	missing yield table
-195	xNG_P,R,6,W,C,J,1	990.85	0.0	C_J_NG_0_E	0	missing yield table
-196	xNG_P,R,6,W,C,J,2	988.87	0.0	C_J_NG_0_E	1	missing yield table
-197	xNG_P,R,6,W,C,J,3	986.89	0.0	C_J_NG_0_E	2	missing yield table
-198	xNG_P,R,6,W,C,J,4	984.92	0.0	C_J_NG_0_E	3	missing yield table
-199	xNG_P,R,6,W,C,J,5	982.95	0.0	C_J_NG_0_E	4	missing yield table
-200	xNG_P,R,6,W,I,K,1	781.85	0.0	I_K_NG_0_E	0	missing yield table
-201	xNG_P,R,6,W,I,K,2	780.29	0.0	I_K_NG_0_E	1	missing yield table
-202	xNG_P,R,6,W,I,K,3	778.73	0.0	I_K_NG_0_E	2	missing yield table
-203	xNG_P,R,6,W,I,K,4	777.17	0.0	I_K_NG_0_E	3	missing yield table
-204	xNG_P,R,6,W,I,K,5	775.61	0.0	I_K_NG_0_E	4	missing yield table
-205	xNG_P,R,6,U,I,I,1	1039.3	0.0	I_I_NG_0_E	0	missing yield table
-206	xNG_P,R,6,U,I,I,2	1037.22	0.0	I_I_NG_0_E	1	missing yield table
-207	xNG_P,R,6,U,I,I,3	1035.15	0.0	I_I_NG_0_E	2	missing yield table
-208	xNG_P,R,6,U,I,I,4	1033.08	0.0	I_I_NG_0_E	3	missing yield table
-209	xNG_P,R,6,U,I,I,5	1031.01	0.0	I_I_NG_0_E	4	missing yield table
-1260	xMS_M,R,2,W,I,O,0,1	60.3	0.0	I_O_MS_0_E	0	missing yield table
-1261	xMS_M,R,2,W,I,O,0,2	60.3	0.0	I_O_MS_0_E	1	missing yield table
-1262	xMS_M,R,2,W,I,O,0,3	60.3	0.0	I_O_MS_0_E	2	missing yield table
-1263	xMS_M,R,2,W,I,O,0,4	60.3	0.0	I_O_MS_0_E	3	missing yield table
-1264	xMS_M,R,2,W,I,O,0,5	60.3	0.0	I_O_MS_0_E	4	missing yield table
-1285	xMS_M,R,2,O,E,K,0,1	47.8	0.0	E_K_MS_0_E	0	missing yield table
-1286	xMS_M,R,2,O,E,K,0,2	47.8	0.0	E_K_MS_0_E	1	missing yield table
-1287	xMS_M,R,2,O,E,K,0,3	47.8	0.0	E_K_MS_0_E	2	missing yield table
-1288	xMS_M,R,2,O,E,K,0,4	47.8	0.0	E_K_MS_0_E	3	missing yield table
-1289	xMS_M,R,2,O,E,K,0,5	47.8	0.0	E_K_MS_0_E	4	missing yield table
-1310	xMS_M,R,2,O,I,R,0,1	35.85	0.0	I_R_MS_0_E	0	missing yield table
-1311	xMS_M,R,2,O,I,R,0,2	35.85	0.0	I_R_MS_0_E	1	missing yield table
-1312	xMS_M,R,2,O,I,R,0,3	35.85	0.0	I_R_MS_0_E	2	missing yield table
-1313	xMS_M,R,2,O,I,R,0,4	35.85	0.0	I_R_MS_0_E	3	missing yield table
-1314	xMS_M,R,2,O,I,R,0,5	35.85	0.0	I_R_MS_0_E	4	missing yield table
-1335	xMS_M,R,4,G,E,K,0,1	82.55	0.0	E_K_MS_0_E	0	missing yield table
-1336	xMS_M,R,4,G,E,K,0,2	82.55	0.0	E_K_MS_0_E	1	missing yield table
-1337	xMS_M,R,4,G,E,K,0,3	82.55	0.0	E_K_MS_0_E	2	missing yield table
-1338	xMS_M,R,4,G,E,K,0,4	82.55	0.0	E_K_MS_0_E	3	missing yield table
-1339	xMS_M,R,4,G,E,K,0,5	82.55	0.0	E_K_MS_0_E	4	missing yield table
-1360	xMS_M,R,5,L,G,J,0,1	50.4	0.0	G_J_MS_0_E	0	missing yield table
-1361	xMS_M,R,5,L,G,J,0,2	50.4	0.0	G_J_MS_0_E	1	missing yield table
-1362	xMS_M,R,5,L,G,J,0,3	50.4	0.0	G_J_MS_0_E	2	missing yield table
-1363	xMS_M,R,5,L,G,J,0,4	50.4	0.0	G_J_MS_0_E	3	missing yield table
-1364	xMS_M,R,5,L,G,J,0,5	50.4	0.0	G_J_MS_0_E	4	missing yield table
-1385	xMS_M,R,6,U,I,O,0,1	80.5	0.0	I_O_MS_0_E	0	missing yield table
-1386	xMS_M,R,6,U,I,O,0,2	80.5	0.0	I_O_MS_0_E	1	missing yield table
-1387	xMS_M,R,6,U,I,O,0,3	80.5	0.0	I_O_MS_0_E	2	missing yield table
-1388	xMS_M,R,6,U,I,O,0,4	80.5	0.0	I_O_MS_0_E	3	missing yield table
-1389	xMS_M,R,6,U,I,O,0,5	80.5	0.0	I_O_MS_0_E	4	missing yield table
-1410	xMS_P,R,1,O,B,M,0,1	54.4	0.0	B_M_MS_0_E	0	missing yield table
-1411	xMS_P,R,1,O,B,M,0,2	54.4	0.0	B_M_MS_0_E	1	missing yield table
-1412	xMS_P,R,1,O,B,M,0,3	54.4	0.0	B_M_MS_0_E	2	missing yield table
-1413	xMS_P,R,1,O,B,M,0,4	54.4	0.0	B_M_MS_0_E	3	missing yield table
-1414	xMS_P,R,1,O,B,M,0,5	54.4	0.0	B_M_MS_0_E	4	missing yield table
-1435	xMS_P,R,2,L,H,M,0,1	75.3	0.0	H_M_MS_0_E	0	missing yield table
-1436	xMS_P,R,2,L,H,M,0,2	75.3	0.0	H_M_MS_0_E	1	missing yield table
-1437	xMS_P,R,2,L,H,M,0,3	75.3	0.0	H_M_MS_0_E	2	missing yield table
-1438	xMS_P,R,2,L,H,M,0,4	75.3	0.0	H_M_MS_0_E	3	missing yield table
-1439	xMS_P,R,2,L,H,M,0,5	75.3	0.0	H_M_MS_0_E	4	missing yield table
-1460	xMS_P,R,2,B,G,O,0,1	99.1	0.0	G_O_MS_0_E	0	missing yield table
-1461	xMS_P,R,2,B,G,O,0,2	99.1	0.0	G_O_MS_0_E	1	missing yield table
-1462	xMS_P,R,2,B,G,O,0,3	99.1	0.0	G_O_MS_0_E	2	missing yield table
-1463	xMS_P,R,2,B,G,O,0,4	99.1	0.0	G_O_MS_0_E	3	missing yield table
-1464	xMS_P,R,2,B,G,O,0,5	99.1	0.0	G_O_MS_0_E	4	missing yield table
-1485	xMS_P,R,2,U,I,G,0,1	60.95	0.0	I_G_MS_0_E	0	missing yield table
-1486	xMS_P,R,2,U,I,G,0,2	60.95	0.0	I_G_MS_0_E	1	missing yield table
-1487	xMS_P,R,2,U,I,G,0,3	60.95	0.0	I_G_MS_0_E	2	missing yield table
-1488	xMS_P,R,2,U,I,G,0,4	60.95	0.0	I_G_MS_0_E	3	missing yield table
-1489	xMS_P,R,2,U,I,G,0,5	60.95	0.0	I_G_MS_0_E	4	missing yield table
-1510	xMS_P,R,3,U,B,M,0,1	57.1	0.0	B_M_MS_0_E	0	missing yield table
-1511	xMS_P,R,3,U,B,M,0,2	57.1	0.0	B_M_MS_0_E	1	missing yield table
-1512	xMS_P,R,3,U,B,M,0,3	57.1	0.0	B_M_MS_0_E	2	missing yield table
-1513	xMS_P,R,3,U,B,M,0,4	57.1	0.0	B_M_MS_0_E	3	missing yield table
-1514	xMS_P,R,3,U,B,M,0,5	57.1	0.0	B_M_MS_0_E	4	missing yield table
-1535	xMS_P,R,4,W,I,S,0,1	96.65	0.0	I_S_MS_0_E	0	good
-1536	xMS_P,R,4,W,I,S,0,2	96.65	0.0	I_S_MS_0_E	1	good
-1537	xMS_P,R,4,W,I,S,0,3	96.65	0.0	I_S_MS_0_E	2	good
-1538	xMS_P,R,4,W,I,S,0,4	96.65	0.0	I_S_MS_0_E	3	good
-1539	xMS_P,R,4,W,I,S,0,5	96.65	0.0	I_S_MS_0_E	4	good
-1560	xMS_P,R,4,U,B,R,0,1	42.55	0.0	B_R_MS_0_E	0	missing yield table
-1561	xMS_P,R,4,U,B,R,0,2	42.55	0.0	B_R_MS_0_E	1	missing yield table
-1562	xMS_P,R,4,U,B,R,0,3	42.55	0.0	B_R_MS_0_E	2	missing yield table
-1563	xMS_P,R,4,U,B,R,0,4	42.55	0.0	B_R_MS_0_E	3	missing yield table
-1564	xMS_P,R,4,U,B,R,0,5	42.55	0.0	B_R_MS_0_E	4	missing yield table
-1585	xMS_P,R,4,U,C,S,0,1	60.05	0.0	C_S_MS_0_E	0	good
-1586	xMS_P,R,4,U,C,S,0,2	60.05	0.0	C_S_MS_0_E	1	good
-1587	xMS_P,R,4,U,C,S,0,3	60.05	0.0	C_S_MS_0_E	2	good
-1588	xMS_P,R,4,U,C,S,0,4	60.05	0.0	C_S_MS_0_E	3	good
-1589	xMS_P,R,4,U,C,S,0,5	60.05	0.0	C_S_MS_0_E	4	good
-1610	xMS_P,R,4,U,D,M,0,1	96.1	0.0	D_M_MS_0_E	0	good
-1611	xMS_P,R,4,U,D,M,0,2	96.1	0.0	D_M_MS_0_E	1	good
-1612	xMS_P,R,4,U,D,M,0,3	96.1	0.0	D_M_MS_0_E	2	good
-1613	xMS_P,R,4,U,D,M,0,4	96.1	0.0	D_M_MS_0_E	3	good
-1614	xMS_P,R,4,U,D,M,0,5	96.1	0.0	D_M_MS_0_E	4	good
-1635	xMS_P,R,4,G,B,Q,0,1	83.65	0.0	B_Q_MS_0_E	0	missing yield table
-1636	xMS_P,R,4,G,B,Q,0,2	83.65	0.0	B_Q_MS_0_E	1	missing yield table
-1637	xMS_P,R,4,G,B,Q,0,3	83.65	0.0	B_Q_MS_0_E	2	missing yield table
-1638	xMS_P,R,4,G,B,Q,0,4	83.65	0.0	B_Q_MS_0_E	3	missing yield table
-1639	xMS_P,R,4,G,B,Q,0,5	83.65	0.0	B_Q_MS_0_E	4	missing yield table
-1660	xMS_P,R,5,L,I,S,0,1	85.1	0.0	I_S_MS_0_E	0	good
-1661	xMS_P,R,5,L,I,S,0,2	85.1	0.0	I_S_MS_0_E	1	good
-1662	xMS_P,R,5,L,I,S,0,3	85.1	0.0	I_S_MS_0_E	2	good
-1663	xMS_P,R,5,L,I,S,0,4	85.1	0.0	I_S_MS_0_E	3	good
-1664	xMS_P,R,5,L,I,S,0,5	85.1	0.0	I_S_MS_0_E	4	good
-1685	xMS_P,R,5,G,F,P,0,1	36.3	0.0	F_P_MS_0_E	0	missing yield table
-1686	xMS_P,R,5,G,F,P,0,2	36.3	0.0	F_P_MS_0_E	1	missing yield table
-1687	xMS_P,R,5,G,F,P,0,3	36.3	0.0	F_P_MS_0_E	2	missing yield table
-1688	xMS_P,R,5,G,F,P,0,4	36.3	0.0	F_P_MS_0_E	3	missing yield table
-1689	xMS_P,R,5,G,F,P,0,5	36.3	0.0	F_P_MS_0_E	4	missing yield table
-1710	xMS_P,R,6,W,C,J,0,1	52.15	0.0	C_J_MS_0_E	0	missing yield table
-1711	xMS_P,R,6,W,C,J,0,2	52.15	0.0	C_J_MS_0_E	1	missing yield table
-1712	xMS_P,R,6,W,C,J,0,3	52.15	0.0	C_J_MS_0_E	2	missing yield table
-1713	xMS_P,R,6,W,C,J,0,4	52.15	0.0	C_J_MS_0_E	3	missing yield table
-1714	xMS_P,R,6,W,C,J,0,5	52.15	0.0	C_J_MS_0_E	4	missing yield table
-1735	xMS_P,R,6,W,I,K,0,1	41.15	0.0	I_K_MS_0_E	0	missing yield table
-1736	xMS_P,R,6,W,I,K,0,2	41.15	0.0	I_K_MS_0_E	1	missing yield table
-1737	xMS_P,R,6,W,I,K,0,3	41.15	0.0	I_K_MS_0_E	2	missing yield table
-1738	xMS_P,R,6,W,I,K,0,4	41.15	0.0	I_K_MS_0_E	3	missing yield table
-1739	xMS_P,R,6,W,I,K,0,5	41.15	0.0	I_K_MS_0_E	4	missing yield table
-1760	xMS_P,R,6,U,I,I,0,1	54.7	0.0	I_I_MS_0_E	0	missing yield table
-1761	xMS_P,R,6,U,I,I,0,2	54.7	0.0	I_I_MS_0_E	1	missing yield table
-1762	xMS_P,R,6,U,I,I,0,3	54.7	0.0	I_I_MS_0_E	2	missing yield table
-1763	xMS_P,R,6,U,I,I,0,4	54.7	0.0	I_I_MS_0_E	3	missing yield table
-1764	xMS_P,R,6,U,I,I,0,5	54.7	0.0	I_I_MS_0_E	4	missing yield table
-2242	xEAr_M,R,2,W,I,2,1	2.29	0.0	I_EA_0_R	1	missing yield table
-2243	xEAr_M,R,2,W,I,3,1	2.29	0.0	I_EA_0_R	2	missing yield table
-2244	xEAr_M,R,2,W,I,3,2	2.29	0.0	I_EA_0_R	2	missing yield table
-2245	xEAr_M,R,2,W,I,4,1	2.29	0.0	I_EA_0_R	3	missing yield table
-2246	xEAr_M,R,2,W,I,4,2	2.29	0.0	I_EA_0_R	3	missing yield table
-2247	xEAr_M,R,2,W,I,4,3	2.28	0.0	I_EA_0_R	3	missing yield table
-2248	xEAr_M,R,2,W,I,5,1	2.29	0.0	I_EA_0_R	4	missing yield table
-2249	xEAr_M,R,2,W,I,5,2	2.29	0.0	I_EA_0_R	4	missing yield table
-2250	xEAr_M,R,2,W,I,5,3	2.28	0.0	I_EA_0_R	4	missing yield table
-2251	xEAr_M,R,2,W,I,5,4	2.28	0.0	I_EA_0_R	4	missing yield table
-2282	xEAr_M,R,2,O,E,2,1	1.82	0.0	E_EA_0_R	1	missing yield table
-2283	xEAr_M,R,2,O,E,3,1	1.82	0.0	E_EA_0_R	2	missing yield table
-2284	xEAr_M,R,2,O,E,3,2	1.81	0.0	E_EA_0_R	2	missing yield table
-2285	xEAr_M,R,2,O,E,4,1	1.82	0.0	E_EA_0_R	3	missing yield table
-2286	xEAr_M,R,2,O,E,4,2	1.81	0.0	E_EA_0_R	3	missing yield table
-2287	xEAr_M,R,2,O,E,4,3	1.81	0.0	E_EA_0_R	3	missing yield table
-2288	xEAr_M,R,2,O,E,5,1	1.82	0.0	E_EA_0_R	4	missing yield table
-2289	xEAr_M,R,2,O,E,5,2	1.81	0.0	E_EA_0_R	4	missing yield table
-2290	xEAr_M,R,2,O,E,5,3	1.81	0.0	E_EA_0_R	4	missing yield table
-2291	xEAr_M,R,2,O,E,5,4	1.81	0.0	E_EA_0_R	4	missing yield table
-2322	xEAr_M,R,2,O,I,2,1	1.36	0.0	I_EA_0_R	1	missing yield table
-2323	xEAr_M,R,2,O,I,3,1	1.36	0.0	I_EA_0_R	2	missing yield table
-2324	xEAr_M,R,2,O,I,3,2	1.36	0.0	I_EA_0_R	2	missing yield table
-2325	xEAr_M,R,2,O,I,4,1	1.36	0.0	I_EA_0_R	3	missing yield table
-2326	xEAr_M,R,2,O,I,4,2	1.36	0.0	I_EA_0_R	3	missing yield table
-2327	xEAr_M,R,2,O,I,4,3	1.36	0.0	I_EA_0_R	3	missing yield table
-2328	xEAr_M,R,2,O,I,5,1	1.36	0.0	I_EA_0_R	4	missing yield table
-2329	xEAr_M,R,2,O,I,5,2	1.36	0.0	I_EA_0_R	4	missing yield table
-2330	xEAr_M,R,2,O,I,5,3	1.36	0.0	I_EA_0_R	4	missing yield table
-2331	xEAr_M,R,2,O,I,5,4	1.35	0.0	I_EA_0_R	4	missing yield table
-2362	xEAr_M,R,4,G,E,2,1	3.14	0.0	E_EA_0_R	1	missing yield table
-2363	xEAr_M,R,4,G,E,3,1	3.14	0.0	E_EA_0_R	2	missing yield table
-2364	xEAr_M,R,4,G,E,3,2	3.13	0.0	E_EA_0_R	2	missing yield table
-2365	xEAr_M,R,4,G,E,4,1	3.14	0.0	E_EA_0_R	3	missing yield table
-2366	xEAr_M,R,4,G,E,4,2	3.13	0.0	E_EA_0_R	3	missing yield table
-2367	xEAr_M,R,4,G,E,4,3	3.12	0.0	E_EA_0_R	3	missing yield table
-2368	xEAr_M,R,4,G,E,5,1	3.14	0.0	E_EA_0_R	4	missing yield table
-2369	xEAr_M,R,4,G,E,5,2	3.13	0.0	E_EA_0_R	4	missing yield table
-2370	xEAr_M,R,4,G,E,5,3	3.12	0.0	E_EA_0_R	4	missing yield table
-2371	xEAr_M,R,4,G,E,5,4	3.12	0.0	E_EA_0_R	4	missing yield table
-2462	xEAr_M,R,5,L,G,2,1	1.92	0.0	G_EA_0_R	1	missing yield table
-2463	xEAr_M,R,5,L,G,3,1	1.92	0.0	G_EA_0_R	2	missing yield table
-2464	xEAr_M,R,5,L,G,3,2	1.91	0.0	G_EA_0_R	2	missing yield table
-2465	xEAr_M,R,5,L,G,4,1	1.92	0.0	G_EA_0_R	3	missing yield table
-2466	xEAr_M,R,5,L,G,4,2	1.91	0.0	G_EA_0_R	3	missing yield table
-2467	xEAr_M,R,5,L,G,4,3	1.91	0.0	G_EA_0_R	3	missing yield table
-2468	xEAr_M,R,5,L,G,5,1	1.92	0.0	G_EA_0_R	4	missing yield table
-2469	xEAr_M,R,5,L,G,5,2	1.91	0.0	G_EA_0_R	4	missing yield table
-2470	xEAr_M,R,5,L,G,5,3	1.91	0.0	G_EA_0_R	4	missing yield table
-2471	xEAr_M,R,5,L,G,5,4	1.9	0.0	G_EA_0_R	4	missing yield table
-2562	xEAr_M,R,6,U,I,2,1	3.06	0.0	I_EA_0_R	1	missing yield table
-2563	xEAr_M,R,6,U,I,3,1	3.06	0.0	I_EA_0_R	2	missing yield table
-2564	xEAr_M,R,6,U,I,3,2	3.05	0.0	I_EA_0_R	2	missing yield table
-2565	xEAr_M,R,6,U,I,4,1	3.06	0.0	I_EA_0_R	3	missing yield table
-2566	xEAr_M,R,6,U,I,4,2	3.05	0.0	I_EA_0_R	3	missing yield table
-2567	xEAr_M,R,6,U,I,4,3	3.05	0.0	I_EA_0_R	3	missing yield table
-2568	xEAr_M,R,6,U,I,5,1	3.06	0.0	I_EA_0_R	4	missing yield table
-2569	xEAr_M,R,6,U,I,5,2	3.05	0.0	I_EA_0_R	4	missing yield table
-2570	xEAr_M,R,6,U,I,5,3	3.05	0.0	I_EA_0_R	4	missing yield table
-2571	xEAr_M,R,6,U,I,5,4	3.04	0.0	I_EA_0_R	4	missing yield table
-2572	xEAr_P,R,1,O,B,2,1	2.07	0.0	B_EA_0_R	1	missing yield table
-2573	xEAr_P,R,1,O,B,3,1	2.07	0.0	B_EA_0_R	2	missing yield table
-2574	xEAr_P,R,1,O,B,3,2	2.06	0.0	B_EA_0_R	2	missing yield table
-2575	xEAr_P,R,1,O,B,4,1	2.07	0.0	B_EA_0_R	3	missing yield table
-2576	xEAr_P,R,1,O,B,4,2	2.06	0.0	B_EA_0_R	3	missing yield table
-2577	xEAr_P,R,1,O,B,4,3	2.06	0.0	B_EA_0_R	3	missing yield table
-2578	xEAr_P,R,1,O,B,5,1	2.07	0.0	B_EA_0_R	4	missing yield table
-2579	xEAr_P,R,1,O,B,5,2	2.06	0.0	B_EA_0_R	4	missing yield table
-2580	xEAr_P,R,1,O,B,5,3	2.06	0.0	B_EA_0_R	4	missing yield table
-2581	xEAr_P,R,1,O,B,5,4	2.05	0.0	B_EA_0_R	4	missing yield table
-2712	xEAr_P,R,2,L,H,2,1	2.86	0.0	H_EA_0_R	1	missing yield table
-2713	xEAr_P,R,2,L,H,3,1	2.86	0.0	H_EA_0_R	2	missing yield table
-2714	xEAr_P,R,2,L,H,3,2	2.86	0.0	H_EA_0_R	2	missing yield table
-2715	xEAr_P,R,2,L,H,4,1	2.86	0.0	H_EA_0_R	3	missing yield table
-2716	xEAr_P,R,2,L,H,4,2	2.86	0.0	H_EA_0_R	3	missing yield table
-2717	xEAr_P,R,2,L,H,4,3	2.85	0.0	H_EA_0_R	3	missing yield table
-2718	xEAr_P,R,2,L,H,5,1	2.86	0.0	H_EA_0_R	4	missing yield table
-2719	xEAr_P,R,2,L,H,5,2	2.86	0.0	H_EA_0_R	4	missing yield table
-2720	xEAr_P,R,2,L,H,5,3	2.85	0.0	H_EA_0_R	4	missing yield table
-2721	xEAr_P,R,2,L,H,5,4	2.84	0.0	H_EA_0_R	4	missing yield table
-2782	xEAr_P,R,2,B,G,2,1	3.77	0.0	G_EA_0_R	1	missing yield table
-2783	xEAr_P,R,2,B,G,3,1	3.77	0.0	G_EA_0_R	2	missing yield table
-2784	xEAr_P,R,2,B,G,3,2	3.76	0.0	G_EA_0_R	2	missing yield table
-2785	xEAr_P,R,2,B,G,4,1	3.77	0.0	G_EA_0_R	3	missing yield table
-2786	xEAr_P,R,2,B,G,4,2	3.76	0.0	G_EA_0_R	3	missing yield table
-2787	xEAr_P,R,2,B,G,4,3	3.75	0.0	G_EA_0_R	3	missing yield table
-2788	xEAr_P,R,2,B,G,5,1	3.77	0.0	G_EA_0_R	4	missing yield table
-2789	xEAr_P,R,2,B,G,5,2	3.76	0.0	G_EA_0_R	4	missing yield table
-2790	xEAr_P,R,2,B,G,5,3	3.75	0.0	G_EA_0_R	4	missing yield table
-2791	xEAr_P,R,2,B,G,5,4	3.74	0.0	G_EA_0_R	4	missing yield table
-2882	xEAr_P,R,2,U,I,2,1	2.32	0.0	I_EA_0_R	1	missing yield table
-2883	xEAr_P,R,2,U,I,3,1	2.32	0.0	I_EA_0_R	2	missing yield table
-2884	xEAr_P,R,2,U,I,3,2	2.31	0.0	I_EA_0_R	2	missing yield table
-2885	xEAr_P,R,2,U,I,4,1	2.32	0.0	I_EA_0_R	3	missing yield table
-2886	xEAr_P,R,2,U,I,4,2	2.31	0.0	I_EA_0_R	3	missing yield table
-2887	xEAr_P,R,2,U,I,4,3	2.31	0.0	I_EA_0_R	3	missing yield table
-2888	xEAr_P,R,2,U,I,5,1	2.32	0.0	I_EA_0_R	4	missing yield table
-2889	xEAr_P,R,2,U,I,5,2	2.31	0.0	I_EA_0_R	4	missing yield table
-2890	xEAr_P,R,2,U,I,5,3	2.31	0.0	I_EA_0_R	4	missing yield table
-2891	xEAr_P,R,2,U,I,5,4	2.3	0.0	I_EA_0_R	4	missing yield table
-2892	xEAr_P,R,3,U,B,2,1	2.17	0.0	B_EA_0_R	1	missing yield table
-2893	xEAr_P,R,3,U,B,3,1	2.17	0.0	B_EA_0_R	2	missing yield table
-2894	xEAr_P,R,3,U,B,3,2	2.17	0.0	B_EA_0_R	2	missing yield table
-2895	xEAr_P,R,3,U,B,4,1	2.17	0.0	B_EA_0_R	3	missing yield table
-2896	xEAr_P,R,3,U,B,4,2	2.17	0.0	B_EA_0_R	3	missing yield table
-2897	xEAr_P,R,3,U,B,4,3	2.16	0.0	B_EA_0_R	3	missing yield table
-2898	xEAr_P,R,3,U,B,5,1	2.17	0.0	B_EA_0_R	4	missing yield table
-2899	xEAr_P,R,3,U,B,5,2	2.17	0.0	B_EA_0_R	4	missing yield table
-2900	xEAr_P,R,3,U,B,5,3	2.16	0.0	B_EA_0_R	4	missing yield table
-2901	xEAr_P,R,3,U,B,5,4	2.16	0.0	B_EA_0_R	4	missing yield table
-3042	xEAr_P,R,4,W,I,2,1	3.67	0.0	I_EA_0_R	1	missing yield table
-3043	xEAr_P,R,4,W,I,3,1	3.67	0.0	I_EA_0_R	2	missing yield table
-3044	xEAr_P,R,4,W,I,3,2	3.67	0.0	I_EA_0_R	2	missing yield table
-3045	xEAr_P,R,4,W,I,4,1	3.67	0.0	I_EA_0_R	3	missing yield table
-3046	xEAr_P,R,4,W,I,4,2	3.67	0.0	I_EA_0_R	3	missing yield table
-3047	xEAr_P,R,4,W,I,4,3	3.66	0.0	I_EA_0_R	3	missing yield table
-3048	xEAr_P,R,4,W,I,5,1	3.67	0.0	I_EA_0_R	4	missing yield table
-3049	xEAr_P,R,4,W,I,5,2	3.67	0.0	I_EA_0_R	4	missing yield table
-3050	xEAr_P,R,4,W,I,5,3	3.66	0.0	I_EA_0_R	4	missing yield table
-3051	xEAr_P,R,4,W,I,5,4	3.65	0.0	I_EA_0_R	4	missing yield table
-3052	xEAr_P,R,4,U,B,2,1	1.62	0.0	B_EA_0_R	1	missing yield table
-3053	xEAr_P,R,4,U,B,3,1	1.62	0.0	B_EA_0_R	2	missing yield table
-3054	xEAr_P,R,4,U,B,3,2	1.61	0.0	B_EA_0_R	2	missing yield table
-3055	xEAr_P,R,4,U,B,4,1	1.62	0.0	B_EA_0_R	3	missing yield table
-3056	xEAr_P,R,4,U,B,4,2	1.61	0.0	B_EA_0_R	3	missing yield table
-3057	xEAr_P,R,4,U,B,4,3	1.61	0.0	B_EA_0_R	3	missing yield table
-3058	xEAr_P,R,4,U,B,5,1	1.62	0.0	B_EA_0_R	4	missing yield table
-3059	xEAr_P,R,4,U,B,5,2	1.61	0.0	B_EA_0_R	4	missing yield table
-3060	xEAr_P,R,4,U,B,5,3	1.61	0.0	B_EA_0_R	4	missing yield table
-3061	xEAr_P,R,4,U,B,5,4	1.61	0.0	B_EA_0_R	4	missing yield table
-3062	xEAr_P,R,4,U,C,2,1	2.28	0.0	C_EA_0_R	1	missing yield table
-3063	xEAr_P,R,4,U,C,3,1	2.28	0.0	C_EA_0_R	2	missing yield table
-3064	xEAr_P,R,4,U,C,3,2	2.28	0.0	C_EA_0_R	2	missing yield table
-3065	xEAr_P,R,4,U,C,4,1	2.28	0.0	C_EA_0_R	3	missing yield table
-3066	xEAr_P,R,4,U,C,4,2	2.28	0.0	C_EA_0_R	3	missing yield table
-3067	xEAr_P,R,4,U,C,4,3	2.27	0.0	C_EA_0_R	3	missing yield table
-3068	xEAr_P,R,4,U,C,5,1	2.28	0.0	C_EA_0_R	4	missing yield table
-3069	xEAr_P,R,4,U,C,5,2	2.28	0.0	C_EA_0_R	4	missing yield table
-3070	xEAr_P,R,4,U,C,5,3	2.27	0.0	C_EA_0_R	4	missing yield table
-3071	xEAr_P,R,4,U,C,5,4	2.27	0.0	C_EA_0_R	4	missing yield table
-3072	xEAr_P,R,4,U,D,2,1	3.65	0.0	D_EA_0_R	1	missing yield table
-3073	xEAr_P,R,4,U,D,3,1	3.65	0.0	D_EA_0_R	2	missing yield table
-3074	xEAr_P,R,4,U,D,3,2	3.64	0.0	D_EA_0_R	2	missing yield table
-3075	xEAr_P,R,4,U,D,4,1	3.65	0.0	D_EA_0_R	3	missing yield table
-3076	xEAr_P,R,4,U,D,4,2	3.64	0.0	D_EA_0_R	3	missing yield table
-3077	xEAr_P,R,4,U,D,4,3	3.64	0.0	D_EA_0_R	3	missing yield table
-3078	xEAr_P,R,4,U,D,5,1	3.65	0.0	D_EA_0_R	4	missing yield table
-3079	xEAr_P,R,4,U,D,5,2	3.64	0.0	D_EA_0_R	4	missing yield table
-3080	xEAr_P,R,4,U,D,5,3	3.64	0.0	D_EA_0_R	4	missing yield table
-3081	xEAr_P,R,4,U,D,5,4	3.63	0.0	D_EA_0_R	4	missing yield table
-3132	xEAr_P,R,4,G,B,2,1	3.18	0.0	B_EA_0_R	1	missing yield table
-3133	xEAr_P,R,4,G,B,3,1	3.18	0.0	B_EA_0_R	2	missing yield table
-3134	xEAr_P,R,4,G,B,3,2	3.17	0.0	B_EA_0_R	2	missing yield table
-3135	xEAr_P,R,4,G,B,4,1	3.18	0.0	B_EA_0_R	3	missing yield table
-3136	xEAr_P,R,4,G,B,4,2	3.17	0.0	B_EA_0_R	3	missing yield table
-3137	xEAr_P,R,4,G,B,4,3	3.17	0.0	B_EA_0_R	3	missing yield table
-3138	xEAr_P,R,4,G,B,5,1	3.18	0.0	B_EA_0_R	4	missing yield table
-3139	xEAr_P,R,4,G,B,5,2	3.17	0.0	B_EA_0_R	4	missing yield table
-3140	xEAr_P,R,4,G,B,5,3	3.17	0.0	B_EA_0_R	4	missing yield table
-3141	xEAr_P,R,4,G,B,5,4	3.16	0.0	B_EA_0_R	4	missing yield table
-3282	xEAr_P,R,5,L,I,2,1	3.23	0.0	I_EA_0_R	1	missing yield table
-3283	xEAr_P,R,5,L,I,3,1	3.23	0.0	I_EA_0_R	2	missing yield table
-3284	xEAr_P,R,5,L,I,3,2	3.23	0.0	I_EA_0_R	2	missing yield table
-3285	xEAr_P,R,5,L,I,4,1	3.23	0.0	I_EA_0_R	3	missing yield table
-3286	xEAr_P,R,5,L,I,4,2	3.23	0.0	I_EA_0_R	3	missing yield table
-3287	xEAr_P,R,5,L,I,4,3	3.22	0.0	I_EA_0_R	3	missing yield table
-3288	xEAr_P,R,5,L,I,5,1	3.23	0.0	I_EA_0_R	4	missing yield table
-3289	xEAr_P,R,5,L,I,5,2	3.23	0.0	I_EA_0_R	4	missing yield table
-3290	xEAr_P,R,5,L,I,5,3	3.22	0.0	I_EA_0_R	4	missing yield table
-3291	xEAr_P,R,5,L,I,5,4	3.21	0.0	I_EA_0_R	4	missing yield table
-3332	xEAr_P,R,5,G,F,2,1	1.38	0.0	F_EA_0_R	1	missing yield table
-3333	xEAr_P,R,5,G,F,3,1	1.38	0.0	F_EA_0_R	2	missing yield table
-3334	xEAr_P,R,5,G,F,3,2	1.38	0.0	F_EA_0_R	2	missing yield table
-3335	xEAr_P,R,5,G,F,4,1	1.38	0.0	F_EA_0_R	3	missing yield table
-3336	xEAr_P,R,5,G,F,4,2	1.38	0.0	F_EA_0_R	3	missing yield table
-3337	xEAr_P,R,5,G,F,4,3	1.37	0.0	F_EA_0_R	3	missing yield table
-3338	xEAr_P,R,5,G,F,5,1	1.38	0.0	F_EA_0_R	4	missing yield table
-3339	xEAr_P,R,5,G,F,5,2	1.38	0.0	F_EA_0_R	4	missing yield table
-3340	xEAr_P,R,5,G,F,5,3	1.37	0.0	F_EA_0_R	4	missing yield table
-3341	xEAr_P,R,5,G,F,5,4	1.37	0.0	F_EA_0_R	4	missing yield table
-3382	xEAr_P,R,6,W,C,2,1	1.98	0.0	C_EA_0_R	1	missing yield table
-3383	xEAr_P,R,6,W,C,3,1	1.98	0.0	C_EA_0_R	2	missing yield table
-3384	xEAr_P,R,6,W,C,3,2	1.98	0.0	C_EA_0_R	2	missing yield table
-3385	xEAr_P,R,6,W,C,4,1	1.98	0.0	C_EA_0_R	3	missing yield table
-3386	xEAr_P,R,6,W,C,4,2	1.98	0.0	C_EA_0_R	3	missing yield table
-3387	xEAr_P,R,6,W,C,4,3	1.97	0.0	C_EA_0_R	3	missing yield table
-3388	xEAr_P,R,6,W,C,5,1	1.98	0.0	C_EA_0_R	4	missing yield table
-3389	xEAr_P,R,6,W,C,5,2	1.98	0.0	C_EA_0_R	4	missing yield table
-3390	xEAr_P,R,6,W,C,5,3	1.97	0.0	C_EA_0_R	4	missing yield table
-3391	xEAr_P,R,6,W,C,5,4	1.97	0.0	C_EA_0_R	4	missing yield table
-3442	xEAr_P,R,6,W,I,2,1	1.56	0.0	I_EA_0_R	1	missing yield table
-3443	xEAr_P,R,6,W,I,3,1	1.56	0.0	I_EA_0_R	2	missing yield table
-3444	xEAr_P,R,6,W,I,3,2	1.56	0.0	I_EA_0_R	2	missing yield table
-3445	xEAr_P,R,6,W,I,4,1	1.56	0.0	I_EA_0_R	3	missing yield table
-3446	xEAr_P,R,6,W,I,4,2	1.56	0.0	I_EA_0_R	3	missing yield table
-3447	xEAr_P,R,6,W,I,4,3	1.56	0.0	I_EA_0_R	3	missing yield table
-3448	xEAr_P,R,6,W,I,5,1	1.56	0.0	I_EA_0_R	4	missing yield table
-3449	xEAr_P,R,6,W,I,5,2	1.56	0.0	I_EA_0_R	4	missing yield table
-3450	xEAr_P,R,6,W,I,5,3	1.56	0.0	I_EA_0_R	4	missing yield table
-3451	xEAr_P,R,6,W,I,5,4	1.55	0.0	I_EA_0_R	4	missing yield table
-3522	xEAr_P,R,6,U,I,2,1	2.08	0.0	I_EA_0_R	1	missing yield table
-3523	xEAr_P,R,6,U,I,3,1	2.08	0.0	I_EA_0_R	2	missing yield table
-3524	xEAr_P,R,6,U,I,3,2	2.07	0.0	I_EA_0_R	2	missing yield table
-3525	xEAr_P,R,6,U,I,4,1	2.08	0.0	I_EA_0_R	3	missing yield table
-3526	xEAr_P,R,6,U,I,4,2	2.07	0.0	I_EA_0_R	3	missing yield table
-3527	xEAr_P,R,6,U,I,4,3	2.07	0.0	I_EA_0_R	3	missing yield table
-3528	xEAr_P,R,6,U,I,5,1	2.08	0.0	I_EA_0_R	4	missing yield table
-3529	xEAr_P,R,6,U,I,5,2	2.07	0.0	I_EA_0_R	4	missing yield table
-3530	xEAr_P,R,6,U,I,5,3	2.07	0.0	I_EA_0_R	4	missing yield table
-3531	xEAr_P,R,6,U,I,5,4	2.07	0.0	I_EA_0_R	4	missing yield table
+20	xNG_P,R,4,W,I,S,1	1836.35	0.0	I_S_NG_0_E	0	good
+21	xNG_P,R,4,W,I,S,2	1832.68	0.0	I_S_NG_0_E	1	good
+22	xNG_P,R,4,W,I,S,3	1829.01	0.0	I_S_NG_0_E	2	good
+23	xNG_P,R,4,W,I,S,4	1825.35	0.0	I_S_NG_0_E	3	good
+24	xNG_P,R,4,W,I,S,5	1821.7	0.0	I_S_NG_0_E	4	good
+25	xNG_P,R,4,U,C,S,1	1140.95	0.0	C_S_NG_0_E	0	good
+26	xNG_P,R,4,U,C,S,2	1138.67	0.0	C_S_NG_0_E	1	good
+27	xNG_P,R,4,U,C,S,3	1136.39	0.0	C_S_NG_0_E	2	good
+28	xNG_P,R,4,U,C,S,4	1134.12	0.0	C_S_NG_0_E	3	good
+29	xNG_P,R,4,U,C,S,5	1131.85	0.0	C_S_NG_0_E	4	good
+30	xNG_P,R,4,U,D,M,1	1825.9	0.0	D_M_NG_0_E	0	good
+31	xNG_P,R,4,U,D,M,2	1822.25	0.0	D_M_NG_0_E	1	good
+32	xNG_P,R,4,U,D,M,3	1818.6	0.0	D_M_NG_0_E	2	good
+33	xNG_P,R,4,U,D,M,4	1814.97	0.0	D_M_NG_0_E	3	good
+34	xNG_P,R,4,U,D,M,5	1811.34	0.0	D_M_NG_0_E	4	good
+35	xNG_P,R,5,L,I,S,1	1616.9	0.0	I_S_NG_0_E	0	good
+36	xNG_P,R,5,L,I,S,2	1613.67	0.0	I_S_NG_0_E	1	good
+37	xNG_P,R,5,L,I,S,3	1610.44	0.0	I_S_NG_0_E	2	good
+38	xNG_P,R,5,L,I,S,4	1607.22	0.0	I_S_NG_0_E	3	good
+39	xNG_P,R,5,L,I,S,5	1604.0	0.0	I_S_NG_0_E	4	good
+240	xMS_P,R,4,W,I,S,0,1	96.65	0.0	I_S_MS_0_E	0	good
+241	xMS_P,R,4,W,I,S,0,2	96.65	0.0	I_S_MS_0_E	1	good
+242	xMS_P,R,4,W,I,S,0,3	96.65	0.0	I_S_MS_0_E	2	good
+243	xMS_P,R,4,W,I,S,0,4	96.65	0.0	I_S_MS_0_E	3	good
+244	xMS_P,R,4,W,I,S,0,5	96.65	0.0	I_S_MS_0_E	4	good
+265	xMS_P,R,4,U,C,S,0,1	60.05	0.0	C_S_MS_0_E	0	good
+266	xMS_P,R,4,U,C,S,0,2	60.05	0.0	C_S_MS_0_E	1	good
+267	xMS_P,R,4,U,C,S,0,3	60.05	0.0	C_S_MS_0_E	2	good
+268	xMS_P,R,4,U,C,S,0,4	60.05	0.0	C_S_MS_0_E	3	good
+269	xMS_P,R,4,U,C,S,0,5	60.05	0.0	C_S_MS_0_E	4	good
+290	xMS_P,R,4,U,D,M,0,1	96.1	0.0	D_M_MS_0_E	0	good
+291	xMS_P,R,4,U,D,M,0,2	96.1	0.0	D_M_MS_0_E	1	good
+292	xMS_P,R,4,U,D,M,0,3	96.1	0.0	D_M_MS_0_E	2	good
+293	xMS_P,R,4,U,D,M,0,4	96.1	0.0	D_M_MS_0_E	3	good
+294	xMS_P,R,4,U,D,M,0,5	96.1	0.0	D_M_MS_0_E	4	good
+315	xMS_P,R,5,L,I,S,0,1	85.1	0.0	I_S_MS_0_E	0	good
+316	xMS_P,R,5,L,I,S,0,2	85.1	0.0	I_S_MS_0_E	1	good
+317	xMS_P,R,5,L,I,S,0,3	85.1	0.0	I_S_MS_0_E	2	good
+318	xMS_P,R,5,L,I,S,0,4	85.1	0.0	I_S_MS_0_E	3	good
+319	xMS_P,R,5,L,I,S,0,5	85.1	0.0	I_S_MS_0_E	4	good
+474	xEAr_P,R,4,W,I,2,1	3.67	0.0	I_EA_0_R	1	missing yield table
+475	xEAr_P,R,4,W,I,3,1	3.67	0.0	I_EA_0_R	2	missing yield table
+476	xEAr_P,R,4,W,I,3,2	3.67	0.0	I_EA_0_R	2	missing yield table
+477	xEAr_P,R,4,W,I,4,1	3.67	0.0	I_EA_0_R	3	missing yield table
+478	xEAr_P,R,4,W,I,4,2	3.67	0.0	I_EA_0_R	3	missing yield table
+479	xEAr_P,R,4,W,I,4,3	3.66	0.0	I_EA_0_R	3	missing yield table
+480	xEAr_P,R,4,W,I,5,1	3.67	0.0	I_EA_0_R	4	missing yield table
+481	xEAr_P,R,4,W,I,5,2	3.67	0.0	I_EA_0_R	4	missing yield table
+482	xEAr_P,R,4,W,I,5,3	3.66	0.0	I_EA_0_R	4	missing yield table
+483	xEAr_P,R,4,W,I,5,4	3.65	0.0	I_EA_0_R	4	missing yield table
+494	xEAr_P,R,4,U,C,2,1	2.28	0.0	C_EA_0_R	1	missing yield table
+495	xEAr_P,R,4,U,C,3,1	2.28	0.0	C_EA_0_R	2	missing yield table
+496	xEAr_P,R,4,U,C,3,2	2.28	0.0	C_EA_0_R	2	missing yield table
+497	xEAr_P,R,4,U,C,4,1	2.28	0.0	C_EA_0_R	3	missing yield table
+498	xEAr_P,R,4,U,C,4,2	2.28	0.0	C_EA_0_R	3	missing yield table
+499	xEAr_P,R,4,U,C,4,3	2.27	0.0	C_EA_0_R	3	missing yield table
+500	xEAr_P,R,4,U,C,5,1	2.28	0.0	C_EA_0_R	4	missing yield table
+501	xEAr_P,R,4,U,C,5,2	2.28	0.0	C_EA_0_R	4	missing yield table
+502	xEAr_P,R,4,U,C,5,3	2.27	0.0	C_EA_0_R	4	missing yield table
+503	xEAr_P,R,4,U,C,5,4	2.27	0.0	C_EA_0_R	4	missing yield table
+504	xEAr_P,R,4,U,D,2,1	3.65	0.0	D_EA_0_R	1	missing yield table
+505	xEAr_P,R,4,U,D,3,1	3.65	0.0	D_EA_0_R	2	missing yield table
+506	xEAr_P,R,4,U,D,3,2	3.64	0.0	D_EA_0_R	2	missing yield table
+507	xEAr_P,R,4,U,D,4,1	3.65	0.0	D_EA_0_R	3	missing yield table
+508	xEAr_P,R,4,U,D,4,2	3.64	0.0	D_EA_0_R	3	missing yield table
+509	xEAr_P,R,4,U,D,4,3	3.64	0.0	D_EA_0_R	3	missing yield table
+510	xEAr_P,R,4,U,D,5,1	3.65	0.0	D_EA_0_R	4	missing yield table
+511	xEAr_P,R,4,U,D,5,2	3.64	0.0	D_EA_0_R	4	missing yield table
+512	xEAr_P,R,4,U,D,5,3	3.64	0.0	D_EA_0_R	4	missing yield table
+513	xEAr_P,R,4,U,D,5,4	3.63	0.0	D_EA_0_R	4	missing yield table
+634	xEAr_P,R,5,L,I,2,1	3.23	0.0	I_EA_0_R	1	missing yield table
+635	xEAr_P,R,5,L,I,3,1	3.23	0.0	I_EA_0_R	2	missing yield table
+636	xEAr_P,R,5,L,I,3,2	3.23	0.0	I_EA_0_R	2	missing yield table
+637	xEAr_P,R,5,L,I,4,1	3.23	0.0	I_EA_0_R	3	missing yield table
+638	xEAr_P,R,5,L,I,4,2	3.23	0.0	I_EA_0_R	3	missing yield table
+639	xEAr_P,R,5,L,I,4,3	3.22	0.0	I_EA_0_R	3	missing yield table
+640	xEAr_P,R,5,L,I,5,1	3.23	0.0	I_EA_0_R	4	missing yield table
+641	xEAr_P,R,5,L,I,5,2	3.23	0.0	I_EA_0_R	4	missing yield table
+642	xEAr_P,R,5,L,I,5,3	3.22	0.0	I_EA_0_R	4	missing yield table
+643	xEAr_P,R,5,L,I,5,4	3.21	0.0	I_EA_0_R	4	missing yield table

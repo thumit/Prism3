@@ -76,9 +76,6 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 import javax.swing.text.DefaultFormatter;
 
-import net.coderazzi.filters.gui.AutoChoices;
-import net.coderazzi.filters.gui.TableFilterHeader;
-import net.coderazzi.filters.gui.TableFilterHeader.Position;
 import spectrumConvenienceClasses.FilesHandle;
 import spectrumConvenienceClasses.IconHandle;
 import spectrumConvenienceClasses.TableModelSpectrum;
@@ -114,7 +111,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 	
 	private Read_Strata read_Strata;
-	private Read_DatabaseTables read_DatabaseTables;
+	private Read_Database_Yield_Tables read_DatabaseTables;
 	private Read_Indentifiers read_Identifiers;
 	
 	private Object[][][] yieldTable_values;
@@ -773,10 +770,10 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
         columnNames_overview= new String[] {"Description" , "Value"};
 		
 		// Populate the data matrix
-		data_overview[0][0] = "Modeled Strata vs Available Strata";
-		data_overview[1][0] = "Modeled Acres vs Available Acres";
+		data_overview[0][0] = "Modeled existing strata vs available existing strata";
+		data_overview[1][0] = "Modeled acres vs available acres";
 		data_overview[2][0] = "Number of yield tables in your database";
-		data_overview[3][0] = "Number of strata not connected to any yield table";
+		data_overview[3][0] = "Number of strata not connected to Natural Growth table";
 		
 		
 		//Create a table
@@ -906,17 +903,24 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			}
 			
 			public void update_model_overview() {  
+				// de-select all modeled_strata that has not found starting age-class
+				for (int row = 0; row < rowCount2; row++) {
+					if (data2[row][colCount2 - 2] == null) {
+						data2[row][colCount2 - 1] = false;
+					}
+				}
+				
 				// Update Model OverView table
 				int modeledStrata = 0;
 				for (int row = 0; row < rowCount2; row++) {
-					if (data2[row][colCount2 -1]!=null && (boolean) data2[row][colCount2 -1] == true)	modeledStrata = modeledStrata + 1;
+					if (data2[row][colCount2 - 1] != null && (boolean) data2[row][colCount2 - 1] == true)	modeledStrata = modeledStrata + 1;
 				}
 				data_overview[0][1] = modeledStrata + " vs " + rowCount2;
 				model_overview.fireTableDataChanged();
 
 				modeledAcres = 0;
 				for (int row = 0; row < rowCount2; row++) {
-					if (data2[row][colCount2 -1]!=null && (boolean) data2[row][colCount2 -1] == true)	modeledAcres = modeledAcres + Double.parseDouble(data2[row][colCount2 - 3].toString());
+					if (data2[row][colCount2 - 1] != null && (boolean) data2[row][colCount2 - 1] == true)	modeledAcres = modeledAcres + Double.parseDouble(data2[row][colCount2 - 3].toString());
 				}
 				data_overview[1][1] = modeledAcres + " vs " + availableAcres;
 				model_overview.fireTableDataChanged();
@@ -967,9 +971,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		//Setup the table------------------------------------------------------------	
 		if (is_table3_loaded == false) { // Create a fresh new if Load fail				
 			rowCount3 = total_CoverType*total_CoverType;
-			colCount3 = 5;
+			colCount3 = 7;
 			data3 = new Object[rowCount3][colCount3];
-	        columnNames3= new String[] {"covertype_before", "covertype_after", "rotation_ageclass_min", "rotation_ageclass_max", "implementation"};
+	        columnNames3= new String[] {"covertype_before_cut", "covertype_after_cut", "min_age_cut_existing", "max_age_cut_existing", "min_age_cut_regeneration", "max_age_cut_regeneration", "implementation"};
 			
 			// Populate the data matrix
 	        int table_row = 0;
@@ -979,7 +983,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					data3[table_row][1] = allLayers.get(4).get(j);	
 					data3[table_row][2] = 20;
 					data3[table_row][3] = 24;
-					if (i==j) data3[table_row][4] = true; 
+					data3[table_row][4] = 10;
+					data3[table_row][5] = 15;
+					if (i==j) data3[table_row][6] = true; 
 					table_row++;
 				}
 			}
@@ -990,7 +996,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		model3 = new TableModelSpectrum(rowCount3, colCount3, data3, columnNames3) {			
 			@Override
 			public boolean isCellEditable(int row, int col) {
-				if (col < 2) { // Only the last 3 columns are editable
+				if (col < 2) { // Only the last 5 columns are editable
 					return false;
 				} else {
 					return true;
@@ -1011,13 +1017,13 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						if (String.valueOf(data3[row][col]).equals("null")) {
 							data3[row][col] = null;
 						} else {					
-							if (col >= 2 && col <= 3) {			//Column 2 to 3 are Integer
+							if (col >= 2 && col <= 5) {			//Column 2 to 5 are Integer
 								try {
 									data3[row][col] = Integer.valueOf(String.valueOf(data3[row][col]));
 								} catch (NumberFormatException e) {
 									System.err.println(e.getClass().getName() + ": " + e.getMessage() + " Fail to convert String to Integer values in create_table3");
 								}	
-							} else if (col == 4) {			//column "Age Class" accepts only Integer
+							} else if (col == 6) {			//column "implementation" accepts only Boolean
 								try {
 									data3[row][col] = Boolean.valueOf(String.valueOf(data3[row][col]));
 								} catch (NumberFormatException e) {
@@ -1062,7 +1068,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		// Define a set of icon for some columns
 		ImageIcon[] imageIconArray = new ImageIcon[colCount3];
 		for (int i = 0; i < colCount3; i++) {
-			if (i == 2 || i == 3 || i == 4) {
+			if (i >= 2) {
 				imageIconArray[i] = IconHandle.get_scaledImageIcon(3, 3, "icon_main.png");
 			}
 		}
@@ -1112,7 +1118,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
         
         
         
-		for (int i = 0; i < columnNames3.length - 3; i++) {		//Except the last 3 column
+		for (int i = 0; i < columnNames3.length - 5; i++) {		//Except the last 5 column
 			table3.getColumnModel().getColumn(i).setCellRenderer(r);
 		}		
 		
@@ -1182,7 +1188,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		  
 		table3.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new comboBox_MinAge()));
 		table3.getColumnModel().getColumn(3).setCellEditor(new DefaultCellEditor(new comboBox_MaxAge()));
-//		table3.getColumnModel().getColumn(4).setCellEditor(new DefaultCellEditor(new checkbox_Option()));
+		table3.getColumnModel().getColumn(4).setCellEditor(new DefaultCellEditor(new comboBox_MinAge()));
+		table3.getColumnModel().getColumn(5).setCellEditor(new DefaultCellEditor(new comboBox_MaxAge()));
+//		table3.getColumnModel().getColumn(6).setCellEditor(new DefaultCellEditor(new checkbox_Option()));
 		((JComponent) table3.getDefaultRenderer(Boolean.class)).setOpaque(true);	// It's a bug in the synth-installed renderer, quick hack is to force the rendering checkbox opacity to true		
 		// End of Set up Types for each  Columns------------------------------------------------------------------------
 		
@@ -1196,18 +1204,15 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		
 //      table3.setTableHeader(null);
         table3.setPreferredScrollableViewportSize(new Dimension(400, 120));
-//        table3.setFillsViewportHeight(true);
-//        TableRowSorter<TableModelSpectrum> sorter = new TableRowSorter<TableModelSpectrum>(model3);	//Add sorter
-//		for (int i = 1; i < colCount3; i++) {
-//			sorter.setSortable(i, false);
-//			if (i == 0 || i == 1) {			//Only the first 2 columns can be sorted
-//				sorter.setSortable(i, true);	
-//			}
-//		}
-//		table3.setRowSorter(sorter);
-        
-        TableFilterHeader filterHeader = new TableFilterHeader(table3, AutoChoices.ENABLED);
-        filterHeader.setPosition(Position.INLINE);
+//      table3.setFillsViewportHeight(true);
+        TableRowSorter<TableModelSpectrum> sorter = new TableRowSorter<TableModelSpectrum>(model3);	//Add sorter
+		for (int i = 1; i < colCount3; i++) {
+			sorter.setSortable(i, false);
+			if (i == 0 || i == 1) {			//Only the first 2 columns can be sorted
+				sorter.setSortable(i, true);	
+			}
+		}
+		table3.setRowSorter(sorter);
         
 	}
 	
@@ -1224,7 +1229,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			rowCount4 = total_CoverType*total_CoverType;
 			colCount4 = 4;
 			data4 = new Object[rowCount4][colCount4];
-	        columnNames4= new String[] {"covertype_before", "covertype_after", "regeneration_weight", "regeneration_percentage"};
+	        columnNames4= new String[] {"covertype_before_disturbance", "covertype_after_disturbance", "regeneration_weight", "regeneration_percentage"};
 			
 			// Populate the data matrix
 	        int table_row2 = 0;
@@ -2423,7 +2428,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			@Override
 			public Class getColumnClass(int c) {
 				if (c == 0) return Integer.class;      //column 0 accepts only Integer
-				else if (c == 1 && c == 2) return String.class;      
+				else if (c == 1 || c == 2) return String.class;      
 				else if (c == 4 || c == 5) return Double.class;       
 				else return String.class;				
 			}
@@ -2923,43 +2928,68 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			button_import_database.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					if (is_this_the_first_load == false) file_Database = FilesHandle.chosenDatabase();				
-					if (file_Database!=null) {
-						textField2.setText(file_Database.getAbsolutePath());
+					File old_database = file_Database;
+					File new_database = null;
+					if (is_this_the_first_load == false) {
+						new_database = FilesHandle.chosenDatabase();
+						file_Database = new_database;
+					}							
+					
+					if (!successfully_update_this_database(file_Database)) {
+						file_Database = old_database;
+						boolean revert_database = successfully_update_this_database(file_Database);					
+						String ExitOption[] = {"OK"};
+						String warningText = "Importation is denied. " + new_database.getName() + " does not meet SpectrumLite's data structure requirements.";
+						int response = JOptionPane.showOptionDialog(Spectrum_Main.get_spectrumDesktopPane(), warningText, "Database importation warning",
+								JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption, ExitOption[0]);
+					}
+				}
+				
+				public boolean successfully_update_this_database(File database) {
+					if (file_Database != null) {
+						try {	
+							// read the database tables into array
+							read_DatabaseTables = new Read_Database_Yield_Tables(file_Database);
+							yieldTable_values = read_DatabaseTables.get_yield_tables_values();
+							yieldTable_ColumnNames = read_DatabaseTables.get_yield_tables_column_names();
+											        
+					        // update Age Class column of the existing strata table
+							for (int row = 0; row < rowCount2; row++) {						
+								String s5 = data2[row][5].toString();
+								String s6 = data2[row][6].toString();
+								if (read_DatabaseTables.get_starting_ageclass(s5, s6, "NG", "0") != null) {
+									data2[row][colCount2 - 2] = Integer.valueOf(read_DatabaseTables.get_starting_ageclass(s5, s6, "A", "0"));	
+								}												
+							}
+							model2.fireTableDataChanged();
+					      
+							 // update Models OverView table
+					        data_overview[2][1] = yieldTable_values.length;
+					        model_overview.fireTableDataChanged();
+					        
+					        int total_yieldtable =0;
+					        for (int row = 0; row < rowCount2; row++) {				        	
+					        	if (data2[row][colCount2 - 2] == null)		total_yieldtable = total_yieldtable + 1;
+							}
+					        data_overview[3][1] = total_yieldtable;
+					        model_overview.fireTableDataChanged();
+					        
+					        // create 2 new instances of this Panel 
+							panel_Management_Cost_GUI = new Management_Cost_GUI();
+							panel_Management_Cost_Text = new Management_Cost_Text();
 							
-						// Read the database tables into array
-						read_DatabaseTables = new Read_DatabaseTables(file_Database);
-						yieldTable_values = read_DatabaseTables.getTableArrays();
-						yieldTable_ColumnNames = read_DatabaseTables.getTableColumnNames();
-										        
-				        //Update Age Class column of the existing strata table
-						for (int row = 0; row < rowCount2; row++) {						
-							String s5 = data2[row][5].toString();
-							String s6 = data2[row][6].toString();
-							if (read_DatabaseTables.get_startingAgeClass(s5, s6, "A", "0") != null) {
-								data2[row][colCount2 - 2] = Integer.valueOf(read_DatabaseTables.get_startingAgeClass(s5, s6, "A", "0"));	
-							}												
+							// create 2 new instances of this Panel 
+							panel_Basic_Constraints_GUI = new Basic_Constraints_GUI();
+							panel_Basic_Constraints_Text = new Basic_Constraints_Text();
+							
+							
+							textField2.setText(file_Database.getAbsolutePath());
+							return true;				
+						} catch (Exception e) {
+							return false;
 						}
-						model2.fireTableDataChanged();
-				      
-						 //Update Models OverView table
-				        data_overview[2][1] = yieldTable_values.length;
-				        model_overview.fireTableDataChanged();
-				        
-				        int total_yieldtable =0;
-				        for (int row = 0; row < rowCount2; row++) {				        	
-				        	if (data2[row][colCount2 -2] == null)		total_yieldtable = total_yieldtable +1;
-						}
-				        data_overview[3][1] = total_yieldtable;
-				        model_overview.fireTableDataChanged();
-				        
-				        //create 2 new instances of this Panel 
-						panel_Management_Cost_GUI = new Management_Cost_GUI();
-						panel_Management_Cost_Text = new Management_Cost_Text();
-						
-						//create 2 new instances of this Panel 
-						panel_Basic_Constraints_GUI = new Basic_Constraints_GUI();
-						panel_Basic_Constraints_Text = new Basic_Constraints_Text();
+					} else {
+						return true;  // no need to be false because no need to revert because "try catch" is not implemented yet.
 					}
 				}
 			});
@@ -3001,28 +3031,26 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						read_Strata = new Read_Strata();
 						read_Strata.readValues(file_ExistingStrata);
 						String[][] value = read_Strata.getValues();
-						rowCount2 = read_Strata.get_TotalRows();	//Total rows of existing strata
-//						colCount = read_Strata.get_TotalColumns() + 2; //the "Age Class" & "Strata in optimization model" Columns add to the total of existing strata columns
-//						table.createDefaultColumnsFromModel(); // Very important code to refresh the number of Columns shown based on existing strata total columns
+						rowCount2 = read_Strata.get_TotalRows();	// refresh total rows based on existing strata, we don't need to refresh the total columns
 						data2 = new Object[rowCount2][colCount2];
 						for (int row = 0; row < rowCount2; row++) {
-							for (int column = 0; column < read_Strata.get_TotalColumns() - 1; column++) {		//loop all existing strata columns, except the last column
+							for (int column = 0; column < read_Strata.get_TotalColumns() - 1; column++) {		// loop all existing strata columns, except the last column
 								data2[row][column] = value[row][column];
 							}
 							if (value[row][read_Strata.get_TotalColumns() - 1] != null) {
-								data2[row][colCount2 - 3] = Double.valueOf(value[row][read_Strata.get_TotalColumns() - 1]);	//the last column of readStrata is "Total acres"	
+								data2[row][colCount2 - 3] = Double.valueOf(value[row][read_Strata.get_TotalColumns() - 1]);	// the last column of readStrata is "Total acres"	
 							}								
 							data2[row][colCount2 - 1] = false;
 						}					
-						model2.match_DataType();			//a smart way to retrieve the original data type :))))))					
-						model2.updateTableModelSpectrum(rowCount2, colCount2, data2, columnNames2);		//Very important to (pass table info back to table model) each time data is new Object
+						model2.match_DataType();	// a smart way to retrieve the original data type :))))))					
+						model2.updateTableModelSpectrum(rowCount2, colCount2, data2, columnNames2);		// very important to (pass table info back to table model) each time data is new Object
 						model2.fireTableDataChanged();
 								         						
-						//Only add sorter after having the data loaded
+						// only add sorter after having the data loaded
 						TableRowSorter<TableModelSpectrum> sorter = new TableRowSorter<TableModelSpectrum>(model2);
 						table2.setRowSorter(sorter);
 				                  
-				        //Update Models OverView table
+				        // update Models OverView table
 				        data_overview[0][1] = "0 vs " + rowCount2;
 				        model_overview.fireTableDataChanged();
 				        
@@ -3034,10 +3062,10 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				        model_overview.fireTableDataChanged();
 						
 				        
-				        //Enable "Import Database"
+				        // enable "Import Database"
 				        textField2.setText(null);
 				        button_import_database.setEnabled(true);
-				        if (file_Database != null) {		//Reload database (to get Age Class) if database already exists when new Existing Strata is imported
+				        if (file_Database != null) {		// reload database (to get Age Class) if database already exists when new existing strata is imported
 				            is_this_the_first_load = true;
 					        button_import_database.doClick();
 					        is_this_the_first_load = false;
@@ -5236,7 +5264,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			});
 						
 			// spinner
-			JLabel label = new JLabel("Number of Sigma");
 			JSpinner spin = new JSpinner (new SpinnerNumberModel(5, 0, 1000, 1));
 			spin.setToolTipText("Total number of Sigma");
 			JFormattedTextField SpinnerText = ((DefaultEditor) spin.getEditor()).getTextField();

@@ -20,7 +20,7 @@ bc_id	bc_description	bc_type	bc_multiplier	lowerbound	lowerbound_perunit_penalty
 19	300k 19 - silvicultural method EA - time period 4	SOFT	1.0	300000.0	1.0	300000.0	0.0	18	y_18	353283.7996900966	0.0	0.0
 20	300k 20 - silvicultural method EA - time period 5	SOFT	1.0	300000.0	1.0	300000.0	0.0	19	y_19	355864.26180827315	0.0	0.0
 21	Cost set free 1 - time period 1	FREE	1.0	null	null	null	null	60	v_0	1.94965170098E8	0.0	0.0
-22	Cost set free 2 - time period 2	FREE	1.0	null	null	null	null	61	v_1	1.969513951517553E8	0.0	0.0
-23	Cost set free 3 - time period 3	FREE	1.0	null	null	null	null	62	v_2	1.2410718674265845E9	0.0	0.0
+22	Cost set free 2 - time period 2	FREE	1.0	null	null	null	null	61	v_1	1.8637272361128902E8	0.0	0.0
+23	Cost set free 3 - time period 3	FREE	1.0	null	null	null	null	62	v_2	1.1876506688294904E9	0.0	0.0
 24	Cost set free 4 - time period 4	FREE	1.0	null	null	null	null	63	v_3	5.771650286102068E8	0.0	0.0
 25	Cost set free 5 - time period 5	FREE	1.0	null	null	null	null	64	v_4	2.974113055386749E8	0.0	0.0

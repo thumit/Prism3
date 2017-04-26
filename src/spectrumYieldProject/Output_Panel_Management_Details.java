@@ -6,7 +6,6 @@ import java.awt.GridBagLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JCheckBox;
@@ -26,7 +25,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 	private ScrollPane_DynamicIdentifiers dynamic_identifiersScrollPanel;
 	
 	private File file_StrataDefinition, file_Database;
-	private Read_DatabaseTables read_DatabaseTables;
+	private Read_Database_Yield_Tables read_DatabaseTables;
 	private Read_Indentifiers read_Identifiers;
 	private Object[][][] yieldTable_values;
 	private String [] yieldTable_ColumnNames;
@@ -52,9 +51,9 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 		read_Identifiers = new Read_Indentifiers(file_StrataDefinition);		
 	
 		// Read the database
-		read_DatabaseTables = new Read_DatabaseTables(file_Database);			
-		yieldTable_values = read_DatabaseTables.getTableArrays();
-		yieldTable_ColumnNames = read_DatabaseTables.getTableColumnNames();		
+		read_DatabaseTables = new Read_Database_Yield_Tables(file_Database);			
+		yieldTable_values = read_DatabaseTables.get_yield_tables_values();
+		yieldTable_ColumnNames = read_DatabaseTables.get_yield_tables_column_names();		
 		// End of set up ---------------------------------------------------------------------------	
 
 		
@@ -167,255 +166,269 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 	
 	//Listeners for this class------------------------------------------------------------------------------------------------------------------------
 	public void itemStateChanged(ItemEvent e) {
-//		List<String> variable_term_list = new ArrayList<String>();		
+//		List<String> checkbox_term_list = new ArrayList<String>();
+//		List<String> checkbox_term_xEAr_list = new ArrayList<String>();
 //		
-//		for (int i = 0; i < data.length; i++) {
-//			String var_name = data[i][1].toString();
+//		for (JCheckBox layer1: checkboxStaticIdentifiers.get(0)) {
+//			for (JCheckBox layer2: checkboxStaticIdentifiers.get(1)) {
+//				for (JCheckBox layer3: checkboxStaticIdentifiers.get(2)) {
+//					for (JCheckBox layer4: checkboxStaticIdentifiers.get(3)) {
+//						for (JCheckBox layer5: checkboxStaticIdentifiers.get(4)) {
+//							for (JCheckBox layer6: checkboxStaticIdentifiers.get(5)) {
+//								for (JCheckBox method: checkboxStaticIdentifiers.get(6)) {
+//									for (JCheckBox period: checkboxStaticIdentifiers.get(7)) {
+//										if (
+//												(layer1.isSelected() && (layer1.isVisible()) || !layer1.isEnabled()) &&
+//												(layer2.isSelected() && (layer2.isVisible()) || !layer2.isEnabled()) &&
+//												(layer3.isSelected() && (layer3.isVisible()) || !layer3.isEnabled()) &&
+//												(layer4.isSelected() && (layer4.isVisible()) || !layer4.isEnabled()) &&
+//												(layer5.isSelected() && (layer5.isVisible()) || !layer5.isEnabled()) &&
+//												(layer6.isSelected() && (layer6.isVisible()) || !layer6.isEnabled()) &&
+//												(method.isSelected() && (method.isVisible()) || !method.isEnabled()) &&
+//												(period.isSelected() && (period.isVisible()) || !period.isEnabled())
+//												) 
+//										{
+//											String aggregation = layer1.getText() + layer2.getText() + layer3.getText() + layer4.getText() + layer5.getText() + layer6.getText() + method.getText() + period.getText();	
+//											checkbox_term_list.add(aggregation);	
+//											
+//											aggregation = layer1.getText() + layer2.getText() + layer3.getText() + layer4.getText() + layer5.getText() + method.getText() + period.getText();												
+//											checkbox_term_xEAr_list.add(aggregation);	
+//										}								
+//									}
+//								}
+//							}
+//						}
+//					}
+//				}
+//			}
+//		}
 //			
-//			if (var_name.startsWith("xNG_")) {
-//				var_name = var_name.replace("xNG_", "");
-//				String[] term = var_name.split(",");
-//				String layer1 = term[0];
-//				String layer2 = term[1];
-//				String layer3 = term[2];
-//				String layer4 = term[3];
-//				String layer5 = term[4];
-//				String layer6 = term[5];
-//				String period = term[6];
-//				String aggregation = layer1 + layer2 + layer3 + layer4 + layer5 + layer6 + "Natural Growth" + period;
-//				variable_term_list.add(aggregation);
-//			} 
-//			else if (var_name.startsWith("xPB_")) {
-//				var_name = var_name.replace("xPB_", "");
-//				String[] term = var_name.toString().split(",");
-//				String layer1 = term[0];
-//				String layer2 = term[1];
-//				String layer3 = term[2];
-//				String layer4 = term[3];
-//				String layer5 = term[4];
-//				String layer6 = term[5];
-//				String timing_choice = term[6];
-//				String period = term[7];
-//				String aggregation = layer1 + layer2 + layer3 + layer4 + layer5 + layer6 + "Prescribed Burn" + period;
-//				variable_term_list.add(aggregation);			
+//		
+//		//This is faster than combining all the if then above
+//		for (JCheckBox layer1 : checkboxStaticIdentifiers.get(0)) {
+//			if (layer1.isSelected() && (layer1.isVisible()) || !layer1.isEnabled()) {
+//				for (JCheckBox layer2 : checkboxStaticIdentifiers.get(1)) {
+//					if (layer2.isSelected() && (layer2.isVisible()) || !layer2.isEnabled()) {
+//						for (JCheckBox layer3 : checkboxStaticIdentifiers.get(2)) {
+//							if (layer3.isSelected() && (layer3.isVisible()) || !layer3.isEnabled()) {
+//								for (JCheckBox layer4 : checkboxStaticIdentifiers.get(3)) {
+//									if (layer4.isSelected() && (layer4.isVisible()) || !layer4.isEnabled()) {
+//										for (JCheckBox layer5 : checkboxStaticIdentifiers.get(4)) {
+//											if (layer5.isSelected() && (layer5.isVisible()) || !layer5.isEnabled()) {
+//												for (JCheckBox layer6 : checkboxStaticIdentifiers.get(5)) {
+//													if (layer6.isSelected() && (layer6.isVisible()) || !layer6.isEnabled()) {
+//														for (JCheckBox method : checkboxStaticIdentifiers.get(6)) {
+//															if (method.isSelected() && (method.isVisible()) || !method.isEnabled()) {
+//																for (JCheckBox period : checkboxStaticIdentifiers.get(7)) {
+//																	if (period.isSelected() && (period.isVisible()) || !period.isEnabled()) {
+//																		String aggregation = layer1.getText() + layer2.getText() + layer3.getText() + layer4.getText() + layer5.getText() + layer6.getText() + method.getText() + period.getText();	
+//																		checkbox_term_list.add(aggregation);	
+//																		
+//																		aggregation = layer1.getText() + layer2.getText() + layer3.getText() + layer4.getText() + layer5.getText() + method.getText() + period.getText();												
+//																		checkbox_term_xEAr_list.add(aggregation);											
+//																	}
+//																}
+//															}
+//														}
+//													}
+//												}
+//											}
+//										}
+//									}
+//								}
+//							}
+//						}
+//					}
+//				}
 //			}
 //		}
 		//-------------------------------------------------------------------------------------------------------
-		//-------------------------------------------------------------------------------------------------------
-		List<String> checkbox_term_list = new ArrayList<String>();
-		List<String> checkbox_term_xEAr_list = new ArrayList<String>();
-		
-		for (JCheckBox layer1: checkboxStaticIdentifiers.get(0)) {
-			for (JCheckBox layer2: checkboxStaticIdentifiers.get(1)) {
-				for (JCheckBox layer3: checkboxStaticIdentifiers.get(2)) {
-					for (JCheckBox layer4: checkboxStaticIdentifiers.get(3)) {
-						for (JCheckBox layer5: checkboxStaticIdentifiers.get(4)) {
-							for (JCheckBox layer6: checkboxStaticIdentifiers.get(5)) {
-								for (JCheckBox method: checkboxStaticIdentifiers.get(6)) {
-									for (JCheckBox period: checkboxStaticIdentifiers.get(7)) {
-										if (
-												(layer1.isSelected() && (layer1.isVisible()) || !layer1.isEnabled()) &&
-												(layer2.isSelected() && (layer2.isVisible()) || !layer2.isEnabled()) &&
-												(layer3.isSelected() && (layer3.isVisible()) || !layer3.isEnabled()) &&
-												(layer4.isSelected() && (layer4.isVisible()) || !layer4.isEnabled()) &&
-												(layer5.isSelected() && (layer5.isVisible()) || !layer5.isEnabled()) &&
-												(layer6.isSelected() && (layer6.isVisible()) || !layer6.isEnabled()) &&
-												(method.isSelected() && (method.isVisible()) || !method.isEnabled()) &&
-												(period.isSelected() && (period.isVisible()) || !period.isEnabled())
-												) 
-										{
-											String aggregation = layer1.getText() + layer2.getText() + layer3.getText() + layer4.getText() + layer5.getText() + layer6.getText() + method.getText() + period.getText();	
-											checkbox_term_list.add(aggregation);	
-											
-											aggregation = layer1.getText() + layer2.getText() + layer3.getText() + layer4.getText() + layer5.getText() + method.getText() + period.getText();												
-											checkbox_term_xEAr_list.add(aggregation);	
-										}								
-									}
-								}
-							}
-						}
+		//-------------------------------------------------------------------------------------------------------		
+		RowFilter<Object, Object> startsWithAFilter = new RowFilter<Object, Object>() {
+			// 1. FAST FILTER: NOT SURE IF FASTER THAN 2
+			public boolean include(Entry<? extends Object, ? extends Object> entry) {				
+				Boolean is_finally_true = false;
+				String original_term = entry.getStringValue(1);
+				String term;
+				
+				
+				term = Get_Variable_Information.get_layer1(entry.getStringValue(1));
+				for (JCheckBox layer1 : checkboxStaticIdentifiers.get(0)) {
+					if ((layer1.isSelected() && (layer1.isVisible()) || !layer1.isEnabled())
+							&& term.startsWith(layer1.getText())) {
+						is_finally_true = true;
 					}
 				}
+				
+				
+				term = Get_Variable_Information.get_layer2(entry.getStringValue(1));
+				if (is_finally_true) {
+					int count = 0;
+					for (JCheckBox layer2 : checkboxStaticIdentifiers.get(1)) {
+						if ((layer2.isSelected() && (layer2.isVisible()) || !layer2.isEnabled())
+								&& term.startsWith(layer2.getText())) {
+							count++;
+						}
+					}
+					if (count < 1)
+						is_finally_true = false;
+				}
+				
+				
+				term = Get_Variable_Information.get_layer3(entry.getStringValue(1));
+				if (is_finally_true) {
+					int count = 0;
+					for (JCheckBox layer3 : checkboxStaticIdentifiers.get(2)) {
+						if ((layer3.isSelected() && (layer3.isVisible()) || !layer3.isEnabled())
+								&& term.startsWith(layer3.getText())) {
+							count++;
+						}
+					}
+					if (count < 1)
+						is_finally_true = false;
+				}
+				
+			
+				term = Get_Variable_Information.get_layer4(entry.getStringValue(1));
+				if (is_finally_true) {
+					int count = 0;
+					for (JCheckBox layer4 : checkboxStaticIdentifiers.get(3)) {
+						if ((layer4.isSelected() && (layer4.isVisible()) || !layer4.isEnabled())
+								&& term.startsWith(layer4.getText())) {
+							count++;
+						}
+					}
+					if (count < 1)
+						is_finally_true = false;
+				}
+				
+				
+				term = Get_Variable_Information.get_layer5(entry.getStringValue(1));
+				if (is_finally_true) {
+					int count = 0;
+					for (JCheckBox layer5 : checkboxStaticIdentifiers.get(4)) {
+						if ((layer5.isSelected() && (layer5.isVisible()) || !layer5.isEnabled())
+								&& term.startsWith(layer5.getText())) {
+							count++;
+						}
+					}
+					if (count < 1)
+						is_finally_true = false;
+				}
+				
+				
+				
+				// The following vary depending on what type of variable is
+				if (original_term.contains("xNG_") || original_term.contains("xPB_")
+						|| original_term.contains("xGS_") || original_term.contains("xMS_") 
+						|| original_term.contains("xEAe_") || original_term.contains("xEAe'_") ) {		
+
+					
+					term = Get_Variable_Information.get_layer6(entry.getStringValue(1));
+					if (is_finally_true) {
+						int count = 0;
+						for (JCheckBox layer6 : checkboxStaticIdentifiers.get(5)) {
+							if ((layer6.isSelected() && (layer6.isVisible()) || !layer6.isEnabled())
+									&& term.startsWith(layer6.getText())) {
+								count++;
+							}
+						}
+						if (count < 1)
+							is_finally_true = false;
+					}
+					
+
+					term = Get_Variable_Information.get_method(entry.getStringValue(1));
+					// NOTE NOTE NOTE NOTE NOTE NOTE: these will be changed when we rename silvicultural method check boxes to 2 letters only
+					if (term.equals("NG")) term = "Natural Growth";
+					if (term.equals("PB")) term = "Prescribed Burn";
+					if (term.equals("GS")) term = "Group Selection";
+					if (term.equals("MS")) term = "Mixed Severity Wildfire";
+					if (term.equals("EA")) term = "Even Age";
+					if (is_finally_true) {
+						int count = 0;
+						for (JCheckBox method : checkboxStaticIdentifiers.get(6)) {
+							if ((method.isSelected() && (method.isVisible()) || !method.isEnabled())
+									&& term.startsWith(method.getText())) {
+								count++;
+							}
+						}
+						if (count < 1)
+							is_finally_true = false;
+					}	
+					
+					
+					term = String.valueOf(Get_Variable_Information.get_period(entry.getStringValue(1)));
+					if (is_finally_true) {
+						int count = 0;
+						for (JCheckBox period : checkboxStaticIdentifiers.get(7)) {
+							if ((period.isSelected() && (period.isVisible()) || !period.isEnabled())
+									&& term.startsWith(period.getText())) {
+								count++;
+							}
+						}
+						if (count < 1)
+							is_finally_true = false;
+					}	
+				}
+				
+				
+				else if (original_term.contains("xEAr_") || original_term.contains("xEAr'_") ) {
+					
+					
+					term = Get_Variable_Information.get_method(entry.getStringValue(1));
+					// NOTE NOTE NOTE NOTE NOTE NOTE: these will be changed when we rename silvicultural method check boxes to 2 letters only
+					if (term.equals("NG")) term = "Natural Growth";
+					if (term.equals("PB")) term = "Prescribed Burn";
+					if (term.equals("GS")) term = "Group Selection";
+					if (term.equals("MS")) term = "Mixed Severity Wildfire";
+					if (term.equals("EA")) term = "Even Age";
+					if (is_finally_true) {
+						int count = 0;
+						for (JCheckBox method : checkboxStaticIdentifiers.get(6)) {
+							if ((method.isSelected() && (method.isVisible()) || !method.isEnabled())
+									&& term.startsWith(method.getText())) {
+								count++;
+							}
+						}
+						if (count < 1)
+							is_finally_true = false;
+					}	
+					
+					
+					term = String.valueOf(Get_Variable_Information.get_period(entry.getStringValue(1)));
+					if (is_finally_true) {
+						int count = 0;
+						for (JCheckBox period : checkboxStaticIdentifiers.get(7)) {
+							if ((period.isSelected() && (period.isVisible()) || !period.isEnabled())
+									&& term.startsWith(period.getText())) {
+								count++;
+							}
+						}
+						if (count < 1)
+							is_finally_true = false;
+					}	
+				}
+				
+				return is_finally_true;		// return false so that this entry is not shown
 			}
-		}
-		//-------------------------------------------------------------------------------------------------------
-		//-------------------------------------------------------------------------------------------------------		
-//		RowFilter<Object, Object> startsWithAFilter = new RowFilter<Object, Object>() {
-//			public boolean include(Entry<? extends Object, ? extends Object> entry) {				
-//
-//				Boolean is_finally_true = false;
-//				String original_term = entry.getStringValue(1);
-//				String term = get_variable_term(entry.getStringValue(1));
-//				
-//				
-//				for (JCheckBox layer1 : checkboxStaticIdentifiers.get(0)) {
-//					if ((layer1.isSelected() && (layer1.isVisible()) || !layer1.isEnabled())
-//							&& term.startsWith(layer1.getText())) {
-//						is_finally_true = true;
-//						term = term.substring(layer1.getText().length(), term.length());
-//					}
-//				}
-//
-//				
-//				if (is_finally_true) {
-//					int count = 0;
-//					for (JCheckBox layer2 : checkboxStaticIdentifiers.get(1)) {
-//						if ((layer2.isSelected() && (layer2.isVisible()) || !layer2.isEnabled())
-//								&& term.startsWith(layer2.getText())) {
-//							count++;
-//							term = term.substring(layer2.getText().length(), term.length());
-//						}
-//					}
-//					if (count < 1)
-//						is_finally_true = false;
-//				}
-//				
-//				
-//				if (is_finally_true) {
-//					int count = 0;
-//					for (JCheckBox layer3 : checkboxStaticIdentifiers.get(2)) {
-//						if ((layer3.isSelected() && (layer3.isVisible()) || !layer3.isEnabled())
-//								&& term.startsWith(layer3.getText())) {
-//							count++;
-//							term = term.substring(layer3.getText().length(), term.length());
-//						}
-//					}
-//					if (count < 1)
-//						is_finally_true = false;
-//				}
-//				
-//			
-//				if (is_finally_true) {
-//					int count = 0;
-//					for (JCheckBox layer4 : checkboxStaticIdentifiers.get(3)) {
-//						if ((layer4.isSelected() && (layer4.isVisible()) || !layer4.isEnabled())
-//								&& term.startsWith(layer4.getText())) {
-//							count++;
-//							term = term.substring(layer4.getText().length(), term.length());
-//						}
-//					}
-//					if (count < 1)
-//						is_finally_true = false;
-//				}
-//				
-//				
-//				if (is_finally_true) {
-//					int count = 0;
-//					for (JCheckBox layer5 : checkboxStaticIdentifiers.get(4)) {
-//						if ((layer5.isSelected() && (layer5.isVisible()) || !layer5.isEnabled())
-//								&& term.startsWith(layer5.getText())) {
-//							count++;
-//							term = term.substring(layer5.getText().length(), term.length());
-//						}
-//					}
-//					if (count < 1)
-//						is_finally_true = false;
-//				}
-//				
-//				if (original_term.contains("xNG_")) System.out.println("found NG " + original_term + " term = " + term);
-//				if (original_term.contains("xNG_") || original_term.contains("xPB_")
-//						|| original_term.contains("xGS_") || original_term.contains("xMS_") 
-//						|| original_term.contains("xEAe_") || original_term.contains("xEAe'_") ) {					
-//					if (is_finally_true) {
-//						int count = 0;
-//						for (JCheckBox layer6 : checkboxStaticIdentifiers.get(5)) {
-//							if ((layer6.isSelected() && (layer6.isVisible()) || !layer6.isEnabled())
-//									&& term.startsWith(layer6.getText())) {
-//								count++;
-//								term = term.substring(layer6.getText().length(), term.length());
-//							}
-//						}
-//						if (count < 1)
-//							is_finally_true = false;
-//					}
-//					
-//
-//					if (is_finally_true) {
-//						int count = 0;
-//						for (JCheckBox method : checkboxStaticIdentifiers.get(6)) {
-//							if ((method.isSelected() && (method.isVisible()) || !method.isEnabled())
-//									&& term.startsWith(method.getText())) {
-//								count++;
-//								term = term.substring(method.getText().length(), term.length());
-//							}
-//						}
-//						if (count < 1)
-//							is_finally_true = false;
-//					}	
-//				
-//					
-//					if (is_finally_true) {
-//						int count = 0;
-//						for (JCheckBox period : checkboxStaticIdentifiers.get(7)) {
-//							if ((period.isSelected() && (period.isVisible()) || !period.isEnabled())
-//									&& term.startsWith(period.getText())) {
-//								count++;
-//								term = term.substring(period.getText().length(), term.length());
-//							}
-//						}
-//						if (count < 1)
-//							is_finally_true = false;
-//					}	
-//				}
-//				
-//				
-//				else if (original_term.contains("xEAr_") || original_term.contains("xEAr'_") ) {										
-//					if (is_finally_true) {
-//						int count = 0;
-//						for (JCheckBox method : checkboxStaticIdentifiers.get(6)) {
-//							if ((method.isSelected() && (method.isVisible()) || !method.isEnabled())
-//									&& term.startsWith(method.getText())) {
-//								count++;
-//								term = term.substring(method.getText().length(), term.length());
-//							}
-//						}
-//						if (count < 1)
-//							is_finally_true = false;
-//					}	
-//				
-//					
-//					if (is_finally_true) {
-//						int count = 0;
-//						for (JCheckBox period : checkboxStaticIdentifiers.get(7)) {
-//							if ((period.isSelected() && (period.isVisible()) || !period.isEnabled())
-//									&& term.startsWith(period.getText())) {
-//								count++;
-//								term = term.substring(period.getText().length(), term.length());
-//							}
-//						}
-//						if (count < 1)
-//							is_finally_true = false;
-//					}	
-//				}
-//
-//				
-//				return is_finally_true;	// return false so that this entry is not shown
-//			}
-//		};
-//		
-//		TableRowSorter<TableModelSpectrum> sorter = new TableRowSorter<TableModelSpectrum>(model);
-//		table.setRowSorter(sorter);
-//		sorter.setRowFilter(startsWithAFilter);
+		};
+		
+		TableRowSorter<TableModelSpectrum> sorter = new TableRowSorter<TableModelSpectrum>(model);
+		table.setRowSorter(sorter);
+		sorter.setRowFilter(startsWithAFilter);
 		
 
 		
 		
 		
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 	
+		
+		
+		
+		
+//		// 2. FAST FILTER: not sure, this may be faster but we need many more columns in the table	
 //	    TableRowSorter<TableModelSpectrum> sorter = new TableRowSorter<TableModelSpectrum>(model);
 //		table.setRowSorter(sorter);
 //		List<RowFilter<TableModelSpectrum, Object>> filters, filters2;
@@ -440,60 +453,37 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 		
 		
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+	
 		
 		
 		
 
 		
-		// BELOW IS THE OLD FREAKING SLOW FILTER --> THE ABOVE I WROTE IS MUCH MORE FASTER & SMARTER		
-		long time_start = System.currentTimeMillis();		// measure time before solving
-	
-		
-		RowFilter<Object, Object> startsWithAFilter = new RowFilter<Object, Object>() {
-			public boolean include(Entry<? extends Object, ? extends Object> entry) {				
-//				for (int i = entry.getValueCount() - 1; i >= 0; i--) {	// Loop columns
-				String modified_var_name = Get_Variable_Information.get_customized_variable_term(entry.getStringValue(1));		// entry.getStringValue(1) = column 1 = var_name
-				if (checkbox_term_list.contains(modified_var_name) || checkbox_term_xEAr_list.contains(modified_var_name)) {
-					return true;
-				}
+//		// 3. SLOWEST FILTER: BELOW IS THE OLD FREAKING SLOW FILTER --> THE 1st METHOD I WROTE IS MUCH MORE FASTER & SMARTER		
+//		long time_start = System.currentTimeMillis();		// measure time before solving
+//	
+//		
+//		RowFilter<Object, Object> startsWithAFilter = new RowFilter<Object, Object>() {
+//			public boolean include(Entry<? extends Object, ? extends Object> entry) {				
+////				for (int i = entry.getValueCount() - 1; i >= 0; i--) {	// Loop columns
+//				String modified_var_name = Get_Variable_Information.get_customized_variable_term(entry.getStringValue(1));		// entry.getStringValue(1) = column 1 = var_name
+//				if (checkbox_term_list.contains(modified_var_name) || checkbox_term_xEAr_list.contains(modified_var_name)) {
+//					return true;
 //				}
-
-				return false; // return false so that this entry is not shown
-			}
-		};
-		
-		TableRowSorter<TableModelSpectrum> sorter = new TableRowSorter<TableModelSpectrum>(model);
-		table.setRowSorter(sorter);
-		sorter.setRowFilter(startsWithAFilter);
-		
-		
-		long time_end = System.currentTimeMillis();		//measure time after solving
-		double timeElapsed = (double) (time_end - time_start) / 1000;
-		System.out.println("Total time filter = " + timeElapsed);
+////				}
+//
+//				return false; // return false so that this entry is not shown
+//			}
+//		};
+//		
+//		TableRowSorter<TableModelSpectrum> sorter = new TableRowSorter<TableModelSpectrum>(model);
+//		table.setRowSorter(sorter);
+//		sorter.setRowFilter(startsWithAFilter);
+//		
+//		
+//		long time_end = System.currentTimeMillis();		//measure time after solving
+//		double timeElapsed = (double) (time_end - time_start) / 1000;
+//		System.out.println("Total time filter = " + timeElapsed);
 	}
-	
-	
-	
-	
+
 }	

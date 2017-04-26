@@ -71,12 +71,16 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 				public void mouseClicked(MouseEvent e) {
 					if (layers_Title_Label.get(curent_index).isEnabled()) {	
 						for (int j = 0; j < allLayers.get(curent_index).size(); j++) {		//Loop all elements in each layer
-							checkboxStaticIdentifiers.get(curent_index).get(j).setSelected(false);
+							if (checkboxStaticIdentifiers.get(curent_index).get(j).isVisible()) {		// to prevent select or de-select invisible periods which slow the Table Filter
+								checkboxStaticIdentifiers.get(curent_index).get(j).setSelected(false);
+							}						
 						}
 						layers_Title_Label.get(curent_index).setEnabled(false);
 					} else {
 						for (int j = 0; j < allLayers.get(curent_index).size(); j++) {		//Loop all elements in each layer
-							checkboxStaticIdentifiers.get(curent_index).get(j).setSelected(true);
+							if (checkboxStaticIdentifiers.get(curent_index).get(j).isVisible()) {		// to prevent select or de-select invisible periods which slow the Table Filter
+								checkboxStaticIdentifiers.get(curent_index).get(j).setSelected(true);
+							}							
 						}
 						layers_Title_Label.get(curent_index).setEnabled(true);
 					}

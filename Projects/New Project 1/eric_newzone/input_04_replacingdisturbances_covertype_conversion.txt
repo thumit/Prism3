@@ -1,4 +1,4 @@
-covertype_before	covertype_after	regeneration_weight	regeneration_percentage	
+covertype_before_disturbance	covertype_after_disturbance	regeneration_weight	regeneration_percentage	
 B	B	1	100.0	
 B	C	0	0.0	
 B	D	0	0.0	
