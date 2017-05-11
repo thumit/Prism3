@@ -43,7 +43,21 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 		layers_Title.addAll(MethodsPeriodsAges_Title);
 		layers_Title_ToolTip.addAll(MethodsPeriodsAges_Title);
 		allLayers.addAll(MethodsPeriodsAges);
-		allLayers_ToolTips.addAll(MethodsPeriodsAges);
+		
+		// Full name of silvicultural methods			// NOTE NOTE NOTE change later
+		List<List<String>> allmethods_ToolTips = read_Identifiers.get_MethodsPeriodsAges();
+		for (int i = 0; i < allmethods_ToolTips.get(0).size(); i++) {	// 0 is method, 1 is period
+			if (allmethods_ToolTips.get(0).get(i).equals("NGe")) 	allmethods_ToolTips.get(0).set(i, "Natural Growth existing");
+			if (allmethods_ToolTips.get(0).get(i).equals("PBe")) 	allmethods_ToolTips.get(0).set(i, "Prescribed Burn existing");
+			if (allmethods_ToolTips.get(0).get(i).equals("GSe")) 	allmethods_ToolTips.get(0).set(i, "Group Selection existing");
+			if (allmethods_ToolTips.get(0).get(i).equals("EAe")) 	allmethods_ToolTips.get(0).set(i, "Even Age existing");
+			if (allmethods_ToolTips.get(0).get(i).equals("MS")) 	allmethods_ToolTips.get(0).set(i, "Mizxed Severity Wildfire");
+			if (allmethods_ToolTips.get(0).get(i).equals("NGr")) 	allmethods_ToolTips.get(0).set(i, "Natural Growth regeneration");
+			if (allmethods_ToolTips.get(0).get(i).equals("PBr")) 	allmethods_ToolTips.get(0).set(i, "Prescribed Burn regeneration");
+			if (allmethods_ToolTips.get(0).get(i).equals("GSr")) 	allmethods_ToolTips.get(0).set(i, "Group Selection regeneration");
+			if (allmethods_ToolTips.get(0).get(i).equals("EAr")) 	allmethods_ToolTips.get(0).set(i, "Even Age regeneration");		
+		}	
+		allLayers_ToolTips.addAll(allmethods_ToolTips);
 
 		int total_staticIdentifiers = total_layers + MethodsPeriodsAges.size();
 		
@@ -124,7 +138,13 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 //				//Set layer 5 - Cover Type invisible
 //				if (i==4) checkboxStaticIdentifiers.get(i).get(j).setEnabled(false);
 				//Set layer 6 - Size Class invisible
-				if (i==5) checkboxStaticIdentifiers.get(i).get(j).setEnabled(false);
+				if (i == 5) checkboxStaticIdentifiers.get(i).get(j).setEnabled(false);
+				if (i == 6) {	// sil-method
+					for (JCheckBox cb: checkboxStaticIdentifiers.get(i))
+					if (cb.getText().equals("PBr") || cb.getText().equals("GSr") ) {
+						cb.setEnabled(false);
+					}
+				}
 //				//Deselect all time period check boxes (7)
 //				if (i==7) checkboxStaticIdentifiers.get(i).get(j).setSelected(false);
 			}
@@ -160,19 +180,7 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 		for (int ii = 0; ii < checkboxStaticIdentifiers.size(); ii++) {		//Loop all static identifiers
 			static_info = static_info + ii + " ";
 			for (int j = 0; j < checkboxStaticIdentifiers.get(ii).size(); j++) {		//Loop all elements in each layer
-				String checkboxName = checkboxStaticIdentifiers.get(ii).get(j).getText();
-				if (checkboxName.equals("Even Age")) {
-					checkboxName = "EA";
-				} else if (checkboxName.equals("Group Selection")) {
-					checkboxName = "GS";
-				} else if (checkboxName.equals("Prescribed Burn")) {
-					checkboxName = "PB";
-				} else if (checkboxName.equals("Natural Growth")) {
-					checkboxName = "NG";
-				} else if (checkboxName.equals("Mixed Severity Wildfire")) {
-					checkboxName = "MS";
-				}
-				
+				String checkboxName = checkboxStaticIdentifiers.get(ii).get(j).getText();				
 				//Add checkBox if it is (selected & visible) or disable
 				if ((checkboxStaticIdentifiers.get(ii).get(j).isSelected() && (checkboxStaticIdentifiers.get(ii).get(j).isVisible())
 						|| !checkboxStaticIdentifiers.get(ii).get(j).isEnabled()))	

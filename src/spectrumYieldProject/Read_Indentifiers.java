@@ -115,11 +115,15 @@ public class Read_Indentifiers {
 	public List<List<String>> get_MethodsPeriodsAges() {
 		//Layers element name
 		List<String> layer1 = new ArrayList<String>();			//Silvicultural methods
-		layer1.add("Natural Growth");
-		layer1.add("Prescribed Burn");
-		layer1.add("Group Selection");
-		layer1.add("Mixed Severity Wildfire");
-		layer1.add("Even Age");	
+		layer1.add("NGe");
+		layer1.add("PBe");
+		layer1.add("GSe");
+		layer1.add("EAe");	
+		layer1.add("MSe");
+		layer1.add("NGr");
+		layer1.add("PBr");
+		layer1.add("GSr");
+		layer1.add("EAr");
 
 		
 		List<String> layer2 = new ArrayList<String>();		//Time Periods

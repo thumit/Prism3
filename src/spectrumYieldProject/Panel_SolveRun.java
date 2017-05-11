@@ -416,27 +416,23 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			int[] v = new int [total_freeConstraints];	//v(n)
 			
 			int[][][][][][][] x = new int[layer1.size()][layer2.size()][layer3.size()][layer4.size()][layer5.size()][layer6.size()][total_methods];		//x(s1,s2,s3,s4,s5,s6)(q)
-			int[][][][][][][] xNG = new int[layer1.size()][layer2.size()][layer3.size()][layer4.size()][layer5.size()][layer6.size()][total_Periods + 1];						//xNG(s1,s2,s3,s4,s5,s6)(t)
-			int[][][][][][][][] xPB = new int[layer1.size()][layer2.size()][layer3.size()][layer4.size()][layer5.size()][layer6.size()][total_PB_Prescriptions][total_Periods + 1];		//xPB(s1,s2,s3,s4,s5,s6)(i,t)
-			int[][][][][][][][] xGS = new int[layer1.size()][layer2.size()][layer3.size()][layer4.size()][layer5.size()][layer6.size()][total_GS_Prescriptions][total_Periods + 1];			//xGS(s1,s2,s3,s4,s5,s6)(i,t)
+			int[][][][][][][] xNGe = new int[layer1.size()][layer2.size()][layer3.size()][layer4.size()][layer5.size()][layer6.size()][total_Periods + 1];						//xNGe(s1,s2,s3,s4,s5,s6)(t)
+			int[][][][][][][][] xPBe = new int[layer1.size()][layer2.size()][layer3.size()][layer4.size()][layer5.size()][layer6.size()][total_PB_Prescriptions][total_Periods + 1];		//xPBe(s1,s2,s3,s4,s5,s6)(i,t)
+			int[][][][][][][][] xGSe = new int[layer1.size()][layer2.size()][layer3.size()][layer4.size()][layer5.size()][layer6.size()][total_GS_Prescriptions][total_Periods + 1];			//xGSe(s1,s2,s3,s4,s5,s6)(i,t)
 			int[][][][][][][][] xMS = new int[layer1.size()][layer2.size()][layer3.size()][layer4.size()][layer5.size()][layer6.size()][total_PB_Prescriptions][total_Periods + 1];		//xMS(s1,s2,s3,s4,s5,s6)(i,t)
-			int[][][][][][][] xEAe = new int
+			int[][][][][][][][][] xEAe = new int
 					[layer1.size()][layer2.size()][layer3.size()][layer4.size()][layer5.size()][layer6.size()]
-							[total_Periods + 1];		//xEAe(s1,s2,s3,s4,s5,s6)(t)
-									// total_Periods + 1 because t starts from 1 to total_Periods, ignore the 0
-			int[][][][][][][][][] xEAeCut = new int
-					[layer1.size()][layer2.size()][layer3.size()][layer4.size()][layer5.size()][layer6.size()]
-							[total_Periods + 1][layer5.size()][total_Periods + 1];		//xEAe'(s1,s2,s3,s4,s5,s6)(t)(c)(tR)
-									// total_Periods + 1 because t starts from 1 to total_Periods, ignore the 0
+							[total_Periods + 1][layer5.size()][total_Periods + 1];		//xEAe(s1,s2,s3,s4,s5,s6)(tR)(s5R)(t)
+									// total_Periods + 1 because tR starts from 1 to total_Periods, ignore the 0
 			
-			int[][][][][][][] xEAr = new int
+			int[][][][][][][] xNGr = new int
 					[layer1.size()][layer2.size()][layer3.size()][layer4.size()][layer5.size()]
-							[total_Periods + 1][total_AgeClasses + 1];		//xEAr(s1,s2,s3,s4,s5)(t)(a)
+							[total_Periods + 1][total_AgeClasses + 1];		//xNGr(s1,s2,s3,s4,s5)(t)(a)
 									// total_Periods + 1 because t starts from 1 to total_Periods, ignore the 0
-			int[][][][][][][][][] xEArCut = new int
+			int[][][][][][][][][] xEAr = new int
 					[layer1.size()][layer2.size()][layer3.size()][layer4.size()][layer5.size()]
-							[total_Periods + 1][total_AgeClasses + 1][layer5.size()][total_Periods + 1];		//xEAr'(s1,s2,s3,s4,s5)(t)(a)(c)(tR)
-									// total_Periods + 1 because t starts from 1 to total_Periods, ignore the 0
+							[total_Periods + 1][total_AgeClasses + 1][layer5.size()][total_Periods + 1];		//xEAr(s1,s2,s3,s4,s5)(tR)(a)(s5R)(t)
+									// total_Periods + 1 because tR starts from 1 to total_Periods, ignore the 0
 			
 			
 			// Declare arrays to keep Fire variables	//f(s1,s2,s3,s4,s5,s6)(t)
@@ -597,7 +593,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			}
 			nV = nvars;
 			
-			// Create decision variables xNG(s1,s2,s3,s4,s5,s6)(t)	
+			// Create decision variables xNGe(s1,s2,s3,s4,s5,s6)(t)	
 			for (int s1 = 0; s1 < layer1.size(); s1++) {
 				for (int s2 = 0; s2 < layer2.size(); s2++) {
 					for (int s3 = 0; s3 < layer3.size(); s3++) {
@@ -608,12 +604,12 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									if (modeled_strata.contains(strataName)) {
 										for (int t = 1; t <= total_Periods; t++) {
 											objlist.add((double) 0);
-	//										vnamelist.add("xNG(" + s1 + "," + s2 + "," + s3 + "," + s4 + "," + s5 + "," + s6 + ")");			
-											vnamelist.add("xNG_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6) + "," + t);										
+	//										vnamelist.add("xNGe(" + s1 + "," + s2 + "," + s3 + "," + s4 + "," + s5 + "," + s6 + ")");			
+											vnamelist.add("xNGe_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6) + "," + t);										
 											vlblist.add((double) 0);
 											vublist.add(Double.MAX_VALUE);
 											vtlist.add(IloNumVarType.Float);
-											xNG[s1][s2][s3][s4][s5][s6][t] = nvars;
+											xNGe[s1][s2][s3][s4][s5][s6][t] = nvars;
 											nvars++;
 										}
 									}
@@ -625,7 +621,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			}
 			nV = nvars;
 			
-			// Create decision variables xPB(s1,s2,s3,s4,s5,s6)(i,t)	
+			// Create decision variables xPBe(s1,s2,s3,s4,s5,s6)(i,t)	
 			for (int s1 = 0; s1 < layer1.size(); s1++) {
 				for (int s2 = 0; s2 < layer2.size(); s2++) {
 					for (int s3 = 0; s3 < layer3.size(); s3++) {
@@ -637,12 +633,12 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										for (int i = 0; i < total_PB_Prescriptions; i++) {
 											for (int t = 1; t <= total_Periods; t++) {
 												objlist.add((double) 0);
-	//											vnamelist.add("xPB(" + s1 + "," + s2 + "," + s3 + "," + s4 + "," + s5 + "," + s6 + ")(" + i + ")");
-												vnamelist.add("xPB_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6) + "," + i + "," + t);
+	//											vnamelist.add("xPBe(" + s1 + "," + s2 + "," + s3 + "," + s4 + "," + s5 + "," + s6 + ")(" + i + ")");
+												vnamelist.add("xPBe_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6) + "," + i + "," + t);
 												vlblist.add((double) 0);
 												vublist.add(Double.MAX_VALUE);
 												vtlist.add(IloNumVarType.Float);
-												xPB[s1][s2][s3][s4][s5][s6][i][t] = nvars;
+												xPBe[s1][s2][s3][s4][s5][s6][i][t] = nvars;
 												nvars++;
 											}
 										}
@@ -655,7 +651,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			}
 			nV = nvars;			
 			
-			// Create decision variables xGS(s1,s2,s3,s4,s5,s6)(i,t)		
+			// Create decision variables xGSe(s1,s2,s3,s4,s5,s6)(i,t)		
 			for (int s1 = 0; s1 < layer1.size(); s1++) {
 				for (int s2 = 0; s2 < layer2.size(); s2++) {
 					for (int s3 = 0; s3 < layer3.size(); s3++) {
@@ -667,12 +663,12 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										for (int i = 0; i < total_PB_Prescriptions; i++) {
 											for (int t = 1; t <= total_Periods; t++) {
 												objlist.add((double) 0);
-	//											vnamelist.add("xGS(" + s1 + "," + s2 + "," + s3 + "," + s4 + "," + s5 + "," + s6 + ")(" + i + ")");
-												vnamelist.add("xGS_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6)  + "," + i + "," + t);
+	//											vnamelist.add("xGSe(" + s1 + "," + s2 + "," + s3 + "," + s4 + "," + s5 + "," + s6 + ")(" + i + ")");
+												vnamelist.add("xGSe_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6)  + "," + i + "," + t);
 												vlblist.add((double) 0);
 												vublist.add(Double.MAX_VALUE);
 												vtlist.add(IloNumVarType.Float);
-												xGS[s1][s2][s3][s4][s5][s6][i][t] = nvars;
+												xGSe[s1][s2][s3][s4][s5][s6][i][t] = nvars;
 												nvars++;
 											}
 										}
@@ -698,7 +694,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 											for (int t = 1; t <= total_Periods; t++) {
 												objlist.add((double) 0);
 	//											vnamelist.add("xMS(" + s1 + "," + s2 + "," + s3 + "," + s4 + "," + s5 + "," + s6 + ")(" + i + ")");
-												vnamelist.add("xMS_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6)  + "," + i + "," + t);
+												vnamelist.add("xMSe_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6)  + "," + i + "," + t);
 												vlblist.add((double) 0);
 												vublist.add(Double.MAX_VALUE);
 												vtlist.add(IloNumVarType.Float);
@@ -713,37 +709,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					}
 				}
 			}
-			nV = nvars;									
+			nV = nvars;																
 			
-			// Create decision variables xEAe(s1,s2,s3,s4,s5,s6)(t)
-			for (int s1 = 0; s1 < layer1.size(); s1++) {
-				for (int s2 = 0; s2 < layer2.size(); s2++) {
-					for (int s3 = 0; s3 < layer3.size(); s3++) {
-						for (int s4 = 0; s4 < layer4.size(); s4++) {
-							for (int s5 = 0; s5 < layer5.size(); s5++) {
-								for (int s6 = 0; s6 < layer6.size(); s6++) {
-									String strataName = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4) + layer5.get(s5) + layer6.get(s6);
-									if (modeled_strata.contains(strataName)) {
-										for (int t = 1; t <= total_Periods; t++) {
-											objlist.add((double) 0);
-//											vnamelist.add("xEAe(" + s1 + "," + s2 + "," + s3 + "," + s4 + "," + s5 + "," + s6 + ")(" + t + ")");
-											vnamelist.add("xEAe_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6) + "," + t);
-											vlblist.add((double) 0);
-											vublist.add(Double.MAX_VALUE);
-											vtlist.add(IloNumVarType.Float);
-											xEAe[s1][s2][s3][s4][s5][s6][t] = nvars;
-											nvars++;
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-			nV = nvars;					
-			
-			// Create decision variables xEAe'(s1,s2,s3,s4,s5,s6)(t)(c)(tR)
+			// Create decision variables xEAe(s1,s2,s3,s4,s5,s6)(t)(c)(tR)
 			for (int s1 = 0; s1 < layer1.size(); s1++) {
 				for (int s2 = 0; s2 < layer2.size(); s2++) {
 					for (int s3 = 0; s3 < layer3.size(); s3++) {
@@ -759,12 +727,12 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 												if (covertype_conversions_and_existing_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
 													for (int tR = 1; tR <= t; tR++) {
 														objlist.add((double) 0);
-	//													vnamelist.add("xEAe'(" + s1 + "," + s2 + "," + s3 + "," + s4 + "," + s5 + "," + s6 + ")(" + t + ")(" + c + ")");
-														vnamelist.add("xEAe'_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6) + "," + t + "," + layer5.get(c) + "," + tR );
+	//													vnamelist.add("xEAe(" + s1 + "," + s2 + "," + s3 + "," + s4 + "," + s5 + "," + s6 + ")(" + t + ")(" + c + ")");
+														vnamelist.add("xEAe_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6) + "," + t + "," + layer5.get(c) + "," + tR );
 														vlblist.add((double) 0);
 														vublist.add(Double.MAX_VALUE);
 														vtlist.add(IloNumVarType.Float);
-														xEAeCut[s1][s2][s3][s4][s5][s6][t][c][tR] = nvars;
+														xEAe[s1][s2][s3][s4][s5][s6][t][c][tR] = nvars;
 														nvars++;
 													}
 												}
@@ -779,7 +747,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			}
 			nV = nvars;				
 			
-			// Create decision variables xEAr(s1,s2,s3,s4,s5)(t)(a)
+			// Create decision variables xNGr(s1,s2,s3,s4,s5)(t)(a)
 			for (int s1 = 0; s1 < layer1.size(); s1++) {
 				for (int s2 = 0; s2 < layer2.size(); s2++) {
 					for (int s3 = 0; s3 < layer3.size(); s3++) {
@@ -790,12 +758,12 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									for (int t = 2; t <= total_Periods; t++) {
 										for (int a = 1; a <= t-1; a++) {
 											objlist.add((double) 0);
-//											vnamelist.add("xEAr(" + s1 + "," + s2 + "," + s3 + "," + s4 + "," + s5 + ")(" + t + ")(" + a + ")");
-											vnamelist.add("xEAr_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + t + "," + a);							
+//											vnamelist.add("xNGr(" + s1 + "," + s2 + "," + s3 + "," + s4 + "," + s5 + ")(" + t + ")(" + a + ")");
+											vnamelist.add("xNGr_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + t + "," + a);							
 											vlblist.add((double) 0);
 											vublist.add(Double.MAX_VALUE);
 											vtlist.add(IloNumVarType.Float);
-											xEAr[s1][s2][s3][s4][s5][t][a] = nvars;
+											xNGr[s1][s2][s3][s4][s5][t][a] = nvars;
 											nvars++;
 										}
 									}
@@ -807,7 +775,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			}
 			nV = nvars;
 			
-			// Create decision variables xEAr'(s1,s2,s3,s4,s5)(t)(a)(c)(tR)
+			// Create decision variables xEAr(s1,s2,s3,s4,s5)(t)(a)(c)(tR)
 			for (int s1 = 0; s1 < layer1.size(); s1++) {
 				for (int s2 = 0; s2 < layer2.size(); s2++) {
 					for (int s3 = 0; s3 < layer3.size(); s3++) {
@@ -822,12 +790,12 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 												if (covertype_conversions_and_regeneration_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
 													for (int tR = t-a+1; tR <= t; tR++) {
 														objlist.add((double) 0);
-	//													vnamelist.add("xEAr'(" + s1 + "," + s2 + "," + s3 + "," + s4 + "," + s5 + ")(" + t + ")(" + a + ")(" + c + ")");
-														vnamelist.add("xEAr'_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + t + "," + a + "," + layer5.get(c) + "," + tR);	
+	//													vnamelist.add("xEAr(" + s1 + "," + s2 + "," + s3 + "," + s4 + "," + s5 + ")(" + t + ")(" + a + ")(" + c + ")");
+														vnamelist.add("xEAr_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + t + "," + a + "," + layer5.get(c) + "," + tR);	
 														vlblist.add((double) 0);
 														vublist.add(Double.MAX_VALUE);
 														vtlist.add(IloNumVarType.Float);
-														xEArCut[s1][s2][s3][s4][s5][t][a][c][tR] = nvars;
+														xEAr[s1][s2][s3][s4][s5][t][a][c][tR] = nvars;
 														nvars++;
 													}
 												}
@@ -1253,8 +1221,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										c7_indexlist.get(c7_num).add(x[s1][s2][s3][s4][s5][s6][0]);
 										c7_valuelist.get(c7_num).add((double) 1);
 										
-										//Add -xNG(s1,s2,s3,s4,s5,s6)(1)
-										c7_indexlist.get(c7_num).add(xNG[s1][s2][s3][s4][s5][s6][1]);
+										//Add -xNGe(s1,s2,s3,s4,s5,s6)(1)
+										c7_indexlist.get(c7_num).add(xNGe[s1][s2][s3][s4][s5][s6][1]);
 										c7_valuelist.get(c7_num).add((double) -1);
 								
 										//add bounds
@@ -1284,15 +1252,15 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 											c7_indexlist.add(new ArrayList<Integer>());
 											c7_valuelist.add(new ArrayList<Double>());
 											
-											//Add xNG(s1,s2,s3,s4,s5,s6)(t)
+											//Add xNGe(s1,s2,s3,s4,s5,s6)(t)
 											SRDage = StartingAge[s1][s2][s3][s4][s5][s6] + t - 1; 
 											if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
 											
-											c7_indexlist.get(c7_num).add(xNG[s1][s2][s3][s4][s5][s6][t]);
+											c7_indexlist.get(c7_num).add(xNGe[s1][s2][s3][s4][s5][s6][t]);
 											c7_valuelist.get(c7_num).add((double) 1 - SRD_percent[s5][SRDage] / 100);	//SR Fire loss Rate = P(s5,a)/100
 									
-											// Add -xNG(s1,s2,s3,s4,s5,s6)(t+1)
-											c7_indexlist.get(c7_num).add(xNG[s1][s2][s3][s4][s5][s6][t + 1]);
+											// Add -xNGe(s1,s2,s3,s4,s5,s6)(t+1)
+											c7_indexlist.get(c7_num).add(xNGe[s1][s2][s3][s4][s5][s6][t + 1]);
 											c7_valuelist.get(c7_num).add((double) -1);											
 																					
 											//add bounds
@@ -1349,9 +1317,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										c8_indexlist.get(c8_num).add(x[s1][s2][s3][s4][s5][s6][1]);
 										c8_valuelist.get(c8_num).add((double) 1);
 										
-										//Add - sigma(i) xPB(s1,s2,s3,s4,s5,s6)[i][1]
+										//Add - sigma(i) xPBe(s1,s2,s3,s4,s5,s6)[i][1]
 										for (int i = 0; i < total_PB_Prescriptions; i++) {
-											c8_indexlist.get(c8_num).add(xPB[s1][s2][s3][s4][s5][s6][i][1]);
+											c8_indexlist.get(c8_num).add(xPBe[s1][s2][s3][s4][s5][s6][i][1]);
 											c8_valuelist.get(c8_num).add((double) -1);
 										}
 										
@@ -1383,15 +1351,15 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 												c8_indexlist.add(new ArrayList<Integer>());
 												c8_valuelist.add(new ArrayList<Double>());
 												
-												//Add xPB(s1,s2,s3,s4,s5,s6)[i][t]
+												//Add xPBe(s1,s2,s3,s4,s5,s6)[i][t]
 												SRDage = StartingAge[s1][s2][s3][s4][s5][s6] + t - 1; 
 												if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
 												
-												c8_indexlist.get(c8_num).add(xPB[s1][s2][s3][s4][s5][s6][i][t]);
+												c8_indexlist.get(c8_num).add(xPBe[s1][s2][s3][s4][s5][s6][i][t]);
 												c8_valuelist.get(c8_num).add((double) 1 - SRD_percent[s5][SRDage] / 100);		//SR Fire loss Rate = P(s5,a)/100
 												
-												//Add -xPB(s1,s2,s3,s4,s5,s6)[i][t+1]
-												c8_indexlist.get(c8_num).add(xPB[s1][s2][s3][s4][s5][s6][i][t + 1]);
+												//Add -xPBe(s1,s2,s3,s4,s5,s6)[i][t+1]
+												c8_indexlist.get(c8_num).add(xPBe[s1][s2][s3][s4][s5][s6][i][t + 1]);
 												c8_valuelist.get(c8_num).add((double) -1);
 												
 												//add bounds
@@ -1449,9 +1417,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										c9_indexlist.get(c9_num).add(x[s1][s2][s3][s4][s5][s6][2]);
 										c9_valuelist.get(c9_num).add((double) 1);							
 										
-										//Add -xGS(s1,s2,s3,s4,s5,s6)[i][1]
+										//Add -xGSe(s1,s2,s3,s4,s5,s6)[i][1]
 										for (int i = 0; i < total_GS_Prescriptions; i++) {
-											c9_indexlist.get(c9_num).add(xGS[s1][s2][s3][s4][s5][s6][i][1]);
+											c9_indexlist.get(c9_num).add(xGSe[s1][s2][s3][s4][s5][s6][i][1]);
 											c9_valuelist.get(c9_num).add((double) -1);
 										}
 										
@@ -1482,15 +1450,15 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 												c9_indexlist.add(new ArrayList<Integer>());
 												c9_valuelist.add(new ArrayList<Double>());
 												
-												//Add xGS(s1,s2,s3,s4,s5,s6)[i][t]
+												//Add xGSe(s1,s2,s3,s4,s5,s6)[i][t]
 												SRDage = StartingAge[s1][s2][s3][s4][s5][s6] + t - 1; 
 												if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
 									
-												c9_indexlist.get(c9_num).add(xGS[s1][s2][s3][s4][s5][s6][i][t]);
+												c9_indexlist.get(c9_num).add(xGSe[s1][s2][s3][s4][s5][s6][i][t]);
 												c9_valuelist.get(c9_num).add((double) 1 - SRD_percent[s5][SRDage] / 100);		//SR Fire loss Rate = P(s5,a)/100
 												
-												//Add -xGS(s1,s2,s3,s4,s5,s6)[i][t+1]
-												c9_indexlist.get(c9_num).add(xGS[s1][s2][s3][s4][s5][s6][i][t + 1]);
+												//Add -xGSe(s1,s2,s3,s4,s5,s6)[i][t+1]
+												c9_indexlist.get(c9_num).add(xGSe[s1][s2][s3][s4][s5][s6][i][t + 1]);
 												c9_valuelist.get(c9_num).add((double) -1);												
 												
 												//add bounds
@@ -1545,18 +1513,14 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										//Add x(s1,s2,s3,s4,s5,s6)[3]
 										c10_indexlist.get(c10_num).add(x[s1][s2][s3][s4][s5][s6][3]);
 										c10_valuelist.get(c10_num).add((double) 1);							
-									
-										//Add - xEAe(s1,s2,s3,s4,s5,s6)[1]	
-										c10_indexlist.get(c10_num).add(xEAe[s1][s2][s3][s4][s5][s6][1]);
-										c10_valuelist.get(c10_num).add((double) -1);
 										
-										//Add - sigma(t,c) xEAe'(s1,s2,s3,s4,s5,s6)[t][c][1]	
-										for (int t = 1; t <= total_Periods; t++) {
-											for (int c = 0; c < layer5.size(); c++) {
-												int processingAge = t + StartingAge[s1][s2][s3][s4][s5][s6] - 1;
-												String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(c) + " " + processingAge;						
+										//Add - sigma(tR,s5R) xEAe(s1,s2,s3,s4,s5,s6)[tR][s5R][1]	
+										for (int tR = 1; tR <= total_Periods; tR++) {
+											for (int s5R = 0; s5R < layer5.size(); s5R++) {
+												int rotationAge = tR + StartingAge[s1][s2][s3][s4][s5][s6] - 1;
+												String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(s5R) + " " + rotationAge;						
 												if (covertype_conversions_and_existing_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
-													c10_indexlist.get(c10_num).add(xEAeCut[s1][s2][s3][s4][s5][s6][t][c][1]);
+													c10_indexlist.get(c10_num).add(xEAe[s1][s2][s3][s4][s5][s6][tR][s5R][1]);
 													c10_valuelist.get(c10_num).add((double) -1);
 												}
 											}	
@@ -1594,45 +1558,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			List<List<Double>> c11_valuelist = new ArrayList<List<Double>>();
 			List<Double> c11_lblist = new ArrayList<Double>();	
 			List<Double> c11_ublist = new ArrayList<Double>();
-			int c11_num = 0;
-			
-			//11a
-			for (int s1 = 0; s1 < layer1.size(); s1++) {
-				for (int s2 = 0; s2 < layer2.size(); s2++) {
-					for (int s3 = 0; s3 < layer3.size(); s3++) {
-						for (int s4 = 0; s4 < layer4.size(); s4++) {
-							for (int s5 = 0; s5 < layer5.size(); s5++) {
-								for (int s6 = 0; s6 < layer6.size(); s6++) {
-									String strataName = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4) + layer5.get(s5) + layer6.get(s6);
-									if (modeled_strata.contains(strataName)) {		
-										for (int t = 1; t <= total_Periods-1; t++) {
-											//Add constraint
-											c11_indexlist.add(new ArrayList<Integer>());
-											c11_valuelist.add(new ArrayList<Double>());
-											
-											//Add xEAe(s1,s2,s3,s4,s5,s6)[t]
-											SRDage = StartingAge[s1][s2][s3][s4][s5][s6] + t - 1; 
-											if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
-								
-											c11_indexlist.get(c11_num).add(xEAe[s1][s2][s3][s4][s5][s6][t]);
-											c11_valuelist.get(c11_num).add((double) 1 - SRD_percent[s5][SRDage] / 100);		//SR Fire loss Rate = P(s5,a)/100											
-											
-											//Add - xEAe(s1,s2,s3,s4,s5,s6)[t+1]		
-											c11_indexlist.get(c11_num).add(xEAe[s1][s2][s3][s4][s5][s6][t + 1]);
-											c11_valuelist.get(c11_num).add((double) -1);																					
-											
-											//add bounds
-											c11_lblist.add((double) 0);
-											c11_ublist.add((double) 0);
-											c11_num++;
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}							
+			int c11_num = 0;									
 			
 			//11b
 			for (int s1 = 0; s1 < layer1.size(); s1++) {
@@ -1643,25 +1569,25 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								for (int s6 = 0; s6 < layer6.size(); s6++) {
 									String strataName = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4) + layer5.get(s5) + layer6.get(s6);
 									if (modeled_strata.contains(strataName)) {		
-										for (int t = 1; t <= total_Periods; t++) {										
-											for (int c = 0; c < layer5.size(); c++) {
-												int processingAge = t + StartingAge[s1][s2][s3][s4][s5][s6] - 1;
-												String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(c) + " " + processingAge;					
+										for (int tR = 1; tR <= total_Periods; tR++) {										
+											for (int s5R = 0; s5R < layer5.size(); s5R++) {
+												int rotationAge = tR + StartingAge[s1][s2][s3][s4][s5][s6] - 1;
+												String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(s5R) + " " + rotationAge;					
 												if (covertype_conversions_and_existing_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
-													for (int tR = 1; tR <= t-1; tR++) {
+													for (int t = 1; t <= tR-1; t++) {
 														//Add constraint
 														c11_indexlist.add(new ArrayList<Integer>());
 														c11_valuelist.add(new ArrayList<Double>());
 														
-														//Add xEAe'(s1,s2,s3,s4,s5,s6)[t][c][tR]
-														SRDage = StartingAge[s1][s2][s3][s4][s5][s6] + tR - 1; 
+														//Add xEAe(s1,s2,s3,s4,s5,s6)[tR][s5R][t]
+														SRDage = StartingAge[s1][s2][s3][s4][s5][s6] + t - 1; 
 														if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
 												
-														c11_indexlist.get(c11_num).add(xEAeCut[s1][s2][s3][s4][s5][s6][t][c][tR]);
+														c11_indexlist.get(c11_num).add(xEAe[s1][s2][s3][s4][s5][s6][tR][s5R][t]);
 														c11_valuelist.get(c11_num).add((double) 1 - SRD_percent[s5][SRDage] / 100);		//SR Fire loss Rate = P(s5,a)/100																											
 														
-														//Add - xEAe'(s1,s2,s3,s4,s5,s6)[t][c][tR+1]		
-														c11_indexlist.get(c11_num).add(xEAeCut[s1][s2][s3][s4][s5][s6][t][c][tR + 1]);
+														//Add - xEAe(s1,s2,s3,s4,s5,s6)[tR][s5R][t+1]		
+														c11_indexlist.get(c11_num).add(xEAe[s1][s2][s3][s4][s5][s6][tR][s5R][t + 1]);
 														c11_valuelist.get(c11_num).add((double) -1);																					
 														
 														//add bounds
@@ -1678,36 +1604,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						}
 					}
 				}
-			}	
-			
-			//11c
-			for (int s1 = 0; s1 < layer1.size(); s1++) {
-				for (int s2 = 0; s2 < layer2.size(); s2++) {
-					for (int s3 = 0; s3 < layer3.size(); s3++) {
-						for (int s4 = 0; s4 < layer4.size(); s4++) {
-							for (int s5 = 0; s5 < layer5.size(); s5++) {
-								for (int s6 = 0; s6 < layer6.size(); s6++) {
-									String strataName = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4) + layer5.get(s5) + layer6.get(s6);
-									if (modeled_strata.contains(strataName)) {		
-										//Add constraint
-										c11_indexlist.add(new ArrayList<Integer>());
-										c11_valuelist.add(new ArrayList<Double>());
-
-										//Add xEAe(s1,s2,s3,s4,s5,s6)[T]	
-										c11_indexlist.get(c11_num).add(xEAe[s1][s2][s3][s4][s5][s6][total_Periods]);
-										c11_valuelist.get(c11_num).add((double) 1);
-																									
-										//add bounds
-										c11_lblist.add((double) 0);
-										c11_ublist.add((double) 0);
-										c11_num++;
-									}
-								}
-							}
-						}
-					}
-				}
-			}	
+			}				
 			
 			
 			double[] c11_lb = Stream.of(c11_lblist.toArray(new Double[c11_lblist.size()])).mapToDouble(Double::doubleValue).toArray();
@@ -1752,19 +1649,19 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										}
 										
 										
-										//Add - sigma(s6)	xNG[s1][s2][s3][s4][s5][s6][t]
+										//Add - sigma(s6)	xNGe[s1][s2][s3][s4][s5][s6][t]
 										for (int s6 = 0; s6 < layer6.size(); s6++) {
 											String strataName2 = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4) + layer5.get(s5) + layer6.get(s6);					
 											if (modeled_strata.contains(strataName2)) {
 												SRDage = StartingAge[s1][s2][s3][s4][s5][s6] + t - 1; 
 												if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
 										
-												c12_indexlist.get(c12_num).add(xNG[s1][s2][s3][s4][s5][s6][t]);
+												c12_indexlist.get(c12_num).add(xNGe[s1][s2][s3][s4][s5][s6][t]);
 												c12_valuelist.get(c12_num).add((double) - SRD_percent[s5][SRDage] / 100);		//SR Fire loss Rate = P(s5,a)/100	
 											}
 										}
 										
-										//Add - sigma(s6)(i)	xPB[s1][s2][s3][s4][s5][s6][i][t]
+										//Add - sigma(s6)(i)	xPBe[s1][s2][s3][s4][s5][s6][i][t]
 										for (int s6 = 0; s6 < layer6.size(); s6++) {
 											for (int i = 0; i < total_PB_Prescriptions; i++) {
 												String strataName2 = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4) + layer5.get(s5) + layer6.get(s6);					
@@ -1772,13 +1669,13 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 													SRDage = StartingAge[s1][s2][s3][s4][s5][s6] + t - 1; 
 													if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
 											
-													c12_indexlist.get(c12_num).add(xPB[s1][s2][s3][s4][s5][s6][i][t]);
+													c12_indexlist.get(c12_num).add(xPBe[s1][s2][s3][s4][s5][s6][i][t]);
 													c12_valuelist.get(c12_num).add((double) - SRD_percent[s5][SRDage] / 100);		//SR Fire loss Rate = P(s5,a)/100	
 												}
 											}
 										}
 																
-										//Add - sigma(s6)(i)	xGS[s1][s2][s3][s4][s5][s6][i][t]
+										//Add - sigma(s6)(i)	xGSe[s1][s2][s3][s4][s5][s6][i][t]
 										for (int s6 = 0; s6 < layer6.size(); s6++) {
 											for (int i = 0; i < total_GS_Prescriptions; i++) {
 												String strataName2 = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4) + layer5.get(s5) + layer6.get(s6);					
@@ -1786,87 +1683,68 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 													SRDage = StartingAge[s1][s2][s3][s4][s5][s6] + t - 1; 
 													if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
 											
-													c12_indexlist.get(c12_num).add(xGS[s1][s2][s3][s4][s5][s6][i][t]);
+													c12_indexlist.get(c12_num).add(xGSe[s1][s2][s3][s4][s5][s6][i][t]);
 													c12_valuelist.get(c12_num).add((double) - SRD_percent[s5][SRDage] / 100);		//SR Fire loss Rate = P(s5,a)/100	
 												}
 											}
 										}
-																			
-										//Add - sigma(s6)	xEAe[s1][s2][s3][s4][s5][s6][t]
-										for (int s6 = 0; s6 < layer6.size(); s6++) {
-											String strataName2 = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4) + layer5.get(s5) + layer6.get(s6);					
-											if (modeled_strata.contains(strataName2)) {
-												SRDage = StartingAge[s1][s2][s3][s4][s5][s6] + t - 1; 
-												if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
-										
-												c12_indexlist.get(c12_num).add(xEAe[s1][s2][s3][s4][s5][s6][t]);
-												c12_valuelist.get(c12_num).add((double) - SRD_percent[s5][SRDage] / 100);		//SR Fire loss Rate = P(s5,a)/100	
-											}
-										}						
+																								
 							
-										// Add - sigma(s6)(t'')(c'')   xEAe'(s1,s2,s3,s4,s5,s6)(t'')(c'')(tR)
+										// Add - sigma(s6)(tR)(s5R)   xEAe(s1,s2,s3,s4,s5,s6)(tR)(s5R)(t)
 										for (int s6 = 0; s6 < layer6.size(); s6++) {
 											String strataName2 = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4) + layer5.get(s5) + layer6.get(s6);					
 											if (modeled_strata.contains(strataName2)) {
-												for (int ttt = t; ttt <= total_Periods; ttt++) {		// t''
-													for (int ccc = 0; ccc < layer5.size(); ccc++) {		//c''
-														int processingAge = ttt + StartingAge[s1][s2][s3][s4][s5][s6] - 1;
-														String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(ccc) + " " + processingAge;								
+												for (int tR = t + 1; tR <= total_Periods; tR++) {		// tR
+													for (int s5R = 0; s5R < layer5.size(); s5R++) {		//s5R
+														int rotationAge = tR + StartingAge[s1][s2][s3][s4][s5][s6] - 1;
+														String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(s5R) + " " + rotationAge;								
 														if (covertype_conversions_and_existing_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
-															for (int tR = 1; tR <= ttt; tR++) {					
-																if (tR == t) {
-																	SRDage = StartingAge[s1][s2][s3][s4][s5][s6] + tR - 1; 
-																	if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
-															
-																	c12_indexlist.get(c12_num).add(xEAeCut[s1][s2][s3][s4][s5][s6][ttt][ccc][tR]);
-																	c12_valuelist.get(c12_num).add((double) - SRD_percent[s5][SRDage] / 100);		//SR Fire loss Rate = P(s5,a)/100	
-																}						
-															}
+															SRDage = StartingAge[s1][s2][s3][s4][s5][s6] + t - 1; 
+															if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
+													
+															c12_indexlist.get(c12_num).add(xEAe[s1][s2][s3][s4][s5][s6][tR][s5R][t]);
+															c12_valuelist.get(c12_num).add((double) - SRD_percent[s5][SRDage] / 100);		//SR Fire loss Rate = P(s5,a)/100			
 														}
 													}
 												}
 											}
 										}					
 										
-										//Add - sigma(a)	xEAr[s1][s2][s3][s4][s5][t][a]
+										//Add - sigma(a)	xNGr[s1][s2][s3][s4][s5][t][a]
 										if (t >= 2) {
 											for (int a = 1; a <= t - 1; a++) {
 												SRDage = a; 
 												if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %									
 												
-												c12_indexlist.get(c12_num).add(xEAr[s1][s2][s3][s4][s5][t][a]);
+												c12_indexlist.get(c12_num).add(xNGr[s1][s2][s3][s4][s5][t][a]);
 												c12_valuelist.get(c12_num).add((double) - SRD_percent[s5][SRDage] / 100);		//SR Fire loss Rate = P(s5,a)/100	
 											}
 										}
 
-										//Add - sigma(t'')(a)(c'')	xEAr'[s1][s2][s3][s4][s5][t''][a][c''][tR=t]
+										//Add - sigma(tR)(a)(s5R)	xEAr[s1][s2][s3][s4][s5][tR][a][s5R][t]
 										if (t >= 2) {
-											for (int ttt = t; ttt <= total_Periods; ttt++) { // t''
-												for (int a = 1; a <= ttt - 1; a++) {
-													for (int ccc = 0; ccc < layer5.size(); ccc++) {		//c''
-														String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(ccc) + " " + a;						
-														if (covertype_conversions_and_regeneration_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
-															for (int tR = 1; tR <= ttt; tR++) {					
-																if (tR == t && tR==ttt-a+1) {
-																	SRDage = a - ttt + tR; 
-																	if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %																									
-																	
-																	c12_indexlist.get(c12_num).add(xEArCut[s1][s2][s3][s4][s5][ttt][a][ccc][tR]);
-																	c12_valuelist.get(c12_num).add((double) - SRD_percent[s5][SRDage] / 100);		//SR Fire loss Rate = P(s5,a)/100																				
-																}
+											for (int tR = t + 1; tR <= total_Periods; tR++) { // tR
+												for (int a = 1; a <= tR - 1; a++) {
+													for (int s5R = 0; s5R < layer5.size(); s5R++) {		// s5R
+														String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(s5R) + " " + a;						
+														if (covertype_conversions_and_regeneration_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {				
+															SRDage = a - tR + t;
+															if (SRDage > 0) {
+																if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %	
+																c12_indexlist.get(c12_num).add(xEAr[s1][s2][s3][s4][s5][tR][a][s5R][t]);
+																c12_valuelist.get(c12_num).add((double) - SRD_percent[s5][SRDage] / 100);		//SR Fire loss Rate = P(s5,a)/100
 															}
 														}
 													}
 												}
 											}
 										}															
-										
-																											
+																															
 
 										// add bounds
 										c12_lblist.add((double) 0);
 										c12_ublist.add((double) 0);
-										c12_num++;						
+										c12_num++;
 									}
 								}
 							}
@@ -1953,52 +1831,49 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										//FIRE VARIABLES
 										//Add sigma(s5) fire(s1,s2,s3,s4,s5)[t][c]
 										for (int s5 = 0; s5 < layer5.size(); s5++) {
-											String thisCoverTypeconversion = layer5.get(s5) + " " + layer5.get(c);						
-											if (covertype_conversions.contains(thisCoverTypeconversion)) {
-												c13_indexlist.get(c13_num).add(fire[s1][s2][s3][s4][s5][t][c]);
-												c13_valuelist.get(c13_num).add((double) 1);
-											}
+											c13_indexlist.get(c13_num).add(fire[s1][s2][s3][s4][s5][t][c]);
+											c13_valuelist.get(c13_num).add((double) 1);
 										}
 										
 			
 										//NON-FIRE VARIABLES
-										//Add sigma(s5)(s6) xEAe'(s1,s2,s3,s4,s5,s6)[t][c][t]
+										//Add sigma(s5)(s6) xEAe(s1,s2,s3,s4,s5,s6)[t][c][t]
 										for (int s5 = 0; s5 < layer5.size(); s5++) {
 											for (int s6 = 0; s6 < layer6.size(); s6++) {
 												String strataName = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4) + layer5.get(s5) + layer6.get(s6);
-												int processingAge = t + StartingAge[s1][s2][s3][s4][s5][s6] - 1;
-												String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(c) + " " + processingAge;						
+												int rotationAge = t + StartingAge[s1][s2][s3][s4][s5][s6] - 1;
+												String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(c) + " " + rotationAge;						
 												if (modeled_strata.contains(strataName) && covertype_conversions_and_existing_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
-													c13_indexlist.get(c13_num).add(xEAeCut[s1][s2][s3][s4][s5][s6][t][c][t]);
+													c13_indexlist.get(c13_num).add(xEAe[s1][s2][s3][s4][s5][s6][t][c][t]);
 													c13_valuelist.get(c13_num).add((double) 1);
 												}
 											}
 										}
 										
-										//Add sigma(s5)(a) xEAr'(s1,s2,s3,s4,s5)[t][a][c][tR=t] only if period t>=2
+										//Add sigma(s5)(a) xEAr(s1,s2,s3,s4,s5)[t][a][c][t] only if period t>=2
 										if (t >= 2) {
 											for (int s5 = 0; s5 < layer5.size(); s5++) {
 												for (int a = 1; a <= t - 1; a++) {
 													String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(c) + " " + a;						
 													if (covertype_conversions_and_regeneration_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
-														c13_indexlist.get(c13_num).add(xEArCut[s1][s2][s3][s4][s5][t][a][c][t]);
+														c13_indexlist.get(c13_num).add(xEAr[s1][s2][s3][s4][s5][t][a][c][t]);
 														c13_valuelist.get(c13_num).add((double) 1);
 													}
 												}
 											}
 										}
 								
-										//Add -xEAr(s1,s2,s3,s4,s5=c)[t+1][1]
-										c13_indexlist.get(c13_num).add(xEAr[s1][s2][s3][s4][c][t + 1][1]);
+										//Add -xNGr(s1,s2,s3,s4,s5=c)[t+1][1]
+										c13_indexlist.get(c13_num).add(xNGr[s1][s2][s3][s4][c][t + 1][1]);
 										c13_valuelist.get(c13_num).add((double) -1);
 																			
-										//Add -sigma(t' c') xEAr'(s1,s2,s3,s4,s5=c)[t'][a'=t'-t][c'][tR=t+1]
-										for (int tt = t+1; tt <= total_Periods; tt++) {
-											for (int cc = 0; cc < layer5.size(); cc++) {
-												int processingAge = tt - t;	
-												String thisCoverTypeconversion_and_RotationAge = layer5.get(c) + " " + layer5.get(cc) + " " + processingAge;						
+										//Add -sigma(t' c') xEAr(s1,s2,s3,s4,s5=c)[tR][a'=tR-t][s5R][t+1]
+										for (int tR = t+1; tR <= total_Periods; tR++) {
+											for (int s5R = 0; s5R < layer5.size(); s5R++) {
+												int rotationAge = tR - t;	
+												String thisCoverTypeconversion_and_RotationAge = layer5.get(c) + " " + layer5.get(s5R) + " " + rotationAge;						
 												if (covertype_conversions_and_regeneration_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
-													c13_indexlist.get(c13_num).add(xEArCut[s1][s2][s3][s4][c][tt][tt - t][cc][t + 1]);
+													c13_indexlist.get(c13_num).add(xEAr[s1][s2][s3][s4][c][tR][tR - t][s5R][t + 1]);
 													c13_valuelist.get(c13_num).add((double) -1);
 												}
 											}
@@ -2053,15 +1928,15 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 											c14_indexlist.add(new ArrayList<Integer>());
 											c14_valuelist.add(new ArrayList<Double>());
 											
-											//Add xEAr(s1,s2,s3,s4,s5)[t][a]
+											//Add xNGr(s1,s2,s3,s4,s5)[t][a]
 											SRDage = a; 
 											if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %									
 											
-											c14_indexlist.get(c14_num).add(xEAr[s1][s2][s3][s4][s5][t][a]);
+											c14_indexlist.get(c14_num).add(xNGr[s1][s2][s3][s4][s5][t][a]);
 											c14_valuelist.get(c14_num).add((double) 1 - SRD_percent[s5][SRDage] / 100);		//SR Fire loss Rate = P(s5,a)/100
 											
-											//Add - xEAr(s1,s2,s3,s4,s5)[t+1][a+1]
-											c14_indexlist.get(c14_num).add(xEAr[s1][s2][s3][s4][s5][t + 1][a + 1]);
+											//Add - xNGr(s1,s2,s3,s4,s5)[t+1][a+1]
+											c14_indexlist.get(c14_num).add(xNGr[s1][s2][s3][s4][s5][t + 1][a + 1]);
 											c14_valuelist.get(c14_num).add((double) -1);										
 											
 											//add bounds
@@ -2085,25 +1960,25 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 							String strataName = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4);
 							if (modeled_strata_withoutSizeClassandCoverType.contains(strataName)) {		
 								for (int s5 = 0; s5 < layer5.size(); s5++) {
-									for (int t = 2; t <= total_Periods; t++) {
-										for (int a = 1; a <= t-1; a++) {									
-											for (int c = 0; c < layer5.size(); c++) {
-												String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(c) + " " + a;						
+									for (int tR = 2; tR <= total_Periods; tR++) {
+										for (int a = 1; a <= tR-1; a++) {									
+											for (int s5R = 0; s5R < layer5.size(); s5R++) {
+												String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(s5R) + " " + a;						
 												if (covertype_conversions_and_regeneration_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
-													for (int tR = t-a+1; tR <= t-1; tR++) {
+													for (int t = tR - a + 1; t <= tR - 1; t++) {
 														//Add constraint
 														c14_indexlist.add(new ArrayList<Integer>());
 														c14_valuelist.add(new ArrayList<Double>());
 														
-														//Add xEAr'(s1,s2,s3,s4,s5)[t][a][c][tR]
-														SRDage = a - t + tR; 
+														//Add xEAr(s1,s2,s3,s4,s5)[tR][a][s5R][t]
+														SRDage = a - tR + t; 
 														if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %									
 														
-														c14_indexlist.get(c14_num).add(xEArCut[s1][s2][s3][s4][s5][t][a][c][tR]);
+														c14_indexlist.get(c14_num).add(xEAr[s1][s2][s3][s4][s5][tR][a][s5R][t]);
 														c14_valuelist.get(c14_num).add((double) 1 - SRD_percent[s5][SRDage] / 100);		//SR Fire loss Rate = P(s5,a)/100													
 												
-														//Add - xEAr'(s1,s2,s3,s4,s5,s6)[t][a][c][tR+1]		
-														c14_indexlist.get(c14_num).add(xEArCut[s1][s2][s3][s4][s5][t][a][c][tR + 1]);
+														//Add - xEAr(s1,s2,s3,s4,s5,s6)[tR][a][s5R][t+1]		
+														c14_indexlist.get(c14_num).add(xEAr[s1][s2][s3][s4][s5][tR][a][s5R][t + 1]);
 														c14_valuelist.get(c14_num).add((double) -1);																					
 														
 														//add bounds
@@ -2202,8 +2077,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				multiplier = (!BC_value[i][multiplier_col].equals("null")) ?  Double.parseDouble(BC_value[i][multiplier_col]) : 0;	//if multiplier = null --> 0
 				
 				
-				//Add xNG and xEAe				currently using Eq. 11 so we don't need to add xEAe, only add xNG
-				if (static_SilvivulturalMethods.contains("NG")) {	
+				//Add xNGe
+				if (static_SilvivulturalMethods.contains("NGe")) {	
 					for (int s1 = 0; s1 < layer1.size(); s1++) {
 						for (int s2 = 0; s2 < layer2.size(); s2++) {
 							for (int s3 = 0; s3 < layer3.size(); s3++) {
@@ -2232,7 +2107,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 															current_var_static_condition.add(layers_Title.get(3) + layer4.get(s4));		// layer + element
 															current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
 																							
-															para_value = Get_Parameter_Information.get_total_value(vname[xNG[s1][s2][s3][s4][s5][s6][t]], 
+															para_value = Get_Parameter_Information.get_total_value(vname[xNGe[s1][s2][s3][s4][s5][s6][t]], 
 																	yieldTable_Name, yieldTable_values, parameters_indexes_list,
 																	all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers,
 																	action_type_list, baseCost_acres, baseCost_yieldtables,
@@ -2240,8 +2115,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																	current_var_static_condition);
 															para_value = para_value * currentDiscountValue * multiplier;
 
-															//Add xNG(s1,s2,s3,s4,s5,s6)(t)
-															c15_indexlist.get(c15_num).add(xNG[s1][s2][s3][s4][s5][s6][t]);
+															//Add xNGe(s1,s2,s3,s4,s5,s6)(t)
+															c15_indexlist.get(c15_num).add(xNGe[s1][s2][s3][s4][s5][s6][t]);
 															c15_valuelist.get(c15_num).add((double) para_value);
 														}
 													}
@@ -2256,8 +2131,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				}	
 
 						
-				//Add xPB[s1][s2][s3][s4][s5][s6][ii]			
-				if (static_SilvivulturalMethods.contains("PB")) {		
+				//Add xPBe[s1][s2][s3][s4][s5][s6][ii]			
+				if (static_SilvivulturalMethods.contains("PBe")) {		
 					for (int s1 = 0; s1 < layer1.size(); s1++) {
 						for (int s2 = 0; s2 < layer2.size(); s2++) {
 							for (int s3 = 0; s3 < layer3.size(); s3++) {
@@ -2282,7 +2157,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																current_var_static_condition.add(layers_Title.get(3) + layer4.get(s4));		// layer + element
 																current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
 																				
-																para_value = Get_Parameter_Information.get_total_value(vname[xPB[s1][s2][s3][s4][s5][s6][ii][t]], 
+																para_value = Get_Parameter_Information.get_total_value(vname[xPBe[s1][s2][s3][s4][s5][s6][ii][t]], 
 																		yieldTable_Name, yieldTable_values, parameters_indexes_list,
 																		all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers,
 																		action_type_list, baseCost_acres, baseCost_yieldtables, 
@@ -2290,8 +2165,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																		current_var_static_condition);
 																para_value = para_value * currentDiscountValue * multiplier;
 																
-																//Add xPB[s1][s2][s3][s4][s5][s6][ii][t]
-																c15_indexlist.get(c15_num).add(xPB[s1][s2][s3][s4][s5][s6][ii][t]);
+																//Add xPBe[s1][s2][s3][s4][s5][s6][ii][t]
+																c15_indexlist.get(c15_num).add(xPBe[s1][s2][s3][s4][s5][s6][ii][t]);
 																c15_valuelist.get(c15_num).add((double) para_value);	
 															}
 														}
@@ -2308,7 +2183,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								
 				
 				//Add xMS[s1][s2][s3][s4][s5][s6][ii]			
-				if (static_SilvivulturalMethods.contains("MS")) {		
+				if (static_SilvivulturalMethods.contains("MSe")) {		
 					for (int s1 = 0; s1 < layer1.size(); s1++) {
 						for (int s2 = 0; s2 < layer2.size(); s2++) {
 							for (int s3 = 0; s3 < layer3.size(); s3++) {
@@ -2358,8 +2233,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				}					
 							
 				
-				//Add xGS[s1][s2][s3][s4][s5][s6][ii]			
-				if (static_SilvivulturalMethods.contains("GS")) {		
+				//Add xGSe[s1][s2][s3][s4][s5][s6][ii]			
+				if (static_SilvivulturalMethods.contains("GSe")) {		
 					for (int s1 = 0; s1 < layer1.size(); s1++) {
 						for (int s2 = 0; s2 < layer2.size(); s2++) {
 							for (int s3 = 0; s3 < layer3.size(); s3++) {
@@ -2384,7 +2259,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																current_var_static_condition.add(layers_Title.get(3) + layer4.get(s4));		// layer + element
 																current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
 																		
-																para_value = Get_Parameter_Information.get_total_value(vname[xGS[s1][s2][s3][s4][s5][s6][ii][t]], 
+																para_value = Get_Parameter_Information.get_total_value(vname[xGSe[s1][s2][s3][s4][s5][s6][ii][t]], 
 																		yieldTable_Name, yieldTable_values, parameters_indexes_list,
 																		all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers,
 																		action_type_list, baseCost_acres, baseCost_yieldtables, 
@@ -2392,8 +2267,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																		current_var_static_condition);
 																para_value = para_value * currentDiscountValue * multiplier;
 																
-																//Add xGS[s1][s2][s3][s4][s5][s6][ii][t]
-																c15_indexlist.get(c15_num).add(xGS[s1][s2][s3][s4][s5][s6][ii][t]);
+																//Add xGSe[s1][s2][s3][s4][s5][s6][ii][t]
+																c15_indexlist.get(c15_num).add(xGSe[s1][s2][s3][s4][s5][s6][ii][t]);
 																c15_valuelist.get(c15_num).add((double) para_value);
 															}
 														}
@@ -2409,10 +2284,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				}						
 				
 							
-				//Add xEAe'  xEAr'  xEAr
-				if (static_SilvivulturalMethods.contains("EA")) {		
-							
-					// Add xEAe'(s1,s2,s3,s4,s5,s6)(t)(c)(tR)
+				//Add xEAe
+				if (static_SilvivulturalMethods.contains("EAe")) {							
+					// Add xEAe(s1,s2,s3,s4,s5,s6)(t)(c)(tR)
 					for (int s1 = 0; s1 < layer1.size(); s1++) {
 						for (int s2 = 0; s2 < layer2.size(); s2++) {
 							for (int s3 = 0; s3 < layer3.size(); s3++) {
@@ -2441,7 +2315,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																		current_var_static_condition.add(layers_Title.get(3) + layer4.get(s4));		// layer + element
 																		current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
 																																						
-																	    para_value = Get_Parameter_Information.get_total_value(vname[xEAeCut[s1][s2][s3][s4][s5][s6][t][c][tR]], 
+																	    para_value = Get_Parameter_Information.get_total_value(vname[xEAe[s1][s2][s3][s4][s5][s6][t][c][tR]], 
 																				yieldTable_Name, yieldTable_values, parameters_indexes_list,
 																				all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers,
 																				action_type_list, baseCost_acres, baseCost_yieldtables, 
@@ -2449,8 +2323,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																				current_var_static_condition);
 																		para_value = para_value * currentDiscountValue * multiplier;
 																		
-																		//Add xEAe'(s1,s2,s3,s4,s5,s6)(t)(c)(tR)	final cut at t but we need parameter at time tR
-																		c15_indexlist.get(c15_num).add(xEAeCut[s1][s2][s3][s4][s5][s6][t][c][tR]);
+																		//Add xEAe(s1,s2,s3,s4,s5,s6)(t)(c)(tR)	final cut at t but we need parameter at time tR
+																		c15_indexlist.get(c15_num).add(xEAe[s1][s2][s3][s4][s5][s6][t][c][tR]);
 																		c15_valuelist.get(c15_num).add((double) para_value);	
 																	}
 																}
@@ -2464,9 +2338,13 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								}
 							}
 						}
-					}						
+					}	
+				}
 				
-					// Add xEAr'(s1,s2,s3,s4,s5)(t)(a)(c)(tR)  note t>=2 --> tR>=t-a+1
+				
+				//Add xEAr
+				if (static_SilvivulturalMethods.contains("EAr")) {	
+					// Add xEAr(s1,s2,s3,s4,s5)(t)(a)(c)(tR)  note t>=2 --> tR>=t-a+1
 					for (int s1 = 0; s1 < layer1.size(); s1++) {
 						for (int s2 = 0; s2 < layer2.size(); s2++) {
 							for (int s3 = 0; s3 < layer3.size(); s3++) {
@@ -2494,7 +2372,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																		current_var_static_condition.add(layers_Title.get(3) + layer4.get(s4));		// layer + element
 																		current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
 																				
-																	    para_value = Get_Parameter_Information.get_total_value(vname[xEArCut[s1][s2][s3][s4][s5][t][a][c][tR]], 
+																	    para_value = Get_Parameter_Information.get_total_value(vname[xEAr[s1][s2][s3][s4][s5][t][a][c][tR]], 
 																				yieldTable_Name, yieldTable_values, parameters_indexes_list,
 																				all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers,
 																				action_type_list, baseCost_acres, baseCost_yieldtables, 
@@ -2502,8 +2380,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																				current_var_static_condition);
 																		para_value = para_value * currentDiscountValue * multiplier;
 																		
-																		//Add xEAr'(s1,s2,s3,s4,s5)(t)(a)(c)(tR)		final cut at t but we need parameter at time tR
-																		c15_indexlist.get(c15_num).add(xEArCut[s1][s2][s3][s4][s5][t][a][c][tR]);
+																		//Add xEAr(s1,s2,s3,s4,s5)(t)(a)(c)(tR)		final cut at t but we need parameter at time tR
+																		c15_indexlist.get(c15_num).add(xEAr[s1][s2][s3][s4][s5][t][a][c][tR]);
 																		c15_valuelist.get(c15_num).add((double) para_value);	
 																	}
 																}
@@ -2518,9 +2396,12 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 							}
 						}
 					}		
-					
-					
-					//Add xEAr(s1,s2,s3,s4,s5)(tt)(a)
+				}
+				
+				
+				//Add xNGr
+				if (static_SilvivulturalMethods.contains("NGr")) {		
+					//Add xNGr(s1,s2,s3,s4,s5)(tt)(a)
 					for (int s1 = 0; s1 < layer1.size(); s1++) {
 						for (int s2 = 0; s2 < layer2.size(); s2++) {
 							for (int s3 = 0; s3 < layer3.size(); s3++) {
@@ -2548,7 +2429,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																current_var_static_condition.add(layers_Title.get(3) + layer4.get(s4));		// layer + element
 																current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
 																
-															    para_value = Get_Parameter_Information.get_total_value(vname[xEAr[s1][s2][s3][s4][s5][tt][a]], 
+															    para_value = Get_Parameter_Information.get_total_value(vname[xNGr[s1][s2][s3][s4][s5][tt][a]], 
 																		yieldTable_Name, yieldTable_values, parameters_indexes_list,
 																		all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers,
 																		action_type_list, baseCost_acres, baseCost_yieldtables, 
@@ -2559,8 +2440,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 															}
 														}
 														
-														//Add xEAr(s1,s2,s3,s4,s5)(tt)(a)		final cut at tt but we need parameter at time t
-														c15_indexlist.get(c15_num).add(xEAr[s1][s2][s3][s4][s5][tt][a]);
+														//Add xNGr(s1,s2,s3,s4,s5)(tt)(a)		final cut at tt but we need parameter at time t
+														c15_indexlist.get(c15_num).add(xNGr[s1][s2][s3][s4][s5][tt][a]);
 														c15_valuelist.get(c15_num).add((double) parameter);	
 													}	
 												}
@@ -2763,7 +2644,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						for (int i = 0; i < value.length; i++) {
 							if (value[i] != 0) {
 								fileOut.newLine();
-								fileOut.write(i + "\t" + vname[i] + "\t" +  Double.valueOf(twoDForm.format(value[i])) + "\t" +  Double.valueOf(twoDForm.format(reduceCost[i])));
+								fileOut.write(i + "\t" + vname[i] 
+										+ "\t" + Double.valueOf(value[i]) /*Double.valueOf(twoDForm.format(value[i]))*/ 
+										+ "\t" + Double.valueOf(reduceCost[i])) /*Double.valueOf(twoDForm.format(reduceCost[i])))*/;
 							}
 						}
 
@@ -2782,7 +2665,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						for (int j = 0; j < dual.length; j++) {
 							if (slack[j] != 0 || dual[j] != 0) {
 								fileOut.newLine();
-								fileOut.write(j + "\t" + Double.valueOf(twoDForm.format(slack[j])) + "\t" + Double.valueOf(twoDForm.format(dual[j])));
+								fileOut.write(j 
+										+ "\t" + Double.valueOf(slack[j]) /*Double.valueOf(twoDForm.format(slack[j]))*/ 
+										+ "\t" + Double.valueOf(dual[j])) /*Double.valueOf(twoDForm.format(dual[j])))*/;
 							}
 						}
 
@@ -2821,7 +2706,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 													//Write acres from each method
 													for (int q = 0; q < total_methods; q++) {
 														int this_var_index = x[s1][s2][s3][s4][s5][s6][q];
-														fileOut.write("\t" + Double.valueOf(twoDForm.format(value[this_var_index])));
+														fileOut.write("\t" + Double.valueOf(value[this_var_index]) /*Double.valueOf(twoDForm.format(value[this_var_index]))*/);
 													}
 												}
 											}
@@ -2864,8 +2749,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								}
 
 								fileOut.newLine();
-								fileOut.write(i + "\t" + vname[i] + "\t" + Double.valueOf(twoDForm.format(value[i]))
-										+ "\t" + Double.valueOf(twoDForm.format(reduceCost[i])) 
+								fileOut.write(i + "\t" + vname[i] 
+										+ "\t" + Double.valueOf(value[i] /*Double.valueOf(twoDForm.format(value[i])*/)
+										+ "\t" + Double.valueOf(reduceCost[i]) /*Double.valueOf(twoDForm.format(reduceCost[i]))*/ 
 										+ "\t" + yield_table_name_to_find + "\t" + yield_table_row_index_to_find + "\t" + db_status);
 							}
 						}
@@ -2963,7 +2849,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										int var_id = bookkeeping_Var_list.get(gui_table_id);
 										aggragated_value = aggragated_value + value[var_id];
 									}
-									temp = temp + Double.valueOf(twoDForm.format(aggragated_value)) + ";";	
+									temp = temp + Double.valueOf(aggragated_value) /*Double.valueOf(twoDForm.format(aggragated_value))*/ + ";";	
 								}	
 								temp = temp.substring(0, temp.length() - 1) + "\t";		// remove the last ; and add a tab									
 								temp = temp.substring(0, temp.length() - 1);		// remove the last ;								

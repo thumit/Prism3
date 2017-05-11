@@ -7,7 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -32,7 +31,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.JTree;
-import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
@@ -59,7 +57,7 @@ public class Panel_YieldProject extends JLayeredPane {
 	private Panel_SolveRun solvePanel;		// This panel only visible when "Start Solving"
 	private Panel_CustomizeOutput customizeOutputPanel;		// This panel only visible when Start "Customize Output"
 	private JButton btnNewRun, btnDeleteRun;
-	private static JButton btnEditRun;
+	private JButton btnEditRun;
 	private JButton btnRefresh;
 	private JButton btnSolveRun;
 	private JButton btnCustomizeOutput;
@@ -72,7 +70,7 @@ public class Panel_YieldProject extends JLayeredPane {
 	private JTextField displayTextField;
 	private JTextArea rightPanelTextArea;
 
-	private String currentInputFile, currentRun;
+	private String currentInputFile, currentProject, currentRun;
 	private int currentLevel;
 	private TreePath[] selectionPaths;
 	private TreePath editingPath;
@@ -93,14 +91,18 @@ public class Panel_YieldProject extends JLayeredPane {
 	
 	private Thread thread_management_details;
 	
-	public Panel_YieldProject() {
-		super.setLayout(new BorderLayout(0, 0));
+	public Panel_YieldProject(String currentProject) {
+		
+		this.currentProject = currentProject;
+		this.currentProjectFolder = new File(FilesHandle.get_projectsFolder().getAbsolutePath() + "/" + this.currentProject);
+		
+		this.setLayout(new BorderLayout(0, 0));
 		ToolTipManager.sharedInstance().setInitialDelay(0);		//Show toolTip immediately
 
 		splitPanel = new JSplitPane();
 		// splitPane.setResizeWeight(0.15);
 		splitPanel.setOneTouchExpandable(true);
-		splitPanel.setDividerLocation(200);
+		splitPanel.setDividerLocation(245);
 		// splitPane.setDividerSize(5);
 //		splitPanel.getComponent(2).setCursor(new Cursor(Cursor.HAND_CURSOR));
 
@@ -241,10 +243,10 @@ public class Panel_YieldProject extends JLayeredPane {
 
 		//------------------------------------------------------------------------------------------------
 		// Add all components to JInternalFrame------------------------------------------------------------
-		super.add(projectToolBar, BorderLayout.NORTH);
-		super.add(displayTextField, BorderLayout.SOUTH);
-		super.add(splitPanel, BorderLayout.CENTER);
-		super.setOpaque(false);
+		this.add(projectToolBar, BorderLayout.NORTH);
+		this.add(displayTextField, BorderLayout.SOUTH);
+		this.add(splitPanel, BorderLayout.CENTER);
+		this.setOpaque(false);
 	} // end Panel_Project()
 
 	// --------------------------------------------------------------------------------------------------------------------------------
@@ -553,11 +555,7 @@ public class Panel_YieldProject extends JLayeredPane {
 		DefaultTreeModel model = (DefaultTreeModel)projectTree.getModel();
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode)model.getRoot();
 		root.removeAllChildren();
-		model.reload(root);
-
-		// CurrentProjectFolder will be referred to the currently opened and selected JinternalFrame title 
-		currentProjectFolder= new File(FilesHandle.get_projectsFolder().getAbsolutePath() + "/" + Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().getTitle());	
-//		currentProjectFolder = new File(workingLocation + "/Projects/" + Spectrum_Main.getProjectName());	//IF pack JInternal Frame in Spectrum_main then we need this	
+		model.reload(root);	
 	
 		// Find all the Runs folders in the "Projects" folder to add into projectTree	
 		String fileName;
@@ -748,7 +746,7 @@ public class Panel_YieldProject extends JLayeredPane {
 					}
 				}
 				
-				super.setVisible(false); //----------------------------------------------
+				this.setVisible(false); //----------------------------------------------
 				//Disable all other buttons, change name to "Stop Editing",  remove splitPanel and add editPanel
 				for (Component c : projectToolBar.getComponents()) c.setVisible(false);
 				displayTextField.setVisible(false);
@@ -757,10 +755,10 @@ public class Panel_YieldProject extends JLayeredPane {
 				btnEditRun.setToolTipText("Stop Editing");
 				btnEditRun.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_back.png"));
 				btnEditRun.setForeground(Color.RED);
-				super.remove(splitPanel);
+				this.remove(splitPanel);
 				editPanel = new Panel_EditRun(listOfEditRuns);		// This panel only visible when "Start Editing"	
-				super.add(editPanel);
-				super.setVisible(true); //----------------------------------------------
+				this.add(editPanel);
+				this.setVisible(true); //----------------------------------------------
 			} 	
 		} //End of start editing
 		
@@ -783,8 +781,8 @@ public class Panel_YieldProject extends JLayeredPane {
 				btnEditRun.setToolTipText("Start Editing");
 				btnEditRun.setRolloverIcon(null);
 				btnEditRun.setForeground(null);
-				super.remove(editPanel);
-				super.add(splitPanel);
+				this.remove(editPanel);
+				this.add(splitPanel);
 				
 				if (response == 0)		//Yes option
 				{
@@ -854,9 +852,9 @@ public class Panel_YieldProject extends JLayeredPane {
 				btnSolveRun.setToolTipText("Stop Solving");
 				btnSolveRun.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_back.png"));
 				btnSolveRun.setForeground(Color.RED);
-				super.remove(splitPanel);
+				this.remove(splitPanel);
 				solvePanel = new Panel_SolveRun(listOfEditRuns); // This panel only visible when "Start Solving"
-				super.add(solvePanel);
+				this.add(solvePanel);
 			}
 		} // End of start solving
 		
@@ -871,8 +869,8 @@ public class Panel_YieldProject extends JLayeredPane {
 			btnSolveRun.setToolTipText("Start Solving");
 			btnSolveRun.setRolloverIcon(null);
 			btnSolveRun.setForeground(null);
-			super.remove(solvePanel);
-			super.add(splitPanel);
+			this.remove(solvePanel);
+			this.add(splitPanel);
 			refreshProjectTree(); //Refresh the tree
 		}
 	}
@@ -922,9 +920,9 @@ public class Panel_YieldProject extends JLayeredPane {
 				btnCustomizeOutput.setToolTipText("Return to Main Window");
 				btnCustomizeOutput.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_back.png"));
 				btnCustomizeOutput.setForeground(Color.RED);
-				super.remove(splitPanel);
+				this.remove(splitPanel);
 				customizeOutputPanel = new Panel_CustomizeOutput(listOfEditRuns); // This panel only visible when Start "Customize Output"
-				super.add(customizeOutputPanel);
+				this.add(customizeOutputPanel);
 			}
 		} // End of start solving
 		
@@ -939,8 +937,8 @@ public class Panel_YieldProject extends JLayeredPane {
 			btnCustomizeOutput.setToolTipText("Customize Output");
 			btnCustomizeOutput.setRolloverIcon(null);
 			btnCustomizeOutput.setForeground(null);
-			super.remove(customizeOutputPanel);
-			super.add(splitPanel);
+			this.remove(customizeOutputPanel);
+			this.add(splitPanel);
 			refreshProjectTree(); //Refresh the tree
 		}
 	}
@@ -952,7 +950,4 @@ public class Panel_YieldProject extends JLayeredPane {
 		scrollPane_Right.setViewportView(null);
 	}
 	
-	public static JButton get_btnEditRun() {
-		return btnEditRun;
-	}
 }

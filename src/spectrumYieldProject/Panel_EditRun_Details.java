@@ -280,7 +280,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		
 		Thread thread = new Thread() {			// Make a thread so JFrame will not be frozen
 			public void run() {
-				Panel_YieldProject.get_btnEditRun().setEnabled(false);
 //				radioButton_Right[1].setEnabled(false);
 //				radioButton_Right[2].setEnabled(false);
 //				radioButton_Right[3].setEnabled(false);
@@ -293,7 +292,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().revalidate();
 				Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().repaint();
 				
-				Panel_YieldProject.get_btnEditRun().setEnabled(true);
 				radioButton_Right[1].setEnabled(true);
 				radioButton_Right[2].setEnabled(true);
 				radioButton_Right[3].setEnabled(true);
@@ -630,6 +628,11 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_03_clearcut_covertype_conversion.txt");
 		if (table_file.exists()) { // Load from input
+			// Uncheck all checkboxes in "implementation" column when the input_03 exists
+			for (int i = 0; i < data3.length; i++) {
+				data3[i][6] = false;
+			}	
+			
 			 // Load from input
 			tableLoader = new Reload_Table_Info(table_file);
 			String twocolumnsGUI, twocolumnsInput;
@@ -4213,19 +4216,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 												 *  Please figure out the logic by yourself :))									
 												*/
 												if ( processing_constraint % (selected_Element_Index.size() * total_same_info_constraints) == element_to_add * total_same_info_constraints + j) {							
-													String checkboxName = checkboxStaticIdentifiers.get(i).get(selected_Element_Index.get(element_to_add)).getText();
-													if (checkboxName.equals("Even Age")) {
-														checkboxName = "EA";
-													} else if (checkboxName.equals("Group Selection")) {
-														checkboxName = "GS";
-													} else if (checkboxName.equals("Prescribed Burn")) {
-														checkboxName = "PB";
-													} else if (checkboxName.equals("Natural Growth")) {
-														checkboxName = "NG";
-													} else if (checkboxName.equals("Mixed Severity Wildfire")) {
-														checkboxName = "MS";
-													}
-													
+													String checkboxName = checkboxStaticIdentifiers.get(i).get(selected_Element_Index.get(element_to_add)).getText();												
 													//Add checkBox if it is (selected & visible) or disable
 													if ((checkboxStaticIdentifiers.get(i).get(selected_Element_Index.get(element_to_add)).isSelected() && (checkboxStaticIdentifiers.get(i).get(selected_Element_Index.get(element_to_add)).isVisible())
 															|| !checkboxStaticIdentifiers.get(i).get(selected_Element_Index.get(element_to_add)).isEnabled())) {
@@ -4241,19 +4232,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 										
 									} else {		// IF this static would not be split
 										for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {		//Loop all elements in each layer
-											String checkboxName = checkboxStaticIdentifiers.get(i).get(j).getText();
-											if (checkboxName.equals("Even Age")) {
-												checkboxName = "EA";
-											} else if (checkboxName.equals("Group Selection")) {
-												checkboxName = "GS";
-											} else if (checkboxName.equals("Prescribed Burn")) {
-												checkboxName = "PB";
-											} else if (checkboxName.equals("Natural Growth")) {
-												checkboxName = "NG";
-											} else if (checkboxName.equals("Mixed Severity Wildfire")) {
-												checkboxName = "MS";
-											}
-											
+											String checkboxName = checkboxStaticIdentifiers.get(i).get(j).getText();																						
 											//Add checkBox if it is (selected & visible) or disable
 											if ((checkboxStaticIdentifiers.get(i).get(j).isSelected() && (checkboxStaticIdentifiers.get(i).get(j).isVisible())
 													|| !checkboxStaticIdentifiers.get(i).get(j).isEnabled())) {

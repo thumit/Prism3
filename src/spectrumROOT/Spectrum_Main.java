@@ -70,7 +70,7 @@ public class Spectrum_Main extends JFrame {
 	private MenuItem_CaptureGUI 		captureGUI;	// For menuWindow
 		
 	private static DesktopPanel_BackGround 	spectrumDesktopPane;
-	private static String 					currentProjectName;
+	private static String 					currentProject;
 	private static Spectrum_Main 			main;
 	private static ComponentResizer 		cr;
 	
@@ -214,6 +214,7 @@ public class Spectrum_Main extends JFrame {
 				
 				// Add listeners "New"------------------------------------------------
 //				newProject.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));	// CTRL on Windows, *** on MAC-OS
+				newProject.setMnemonic(KeyEvent.VK_N);
 				newProject.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent event) {
 						//JtextField to type name
@@ -221,13 +222,13 @@ public class Spectrum_Main extends JFrame {
 						projectName_JTextField.getDocument().addDocumentListener(new DocumentListener() {
 							@Override  
 							public void changedUpdate(DocumentEvent e) {
-								currentProjectName = projectName_JTextField.getText().trim();		//Trim spaces at the begin and end of the string
+								currentProject = projectName_JTextField.getText().trim();		//Trim spaces at the begin and end of the string
 							}
 							public void removeUpdate(DocumentEvent e) {
-								currentProjectName = projectName_JTextField.getText().trim();		//Trim spaces at the begin and end of the string
+								currentProject = projectName_JTextField.getText().trim();		//Trim spaces at the begin and end of the string
 							}
 							public void insertUpdate(DocumentEvent e) {
-								currentProjectName = projectName_JTextField.getText().trim();		//Trim spaces at the begin and end of the string
+								currentProject = projectName_JTextField.getText().trim();		//Trim spaces at the begin and end of the string
 							}
 						});
 						projectName_JTextField.setText("new_project");		//default name
@@ -262,8 +263,8 @@ public class Spectrum_Main extends JFrame {
 								}
 												
 								//if Name is valid and existing projects do not contain this Name
-								if (StringHandle.nameIsValid(currentProjectName)==true && !existingName_list.contains(currentProjectName)) {
-									if (new File(FilesHandle.get_projectsFolder().getAbsolutePath() + "/" + currentProjectName).mkdir()) {		//try if can create a folder with the existing project name
+								if (StringHandle.nameIsValid(currentProject)==true && !existingName_list.contains(currentProject)) {
+									if (new File(FilesHandle.get_projectsFolder().getAbsolutePath() + "/" + currentProject).mkdir()) {		//try if can create a folder with the existing project name
 										createNewJInternalFrame();		//create new internal frame for this existing project
 										stop_naming = true;
 									}
@@ -306,7 +307,7 @@ public class Spectrum_Main extends JFrame {
 
 									existingProject.addActionListener(new ActionListener() {
 										public void actionPerformed(ActionEvent event) {
-											currentProjectName = fileName;
+											currentProject = fileName;
 											
 											JInternalFrame[] opened_InternalFrames = Spectrum_Main.get_spectrumDesktopPane().getAllFrames();	// All displayed internalFrames
 											List<String> openedFrames_list = new ArrayList<String>();					// List of Frames Names					
@@ -366,6 +367,7 @@ public class Spectrum_Main extends JFrame {
 				
 				// Add listeners "ExitSoftware"-----------------------------------------------------
 				exitSoftware.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, InputEvent.ALT_DOWN_MASK));
+				exitSoftware.setMnemonic(KeyEvent.VK_E);
 				exitSoftware.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent event) {
 						exitSpectrumLite();
@@ -374,6 +376,7 @@ public class Spectrum_Main extends JFrame {
 				
 								
 				// Add listeners "DatabaseManagement"------------------------------------------------
+				DatabaseManagement.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_DOWN_MASK));
 				DatabaseManagement.addActionListener(
 						new ActionListener() { // anonymous inner class
 							// display new internal window
@@ -440,7 +443,7 @@ public class Spectrum_Main extends JFrame {
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public void createNewJInternalFrame() {
 		// create internal frame
-		JInternalFrame ProjectInternalFrame = new JInternalFrame(currentProjectName, 
+		JInternalFrame ProjectInternalFrame = new JInternalFrame(currentProject, 
 																true /*resizable*/, true, /*closable*/true/*maximizable*/, true/*iconifiable*/);	
 		ProjectInternalFrame.setDefaultCloseOperation(JInternalFrame.DO_NOTHING_ON_CLOSE);
 				
@@ -454,7 +457,7 @@ public class Spectrum_Main extends JFrame {
 			
 		// Note: visible first for the JIframe to be selected, pack at the end would be fail for JIframe to be selected (Spectrum_Main.mainFrameReturn().getSelectedFrame = null)
 		ProjectInternalFrame.setVisible(true); // show internal frame	
-		Panel_YieldProject YieldProjectPanel = new Panel_YieldProject(); // create new panel
+		Panel_YieldProject YieldProjectPanel = new Panel_YieldProject(currentProject); // create new panel
 		ProjectInternalFrame.add(YieldProjectPanel, BorderLayout.CENTER); // add panel
 //		ProjectInternalFrame.pack(); // set internal frame to size of contents
 		
@@ -552,7 +555,7 @@ public class Spectrum_Main extends JFrame {
 	
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public static String getProjectName() {
-		return currentProjectName;
+		return currentProject;
 	}
 	
 }

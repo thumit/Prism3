@@ -89,7 +89,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		JSplitPane splitPane = new JSplitPane();
 		//splitPane.setResizeWeight(0.15);
 		splitPane.setOneTouchExpandable(true);
-		splitPane.setDividerLocation(200);
+		splitPane.setDividerLocation(245);
 //		splitPane.setDividerSize(5);
 		//splitPane.getComponent(2).setCursor(new Cursor(Cursor.HAND_CURSOR));
 		

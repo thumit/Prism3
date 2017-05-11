@@ -319,9 +319,9 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 				
 				
 				// The following vary depending on what type of variable is
-				if (original_term.contains("xNG_") || original_term.contains("xPB_")
-						|| original_term.contains("xGS_") || original_term.contains("xMS_") 
-						|| original_term.contains("xEAe_") || original_term.contains("xEAe'_") ) {		
+				if (original_term.contains("xNGe_") || original_term.contains("xPBe_")
+						|| original_term.contains("xGSe_") || original_term.contains("xMSe_") 
+						|| original_term.contains("xEAe_") ) {		
 
 					
 					term = Get_Variable_Information.get_layer6(entry.getStringValue(1));
@@ -338,13 +338,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 					}
 					
 
-					term = Get_Variable_Information.get_method(entry.getStringValue(1));
-					// NOTE NOTE NOTE NOTE NOTE NOTE: these will be changed when we rename silvicultural method check boxes to 2 letters only
-					if (term.equals("NG")) term = "Natural Growth";
-					if (term.equals("PB")) term = "Prescribed Burn";
-					if (term.equals("GS")) term = "Group Selection";
-					if (term.equals("MS")) term = "Mixed Severity Wildfire";
-					if (term.equals("EA")) term = "Even Age";
+					term = Get_Variable_Information.get_method(entry.getStringValue(1)) + "e";				//NOTE NOTE NOTE Remove this + "e" later
 					if (is_finally_true) {
 						int count = 0;
 						for (JCheckBox method : checkboxStaticIdentifiers.get(6)) {
@@ -373,16 +367,10 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 				}
 				
 				
-				else if (original_term.contains("xEAr_") || original_term.contains("xEAr'_") ) {
+				else if (original_term.contains("xEAr_") || original_term.contains("xNGr_") ) {
 					
 					
-					term = Get_Variable_Information.get_method(entry.getStringValue(1));
-					// NOTE NOTE NOTE NOTE NOTE NOTE: these will be changed when we rename silvicultural method check boxes to 2 letters only
-					if (term.equals("NG")) term = "Natural Growth";
-					if (term.equals("PB")) term = "Prescribed Burn";
-					if (term.equals("GS")) term = "Group Selection";
-					if (term.equals("MS")) term = "Mixed Severity Wildfire";
-					if (term.equals("EA")) term = "Even Age";
+					term = Get_Variable_Information.get_method(entry.getStringValue(1)) + "r";				//NOTE NOTE NOTE Remove this + "r" later
 					if (is_finally_true) {
 						int count = 0;
 						for (JCheckBox method : checkboxStaticIdentifiers.get(6)) {

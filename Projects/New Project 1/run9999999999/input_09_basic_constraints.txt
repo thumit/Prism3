@@ -1,0 +1,86 @@
+bc_id	bc_description	bc_type	bc_multiplier	lowerbound	lowerbound_perunit_penalty	upperbound	upperbound_perunit_penalty	parameter_index	static_identifiers	dynamic_identifiers	
+1	300k 1 - silvicultural method NGe - time period 1	FREE	1.0	300000.0	1.0	300000.0	0.0	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe;7 1	NoIdentifier	
+2	300k 2 - silvicultural method NGe - time period 2	FREE	1.0	300000.0	1.0	300000.0	0.0	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe;7 2	NoIdentifier	
+3	300k 3 - silvicultural method NGe - time period 3	FREE	1.0	300000.0	1.0	300000.0	0.0	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe;7 3	NoIdentifier	
+4	300k 4 - silvicultural method NGe - time period 4	FREE	1.0	300000.0	1.0	300000.0	0.0	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe;7 4	NoIdentifier	
+5	300k 5 - silvicultural method NGe - time period 5	FREE	1.0	300000.0	1.0	300000.0	0.0	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe;7 5	NoIdentifier	
+6	300k 6 - silvicultural method PBe - time period 1	FREE	1.0	300000.0	1.0	300000.0	0.0	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBe;7 1	NoIdentifier	
+7	300k 7 - silvicultural method PBe - time period 2	FREE	1.0	300000.0	1.0	300000.0	0.0	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBe;7 2	NoIdentifier	
+8	300k 8 - silvicultural method PBe - time period 3	FREE	1.0	300000.0	1.0	300000.0	0.0	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBe;7 3	NoIdentifier	
+9	300k 9 - silvicultural method PBe - time period 4	FREE	1.0	300000.0	1.0	300000.0	0.0	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBe;7 4	NoIdentifier	
+10	300k 10 - silvicultural method PBe - time period 5	FREE	1.0	300000.0	1.0	300000.0	0.0	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBe;7 5	NoIdentifier	
+11	300k 11 - silvicultural method GSe - time period 1	FREE	1.0	300000.0	1.0	300000.0	0.0	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSe;7 1	NoIdentifier	
+12	300k 12 - silvicultural method GSe - time period 2	FREE	1.0	300000.0	1.0	300000.0	0.0	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSe;7 2	NoIdentifier	
+13	300k 13 - silvicultural method GSe - time period 3	FREE	1.0	300000.0	1.0	300000.0	0.0	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSe;7 3	NoIdentifier	
+14	300k 14 - silvicultural method GSe - time period 4	FREE	1.0	300000.0	1.0	300000.0	0.0	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSe;7 4	NoIdentifier	
+15	300k 15 - silvicultural method GSe - time period 5	FREE	1.0	300000.0	1.0	300000.0	0.0	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSe;7 5	NoIdentifier	
+16	300k 1 - time period 1	FREE	1.0	300000.0	1.0	300000.0	0.0	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAe NGr EAr;7 1	NoIdentifier	
+17	300k 2 - time period 2	FREE	1.0	300000.0	1.0	300000.0	0.0	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAe NGr EAr;7 2	NoIdentifier	
+18	300k 3 - time period 3	FREE	1.0	300000.0	1.0	300000.0	0.0	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAe NGr EAr;7 3	NoIdentifier	
+19	300k 4 - time period 4	FREE	1.0	300000.0	1.0	300000.0	0.0	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAe NGr EAr;7 4	NoIdentifier	
+20	300k 5 - time period 5	FREE	1.0	300000.0	1.0	300000.0	0.0	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAe NGr EAr;7 5	NoIdentifier	
+21	total cost 1 - time period 1	FREE	1.0	null	null	null	null	CostParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe MSe EAe NGr EAr;7 1	NoIdentifier	
+22	total cost 2 - time period 2	FREE	1.0	null	null	null	null	CostParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe MSe EAe NGr EAr;7 2	NoIdentifier	
+23	total cost 3 - time period 3	FREE	1.0	null	null	null	null	CostParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe MSe EAe NGr EAr;7 3	NoIdentifier	
+24	total cost 4 - time period 4	FREE	1.0	null	null	null	null	CostParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe MSe EAe NGr EAr;7 4	NoIdentifier	
+25	total cost 5 - time period 5	FREE	1.0	null	null	null	null	CostParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe MSe EAe NGr EAr;7 5	NoIdentifier	
+26	total acres set 1 - silvicultural method NGe - time period 1	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe;7 1	NoIdentifier	
+27	total acres set 2 - silvicultural method NGe - time period 2	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe;7 2	NoIdentifier	
+28	total acres set 3 - silvicultural method NGe - time period 3	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe;7 3	NoIdentifier	
+29	total acres set 4 - silvicultural method NGe - time period 4	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe;7 4	NoIdentifier	
+30	total acres set 5 - silvicultural method NGe - time period 5	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe;7 5	NoIdentifier	
+31	total acres set 6 - silvicultural method PBe - time period 1	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBe;7 1	NoIdentifier	
+32	total acres set 7 - silvicultural method PBe - time period 2	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBe;7 2	NoIdentifier	
+33	total acres set 8 - silvicultural method PBe - time period 3	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBe;7 3	NoIdentifier	
+34	total acres set 9 - silvicultural method PBe - time period 4	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBe;7 4	NoIdentifier	
+35	total acres set 10 - silvicultural method PBe - time period 5	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBe;7 5	NoIdentifier	
+36	total acres set 11 - silvicultural method GSe - time period 1	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSe;7 1	NoIdentifier	
+37	total acres set 12 - silvicultural method GSe - time period 2	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSe;7 2	NoIdentifier	
+38	total acres set 13 - silvicultural method GSe - time period 3	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSe;7 3	NoIdentifier	
+39	total acres set 14 - silvicultural method GSe - time period 4	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSe;7 4	NoIdentifier	
+40	total acres set 15 - silvicultural method GSe - time period 5	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSe;7 5	NoIdentifier	
+41	total acres set 16 - silvicultural method EAe - time period 1	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAe;7 1	NoIdentifier	
+42	total acres set 17 - silvicultural method EAe - time period 2	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAe;7 2	NoIdentifier	
+43	total acres set 18 - silvicultural method EAe - time period 3	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAe;7 3	NoIdentifier	
+44	total acres set 19 - silvicultural method EAe - time period 4	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAe;7 4	NoIdentifier	
+45	total acres set 20 - silvicultural method EAe - time period 5	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAe;7 5	NoIdentifier	
+46	total acres set 21 - silvicultural method MSe - time period 1	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 MSe;7 1	NoIdentifier	
+47	total acres set 22 - silvicultural method MSe - time period 2	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 MSe;7 2	NoIdentifier	
+48	total acres set 23 - silvicultural method MSe - time period 3	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 MSe;7 3	NoIdentifier	
+49	total acres set 24 - silvicultural method MSe - time period 4	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 MSe;7 4	NoIdentifier	
+50	total acres set 25 - silvicultural method MSe - time period 5	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 MSe;7 5	NoIdentifier	
+51	total acres set 26 - silvicultural method NGr - time period 1	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGr;7 1	NoIdentifier	
+52	total acres set 27 - silvicultural method NGr - time period 2	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGr;7 2	NoIdentifier	
+53	total acres set 28 - silvicultural method NGr - time period 3	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGr;7 3	NoIdentifier	
+54	total acres set 29 - silvicultural method NGr - time period 4	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGr;7 4	NoIdentifier	
+55	total acres set 30 - silvicultural method NGr - time period 5	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGr;7 5	NoIdentifier	
+56	total acres set 31 - silvicultural method PBr - time period 1	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBr;7 1	NoIdentifier	
+57	total acres set 32 - silvicultural method PBr - time period 2	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBr;7 2	NoIdentifier	
+58	total acres set 33 - silvicultural method PBr - time period 3	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBr;7 3	NoIdentifier	
+59	total acres set 34 - silvicultural method PBr - time period 4	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBr;7 4	NoIdentifier	
+60	total acres set 35 - silvicultural method PBr - time period 5	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBr;7 5	NoIdentifier	
+61	total acres set 36 - silvicultural method GSr - time period 1	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSr;7 1	NoIdentifier	
+62	total acres set 37 - silvicultural method GSr - time period 2	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSr;7 2	NoIdentifier	
+63	total acres set 38 - silvicultural method GSr - time period 3	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSr;7 3	NoIdentifier	
+64	total acres set 39 - silvicultural method GSr - time period 4	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSr;7 4	NoIdentifier	
+65	total acres set 40 - silvicultural method GSr - time period 5	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSr;7 5	NoIdentifier	
+66	total acres set 41 - silvicultural method EAr - time period 1	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAr;7 1	NoIdentifier	
+67	total acres set 42 - silvicultural method EAr - time period 2	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAr;7 2	NoIdentifier	
+68	total acres set 43 - silvicultural method EAr - time period 3	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAr;7 3	NoIdentifier	
+69	total acres set 44 - silvicultural method EAr - time period 4	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAr;7 4	NoIdentifier	
+70	total acres set 45 - silvicultural method EAr - time period 5	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAr;7 5	NoIdentifier	
+71	TOTAL ACRES in  1 - time period 1	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 1	NoIdentifier	
+72	TOTAL ACRES in  2 - time period 2	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 2	NoIdentifier	
+73	TOTAL ACRES in  3 - time period 3	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 3	NoIdentifier	
+74	TOTAL ACRES in  4 - time period 4	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 4	NoIdentifier	
+75	TOTAL ACRES in  5 - time period 5	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 5	NoIdentifier	
+76	total acres each SILVI METHOD 1 - silvicultural method NGe	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe;7 1 2 3 4 5	NoIdentifier	
+77	total acres each SILVI METHOD 2 - silvicultural method PBe	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBe;7 1 2 3 4 5	NoIdentifier	
+78	total acres each SILVI METHOD 3 - silvicultural method GSe	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSe;7 1 2 3 4 5	NoIdentifier	
+79	total acres each SILVI METHOD 4 - silvicultural method EAe	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAe;7 1 2 3 4 5	NoIdentifier	
+80	total acres each SILVI METHOD 5 - silvicultural method MSe	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 MSe;7 1 2 3 4 5	NoIdentifier	
+81	total acres each SILVI METHOD 6 - silvicultural method NGr	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGr;7 1 2 3 4 5	NoIdentifier	
+82	total acres each SILVI METHOD 7 - silvicultural method PBr	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBr;7 1 2 3 4 5	NoIdentifier	
+83	total acres each SILVI METHOD 8 - silvicultural method GSr	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSr;7 1 2 3 4 5	NoIdentifier	
+84	total acres each SILVI METHOD 9 - silvicultural method EAr	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAr;7 1 2 3 4 5	NoIdentifier	
+85	TOTAL ACRES EVERYTHING	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 1 2 3 4 5	NoIdentifier	

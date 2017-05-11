@@ -1,0 +1,4 @@
+bc_id	bc_description	bc_type	bc_multiplier	lowerbound	lowerbound_perunit_penalty	upperbound	upperbound_perunit_penalty	bookeeping_var_id	bookeeping_var_name	bookeeping_var_value	bookeeping_var_reduced_cost	total_penalty
+1	acres 1 - time period 1	SOFT	1.0	null	null	null	null	0	y_0	780.0	0.0	0.0
+2	acres 2 - time period 2	SOFT	1.0	null	null	null	null	1	y_1	780.0	0.0	0.0
+3	acres 3 - time period 3	SOFT	1.0	null	null	null	null	2	y_2	780.0	0.0	0.0

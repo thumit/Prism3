@@ -1,0 +1,12 @@
+var_id	var_name	var_value	var_reduced_cost	db_strata_tofind	db_row_id_tofind	db_status
+19	xNGe_B,N,N,C,D,M,1	540.0	0.0	D_M_NG_0_E	0	good
+20	xNGe_B,N,N,C,D,M,2	534.6	0.0	D_M_NG_0_E	1	good
+21	xNGe_B,N,N,C,D,M,3	529.254	0.0	D_M_NG_0_E	2	good
+116	xEAe_C,N,N,C,P,S,2,P,1	240.0	0.0	P_S_EA_1+startage-1_E	0	missing yield table
+117	xEAe_C,N,N,C,P,S,2,P,2	237.6	0.0	P_S_EA_2+startage-1_E	1	missing yield table
+118	xNGr_B,N,N,C,P,2,1	5.4	0.0	P_NG_0_R	0	missing yield table
+119	xNGr_B,N,N,C,P,3,1	5.4	0.0	P_NG_0_R	0	missing yield table
+120	xNGr_B,N,N,C,P,3,2	5.346	0.0	P_NG_0_R	1	missing yield table
+142	xNGr_C,N,N,C,P,2,1	2.4	0.0	P_NG_0_R	0	missing yield table
+143	xNGr_C,N,N,C,P,3,1	237.624	0.0	P_NG_0_R	0	missing yield table
+144	xNGr_C,N,N,C,P,3,2	2.376	0.0	P_NG_0_R	1	missing yield table

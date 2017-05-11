@@ -1,5 +1,5 @@
 strata_id	layer1	layer2	layer3	layer4	layer5	layer6	natural_growth_acres	prescribed_burn_acres	group_selection_acres	even_age_acres	mixed_severity_wildfire_acres
 PR4WIS	P	R	4	W	I	S	1836.35	0.0	0.0	0.0	96.65
-PR4UCS	P	R	4	U	C	S	1140.95	0.0	0.0	0.0	60.05
-PR4UDM	P	R	4	U	D	M	1825.9	0.0	0.0	0.0	96.1
-PR5LIS	P	R	5	L	I	S	1616.9	0.0	0.0	0.0	85.1
+PR4UCS	P	R	4	U	C	S	1140.95	0.0	0.0	0.0	60.050000000000004
+PR4UDM	P	R	4	U	D	M	1825.9	0.0	0.0	0.0	96.10000000000001
+PR5LIS	P	R	5	L	I	S	1616.9	0.0	0.0	0.0	85.10000000000001

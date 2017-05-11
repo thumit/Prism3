@@ -27,7 +27,7 @@
 25. Advanced Constraints (flow only): arrangement, sources, tables, auto check before add new, reload, updateID, Quick Edit, Mouse Interaction Menu, etc...
 --------------------------------------------------------------------------
 
-26. Show/Hied Logo feature
+26. Show/Hide Logo feature
 27. Change Font feature
 28. Regain focus on the table when showing 2 Charts, change mouse listener to selection listener for showing the 2nd chart (Ctrl A works)
 29. Change minimum size of MAIN in ComponentResizer to 600x35
@@ -75,3 +75,29 @@
 63. Database import has a security check to deny database that is not following SpectrumLite's data requirements
 64. All existing strata that is not linked to Natural Growth table (-->not found starting ageclass) will not be selectable for modeled_strata. The codes change is located in the update_management_overview (table model overview)
 65. Many shortcut keys have been applied
+--------------------------------------------------------------------------
+
+66. Remove xEAe in the model logic since it is not necessary to have it. Changes include: remove xEAe in eq.10, eq.12a; remove the entire eq.11a; remove the entire eq.11c. And all variables are renamed.
+67. Remove xEAe in the software codes, including:
+- Changes and removals of the codes of the equations logic
+- Change silviculture method to short names in Read_Indentifiers: Natural Growth --> NGe, Prescribed Burn -->PBe, Group Selection --> GSe, Even Age --> EAe
+- Remove the conversion to detailed silviculture method names in ScrollPane_StaticIdentifiers & Panel_EditRun_Details & Output_Panel_Management_Details
+- Change variable names in Panel_SolveRun (var definition & eq. 15 & Output_Panel_Management_Details): xNG --> xNGe; xPB --> xPBe; xGS --> xGSe; xEAe' --> xEAe; xMS --> xMSe; xEAr --> xNGr; xEAr' --> xEAr
+- Changes in Get_Variable_Information: remove xEAe, change the "startwith" and "replace" with new var start names
+- Disable XPBr, xGSr in GUI. 
+- Refactoring the codes of formulation to match the renamed variables.
+- Split the if then of xEAe, xEAr, xNGr into 3 different if then
+68. Move MSe to below EAe in the GUI of static identifiers
+69. Fix method to get currentProjectFolder, previously based on active internal frame which is bad.
+70. Fix error with multiple project lost icon buttons when edit runs of a project when other projects opened. This is due to JButton btnedit is defined as static and pass to the threads. static is removed.
+71. change both logic and GUI: c -->s5R, t (in xEAe, xEAr) --> tR,
+72. old formulation 12a is wrong? ex: tR,a,t only add 6,4,3 while we should add 6,4,3 and 6,5,3 (assume tR = 6 and t = 3) -->changed!
+73. Print out the long variable value without using 2 digits after the dot (twoDform)
+74. Change row ID search to the correct ones for XEAr and XNGr (both in codes and in formulation)
+	- For xEAr: row to find = aR - 1 + t - tR
+	- For xNGr: row to find = a - 1
+75. For logic replacing bug: change eq. (12a): change loop tR from t + 1 (in xEAe and xEAr) to remove the period tR=t which has clear cut from calculating SR's area loss
+76. Check all xEAe and xEAr condition from eq.10 to eq.15 (processing_age should be changed to rotation_age to make the codes more intuitive)
+	- eq.10, eq.11b, eq.12a, eq.13: change processingAge to rotationAge: keep the calculation (actually no logic has been changed)
+77. Sove the auto check "implementation" columns at some default rows, if the input03 exists and is successfully loaded 
+
