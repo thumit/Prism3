@@ -1721,17 +1721,17 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 											}
 										}
 
-										//Add - sigma(tR)(a)(s5R)	xEAr[s1][s2][s3][s4][s5][tR][a][s5R][t]
+										//Add - sigma(tR)(aR)(s5R)	xEAr[s1][s2][s3][s4][s5][tR][aR][s5R][t]
 										if (t >= 2) {
 											for (int tR = t + 1; tR <= total_Periods; tR++) { // tR
-												for (int a = 1; a <= tR - 1; a++) {
+												for (int aR = 1; aR <= tR - 1; aR++) {
 													for (int s5R = 0; s5R < layer5.size(); s5R++) {		// s5R
-														String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(s5R) + " " + a;						
+														String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(s5R) + " " + aR;						
 														if (covertype_conversions_and_regeneration_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {				
-															SRDage = a - tR + t;
+															SRDage = aR - tR + t;
 															if (SRDage > 0) {
 																if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %	
-																c12_indexlist.get(c12_num).add(xEAr[s1][s2][s3][s4][s5][tR][a][s5R][t]);
+																c12_indexlist.get(c12_num).add(xEAr[s1][s2][s3][s4][s5][tR][aR][s5R][t]);
 																c12_valuelist.get(c12_num).add((double) - SRD_percent[s5][SRDage] / 100);		//SR Fire loss Rate = P(s5,a)/100
 															}
 														}
@@ -1867,7 +1867,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										c13_indexlist.get(c13_num).add(xNGr[s1][s2][s3][s4][c][t + 1][1]);
 										c13_valuelist.get(c13_num).add((double) -1);
 																			
-										//Add -sigma(t' c') xEAr(s1,s2,s3,s4,s5=c)[tR][a'=tR-t][s5R][t+1]
+										//Add -sigma(t' c') xEAr(s1,s2,s3,s4,s5=c)[tR][aR=tR-t][s5R][t+1]
 										for (int tR = t+1; tR <= total_Periods; tR++) {
 											for (int s5R = 0; s5R < layer5.size(); s5R++) {
 												int rotationAge = tR - t;	
@@ -1961,24 +1961,24 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 							if (modeled_strata_withoutSizeClassandCoverType.contains(strataName)) {		
 								for (int s5 = 0; s5 < layer5.size(); s5++) {
 									for (int tR = 2; tR <= total_Periods; tR++) {
-										for (int a = 1; a <= tR-1; a++) {									
+										for (int aR = 1; aR <= tR-1; aR++) {									
 											for (int s5R = 0; s5R < layer5.size(); s5R++) {
-												String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(s5R) + " " + a;						
+												String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(s5R) + " " + aR;						
 												if (covertype_conversions_and_regeneration_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
-													for (int t = tR - a + 1; t <= tR - 1; t++) {
+													for (int t = tR - aR + 1; t <= tR - 1; t++) {
 														//Add constraint
 														c14_indexlist.add(new ArrayList<Integer>());
 														c14_valuelist.add(new ArrayList<Double>());
 														
-														//Add xEAr(s1,s2,s3,s4,s5)[tR][a][s5R][t]
-														SRDage = a - tR + t; 
+														//Add xEAr(s1,s2,s3,s4,s5)[tR][aR][s5R][t]
+														SRDage = aR - tR + t; 
 														if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %									
 														
-														c14_indexlist.get(c14_num).add(xEAr[s1][s2][s3][s4][s5][tR][a][s5R][t]);
+														c14_indexlist.get(c14_num).add(xEAr[s1][s2][s3][s4][s5][tR][aR][s5R][t]);
 														c14_valuelist.get(c14_num).add((double) 1 - SRD_percent[s5][SRDage] / 100);		//SR Fire loss Rate = P(s5,a)/100													
 												
-														//Add - xEAr(s1,s2,s3,s4,s5,s6)[tR][a][s5R][t+1]		
-														c14_indexlist.get(c14_num).add(xEAr[s1][s2][s3][s4][s5][tR][a][s5R][t + 1]);
+														//Add - xEAr(s1,s2,s3,s4,s5,s6)[tR][aR][s5R][t+1]		
+														c14_indexlist.get(c14_num).add(xEAr[s1][s2][s3][s4][s5][tR][aR][s5R][t + 1]);
 														c14_valuelist.get(c14_num).add((double) -1);																					
 														
 														//add bounds

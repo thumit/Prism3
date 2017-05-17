@@ -100,4 +100,15 @@
 76. Check all xEAe and xEAr condition from eq.10 to eq.15 (processing_age should be changed to rotation_age to make the codes more intuitive)
 	- eq.10, eq.11b, eq.12a, eq.13: change processingAge to rotationAge: keep the calculation (actually no logic has been changed)
 77. Sove the auto check "implementation" columns at some default rows, if the input03 exists and is successfully loaded 
+--------------------------------------------------------------------------
 
+78. Change xEar: a-->aR in eq. 12a, 13
+79. Change c-->s5r in eq.12a
+80. Change c-->s5r and c'-->s5r' in eq.12b
+81. Still keep c and c' in the codes because it is easier to read constraints (may need to change later)
+82. Change database "strata" name to match name requirements in Part 2: SpectrumLite database: switch timing_choice and forest_status  
+	- Get_Variable_Information & 
+	- public void create_sample()
+	- public String get_starting_ageclass
+83. Hide PBr, GSr in the GUI, show them later after the future update of PBr and GSr in the model formulation
+84. CNPZ fake actions created for all yield tables but very realistic.

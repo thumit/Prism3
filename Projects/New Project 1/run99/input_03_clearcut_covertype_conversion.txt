@@ -1,0 +1,16 @@
+covertype_before_cut	covertype_after_cut	min_age_cut_existing	max_age_cut_existing	min_age_cut_regeneration	max_age_cut_regeneration	implementation	
+P	P	5	15	4	8	true	
+P	I	5	15	4	8	true	
+D	P	5	15	4	8	true	
+D	I	5	15	4	8	true	
+W	C	5	15	4	8	true	
+W	N	5	15	4	8	true	
+C	C	5	15	4	8	true	
+C	L	5	15	4	8	true	
+I	W	5	15	4	8	true	
+A	D	5	15	4	8	true	
+A	I	5	15	4	8	true	
+L	D	5	15	4	8	true	
+L	I	5	15	4	8	true	
+N	W	5	15	4	8	true	
+N	A	5	15	4	8	true	

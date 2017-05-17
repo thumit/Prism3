@@ -1,2 +1,0 @@
-strata_id	layer1	layer2	layer3	layer4	layer5	layer6	acres	ageclass	modeled_strata	
-BRPCPS	B	R	P	C	P	S	53.0	2	true	

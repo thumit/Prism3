@@ -158,7 +158,7 @@ public class Read_Database_Yield_Tables {
 		method = "NG";	//only use NG table to find starting age class
 		timing_choice ="0";
 		String forest_status = "E";
-		String tableName_toFind = cover_type + "_" + size_class + "_" + method + "_" + timing_choice + "_" + forest_status;
+		String tableName_toFind = cover_type + "_" + size_class + "_" + method + "_" + forest_status + "_" + timing_choice;
 		tableName_toFind = tableName_toFind.toUpperCase();
 		
 		String valueReturn = null;

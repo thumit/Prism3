@@ -51,7 +51,7 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 			if (allmethods_ToolTips.get(0).get(i).equals("PBe")) 	allmethods_ToolTips.get(0).set(i, "Prescribed Burn existing");
 			if (allmethods_ToolTips.get(0).get(i).equals("GSe")) 	allmethods_ToolTips.get(0).set(i, "Group Selection existing");
 			if (allmethods_ToolTips.get(0).get(i).equals("EAe")) 	allmethods_ToolTips.get(0).set(i, "Even Age existing");
-			if (allmethods_ToolTips.get(0).get(i).equals("MS")) 	allmethods_ToolTips.get(0).set(i, "Mizxed Severity Wildfire");
+			if (allmethods_ToolTips.get(0).get(i).equals("MSe")) 	allmethods_ToolTips.get(0).set(i, "Mixed Severity Wildfire");
 			if (allmethods_ToolTips.get(0).get(i).equals("NGr")) 	allmethods_ToolTips.get(0).set(i, "Natural Growth regeneration");
 			if (allmethods_ToolTips.get(0).get(i).equals("PBr")) 	allmethods_ToolTips.get(0).set(i, "Prescribed Burn regeneration");
 			if (allmethods_ToolTips.get(0).get(i).equals("GSr")) 	allmethods_ToolTips.get(0).set(i, "Group Selection regeneration");

@@ -25,7 +25,7 @@ public class Get_Variable_Information {
 			method = "NG";
 			timing_choice = 0;
 			forest_status = "E";
-			yield_table_name_to_find = layer5 + "_" + layer6  + "_"+ method + "_" + timing_choice + "_" + forest_status;
+			yield_table_name_to_find = layer5 + "_" + layer6  + "_"+ method + "_" + forest_status + "_" + timing_choice;
 			yield_table_row_index_to_find = period - 1;
 		} 
 		else if (var_name.startsWith("xPBe_")) {
@@ -44,7 +44,7 @@ public class Get_Variable_Information {
 			
 			method = "PB";
 			forest_status = "E";
-			yield_table_name_to_find = layer5 + "_" + layer6  + "_"+ method + "_" + timing_choice + "_" + forest_status;
+			yield_table_name_to_find = layer5 + "_" + layer6  + "_"+ method + "_" + forest_status + "_" + timing_choice;
 			yield_table_row_index_to_find = period - 1;
 		}
 		else if (var_name.startsWith("xGSe_")) {
@@ -63,7 +63,7 @@ public class Get_Variable_Information {
 			
 			method = "GS";
 			forest_status = "E";
-			yield_table_name_to_find = layer5 + "_" + layer6  + "_"+ method + "_" + timing_choice + "_" + forest_status;
+			yield_table_name_to_find = layer5 + "_" + layer6  + "_"+ method + "_" + forest_status + "_" + timing_choice;
 			yield_table_row_index_to_find = period - 1;
 		}
 		else if (var_name.startsWith("xMSe_")) {
@@ -82,7 +82,7 @@ public class Get_Variable_Information {
 			
 			method = "MS";
 			forest_status = "E";
-			yield_table_name_to_find = layer5 + "_" + layer6  + "_"+ method + "_" + timing_choice + "_" + forest_status;
+			yield_table_name_to_find = layer5 + "_" + layer6  + "_"+ method + "_" + forest_status + "_" + timing_choice;
 			yield_table_row_index_to_find = period - 1;
 		}
 		else if (var_name.startsWith("xEAe_")) {				
@@ -100,7 +100,7 @@ public class Get_Variable_Information {
 			
 			method = "EA";
 			forest_status = "E";
-			yield_table_name_to_find = layer5 + "_" + layer6  + "_"+ method + "_" + period + "+startage-1_" + forest_status;
+			yield_table_name_to_find = layer5 + "_" + layer6  + "_"+ method + "_" + forest_status + "_" + period + "+startage-1";
 			yield_table_row_index_to_find = period - 1;
 		}	
 		else if (var_name.startsWith("xEAr_")) {
@@ -118,7 +118,7 @@ public class Get_Variable_Information {
 			
 			method = "EA";
 			forest_status = "R";
-			yield_table_name_to_find = layer5 + "_" + method + "_" + rotation_age + "_" + forest_status;
+			yield_table_name_to_find = layer5 + "_" + method + "_" + forest_status + "_" + rotation_age;
 			yield_table_row_index_to_find = rotation_age - 1 + period - rotation_period;
 		}
 		else if (var_name.startsWith("xNGr_")) {
@@ -136,7 +136,7 @@ public class Get_Variable_Information {
 			method = "NG";
 			timing_choice = 0;
 			forest_status = "R";
-			yield_table_name_to_find = layer5 + "_" + method + "_" + timing_choice + "_" + forest_status;
+			yield_table_name_to_find = layer5 + "_" + method + "_" + forest_status + "_" + timing_choice;
 			yield_table_row_index_to_find = age - 1;
 		}	
 	}

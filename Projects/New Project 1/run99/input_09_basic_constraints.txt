@@ -1,0 +1,151 @@
+bc_id	bc_description	bc_type	bc_multiplier	lowerbound	lowerbound_perunit_penalty	upperbound	upperbound_perunit_penalty	parameter_index	static_identifiers	dynamic_identifiers	
+1	200k 1 - silvicultural method NGe - time period 1	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe;7 1	NoIdentifier	
+2	200k 2 - silvicultural method NGe - time period 2	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe;7 2	NoIdentifier	
+3	200k 3 - silvicultural method NGe - time period 3	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe;7 3	NoIdentifier	
+4	200k 4 - silvicultural method NGe - time period 4	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe;7 4	NoIdentifier	
+5	200k 5 - silvicultural method NGe - time period 5	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe;7 5	NoIdentifier	
+6	200k 6 - silvicultural method NGe - time period 6	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe;7 6	NoIdentifier	
+7	200k 7 - silvicultural method NGe - time period 7	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe;7 7	NoIdentifier	
+8	200k 8 - silvicultural method NGe - time period 8	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe;7 8	NoIdentifier	
+9	200k 9 - silvicultural method NGe - time period 9	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe;7 9	NoIdentifier	
+10	200k 10 - silvicultural method NGe - time period 10	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe;7 10	NoIdentifier	
+11	200k 11 - silvicultural method NGe - time period 11	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe;7 11	NoIdentifier	
+12	200k 12 - silvicultural method NGe - time period 12	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe;7 12	NoIdentifier	
+13	200k 13 - silvicultural method NGe - time period 13	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe;7 13	NoIdentifier	
+14	200k 14 - silvicultural method NGe - time period 14	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe;7 14	NoIdentifier	
+15	200k 15 - silvicultural method NGe - time period 15	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe;7 15	NoIdentifier	
+16	200k 16 - silvicultural method NGe - time period 16	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe;7 16	NoIdentifier	
+17	200k 17 - silvicultural method NGe - time period 17	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe;7 17	NoIdentifier	
+18	200k 18 - silvicultural method NGe - time period 18	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe;7 18	NoIdentifier	
+19	200k 19 - silvicultural method NGe - time period 19	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe;7 19	NoIdentifier	
+20	200k 20 - silvicultural method NGe - time period 20	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe;7 20	NoIdentifier	
+21	200k 21 - silvicultural method NGe - time period 21	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe;7 21	NoIdentifier	
+22	200k 22 - silvicultural method NGe - time period 22	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe;7 22	NoIdentifier	
+23	200k 23 - silvicultural method NGe - time period 23	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe;7 23	NoIdentifier	
+24	200k 24 - silvicultural method NGe - time period 24	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe;7 24	NoIdentifier	
+25	200k 25 - silvicultural method NGe - time period 25	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe;7 25	NoIdentifier	
+26	200k 26 - silvicultural method PBe - time period 1	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBe;7 1	NoIdentifier	
+27	200k 27 - silvicultural method PBe - time period 2	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBe;7 2	NoIdentifier	
+28	200k 28 - silvicultural method PBe - time period 3	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBe;7 3	NoIdentifier	
+29	200k 29 - silvicultural method PBe - time period 4	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBe;7 4	NoIdentifier	
+30	200k 30 - silvicultural method PBe - time period 5	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBe;7 5	NoIdentifier	
+31	200k 31 - silvicultural method PBe - time period 6	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBe;7 6	NoIdentifier	
+32	200k 32 - silvicultural method PBe - time period 7	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBe;7 7	NoIdentifier	
+33	200k 33 - silvicultural method PBe - time period 8	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBe;7 8	NoIdentifier	
+34	200k 34 - silvicultural method PBe - time period 9	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBe;7 9	NoIdentifier	
+35	200k 35 - silvicultural method PBe - time period 10	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBe;7 10	NoIdentifier	
+36	200k 36 - silvicultural method PBe - time period 11	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBe;7 11	NoIdentifier	
+37	200k 37 - silvicultural method PBe - time period 12	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBe;7 12	NoIdentifier	
+38	200k 38 - silvicultural method PBe - time period 13	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBe;7 13	NoIdentifier	
+39	200k 39 - silvicultural method PBe - time period 14	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBe;7 14	NoIdentifier	
+40	200k 40 - silvicultural method PBe - time period 15	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBe;7 15	NoIdentifier	
+41	200k 41 - silvicultural method PBe - time period 16	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBe;7 16	NoIdentifier	
+42	200k 42 - silvicultural method PBe - time period 17	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBe;7 17	NoIdentifier	
+43	200k 43 - silvicultural method PBe - time period 18	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBe;7 18	NoIdentifier	
+44	200k 44 - silvicultural method PBe - time period 19	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBe;7 19	NoIdentifier	
+45	200k 45 - silvicultural method PBe - time period 20	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBe;7 20	NoIdentifier	
+46	200k 46 - silvicultural method PBe - time period 21	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBe;7 21	NoIdentifier	
+47	200k 47 - silvicultural method PBe - time period 22	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBe;7 22	NoIdentifier	
+48	200k 48 - silvicultural method PBe - time period 23	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBe;7 23	NoIdentifier	
+49	200k 49 - silvicultural method PBe - time period 24	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBe;7 24	NoIdentifier	
+50	200k 50 - silvicultural method PBe - time period 25	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBe;7 25	NoIdentifier	
+51	200k 51 - silvicultural method GSe - time period 1	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSe;7 1	NoIdentifier	
+52	200k 52 - silvicultural method GSe - time period 2	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSe;7 2	NoIdentifier	
+53	200k 53 - silvicultural method GSe - time period 3	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSe;7 3	NoIdentifier	
+54	200k 54 - silvicultural method GSe - time period 4	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSe;7 4	NoIdentifier	
+55	200k 55 - silvicultural method GSe - time period 5	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSe;7 5	NoIdentifier	
+56	200k 56 - silvicultural method GSe - time period 6	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSe;7 6	NoIdentifier	
+57	200k 57 - silvicultural method GSe - time period 7	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSe;7 7	NoIdentifier	
+58	200k 58 - silvicultural method GSe - time period 8	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSe;7 8	NoIdentifier	
+59	200k 59 - silvicultural method GSe - time period 9	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSe;7 9	NoIdentifier	
+60	200k 60 - silvicultural method GSe - time period 10	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSe;7 10	NoIdentifier	
+61	200k 61 - silvicultural method GSe - time period 11	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSe;7 11	NoIdentifier	
+62	200k 62 - silvicultural method GSe - time period 12	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSe;7 12	NoIdentifier	
+63	200k 63 - silvicultural method GSe - time period 13	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSe;7 13	NoIdentifier	
+64	200k 64 - silvicultural method GSe - time period 14	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSe;7 14	NoIdentifier	
+65	200k 65 - silvicultural method GSe - time period 15	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSe;7 15	NoIdentifier	
+66	200k 66 - silvicultural method GSe - time period 16	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSe;7 16	NoIdentifier	
+67	200k 67 - silvicultural method GSe - time period 17	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSe;7 17	NoIdentifier	
+68	200k 68 - silvicultural method GSe - time period 18	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSe;7 18	NoIdentifier	
+69	200k 69 - silvicultural method GSe - time period 19	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSe;7 19	NoIdentifier	
+70	200k 70 - silvicultural method GSe - time period 20	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSe;7 20	NoIdentifier	
+71	200k 71 - silvicultural method GSe - time period 21	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSe;7 21	NoIdentifier	
+72	200k 72 - silvicultural method GSe - time period 22	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSe;7 22	NoIdentifier	
+73	200k 73 - silvicultural method GSe - time period 23	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSe;7 23	NoIdentifier	
+74	200k 74 - silvicultural method GSe - time period 24	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSe;7 24	NoIdentifier	
+75	200k 75 - silvicultural method GSe - time period 25	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSe;7 25	NoIdentifier	
+76	200k 76 - silvicultural method EAe - time period 1	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAe;7 1	NoIdentifier	
+77	200k 77 - silvicultural method EAe - time period 2	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAe;7 2	NoIdentifier	
+78	200k 78 - silvicultural method EAe - time period 3	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAe;7 3	NoIdentifier	
+79	200k 79 - silvicultural method EAe - time period 4	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAe;7 4	NoIdentifier	
+80	200k 80 - silvicultural method EAe - time period 5	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAe;7 5	NoIdentifier	
+81	200k 81 - silvicultural method EAe - time period 6	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAe;7 6	NoIdentifier	
+82	200k 82 - silvicultural method EAe - time period 7	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAe;7 7	NoIdentifier	
+83	200k 83 - silvicultural method EAe - time period 8	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAe;7 8	NoIdentifier	
+84	200k 84 - silvicultural method EAe - time period 9	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAe;7 9	NoIdentifier	
+85	200k 85 - silvicultural method EAe - time period 10	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAe;7 10	NoIdentifier	
+86	200k 86 - silvicultural method EAe - time period 11	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAe;7 11	NoIdentifier	
+87	200k 87 - silvicultural method EAe - time period 12	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAe;7 12	NoIdentifier	
+88	200k 88 - silvicultural method EAe - time period 13	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAe;7 13	NoIdentifier	
+89	200k 89 - silvicultural method EAe - time period 14	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAe;7 14	NoIdentifier	
+90	200k 90 - silvicultural method EAe - time period 15	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAe;7 15	NoIdentifier	
+91	200k 91 - silvicultural method EAe - time period 16	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAe;7 16	NoIdentifier	
+92	200k 92 - silvicultural method EAe - time period 17	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAe;7 17	NoIdentifier	
+93	200k 93 - silvicultural method EAe - time period 18	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAe;7 18	NoIdentifier	
+94	200k 94 - silvicultural method EAe - time period 19	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAe;7 19	NoIdentifier	
+95	200k 95 - silvicultural method EAe - time period 20	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAe;7 20	NoIdentifier	
+96	200k 96 - silvicultural method EAe - time period 21	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAe;7 21	NoIdentifier	
+97	200k 97 - silvicultural method EAe - time period 22	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAe;7 22	NoIdentifier	
+98	200k 98 - silvicultural method EAe - time period 23	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAe;7 23	NoIdentifier	
+99	200k 99 - silvicultural method EAe - time period 24	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAe;7 24	NoIdentifier	
+100	200k 100 - silvicultural method EAe - time period 25	SOFT	1.0	200000.0	1.0	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAe;7 25	NoIdentifier	
+101	Total Cost in period 1 - time period 1	FREE	1.0	null	null	null	null	CostParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 1	NoIdentifier	
+102	Total Cost in period 2 - time period 2	FREE	1.0	null	null	null	null	CostParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 2	NoIdentifier	
+103	Total Cost in period 3 - time period 3	FREE	1.0	null	null	null	null	CostParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 3	NoIdentifier	
+104	Total Cost in period 4 - time period 4	FREE	1.0	null	null	null	null	CostParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 4	NoIdentifier	
+105	Total Cost in period 5 - time period 5	FREE	1.0	null	null	null	null	CostParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 5	NoIdentifier	
+106	Total Cost in period 6 - time period 6	FREE	1.0	null	null	null	null	CostParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 6	NoIdentifier	
+107	Total Cost in period 7 - time period 7	FREE	1.0	null	null	null	null	CostParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 7	NoIdentifier	
+108	Total Cost in period 8 - time period 8	FREE	1.0	null	null	null	null	CostParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 8	NoIdentifier	
+109	Total Cost in period 9 - time period 9	FREE	1.0	null	null	null	null	CostParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 9	NoIdentifier	
+110	Total Cost in period 10 - time period 10	FREE	1.0	null	null	null	null	CostParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 10	NoIdentifier	
+111	Total Cost in period 11 - time period 11	FREE	1.0	null	null	null	null	CostParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 11	NoIdentifier	
+112	Total Cost in period 12 - time period 12	FREE	1.0	null	null	null	null	CostParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 12	NoIdentifier	
+113	Total Cost in period 13 - time period 13	FREE	1.0	null	null	null	null	CostParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 13	NoIdentifier	
+114	Total Cost in period 14 - time period 14	FREE	1.0	null	null	null	null	CostParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 14	NoIdentifier	
+115	Total Cost in period 15 - time period 15	FREE	1.0	null	null	null	null	CostParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 15	NoIdentifier	
+116	Total Cost in period 16 - time period 16	FREE	1.0	null	null	null	null	CostParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 16	NoIdentifier	
+117	Total Cost in period 17 - time period 17	FREE	1.0	null	null	null	null	CostParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 17	NoIdentifier	
+118	Total Cost in period 18 - time period 18	FREE	1.0	null	null	null	null	CostParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 18	NoIdentifier	
+119	Total Cost in period 19 - time period 19	FREE	1.0	null	null	null	null	CostParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 19	NoIdentifier	
+120	Total Cost in period 20 - time period 20	FREE	1.0	null	null	null	null	CostParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 20	NoIdentifier	
+121	Total Cost in period 21 - time period 21	FREE	1.0	null	null	null	null	CostParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 21	NoIdentifier	
+122	Total Cost in period 22 - time period 22	FREE	1.0	null	null	null	null	CostParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 22	NoIdentifier	
+123	Total Cost in period 23 - time period 23	FREE	1.0	null	null	null	null	CostParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 23	NoIdentifier	
+124	Total Cost in period 24 - time period 24	FREE	1.0	null	null	null	null	CostParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 24	NoIdentifier	
+125	Total Cost in period 25 - time period 25	FREE	1.0	null	null	null	null	CostParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 25	NoIdentifier	
+126	TOTAL ACRES in period 1 - time period 1	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 1	NoIdentifier	
+127	TOTAL ACRES in period 2 - time period 2	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 2	NoIdentifier	
+128	TOTAL ACRES in period 3 - time period 3	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 3	NoIdentifier	
+129	TOTAL ACRES in period 4 - time period 4	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 4	NoIdentifier	
+130	TOTAL ACRES in period 5 - time period 5	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 5	NoIdentifier	
+131	TOTAL ACRES in period 6 - time period 6	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 6	NoIdentifier	
+132	TOTAL ACRES in period 7 - time period 7	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 7	NoIdentifier	
+133	TOTAL ACRES in period 8 - time period 8	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 8	NoIdentifier	
+134	TOTAL ACRES in period 9 - time period 9	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 9	NoIdentifier	
+135	TOTAL ACRES in period 10 - time period 10	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 10	NoIdentifier	
+136	TOTAL ACRES in period 11 - time period 11	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 11	NoIdentifier	
+137	TOTAL ACRES in period 12 - time period 12	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 12	NoIdentifier	
+138	TOTAL ACRES in period 13 - time period 13	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 13	NoIdentifier	
+139	TOTAL ACRES in period 14 - time period 14	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 14	NoIdentifier	
+140	TOTAL ACRES in period 15 - time period 15	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 15	NoIdentifier	
+141	TOTAL ACRES in period 16 - time period 16	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 16	NoIdentifier	
+142	TOTAL ACRES in period 17 - time period 17	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 17	NoIdentifier	
+143	TOTAL ACRES in period 18 - time period 18	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 18	NoIdentifier	
+144	TOTAL ACRES in period 19 - time period 19	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 19	NoIdentifier	
+145	TOTAL ACRES in period 20 - time period 20	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 20	NoIdentifier	
+146	TOTAL ACRES in period 21 - time period 21	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 21	NoIdentifier	
+147	TOTAL ACRES in period 22 - time period 22	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 22	NoIdentifier	
+148	TOTAL ACRES in period 23 - time period 23	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 23	NoIdentifier	
+149	TOTAL ACRES in period 24 - time period 24	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 24	NoIdentifier	
+150	TOTAL ACRES in period 25 - time period 25	FREE	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe NGr PBr GSr EAr;7 25	NoIdentifier	

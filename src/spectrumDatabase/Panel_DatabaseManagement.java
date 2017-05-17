@@ -1515,15 +1515,256 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 			conn.setAutoCommit(false);
 			PreparedStatement pst = null;
 			
+	
+//			// Change yield table (strata) name and add MS tables
+//			try {
+//				//get the strata name and put into a list		
+//				List<String> strata_list = new ArrayList<String>();	
+//				pst = conn.prepareStatement("SELECT DISTINCT strata FROM yield_tables;");
+//				ResultSet rs = pst.executeQuery();			
+//				while (rs.next()) {
+//					strata_list.add(rs.getString(1));		//column 1
+//				}
+//				rs.close();
+//				
+//				//new strata name
+//				List<String> new_strata_list = new ArrayList<String>();	
+//				String covertype, sizeclass, method, timing_choice, forest_status, new_name;
+//				for (String strata: strata_list) {
+//					if (strata.substring(0,1).equalsIgnoreCase("v")) {
+//						covertype = strata.substring(0, 4);
+//						sizeclass = strata.substring(4, 6);
+//						method = strata.substring(6, 7);
+//						timing_choice = strata.substring(7, 8);
+//						forest_status = strata.substring(8, 9);
+//						
+//						if (covertype.equalsIgnoreCase("VDIP")) covertype = "P";
+//						if (covertype.equalsIgnoreCase("VDTD")) covertype = "D";
+//						if (covertype.equalsIgnoreCase("VMIW")) covertype = "W";
+//						if (covertype.equalsIgnoreCase("VMTC")) covertype = "C";
+//						if (covertype.equalsIgnoreCase("VSII")) covertype = "I";
+//						if (covertype.equalsIgnoreCase("VSTA")) covertype = "A";
+//						if (covertype.equalsIgnoreCase("VLPP")) covertype = "L";
+//						if (covertype.equalsIgnoreCase("NS")) covertype = "N";					
+//						
+//						if (sizeclass.equalsIgnoreCase("50")) sizeclass = "N";
+//						if (sizeclass.equalsIgnoreCase("30")) sizeclass = "S";
+//						if (sizeclass.equalsIgnoreCase("20")) sizeclass = "P";
+//						if (sizeclass.equalsIgnoreCase("13")) sizeclass = "M";
+//						if (sizeclass.equalsIgnoreCase("12")) sizeclass = "L";	
+//						
+//						if (method.equalsIgnoreCase("A")) method = "NG";
+//						if (method.equalsIgnoreCase("B")) method = "EA";
+//						if (method.equalsIgnoreCase("C")) method = "GS";
+//						if (method.equalsIgnoreCase("D")) method = "PB";
+//						if (method.equalsIgnoreCase("E")) method = "MS";
+//									
+//						//Update strata with new name					
+//						new_name = covertype + "_" + sizeclass + "_" + method + "_" + forest_status + "_" + timing_choice;
+//						new_name = new_name.toUpperCase();
+//						new_strata_list.add(new_name);
+//						pst = conn.prepareStatement("UPDATE yield_tables SET strata = '" + new_name + "' WHERE strata = '" + strata + "';");
+//						pst.executeUpdate();
+//					}
+//				}		
+//				
+//				//Create MS tables based on PB tables
+//				pst = conn.prepareStatement("CREATE TABLE ms_tables AS SELECT * FROM yield_tables WHERE strata LIKE '%PB%';");
+//				pst.executeUpdate();	
+//				for (String new_strata: new_strata_list) {
+//					pst = conn.prepareStatement("UPDATE ms_tables SET strata = '" + new_strata.replace("PB", "MS") + "' WHERE strata = '" + new_strata + "';");
+//					pst.executeUpdate();
+//				}
+//			} catch (Exception e) {
+//				JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
+//			}
+//					
+//			
+//			try {			
+//				//Combine yield_tables & ms_tables
+//				pst = conn.prepareStatement("CREATE TABLE combine_table AS SELECT * FROM yield_tables union SELECT * FROM ms_tables;");
+//				pst.executeUpdate();		
+//				
+//				//delete yield_tables & ms_tables
+//				pst = conn.prepareStatement("DROP TABLE yield_tables;");
+//				pst.executeUpdate();
+//				
+//				pst = conn.prepareStatement("DROP TABLE ms_tables;");
+//				pst.executeUpdate();
+//				
+//				//rename combine_table to yield_tables
+//				pst = conn.prepareStatement("ALTER TABLE combine_table RENAME TO yield_tables;");
+//				pst.executeUpdate();
+//			} catch (Exception e) {
+//				JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
+//			}
+//			
+//			
+//			
+//			
+//
+//			
+//			// Change timing choice of EAe and EAr table to be the rotation age class (the max age of this EA table) - and delete all EAr tables
+//			try {		
+//				// Delete all EAr tables
+//				pst = conn.prepareStatement("DELETE FROM yield_tables WHERE strata LIKE '%_R_%';");		
+//				pst.executeUpdate();
+//				
+//				
+//				//get the strata name and put into a list		
+//				List<String> strata_list = new ArrayList<String>();	
+//				pst = conn.prepareStatement("SELECT DISTINCT strata FROM yield_tables;");
+//				ResultSet rs = pst.executeQuery();			
+//				while (rs.next()) {
+//					strata_list.add(rs.getString(1));		//column 1
+//				}
+//				rs.close();
+//				
+//				//new strata name
+//				String covertype, sizeclass, method, timing_choice, forest_status, new_name;
+//				for (String strata: strata_list) {
+//					covertype = strata.substring(0, 1);
+//					sizeclass = strata.substring(2, 3);
+//					method = strata.substring(4, 6);						
+//					forest_status = strata.substring(7, 8);
+//					timing_choice = strata.substring(9, 10);
+//					
+//					
+//					// Find the min age
+//					pst = conn.prepareStatement("SELECT min(CAST(st_age_10 as decimal)) FROM yield_tables WHERE strata = '" + strata + "';");
+//					ResultSet rs1 = pst.executeQuery();	
+//					String starting_age = rs1.getString(1);					
+//					rs1.close();
+//					
+//					// Find the max age
+//					pst = conn.prepareStatement("SELECT max(CAST(st_age_10 as decimal)) FROM yield_tables WHERE strata = '" + strata + "';");
+//					ResultSet rs2 = pst.executeQuery();	
+//					String rotation_age = rs2.getString(1);					
+//					rs2.close();
+//					
+//					// Count number of row
+//					pst = conn.prepareStatement("SELECT COUNT(st_age_10) FROM yield_tables WHERE strata = '" + strata + "';");
+//					ResultSet rs3 = pst.executeQuery();	
+//					String total_rows = rs3.getString(1);					
+//					rs3.close();
+//					
+//															
+//					// Update EAe strata with new name where timing_choice would be replaced by rotation_age					
+//					new_name = covertype + "_" + sizeclass + "_" + method + "_" + forest_status + "_" + rotation_age;
+//					new_name = new_name.toUpperCase();
+//					
+//					if (method.equalsIgnoreCase("EA")) {	
+//						if (Integer.parseInt(total_rows) == Integer.parseInt(rotation_age) - Integer.parseInt(starting_age) + 1){	 // Update if this table has enough rows
+//							pst = conn.prepareStatement("UPDATE yield_tables SET strata = '" + new_name + "' WHERE strata = '" + strata + "';");
+//							pst.executeUpdate();
+//						} else {		// Delete all EAe tables if table this table lacks rows
+//							pst = conn.prepareStatement("DELETE FROM yield_tables WHERE strata = '" + strata + "';");	
+//							pst.executeUpdate();
+//						}					
+//					}	
+//					
+//				}		
+//				
+//
+//			} catch (Exception e) {
+//				JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
+//			}
+			
+			
+			
+						
+			
+			
+			
 			try {
-				//add action_id
+				// add action_id
 				pst = conn.prepareStatement("ALTER TABLE yield_tables ADD COLUMN action_id TEXT;");
 				pst.executeUpdate();
 
-				//action_id = random number (max = total actions)
-				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = 1 + ABS (RANDOM() % (SELECT COUNT(action_id) FROM management_actions));");	
+				
+				// action_id = random number (max = total actions)
+//				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = ABS (RANDOM() % (SELECT COUNT(action_id) FROM management_actions));");	
+				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = ABS (RANDOM() % 10);");	// Random first action_id from 0-9
 				pst.executeUpdate();
+				
+				
+				
+				// NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG-------------------
+				// no_action if method = NG 
+				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = '0' WHERE strata LIKE '%_NG_%';");
+				pst.executeUpdate();	
 			
+						
+				
+				// EA EA EA EA EA EA EA EA EA EA EA EA EA EA EA EA EA EA EA EA EA EA EA EA--------------------
+				// action_id = random(15-->20) if  method = EA   and   not the row of rotation (clear cut not happens)   and   trt_acres <> 0.00
+				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = 15 + ABS (RANDOM() % 6) "
+						+ "WHERE (strata LIKE '%_EA_%' AND substr(strata,10,2) <> st_age_10 AND trt_acres <> '0.00')"
+						+ ";");
+				pst.executeUpdate();			
+				
+				// action_id = random(21-->24) if  method = EA and in the row of rotation (clear cut happens)
+				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = 21 + ABS (RANDOM() % 4) "
+						+ "WHERE strata LIKE '%_EA_%' AND substr(strata,10,2) = st_age_10"
+						+ ";");
+				pst.executeUpdate();	
+				
+				// action_id = 0 if  method = EA  and   trt_acres = 0.00
+				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = '0' "
+						+ "WHERE strata LIKE '%_EA_%' AND trt_acres = '0.00'"
+						+ ";");
+				pst.executeUpdate();
+				
+				
+				
+				// GS GS GS GS GS GS GS GS GS GS GS GS GS GS GS GS GS GS GS GS GS GS GS GS----------------------		
+				// action_id = random(11-->20) if  method = GS    and   trt_acres <> 0.00
+				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = 11 + ABS (RANDOM() % 10) "
+						+ "WHERE (strata LIKE '%_GS_%' AND trt_acres <> '0.00')"
+						+ ";");
+				pst.executeUpdate();
+				
+				// action_id = 0 if  method = GS  and   trt_acres = 0.00
+				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = '0' "
+						+ "WHERE strata LIKE '%_GS_%' AND trt_acres = '0.00'"
+						+ ";");
+				pst.executeUpdate();
+				
+				
+				
+				// PB PB PB PB PB PB PB PB PB PB PB PB PB PB PB PB PB PB PB PB PB PB PB PB----------------------
+				// action_id = 0
+				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = '0' "
+						+ "WHERE strata LIKE '%_PB_%'"
+						+ ";");
+				pst.executeUpdate();
+				
+				// action_id = = random(2-->9) for every random (3-6) periods if  method = PB
+				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = 2 + ABS (RANDOM() % 8) "
+						+ "WHERE strata LIKE '%_PB_%' AND CAST(st_age_10 as decimal) % (3 + ABS (RANDOM() % 4)) = 0"
+						+ ";");
+				pst.executeUpdate();
+				
+				
+				
+				// MS MS MS MS MS MS MS MS MS MS MS MS MS MS MS MS MS MS MS MS MS MS MS MS----------------------
+				// action_id = 0
+				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = '0' "
+						+ "WHERE strata LIKE '%_MS_%'"
+						+ ";");
+				pst.executeUpdate();
+				
+				// action_id = = random(4-->9) for every random (4-8) periods if  method = PB
+				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = 4 + ABS (RANDOM() % 6) "
+						+ "WHERE strata LIKE '%_MS_%' AND CAST(st_age_10 as decimal) % (4 + ABS (RANDOM() % 5)) = 0"
+						+ ";");
+				pst.executeUpdate();
+				
+				
+				
+				
+				
+				
 				//join tables to yield_tables2
 				pst = conn.prepareStatement("CREATE TABLE yield_tables2 AS SELECT * FROM yield_tables JOIN management_actions USING (action_id);");
 				pst.executeUpdate();
@@ -1535,97 +1776,18 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 				//rename yield_tables2 to yield_tables
 				pst = conn.prepareStatement("ALTER TABLE yield_tables2 RENAME TO yield_tables;");
 				pst.executeUpdate();
-				
-				//no_action if trt_acres = 0.00  or method = Natural Growth 
-				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = '0', action_type = 'no_action' WHERE trt_acres = '0.00' OR strata LIKE '%a0%';");
-				pst.executeUpdate();			
-
+			
 			} catch (Exception e) {
 				JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
 			}
+	
+			
+		
 			
 			
-			try {
-				//get the strata name and put into a list		
-				List<String> strata_list = new ArrayList<String>();	
-				pst = conn.prepareStatement("SELECT DISTINCT strata FROM yield_tables;");
-				ResultSet rs = pst.executeQuery();			
-				while (rs.next()) {
-					strata_list.add(rs.getString(1));		//column 1
-				}
-				rs.close();
-				
-				//new strata name
-				List<String> new_strata_list = new ArrayList<String>();	
-				String covertype, sizeclass, method, timing_choice, forest_status, new_name;
-				for (String strata: strata_list) {
-					if (strata.substring(0,1).equalsIgnoreCase("v")) {
-						covertype = strata.substring(0, 4);
-						sizeclass = strata.substring(4, 6);
-						method = strata.substring(6, 7);
-						timing_choice = strata.substring(7, 8);
-						forest_status = strata.substring(8, 9);
-						
-						if (covertype.equalsIgnoreCase("VDIP")) covertype = "P";
-						if (covertype.equalsIgnoreCase("VDTD")) covertype = "D";
-						if (covertype.equalsIgnoreCase("VMIW")) covertype = "W";
-						if (covertype.equalsIgnoreCase("VMTC")) covertype = "C";
-						if (covertype.equalsIgnoreCase("VSII")) covertype = "I";
-						if (covertype.equalsIgnoreCase("VSTA")) covertype = "A";
-						if (covertype.equalsIgnoreCase("VLPP")) covertype = "L";
-						if (covertype.equalsIgnoreCase("NS")) covertype = "N";					
-						
-						if (sizeclass.equalsIgnoreCase("50")) sizeclass = "N";
-						if (sizeclass.equalsIgnoreCase("30")) sizeclass = "S";
-						if (sizeclass.equalsIgnoreCase("20")) sizeclass = "P";
-						if (sizeclass.equalsIgnoreCase("13")) sizeclass = "M";
-						if (sizeclass.equalsIgnoreCase("12")) sizeclass = "L";	
-						
-						if (method.equalsIgnoreCase("A")) method = "NG";
-						if (method.equalsIgnoreCase("B")) method = "EA";
-						if (method.equalsIgnoreCase("C")) method = "GS";
-						if (method.equalsIgnoreCase("D")) method = "PB";
-						if (method.equalsIgnoreCase("E")) method = "MS";
-									
-						//Update strata with new name					
-						new_name = covertype + "_" + sizeclass + "_" + method + "_" + timing_choice + "_" + forest_status;
-						new_name = new_name.toUpperCase();
-						new_strata_list.add(new_name);
-						pst = conn.prepareStatement("UPDATE yield_tables SET strata = '" + new_name + "' WHERE strata = '" + strata + "';");
-						pst.executeUpdate();
-					}
-				}		
-				
-				//Create MS tables based on PB tables
-				pst = conn.prepareStatement("CREATE TABLE ms_tables AS SELECT * FROM yield_tables WHERE strata LIKE '%PB%';");
-				pst.executeUpdate();	
-				for (String new_strata: new_strata_list) {
-					pst = conn.prepareStatement("UPDATE ms_tables SET strata = '" + new_strata.replace("PB", "MS") + "' WHERE strata = '" + new_strata + "';");
-					pst.executeUpdate();
-				}
-			} catch (Exception e) {
-				JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
-			}
-					
 			
-			try {			
-				//Combine yield_tables & ms_tables
-				pst = conn.prepareStatement("CREATE TABLE combine_table AS SELECT * FROM yield_tables union SELECT * FROM ms_tables;");
-				pst.executeUpdate();		
-				
-				//delete yield_tables & ms_tables
-				pst = conn.prepareStatement("DROP TABLE yield_tables;");
-				pst.executeUpdate();
-				
-				pst = conn.prepareStatement("DROP TABLE ms_tables;");
-				pst.executeUpdate();
-				
-				//rename combine_table to yield_tables
-				pst = conn.prepareStatement("ALTER TABLE combine_table RENAME TO yield_tables;");
-				pst.executeUpdate();
-			} catch (Exception e) {
-				JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
-			}
+			
+			
 			
 			
 			
