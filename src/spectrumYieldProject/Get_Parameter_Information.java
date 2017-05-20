@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Get_Parameter_Information {
 
-	public static double get_total_value(String var_name, 
+	public static double get_total_value(String var_name, int rotation_age,
 			Object[] yieldTable_Name, Object[][][] yieldTable_values, List<String> parameters_indexes_list,
 			List<String> all_dynamicIdentifiers_columnIndexes, List<List<String>> all_dynamicIdentifiers,
 			List<String> action_type_list, double[] baseCost_acres, double[][] baseCost_yieldtables,
@@ -23,6 +23,9 @@ public class Get_Parameter_Information {
 		} else {	// Check the yield table 				
 			List<String> yieldTable_Name_list = new ArrayList<String>() {{ for (Object i : yieldTable_Name) add(i.toString());}};		// Convert Object array to String list
 			String yield_table_name_to_find = Get_Variable_Information.get_yield_table_name_to_find(var_name);	
+			if (yield_table_name_to_find.contains("rotation_age")) {
+				yield_table_name_to_find = yield_table_name_to_find.replace("rotation_age", String.valueOf(rotation_age));
+			}
 			int row_index_to_find  = Get_Variable_Information.get_yield_table_row_index_to_find(var_name);
 			
 			

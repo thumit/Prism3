@@ -1,31 +1,31 @@
 bc_id	bc_description	bc_type	bc_multiplier	lowerbound	lowerbound_perunit_penalty	upperbound	upperbound_perunit_penalty	bookeeping_var_id	bookeeping_var_name	bookeeping_var_value	bookeeping_var_reduced_cost	total_penalty
-1	300k 1 - silvicultural method NGe - time period 1	SOFT	1.0	300000.0	1.0	300000.0	0.0	0	y_0	559805.4316508308	0.0	0.0
-2	300k 2 - silvicultural method NGe - time period 2	SOFT	1.0	300000.0	1.0	300000.0	0.0	1	y_1	515020.9971187638	0.0	0.0
-3	300k 3 - silvicultural method NGe - time period 3	SOFT	1.0	300000.0	1.0	300000.0	0.0	2	y_2	473819.3173492627	0.0	0.0
-4	300k 4 - silvicultural method NGe - time period 4	SOFT	1.0	300000.0	1.0	300000.0	0.0	3	y_3	435913.7719613212	0.0	0.0
-5	300k 5 - silvicultural method NGe - time period 5	SOFT	1.0	300000.0	1.0	300000.0	0.0	4	y_4	401040.670204416	0.0	0.0
-6	300k 6 - silvicultural method PBe - time period 1	SOFT	1.0	300000.0	1.0	300000.0	0.0	5	y_5	418764.58417458466	0.0	0.0
-7	300k 7 - silvicultural method PBe - time period 2	SOFT	1.0	300000.0	1.0	300000.0	0.0	6	y_6	385263.41744061804	0.0	0.0
-8	300k 8 - silvicultural method PBe - time period 3	SOFT	1.0	300000.0	1.0	300000.0	0.0	7	y_7	354442.3440453686	0.0	0.0
-9	300k 9 - silvicultural method PBe - time period 4	SOFT	1.0	300000.0	1.0	300000.0	0.0	8	y_8	326086.95652173925	0.0	0.0
-10	300k 10 - silvicultural method PBe - time period 5	SOFT	1.0	300000.0	1.0	300000.0	0.0	9	y_9	300000.0	0.0	0.0
-11	300k 11 - silvicultural method GSe - time period 1	SOFT	1.0	300000.0	1.0	300000.0	0.0	10	y_10	418764.5841745849	0.0	0.0
-12	300k 12 - silvicultural method GSe - time period 2	SOFT	1.0	300000.0	1.0	300000.0	0.0	11	y_11	385263.4174406183	0.0	0.0
-13	300k 13 - silvicultural method GSe - time period 3	SOFT	1.0	300000.0	1.0	300000.0	0.0	12	y_12	354442.3440453687	0.0	0.0
-14	300k 14 - silvicultural method GSe - time period 4	SOFT	1.0	300000.0	1.0	300000.0	0.0	13	y_13	326086.95652173896	0.0	0.0
+1	300k 1 - silvicultural method NGe - time period 1	SOFT	1.0	300000.0	1.0	300000.0	0.0	0	y_0	418764.58417458576	0.0	0.0
+2	300k 2 - silvicultural method NGe - time period 2	SOFT	1.0	300000.0	1.0	300000.0	0.0	1	y_1	385263.4174406184	0.0	0.0
+3	300k 3 - silvicultural method NGe - time period 3	SOFT	1.0	300000.0	1.0	300000.0	0.0	2	y_2	354442.3440453692	0.0	0.0
+4	300k 4 - silvicultural method NGe - time period 4	SOFT	1.0	300000.0	1.0	300000.0	0.0	3	y_3	326086.9565217392	0.0	0.0
+5	300k 5 - silvicultural method NGe - time period 5	SOFT	1.0	300000.0	1.0	300000.0	0.0	4	y_4	300000.0	0.0	0.0
+6	300k 6 - silvicultural method PBe - time period 1	SOFT	1.0	300000.0	1.0	300000.0	0.0	5	y_5	525683.7816508302	0.0	0.0
+7	300k 7 - silvicultural method PBe - time period 2	SOFT	1.0	300000.0	1.0	300000.0	0.0	6	y_6	483629.07911876385	0.0	0.0
+8	300k 8 - silvicultural method PBe - time period 3	SOFT	1.0	300000.0	1.0	300000.0	0.0	7	y_7	444938.7527892627	0.0	0.0
+9	300k 9 - silvicultural method PBe - time period 4	SOFT	1.0	300000.0	1.0	300000.0	0.0	8	y_8	409343.6525661218	0.0	0.0
+10	300k 10 - silvicultural method PBe - time period 5	SOFT	1.0	300000.0	1.0	300000.0	0.0	9	y_9	376596.1603608319	0.0	0.0
+11	300k 11 - silvicultural method GSe - time period 1	SOFT	1.0	300000.0	1.0	300000.0	0.0	10	y_10	418764.5841745845	0.0	0.0
+12	300k 12 - silvicultural method GSe - time period 2	SOFT	1.0	300000.0	1.0	300000.0	0.0	11	y_11	385263.4174406181	0.0	0.0
+13	300k 13 - silvicultural method GSe - time period 3	SOFT	1.0	300000.0	1.0	300000.0	0.0	12	y_12	354442.34404536855	0.0	0.0
+14	300k 14 - silvicultural method GSe - time period 4	SOFT	1.0	300000.0	1.0	300000.0	0.0	13	y_13	326086.9565217388	0.0	0.0
 15	300k 15 - silvicultural method GSe - time period 5	SOFT	1.0	300000.0	1.0	300000.0	0.0	14	y_14	300000.0	0.0	0.0
-16	300k 1 - time period 1	SOFT	1.0	300000.0	1.0	300000.0	0.0	15	y_15	300000.0	0.0	0.0
-17	300k 2 - time period 2	SOFT	1.0	300000.0	1.0	300000.0	0.0	16	y_16	411786.76799999987	0.0	0.0
-18	300k 3 - time period 3	SOFT	1.0	300000.0	1.0	300000.0	0.0	17	y_17	514630.5945600002	0.0	0.0
-19	300k 4 - time period 4	SOFT	1.0	300000.0	1.0	300000.0	0.0	18	y_18	609246.9149952002	0.0	0.0
-20	300k 5 - time period 5	SOFT	1.0	300000.0	1.0	300000.0	0.0	19	y_19	696293.9297955846	0.0	0.0
-21	total cost 1 - time period 1	FREE	1.0	null	null	null	null	60	v_0	4.196334645729664E8	0.0	0.0
-22	total cost 2 - time period 2	FREE	1.0	null	null	null	null	61	v_1	3.357067716583731E8	0.0	0.0
-23	total cost 3 - time period 3	FREE	1.0	null	null	null	null	62	v_2	2.685654173266985E8	0.0	0.0
-24	total cost 4 - time period 4	FREE	1.0	null	null	null	null	63	v_3	2.148523338613588E8	0.0	0.0
-25	total cost 5 - time period 5	FREE	1.0	null	null	null	null	64	v_4	1.7188186708908704E8	0.0	0.0
-26	TOTAL ACRES IN 1 - time period 1	FREE	1.0	null	null	null	null	65	v_5	1786668.0000000014	0.0	0.0
-27	TOTAL ACRES IN 2 - time period 2	FREE	1.0	null	null	null	null	66	v_6	1786667.9999999995	0.0	0.0
-28	TOTAL ACRES IN 3 - time period 3	FREE	1.0	null	null	null	null	67	v_7	1786668.000000003	0.0	0.0
-29	TOTAL ACRES IN 4 - time period 4	FREE	1.0	null	null	null	null	68	v_8	1786668.0000000026	0.0	0.0
-30	TOTAL ACRES IN 5 - time period 5	FREE	1.0	null	null	null	null	69	v_9	1786668.000000001	0.0	0.0
+16	300k 1 - time period 1	SOFT	1.0	300000.0	1.0	300000.0	0.0	15	y_15	334121.6499999997	0.0	0.0
+17	300k 2 - time period 2	SOFT	1.0	300000.0	1.0	300000.0	0.0	16	y_16	443178.68599999975	0.0	0.0
+18	300k 3 - time period 3	SOFT	1.0	300000.0	1.0	300000.0	0.0	17	y_17	543511.1591199997	0.0	0.0
+19	300k 4 - time period 4	SOFT	1.0	300000.0	1.0	300000.0	0.0	18	y_18	635817.0343903999	0.0	0.0
+20	300k 5 - time period 5	SOFT	1.0	300000.0	1.0	300000.0	0.0	19	y_19	720738.4396391681	0.0	0.0
+21	total cost 1 - time period 1	FREE	1.0	null	null	null	null	60	v_0	4.909382842608921E8	0.0	0.0
+22	total cost 2 - time period 2	FREE	1.0	null	null	null	null	61	v_1	3.927506274087137E8	0.0	0.0
+23	total cost 3 - time period 3	FREE	1.0	null	null	null	null	62	v_2	2.4799782064006484E8	0.0	0.0
+24	total cost 4 - time period 4	FREE	1.0	null	null	null	null	63	v_3	1.9839825651205188E8	0.0	0.0
+25	total cost 5 - time period 5	FREE	1.0	null	null	null	null	64	v_4	1.5871860520964152E8	0.0	0.0
+26	TOTAL ACRES IN 1 - time period 1	FREE	1.0	null	null	null	null	65	v_5	1786668.0000000026	0.0	0.0
+27	TOTAL ACRES IN 2 - time period 2	FREE	1.0	null	null	null	null	66	v_6	1786667.9999999984	0.0	0.0
+28	TOTAL ACRES IN 3 - time period 3	FREE	1.0	null	null	null	null	67	v_7	1786668.0000000012	0.0	0.0
+29	TOTAL ACRES IN 4 - time period 4	FREE	1.0	null	null	null	null	68	v_8	1786668.000000003	0.0	0.0
+30	TOTAL ACRES IN 5 - time period 5	FREE	1.0	null	null	null	null	69	v_9	1786668.0000000044	0.0	0.0

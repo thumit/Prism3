@@ -112,3 +112,7 @@
 	- public String get_starting_ageclass
 83. Hide PBr, GSr in the GUI, show them later after the future update of PBr and GSr in the model formulation
 84. CNPZ fake actions created for all yield tables but very realistic.
+--------------------------------------------------------------------------
+
+85. fake NGr (7 prescriptions for all cover type except Nonstock), EAe (5 prescriptions per...), EAr (15 prescriptions per...)
+86. Establish the link to correct EAe yield tables (too complicated, need to simplify somehow)

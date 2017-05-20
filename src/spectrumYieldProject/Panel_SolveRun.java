@@ -2106,8 +2106,10 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 															current_var_static_condition.add(layers_Title.get(2) + layer3.get(s3));		// layer + element
 															current_var_static_condition.add(layers_Title.get(3) + layer4.get(s4));		// layer + element
 															current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
+															
+															int rotation_age = 9999;	// not need to use this, so put a 9999 here to note
 																							
-															para_value = Get_Parameter_Information.get_total_value(vname[xNGe[s1][s2][s3][s4][s5][s6][t]], 
+															para_value = Get_Parameter_Information.get_total_value(vname[xNGe[s1][s2][s3][s4][s5][s6][t]], rotation_age,
 																	yieldTable_Name, yieldTable_values, parameters_indexes_list,
 																	all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers,
 																	action_type_list, baseCost_acres, baseCost_yieldtables,
@@ -2156,8 +2158,10 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																current_var_static_condition.add(layers_Title.get(2) + layer3.get(s3));		// layer + element
 																current_var_static_condition.add(layers_Title.get(3) + layer4.get(s4));		// layer + element
 																current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
+																
+																int rotation_age = 9999;	// not need to use this, so put a 9999 here to note
 																				
-																para_value = Get_Parameter_Information.get_total_value(vname[xPBe[s1][s2][s3][s4][s5][s6][ii][t]], 
+																para_value = Get_Parameter_Information.get_total_value(vname[xPBe[s1][s2][s3][s4][s5][s6][ii][t]], rotation_age,
 																		yieldTable_Name, yieldTable_values, parameters_indexes_list,
 																		all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers,
 																		action_type_list, baseCost_acres, baseCost_yieldtables, 
@@ -2208,7 +2212,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																current_var_static_condition.add(layers_Title.get(3) + layer4.get(s4));		// layer + element
 																current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
 																
-																para_value = Get_Parameter_Information.get_total_value(vname[xMS[s1][s2][s3][s4][s5][s6][ii][t]], 
+																int rotation_age = 9999;	// not need to use this, so put a 9999 here to note
+																
+																para_value = Get_Parameter_Information.get_total_value(vname[xMS[s1][s2][s3][s4][s5][s6][ii][t]], rotation_age,
 																		yieldTable_Name, yieldTable_values, parameters_indexes_list,
 																		all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers,
 																		action_type_list, baseCost_acres, baseCost_yieldtables, 
@@ -2259,7 +2265,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																current_var_static_condition.add(layers_Title.get(3) + layer4.get(s4));		// layer + element
 																current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
 																		
-																para_value = Get_Parameter_Information.get_total_value(vname[xGSe[s1][s2][s3][s4][s5][s6][ii][t]], 
+																int rotation_age = 9999;	// not need to use this, so put a 9999 here to note
+																
+																para_value = Get_Parameter_Information.get_total_value(vname[xGSe[s1][s2][s3][s4][s5][s6][ii][t]], rotation_age,
 																		yieldTable_Name, yieldTable_values, parameters_indexes_list,
 																		all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers,
 																		action_type_list, baseCost_acres, baseCost_yieldtables, 
@@ -2314,8 +2322,10 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																		current_var_static_condition.add(layers_Title.get(2) + layer3.get(s3));		// layer + element
 																		current_var_static_condition.add(layers_Title.get(3) + layer4.get(s4));		// layer + element
 																		current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
-																																						
-																	    para_value = Get_Parameter_Information.get_total_value(vname[xEAe[s1][s2][s3][s4][s5][s6][t][c][tR]], 
+																			
+																		int rotation_age =  t + StartingAge[s1][s2][s3][s4][s5][s6] - 1;
+																		
+																	    para_value = Get_Parameter_Information.get_total_value(vname[xEAe[s1][s2][s3][s4][s5][s6][t][c][tR]], rotation_age,
 																				yieldTable_Name, yieldTable_values, parameters_indexes_list,
 																				all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers,
 																				action_type_list, baseCost_acres, baseCost_yieldtables, 
@@ -2371,8 +2381,10 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																		current_var_static_condition.add(layers_Title.get(2) + layer3.get(s3));		// layer + element
 																		current_var_static_condition.add(layers_Title.get(3) + layer4.get(s4));		// layer + element
 																		current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
-																				
-																	    para_value = Get_Parameter_Information.get_total_value(vname[xEAr[s1][s2][s3][s4][s5][t][a][c][tR]], 
+																		
+																		int rotation_age = 9999;	// not need to use this, so put a 9999 here to note
+																		
+																	    para_value = Get_Parameter_Information.get_total_value(vname[xEAr[s1][s2][s3][s4][s5][t][a][c][tR]], rotation_age,
 																				yieldTable_Name, yieldTable_values, parameters_indexes_list,
 																				all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers,
 																				action_type_list, baseCost_acres, baseCost_yieldtables, 
@@ -2429,7 +2441,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																current_var_static_condition.add(layers_Title.get(3) + layer4.get(s4));		// layer + element
 																current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
 																
-															    para_value = Get_Parameter_Information.get_total_value(vname[xNGr[s1][s2][s3][s4][s5][tt][a]], 
+																int rotation_age = 9999;	// not need to use this, so put a 9999 here to note
+																
+															    para_value = Get_Parameter_Information.get_total_value(vname[xNGr[s1][s2][s3][s4][s5][tt][a]], rotation_age,
 																		yieldTable_Name, yieldTable_values, parameters_indexes_list,
 																		all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers,
 																		action_type_list, baseCost_acres, baseCost_yieldtables, 
@@ -2735,6 +2749,21 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 											)) {
 								
 								String yield_table_name_to_find = Get_Variable_Information.get_yield_table_name_to_find(vname[i]);
+								if (yield_table_name_to_find.contains("rotation_age")) {	// replace the String "rotation_age" with the integer value of rotation_age
+									if (vname[i].contains("xEAe_")) {
+										String var_name = vname[i].replace("xEAe_", "");
+										String[] term = var_name.toString().split(",");	
+										int s1 = layer1.indexOf(term[0]);
+										int s2 = layer2.indexOf(term[1]);
+										int s3 = layer3.indexOf(term[2]);
+										int s4 = layer4.indexOf(term[3]);
+										int s5 = layer5.indexOf(term[4]);
+										int s6 = layer6.indexOf(term[5]);									
+										int rotation_period = Integer.parseInt(term[6]);
+										int rotation_age = rotation_period + StartingAge[s1][s2][s3][s4][s5][s6] - 1;								
+										yield_table_name_to_find = yield_table_name_to_find.replace("rotation_age", String.valueOf(rotation_age));	
+									}					
+								}
 								int yield_table_row_index_to_find = Get_Variable_Information.get_yield_table_row_index_to_find(vname[i]);
 								String db_status = "good";
 								List<String> temp_list = new ArrayList<String>() {{ for (Object i : yieldTable_Name) add(i.toString());}};		// Convert Object array to String list

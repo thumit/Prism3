@@ -100,7 +100,7 @@ public class Get_Variable_Information {
 			
 			method = "EA";
 			forest_status = "E";
-			yield_table_name_to_find = layer5 + "_" + layer6  + "_"+ method + "_" + forest_status + "_" + period + "+startage-1";
+			yield_table_name_to_find = layer5 + "_" + layer6  + "_"+ method + "_" + forest_status + "_" + "rotation_age";
 			yield_table_row_index_to_find = period - 1;
 		}	
 		else if (var_name.startsWith("xEAr_")) {
