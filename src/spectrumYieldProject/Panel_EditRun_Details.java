@@ -162,7 +162,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private TableModelSpectrum model4;
 	private Object[][] data4;
 
-	//table input_05_mixed_severity_wildfire.txt
+	//table input_05_non_replacing_disturbances.txt
 	private boolean is_table5_loaded = false;
 	private int rowCount5, colCount5;
 	private String[] columnNames5;
@@ -460,7 +460,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		}
 		
 
-		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_05_mixed_severity_wildfire.txt");
+		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_05_non_replacing_disturbances.txt");
 		if (table_file.exists()) { // Load from input
 			tableLoader = new Reload_Table_Info(table_file);
 			rowCount5 = tableLoader.get_rowCount();
@@ -469,7 +469,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			columnNames5 = tableLoader.get_columnNames();
 			is_table5_loaded = true;
 		} else { // Create a fresh new if Load fail
-			System.err.println("File not exists: input_05_mixed_severity_wildfire.txt - New interface is created");
+			System.err.println("File not exists: input_05_non_replacing_disturbances.txt - New interface is created");
 		}
 		
 		
@@ -676,7 +676,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		
 		
 		
-//		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_05_mixed_severity_wildfire.txt");
+//		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_05_non_replacing_disturbances.txt");
 //		if (table_file.exists()) { // Load from input
 //			 // Load from input
 //			tableLoader = new Reload_Table_Info(table_file);		
@@ -689,7 +689,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 //			}	
 //			is_table5_loaded = true;
 //		} else { // Create a fresh new if Load fail
-//			System.err.println("File not exists: input_05_mixed_severity_wildfire.txt - New interface is created");
+//			System.err.println("File not exists: input_05_non_replacing_disturbances.txt - New interface is created");
 //		}
 			
 		
@@ -1495,9 +1495,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		//Setup the table------------------------------------------------------------	
 		if (is_table5_loaded == false) { // Create a fresh new if Load fail				
 			rowCount5 = total_CoverType*total_SizeClass;
-			colCount5 = 3;
+			colCount5 = 4;
 			data5 = new Object[rowCount5][colCount5];
-	        columnNames5= new String[] {"period1_covertype", "period1_sizeclass", "mixedfire_percentage"};
+	        columnNames5= new String[] {"period1_covertype", "period1_sizeclass", "mixedfire_percentage", "barkbeetle_percentage"};
 			
 			// Populate the data matrix
 	        int table_row = 0;
@@ -1506,7 +1506,11 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					data5[table_row][0] = allLayers.get(4).get(i);
 					data5[table_row][1] = allLayers.get(5).get(j);	
 					data5[table_row][2] = 5.0;
-					if (allLayers.get(4).get(i).equals("N"))	data5[table_row][2] = 0.0;	//Non-stocked --> No MS Fire
+					data5[table_row][3] = 4.5;
+					if (allLayers.get(4).get(i).equals("N")) {
+						data5[table_row][2] = 0.0;	//Non-stocked --> No MS
+						data5[table_row][3] = 0.0;	//Non-stocked --> No BS
+					}
 					table_row++;
 				}
 			}						
@@ -1526,7 +1530,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
         	@Override
     		public void setValueAt(Object value, int row, int col) {
-    			if (col == 2 && (((Number) value).doubleValue() < 0 || ((Number) value).doubleValue() > 100)) {
+    			if ((col == 2 || col == 3) && (((Number) value).doubleValue() < 0 || ((Number) value).doubleValue() > 100)) {
     				JOptionPane.showMessageDialog(Spectrum_Main.get_spectrumDesktopPane(),
     						"Your input has not been accepted. Only double values in the range 0-100 (%) would be allowed.");
     			} else {
@@ -1541,7 +1545,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						if (String.valueOf(data5[row][col]).equals("null")) {
 							data5[row][col] = null;
 						} else {					
-							if (col == 2) {			//Column 2 is Double
+							if (col == 2 || col == 3) {			//Column 2 & 3 is Double
 								try {
 									data5[row][col] = Double.valueOf(String.valueOf(data5[row][col]));
 								} catch (NumberFormatException e) {
@@ -1591,6 +1595,13 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					} catch (RuntimeException e1) {
 						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
 					}
+				} else if (colIndex == 3) {
+					try {
+						tip = "Percentage of the existing strata in the first period with cover type "+ getValueAt(rowIndex, 0).toString() 
+								+ " at size class " + getValueAt(rowIndex, 1).toString() + " to be assigned to bark beetle";
+					} catch (RuntimeException e1) {
+						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+					}
 				}	
 				return tip;
 			}
@@ -1619,7 +1630,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		// Define a set of icon for some columns
 		ImageIcon[] imageIconArray = new ImageIcon[colCount5];
 		for (int i = 0; i < colCount5; i++) {
-			if (i == 2) {
+			if (i == 2 || i == 3) {
 				imageIconArray[i] = IconHandle.get_scaledImageIcon(3, 3, "icon_main.png");
 			}
 		}
@@ -1686,7 +1697,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		
       
         for (int i=0; i<columnNames5.length; i++) {
-        	if (i != 2) {
+        	if (i < 2) {
         		table5.getColumnModel().getColumn(i).setCellRenderer(r);
         	} 
         }
@@ -3585,11 +3596,11 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			// 1st grid -----------------------------------------------------------------------
 			create_table5();
 	        //Put table5 into MixedFire_ScrollPane
-	        JScrollPane MixedFire_ScrollPane = new JScrollPane();
-	    	TitledBorder border = new TitledBorder("Proportion (%) of period-one existing strata suffered from mixed severity wildfire across all time periods");
+	        JScrollPane nonStandReplacing_ScrollPane = new JScrollPane();
+	    	TitledBorder border = new TitledBorder("Proportion (%) of period-one existing strata suffered from NON-REPLACING DISTURBANCES across all time periods");
 			border.setTitleJustification(TitledBorder.CENTER);
-			MixedFire_ScrollPane.setBorder(border);
-	        MixedFire_ScrollPane.setViewportView(table5);			
+			nonStandReplacing_ScrollPane.setBorder(border);
+	        nonStandReplacing_ScrollPane.setViewportView(table5);			
 			
 		    
 			// 2nd grid -----------------------------------------------------------------------
@@ -3597,7 +3608,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	        create_table6();
 	        //Put table6 into StandReplacing_ScrollPane
 	        JScrollPane StandReplacing_ScrollPane = new JScrollPane();
-	        TitledBorder border3 = new TitledBorder("Proportion (%) of existing strata or regeneration strata suffered from replacing disturbance in each time period");
+	        TitledBorder border3 = new TitledBorder("Proportion (%) of existing strata or regeneration strata suffered from REPLACING DISTURBANCES in each time period");
 			border3.setTitleJustification(TitledBorder.CENTER);
 			StandReplacing_ScrollPane.setBorder(border3);
 	        StandReplacing_ScrollPane.setViewportView(table6);
@@ -3607,7 +3618,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	        
 	        // scrollPane Quick Edit 1 & 2-----------------------------------------------------------------------
 	        // scrollPane Quick Edit 1 @ 2-----------------------------------------------------------------------		
- 			JScrollPane scrollpane_QuickEdit_1 = new JScrollPane(new QuickEdit_MS_Percentage_Panel(table5, data5));
+ 			JScrollPane scrollpane_QuickEdit_1 = new JScrollPane(new QuickEdit_NonRD_Percentage_Panel(table5, data5));
  			JScrollPane scrollpane_QuickEdit_2 = new JScrollPane(new QuickEdit_RD_Percentage_Panel(table6, data6));	
  			
  			border = new TitledBorder("Quick Edit ");
@@ -3696,7 +3707,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		    c.weighty = 1;
 			c.gridwidth = 1;
 			c.gridheight = 1;
-			super.add(MixedFire_ScrollPane, c);
+			super.add(nonStandReplacing_ScrollPane, c);
 			
 			// Add scrollpane_QuickEdit_1	
 			c.gridx = 1;
@@ -5457,13 +5468,13 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 	private void create_file_input_03() {
 		//Only print out if the last column Allowed Options <> null
-		File requirementsFile = new File(currentRunFolder.getAbsolutePath() + "/input_03_clearcut_covertype_conversion.txt");
-		if (requirementsFile.exists()) {
-			requirementsFile.delete();		// Delete the old file before writing new contents
+		File clearcutConversionFile = new File(currentRunFolder.getAbsolutePath() + "/input_03_clearcut_covertype_conversion.txt");
+		if (clearcutConversionFile.exists()) {
+			clearcutConversionFile.delete();		// Delete the old file before writing new contents
 		}
 		
 		if (data3 != null && data3.length > 0) {
-			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(requirementsFile))) {
+			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(clearcutConversionFile))) {
 				for (int j = 0; j < columnNames3.length; j++) {
 					fileOut.write(columnNames3[j] + "\t");
 				}
@@ -5486,13 +5497,13 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 	
 	private void create_file_input_04() {
-		File SRDrequirementsFile = new File(currentRunFolder.getAbsolutePath() + "/input_04_replacingdisturbances_covertype_conversion.txt");	
-		if (SRDrequirementsFile.exists()) {
-			SRDrequirementsFile.delete();		// Delete the old file before writing new contents
+		File replacingDisturbanceConversionFile = new File(currentRunFolder.getAbsolutePath() + "/input_04_replacingdisturbances_covertype_conversion.txt");	
+		if (replacingDisturbanceConversionFile.exists()) {
+			replacingDisturbanceConversionFile.delete();		// Delete the old file before writing new contents
 		}
 		
 		if (data4 != null && data4.length > 0) {
-			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(SRDrequirementsFile))) {
+			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(replacingDisturbanceConversionFile))) {
 				for (int j = 0; j < columnNames4.length; j++) {
 					fileOut.write(columnNames4[j] + "\t");
 				}
@@ -5512,13 +5523,13 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 	
 	private void create_file_input_05() {
-		File MSFireFile = new File(currentRunFolder.getAbsolutePath() + "/input_05_mixed_severity_wildfire.txt");	
-		if (MSFireFile.exists()) {
-			MSFireFile.delete();		// Delete the old file before writing new contents
+		File nonReplacingDisturbanceFile = new File(currentRunFolder.getAbsolutePath() + "/input_05_non_replacing_disturbances.txt");	
+		if (nonReplacingDisturbanceFile.exists()) {
+			nonReplacingDisturbanceFile.delete();		// Delete the old file before writing new contents
 		}
 		
 		if (data5 != null && data5.length > 0) {
-			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(MSFireFile))) {
+			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(nonReplacingDisturbanceFile))) {
 				for (int j = 0; j < columnNames5.length; j++) {
 					fileOut.write(columnNames5[j] + "\t");
 				}
@@ -5538,13 +5549,13 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 	
 	private void create_file_input_06() {
-		File SRDisturbancesFile = new File(currentRunFolder.getAbsolutePath() + "/input_06_replacing_disturbances.txt");	
-		if (SRDisturbancesFile.exists()) {
-			SRDisturbancesFile.delete();		// Delete the old file before writing new contents
+		File replacingDisturbanceFile = new File(currentRunFolder.getAbsolutePath() + "/input_06_replacing_disturbances.txt");	
+		if (replacingDisturbanceFile.exists()) {
+			replacingDisturbanceFile.delete();		// Delete the old file before writing new contents
 		}
 		
 		if (data6 != null && data6.length > 0) {
-			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(SRDisturbancesFile))) {
+			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(replacingDisturbanceFile))) {
 				for (int j = 0; j < columnNames6.length; j++) {
 					fileOut.write(columnNames6[j] + "\t");
 				}
@@ -5564,13 +5575,13 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 	
 	private void create_file_input_07() {
-		File basecostFile = new File(currentRunFolder.getAbsolutePath() + "/input_07_base_cost.txt");	
-		if (basecostFile.exists()) {
-			basecostFile.delete();		// Delete the old file before writing new contents
+		File baseCostFile = new File(currentRunFolder.getAbsolutePath() + "/input_07_base_cost.txt");	
+		if (baseCostFile.exists()) {
+			baseCostFile.delete();		// Delete the old file before writing new contents
 		}
 		
 		if (data7 != null && data7.length > 0) {
-			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(basecostFile))) {
+			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(baseCostFile))) {
 				for (int j = 0; j < columnNames7.length; j++) {
 					fileOut.write(columnNames7[j] + "\t");
 				}
@@ -5616,13 +5627,13 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 	
 	private void create_file_input_09() {
-		File userConstraintsFile = new File(currentRunFolder.getAbsolutePath() + "/input_09_basic_constraints.txt");
-		if (userConstraintsFile.exists()) {
-			userConstraintsFile.delete();		// Delete the old file before writing new contents
+		File basicConstraintsFile = new File(currentRunFolder.getAbsolutePath() + "/input_09_basic_constraints.txt");
+		if (basicConstraintsFile.exists()) {
+			basicConstraintsFile.delete();		// Delete the old file before writing new contents
 		}
 		
 		if (data9 != null && data9.length > 0) {
-			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(userConstraintsFile))) {
+			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(basicConstraintsFile))) {
 				for (int j = 0; j < columnNames9.length; j++) {
 					fileOut.write(columnNames9[j] + "\t");
 				}
@@ -5642,13 +5653,13 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 	
 	private void create_file_input_10() {
-		File userConstraintsFile = new File(currentRunFolder.getAbsolutePath() + "/input_10_flow_constraints.txt");
-		if (userConstraintsFile.exists()) {
-			userConstraintsFile.delete();		// Delete the old file before writing new contents
+		File advancedConstraintsFile = new File(currentRunFolder.getAbsolutePath() + "/input_10_flow_constraints.txt");
+		if (advancedConstraintsFile.exists()) {
+			advancedConstraintsFile.delete();		// Delete the old file before writing new contents
 		}
 		
 		if (data10 != null && data10.length > 0) {
-			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(userConstraintsFile))) {
+			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(advancedConstraintsFile))) {
 				for (int j = 0; j < columnNames10.length; j++) {
 					fileOut.write(columnNames10[j] + "\t");
 				}

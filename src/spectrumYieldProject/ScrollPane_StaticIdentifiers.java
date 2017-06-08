@@ -52,6 +52,7 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 			if (allmethods_ToolTips.get(0).get(i).equals("GSe")) 	allmethods_ToolTips.get(0).set(i, "Group Selection existing");
 			if (allmethods_ToolTips.get(0).get(i).equals("EAe")) 	allmethods_ToolTips.get(0).set(i, "Even Age existing");
 			if (allmethods_ToolTips.get(0).get(i).equals("MSe")) 	allmethods_ToolTips.get(0).set(i, "Mixed Severity Wildfire");
+			if (allmethods_ToolTips.get(0).get(i).equals("BSe")) 	allmethods_ToolTips.get(0).set(i, "Severe Bark Beetle");
 			if (allmethods_ToolTips.get(0).get(i).equals("NGr")) 	allmethods_ToolTips.get(0).set(i, "Natural Growth regeneration");
 			if (allmethods_ToolTips.get(0).get(i).equals("PBr")) 	allmethods_ToolTips.get(0).set(i, "Prescribed Burn regeneration");
 			if (allmethods_ToolTips.get(0).get(i).equals("GSr")) 	allmethods_ToolTips.get(0).set(i, "Group Selection regeneration");
@@ -139,12 +140,12 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 //				if (i==4) checkboxStaticIdentifiers.get(i).get(j).setEnabled(false);
 				//Set layer 6 - Size Class invisible
 				if (i == 5) checkboxStaticIdentifiers.get(i).get(j).setEnabled(false);
-				if (i == 6) {	// sil-method
-					for (JCheckBox cb: checkboxStaticIdentifiers.get(i))
-					if (cb.getText().equals("PBr") || cb.getText().equals("GSr") ) {
-						cb.setEnabled(false);
-					}
-				}
+//				if (i == 6) {	// sil-method
+//					for (JCheckBox cb: checkboxStaticIdentifiers.get(i))
+//					if (cb.getText().equals("PBr") || cb.getText().equals("GSr") ) {
+//						cb.setEnabled(false);
+//					}
+//				}
 //				//Deselect all time period check boxes (7)
 //				if (i==7) checkboxStaticIdentifiers.get(i).get(j).setSelected(false);
 			}

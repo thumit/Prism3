@@ -13,11 +13,9 @@ W	D	2	6	2	6	true
 W	W	2	6	2	6	true	
 W	I	2	6	2	6	true	
 W	L	2	6	2	6	true	
-W	N	2	6	2	6	true	
 C	C	2	6	2	6	true	
 C	I	2	6	2	6	true	
 C	L	2	6	2	6	true	
-C	N	2	6	2	6	true	
 I	P	2	6	2	6	true	
 I	I	2	6	2	6	true	
 A	P	2	6	2	6	true	
@@ -27,7 +25,6 @@ A	C	2	6	2	6	true
 A	I	2	6	2	6	true	
 A	A	2	6	2	6	true	
 A	L	2	6	2	6	true	
-A	N	2	6	2	6	true	
 L	P	2	6	2	6	true	
 L	D	2	6	2	6	true	
 L	W	2	6	2	6	true	
@@ -35,12 +32,3 @@ L	C	2	6	2	6	true
 L	I	2	6	2	6	true	
 L	A	2	6	2	6	true	
 L	L	2	6	2	6	true	
-L	N	2	6	2	6	true	
-N	P	2	6	2	6	true	
-N	D	2	6	2	6	true	
-N	W	2	6	2	6	true	
-N	C	2	6	2	6	true	
-N	I	2	6	2	6	true	
-N	A	2	6	2	6	true	
-N	L	2	6	2	6	true	
-N	N	2	6	2	6	true	

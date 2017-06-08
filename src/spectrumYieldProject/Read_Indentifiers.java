@@ -120,9 +120,10 @@ public class Read_Indentifiers {
 		layer1.add("GSe");
 		layer1.add("EAe");	
 		layer1.add("MSe");
+		layer1.add("BSe");
 		layer1.add("NGr");
-//		layer1.add("PBr");		// enable this after update
-//		layer1.add("GSr");		// enable this after update
+		layer1.add("PBr");
+		layer1.add("GSr");
 		layer1.add("EAr");
 
 		

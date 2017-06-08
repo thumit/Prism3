@@ -202,7 +202,7 @@ public class Read_RunInputs {
 
 	//-------------------------------------------------------------------------------------------------------------------------------------------------		
 	//For input_04_replacingdisturbances_covertype_conversion
-	private List<Double> SRDrequirementProportion_list;	
+	private List<Double> rdProportion_list;	
 	
 	public void readRDCovertypeProportion (File file) {
 		try {
@@ -211,10 +211,10 @@ public class Read_RunInputs {
 			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
 			list.remove(0);	//Remove the first row (Column names)
 		
-			SRDrequirementProportion_list = new ArrayList<Double>();		
+			rdProportion_list = new ArrayList<Double>();		
 			for (int i = 0; i < list.size(); i++) {
 				String[] values = list.get(i).split("\t");				
-				SRDrequirementProportion_list.add(Double.parseDouble(values[3]));
+				rdProportion_list.add(Double.parseDouble(values[3]));
 			}
 			
 		} catch (IOException e) {
@@ -222,26 +222,28 @@ public class Read_RunInputs {
 		}
 	}		
 							
-	public double[] getSRDrequirementProportion () {		
-		double[] array = Stream.of(SRDrequirementProportion_list.toArray(new Double[SRDrequirementProportion_list.size()])).mapToDouble(Double::doubleValue).toArray();
+	public double[] getRDProportion () {		
+		double[] array = Stream.of(rdProportion_list.toArray(new Double[rdProportion_list.size()])).mapToDouble(Double::doubleValue).toArray();
 		return array;
 	}	
 	
 	//-------------------------------------------------------------------------------------------------------------------------------------------------	
-	//For input_05_mixed_severity_wildfire
-	private List<Double> msFireProportion_list;	
+	//For input_05_non_replacing_disturbances
+	private List<Double> msProportion_list, bsProportion_list;	
 	
-	public void readMSPercent (File file) {
+	public void readMSPercent(File file) {
 		try {
 			// All lines except the 1st line to be in a list;		
 			List<String> list;	
 			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
 			list.remove(0);	//Remove the first row (Column names)
 		
-			msFireProportion_list = new ArrayList<Double>();		
+			msProportion_list = new ArrayList<Double>();
+			bsProportion_list = new ArrayList<Double>();
 			for (int i = 0; i < list.size(); i++) {
 				String[] values = list.get(i).split("\t");				
-				msFireProportion_list.add(Double.parseDouble(values[2]));
+				msProportion_list.add(Double.parseDouble(values[2]));
+				bsProportion_list.add(Double.parseDouble(values[3]));
 			}
 			
 		} catch (IOException e) {
@@ -250,9 +252,14 @@ public class Read_RunInputs {
 	}		
 							
 	public double[] getMSFireProportion () {		
-		double[] array = Stream.of(msFireProportion_list.toArray(new Double[msFireProportion_list.size()])).mapToDouble(Double::doubleValue).toArray();
+		double[] array = Stream.of(msProportion_list.toArray(new Double[msProportion_list.size()])).mapToDouble(Double::doubleValue).toArray();
 		return array;
 	}	
+	
+	public double[] getBSFireProportion () {		
+		double[] array = Stream.of(bsProportion_list.toArray(new Double[bsProportion_list.size()])).mapToDouble(Double::doubleValue).toArray();
+		return array;
+	}
 	
 	//-------------------------------------------------------------------------------------------------------------------------------------------------	
 	//For input_06_replacing_disturbances

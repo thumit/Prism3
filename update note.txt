@@ -99,7 +99,7 @@
 75. For logic replacing bug: change eq. (12a): change loop tR from t + 1 (in xEAe and xEAr) to remove the period tR=t which has clear cut from calculating SR's area loss
 76. Check all xEAe and xEAr condition from eq.10 to eq.15 (processing_age should be changed to rotation_age to make the codes more intuitive)
 	- eq.10, eq.11b, eq.12a, eq.13: change processingAge to rotationAge: keep the calculation (actually no logic has been changed)
-77. Sove the auto check "implementation" columns at some default rows, if the input03 exists and is successfully loaded 
+77. Solve the auto check "implementation" columns at some default rows, if the input03 exists and is successfully loaded 
 --------------------------------------------------------------------------
 
 78. Change xEar: a-->aR in eq. 12a, 13
@@ -116,3 +116,42 @@
 
 85. fake NGr (7 prescriptions for all cover type except Nonstock), EAe (5 prescriptions per...), EAr (15 prescriptions per...)
 86. Establish the link to correct EAe yield tables (too complicated, need to simplify somehow)
+--------------------------------------------------------------------------
+
+All changes in this block are associated with v26.jar, formulation21.docx, database3.docx
+
+87. Dynamic Identifiers duplicated calculation fixed
+88. Adding Bark Beetle (BSe):
+	- Edit window: change title "mixed severity wildfire" to "non-replacing disturbances"
+	- Edit window: add barkbeetle_percentage column with defaulth 4.5%, change a bunch of codes in "public void create_table5()"
+	- Change "QuickEdit_MS_Percentage_Panel" to "QuickEdit_NonRD_Percentage_Panel"
+	- QuickEdit_NonRD_Percentage_Panel: add quick edit option for barkbeetle_percentage
+	- input_05_mixed_severity_wildfire.txt --> input_05_non_replacing_disturbances.txt
+	- public void readMSPercent(File file): add "bsProportion_list"
+	- rename some terms in Read Inputs and Panel_SolveRun: 	
+	- Change model's formulation: BS is the 6th method (index = 5), add 2 variables for BS, change propotion name (Pe-->Pms), add 2 equations (6d, 6e)
+	- Panel_SolveRun: total_methods --> 6, add xBS, add 6d and 6e
+	- Panel_SolveRun - Output04: add barkbeetle acres in Panel_SolveRun
+	- Output_Panel_Management_Overview: add barkbeetle pie
+	- Read_Identifiers: add "BSe"
+	- Get_Variable_Information: add "else if (var_name.startsWith("xBSe_"))"
+	- Get_Variable_Information - RowFilter:	add 	|| original_term.contains("xBSe_")
+	- Panel_SolveRun: Add xBS[s1][s2][s3][s4][s5][s6][ii] for Constraints 15
+	- ScrollPane_StaticIdentifiers: add BSe and description in the "if then" toolTip
+	- Panel_SolveRun - output_management_details_file: add 	|| vname[i].contains("BS")
+89. Fix total_GS_Prescription, total_MS_Prescriptions,... and other total prescriptions (or total choices) that is wrong due to copy-paste
+90. Adding PBr and GSr:
+	- Formulation21: 
+		- 14b -->14d
+		- Add 14b and 14c for PBr and GSr transitions
+		- Add PBr and GSr terms in 12a and 13
+	- Codes:
+		- Add total prescriptions for PBr, GSr (currently set at total of 5)	
+		- Define arrays and create decision variables for xPBr and xGSr
+		- Add terms PBr, GSr for eq. 12a
+		- Add terms PBr, GSr for eq. 13
+		- Add 14b and 14c
+		- Add PBr and GSr for eq. 15
+		- Get_Variable_Information: Add PBr, GSr
+		- Static_Identifiers: Enable 2 checkboxes for PBr and GSr
+		- Output_Panel_Management_Details: add	|| original_term.contains("xPBr_")	and	|| original_term.contains("xGSr_")

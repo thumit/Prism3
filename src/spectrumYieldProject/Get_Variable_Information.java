@@ -85,6 +85,25 @@ public class Get_Variable_Information {
 			yield_table_name_to_find = layer5 + "_" + layer6  + "_"+ method + "_" + forest_status + "_" + timing_choice;
 			yield_table_row_index_to_find = period - 1;
 		}
+		else if (var_name.startsWith("xBSe_")) {
+			var_name = var_name.replace("xBSe_", "");
+			String[] term = var_name.toString().split(",");
+			layer1 = term[0];
+			layer2 = term[1];
+			layer3 = term[2];
+			layer4 = term[3];
+			layer5 = term[4];
+			layer6 = term[5];
+			timing_choice = Integer.parseInt(term[6]);
+			period = Integer.parseInt(term[7]);
+			customized_variable_term = layer1 + layer2 + layer3 + layer4 + layer5 + layer6 + "Severe Bark Beetle" + period;	
+			
+			
+			method = "BS";
+			forest_status = "E";
+			yield_table_name_to_find = layer5 + "_" + layer6  + "_"+ method + "_" + forest_status + "_" + timing_choice;
+			yield_table_row_index_to_find = period - 1;
+		}
 		else if (var_name.startsWith("xEAe_")) {				
 			var_name = var_name.replace("xEAe_", "");
 			String[] term = var_name.toString().split(",");
@@ -135,6 +154,42 @@ public class Get_Variable_Information {
 			
 			method = "NG";
 			timing_choice = 0;
+			forest_status = "R";
+			yield_table_name_to_find = layer5 + "_" + method + "_" + forest_status + "_" + timing_choice;
+			yield_table_row_index_to_find = age - 1;
+		}	
+		else if (var_name.startsWith("xPBr_")) {
+			var_name = var_name.replace("xPBr_", "");
+			String[] term = var_name.toString().split(",");
+			layer1 = term[0];
+			layer2 = term[1];
+			layer3 = term[2];
+			layer4 = term[3];
+			layer5 = term[4];
+			timing_choice = Integer.parseInt(term[5]);
+			period = Integer.parseInt(term[6]);
+			age = Integer.parseInt(term[7]);
+			customized_variable_term = layer1 + layer2 + layer3 + layer4 + layer5 + "Prescribed Burn" + period;
+			
+			method = "PB";
+			forest_status = "R";
+			yield_table_name_to_find = layer5 + "_" + method + "_" + forest_status + "_" + timing_choice;
+			yield_table_row_index_to_find = age - 1;
+		}	
+		else if (var_name.startsWith("xGSr_")) {
+			var_name = var_name.replace("xGSr_", "");
+			String[] term = var_name.toString().split(",");
+			layer1 = term[0];
+			layer2 = term[1];
+			layer3 = term[2];
+			layer4 = term[3];
+			layer5 = term[4];
+			timing_choice = Integer.parseInt(term[5]);
+			period = Integer.parseInt(term[6]);
+			age = Integer.parseInt(term[7]);
+			customized_variable_term = layer1 + layer2 + layer3 + layer4 + layer5 + "Group Selection" + period;
+			
+			method = "GS";
 			forest_status = "R";
 			yield_table_name_to_find = layer5 + "_" + method + "_" + forest_status + "_" + timing_choice;
 			yield_table_row_index_to_find = age - 1;

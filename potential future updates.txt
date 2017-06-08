@@ -1,0 +1,41 @@
+Each of the following updates might require significant time & effort. They are currently not the priority.
+
+Modify the model logic to capture layers beyond 6
+
+Allow users defining the unit of each yield table column, use that unit to enhance the description & validate the eligibility of basic and advanced constraints (minimize users mistakes)
+
+Allow cost adjustment based on dynamic identifiers
+
+New set of constraints: allow split by Parameters & Dynamic spliters
+
+More improvement on Database reading speed (by batching multiple resultsets)
+
+Another window for users to build more complex constraints where negative numbers (for LB, UB, LB_penalty, UB_penalty, multipliers) could be used. This might be challenging since it touches the model logic.
+
+Currently in each planning period, replacing disturbances are assumed to always occur after management action has been implemented in that same period (action is implemented at the beginning of a period). We may need to allow users choosing the sequence: 1) action --> replacing disturbances, 2) replacing disturbances --> action, 3) random (stochastic).
+
+(update is completed) Currently, Natural Growth, Group Selection, Prescribed Burn (existing) will have the total areas decreased when moving from one period to the next if there are replacing disturbances --> if we make a constraint which requires an increasing acres for those things across periods, we will be in trouble of in-feasibility. To make that constraint possible, we can change the model formulation by adding 2 methods for regeneration (PGr and GSr, since NGr is already added). The challenges are: 1) more effort to create database tables (may be not too many: 8 covertypes * 5 choices * 2 methods = 80 tables); 2) number of variables and constraints would increase (may be not too many?) so we have to reduce the total number of planning period ---> might be the most useful update
+
+Adding Revenue might be very challenging since it touches the model logic. Currently the obj. function is created by the sum of all penalties. Adding revenue would make it become something minus something --> constraints logic and functionality might need to be modified.
+
+(update is completed) Modify model formulation and GUI (in basic constraints and output05_mamagement_details) to separate existing and regeneration methods, and therefore giving users more control and flexibility on setting up constraints' requirements and output presentation. This update would build a base for the above update No 8.
+
+(Eric) Currently, yield tables are linked to AAs by two attributes; the Covertype and Size Class. We discussed adding the ability to add detail for yields according to all Layer attributes if desired. The structure would have to be flexible enough to both recognize a specific yield table for specific Layer attributes as well as identify AAs that should reference a more generic/universal yield table.This would add flexibility to vary the effects of treatments by Layer attribute. For example, a Group Selection prescription in the Wilderness may look different than the Group Selection prescription in the timber production lands for the same covertype and size class. This is not a high priority item and does not appear like it needs to be implemented for the Custer Gallatin planning model. So, right now, this issue is just documentation of the idea and discussion.
+
+Since each variable is linked to a specific row in a specific yield table, we can add a dynamic system to totally match the variables indexes (including cover type & age class) with the values in the associated row of that yield tables. This would make all the variables indexes totally reflect the real data. The reason for this update is because sometimes we see the age class increased several unit and cover type changed when moving from one period (a row) to the next period (the next row). Cons: since we have to read all rows to get the data, time for building a model would increase. Is it worth the effort ?
+
+Object Relational Mapping (ORM) should definitely be implemented at some point in the future (https://www.tutorialspoint.com/hibernate/orm_overview.htm)
+
+Modify formulation to add choices for Even Age method (i.e. same rotation age but different thinning regimes). Note: Number of variables and constraints (model size) will increase significantly.
+
+Remove time period index: this index (t) could be removed for some variables to reduce model size. This could help in the case when adding timing choices for Even Age (same rotation ages, different thinning regimes) that makes the model's size increased significantly. Currently, without Even Age timing choices (i.e. only 1 choice), the model can solve a 20-25 period planning horizon. We don't know how it performs when more choices are added. Therefore, this update is a potential solution when model's size becomes a concern. --> this update is expected to significantly improve SpectrumLite's solving performance
+
+Users will be able to add unlimited number of non-replacing disturbances (Mixed severity Fire, Bark Beetle,...). SpectrumLite would automatically modify the core formulation to address all the non-replacing disturbances added. Disturbances' names are user-defined. Default names might be: NR_1, NR_2, NR_3,... This is to make SpectrumLite adaptive to different regions' non-replacing disturbances definitions.
+
+Users would be allowed to add (unlimited number), and define, activate, deactivate all the added silvicultural methods (both existing and regeneration methods except Even Age) --> THIS IS THE MOST ULTIMATE UPDATE. IF COMBINED WITH 16, IT WOULD MAKE SPECTRUMLITE A COMPLETE SOFTWARE PRODUCT
+
+Modeling System needs to be modified to not define the variables that do not have their associated yield tables' timing choices. This would save memory to run large test cases.
+
+After the ultimate update 16 and 17, a GUI windows will be created to assign methods to any combination of static identifiers. This would help users remove the need of grouping methods. For example, we currently have to group GSr and LH, NG and NA, EA and SW in the Custer Gallatin National Forest. We will not have to do that after this update. On a side note, a lot of GUI windows will not even need to be built if we add more model's indexes into the Static Identifiers, and then use the identifiers to build hard constraints. This is a strong advantage of the current "Basic Constraints" window.
+
+Out of the box: With some complex modifications, the whole structure of SpectrumLite could be generalized to formulate and solve other problems (not only timber harvest management). For example fire management, etc ... The most important thing need to be utilized is the design of "Basic Constraints". In addition, all other definitions need to be dynamic. This is a note for who are interested. It is not in the scope of this project.

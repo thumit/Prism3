@@ -188,12 +188,14 @@ class Output_Panel_Management_Overview extends JLayeredPane {
 		double total_GS = 0;
 		double total_EA = 0;
 		double total_MS = 0;
+		double total_BS = 0;
 		for (int i = 0; i < data.length; i++) { // Loop table rows
 			total_NG = total_NG + Double.parseDouble(data[i][7].toString());
 			total_PB = total_PB + Double.parseDouble(data[i][8].toString());
 			total_GS = total_GS + Double.parseDouble(data[i][9].toString());
 			total_EA = total_EA + Double.parseDouble(data[i][10].toString());
 			total_MS = total_MS + Double.parseDouble(data[i][11].toString());
+			total_BS = total_BS + Double.parseDouble(data[i][12].toString());
 		}
 	
 		dataset.setValue("Natural Growth", total_NG);
@@ -201,6 +203,7 @@ class Output_Panel_Management_Overview extends JLayeredPane {
 		dataset.setValue("Group Selection", total_GS);
 		dataset.setValue("Even Age", total_EA);
 		dataset.setValue("Mixed Severity Wildfire", total_MS);
+		dataset.setValue("Severe Bark Beetle", total_BS);
 		
 		return dataset;
 	}
@@ -214,6 +217,7 @@ class Output_Panel_Management_Overview extends JLayeredPane {
 			double total_GS = 0;
 			double total_EA = 0;
 			double total_MS = 0;
+			double total_BS = 0;
 				
 			int[] selectedRow = table.getSelectedRows();	
 			for (int i = 0; i < selectedRow.length; i++) {
@@ -226,6 +230,7 @@ class Output_Panel_Management_Overview extends JLayeredPane {
 				total_GS = total_GS + Double.parseDouble(data[i][9].toString());
 				total_EA = total_EA + Double.parseDouble(data[i][10].toString());
 				total_MS = total_MS + Double.parseDouble(data[i][11].toString());
+				total_BS = total_BS + Double.parseDouble(data[i][12].toString());
 			}					
 		
 			dataset.setValue("Natural Growth", total_NG);
@@ -233,6 +238,7 @@ class Output_Panel_Management_Overview extends JLayeredPane {
 			dataset.setValue("Group Selection", total_GS);
 			dataset.setValue("Even Age", total_EA);
 			dataset.setValue("Mixed Severity Wildfire", total_MS);
+			dataset.setValue("Severe Bark Beetle", total_BS);
 		} else {
 			dataset = null;
 		}
@@ -276,7 +282,8 @@ class Output_Panel_Management_Overview extends JLayeredPane {
 		plot.setSectionPaint("Prescribed Burn", new Color(255, 255, 0));
 		plot.setSectionPaint("Group Selection", new Color(240, 248, 255));
 	    plot.setSectionPaint("Even Age", new Color(51, 255, 255));
-	    plot.setSectionPaint("Mixed Severity Wildfire", new Color(255, 51, 0));
+	    plot.setSectionPaint("Mixed Severity Wildfire", new Color(255, 140, 0));
+	    plot.setSectionPaint("Severe Bark Beetle", new Color(255, 51, 0));
 	    		    
 //	    plot.setLabelLinksVisible(false);
 //		plot.setLabelGenerator(null);

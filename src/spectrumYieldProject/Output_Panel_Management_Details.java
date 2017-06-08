@@ -321,7 +321,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 				// The following vary depending on what type of variable is
 				if (original_term.contains("xNGe_") || original_term.contains("xPBe_")
 						|| original_term.contains("xGSe_") || original_term.contains("xMSe_") 
-						|| original_term.contains("xEAe_") ) {		
+						|| original_term.contains("xBSe_") || original_term.contains("xEAe_") ) {		
 
 					
 					term = Get_Variable_Information.get_layer6(entry.getStringValue(1));
@@ -367,7 +367,8 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 				}
 				
 				
-				else if (original_term.contains("xEAr_") || original_term.contains("xNGr_") ) {
+				else if (original_term.contains("xNGr_") || original_term.contains("xPBr_")
+						|| original_term.contains("xGSr_") || original_term.contains("xEAr_") ) {
 					
 					
 					term = Get_Variable_Information.get_method(entry.getStringValue(1)) + "r";				//NOTE NOTE NOTE Remove this + "r" later

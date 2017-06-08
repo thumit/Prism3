@@ -1,0 +1,30 @@
+bc_id	bc_description	bc_type	bc_multiplier	lowerbound	lowerbound_perunit_penalty	upperbound	upperbound_perunit_penalty	bookeeping_var_id	bookeeping_var_name	bookeeping_var_value	bookeeping_var_reduced_cost	total_penalty
+1	Live CF of Douglas Fir in  1 - time period 1	FREE	1.0	null	null	null	null	8	v_0	1.6149124682008E9	0.0	0.0
+2	Live CF of Douglas Fir in  2 - time period 2	FREE	1.0	null	null	null	null	9	v_1	1.2099418293809874E9	0.0	0.0
+3	Live CF of Douglas Fir in  3 - time period 3	FREE	1.0	null	null	null	null	10	v_2	1.1122101042622106E9	0.0	0.0
+4	Live CF of Douglas Fir in  4 - time period 4	FREE	1.0	null	null	null	null	11	v_3	1.4650043036033745E9	0.0	0.0
+5	Live CF of Douglas Fir in  5 - time period 5	FREE	1.0	null	null	null	null	12	v_4	1.6593080570892684E9	0.0	0.0
+6	Harvested CF of Douglas Fir in 1 - time period 1	FREE	1.0	null	null	null	null	13	v_5	879996.628470253	0.0	0.0
+7	Harvested CF of Douglas Fir in 2 - time period 2	FREE	1.0	null	null	null	null	14	v_6	1319994.9427053793	0.0	0.0
+8	Harvested CF of Douglas Fir in 3 - time period 3	FREE	1.0	null	null	null	null	15	v_7	1837279.561445007	0.0	0.0
+9	Harvested CF of Douglas Fir in 4 - time period 4	FREE	1.0	null	null	null	null	16	v_8	2755919.3421675107	0.0	0.0
+10	Harvested CF of Douglas Fir in 5 - time period 5	FREE	1.0	null	null	null	null	17	v_9	3206809.52521185	0.0	0.0
+11	Total Cost in 1 - time period 1	FREE	1.0	null	null	null	null	18	v_10	999999.9999999999	0.0	0.0
+12	Total Cost in 2 - time period 2	FREE	1.0	null	null	null	null	19	v_11	999999.9999999999	0.0	0.0
+13	Total Cost in 3 - time period 3	FREE	1.0	null	null	null	null	20	v_12	999999.9999999999	0.0	0.0
+14	Total Cost in 4 - time period 4	FREE	1.0	null	null	null	null	21	v_13	999999.9999999999	0.0	0.0
+15	Total Cost in 5 - time period 5	FREE	1.0	null	null	null	null	22	v_14	999999.9999999999	0.0	0.0
+16	Total harvested CF of Douglas Fir across all 5 periods	SOFT	1.0	1.0E7	1.0	1.0E7	1.0	0	y_0	1.0E7	0.0	0.0
+17	Total Cost across 5 periods	HARD	1.0	null	null	5000000.0	null	6	z_0	5000000.0	0.0	0.0
+18	Total acres of forest with Douglas Fir dominant in  1 - time period 1	FREE	1.0	null	null	null	null	23	v_15	667207.7099999994	0.0	0.0
+19	Total acres of forest with Douglas Fir dominant in  2 - time period 2	FREE	1.0	null	null	null	null	24	v_16	483002.2473200002	0.0	0.0
+20	Total acres of forest with Douglas Fir dominant in  3 - time period 3	FREE	1.0	null	null	null	null	25	v_17	402820.0863763196	0.0	0.0
+21	Total acres of forest with Douglas Fir dominant in  4 - time period 4	FREE	1.0	null	null	null	null	26	v_18	465260.0565398707	0.0	0.0
+22	Total acres of forest with Douglas Fir dominant in  5 - time period 5	SOFT	1.0	50000.0	1.0	null	null	1	y_1	467590.5959955287	0.0	0.0
+23	p3 Douglas size 12	FREE	1.0	null	null	null	null	27	v_19	328323.2785113595	0.0	0.0
+24	p3 Douglas size 13	FREE	1.0	null	null	null	null	28	v_20	47726.17669376	0.0	0.0
+25	p3 Douglas size 20	FREE	1.0	null	null	null	null	29	v_21	25329.091734560003	0.0	0.0
+26	p3 Douglas size 30	FREE	1.0	null	null	null	null	30	v_22	1441.53943664	0.0	0.0
+27	p3 all others size 12 and 13	FREE	1.0	null	null	null	null	31	v_23	940044.2291865188	0.0	0.0
+28	p3 all others size 20 and 30	FREE	1.0	null	null	null	null	32	v_24	261720.78966156012	0.0	0.0
+29	p1 at least 25k EAe	HARD	1.0	25000.0	1.0	null	null	7	z_1	128790.70830705707	0.0	0.0
