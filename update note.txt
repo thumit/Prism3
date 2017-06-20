@@ -118,8 +118,6 @@
 86. Establish the link to correct EAe yield tables (too complicated, need to simplify somehow)
 --------------------------------------------------------------------------
 
-All changes in this block are associated with v26.jar, formulation21.docx, database3.docx
-
 87. Dynamic Identifiers duplicated calculation fixed
 88. Adding Bark Beetle (BSe):
 	- Edit window: change title "mixed severity wildfire" to "non-replacing disturbances"
@@ -155,3 +153,20 @@ All changes in this block are associated with v26.jar, formulation21.docx, datab
 		- Get_Variable_Information: Add PBr, GSr
 		- Static_Identifiers: Enable 2 checkboxes for PBr and GSr
 		- Output_Panel_Management_Details: add	|| original_term.contains("xPBr_")	and	|| original_term.contains("xGSr_")
+
+All changes in this block are associated with v26.jar, formulation21.docx, database3.docx
+--------------------------------------------------------------------------
+
+91. Adding timing choice i for EAe and EAr
+	- Formulation22: 
+		- Add all terms needed for equations 10, 11b, 12a, 13, 14d
+		- Linking variable to yield table: add i for EAe and EAr
+	- Codes:
+		- Add total prescriptions for EAe, EAr (currently set at total of 5 choices for each defined rotation age)
+		- Add i for the arrays and decision variables of xEAe and xEAr
+		- Add all terms needed for equations 10, 11b (change to 11), 12a, 13, 14d, and 15
+		- Get_Variable_Information: add timing choice for EAe and EAr (after this, all EAe and EAr should be missing in the output, until database is updated with timing choice for Eae and Ear tables)
+92. Remove choices from current sampleCNPZ and add 0 (as the only 1 choice) for the EAe and EAr data for testing
+
+
+All changes in this block are associated with v27.jar, formulation22.docx, database4.docx

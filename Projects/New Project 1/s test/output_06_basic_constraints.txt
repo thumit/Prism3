@@ -1,30 +1,33 @@
 bc_id	bc_description	bc_type	bc_multiplier	lowerbound	lowerbound_perunit_penalty	upperbound	upperbound_perunit_penalty	bookeeping_var_id	bookeeping_var_name	bookeeping_var_value	bookeeping_var_reduced_cost	total_penalty
-1	Live CF of Douglas Fir in  1 - time period 1	FREE	1.0	null	null	null	null	8	v_0	1.6149124682008E9	0.0	0.0
-2	Live CF of Douglas Fir in  2 - time period 2	FREE	1.0	null	null	null	null	9	v_1	1.2099418293809874E9	0.0	0.0
-3	Live CF of Douglas Fir in  3 - time period 3	FREE	1.0	null	null	null	null	10	v_2	1.1122101042622106E9	0.0	0.0
-4	Live CF of Douglas Fir in  4 - time period 4	FREE	1.0	null	null	null	null	11	v_3	1.4650043036033745E9	0.0	0.0
-5	Live CF of Douglas Fir in  5 - time period 5	FREE	1.0	null	null	null	null	12	v_4	1.6593080570892684E9	0.0	0.0
-6	Harvested CF of Douglas Fir in 1 - time period 1	FREE	1.0	null	null	null	null	13	v_5	879996.628470253	0.0	0.0
-7	Harvested CF of Douglas Fir in 2 - time period 2	FREE	1.0	null	null	null	null	14	v_6	1319994.9427053793	0.0	0.0
-8	Harvested CF of Douglas Fir in 3 - time period 3	FREE	1.0	null	null	null	null	15	v_7	1837279.561445007	0.0	0.0
-9	Harvested CF of Douglas Fir in 4 - time period 4	FREE	1.0	null	null	null	null	16	v_8	2755919.3421675107	0.0	0.0
-10	Harvested CF of Douglas Fir in 5 - time period 5	FREE	1.0	null	null	null	null	17	v_9	3206809.52521185	0.0	0.0
-11	Total Cost in 1 - time period 1	FREE	1.0	null	null	null	null	18	v_10	999999.9999999999	0.0	0.0
-12	Total Cost in 2 - time period 2	FREE	1.0	null	null	null	null	19	v_11	999999.9999999999	0.0	0.0
-13	Total Cost in 3 - time period 3	FREE	1.0	null	null	null	null	20	v_12	999999.9999999999	0.0	0.0
-14	Total Cost in 4 - time period 4	FREE	1.0	null	null	null	null	21	v_13	999999.9999999999	0.0	0.0
-15	Total Cost in 5 - time period 5	FREE	1.0	null	null	null	null	22	v_14	999999.9999999999	0.0	0.0
+1	Live CF of Douglas Fir in  1 - time period 1	FREE	1.0	null	null	null	null	17	v_0	1.4325045013329809E9	0.0	0.0
+2	Live CF of Douglas Fir in  2 - time period 2	FREE	1.0	null	null	null	null	18	v_1	9.935342880132315E8	0.0	0.0
+3	Live CF of Douglas Fir in  3 - time period 3	FREE	1.0	null	null	null	null	19	v_2	1.0193087023338095E9	0.0	0.0
+4	Live CF of Douglas Fir in  4 - time period 4	FREE	1.0	null	null	null	null	20	v_3	1.2256756081743722E9	0.0	0.0
+5	Live CF of Douglas Fir in  5 - time period 5	FREE	1.0	null	null	null	null	21	v_4	1.362410489631164E9	0.0	0.0
+6	Harvested CF of Douglas Fir in 1 - time period 1	FREE	1.0	null	null	null	null	22	v_5	924996.0622932704	0.0	0.0
+7	Harvested CF of Douglas Fir in 2 - time period 2	FREE	1.0	null	null	null	null	23	v_6	1231321.8219534196	0.0	0.0
+8	Harvested CF of Douglas Fir in 3 - time period 3	FREE	1.0	null	null	null	null	24	v_7	1702955.0756545877	0.0	0.0
+9	Harvested CF of Douglas Fir in 4 - time period 4	FREE	1.0	null	null	null	null	25	v_8	2554432.6134818816	0.0	0.0
+10	Harvested CF of Douglas Fir in 5 - time period 5	FREE	1.0	null	null	null	null	26	v_9	3586294.426616842	0.0	0.0
+11	Total Cost in 1 - time period 1	FREE	1.0	null	null	null	null	27	v_10	1000000.0	0.0	0.0
+12	Total Cost in 2 - time period 2	FREE	1.0	null	null	null	null	28	v_11	1000000.0	0.0	0.0
+13	Total Cost in 3 - time period 3	FREE	1.0	null	null	null	null	29	v_12	1000000.0	0.0	0.0
+14	Total Cost in 4 - time period 4	FREE	1.0	null	null	null	null	30	v_13	1000000.0	0.0	0.0
+15	Total Cost in 5 - time period 5	FREE	1.0	null	null	null	null	31	v_14	1000000.0	0.0	0.0
 16	Total harvested CF of Douglas Fir across all 5 periods	SOFT	1.0	1.0E7	1.0	1.0E7	1.0	0	y_0	1.0E7	0.0	0.0
-17	Total Cost across 5 periods	HARD	1.0	null	null	5000000.0	null	6	z_0	5000000.0	0.0	0.0
-18	Total acres of forest with Douglas Fir dominant in  1 - time period 1	FREE	1.0	null	null	null	null	23	v_15	667207.7099999994	0.0	0.0
-19	Total acres of forest with Douglas Fir dominant in  2 - time period 2	FREE	1.0	null	null	null	null	24	v_16	483002.2473200002	0.0	0.0
-20	Total acres of forest with Douglas Fir dominant in  3 - time period 3	FREE	1.0	null	null	null	null	25	v_17	402820.0863763196	0.0	0.0
-21	Total acres of forest with Douglas Fir dominant in  4 - time period 4	FREE	1.0	null	null	null	null	26	v_18	465260.0565398707	0.0	0.0
-22	Total acres of forest with Douglas Fir dominant in  5 - time period 5	SOFT	1.0	50000.0	1.0	null	null	1	y_1	467590.5959955287	0.0	0.0
-23	p3 Douglas size 12	FREE	1.0	null	null	null	null	27	v_19	328323.2785113595	0.0	0.0
-24	p3 Douglas size 13	FREE	1.0	null	null	null	null	28	v_20	47726.17669376	0.0	0.0
-25	p3 Douglas size 20	FREE	1.0	null	null	null	null	29	v_21	25329.091734560003	0.0	0.0
-26	p3 Douglas size 30	FREE	1.0	null	null	null	null	30	v_22	1441.53943664	0.0	0.0
-27	p3 all others size 12 and 13	FREE	1.0	null	null	null	null	31	v_23	940044.2291865188	0.0	0.0
-28	p3 all others size 20 and 30	FREE	1.0	null	null	null	null	32	v_24	261720.78966156012	0.0	0.0
-29	p1 at least 25k EAe	HARD	1.0	25000.0	1.0	null	null	7	z_1	128790.70830705707	0.0	0.0
+17	Total Cost across 5 periods	HARD	1.0	null	null	5000000.0	null	15	z_0	5000000.0	0.0	0.0
+18	Total acres of forest with Douglas Fir dominant in  1 - time period 1	FREE	1.0	null	null	null	null	32	v_15	522244.3078089989	0.0	0.0
+19	Total acres of forest with Douglas Fir dominant in  2 - time period 2	FREE	1.0	null	null	null	null	33	v_16	391133.72765338083	0.0	0.0
+20	Total acres of forest with Douglas Fir dominant in  3 - time period 3	FREE	1.0	null	null	null	null	34	v_17	336349.4046854661	0.0	0.0
+21	Total acres of forest with Douglas Fir dominant in  4 - time period 4	FREE	1.0	null	null	null	null	35	v_18	384946.38321762823	0.0	0.0
+22	Total acres of forest with Douglas Fir dominant in  5 - time period 5	SOFT	1.0	50000.0	1.0	null	null	1	y_1	390538.815766369	0.0	0.0
+23	p3 Douglas size 12	FREE	1.0	null	null	null	null	36	v_19	278536.70757159946	0.0	0.0
+24	p3 Douglas size 13	FREE	1.0	null	null	null	null	37	v_20	18366.903517920007	0.0	0.0
+25	p3 Douglas size 20	FREE	1.0	null	null	null	null	38	v_21	7699.233729146207	0.0	0.0
+26	p3 Douglas size 30	FREE	1.0	null	null	null	null	39	v_22	31746.5598668	0.0	0.0
+27	p3 all others size 12 and 13	FREE	1.0	null	null	null	null	40	v_23	773040.4779173859	0.0	0.0
+28	p3 all others size 20 and 30	FREE	1.0	null	null	null	null	41	v_24	177812.99859694354	0.0	0.0
+29	p1 at least 25k EAe	HARD	1.0	25000.0	1.0	null	null	16	z_1	492703.9331256891	0.0	0.0
+30	No GSe	SOFT	1.0	null	null	0.0	2.0	2	y_2	0.0	0.0	0.0
+31	200k EAe and EAr each 1 - silvicultural method EAe	SOFT	1.0	200000.0	1.0	null	null	3	y_3	825254.3723681174	0.0	0.0
+32	200k EAe and EAr each 2 - silvicultural method EAr	SOFT	1.0	200000.0	1.0	null	null	4	y_4	337991.48017702316	0.0	0.0

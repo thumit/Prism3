@@ -1598,12 +1598,12 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 //			} catch (Exception e) {
 //				JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
 //			}
-//			
-//			
-//			
-//			
-//
-//			
+			
+			
+			
+			
+
+			
 //			// Change timing choice of EAe and EAr table to be the rotation age class (the max age of this EA table) - and delete all EAr tables
 //			try {		
 //				// Delete all EAr tables
@@ -1676,114 +1676,134 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 			
 			
 			
-			try {
-				// add action_id
-				pst = conn.prepareStatement("ALTER TABLE yield_tables ADD COLUMN action_id TEXT;");
-				pst.executeUpdate();
-
-				
-				// action_id = random number (max = total actions)
-//				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = ABS (RANDOM() % (SELECT COUNT(action_id) FROM management_actions));");	
-				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = ABS (RANDOM() % 10);");	// Random first action_id from 0-9
-				pst.executeUpdate();
-				
-				
-				
-				// NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG-------------------
-				// no_action if method = NG 
-				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = '0' WHERE strata LIKE '%_NG_%';");
-				pst.executeUpdate();	
-			
-						
-				
-				// EA EA EA EA EA EA EA EA EA EA EA EA EA EA EA EA EA EA EA EA EA EA EA EA--------------------
-				// action_id = random(15-->20) if  method = EA   and   not the row of rotation (clear cut not happens)   and   trt_acres <> 0.00
-				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = 15 + ABS (RANDOM() % 6) "
-						+ "WHERE (strata LIKE '%_EA_%' AND substr(strata,10,2) <> st_age_10 AND trt_acres <> '0.00')"
-						+ ";");
-				pst.executeUpdate();			
-				
-				// action_id = random(21-->24) if  method = EA and in the row of rotation (clear cut happens)
-				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = 21 + ABS (RANDOM() % 4) "
-						+ "WHERE strata LIKE '%_EA_%' AND substr(strata,10,2) = st_age_10"
-						+ ";");
-				pst.executeUpdate();	
-				
-				// action_id = 0 if  method = EA  and   trt_acres = 0.00
-				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = '0' "
-						+ "WHERE strata LIKE '%_EA_%' AND trt_acres = '0.00'"
-						+ ";");
-				pst.executeUpdate();
-				
-				
-				
-				// GS GS GS GS GS GS GS GS GS GS GS GS GS GS GS GS GS GS GS GS GS GS GS GS----------------------		
-				// action_id = random(11-->20) if  method = GS    and   trt_acres <> 0.00
-				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = 11 + ABS (RANDOM() % 10) "
-						+ "WHERE (strata LIKE '%_GS_%' AND trt_acres <> '0.00')"
-						+ ";");
-				pst.executeUpdate();
-				
-				// action_id = 0 if  method = GS  and   trt_acres = 0.00
-				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = '0' "
-						+ "WHERE strata LIKE '%_GS_%' AND trt_acres = '0.00'"
-						+ ";");
-				pst.executeUpdate();
-				
-				
-				
-				// PB PB PB PB PB PB PB PB PB PB PB PB PB PB PB PB PB PB PB PB PB PB PB PB----------------------
-				// action_id = 0
-				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = '0' "
-						+ "WHERE strata LIKE '%_PB_%'"
-						+ ";");
-				pst.executeUpdate();
-				
-				// action_id = = random(2-->9) for every random (3-6) periods if  method = PB
-				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = 2 + ABS (RANDOM() % 8) "
-						+ "WHERE strata LIKE '%_PB_%' AND CAST(st_age_10 as decimal) % (3 + ABS (RANDOM() % 4)) = 0"
-						+ ";");
-				pst.executeUpdate();
-				
-				
-				
-				// MS MS MS MS MS MS MS MS MS MS MS MS MS MS MS MS MS MS MS MS MS MS MS MS----------------------
-				// action_id = 0
-				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = '0' "
-						+ "WHERE strata LIKE '%_MS_%'"
-						+ ";");
-				pst.executeUpdate();
-				
-				// action_id = = random(4-->9) for every random (4-8) periods if  method = PB
-				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = 4 + ABS (RANDOM() % 6) "
-						+ "WHERE strata LIKE '%_MS_%' AND CAST(st_age_10 as decimal) % (4 + ABS (RANDOM() % 5)) = 0"
-						+ ";");
-				pst.executeUpdate();
-				
-				
-				
-				
-				
-				
-				//join tables to yield_tables2
-				pst = conn.prepareStatement("CREATE TABLE yield_tables2 AS SELECT * FROM yield_tables JOIN management_actions USING (action_id);");
-				pst.executeUpdate();
-				
-				//delete yield_tables
-				pst = conn.prepareStatement("DROP TABLE yield_tables;");
-				pst.executeUpdate();
-				
-				//rename yield_tables2 to yield_tables
-				pst = conn.prepareStatement("ALTER TABLE yield_tables2 RENAME TO yield_tables;");
-				pst.executeUpdate();
-			
-			} catch (Exception e) {
-				JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
-			}
+//			try {
+//				// add action_id
+//				pst = conn.prepareStatement("ALTER TABLE yield_tables ADD COLUMN action_id TEXT;");
+//				pst.executeUpdate();
+//
+//				
+//				// action_id = random number (max = total actions)
+////				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = ABS (RANDOM() % (SELECT COUNT(action_id) FROM management_actions));");	
+//				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = ABS (RANDOM() % 10);");	// Random first action_id from 0-9
+//				pst.executeUpdate();
+//				
+//				
+//				
+//				// NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG-------------------
+//				// no_action if method = NG 
+//				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = '0' WHERE strata LIKE '%_NG_%';");
+//				pst.executeUpdate();	
+//			
+//						
+//				
+//				// EA EA EA EA EA EA EA EA EA EA EA EA EA EA EA EA EA EA EA EA EA EA EA EA--------------------
+//				// action_id = random(15-->20) if  method = EA   and   not the row of rotation (clear cut not happens)   and   trt_acres <> 0.00
+//				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = 15 + ABS (RANDOM() % 6) "
+//						+ "WHERE (strata LIKE '%_EA_%' AND substr(strata,10,2) <> st_age_10 AND trt_acres <> '0.00')"
+//						+ ";");
+//				pst.executeUpdate();			
+//				
+//				// action_id = random(21-->24) if  method = EA and in the row of rotation (clear cut happens)
+//				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = 21 + ABS (RANDOM() % 4) "
+//						+ "WHERE strata LIKE '%_EA_%' AND substr(strata,10,2) = st_age_10"
+//						+ ";");
+//				pst.executeUpdate();	
+//				
+//				// action_id = 0 if  method = EA  and   trt_acres = 0.00
+//				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = '0' "
+//						+ "WHERE strata LIKE '%_EA_%' AND trt_acres = '0.00'"
+//						+ ";");
+//				pst.executeUpdate();
+//				
+//				
+//				
+//				// GS GS GS GS GS GS GS GS GS GS GS GS GS GS GS GS GS GS GS GS GS GS GS GS----------------------		
+//				// action_id = random(11-->20) if  method = GS    and   trt_acres <> 0.00
+//				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = 11 + ABS (RANDOM() % 10) "
+//						+ "WHERE (strata LIKE '%_GS_%' AND trt_acres <> '0.00')"
+//						+ ";");
+//				pst.executeUpdate();
+//				
+//				// action_id = 0 if  method = GS  and   trt_acres = 0.00
+//				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = '0' "
+//						+ "WHERE strata LIKE '%_GS_%' AND trt_acres = '0.00'"
+//						+ ";");
+//				pst.executeUpdate();
+//				
+//				
+//				
+//				// PB PB PB PB PB PB PB PB PB PB PB PB PB PB PB PB PB PB PB PB PB PB PB PB----------------------
+//				// action_id = 0
+//				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = '0' "
+//						+ "WHERE strata LIKE '%_PB_%'"
+//						+ ";");
+//				pst.executeUpdate();
+//				
+//				// action_id = = random(2-->9) for every random (3-6) periods if  method = PB
+//				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = 2 + ABS (RANDOM() % 8) "
+//						+ "WHERE strata LIKE '%_PB_%' AND CAST(st_age_10 as decimal) % (3 + ABS (RANDOM() % 4)) = 0"
+//						+ ";");
+//				pst.executeUpdate();
+//				
+//				
+//				
+//				// MS MS MS MS MS MS MS MS MS MS MS MS MS MS MS MS MS MS MS MS MS MS MS MS----------------------
+//				// action_id = 0
+//				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = '0' "
+//						+ "WHERE strata LIKE '%_MS_%'"
+//						+ ";");
+//				pst.executeUpdate();
+//				
+//				// action_id = = random(4-->9) for every random (4-8) periods if  method = PB
+//				pst = conn.prepareStatement("UPDATE yield_tables SET action_id = 4 + ABS (RANDOM() % 6) "
+//						+ "WHERE strata LIKE '%_MS_%' AND CAST(st_age_10 as decimal) % (4 + ABS (RANDOM() % 5)) = 0"
+//						+ ";");
+//				pst.executeUpdate();
+//				
+//				
+//				
+//				
+//				
+//				
+//				//join tables to yield_tables2
+//				pst = conn.prepareStatement("CREATE TABLE yield_tables2 AS SELECT * FROM yield_tables JOIN management_actions USING (action_id);");
+//				pst.executeUpdate();
+//				
+//				//delete yield_tables
+//				pst = conn.prepareStatement("DROP TABLE yield_tables;");
+//				pst.executeUpdate();
+//				
+//				//rename yield_tables2 to yield_tables
+//				pst = conn.prepareStatement("ALTER TABLE yield_tables2 RENAME TO yield_tables;");
+//				pst.executeUpdate();
+//			
+//			} catch (Exception e) {
+//				JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
+//			}
 	
 			
 		
-			
+//			// add timing choices 0 for the current names of EAe and EAr tables
+//			try {						
+//				//get the strata name and put into a list		
+//				List<String> strata_list = new ArrayList<String>();	
+//				pst = conn.prepareStatement("SELECT DISTINCT strata FROM yield_tables;");
+//				ResultSet rs = pst.executeQuery();			
+//				while (rs.next()) {
+//					strata_list.add(rs.getString(1));		//column 1
+//				}
+//				rs.close();
+//				
+//				// Update EAe and Ear strata with new name
+//				for (String strata: strata_list) {														
+//					if (strata.contains("_EA")) {	
+//						pst = conn.prepareStatement("UPDATE yield_tables SET strata = '" + strata + "_0" + "' WHERE strata = '" + strata + "';");
+//						pst.executeUpdate();				
+//					}					
+//				}		
+//			} catch (Exception e) {
+//				JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
+//			}			
 			
 			
 			

@@ -101,7 +101,7 @@ public class Get_Variable_Information {
 			
 			method = "BS";
 			forest_status = "E";
-			yield_table_name_to_find = layer5 + "_" + layer6  + "_"+ method + "_" + forest_status + "_" + timing_choice;
+			yield_table_name_to_find = layer5 + "_" + layer6  + "_" + method + "_" + forest_status + "_" + timing_choice;
 			yield_table_row_index_to_find = period - 1;
 		}
 		else if (var_name.startsWith("xEAe_")) {				
@@ -113,13 +113,14 @@ public class Get_Variable_Information {
 			layer4 = term[3];
 			layer5 = term[4];
 			layer6 = term[5];
-			period = Integer.parseInt(term[8]);
+			timing_choice = Integer.parseInt(term[8]);
+			period = Integer.parseInt(term[9]);
 			customized_variable_term = layer1 + layer2 + layer3 + layer4 + layer5 + layer6 + "Even Age" + period;	
 			
 			
 			method = "EA";
 			forest_status = "E";
-			yield_table_name_to_find = layer5 + "_" + layer6  + "_"+ method + "_" + forest_status + "_" + "rotation_age";
+			yield_table_name_to_find = layer5 + "_" + layer6 + "_" + method + "_" + forest_status + "_" + "rotation_age" + "_" + timing_choice;
 			yield_table_row_index_to_find = period - 1;
 		}	
 		else if (var_name.startsWith("xEAr_")) {
@@ -132,12 +133,13 @@ public class Get_Variable_Information {
 			layer5 = term[4];
 			rotation_period = Integer.parseInt(term[5]);
 			rotation_age = Integer.parseInt(term[6]);
-			period = Integer.parseInt(term[8]);
+			timing_choice = Integer.parseInt(term[8]);
+			period = Integer.parseInt(term[9]);
 			customized_variable_term = layer1 + layer2 + layer3 + layer4 + layer5 + "Even Age" + period;	
 			
 			method = "EA";
 			forest_status = "R";
-			yield_table_name_to_find = layer5 + "_" + method + "_" + forest_status + "_" + rotation_age;
+			yield_table_name_to_find = layer5 + "_" + method + "_" + forest_status + "_" + rotation_age + "_" + timing_choice;
 			yield_table_row_index_to_find = rotation_age - 1 + period - rotation_period;
 		}
 		else if (var_name.startsWith("xNGr_")) {
