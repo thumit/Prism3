@@ -42,7 +42,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 	private JScrollPane defineScrollPane;		//for Definition of dynamic identifier
 
 	
-	public ScrollPane_DynamicIdentifiers(int option, Read_Database_Yield_Tables read_DatabaseTables, Read_Indentifiers read_Identifiers,
+	public ScrollPane_DynamicIdentifiers(int option, Read_Database read_DatabaseTables, Read_Indentifiers read_Identifiers,
 			String[] yieldTable_ColumnNames, Object[][][] yieldTable_values) {
 		
 		

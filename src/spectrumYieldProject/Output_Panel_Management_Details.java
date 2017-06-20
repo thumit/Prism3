@@ -25,7 +25,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 	private ScrollPane_DynamicIdentifiers dynamic_identifiersScrollPanel;
 	
 	private File file_StrataDefinition, file_Database;
-	private Read_Database_Yield_Tables read_DatabaseTables;
+	private Read_Database read_DatabaseTables;
 	private Read_Indentifiers read_Identifiers;
 	private Object[][][] yieldTable_values;
 	private String [] yieldTable_ColumnNames;
@@ -51,7 +51,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 		read_Identifiers = new Read_Indentifiers(file_StrataDefinition);		
 	
 		// Read the database
-		read_DatabaseTables = new Read_Database_Yield_Tables(file_Database);			
+		read_DatabaseTables = new Read_Database(file_Database);			
 		yieldTable_values = read_DatabaseTables.get_yield_tables_values();
 		yieldTable_ColumnNames = read_DatabaseTables.get_yield_tables_column_names();		
 		// End of set up ---------------------------------------------------------------------------	

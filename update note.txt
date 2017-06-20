@@ -168,5 +168,15 @@ All changes in this block are associated with v26.jar, formulation21.docx, datab
 		- Get_Variable_Information: add timing choice for EAe and EAr (after this, all EAe and EAr should be missing in the output, until database is updated with timing choice for Eae and Ear tables)
 92. Remove choices from current sampleCNPZ and add 0 (as the only 1 choice) for the EAe and EAr data for testing
 
+All changes in this block are associated with v27.jar, formulation22.docx, database4.docx
+--------------------------------------------------------------------------
+
+92. Move existing_strata & strata_definition to database
+	- Change class name: Rade_database_Yield_Tables --> Read_database
+	- button_import_database: always enable
+	- Read_Database: now also read existing_strata 
+	- Delete UI of "import strata", move some codes into "import database"
+	- Delete Read_Strata class
+	- FilesHandle: delete "public static File chosenStrata()" 
 
 All changes in this block are associated with v27.jar, formulation22.docx, database4.docx

@@ -10,14 +10,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Read_Database_Yield_Tables {
+public class Read_Database {
 	private Object[][][] yield_tables_values;			// Note: indexes start from 0 
 	private Object[] yield_tables_names;
 	private String[] yield_tables_column_names;
 	private String[] action_type;
 	
 	
-	public Read_Database_Yield_Tables(File file) {
+	private String[][] existing_strata_values;
+	
+	
+	
+	
+	public Read_Database(File file) {
 		try {
 			Connection conn;
 			
@@ -30,7 +35,7 @@ public class Read_Database_Yield_Tables {
 				
 				// get total yield tables
 				int tableCount = 0;				
-				rs = st.executeQuery("SELECT COUNT(DISTINCT strata) FROM yield_tables;");		//This only have 1 row and 1 column, the value is total number of unique strata
+				rs = st.executeQuery("SELECT COUNT(DISTINCT strata) FROM yield_tables;");		//This only have 1 row and 1 column, the value is total number of unique prescription
 				while (rs.next()) {
 					tableCount = rs.getInt(1);	//column 1
 				}
@@ -108,7 +113,40 @@ public class Read_Database_Yield_Tables {
 							yield_tables_values[i][row][col] = rs.getString(col + 1);
 						}
 					}
-				}							
+				}			
+				
+				
+				//-----------------------------------------------------------------------------------------------------------
+				// For existing_strata
+				
+				// get total rows (strata count)
+				int rowCount2 = 0;				
+				rs = st.executeQuery("SELECT COUNT(DISTINCT strata_id) FROM existing_strata;");		//This only have 1 row and 1 column, the value is total number of unique strata
+				while (rs.next()) {
+					rowCount2 = rs.getInt(1);	//column 1
+				}				
+				
+				// get total columns
+				rs = st.executeQuery("SELECT * FROM existing_strata;");	
+				rsmd = rs.getMetaData();
+				int colCount2 = rsmd.getColumnCount();
+				
+				// Redefine size
+				existing_strata_values = new String[rowCount2][colCount2];
+				
+				// get values
+				for (int row = 0; row < rowCount2; row++) {
+					rs.next();
+					for (int col = 0; col < colCount2; col++) {
+						existing_strata_values[row][col] = rs.getString(col + 1);
+					}
+				}
+				
+				
+				
+				
+				
+				
 				
 				
 				st.close();
@@ -122,6 +160,7 @@ public class Read_Database_Yield_Tables {
 	}
 	
 	
+	// For yield_tales
 	public Object[][][] get_yield_tables_values() {	
 		return yield_tables_values;
 	}
@@ -175,6 +214,10 @@ public class Read_Database_Yield_Tables {
 	
 	
 	
+	// For existing_strata
+	public String[][] get_existing_strata_values() {
+		return existing_strata_values;
+	}
 	
 	
 }

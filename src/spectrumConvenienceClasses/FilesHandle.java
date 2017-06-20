@@ -125,29 +125,7 @@ public class FilesHandle {
 		}
 
 		return file;
-	}	
-	
-	
-	public static File chosenStrata() {
-		JFileChooser chooser = new JFileChooser();
-		chooser.setCurrentDirectory(new File(get_workingLocation()));
-		chooser.setDialogTitle("Select existing strata file");
-		chooser.setMultiSelectionEnabled(false);
-		
-		chooser.setApproveButtonText("Import");
-		chooser.setApproveButtonToolTipText("Import existing strata from the selected file");
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("Existing Strata File '.csv' '.txt'", "csv", "txt");
-		chooser.setFileFilter(filter);
-		chooser.setAcceptAllFileFilterUsed(false);
-		
-		int returnValue = chooser.showOpenDialog(Spectrum_Main.get_spectrumDesktopPane());
-		File file = null;
-		if (returnValue == JFileChooser.APPROVE_OPTION) {
-			file = chooser.getSelectedFile();
-		}
-
-		return file;
-	}	
+	}			
 	
 	
 	public static File chosenDefinition() {

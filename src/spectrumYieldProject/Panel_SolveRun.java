@@ -293,7 +293,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			read.readCostAdjustment(new File(runFolder.getAbsolutePath() + "/input_08_cost_adjustment.txt"));
 			read.read_basic_constraints(new File(runFolder.getAbsolutePath() + "/input_09_basic_constraints.txt"));
 			read.read_flow_constraints(new File(runFolder.getAbsolutePath() + "/input_10_flow_constraints.txt"));
-			Read_Database_Yield_Tables read_DatabaseTables = new Read_Database_Yield_Tables(new File(runFolder.getAbsolutePath() + "/database.db"));
+			Read_Database read_DatabaseTables = new Read_Database(new File(runFolder.getAbsolutePath() + "/database.db"));
 			
 			
 			//Get info: input_02_modeled_strata
