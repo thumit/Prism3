@@ -1,5 +1,5 @@
 description	selection	
-Total planning periods (decades)	5	
+Total planning periods (decades)	7	
 Annual discount rate (%)	3.5	
 Solver for optimization	CPLEX	
 Maximum solving time (minutes)	15	

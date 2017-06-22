@@ -2687,51 +2687,42 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			button_import_database.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
+//					File old_database = file_Database;
 					
-					Thread thread = new Thread() {			// Make a thread so JFrame will not be frozen
-						public void run() {
-//							File old_database = file_Database;
+					if (is_this_the_first_load == false) {
+						file_Database = FilesHandle.chosenDatabase();
+					} 
+					
+					if (file_Database != null) {
+						try {	
+							button_import_database.setEnabled(false);
+							radioButton_Right[1].setEnabled(false);
+							radioButton_Right[2].setEnabled(false);
+							radioButton_Right[3].setEnabled(false);
+							radioButton_Right[4].setEnabled(false);
+							radioButton_Right[5].setEnabled(false);
+							radioButton_Right[6].setEnabled(false);
+							change_database();
+							radioButton_Right[1].setEnabled(true);
+							radioButton_Right[2].setEnabled(true);
+							radioButton_Right[3].setEnabled(true);
+							radioButton_Right[4].setEnabled(true);
+							radioButton_Right[5].setEnabled(true);
+							radioButton_Right[6].setEnabled(true);
+						} catch (Exception e1) {
+							String warningText = "Importation is denied. " + file_Database.getName() + " does not meet SpectrumLite's data requirements.";
+							String ExitOption[] = {"OK"};
+							int response = JOptionPane.showOptionDialog(Spectrum_Main.get_spectrumDesktopPane(), warningText, "Database importation warning",
+									JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption, ExitOption[0]);
+//							file_Database = old_database;
+//							change_database();	// Revert
 							
-							if (is_this_the_first_load == false) {
-								file_Database = FilesHandle.chosenDatabase();
-							} else {
-								is_this_the_first_load = false;	
-							}
-							
-							if (file_Database != null) {
-								try {	
-									button_import_database.setEnabled(false);
-									radioButton_Right[1].setEnabled(false);
-									radioButton_Right[2].setEnabled(false);
-									radioButton_Right[3].setEnabled(false);
-									radioButton_Right[4].setEnabled(false);
-									radioButton_Right[5].setEnabled(false);
-									radioButton_Right[6].setEnabled(false);
-									change_database();
-									radioButton_Right[1].setEnabled(true);
-									radioButton_Right[2].setEnabled(true);
-									radioButton_Right[3].setEnabled(true);
-									radioButton_Right[4].setEnabled(true);
-									radioButton_Right[5].setEnabled(true);
-									radioButton_Right[6].setEnabled(true);
-								} catch (Exception e1) {
-									String warningText = "Importation is denied. " + file_Database.getName() + " does not meet SpectrumLite's data requirements.";
-									String ExitOption[] = {"OK"};
-									int response = JOptionPane.showOptionDialog(Spectrum_Main.get_spectrumDesktopPane(), warningText, "Database importation warning",
-											JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption, ExitOption[0]);
-//									file_Database = old_database;
-//									change_database();	// Revert
-									
-									file_Database = null;
-									textField2.setText("Select database that meets SpectrumLite's requirements");
-								} finally {
-									button_import_database.setEnabled(true);
-								}
-							} 
-							this.interrupt();
+							file_Database = null;
+							textField2.setText("Select database that meets SpectrumLite's requirements");
+						} finally {
+							button_import_database.setEnabled(true);
 						}
-					};
-					thread.start();
+					} 
 				}
 
 				private void change_database() {
@@ -2742,43 +2733,45 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		        
 					
 
-		
-					// Reset all panels except General Inputs----------------------------------------------------------------		
-					is_table_overview_loaded = false;
-					is_table1_loaded = false;
-					is_table2_loaded = false;
-					is_table3_loaded = false;
-					is_table4_loaded = false;
-					is_table5_loaded = false;
-					is_table6_loaded = false;
-					is_table7_loaded = false;
-					is_table8_loaded = false;
-					is_table9_loaded = false;
-					is_table10_loaded = false;
-																	
-			        // create 2 new instances of this Panel
-					panel_Model_Identifiniton_GUI = new Model_Identifiniton_GUI();
-					panel_Model_Identification_Text = new Model_Identification_Text();
-			        
-			        // create 2 new instances of this Panel
-					panel_Covertype_Conversion_GUI = new Covertype_Conversion_GUI();
-					panel_Covertype_Conversion_Text = new Covertype_Conversion_Text();
-					
-					 // create 2 new instances of this Panel
-					panel_Disturbances_GUI = new Disturbances_GUI();
-					panel_Disturbances_Text = new Disturbances_Text();
-					
-			        // create 2 new instances of this Panel 
-					panel_Management_Cost_GUI = new Management_Cost_GUI();
-					panel_Management_Cost_Text = new Management_Cost_Text();
-					
-					// create 2 new instances of this Panel 
-					panel_Basic_Constraints_GUI = new Basic_Constraints_GUI();
-					panel_Basic_Constraints_Text = new Basic_Constraints_Text();
-					
-					// create 2 new instances of this Panel 
-					panel_Advanced_Constraints_GUI = new Advanced_Constraints_GUI();
-					panel_Advanced_Constraints_Text = new Advanced_Constraints_Text();
+					if (is_this_the_first_load == false) {
+						// Reset all panels except General Inputs----------------------------------------------------------------		
+						is_table_overview_loaded = false;
+						is_table1_loaded = false;
+						is_table2_loaded = false;
+						is_table3_loaded = false;
+						is_table4_loaded = false;
+						is_table5_loaded = false;
+						is_table6_loaded = false;
+						is_table7_loaded = false;
+						is_table8_loaded = false;
+						is_table9_loaded = false;
+						is_table10_loaded = false;
+																		
+				        // create 2 new instances of this Panel
+						panel_Model_Identifiniton_GUI = new Model_Identifiniton_GUI();
+						panel_Model_Identification_Text = new Model_Identification_Text();
+				        
+				        // create 2 new instances of this Panel
+						panel_Covertype_Conversion_GUI = new Covertype_Conversion_GUI();
+						panel_Covertype_Conversion_Text = new Covertype_Conversion_Text();
+						
+						 // create 2 new instances of this Panel
+						panel_Disturbances_GUI = new Disturbances_GUI();
+						panel_Disturbances_Text = new Disturbances_Text();
+						
+				        // create 2 new instances of this Panel 
+						panel_Management_Cost_GUI = new Management_Cost_GUI();
+						panel_Management_Cost_Text = new Management_Cost_Text();
+						
+						// create 2 new instances of this Panel 
+						panel_Basic_Constraints_GUI = new Basic_Constraints_GUI();
+						panel_Basic_Constraints_Text = new Basic_Constraints_Text();
+						
+						// create 2 new instances of this Panel 
+						panel_Advanced_Constraints_GUI = new Advanced_Constraints_GUI();
+						panel_Advanced_Constraints_Text = new Advanced_Constraints_Text();
+					}
+
 									
 					
 
