@@ -2694,10 +2694,13 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 							
 							if (is_this_the_first_load == false) {
 								file_Database = FilesHandle.chosenDatabase();
-							}	
+							} else {
+								is_this_the_first_load = false;	
+							}
 							
 							if (file_Database != null) {
 								try {	
+									button_import_database.setEnabled(false);
 									radioButton_Right[1].setEnabled(false);
 									radioButton_Right[2].setEnabled(false);
 									radioButton_Right[3].setEnabled(false);
@@ -2721,6 +2724,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 									
 									file_Database = null;
 									textField2.setText("Select database that meets SpectrumLite's requirements");
+								} finally {
+									button_import_database.setEnabled(true);
 								}
 							} 
 							this.interrupt();
