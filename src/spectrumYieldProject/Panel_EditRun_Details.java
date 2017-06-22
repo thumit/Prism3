@@ -881,6 +881,18 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					if (data2[row][colCount2 - 1] != null && (boolean) data2[row][colCount2 - 1] == true)	modeledAcres = modeledAcres + Double.parseDouble(data2[row][colCount2 - 3].toString());
 				}
 				data_overview[1][1] = modeledAcres + " vs " + availableAcres;
+				
+		        data_overview[2][1] = yieldTable_values.length;
+		        
+		        int total_yieldtable =0;
+		        for (int row = 0; row < rowCount2; row++) {				        	
+		        	if (data2[row][colCount2 - 2] == null) {
+		        		total_yieldtable = total_yieldtable + 1;
+		        	}
+				}
+		        data_overview[3][1] = total_yieldtable;
+		        model_overview.fireTableDataChanged();
+		        				
 				model_overview.fireTableDataChanged();
 			}
 		};
@@ -2675,39 +2687,46 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			button_import_database.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-//					File old_database = file_Database;
 					
-					if (is_this_the_first_load == false) {
-						file_Database = FilesHandle.chosenDatabase();
-					}	
-					
-					if (file_Database != null) {
-						try {	
-							radioButton_Right[1].setEnabled(false);
-							radioButton_Right[2].setEnabled(false);
-							radioButton_Right[3].setEnabled(false);
-							radioButton_Right[4].setEnabled(false);
-							radioButton_Right[5].setEnabled(false);
-							radioButton_Right[6].setEnabled(false);
-							change_database();
-							radioButton_Right[1].setEnabled(true);
-							radioButton_Right[2].setEnabled(true);
-							radioButton_Right[3].setEnabled(true);
-							radioButton_Right[4].setEnabled(true);
-							radioButton_Right[5].setEnabled(true);
-							radioButton_Right[6].setEnabled(true);
-						} catch (Exception e1) {
-							String warningText = "Importation is denied. " + file_Database.getName() + " does not meet SpectrumLite's data requirements.";
-							String ExitOption[] = {"OK"};
-							int response = JOptionPane.showOptionDialog(Spectrum_Main.get_spectrumDesktopPane(), warningText, "Database importation warning",
-									JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption, ExitOption[0]);
-//							file_Database = old_database;
-//							change_database();	// Revert
+					Thread thread = new Thread() {			// Make a thread so JFrame will not be frozen
+						public void run() {
+//							File old_database = file_Database;
 							
-							file_Database = null;
-							textField2.setText("Select database that meets SpectrumLite's requirements");
+							if (is_this_the_first_load == false) {
+								file_Database = FilesHandle.chosenDatabase();
+							}	
+							
+							if (file_Database != null) {
+								try {	
+									radioButton_Right[1].setEnabled(false);
+									radioButton_Right[2].setEnabled(false);
+									radioButton_Right[3].setEnabled(false);
+									radioButton_Right[4].setEnabled(false);
+									radioButton_Right[5].setEnabled(false);
+									radioButton_Right[6].setEnabled(false);
+									change_database();
+									radioButton_Right[1].setEnabled(true);
+									radioButton_Right[2].setEnabled(true);
+									radioButton_Right[3].setEnabled(true);
+									radioButton_Right[4].setEnabled(true);
+									radioButton_Right[5].setEnabled(true);
+									radioButton_Right[6].setEnabled(true);
+								} catch (Exception e1) {
+									String warningText = "Importation is denied. " + file_Database.getName() + " does not meet SpectrumLite's data requirements.";
+									String ExitOption[] = {"OK"};
+									int response = JOptionPane.showOptionDialog(Spectrum_Main.get_spectrumDesktopPane(), warningText, "Database importation warning",
+											JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption, ExitOption[0]);
+//									file_Database = old_database;
+//									change_database();	// Revert
+									
+									file_Database = null;
+									textField2.setText("Select database that meets SpectrumLite's requirements");
+								}
+							} 
+							this.interrupt();
 						}
-					} 
+					};
+					thread.start();
 				}
 
 				private void change_database() {
@@ -2802,32 +2821,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 							data2[row][colCount2 - 1] = true;
 						}
 					}
+					
+					
+					
+					// some final data update after import successfully
 					model2.fireTableDataChanged();
-			      
-					
-					
-					
-					 // update Models OverView table------------------------------------------------------
-			        data_overview[0][1] = "0 vs " + rowCount2;				        
-			        
-			        availableAcres = 0;
-			        for (int row = 0; row < rowCount2; row++) {
-			        	availableAcres = availableAcres + Double.parseDouble(data2[row][colCount2 - 3].toString());
-					}
-			        data_overview[1][1] = "0 vs " + availableAcres;
-			        
-			        data_overview[2][1] = yieldTable_values.length;
-	        
-			        int total_yieldtable =0;
-			        for (int row = 0; row < rowCount2; row++) {				        	
-			        	if (data2[row][colCount2 - 2] == null) {
-			        		total_yieldtable = total_yieldtable + 1;
-			        	}
-					}
-			        data_overview[3][1] = total_yieldtable;
-			        model_overview.fireTableDataChanged();
-			        
-					
+					model2.update_model_overview();								        					
 					textField2.setText(file_Database.getAbsolutePath());			
 				}
 			});	

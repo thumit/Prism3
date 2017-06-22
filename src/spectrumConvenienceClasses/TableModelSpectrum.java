@@ -66,4 +66,8 @@ public class TableModelSpectrum extends AbstractTableModel {
 	public void match_DataType() {
 	
 	}
+	
+	public void update_model_overview() {
+		
+	}
 };

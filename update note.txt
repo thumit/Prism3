@@ -194,6 +194,9 @@ All changes in this block are associated with v27.jar, formulation22.docx, datab
 97. Disable database revert to save time. Model is always reset if a new database is imported (regarless of success or failure)
 98. Merging Read_Database & Read_Definition + a lot of codes trim (still could not avoid conflict between reading from database & thread behavior)
 99. default to selecting all exsiting strata (which have age class found) after import database.
+--------------------------------------------------------------------------
 
+100. TableModelSpectrum: add method "update_model_overview" and also add one line to replace update overview codes in import database (general inputs). This help update overview whenever database is imported (overview is previously not updated after auto select existing strata)
+101. button_import_database.addActionListener:  start another thread to make the software not frozen during database import.
 
 All changes in this block are associated with v27.jar, formulation22.docx, database4.docx
