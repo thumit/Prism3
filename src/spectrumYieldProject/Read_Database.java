@@ -1,6 +1,14 @@
 package spectrumYieldProject;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -9,6 +17,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import spectrumConvenienceClasses.FilesHandle;
+import spectrumConvenienceClasses.StringHandle;
 
 public class Read_Database {
 	private Object[][][] yield_tables_values;			// Note: indexes start from 0 
@@ -20,22 +31,35 @@ public class Read_Database {
 	private String[][] existing_strata_values;
 	
 	
+	private String[][] strata_definition_values;	
+	private List<String> layers_Title;
+	private List<String> layers_Title_ToolTip;
+	private List<List<String>> allLayers;
+	private List<List<String>> allLayers_ToolTips;
+	
+	private Connection conn = null;
+	private Statement st = null;
+	private ResultSet rs = null;
+	private ResultSetMetaData rsmd = null;
+	private File file_Database;
 	
 	
-	public Read_Database(File file) {
-		try {
-			Connection conn;
-			
-			Class.forName("org.sqlite.JDBC").newInstance();
-			if (file.exists()) {
-				conn = DriverManager.getConnection("jdbc:sqlite:" + file);
-				Statement st = conn.createStatement();
-				ResultSet rs;
+	public Read_Database(File file_Database) {
+		this.file_Database = file_Database;
+		
+		try {			
+			if (file_Database.exists()) {						
+				Class.forName("org.sqlite.JDBC").newInstance();
+				conn = DriverManager.getConnection("jdbc:sqlite:" + file_Database);
+				st = conn.createStatement();
+
 				
-				
+				//-----------------------------------------------------------------------------------------------------------
+				// For yield_tables
+				//-----------------------------------------------------------------------------------------------------------
 				// get total yield tables
 				int tableCount = 0;				
-				rs = st.executeQuery("SELECT COUNT(DISTINCT strata) FROM yield_tables;");		//This only have 1 row and 1 column, the value is total number of unique prescription
+				rs = st.executeQuery("SELECT COUNT(DISTINCT prescription) FROM yield_tables;");		//This only have 1 row and 1 column, the value is total number of unique prescription
 				while (rs.next()) {
 					tableCount = rs.getInt(1);	//column 1
 				}
@@ -53,7 +77,7 @@ public class Read_Database {
 				
 				
 				//get the table name and put into array "nameOftable"
-				rs = st.executeQuery("SELECT DISTINCT strata FROM yield_tables;");			
+				rs = st.executeQuery("SELECT DISTINCT prescription FROM yield_tables;");			
 				int tbl = 0;
 				while (rs.next()) {
 					yield_tables_names[tbl] = rs.getString(1);		//column 1
@@ -72,7 +96,7 @@ public class Read_Database {
 				
 				// get total columns and "table_ColumnNames" for each yield table
 				rs = st.executeQuery("SELECT * FROM yield_tables;");	
-				ResultSetMetaData rsmd = rs.getMetaData();
+				rsmd = rs.getMetaData();
 				int colCount = rsmd.getColumnCount();
 				yield_tables_column_names = new String[colCount];
 				for (int i = 1; i <= colCount; i++) {		//this start from 1
@@ -116,9 +140,11 @@ public class Read_Database {
 				}			
 				
 				
+				
+				
 				//-----------------------------------------------------------------------------------------------------------
 				// For existing_strata
-				
+				//-----------------------------------------------------------------------------------------------------------
 				// get total rows (strata count)
 				int rowCount2 = 0;				
 				rs = st.executeQuery("SELECT COUNT(DISTINCT strata_id) FROM existing_strata;");		//This only have 1 row and 1 column, the value is total number of unique strata
@@ -144,27 +170,79 @@ public class Read_Database {
 				
 				
 				
+				//-----------------------------------------------------------------------------------------------------------
+				// For strata_definition
+				//-----------------------------------------------------------------------------------------------------------
+				// get total rows
+				int rowCount3 = 0;				
+				rs = st.executeQuery("SELECT COUNT(layer_id) FROM strata_definition;");		//This only have 1 row and 1 column
+				while (rs.next()) {
+					rowCount3 = rs.getInt(1);	//column 1
+				}				
+				
+				// get total columns
+				rs = st.executeQuery("SELECT * FROM strata_definition;");	
+				rsmd = rs.getMetaData();
+				int colCount3 = rsmd.getColumnCount();
+				
+				// Redefine size
+				strata_definition_values = new String[rowCount3][colCount3];
+				
+				// get values
+				for (int row = 0; row < rowCount3; row++) {
+					rs.next();
+					for (int col = 0; col < colCount3; col++) {
+						strata_definition_values[row][col] = rs.getString(col + 1);
+					}
+				}
 				
 				
-				
-				
-				
-				st.close();
-				rs.close();
-				conn.close();	
-			}
+					
 
+				layers_Title = new ArrayList<String>();
+				layers_Title_ToolTip = new ArrayList<String>();
+				
+				allLayers = new ArrayList<List<String>>();
+				allLayers_ToolTips = new ArrayList<List<String>>();				
+				
+				//Loop through all rows and add all layers information
+				for (int i = 0; i < rowCount3; i++) {
+					if (! layers_Title.contains(strata_definition_values[i][0])) {  //If found a new layer
+						//Add Layer title and toolTip    	
+			        	layers_Title.add(strata_definition_values[i][0]);
+			        	layers_Title_ToolTip.add(strata_definition_values[i][1]);
+			        	
+			        	//Add 2 temporary Lists to the allLayers & allLayers_ToolTips
+			        	allLayers.add(new ArrayList<String>());
+			        	allLayers_ToolTips.add(new ArrayList<String>());
+					}
+									
+					allLayers.get(allLayers.size() - 1).add(strata_definition_values[i][2]);		// Add layer's element to the last layer
+					allLayers_ToolTips.get(allLayers_ToolTips.size() - 1).add(strata_definition_values[i][3]);		// Add layer's element's ToolTip to the last layer ToolTip
+				}	
+				
+	
+			}
 		} catch (Exception e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Read_DatabaseTables   -   Database connection error");
-		}		
+			System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Read_Database   -   Database connection error");
+		} finally {
+			// Close in case not closing properly, not need to print out because the exception only happens when there is null to close
+		    try { rs.close(); } catch (Exception e) { /* ignored */}	
+		    try { st.close(); } catch (Exception e) { /* ignored */}
+		    try { conn.close(); } catch (Exception e) { /* ignored */}
+		}			
 	}
 	
+
 	
-	// For yield_tales
+	
+	
+	// This block is For yield_tales ------------------------------------------------------------------------------------------------------
+	// This block is For yield_tales ------------------------------------------------------------------------------------------------------
+	// This block is For yield_tales ------------------------------------------------------------------------------------------------------
 	public Object[][][] get_yield_tables_values() {	
 		return yield_tables_values;
 	}
-	
 	
 	public String[] get_yield_tables_column_names() {
 		return yield_tables_column_names;
@@ -212,12 +290,165 @@ public class Read_Database {
 		return valueReturn;	
 	}
 	
+
 	
 	
-	// For existing_strata
+	
+	// This block is For existing_strata ------------------------------------------------------------------------------------------------------
+	// This block is For existing_strata ------------------------------------------------------------------------------------------------------
+	// This block is For existing_strata ------------------------------------------------------------------------------------------------------	
 	public String[][] get_existing_strata_values() {
 		return existing_strata_values;
 	}
+	
+	
+	
+	
+	
+	// This block is For strata_definition ------------------------------------------------------------------------------------------------------
+	// This block is For strata_definition ------------------------------------------------------------------------------------------------------
+	// This block is For strata_definition ------------------------------------------------------------------------------------------------------	
+	public String[][] get_strata_definition_values() {
+		return strata_definition_values;
+	}	
+	
+	
+	
+	
+	
+	
+	public List<String> get_layers_Title() {       
+		return layers_Title;
+	}
+
+	
+	public List<String> get_layers_Title_ToolTip() {		
+		return layers_Title_ToolTip;
+	}
+	
+	
+	public List<List<String>> get_allLayers() {			
+		return allLayers;
+	}
+	
+	public List<List<String>> get_allLayers_ToolTips() {
+		return allLayers_ToolTips;
+	}	
+
+
+	
+	
+	
+	public List<String> get_MethodsPeriodsAges_Title() {
+		//Layers title
+		List<String> MethodsPeriodsAges_Title = new ArrayList<String>();
+		MethodsPeriodsAges_Title.add("silvicultural method");
+		MethodsPeriodsAges_Title.add("time period");
+		MethodsPeriodsAges_Title.add("age class");
+
+		return MethodsPeriodsAges_Title;
+	}
+
+	
+	public List<List<String>> get_MethodsPeriodsAges() {
+		//Layers element name
+		List<String> layer1 = new ArrayList<String>();			//Silvicultural methods
+		layer1.add("NGe");
+		layer1.add("PBe");
+		layer1.add("GSe");
+		layer1.add("EAe");	
+		layer1.add("MSe");
+		layer1.add("BSe");
+		layer1.add("NGr");
+		layer1.add("PBr");
+		layer1.add("GSr");
+		layer1.add("EAr");
+
+		
+		List<String> layer2 = new ArrayList<String>();		//Time Periods
+		for (int i = 1; i <= 50; i++) {
+			layer2.add(Integer.toString(i));
+		}
+		
+		List<String> layer3 = new ArrayList<String>();		//Age Classes
+		for (int i = 1; i <= 50; i++) {
+			layer3.add(Integer.toString(i));
+		}
+
+			
+		List<List<String>> MethodsPeriodsAges = new ArrayList<List<String>>();
+		MethodsPeriodsAges.add(layer1);
+		MethodsPeriodsAges.add(layer2);
+//		MethodsPeriodsAges.add(layer3);
+			
+		return MethodsPeriodsAges;
+	}
+
+
+	
+	public String get_ParameterToolTip(String yt_columnName) {
+		String toolTip = null;
+
+		
+		//Read library from the system
+		File file_SpectrumLiteLibrary = null;
+		
+		if (file_SpectrumLiteLibrary == null) {		//This is to make it read the file only once, after that no need to repeat reading this file any more
+			try {
+				file_SpectrumLiteLibrary = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "SpectrumLiteLibrary.csv");
+				file_SpectrumLiteLibrary.deleteOnExit();
+
+				InputStream initialStream = getClass().getResourceAsStream("/SpectrumLiteLibrary.csv"); //Default definition
+				byte[] buffer = new byte[initialStream.available()];
+				initialStream.read(buffer);
+
+				OutputStream outStream = new FileOutputStream(file_SpectrumLiteLibrary);
+				outStream.write(buffer);
+
+				initialStream.close();
+				outStream.close();
+			} catch (FileNotFoundException e1) {
+				System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+			} catch (IOException e2) {
+				System.err.println(e2.getClass().getName() + ": " + e2.getMessage());
+			} 
+		}
+		
+		
+		String delimited = ","; // 		","		comma delimited			"\\s+"		space delimited		"\t"	tab delimited	
+		try {
+			// All lines to be in array
+			List<String> list;
+			list = Files.readAllLines(Paths.get(file_SpectrumLiteLibrary.getAbsolutePath()), StandardCharsets.UTF_8);
+			String[] a = list.toArray(new String[list.size()]);
+			int totalRows = a.length;
+			int totalCols = 2;
+			String[][] value = new String[totalRows][totalCols];
+
+			// read all values from all rows and columns
+			for (int i = 0; i < totalRows; i++) { // Read from 1st row
+				String[] rowValue = a[i].split(delimited);
+				for (int j = 0; j < totalCols && j < rowValue.length; j++) {
+//					value[i][j] = rowValue[j].replaceAll("\\s+", "");		//Remove all the space in the String   
+					value[i][j] = rowValue[j];		//to make toolTp text separated with space, may need the above line if there is spaces in layer and elements name in the file StrataDefinition.csv
+				
+				}				
+				//Tool tip identified by comparing the name before and after normalization
+				if (yt_columnName.equals(value[i][0]) || StringHandle.normalize(yt_columnName).equals(StringHandle.normalize(value[i][0]))) {
+					toolTip = value[i][1];
+				}
+			}	
+		} catch (IOException e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+		}
+			
+		return toolTip;
+	}	
+	
+	
+	
+	
+	
 	
 	
 }

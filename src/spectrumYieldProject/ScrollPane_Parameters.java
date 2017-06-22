@@ -19,7 +19,10 @@ public class ScrollPane_Parameters extends JScrollPane {
 	private JCheckBox checkboxNoParameter, checkboxCostParameter;
 	private List<JCheckBox> checkboxParameter;
 	
-	public ScrollPane_Parameters(String[] yieldTable_ColumnNames) {				
+	public ScrollPane_Parameters(Read_Database read_Database) {		
+		
+		String[] yieldTable_ColumnNames = read_Database.get_yield_tables_column_names();
+		
 		JPanel parametersPanel = new JPanel();	
 		parametersPanel.setLayout(new GridBagLayout());
 		GridBagConstraints c2 = new GridBagConstraints();
@@ -32,12 +35,11 @@ public class ScrollPane_Parameters extends JScrollPane {
 		if (yieldTable_ColumnNames != null && checkboxParameter == null) {				
 			checkboxParameter = new ArrayList<JCheckBox>();
 			
-			Read_Indentifiers read_Identifiers = new Read_Indentifiers(null);
 			for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
 				String YTcolumnName = yieldTable_ColumnNames[i];
 
 				checkboxParameter.add(new JCheckBox(YTcolumnName));		//add checkbox
-				String tip = read_Identifiers.get_ParameterToolTip(YTcolumnName) + " (Column index: " + i + ")";
+				String tip = read_Database.get_ParameterToolTip(YTcolumnName) + " (Column index: " + i + ")";
 				checkboxParameter.get(i).setToolTipText(tip);		//add toolTip
 				if (!tip.contains("per Acre")) {	// Disable Parameter check box if unit is not per Acre
 					checkboxParameter.get(i).setEnabled(false);

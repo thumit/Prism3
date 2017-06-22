@@ -162,7 +162,7 @@ public class QuickEdit_BaseCost_Panel extends JPanel {
 			
 			// Must set this show/hide column method when all columns are still visible------------------------------------------------------
 			TableColumnsHandle column_handle = new TableColumnsHandle(table);
-			Read_Indentifiers read_Identifiers = new Read_Indentifiers(null);
+			Read_Database read_Database = new Read_Database(null);
 			
 						
 			// Create a radio buttons-----------------------------------------------------------------------------
@@ -192,7 +192,7 @@ public class QuickEdit_BaseCost_Panel extends JPanel {
 					column_checkboxes.add(new JCheckBox(table.getColumnName(i)));
 					column_checkboxes.get(i - 2).setSelected(true);		// -2 because we ignore 2 columns
 									
-					String tip = read_Identifiers.get_ParameterToolTip(column_checkboxes.get(i - 2).getText()) + " (Column index: " + (int) (i - 2) + ")";
+					String tip = read_Database.get_ParameterToolTip(column_checkboxes.get(i - 2).getText()) + " (Column index: " + (int) (i - 2) + ")";
 					column_checkboxes.get(i - 2).setToolTipText(tip);				
 					if (!tip.contains("per Acre")) {	// Disable check box if unit is not per Acre
 						column_checkboxes.get(i - 2).setEnabled(false);

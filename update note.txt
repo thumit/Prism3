@@ -171,12 +171,29 @@ All changes in this block are associated with v26.jar, formulation21.docx, datab
 All changes in this block are associated with v27.jar, formulation22.docx, database4.docx
 --------------------------------------------------------------------------
 
-92. Move existing_strata & strata_definition to database
-	- Change class name: Rade_database_Yield_Tables --> Read_database
+93. Move existing_strata to database
+	- Change class name: Read_database_Yield_Tables --> Read_Database
 	- button_import_database: always enable
 	- Read_Database: now also read existing_strata 
 	- Delete UI of "import strata", move some codes into "import database"
 	- Delete Read_Strata class
 	- FilesHandle: delete "public static File chosenStrata()" 
+94. Trim some (purple, in comments) codes in Basic & Advanced constraints
+--------------------------------------------------------------------------
+
+95. temporarily change "strata" to "prescription" in Read_Database to test CGNF
+96. Move strata_definition to database
+	- Change class name: Read_Indentifiers--> Read_Definition
+	- Read_Definition: now read from strata_definition inside the database
+	- FilesHandles: public static File chosenDefinition(): change strata_definition.csv to default_database.db and create that file to put into src 
+	- Delete UI of "import definition", move some codes into "import database"
+	- Panel_SolveRun: change file_StrataDefinition to file_Databse (so we can run), and remove the codes when set up problem to default definition
+	- move the "import database" panel to "general inputs"
+	- remove file_strata_definition (make it file_Database) 
+	- a default_database.db is created to load properly
+97. Disable database revert to save time. Model is always reset if a new database is imported (regarless of success or failure)
+98. Merging Read_Database & Read_Definition + a lot of codes trim (still could not avoid conflict between reading from database & thread behavior)
+99. default to selecting all exsiting strata (which have age class found) after import database.
+
 
 All changes in this block are associated with v27.jar, formulation22.docx, database4.docx

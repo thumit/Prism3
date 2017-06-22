@@ -54,7 +54,7 @@ import net.coderazzi.filters.gui.AutoChoices;
 import net.coderazzi.filters.gui.TableFilterHeader;
 import spectrumConvenienceClasses.FilesHandle;
 import spectrumConvenienceClasses.IconHandle;
-import spectrumYieldProject.Read_Indentifiers;
+import spectrumYieldProject.Read_Database;
 
 @SuppressWarnings("serial")
 public class Panel_DatabaseManagement extends JLayeredPane {
@@ -1437,10 +1437,10 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 					table_ColumnNames[i-1] = rsmd.getColumnName(i);			//Note that tableColumnNames start from 0
 				}
 				rs.close();
-				Read_Indentifiers read_Identifiers = new Read_Indentifiers(new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/strata_definition.csv"));
+				Read_Database read_Database = new Read_Database(null);
 				for (int i = 0; i < colCount; i++) {	
 					pst = conn.prepareStatement("INSERT OR IGNORE INTO yield_tables_definition (col_index, col_name, description, data_type) VALUES(" 
-									+ i + ", '" + table_ColumnNames[i] + "', '" + read_Identifiers.get_ParameterToolTip(table_ColumnNames[i]) + "', 'TEXT');");
+									+ i + ", '" + table_ColumnNames[i] + "', '" + read_Database.get_ParameterToolTip(table_ColumnNames[i]) + "', 'TEXT');");
 					pst.executeUpdate();
 				}
 				

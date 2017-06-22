@@ -23,29 +23,26 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 	private List<List<JCheckBox>> checkboxStaticIdentifiers;
 	List<JLabel> layers_Title_Label;
 
-	public ScrollPane_StaticIdentifiers (File file_StrataDefinition) {
+	public ScrollPane_StaticIdentifiers (Read_Database read_Database) {
 	
-		
-		Read_Indentifiers read_Identifiers = new Read_Indentifiers(file_StrataDefinition);		// New instance so we can add some more layers, it does not change read_Identifiers in the 'Panel_EditRun_Details" 
-
-		List<String> layers_Title = read_Identifiers.get_layers_Title();
-		List<String> layers_Title_ToolTip = read_Identifiers.get_layers_Title_ToolTip();
-		List<List<String>> allLayers = read_Identifiers.get_allLayers();
-		List<List<String>> allLayers_ToolTips = read_Identifiers.get_allLayers_ToolTips();
+		List<String> layers_Title = read_Database.get_layers_Title();
+		List<String> layers_Title_ToolTip = read_Database.get_layers_Title_ToolTip();
+		List<List<String>> allLayers = read_Database.get_allLayers();
+		List<List<String>> allLayers_ToolTips = read_Database.get_allLayers_ToolTips();
 
 		int total_layers = allLayers.size(); // Remove the last 1 layers = allLayers.size() - 1
 		// int total_layers_ToolTips = allLayers_ToolTips.size() -1; //Remove the last 1 layers = allLayers.size() - 1
 
 		// Add 3 more into static identifiers
-		List<String> MethodsPeriodsAges_Title = read_Identifiers.get_MethodsPeriodsAges_Title();
-		List<List<String>> MethodsPeriodsAges = read_Identifiers.get_MethodsPeriodsAges();
+		List<String> MethodsPeriodsAges_Title = read_Database.get_MethodsPeriodsAges_Title();
+		List<List<String>> MethodsPeriodsAges = read_Database.get_MethodsPeriodsAges();
 
 		layers_Title.addAll(MethodsPeriodsAges_Title);
 		layers_Title_ToolTip.addAll(MethodsPeriodsAges_Title);
 		allLayers.addAll(MethodsPeriodsAges);
 		
 		// Full name of silvicultural methods			// NOTE NOTE NOTE change later
-		List<List<String>> allmethods_ToolTips = read_Identifiers.get_MethodsPeriodsAges();
+		List<List<String>> allmethods_ToolTips = read_Database.get_MethodsPeriodsAges();
 		for (int i = 0; i < allmethods_ToolTips.get(0).size(); i++) {	// 0 is method, 1 is period
 			if (allmethods_ToolTips.get(0).get(i).equals("NGe")) 	allmethods_ToolTips.get(0).set(i, "Natural Growth existing");
 			if (allmethods_ToolTips.get(0).get(i).equals("PBe")) 	allmethods_ToolTips.get(0).set(i, "Prescribed Burn existing");

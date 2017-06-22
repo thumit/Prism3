@@ -290,7 +290,7 @@ public class QuickEdit_EA_Conversion_Panel extends JPanel {
 		JCheckBox inplement_Check = new JCheckBox();
 		c.gridx = 1;
 		c.gridy = 9;
-		c.weightx = 0;
+		c.weightx = 1;
 		c.weighty = 0;
 		c.gridwidth = 1;
 		c.gridheight = 1;

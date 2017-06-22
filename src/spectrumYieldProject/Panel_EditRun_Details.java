@@ -90,8 +90,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 	private File currentRunFolder;
 	private File file_Database;
-	private File file_StrataDefinition;
-	private String currentDefinition_location;
 	
 	//6 panels for the selected Run
 	private General_Inputs_GUI paneL_General_Inputs_GUI;
@@ -110,9 +108,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private Advanced_Constraints_Text panel_Advanced_Constraints_Text;
 	
 	
-	private Read_Database read_DatabaseTables;
-	private Read_Indentifiers read_Identifiers;
-	
+	private Read_Database read_Database;
 	private Object[][][] yieldTable_values;
 	private String [] yieldTable_ColumnNames;
 	
@@ -278,25 +274,10 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		
 		Thread thread = new Thread() {			// Make a thread so JFrame will not be frozen
 			public void run() {
-//				radioButton_Right[1].setEnabled(false);
-//				radioButton_Right[2].setEnabled(false);
-//				radioButton_Right[3].setEnabled(false);
-//				radioButton_Right[4].setEnabled(false);
-				radioButton_Right[5].setEnabled(false);
-				radioButton_Right[6].setEnabled(false);
-							
 				reload_inputs_after_creating_GUI();
 				is_this_the_first_load = false;	
 				Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().revalidate();
 				Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().repaint();
-				
-				radioButton_Right[1].setEnabled(true);
-				radioButton_Right[2].setEnabled(true);
-				radioButton_Right[3].setEnabled(true);
-				radioButton_Right[4].setEnabled(true);
-				radioButton_Right[5].setEnabled(true);
-				radioButton_Right[6].setEnabled(true);
-				
 				this.interrupt();
 			}
 		};
@@ -346,44 +327,20 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 
     // Reload inputs of the run------------------------------------------------------------------------------------------------ 
-	public void reload_inputs_before_creating_GUI() {
-
-		// Load "strata_definition.csv" of the run-------------------------------------------------------
-		File definition_to_load = new File(currentRunFolder.getAbsolutePath() + "/strata_definition.csv");
-		if (definition_to_load.exists()) {	//Load if the file exists
-			file_StrataDefinition = definition_to_load;
-			currentDefinition_location = file_StrataDefinition.getAbsolutePath();
-		} else { 	// If file does not exist then load the default definition
-			System.out.println("File not exists: strata_definition.csv - New interface is created using Default strata_definition.csv");
-			
-			try {	// Read default "strata_definition.csv" file from where this class is located
-				file_StrataDefinition = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/strata_definition.csv");
-				file_StrataDefinition.deleteOnExit();		
-				currentDefinition_location = "Default Six Layers: " + file_StrataDefinition.getAbsolutePath();
-				
-				InputStream initialStream = getClass().getResourceAsStream("/strata_definition.csv");
-				byte[] buffer = new byte[initialStream.available()];
-				initialStream.read(buffer);
-				
-				OutputStream outStream = new FileOutputStream(file_StrataDefinition);		//  and write to file_StrataDefinition
-				outStream.write(buffer);
-
-				initialStream.close();
-				outStream.close();
-			} catch (IOException e) {
-				System.err.println(e.getClass().getName() + ": " + e.getMessage());
-			}
-		}
-		read_Identifiers = new Read_Indentifiers(file_StrataDefinition);
-			
+	public void reload_inputs_before_creating_GUI() {		
 		
-			
-		// Load database of the run---------------------------------------------------------------------
+		// Load default_database to make everything appears quickly---------------------------------------------------
+		file_Database = new File(FilesHandle.get_DatabasesFolder().getAbsolutePath() + "/default_database.db");
+		read_Database = new Read_Database(file_Database);		
+		// Then Load database of the run if exist---------------------------------------------------------------------
 		File database_to_load = new File(currentRunFolder.getAbsolutePath() + "/database.db");
 		if (database_to_load.exists()) {	//Load if the file exists
 			file_Database = database_to_load;
-		}					
-											
+		}  else { 	// If file does not exist then use the default definition in default_database.db
+			System.out.println("File not exists: database.db - New interface is created using default_database.db");					
+		}
+		
+		
 
 		
 		//Load tables---------------------------------------------------------------------------------
@@ -593,6 +550,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			// Find the data match to paste into Existing Strata		
 			table_file = new File(currentRunFolder.getAbsolutePath() + "/input_02_modeled_strata.txt");
 			if (table_file.exists()) { // Load from input
+				// Uncheck all checkboxes in "modeled_strata"
+				for (int i = 0; i < data2.length; i++) {
+					data2[i][9] = false;
+				}
+				
+				
 				tableLoader = new Reload_Table_Info(table_file);
 				
 				Object[][] temp_data = tableLoader.get_input_data();
@@ -825,8 +788,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	public void create_table2() {
 		//Setup the table------------------------------------------------------------	
 		if (is_table2_loaded == false) { // Create a fresh new if Load fail				
-			List<String> layers_Title = read_Identifiers.get_layers_Title();
-			List<String> layers_Title_ToolTip = read_Identifiers.get_layers_Title_ToolTip();
+			List<String> layers_Title = read_Database.get_layers_Title();
+			List<String> layers_Title_ToolTip = read_Database.get_layers_Title_ToolTip();
 	         
 			
 			rowCount2 = 0;
@@ -841,7 +804,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			columnNames2[colCount2 - 3] = "acres";	//add 3 more columns
 			columnNames2[colCount2 - 2] = "ageclass";
 			columnNames2[colCount2 - 1] = "modeled_strata";	
-		}
+		}		
 					
 		
 		//Create a table-------------------------------------------------------------
@@ -958,8 +921,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 	//--------------------------------------------------------------------------------------------------------------------------
 	public void create_table3() {
-		List<List<String>> allLayers = read_Identifiers.get_allLayers();
-		List<List<String>> allLayers_ToolTips = read_Identifiers.get_allLayers_ToolTips();
+		List<List<String>> allLayers = read_Database.get_allLayers();
+		List<List<String>> allLayers_ToolTips = read_Database.get_allLayers_ToolTips();
 		int total_CoverType = allLayers.get(4).size();		// total number of elements - 1 in layer5 Cover Type (0 to...)
 	
 
@@ -1214,8 +1177,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 	//--------------------------------------------------------------------------------------------------------------------------
 	public void create_table4() {
-		List<List<String>> allLayers = read_Identifiers.get_allLayers();
-		List<List<String>> allLayers_ToolTips = read_Identifiers.get_allLayers_ToolTips();
+		List<List<String>> allLayers = read_Database.get_allLayers();
+		List<List<String>> allLayers_ToolTips = read_Database.get_allLayers_ToolTips();
 		int total_CoverType = allLayers.get(4).size();		// total number of elements - 1 in layer5 Cover Type (0 to...)
 		
 		
@@ -1285,7 +1248,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			}
         	
         	public void update_Percentage_column() {     		
-				List<List<String>> allLayers =  read_Identifiers.get_allLayers();
+				List<List<String>> allLayers =  read_Database.get_allLayers();
 				int total_CoverType = allLayers.get(4).size();		// total number of elements - 1 in layer5 Cover Type (0 to...)
 				int table_row=0;
 				double[] total_Weight = new double[total_CoverType];
@@ -1478,8 +1441,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 	//--------------------------------------------------------------------------------------------------------------------------
 	public void create_table5() {
-		List<List<String>> allLayers =  read_Identifiers.get_allLayers();
-		List<List<String>> allLayers_ToolTips = read_Identifiers.get_allLayers_ToolTips();
+		List<List<String>> allLayers =  read_Database.get_allLayers();
+		List<List<String>> allLayers_ToolTips = read_Database.get_allLayers_ToolTips();
 		int total_CoverType = allLayers.get(4).size();		// total number of elements - 1 in layer5 Cover Type (0 to...)
 		int total_SizeClass = allLayers.get(5).size();		// total number of elements - 1 in layer6 Size Class (0 to...)			
 		
@@ -1715,8 +1678,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 	//--------------------------------------------------------------------------------------------------------------------------
 	public void create_table6() {
-		List<List<String>> allLayers =  read_Identifiers.get_allLayers();
-		List<List<String>> allLayers_ToolTips = read_Identifiers.get_allLayers_ToolTips();
+		List<List<String>> allLayers =  read_Database.get_allLayers();
+		List<List<String>> allLayers_ToolTips = read_Database.get_allLayers_ToolTips();
 		int total_CoverType = allLayers.get(4).size();		// total number of elements - 1 in layer5 Cover Type (0 to...)
 		int total_SizeClass = allLayers.get(5).size();		// total number of elements - 1 in layer6 Size Class (0 to...)	
 		
@@ -1886,7 +1849,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			// This all_actions List contains all actions loaded from yield tables------------------------------------------------------------
 			List<String> action_list = new ArrayList<String>();
 			if (yieldTable_ColumnNames != null) {	//create table with column include yield tables columns
-				for (String action: read_DatabaseTables.get_action_type()) {
+				for (String action: read_Database.get_action_type()) {
 					action_list.add(action);					
 				}	
 				
@@ -1910,7 +1873,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			// Populate the data matrix
 			for (int i = 0; i < rowCount7; i++) {
 				data7[i][0] = action_list.get(i);
-				data7[i][1] = (action_list.get(i).equalsIgnoreCase("no_action")) ? (double) 0 : (double) 360; 
+				data7[i][1] = (action_list.get(i).equalsIgnoreCase("no-action")) ? (double) 0 : (double) 360; 
 				for (int j = 2; j < colCount7; j++) {
 					data7[i][j] = (double) 0;				
 				}
@@ -1925,7 +1888,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		if (yieldTable_ColumnNames != null) {      
 	        for (int i = 2; i < colCount7; i++) {
 	        	int yt_col = i - 2;
-	        	headerToolTips[i] = read_Identifiers.get_ParameterToolTip(yieldTable_ColumnNames[yt_col]) + " (Column index: " + yt_col + ")";	
+	        	headerToolTips[i] = read_Database.get_ParameterToolTip(yieldTable_ColumnNames[yt_col]) + " (Column index: " + yt_col + ")";	
 			}
 		}
 	
@@ -2067,10 +2030,10 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		List<String> layers_Title = new ArrayList<String>();
 		List<String> layers_Title_ToolTip = new ArrayList<String>();	
 				
-		allLayers.addAll(read_Identifiers.get_allLayers());
-		allLayers_ToolTips.addAll(read_Identifiers.get_allLayers_ToolTips());
-		layers_Title.addAll(read_Identifiers.get_layers_Title());
-		layers_Title_ToolTip.addAll(read_Identifiers.get_layers_Title_ToolTip());
+		allLayers.addAll(read_Database.get_allLayers());
+		allLayers_ToolTips.addAll(read_Database.get_allLayers_ToolTips());
+		layers_Title.addAll(read_Database.get_layers_Title());
+		layers_Title_ToolTip.addAll(read_Database.get_layers_Title_ToolTip());
 			
 		allLayers.remove(allLayers.size() - 1);		// Remove size class: BECAUSE OF THIS REMOVE, WE HAVE TO clone original Lists by add all method
 		
@@ -2079,7 +2042,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			// This all_actions List contains all actions loaded from yield tables------------------------------------------------------------
 			List<String> action_list = new ArrayList<String>();
 			if (yieldTable_ColumnNames != null) {
-				for (String action: read_DatabaseTables.get_action_type()) {
+				for (String action: read_Database.get_action_type()) {
 					action_list.add(action);					
 				}	
 			}			
@@ -2681,6 +2644,217 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		    
 
 		    
+		    
+		    
+		    
+		    // Import Database Panel -----------------------------------------------------------------------
+		 	// Import Database Panel -----------------------------------------------------------------------
+			JPanel importPanel = new JPanel();
+			TitledBorder border0 = new TitledBorder("Import Database (model will be forced to reset)");
+			border0.setTitleJustification(TitledBorder.CENTER);
+			importPanel.setBorder(border0);
+			importPanel.setLayout(new GridBagLayout());
+			GridBagConstraints c0 = new GridBagConstraints();
+			c0.fill = GridBagConstraints.HORIZONTAL;
+			c0.weightx = 1;
+			c0.weighty = 1;			
+
+			
+			JTextField textField2 = new JTextField(30);
+			textField2.setEditable(false);
+			c0.gridx = 0;
+			c0.gridy = 0;
+			c0.weightx = 1;
+		    c0.weighty = 0;
+			importPanel.add(textField2, c0);
+
+			
+			button_import_database = new JButton();
+			button_import_database.setToolTipText("Browse");
+			button_import_database.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_add.png"));		
+			button_import_database.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+//					File old_database = file_Database;
+					
+					if (is_this_the_first_load == false) {
+						file_Database = FilesHandle.chosenDatabase();
+					}	
+					
+					if (file_Database != null) {
+						try {	
+							radioButton_Right[1].setEnabled(false);
+							radioButton_Right[2].setEnabled(false);
+							radioButton_Right[3].setEnabled(false);
+							radioButton_Right[4].setEnabled(false);
+							radioButton_Right[5].setEnabled(false);
+							radioButton_Right[6].setEnabled(false);
+							change_database();
+							radioButton_Right[1].setEnabled(true);
+							radioButton_Right[2].setEnabled(true);
+							radioButton_Right[3].setEnabled(true);
+							radioButton_Right[4].setEnabled(true);
+							radioButton_Right[5].setEnabled(true);
+							radioButton_Right[6].setEnabled(true);
+						} catch (Exception e1) {
+							String warningText = "Importation is denied. " + file_Database.getName() + " does not meet SpectrumLite's data requirements.";
+							String ExitOption[] = {"OK"};
+							int response = JOptionPane.showOptionDialog(Spectrum_Main.get_spectrumDesktopPane(), warningText, "Database importation warning",
+									JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption, ExitOption[0]);
+//							file_Database = old_database;
+//							change_database();	// Revert
+							
+							file_Database = null;
+							textField2.setText("Select database that meets SpectrumLite's requirements");
+						}
+					} 
+				}
+
+				private void change_database() {
+					// read the tables (strata_definition, existing_strata, yield_tables) of the database-------------------
+					read_Database = new Read_Database(file_Database);												
+					yieldTable_values = read_Database.get_yield_tables_values();
+					yieldTable_ColumnNames = read_Database.get_yield_tables_column_names();
+		        
+					
+
+		
+					// Reset all panels except General Inputs----------------------------------------------------------------		
+					is_table_overview_loaded = false;
+					is_table1_loaded = false;
+					is_table2_loaded = false;
+					is_table3_loaded = false;
+					is_table4_loaded = false;
+					is_table5_loaded = false;
+					is_table6_loaded = false;
+					is_table7_loaded = false;
+					is_table8_loaded = false;
+					is_table9_loaded = false;
+					is_table10_loaded = false;
+																	
+			        // create 2 new instances of this Panel
+					panel_Model_Identifiniton_GUI = new Model_Identifiniton_GUI();
+					panel_Model_Identification_Text = new Model_Identification_Text();
+			        
+			        // create 2 new instances of this Panel
+					panel_Covertype_Conversion_GUI = new Covertype_Conversion_GUI();
+					panel_Covertype_Conversion_Text = new Covertype_Conversion_Text();
+					
+					 // create 2 new instances of this Panel
+					panel_Disturbances_GUI = new Disturbances_GUI();
+					panel_Disturbances_Text = new Disturbances_Text();
+					
+			        // create 2 new instances of this Panel 
+					panel_Management_Cost_GUI = new Management_Cost_GUI();
+					panel_Management_Cost_Text = new Management_Cost_Text();
+					
+					// create 2 new instances of this Panel 
+					panel_Basic_Constraints_GUI = new Basic_Constraints_GUI();
+					panel_Basic_Constraints_Text = new Basic_Constraints_Text();
+					
+					// create 2 new instances of this Panel 
+					panel_Advanced_Constraints_GUI = new Advanced_Constraints_GUI();
+					panel_Advanced_Constraints_Text = new Advanced_Constraints_Text();
+									
+					
+
+					
+					// get the raw existing_strata from the database------------------------------------------------------
+					String[][] existing_strata_values = read_Database.get_existing_strata_values();
+					rowCount2 = existing_strata_values.length;	// refresh total rows based on existing strata, we don't need to refresh the total columns
+					int existing_strata_colCount = existing_strata_values[0].length;
+
+					data2 = new Object[rowCount2][colCount2];
+					for (int row = 0; row < rowCount2; row++) {
+						for (int column = 0; column < existing_strata_colCount - 1; column++) {		// loop all existing strata columns, except the last column
+							data2[row][column] = existing_strata_values[row][column];
+						}
+						if (existing_strata_values[row][existing_strata_colCount - 1] != null) {
+							data2[row][colCount2 - 3] = Double.valueOf(existing_strata_values[row][existing_strata_colCount - 1]);	// the last column of readStrata is "Total acres"	
+						}								
+						data2[row][colCount2 - 1] = false;
+					}					
+					model2.match_DataType();	// a smart way to retrieve the original data type :))))))					
+					model2.updateTableModelSpectrum(rowCount2, colCount2, data2, columnNames2);		// very important to (pass table info back to table model) each time data is new Object
+							         						
+					// only add sorter after having the data loaded
+					TableRowSorter<TableModelSpectrum> sorter = new TableRowSorter<TableModelSpectrum>(model2);
+					table2.setRowSorter(sorter);
+
+
+					
+					
+			        // update Age Class column for the existing strata------------------------------------------------------
+					for (int row = 0; row < rowCount2; row++) {						
+						String s5 = data2[row][5].toString();
+						String s6 = data2[row][6].toString();
+						if (read_Database.get_starting_ageclass(s5, s6, "NG", "0") != null) {
+							data2[row][colCount2 - 2] = Integer.valueOf(read_Database.get_starting_ageclass(s5, s6, "A", "0"));	
+						}												
+					}
+					
+					
+					
+					
+					// select all existing strata after loaded if found age class
+					for (int row = 0; row < rowCount2; row++) {
+						if (data2[row][colCount2 - 2] != null) {
+							data2[row][colCount2 - 1] = true;
+						}
+					}
+					model2.fireTableDataChanged();
+			      
+					
+					
+					
+					 // update Models OverView table------------------------------------------------------
+			        data_overview[0][1] = "0 vs " + rowCount2;				        
+			        
+			        availableAcres = 0;
+			        for (int row = 0; row < rowCount2; row++) {
+			        	availableAcres = availableAcres + Double.parseDouble(data2[row][colCount2 - 3].toString());
+					}
+			        data_overview[1][1] = "0 vs " + availableAcres;
+			        
+			        data_overview[2][1] = yieldTable_values.length;
+	        
+			        int total_yieldtable =0;
+			        for (int row = 0; row < rowCount2; row++) {				        	
+			        	if (data2[row][colCount2 - 2] == null) {
+			        		total_yieldtable = total_yieldtable + 1;
+			        	}
+					}
+			        data_overview[3][1] = total_yieldtable;
+			        model_overview.fireTableDataChanged();
+			        
+					
+					textField2.setText(file_Database.getAbsolutePath());			
+				}
+			});	
+
+
+			c0.gridx = 1;
+			c0.gridy = 0;
+			c0.weightx = 0;
+		    c0.weighty = 0;
+			importPanel.add(button_import_database, c0);
+		 			
+								
+			// Add empty Label for everything above not resize
+			c0.gridx = 0;
+			c0.gridy = 1;
+			c0.weightx = 0;
+		    c0.weighty = 1;
+			importPanel.add(new JLabel(), c0);
+			// End of Import Database Panel -----------------------------------------------------------------------
+			// End of Import Database Panel -----------------------------------------------------------------------		    
+		    
+		    
+		    
+		    
+		    
+		        
+		    
 			// Add all Grids to the Main Grid-----------------------------------------------------------------------
 			// Add all Grids to the Main Grid-----------------------------------------------------------------------
  			GridBagConstraints c = new GridBagConstraints(); 			
@@ -2805,6 +2979,15 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
  			c.gridwidth = 1;
  			c.gridheight = 1;
  			super.add(check6, c);
+ 						
+ 			// Add
+ 			c.gridx = 0;
+ 			c.gridy = 7;
+ 			c.weightx = 0;
+ 			c.weighty = 0;
+ 			c.gridwidth = 2;
+ 			c.gridheight = 1;
+ 			super.add(importPanel, c);
 		}
 	}
 
@@ -2824,304 +3007,14 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		public Model_Identifiniton_GUI() {
 			setLayout(new GridBagLayout());
 			
-		    // 1st grid -----------------------------------------------------------------------
-		 	// 1st grid -----------------------------------------------------------------------
-			JPanel importPanel = new JPanel();
-			TitledBorder border0 = new TitledBorder("Import Files");
-			border0.setTitleJustification(TitledBorder.CENTER);
-			importPanel.setBorder(border0);
-			importPanel.setLayout(new GridBagLayout());
-			GridBagConstraints c0 = new GridBagConstraints();
-			c0.fill = GridBagConstraints.HORIZONTAL;
-			c0.weightx = 1;
-			c0.weighty = 1;
-			
-		       
-			// 1st grid line 0----------------------------
-			JLabel label0 = new JLabel("Strata Definition");
-			c0.gridx = 0;
-			c0.gridy = 0;
-			c0.weightx = 0;
-			c0.weighty = 0;
-			importPanel.add(label0, c0);
-
-			JTextField textField0 = new JTextField(25);
-			textField0.setEditable(false);
-			textField0.setText(currentDefinition_location);
-			c0.gridx = 1;
-			c0.gridy = 0;
-			c0.weightx = 1;
-			c0.weighty = 0;
-			importPanel.add(textField0, c0);
-
-			JButton button0 = new JButton();
-			button0.setToolTipText("Import Definition");
-			button0.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_add.png"));
-			button0.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					File tempDefinitionFile = FilesHandle.chosenDefinition();	
-					if (tempDefinitionFile != null) {	//Only change strata_definition if the FileChooser return a file that is not Null
-						file_StrataDefinition = tempDefinitionFile;
-						currentDefinition_location = file_StrataDefinition.getAbsolutePath();
-						
-						// Reset Read Identifiers
-						read_Identifiers = new Read_Indentifiers(file_StrataDefinition);
-						
-						// create 4 new instances of the 2 Panels 
-						is_table2_loaded = false;
-						is_table1_loaded = false;
-						is_table9_loaded = false;
-						is_table_overview_loaded = false;
-						is_table3_loaded = false;
-						is_table5_loaded = false;
-						is_table6_loaded = false;
-						is_table4_loaded = false;
-						
-						// Reset data to null
-						availableAcres = 0;
-						file_Database = null;
-						yieldTable_values = null;
-						yieldTable_ColumnNames = null;
-						
-						// Reset all panels except General Inputs
-						panel_Model_Identifiniton_GUI = new Model_Identifiniton_GUI();
-						panel_Model_Identification_Text = new Model_Identification_Text();
-						panel_Covertype_Conversion_GUI = new Covertype_Conversion_GUI();
-						panel_Covertype_Conversion_Text = new Covertype_Conversion_Text();
-						panel_Disturbances_GUI = new Disturbances_GUI();
-						panel_Disturbances_Text = new Disturbances_Text();
-						panel_Management_Cost_GUI = new Management_Cost_GUI();
-						panel_Management_Cost_Text = new Management_Cost_Text();
-						panel_Basic_Constraints_GUI = new Basic_Constraints_GUI();
-						panel_Basic_Constraints_Text = new Basic_Constraints_Text();
-						
-						// And show the 2 new instances of Model_Definition Panel
-						GUI_Text_splitPanel.setLeftComponent(panel_Model_Identifiniton_GUI);
-						GUI_Text_splitPanel.setRightComponent(panel_Model_Identification_Text);	
-					}
-				}
-			});
-			c0.gridx = 2;
-			c0.gridy = 0;
-			c0.weightx = 0;
-			c0.weighty = 0;
-			importPanel.add(button0, c0);
-
-				
-			// 1st grid line 2----------------------------
-			JLabel label2 = new JLabel("Yield Database");
-			c0.gridx = 0;
-			c0.gridy = 2;
-			c0.weightx = 0;
-		    c0.weighty = 0;
-			importPanel.add(label2, c0);
-
-			JTextField textField2 = new JTextField(25);
-			textField2.setEditable(false);
-			c0.gridx = 1;
-			c0.gridy = 2;
-			c0.weightx = 1;
-		    c0.weighty = 0;
-			importPanel.add(textField2, c0);
-
-			
-			button_import_database = new JButton();
-			button_import_database.setToolTipText("Import Database");
-			button_import_database.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_add.png"));		
-			button_import_database.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					File old_database = file_Database;
-					File new_database = null;
-					if (is_this_the_first_load == false) {
-						new_database = FilesHandle.chosenDatabase();
-						file_Database = new_database;
-					}							
-					
-					if (!successfully_update_this_database(file_Database)) {
-						file_Database = old_database;
-						boolean revert_database = successfully_update_this_database(file_Database);					
-						String ExitOption[] = {"OK"};
-						String warningText = "Importation is denied. " + new_database.getName() + " does not meet SpectrumLite's data structure requirements.";
-						int response = JOptionPane.showOptionDialog(Spectrum_Main.get_spectrumDesktopPane(), warningText, "Database importation warning",
-								JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption, ExitOption[0]);
-					}
-				}
-				
-				public boolean successfully_update_this_database(File database) {
-					if (file_Database != null) {
-						try {	
-							// read the database tables into array
-							read_DatabaseTables = new Read_Database(file_Database);
-							yieldTable_values = read_DatabaseTables.get_yield_tables_values();
-							yieldTable_ColumnNames = read_DatabaseTables.get_yield_tables_column_names();
-											        
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							// for existing_strata
-							String[][] values = read_DatabaseTables.get_existing_strata_values();
-							rowCount2 = values.length;	// refresh total rows based on existing strata, we don't need to refresh the total columns
-							int existing_strata_colCount = values[0].length;
-
-							data2 = new Object[rowCount2][colCount2];
-							for (int row = 0; row < rowCount2; row++) {
-								for (int column = 0; column < existing_strata_colCount - 1; column++) {		// loop all existing strata columns, except the last column
-									data2[row][column] = values[row][column];
-								}
-								if (values[row][existing_strata_colCount - 1] != null) {
-									data2[row][colCount2 - 3] = Double.valueOf(values[row][existing_strata_colCount - 1]);	// the last column of readStrata is "Total acres"	
-								}								
-								data2[row][colCount2 - 1] = false;
-							}					
-							model2.match_DataType();	// a smart way to retrieve the original data type :))))))					
-							model2.updateTableModelSpectrum(rowCount2, colCount2, data2, columnNames2);		// very important to (pass table info back to table model) each time data is new Object
-							model2.fireTableDataChanged();
-									         						
-							// only add sorter after having the data loaded
-							TableRowSorter<TableModelSpectrum> sorter = new TableRowSorter<TableModelSpectrum>(model2);
-							table2.setRowSorter(sorter);
-					                  
-					        // update Models OverView table
-					        data_overview[0][1] = "0 vs " + rowCount2;
-					        model_overview.fireTableDataChanged();
-					        
-					        availableAcres = 0;
-					        for (int row = 0; row < rowCount2; row++) {
-					        	availableAcres = availableAcres + Double.parseDouble(data2[row][colCount2 - 3].toString());
-							}
-					        data_overview[1][1] = "0 vs " + availableAcres;
-					        model_overview.fireTableDataChanged();
-							
-
-						
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-					        // update Age Class column of the existing strata table
-							for (int row = 0; row < rowCount2; row++) {						
-								String s5 = data2[row][5].toString();
-								String s6 = data2[row][6].toString();
-								if (read_DatabaseTables.get_starting_ageclass(s5, s6, "NG", "0") != null) {
-									data2[row][colCount2 - 2] = Integer.valueOf(read_DatabaseTables.get_starting_ageclass(s5, s6, "A", "0"));	
-								}												
-							}
-							model2.fireTableDataChanged();
-					      
-							 // update Models OverView table
-					        data_overview[2][1] = yieldTable_values.length;
-					        model_overview.fireTableDataChanged();
-					        
-					        int total_yieldtable =0;
-					        for (int row = 0; row < rowCount2; row++) {				        	
-					        	if (data2[row][colCount2 - 2] == null)		total_yieldtable = total_yieldtable + 1;
-							}
-					        data_overview[3][1] = total_yieldtable;
-					        model_overview.fireTableDataChanged();
-					        
-					        // create 2 new instances of this Panel 
-							panel_Management_Cost_GUI = new Management_Cost_GUI();
-							panel_Management_Cost_Text = new Management_Cost_Text();
-							
-							// create 2 new instances of this Panel 
-							panel_Basic_Constraints_GUI = new Basic_Constraints_GUI();
-							panel_Basic_Constraints_Text = new Basic_Constraints_Text();
-							
-							
-							textField2.setText(file_Database.getAbsolutePath());
-							return true;				
-						} catch (Exception e) {
-							return false;
-						}
-					} else {
-						return true;  // no need to be false because no need to revert because "try catch" is not implemented yet.
-					}
-				}
-			});
-			c0.gridx = 2;
-			c0.gridy = 2;
-			c0.weightx = 0;
-		    c0.weighty = 0;
-			importPanel.add(button_import_database, c0);
-		 			
-								
-			// Add empty Label for everything above not resize
-			c0.gridx = 0;
-			c0.gridy = 3;
-			c0.weightx = 0;
-		    c0.weighty = 1;
-			importPanel.add(new JLabel(), c0);
-			// End of 1st grid -----------------------------------------------------------------------
-			// End of 1st grid -----------------------------------------------------------------------
-			
-				
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
 			
 			
 			// 2nd grid -----------------------------------------------------------------------
 			// 2nd grid -----------------------------------------------------------------------						
-			List<String> layers_Title = read_Identifiers.get_layers_Title();
-			List<String> layers_Title_ToolTip = read_Identifiers.get_layers_Title_ToolTip();
-			List<List<String>> allLayers =  read_Identifiers.get_allLayers();
-			List<List<String>> allLayers_ToolTips = read_Identifiers.get_allLayers_ToolTips();
+			List<String> layers_Title = read_Database.get_layers_Title();
+			List<String> layers_Title_ToolTip = read_Database.get_layers_Title_ToolTip();
+			List<List<String>> allLayers =  read_Database.get_allLayers();
+			List<List<String>> allLayers_ToolTips = read_Database.get_allLayers_ToolTips();
 
 			int total_layers = allLayers.size();
 			int total_layers_ToolTips = allLayers_ToolTips.size();
@@ -3368,14 +3261,14 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c.gridheight = 1;
 			super.add(helpToolBar, c);	
 			
-		    // Add the 1st grid - importPanel to the main Grid
-			c.gridx = 0;
-			c.gridy = 1;
-			c.weightx = 1;
-		    c.weighty = 1;
-			c.gridwidth = 1;
-			c.gridheight = 1;
-			super.add(importPanel, c);
+//		    // Add the 1st grid - importPanel to the main Grid
+//			c.gridx = 0;
+//			c.gridy = 1;
+//			c.weightx = 1;
+//		    c.weighty = 1;
+//			c.gridwidth = 1;
+//			c.gridheight = 1;
+//			super.add(importPanel, c);
 			
 			// Add the 2nd grid - checkPanel to the main Grid - only show up when btnStrataFilter is clicked
 			c.gridx = 0;
@@ -3933,19 +3826,18 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			
 			// 1st grid ------------------------------------------------------------------------------		// Static identifiers	
-			static_identifiersScrollPanel = new ScrollPane_StaticIdentifiers(file_StrataDefinition);
+			static_identifiersScrollPanel = new ScrollPane_StaticIdentifiers(read_Database);
 			checkboxStaticIdentifiers = static_identifiersScrollPanel.get_CheckboxStaticIdentifiers();
 			// End of 1st grid -----------------------------------------------------------------------
 
 			
 			// 2nd Grid ------------------------------------------------------------------------------		// Dynamic identifiers
-			dynamic_identifiersScrollPanel = new ScrollPane_DynamicIdentifiers(2, 
-					read_DatabaseTables, read_Identifiers, yieldTable_ColumnNames, yieldTable_values);
+			dynamic_identifiersScrollPanel = new ScrollPane_DynamicIdentifiers(2, read_Database);
 			// End of 2nd Grid -----------------------------------------------------------------------
 				
 					
 			// 3rd grid ------------------------------------------------------------------------------		// Parameters
-			parametersScrollPanel = new ScrollPane_Parameters(yieldTable_ColumnNames);
+			parametersScrollPanel = new ScrollPane_Parameters(read_Database);
 			TitledBorder border = new TitledBorder("PARAMETERS");
 			border.setTitleJustification(TitledBorder.CENTER);
 			parametersScrollPanel.setBorder(border);
@@ -4628,13 +4520,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	    	
 	       	//Update Parameter Panel
 	    	if (yieldTable_ColumnNames != null && parametersScrollPanel.get_checkboxParameter() == null) {
-	    		parametersScrollPanel = new ScrollPane_Parameters(yieldTable_ColumnNames);	//"Get parameters from YT columns"
+	    		parametersScrollPanel = new ScrollPane_Parameters(read_Database);	//"Get parameters from YT columns"
 	    	}
 	    	
 	      	//Update Dynamic Identifier Panel
 	    	if (yieldTable_ColumnNames != null && dynamic_identifiersScrollPanel.get_allDynamicIdentifiers() == null) {
-	    		dynamic_identifiersScrollPanel = new ScrollPane_DynamicIdentifiers(2, read_DatabaseTables, read_Identifiers,
-						yieldTable_ColumnNames, yieldTable_values);	// "Get identifiers from yield table columns"
+	    		dynamic_identifiersScrollPanel = new ScrollPane_DynamicIdentifiers(2, read_Database);	// "Get identifiers from yield table columns"
 	    	}
 
 	    	//Only set button_table_Panel visible when Parameter scroll Pane have checkboxes created
@@ -5268,9 +5159,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		create_file_input_08();
 		create_file_input_09();		
 		create_file_input_10();	
-			
-		create_file_definition();		// Note for those 3 files we just copy overwritten
-		create_file_database();
+		create_file_database();		// Note for this file, we just copy overwritten
 		
 		
 		
@@ -5548,18 +5437,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			} 
 		}
-	}	
-	
-	
-	private void create_file_definition() {	
-		File definitionFile = new File(currentRunFolder.getAbsolutePath() + "/" + "strata_definition.csv");
-		
-		try {
-			if (file_StrataDefinition != null) Files.copy(file_StrataDefinition.toPath(), definitionFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-		} catch (IOException e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage());
-		}	
-	}		
+	}			
 	
 	
 	private void create_file_database() {	

@@ -293,7 +293,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			read.readCostAdjustment(new File(runFolder.getAbsolutePath() + "/input_08_cost_adjustment.txt"));
 			read.read_basic_constraints(new File(runFolder.getAbsolutePath() + "/input_09_basic_constraints.txt"));
 			read.read_flow_constraints(new File(runFolder.getAbsolutePath() + "/input_10_flow_constraints.txt"));
-			Read_Database read_DatabaseTables = new Read_Database(new File(runFolder.getAbsolutePath() + "/database.db"));
+			File file_Database = new File(runFolder.getAbsolutePath() + "/database.db");
+			Read_Database read_Database = new Read_Database(file_Database);
 			
 			
 			//Get info: input_02_modeled_strata
@@ -350,35 +351,14 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			List<Double> flow_upperbound_percentage_list = read.get_flow_upperbound_percentage_list();
 
 			//Database Info
-			Object[][][] yieldTable_values = read_DatabaseTables.get_yield_tables_values();
-			Object[] yieldTable_Name = read_DatabaseTables.get_yield_tables_names();			
+			Object[][][] yieldTable_values = read_Database.get_yield_tables_values();
+			Object[] yieldTable_Name = read_Database.get_yield_tables_names();			
 
 			
 			
 			// Set up problem-------------------------------------------------			
-			File file_StrataDefinition = new File(runFolder.getAbsolutePath() + "/" + "strata_definition.csv");
-			if (! file_StrataDefinition.exists()) {		// If not exist then use the Default Definition
-				try {
-					InputStream initialStream = getClass().getResourceAsStream("/strata_definition.csv");		//Default definition
-					byte[] buffer = new byte[initialStream.available()];
-					initialStream.read(buffer);
-					
-					 OutputStream outStream = new FileOutputStream(file_StrataDefinition);
-					 outStream.write(buffer);
-					 
-					 initialStream.close();
-					 outStream.close();
-				} catch (FileNotFoundException e1) {
-					System.err.println("Panel Solve Runs - file_StrataDefinition not found error - " + e1.getClass().getName() + ": " + e1.getMessage());
-				} catch (IOException e2) {
-					System.err.println("Panel Solve Runs - file_StrataDefinition read-write stream error - " + e2.getClass().getName() + ": " + e2.getMessage());
-				}
-			}
-		
-
-			Read_Indentifiers read_Identifiers = new Read_Indentifiers(file_StrataDefinition);		//file_StrataDefinition
-			List<String> layers_Title = read_Identifiers.get_layers_Title();
-			List<List<String>> allLayers =  read_Identifiers.get_allLayers();
+			List<String> layers_Title = read_Database.get_layers_Title();
+			List<List<String>> allLayers =  read_Database.get_allLayers();
 		
 			List<String> layer1 = allLayers.get(0);
 			List<String> layer2 = allLayers.get(1);

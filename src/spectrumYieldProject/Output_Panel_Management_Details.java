@@ -24,11 +24,8 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 	private ScrollPane_StaticIdentifiers static_identifiersScrollPanel;
 	private ScrollPane_DynamicIdentifiers dynamic_identifiersScrollPanel;
 	
-	private File file_StrataDefinition, file_Database;
-	private Read_Database read_DatabaseTables;
-	private Read_Indentifiers read_Identifiers;
-	private Object[][][] yieldTable_values;
-	private String [] yieldTable_ColumnNames;
+	private File file_Database;
+	private Read_Database read_Database;
 	
 	private JTable table;
 	private Object[][] data;
@@ -41,19 +38,13 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 		
 		
 		// Some set up ---------------------------------------------------------------------------	
-		file_StrataDefinition = new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/strata_definition.csv");
 		file_Database = new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/database.db");
 		Read_RunInputs read = new Read_RunInputs();
 		read.readGeneralInputs(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_01_general_inputs.txt"));
 		int total_Periods = read.get_total_periods();
-		
-		// Read definition
-		read_Identifiers = new Read_Indentifiers(file_StrataDefinition);		
-	
+
 		// Read the database
-		read_DatabaseTables = new Read_Database(file_Database);			
-		yieldTable_values = read_DatabaseTables.get_yield_tables_values();
-		yieldTable_ColumnNames = read_DatabaseTables.get_yield_tables_column_names();		
+		read_Database = new Read_Database(file_Database);				
 		// End of set up ---------------------------------------------------------------------------	
 
 		
@@ -63,7 +54,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 		
 		
 		// 1st grid ------------------------------------------------------------------------------		// Static identifiers	
-		static_identifiersScrollPanel = new ScrollPane_StaticIdentifiers(file_StrataDefinition);
+		static_identifiersScrollPanel = new ScrollPane_StaticIdentifiers(read_Database);
 		checkboxStaticIdentifiers = static_identifiersScrollPanel.get_CheckboxStaticIdentifiers();		
 				
 		//Update GUI for time period 
@@ -97,12 +88,11 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 
 		
 		// 2nd Grid ------------------------------------------------------------------------------		// Dynamic identifiers
-		dynamic_identifiersScrollPanel = new ScrollPane_DynamicIdentifiers(2, 
-				read_DatabaseTables, read_Identifiers, yieldTable_ColumnNames, yieldTable_values);
+		dynamic_identifiersScrollPanel = new ScrollPane_DynamicIdentifiers(2, read_Database);
 			
 				
 		// 3rd grid ------------------------------------------------------------------------------		// Parameters
-		parametersScrollPanel = new ScrollPane_Parameters(yieldTable_ColumnNames);
+		parametersScrollPanel = new ScrollPane_Parameters(read_Database);
 		TitledBorder border = new TitledBorder("PARAMETERS");
 		border.setTitleJustification(TitledBorder.CENTER);
 		parametersScrollPanel.setBorder(border);
