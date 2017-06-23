@@ -1,8 +1,5 @@
 bc_id	bc_description	bc_type	bc_multiplier	lowerbound	lowerbound_perunit_penalty	upperbound	upperbound_perunit_penalty	parameter_index	static_identifiers	dynamic_identifiers	
-1	null	null	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe BSe NGr PBr GSr EAr;7 1 2 3 4 5 6 7 8 9 10	NoIdentifier	
-2	null	null	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe BSe NGr PBr GSr EAr;7 1 2 3 4 5 6 7 8 9 10	NoIdentifier	
-3	null	null	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe BSe NGr PBr GSr EAr;7 1 2 3 4 5 6 7 8 9 10	NoIdentifier	
-4	null	null	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe BSe NGr PBr GSr EAr;7 1 2 3 4 5 6 7 8 9 10	NoIdentifier	
-5	null	null	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe BSe NGr PBr GSr EAr;7 1 2 3 4 5 6 7 8 9 10	NoIdentifier	
-6	null	null	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe BSe NGr PBr GSr EAr;7 1 2 3 4 5 6 7 8 9 10	NoIdentifier	
-7	null	null	1.0	null	null	null	null	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe PBe GSe EAe MSe BSe NGr PBr GSr EAr;7 1 2 3 4 5 6 7 8 9 10	NoIdentifier	
+1	150k acres of 1 - silvicultural method NGe - time period 1	SOFT	1.0	150000.0	1.0	150000.0	1.0	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 NGe;7 1	NoIdentifier	
+2	150k acres of 2 - silvicultural method PBe - time period 1	SOFT	1.0	150000.0	1.0	150000.0	1.0	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 PBe;7 1	NoIdentifier	
+3	150k acres of 3 - silvicultural method GSe - time period 1	SOFT	1.0	150000.0	1.0	150000.0	1.0	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 GSe;7 1	NoIdentifier	
+4	150k acres of 4 - silvicultural method EAe - time period 1	SOFT	1.0	150000.0	1.0	150000.0	1.0	NoParameter	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N;6 EAe;7 1	NoIdentifier	

@@ -14,6 +14,8 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 
+import spectrumROOT.Spectrum_Main;
+
 public class Panel_EditRun extends JLayeredPane implements ActionListener {
 	private JSplitPane splitPanel;
 	private JPanel radioPanel_Left; 
@@ -62,9 +64,17 @@ public class Panel_EditRun extends JLayeredPane implements ActionListener {
 		// Add all Panel_EditRun_Details for all selected Runs, but only show the 1st selected Run details
 		combinePanel = new Panel_EditRun_Details[listOfEditRuns.length];
 		for (int i = 0; i < listOfEditRuns.length; i++) {
-			combinePanel[i] = new Panel_EditRun_Details(listOfEditRuns[i]);
+			final int processingRun = i;
+			Thread thread = new Thread() {			// Make a thread so JFrame will not be frozen
+				public void run() {
+					combinePanel[processingRun] = new Panel_EditRun_Details(listOfEditRuns[processingRun]);
+					radioButton_Left[processingRun].setSelected(true);
+					scrollPane_Right.setViewportView(combinePanel[processingRun]);
+					this.interrupt();
+				}
+			};
+			thread.start();
 		}			
-		scrollPane_Right.setViewportView(combinePanel[0]);	
 				
 		
 		// Add all components to JInternalFrame------------------------------------------------------------

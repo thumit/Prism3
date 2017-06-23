@@ -200,7 +200,7 @@ All changes in this block are associated with v27.jar, formulation22.docx, datab
 101. button_import_database.addActionListener:  start another thread to make the software not frozen during database import.
 102. Fix the thread: is_this_the_first_load = false; this would help not reloading the same database again and again whne press the green plus
 103. Disable button when import database Thread starts, ReEnable when Thread ends
-104. Remove the 101 Thread and add this if " (is_this_the_first_load == false) " before Reset all Panels. These 2 actions help loading model correctly
+104. Remove all threads in Panel_EditRun_Details, add a Thread to Panel_EditRun, plus some other changes to load properly. 
 --------------------------------------------------------------------------
 
 

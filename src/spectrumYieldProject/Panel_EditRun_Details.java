@@ -272,16 +272,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		super.setOpaque(false);
 		ToolTipManager.sharedInstance().setInitialDelay(0);		//Show toolTip immediately
 		
-		Thread thread = new Thread() {			// Make a thread so JFrame will not be frozen
-			public void run() {
-				reload_inputs_after_creating_GUI();
-				is_this_the_first_load = false;	
-				Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().revalidate();
-				Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().repaint();
-				this.interrupt();
-			}
-		};
-		thread.start();
+
+				
+		reload_inputs_after_creating_GUI();
+		is_this_the_first_load = false;	
+		Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().revalidate();
+		Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().repaint();
 	} // End Of Panel_EditRun_Details()
 
 		
@@ -328,22 +324,26 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
     // Reload inputs of the run------------------------------------------------------------------------------------------------ 
 	public void reload_inputs_before_creating_GUI() {		
-		
-		// Load default_database to make everything appears quickly---------------------------------------------------
-		file_Database = new File(FilesHandle.get_DatabasesFolder().getAbsolutePath() + "/default_database.db");
-		read_Database = new Read_Database(file_Database);		
-		// Then Load database of the run if exist---------------------------------------------------------------------
+			
+		// Load database of the run if exist---------------------------------------------------------------------
 		File database_to_load = new File(currentRunFolder.getAbsolutePath() + "/database.db");
 		if (database_to_load.exists()) {	//Load if the file exists
 			file_Database = database_to_load;
 		}  else { 	// If file does not exist then use the default definition in default_database.db
+			file_Database = new File(FilesHandle.get_DatabasesFolder().getAbsolutePath() + "/default_database.db");
 			System.out.println("File not exists: database.db - New interface is created using default_database.db");					
 		}
 		
+		// Read the tables (strata_definition, existing_strata, yield_tables) of the database-------------------
+		read_Database = new Read_Database(file_Database);												
+		yieldTable_values = read_Database.get_yield_tables_values();
+		yieldTable_ColumnNames = read_Database.get_yield_tables_column_names();
+    
 		
+	
 
 		
-		//Load tables---------------------------------------------------------------------------------
+		// Load tables---------------------------------------------------------------------------------
 		File table_file;
 		Reload_Table_Info tableLoader;
 		
@@ -2726,14 +2726,13 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				}
 
 				private void change_database() {
-					// read the tables (strata_definition, existing_strata, yield_tables) of the database-------------------
-					read_Database = new Read_Database(file_Database);												
-					yieldTable_values = read_Database.get_yield_tables_values();
-					yieldTable_ColumnNames = read_Database.get_yield_tables_column_names();
-		        
-					
 
 					if (is_this_the_first_load == false) {
+						// read the tables (strata_definition, existing_strata, yield_tables) of the database-------------------
+						read_Database = new Read_Database(file_Database);												
+						yieldTable_values = read_Database.get_yield_tables_values();
+						yieldTable_ColumnNames = read_Database.get_yield_tables_column_names();
+						
 						// Reset all panels except General Inputs----------------------------------------------------------------		
 						is_table_overview_loaded = false;
 						is_table1_loaded = false;
