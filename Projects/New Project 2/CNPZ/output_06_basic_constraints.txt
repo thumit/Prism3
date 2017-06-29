@@ -1,5 +1,14 @@
 bc_id	bc_description	bc_type	bc_multiplier	lowerbound	lowerbound_perunit_penalty	upperbound	upperbound_perunit_penalty	bookeeping_var_id	bookeeping_var_name	bookeeping_var_value	bookeeping_var_reduced_cost	total_penalty
-1	150k acres of 1 - silvicultural method NGe - time period 1	SOFT	1.0	150000.0	1.0	150000.0	1.0	0	y_0	150000.0	0.0	0.0
-2	150k acres of 2 - silvicultural method PBe - time period 1	SOFT	1.0	150000.0	1.0	150000.0	1.0	1	y_1	182963.5400000001	0.0	32963.540000000095
-3	150k acres of 3 - silvicultural method GSe - time period 1	SOFT	1.0	150000.0	1.0	150000.0	1.0	2	y_2	1142904.3400000005	0.0	992904.3400000005
-4	150k acres of 4 - silvicultural method EAe - time period 1	SOFT	1.0	150000.0	1.0	150000.0	1.0	3	y_3	150000.0	0.0	0.0
+1	100k of 1 - silvicultural method NGe - time period 1	HARD	1.0	100000.0	1.0	null	null	6	z_0	207630.02000000005	0.0	0.0
+2	100k of 2 - silvicultural method PBe - time period 1	HARD	1.0	100000.0	1.0	null	null	7	z_1	195301.91999999998	0.0	0.0
+3	100k of 3 - silvicultural method GSe - time period 1	HARD	1.0	100000.0	1.0	null	null	8	z_2	112534.92000000003	0.0	0.0
+4	100k of 4 - silvicultural method EAe - time period 1	SOFT	1.0	100000.0	1.0	null	null	0	y_0	1155589.0	0.0	0.0
+5	acres free 1 - silvicultural method MSe - time period 1	FREE	1.0	null	null	null	null	9	v_0	35554.379999999954	0.0	0.0
+6	acres free 2 - silvicultural method BSe - time period 1	FREE	1.0	null	null	null	null	10	v_1	71108.75999999991	0.0	0.0
+7	acres period 4 of 201 	FREE	1.0	null	null	null	null	11	v_2	147376.05434202135	0.0	0.0
+8	acres period 4 of 221 	FREE	1.0	null	null	null	null	12	v_3	66390.69166407386	0.0	0.0
+9	acres period 4 of 265	FREE	1.0	null	null	null	null	13	v_4	-0.0	0.0	0.0
+10	acres period 4 of 266	FREE	1.0	null	null	null	null	14	v_5	-0.0	0.0	0.0
+11	acres period 4 of 267	FREE	1.0	null	null	null	null	15	v_6	132483.46706244384	0.0	0.0
+12	acres period 4 of 268 to 321	FREE	1.0	null	null	null	null	16	v_7	278241.60312857485	0.0	0.0
+13	At least 30k acres EAr period 2	SOFT	1.0	30000.0	50.0	null	null	1	y_1	1043181.2503440002	0.0	0.0

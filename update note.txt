@@ -201,7 +201,29 @@ All changes in this block are associated with v27.jar, formulation22.docx, datab
 102. Fix the thread: is_this_the_first_load = false; this would help not reloading the same database again and again whne press the green plus
 103. Disable button when import database Thread starts, ReEnable when Thread ends
 104. Remove all threads in Panel_EditRun_Details, add a Thread to Panel_EditRun, plus some other changes to load properly. 
+
+All changes in this block are associated with v28.jar, formulation22.docx, database4.docx
 --------------------------------------------------------------------------
 
+105. Fix to show available_Acres (in model2 match_data)
+106. Modeling System is redesigned to not use default_database.db any more
+107. Fix to not change database when cancel database-browsing
+108. Boost 2: only define variable that is associated with unempty prescription/yieldtable
+	- Formulation:
+		- MS: Remove 6b, make it the bound of variables so it would be no-problem if not defined (not affect boost 2)
+		- BS: Remove 6d, make it the bound of variables so it would be no-problem if not defined (not affect boost 2)
 
-All changes in this block are associated with v27.jar, formulation22.docx, database4.docx
+	- Codes:
+		- MS: Remove 6b, redefine variables bounds and add boost 2 conditions for variables, add boost 2 conditions for 6c and 15
+		- BS: Remove 6d, redefine variables bounds and add boost 2 conditions for variables, add boost 2 conditions for 6e and 15
+		- NGe: add boost 2 conditions for variables, add boost 2 conditions for 7a 7b 12a 15 
+		- PBe, GSe: add boost 2 conditions for variables, add boost 2 conditions for 8a 8b 9a 9b 12a 15 
+		- EAe: add boost 2 conditions for variables, add boost 2 conditions for 10 11 12a 13 15
+			- Other changes for EAe variable definition to match with fromulation indexes: change t to tR, tR to t, c to s5R, processingAge to rotationAge
+		- NGr: add boost 2 conditions for variables, add boost 2 conditions for 12a 13 14a 15
+		- PBr, GSr: add boost 2 conditions for variables, add boost 2 conditions for 12a 13 14b 14c 15
+		- Ear:  add boost 2 conditions for variables, 12a 13 14d 15
+			- Other changes for EAr variable definition to match with fromulation indexes: change t to tR, tR to t, a to aR, c to s5R
+109. variables x[s1][s2][s3][s4][s5][s6][4] (also x[s1][s2][s3][s4][s5][s6][5]) would have the bounds set to 0 if no prescriptions for MS (also BS) exists. This make output04 pie chart so correctly
+
+All changes in this block are associated with v29.jar, formulation24.docx, database4.docx
