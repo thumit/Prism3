@@ -42,7 +42,7 @@ public class ScrollPane_Parameters extends JScrollPane {
 				String tip = read_Database.get_ParameterToolTip(YTcolumnName) + " (Column index: " + i + ")";
 				checkboxParameter.get(i).setToolTipText(tip);		//add toolTip
 				if (!tip.contains("per Acre")) {	// Disable Parameter check box if unit is not per Acre
-					checkboxParameter.get(i).setEnabled(false);
+//					checkboxParameter.get(i).setEnabled(false);
 				}
 				
 				// add checkboxParameter to the Panel
@@ -170,5 +170,29 @@ public class ScrollPane_Parameters extends JScrollPane {
 		}	
 		
 		return parameters_info;
+	}
+	
+	public void reload_this_constraint_parameters(String parameters_info) {	
+		// Note: parameters_info: contains all the selected parameters	
+		for (int i = 0; i < checkboxParameter.size(); i++) {			
+			checkboxParameter.get(i).setSelected(false);
+			checkboxNoParameter.setSelected(false);
+			checkboxCostParameter.setSelected(false);
+		}
+				
+		// Read the whole cell into array
+		String[] info = parameters_info.split("\\s+");	// Space delimited
+		
+		// Get all parameters & Reload the check
+		if (info[0].equalsIgnoreCase("NoParameter")) {
+			checkboxNoParameter.setSelected(true);
+		} else if (info[0].equalsIgnoreCase("CostParameter")) {
+			checkboxCostParameter.setSelected(true);
+		} else {		
+			for (int i = 0; i < info.length; i++) {	
+				int current_parameter_id = Integer.valueOf(info[i]);
+				checkboxParameter.get(current_parameter_id).setSelected(true);						
+			}
+		}
 	}
 }

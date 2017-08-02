@@ -10,13 +10,9 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.PrintStream;
@@ -280,8 +276,19 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			output_basic_constraints_file[row] = new File(runFolder.getAbsolutePath() + "/output_06_basic_constraints.txt");
 			output_flow_constraints_file[row] = new File(runFolder.getAbsolutePath() + "/output_07_flow_constraints.txt");
 			
+			// Database must be read first
+			File file_Database = new File(runFolder.getAbsolutePath() + "/database.db");
+			Read_Database read_Database = new Read_Database(file_Database);
+			
+			//Database Info
+			Object[][][] yield_tables_values = read_Database.get_yield_tables_values();
+			Object[] yield_tables_names = read_Database.get_yield_tables_names();			
+			List<String> yield_tables_names_list = new ArrayList<String>() {{ for (Object i : yield_tables_names) add(i.toString());}};		// Convert Object array to String list
 				
-			//Read input files to retrieve values later
+			
+			
+			
+			// Read input files to retrieve values later
 			Read_RunInputs read = new Read_RunInputs();
 			read.readGeneralInputs(new File(runFolder.getAbsolutePath() + "/input_01_general_inputs.txt"));
 			read.readManagementOptions(new File(runFolder.getAbsolutePath() + "/input_02_modeled_strata.txt"));
@@ -289,46 +296,37 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			read.readRDCovertypeProportion(new File(runFolder.getAbsolutePath() + "/input_04_replacingdisturbances_covertype_conversion.txt"));
 			read.readMSPercent(new File(runFolder.getAbsolutePath() + "/input_05_non_replacing_disturbances.txt"));
 			read.readRDPercent(new File(runFolder.getAbsolutePath() + "/input_06_replacing_disturbances.txt"));
-			read.readBaseCost(new File(runFolder.getAbsolutePath() + "/input_07_base_cost.txt"));
-			read.readCostAdjustment(new File(runFolder.getAbsolutePath() + "/input_08_cost_adjustment.txt"));
+			read.readManagementCost(new File(runFolder.getAbsolutePath() + "/input_08_management_cost.txt"));
 			read.read_basic_constraints(new File(runFolder.getAbsolutePath() + "/input_09_basic_constraints.txt"));
 			read.read_flow_constraints(new File(runFolder.getAbsolutePath() + "/input_10_flow_constraints.txt"));
-			File file_Database = new File(runFolder.getAbsolutePath() + "/database.db");
-			Read_Database read_Database = new Read_Database(file_Database);
 			
 			
-			//Get info: input_02_modeled_strata
+			// Get info: input_02_modeled_strata
 			List<String> modeled_strata, modeled_strata_withoutSizeClass, modeled_strata_withoutSizeClassandCoverType = new ArrayList<String>();
 			modeled_strata = read.get_modeled_strata();
 			modeled_strata_withoutSizeClass = read.get_modeled_strata_withoutSizeClass();
 			modeled_strata_withoutSizeClassandCoverType = read.get_modeled_strata_withoutSizeClassandCoverType(); 
 						
-			//Get Info: input_03_clearcut_covertype_conversion
+			// Get Info: input_03_clearcut_covertype_conversion
 			List<String> covertype_conversions, covertype_conversions_and_existing_rotation_ages, covertype_conversions_and_regeneration_rotation_ages = new ArrayList<String>();
 			covertype_conversions = read.get_covertype_conversions();
 			covertype_conversions_and_existing_rotation_ages = read.get_covertype_conversions_and_existing_rotation_ages();	
 			covertype_conversions_and_regeneration_rotation_ages = read.get_covertype_conversions_and_regeneration_rotation_ages();
 
-			//Get Info: input_04_replacingdisturbances_covertype_conversion
+			// Get Info: input_04_replacingdisturbances_covertype_conversion
 			double[] rdProportion = read.getRDProportion(); 
 			
-			//Get info: input_05_non_replacing_disturbances
+			// Get info: input_05_non_replacing_disturbances
 			double[] msProportion = read.getMSFireProportion();
 			double[] bsProportion = read.getBSFireProportion();
 			
-			//Get Info: input_06_replacing_disturbances
+			// Get Info: input_06_replacing_disturbances
 			double[][] SRD_percent = read.getSRDProportion();		
-					
-			//Get info: input_07_base_cost			
-			List<String> action_type_list = read.get_action_type_list(); 
-			double[] baseCost_acres = read.getbaseCost_acres(); 
-			double[][] baseCost_yieldtables = read.getbaseCost_yieldtables(); 
 			
-			//Get info:	input_08_cost_adjustment
-			List<String> cost_staticCondition_list = read.get_cost_staticCondition_list(); 
-			double[] cost_adjusted_percentage = read.get_cost_adjusted_percentage();
+			// Get info: input_08_management_cost
+			List<String> cost_condition_list = read.get_cost_condition_list(); 
 		
-			//Get info:	input_09_basic_constraints
+			// Get info: input_09_basic_constraints
 			List<String> constraint_column_names_list = read.get_constraint_column_names_list();
 			String[][] BC_value = read.get_BC_Values();		
 			int total_softConstraints = read.get_total_softConstraints();
@@ -341,7 +339,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			double[] hardConstraints_UB = read.get_hardConstraints_UB();	
 			int total_freeConstraints = read.get_total_freeConstraints();
 			
-			//Get info:	input_10_flow_constraints	
+			// Get info: input_10_flow_constraints	
 			List<List<List<Integer>>> flow_set_list = read.get_flow_set_list();
 			List<Integer> flow_id_list = read.get_flow_id_list();
 			List<String> flow_description_list = read.get_flow_description_list();
@@ -350,10 +348,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			List<Double> flow_lowerbound_percentage_list = read.get_flow_lowerbound_percentage_list();
 			List<Double> flow_upperbound_percentage_list = read.get_flow_upperbound_percentage_list();
 
-			//Database Info
-			Object[][][] yield_tables_values = read_Database.get_yield_tables_values();
-			Object[] yield_tables_names = read_Database.get_yield_tables_names();			
-			List<String> yield_tables_names_list = new ArrayList<String>() {{ for (Object i : yield_tables_names) add(i.toString());}};		// Convert Object array to String list
+
 			
 			
 			// Set up problem-------------------------------------------------			
@@ -612,7 +607,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									String strataName = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4) + layer5.get(s5) + layer6.get(s6);
 									if (modeled_strata.contains(strataName)) {
 										for (int t = 1; t <= total_Periods; t++) {
-											String var_name = "xNGe_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6) + "," + t;										
+											String var_name = "xNG_E_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6) + "," + t;										
 											if (!allow_Non_Existing_Prescription) {
 												if (yield_tables_names_list.contains(Get_Variable_Information.get_yield_table_name_to_find(var_name))) {
 													objlist.add((double) 0);			
@@ -653,7 +648,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									if (modeled_strata.contains(strataName)) {
 										for (int i = 0; i < total_PBe_Prescriptions; i++) {
 											for (int t = 1; t <= total_Periods; t++) {
-												String var_name = "xPBe_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6) + "," + i + "," + t;										
+												String var_name = "xPB_E" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6) + "," + i + "," + t;										
 												if (!allow_Non_Existing_Prescription) {
 													if (yield_tables_names_list.contains(Get_Variable_Information.get_yield_table_name_to_find(var_name))) {
 														objlist.add((double) 0);
@@ -695,7 +690,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									if (modeled_strata.contains(strataName)) {
 										for (int i = 0; i < total_GSe_Prescriptions; i++) {
 											for (int t = 1; t <= total_Periods; t++) {
-												String var_name = "xGSe_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6) + "," + i + "," + t;										
+												String var_name = "xGS_E_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6) + "," + i + "," + t;										
 												if (!allow_Non_Existing_Prescription) {
 													if (yield_tables_names_list.contains(Get_Variable_Information.get_yield_table_name_to_find(var_name))) {
 														objlist.add((double) 0);
@@ -742,7 +737,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 												if (covertype_conversions_and_existing_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
 													for (int i = 0; i < total_EAe_Prescriptions; i++) {
 														for (int t = 1; t <= tR; t++) {
-															String var_name = "xEAe_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6) + "," + tR + "," + layer5.get(s5R) + "," + i + "," + t ;										
+															String var_name = "xEA_E_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6) + "," + tR + "," + layer5.get(s5R) + "," + i + "," + t ;										
 															String yield_table_name_to_find = Get_Variable_Information.get_yield_table_name_to_find(var_name);	
 															if (yield_table_name_to_find.contains("rotation_age")) {
 																yield_table_name_to_find = yield_table_name_to_find.replace("rotation_age", String.valueOf(rotationAge));
@@ -791,7 +786,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									if (modeled_strata.contains(strataName)) {
 										for (int i = 0; i < total_MS_Prescriptions; i++) {
 											for (int t = 1; t <= total_Periods; t++) {
-												String var_name = "xMSe_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6)  + "," + i + "," + t;										
+												String var_name = "xMS_E_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6)  + "," + i + "," + t;										
 												if (!allow_Non_Existing_Prescription) {
 													if (yield_tables_names_list.contains(Get_Variable_Information.get_yield_table_name_to_find(var_name))) {
 														objlist.add((double) 0);
@@ -833,7 +828,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									if (modeled_strata.contains(strataName)) {
 										for (int i = 0; i < total_BS_Prescriptions; i++) {
 											for (int t = 1; t <= total_Periods; t++) {
-												String var_name = "xBSe_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6)  + "," + i + "," + t;										
+												String var_name = "xBS_E_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6)  + "," + i + "," + t;										
 												if (!allow_Non_Existing_Prescription) {
 													if (yield_tables_names_list.contains(Get_Variable_Information.get_yield_table_name_to_find(var_name))) {
 														objlist.add((double) 0);
@@ -874,7 +869,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								for (int s5 = 0; s5 < layer5.size(); s5++) {
 									for (int t = 2; t <= total_Periods; t++) {
 										for (int a = 1; a <= t-1; a++) {
-											String var_name = "xNGr_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + t + "," + a;										
+											String var_name = "xNG_R_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + t + "," + a;										
 											if (!allow_Non_Existing_Prescription) {
 												if (yield_tables_names_list.contains(Get_Variable_Information.get_yield_table_name_to_find(var_name))) {
 													objlist.add((double) 0);
@@ -915,7 +910,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									for (int i = 0; i < total_PBr_Prescriptions; i++) {
 										for (int t = 2; t <= total_Periods; t++) {
 											for (int a = 1; a <= t - 1; a++) {
-												String var_name = "xPBr_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + i + "," + t + "," + a;										
+												String var_name = "xPB_R_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + i + "," + t + "," + a;										
 												if (!allow_Non_Existing_Prescription) {
 													if (yield_tables_names_list.contains(Get_Variable_Information.get_yield_table_name_to_find(var_name))) {
 														objlist.add((double) 0);
@@ -957,7 +952,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									for (int i = 0; i < total_GSr_Prescriptions; i++) {
 										for (int t = 2; t <= total_Periods; t++) {
 											for (int a = 1; a <= t - 1; a++) {
-												String var_name = "xGSr_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + i + "," + t + "," + a;										
+												String var_name = "xGS_R_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + i + "," + t + "," + a;										
 												if (!allow_Non_Existing_Prescription) {
 													if (yield_tables_names_list.contains(Get_Variable_Information.get_yield_table_name_to_find(var_name))) {
 														objlist.add((double) 0);
@@ -1003,7 +998,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 												if (covertype_conversions_and_regeneration_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
 													for (int i = 0; i < total_EAr_Prescriptions; i++) {
 														for (int t = tR-aR+1; t <= tR; t++) {
-															String var_name = "xEAr_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + tR + "," + aR + "," + layer5.get(s5R) + "," + i + "," + t;										
+															String var_name = "xEA_R_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + tR + "," + aR + "," + layer5.get(s5R) + "," + i + "," + t;										
 															if (!allow_Non_Existing_Prescription) {
 																if (yield_tables_names_list.contains(Get_Variable_Information.get_yield_table_name_to_find(var_name))) {
 																	objlist.add((double) 0);
@@ -1489,6 +1484,19 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 											c7_lblist.add((double) 0);
 											c7_ublist.add((double) 0);
 											c7_num++;
+											
+											// Remove this constraint if total number of variables added is 1 (only x[s1][s2][s3][s4][s5][s6][0] is added)
+											if (c7_indexlist.get(c7_num - 1).size() == 1) {
+												c7_indexlist.remove(c7_num - 1);
+												c7_valuelist.remove(c7_num - 1);
+												c7_lblist.remove(c7_num - 1);
+												c7_ublist.remove(c7_num - 1);
+												c7_num--;
+												
+												// Set x[s1][s2][s3][s4][s5][s6][0] to be zero if boost 2 is implemented but associated prescriptions does not exist
+												vlb[x[s1][s2][s3][s4][s5][s6][0]] = 0;
+												vub[x[s1][s2][s3][s4][s5][s6][0]] = 0;
+											}
 										}
 									}
 								}
@@ -1600,6 +1608,10 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 											c8_lblist.remove(c8_num - 1);
 											c8_ublist.remove(c8_num - 1);
 											c8_num--;
+											
+											// Set x[s1][s2][s3][s4][s5][s6][1] to be zero if boost 2 is implemented but associated prescriptions does not exist
+											vlb[x[s1][s2][s3][s4][s5][s6][1]] = 0;
+											vub[x[s1][s2][s3][s4][s5][s6][1]] = 0;
 										}
 									}
 								}
@@ -1713,6 +1725,10 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 											c9_lblist.remove(c9_num - 1);
 											c9_ublist.remove(c9_num - 1);
 											c9_num--;
+											
+											// Set x[s1][s2][s3][s4][s5][s6][2] to be zero if boost 2 is implemented but associated prescriptions does not exist
+											vlb[x[s1][s2][s3][s4][s5][s6][2]] = 0;
+											vub[x[s1][s2][s3][s4][s5][s6][2]] = 0;
 										}
 									}
 								}
@@ -1831,6 +1847,10 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 											c10_lblist.remove(c10_num - 1);
 											c10_ublist.remove(c10_num - 1);
 											c10_num--;
+											
+											// Set x[s1][s2][s3][s4][s5][s6][3] to be zero if boost 2 is implemented but associated prescriptions does not exist
+											vlb[x[s1][s2][s3][s4][s5][s6][3]] = 0;
+											vub[x[s1][s2][s3][s4][s5][s6][3]] = 0;
 										}
 									}
 								}
@@ -2507,7 +2527,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				List<String> parameters_indexes_list = read.get_Parameters_indexes_list(i);
 				// Get the dynamic identifiers indexes list
 				List<String> all_dynamicIdentifiers_columnIndexes = read.get_all_dynamicIdentifiers_columnsIndexes_in_row(i);
-				List<List<String>> all_dynamicIdentifiers = read.get_all_dynamicIdentifiers_in_row(i);
+				List<List<String>> all_dynamicIdentifiers = read.get_all_dynamic_identifiers_in_row(i);
 				
 				
 						
@@ -2538,9 +2558,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									
 				
 				// Add user_defined_variables and parameters------------------------------------
-				List<String> static_SilvivulturalMethods = read.get_static_SilvivulturalMethods(i);
-				List<String> static_timePeriods = read.get_static_timePeriods(i);
-				List<Integer> integer_static_timePeriods = static_timePeriods.stream().map(Integer::parseInt).collect(Collectors.toList());
+				List<String> static_methods = read.get_static_methods(i);
+				List<String> static_periods = read.get_static_periods(i);
+				List<Integer> integer_static_periods = static_periods.stream().map(Integer::parseInt).collect(Collectors.toList());
 				
 				List<String> static_strata = read.get_static_strata(i);
 				List<String> static_strata_withoutSizeClassandCoverType = read.get_static_strata_withoutSizeClassandCoverType(i);
@@ -2550,7 +2570,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				
 				
 				//Add xNGe
-				if (static_SilvivulturalMethods.contains("NGe")) {	
+				if (static_methods.contains("NG_E")) {	
 					for (int s1 = 0; s1 < layer1.size(); s1++) {
 						for (int s2 = 0; s2 < layer2.size(); s2++) {
 							for (int s3 = 0; s3 < layer3.size(); s3++) {
@@ -2559,8 +2579,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										for (int s6 = 0; s6 < layer6.size(); s6++) {
 											String strataName = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4) + layer5.get(s5) + layer6.get(s6);
 											if (modeled_strata.contains(strataName) && static_strata.contains(strataName)) {											
-												if (integer_static_timePeriods.size() > 0) {	
-													for (int t : integer_static_timePeriods) {		//Loop all periods
+												if (integer_static_periods.size() > 0) {	
+													for (int t : integer_static_periods) {		//Loop all periods
 														if (t <= total_Periods) {
 															//Find all parameter match the t and add them all to parameter
 															/*	Table Name = s5 + s6 convert then + method + timingChoice
@@ -2581,12 +2601,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 															
 															int rotation_age = 9999;	// not need to use this, so put a 9999 here to note
 																							
-															para_value = Get_Parameter_Information.get_total_value(vname[xNGe[s1][s2][s3][s4][s5][s6][t]], rotation_age,
+															para_value = Get_Parameter_Information.get_total_value(
+																	read_Database, vname[xNGe[s1][s2][s3][s4][s5][s6][t]], rotation_age,
 																	yield_tables_names, yield_tables_values, parameters_indexes_list,
 																	all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers,
-																	action_type_list, baseCost_acres, baseCost_yieldtables,
-																	cost_staticCondition_list, cost_adjusted_percentage,
-																	current_var_static_condition);
+																	cost_condition_list, current_var_static_condition);
 															para_value = para_value * currentDiscountValue * multiplier;
 
 															//Add xNGe(s1,s2,s3,s4,s5,s6)(t)
@@ -2608,7 +2627,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 
 						
 				//Add xPBe[s1][s2][s3][s4][s5][s6][ii]			
-				if (static_SilvivulturalMethods.contains("PBe")) {		
+				if (static_methods.contains("PB_E")) {		
 					for (int s1 = 0; s1 < layer1.size(); s1++) {
 						for (int s2 = 0; s2 < layer2.size(); s2++) {
 							for (int s3 = 0; s3 < layer3.size(); s3++) {
@@ -2618,8 +2637,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 											String strataName = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4) + layer5.get(s5) + layer6.get(s6);
 											if (modeled_strata.contains(strataName) && static_strata.contains(strataName)) {
 												for (int ii = 0; ii < total_PBe_Prescriptions; ii++) {
-													if (integer_static_timePeriods.size() > 0) {	
-														for (int t : integer_static_timePeriods) {		//Loop all periods
+													if (integer_static_periods.size() > 0) {	
+														for (int t : integer_static_periods) {		//Loop all periods
 															if (t <= total_Periods) {
 																//Find all parameter match the t and add them all to parameter
 																current_period = t;
@@ -2635,12 +2654,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																
 																int rotation_age = 9999;	// not need to use this, so put a 9999 here to note
 																				
-																para_value = Get_Parameter_Information.get_total_value(vname[xPBe[s1][s2][s3][s4][s5][s6][ii][t]], rotation_age,
+																para_value = Get_Parameter_Information.get_total_value(
+																		read_Database, vname[xPBe[s1][s2][s3][s4][s5][s6][ii][t]], rotation_age,
 																		yield_tables_names, yield_tables_values, parameters_indexes_list,
 																		all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers,
-																		action_type_list, baseCost_acres, baseCost_yieldtables, 
-																		cost_staticCondition_list, cost_adjusted_percentage,
-																		current_var_static_condition);
+																		cost_condition_list, current_var_static_condition);
 																para_value = para_value * currentDiscountValue * multiplier;
 																
 																//Add xPBe[s1][s2][s3][s4][s5][s6][ii][t]
@@ -2663,7 +2681,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 							
 				
 				//Add xGSe[s1][s2][s3][s4][s5][s6][ii]			
-				if (static_SilvivulturalMethods.contains("GSe")) {		
+				if (static_methods.contains("GS_E")) {		
 					for (int s1 = 0; s1 < layer1.size(); s1++) {
 						for (int s2 = 0; s2 < layer2.size(); s2++) {
 							for (int s3 = 0; s3 < layer3.size(); s3++) {
@@ -2673,8 +2691,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 											String strataName = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4) + layer5.get(s5) + layer6.get(s6);
 											if (modeled_strata.contains(strataName) && static_strata.contains(strataName)) {
 												for (int ii = 0; ii < total_GSe_Prescriptions; ii++) {
-													if (integer_static_timePeriods.size() > 0) {	
-														for (int t : integer_static_timePeriods) {		//Loop all periods
+													if (integer_static_periods.size() > 0) {	
+														for (int t : integer_static_periods) {		//Loop all periods
 															if (t <= total_Periods) {
 																//Find all parameter match the t and add them all to parameter
 																current_period = t;
@@ -2690,12 +2708,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																		
 																int rotation_age = 9999;	// not need to use this, so put a 9999 here to note
 																
-																para_value = Get_Parameter_Information.get_total_value(vname[xGSe[s1][s2][s3][s4][s5][s6][ii][t]], rotation_age,
+																para_value = Get_Parameter_Information.get_total_value(
+																		read_Database, vname[xGSe[s1][s2][s3][s4][s5][s6][ii][t]], rotation_age,
 																		yield_tables_names, yield_tables_values, parameters_indexes_list,
 																		all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers,
-																		action_type_list, baseCost_acres, baseCost_yieldtables, 
-																		cost_staticCondition_list, cost_adjusted_percentage,
-																		current_var_static_condition);
+																		cost_condition_list, current_var_static_condition);
 																para_value = para_value * currentDiscountValue * multiplier;
 																
 																//Add xGSe[s1][s2][s3][s4][s5][s6][ii][t]
@@ -2718,7 +2735,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 	
 						
 				//Add xMS[s1][s2][s3][s4][s5][s6][ii]			
-				if (static_SilvivulturalMethods.contains("MSe")) {		
+				if (static_methods.contains("MS_E")) {		
 					for (int s1 = 0; s1 < layer1.size(); s1++) {
 						for (int s2 = 0; s2 < layer2.size(); s2++) {
 							for (int s3 = 0; s3 < layer3.size(); s3++) {
@@ -2728,8 +2745,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 											String strataName = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4) + layer5.get(s5) + layer6.get(s6);
 											if (modeled_strata.contains(strataName) && static_strata.contains(strataName)) {
 												for (int ii = 0; ii < total_MS_Prescriptions; ii++) {
-													if (integer_static_timePeriods.size() > 0) {	
-														for (int t : integer_static_timePeriods) {		//Loop all periods
+													if (integer_static_periods.size() > 0) {	
+														for (int t : integer_static_periods) {		//Loop all periods
 															if (t <= total_Periods) {
 																//Find all parameter match the t and add them all to parameter
 																current_period = t;
@@ -2745,12 +2762,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																
 																int rotation_age = 9999;	// not need to use this, so put a 9999 here to note
 																
-																para_value = Get_Parameter_Information.get_total_value(vname[xMS[s1][s2][s3][s4][s5][s6][ii][t]], rotation_age,
+																para_value = Get_Parameter_Information.get_total_value(
+																		read_Database, vname[xMS[s1][s2][s3][s4][s5][s6][ii][t]], rotation_age,
 																		yield_tables_names, yield_tables_values, parameters_indexes_list,
 																		all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers,
-																		action_type_list, baseCost_acres, baseCost_yieldtables, 
-																		cost_staticCondition_list, cost_adjusted_percentage,
-																		current_var_static_condition);
+																		cost_condition_list, current_var_static_condition);
 																para_value = para_value * currentDiscountValue * multiplier;
 																
 																//Add xMS[s1][s2][s3][s4][s5][s6][ii][t]
@@ -2773,7 +2789,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				
 				
 				//Add xBS[s1][s2][s3][s4][s5][s6][ii]			
-				if (static_SilvivulturalMethods.contains("BSe")) {		
+				if (static_methods.contains("BS_E")) {		
 					for (int s1 = 0; s1 < layer1.size(); s1++) {
 						for (int s2 = 0; s2 < layer2.size(); s2++) {
 							for (int s3 = 0; s3 < layer3.size(); s3++) {
@@ -2783,8 +2799,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 											String strataName = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4) + layer5.get(s5) + layer6.get(s6);
 											if (modeled_strata.contains(strataName) && static_strata.contains(strataName)) {
 												for (int ii = 0; ii < total_BS_Prescriptions; ii++) {
-													if (integer_static_timePeriods.size() > 0) {	
-														for (int t : integer_static_timePeriods) {		//Loop all periods
+													if (integer_static_periods.size() > 0) {	
+														for (int t : integer_static_periods) {		//Loop all periods
 															if (t <= total_Periods) {
 																//Find all parameter match the t and add them all to parameter
 																current_period = t;
@@ -2800,12 +2816,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																
 																int rotation_age = 9999;	// not need to use this, so put a 9999 here to note
 																
-																para_value = Get_Parameter_Information.get_total_value(vname[xBS[s1][s2][s3][s4][s5][s6][ii][t]], rotation_age,
+																para_value = Get_Parameter_Information.get_total_value(
+																		read_Database, vname[xBS[s1][s2][s3][s4][s5][s6][ii][t]], rotation_age,
 																		yield_tables_names, yield_tables_values, parameters_indexes_list,
 																		all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers,
-																		action_type_list, baseCost_acres, baseCost_yieldtables, 
-																		cost_staticCondition_list, cost_adjusted_percentage,
-																		current_var_static_condition);
+																		cost_condition_list, current_var_static_condition);
 																para_value = para_value * currentDiscountValue * multiplier;
 																
 																//Add xBS[s1][s2][s3][s4][s5][s6][ii][t]
@@ -2828,7 +2843,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								
 				
 				//Add xEAe
-				if (static_SilvivulturalMethods.contains("EAe")) {							
+				if (static_methods.contains("EA_E")) {							
 					// Add xEAe(s1,s2,s3,s4,s5,s6)(t)(c)(ii)(tR)
 					for (int s1 = 0; s1 < layer1.size(); s1++) {
 						for (int s2 = 0; s2 < layer2.size(); s2++) {
@@ -2843,9 +2858,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 														int processingAge = t + StartingAge[s1][s2][s3][s4][s5][s6] - 1;
 														String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(c) + " " + processingAge;	
 														if (covertype_conversions_and_existing_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
-															if (integer_static_timePeriods.size() > 0) {	
+															if (integer_static_periods.size() > 0) {	
 																for (int ii = 0; ii < total_EAe_Prescriptions; ii++) {
-																	for (int tR : integer_static_timePeriods) {		//Loop all periods, 	final cut at t but we need parameter at time tR
+																	for (int tR : integer_static_periods) {		//Loop all periods, 	final cut at t but we need parameter at time tR
 																		if (tR<=t) {
 																			//Find all parameter match the t and add them all to parameter
 																			current_period = tR;
@@ -2861,12 +2876,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																				
 																			int rotation_age =  t + StartingAge[s1][s2][s3][s4][s5][s6] - 1;
 																			
-																		    para_value = Get_Parameter_Information.get_total_value(vname[xEAe[s1][s2][s3][s4][s5][s6][t][c][ii][tR]], rotation_age,
+																		    para_value = Get_Parameter_Information.get_total_value(
+																		    		read_Database, vname[xEAe[s1][s2][s3][s4][s5][s6][t][c][ii][tR]], rotation_age,
 																					yield_tables_names, yield_tables_values, parameters_indexes_list,
 																					all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers,
-																					action_type_list, baseCost_acres, baseCost_yieldtables, 
-																					cost_staticCondition_list, cost_adjusted_percentage,
-																					current_var_static_condition);
+																					cost_condition_list, current_var_static_condition);
 																			para_value = para_value * currentDiscountValue * multiplier;
 																			
 																			//Add xEAe(s1,s2,s3,s4,s5,s6)(t)(c)(tR)	final cut at t but we need parameter at time tR
@@ -2892,7 +2906,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				
 				
 				//Add xEAr
-				if (static_SilvivulturalMethods.contains("EAr")) {	
+				if (static_methods.contains("EA_R")) {	
 					// Add xEAr(s1,s2,s3,s4,s5)(t)(a)(c)(ii)(tR)  note t>=2 --> tR>=t-a+1
 					for (int s1 = 0; s1 < layer1.size(); s1++) {
 						for (int s2 = 0; s2 < layer2.size(); s2++) {
@@ -2906,9 +2920,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 													for (int c = 0; c < layer5.size(); c++) {
 														String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(c) + " " + a;						
 														if (covertype_conversions_and_regeneration_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
-															if (integer_static_timePeriods.size() > 0) {	
+															if (integer_static_periods.size() > 0) {	
 																for (int ii = 0; ii < total_EAr_Prescriptions; ii++) {
-																	for (int tR : integer_static_timePeriods) {		//Loop all periods, 	final cut at t but we need parameter at time tR
+																	for (int tR : integer_static_periods) {		//Loop all periods, 	final cut at t but we need parameter at time tR
 																		if (tR >= (t-a+1) && tR<=t) {
 																			//Find all parameter match the t and add them all to parameter
 																			current_period = tR;
@@ -2924,12 +2938,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																			
 																			int rotation_age = 9999;	// not need to use this, so put a 9999 here to note
 																			
-																		    para_value = Get_Parameter_Information.get_total_value(vname[xEAr[s1][s2][s3][s4][s5][t][a][c][ii][tR]], rotation_age,
+																		    para_value = Get_Parameter_Information.get_total_value(
+																		    		read_Database, vname[xEAr[s1][s2][s3][s4][s5][t][a][c][ii][tR]], rotation_age,
 																					yield_tables_names, yield_tables_values, parameters_indexes_list,
 																					all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers,
-																					action_type_list, baseCost_acres, baseCost_yieldtables, 
-																					cost_staticCondition_list, cost_adjusted_percentage,
-																					current_var_static_condition);
+																					cost_condition_list, current_var_static_condition);
 																			para_value = para_value * currentDiscountValue * multiplier;
 																			
 																			//Add xEAr(s1,s2,s3,s4,s5)(t)(a)(c)(ii)(tR)		final cut at t but we need parameter at time tR
@@ -2953,9 +2966,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					}		
 				}
 				
-				
+	
 				//Add xNGr
-				if (static_SilvivulturalMethods.contains("NGr")) {		
+				if (static_methods.contains("NG_R")) {		
 					//Add xNGr(s1,s2,s3,s4,s5)(tt)(a)
 					for (int s1 = 0; s1 < layer1.size(); s1++) {
 						for (int s2 = 0; s2 < layer2.size(); s2++) {
@@ -2966,11 +2979,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										for (int s5 = 0; s5 < layer5.size(); s5++) {
 											for (int tt = 2; tt <= total_Periods; tt++) {
 												for (int a = 1; a <= tt - 1; a++) {
-													if (integer_static_timePeriods.size() > 0) {	
+													if (integer_static_periods.size() > 0) {	
 														
 														//Combine all parameter together
 														double parameter = 0;
-														for (int t : integer_static_timePeriods) {		//Loop all periods, t and tt are the same
+														for (int t : integer_static_periods) {		//Loop all periods, t and tt are the same
 															if (t == tt) {
 																//Find all parameter match the t and add them all to parameter
 																current_period = t;
@@ -2986,12 +2999,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																
 																int rotation_age = 9999;	// not need to use this, so put a 9999 here to note
 																
-															    para_value = Get_Parameter_Information.get_total_value(vname[xNGr[s1][s2][s3][s4][s5][tt][a]], rotation_age,
+															    para_value = Get_Parameter_Information.get_total_value(
+															    		read_Database, vname[xNGr[s1][s2][s3][s4][s5][tt][a]], rotation_age,
 																		yield_tables_names, yield_tables_values, parameters_indexes_list,
 																		all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers,
-																		action_type_list, baseCost_acres, baseCost_yieldtables, 
-																		cost_staticCondition_list, cost_adjusted_percentage,
-																		current_var_static_condition);
+																		cost_condition_list, current_var_static_condition);
 																para_value = para_value * currentDiscountValue * multiplier;
 																parameter = parameter + para_value;			
 															}
@@ -3015,7 +3027,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				
 
 				//Add xPBr
-				if (static_SilvivulturalMethods.contains("PBr")) {		
+				if (static_methods.contains("PB_R")) {		
 					//Add xPBr(s1,s2,s3,s4,s5)(ii)(tt)(a)
 					for (int s1 = 0; s1 < layer1.size(); s1++) {
 						for (int s2 = 0; s2 < layer2.size(); s2++) {
@@ -3027,11 +3039,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 											for (int ii = 0; ii < total_PBr_Prescriptions; ii++) {
 												for (int tt = 2; tt <= total_Periods; tt++) {
 													for (int a = 1; a <= tt - 1; a++) {
-														if (integer_static_timePeriods.size() > 0) {	
+														if (integer_static_periods.size() > 0) {	
 															
 															//Combine all parameter together
 															double parameter = 0;
-															for (int t : integer_static_timePeriods) {		//Loop all periods, t and tt are the same
+															for (int t : integer_static_periods) {		//Loop all periods, t and tt are the same
 																if (t == tt) {
 																	//Find all parameter match the t and add them all to parameter
 																	current_period = t;
@@ -3047,12 +3059,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																	
 																	int rotation_age = 9999;	// not need to use this, so put a 9999 here to note
 																	
-																    para_value = Get_Parameter_Information.get_total_value(vname[xPBr[s1][s2][s3][s4][s5][ii][tt][a]], rotation_age,
+																    para_value = Get_Parameter_Information.get_total_value(
+																    		read_Database, vname[xPBr[s1][s2][s3][s4][s5][ii][tt][a]], rotation_age,
 																			yield_tables_names, yield_tables_values, parameters_indexes_list,
 																			all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers,
-																			action_type_list, baseCost_acres, baseCost_yieldtables, 
-																			cost_staticCondition_list, cost_adjusted_percentage,
-																			current_var_static_condition);
+																			cost_condition_list, current_var_static_condition);
 																	para_value = para_value * currentDiscountValue * multiplier;
 																	parameter = parameter + para_value;			
 																}
@@ -3077,7 +3088,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 
 				
 				//Add xGSr
-				if (static_SilvivulturalMethods.contains("GSr")) {		
+				if (static_methods.contains("GS_R")) {		
 					//Add xGSr(s1,s2,s3,s4,s5)(ii)(tt)(a)
 					for (int s1 = 0; s1 < layer1.size(); s1++) {
 						for (int s2 = 0; s2 < layer2.size(); s2++) {
@@ -3089,11 +3100,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 											for (int ii = 0; ii < total_GSr_Prescriptions; ii++) {
 												for (int tt = 2; tt <= total_Periods; tt++) {
 													for (int a = 1; a <= tt - 1; a++) {
-														if (integer_static_timePeriods.size() > 0) {	
+														if (integer_static_periods.size() > 0) {	
 															
 															//Combine all parameter together
 															double parameter = 0;
-															for (int t : integer_static_timePeriods) {		//Loop all periods, t and tt are the same
+															for (int t : integer_static_periods) {		//Loop all periods, t and tt are the same
 																if (t == tt) {
 																	//Find all parameter match the t and add them all to parameter
 																	current_period = t;
@@ -3109,12 +3120,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																	
 																	int rotation_age = 9999;	// not need to use this, so put a 9999 here to note
 																	
-																    para_value = Get_Parameter_Information.get_total_value(vname[xGSr[s1][s2][s3][s4][s5][ii][tt][a]], rotation_age,
+																    para_value = Get_Parameter_Information.get_total_value(
+																    		read_Database, vname[xGSr[s1][s2][s3][s4][s5][ii][tt][a]], rotation_age,
 																			yield_tables_names, yield_tables_values, parameters_indexes_list,
 																			all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers,
-																			action_type_list, baseCost_acres, baseCost_yieldtables, 
-																			cost_staticCondition_list, cost_adjusted_percentage,
-																			current_var_static_condition);
+																			cost_condition_list, current_var_static_condition);
 																	para_value = para_value * currentDiscountValue * multiplier;
 																	parameter = parameter + para_value;			
 																}
@@ -3417,8 +3427,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								
 								String yield_table_name_to_find = Get_Variable_Information.get_yield_table_name_to_find(vname[i]);
 								if (yield_table_name_to_find.contains("rotation_age")) {	// replace the String "rotation_age" with the integer value of rotation_age
-									if (vname[i].contains("xEAe_")) {
-										String var_name = vname[i].replace("xEAe_", "");
+									if (vname[i].contains("xEA_E_")) {
+										String var_name = vname[i].replace("xEA_E_", "");
 										String[] term = var_name.toString().split(",");	
 										int s1 = layer1.indexOf(term[0]);
 										int s2 = layer2.indexOf(term[1]);
@@ -3504,13 +3514,13 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									double lowerbound = (!BC_value[i][lowerbound_col].equals("null")) ? Double.parseDouble(BC_value[i][lowerbound_col]) : 0;
 									double lowerbound_perunit_penalty = (!BC_value[i][lowerbound_perunit_penalty_col].equals("null")) ? Double.parseDouble(BC_value[i][lowerbound_perunit_penalty_col]) : 0;
 									double upperbound = (!BC_value[i][upperbound_col].equals("null")) ? Double.parseDouble(BC_value[i][upperbound_col]) : 0;
-									double upperbound_perunit_penalty = (!BC_value[i][upperbound_perunit_penalty_col].equals("null")) ? Double.parseDouble(BC_value[i][upperbound_perunit_penalty_col]) : 0;
+									double upperbound_perunit_penalty = (!BC_value[i][upperbound_perunit_penalty_col].equals("null")) ? Double.parseDouble(BC_value[i][upperbound_perunit_penalty_col]) : Double.MAX_VALUE;
 									
-									if (lowerbound != 0 && lowerbound_perunit_penalty != 0 && value[var_id] < lowerbound) {
+									if (lowerbound_perunit_penalty != 0 && value[var_id] < lowerbound) {
 										total_penalty = (lowerbound - value[var_id]) * lowerbound_perunit_penalty;
 									}
 									
-									if (upperbound != 0 && upperbound_perunit_penalty != 0 && value[var_id] > upperbound) {
+									if (upperbound_perunit_penalty != 0 && value[var_id] > upperbound) {
 										total_penalty = (value[var_id] - upperbound) * upperbound_perunit_penalty;
 									}	
 								}

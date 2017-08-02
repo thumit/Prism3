@@ -1,0 +1,10 @@
+bc_id	bc_description	bc_type	bc_multiplier	lowerbound	lowerbound_perunit_penalty	upperbound	upperbound_perunit_penalty	bookeeping_var_id	bookeeping_var_name	bookeeping_var_value	bookeeping_var_reduced_cost	total_penalty
+1	Ponderosa P5	FREE	1.0	null	null	null	null	6	v_0	2292.31979896251	0.0	0.0
+2	Ponderosa P4	FREE	1.0	null	null	null	null	7	v_1	2290.2460911448	0.0	0.0
+4	total cost in 1 - time period 1	FREE	1.0	null	null	null	null	8	v_2	-0.0	0.0	0.0
+5	total cost in 2 - time period 2	FREE	1.0	null	null	null	null	9	v_3	-0.0	0.0	0.0
+6	total cost in 3 - time period 3	FREE	1.0	null	null	null	null	10	v_4	-0.0	0.0	0.0
+7	total cost in 4 - time period 4	FREE	1.0	null	null	null	null	11	v_5	-0.0	0.0	0.0
+8	total cost in 5 - time period 5	FREE	1.0	null	null	null	null	12	v_6	1023.5667772106236	0.0	0.0
+9	5k acres EAe period 1	SOFT	1.0	5000.0	1.0	5000.0	1.0	0	y_0	5000.0	0.0	0.0
+10	penaly for each dollar used	SOFT	1.0	null	null	0.0	0.01	1	y_1	1023.5667772106236	0.0	10.235667772106236

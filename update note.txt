@@ -227,3 +227,35 @@ All changes in this block are associated with v28.jar, formulation22.docx, datab
 109. variables x[s1][s2][s3][s4][s5][s6][4] (also x[s1][s2][s3][s4][s5][s6][5]) would have the bounds set to 0 if no prescriptions for MS (also BS) exists. This make output04 pie chart so correctly
 
 All changes in this block are associated with v29.jar, formulation24.docx, database4.docx
+--------------------------------------------------------------------------
+
+110. Allow Flow chart (in output_07) resizable on right border
+111. Important LinkedList is used to define layer: layer = (layer_id, layer_description, attributes) where attibutes is also a linked list (not use anywhere yet)
+112. Change some uneditable columns in some tables (5, 6, 7, 8a) to darker colors; Align regeneration_percentage to the right
+113. Bug 6 is fixed: set bounds to 0 for x(s1,s2,s3,s4,s5,s6,q) in eq. 7a, 8a, 9a, 10
+114. Add Feature Auto Reload a basic constraint after left click released (This feature is a must for the design of Cost Adjustment GUI)
+	- Reload dynamic identifiers (add 1 more column to the table: original_dynamic_identifiers, reload based on this column info)
+	- Reload static identifiers
+	- Reload Parameters
+115. Edit button in Basic Constraints is now functional
+116. Important Change: fix defining new list: for example, see ScrollPane_StaticIdentifiers where the 4 lists are defined. Need to change other places as well  --- Check Check later
+117. Hide some columns in basic constraints and cost adjustment conditions, since it is always loaded to interface on click release
+118. Add an options of submit/cancel for Edit button
+119. Reload also work on key board selection by navigating
+120. define all_layers all_layersToolTip, layers_Title, layers_Title_ToolTip only once after ReadDatabase
+121. Remove Read_Databse (null) in some Panels to get rid of the "null" report - not actually error
+122. output05_management_details is allowed to stop the Customize Mode GUI on click
+123. Multi-threads are applied to improve Table Filter in output05. Need to review later.
+124. Fixed reload based on table 10 (convert view to model) when writting reload for table 8, 9
+125. Edit take effect immediately on click
+126. age_class and action_type can now be plaved any where in the yield tables (previously the col id must be 3 and last id respectively)
+127. Change variable index in both GUI and formulation. Example: EAe --> EA_E, NGr --> NG_R, etc.
+128. Rewrite the output05 filter: fix layer1 filter (make it false to have the same strcuture as other layers), and use more return to escape entry checking faster.
+129. Change condition check for priting out total_penalty (currenly it does not print out total_penalty when upperbound = 0 which is wrong)
+
+
+All changes in this block are associated with v30.jar, formulation25.docx, database5.docx
+
+
+
+

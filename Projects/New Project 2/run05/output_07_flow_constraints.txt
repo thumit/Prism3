@@ -1,0 +1,2 @@
+flow_id	flow_description	flow_arrangement	flow_type	lowerbound_percentage	upperbound_percentage	flow_output_original
+1	Ponderosa in 4 and 5	2;1	null	null	null	2290.2460911448;2292.31979896251

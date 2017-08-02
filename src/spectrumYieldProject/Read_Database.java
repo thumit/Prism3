@@ -16,6 +16,8 @@ import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import spectrumConvenienceClasses.FilesHandle;
@@ -25,7 +27,6 @@ public class Read_Database {
 	private Object[][][] yield_tables_values;			// Note: indexes start from 0 
 	private Object[] yield_tables_names;
 	private String[] yield_tables_column_names;
-	private String[] action_type;
 	
 	
 	private String[][] existing_strata_values;
@@ -37,18 +38,78 @@ public class Read_Database {
 	private List<List<String>> allLayers;
 	private List<List<String>> allLayers_ToolTips;
 	
+	
+	private LayerLinkedList layers;
+	
+	
 	private Connection conn = null;
 	private Statement st = null;
 	private ResultSet rs = null;
 	private ResultSetMetaData rsmd = null;
-	private File file_Database;
+
 	
+	private File file_Database;
+	private boolean is_yield_tables_read = false;
+	private boolean is_existing_strata_read = false;
+	private boolean is_strata_definitions_read = false;
 	
 	public Read_Database(File file_Database) {
 		this.file_Database = file_Database;
 		
+		
+		Read_strata_definition();
+		Read_existing_strata();
+		Read_yield_tables();
+		
+		
+//		Thread t = new Thread() {
+//			public void run() {
+//				System.out.println("Reading yield_tables");
+//				Read_yield_tables();
+//				this.interrupt();
+//			}
+//		};
+//
+//		
+//		Thread t2 = new Thread() {
+//			public void run() {
+//				System.out.println("Reading existing_strata");
+//				Read_existing_strata();
+//				this.interrupt();
+//			}
+//		};
+//
+//
+//		Thread t3 = new Thread() {
+//			public void run() {
+//				System.out.println("Reading strata_definition");
+//				Read_strata_definition();
+//				this.interrupt();
+//			}
+//		};
+//		
+//		
+//		t.start();
+//		t2.start();
+//		t3.start();
+//		
+//		
+//		try {
+//			t.join();
+//			t2.join();
+//			t3.join();
+//		} catch (InterruptedException e) {
+//			System.out.println("Reading strata_definition failed");
+//		}
+//		
+//		
+//		System.out.println("Finish");
+	}
+
+	
+	private void Read_yield_tables() {		
 		try {			
-			if (file_Database.exists()) {						
+			if (file_Database.exists()) {	
 				Class.forName("org.sqlite.JDBC").newInstance();
 				conn = DriverManager.getConnection("jdbc:sqlite:" + file_Database);
 				st = conn.createStatement();
@@ -62,17 +123,9 @@ public class Read_Database {
 				rs = st.executeQuery("SELECT COUNT(DISTINCT prescription) FROM yield_tables;");		//This only have 1 row and 1 column, the value is total number of unique prescription
 				while (rs.next()) {
 					tableCount = rs.getInt(1);	//column 1
-				}
-				
-				// get total action types
-				int actionCount = 0;				
-				rs = st.executeQuery("SELECT COUNT(DISTINCT action_type) FROM yield_tables;");		//This only have 1 row and 1 column, the value is total number of unique action_type
-				while (rs.next()) {
-					actionCount = rs.getInt(1);	//column 1
-				}			
+				}						
 				
 				yield_tables_names = new Object[tableCount];
-				action_type = new String[actionCount];
 				yield_tables_values = new Object[tableCount][][];
 				
 				
@@ -82,16 +135,7 @@ public class Read_Database {
 				while (rs.next()) {
 					yield_tables_names[tbl] = rs.getString(1);		//column 1
 					tbl++;
-				}
-				
-				
-				//get action types and put into array "action_type"
-				rs = st.executeQuery("SELECT DISTINCT action_type FROM yield_tables ORDER BY action_type ASC;");			
-				int type_count = 0;
-				while (rs.next()) {
-					action_type[type_count] = rs.getString(1);		//column 1
-					type_count++;
-				}
+				}				
 				
 				
 				// get total columns and "table_ColumnNames" for each yield table
@@ -137,10 +181,28 @@ public class Read_Database {
 							yield_tables_values[i][row][col] = rs.getString(col + 1);
 						}
 					}
-				}			
-				
-				
-				
+				}							
+			}
+			is_yield_tables_read = true;
+		} catch (Exception e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Read_Database   -   Database connection error");
+		} finally {
+			// Close in case not closing properly, not need to print out because the exception only happens when there is null to close
+		    try { rs.close(); } catch (Exception e) { /* ignored */}	
+		    try { st.close(); } catch (Exception e) { /* ignored */}
+		    try { conn.close(); } catch (Exception e) { /* ignored */}
+		}			
+	}
+
+
+	
+	private void Read_existing_strata() {		
+		try {			
+			if (file_Database.exists()) {	
+				Class.forName("org.sqlite.JDBC").newInstance();
+				conn = DriverManager.getConnection("jdbc:sqlite:" + file_Database);
+				st = conn.createStatement();
+
 				
 				//-----------------------------------------------------------------------------------------------------------
 				// For existing_strata
@@ -167,7 +229,26 @@ public class Read_Database {
 						existing_strata_values[row][col] = rs.getString(col + 1);
 					}
 				}
-				
+			}
+			is_existing_strata_read = true;
+		} catch (Exception e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Read_Database   -   Database connection error");
+		} finally {
+			// Close in case not closing properly, not need to print out because the exception only happens when there is null to close
+		    try { rs.close(); } catch (Exception e) { /* ignored */}	
+		    try { st.close(); } catch (Exception e) { /* ignored */}
+		    try { conn.close(); } catch (Exception e) { /* ignored */}
+		}			
+	}
+	
+	
+	private void Read_strata_definition() {		
+		try {			
+			if (file_Database.exists()) {	
+				Class.forName("org.sqlite.JDBC").newInstance();
+				conn = DriverManager.getConnection("jdbc:sqlite:" + file_Database);
+				st = conn.createStatement();
+
 				
 				
 				//-----------------------------------------------------------------------------------------------------------
@@ -221,8 +302,26 @@ public class Read_Database {
 					allLayers_ToolTips.get(allLayers_ToolTips.size() - 1).add(strata_definition_values[i][3]);		// Add layer's element's ToolTip to the last layer ToolTip
 				}	
 				
-	
+				
+				
+				// Testing Linked List
+				layers = new LayerLinkedList();
+				for (int i = 0; i < rowCount3; i++) {				
+					if (layers.isEmpty() || ! layers.get(layers.size() - 1).layer_id.equalsIgnoreCase(strata_definition_values[i][0])) {  // If found a new layer then add the layer
+						Layer_Item new_layer = new Layer_Item(strata_definition_values[i][0], strata_definition_values[i][1], new LinkedList<Attribute_Item>());
+						layers.add(new_layer);
+					}									
+					Attribute_Item new_attribute = new Attribute_Item(strata_definition_values[i][2], strata_definition_values[i][3]);	// add the attribute to the attributes of the last added layer		
+					layers.get(layers.size() - 1).attributes.add(new_attribute);
+				}	
+															
+//				for (Layer_Item i : layers) {					
+//					for (Attribute_Item j : i.attributes) {
+//						System.out.println(i.layer_id + " " + i.layer_description + " " + j.attribute_id + " " + j.attribute_description);
+//					}
+//				}		
 			}
+			is_strata_definitions_read = true;
 		} catch (Exception e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Read_Database   -   Database connection error");
 		} finally {
@@ -233,7 +332,6 @@ public class Read_Database {
 		}			
 	}
 	
-
 	
 	
 	
@@ -241,22 +339,35 @@ public class Read_Database {
 	// This block is For yield_tales ------------------------------------------------------------------------------------------------------
 	// This block is For yield_tales ------------------------------------------------------------------------------------------------------
 	public Object[][][] get_yield_tables_values() {	
+		if (!is_yield_tables_read) Read_yield_tables(); 
 		return yield_tables_values;
 	}
 	
 	public String[] get_yield_tables_column_names() {
+		if (!is_yield_tables_read) Read_yield_tables();
 		return yield_tables_column_names;
 	}
 
 	public Object[] get_yield_tables_names() {
+		if (!is_yield_tables_read) Read_yield_tables();
 		return yield_tables_names;
 	}
 	
 	public String[] get_action_type() {
+		if (!is_yield_tables_read) Read_yield_tables();		
+		List<String> actionList = null;
+		
+		List<String> yield_tables_column_names_list = Arrays.asList(yield_tables_column_names);	// Convert array to list		
+		int index = yield_tables_column_names_list.indexOf("action_type");
+		actionList = get_col_unique_values_list(index);			
+		
+		Collections.sort(actionList);	// Sort this list
+		String[] action_type = actionList.toArray(new String[actionList.size()]);	// Convert list to array	
 		return action_type;
 	}
 	
 	public List<String> get_col_unique_values_list(int columnIndex) {
+		if (!is_yield_tables_read) Read_yield_tables();
 		List<String> listOfUniqueValues = new ArrayList<String>();
 		
 		for (int tb = 0; tb < yield_tables_values.length; tb++) {
@@ -272,6 +383,7 @@ public class Read_Database {
 	
 	
 	public String get_starting_ageclass(String cover_type, String size_class, String method, String timing_choice) {
+		if (!is_yield_tables_read) Read_yield_tables();
 		method = "NG";	//only use NG table to find starting age class
 		timing_choice ="0";
 		String forest_status = "E";
@@ -281,7 +393,12 @@ public class Read_Database {
 		String valueReturn = null;
 		try {
 			int index = Arrays.asList(yield_tables_names).indexOf(tableName_toFind);
-			valueReturn = yield_tables_values[index][0][2].toString();			// row 0 is the first period (1st row), column 2 is "st_age_10"
+			
+			List<String> yield_tables_column_names_list = Arrays.asList(yield_tables_column_names);	// Convert array to list
+			int age_class_index = yield_tables_column_names_list.indexOf("st_age_10");																// CNPZ case
+			if (yield_tables_column_names_list.contains("age_class")) age_class_index = yield_tables_column_names_list.indexOf("age_class");		// CGNF case
+			
+			valueReturn = yield_tables_values[index][0][age_class_index].toString();			// row 0 is the first period (1st row)
 		} catch (Exception e) {
 			valueReturn = null;
 			System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Not found age class from yield table: " + tableName_toFind);
@@ -298,6 +415,7 @@ public class Read_Database {
 	// This block is For existing_strata ------------------------------------------------------------------------------------------------------
 	// This block is For existing_strata ------------------------------------------------------------------------------------------------------	
 	public String[][] get_existing_strata_values() {
+		if (!is_existing_strata_read) Read_existing_strata();
 		return existing_strata_values;
 	}
 	
@@ -308,34 +426,46 @@ public class Read_Database {
 	// This block is For strata_definition ------------------------------------------------------------------------------------------------------
 	// This block is For strata_definition ------------------------------------------------------------------------------------------------------
 	// This block is For strata_definition ------------------------------------------------------------------------------------------------------	
+//	public LayerLinkedList get_layers() {       
+//		return layers;
+//	}
+	
+	
+	
 	public String[][] get_strata_definition_values() {
+		if (!is_strata_definitions_read) Read_strata_definition();
 		return strata_definition_values;
 	}	
 	
 	
-	
-	
-	
-	
-	public List<String> get_layers_Title() {       
+	public List<String> get_layers_Title() {   
+		if (!is_strata_definitions_read) Read_strata_definition();
 		return layers_Title;
 	}
 
 	
-	public List<String> get_layers_Title_ToolTip() {		
+	public List<String> get_layers_Title_ToolTip() {	
+		if (!is_strata_definitions_read) Read_strata_definition();
 		return layers_Title_ToolTip;
 	}
 	
 	
-	public List<List<String>> get_allLayers() {			
+	public List<List<String>> get_allLayers() {		
+		if (!is_strata_definitions_read) Read_strata_definition();
 		return allLayers;
 	}
 	
 	public List<List<String>> get_allLayers_ToolTips() {
+		if (!is_strata_definitions_read) Read_strata_definition();
 		return allLayers_ToolTips;
 	}	
 
 
+	
+	
+	
+	
+	
 	
 	
 	
@@ -353,16 +483,16 @@ public class Read_Database {
 	public List<List<String>> get_MethodsPeriodsAges() {
 		//Layers element name
 		List<String> layer1 = new ArrayList<String>();			//Silvicultural methods
-		layer1.add("NGe");
-		layer1.add("PBe");
-		layer1.add("GSe");
-		layer1.add("EAe");	
-		layer1.add("MSe");
-		layer1.add("BSe");
-		layer1.add("NGr");
-		layer1.add("PBr");
-		layer1.add("GSr");
-		layer1.add("EAr");
+		layer1.add("NG_E");
+		layer1.add("PB_E");
+		layer1.add("GS_E");
+		layer1.add("EA_E");	
+		layer1.add("MS_E");
+		layer1.add("BS_E");
+		layer1.add("NG_R");
+		layer1.add("PB_R");
+		layer1.add("GS_R");
+		layer1.add("EA_R");
 
 		
 		List<String> layer2 = new ArrayList<String>();		//Time Periods

@@ -3,6 +3,10 @@ package spectrumYieldProject;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -19,10 +23,12 @@ import java.nio.file.Paths;
 import java.util.Enumeration;
 import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLayeredPane;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -38,6 +44,7 @@ import javax.swing.ToolTipManager;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import javax.swing.text.DefaultCaret;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
@@ -118,8 +125,9 @@ public class Panel_YieldProject extends JLayeredPane {
 		
 		projectTree.addMouseListener(new MouseAdapter() { // Add listener to projectTree
 			public void mousePressed(MouseEvent e) {
-				if (thread_management_details != null && !thread_management_details.isInterrupted()) {
+				if (thread_management_details != null && thread_management_details.isAlive()) {
 					thread_management_details.interrupt();	// stop the thread which creating the panel for output5
+					thread_management_details.stop();			// NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE : THIS IS DANGEROUS WAY TO STOP THREAD: DEPRICATED
 				}
 				doMousePressed(e);
 			}
@@ -357,15 +365,76 @@ public class Panel_YieldProject extends JLayeredPane {
 							Output_Panel_Management_Overview chart_panel = new Output_Panel_Management_Overview(table, data);
 							scrollPane_Right.setViewportView(chart_panel);
 						} else if (currentInputFile.equals("output_05_management_details.txt")) {							
-							scrollPane_Right.setViewportView(table);
-							thread_management_details = new Thread() {			// Make a thread for output5
-								public void run() {
-									Output_Panel_Management_Details management_details_panel = new Output_Panel_Management_Details(currentProjectFolder, currentRun, table, data, model);
-									scrollPane_Right.setViewportView(management_details_panel);
-									this.interrupt();
-								}
-							};
-							thread_management_details.start();
+							JPanel tempPanel = new JPanel(new GridBagLayout());
+							GridBagConstraints c = new GridBagConstraints();
+							c.fill = GridBagConstraints.BOTH;
+							
+							java.net.URL imgURL = getClass().getResource("/pikachuRunning.gif");		//Name is case sensitive						
+							ImageIcon icon = new ImageIcon(imgURL);		//Image is in the same location of this class		
+							Image scaleImage = icon.getImage().getScaledInstance(200, 150,Image.SCALE_SMOOTH);													
+							JButton runStatButton = new JButton(new ImageIcon(scaleImage));
+							runStatButton.setHorizontalTextPosition(JButton.CENTER);
+							runStatButton.setVerticalTextPosition(JButton.TOP);
+							runStatButton.setFont(new Font(null, Font.BOLD, 15));
+							runStatButton.setText("Loading Customize Mode - Click me to stop");
+							runStatButton.addActionListener(new ActionListener() {
+								@Override
+								public void actionPerformed(ActionEvent e) {
+									thread_management_details.stop();			// NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE : THIS IS DANGEROUS WAY TO STOP THREAD: DEPRICATED	
+									scrollPane_Right.setViewportView(table);
+								}						
+							});
+							
+							JTextArea tempArea = new JTextArea();
+							tempArea.setFocusable(false);
+							tempArea.setOpaque(false);
+							tempArea.setEditable(false);
+							DefaultCaret caret = (DefaultCaret) tempArea.getCaret();
+							caret.setUpdatePolicy(DefaultCaret.OUT_BOTTOM);		
+							tempArea.append("\n \n");
+							tempArea.append("It takes time reading database to enter Customize Mode. Example:");	
+							tempArea.append("\n \n");
+							tempArea.append("CNPZ: approximately 16,000 rows & 100 columns: 5 seconds");					
+							tempArea.append("\n \n");	
+							tempArea.append("CGNF: approximately 40,000 rows & 60 columns: 25 seconds");
+							tempArea.append("\n \n");	
+							tempArea.append("Plus time loading Preset Filter: 1 - 10 seconds ");
+							tempArea.append("\n \n");
+							tempArea.append("Please be patient...");
+														
+							c.gridx = 0;
+							c.gridy = 0;
+							c.gridheight = 2;
+							c.weightx = 1;
+							c.weighty = 1;	
+							tempPanel.add(new JScrollPane(table), c);
+									
+							c.gridx = 1;
+							c.gridy = 0;
+							c.gridheight = 1;
+							c.weightx = 0;
+							c.weighty = 0;	
+							tempPanel.add(runStatButton, c);
+							
+							c.gridx = 1;
+							c.gridy = 1;
+							c.gridheight = 1;
+							c.weightx = 0;
+							c.weighty = 1;	
+							tempPanel.add(tempArea, c);
+							
+							
+							scrollPane_Right.setViewportView(tempPanel);
+							if (thread_management_details == null || !thread_management_details.isAlive()) {	// don't create new Thread if the current thread is still alive
+								thread_management_details = new Thread() {			// Make a thread for output5
+									public void run() {
+										Output_Panel_Management_Details management_details_panel = new Output_Panel_Management_Details(currentProjectFolder, currentRun, table, data, model);
+										scrollPane_Right.setViewportView(management_details_panel);
+										this.interrupt();
+									}
+								};
+								thread_management_details.start();
+							}
 						} else if (currentInputFile.equals("output_07_flow_constraints.txt")) {		//show a panel with bar and line charts
 							table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 							Output_Panel_Flow_Constraints chart_panel = new Output_Panel_Flow_Constraints(table, data);
@@ -386,7 +455,12 @@ public class Panel_YieldProject extends JLayeredPane {
 				}
 			} else if (e.getClickCount() == 2) {
 				// Do something here
-				if (currentLevel == 3) {		
+				if (currentLevel == 3) {
+					if (currentInputFile.equals("output_05_management_details.txt")) {
+						thread_management_details.stop();			// NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE : THIS IS DANGEROUS WAY TO STOP THREAD: DEPRICATED
+						scrollPane_Right.setViewportView(table);
+					}
+					
 					//show the filter only when double left click
 					filterHeader = new TableFilterHeader(table, AutoChoices.ENABLED);
 					filterHeader.setTable(table);

@@ -24,14 +24,73 @@ public class FilesHandle {
 	public FilesHandle() {
 
 	}
-	 
+	
+
+//    static public String ExportResource(String resourceName) throws Exception {
+//    	/**
+//         * Export a resource embedded into a Jar file to the local file path.
+//         *
+//         * @param resourceName ie.: "/SmartLibrary.dll"
+//         * @return The path to the exported resource
+//         * @throws Exception
+//         */
+//    	
+//        InputStream stream = null;
+//        OutputStream resStreamOut = null;
+//        String jarFolder;
+//        try {
+//            stream = Spectrum_Main.class.getResourceAsStream(resourceName);//note that each / is a directory down in the "jar tree" been the jar the root of the tree
+//			if (stream == null) {
+//				throw new Exception("Cannot get resource \"" + resourceName + "\" from Jar file.");
+//			}
+//
+//			int readBytes;
+//			byte[] buffer = new byte[4096];
+//			jarFolder = new File(
+//					Spectrum_Main.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath())
+//							.getParentFile().getPath().replace('\\', '/');
+//			resStreamOut = new FileOutputStream(jarFolder + "/Temporary" + resourceName);
+//			while ((readBytes = stream.read(buffer)) > 0) {
+//				resStreamOut.write(buffer, 0, readBytes);
+//			}
+//		} catch (Exception ex) {
+//			throw ex;
+//		} finally {
+//			stream.close();
+//			resStreamOut.close();
+//		}
+//		return jarFolder + "/Temporary" + resourceName;
+//	}
+    
+    
+	public static File getResourceAsJarFile(String resourcePath) {
+		File file_animation = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "animation.jar");
+		file_animation.deleteOnExit();
+		try {
+			InputStream initialStream = Spectrum_Main.get_main().getClass().getResourceAsStream("/test.jar");
+			byte[] buffer = new byte[initialStream.available()];
+			initialStream.read(buffer);
+
+			OutputStream outStream = new FileOutputStream(file_animation);
+			outStream.write(buffer);
+
+			initialStream.close();
+			outStream.close();
+		} catch (FileNotFoundException e1) {
+			System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+		} catch (IOException e2) {
+			System.err.println(e2.getClass().getName() + ": " + e2.getMessage());
+		}
+		return file_animation;
+	}
+	
 	
 	public static String get_workingLocation() {
 		// Get working location of spectrumLite
 		String workingLocation;
 
 		// Get working location of the IDE project, or runnable jar file
-		final File jarFile = new File(Spectrum_Main.get_spectrumDesktopPane().getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
+		final File jarFile = new File(Spectrum_Main.get_main().getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
 		workingLocation = jarFile.getParentFile().toString();
 
 		// Make the working location with correct name
@@ -118,7 +177,7 @@ public class FilesHandle {
 		chooser.setFileFilter(filter);
 		chooser.setAcceptAllFileFilterUsed(false);
 		
-		int returnValue = chooser.showOpenDialog(Spectrum_Main.get_spectrumDesktopPane());
+		int returnValue = chooser.showOpenDialog(Spectrum_Main.get_main());
 		File file = null;
 		if (returnValue == JFileChooser.APPROVE_OPTION) {
 			file = chooser.getSelectedFile();
@@ -131,7 +190,7 @@ public class FilesHandle {
 	public static File chosenDefinition() {
 		File file = null;
 			
-		ImageIcon icon = new ImageIcon(Spectrum_Main.get_spectrumDesktopPane().getClass().getResource("/icon_question.png"));
+		ImageIcon icon = new ImageIcon(Spectrum_Main.get_main().getClass().getResource("/icon_question.png"));
 		Image scaleImage = icon.getImage().getScaledInstance(50, 50,Image.SCALE_SMOOTH);
 		String ExitOption[] = {"New definition","Default definition","Cancel"};
 		int response = JOptionPane.showOptionDialog(Spectrum_Main.get_spectrumDesktopPane(),"Except General Inputs, everything will be reset. Your option ?", "Import Strata Definition",
@@ -149,7 +208,7 @@ public class FilesHandle {
 			chooser.setFileFilter(filter);
 			chooser.setAcceptAllFileFilterUsed(false);
 			
-			int returnValue = chooser.showOpenDialog(Spectrum_Main.get_spectrumDesktopPane());
+			int returnValue = chooser.showOpenDialog(Spectrum_Main.get_main());
 			if (returnValue == JFileChooser.APPROVE_OPTION) {	//Return the new Definition as in the selected file
 				file = chooser.getSelectedFile();
 			}

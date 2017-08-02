@@ -299,100 +299,63 @@ public class Read_RunInputs {
 	public double[][] getSRDProportion () {		
 		return SRDProportion;
 	}			
-	
+				
 	//-------------------------------------------------------------------------------------------------------------------------------------------------	
-	//For input_07_base_cost
-	private List<Double> baseCost_acres;
-	private double[][] baseCost_yieldtables;	
-	private List<String> action_type_list;
+	//For input_08_management_cost
+	private List<String> cost_condition_list;
+//	private List<String> condition_column_names_list;
+//	private int condition_total_rows, condition_total_columns;
+//	private String[][] condition_value;
+//	private int priority_col, condition_description_col, action_percentage_col, conversion_percentage_col, condition_static_identifiers_col, condition_dynamic_identifiers_col;	
 	
-	public void readBaseCost (File file) {
+	
+	public void readManagementCost (File file) {
 		try {
+//			// All lines to be in array
+//			List<String> list;
+//			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
+//			String[] a = list.toArray(new String[list.size()]);
+//
+//			// Read the first row into array. This will be Column names
+//			String[] columnName = a[0].split("\t");
+//
+//			// List of constraint column names
+//			condition_column_names_list = Arrays.asList(columnName);	
+//			priority_col = condition_column_names_list.indexOf("priority");
+//			condition_description_col = condition_column_names_list.indexOf("condition_description");
+//			action_percentage_col = condition_column_names_list.indexOf("action_percentage");
+//			conversion_percentage_col = condition_column_names_list.indexOf("conversion_percentage");
+//			condition_static_identifiers_col = condition_column_names_list.indexOf("static_identifiers");
+//			condition_dynamic_identifiers_col = condition_column_names_list.indexOf("dynamic_identifiers");
+//	
+//			
+//			// Values in all rows and columns
+//			condition_total_rows = a.length;
+//			condition_total_columns = columnName.length;				
+//			condition_value = new String[condition_total_rows][condition_total_columns];
+//		
+//			// Read all values from all rows and columns
+//			for (int i = 1; i < condition_total_rows; i++) { // From 2nd row
+//				String[] rowValue = a[i].split("\t");
+//				for (int j = 0; j < condition_total_columns; j++) {
+//					condition_value[i][j] = rowValue[j];
+//				}
+//			}		
+			
+			
 			// All lines except the 1st line to be in a list;		
-			List<String> list;	
-			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
-			list.remove(0);	//Remove the first row (Column names)
-		
-			//Define the size of array
-			String[] firstRowValue = list.get(0).split("\t");
-			int totalRows = list.size();
-			int totalColumns = firstRowValue.length;
-			baseCost_yieldtables = new double[totalRows][totalColumns - 2];			// - 2 columns which are action_type & acres
-			
-			//Define lists
-			baseCost_acres = new ArrayList<Double>();
-			action_type_list = new ArrayList<String>();
-						
-			//Put the values to arrays and lists
-			for (int i = 0; i < totalRows; i++) {
-				String[] values = list.get(i).split("\t");	
-				
-				action_type_list.add(values[0]);						//1st column is action_type
-				baseCost_acres.add(Double.parseDouble(values[1]));		//2nd column is base cost for acres
-				
-				for (int j = 2; j < totalColumns; j++) {
-					baseCost_yieldtables[i][j - 2] = Double.parseDouble(values[j]);							
-				}
-			}
-			
-		} catch (IOException e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage());
-		}
-	}		
-	
-	public List<String> get_action_type_list() {
-		return action_type_list;
-	}
-	
-	public double[] getbaseCost_acres() {		
-		double[] array = Stream.of(baseCost_acres.toArray(new Double[baseCost_acres.size()])).mapToDouble(Double::doubleValue).toArray();
-		return array;
-	}	
-	
-	public double[][] getbaseCost_yieldtables() {		
-		return baseCost_yieldtables;
-	}			
+			cost_condition_list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
+			cost_condition_list.remove(0);	// Remove the first row (Column names)
 
-	//-------------------------------------------------------------------------------------------------------------------------------------------------	
-	//For input_08_cost_adjustment
-	private List<String> cost_staticCondition_list;
-	private double[] cost_adjusted_percentage;	
-	
-	public void readCostAdjustment (File file) {
-		try {
-			// All lines except the 1st line to be in a list;		
-			List<String> list;	
-			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
-			list.remove(0);	//Remove the first row (Column names)
-		
-			//Define the size of array
-			String[] firstRowValue = list.get(0).split("\t");
-			int totalRows = list.size();
-			int totalColumns = firstRowValue.length;
-			cost_adjusted_percentage = new double[totalRows];
-			
-			//Define list
-			cost_staticCondition_list = new ArrayList<String>();
-						
-			//Put the values to arrays and lists
-			for (int i = 0; i < totalRows; i++) {
-				String[] values = list.get(i).split("\t");				
-				cost_staticCondition_list.add(values[0] + values[1] +values[2]);	// action_list + layer_id + attribute_id
-				cost_adjusted_percentage[i] = Double.parseDouble(values[3]);		//4th column is the cost_adjusted_percentage  Double.parseDouble(values[1]));		
-			}
-			
 		} catch (IOException e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 		}
 	}		
 	
-	public List<String> get_cost_staticCondition_list() {
-		return cost_staticCondition_list;
+	public List<String> get_cost_condition_list() {
+		return cost_condition_list;
 	}
-	
-	public double[] get_cost_adjusted_percentage() {		
-		return cost_adjusted_percentage;
-	}		
+			
 	
 	//-------------------------------------------------------------------------------------------------------------------------------------------------
 	//For input_09_basic_constraints
@@ -543,14 +506,15 @@ public class Read_RunInputs {
 	
 	public int get_total_freeConstraints () {
 		int total =0;	
-		for (int i = 1; i < BC_totalRows; i++) {		//From 2nd row			
+		for (int i = 1; i < BC_totalRows; i++) {		//From 2nd row		
+			if (BC_value[i][constraint_type_col].equals("null")) BC_value[i][constraint_type_col] = "FREE";
 			if (BC_value[i][constraint_type_col].equals("FREE")) total++;
 		}	
 		return total;
 	}	
 	
 	
-	public List<List<String>> get_all_staticIdentifiers_in_row (int row) {	//Column 7 in the GUI table "Static identifiers". The whole is contained by UC_value[i][7]
+	public List<List<String>> get_all_static_identifiers_in_row (int row) {
 		List<List<String>> all_staticIdentifiers = new ArrayList<List<String>>();
 		
 		//Read the whole cell into array
@@ -575,7 +539,7 @@ public class Read_RunInputs {
 	
 	public List<String> get_static_strata (int row) {
 		List<String> static_strata = new ArrayList<String>();
-		List<List<String>> all_staticIdentifiers = get_all_staticIdentifiers_in_row(row);
+		List<List<String>> all_staticIdentifiers = get_all_static_identifiers_in_row(row);
 		
 		List<String> layer1 = all_staticIdentifiers.get(0);
 		List<String> layer2 = all_staticIdentifiers.get(1);
@@ -606,12 +570,12 @@ public class Read_RunInputs {
 	
 	public List<String> get_static_strata_withoutSizeClassandCoverType (int row) {	
 		List<String> static_strata_withoutSizeClassandCoverType = new ArrayList<String>();
-		List<List<String>> all_staticIdentifiers = get_all_staticIdentifiers_in_row(row);
+		List<List<String>> all_static_identifiers = get_all_static_identifiers_in_row(row);
 		
-		List<String> layer1 = all_staticIdentifiers.get(0);
-		List<String> layer2 = all_staticIdentifiers.get(1);
-		List<String> layer3 = all_staticIdentifiers.get(2);
-		List<String> layer4 = all_staticIdentifiers.get(3);
+		List<String> layer1 = all_static_identifiers.get(0);
+		List<String> layer2 = all_static_identifiers.get(1);
+		List<String> layer3 = all_static_identifiers.get(2);
+		List<String> layer4 = all_static_identifiers.get(3);
 				
 		//first 4 layers
 		for (int i1 = 0; i1 < layer1.size(); i1++) {
@@ -629,21 +593,19 @@ public class Read_RunInputs {
 	
 	
 	
-	public List<String> get_static_SilvivulturalMethods (int row) {	
-		List<List<String>> all_staticIdentifiers = get_all_staticIdentifiers_in_row(row);
-		List<String> static_SilvivulturalMethods = all_staticIdentifiers.get(6);
-		return static_SilvivulturalMethods;
+	public List<String> get_static_methods (int row) {	
+		List<List<String>> all_static_identifiers = get_all_static_identifiers_in_row(row);
+		return all_static_identifiers.get(6);
 	}
 	
-	public List<String> get_static_timePeriods (int row) {	
-		List<List<String>> all_staticIdentifiers = get_all_staticIdentifiers_in_row(row);
-		List<String> static_timePeriods = all_staticIdentifiers.get(7);	
-		return static_timePeriods;
+	public List<String> get_static_periods (int row) {	
+		List<List<String>> all_static_identifiers = get_all_static_identifiers_in_row(row);	
+		return all_static_identifiers.get(7);
 	}	
 
 	
 	
-	public List<List<String>> get_all_dynamicIdentifiers_in_row (int row) {	//Column 8 in the GUI table "Dynamic identifiers". The whole is contained by UC_value[i][8]
+	public List<List<String>> get_all_dynamic_identifiers_in_row (int row) {
 		List<List<String>> all_dynamicIdentifiers = new ArrayList<List<String>>();
 		
 		//Read the whole cell into array

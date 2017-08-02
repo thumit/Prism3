@@ -31,15 +31,15 @@ import spectrumConvenienceClasses.IconHandle;
 import spectrumConvenienceClasses.TableColumnsHandle;
 import spectrumROOT.Spectrum_Main;
 
-public class QuickEdit_BaseCost_Panel extends JPanel {
+public class QuickEdit_ManagementCost_Panel extends JPanel {
 	
-	public QuickEdit_BaseCost_Panel(JTable table, Object[][] data, String[] columnNames) {
+	public QuickEdit_ManagementCost_Panel(JTable table7a, Object[][] data7a, String[] columnNames7a, JTable table7b, Object[][] data7b) {
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		
 		
 		// Add Button-------------------------------------------------------------------------------------------------
-		Spectrum_ApplyButton btnApply_multiplier = new Spectrum_ApplyButton(table, data, columnNames);
+		Spectrum_ShowHideColumnsButtons btnApply_showhide = new Spectrum_ShowHideColumnsButtons(table7a, data7a, columnNames7a);
 		c.gridx = 0;
 		c.gridy = 1;
 		c.weightx = 0;
@@ -47,7 +47,7 @@ public class QuickEdit_BaseCost_Panel extends JPanel {
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		c.fill = GridBagConstraints.BOTH;
-		add(btnApply_multiplier, c);	
+		add(btnApply_showhide, c);	
 		
 		// Add empty Label to organize
 		c.gridx = 1;
@@ -68,7 +68,7 @@ public class QuickEdit_BaseCost_Panel extends JPanel {
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		c.fill = GridBagConstraints.CENTER;
-		add(new JLabel("base_cost"), c);
+		add(new JLabel("Action Cost"), c);
 
 		
 		// Add formatedTextfield
@@ -114,33 +114,33 @@ public class QuickEdit_BaseCost_Panel extends JPanel {
 		
 		
 		// Add button apply
-		JButton btnApplyPercentage = new JButton();
-		btnApplyPercentage.setToolTipText("make changes for all highlighted cells, except cells in the first column 'action_list'");
-		btnApplyPercentage.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_left.png"));
-		btnApplyPercentage.addActionListener(new ActionListener() {
+		JButton btnApplyActionBaseCost = new JButton();
+		btnApplyActionBaseCost.setToolTipText("make changes to all highlighted cells, except cells in column action_list");
+		btnApplyActionBaseCost.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_left.png"));
+		btnApplyActionBaseCost.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				// Get selected rows
-				int[] selectedRow = table.getSelectedRows();
-				int[] selectedCol = table.getSelectedColumns();
+				int[] selectedRow = table7a.getSelectedRows();
+				int[] selectedCol = table7a.getSelectedColumns();
 							
 				// Convert row index because "Sort" causes problems
 				for (int i = 0; i < selectedRow.length; i++) {
-					selectedRow[i] = table.convertRowIndexToModel(selectedRow[i]);
+					selectedRow[i] = table7a.convertRowIndexToModel(selectedRow[i]);
 				}
 				// Convert col index because "Sort" causes problems
 				for (int j = 0; j < selectedCol.length; j++) {
-					selectedCol[j] = table.convertColumnIndexToModel(selectedCol[j]);
+					selectedCol[j] = table7a.convertColumnIndexToModel(selectedCol[j]);
 				}
 				
-				table.clearSelection(); // To help trigger the row refresh: clear then add back the rows
+				table7a.clearSelection(); // To help trigger the row refresh: clear then add back the rows
 				for (int i : selectedRow) {
 					for (int j : selectedCol) {
-						if (!formatedTextfield.getText().isEmpty() && !formatedTextfield.getText().equals(".") && j != 0) {	// Only apply the changes to selected cells when the text is not empty, and column <>0 (ageclass column)
-							data[i][j] = Double.valueOf(formatedTextfield.getText());
+						if (!formatedTextfield.getText().isEmpty() && !formatedTextfield.getText().equals(".") && j != 0) {	// Only apply the changes to selected cells when the text is not empty,  and column > 0 (from 'acres' column)
+							data7a[i][j] = Double.valueOf(formatedTextfield.getText());
 						}
-						table.addRowSelectionInterval(table.convertRowIndexToView(i), table.convertRowIndexToView(i));
-						table.addColumnSelectionInterval(table.convertColumnIndexToView(j), table.convertColumnIndexToView(j));
+						table7a.addRowSelectionInterval(table7a.convertRowIndexToView(i), table7a.convertRowIndexToView(i));
+						table7a.addColumnSelectionInterval(table7a.convertColumnIndexToView(j), table7a.convertColumnIndexToView(j));
 					}
 				}
 			}
@@ -152,16 +152,111 @@ public class QuickEdit_BaseCost_Panel extends JPanel {
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		c.fill = GridBagConstraints.BOTH;
-		add(btnApplyPercentage, c);
+		add(btnApplyActionBaseCost, c);
+		
+		
+		// Add Label-------------------------------------------------------------------------------------------------
+		c.gridx = 1;
+		c.gridy = 4;
+		c.weightx = 0;
+		c.weighty = 0;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		c.fill = GridBagConstraints.CENTER;
+		add(new JLabel("Conversion Cost"), c);
+
+		
+		// Add formatedTextfield
+		JFormattedTextField formatedTextfield_2 = new JFormattedTextField();
+		formatedTextfield_2.setToolTipText("greater than 0 with maximum 2 digits after the dot");
+		formatedTextfield_2.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				Runnable format = new Runnable() {
+					@Override
+					public void run() {
+						String text = formatedTextfield_2.getText();
+						if (!text.matches("\\d*(\\.\\d{0,2})?")) {		//	used regex: \\d*(\\.\\d{0,2})? because two decimal places is enough
+							formatedTextfield_2.setText(text.substring(0, text.length() - 1));
+						} else {
+							if (!text.isEmpty() && !text.equals(".") && Double.valueOf(text) < (double) 0) {		// If the added String make value <0 then delete that String
+								formatedTextfield_2.setText(text.substring(0, text.length() - 1));
+							}
+						}	
+					}
+				};
+				SwingUtilities.invokeLater(format);
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+
+			}
+		});
+		c.gridx = 1;
+		c.gridy = 5;
+		c.weightx = 1;
+		c.weighty = 0;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		c.fill = GridBagConstraints.BOTH;
+		add(formatedTextfield_2, c);
+		
+		
+		// Add button apply
+		JButton btnApplyConversionBaseCost = new JButton();
+		btnApplyConversionBaseCost.setToolTipText("make changes to all highlighted cells, except cells in columns covertype_before & covertype_after");
+		btnApplyConversionBaseCost.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_left.png"));
+		btnApplyConversionBaseCost.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				// Get selected rows
+				int[] selectedRow = table7b.getSelectedRows();
+				int[] selectedCol = table7b.getSelectedColumns();
+							
+				// Convert row index because "Sort" causes problems
+				for (int i = 0; i < selectedRow.length; i++) {
+					selectedRow[i] = table7b.convertRowIndexToModel(selectedRow[i]);
+				}
+				// Convert col index because "Sort" causes problems
+				for (int j = 0; j < selectedCol.length; j++) {
+					selectedCol[j] = table7b.convertColumnIndexToModel(selectedCol[j]);
+				}
+				
+				table7b.clearSelection(); // To help trigger the row refresh: clear then add back the rows
+				for (int i : selectedRow) {
+					for (int j : selectedCol) {
+						if (!formatedTextfield_2.getText().isEmpty() && !formatedTextfield_2.getText().equals(".") && j > 1) {	// Only apply the changes to selected cells when the text is not empty,  and column > 1
+							data7b[i][j] = Double.valueOf(formatedTextfield_2.getText());
+						}
+						table7b.addRowSelectionInterval(table7b.convertRowIndexToView(i), table7b.convertRowIndexToView(i));
+						table7b.addColumnSelectionInterval(table7b.convertColumnIndexToView(j), table7b.convertColumnIndexToView(j));
+					}
+				}
+			}
+		});
+		c.gridx = 0;
+		c.gridy = 5;
+		c.weightx = 0;
+		c.weighty = 0;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		c.fill = GridBagConstraints.BOTH;
+		add(btnApplyConversionBaseCost, c);
 	}
 	
 	
-	private class Spectrum_ApplyButton extends JButton {
-		public Spectrum_ApplyButton(JTable table,  Object[][] data, String[] columnNames) {
+	private class Spectrum_ShowHideColumnsButtons extends JButton {
+		public Spectrum_ShowHideColumnsButtons(JTable table7a,  Object[][] data7a, String[] columnNames7a) {
 
 			
 			// Must set this show/hide column method when all columns are still visible------------------------------------------------------
-			TableColumnsHandle column_handle = new TableColumnsHandle(table);
+			TableColumnsHandle column_handle = new TableColumnsHandle(table7a);
 			Read_Database read_Database = new Read_Database(null);
 			
 						
@@ -187,9 +282,9 @@ public class QuickEdit_BaseCost_Panel extends JPanel {
 						
 			// Create a list of JCheckBox-------------------------------------------------------------------------
 			List<JCheckBox> column_checkboxes = new ArrayList<JCheckBox>();		
-			for (int i = 0; i < table.getColumnModel().getColumnCount(); i++) {
+			for (int i = 0; i < table7a.getColumnModel().getColumnCount(); i++) {
 				if (i > 1) {	// ignore columns 0 and 1: action_list & acres
-					column_checkboxes.add(new JCheckBox(table.getColumnName(i)));
+					column_checkboxes.add(new JCheckBox(table7a.getColumnName(i)));
 					column_checkboxes.get(i - 2).setSelected(true);		// -2 because we ignore 2 columns
 									
 					String tip = read_Database.get_ParameterToolTip(column_checkboxes.get(i - 2).getText()) + " (Column index: " + (int) (i - 2) + ")";
@@ -275,10 +370,10 @@ public class QuickEdit_BaseCost_Panel extends JPanel {
 			radioButton[1].addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {																	
 					List<Integer> active_col_id = new ArrayList<Integer>();		// List of active columns: at least 1 cell > 0			
-					for (int i = 0; i < data.length; i++) {
-						for (int j = 0; j < data[i].length; j++) {
-							if (data[i][j].getClass().equals(Double.class)) {		// Check if column class is Double
-								if ((double) data[i][j] > 0 && !active_col_id.contains(j)) {
+					for (int i = 0; i < data7a.length; i++) {
+						for (int j = 0; j < data7a[i].length; j++) {
+							if (data7a[i][j].getClass().equals(Double.class)) {		// Check if column class is Double
+								if ((double) data7a[i][j] > 0 && !active_col_id.contains(j)) {
 									active_col_id.add(j);
 								}
 							}
@@ -287,13 +382,13 @@ public class QuickEdit_BaseCost_Panel extends JPanel {
 					
 					// For only acres column (No check boxes so we have to set visible/invisible manually)
 					if (active_col_id.contains(1)) {	// if acres is active column
-						column_handle.setColumnVisible(columnNames[1], true);	// show column
+						column_handle.setColumnVisible(columnNames7a[1], true);	// show column
 					} else {
-						column_handle.setColumnVisible(columnNames[1], false);	// hide column
+						column_handle.setColumnVisible(columnNames7a[1], false);	// hide column
 					}
 						
 					// For columns > 1 (Have check boxes to we only have to check/uncheck)
-					for (int i = 0; i < columnNames.length; i++) {						
+					for (int i = 0; i < columnNames7a.length; i++) {						
 						if (i > 1) {	// ignore columns 0 and 1: action_list & acres	
 							column_checkboxes.get(i - 2).setSelected(false);		// -2 because we ignore 2 columns
 							if (active_col_id.contains(i)) {

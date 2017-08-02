@@ -1,0 +1,23 @@
+bc_id	bc_description	bc_type	bc_multiplier	lowerbound	lowerbound_perunit_penalty	upperbound	upperbound_perunit_penalty	bookeeping_var_id	bookeeping_var_name	bookeeping_var_value	bookeeping_var_reduced_cost	total_penalty
+1	Volume Period 1	SOFT	1.0	9.999999999E9	1.0	null	null	0	y_0	6.028753221246744E7	0.0	9.939712466787533E9
+2	PerVol 1 - time period 1	FREE	1.0	null	null	null	null	4	v_0	6.028753221246743E7	0.0	0.0
+3	PerVol 2 - time period 2	FREE	1.0	null	null	null	null	5	v_1	6.631628543371418E7	0.0	0.0
+4	PerVol 3 - time period 3	FREE	1.0	null	null	null	null	6	v_2	7.29479139770856E7	0.0	0.0
+5	PerVol 4 - time period 4	FREE	1.0	null	null	null	null	7	v_3	8.024270537479416E7	0.0	0.0
+6	PerVol 5 - time period 5	FREE	1.0	null	null	null	null	8	v_4	8.826697591227359E7	0.0	0.0
+7	PerVol 6 - time period 6	FREE	1.0	null	null	null	null	9	v_5	9.709367350350094E7	0.0	0.0
+8	PerVol 7 - time period 7	FREE	1.0	null	null	null	null	10	v_6	1.0680304085385102E8	0.0	0.0
+9	PerVol 8 - time period 8	FREE	1.0	null	null	null	null	11	v_7	1.1748334493923612E8	0.0	0.0
+10	PerVol 9 - time period 9	FREE	1.0	null	null	null	null	12	v_8	1.2923167943315975E8	0.0	0.0
+11	PerVol 10 - time period 10	FREE	1.0	null	null	null	null	13	v_9	1.4215484737647572E8	0.0	0.0
+12	PerVol 11 - time period 11	FREE	1.0	null	null	null	null	14	v_10	1.563703321141233E8	0.0	0.0
+13	PerVol 12 - time period 12	FREE	1.0	null	null	null	null	15	v_11	1.7200736532553566E8	0.0	0.0
+14	PerVol 13 - time period 13	FREE	1.0	null	null	null	null	16	v_12	1.8920810185808924E8	0.0	0.0
+15	PerVol 14 - time period 14	FREE	1.0	null	null	null	null	17	v_13	2.0812891204389817E8	0.0	0.0
+16	PerVol 15 - time period 15	FREE	1.0	null	null	null	null	18	v_14	2.2894180324828804E8	0.0	0.0
+17	PerVol 16 - time period 16	FREE	1.0	null	null	null	null	19	v_15	2.5183598357311687E8	0.0	0.0
+18	PerVol 17 - time period 17	FREE	1.0	null	null	null	null	20	v_16	2.7701958193042856E8	0.0	0.0
+19	PerVol 18 - time period 18	FREE	1.0	null	null	null	null	21	v_17	3.0472154012347144E8	0.0	0.0
+20	PerVol 19 - time period 19	FREE	1.0	null	null	null	null	22	v_18	3.3519369413581866E8	0.0	0.0
+21	PerVol 20 - time period 20	FREE	1.0	null	null	null	null	23	v_19	3.6871306354940057E8	0.0	0.0
+22	Wilderness Management	HARD	1.0	null	null	0.0	null	3	z_0	0.0	-511.09743436144987	0.0

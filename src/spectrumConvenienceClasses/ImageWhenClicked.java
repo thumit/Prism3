@@ -61,12 +61,22 @@ public class ImageWhenClicked extends MouseAdapter {
 						}
 					});
 					
-					final JMenuItem capture_parent_component = new JMenuItem("Capture component's parent GUI");
+					final JMenuItem capture_parent_component = new JMenuItem("Capture component's parents GUI");
 					capture_parent_component.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_camera3.png"));
 					capture_parent_component.addActionListener(new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent actionEvent) {
-							create_desktop_image(comp.getParent(), "SpectrumLite_PComponent");
+							create_desktop_image(comp.getParent(), "SpectrumLite_Parents_Component");
+							popup.setVisible(false);
+						}
+					});
+					
+					final JMenuItem capture_grandparent_component = new JMenuItem("Capture component's grand-parents GUI");
+					capture_grandparent_component.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_camera4.png"));
+					capture_grandparent_component.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent actionEvent) {
+							create_desktop_image(comp.getParent().getParent(), "SpectrumLite_GrandParents_Component");
 							popup.setVisible(false);
 						}
 					});
@@ -74,6 +84,7 @@ public class ImageWhenClicked extends MouseAdapter {
 					popup.add(capture_all);
 					popup.add(capture_component);
 					popup.add(capture_parent_component);
+					popup.add(capture_grandparent_component);
 					popup.show(comp, e.getX(), e.getY());
 					
 				} catch (Exception event) {

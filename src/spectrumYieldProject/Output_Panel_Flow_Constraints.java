@@ -29,6 +29,9 @@ import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.ui.RectangleEdge;
 
+import spectrumConvenienceClasses.ColorUtil;
+import spectrumConvenienceClasses.ComponentResizer;
+
 // Panel_Flow_Constraints--------------------------------------------------------------------------------	
 class Output_Panel_Flow_Constraints extends JLayeredPane {
 	public Output_Panel_Flow_Constraints(JTable table, Object[][] data) {
@@ -40,7 +43,11 @@ class Output_Panel_Flow_Constraints extends JLayeredPane {
 	    
 	    //---------------------------------------------------------------
         JScrollPane scroll_bar_chart = new JScrollPane();
-        scroll_bar_chart.setBorder(null);
+        scroll_bar_chart.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scroll_bar_chart.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+        scroll_bar_chart.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 5, ColorUtil.makeTransparent(Color.BLACK, 0)));  // only draw the right border, so only right border can be resized  
+        ComponentResizer cr = new ComponentResizer();
+		cr.registerComponent(scroll_bar_chart);
         
         //---------------------------------------------------------------
         JScrollPane scroll_line_chart = new JScrollPane();
@@ -58,7 +65,7 @@ class Output_Panel_Flow_Constraints extends JLayeredPane {
 	 	        TitledBorder border1 = new TitledBorder("");
 	 			border1.setTitleJustification(TitledBorder.CENTER);
 	 			chart_panel1.setBorder(border1);
-	 	        chart_panel1.setPreferredSize(new Dimension(600, 350));
+	 	        chart_panel1.setPreferredSize(new Dimension(595, 350));	// because border is 5 thick, set to 600 if no border
 
 	 	        // Add panel to scroll panel
 	 	       scroll_bar_chart.setViewportView(chart_panel1);

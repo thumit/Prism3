@@ -1,0 +1,2 @@
+flow_id	flow_description	flow_arrangement	flow_type	lowerbound_percentage	upperbound_percentage	
+1	Ponderosa in 4 and 5	2;1	null	null	null	

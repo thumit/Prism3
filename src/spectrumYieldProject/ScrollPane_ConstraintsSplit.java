@@ -53,7 +53,7 @@ public class ScrollPane_ConstraintsSplit  extends JScrollPane {
 		}
 		
 		JScrollPane staticScrollPane = new JScrollPane(staticPanel);
-		TitledBorder border = new TitledBorder("Static Spliters");
+		TitledBorder border = new TitledBorder("Static Identifiers");
 		border.setTitleJustification(TitledBorder.CENTER);
 		staticScrollPane.setBorder(border);
 		staticScrollPane.setPreferredSize(new Dimension(300, 250));
@@ -88,7 +88,7 @@ public class ScrollPane_ConstraintsSplit  extends JScrollPane {
 		}
 		
 		JScrollPane parametersScrollPane = new JScrollPane(parametersPanel);
-		border = new TitledBorder("Parameter Spliters");
+		border = new TitledBorder("Parameters");
 		border.setTitleJustification(TitledBorder.CENTER);
 		parametersScrollPane.setBorder(border);
 		parametersScrollPane.setPreferredSize(new Dimension(300, 250));		
@@ -119,7 +119,7 @@ public class ScrollPane_ConstraintsSplit  extends JScrollPane {
 		}
 		
 		JScrollPane dynamicScrollPane = new JScrollPane(dynamicPanel);
-		border = new TitledBorder("Dynamic Spliters");
+		border = new TitledBorder("Dynamic Identifiers");
 		border.setTitleJustification(TitledBorder.CENTER);
 		dynamicScrollPane.setBorder(border);
 		dynamicScrollPane.setPreferredSize(new Dimension(300, 250));					
@@ -232,23 +232,23 @@ public class ScrollPane_ConstraintsSplit  extends JScrollPane {
 		c.gridx = 0;
 		c.gridy = 1;
 		c.weightx = 1;
-		c.weighty = 1;
+		c.weighty = 0;
 		c.gridwidth = 3;
 		popupPanel.add(tableScrollPane, c);
 		
 		// Add autoDescription checkbox
-		autoDescription = new JCheckBox("Add Splitters Info to Constraints Description");
+		autoDescription = new JCheckBox("Add splitting infomation to constraints description (i.e. bc_description)");
 		c.gridx = 1;
 		c.gridy = 2;
 		c.weightx = 1;
-		c.weighty = 1;
+		c.weighty = 0;
 		c.gridwidth = 3;
 		popupPanel.add(autoDescription, c);
 
 		
 		
 		//Add the Panel to this Big ScrollPane------------------------------------------------------------------------------
-		border = new TitledBorder("Choose Splitters - SpectrumLite currently supports only Static Splitters");
+		border = new TitledBorder("Select items you want to split - currently supports splitting only Static Identifiers (future: Dynamic Identifiers & Parameters)");
 		border.setTitleJustification(TitledBorder.CENTER);
 		setBorder(border);
 		setViewportView(popupPanel);			

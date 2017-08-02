@@ -69,7 +69,7 @@ public class ScrollPane_ConstraintsFlow  extends JScrollPane {
 	private JList[] flow_list;
 	private JList id_list;
 	private DefaultListModel[] list_model = null;
-	private JPanel panel;
+	private JPanel flow_panel;
 	private JScrollPane list_scroll;
 	
 	
@@ -77,8 +77,8 @@ public class ScrollPane_ConstraintsFlow  extends JScrollPane {
 		id_list = outside_id_list;
 		
 		lh = new ArrayListTransferHandler(); 
-        panel = new JPanel(new GridLayout(0,3,20,0));
-		list_scroll = new JScrollPane(panel);
+        flow_panel = new JPanel(new GridLayout(0,3,20,0));
+		list_scroll = new JScrollPane(flow_panel);
 		list_scroll.setPreferredSize(new Dimension(400, 250));
 		TitledBorder border = new TitledBorder("Flow arrangement");
 		border.setTitleJustification(TitledBorder.CENTER);
@@ -173,7 +173,7 @@ public class ScrollPane_ConstraintsFlow  extends JScrollPane {
 	} 
 	
 	public void create_flow_arrangement_UI(DefaultListModel[] new_list_model) {		
-		panel.removeAll();
+		flow_panel.removeAll();
 		int total_Flow = (new_list_model != null) ? new_list_model.length : 5;			// new or reload
 		
 		
@@ -232,7 +232,7 @@ public class ScrollPane_ConstraintsFlow  extends JScrollPane {
 			list_scrollpane[i] = new JScrollPane(flow_list[i]);
 			list_scrollpane[i].setBorder(BorderFactory.createTitledBorder("Sigma " + (int) (i + 1)));
 			list_scrollpane[i].setPreferredSize(new Dimension(80, 80));			
-			panel.add(list_scrollpane[i]);
+			flow_panel.add(list_scrollpane[i]);
 			
 			// Add mouse listeners
 			flow_list[i].addMouseListener(mouse_listener);	
@@ -244,7 +244,7 @@ public class ScrollPane_ConstraintsFlow  extends JScrollPane {
 			list_scrollpane[i].getViewport().setOpaque(false);
 			list_scrollpane[i].setViewportBorder(null);
 		}
-		list_scroll.setViewportView(panel);	
+		list_scroll.setViewportView(flow_panel);	
 	} 
 	
 	
@@ -355,5 +355,9 @@ public class ScrollPane_ConstraintsFlow  extends JScrollPane {
 				popup.show(e.getComponent(), e.getX(), e.getY());
 			}
 		}
+	}
+
+	public JScrollPane get_list_scroll() {
+		return list_scroll;
 	}	
 }

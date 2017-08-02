@@ -1,12 +1,16 @@
 package spectrumROOT;
 
 import java.awt.BorderLayout;
+import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.HierarchyEvent;
+import java.awt.event.HierarchyListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
@@ -143,9 +147,24 @@ public class MenuItem_SetFont extends JMenuItem {
 				    //--------------------------------------------------------------------------------------------------------------------
 					// Add Font size & type to a panel
 					JPanel combined_panel = new JPanel(new BorderLayout());
+//					These codes make the popupPanel resizable
+					combined_panel.addHierarchyListener(new HierarchyListener() {
+					    public void hierarchyChanged(HierarchyEvent e) {
+					        Window window = SwingUtilities.getWindowAncestor(combined_panel);
+					        if (window instanceof Dialog) {
+					            Dialog dialog = (Dialog)window;
+					            if (!dialog.isResizable()) {
+					                dialog.setResizable(true);
+					            }
+					        }
+					    }
+					});
+					
 					combined_panel.add(spin, BorderLayout.NORTH);
 					combined_panel.add(scrollPane, BorderLayout.CENTER);
 	//				combined_panel.add(textarea, BorderLayout.SOUTH);
+					
+					
 					
 					
 					// Add the panel to a pop-up panel

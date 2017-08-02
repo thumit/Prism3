@@ -46,6 +46,7 @@ import spectrumConvenienceClasses.ColorUtil;
 import spectrumConvenienceClasses.ComponentResizer;
 import spectrumConvenienceClasses.FilesHandle;
 import spectrumConvenienceClasses.IconHandle;
+import spectrumConvenienceClasses.Processing;
 import spectrumConvenienceClasses.RequestFocusListener;
 import spectrumConvenienceClasses.StringHandle;
 import spectrumConvenienceClasses.WindowAppearanceHandle;
@@ -76,8 +77,6 @@ public class Spectrum_Main extends JFrame {
 	
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public static void main(String[] args) {
-//		new Spectrum_Main();
-			
 		
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice gd = ge.getDefaultScreenDevice();
@@ -94,6 +93,13 @@ public class Spectrum_Main extends JFrame {
 			
 			cr = new ComponentResizer();	//Need resize since if "setDefaultLookAndFeelDecorated(true);" then the top corners cannot be resized (java famous bug?)
 			cr.registerComponent(main);
+			
+//			PApplet.main("Processing_SpectrumLite");	// Start processing animation
+//			try {
+//				Runtime.getRuntime().exec("C://Users//Dung Nguyen//Desktop//Planets//application.windows64//Planets.exe", null, new File("C://Users//Dung Nguyen//Desktop//Planets//application.windows64//"));
+//			} catch (IOException e) {
+//			}
+							
 		} 		
 	}
 
@@ -102,8 +108,20 @@ public class Spectrum_Main extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-	
-				for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+								
+				Thread exitThread = new Thread() { // Make a thread
+					public void run() {
+						try {
+//							FilesHandle.ExportResource("/test.jar");
+							Processing.playAnimation1();
+						} catch (Exception e) {
+							System.err.println(e.getClass().getName() + ": " + e.getMessage());
+						}
+					}
+				};
+				exitThread.start();
+				
+				for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {	// Set Look & Feel
 					if (info.getName().equals("Nimbus")) {
 						try {
 							UIManager.setLookAndFeel(info.getClassName());
@@ -508,14 +526,26 @@ public class Spectrum_Main extends JFrame {
 		String ExitOption[] = {"Exit","Cancel"};
 		int response = JOptionPane.showOptionDialog(Spectrum_Main.get_spectrumDesktopPane(),"Stop Editing can save changes you made. Exit SpectrumLite ?", "Exit SpectrumLite",
 				JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
-		if (response == 0)
-		{
+		if (response == 0) {		
+//			main.setVisible(false);
+//			Thread exitThread = new Thread() { // Make a thread for output5
+//				public void run() {
+//					try {
+//						PApplet.main("Processing_SpectrumLite"); // Start processing animation						
+//						sleep(10000);
+//					} catch (InterruptedException e) {
+//					} finally {
+//						System.exit(0);
+//						this.interrupt();
+//					}
+//				}
+//			};
+//			exitThread.start();
 			System.exit(0);
 		}
-		if (response == 1)
-		{
+		if (response == 1) {
 		}
-	} 
+	}
 	
 	public void minimize() {
 		main.setExtendedState(JFrame.ICONIFIED);

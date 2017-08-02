@@ -9,8 +9,8 @@ public class Get_Variable_Information {
 	private static int yield_table_row_index_to_find;
 	
 	public static void get_all_terms_from_name(String var_name) {
-		if (var_name.startsWith("xNGe_")) {
-			var_name = var_name.replace("xNGe_", "");
+		if (var_name.startsWith("xNG_E_")) {
+			var_name = var_name.replace("xNG_E_", "");
 			String[] term = var_name.split(",");
 			layer1 = term[0];
 			layer2 = term[1];
@@ -28,8 +28,8 @@ public class Get_Variable_Information {
 			yield_table_name_to_find = layer5 + "_" + layer6  + "_"+ method + "_" + forest_status + "_" + timing_choice;
 			yield_table_row_index_to_find = period - 1;
 		} 
-		else if (var_name.startsWith("xPBe_")) {
-			var_name = var_name.replace("xPBe_", "");
+		else if (var_name.startsWith("xPB_E_")) {
+			var_name = var_name.replace("xPB_E_", "");
 			String[] term = var_name.toString().split(",");
 			layer1 = term[0];
 			layer2 = term[1];
@@ -47,8 +47,8 @@ public class Get_Variable_Information {
 			yield_table_name_to_find = layer5 + "_" + layer6  + "_"+ method + "_" + forest_status + "_" + timing_choice;
 			yield_table_row_index_to_find = period - 1;
 		}
-		else if (var_name.startsWith("xGSe_")) {
-			var_name = var_name.replace("xGSe_", "");
+		else if (var_name.startsWith("xGS_E_")) {
+			var_name = var_name.replace("xGS_E_", "");
 			String[] term = var_name.toString().split(",");
 			layer1 = term[0];
 			layer2 = term[1];
@@ -66,8 +66,8 @@ public class Get_Variable_Information {
 			yield_table_name_to_find = layer5 + "_" + layer6  + "_"+ method + "_" + forest_status + "_" + timing_choice;
 			yield_table_row_index_to_find = period - 1;
 		}
-		else if (var_name.startsWith("xMSe_")) {
-			var_name = var_name.replace("xMSe_", "");
+		else if (var_name.startsWith("xMS_E_")) {
+			var_name = var_name.replace("xMS_E_", "");
 			String[] term = var_name.toString().split(",");
 			layer1 = term[0];
 			layer2 = term[1];
@@ -85,8 +85,8 @@ public class Get_Variable_Information {
 			yield_table_name_to_find = layer5 + "_" + layer6  + "_"+ method + "_" + forest_status + "_" + timing_choice;
 			yield_table_row_index_to_find = period - 1;
 		}
-		else if (var_name.startsWith("xBSe_")) {
-			var_name = var_name.replace("xBSe_", "");
+		else if (var_name.startsWith("xBS_E_")) {
+			var_name = var_name.replace("xBS_E_", "");
 			String[] term = var_name.toString().split(",");
 			layer1 = term[0];
 			layer2 = term[1];
@@ -104,8 +104,8 @@ public class Get_Variable_Information {
 			yield_table_name_to_find = layer5 + "_" + layer6  + "_" + method + "_" + forest_status + "_" + timing_choice;
 			yield_table_row_index_to_find = period - 1;
 		}
-		else if (var_name.startsWith("xEAe_")) {				
-			var_name = var_name.replace("xEAe_", "");
+		else if (var_name.startsWith("xEA_E_")) {				
+			var_name = var_name.replace("xEA_E_", "");
 			String[] term = var_name.toString().split(",");
 			layer1 = term[0];
 			layer2 = term[1];
@@ -123,8 +123,8 @@ public class Get_Variable_Information {
 			yield_table_name_to_find = layer5 + "_" + layer6 + "_" + method + "_" + forest_status + "_" + "rotation_age" + "_" + timing_choice;
 			yield_table_row_index_to_find = period - 1;
 		}	
-		else if (var_name.startsWith("xEAr_")) {
-			var_name = var_name.replace("xEAr_", "");
+		else if (var_name.startsWith("xEA_R_")) {
+			var_name = var_name.replace("xEA_R_", "");
 			String[] term = var_name.toString().split(",");
 			layer1 = term[0];
 			layer2 = term[1];
@@ -142,8 +142,8 @@ public class Get_Variable_Information {
 			yield_table_name_to_find = layer5 + "_" + method + "_" + forest_status + "_" + rotation_age + "_" + timing_choice;
 			yield_table_row_index_to_find = rotation_age - 1 + period - rotation_period;
 		}
-		else if (var_name.startsWith("xNGr_")) {
-			var_name = var_name.replace("xNGr_", "");
+		else if (var_name.startsWith("xNG_R_")) {
+			var_name = var_name.replace("xNG_R_", "");
 			String[] term = var_name.toString().split(",");
 			layer1 = term[0];
 			layer2 = term[1];
@@ -160,8 +160,8 @@ public class Get_Variable_Information {
 			yield_table_name_to_find = layer5 + "_" + method + "_" + forest_status + "_" + timing_choice;
 			yield_table_row_index_to_find = age - 1;
 		}	
-		else if (var_name.startsWith("xPBr_")) {
-			var_name = var_name.replace("xPBr_", "");
+		else if (var_name.startsWith("xPB_R_")) {
+			var_name = var_name.replace("xPB_R_", "");
 			String[] term = var_name.toString().split(",");
 			layer1 = term[0];
 			layer2 = term[1];
@@ -178,8 +178,8 @@ public class Get_Variable_Information {
 			yield_table_name_to_find = layer5 + "_" + method + "_" + forest_status + "_" + timing_choice;
 			yield_table_row_index_to_find = age - 1;
 		}	
-		else if (var_name.startsWith("xGSr_")) {
-			var_name = var_name.replace("xGSr_", "");
+		else if (var_name.startsWith("xGS_R_")) {
+			var_name = var_name.replace("xGS_R_", "");
 			String[] term = var_name.toString().split(",");
 			layer1 = term[0];
 			layer2 = term[1];
@@ -232,6 +232,11 @@ public class Get_Variable_Information {
 	public static String get_method(String var_name) {
 		get_all_terms_from_name(var_name);
 		return method;
+	}
+	
+	public static String get_forest_status(String var_name) {
+		get_all_terms_from_name(var_name);
+		return forest_status;
 	}
 	
 	public static int get_period(String var_name) {

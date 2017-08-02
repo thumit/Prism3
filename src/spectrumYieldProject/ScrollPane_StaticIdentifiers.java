@@ -7,7 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,14 +20,14 @@ import javax.swing.border.TitledBorder;
 
 public class ScrollPane_StaticIdentifiers extends JScrollPane {
 	private List<List<JCheckBox>> checkboxStaticIdentifiers;
-	List<JLabel> layers_Title_Label;
+	private List<JLabel> layers_Title_Label;
 
 	public ScrollPane_StaticIdentifiers (Read_Database read_Database) {
 	
-		List<String> layers_Title = read_Database.get_layers_Title();
-		List<String> layers_Title_ToolTip = read_Database.get_layers_Title_ToolTip();
-		List<List<String>> allLayers = read_Database.get_allLayers();
-		List<List<String>> allLayers_ToolTips = read_Database.get_allLayers_ToolTips();
+		List<String> layers_Title = new ArrayList<>(read_Database.get_layers_Title());
+		List<String> layers_Title_ToolTip = new ArrayList<>(read_Database.get_layers_Title_ToolTip());
+		List<List<String>> allLayers = new ArrayList<>(read_Database.get_allLayers());
+		List<List<String>> allLayers_ToolTips = new ArrayList<>(read_Database.get_allLayers_ToolTips());
 
 		int total_layers = allLayers.size(); // Remove the last 1 layers = allLayers.size() - 1
 		// int total_layers_ToolTips = allLayers_ToolTips.size() -1; //Remove the last 1 layers = allLayers.size() - 1
@@ -44,16 +43,16 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 		// Full name of silvicultural methods			// NOTE NOTE NOTE change later
 		List<List<String>> allmethods_ToolTips = read_Database.get_MethodsPeriodsAges();
 		for (int i = 0; i < allmethods_ToolTips.get(0).size(); i++) {	// 0 is method, 1 is period
-			if (allmethods_ToolTips.get(0).get(i).equals("NGe")) 	allmethods_ToolTips.get(0).set(i, "Natural Growth existing");
-			if (allmethods_ToolTips.get(0).get(i).equals("PBe")) 	allmethods_ToolTips.get(0).set(i, "Prescribed Burn existing");
-			if (allmethods_ToolTips.get(0).get(i).equals("GSe")) 	allmethods_ToolTips.get(0).set(i, "Group Selection existing");
-			if (allmethods_ToolTips.get(0).get(i).equals("EAe")) 	allmethods_ToolTips.get(0).set(i, "Even Age existing");
-			if (allmethods_ToolTips.get(0).get(i).equals("MSe")) 	allmethods_ToolTips.get(0).set(i, "Mixed Severity Wildfire");
-			if (allmethods_ToolTips.get(0).get(i).equals("BSe")) 	allmethods_ToolTips.get(0).set(i, "Severe Bark Beetle");
-			if (allmethods_ToolTips.get(0).get(i).equals("NGr")) 	allmethods_ToolTips.get(0).set(i, "Natural Growth regeneration");
-			if (allmethods_ToolTips.get(0).get(i).equals("PBr")) 	allmethods_ToolTips.get(0).set(i, "Prescribed Burn regeneration");
-			if (allmethods_ToolTips.get(0).get(i).equals("GSr")) 	allmethods_ToolTips.get(0).set(i, "Group Selection regeneration");
-			if (allmethods_ToolTips.get(0).get(i).equals("EAr")) 	allmethods_ToolTips.get(0).set(i, "Even Age regeneration");		
+			if (allmethods_ToolTips.get(0).get(i).equals("NG_E")) 	allmethods_ToolTips.get(0).set(i, "Natural Growth existing");
+			if (allmethods_ToolTips.get(0).get(i).equals("PB_E")) 	allmethods_ToolTips.get(0).set(i, "Prescribed Burn existing");
+			if (allmethods_ToolTips.get(0).get(i).equals("GS_E")) 	allmethods_ToolTips.get(0).set(i, "Group Selection existing");
+			if (allmethods_ToolTips.get(0).get(i).equals("EA_E")) 	allmethods_ToolTips.get(0).set(i, "Even Age existing");
+			if (allmethods_ToolTips.get(0).get(i).equals("MS_E")) 	allmethods_ToolTips.get(0).set(i, "Mixed Severity Wildfire");
+			if (allmethods_ToolTips.get(0).get(i).equals("BS_E")) 	allmethods_ToolTips.get(0).set(i, "Severe Bark Beetle");
+			if (allmethods_ToolTips.get(0).get(i).equals("NG_R")) 	allmethods_ToolTips.get(0).set(i, "Natural Growth regeneration");
+			if (allmethods_ToolTips.get(0).get(i).equals("PB_R")) 	allmethods_ToolTips.get(0).set(i, "Prescribed Burn regeneration");
+			if (allmethods_ToolTips.get(0).get(i).equals("GS_R")) 	allmethods_ToolTips.get(0).set(i, "Group Selection regeneration");
+			if (allmethods_ToolTips.get(0).get(i).equals("EA_R")) 	allmethods_ToolTips.get(0).set(i, "Even Age regeneration");		
 		}	
 		allLayers_ToolTips.addAll(allmethods_ToolTips);
 
@@ -133,18 +132,10 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 					}
 				});
 						
-//				//Set layer 5 - Cover Type invisible
-//				if (i==4) checkboxStaticIdentifiers.get(i).get(j).setEnabled(false);
-				//Set layer 6 - Size Class invisible
-				if (i == 5) checkboxStaticIdentifiers.get(i).get(j).setEnabled(false);
-//				if (i == 6) {	// sil-method
-//					for (JCheckBox cb: checkboxStaticIdentifiers.get(i))
-//					if (cb.getText().equals("PBr") || cb.getText().equals("GSr") ) {
-//						cb.setEnabled(false);
-//					}
-//				}
-//				//Deselect all time period check boxes (7)
-//				if (i==7) checkboxStaticIdentifiers.get(i).get(j).setSelected(false);
+				// Set layer 5 - Cover Type & layer 6 - Size Class invisible and disable
+				if (i == 4 || i == 5) {
+//					checkboxStaticIdentifiers.get(i).get(j).setEnabled(false);
+				}
 			}
 		}
 		
@@ -152,10 +143,10 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 	    
 	    
 		this.setViewportView(identifiersPanel);
-		TitledBorder border1 = new TitledBorder("Static identifiers for VARIABLES");
+		TitledBorder border1 = new TitledBorder("Static Identifiers  -  use strata attributes to filter variables");
 		border1.setTitleJustification(TitledBorder.CENTER);
 		this.setBorder(border1);
-		this.setPreferredSize(new Dimension(500, 250));
+		this.setPreferredSize(new Dimension(550, 250));
 	}
 	
 	
@@ -196,4 +187,35 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 				
 		return static_info;
 	}
+	
+	
+	public void reload_this_constraint_static_identifiers(String static_identifiers_info) {	
+		// Note: static_identifiers_info: contains all the selected static identifiers	
+		for (int i = 0; i < checkboxStaticIdentifiers.size(); i++) {			
+			for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {					
+				checkboxStaticIdentifiers.get(i).get(j).setSelected(false);
+			}
+		}
+				
+		// Read the whole cell into array
+		String[] info = static_identifiers_info.split(";");
+		int total_static_identifiers = info.length;
+		
+		// Get all static Identifiers
+		for (int i = 0; i < total_static_identifiers; i++) {	
+			String[] identifier_elements = info[i].split("\\s+");	// Space delimited
+			int current_identifier_id = Integer.valueOf(identifier_elements[0]);
+						
+			// Reload the selection			
+			for (int j = 1; j < identifier_elements.length; j++) {		//Ignore the first element which is the identifier id
+				String this_identifier_attribute = identifier_elements[j].replaceAll("\\s+","");		//Add element name, if name has spaces then remove all the spaces												
+				for (JCheckBox k: checkboxStaticIdentifiers.get(current_identifier_id)) {
+					if (k.getText().equalsIgnoreCase(this_identifier_attribute)) {
+						k.setSelected(true);
+					}
+				}
+			}
+		}
+	}
+	
 }
