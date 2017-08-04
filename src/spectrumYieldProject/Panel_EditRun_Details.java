@@ -1895,9 +1895,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			for (int i = 0; i < rowCount7a; i++) {
 				data7a[i][0] = action_list.get(i);
 				data7a[i][1] = (action_list.get(i).equalsIgnoreCase("no-action")) ? (double) 0 : (double) 360; 
-				for (int j = 2; j < colCount7a; j++) {
-					data7a[i][j] = (double) 0;				
-				}
 			}
 		}		
 		
@@ -1917,8 +1914,14 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		//Create a table-------------------------------------------------------------			
         model7a = new TableModelSpectrum(rowCount7a, colCount7a, data7a, columnNames7a) {
         	@Override
+			public Class getColumnClass(int c) {
+				if (c > 0) return Double.class;      // columns > 0 accept only Double  
+				else return String.class;				
+			}
+        	
+        	@Override
     		public boolean isCellEditable(int row, int col) {
-    			if (col==0) { // the 1st column is not editable
+				if (col == 0) { // the 1st column is not editable
     				return false;
     			} else {
     				return true;
@@ -1927,9 +1930,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
         	@Override
     		public void setValueAt(Object value, int row, int col) {
-        		if (col > 0 && ((Number) value).doubleValue() < 0) {
+        		if (value != null && col > 0 && ((Number) value).doubleValue() < 0) {			// allow null to be set
     				JOptionPane.showMessageDialog(Spectrum_Main.get_spectrumDesktopPane(),
-    						"Your input has not been accepted. Base cost cannot be negative.");
+    						"Your input has not been accepted. Cost cannot be negative.");
     			} else {
     				data7a[row][col] = value;
     			}
@@ -2083,7 +2086,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						data7b[table_row][0] = allLayers.get(4).get(i);
 						data7b[table_row][1] = allLayers.get(4).get(j);
 						data7b[table_row][2] = (double) 240; 
-						data7b[table_row][3] = (double) 120; 
 						table_row++;
 				}
 			}
@@ -2100,6 +2102,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		//Create a table-------------------------------------------------------------			
         model7b = new TableModelSpectrum(rowCount7b, colCount7b, data7b, columnNames7b) {
         	@Override
+			public Class getColumnClass(int c) {
+				if (c > 1) return Double.class;      // columns > 1 accept only Double  
+				else return String.class;				
+			}
+        	
+        	@Override
     		public boolean isCellEditable(int row, int col) {
 				if (col < 2) { // the first 2 column is not editable
 					return false;
@@ -2110,9 +2118,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
         	@Override
     		public void setValueAt(Object value, int row, int col) {
-        		if (col >= 2 && ((Number) value).doubleValue() < 0) {
+        		if (value != null && col >= 2 && ((Number) value).doubleValue() < 0) {
     				JOptionPane.showMessageDialog(Spectrum_Main.get_spectrumDesktopPane(),
-    						"Your input has not been accepted. Base cost cannot be negative.");
+    						"Your input has not been accepted. Cost cannot be negative.");
     			} else {
     				data7b[row][col] = value;   				
     			}
@@ -2253,7 +2261,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			rowCount8 = 0;
 			colCount8 = 7;
 			data8 = new Object[rowCount8][colCount8];
-			columnNames8 = new String[] {"priority", "condition_description", "action_percentage", "conversion_percentage", "static_identifiers", "dynamic_identifiers", "original_dynamic_identifiers"};	         				
+			columnNames8 = new String[] {"priority", "condition_description", "action_cost", "conversion_cost", "static_identifiers", "dynamic_identifiers", "original_dynamic_identifiers"};	         				
 		}
 					
 		
@@ -3791,7 +3799,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			// 4th Grid ------------------------------------------------------------------------------		// Buttons	
 			// 4th Grid -----------------------------------------------------------------------------
 			JPanel cost_condition_panel = new JPanel(new GridBagLayout());
-			TitledBorder border = new TitledBorder("Costs and Conditons to apply in priority order");
+			TitledBorder border = new TitledBorder("Conditons to apply Costs in Priority Order");
 			border.setTitleJustification(TitledBorder.CENTER);
 			cost_condition_panel.setBorder(border);
 			GridBagConstraints c = new GridBagConstraints();
@@ -5204,10 +5212,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					}	
 					id_list.setModel(id_list_model);
 		        }
-		    });
-			
+		    });			
 			basic_table.setAutoResizeMode(0);		// 0 = JTable.AUTO_RESIZE_OFF
-			basic_table.setDragEnabled(true);
+
 			
 			// Hide the last 4 columns: this hide is better than remove column from column model, this is basically set size to be zero
 			for (int i = basic_table.getColumnCount() - 4; i < basic_table.getColumnCount(); i++) {

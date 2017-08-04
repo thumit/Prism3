@@ -2,7 +2,7 @@ package spectrumYieldProject;
 
 public class Get_Variable_Information {
 
-	private static String layer1, layer2, layer3, layer4, layer5, layer6, method;
+	private static String layer1, layer2, layer3, layer4, layer5, layer6, method, regenerated_covertype;	// regenerated_covertype = s5R = covertype_after, while layer5 = covertype_before
 	private static int period, age, timing_choice, rotation_period, rotation_age;
 	private static String customized_variable_term;
 	private static String yield_table_name_to_find, forest_status;
@@ -113,6 +113,8 @@ public class Get_Variable_Information {
 			layer4 = term[3];
 			layer5 = term[4];
 			layer6 = term[5];
+			rotation_period = Integer.parseInt(term[6]);
+			regenerated_covertype = term[7];
 			timing_choice = Integer.parseInt(term[8]);
 			period = Integer.parseInt(term[9]);
 			customized_variable_term = layer1 + layer2 + layer3 + layer4 + layer5 + layer6 + "Even Age" + period;	
@@ -133,6 +135,7 @@ public class Get_Variable_Information {
 			layer5 = term[4];
 			rotation_period = Integer.parseInt(term[5]);
 			rotation_age = Integer.parseInt(term[6]);
+			regenerated_covertype = term[7];
 			timing_choice = Integer.parseInt(term[8]);
 			period = Integer.parseInt(term[9]);
 			customized_variable_term = layer1 + layer2 + layer3 + layer4 + layer5 + "Even Age" + period;	
@@ -234,9 +237,19 @@ public class Get_Variable_Information {
 		return method;
 	}
 	
+	public static String get_regenerated_covertype(String var_name) {
+		get_all_terms_from_name(var_name);
+		return regenerated_covertype;
+	}	
+	
 	public static String get_forest_status(String var_name) {
 		get_all_terms_from_name(var_name);
 		return forest_status;
+	}
+	
+	public static int get_rotation_period(String var_name) {
+		get_all_terms_from_name(var_name);
+		return rotation_period;
 	}
 	
 	public static int get_period(String var_name) {

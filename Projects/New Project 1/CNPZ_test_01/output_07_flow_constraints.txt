@@ -1,4 +1,0 @@
-flow_id	flow_description	flow_arrangement	flow_type	lowerbound_percentage	upperbound_percentage	flow_output_original
-1	Live CF of Douglas Fir across 5 periods	1;2;3;4;5	FREE	null	null	1.6648582146399984E9;1.2384604898731725E9;1.2771663972966025E9;1.5378477255626612E9;1.7672164634849982E9
-2	Harvested CF volume of Douglas Fir across 5 periods	6;7;8;9;10	FREE	null	null	0.0;0.0;0.0;0.0;0.0
-3	Total Cost across 5 periods	11;12;13;14;15	FREE	null	null	0.0;0.0;0.0;0.0;0.0

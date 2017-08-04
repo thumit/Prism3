@@ -1,2 +1,0 @@
-flow_id	flow_description	flow_arrangement	flow_type	lowerbound_percentage	upperbound_percentage	
-1	null	21;22;23;24;25	HARD	60.0	80.0	

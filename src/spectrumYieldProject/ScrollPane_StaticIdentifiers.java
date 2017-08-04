@@ -1,5 +1,6 @@
 package spectrumYieldProject;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -72,8 +73,18 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 		//Add all layers labels
 	    layers_Title_Label = new ArrayList<JLabel>();
 		for (int i = 0; i < total_staticIdentifiers; i++) {
-			layers_Title_Label.add(new JLabel(layers_Title.get(i)));
-			layers_Title_Label.get(i).setToolTipText(layers_Title_ToolTip.get(i));
+			
+			JLabel title = new JLabel(layers_Title.get(i));
+			String title_tooltip = layers_Title_ToolTip.get(i);
+			
+			layers_Title_Label.add(title);
+			if (i == 4 || i == 5) {
+				title.setForeground(Color.RED);
+				layers_Title_Label.get(i).setToolTipText(title_tooltip + " (Apply to only existing strata in time period 1 - In most cases you should check all)");
+			} else {
+				layers_Title_Label.get(i).setToolTipText(title_tooltip);
+			}					
+			
 			
 			//add listeners to select all or deselect all
 			int curent_index = i;
@@ -113,8 +124,11 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 			checkboxStaticIdentifiers.add(temp_List);
 			for (int j = 0; j < allLayers.get(i).size(); j++) {		//Loop all elements in each layer
 				checkboxStaticIdentifiers.get(i).add(new JCheckBox(allLayers.get(i).get(j)));
-				checkboxStaticIdentifiers.get(i).get(j).setToolTipText(allLayers_ToolTips.get(i).get(j));	
+				checkboxStaticIdentifiers.get(i).get(j).setToolTipText(allLayers_ToolTips.get(i).get(j));
 				checkboxStaticIdentifiers.get(i).get(j).setSelected(true);
+				if (i == 4 || i == 5) {
+					checkboxStaticIdentifiers.get(i).get(j).setForeground(Color.RED);
+				}			
 				
 				c1.gridx = i;
 				c1.gridy = j + 1;
@@ -132,7 +146,7 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 					}
 				});
 						
-				// Set layer 5 - Cover Type & layer 6 - Size Class invisible and disable
+				// Disable layer 5 - Cover Type & layer 6 - Size Class
 				if (i == 4 || i == 5) {
 //					checkboxStaticIdentifiers.get(i).get(j).setEnabled(false);
 				}

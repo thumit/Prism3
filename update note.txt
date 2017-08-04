@@ -248,10 +248,15 @@ All changes in this block are associated with v29.jar, formulation24.docx, datab
 123. Multi-threads are applied to improve Table Filter in output05. Need to review later.
 124. Fixed reload based on table 10 (convert view to model) when writting reload for table 8, 9
 125. Edit take effect immediately on click
-126. age_class and action_type can now be plaved any where in the yield tables (previously the col id must be 3 and last id respectively)
+126. age_class and action_type can now be placed any where in the yield tables (previously the col id must be 3 and last id respectively)
 127. Change variable index in both GUI and formulation. Example: EAe --> EA_E, NGr --> NG_R, etc.
-128. Rewrite the output05 filter: fix layer1 filter (make it false to have the same strcuture as other layers), and use more return to escape entry checking faster.
+128. Rewrite the output05 filter: fix layer1 filter (make it false to have the same structure as other layers), and use more return to escape entry checking faster.
 129. Change condition check for priting out total_penalty (currenly it does not print out total_penalty when upperbound = 0 which is wrong)
+130. empty cell is now used for cost condition override
+131. Remove drag on basic_table because it is simply annoying
+132. Very important: Highlight layer 5 and 6 in red (Static identifier) since it is applied for existing strata only, regenerated strata do not use those 2 layers.
+133. Very important: output05 filter (Static identifier): layer 5 and 6 are applied for existing strata only.
+134. Management Cost GUI is built and and Logic is connected
 
 
 All changes in this block are associated with v30.jar, formulation25.docx, database5.docx

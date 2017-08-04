@@ -481,18 +481,20 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 								
 								
 								
-								term = Get_Variable_Information.get_layer5(varible_term);
-								count = 0;
-								for (JCheckBox layer5 : checkboxStaticIdentifiers.get(4)) {
-									if ((layer5.isSelected() && (layer5.isVisible()) || !layer5.isEnabled()) && term.equals(layer5.getText())) {
-										count++;
+								if (Get_Variable_Information.get_forest_status(varible_term) == "E") {		// Only applied for Existing Strata
+									term = Get_Variable_Information.get_layer5(varible_term);
+									count = 0;
+									for (JCheckBox layer5 : checkboxStaticIdentifiers.get(4)) {
+										if ((layer5.isSelected() && (layer5.isVisible()) || !layer5.isEnabled()) && term.equals(layer5.getText())) {
+											count++;
+										}
 									}
+									if (count < 1) return false;		// return false so that this entry is not shown
 								}
-								if (count < 1) return false;		// return false so that this entry is not shown
 								
 								
 								
-								if (Get_Variable_Information.get_layer6(varible_term) != null) {		// Only Existing variables have layer6 <> null
+								if (Get_Variable_Information.get_forest_status(varible_term) == "E") {		// Only applied for Existing Strata
 									term = Get_Variable_Information.get_layer6(varible_term);
 									count = 0;
 									for (JCheckBox layer6 : checkboxStaticIdentifiers.get(5)) {

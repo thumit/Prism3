@@ -1,3 +1,0 @@
-strata_id	layer1	layer2	layer3	layer4	layer5	layer6	acres	ageclass	modeled_strata	
-BNNCDM	B	N	N	C	D	M	540.0	8	true	
-CNNCPS	C	N	N	C	P	S	240.0	2	true	

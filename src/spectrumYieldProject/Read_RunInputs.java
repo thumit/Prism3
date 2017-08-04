@@ -103,19 +103,19 @@ public class Read_RunInputs {
 		}
 	}
 
-	public String[][] get_MO_Values () {
+	public String[][] get_MO_Values() {
 		return MO_value;
 	}
 
-	public int get_MO_TotalRows () {
+	public int get_MO_TotalRows() {
 		return MO_totalRows;
 	}
 	
-	public int get_MO_TotalColumns () {
+	public int get_MO_TotalColumns() {
 		return MO_totalColumns;
 	}
 	
-	public List<String> get_modeled_strata () {
+	public List<String> get_modeled_strata() {
 		List<String> modeled_strata = new ArrayList<String>();
 		for (int i = 1; i < MO_totalRows; i++) {		//From 2nd row			
 //			modeled_strata.add(MO_value[i][0]);	//1st column contains the full name with 6 layers letters
@@ -125,24 +125,24 @@ public class Read_RunInputs {
 		return modeled_strata;
 	}
 	
-	public List<String> get_modeled_strata_withoutSizeClass () {
-		List<String> modeled_strata_withoutSizeClass = new ArrayList<String>();
+	public List<String> get_modeled_strata_without_sizeclass() {
+		List<String> modeled_strata_without_sizeclass = new ArrayList<String>();
 		for (int i = 1; i < MO_totalRows; i++) {		//From 2nd row			
 //			modeled_strata_withoutSizeClass.add(MO_value[i][0].substring(0,MO_value[i][0].length()-1));	//remove the last character to get name with 5 layers only
 			String combined_name = MO_value[i][1] + MO_value[i][2] + MO_value[i][3] + MO_value[i][4] + MO_value[i][5];
-			modeled_strata_withoutSizeClass.add(combined_name);
+			modeled_strata_without_sizeclass.add(combined_name);
 		}
-		return modeled_strata_withoutSizeClass;
+		return modeled_strata_without_sizeclass;
 	}	
 	
-	public List<String> get_modeled_strata_withoutSizeClassandCoverType () {
-		List<String> get_modeled_strata_withoutSizeClassandCoverType = new ArrayList<String>();
+	public List<String> get_modeled_strata_without_sizeclass_and_covertype() {
+		List<String> modeled_strata_without_sizeclass_and_covertype = new ArrayList<String>();
 		for (int i = 1; i < MO_totalRows; i++) {		//From 2nd row			
 //			get_modeled_strata_withoutSizeClassandCoverType.add(MO_value[i][0].substring(0,MO_value[i][0].length()-2));	//remove the last 2 characters to get name with 4 layers only
 			String combined_name = MO_value[i][1] + MO_value[i][2] + MO_value[i][3] + MO_value[i][4];
-			get_modeled_strata_withoutSizeClassandCoverType.add(combined_name);
+			modeled_strata_without_sizeclass_and_covertype.add(combined_name);
 		}
-		return get_modeled_strata_withoutSizeClassandCoverType;
+		return modeled_strata_without_sizeclass_and_covertype;
 	}
 		
 	//-------------------------------------------------------------------------------------------------------------------------------------------------	
@@ -549,7 +549,7 @@ public class Read_RunInputs {
 		List<String> layer6 = all_staticIdentifiers.get(5);
 		
 		
-		//first 6 layers
+		// first 6 layers
 		for (int i1 = 0; i1 < layer1.size(); i1++) {
 			for (int i2 = 0; i2 < layer2.size(); i2++) {
 				for (int i3 = 0; i3 < layer3.size(); i3++) {
@@ -568,6 +568,33 @@ public class Read_RunInputs {
 	}	
 
 	
+	public List<String> get_static_strata_without_sizeclass(int row) {	
+		List<String> static_strata_without_sizeclass = new ArrayList<String>();
+		List<List<String>> all_static_identifiers = get_all_static_identifiers_in_row(row);
+		
+		List<String> layer1 = all_static_identifiers.get(0);
+		List<String> layer2 = all_static_identifiers.get(1);
+		List<String> layer3 = all_static_identifiers.get(2);
+		List<String> layer4 = all_static_identifiers.get(3);
+		List<String> layer5 = all_static_identifiers.get(4);
+				
+		// first 5 layers
+		for (int i1 = 0; i1 < layer1.size(); i1++) {
+			for (int i2 = 0; i2 < layer2.size(); i2++) {
+				for (int i3 = 0; i3 < layer3.size(); i3++) {
+					for (int i4 = 0; i4 < layer4.size(); i4++) {
+						for (int i5 = 0; i5 < layer5.size(); i5++) {
+							String combined_name = layer1.get(i1) + layer2.get(i2) + layer3.get(i3) + layer4.get(i4) + layer5.get(i5);
+							static_strata_without_sizeclass.add(combined_name);						
+						}					
+					}					
+				}				
+			}	
+		}
+		return static_strata_without_sizeclass;
+	}
+	
+	
 	public List<String> get_static_strata_withoutSizeClassandCoverType (int row) {	
 		List<String> static_strata_withoutSizeClassandCoverType = new ArrayList<String>();
 		List<List<String>> all_static_identifiers = get_all_static_identifiers_in_row(row);
@@ -577,7 +604,7 @@ public class Read_RunInputs {
 		List<String> layer3 = all_static_identifiers.get(2);
 		List<String> layer4 = all_static_identifiers.get(3);
 				
-		//first 4 layers
+		// first 4 layers
 		for (int i1 = 0; i1 < layer1.size(); i1++) {
 			for (int i2 = 0; i2 < layer2.size(); i2++) {
 				for (int i3 = 0; i3 < layer3.size(); i3++) {

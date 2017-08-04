@@ -10,7 +10,9 @@ public class Get_Parameter_Information {
 			Read_Database read_database, String var_name, int var_rotation_age,
 			Object[] yield_tables_names, Object[][][] yield_tables_values, List<String> parameters_indexes_list,
 			List<String> dynamic_dentifiers_column_indexes, List<List<String>> dynamic_identifiers,
-			List<String> cost_condition_list, List<String> current_var_static_condition) {		// might not need the last: current_var_static_condition --> check later
+			List<String> cost_condition_list,
+			List<String> coversion_cost_after_disturbance_name_list,		// i.e. P P disturbance		P D disturbance
+			List<Double> coversion_cost_after_disturbance_value_list) {		// i.e. 0.25				0.75
 		
 		String[] yield_tables_column_names = read_database.get_yield_tables_column_names();
 		List<String> yield_tables_column_names_list = Arrays.asList(yield_tables_column_names);	// Convert array to list
@@ -51,22 +53,46 @@ public class Get_Parameter_Information {
 								int action_type_index = yield_tables_column_names_list.indexOf("action_type");
 								String var_action_type = yield_tables_values[table_id_to_find][row_id_to_find][action_type_index].toString();
 								
-								// The following include 1 list for the name and 1 list for the value
-								List<List<String>> final_action_percentage_list = get_final_action_percentage_list_for_this_variable(
+								// The following includes 1 list for the action_cost and 1 list for the conversion_cost
+								List<List<List<String>>> final_cost_list = get_final_action_cost_list_and_conversion_cost_list_for_this_variable(
 										cost_condition_list, var_name, var_rotation_age, var_action_type,
 										yield_tables_values, table_id_to_find, row_id_to_find, dynamic_dentifiers_column_indexes);
-									
-								for (int item = 0; item < final_action_percentage_list.get(0).size(); item++) {	// loop name list
+								
+								
+								// action_cost: include 2 lists for column name (i.e. hca_allsx) and value (i.e. 360)
+								for (int item = 0; item < final_cost_list.get(0).get(0).size(); item++) {	// loop list:  final_cost_list.get(0).get(0) which is final_action_cost_column_list
 									// Add cost per acre
-									if (final_action_percentage_list.get(0).get(item).equals("acres")) {
-										value_to_return = value_to_return + Double.parseDouble(final_action_percentage_list.get(1).get(item));
+									if (final_cost_list.get(0).get(0).get(item).equals("acres")) {
+										value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(0).get(1).get(item));
 									} 
 									// Add cost per unit of the yield table column
 									else {
-										int col_id = yield_tables_column_names_list.indexOf(final_action_percentage_list.get(0).get(item));
-										value_to_return = value_to_return + Double.parseDouble(final_action_percentage_list.get(1).get(item)) * Double.parseDouble(yield_tables_values[table_id_to_find][row_id_to_find][col_id].toString());
+										int col_id = yield_tables_column_names_list.indexOf(final_cost_list.get(0).get(0).get(item));
+										value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(0).get(1).get(item)) * Double.parseDouble(yield_tables_values[table_id_to_find][row_id_to_find][col_id].toString());
 									}
 								}
+										
+								
+								// conversion_cost: include 2 lists for column name (i.e. P D action) and value (i.e. 240)
+								for (int item = 0; item < final_cost_list.get(1).get(0).size(); item++) {	// loop list:  final_cost_list.get(1).get(0) which is final_conversion_cost_column_list
+									// add conversion cost for post management action (i.e clear cut) or post replacing disturbance (i.e. SRFire)
+									// note only one of them is true: for example if it is clear cut --> no replacing disturbance anymore, replacing disturbance can happen in areas where no clear cut implemented
+									if (Get_Variable_Information.get_rotation_period(var_name) == Get_Variable_Information.get_period(var_name)) {	// period is the rotation period (this if guarantees variable to be EA_E or EA_R)
+										String conversion_cost_to_apply = 
+												Get_Variable_Information.get_layer5(var_name) + " " +
+												Get_Variable_Information.get_regenerated_covertype(var_name) + " " + "action";
+										if (final_cost_list.get(1).get(0).get(item).equals(conversion_cost_to_apply)) {
+											value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(1).get(1).get(item));
+										} 
+									} else {	// when period is not the rotation_period (variable can be anything except BS MS)
+										if (coversion_cost_after_disturbance_name_list != null && coversion_cost_after_disturbance_name_list.contains(final_cost_list.get(1).get(0).get(item))) {
+											int index = coversion_cost_after_disturbance_name_list.indexOf(final_cost_list.get(1).get(0).get(item));
+											value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(1).get(1).get(item)) * coversion_cost_after_disturbance_value_list.get(index);
+										}
+									}
+									
+								}
+								
 							}						
 						} 
 						
@@ -130,13 +156,17 @@ public class Get_Parameter_Information {
 	
 	
 	// The following is for cost:	
-	private static List<List<String>> get_final_action_percentage_list_for_this_variable(
+	private static List<List<List<String>>> get_final_action_cost_list_and_conversion_cost_list_for_this_variable(
 			List<String> cost_condition_list, String var_name, int var_rotation_age, String var_action_type,
 			Object[][][] yield_tables_values, int table_id_to_find, int row_id_to_find, List<String> dynamic_dentifiers_column_indexes) {	
 		
-		List<String> final_action_percentage_column_list = new ArrayList<String>();		// example: 	"acres", "...", "hca_allsx", ... -->see table 7a in the GUI of Cost Management
-		List<String> final_action_percentage_value_list = new ArrayList<String>(); 		// example: 	"360", "...", "1.2", ...
-								
+		List<String> final_action_cost_column_list = new ArrayList<String>();		// example: 	"acres", "...", "hca_allsx", ... -->see table 7a in the GUI of Cost Management
+		List<String> final_action_cost_value_list = new ArrayList<String>(); 		// example: 	"360", "...", "1.2", ...
+		
+		List<String> final_conversion_cost_column_list = new ArrayList<String>();	// example: P D action         	W L disturbance 
+		List<String> final_conversion_cost_value_list = new ArrayList<String>();	// example: 240         		120 
+		
+									
 		for (int priority = 0; priority < cost_condition_list.size(); priority++) {		// Looping from the highest priority cost condition to the lowest
 			String[] this_condition_info = cost_condition_list.get(priority).split("\t");
 			List<List<String>> cost_condition_static_identifiers = get_cost_condition_dynamic_identifiers(this_condition_info[4]);	// column 4 is static identifiers
@@ -146,21 +176,43 @@ public class Get_Parameter_Information {
 			if (are_all_static_identifiers_matched(var_name, cost_condition_static_identifiers) && 
 					are_all_dynamic_identifiers_matched(yield_tables_values, table_id_to_find, row_id_to_find, dynamic_dentifiers_column_indexes,cost_condition_dynamic_identifiers)) {
 				
-				List<String[]> cost_condition_action_percentage = get_cost_condition_action_percentage(this_condition_info[2], var_action_type);
-				for (String[] c: cost_condition_action_percentage) {			// c example1: clearcut acres 360		c example2: clearcut hca_allsx 200
-					if (!final_action_percentage_column_list.contains(c[1]) && Double.parseDouble(c[2]) > 0) {	// address the null case later if I really want to add the null to table7a						
-						final_action_percentage_column_list.add(c[1]);	// i.e acres    hca_allsx
-						final_action_percentage_value_list.add(c[2]);
+				// For action_cost
+				List<String[]> action_cost_list = get_cost_condition_action_cost(this_condition_info[2], var_action_type);
+				for (String[] c: action_cost_list) {			// c example: clearcut acres 360		c example2: clearcut hca_allsx 0
+					if (!final_action_cost_column_list.contains(c[1])) {		// only null is escape, the GUI already guarantees the value >=0			
+						final_action_cost_column_list.add(c[1]);	// i.e. acres    hca_allsx
+						final_action_cost_value_list.add(c[2]);		// i.e. 360
 					}
 				}
+				
+				// For conversion cost
+				List<String[]> conversion_cost_list = get_cost_condition_conversion_cost(this_condition_info[3]);
+				for (String[] c: conversion_cost_list) {			// c example:  P D action 240         	W L disturbance 120
+					if (!final_conversion_cost_column_list.contains(c[0] + " " + c[1] + " " + c[2])) {		// only null is escape, the GUI already guarantees the value >=0				
+						final_conversion_cost_column_list.add(c[0] + " " + c[1] + " " + c[2]);		// i.e. P D action		W L disturbance
+						final_conversion_cost_value_list.add(c[3]);		// i.e. 240		120
+					}	
+				}
+				
 			}
 		}		
 				
-		// Combine the above 2 lists into a single new list
-		List<List<String>> final_action_percentage_list = new ArrayList<List<String>>();
-		final_action_percentage_list.add(final_action_percentage_column_list);
-		final_action_percentage_list.add(final_action_percentage_value_list);		
-		return final_action_percentage_list;
+		// Combine the above 2 action_cost lists into a single new list
+		List<List<String>> final_action_cost_list = new ArrayList<List<String>>();
+		final_action_cost_list.add(final_action_cost_column_list);
+		final_action_cost_list.add(final_action_cost_value_list);
+		
+		// Combine the above 2 conversion_cost lists into a single new list
+		List<List<String>> final_conversion_cost_list = new ArrayList<List<String>>();
+		final_conversion_cost_list.add(final_conversion_cost_column_list);
+		final_conversion_cost_list.add(final_conversion_cost_value_list);
+		
+		// Combine the above 2 final lists into a single big final list
+		List<List<List<String>>> final_cost_list = new ArrayList<List<List<String>>>();
+		final_cost_list.add(final_action_cost_list);
+		final_cost_list.add(final_conversion_cost_list);
+		
+		return final_cost_list;
 	}
 	
 	
@@ -193,17 +245,30 @@ public class Get_Parameter_Information {
 	
 
 	
-	private static List<String[]> get_cost_condition_action_percentage(String action_percentage_info, String var_action_type) {	
+	private static List<String[]> get_cost_condition_action_cost(String action_cost_info, String var_action_type) {	
 		//Read the whole cell into array
-		String[] action_percentage_array = action_percentage_info.split(";");
-		List<String[]> cost_condition_action_percentage = new ArrayList<String[]>();		
-		for (String infor: action_percentage_array) {
+		String[] action_cost_array = action_cost_info.split(";");
+		List<String[]> action_cost = new ArrayList<String[]>();		
+		for (String infor: action_cost_array) {
 			String[] info_array = infor.split("\\s+");		// infor example: clearcut hca_allsx 360
 			if (info_array[0].equals(var_action_type)) {	// info_array[0] = clearcut			only get the info matched with the var_action_type
-				cost_condition_action_percentage.add(info_array);
+				action_cost.add(info_array);
 			}
 		}		
-		return cost_condition_action_percentage;
+		return action_cost;
+	}
+	
+	
+	
+	private static List<String[]> get_cost_condition_conversion_cost(String conversion_cost_info) {	
+		//Read the whole cell into array
+		String[] conversion_cost_array = conversion_cost_info.split(";");
+		List<String[]> conversion_cost = new ArrayList<String[]>();		
+		for (String infor: conversion_cost_array) {
+			String[] info_array = infor.split("\\s+");		// infor example: P D action 240         	W L disturbance 120
+			conversion_cost.add(info_array);
+		}		
+		return conversion_cost;
 	}
 	
 	

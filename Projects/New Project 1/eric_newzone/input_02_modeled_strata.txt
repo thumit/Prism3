@@ -1,5 +1,0 @@
-strata_id	layer1	layer2	layer3	layer4	layer5	layer6	acres	ageclass	modeled_strata	
-PR4WIS	P	R	4	W	I	S	1933.0	1	true	
-PR4UDM	P	R	4	U	D	M	1922.0	8	true	
-PR4UCS	P	R	4	U	C	S	1201.0	2	true	
-PR5LIS	P	R	5	L	I	S	1702.0	1	true	

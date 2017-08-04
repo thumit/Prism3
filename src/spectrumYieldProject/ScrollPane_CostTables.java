@@ -69,7 +69,7 @@ public class ScrollPane_CostTables extends JScrollPane {
 		String action_cost_info = "";		
 		for (int row = 0; row < data7a.length; row++) {
 			for (int col = 1; col < data7a[row].length; col++) {
-				if ((double) data7a[row][col] > 0) {
+				if (data7a[row][col] != null) {
 					action_cost_info = action_cost_info + data7a[row][0] + " " + columnNames7a[col] + " " + data7a[row][col].toString() + ";";
 				}	
 			}
@@ -85,7 +85,7 @@ public class ScrollPane_CostTables extends JScrollPane {
 		String conversion_to_adjust_info = "";
 		for (int row = 0; row < data7b.length; row++) {
 			for (int col = 2; col < data7b[row].length; col++) {
-				if ((double) data7b[row][col] > 0) {
+				if (data7b[row][col] != null) {
 					conversion_to_adjust_info = conversion_to_adjust_info + data7b[row][0] + " " + data7b[row][1] + " " + columnNames7b[col] + " " + data7b[row][col].toString() + ";";
 				}	
 			}
@@ -98,10 +98,10 @@ public class ScrollPane_CostTables extends JScrollPane {
 	
 	
 	public void reload_this_condition_action_cost_and_conversion_cost(String action_cost_info, String conversion_cost_info) {			
-		// Reset data7a to zero		
+		// Reset data7a to null		
 		for (int row = 0; row < data7a.length; row++) {
 			for (int col = 1; col < data7a[row].length; col++) {
-				data7a[row][col] = (double) 0;
+				data7a[row][col] = null;
 			}
 		}
 		
@@ -124,10 +124,10 @@ public class ScrollPane_CostTables extends JScrollPane {
 			}	
 		}				
 		
-		// Reset data7b to zero		
+		// Reset data7b to null		
 		for (int row = 0; row < data7b.length; row++) {
 			for (int col = 2; col < data7b[row].length; col++) {
-				data7b[row][col] = (double) 0;
+				data7b[row][col] = null;
 			}
 		}
 		

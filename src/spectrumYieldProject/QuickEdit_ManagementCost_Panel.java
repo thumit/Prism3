@@ -136,8 +136,8 @@ public class QuickEdit_ManagementCost_Panel extends JPanel {
 				table7a.clearSelection(); // To help trigger the row refresh: clear then add back the rows
 				for (int i : selectedRow) {
 					for (int j : selectedCol) {
-						if (!formatedTextfield.getText().isEmpty() && !formatedTextfield.getText().equals(".") && j != 0) {	// Only apply the changes to selected cells when the text is not empty,  and column > 0 (from 'acres' column)
-							data7a[i][j] = Double.valueOf(formatedTextfield.getText());
+						if (!formatedTextfield.getText().equals(".") && j != 0) {	// Only apply the changes to selected cells in columns > 0 (from 'acres' column)
+							data7a[i][j] = (formatedTextfield.getText().isEmpty())? null : Double.valueOf(formatedTextfield.getText());
 						}
 						table7a.addRowSelectionInterval(table7a.convertRowIndexToView(i), table7a.convertRowIndexToView(i));
 						table7a.addColumnSelectionInterval(table7a.convertColumnIndexToView(j), table7a.convertColumnIndexToView(j));
@@ -231,8 +231,8 @@ public class QuickEdit_ManagementCost_Panel extends JPanel {
 				table7b.clearSelection(); // To help trigger the row refresh: clear then add back the rows
 				for (int i : selectedRow) {
 					for (int j : selectedCol) {
-						if (!formatedTextfield_2.getText().isEmpty() && !formatedTextfield_2.getText().equals(".") && j > 1) {	// Only apply the changes to selected cells when the text is not empty,  and column > 1
-							data7b[i][j] = Double.valueOf(formatedTextfield_2.getText());
+						if (!formatedTextfield_2.getText().equals(".") && j > 1) {	// Only apply the changes to selected cells in columns > 1
+							data7b[i][j] = (formatedTextfield_2.getText().isEmpty())? null : Double.valueOf(formatedTextfield_2.getText());
 						}
 						table7b.addRowSelectionInterval(table7b.convertRowIndexToView(i), table7b.convertRowIndexToView(i));
 						table7b.addColumnSelectionInterval(table7b.convertColumnIndexToView(j), table7b.convertColumnIndexToView(j));
@@ -263,7 +263,7 @@ public class QuickEdit_ManagementCost_Panel extends JPanel {
 			// Create a radio buttons-----------------------------------------------------------------------------
 			JRadioButton[] radioButton = new JRadioButton[2];		
 			radioButton[0] = new JRadioButton("Select default columns (acres and harvested volume in cubic feet per acre)");
-			radioButton[1] = new JRadioButton("Select active columns (active column has at least one cell with non-zero value)");
+			radioButton[1] = new JRadioButton("Select active columns (active column has at least one cell with unempty value)");
 			
 			
 			// Create a radio group
@@ -369,14 +369,12 @@ public class QuickEdit_ManagementCost_Panel extends JPanel {
 			// Listener 2	
 			radioButton[1].addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {																	
-					List<Integer> active_col_id = new ArrayList<Integer>();		// List of active columns: at least 1 cell > 0			
+					List<Integer> active_col_id = new ArrayList<Integer>();		// List of active columns: at least 1 cell <> null			
 					for (int i = 0; i < data7a.length; i++) {
 						for (int j = 0; j < data7a[i].length; j++) {
-							if (data7a[i][j].getClass().equals(Double.class)) {		// Check if column class is Double
-								if ((double) data7a[i][j] > 0 && !active_col_id.contains(j)) {
-									active_col_id.add(j);
-								}
-							}
+							if (data7a[i][j] != null && !active_col_id.contains(j)) {
+								active_col_id.add(j);
+							}		
 						}	
 					}
 					
