@@ -1,10 +1,27 @@
 bc_id	bc_description	bc_type	bc_multiplier	lowerbound	lowerbound_perunit_penalty	upperbound	upperbound_perunit_penalty	bookeeping_var_id	bookeeping_var_name	bookeeping_var_value	bookeeping_var_reduced_cost	total_penalty
 1	Ponderosa P5	FREE	1.0	null	null	null	null	6	v_0	2292.3197989625105	0.0	0.0
 2	Ponderosa P4	FREE	1.0	null	null	null	null	7	v_1	2290.2460911448	0.0	0.0
-4	total cost in 1 - time period 1	FREE	1.0	null	null	null	null	8	v_2	20014.068000000017	0.0	0.0
-5	total cost in 2 - time period 2	FREE	1.0	null	null	null	null	9	v_3	14188.34934406672	0.0	0.0
-6	total cost in 3 - time period 3	FREE	1.0	null	null	null	null	10	v_4	10058.387785495588	0.0	0.0
-7	total cost in 4 - time period 4	FREE	1.0	null	null	null	null	11	v_5	7130.580336726404	0.0	0.0
-8	total cost in 5 - time period 5	FREE	1.0	null	null	null	null	12	v_6	2661780.449381238	0.0	0.0
+4	total cost in 1 - time period 1	FREE	1.0	null	null	null	null	8	v_2	19794.504000000015	0.0	0.0
+5	total cost in 2 - time period 2	FREE	1.0	null	null	null	null	9	v_3	20014.06799999999	0.0	0.0
+6	total cost in 3 - time period 3	FREE	1.0	null	null	null	null	10	v_4	20014.068000000014	0.0	0.0
+7	total cost in 4 - time period 4	FREE	1.0	null	null	null	null	11	v_5	20014.068000000007	0.0	0.0
+8	total cost in 5 - time period 5	FREE	1.0	null	null	null	null	12	v_6	23094.018701834837	0.0	0.0
 9	5k acres EAe period 1	SOFT	1.0	5000.0	1.0	5000.0	1.0	0	y_0	5000.0	0.0	0.0
-10	penaly for each dollar used	SOFT	1.0	null	null	0.0	0.01	1	y_1	2713171.8348475266	0.0	27131.718348475268
+10	penaly for each dollar used	SOFT	1.0	null	null	0.0	0.01	1	y_1	102930.72670183516	0.0	1029.3072670183515
+11	total acre period 1	FREE	1.0	null	null	null	null	13	v_7	83391.95000000003	0.0	0.0
+12	total acre period 2	FREE	1.0	null	null	null	null	14	v_8	83391.94999999992	0.0	0.0
+13	total acre period 3	FREE	1.0	null	null	null	null	15	v_9	83391.95	0.0	0.0
+14	total acre period 4	FREE	1.0	null	null	null	null	16	v_10	83391.95000000003	0.0	0.0
+15	total acre period 5	FREE	1.0	null	null	null	null	17	v_11	83391.94999999995	0.0	0.0
+16	total cares p3 dom_group1 size 12 	FREE	1.0	null	null	null	null	18	v_12	30297.546169399997	0.0	0.0
+17	total cares p3 dom_group1 size 13	FREE	1.0	null	null	null	null	19	v_13	3426.3371755999997	0.0	0.0
+18	total cares p3 dom_group1 size 20	FREE	1.0	null	null	null	null	20	v_14	1688.2268296	0.0	0.0
+19	total cares p3 dom_group1 size 30	FREE	1.0	null	null	null	null	21	v_15	34.173392400000004	0.0	0.0
+20	total cares p3 dom_group2 size 12	FREE	1.0	null	null	null	null	22	v_16	47282.82095940005	0.0	0.0
+21	total cares p3 dom_group2 size 13	FREE	1.0	null	null	null	null	23	v_17	2978.5956659999993	0.0	0.0
+22	total cares p3 dom_group2 size 20	FREE	1.0	null	null	null	null	24	v_18	217.98826259999998	0.0	0.0
+23	total cares p3 dom_group2 size 30	FREE	1.0	null	null	null	null	25	v_19	132.09213380000003	0.0	0.0
+24	total cares p3 dom_group3 size 12	FREE	1.0	null	null	null	null	26	v_20	30.55	0.0	0.0
+25	total cares p3 dom_group3 size 13	FREE	1.0	null	null	null	null	27	v_21	406.1194820000001	0.0	0.0
+26	total cares p3 dom_group3 size 20	FREE	1.0	null	null	null	null	28	v_22	190.1869638	0.0	0.0
+27	total cares p3 dom_group3 size 30	FREE	1.0	null	null	null	null	29	v_23	1096.3629654000001	0.0	0.0

@@ -1,0 +1,2 @@
+strata_id	layer1	layer2	layer3	layer4	layer5	layer6	acres	ageclass	modeled_strata	
+CRNRPM	C	R	N	R	P	M	90.0	8	true	

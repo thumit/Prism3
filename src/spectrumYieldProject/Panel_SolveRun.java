@@ -648,7 +648,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									if (modeled_strata.contains(strataName)) {
 										for (int i = 0; i < total_PBe_Prescriptions; i++) {
 											for (int t = 1; t <= total_Periods; t++) {
-												String var_name = "xPB_E" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6) + "," + i + "," + t;										
+												String var_name = "xPB_E_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6) + "," + i + "," + t;										
 												if (!allow_Non_Existing_Prescription) {
 													if (yield_tables_names_list.contains(Get_Variable_Information.get_yield_table_name_to_find(var_name))) {
 														objlist.add((double) 0);
@@ -2515,19 +2515,18 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			int current_softConstraint = 0;
 			int current_hardConstraint = 0;	
 			int current_period;
-			int current_row;
 			double currentDiscountValue;
 			double para_value;
 			double multiplier;
 				
 			// Add -y(j) + user_defined_variables = 0		or 			-z(k) + user_defined_variables = 0		or 			-v(n) + user_defined_variables = 0
-			for (int i = 1; i < total_freeConstraints + total_softConstraints + total_hardConstraints + 1; i++) {	//Loop from 1 because the first row of the userConstraint file is just title
+			for (int id = 1; id < total_freeConstraints + total_softConstraints + total_hardConstraints + 1; id++) {	//Loop from 1 because the first row of the userConstraint file is just title
 				
 				// Get the parameter indexes list
-				List<String> parameters_indexes_list = read.get_Parameters_indexes_list(i);
+				List<String> parameters_indexes_list = read.get_Parameters_indexes_list(id);
 				// Get the dynamic identifiers indexes list
-				List<String> all_dynamicIdentifiers_columnIndexes = read.get_all_dynamicIdentifiers_columnsIndexes_in_row(i);
-				List<List<String>> all_dynamicIdentifiers = read.get_all_dynamic_identifiers_in_row(i);
+				List<String> all_dynamicIdentifiers_columnIndexes = read.get_all_dynamicIdentifiers_columnsIndexes_in_row(id);
+				List<List<String>> all_dynamicIdentifiers = read.get_all_dynamic_identifiers_in_row(id);
 				
 				
 						
@@ -2538,19 +2537,19 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				// Add -y(j) or -z(k) or -v(n)
 				int constraint_type_col = constraint_column_names_list.indexOf("bc_type");				
 				
-				if (BC_value[i][constraint_type_col].equals("SOFT")) {
+				if (BC_value[id][constraint_type_col].equals("SOFT")) {
 					c15_indexlist.get(c15_num).add(y[current_softConstraint]);
 					c15_valuelist.get(c15_num).add((double) -1);
 					current_softConstraint++;
 				}
 				
-				if (BC_value[i][constraint_type_col].equals("HARD")) {
+				if (BC_value[id][constraint_type_col].equals("HARD")) {
 					c15_indexlist.get(c15_num).add(z[current_hardConstraint]);
 					c15_valuelist.get(c15_num).add((double) -1);
 					current_hardConstraint++;
 				}
 				
-				if (BC_value[i][constraint_type_col].equals("FREE")) {
+				if (BC_value[id][constraint_type_col].equals("FREE")) {
 					c15_indexlist.get(c15_num).add(v[current_freeConstraint]);
 					c15_valuelist.get(c15_num).add((double) -1);
 					current_freeConstraint++;
@@ -2558,16 +2557,16 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									
 				
 				// Add user_defined_variables and parameters------------------------------------
-				List<String> static_methods = read.get_static_methods(i);
-				List<String> static_periods = read.get_static_periods(i);
+				List<String> static_methods = read.get_static_methods(id);
+				List<String> static_periods = read.get_static_periods(id);
 				List<Integer> integer_static_periods = static_periods.stream().map(Integer::parseInt).collect(Collectors.toList());
 				
-				List<String> static_strata = read.get_static_strata(i);
-				List<String> static_strata_without_sizeclass = read.get_static_strata_without_sizeclass(i);
-				List<String> static_strata_withoutSizeClassandCoverType = read.get_static_strata_withoutSizeClassandCoverType(i);
+				List<String> static_strata = read.get_static_strata(id);
+				List<String> static_strata_without_sizeclass = read.get_static_strata_without_sizeclass(id);
+				List<String> static_strata_withoutSizeClassandCoverType = read.get_static_strata_withoutSizeClassandCoverType(id);
 				
 				int multiplier_col = constraint_column_names_list.indexOf("bc_multiplier");
-				multiplier = (!BC_value[i][multiplier_col].equals("null")) ?  Double.parseDouble(BC_value[i][multiplier_col]) : 0;	//if multiplier = null --> 0
+				multiplier = (!BC_value[id][multiplier_col].equals("null")) ?  Double.parseDouble(BC_value[id][multiplier_col]) : 0;	//if multiplier = null --> 0
 				
 				
 				//Add xNGe
@@ -2590,7 +2589,6 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 															 * Table row index = t - 1  
 															 */		
 															current_period = t;
-															current_row = t - 1;
 															currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
 																	1 / Math.pow(1 + annualDiscountRate, 10 * (current_period - 1)) : 1;	//total discount = 1 if not cost constraint																	
 															List<String> current_var_static_condition = new ArrayList<String>();
@@ -2600,7 +2598,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 															current_var_static_condition.add(layers_Title.get(3) + layer4.get(s4));		// layer + element
 															current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
 															
-															int rotation_age = 9999;	// not need to use this, so put a 9999 here to note
+															int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
 															
 															
 															
@@ -2643,7 +2641,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				}	
 
 						
-				//Add xPBe[s1][s2][s3][s4][s5][s6][ii]			
+				//Add xPBe[s1][s2][s3][s4][s5][s6][i][t]			
 				if (static_methods.contains("PB_E")) {		
 					for (int s1 = 0; s1 < layer1.size(); s1++) {
 						for (int s2 = 0; s2 < layer2.size(); s2++) {
@@ -2653,13 +2651,12 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										for (int s6 = 0; s6 < layer6.size(); s6++) {
 											String strataName = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4) + layer5.get(s5) + layer6.get(s6);
 											if (modeled_strata.contains(strataName) && static_strata.contains(strataName)) {
-												for (int ii = 0; ii < total_PBe_Prescriptions; ii++) {
+												for (int i = 0; i < total_PBe_Prescriptions; i++) {
 													if (integer_static_periods.size() > 0) {	
 														for (int t : integer_static_periods) {		//Loop all periods
 															if (t <= total_Periods) {
 																//Find all parameter match the t and add them all to parameter
 																current_period = t;
-																current_row = t - 1;
 																currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
 																		1 / Math.pow(1 + annualDiscountRate, 10 * (current_period - 1)) : 1;	//total discount = 1 if not cost constraint																	
 																List<String> current_var_static_condition = new ArrayList<String>();
@@ -2669,7 +2666,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																current_var_static_condition.add(layers_Title.get(3) + layer4.get(s4));		// layer + element
 																current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
 																
-																int rotation_age = 9999;	// not need to use this, so put a 9999 here to note
+																int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
 																
 																
 																
@@ -2687,16 +2684,16 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																
 																				
 																para_value = Get_Parameter_Information.get_total_value(
-																		read_Database, vname[xPBe[s1][s2][s3][s4][s5][s6][ii][t]], rotation_age,
+																		read_Database, vname[xPBe[s1][s2][s3][s4][s5][s6][i][t]], rotation_age,
 																		yield_tables_names, yield_tables_values, parameters_indexes_list,
 																		all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers,
 																		cost_condition_list,
 																		coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 																para_value = para_value * currentDiscountValue * multiplier;
 																
-																//Add xPBe[s1][s2][s3][s4][s5][s6][ii][t]
-																if(xPBe[s1][s2][s3][s4][s5][s6][ii][t] > 0) {		// if variable is defined, this value would be > 0 																
-																	c15_indexlist.get(c15_num).add(xPBe[s1][s2][s3][s4][s5][s6][ii][t]);
+																//Add xPBe[s1][s2][s3][s4][s5][s6][i][t]
+																if(xPBe[s1][s2][s3][s4][s5][s6][i][t] > 0) {		// if variable is defined, this value would be > 0 																
+																	c15_indexlist.get(c15_num).add(xPBe[s1][s2][s3][s4][s5][s6][i][t]);
 																	c15_valuelist.get(c15_num).add((double) para_value);
 																}
 															}
@@ -2713,7 +2710,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				}																	
 							
 				
-				//Add xGSe[s1][s2][s3][s4][s5][s6][ii]			
+				//Add xGSe[s1][s2][s3][s4][s5][s6][i][t]			
 				if (static_methods.contains("GS_E")) {		
 					for (int s1 = 0; s1 < layer1.size(); s1++) {
 						for (int s2 = 0; s2 < layer2.size(); s2++) {
@@ -2723,13 +2720,12 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										for (int s6 = 0; s6 < layer6.size(); s6++) {
 											String strataName = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4) + layer5.get(s5) + layer6.get(s6);
 											if (modeled_strata.contains(strataName) && static_strata.contains(strataName)) {
-												for (int ii = 0; ii < total_GSe_Prescriptions; ii++) {
+												for (int i = 0; i < total_GSe_Prescriptions; i++) {
 													if (integer_static_periods.size() > 0) {	
 														for (int t : integer_static_periods) {		//Loop all periods
 															if (t <= total_Periods) {
 																//Find all parameter match the t and add them all to parameter
 																current_period = t;
-																current_row = t - 1;
 																currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
 																		1 / Math.pow(1 + annualDiscountRate, 10 * (current_period - 1)) : 1;	//total discount = 1 if not cost constraint																	
 																List<String> current_var_static_condition = new ArrayList<String>();
@@ -2739,7 +2735,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																current_var_static_condition.add(layers_Title.get(3) + layer4.get(s4));		// layer + element
 																current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
 																		
-																int rotation_age = 9999;	// not need to use this, so put a 9999 here to note
+																int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
 																
 																
 																
@@ -2757,16 +2753,16 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																
 																
 																para_value = Get_Parameter_Information.get_total_value(
-																		read_Database, vname[xGSe[s1][s2][s3][s4][s5][s6][ii][t]], rotation_age,
+																		read_Database, vname[xGSe[s1][s2][s3][s4][s5][s6][i][t]], rotation_age,
 																		yield_tables_names, yield_tables_values, parameters_indexes_list,
 																		all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers,
 																		cost_condition_list,
 																		coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 																para_value = para_value * currentDiscountValue * multiplier;
 																
-																//Add xGSe[s1][s2][s3][s4][s5][s6][ii][t]
-																if(xGSe[s1][s2][s3][s4][s5][s6][ii][t] > 0) {		// if variable is defined, this value would be > 0 																	
-																	c15_indexlist.get(c15_num).add(xGSe[s1][s2][s3][s4][s5][s6][ii][t]);
+																//Add xGSe[s1][s2][s3][s4][s5][s6][i][t]
+																if(xGSe[s1][s2][s3][s4][s5][s6][i][t] > 0) {		// if variable is defined, this value would be > 0 																	
+																	c15_indexlist.get(c15_num).add(xGSe[s1][s2][s3][s4][s5][s6][i][t]);
 																	c15_valuelist.get(c15_num).add((double) para_value);
 																}
 															}
@@ -2783,7 +2779,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				}						
 	
 						
-				//Add xMS[s1][s2][s3][s4][s5][s6][ii]			
+				//Add xMS[s1][s2][s3][s4][s5][s6][i][t]			
 				if (static_methods.contains("MS_E")) {		
 					for (int s1 = 0; s1 < layer1.size(); s1++) {
 						for (int s2 = 0; s2 < layer2.size(); s2++) {
@@ -2793,13 +2789,12 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										for (int s6 = 0; s6 < layer6.size(); s6++) {
 											String strataName = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4) + layer5.get(s5) + layer6.get(s6);
 											if (modeled_strata.contains(strataName) && static_strata.contains(strataName)) {
-												for (int ii = 0; ii < total_MS_Prescriptions; ii++) {
+												for (int i = 0; i < total_MS_Prescriptions; i++) {
 													if (integer_static_periods.size() > 0) {	
 														for (int t : integer_static_periods) {		//Loop all periods
 															if (t <= total_Periods) {
 																//Find all parameter match the t and add them all to parameter
 																current_period = t;
-																current_row = t - 1;
 																currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
 																		1 / Math.pow(1 + annualDiscountRate, 10 * (current_period - 1)) : 1;	//total discount = 1 if not cost constraint																	
 																List<String> current_var_static_condition = new ArrayList<String>();
@@ -2809,7 +2804,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																current_var_static_condition.add(layers_Title.get(3) + layer4.get(s4));		// layer + element
 																current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
 																
-																int rotation_age = 9999;	// not need to use this, so put a 9999 here to note
+																int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
 																
 																
 																
@@ -2821,16 +2816,16 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																
 																
 																para_value = Get_Parameter_Information.get_total_value(
-																		read_Database, vname[xMS[s1][s2][s3][s4][s5][s6][ii][t]], rotation_age,
+																		read_Database, vname[xMS[s1][s2][s3][s4][s5][s6][i][t]], rotation_age,
 																		yield_tables_names, yield_tables_values, parameters_indexes_list,
 																		all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers,
 																		cost_condition_list,
 																		coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 																para_value = para_value * currentDiscountValue * multiplier;
 																
-																//Add xMS[s1][s2][s3][s4][s5][s6][ii][t]
-																if(xMS[s1][s2][s3][s4][s5][s6][ii][t] > 0) {		// if variable is defined, this value would be > 0 															
-																	c15_indexlist.get(c15_num).add(xMS[s1][s2][s3][s4][s5][s6][ii][t]);
+																//Add xMS[s1][s2][s3][s4][s5][s6][i][t]
+																if(xMS[s1][s2][s3][s4][s5][s6][i][t] > 0) {		// if variable is defined, this value would be > 0 															
+																	c15_indexlist.get(c15_num).add(xMS[s1][s2][s3][s4][s5][s6][i][t]);
 																	c15_valuelist.get(c15_num).add((double) para_value);
 																}
 															}
@@ -2847,7 +2842,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				}								
 				
 				
-				//Add xBS[s1][s2][s3][s4][s5][s6][ii]			
+				//Add xBS[s1][s2][s3][s4][s5][s6][i][t]			
 				if (static_methods.contains("BS_E")) {		
 					for (int s1 = 0; s1 < layer1.size(); s1++) {
 						for (int s2 = 0; s2 < layer2.size(); s2++) {
@@ -2857,13 +2852,12 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										for (int s6 = 0; s6 < layer6.size(); s6++) {
 											String strataName = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4) + layer5.get(s5) + layer6.get(s6);
 											if (modeled_strata.contains(strataName) && static_strata.contains(strataName)) {
-												for (int ii = 0; ii < total_BS_Prescriptions; ii++) {
+												for (int i = 0; i < total_BS_Prescriptions; i++) {
 													if (integer_static_periods.size() > 0) {	
 														for (int t : integer_static_periods) {		//Loop all periods
 															if (t <= total_Periods) {
 																//Find all parameter match the t and add them all to parameter
 																current_period = t;
-																current_row = t - 1;
 																currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
 																		1 / Math.pow(1 + annualDiscountRate, 10 * (current_period - 1)) : 1;	//total discount = 1 if not cost constraint																	
 																List<String> current_var_static_condition = new ArrayList<String>();
@@ -2873,7 +2867,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																current_var_static_condition.add(layers_Title.get(3) + layer4.get(s4));		// layer + element
 																current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
 																
-																int rotation_age = 9999;	// not need to use this, so put a 9999 here to note
+																int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
 																
 																
 																
@@ -2883,16 +2877,16 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																
 																
 																para_value = Get_Parameter_Information.get_total_value(
-																		read_Database, vname[xBS[s1][s2][s3][s4][s5][s6][ii][t]], rotation_age,
+																		read_Database, vname[xBS[s1][s2][s3][s4][s5][s6][i][t]], rotation_age,
 																		yield_tables_names, yield_tables_values, parameters_indexes_list,
 																		all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers,
 																		cost_condition_list,
 																		coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 																para_value = para_value * currentDiscountValue * multiplier;
 																
-																//Add xBS[s1][s2][s3][s4][s5][s6][ii][t]
-																if(xBS[s1][s2][s3][s4][s5][s6][ii][t] > 0) {		// if variable is defined, this value would be > 0 															
-																	c15_indexlist.get(c15_num).add(xBS[s1][s2][s3][s4][s5][s6][ii][t]);
+																//Add xBS[s1][s2][s3][s4][s5][s6][i][t]
+																if(xBS[s1][s2][s3][s4][s5][s6][i][t] > 0) {		// if variable is defined, this value would be > 0 															
+																	c15_indexlist.get(c15_num).add(xBS[s1][s2][s3][s4][s5][s6][i][t]);
 																	c15_valuelist.get(c15_num).add((double) para_value);	
 																}
 															}
@@ -2909,9 +2903,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				}									
 								
 				
-				//Add xEAe
+				// Add xEAe[s1][s2][s3][s4][s5][s6](tR)(s5R)(i)(t)
 				if (static_methods.contains("EA_E")) {							
-					// Add xEAe(s1,s2,s3,s4,s5,s6)(t)(c)(ii)(tR)
 					for (int s1 = 0; s1 < layer1.size(); s1++) {
 						for (int s2 = 0; s2 < layer2.size(); s2++) {
 							for (int s3 = 0; s3 < layer3.size(); s3++) {
@@ -2920,18 +2913,17 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										for (int s6 = 0; s6 < layer6.size(); s6++) {
 											String strataName = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4) + layer5.get(s5) + layer6.get(s6);
 											if (modeled_strata.contains(strataName) && static_strata.contains(strataName)) {
-												for (int t = 1; t <= total_Periods; t++) {		//Loop from period tR to T
-													for (int c = 0; c < layer5.size(); c++) {	
-														int processingAge = t + StartingAge[s1][s2][s3][s4][s5][s6] - 1;
-														String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(c) + " " + processingAge;	
-														if (covertype_conversions_and_existing_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
+												for (int tR = 1; tR <= total_Periods; tR++) {		//Loop from period tR to T
+													for (int s5R = 0; s5R < layer5.size(); s5R++) {	
+														int rotation_age = tR + StartingAge[s1][s2][s3][s4][s5][s6] - 1;
+														String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(s5R) + " " + rotation_age;	
+														if (covertype_conversions_and_existing_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {			// Check this one carefully
 															if (integer_static_periods.size() > 0) {	
-																for (int ii = 0; ii < total_EAe_Prescriptions; ii++) {
-																	for (int tR : integer_static_periods) {		//Loop all periods, 	final cut at t but we need parameter at time tR
-																		if (tR<=t) {
+																for (int i = 0; i < total_EAe_Prescriptions; i++) {
+																	for (int t : integer_static_periods) {		//Loop all periods, 	final cut at t but we need parameter at time tR
+																		if (t <= tR) {
 																			//Find all parameter match the t and add them all to parameter
-																			current_period = tR;
-																			current_row = tR - 1;		//Change this later
+																			current_period = t;
 																			currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
 																					1 / Math.pow(1 + annualDiscountRate, 10 * (current_period - 1)) : 1;	//total discount = 1 if not cost constraint																	
 																			List<String> current_var_static_condition = new ArrayList<String>();
@@ -2941,7 +2933,6 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																			current_var_static_condition.add(layers_Title.get(3) + layer4.get(s4));		// layer + element
 																			current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
 																				
-																			int rotation_age =  t + StartingAge[s1][s2][s3][s4][s5][s6] - 1;
 																			
 																			
 																			
@@ -2950,27 +2941,27 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																			List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
 																			SRDage = StartingAge[s1][s2][s3][s4][s5][s6] + t - 1; 
 																			if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
-																			for (int s5R = 0; s5R < layer5.size(); s5R++) {
-																				if (rdPercent[s5][s5R] / 100 > 0) {
-																					coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(s5R) + " " + "disturbance");
-																					coversion_cost_after_disturbance_value_list.add(SRD_percent[s5][SRDage] / 100 * rdPercent[s5][s5R] / 100);
+																			for (int s5RR = 0; s5RR < layer5.size(); s5RR++) {
+																				if (rdPercent[s5][s5RR] / 100 > 0) {
+																					coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(s5RR) + " " + "disturbance");
+																					coversion_cost_after_disturbance_value_list.add(SRD_percent[s5][SRDage] / 100 * rdPercent[s5][s5RR] / 100);
 																				}														
 																			}
 																			
 																			
 																			
 																		    para_value = Get_Parameter_Information.get_total_value(
-																		    		read_Database, vname[xEAe[s1][s2][s3][s4][s5][s6][t][c][ii][tR]], rotation_age,
+																		    		read_Database, vname[xEAe[s1][s2][s3][s4][s5][s6][tR][s5R][i][t]], rotation_age,
 																					yield_tables_names, yield_tables_values, parameters_indexes_list,
 																					all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers,
 																					cost_condition_list,
 																					coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 																			para_value = para_value * currentDiscountValue * multiplier;
 																			
-																			//Add xEAe(s1,s2,s3,s4,s5,s6)(t)(c)(tR)	final cut at t but we need parameter at time tR
-																			if(xEAe[s1][s2][s3][s4][s5][s6][t][c][ii][tR] > 0) {		// if variable is defined, this value would be > 0 																				
-																				c15_indexlist.get(c15_num).add(xEAe[s1][s2][s3][s4][s5][s6][t][c][ii][tR]);
-																				c15_valuelist.get(c15_num).add((double) para_value);	
+																			//Add xEAe(s1,s2,s3,s4,s5,s6)(tR)(s5R)(i)(t)	final cut at tR but we need parameter at time t
+																			if(xEAe[s1][s2][s3][s4][s5][s6][tR][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0 																				
+																				c15_indexlist.get(c15_num).add(xEAe[s1][s2][s3][s4][s5][s6][tR][s5R][i][t]);
+																				c15_valuelist.get(c15_num).add((double) para_value);
 																			}
 																		}
 																	}
@@ -2989,9 +2980,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				}
 				
 				
-				//Add xEAr
+				//Add xEAr[s1][s2][s3][s4][s5][tR][aR][s5R][i][t]		  note   tR >= 2   -->   tR >= t >= tR - aR + 1
 				if (static_methods.contains("EA_R")) {	
-					// Add xEAr(s1,s2,s3,s4,s5)(t)(a)(c)(ii)(tR)  note t>=2 --> tR>=t-a+1
 					for (int s1 = 0; s1 < layer1.size(); s1++) {
 						for (int s2 = 0; s2 < layer2.size(); s2++) {
 							for (int s3 = 0; s3 < layer3.size(); s3++) {
@@ -2999,18 +2989,17 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									String strataName = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4);
 									if (modeled_strata_without_sizeclass_and_covertype.contains(strataName) && static_strata_withoutSizeClassandCoverType.contains(strataName)) {
 										for (int s5 = 0; s5 < layer5.size(); s5++) {
-											for (int t = 2; t <= total_Periods; t++) {
-												for (int a = 1; a <= t - 1; a++) {
-													for (int c = 0; c < layer5.size(); c++) {
-														String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(c) + " " + a;						
+											for (int tR = 2; tR <= total_Periods; tR++) {
+												for (int aR = 1; aR <= tR - 1; aR++) {
+													for (int s5R = 0; s5R < layer5.size(); s5R++) {
+														String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(s5R) + " " + aR;						
 														if (covertype_conversions_and_regeneration_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
 															if (integer_static_periods.size() > 0) {	
-																for (int ii = 0; ii < total_EAr_Prescriptions; ii++) {
-																	for (int tR : integer_static_periods) {		//Loop all periods, 	final cut at t but we need parameter at time tR
-																		if (tR >= (t-a+1) && tR<=t) {
+																for (int i = 0; i < total_EAr_Prescriptions; i++) {
+																	for (int t : integer_static_periods) {		//Loop all periods, 	final cut at t but we need parameter at time tR
+																		if (t >= tR - aR + 1 && t <= tR) {
 																			//Find all parameter match the t and add them all to parameter
-																			current_period = tR;
-																			current_row = tR - 1;		//Change this later
+																			current_period = t;
 																			currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
 																					1 / Math.pow(1 + annualDiscountRate, 10 * (current_period - 1)) : 1;	//total discount = 1 if not cost constraint																	
 																			List<String> current_var_static_condition = new ArrayList<String>();
@@ -3020,19 +3009,19 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																			current_var_static_condition.add(layers_Title.get(3) + layer4.get(s4));		// layer + element
 																			current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
 																			
-																			int rotation_age = 9999;	// not need to use this, so put a 9999 here to note
+																			int rotation_age = aR;
 																			
 																			
 																			
 																			
 																			List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
 																			List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
-																			SRDage = a - t + tR; 
+																			SRDage = aR - tR + t; 
 																			if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
-																			for (int s5R = 0; s5R < layer5.size(); s5R++) {
-																				if (rdPercent[s5][s5R] / 100 > 0) {
-																					coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(s5R) + " " + "disturbance");
-																					coversion_cost_after_disturbance_value_list.add(SRD_percent[s5][SRDage] / 100 * rdPercent[s5][s5R] / 100);
+																			for (int s5RR = 0; s5RR < layer5.size(); s5RR++) {
+																				if (rdPercent[s5][s5RR] / 100 > 0) {
+																					coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(s5RR) + " " + "disturbance");
+																					coversion_cost_after_disturbance_value_list.add(SRD_percent[s5][SRDage] / 100 * rdPercent[s5][s5RR] / 100);
 																				}														
 																			}
 																			
@@ -3040,17 +3029,17 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																			
 																			
 																		    para_value = Get_Parameter_Information.get_total_value(
-																		    		read_Database, vname[xEAr[s1][s2][s3][s4][s5][t][a][c][ii][tR]], rotation_age,
+																		    		read_Database, vname[xEAr[s1][s2][s3][s4][s5][tR][aR][s5R][i][t]], rotation_age,
 																					yield_tables_names, yield_tables_values, parameters_indexes_list,
 																					all_dynamicIdentifiers_columnIndexes, all_dynamicIdentifiers,
 																					cost_condition_list,
 																					coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 																			para_value = para_value * currentDiscountValue * multiplier;
 																			
-																			//Add xEAr(s1,s2,s3,s4,s5)(t)(a)(c)(ii)(tR)		final cut at t but we need parameter at time tR
-																			if(xEAr[s1][s2][s3][s4][s5][t][a][c][ii][tR] > 0) {		// if variable is defined, this value would be > 0 
-																				c15_indexlist.get(c15_num).add(xEAr[s1][s2][s3][s4][s5][t][a][c][ii][tR]);
-																				c15_valuelist.get(c15_num).add((double) para_value);
+																			//Add xEAr[s1][s2][s3][s4][s5][tR][aR][s5R][i][t]		final cut at tR but we need parameter at time t
+																			if(xEAr[s1][s2][s3][s4][s5][tR][aR][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0 
+																				c15_indexlist.get(c15_num).add(xEAr[s1][s2][s3][s4][s5][tR][aR][s5R][i][t]);
+																				c15_valuelist.get(c15_num).add((double) para_value);	
 																			}
 																		}
 																	}
@@ -3071,7 +3060,6 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 	
 				//Add xNGr
 				if (static_methods.contains("NG_R")) {		
-					//Add xNGr(s1,s2,s3,s4,s5)(tt)(a)
 					for (int s1 = 0; s1 < layer1.size(); s1++) {
 						for (int s2 = 0; s2 < layer2.size(); s2++) {
 							for (int s3 = 0; s3 < layer3.size(); s3++) {
@@ -3089,7 +3077,6 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 															if (t == tt) {
 																//Find all parameter match the t and add them all to parameter
 																current_period = t;
-																current_row = t - 1;		//Change this later
 																currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
 																		1 / Math.pow(1 + annualDiscountRate, 10 * (current_period - 1)) : 1;	//total discount = 1 if not cost constraint																	
 																List<String> current_var_static_condition = new ArrayList<String>();
@@ -3099,7 +3086,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																current_var_static_condition.add(layers_Title.get(3) + layer4.get(s4));		// layer + element
 																current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
 																
-																int rotation_age = 9999;	// not need to use this, so put a 9999 here to note
+																int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
 																
 																
 																
@@ -3146,7 +3133,6 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 
 				//Add xPBr
 				if (static_methods.contains("PB_R")) {		
-					//Add xPBr(s1,s2,s3,s4,s5)(ii)(tt)(a)
 					for (int s1 = 0; s1 < layer1.size(); s1++) {
 						for (int s2 = 0; s2 < layer2.size(); s2++) {
 							for (int s3 = 0; s3 < layer3.size(); s3++) {
@@ -3165,7 +3151,6 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																if (t == tt) {
 																	//Find all parameter match the t and add them all to parameter
 																	current_period = t;
-																	current_row = t - 1;		//Change this later
 																	currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
 																			1 / Math.pow(1 + annualDiscountRate, 10 * (current_period - 1)) : 1;	//total discount = 1 if not cost constraint																	
 																	List<String> current_var_static_condition = new ArrayList<String>();
@@ -3175,7 +3160,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																	current_var_static_condition.add(layers_Title.get(3) + layer4.get(s4));		// layer + element
 																	current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
 																	
-																	int rotation_age = 9999;	// not need to use this, so put a 9999 here to note
+																	int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
 																	
 																	
 																	
@@ -3225,7 +3210,6 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				
 				//Add xGSr
 				if (static_methods.contains("GS_R")) {		
-					//Add xGSr(s1,s2,s3,s4,s5)(ii)(tt)(a)
 					for (int s1 = 0; s1 < layer1.size(); s1++) {
 						for (int s2 = 0; s2 < layer2.size(); s2++) {
 							for (int s3 = 0; s3 < layer3.size(); s3++) {
@@ -3244,7 +3228,6 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																if (t == tt) {
 																	//Find all parameter match the t and add them all to parameter
 																	current_period = t;
-																	current_row = t - 1;		//Change this later
 																	currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
 																			1 / Math.pow(1 + annualDiscountRate, 10 * (current_period - 1)) : 1;	//total discount = 1 if not cost constraint																	
 																	List<String> current_var_static_condition = new ArrayList<String>();
@@ -3254,7 +3237,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																	current_var_static_condition.add(layers_Title.get(3) + layer4.get(s4));		// layer + element
 																	current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));		// layer + element
 																	
-																	int rotation_age = 9999;	// not need to use this, so put a 9999 here to note
+																	int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
 																	
 																	
 																	

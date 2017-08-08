@@ -258,9 +258,22 @@ All changes in this block are associated with v29.jar, formulation24.docx, datab
 133. Very important: output05 filter (Static identifier): layer 5 and 6 are applied for existing strata only.
 134. Management Cost GUI is built and and Logic is connected
 
-
 All changes in this block are associated with v30.jar, formulation25.docx, database5.docx
+--------------------------------------------------------------------------
 
+135. Some changes to match codes and formulation:
+	- Eq 15: change rotation_age = 9999 which is wrong --> the right thing is: rotation_age = aR
+	- Define variable: forgot to add underscore to PB_E variable --> fixed
+	- Eq 15: change indexes for xEA_E and xEA_R variables to match formulation
+	- private static Boolean are_all_static_identifiers_matched: only check identifiers vs layer5 and layer6 if forest_status is E and method is not MS or BS
+	- Get_Variable_Information: add a "not available" whenever a search is implemented for each term --> this is a security in case of bad situation 
+	- get_final_action_cost_list_and_conversion_cost_list_for_this_variable: add 2 if to make sure all null (or "") condition can be run:
+		- if (this_condition_info[2].length() > 0) {
+		- if (this_condition_info[3].length() > 0) {
+	- reload_this_condition_action_cost_and_conversion_cost: add 2 if to make sure all null (or "") condition can be reloaded:
+		- if(action_cost_info.length() > 0) {
+		- if(conversion_cost_info.length() > 0) {
+136. 
 
 
 

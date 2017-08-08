@@ -45,11 +45,8 @@ public class Get_Parameter_Information {
 							value_to_return = 1;							
 						} 
 						
-						else if (parameters_indexes_list.contains("CostParameter")) {			//If this is a cost constraint	
-							if (cost_condition_list == null) {	// no condition --> all cost is 0
-								value_to_return = 0;
-							} 
-							else {														
+						else if (parameters_indexes_list.contains("CostParameter")) {			// If this is a cost constrain
+							if (cost_condition_list != null) {					// If there is at least one cost condition										
 								int action_type_index = yield_tables_column_names_list.indexOf("action_type");
 								String var_action_type = yield_tables_values[table_id_to_find][row_id_to_find][action_type_index].toString();
 								
@@ -71,7 +68,12 @@ public class Get_Parameter_Information {
 										value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(0).get(1).get(item)) * Double.parseDouble(yield_tables_values[table_id_to_find][row_id_to_find][col_id].toString());
 									}
 								}
-										
+								
+								if (Get_Variable_Information.get_period(var_name) == 2) {
+									System.out.println("processing cost condition for var = " + var_name 
+											+ "   condtion = " + coversion_cost_after_disturbance_name_list);
+								}
+								
 								
 								// conversion_cost: include 2 lists for column name (i.e. P D action) and value (i.e. 240)
 								for (int item = 0; item < final_cost_list.get(1).get(0).size(); item++) {	// loop list:  final_cost_list.get(1).get(0) which is final_conversion_cost_column_list
@@ -88,6 +90,15 @@ public class Get_Parameter_Information {
 										if (coversion_cost_after_disturbance_name_list != null && coversion_cost_after_disturbance_name_list.contains(final_cost_list.get(1).get(0).get(item))) {
 											int index = coversion_cost_after_disturbance_name_list.indexOf(final_cost_list.get(1).get(0).get(item));
 											value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(1).get(1).get(item)) * coversion_cost_after_disturbance_value_list.get(index);
+											
+											if (Get_Variable_Information.get_period(var_name) == 2) {
+												System.out.println("added var = " + var_name 
+														+ "   non-discounted parameter = " + value_to_return
+														+ "   rotation_period = " + Get_Variable_Information.get_rotation_period(var_name)
+														+ "   period = " + Get_Variable_Information.get_period(var_name)
+														+ "   condition = " + coversion_cost_after_disturbance_name_list.get(index)
+														+ " " + coversion_cost_after_disturbance_value_list.get(index));
+											}		
 										}
 									}
 									
@@ -96,7 +107,7 @@ public class Get_Parameter_Information {
 							}						
 						} 
 						
-						else {			// If this is regular constraint with parameters		
+						else {			// If this is regular constraint with Parameters		
 							for (int j = 0; j < parameters_indexes_list.size(); j++) {		//loop all parameters_indexes_list 	
 								int col = Integer.parseInt(parameters_indexes_list.get(j));						
 								value_to_return = value_to_return + Double.parseDouble(yield_tables_values[table_id_to_find][row_id_to_find][col].toString());		// then add to the total of all parameters found
@@ -177,21 +188,25 @@ public class Get_Parameter_Information {
 					are_all_dynamic_identifiers_matched(yield_tables_values, table_id_to_find, row_id_to_find, dynamic_dentifiers_column_indexes,cost_condition_dynamic_identifiers)) {
 				
 				// For action_cost
-				List<String[]> action_cost_list = get_cost_condition_action_cost(this_condition_info[2], var_action_type);
-				for (String[] c: action_cost_list) {			// c example: clearcut acres 360		c example2: clearcut hca_allsx 0
-					if (!final_action_cost_column_list.contains(c[1])) {		// only null is escape, the GUI already guarantees the value >=0			
-						final_action_cost_column_list.add(c[1]);	// i.e. acres    hca_allsx
-						final_action_cost_value_list.add(c[2]);		// i.e. 360
+				if (this_condition_info[2].length() > 0) {		// this guarantees the string is not ""
+					List<String[]> action_cost_list = get_cost_condition_action_cost(this_condition_info[2], var_action_type);
+					for (String[] c: action_cost_list) {			// c example: clearcut acres 360		c example2: clearcut hca_allsx 0
+						if (!final_action_cost_column_list.contains(c[1])) {		// only null is escape, the GUI already guarantees the value >=0			
+							final_action_cost_column_list.add(c[1]);	// i.e. acres    hca_allsx
+							final_action_cost_value_list.add(c[2]);		// i.e. 360
+						}
 					}
 				}
 				
 				// For conversion cost
-				List<String[]> conversion_cost_list = get_cost_condition_conversion_cost(this_condition_info[3]);
-				for (String[] c: conversion_cost_list) {			// c example:  P D action 240         	W L disturbance 120
-					if (!final_conversion_cost_column_list.contains(c[0] + " " + c[1] + " " + c[2])) {		// only null is escape, the GUI already guarantees the value >=0				
-						final_conversion_cost_column_list.add(c[0] + " " + c[1] + " " + c[2]);		// i.e. P D action		W L disturbance
-						final_conversion_cost_value_list.add(c[3]);		// i.e. 240		120
-					}	
+				if (this_condition_info[3].length() > 0) {		// this guarantees the string is not ""
+					List<String[]> conversion_cost_list = get_cost_condition_conversion_cost(this_condition_info[3]);
+					for (String[] c: conversion_cost_list) {			// c example:  P D action 240         	W L disturbance 120
+						if (!final_conversion_cost_column_list.contains(c[0] + " " + c[1] + " " + c[2])) {		// only null is escape, the GUI already guarantees the value >=0				
+							final_conversion_cost_column_list.add(c[0] + " " + c[1] + " " + c[2]);		// i.e. P D action		W L disturbance
+							final_conversion_cost_value_list.add(c[3]);		// i.e. 240		120
+						}	
+					}
 				}
 				
 			}
@@ -234,9 +249,9 @@ public class Get_Parameter_Information {
 		if (!static_identifier.get(1).contains(Get_Variable_Information.get_layer2(var_name))) return false;
 		if (!static_identifier.get(2).contains(Get_Variable_Information.get_layer3(var_name))) return false;
 		if (!static_identifier.get(3).contains(Get_Variable_Information.get_layer4(var_name))) return false;
-		if (!static_identifier.get(4).contains(Get_Variable_Information.get_layer5(var_name))) return false;
-		if (Get_Variable_Information.get_layer6(var_name) != null) {		// Only existing variables have layer6 <> null			
-			if (!static_identifier.get(5).contains(Get_Variable_Information.get_layer6(var_name))) return false;	// layer 6: size class
+		if (Get_Variable_Information.get_forest_status(var_name).equals("E") && !Get_Variable_Information.get_method(var_name).equals("MS") && !Get_Variable_Information.get_method(var_name).equals("BS")) {
+			if (!static_identifier.get(4).contains(Get_Variable_Information.get_layer5(var_name))) return false;	// layer5 cover type
+			if (!static_identifier.get(5).contains(Get_Variable_Information.get_layer6(var_name))) return false;	// layer6: size class
 		}
 		if (!static_identifier.get(6).contains(Get_Variable_Information.get_method(var_name) + "_" + Get_Variable_Information.get_forest_status(var_name))) return false;
 		if (!static_identifier.get(7).contains(String.valueOf(Get_Variable_Information.get_period(var_name)))) return false;					

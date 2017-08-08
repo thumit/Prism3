@@ -106,23 +106,25 @@ public class ScrollPane_CostTables extends JScrollPane {
 		}
 		
 		// Reload table7a
-		String[] info_7a = action_cost_info.split(";");					
-		for (int i = 0; i < info_7a.length; i++) {			
-			String[] sub_info = info_7a[i].split(" ");
-			String action = sub_info[0];
-			String attribute = sub_info[1];
-			double cost = Double.valueOf(sub_info[2]);
-			
-			for (int row = 0; row < data7a.length; row++) {
-				if (data7a[row][0].toString().equals(action)) {
-					for (int col = 1; col < data7a[row].length; col++) {
-						if (columnNames7a[col].equals(attribute)) {
-							data7a[row][col] = cost;
+		if(action_cost_info.length() > 0) {		// this guarantees the string is not ""
+			String[] info_7a = action_cost_info.split(";");					
+			for (int i = 0; i < info_7a.length; i++) {			
+				String[] sub_info = info_7a[i].split(" ");
+				String action = sub_info[0];
+				String attribute = sub_info[1];
+				double cost = Double.valueOf(sub_info[2]);
+				
+				for (int row = 0; row < data7a.length; row++) {
+					if (data7a[row][0].toString().equals(action)) {
+						for (int col = 1; col < data7a[row].length; col++) {
+							if (columnNames7a[col].equals(attribute)) {
+								data7a[row][col] = cost;
+							}
 						}
 					}
-				}
-			}	
-		}				
+				}	
+			}		
+		}
 		
 		// Reset data7b to null		
 		for (int row = 0; row < data7b.length; row++) {
@@ -132,23 +134,25 @@ public class ScrollPane_CostTables extends JScrollPane {
 		}
 		
 		// Reload table7b
-		String[] info_7b = conversion_cost_info.split(";");					
-		for (int i = 0; i < info_7b.length; i++) {			
-			String[] sub_info = info_7b[i].split(" ");
-			String covertype_before = sub_info[0];
-			String covertype_after = sub_info[1];
-			String attribute = sub_info[2];
-			double cost = Double.valueOf(sub_info[3]);
-			
-			for (int row = 0; row < data7b.length; row++) {
-				if ((data7b[row][0].toString() + data7b[row][1].toString()).equals(covertype_before + covertype_after)) {
-					for (int col = 2; col < data7b[row].length; col++) {
-						if (columnNames7b[col].equals(attribute)) {
-							data7b[row][col] = cost;
+		if(conversion_cost_info.length() > 0) {		// this guarantees the string is not ""
+			String[] info_7b = conversion_cost_info.split(";");					
+			for (int i = 0; i < info_7b.length; i++) {			
+				String[] sub_info = info_7b[i].split(" ");
+				String covertype_before = sub_info[0];
+				String covertype_after = sub_info[1];
+				String attribute = sub_info[2];
+				double cost = Double.valueOf(sub_info[3]);
+				
+				for (int row = 0; row < data7b.length; row++) {
+					if ((data7b[row][0].toString() + data7b[row][1].toString()).equals(covertype_before + covertype_after)) {
+						for (int col = 2; col < data7b[row].length; col++) {
+							if (columnNames7b[col].equals(attribute)) {
+								data7b[row][col] = cost;
+							}
 						}
 					}
-				}
-			}	
+				}	
+			}
 		}
 	}
 

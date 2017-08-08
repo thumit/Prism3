@@ -1,0 +1,14 @@
+var_id	var_name	var_value	var_reduced_cost	db_strata_tofind	db_row_id_tofind	db_status
+10	xNG_E_C,R,N,R,P,M,1	85.5	0.0	P_M_NG_E_0	0	good
+11	xNG_E_C,R,N,R,P,M,2	85.329	0.0	P_M_NG_E_0	1	good
+12	xNG_E_C,R,N,R,P,M,3	85.15834199999999	0.0	P_M_NG_E_0	2	good
+43	xMS_E_C,R,N,R,P,M,0,1	4.5	0.0	P_M_MS_E_0	0	good
+44	xMS_E_C,R,N,R,P,M,0,2	4.5	0.0	P_M_MS_E_0	1	good
+45	xMS_E_C,R,N,R,P,M,0,3	4.5	0.0	P_M_MS_E_0	2	good
+58	xNG_R_C,R,N,R,P,2,1	0.0855	0.0	P_NG_R_0	0	good
+59	xNG_R_C,R,N,R,P,3,1	0.0854145	0.0	P_NG_R_0	0	good
+60	xNG_R_C,R,N,R,P,3,2	0.085329	0.0	P_NG_R_0	1	good
+61	xNG_R_C,R,N,R,D,2,1	0.0855	0.0	D_NG_R_0	0	good
+62	xNG_R_C,R,N,R,D,3,1	0.08545725	0.0	D_NG_R_0	0	good
+63	xNG_R_C,R,N,R,D,3,2	0.085329	0.0	D_NG_R_0	1	good
+65	xNG_R_C,R,N,R,W,3,1	1.2825E-4	0.0	W_NG_R_0	0	good
