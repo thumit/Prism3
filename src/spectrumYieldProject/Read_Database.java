@@ -468,21 +468,21 @@ public class Read_Database {
 	
 	
 	
-	
-	public List<String> get_MethodsPeriodsAges_Title() {
+	// This block is For 2 extra layers ------------------------------------------------------------------------------------------------------
+	// This block is For 2 extra layers ------------------------------------------------------------------------------------------------------
+	// This block is For 2 extra layers ------------------------------------------------------------------------------------------------------	
+	public List<String> get_method_period_layers_title() {
 		//Layers title
-		List<String> MethodsPeriodsAges_Title = new ArrayList<String>();
-		MethodsPeriodsAges_Title.add("silvicultural method");
-		MethodsPeriodsAges_Title.add("time period");
-		MethodsPeriodsAges_Title.add("age class");
-
-		return MethodsPeriodsAges_Title;
+		List<String> method_period_layers_title = new ArrayList<String>();
+		method_period_layers_title.add("silviculture method");
+		method_period_layers_title.add("time period");
+		return method_period_layers_title;
 	}
 
 	
-	public List<List<String>> get_MethodsPeriodsAges() {
+	public List<List<String>> get_method_period_layers() {
 		//Layers element name
-		List<String> layer1 = new ArrayList<String>();			//Silvicultural methods
+		List<String> layer1 = new ArrayList<String>();		// methods
 		layer1.add("NG_E");
 		layer1.add("PB_E");
 		layer1.add("GS_E");
@@ -493,27 +493,54 @@ public class Read_Database {
 		layer1.add("PB_R");
 		layer1.add("GS_R");
 		layer1.add("EA_R");
-
 		
-		List<String> layer2 = new ArrayList<String>();		//Time Periods
+		List<String> layer2 = new ArrayList<String>();		// periods
 		for (int i = 1; i <= 50; i++) {
 			layer2.add(Integer.toString(i));
-		}
-		
-		List<String> layer3 = new ArrayList<String>();		//Age Classes
-		for (int i = 1; i <= 50; i++) {
-			layer3.add(Integer.toString(i));
-		}
-
+		}		
 			
-		List<List<String>> MethodsPeriodsAges = new ArrayList<List<String>>();
-		MethodsPeriodsAges.add(layer1);
-		MethodsPeriodsAges.add(layer2);
-//		MethodsPeriodsAges.add(layer3);
+		List<List<String>> method_period_layers = new ArrayList<List<String>>();
+		method_period_layers.add(layer1);
+		method_period_layers.add(layer2);
 			
-		return MethodsPeriodsAges;
+		return method_period_layers;
 	}
 
+	
+	public List<String> get_method_choice_layers_title() {
+		//Layers title
+		List<String> method_choice_layers_title = new ArrayList<String>();
+		method_choice_layers_title.add("silviculture method (unactivated)");
+		method_choice_layers_title.add("timing choice (unactivated)");
+		return method_choice_layers_title;
+	}
+
+	
+	public List<List<String>> get_method_choice_layers() {
+		//Layers element name
+		List<String> layer1 = new ArrayList<String>();		// methods
+		layer1.add("NG_E");
+		layer1.add("PB_E");
+		layer1.add("GS_E");
+		layer1.add("EA_E");	
+		layer1.add("MS_E");
+		layer1.add("BS_E");
+		layer1.add("NG_R");
+		layer1.add("PB_R");
+		layer1.add("GS_R");
+		layer1.add("EA_R");
+		
+		List<String> layer2 = new ArrayList<String>();		// timing choice
+		for (int i = 0; i <= 4; i++) {
+			layer2.add(Integer.toString(i));
+		}		
+			
+		List<List<String>> method_choice_layers = new ArrayList<List<String>>();
+		method_choice_layers.add(layer1);
+		method_choice_layers.add(layer2);
+			
+		return method_choice_layers;
+	}
 
 	
 	public String get_ParameterToolTip(String yt_columnName) {
@@ -560,7 +587,7 @@ public class Read_Database {
 				String[] rowValue = a[i].split(delimited);
 				for (int j = 0; j < totalCols && j < rowValue.length; j++) {
 //					value[i][j] = rowValue[j].replaceAll("\\s+", "");		//Remove all the space in the String   
-					value[i][j] = rowValue[j];		//to make toolTp text separated with space, may need the above line if there is spaces in layer and elements name in the file StrataDefinition.csv
+					value[i][j] = rowValue[j];		//to make toolTip text separated with space, may need the above line if there is spaces in layer and elements name in the file StrataDefinition.csv
 				
 				}				
 				//Tool tip identified by comparing the name before and after normalization

@@ -23,42 +23,87 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 	private List<List<JCheckBox>> checkboxStaticIdentifiers;
 	private List<JLabel> layers_Title_Label;
 
-	public ScrollPane_StaticIdentifiers (Read_Database read_Database) {
-	
+	public ScrollPane_StaticIdentifiers (Read_Database read_Database, int option, String panel_name) {
+		// option = 0 --> 6 layers		1 --> 4 layers       2 --> 6 layers + method_period      3 --> method_choice 
 		List<String> layers_Title = new ArrayList<>(read_Database.get_layers_Title());
 		List<String> layers_Title_ToolTip = new ArrayList<>(read_Database.get_layers_Title_ToolTip());
 		List<List<String>> allLayers = new ArrayList<>(read_Database.get_allLayers());
 		List<List<String>> allLayers_ToolTips = new ArrayList<>(read_Database.get_allLayers_ToolTips());
 
-		int total_layers = allLayers.size(); // Remove the last 1 layers = allLayers.size() - 1
-		// int total_layers_ToolTips = allLayers_ToolTips.size() -1; //Remove the last 1 layers = allLayers.size() - 1
-
-		// Add 3 more into static identifiers
-		List<String> MethodsPeriodsAges_Title = read_Database.get_MethodsPeriodsAges_Title();
-		List<List<String>> MethodsPeriodsAges = read_Database.get_MethodsPeriodsAges();
-
-		layers_Title.addAll(MethodsPeriodsAges_Title);
-		layers_Title_ToolTip.addAll(MethodsPeriodsAges_Title);
-		allLayers.addAll(MethodsPeriodsAges);
 		
-		// Full name of silvicultural methods			// NOTE NOTE NOTE change later
-		List<List<String>> allmethods_ToolTips = read_Database.get_MethodsPeriodsAges();
-		for (int i = 0; i < allmethods_ToolTips.get(0).size(); i++) {	// 0 is method, 1 is period
-			if (allmethods_ToolTips.get(0).get(i).equals("NG_E")) 	allmethods_ToolTips.get(0).set(i, "Natural Growth existing");
-			if (allmethods_ToolTips.get(0).get(i).equals("PB_E")) 	allmethods_ToolTips.get(0).set(i, "Prescribed Burn existing");
-			if (allmethods_ToolTips.get(0).get(i).equals("GS_E")) 	allmethods_ToolTips.get(0).set(i, "Group Selection existing");
-			if (allmethods_ToolTips.get(0).get(i).equals("EA_E")) 	allmethods_ToolTips.get(0).set(i, "Even Age existing");
-			if (allmethods_ToolTips.get(0).get(i).equals("MS_E")) 	allmethods_ToolTips.get(0).set(i, "Mixed Severity Wildfire");
-			if (allmethods_ToolTips.get(0).get(i).equals("BS_E")) 	allmethods_ToolTips.get(0).set(i, "Severe Bark Beetle");
-			if (allmethods_ToolTips.get(0).get(i).equals("NG_R")) 	allmethods_ToolTips.get(0).set(i, "Natural Growth regeneration");
-			if (allmethods_ToolTips.get(0).get(i).equals("PB_R")) 	allmethods_ToolTips.get(0).set(i, "Prescribed Burn regeneration");
-			if (allmethods_ToolTips.get(0).get(i).equals("GS_R")) 	allmethods_ToolTips.get(0).set(i, "Group Selection regeneration");
-			if (allmethods_ToolTips.get(0).get(i).equals("EA_R")) 	allmethods_ToolTips.get(0).set(i, "Even Age regeneration");		
-		}	
-		allLayers_ToolTips.addAll(allmethods_ToolTips);
-
-		int total_staticIdentifiers = total_layers + MethodsPeriodsAges.size();
+		if (option == 1) {
+			for (int count = 0; count <= 1; count++) {	// a loop to remove the last layer 2 times
+				layers_Title.remove(layers_Title.size() - 1);
+				layers_Title_ToolTip.remove(layers_Title_ToolTip.size() - 1);
+				allLayers.remove(allLayers.size() - 1);
+				allLayers_ToolTips.remove(allLayers_ToolTips.size() - 1);
+			}
+		}
 		
+		
+		if (option == 2) {
+			// Add 2 more into static identifiers
+			List<String> method_period_layers_title = new ArrayList<>(read_Database.get_method_period_layers_title());
+			List<List<String>> method_period_layers = new ArrayList<>(read_Database.get_method_period_layers());
+
+			layers_Title.addAll(method_period_layers_title);
+			layers_Title_ToolTip.addAll(method_period_layers_title);
+			allLayers.addAll(method_period_layers);
+			
+			// Full name of silviculture methods
+			List<List<String>> allmethods_ToolTips = read_Database.get_method_period_layers();
+			for (int i = 0; i < allmethods_ToolTips.get(0).size(); i++) {	// 0 is method, 1 is period
+				if (allmethods_ToolTips.get(0).get(i).equals("NG_E")) 	allmethods_ToolTips.get(0).set(i, "Natural Growth existing");
+				if (allmethods_ToolTips.get(0).get(i).equals("PB_E")) 	allmethods_ToolTips.get(0).set(i, "Prescribed Burn existing");
+				if (allmethods_ToolTips.get(0).get(i).equals("GS_E")) 	allmethods_ToolTips.get(0).set(i, "Group Selection existing");
+				if (allmethods_ToolTips.get(0).get(i).equals("EA_E")) 	allmethods_ToolTips.get(0).set(i, "Even Age existing");
+				if (allmethods_ToolTips.get(0).get(i).equals("MS_E")) 	allmethods_ToolTips.get(0).set(i, "Mixed Severity Wildfire");
+				if (allmethods_ToolTips.get(0).get(i).equals("BS_E")) 	allmethods_ToolTips.get(0).set(i, "Severe Bark Beetle");
+				if (allmethods_ToolTips.get(0).get(i).equals("NG_R")) 	allmethods_ToolTips.get(0).set(i, "Natural Growth regeneration");
+				if (allmethods_ToolTips.get(0).get(i).equals("PB_R")) 	allmethods_ToolTips.get(0).set(i, "Prescribed Burn regeneration");
+				if (allmethods_ToolTips.get(0).get(i).equals("GS_R")) 	allmethods_ToolTips.get(0).set(i, "Group Selection regeneration");
+				if (allmethods_ToolTips.get(0).get(i).equals("EA_R")) 	allmethods_ToolTips.get(0).set(i, "Even Age regeneration");		
+			}	
+			allLayers_ToolTips.addAll(allmethods_ToolTips);
+		}
+		
+		
+		if (option == 3) {
+			layers_Title.removeAll(layers_Title);
+			layers_Title_ToolTip.removeAll(layers_Title_ToolTip);
+			allLayers.removeAll(allLayers);
+			allLayers_ToolTips.removeAll(allLayers_ToolTips);			
+			
+			// Add 2 more into static identifiers
+			// Add 2 more into static identifiers
+			List<String> method_choice_layers_title = new ArrayList<>(read_Database.get_method_choice_layers_title());
+			List<List<String>> method_choice_layers = new ArrayList<>(read_Database.get_method_choice_layers());
+
+			layers_Title.addAll(method_choice_layers_title);
+			layers_Title_ToolTip.addAll(method_choice_layers_title);
+			allLayers.addAll(method_choice_layers);
+			
+			// Full name of silviculture methods
+			List<List<String>> allmethods_ToolTips = read_Database.get_method_choice_layers();
+			for (int i = 0; i < allmethods_ToolTips.get(0).size(); i++) {	// 0 is method, 1 is choice
+				if (allmethods_ToolTips.get(0).get(i).equals("NG_E")) 	allmethods_ToolTips.get(0).set(i, "Natural Growth existing");
+				if (allmethods_ToolTips.get(0).get(i).equals("PB_E")) 	allmethods_ToolTips.get(0).set(i, "Prescribed Burn existing");
+				if (allmethods_ToolTips.get(0).get(i).equals("GS_E")) 	allmethods_ToolTips.get(0).set(i, "Group Selection existing");
+				if (allmethods_ToolTips.get(0).get(i).equals("EA_E")) 	allmethods_ToolTips.get(0).set(i, "Even Age existing");
+				if (allmethods_ToolTips.get(0).get(i).equals("MS_E")) 	allmethods_ToolTips.get(0).set(i, "Mixed Severity Wildfire");
+				if (allmethods_ToolTips.get(0).get(i).equals("BS_E")) 	allmethods_ToolTips.get(0).set(i, "Severe Bark Beetle");
+				if (allmethods_ToolTips.get(0).get(i).equals("NG_R")) 	allmethods_ToolTips.get(0).set(i, "Natural Growth regeneration");
+				if (allmethods_ToolTips.get(0).get(i).equals("PB_R")) 	allmethods_ToolTips.get(0).set(i, "Prescribed Burn regeneration");
+				if (allmethods_ToolTips.get(0).get(i).equals("GS_R")) 	allmethods_ToolTips.get(0).set(i, "Group Selection regeneration");
+				if (allmethods_ToolTips.get(0).get(i).equals("EA_R")) 	allmethods_ToolTips.get(0).set(i, "Even Age regeneration");		
+			}	
+			allLayers_ToolTips.addAll(allmethods_ToolTips);			
+		}
+		
+		
+		
+		
+		int total_staticIdentifiers = allLayers.size();
 		
 		
 		//Add all layers labels and CheckBoxes to identifiersPanel
@@ -78,9 +123,9 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 			String title_tooltip = layers_Title_ToolTip.get(i);
 			
 			layers_Title_Label.add(title);
-			if (i == 4 || i == 5) {
+			if ((i == 4 || i == 5) && (option == 0 || option == 2)){
 				title.setForeground(Color.RED);
-				layers_Title_Label.get(i).setToolTipText(title_tooltip + " (Apply to only existing strata in time period 1 - In most cases you should check all)");
+				layers_Title_Label.get(i).setToolTipText(title_tooltip + " in period one (apply to existing strata, not apply to regenerated strata. For periods > 1 you should use Dynamic Identifiers)");
 			} else {
 				layers_Title_Label.get(i).setToolTipText(title_tooltip);
 			}					
@@ -126,7 +171,7 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 				checkboxStaticIdentifiers.get(i).add(new JCheckBox(allLayers.get(i).get(j)));
 				checkboxStaticIdentifiers.get(i).get(j).setToolTipText(allLayers_ToolTips.get(i).get(j));
 				checkboxStaticIdentifiers.get(i).get(j).setSelected(true);
-				if (i == 4 || i == 5) {
+				if ((i == 4 || i == 5) && (option == 0 || option == 2)){
 					checkboxStaticIdentifiers.get(i).get(j).setForeground(Color.RED);
 				}			
 				
@@ -147,7 +192,7 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 				});
 						
 				// Disable layer 5 - Cover Type & layer 6 - Size Class
-				if (i == 4 || i == 5) {
+				if ((i == 4 || i == 5) && option == 2){
 //					checkboxStaticIdentifiers.get(i).get(j).setEnabled(false);
 				}
 			}
@@ -157,9 +202,9 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 	    
 	    
 		this.setViewportView(identifiersPanel);
-		TitledBorder border1 = new TitledBorder("Static Identifiers  -  use strata attributes to filter variables");
-		border1.setTitleJustification(TitledBorder.CENTER);
-		this.setBorder(border1);
+		TitledBorder border = new TitledBorder(panel_name);
+		border.setTitleJustification(TitledBorder.CENTER);
+		this.setBorder(border);
 		this.setPreferredSize(new Dimension(550, 250));
 	}
 	

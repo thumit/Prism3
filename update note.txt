@@ -273,7 +273,20 @@ All changes in this block are associated with v30.jar, formulation25.docx, datab
 	- reload_this_condition_action_cost_and_conversion_cost: add 2 if to make sure all null (or "") condition can be reloaded:
 		- if(action_cost_info.length() > 0) {
 		- if(conversion_cost_info.length() > 0) {
-136. 
+136. Popup added for Cost Conditons, Basic Constraints, and Advanced Constraints so users have a change to not modify if accidently hit the button
+137. Allow: age_class (CGNF) or st_age_10 (CNPZ) to be searched as age, and hca_allsx (CNPZ) or rmcuft (CGNF) to show up as default in action cost
+138. Change name for the panels in edit_details, add a new panel "Silviculture Method"
+139. table_overview: add count strata and acres of the currently highlighted rows
+140. Remove agelass from the extra layer permanently (now only method and period are used as 2 extra layers)
+141. Redefine static_Identifiers scroll pane so it has more options of which layers to be added, also use it in Model Strata GUI (remove the previous long codes)
+142. Refactor (Rename) a lot os tables, data, etc. THIS IS DANGEROUS! but necessary for the new input: silviculture_method
+143. GUI completed for Silviculture Method Panel
+144. Temporarily swith radioButton_Right (2 places at the start of edit_runs_details) to move Silvicultuer method after Model Strata
+145. Boost 5:
+	- Read_RunInputs: return unique model_strata_without_sizeclass_and_covertype, model_strata_without_sizeclass (this one is currently not used)
+	- Except 12a, 13, 6a to 6e, and the definition of xEA_E: all the other definition and equations have the for loop rewritten
+146. Fix the IF THEN that forgot to add for eq 15 regeneration variables
 
-
+All changes in this block are associated with v30.jar, formulation25.docx, database5.docx
+--------------------------------------------------------------------------
 

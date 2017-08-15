@@ -33,13 +33,13 @@ import spectrumROOT.Spectrum_Main;
 
 public class QuickEdit_ManagementCost_Panel extends JPanel {
 	
-	public QuickEdit_ManagementCost_Panel(JTable table7a, Object[][] data7a, String[] columnNames7a, JTable table7b, Object[][] data7b) {
+	public QuickEdit_ManagementCost_Panel(JTable table8a, Object[][] data8a, String[] columnNames8a, JTable table8b, Object[][] data8b) {
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		
 		
 		// Add Button-------------------------------------------------------------------------------------------------
-		Spectrum_ShowHideColumnsButtons btnApply_showhide = new Spectrum_ShowHideColumnsButtons(table7a, data7a, columnNames7a);
+		Spectrum_ShowHideColumnsButtons btnApply_showhide = new Spectrum_ShowHideColumnsButtons(table8a, data8a, columnNames8a);
 		c.gridx = 0;
 		c.gridy = 1;
 		c.weightx = 0;
@@ -121,26 +121,26 @@ public class QuickEdit_ManagementCost_Panel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				// Get selected rows
-				int[] selectedRow = table7a.getSelectedRows();
-				int[] selectedCol = table7a.getSelectedColumns();
+				int[] selectedRow = table8a.getSelectedRows();
+				int[] selectedCol = table8a.getSelectedColumns();
 							
 				// Convert row index because "Sort" causes problems
 				for (int i = 0; i < selectedRow.length; i++) {
-					selectedRow[i] = table7a.convertRowIndexToModel(selectedRow[i]);
+					selectedRow[i] = table8a.convertRowIndexToModel(selectedRow[i]);
 				}
 				// Convert col index because "Sort" causes problems
 				for (int j = 0; j < selectedCol.length; j++) {
-					selectedCol[j] = table7a.convertColumnIndexToModel(selectedCol[j]);
+					selectedCol[j] = table8a.convertColumnIndexToModel(selectedCol[j]);
 				}
 				
-				table7a.clearSelection(); // To help trigger the row refresh: clear then add back the rows
+				table8a.clearSelection(); // To help trigger the row refresh: clear then add back the rows
 				for (int i : selectedRow) {
 					for (int j : selectedCol) {
 						if (!formatedTextfield.getText().equals(".") && j != 0) {	// Only apply the changes to selected cells in columns > 0 (from 'acres' column)
-							data7a[i][j] = (formatedTextfield.getText().isEmpty())? null : Double.valueOf(formatedTextfield.getText());
+							data8a[i][j] = (formatedTextfield.getText().isEmpty())? null : Double.valueOf(formatedTextfield.getText());
 						}
-						table7a.addRowSelectionInterval(table7a.convertRowIndexToView(i), table7a.convertRowIndexToView(i));
-						table7a.addColumnSelectionInterval(table7a.convertColumnIndexToView(j), table7a.convertColumnIndexToView(j));
+						table8a.addRowSelectionInterval(table8a.convertRowIndexToView(i), table8a.convertRowIndexToView(i));
+						table8a.addColumnSelectionInterval(table8a.convertColumnIndexToView(j), table8a.convertColumnIndexToView(j));
 					}
 				}
 			}
@@ -216,26 +216,26 @@ public class QuickEdit_ManagementCost_Panel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				// Get selected rows
-				int[] selectedRow = table7b.getSelectedRows();
-				int[] selectedCol = table7b.getSelectedColumns();
+				int[] selectedRow = table8b.getSelectedRows();
+				int[] selectedCol = table8b.getSelectedColumns();
 							
 				// Convert row index because "Sort" causes problems
 				for (int i = 0; i < selectedRow.length; i++) {
-					selectedRow[i] = table7b.convertRowIndexToModel(selectedRow[i]);
+					selectedRow[i] = table8b.convertRowIndexToModel(selectedRow[i]);
 				}
 				// Convert col index because "Sort" causes problems
 				for (int j = 0; j < selectedCol.length; j++) {
-					selectedCol[j] = table7b.convertColumnIndexToModel(selectedCol[j]);
+					selectedCol[j] = table8b.convertColumnIndexToModel(selectedCol[j]);
 				}
 				
-				table7b.clearSelection(); // To help trigger the row refresh: clear then add back the rows
+				table8b.clearSelection(); // To help trigger the row refresh: clear then add back the rows
 				for (int i : selectedRow) {
 					for (int j : selectedCol) {
 						if (!formatedTextfield_2.getText().equals(".") && j > 1) {	// Only apply the changes to selected cells in columns > 1
-							data7b[i][j] = (formatedTextfield_2.getText().isEmpty())? null : Double.valueOf(formatedTextfield_2.getText());
+							data8b[i][j] = (formatedTextfield_2.getText().isEmpty())? null : Double.valueOf(formatedTextfield_2.getText());
 						}
-						table7b.addRowSelectionInterval(table7b.convertRowIndexToView(i), table7b.convertRowIndexToView(i));
-						table7b.addColumnSelectionInterval(table7b.convertColumnIndexToView(j), table7b.convertColumnIndexToView(j));
+						table8b.addRowSelectionInterval(table8b.convertRowIndexToView(i), table8b.convertRowIndexToView(i));
+						table8b.addColumnSelectionInterval(table8b.convertColumnIndexToView(j), table8b.convertColumnIndexToView(j));
 					}
 				}
 			}
@@ -252,11 +252,11 @@ public class QuickEdit_ManagementCost_Panel extends JPanel {
 	
 	
 	private class Spectrum_ShowHideColumnsButtons extends JButton {
-		public Spectrum_ShowHideColumnsButtons(JTable table7a,  Object[][] data7a, String[] columnNames7a) {
+		public Spectrum_ShowHideColumnsButtons(JTable table8a,  Object[][] data8a, String[] columnNames8a) {
 
 			
 			// Must set this show/hide column method when all columns are still visible------------------------------------------------------
-			TableColumnsHandle column_handle = new TableColumnsHandle(table7a);
+			TableColumnsHandle column_handle = new TableColumnsHandle(table8a);
 			Read_Database read_Database = new Read_Database(null);
 			
 						
@@ -282,16 +282,16 @@ public class QuickEdit_ManagementCost_Panel extends JPanel {
 						
 			// Create a list of JCheckBox-------------------------------------------------------------------------
 			List<JCheckBox> column_checkboxes = new ArrayList<JCheckBox>();		
-			for (int i = 0; i < table7a.getColumnModel().getColumnCount(); i++) {
+			for (int i = 0; i < table8a.getColumnModel().getColumnCount(); i++) {
 				if (i > 1) {	// ignore columns 0 and 1: action_list & acres
-					column_checkboxes.add(new JCheckBox(table7a.getColumnName(i)));
+					column_checkboxes.add(new JCheckBox(table8a.getColumnName(i)));
 					column_checkboxes.get(i - 2).setSelected(true);		// -2 because we ignore 2 columns
 									
 					String tip = read_Database.get_ParameterToolTip(column_checkboxes.get(i - 2).getText()) + " (Column index: " + (int) (i - 2) + ")";
 					column_checkboxes.get(i - 2).setToolTipText(tip);				
-					if (!tip.contains("per Acre")) {	// Disable check box if unit is not per Acre
-						column_checkboxes.get(i - 2).setEnabled(false);
-					}
+//					if (!tip.contains("per Acre")) {	// Disable check box if unit is not per Acre
+//						column_checkboxes.get(i - 2).setEnabled(false);
+//					}
 				}
 			}
 			
@@ -358,7 +358,7 @@ public class QuickEdit_ManagementCost_Panel extends JPanel {
 					for (JCheckBox i: column_checkboxes) {
 						i.setSelected(true);		// true then false to activate the ChangeListener
 						i.setSelected(false);
-						if (i.getText().equalsIgnoreCase("hca_allsx")) {
+						if (i.getText().equalsIgnoreCase("hca_allsx") || i.getText().equalsIgnoreCase("rmcuft")) {
 							i.setSelected(true);							
 						}
 					}						
@@ -370,9 +370,9 @@ public class QuickEdit_ManagementCost_Panel extends JPanel {
 			radioButton[1].addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {																	
 					List<Integer> active_col_id = new ArrayList<Integer>();		// List of active columns: at least 1 cell <> null			
-					for (int i = 0; i < data7a.length; i++) {
-						for (int j = 0; j < data7a[i].length; j++) {
-							if (data7a[i][j] != null && !active_col_id.contains(j)) {
+					for (int i = 0; i < data8a.length; i++) {
+						for (int j = 0; j < data8a[i].length; j++) {
+							if (data8a[i][j] != null && !active_col_id.contains(j)) {
 								active_col_id.add(j);
 							}		
 						}	
@@ -380,13 +380,13 @@ public class QuickEdit_ManagementCost_Panel extends JPanel {
 					
 					// For only acres column (No check boxes so we have to set visible/invisible manually)
 					if (active_col_id.contains(1)) {	// if acres is active column
-						column_handle.setColumnVisible(columnNames7a[1], true);	// show column
+						column_handle.setColumnVisible(columnNames8a[1], true);	// show column
 					} else {
-						column_handle.setColumnVisible(columnNames7a[1], false);	// hide column
+						column_handle.setColumnVisible(columnNames8a[1], false);	// hide column
 					}
 						
 					// For columns > 1 (Have check boxes to we only have to check/uncheck)
-					for (int i = 0; i < columnNames7a.length; i++) {						
+					for (int i = 0; i < columnNames8a.length; i++) {						
 						if (i > 1) {	// ignore columns 0 and 1: action_list & acres	
 							column_checkboxes.get(i - 2).setSelected(false);		// -2 because we ignore 2 columns
 							if (active_col_id.contains(i)) {

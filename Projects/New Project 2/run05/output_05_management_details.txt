@@ -1,4 +1,4 @@
-var_id	var_name	var_value	var_reduced_cost	db_strata_tofind	db_row_id_tofind	db_status
+var_id	var_name	var_value	var_reduced_cost	db_prescription	db_row_id	db_status
 1186	xNG_E_B,R,N,L,I,M,1	106.4	0.0	I_M_NG_E_0	0	good
 1187	xNG_E_B,R,N,L,I,M,2	106.1872	0.0	I_M_NG_E_0	1	good
 1188	xNG_E_B,R,N,L,I,M,3	105.9748256	0.0	I_M_NG_E_0	2	good

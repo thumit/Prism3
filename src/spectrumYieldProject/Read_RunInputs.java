@@ -115,7 +115,7 @@ public class Read_RunInputs {
 		return MO_totalColumns;
 	}
 	
-	public List<String> get_modeled_strata() {
+	public List<String> get_model_strata() {
 		List<String> modeled_strata = new ArrayList<String>();
 		for (int i = 1; i < MO_totalRows; i++) {		//From 2nd row			
 //			modeled_strata.add(MO_value[i][0]);	//1st column contains the full name with 6 layers letters
@@ -125,24 +125,26 @@ public class Read_RunInputs {
 		return modeled_strata;
 	}
 	
-	public List<String> get_modeled_strata_without_sizeclass() {
-		List<String> modeled_strata_without_sizeclass = new ArrayList<String>();
+	public List<String> get_model_strata_without_sizeclass() {
+		List<String> model_strata_without_sizeclass = new ArrayList<String>();
 		for (int i = 1; i < MO_totalRows; i++) {		//From 2nd row			
-//			modeled_strata_withoutSizeClass.add(MO_value[i][0].substring(0,MO_value[i][0].length()-1));	//remove the last character to get name with 5 layers only
 			String combined_name = MO_value[i][1] + MO_value[i][2] + MO_value[i][3] + MO_value[i][4] + MO_value[i][5];
-			modeled_strata_without_sizeclass.add(combined_name);
+			if (!model_strata_without_sizeclass.contains(combined_name)) {	// only add to list if list does not contain the value
+				model_strata_without_sizeclass.add(combined_name);
+			}
 		}
-		return modeled_strata_without_sizeclass;
+		return model_strata_without_sizeclass;
 	}	
 	
-	public List<String> get_modeled_strata_without_sizeclass_and_covertype() {
-		List<String> modeled_strata_without_sizeclass_and_covertype = new ArrayList<String>();
+	public List<String> get_model_strata_without_sizeclass_and_covertype() {
+		List<String> model_strata_without_sizeclass_and_covertype = new ArrayList<String>();
 		for (int i = 1; i < MO_totalRows; i++) {		//From 2nd row			
-//			get_modeled_strata_withoutSizeClassandCoverType.add(MO_value[i][0].substring(0,MO_value[i][0].length()-2));	//remove the last 2 characters to get name with 4 layers only
-			String combined_name = MO_value[i][1] + MO_value[i][2] + MO_value[i][3] + MO_value[i][4];
-			modeled_strata_without_sizeclass_and_covertype.add(combined_name);
+			String combined_name = MO_value[i][1] + MO_value[i][2] + MO_value[i][3] + MO_value[i][4];			
+			if (!model_strata_without_sizeclass_and_covertype.contains(combined_name)) {	// only add to list if list does not contain the value
+				model_strata_without_sizeclass_and_covertype.add(combined_name);
+			}	
 		}
-		return modeled_strata_without_sizeclass_and_covertype;
+		return model_strata_without_sizeclass_and_covertype;
 	}
 		
 	//-------------------------------------------------------------------------------------------------------------------------------------------------	

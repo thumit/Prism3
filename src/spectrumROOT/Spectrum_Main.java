@@ -408,7 +408,7 @@ public class Spectrum_Main extends JFrame {
 								DatabaseManagement_Frame.setLocation((int) ((getWidth() - DatabaseManagement_Frame.getWidth())/2),
 										((int) ((getHeight() - DatabaseManagement_Frame.getHeight())/2.5)));	//Set the DatabaseManagement_Frame near the center of the Main frame
 								if (Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame() != null) {	//or Set the DatabaseManagement_Frame near the recently opened JInternalFrame
-									DatabaseManagement_Frame.setLocation(Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().getX() + 30, Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().getY() + 30);
+									DatabaseManagement_Frame.setLocation(Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().getX() + 25, Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().getY() + 25);
 								}
 								
 								// Note: visible first for the JIframe to be selected, pack at the end would be fail for JIframe to be selected (Spectrum_Main.mainFrameReturn().getSelectedFrame = null)
@@ -470,7 +470,7 @@ public class Spectrum_Main extends JFrame {
 		ProjectInternalFrame.setLocation((int) ((getWidth() - ProjectInternalFrame.getWidth())/2),
 				((int) ((getHeight() - ProjectInternalFrame.getHeight())/2.5)));	//Set the ProjectInternalFrame near the center of the Main frame
 		if (Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame() != null) {	//or Set the ProjectInternalFrame near the recently opened JInternalFrame
-			ProjectInternalFrame.setLocation(Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().getX() + 30, Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().getY() + 30);
+			ProjectInternalFrame.setLocation(Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().getX() + 25, Spectrum_Main.get_spectrumDesktopPane().getSelectedFrame().getY() + 25);
 		}
 			
 		// Note: visible first for the JIframe to be selected, pack at the end would be fail for JIframe to be selected (Spectrum_Main.mainFrameReturn().getSelectedFrame = null)

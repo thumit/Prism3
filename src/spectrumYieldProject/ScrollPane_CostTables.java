@@ -10,35 +10,35 @@ import javax.swing.JTable;
 import javax.swing.border.TitledBorder;
 
 public class ScrollPane_CostTables extends JScrollPane {		
-	private JTable table7a;
-	private Object[][] data7a;
-	private String[] columnNames7a;
+	private JTable table8a;
+	private Object[][] data8a;
+	private String[] columnNames8a;
 	
-	private JTable table7b;
-	private Object[][] data7b;
-	private String[] columnNames7b;
+	private JTable table8b;
+	private Object[][] data8b;
+	private String[] columnNames8b;
 	
 	JScrollPane action_base_adjust_scrollpane;
 	JScrollPane conversion_base_adjust_scrollpane;
 		
-	public ScrollPane_CostTables(JTable table7a, Object[][] data7a, String[] columnNames7a, JTable table7b, Object[][] data7b, String[] columnNames7b) {	
-		this.table7a = table7a;
-		this.data7a = data7a;
-		this.columnNames7a = columnNames7a;
+	public ScrollPane_CostTables(JTable table8a, Object[][] data8a, String[] columnNames8a, JTable table8b, Object[][] data8b, String[] columnNames8b) {	
+		this.table8a = table8a;
+		this.data8a = data8a;
+		this.columnNames8a = columnNames8a;
 		
-		this.table7b = table7b;
-		this.data7b = data7b;
-		this.columnNames7b = columnNames7b;
+		this.table8b = table8b;
+		this.data8b = data8b;
+		this.columnNames8b = columnNames8b;
 		
 	
-		action_base_adjust_scrollpane = new JScrollPane(this.table7a);
+		action_base_adjust_scrollpane = new JScrollPane(this.table8a);
 		TitledBorder border = new TitledBorder("Action Cost (currency per unit of column header)");
 		border.setTitleJustification(TitledBorder.CENTER);
 		action_base_adjust_scrollpane.setBorder(border);
 		action_base_adjust_scrollpane.setPreferredSize(new Dimension(400, 100));
 		
 		
-		conversion_base_adjust_scrollpane = new JScrollPane(this.table7b);
+		conversion_base_adjust_scrollpane = new JScrollPane(this.table8b);
 		border = new TitledBorder("Conversion Cost (currency per converted acre)");
 		border.setTitleJustification(TitledBorder.CENTER);
 		conversion_base_adjust_scrollpane.setBorder(border);
@@ -67,10 +67,10 @@ public class ScrollPane_CostTables extends JScrollPane {
 	
 	public String get_action_cost_info_from_GUI() {			
 		String action_cost_info = "";		
-		for (int row = 0; row < data7a.length; row++) {
-			for (int col = 1; col < data7a[row].length; col++) {
-				if (data7a[row][col] != null) {
-					action_cost_info = action_cost_info + data7a[row][0] + " " + columnNames7a[col] + " " + data7a[row][col].toString() + ";";
+		for (int row = 0; row < data8a.length; row++) {
+			for (int col = 1; col < data8a[row].length; col++) {
+				if (data8a[row][col] != null) {
+					action_cost_info = action_cost_info + data8a[row][0] + " " + columnNames8a[col] + " " + data8a[row][col].toString() + ";";
 				}	
 			}
 		}					
@@ -83,10 +83,10 @@ public class ScrollPane_CostTables extends JScrollPane {
 	
 	public String get_conversion_cost_info_from_GUI() {			
 		String conversion_to_adjust_info = "";
-		for (int row = 0; row < data7b.length; row++) {
-			for (int col = 2; col < data7b[row].length; col++) {
-				if (data7b[row][col] != null) {
-					conversion_to_adjust_info = conversion_to_adjust_info + data7b[row][0] + " " + data7b[row][1] + " " + columnNames7b[col] + " " + data7b[row][col].toString() + ";";
+		for (int row = 0; row < data8b.length; row++) {
+			for (int col = 2; col < data8b[row].length; col++) {
+				if (data8b[row][col] != null) {
+					conversion_to_adjust_info = conversion_to_adjust_info + data8b[row][0] + " " + data8b[row][1] + " " + columnNames8b[col] + " " + data8b[row][col].toString() + ";";
 				}	
 			}
 		}			
@@ -98,27 +98,27 @@ public class ScrollPane_CostTables extends JScrollPane {
 	
 	
 	public void reload_this_condition_action_cost_and_conversion_cost(String action_cost_info, String conversion_cost_info) {			
-		// Reset data7a to null		
-		for (int row = 0; row < data7a.length; row++) {
-			for (int col = 1; col < data7a[row].length; col++) {
-				data7a[row][col] = null;
+		// Reset data8a to null		
+		for (int row = 0; row < data8a.length; row++) {
+			for (int col = 1; col < data8a[row].length; col++) {
+				data8a[row][col] = null;
 			}
 		}
 		
-		// Reload table7a
+		// Reload table8a
 		if(action_cost_info.length() > 0) {		// this guarantees the string is not ""
-			String[] info_7a = action_cost_info.split(";");					
-			for (int i = 0; i < info_7a.length; i++) {			
-				String[] sub_info = info_7a[i].split(" ");
+			String[] info_8a = action_cost_info.split(";");					
+			for (int i = 0; i < info_8a.length; i++) {			
+				String[] sub_info = info_8a[i].split(" ");
 				String action = sub_info[0];
 				String attribute = sub_info[1];
 				double cost = Double.valueOf(sub_info[2]);
 				
-				for (int row = 0; row < data7a.length; row++) {
-					if (data7a[row][0].toString().equals(action)) {
-						for (int col = 1; col < data7a[row].length; col++) {
-							if (columnNames7a[col].equals(attribute)) {
-								data7a[row][col] = cost;
+				for (int row = 0; row < data8a.length; row++) {
+					if (data8a[row][0].toString().equals(action)) {
+						for (int col = 1; col < data8a[row].length; col++) {
+							if (columnNames8a[col].equals(attribute)) {
+								data8a[row][col] = cost;
 							}
 						}
 					}
@@ -126,28 +126,28 @@ public class ScrollPane_CostTables extends JScrollPane {
 			}		
 		}
 		
-		// Reset data7b to null		
-		for (int row = 0; row < data7b.length; row++) {
-			for (int col = 2; col < data7b[row].length; col++) {
-				data7b[row][col] = null;
+		// Reset data8b to null		
+		for (int row = 0; row < data8b.length; row++) {
+			for (int col = 2; col < data8b[row].length; col++) {
+				data8b[row][col] = null;
 			}
 		}
 		
-		// Reload table7b
+		// Reload table8b
 		if(conversion_cost_info.length() > 0) {		// this guarantees the string is not ""
-			String[] info_7b = conversion_cost_info.split(";");					
-			for (int i = 0; i < info_7b.length; i++) {			
-				String[] sub_info = info_7b[i].split(" ");
+			String[] info_8b = conversion_cost_info.split(";");					
+			for (int i = 0; i < info_8b.length; i++) {			
+				String[] sub_info = info_8b[i].split(" ");
 				String covertype_before = sub_info[0];
 				String covertype_after = sub_info[1];
 				String attribute = sub_info[2];
 				double cost = Double.valueOf(sub_info[3]);
 				
-				for (int row = 0; row < data7b.length; row++) {
-					if ((data7b[row][0].toString() + data7b[row][1].toString()).equals(covertype_before + covertype_after)) {
-						for (int col = 2; col < data7b[row].length; col++) {
-							if (columnNames7b[col].equals(attribute)) {
-								data7b[row][col] = cost;
+				for (int row = 0; row < data8b.length; row++) {
+					if ((data8b[row][0].toString() + data8b[row][1].toString()).equals(covertype_before + covertype_after)) {
+						for (int col = 2; col < data8b[row].length; col++) {
+							if (columnNames8b[col].equals(attribute)) {
+								data8b[row][col] = cost;
 							}
 						}
 					}

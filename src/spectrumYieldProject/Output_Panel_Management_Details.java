@@ -63,7 +63,8 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 		
 		
 		// 1st grid ------------------------------------------------------------------------------		// Static identifiers	
-		static_identifiersScrollPanel = new ScrollPane_StaticIdentifiers(read_Database);
+		String panel_name = "Static Identifiers  -  use strata attributes to filter variables";
+		static_identifiersScrollPanel = new ScrollPane_StaticIdentifiers(read_Database, 2, panel_name);
 		checkboxStaticIdentifiers = static_identifiersScrollPanel.get_CheckboxStaticIdentifiers();		
 				
 		//Update GUI for time period 
@@ -106,7 +107,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 				
 		// 3rd grid ------------------------------------------------------------------------------		// Parameters
 		parametersScrollPanel = new ScrollPane_Parameters(read_Database);
-		TitledBorder border = new TitledBorder("PARAMETERS");
+		TitledBorder border = new TitledBorder("Parameters");
 		border.setTitleJustification(TitledBorder.CENTER);
 		parametersScrollPanel.setBorder(border);
     	parametersScrollPanel.setPreferredSize(new Dimension(200, 100));			
@@ -114,7 +115,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
     	    	
     	// 4th grid ------------------------------------------------------------------------------		// table scroll pane
         table_scroll_pane = new JScrollPane();
-        border = new TitledBorder("THE OPTIMAL SOLUTION - MANAGEMENT DETAILS");
+        border = new TitledBorder("Filtered Result based on Optimal Solution");
 		border.setTitleJustification(TitledBorder.CENTER);
 		table_scroll_pane.setBorder(border);
 		table_scroll_pane.setViewportView(table);
@@ -490,11 +491,9 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 										}
 									}
 									if (count < 1) return false;		// return false so that this entry is not shown
-								}
-								
-								
-								
-								if (Get_Variable_Information.get_forest_status(varible_term) == "E") {		// Only applied for Existing Strata
+									
+									
+									
 									term = Get_Variable_Information.get_layer6(varible_term);
 									count = 0;
 									for (JCheckBox layer6 : checkboxStaticIdentifiers.get(5)) {
