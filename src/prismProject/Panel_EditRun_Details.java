@@ -81,7 +81,7 @@ import javax.swing.text.DefaultFormatter;
 import prismConvenienceClasses.ColorUtil;
 import prismConvenienceClasses.FilesHandle;
 import prismConvenienceClasses.IconHandle;
-import prismConvenienceClasses.PRISMTableModel;
+import prismConvenienceClasses.PrismTableModel;
 import prismConvenienceClasses.ToolBarWithBgImage;
 import prismRoot.PrismMain;
 
@@ -132,7 +132,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private int rowCount_overview, colCount_overview;
 	private String[] columnNames_overview;
 	private JTable table_overview;
-	private PRISMTableModel model_overview;
+	private PrismTableModel model_overview;
 	private Object[][] data_overview;
 	private double modeledAcres, availableAcres;
 	
@@ -141,7 +141,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private int rowCount1, colCount1;
 	private String[] columnNames1;
 	private JTable table1;
-	private PRISMTableModel model1;
+	private PrismTableModel model1;
 	private Object[][] data1;
 	
 	//table input_02_silviculture_method.txt
@@ -149,7 +149,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private int rowCount2, colCount2;
 	private String[] columnNames2;
 	private JTable table2;
-	private PRISMTableModel model2;
+	private PrismTableModel model2;
 	private Object[][] data2;
 	
 	//table input_03_model_strata.txt
@@ -157,7 +157,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private int rowCount3, colCount3;
 	private String[] columnNames3;
 	private JTable table3;
-	private PRISMTableModel model3;
+	private PrismTableModel model3;
 	private Object[][] data3;
 	
 	//table input_04_covertype_conversion_clearcut.txt
@@ -165,7 +165,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private int rowCount4, colCount4;
 	private String[] columnNames4;
 	private JTable table4;
-	private PRISMTableModel model4;
+	private PrismTableModel model4;
 	private Object[][] data4;
 	
 	//table input_05_covertype_conversion_replacing.txt
@@ -173,7 +173,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private int rowCount5, colCount5;
 	private String[] columnNames5;
 	private JTable table5;
-	private PRISMTableModel model5;
+	private PrismTableModel model5;
 	private Object[][] data5;
 
 	//table input_06_natural_disturbances_non_replacing.txt
@@ -181,7 +181,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private int rowCount6, colCount6;
 	private String[] columnNames6;
 	private JTable table6;
-	private PRISMTableModel model6;
+	private PrismTableModel model6;
 	private Object[][] data6;
 	
 	//table input_07_natural_disturbances_replacing.txt
@@ -189,7 +189,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private int rowCount7, colCount7;
 	private String[] columnNames7;
 	private JTable table7;
-	private PRISMTableModel model7;
+	private PrismTableModel model7;
 	private Object[][] data7;
 
 	//table input_08a_action_cost.txt
@@ -197,7 +197,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private int rowCount8a, colCount8a;
 	private String[] columnNames8a;
 	private JTable table8a;
-	private PRISMTableModel model8a;
+	private PrismTableModel model8a;
 	private Object[][] data8a;
 	
 	//table input_08b_conversion_cost.txt
@@ -205,7 +205,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private int rowCount8b, colCount8b;
 	private String[] columnNames8b;
 	private JTable table8b;
-	private PRISMTableModel model8b;
+	private PrismTableModel model8b;
 	private Object[][] data8b;	
 	
 	//table input_08_management_cost.txt
@@ -213,7 +213,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private int rowCount8, colCount8;
 	private String[] columnNames8;
 	private JTable table8;
-	private PRISMTableModel model8;
+	private PrismTableModel model8;
 	private Object[][] data8;
 	
 	//table input_09_basic_constraints.txt
@@ -221,7 +221,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private int rowCount9, colCount9;
 	private String[] columnNames9;
 	private JTable table9;
-	private PRISMTableModel model9;
+	private PrismTableModel model9;
 	private Object[][] data9;
 	
 	//table input_10_advanced_constraints.txt
@@ -229,7 +229,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private int rowCount10, colCount10;
 	private String[] columnNames10;
 	private JTable table10;
-	private PRISMTableModel model10;
+	private PrismTableModel model10;
 	private Object[][] data10;	
 	
 	private JButton button_import_database;
@@ -773,7 +773,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		
 		
 		//Create a table
-        model_overview = new PRISMTableModel(rowCount_overview, colCount_overview, data_overview, columnNames_overview);
+        model_overview = new PrismTableModel(rowCount_overview, colCount_overview, data_overview, columnNames_overview);
         table_overview = new JTable(model_overview);
         DefaultTableCellRenderer renderer = (DefaultTableCellRenderer)table_overview.getDefaultRenderer(Object.class);
         renderer.setHorizontalAlignment(SwingConstants.LEFT);		// Set alignment of values in the table to the left side
@@ -806,7 +806,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		}
 			
 		//Create a table-------------------------------------------------------------
-        model1 = new PRISMTableModel(rowCount1, colCount1, data1, columnNames1);
+        model1 = new PrismTableModel(rowCount1, colCount1, data1, columnNames1);
         table1 = new JTable(model1);
 		
         DefaultTableCellRenderer renderer = (DefaultTableCellRenderer)table1.getDefaultRenderer(Object.class);
@@ -834,7 +834,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					
 		
 		//Create a table-------------------------------------------------------------		
-		model2 = new PRISMTableModel(rowCount2, colCount2, data2, columnNames2) {
+		model2 = new PrismTableModel(rowCount2, colCount2, data2, columnNames2) {
 			@Override
 			public Class getColumnClass(int c) {
 				if (c == 0) return Integer.class;	// column 0 accepts only Integer
@@ -937,7 +937,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					
 		
 		//Create a table-------------------------------------------------------------
-		model3 = new PRISMTableModel(rowCount3, colCount3, data3, columnNames3) {
+		model3 = new PrismTableModel(rowCount3, colCount3, data3, columnNames3) {
 			@Override
 			public boolean isCellEditable(int row, int col) {
 				if (col < colCount3 - 1) { // Only the last column is editable
@@ -1091,7 +1091,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 		
 		//Create a table-------------------------------------------------------------
-		model4 = new PRISMTableModel(rowCount4, colCount4, data4, columnNames4) {			
+		model4 = new PrismTableModel(rowCount4, colCount4, data4, columnNames4) {			
 			@Override
 			public boolean isCellEditable(int row, int col) {
 				if (col < 2) { // Only the last 5 columns are editable
@@ -1302,7 +1302,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 //      table4.setTableHeader(null);
         table4.setPreferredScrollableViewportSize(new Dimension(400, 100));
 //      table4.setFillsViewportHeight(true);
-        TableRowSorter<PRISMTableModel> sorter = new TableRowSorter<PRISMTableModel>(model4);	//Add sorter
+        TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model4);	//Add sorter
 		for (int i = 1; i < colCount4; i++) {
 			sorter.setSortable(i, false);
 			if (i == 0 || i == 1) {			//Only the first 2 columns can be sorted
@@ -1340,7 +1340,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 		
 		//Create a table-------------------------------------------------------------		
-        model5 = new PRISMTableModel(rowCount5, colCount5, data5, columnNames5) {
+        model5 = new PrismTableModel(rowCount5, colCount5, data5, columnNames5) {
         	@Override
     		public boolean isCellEditable(int row, int col) {
     			if (col != 2) { // Only column 2 is editable
@@ -1547,7 +1547,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 //      table5.setTableHeader(null);
         table5.setPreferredScrollableViewportSize(new Dimension(400, 100));
         table5.setFillsViewportHeight(true);
-        TableRowSorter<PRISMTableModel> sorter = new TableRowSorter<PRISMTableModel>(model5);	//Add sorter
+        TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model5);	//Add sorter
 		for (int i = 1; i < colCount5; i++) {
 			sorter.setSortable(i, false);
 			if (i == 0) {			//Only the first column can be sorted
@@ -1590,7 +1590,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					
 		
 		//Create a table-------------------------------------------------------------			
-        model6 = new PRISMTableModel(rowCount6, colCount6, data6, columnNames6) {
+        model6 = new PrismTableModel(rowCount6, colCount6, data6, columnNames6) {
         	@Override
     		public boolean isCellEditable(int row, int col) {
     			if (col < 2) { // Only the last column are editable
@@ -1765,7 +1765,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 //        table6.setTableHeader(null);
         table6.setPreferredScrollableViewportSize(new Dimension(400, 100));
         table6.setFillsViewportHeight(true);
-        TableRowSorter<PRISMTableModel> sorter = new TableRowSorter<PRISMTableModel>(model6);	//Add sorter
+        TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model6);	//Add sorter
 		for (int i = 1; i < colCount6; i++) {
 			sorter.setSortable(i, false);
 			if (i == 0 || i == 1) {			//Only the first 2 columns can be sorted
@@ -1812,7 +1812,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
         
 		
 		//Create a table-------------------------------------------------------------			
-        model7 = new PRISMTableModel(rowCount7, colCount7, data7, columnNames7) {
+        model7 = new PrismTableModel(rowCount7, colCount7, data7, columnNames7) {
         	@Override
     		public boolean isCellEditable(int row, int col) {
     			if (col < 1) { // Only the first column are un-editable
@@ -2008,7 +2008,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 		
 		//Create a table-------------------------------------------------------------			
-        model8a = new PRISMTableModel(rowCount8a, colCount8a, data8a, columnNames8a) {
+        model8a = new PrismTableModel(rowCount8a, colCount8a, data8a, columnNames8a) {
         	@Override
 			public Class getColumnClass(int c) {
 				if (c > 0) return Double.class;      // columns > 0 accept only Double  
@@ -2151,7 +2151,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 //      table8a.setTableHeader(null);
         table8a.setPreferredScrollableViewportSize(new Dimension(200, 100));
 //      table8a.setFillsViewportHeight(true);
-        TableRowSorter<PRISMTableModel> sorter = new TableRowSorter<PRISMTableModel>(model8a);	//Add sorter
+        TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model8a);	//Add sorter
 		for (int i = 1; i < colCount8a; i++) {
 			sorter.setSortable(i, false);
 			if (i == 0) {			//Only the first column can be sorted
@@ -2196,7 +2196,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
         headerToolTips[3] = "currency per acre converted by replacing disturbance";
 		
 		//Create a table-------------------------------------------------------------			
-        model8b = new PRISMTableModel(rowCount8b, colCount8b, data8b, columnNames8b) {
+        model8b = new PrismTableModel(rowCount8b, colCount8b, data8b, columnNames8b) {
         	@Override
 			public Class getColumnClass(int c) {
 				if (c > 1) return Double.class;      // columns > 1 accept only Double  
@@ -2339,7 +2339,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 //      table8b.setTableHeader(null);
         table8b.setPreferredScrollableViewportSize(new Dimension(200, 100));
 //      table8b.setFillsViewportHeight(true);
-        TableRowSorter<PRISMTableModel> sorter = new TableRowSorter<PRISMTableModel>(model8b);	//Add sorter
+        TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model8b);	//Add sorter
 		for (int i = 0; i < colCount8b; i++) {
 			sorter.setSortable(i, false);
 			if (i < 2) {			//Only the first 2 columns can be sorted
@@ -2362,7 +2362,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					
 		
 		//Create a table-------------------------------------------------------------		
-		model8 = new PRISMTableModel(rowCount8, colCount8, data8, columnNames8) {
+		model8 = new PrismTableModel(rowCount8, colCount8, data8, columnNames8) {
 			@Override
 			public Class getColumnClass(int c) {
 				return String.class;				
@@ -2472,7 +2472,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					
 		
 		//Create a table-------------------------------------------------------------		
-		model9 = new PRISMTableModel(rowCount9, colCount9, data9, columnNames9) {
+		model9 = new PrismTableModel(rowCount9, colCount9, data9, columnNames9) {
 			@Override
 			public Class getColumnClass(int c) {
 				if (c == 0) return Integer.class;      //column 0 accepts only Integer
@@ -2605,7 +2605,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					
 		
 		//Create a table-------------------------------------------------------------		
-		model10 = new PRISMTableModel(rowCount10, colCount10, data10, columnNames10) {
+		model10 = new PrismTableModel(rowCount10, colCount10, data10, columnNames10) {
 			@Override
 			public Class getColumnClass(int c) {
 				if (c == 0) return Integer.class;      //column 0 accepts only Integer
@@ -3013,7 +3013,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						model3.updateTableModelPrism(rowCount3, colCount3, data3, columnNames3);		// very important to (pass table info back to table model) each time data is new Object
 								         						
 						// only add sorter after having the data loaded
-						TableRowSorter<PRISMTableModel> sorter = new TableRowSorter<PRISMTableModel>(model3);
+						TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model3);
 						table3.setRowSorter(sorter);
 	
 	
@@ -3558,7 +3558,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						btn_Sort.setText("OFF");
 						btn_Sort.repaint();
 					} else if (btn_Sort.getText().equals("OFF")) {
-						TableRowSorter<PRISMTableModel> sorter = new TableRowSorter<PRISMTableModel>(model2); // Add sorter
+						TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model2); // Add sorter
 						table2.setRowSorter(sorter);
 						btn_Sort.setText("ON");
 						btn_Sort.repaint();
@@ -3927,13 +3927,13 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 			if (data3 != null) {		//Only allow sorter if the data of existing strata is loaded
 				//This help filter to get the strata as specified by the CheckBoxes
-				TableRowSorter<PRISMTableModel> sorter = new TableRowSorter<PRISMTableModel>(model3);
+				TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model3);
 				table3.setRowSorter(sorter);
-				List<RowFilter<PRISMTableModel, Object>> filters, filters2;
-				filters2 = new ArrayList<RowFilter<PRISMTableModel, Object>>();
+				List<RowFilter<PrismTableModel, Object>> filters, filters2;
+				filters2 = new ArrayList<RowFilter<PrismTableModel, Object>>();
 				for (int i = 0; i < checkboxStaticIdentifiers.size(); i++) {
-					RowFilter<PRISMTableModel, Object> layer_filter = null;
-					filters = new ArrayList<RowFilter<PRISMTableModel, Object>>();
+					RowFilter<PrismTableModel, Object> layer_filter = null;
+					filters = new ArrayList<RowFilter<PrismTableModel, Object>>();
 					for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {
 						if (checkboxStaticIdentifiers.get(i).get(j).isSelected()) {
 							filters.add(RowFilter.regexFilter(checkboxStaticIdentifiers.get(i).get(j).getText(), i + 1)); // i+1 is the table column containing the first layer	
@@ -3943,7 +3943,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 					filters2.add(layer_filter);
 				}
-				RowFilter<PRISMTableModel, Object> combine_AllFilters = null;
+				RowFilter<PrismTableModel, Object> combine_AllFilters = null;
 				combine_AllFilters = RowFilter.andFilter(filters2);
 				sorter.setRowFilter(combine_AllFilters);
 			}
@@ -5528,7 +5528,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						btn_Sort.setText("OFF");
 						btn_Sort.repaint();
 					} else if (btn_Sort.getText().equals("OFF")) {
-						TableRowSorter<PRISMTableModel> sorter = new TableRowSorter<PRISMTableModel>(model9); // Add sorter
+						TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model9); // Add sorter
 						table9.setRowSorter(sorter);
 						btn_Sort.setText("ON");
 						btn_Sort.repaint();
@@ -5754,7 +5754,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	// Panel Advanced Constraints--------------------------------------------------------------------------------------------------------
 	class Flow_Constraints_GUI extends JLayeredPane implements ActionListener {
 		JTable basic_table;
-		PRISMTableModel model_basic;
+		PrismTableModel model_basic;
 		DefaultListModel id_list_model;
 		JList id_list;
 		JPanel button_table_Panel;
@@ -5775,7 +5775,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 			
 			// 2nd Grid ------------------------------------------------------------------------------		// Basic Constraint Table
-			model_basic = new PRISMTableModel(rowCount9, colCount9, data9, columnNames9) {
+			model_basic = new PrismTableModel(rowCount9, colCount9, data9, columnNames9) {
 				@Override
 				public boolean isCellEditable(int row, int column) {
 					return false;
@@ -6161,7 +6161,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						btn_Sort.setText("OFF");
 						btn_Sort.repaint();
 					} else if (btn_Sort.getText().equals("OFF")) {
-						TableRowSorter<PRISMTableModel> sorter = new TableRowSorter<PRISMTableModel>(model10); // Add sorter
+						TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model10); // Add sorter
 						table10.setRowSorter(sorter);
 						btn_Sort.setText("ON");
 						btn_Sort.repaint();

@@ -52,7 +52,7 @@ import net.coderazzi.filters.gui.AutoChoices;
 import net.coderazzi.filters.gui.TableFilterHeader;
 import prismConvenienceClasses.FilesHandle;
 import prismConvenienceClasses.IconHandle;
-import prismConvenienceClasses.PRISMTableModel;
+import prismConvenienceClasses.PrismTableModel;
 import prismConvenienceClasses.ToolBarWithBgImage;
 import prismRoot.PrismMain;
 @SuppressWarnings("serial")
@@ -90,7 +90,7 @@ public class Panel_YieldProject extends JLayeredPane {
 	private int rowCount, colCount;
 	private String[] columnNames;
 	private JTable table;
-	private PRISMTableModel model;
+	private PrismTableModel model;
 	private Object[][] data;	
 	private TableFilterHeader filterHeader = new TableFilterHeader();
 	
@@ -332,7 +332,7 @@ public class Panel_YieldProject extends JLayeredPane {
 						
 						
 						// Create a table
-						model = new PRISMTableModel(rowCount, colCount, data, columnNames);
+						model = new PrismTableModel(rowCount, colCount, data, columnNames);
 						table = new JTable(model) {
 							@Override			//These override is to make the width of the cell fit all contents of the cell
 							public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="C:/SpectrumLite_Documents/Setup/sqlite-jdbc-3.8.11.2.jar"/>
+	<classpathentry kind="lib" path="C:/prism documents/Setup/sqlite-jdbc-3.8.11.2.jar"/>
 	<classpathentry kind="lib" path="resources"/>
-	<classpathentry kind="lib" path="C:/SpectrumLite_Documents/Setup/jfreechart-1.0.19/jfreechart-1.0.19-demo.jar"/>
-	<classpathentry kind="lib" path="C:/SpectrumLite_Documents/Setup/lp_solve_5.5_java/lib/lpsolve55j.jar"/>
+	<classpathentry kind="lib" path="C:/prism documents/Setup/jfreechart-1.0.19/jfreechart-1.0.19-demo.jar"/>
+	<classpathentry kind="lib" path="C:/prism documents/Setup/lp_solve_5.5_java/lib/lpsolve55j.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
-	<classpathentry kind="lib" path="C:/SpectrumLite_Documents/Setup/x64_win64(CPLEX 1261)/cplex.jar"/>
-	<classpathentry kind="lib" path="C:/SpectrumLite_Documents/Setup/tablefilter-swing-5.3.0.jar"/>
-	<classpathentry kind="lib" path="C:/SpectrumLite_Documents/Setup/processing-3.3/core/library/core.jar"/>
-	<classpathentry kind="lib" path="C:/SpectrumLite_Documents/Setup/processing-3.3/core/library/gluegen-rt.jar"/>
-	<classpathentry kind="lib" path="C:/SpectrumLite_Documents/Setup/processing-3.3/core/library/jogl-all.jar"/>
+	<classpathentry kind="lib" path="C:/prism documents/Setup/x64_win64(CPLEX 1261)/cplex.jar"/>
+	<classpathentry kind="lib" path="C:/prism documents/Setup/tablefilter-swing-5.3.0.jar"/>
+	<classpathentry kind="lib" path="C:/prism documents/Setup/processing-3.3/core/library/core.jar"/>
+	<classpathentry kind="lib" path="C:/prism documents/Setup/processing-3.3/core/library/gluegen-rt.jar"/>
+	<classpathentry kind="lib" path="C:/prism documents/Setup/processing-3.3/core/library/jogl-all.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

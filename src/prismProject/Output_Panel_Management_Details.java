@@ -20,7 +20,7 @@ import javax.swing.RowFilter;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.TableRowSorter;
 
-import prismConvenienceClasses.PRISMTableModel;
+import prismConvenienceClasses.PrismTableModel;
 import prismRoot.PrismMain;
 
 public class Output_Panel_Management_Details extends JLayeredPane implements ItemListener {
@@ -35,12 +35,12 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 	private JScrollPane table_scroll_pane;
 	private JTable table;
 	private Object[][] data;
-	private PRISMTableModel model;
+	private PrismTableModel model;
 	
 	private Thread thread_filter;
 	private ExecutorService executor = Executors.newFixedThreadPool(1);
 	
-	public Output_Panel_Management_Details(File currentProjectFolder, String currentRun, JTable table, Object[][] data, PRISMTableModel model) {
+	public Output_Panel_Management_Details(File currentProjectFolder, String currentRun, JTable table, Object[][] data, PrismTableModel model) {
 		this.table = table;
 		this.data = data;
 		this.model = model;
@@ -532,7 +532,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 							}
 						};
 						
-						TableRowSorter<PRISMTableModel> sorter = new TableRowSorter<PRISMTableModel>(model);
+						TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model);
 						table.setRowSorter(sorter);
 						sorter.setRowFilter(equalsAFilter);	
 						

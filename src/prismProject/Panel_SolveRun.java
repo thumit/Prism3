@@ -43,7 +43,7 @@ import lpsolve.LpSolve;
 import lpsolve.LpSolveException;
 import prismConvenienceClasses.FilesHandle;
 import prismConvenienceClasses.LibraryHandle;
-import prismConvenienceClasses.PRISMTableModel;
+import prismConvenienceClasses.PrismTableModel;
 
 public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 	private JSplitPane splitPanel, splitPanel2;
@@ -54,7 +54,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 	private int rowCount, colCount;
 	private String[] columnNames;
 	private JTable table;
-	private PRISMTableModel model;
+	private PrismTableModel model;
 	private Object[][] data;
 	
 	private File[] listOfEditRuns ;
@@ -82,7 +82,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 		}	
 		
 		//Create a table
-        model = new PRISMTableModel(rowCount, colCount, data, columnNames);
+        model = new PrismTableModel(rowCount, colCount, data, columnNames);
         table = new JTable(model);
         table.getColumnModel().getColumn(1).setPreferredWidth(100);	//Set width of Column 'Validation'
         DefaultTableCellRenderer renderer = (DefaultTableCellRenderer)table.getDefaultRenderer(Object.class);

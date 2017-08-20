@@ -20,7 +20,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 
-import prismConvenienceClasses.PRISMTableModel;
+import prismConvenienceClasses.PrismTableModel;
 
 public class ScrollPane_ConstraintsSplit  extends JScrollPane {
 
@@ -134,7 +134,7 @@ public class ScrollPane_ConstraintsSplit  extends JScrollPane {
 		String[] columnNames = new String[] {"bc_id", "bc_description", "bc_type",  "bc_multiplier", "lowerbound", "lowerbound_perunit_penalty", "upperbound", "upperbound_perunit_penalty"};	         				
 		data[0][3] = (double) 1;
 		
-		PRISMTableModel model = new PRISMTableModel(rowCount, colCount, data, columnNames) {
+		PrismTableModel model = new PrismTableModel(rowCount, colCount, data, columnNames) {
 			@Override
 			public Class getColumnClass(int c) {
 				if (c == 0) return Integer.class;      //column 0 accepts only Integer
