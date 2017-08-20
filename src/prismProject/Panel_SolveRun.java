@@ -73,7 +73,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 		rowCount = listOfEditRuns.length;
 		colCount = 5;
 		data = new Object[rowCount][colCount];
-        columnNames= new String[] {"Model" , "Validation", "Variables", "Constraints", "Status"};
+        columnNames= new String[] {"Model" , "Validation", "Variables", "Constraints", "Status"}; //
 		
 		// Populate the data matrix
 		for (int row = 0; row < rowCount; row++) {
