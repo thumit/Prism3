@@ -287,6 +287,11 @@ All changes in this block are associated with v30.jar, formulation25.docx, datab
 	- Except 12a, 13, 6a to 6e, and the definition of xEA_E: all the other definition and equations have the for loop rewritten
 146. Fix the IF THEN that forgot to add for eq 15 regeneration variables
 
-All changes in this block are associated with v30.jar, formulation25.docx, database5.docx
+All changes in this block are associated with v31Boost5BufFixed.jar, formulation25.docx, database5.docx
 --------------------------------------------------------------------------
+
+147. Some refactor in Panel_SolveRuns
+148. Remove IF Then (for sstactic_identifiers) in eq.15 by using common_strata & common_trata_without_sizeclass_and_covertype (retailAll method)
+149. SpectrumLite --> Prism : all names are replaced
+
 
