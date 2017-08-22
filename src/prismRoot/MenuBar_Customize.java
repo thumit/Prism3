@@ -19,8 +19,8 @@ import javax.swing.JMenuBar;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 
-import prismConvenienceClasses.ColorUtil;
-import prismConvenienceClasses.IconHandle;
+import prismConvenienceClass.ColorUtil;
+import prismConvenienceClass.IconHandle;
 
 public class MenuBar_Customize extends JMenuBar implements MouseListener, MouseMotionListener {
 	private JButton buttonMinimize, buttonMaximize, buttonExit;
@@ -35,7 +35,7 @@ public class MenuBar_Customize extends JMenuBar implements MouseListener, MouseM
 
 		//Shift all below components to the right by some glue boxes
 		add(Box.createGlue());
-		JLabel title = new JLabel("PRISM ALPHA 1.00.00");
+		JLabel title = new JLabel("PRISM ALPHA 1.0.00");
 //		title.setIcon(IconHandle.get_scaledImageIcon(100, 20, "spectrumlite1.png"));
 		add(title);
 		add(Box.createGlue());

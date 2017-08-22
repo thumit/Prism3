@@ -41,9 +41,9 @@ import ilog.concert.IloNumVarType;
 import ilog.cplex.IloCplex;
 import lpsolve.LpSolve;
 import lpsolve.LpSolveException;
-import prismConvenienceClasses.FilesHandle;
-import prismConvenienceClasses.LibraryHandle;
-import prismConvenienceClasses.PrismTableModel;
+import prismConvenienceClass.FilesHandle;
+import prismConvenienceClass.LibraryHandle;
+import prismConvenienceClass.PrismTableModel;
 
 public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 	private JSplitPane splitPanel, splitPanel2;
@@ -73,7 +73,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 		rowCount = listOfEditRuns.length;
 		colCount = 5;
 		data = new Object[rowCount][colCount];
-        columnNames= new String[] {"Model" , "Validation", "Variables", "Constraints", "Status"}; //
+        columnNames= new String[] {"Model" , "Validation", "Variables", "Constraints", "Status"};
 		
 		// Populate the data matrix
 		for (int row = 0; row < rowCount; row++) {
@@ -291,16 +291,22 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			
 			// Read input files to retrieve values later
 			Read_RunInputs read = new Read_RunInputs();
-			read.readGeneralInputs(new File(runFolder.getAbsolutePath() + "/input_01_general_inputs.txt"));
-			read.readManagementOptions(new File(runFolder.getAbsolutePath() + "/input_03_model_strata.txt"));
-			read.readRequirements(new File(runFolder.getAbsolutePath() + "/input_04_covertype_conversion_clearcut.txt"));
-			read.readRDCovertypeProportion(new File(runFolder.getAbsolutePath() + "/input_05_covertype_conversion_replacing.txt"));
-			read.readMSPercent(new File(runFolder.getAbsolutePath() + "/input_06_natural_disturbances_non_replacing.txt"));
-			read.readRDPercent(new File(runFolder.getAbsolutePath() + "/input_07_natural_disturbances_replacing.txt"));
-			read.readManagementCost(new File(runFolder.getAbsolutePath() + "/input_08_management_cost.txt"));
+			read.read_general_inputs(new File(runFolder.getAbsolutePath() + "/input_01_general_inputs.txt"));
+			read.read_silviculture_method(new File(runFolder.getAbsolutePath() + "/input_02_silviculture_method.txt"));
+			read.read_model_strata(new File(runFolder.getAbsolutePath() + "/input_03_model_strata.txt"));
+			read.read_covertype_conversion_clearcut(new File(runFolder.getAbsolutePath() + "/input_04_covertype_conversion_clearcut.txt"));
+			read.read_covertype_conversion_replacing(new File(runFolder.getAbsolutePath() + "/input_05_covertype_conversion_replacing.txt"));
+			read.read_natural_disturbances_non_replacing(new File(runFolder.getAbsolutePath() + "/input_06_natural_disturbances_non_replacing.txt"));
+			read.read_natural_disturbances_replacing(new File(runFolder.getAbsolutePath() + "/input_07_natural_disturbances_replacing.txt"));
+			read.read_management_cost(new File(runFolder.getAbsolutePath() + "/input_08_management_cost.txt"));
 			read.read_basic_constraints(new File(runFolder.getAbsolutePath() + "/input_09_basic_constraints.txt"));
 			read.read_flow_constraints(new File(runFolder.getAbsolutePath() + "/input_10_flow_constraints.txt"));
 			
+			// Get info: input_02_silviculture_method
+			List<String> sm_strata = read.get_sm_strata();
+			List<String> sm_strata_without_sizeclass_and_covertype = read.get_sm_strata_without_sizeclass_and_covertype();
+			List<List<String>> sm_method_choice_for_strata = read.get_sm_method_choice_for_strata();
+			List<List<String>> sm_method_choice_for_strata_without_sizeclass_and_covertype = read.get_sm_method_choice_for_strata_without_sizeclass_and_covertype();
 			
 			// Get info: input_03_modeled_strata
 			List<String> model_strata, model_strata_without_sizeclass_and_covertype = new ArrayList<String>();
@@ -450,7 +456,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				String strataName = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4) + layer5.get(s5) + layer6.get(s6);
 				
 				//Loop through all modeled_strata to find if the names matched and get the total area and age class
-				for (int i = 1; i < read.get_MO_TotalRows(); i++) {	//From 2nd row			
+				for (int i = 0; i < read.get_MO_TotalRows(); i++) {			
 					if (Input2_value[i][0].equals(strataName)) {
 						StrataArea[s1][s2][s3][s4][s5][s6] = Double.parseDouble(Input2_value[i][7]);		//area
 						
@@ -601,7 +607,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				int s6 = layer6.indexOf(strata.substring(5,6));
 				for (int t = 1; t <= total_Periods; t++) {
 					String var_name = "xNG_E_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6) + "," + t;										
-					if (!allow_Non_Existing_Prescription) {
+					if (!allow_Non_Existing_Prescription) {		// Boost 2
 						if (yield_tables_names_list.contains(Get_Variable_Information.get_yield_table_name_to_find(var_name))) {
 							objlist.add((double) 0);			
 							vnamelist.add(var_name);										
@@ -633,10 +639,20 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				int s5 = layer5.indexOf(strata.substring(4,5));
 				int s6 = layer6.indexOf(strata.substring(5,6));
 				for (int i = 0; i < total_PBe_Prescriptions; i++) {
-					for (int t = 1; t <= total_Periods; t++) {
-						String var_name = "xPB_E_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6) + "," + i + "," + t;										
-						if (!allow_Non_Existing_Prescription) {
-							if (yield_tables_names_list.contains(Get_Variable_Information.get_yield_table_name_to_find(var_name))) {
+					if (sm_strata.contains(strata) && sm_method_choice_for_strata.get(sm_strata.indexOf(strata)).contains("PB_E" + " " + i))	// Boost 1 (a.k.a. Silviculture Method)				
+						for (int t = 1; t <= total_Periods; t++) {
+							String var_name = "xPB_E_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6) + "," + i + "," + t;										
+							if (!allow_Non_Existing_Prescription) {		// Boost 2
+								if (yield_tables_names_list.contains(Get_Variable_Information.get_yield_table_name_to_find(var_name))) {
+									objlist.add((double) 0);
+									vnamelist.add(var_name);
+									vlblist.add((double) 0);
+									vublist.add(Double.MAX_VALUE);
+									vtlist.add(IloNumVarType.Float);
+									xPBe[s1][s2][s3][s4][s5][s6][i][t] = nvars;
+									nvars++;
+								}
+							} else {
 								objlist.add((double) 0);
 								vnamelist.add(var_name);
 								vlblist.add((double) 0);
@@ -645,16 +661,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								xPBe[s1][s2][s3][s4][s5][s6][i][t] = nvars;
 								nvars++;
 							}
-						} else {
-							objlist.add((double) 0);
-							vnamelist.add(var_name);
-							vlblist.add((double) 0);
-							vublist.add(Double.MAX_VALUE);
-							vtlist.add(IloNumVarType.Float);
-							xPBe[s1][s2][s3][s4][s5][s6][i][t] = nvars;
-							nvars++;
 						}
-					}
 				}
 			}														
 			nV = nvars;			
@@ -668,10 +675,20 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				int s5 = layer5.indexOf(strata.substring(4,5));
 				int s6 = layer6.indexOf(strata.substring(5,6));
 				for (int i = 0; i < total_GSe_Prescriptions; i++) {
-					for (int t = 1; t <= total_Periods; t++) {
-						String var_name = "xGS_E_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6) + "," + i + "," + t;										
-						if (!allow_Non_Existing_Prescription) {
-							if (yield_tables_names_list.contains(Get_Variable_Information.get_yield_table_name_to_find(var_name))) {
+					if (sm_strata.contains(strata) && sm_method_choice_for_strata.get(sm_strata.indexOf(strata)).contains("GS_E" + " " + i))	// Boost 1 (a.k.a. Silviculture Method)
+						for (int t = 1; t <= total_Periods; t++) {
+							String var_name = "xGS_E_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6) + "," + i + "," + t;										
+							if (!allow_Non_Existing_Prescription) {		// Boost 2
+								if (yield_tables_names_list.contains(Get_Variable_Information.get_yield_table_name_to_find(var_name))) {
+									objlist.add((double) 0);
+									vnamelist.add(var_name);
+									vlblist.add((double) 0);
+									vublist.add(Double.MAX_VALUE);
+									vtlist.add(IloNumVarType.Float);
+									xGSe[s1][s2][s3][s4][s5][s6][i][t] = nvars;
+									nvars++;
+								}
+							} else {
 								objlist.add((double) 0);
 								vnamelist.add(var_name);
 								vlblist.add((double) 0);
@@ -680,16 +697,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								xGSe[s1][s2][s3][s4][s5][s6][i][t] = nvars;
 								nvars++;
 							}
-						} else {
-							objlist.add((double) 0);
-							vnamelist.add(var_name);
-							vlblist.add((double) 0);
-							vublist.add(Double.MAX_VALUE);
-							vtlist.add(IloNumVarType.Float);
-							xGSe[s1][s2][s3][s4][s5][s6][i][t] = nvars;
-							nvars++;
 						}
-					}
 				}
 			}														
 			nV = nvars;																
@@ -709,14 +717,24 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 												String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(s5R) + " " + rotationAge;						
 												if (covertype_conversions_and_existing_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
 													for (int i = 0; i < total_EAe_Prescriptions; i++) {
-														for (int t = 1; t <= tR; t++) {
-															String var_name = "xEA_E_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6) + "," + tR + "," + layer5.get(s5R) + "," + i + "," + t ;										
-															String yield_table_name_to_find = Get_Variable_Information.get_yield_table_name_to_find(var_name);	
-															if (yield_table_name_to_find.contains("rotation_age")) {
-																yield_table_name_to_find = yield_table_name_to_find.replace("rotation_age", String.valueOf(rotationAge));
-															}
-															if (!allow_Non_Existing_Prescription) {
-																if (yield_tables_names_list.contains(yield_table_name_to_find)) {
+														if (sm_strata.contains(strataName) && sm_method_choice_for_strata.get(sm_strata.indexOf(strataName)).contains("EA_E" + " " + i))	// Boost 1 (a.k.a. Silviculture Method)
+															for (int t = 1; t <= tR; t++) {
+																String var_name = "xEA_E_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6) + "," + tR + "," + layer5.get(s5R) + "," + i + "," + t ;										
+																String yield_table_name_to_find = Get_Variable_Information.get_yield_table_name_to_find(var_name);	
+																if (yield_table_name_to_find.contains("rotation_age")) {
+																	yield_table_name_to_find = yield_table_name_to_find.replace("rotation_age", String.valueOf(rotationAge));
+																}
+																if (!allow_Non_Existing_Prescription) {		// Boost 2
+																	if (yield_tables_names_list.contains(yield_table_name_to_find)) {
+																		objlist.add((double) 0);
+																		vnamelist.add(var_name);
+																		vlblist.add((double) 0);
+																		vublist.add(Double.MAX_VALUE);
+																		vtlist.add(IloNumVarType.Float);
+																		xEAe[s1][s2][s3][s4][s5][s6][tR][s5R][i][t] = nvars;
+																		nvars++;
+																	}
+																} else {
 																	objlist.add((double) 0);
 																	vnamelist.add(var_name);
 																	vlblist.add((double) 0);
@@ -725,16 +743,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																	xEAe[s1][s2][s3][s4][s5][s6][tR][s5R][i][t] = nvars;
 																	nvars++;
 																}
-															} else {
-																objlist.add((double) 0);
-																vnamelist.add(var_name);
-																vlblist.add((double) 0);
-																vublist.add(Double.MAX_VALUE);
-																vtlist.add(IloNumVarType.Float);
-																xEAe[s1][s2][s3][s4][s5][s6][tR][s5R][i][t] = nvars;
-																nvars++;
 															}
-														}
 													}
 												}
 											}
@@ -757,28 +766,29 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				int s5 = layer5.indexOf(strata.substring(4,5));
 				int s6 = layer6.indexOf(strata.substring(5,6));
 				for (int i = 0; i < total_MS_Prescriptions; i++) {
-					for (int t = 1; t <= total_Periods; t++) {
-						String var_name = "xMS_E_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6)  + "," + i + "," + t;										
-						if (!allow_Non_Existing_Prescription) {
-							if (yield_tables_names_list.contains(Get_Variable_Information.get_yield_table_name_to_find(var_name))) {
+					if (sm_strata.contains(strata) && sm_method_choice_for_strata.get(sm_strata.indexOf(strata)).contains("MS_E" + " " + i))	// Boost 1 (a.k.a. Silviculture Method)
+						for (int t = 1; t <= total_Periods; t++) {
+							String var_name = "xMS_E_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6)  + "," + i + "," + t;										
+							if (!allow_Non_Existing_Prescription) {		// Boost 2
+								if (yield_tables_names_list.contains(Get_Variable_Information.get_yield_table_name_to_find(var_name))) {
+									objlist.add((double) 0);
+									vnamelist.add(var_name);
+									vlblist.add((double) 0);
+									vublist.add(Double.MAX_VALUE);
+									vtlist.add(IloNumVarType.Float);
+									xMS[s1][s2][s3][s4][s5][s6][i][t] = nvars;
+									nvars++;	
+								}
+							} else {
 								objlist.add((double) 0);
 								vnamelist.add(var_name);
 								vlblist.add((double) 0);
 								vublist.add(Double.MAX_VALUE);
 								vtlist.add(IloNumVarType.Float);
 								xMS[s1][s2][s3][s4][s5][s6][i][t] = nvars;
-								nvars++;	
+								nvars++;
 							}
-						} else {
-							objlist.add((double) 0);
-							vnamelist.add(var_name);
-							vlblist.add((double) 0);
-							vublist.add(Double.MAX_VALUE);
-							vtlist.add(IloNumVarType.Float);
-							xMS[s1][s2][s3][s4][s5][s6][i][t] = nvars;
-							nvars++;
 						}
-					}
 				}
 			}														
 			nV = nvars;	
@@ -792,28 +802,29 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				int s5 = layer5.indexOf(strata.substring(4,5));
 				int s6 = layer6.indexOf(strata.substring(5,6));
 				for (int i = 0; i < total_BS_Prescriptions; i++) {
-					for (int t = 1; t <= total_Periods; t++) {
-						String var_name = "xBS_E_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6)  + "," + i + "," + t;										
-						if (!allow_Non_Existing_Prescription) {
-							if (yield_tables_names_list.contains(Get_Variable_Information.get_yield_table_name_to_find(var_name))) {
+					if (sm_strata.contains(strata) && sm_method_choice_for_strata.get(sm_strata.indexOf(strata)).contains("BS_E" + " " + i))	// Boost 1 (a.k.a. Silviculture Method)
+						for (int t = 1; t <= total_Periods; t++) {
+							String var_name = "xBS_E_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6)  + "," + i + "," + t;										
+							if (!allow_Non_Existing_Prescription) {		// Boost 2
+								if (yield_tables_names_list.contains(Get_Variable_Information.get_yield_table_name_to_find(var_name))) {
+									objlist.add((double) 0);
+									vnamelist.add(var_name);
+									vlblist.add((double) 0);
+									vublist.add(Double.MAX_VALUE);
+									vtlist.add(IloNumVarType.Float);
+									xBS[s1][s2][s3][s4][s5][s6][i][t] = nvars;
+									nvars++;	
+								}
+							} else {
 								objlist.add((double) 0);
 								vnamelist.add(var_name);
 								vlblist.add((double) 0);
 								vublist.add(Double.MAX_VALUE);
 								vtlist.add(IloNumVarType.Float);
 								xBS[s1][s2][s3][s4][s5][s6][i][t] = nvars;
-								nvars++;	
-							}
-						} else {
-							objlist.add((double) 0);
-							vnamelist.add(var_name);
-							vlblist.add((double) 0);
-							vublist.add(Double.MAX_VALUE);
-							vtlist.add(IloNumVarType.Float);
-							xBS[s1][s2][s3][s4][s5][s6][i][t] = nvars;
-							nvars++;
-						}									
-					}
+								nvars++;
+							}									
+						}
 				}
 			}														
 			nV = nvars;	
@@ -828,7 +839,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					for (int t = 2; t <= total_Periods; t++) {
 						for (int a = 1; a <= t-1; a++) {
 							String var_name = "xNG_R_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + t + "," + a;										
-							if (!allow_Non_Existing_Prescription) {
+							if (!allow_Non_Existing_Prescription) {		// Boost 2
 								if (yield_tables_names_list.contains(Get_Variable_Information.get_yield_table_name_to_find(var_name))) {
 									objlist.add((double) 0);
 									vnamelist.add(var_name);							
@@ -861,11 +872,22 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				int s4 = layer4.indexOf(strata.substring(3,4));
 				for (int s5 = 0; s5 < layer5.size(); s5++) {
 					for (int i = 0; i < total_PBr_Prescriptions; i++) {
-						for (int t = 2; t <= total_Periods; t++) {
-							for (int a = 1; a <= t - 1; a++) {
-								String var_name = "xPB_R_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + i + "," + t + "," + a;										
-								if (!allow_Non_Existing_Prescription) {
-									if (yield_tables_names_list.contains(Get_Variable_Information.get_yield_table_name_to_find(var_name))) {
+						if (sm_strata_without_sizeclass_and_covertype.contains(strata) && 
+								sm_method_choice_for_strata_without_sizeclass_and_covertype.get(sm_strata_without_sizeclass_and_covertype.indexOf(strata)).contains("PB_R" + " " + i))	// Boost 1 (a.k.a. Silviculture Method)
+							for (int t = 2; t <= total_Periods; t++) {
+								for (int a = 1; a <= t - 1; a++) {
+									String var_name = "xPB_R_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + i + "," + t + "," + a;										
+									if (!allow_Non_Existing_Prescription) {		// Boost 2
+										if (yield_tables_names_list.contains(Get_Variable_Information.get_yield_table_name_to_find(var_name))) {
+											objlist.add((double) 0);
+											vnamelist.add(var_name);							
+											vlblist.add((double) 0);
+											vublist.add(Double.MAX_VALUE);
+											vtlist.add(IloNumVarType.Float);
+											xPBr[s1][s2][s3][s4][s5][i][t][a] = nvars;
+											nvars++;
+										}
+									} else {
 										objlist.add((double) 0);
 										vnamelist.add(var_name);							
 										vlblist.add((double) 0);
@@ -874,17 +896,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										xPBr[s1][s2][s3][s4][s5][i][t][a] = nvars;
 										nvars++;
 									}
-								} else {
-									objlist.add((double) 0);
-									vnamelist.add(var_name);							
-									vlblist.add((double) 0);
-									vublist.add(Double.MAX_VALUE);
-									vtlist.add(IloNumVarType.Float);
-									xPBr[s1][s2][s3][s4][s5][i][t][a] = nvars;
-									nvars++;
 								}
 							}
-						}
 					}
 				}
 			}						
@@ -898,11 +911,22 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				int s4 = layer4.indexOf(strata.substring(3,4));
 				for (int s5 = 0; s5 < layer5.size(); s5++) {
 					for (int i = 0; i < total_GSr_Prescriptions; i++) {
-						for (int t = 2; t <= total_Periods; t++) {
-							for (int a = 1; a <= t - 1; a++) {
-								String var_name = "xGS_R_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + i + "," + t + "," + a;										
-								if (!allow_Non_Existing_Prescription) {
-									if (yield_tables_names_list.contains(Get_Variable_Information.get_yield_table_name_to_find(var_name))) {
+						if (sm_strata_without_sizeclass_and_covertype.contains(strata) && 
+								sm_method_choice_for_strata_without_sizeclass_and_covertype.get(sm_strata_without_sizeclass_and_covertype.indexOf(strata)).contains("GS_R" + " " + i))	// Boost 1 (a.k.a. Silviculture Method)
+							for (int t = 2; t <= total_Periods; t++) {
+								for (int a = 1; a <= t - 1; a++) {
+									String var_name = "xGS_R_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + i + "," + t + "," + a;										
+									if (!allow_Non_Existing_Prescription) {		// Boost 2
+										if (yield_tables_names_list.contains(Get_Variable_Information.get_yield_table_name_to_find(var_name))) {
+											objlist.add((double) 0);
+											vnamelist.add(var_name);							
+											vlblist.add((double) 0);
+											vublist.add(Double.MAX_VALUE);
+											vtlist.add(IloNumVarType.Float);
+											xGSr[s1][s2][s3][s4][s5][i][t][a] = nvars;
+											nvars++;
+										}
+									} else {
 										objlist.add((double) 0);
 										vnamelist.add(var_name);							
 										vlblist.add((double) 0);
@@ -911,17 +935,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										xGSr[s1][s2][s3][s4][s5][i][t][a] = nvars;
 										nvars++;
 									}
-								} else {
-									objlist.add((double) 0);
-									vnamelist.add(var_name);							
-									vlblist.add((double) 0);
-									vublist.add(Double.MAX_VALUE);
-									vtlist.add(IloNumVarType.Float);
-									xGSr[s1][s2][s3][s4][s5][i][t][a] = nvars;
-									nvars++;
 								}
 							}
-						}
 					}
 				}
 			}
@@ -940,10 +955,21 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(s5R) + " " + aR;						
 								if (covertype_conversions_and_regeneration_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
 									for (int i = 0; i < total_EAr_Prescriptions; i++) {
-										for (int t = tR-aR+1; t <= tR; t++) {
-											String var_name = "xEA_R_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + tR + "," + aR + "," + layer5.get(s5R) + "," + i + "," + t;										
-											if (!allow_Non_Existing_Prescription) {
-												if (yield_tables_names_list.contains(Get_Variable_Information.get_yield_table_name_to_find(var_name))) {
+										if (sm_strata_without_sizeclass_and_covertype.contains(strata) && 
+												sm_method_choice_for_strata_without_sizeclass_and_covertype.get(sm_strata_without_sizeclass_and_covertype.indexOf(strata)).contains("EA_R" + " " + i))	// Boost 1 (a.k.a. Silviculture Method)
+											for (int t = tR-aR+1; t <= tR; t++) {
+												String var_name = "xEA_R_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + tR + "," + aR + "," + layer5.get(s5R) + "," + i + "," + t;										
+												if (!allow_Non_Existing_Prescription) {		// Boost 2
+													if (yield_tables_names_list.contains(Get_Variable_Information.get_yield_table_name_to_find(var_name))) {
+														objlist.add((double) 0);
+														vnamelist.add(var_name);	
+														vlblist.add((double) 0);
+														vublist.add(Double.MAX_VALUE);
+														vtlist.add(IloNumVarType.Float);
+														xEAr[s1][s2][s3][s4][s5][tR][aR][s5R][i][t] = nvars;
+														nvars++;
+													}
+												} else {
 													objlist.add((double) 0);
 													vnamelist.add(var_name);	
 													vlblist.add((double) 0);
@@ -952,16 +978,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 													xEAr[s1][s2][s3][s4][s5][tR][aR][s5R][i][t] = nvars;
 													nvars++;
 												}
-											} else {
-												objlist.add((double) 0);
-												vnamelist.add(var_name);	
-												vlblist.add((double) 0);
-												vublist.add(Double.MAX_VALUE);
-												vtlist.add(IloNumVarType.Float);
-												xEAr[s1][s2][s3][s4][s5][tR][aR][s5R][i][t] = nvars;
-												nvars++;
 											}
-										}
 									}
 								}
 							}
@@ -2380,10 +2397,10 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			for (int id = 1; id < total_freeConstraints + total_softConstraints + total_hardConstraints + 1; id++) {	//Loop from 1 because the first row of the userConstraint file is just title
 				
 				// Get the parameter indexes list
-				List<String> parameters_indexes_list = read.get_Parameters_indexes_list(id);
+				List<String> parameters_indexes_list = read.get_parameters_indexes_list(id);
 				// Get the dynamic identifiers indexes list
-				List<String> dynamic_dentifiers_column_indexes = read.get_all_dynamicIdentifiers_columnsIndexes_in_row(id);
-				List<List<String>> dynamic_identifiers = read.get_all_dynamic_identifiers_in_row(id);
+				List<String> dynamic_dentifiers_column_indexes = read.get_dynamic_dentifiers_column_indexes_in_row(id);
+				List<List<String>> dynamic_identifiers = read.get_dynamic_identifiers_in_row(id);
 				
 				
 						

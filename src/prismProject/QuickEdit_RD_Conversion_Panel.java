@@ -14,7 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 
-import prismConvenienceClasses.IconHandle;
+import prismConvenienceClass.IconHandle;
 
 public class QuickEdit_RD_Conversion_Panel extends JPanel {
 	public QuickEdit_RD_Conversion_Panel(JTable table, Object[][] data) {

@@ -18,7 +18,7 @@ import javax.swing.KeyStroke;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import prismConvenienceClasses.IconHandle;
+import prismConvenienceClass.IconHandle;
 
 public class MenuItem_SetTransparency extends JMenuItem {
 

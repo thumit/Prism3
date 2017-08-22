@@ -52,8 +52,8 @@ import javax.swing.tree.TreePath;
 
 import net.coderazzi.filters.gui.AutoChoices;
 import net.coderazzi.filters.gui.TableFilterHeader;
-import prismConvenienceClasses.FilesHandle;
-import prismConvenienceClasses.IconHandle;
+import prismConvenienceClass.FilesHandle;
+import prismConvenienceClass.IconHandle;
 import prismProject.Read_Database;
 
 @SuppressWarnings("serial")

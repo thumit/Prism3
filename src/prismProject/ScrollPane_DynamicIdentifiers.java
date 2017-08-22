@@ -31,7 +31,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import prismConvenienceClasses.IconHandle;
+import prismConvenienceClass.IconHandle;
 import prismRoot.PrismMain;
 
 public class ScrollPane_DynamicIdentifiers extends JScrollPane {	

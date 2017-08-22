@@ -59,8 +59,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import javax.swing.border.TitledBorder;
 
-import prismConvenienceClasses.ArrayListTransferHandler;
-import prismConvenienceClasses.IconHandle;
+import prismConvenienceClass.ArrayListTransferHandler;
+import prismConvenienceClass.IconHandle;
 
 
 

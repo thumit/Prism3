@@ -42,14 +42,14 @@ import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 import javax.swing.plaf.FontUIResource;
 
-import prismConvenienceClasses.ColorUtil;
-import prismConvenienceClasses.ComponentResizer;
-import prismConvenienceClasses.FilesHandle;
-import prismConvenienceClasses.IconHandle;
-import prismConvenienceClasses.Processing;
-import prismConvenienceClasses.RequestFocusListener;
-import prismConvenienceClasses.StringHandle;
-import prismConvenienceClasses.WindowAppearanceHandle;
+import prismConvenienceClass.ColorUtil;
+import prismConvenienceClass.ComponentResizer;
+import prismConvenienceClass.FilesHandle;
+import prismConvenienceClass.IconHandle;
+import prismConvenienceClass.Processing;
+import prismConvenienceClass.RequestFocusListener;
+import prismConvenienceClass.StringHandle;
+import prismConvenienceClass.WindowAppearanceHandle;
 import prismDatabase.Panel_DatabaseManagement;
 import prismProject.Panel_YieldProject;
 

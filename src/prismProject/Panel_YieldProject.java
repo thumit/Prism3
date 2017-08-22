@@ -50,10 +50,10 @@ import javax.swing.tree.TreePath;
 
 import net.coderazzi.filters.gui.AutoChoices;
 import net.coderazzi.filters.gui.TableFilterHeader;
-import prismConvenienceClasses.FilesHandle;
-import prismConvenienceClasses.IconHandle;
-import prismConvenienceClasses.PrismTableModel;
-import prismConvenienceClasses.ToolBarWithBgImage;
+import prismConvenienceClass.FilesHandle;
+import prismConvenienceClass.IconHandle;
+import prismConvenienceClass.PrismTableModel;
+import prismConvenienceClass.ToolBarWithBgImage;
 import prismRoot.PrismMain;
 @SuppressWarnings("serial")
 public class Panel_YieldProject extends JLayeredPane {

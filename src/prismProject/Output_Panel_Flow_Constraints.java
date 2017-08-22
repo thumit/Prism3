@@ -29,8 +29,8 @@ import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.ui.RectangleEdge;
 
-import prismConvenienceClasses.ColorUtil;
-import prismConvenienceClasses.ComponentResizer;
+import prismConvenienceClass.ColorUtil;
+import prismConvenienceClass.ComponentResizer;
 
 // Panel_Flow_Constraints--------------------------------------------------------------------------------	
 class Output_Panel_Flow_Constraints extends JLayeredPane {

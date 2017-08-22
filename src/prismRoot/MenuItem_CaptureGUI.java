@@ -14,8 +14,8 @@ import java.util.concurrent.TimeUnit;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 
-import prismConvenienceClasses.IconHandle;
-import prismConvenienceClasses.ImageWhenClicked;
+import prismConvenienceClass.IconHandle;
+import prismConvenienceClass.ImageWhenClicked;
 
 public class MenuItem_CaptureGUI extends JMenuItem {
 

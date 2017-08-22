@@ -78,11 +78,11 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 import javax.swing.text.DefaultFormatter;
 
-import prismConvenienceClasses.ColorUtil;
-import prismConvenienceClasses.FilesHandle;
-import prismConvenienceClasses.IconHandle;
-import prismConvenienceClasses.PrismTableModel;
-import prismConvenienceClasses.ToolBarWithBgImage;
+import prismConvenienceClass.ColorUtil;
+import prismConvenienceClass.FilesHandle;
+import prismConvenienceClass.IconHandle;
+import prismConvenienceClass.PrismTableModel;
+import prismConvenienceClass.ToolBarWithBgImage;
 import prismRoot.PrismMain;
 
 public class Panel_EditRun_Details extends JLayeredPane implements ActionListener {
@@ -3233,7 +3233,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			setLayout(new GridBagLayout());	
 			// 1st grid -----------------------------------------------------------------------
 			// 1st grid -----------------------------------------------------------------------	
-			String panel_name = "Strata with selected Layers Attributes would be eligigle for ......";
+			String panel_name = "Strata (Existing: layers 1 to 6, Regeneration: layers 1 to 4)";
 			static_identifiersScrollPanel = new ScrollPane_StaticIdentifiers(read_Database, 0, panel_name);
 			checkboxStaticIdentifiers = static_identifiersScrollPanel.get_CheckboxStaticIdentifiers();	
 			
@@ -3250,7 +3250,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			// 2nd grid -----------------------------------------------------------------------
 			// 2nd grid -----------------------------------------------------------------------	
-			panel_name = "...... implementation of the selected Silviculture Method & Timing Choice below";
+			panel_name = "Silviculture Method & Timing Choice to be implemented";
 			static_identifiersScrollPanel_silviculture = new ScrollPane_StaticIdentifiers(read_Database, 3, panel_name);
 			checkboxStaticIdentifiers = static_identifiersScrollPanel_silviculture.get_CheckboxStaticIdentifiers();	
 			
@@ -3269,7 +3269,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			// 4th Grid -----------------------------------------------------------------------------
 			// Add all buttons to a Panel----------------------------------
 			button_table_Panel = new JPanel(new GridBagLayout());
-			TitledBorder border = new TitledBorder("Silviculture Method Information - all of the below will be applied if checked");
+			TitledBorder border = new TitledBorder("Silviculture Method Information - Implementation based on aggregation of all the below");
 			border.setTitleJustification(TitledBorder.CENTER);
 			button_table_Panel.setBorder(border);
 			GridBagConstraints c2 = new GridBagConstraints();
@@ -3382,8 +3382,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			table2.setAutoResizeMode(0);		// 0 = JTable.AUTO_RESIZE_OFF
 
 			
-			// Hide the column 2 and 3: this hide is better than remove column from column model, this is basically set size to be zero
-			for (int i = 2; i < 4; i++) {
+			// Hide the column 2 and 3 and 4: this hide is better than remove column from column model, this is basically set size to be zero
+			for (int i = 2; i < 5; i++) {
 				table2.getColumnModel().getColumn(i).setMinWidth(0);
 				table2.getColumnModel().getColumn(i).setMaxWidth(0);
 				table2.getColumnModel().getColumn(i).setWidth(0);

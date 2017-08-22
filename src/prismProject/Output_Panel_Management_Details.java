@@ -20,7 +20,7 @@ import javax.swing.RowFilter;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.TableRowSorter;
 
-import prismConvenienceClasses.PrismTableModel;
+import prismConvenienceClass.PrismTableModel;
 import prismRoot.PrismMain;
 
 public class Output_Panel_Management_Details extends JLayeredPane implements ItemListener {
@@ -49,7 +49,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 		// Some set up ---------------------------------------------------------------------------	
 		file_Database = new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/database.db");
 		Read_RunInputs read = new Read_RunInputs();
-		read.readGeneralInputs(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_01_general_inputs.txt"));
+		read.read_general_inputs(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_01_general_inputs.txt"));
 		int total_Periods = read.get_total_periods();
 
 		// Read the database

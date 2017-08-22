@@ -18,8 +18,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
-import prismConvenienceClasses.ComponentResizer;
-import prismConvenienceClasses.IconHandle;
+import prismConvenienceClass.ComponentResizer;
+import prismConvenienceClass.IconHandle;
 
 import javax.swing.UnsupportedLookAndFeelException;
 

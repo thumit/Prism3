@@ -20,7 +20,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 
-import prismConvenienceClasses.PrismTableModel;
+import prismConvenienceClass.PrismTableModel;
 
 public class ScrollPane_ConstraintsSplit  extends JScrollPane {
 

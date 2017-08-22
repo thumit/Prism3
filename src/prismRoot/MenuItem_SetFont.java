@@ -35,8 +35,8 @@ import javax.swing.event.ChangeListener;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.text.DefaultFormatter;
 
-import prismConvenienceClasses.IconHandle;
-import prismConvenienceClasses.WindowAppearanceHandle;
+import prismConvenienceClass.IconHandle;
+import prismConvenienceClass.WindowAppearanceHandle;
 
 public class MenuItem_SetFont extends JMenuItem {
 	private JSpinner spin;

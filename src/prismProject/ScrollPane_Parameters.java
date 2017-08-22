@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.UIManager;
 
-import prismConvenienceClasses.IconHandle;
+import prismConvenienceClass.IconHandle;
 import prismRoot.PrismMain;
 
 public class ScrollPane_Parameters extends JScrollPane {	

@@ -27,8 +27,8 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import prismConvenienceClasses.IconHandle;
-import prismConvenienceClasses.TableColumnsHandle;
+import prismConvenienceClass.IconHandle;
+import prismConvenienceClass.TableColumnsHandle;
 import prismRoot.PrismMain;
 
 public class QuickEdit_ManagementCost_Panel extends JPanel {

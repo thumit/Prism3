@@ -290,8 +290,11 @@ All changes in this block are associated with v30.jar, formulation25.docx, datab
 All changes in this block are associated with v31Boost5BufFixed.jar, formulation25.docx, database5.docx
 --------------------------------------------------------------------------
 
-147. Some refactor in Panel_SolveRuns
+147. Some refactor in Panel_SolveRuns, Read_RunInputs, also fix some loops in Read_RunInputs (general_inputs & model_strata: remove the column header row before saving values)
 148. Remove IF Then (for sstactic_identifiers) in eq.15 by using common_strata & common_trata_without_sizeclass_and_covertype (retailAll method)
 149. SpectrumLite --> Prism : all names are replaced
+150. Boost 1 completed
+151. Hide the checkbox column in Silviculture Method (Could be deleted but still keep it incase if we need to use in the future)
 
+All changes in this block are associated with PrismAlpha1.0.01.jar, Prism Formulation 01.docx, Prism Database 01.docx
 

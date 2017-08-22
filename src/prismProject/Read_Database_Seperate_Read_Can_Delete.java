@@ -19,8 +19,8 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import prismConvenienceClasses.FilesHandle;
-import prismConvenienceClasses.StringHandle;
+import prismConvenienceClass.FilesHandle;
+import prismConvenienceClass.StringHandle;
 
 public class Read_Database_Seperate_Read_Can_Delete {
 	private Object[][][] yield_tables_values;			// Note: indexes start from 0 
@@ -39,7 +39,7 @@ public class Read_Database_Seperate_Read_Can_Delete {
 	private List<List<String>> allLayers_ToolTips;
 	
 	
-	private LayerLinkedList layers;
+	private LinkedList_Layers layers;
 	
 	
 	private Connection conn = null;
@@ -521,7 +521,7 @@ public class Read_Database_Seperate_Read_Can_Delete {
 				
 				
 				// Testing Linked List
-				layers = new LayerLinkedList();
+				layers = new LinkedList_Layers();
 				for (int i = 0; i < rowCount3; i++) {				
 					if (layers.isEmpty() || ! layers.get(layers.size() - 1).layer_id.equalsIgnoreCase(strata_definition_values[i][0])) {  // If found a new layer then add the layer
 						Layer_Item new_layer = new Layer_Item(strata_definition_values[i][0], strata_definition_values[i][1], new LinkedList<Attribute_Item>());

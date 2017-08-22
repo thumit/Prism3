@@ -16,7 +16,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import prismConvenienceClasses.IconHandle;
+import prismConvenienceClass.IconHandle;
 
 
 public class QuickEdit_BasicConstraints_Panel extends JPanel {

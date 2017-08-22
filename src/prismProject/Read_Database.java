@@ -20,8 +20,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import prismConvenienceClasses.FilesHandle;
-import prismConvenienceClasses.StringHandle;
+import prismConvenienceClass.FilesHandle;
+import prismConvenienceClass.StringHandle;
 
 public class Read_Database {
 	private Object[][][] yield_tables_values;			// Note: indexes start from 0 
@@ -39,7 +39,7 @@ public class Read_Database {
 	private List<List<String>> allLayers_ToolTips;
 	
 	
-	private LayerLinkedList layers;
+	private LinkedList_Layers layers;
 	
 	
 	private Connection conn = null;
@@ -305,7 +305,7 @@ public class Read_Database {
 				
 				
 				// Testing Linked List
-				layers = new LayerLinkedList();
+				layers = new LinkedList_Layers();
 				for (int i = 0; i < rowCount3; i++) {				
 					if (layers.isEmpty() || ! layers.get(layers.size() - 1).layer_id.equalsIgnoreCase(strata_definition_values[i][0])) {  // If found a new layer then add the layer
 						Layer_Item new_layer = new Layer_Item(strata_definition_values[i][0], strata_definition_values[i][1], new LinkedList<Attribute_Item>());
@@ -510,8 +510,8 @@ public class Read_Database {
 	public List<String> get_method_choice_layers_title() {
 		//Layers title
 		List<String> method_choice_layers_title = new ArrayList<String>();
-		method_choice_layers_title.add("silviculture method (unactivated)");
-		method_choice_layers_title.add("timing choice (unactivated)");
+		method_choice_layers_title.add("silviculture method");
+		method_choice_layers_title.add("timing choice");
 		return method_choice_layers_title;
 	}
 
