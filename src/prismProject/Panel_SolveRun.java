@@ -605,10 +605,20 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				int s4 = layer4.indexOf(strata.substring(3,4));
 				int s5 = layer5.indexOf(strata.substring(4,5));
 				int s6 = layer6.indexOf(strata.substring(5,6));
-				for (int t = 1; t <= total_Periods; t++) {
-					String var_name = "xNG_E_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6) + "," + t;										
-					if (!allow_Non_Existing_Prescription) {		// Boost 2
-						if (yield_tables_names_list.contains(Get_Variable_Information.get_yield_table_name_to_find(var_name))) {
+				if (sm_strata.contains(strata) && sm_method_choice_for_strata.get(sm_strata.indexOf(strata)).contains("NG_E" + " " + 0))	// Boost 1 (a.k.a. Silviculture Method)
+					for (int t = 1; t <= total_Periods; t++) {
+						String var_name = "xNG_E_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6) + "," + t;										
+						if (!allow_Non_Existing_Prescription) {		// Boost 2
+							if (yield_tables_names_list.contains(Get_Variable_Information.get_yield_table_name_to_find(var_name))) {
+								objlist.add((double) 0);			
+								vnamelist.add(var_name);										
+								vlblist.add((double) 0);
+								vublist.add(Double.MAX_VALUE);
+								vtlist.add(IloNumVarType.Float);
+								xNGe[s1][s2][s3][s4][s5][s6][t] = nvars;
+								nvars++;
+							}
+						} else {
 							objlist.add((double) 0);			
 							vnamelist.add(var_name);										
 							vlblist.add((double) 0);
@@ -617,16 +627,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 							xNGe[s1][s2][s3][s4][s5][s6][t] = nvars;
 							nvars++;
 						}
-					} else {
-						objlist.add((double) 0);			
-						vnamelist.add(var_name);										
-						vlblist.add((double) 0);
-						vublist.add(Double.MAX_VALUE);
-						vtlist.add(IloNumVarType.Float);
-						xNGe[s1][s2][s3][s4][s5][s6][t] = nvars;
-						nvars++;
 					}
-				}
 			}														
 			nV = nvars;
 			
@@ -835,12 +836,23 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				int s2 = layer2.indexOf(strata.substring(1,2));
 				int s3 = layer3.indexOf(strata.substring(2,3));
 				int s4 = layer4.indexOf(strata.substring(3,4));
-				for (int s5 = 0; s5 < layer5.size(); s5++) {
-					for (int t = 2; t <= total_Periods; t++) {
-						for (int a = 1; a <= t-1; a++) {
-							String var_name = "xNG_R_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + t + "," + a;										
-							if (!allow_Non_Existing_Prescription) {		// Boost 2
-								if (yield_tables_names_list.contains(Get_Variable_Information.get_yield_table_name_to_find(var_name))) {
+				if (sm_strata_without_sizeclass_and_covertype.contains(strata) && 
+						sm_method_choice_for_strata_without_sizeclass_and_covertype.get(sm_strata_without_sizeclass_and_covertype.indexOf(strata)).contains("NG_R" + " " + 0))	// Boost 1 (a.k.a. Silviculture Method)
+					for (int s5 = 0; s5 < layer5.size(); s5++) {
+						for (int t = 2; t <= total_Periods; t++) {
+							for (int a = 1; a <= t-1; a++) {
+								String var_name = "xNG_R_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + t + "," + a;										
+								if (!allow_Non_Existing_Prescription) {		// Boost 2
+									if (yield_tables_names_list.contains(Get_Variable_Information.get_yield_table_name_to_find(var_name))) {
+										objlist.add((double) 0);
+										vnamelist.add(var_name);							
+										vlblist.add((double) 0);
+										vublist.add(Double.MAX_VALUE);
+										vtlist.add(IloNumVarType.Float);
+										xNGr[s1][s2][s3][s4][s5][t][a] = nvars;
+										nvars++;
+									}
+								} else {
 									objlist.add((double) 0);
 									vnamelist.add(var_name);							
 									vlblist.add((double) 0);
@@ -849,18 +861,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									xNGr[s1][s2][s3][s4][s5][t][a] = nvars;
 									nvars++;
 								}
-							} else {
-								objlist.add((double) 0);
-								vnamelist.add(var_name);							
-								vlblist.add((double) 0);
-								vublist.add(Double.MAX_VALUE);
-								vtlist.add(IloNumVarType.Float);
-								xNGr[s1][s2][s3][s4][s5][t][a] = nvars;
-								nvars++;
 							}
 						}
 					}
-				}
 			}					
 			nV = nvars;
 			
@@ -1417,36 +1420,34 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				int s4 = layer4.indexOf(strata.substring(3,4));
 				int s5 = layer5.indexOf(strata.substring(4,5));
 				int s6 = layer6.indexOf(strata.substring(5,6));
-				if(xNGe[s1][s2][s3][s4][s5][s6][1] > 0) {		// if variable is defined, this value would be > 0 
-					//Add constraint
-					c7_indexlist.add(new ArrayList<Integer>());
-					c7_valuelist.add(new ArrayList<Double>());
+				//Add constraint
+				c7_indexlist.add(new ArrayList<Integer>());
+				c7_valuelist.add(new ArrayList<Double>());
+				
+				//Add x(s1,s2,s3,s4,s5,s6)[0]
+				c7_indexlist.get(c7_num).add(x[s1][s2][s3][s4][s5][s6][0]);
+				c7_valuelist.get(c7_num).add((double) 1);
+				
+				//Add -xNGe(s1,s2,s3,s4,s5,s6)(1)
+				c7_indexlist.get(c7_num).add(xNGe[s1][s2][s3][s4][s5][s6][1]);
+				c7_valuelist.get(c7_num).add((double) -1);
+		
+				//add bounds
+				c7_lblist.add((double) 0);
+				c7_ublist.add((double) 0);
+				c7_num++;
+				
+				// Remove this constraint if total number of variables added is 1 (only x[s1][s2][s3][s4][s5][s6][0] is added)
+				if (c7_indexlist.get(c7_num - 1).size() == 1) {
+					c7_indexlist.remove(c7_num - 1);
+					c7_valuelist.remove(c7_num - 1);
+					c7_lblist.remove(c7_num - 1);
+					c7_ublist.remove(c7_num - 1);
+					c7_num--;
 					
-					//Add x(s1,s2,s3,s4,s5,s6)[0]
-					c7_indexlist.get(c7_num).add(x[s1][s2][s3][s4][s5][s6][0]);
-					c7_valuelist.get(c7_num).add((double) 1);
-					
-					//Add -xNGe(s1,s2,s3,s4,s5,s6)(1)
-					c7_indexlist.get(c7_num).add(xNGe[s1][s2][s3][s4][s5][s6][1]);
-					c7_valuelist.get(c7_num).add((double) -1);
-			
-					//add bounds
-					c7_lblist.add((double) 0);
-					c7_ublist.add((double) 0);
-					c7_num++;
-					
-					// Remove this constraint if total number of variables added is 1 (only x[s1][s2][s3][s4][s5][s6][0] is added)
-					if (c7_indexlist.get(c7_num - 1).size() == 1) {
-						c7_indexlist.remove(c7_num - 1);
-						c7_valuelist.remove(c7_num - 1);
-						c7_lblist.remove(c7_num - 1);
-						c7_ublist.remove(c7_num - 1);
-						c7_num--;
-						
-						// Set x[s1][s2][s3][s4][s5][s6][0] to be zero if boost 2 is implemented but associated prescriptions does not exist
-						vlb[x[s1][s2][s3][s4][s5][s6][0]] = 0;
-						vub[x[s1][s2][s3][s4][s5][s6][0]] = 0;
-					}
+					// Set x[s1][s2][s3][s4][s5][s6][0] to be zero if boost 2 is implemented but associated prescriptions does not exist
+					vlb[x[s1][s2][s3][s4][s5][s6][0]] = 0;
+					vub[x[s1][s2][s3][s4][s5][s6][0]] = 0;
 				}
 			}														
 			

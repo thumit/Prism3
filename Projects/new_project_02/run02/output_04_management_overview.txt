@@ -1,0 +1,7 @@
+strata_id	layer1	layer2	layer3	layer4	layer5	layer6	NG_E_acres	PB_E_acres	GS_E_acres	EA_E_acres	MS_E_acres	BS_E_acres
+BNNCCL	B	N	N	C	C	L	0.0	4121.0	0.0	0.0	0.0	0.0
+BNNCCM	B	N	N	C	C	M	0.0	1353.0	0.0	0.0	0.0	0.0
+BNNCCP	B	N	N	C	C	P	0.0	651.0	0.0	0.0	0.0	0.0
+BNNCDL	B	N	N	C	D	L	0.0	1725.0	0.0	0.0	0.0	0.0
+BNNCPL	B	N	N	C	P	L	0.0	1268.0	0.0	0.0	0.0	0.0
+BNNCPM	B	N	N	C	P	M	0.0	909.0	0.0	0.0	0.0	0.0

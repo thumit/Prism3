@@ -1,0 +1,2 @@
+sm_id	sm_description	sm_static_identifiers	sm_method_choice	sm_implementation	
+1	null	0 B U S K R C;1 R N;2 N O P S;3 L H C R;4 P D W C I A L N;5 S P M L N	0 PB_E EA_R;1 0 1 2 3 4	true	
