@@ -61,7 +61,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 	private JScrollPane scrollPane_Left, scrollPane_Right;
 	
 	private File[] 	problem_file, solution_file, output_general_outputs_file, output_variables_file, output_constraints_file,
-					output_management_overview_file, output_management_details_file, output_basic_constraints_file, output_flow_constraints_file;
+					output_management_overview_file, output_management_details_file, output_fly_constraints_file, output_basic_constraints_file, output_flow_constraints_file;
 	
 	private DecimalFormat twoDForm = new DecimalFormat("#.##");	 //Only get 2 decimal will be assess
 	
@@ -158,7 +158,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					output_constraints_file = new File[rowCount];
 					output_general_outputs_file = new File[rowCount];
 					output_management_overview_file = new File[rowCount];
-					output_management_details_file = new File[rowCount];			
+					output_management_details_file = new File[rowCount];	
+					output_fly_constraints_file = new File[rowCount];
 					output_flow_constraints_file = new File[rowCount];
 					output_basic_constraints_file = new File[rowCount];
 					
@@ -273,7 +274,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			output_variables_file[row] = new File(runFolder.getAbsolutePath() + "/output_02_variables.txt");
 			output_constraints_file[row] = new File(runFolder.getAbsolutePath() + "/output_03_constraints.txt");	
 			output_management_overview_file[row] = new File(runFolder.getAbsolutePath() + "/output_04_management_overview.txt");
-			output_management_details_file[row] = new File(runFolder.getAbsolutePath() + "/output_05_management_details.txt");		
+			output_management_details_file[row] = new File(runFolder.getAbsolutePath() + "/output_05_management_details.txt");	
+			output_fly_constraints_file[row] = new File(runFolder.getAbsolutePath() + "/output_05_fly_constraints.txt");	
 			output_basic_constraints_file[row] = new File(runFolder.getAbsolutePath() + "/output_06_basic_constraints.txt");
 			output_flow_constraints_file[row] = new File(runFolder.getAbsolutePath() + "/output_07_flow_constraints.txt");
 			
@@ -3408,6 +3410,10 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						System.err.println("Panel Solve Runs - FileWriter(output_management_details_file[row]) error - " + e.getClass().getName() + ": " + e.getMessage());
 					}
 					output_management_details_file[row].createNewFile();
+					
+					
+					// fly_constraints --> don't need to create this file, just delete the old file
+					output_fly_constraints_file[row].delete();		
 					
 					
 					// basic_constraints

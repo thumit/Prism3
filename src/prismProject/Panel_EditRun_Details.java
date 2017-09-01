@@ -543,7 +543,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		private Object[][] input_data;
 		private String[] input_columnNames;
     	
-    	private Reload_Table_Info(File table_file) {
+		private Reload_Table_Info(File table_file) {
 			//Load table to get its 4 attributes
 			try {
 				String delimited = "\t";		// tab delimited

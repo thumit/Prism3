@@ -311,8 +311,12 @@ All changes in this block are associated with PrismAlpha1.0.01.jar, Prism Formul
 156. output05 now has the query works properly. Need more function nayway.
 
 All changes in this block are associated with PrismAlpha1.0.03.jar, Prism Formulation 01.docx, Prism Database 01.docx
+--------------------------------------------------------------------------
 
+157. QuickEdit_FlyConstraints is created.
+158. Change all class and method to private in Output_Panel_Management_Details
+159. Fly_Constraints can now be saved and reloaded (This output would be deleted any time you save after "Edit" or "Solve" the run)
+160. Panel_yieldProject: in public void refreshProjectTree(): do not allow output_05_fly_constraints to appear in the GUI
 
-
-
+All changes in this block are associated with PrismAlpha1.0.04.jar, Prism Formulation 01.docx, Prism Database 01.docx
 

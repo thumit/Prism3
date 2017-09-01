@@ -649,7 +649,7 @@ public class Panel_YieldProject extends JLayeredPane {
 					File[] listOfFiles2 = listOfFiles[i].listFiles(new FilenameFilter() {
 						@Override
 						public boolean accept(File dir, String name) {
-							return name.endsWith(".txt") || name.endsWith(".lp") || name.endsWith(".sol");
+							return (name.endsWith(".txt") && !name.startsWith("output_05_fly_constraints")) || name.endsWith(".lp") || name.endsWith(".sol");
 						}
 					});
 					

@@ -19,7 +19,13 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -196,7 +202,9 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 //	    c.weighty = 1;
 //		super.add(table_scroll_pane, c);		
 		setLayout(new BorderLayout());
-		super.add(new Basic_Constraints_GUI(), BorderLayout.CENTER);
+		reload_inputs_before_creating_GUI();
+		super.add(new Fly_Constraints_GUI(), BorderLayout.CENTER);		
+		model9.match_DataType();	// Matching data types after finishing reloads
 	}	
 	
 	//Listeners for this class------------------------------------------------------------------------------------------------------------------------
@@ -359,9 +367,107 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 	}
 	
 	
+	private void reload_inputs_before_creating_GUI() {		
+		// Load tables---------------------------------------------------------------------------------
+		File table_file;
+		Reload_Table_Info tableLoader;
+		
+		
+		table_file = new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/output_05_fly_constraints.txt");
+		if (table_file.exists()) {		//Load from input
+			tableLoader = new Reload_Table_Info(table_file);
+			rowCount9 = tableLoader.get_rowCount();
+			colCount9 = tableLoader.get_colCount();
+			data9 = tableLoader.get_input_data();
+			columnNames9 = tableLoader.get_columnNames();
+			is_table9_loaded = true;
+		} else { // Create a fresh new if Load fail
+			System.err.println("File not exists: output_05_fly_constraints.txt - New interface is created");
+		}		 	
+    }
+	
+	
+	private void create_file_input_05_fly_constraints() {
+		File flyConstraintsFile = new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/output_05_fly_constraints.txt");	
+		if (flyConstraintsFile.exists()) {
+			flyConstraintsFile.delete();		// Delete the old file before writing new contents
+		}
+		
+		if (data9 != null && data9.length > 0) {
+			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(flyConstraintsFile))) {
+				for (int j = 0; j < columnNames9.length; j++) {
+					fileOut.write(columnNames9[j] + "\t");
+				}
+
+				for (int i = 0; i < data9.length; i++) {
+					fileOut.newLine();
+					for (int j = 0; j < colCount9; j++) {
+						fileOut.write(data9[i][j] + "\t");
+					}
+				}
+				fileOut.close();
+			} catch (IOException e) {
+				System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			} 
+		}
+	}
+	
+	
+	// Class to reload all table------------------------------------------------------------------------------------------------ 
+	private class Reload_Table_Info {
+		private int input_colCount;
+		private int input_rowCount;
+		private Object[][] input_data;
+		private String[] input_columnNames;
+   	
+		private Reload_Table_Info(File table_file) {
+			//Load table to get its 4 attributes
+			try {
+				String delimited = "\t";		// tab delimited
+				List<String> list;
+				list = Files.readAllLines(Paths.get(table_file.getAbsolutePath()), StandardCharsets.UTF_8);			
+				String[] a = list.toArray(new String[list.size()]);					
+												
+				//Setup the table---------------------------------
+				input_columnNames = a[0].split(delimited);		//tab delimited		//Read the first row	
+				input_rowCount = a.length - 1;  // - 1st row which is the column name
+				input_colCount = input_columnNames.length;
+				input_data = new Object[input_rowCount][input_colCount];
+			
+				
+				// Populate the input_data matrix-----------------
+				for (int row = 0; row < input_rowCount; row++) {
+					String[] rowValue = a[row + 1].split(delimited);	//tab delimited	
+					for (int col = 0; col < input_colCount; col++) {
+						input_data[row][col] = rowValue[col];
+					}	
+				}	
+				
+			} catch (IOException e1) {
+				System.err.println(e1.getClass().getName() + ": " + e1.getMessage() + " - Cannot load. New interface is created");
+			}
+		}
+
+		private int get_colCount() {
+			return input_colCount;
+		}
+		
+		private int get_rowCount() {
+			return input_rowCount;
+		}
+		
+		private Object[][] get_input_data() {
+			return input_data;
+		}
+		
+		private String[] get_columnNames() {
+			return input_columnNames;
+		}
+	}
+	
 	
 	//--------------------------------------------------------------------------------------------------------------------------
-	public void create_table9() {
+	private void create_table9() {
 		class comboBox_constraint_type extends JComboBox {	
 			public comboBox_constraint_type() {
 				addItem("SOFT");
@@ -377,7 +483,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 			rowCount9 = 0;
 			colCount9 = 13;
 			data9 = new Object[rowCount9][colCount9];
-			columnNames9 = new String[] {"fc_id", "fc_description", "fc_type",  "fc_multiplier", "lowerbound", "lowerbound_perunit_penalty", "upperbound", "upperbound_perunit_penalty", "parameter_index", "static_identifiers", "dynamic_identifiers", "original_dynamic_identifiers", "fc_value"};	         				
+			columnNames9 = new String[] {"fly_id", "fly_description", "fly_type",  "fly_multiplier", "lowerbound", "lowerbound_perunit_penalty", "upperbound", "upperbound_perunit_penalty", "parameter_index", "static_identifiers", "dynamic_identifiers", "original_dynamic_identifiers", "fly_value"};	         				
 		}
 					
 		
@@ -427,7 +533,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 								} catch (NumberFormatException e) {
 									System.err.println(e.getClass().getName() + ": " + e.getMessage() + " Fail to convert String to Integer values in create_table9");
 								}	
-							} else if (col >= 3 && col <= 7) {			//Column 3 to 7 are Double
+							} else if ((col >= 3 && col <= 7) || col == 12) {			//Column 3 to 7 and column 12 are Double
 								try {
 									data9[row][col] = Double.valueOf(String.valueOf(data9[row][col]));
 								} catch (NumberFormatException e) {
@@ -488,8 +594,9 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 	
 	
 	
+	
 	// Panel Fly Constraints--------------------------------------------------------------------------------------------------------
-	class Basic_Constraints_GUI extends JLayeredPane {
+	private class Fly_Constraints_GUI extends JLayeredPane {
 		List<List<JCheckBox>> checkboxStaticIdentifiers;
 		ScrollPane_Parameters parametersScrollPanel;
 		ScrollPane_StaticIdentifiers static_identifiersScrollPanel;
@@ -499,7 +606,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 		QuickEdit_FlyConstraints_Panel quick_edit;
 		JScrollPane scrollpane_QuickEdit;
 		
-		public Basic_Constraints_GUI() {
+		public Fly_Constraints_GUI() {
 			setLayout(new GridBagLayout());
 			
 			// 1st grid ------------------------------------------------------------------------------		// Static identifiers	
@@ -616,7 +723,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 			JButton btn_GetResult = new JButton();
 			btn_GetResult.setFont(new Font(null, Font.BOLD, 14));
 //			btn_GetResult.setText("Get Result");
-			btn_GetResult.setToolTipText("Update fc_value");
+			btn_GetResult.setToolTipText("Update fly_value");
 			btn_GetResult.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_solve.png"));
 			btn_GetResult.setContentAreaFilled(false);
 			btn_GetResult.addMouseListener(new MouseAdapter() {
@@ -627,9 +734,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 			    public void mouseExited(MouseEvent e) {
 			    	btn_GetResult.setContentAreaFilled(false);
 			    }
-			});
-			
-					
+			});		
 			c2.gridx = 0;
 			c2.gridy = 5;
 			c2.weightx = 0;
@@ -637,10 +742,32 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 			button_table_Panel.add(btn_GetResult, c2);
 			
 			
+			JButton btn_Save = new JButton();
+			btn_Save.setFont(new Font(null, Font.BOLD, 14));
+//			btn_Save.setText("Save");
+			btn_Save.setToolTipText("Save all");
+			btn_Save.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_save.png"));
+			btn_Save.setContentAreaFilled(false);
+			btn_Save.addMouseListener(new MouseAdapter() {
+			    public void mouseEntered(MouseEvent e) {
+			    	btn_Save.setContentAreaFilled(true);
+			    }
+
+			    public void mouseExited(MouseEvent e) {
+			    	btn_Save.setContentAreaFilled(false);
+			    }
+			});		
+			c2.gridx = 0;
+			c2.gridy = 6;
+			c2.weightx = 0;
+			c2.weighty = 0;
+			button_table_Panel.add(btn_Save, c2);
+			
+			
 			c2.insets = new Insets(0, 0, 0, 0); // No padding
 			// Add Empty Label to make all buttons on top not middle
 			c2.gridx = 0;
-			c2.gridy = 6;
+			c2.gridy = 7;
 			c2.weightx = 0;
 			c2.weighty = 1;
 			button_table_Panel.add(new JLabel(), c2);
@@ -652,7 +779,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 			c2.gridy = 0;
 			c2.weightx = 1;
 			c2.weighty = 1;
-			c2.gridheight = 7;
+			c2.gridheight = 8;
 			button_table_Panel.add(table_ScrollPane, c2);
 			// End of 4th Grid -----------------------------------------------------------------------
 			// End of 4th Grid -----------------------------------------------------------------------	
@@ -1109,9 +1236,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 				}
 			});
 			
-			
-			
-			
+								
 			// Get Result
 			btn_GetResult.addActionListener(new ActionListener() {
 				@Override
@@ -1146,8 +1271,16 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 						}
 					}
 				}
-			});			
-
+			});		
+			
+						
+			// Save
+			btn_Save.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent actionEvent) {						
+					create_file_input_05_fly_constraints();
+				}
+			});	
 			// End of Listeners for table9 & buttons -----------------------------------------------------------------------
 			// End of Listeners for table9 & buttons -----------------------------------------------------------------------		    
 		    
@@ -1320,7 +1453,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 	}
 	
 	
-	public List<List<String>> get_static_identifiers_in_row (String current_static_identifiers) {
+	private List<List<String>> get_static_identifiers_in_row (String current_static_identifiers) {
 		List<List<String>> static_identifiers = new ArrayList<List<String>>();
 		
 		//Read the whole cell into array
@@ -1343,7 +1476,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 	}
 	
 	
-	public List<List<String>> get_dynamic_identifiers_in_row (String current_dynamic_identifiers) {
+	private List<List<String>> get_dynamic_identifiers_in_row (String current_dynamic_identifiers) {
 		List<List<String>> dynamic_identifiers = new ArrayList<List<String>>();
 		
 		//Read the whole cell into array
@@ -1367,7 +1500,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 	}	
 	
 	
-	public List<String> get_dynamic_dentifiers_column_indexes_in_row (String current_dynamic_identifiers) {
+	private List<String> get_dynamic_dentifiers_column_indexes_in_row (String current_dynamic_identifiers) {
 		List<String> dynamic_dentifiers_column_indexes = new ArrayList<String>();
 			
 		//Read the whole cell into array
@@ -1385,7 +1518,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 	}	
 	
 	
-	public List<String> get_parameters_indexes_list (String current_parameter_index) {	
+	private List<String> get_parameters_indexes_list (String current_parameter_index) {	
 		List<String> parameters_indexes_list = new ArrayList<String>();
 		
 		//Read the whole cell into array

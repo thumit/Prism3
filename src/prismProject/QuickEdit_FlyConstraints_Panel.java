@@ -33,7 +33,7 @@ public class QuickEdit_FlyConstraints_Panel extends JPanel {
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		c.fill = GridBagConstraints.CENTER;
-		add(new JLabel("fc_multiplier"), c);
+		add(new JLabel("fly_multiplier"), c);
 	
 		// Add JTextfield
 		Prism_FormatedTextfield multiplier_Textfield = new Prism_FormatedTextfield();
