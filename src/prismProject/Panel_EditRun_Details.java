@@ -2544,6 +2544,20 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
 				
 				tableColumn.setPreferredWidth(maxWidth);
+				
+				
+				// Set background color
+				if (getValueAt(row, 2) == null || getValueAt(row, 2).toString().equals("FREE")) {
+					component.setBackground(getBackground());
+				} else if (getValueAt(row, 2).toString().equals("SOFT")) {
+					component.setBackground(ColorUtil.makeTransparent(new Color(27, 158, 119), 100));
+					
+				} else if (getValueAt(row, 2).toString().equals("HARD")) {
+					component.setBackground(ColorUtil.makeTransparent(new Color(217, 95, 2), 100));
+					
+				}
+				if (isRowSelected(row)) component.setBackground(getSelectionBackground());		// for selected row
+								
 				return component;
 			}
 			
@@ -2678,6 +2692,17 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
 				
 				tableColumn.setPreferredWidth(maxWidth);
+				
+				
+				// Set background color
+				if (getValueAt(row, 3) == null || getValueAt(row, 3).toString().equals("FREE")) {
+					component.setBackground(getBackground());				
+				} else if (getValueAt(row, 3).toString().equals("HARD")) {
+					component.setBackground(ColorUtil.makeTransparent(new Color(217, 95, 2), 100));
+					
+				}
+				if (isRowSelected(row)) component.setBackground(getSelectionBackground());		// for selected row
+				
 				return component;
 			}
 			
@@ -3269,7 +3294,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			// 4th Grid -----------------------------------------------------------------------------
 			// Add all buttons to a Panel----------------------------------
 			button_table_Panel = new JPanel(new GridBagLayout());
-			TitledBorder border = new TitledBorder("Silviculture Method Information - Implementation based on aggregation of all the below");
+			TitledBorder border = new TitledBorder("Silviculture Method Information - Implementation is based on aggregation of all the below (if not set up all methods & choices will be eligible for implementation)");
 			border.setTitleJustification(TitledBorder.CENTER);
 			button_table_Panel.setBorder(border);
 			GridBagConstraints c2 = new GridBagConstraints();
@@ -5791,14 +5816,28 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					int maxWidth = Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth());
 					
 					// For the column names
-					TableCellRenderer renderer2 = basic_table.getTableHeader().getDefaultRenderer();	
-					Component component2 = renderer2.getTableCellRendererComponent(basic_table,
+					TableCellRenderer renderer2 = table9.getTableHeader().getDefaultRenderer();	
+					Component component2 = renderer2.getTableCellRendererComponent(table9,
 				            tableColumn.getHeaderValue(), false, false, -1, column);
 					maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
 					
 					tableColumn.setPreferredWidth(maxWidth);
+					
+					
+					// Set background color
+					if (getValueAt(row, 2) == null || getValueAt(row, 2).toString().equals("FREE")) {
+						component.setBackground(getBackground());
+					} else if (getValueAt(row, 2).toString().equals("SOFT")) {
+						component.setBackground(ColorUtil.makeTransparent(new Color(27, 158, 119), 100));
+						
+					} else if (getValueAt(row, 2).toString().equals("HARD")) {
+						component.setBackground(ColorUtil.makeTransparent(new Color(217, 95, 2), 100));
+						
+					}
+					if (isRowSelected(row)) component.setBackground(getSelectionBackground());		// for selected row
+									
 					return component;
-				}	
+				}
 			};
 			
 //			basic_table.addMouseListener(new MouseAdapter() { // Add listener to get the currently selected rows and put IDs into the id_list

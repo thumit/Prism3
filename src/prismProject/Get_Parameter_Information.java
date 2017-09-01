@@ -67,12 +67,7 @@ public class Get_Parameter_Information {
 										int col_id = yield_tables_column_names_list.indexOf(final_cost_list.get(0).get(0).get(item));
 										value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(0).get(1).get(item)) * Double.parseDouble(yield_tables_values[table_id_to_find][row_id_to_find][col_id].toString());
 									}
-								}
-								
-								if (Get_Variable_Information.get_period(var_name) == 2) {
-									System.out.println("processing cost condition for var = " + var_name 
-											+ "   condtion = " + coversion_cost_after_disturbance_name_list);
-								}
+								}								
 								
 								
 								// conversion_cost: include 2 lists for column name (i.e. P D action) and value (i.e. 240)
@@ -89,16 +84,7 @@ public class Get_Parameter_Information {
 									} else {	// when period is not the rotation_period (variable can be anything except BS MS)
 										if (coversion_cost_after_disturbance_name_list != null && coversion_cost_after_disturbance_name_list.contains(final_cost_list.get(1).get(0).get(item))) {
 											int index = coversion_cost_after_disturbance_name_list.indexOf(final_cost_list.get(1).get(0).get(item));
-											value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(1).get(1).get(item)) * coversion_cost_after_disturbance_value_list.get(index);
-											
-											if (Get_Variable_Information.get_period(var_name) == 2) {
-												System.out.println("added var = " + var_name 
-														+ "   non-discounted parameter = " + value_to_return
-														+ "   rotation_period = " + Get_Variable_Information.get_rotation_period(var_name)
-														+ "   period = " + Get_Variable_Information.get_period(var_name)
-														+ "   condition = " + coversion_cost_after_disturbance_name_list.get(index)
-														+ " " + coversion_cost_after_disturbance_value_list.get(index));
-											}		
+											value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(1).get(1).get(item)) * coversion_cost_after_disturbance_value_list.get(index);		
 										}
 									}
 									
@@ -107,8 +93,8 @@ public class Get_Parameter_Information {
 							}						
 						} 
 						
-						else {			// If this is regular constraint with Parameters		
-							for (int j = 0; j < parameters_indexes_list.size(); j++) {		//loop all parameters_indexes_list 	
+						else {	// If this is a constraint with Parameters		
+							for (int j = 0; j < parameters_indexes_list.size(); j++) {		// Loop all parameters_indexes_list 	
 								int col = Integer.parseInt(parameters_indexes_list.get(j));						
 								value_to_return = value_to_return + Double.parseDouble(yield_tables_values[table_id_to_find][row_id_to_find][col].toString());		// then add to the total of all parameters found
 							}

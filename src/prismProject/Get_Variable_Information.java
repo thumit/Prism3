@@ -255,10 +255,22 @@ public class Get_Variable_Information {
 		return rotation_period;
 	}
 	
+	public static int get_rotation_age(String var_name) {
+		rotation_age = -9999;
+		get_all_terms_from_name(var_name);
+		return rotation_age;
+	}
+	
 	public static int get_period(String var_name) {
 		period = -9999;
 		get_all_terms_from_name(var_name);
 		return period;
+	}
+	
+	public static int get_age(String var_name) {
+		age = -9999;
+		get_all_terms_from_name(var_name);
+		return age;
 	}
 	
 	public static int get_timing_choice(String var_name) {

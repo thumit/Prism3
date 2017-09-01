@@ -1,7 +1,0 @@
-strata_id	layer1	layer2	layer3	layer4	layer5	layer6	acres	ageclass	model_strata	
-BNNCCL	B	N	N	C	C	L	4121.0	8	true	
-BNNCCM	B	N	N	C	C	M	1353.0	8	true	
-BNNCCP	B	N	N	C	C	P	651.0	4	true	
-BNNCDL	B	N	N	C	D	L	1725.0	8	true	
-BNNCPL	B	N	N	C	P	L	1268.0	8	true	
-BNNCPM	B	N	N	C	P	M	909.0	8	true	

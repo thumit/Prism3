@@ -296,13 +296,21 @@ All changes in this block are associated with v31Boost5BufFixed.jar, formulation
 150. Boost 1 completed (NG_E NG_R are default applied to every strata)
 151. Hide the checkbox column in Silviculture Method (Could be deleted but still keep it incase if we need to use in the future)
 
-All changes in this block are associated with PrismAlpha1.0.01.jar, Prism Formulation 01.docx, Prism Database 01.docx
+All changes in this block are associated with PrismAlpha1.0.00.jar, Prism Formulation 01.docx, Prism Database 01.docx
 --------------------------------------------------------------------------
 
 151. Boost 1: alow to interact with NG_E and NG_R in "Silviculture Method" window
 152. Bug 9 fixed for equation 7a when an "if then" to remove constraint is unreachable.
 
+All changes in this block are associated with PrismAlpha1.0.01.jar, Prism Formulation 01.docx, Prism Database 01.docx
+--------------------------------------------------------------------------
 
+153. Add null check for sm_strata & sm_strata_without_sizeclass_and_covertype: This would allow all methods eligible to be applied if users do not have any row set up in "Silviculture Method" window.
+154. Highlighted soft and hard constraints with colors
+155. Remove currentPeriod in Panel_solveRuns, it is t --> no need to define
+156. output05 now has the query works properly. Need more function nayway.
+
+All changes in this block are associated with PrismAlpha1.0.03.jar, Prism Formulation 01.docx, Prism Database 01.docx
 
 
 

@@ -1,38 +1,87 @@
 package prismProject;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dialog;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Rectangle;
+import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.HierarchyEvent;
+import java.awt.event.HierarchyListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
+import javax.swing.Box;
+import javax.swing.DefaultCellEditor;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.RowFilter;
+import javax.swing.JTextArea;
+import javax.swing.JToggleButton;
+import javax.swing.JToolBar;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
+import prismConvenienceClass.ColorUtil;
+import prismConvenienceClass.IconHandle;
 import prismConvenienceClass.PrismTableModel;
+import prismConvenienceClass.ToolBarWithBgImage;
 import prismRoot.PrismMain;
 
 public class Output_Panel_Management_Details extends JLayeredPane implements ItemListener {
+	//table input_09_basic_constraints.txt
+	private boolean is_table9_loaded = false;
+	private int rowCount9, colCount9;
+	private String[] columnNames9;
+	private JTable table9;
+	private PrismTableModel model9;
+	private Object[][] data9;
+	
+	
+	Read_RunInputs read;
+	int total_Periods;
+	
+	
+	
+	
 	private List<List<JCheckBox>> checkboxStaticIdentifiers;
 	private ScrollPane_Parameters parametersScrollPanel;
 	private ScrollPane_StaticIdentifiers static_identifiersScrollPanel;
 	private ScrollPane_DynamicIdentifiers dynamic_identifiersScrollPanel;
 	
 	private File file_Database;
-	private Read_Database read_Database;
+	private Read_Database read_database;
 	
 	private JScrollPane table_scroll_pane;
+	private File currentProjectFolder;
+	private String currentRun;
 	private JTable table;
 	private Object[][] data;
 	private PrismTableModel model;
@@ -41,6 +90,8 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 	private ExecutorService executor = Executors.newFixedThreadPool(1);
 	
 	public Output_Panel_Management_Details(File currentProjectFolder, String currentRun, JTable table, Object[][] data, PrismTableModel model) {
+		this.currentProjectFolder = currentProjectFolder;
+		this.currentRun = currentRun;
 		this.table = table;
 		this.data = data;
 		this.model = model;
@@ -48,140 +99,255 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 		
 		// Some set up ---------------------------------------------------------------------------	
 		file_Database = new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/database.db");
-		Read_RunInputs read = new Read_RunInputs();
+		read = new Read_RunInputs();
 		read.read_general_inputs(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_01_general_inputs.txt"));
-		int total_Periods = read.get_total_periods();
-
-		// Read the database
-		read_Database = new Read_Database(file_Database);				
-		// End of set up ---------------------------------------------------------------------------	
-
+		total_Periods = read.get_total_periods();
+		read_database = new Read_Database(file_Database);	// Read the database			
+		// End of set up ---------------------------------------------------------------------------			
 		
 		
-		
-		
-		
-		
-		// 1st grid ------------------------------------------------------------------------------		// Static identifiers	
-		String panel_name = "Static Identifiers  -  use strata attributes to filter variables";
-		static_identifiersScrollPanel = new ScrollPane_StaticIdentifiers(read_Database, 2, panel_name);
-		checkboxStaticIdentifiers = static_identifiersScrollPanel.get_CheckboxStaticIdentifiers();		
-				
-		//Update GUI for time period 
-    	for (int j = 0; j < checkboxStaticIdentifiers.get(checkboxStaticIdentifiers.size() - 1).size(); j++) {			//The last element is Time period			
-			if (j < total_Periods) {
-				checkboxStaticIdentifiers.get(checkboxStaticIdentifiers.size() - 1).get(j).setVisible(true);		//Periods to be visible 			
-			} else {
-				checkboxStaticIdentifiers.get(checkboxStaticIdentifiers.size() - 1).get(j).setVisible(false);		//Periods to be invisible
-				checkboxStaticIdentifiers.get(checkboxStaticIdentifiers.size() - 1).get(j).setSelected(false);		//Periods to be unselected
-			}
-		} 
-    	    	
-    	
-		// Listeners for checkboxStaticIdentifiers
-		for (int i = 0; i < checkboxStaticIdentifiers.size(); i++) {
-			for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {
-				checkboxStaticIdentifiers.get(i).get(j).addItemListener(this);
-			}
-		}	
-		
-		
-//		// Some initial selection
-//    	for (int i = 4; i < checkboxStaticIdentifiers.size(); i++) {				
-//    		for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {		//The last element is Time period						
-//				if (j > 0) {
-//    				checkboxStaticIdentifiers.get(i).get(j).setSelected(false);		// only the 1st would be selected 			
-//    			}
-//    		} 
+//		// 1st grid ------------------------------------------------------------------------------		// Static identifiers	
+//		String panel_name = "Static Identifiers  -  use strata attributes to filter variables";
+//		static_identifiersScrollPanel = new ScrollPane_StaticIdentifiers(read_Database, 2, panel_name);
+//		checkboxStaticIdentifiers = static_identifiersScrollPanel.get_CheckboxStaticIdentifiers();		
+//				
+//		// Update GUI for time period 
+//    	for (int j = 0; j < checkboxStaticIdentifiers.get(checkboxStaticIdentifiers.size() - 1).size(); j++) {			//The last element is Time period			
+//			if (j < total_Periods) {
+//				checkboxStaticIdentifiers.get(checkboxStaticIdentifiers.size() - 1).get(j).setVisible(true);		//Periods to be visible 			
+//			} else {
+//				checkboxStaticIdentifiers.get(checkboxStaticIdentifiers.size() - 1).get(j).setVisible(false);		//Periods to be invisible
+//				checkboxStaticIdentifiers.get(checkboxStaticIdentifiers.size() - 1).get(j).setSelected(false);		//Periods to be unselected
+//			}
 //		} 
-    	
-    	
-//		// 2 lines to activate the listeners
-//		checkboxStaticIdentifiers.get(0).get(0).setSelected(false);
-//		checkboxStaticIdentifiers.get(0).get(0).setSelected(true);
-
-		
-		// 2nd Grid ------------------------------------------------------------------------------		// Dynamic identifiers
-		dynamic_identifiersScrollPanel = new ScrollPane_DynamicIdentifiers(read_Database);
-			
-				
-		// 3rd grid ------------------------------------------------------------------------------		// Parameters
-		parametersScrollPanel = new ScrollPane_Parameters(read_Database);
-		TitledBorder border = new TitledBorder("Parameters");
-		border.setTitleJustification(TitledBorder.CENTER);
-		parametersScrollPanel.setBorder(border);
-    	parametersScrollPanel.setPreferredSize(new Dimension(200, 100));			
-		
-    	    	
-    	// 4th grid ------------------------------------------------------------------------------		// table scroll pane
-        table_scroll_pane = new JScrollPane();
-        border = new TitledBorder("Filtered Result based on Optimal Solution");
-		border.setTitleJustification(TitledBorder.CENTER);
-		table_scroll_pane.setBorder(border);
-		table_scroll_pane.setViewportView(table);
-		table_scroll_pane.setPreferredSize(new Dimension(200, 100));
-		
-    	
-    	
-		
-    	// Add all Grids to the Main Grid-----------------------------------------------------------------------
-    	// Add all Grids to the Main Grid-----------------------------------------------------------------------
-    	setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
-		c.fill = GridBagConstraints.BOTH;
-		
-		
-		// Add static_identifiersScrollPanel to the main Grid
-		c.gridx = 0;
-		c.gridy = 1;
-		c.gridwidth = 2;
-		c.gridheight = 1;
-		c.weightx = 0;
-	    c.weighty = 0;
-		super.add(static_identifiersScrollPanel, c);				
-	    		
-		// Add dynamic_identifiersPanel to the main Grid
-		c.gridx = 2;
-		c.gridy = 1;
-		c.gridwidth = 1;
-		c.gridheight = 1;
-		c.weightx = 1;
-		c.weighty = 0;
-		super.add(dynamic_identifiersScrollPanel, c);	
-		    		
-		// Add the parametersScrollPanel to the main Grid	
-		c.gridx = 0;
-		c.gridy = 2;
-		c.gridwidth = 1;
-		c.gridheight = 1;
-		c.weightx = 0;
-	    c.weighty = 1;
-		super.add(parametersScrollPanel, c);						
-	    	    		    
-	    // Add the table	
-		c.gridx = 1;
-		c.gridy = 2;
-		c.gridwidth = 2; 
-		c.gridheight = 1;
-		c.weightx = 1;
-	    c.weighty = 1;
-		super.add(table_scroll_pane, c);			
+//    	    	
+//    	
+//		// Listeners for checkboxStaticIdentifiers
+//		for (int i = 0; i < checkboxStaticIdentifiers.size(); i++) {
+//			for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {
+//				checkboxStaticIdentifiers.get(i).get(j).addItemListener(this);
+//			}
+//		}	
+//
+//		
+//		// 2nd Grid ------------------------------------------------------------------------------		// Dynamic identifiers
+//		dynamic_identifiersScrollPanel = new ScrollPane_DynamicIdentifiers(read_Database);
+//			
+//				
+//		// 3rd grid ------------------------------------------------------------------------------		// Parameters
+//		parametersScrollPanel = new ScrollPane_Parameters(read_Database);
+//		TitledBorder border = new TitledBorder("Parameters");
+//		border.setTitleJustification(TitledBorder.CENTER);
+//		parametersScrollPanel.setBorder(border);
+//    	parametersScrollPanel.setPreferredSize(new Dimension(200, 100));			
+//		
+//    	    	
+//    	// 4th grid ------------------------------------------------------------------------------		// table scroll pane
+//        table_scroll_pane = new JScrollPane();
+//        border = new TitledBorder("Filtered Result based on Optimal Solution");
+//		border.setTitleJustification(TitledBorder.CENTER);
+//		table_scroll_pane.setBorder(border);
+//		table_scroll_pane.setViewportView(table);
+//		table_scroll_pane.setPreferredSize(new Dimension(200, 100));
+//		
+//    	
+//    	
+//		
+//    	// Add all Grids to the Main Grid-----------------------------------------------------------------------
+//    	// Add all Grids to the Main Grid-----------------------------------------------------------------------
+//    	setLayout(new GridBagLayout());
+//		GridBagConstraints c = new GridBagConstraints();
+//		c.fill = GridBagConstraints.BOTH;
+//		
+//		
+//		// Add static_identifiersScrollPanel to the main Grid
+//		c.gridx = 0;
+//		c.gridy = 1;
+//		c.gridwidth = 2;
+//		c.gridheight = 1;
+//		c.weightx = 0;
+//	    c.weighty = 0;
+//		super.add(static_identifiersScrollPanel, c);				
+//	    		
+//		// Add dynamic_identifiersPanel to the main Grid
+//		c.gridx = 2;
+//		c.gridy = 1;
+//		c.gridwidth = 1;
+//		c.gridheight = 1;
+//		c.weightx = 1;
+//		c.weighty = 0;
+//		super.add(dynamic_identifiersScrollPanel, c);	
+//		    		
+//		// Add the parametersScrollPanel to the main Grid	
+//		c.gridx = 0;
+//		c.gridy = 2;
+//		c.gridwidth = 1;
+//		c.gridheight = 1;
+//		c.weightx = 0;
+//	    c.weighty = 1;
+//		super.add(parametersScrollPanel, c);						
+//	    	    		    
+//	    // Add the table	
+//		c.gridx = 1;
+//		c.gridy = 2;
+//		c.gridwidth = 2; 
+//		c.gridheight = 1;
+//		c.weightx = 1;
+//	    c.weighty = 1;
+//		super.add(table_scroll_pane, c);		
+		setLayout(new BorderLayout());
+		super.add(new Basic_Constraints_GUI(), BorderLayout.CENTER);
 	}	
 	
 	//Listeners for this class------------------------------------------------------------------------------------------------------------------------
 	public void itemStateChanged(ItemEvent e) {
-
+		// THESE FOLLLOWING IS INTERESTING, SAME AS ABOVE BUT I PUT THE WHOLE THING INTO A THREAD AND NO NEED TO STOP ANY MORE --> just interrupt & AVOID TROUBLE OF FREEZING
+		// THESE FOLLLOWING IS INTERESTING, SAME AS ABOVE BUT I PUT THE WHOLE THING INTO A THREAD AND NO NEED TO STOP ANY MORE --> just interrupt & AVOID TROUBLE OF FREEZING
+		// THESE FOLLLOWING IS INTERESTING, SAME AS ABOVE BUT I PUT THE WHOLE THING INTO A THREAD AND NO NEED TO STOP ANY MORE --> just interrupt & AVOID TROUBLE OF FREEZING
 		
 //		Thread filter_thread = new Thread() {
-//			public void run() {
-//				try {
-//					sleep(300);
-//				} catch (InterruptedException e) {
-//					e.printStackTrace();
+//			public void run() {	
+//				Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+//				Thread[] threadArray = threadSet.toArray(new Thread[threadSet.size()]);
+//				for (Thread t : threadArray) {
+//					if (t.getState() == Thread.State.RUNNABLE && t != Thread.currentThread()) {
+//						t.interrupt();
+////						t.stop();
+//						PrismMain.get_main().revalidate();
+//						PrismMain.get_main().repaint();
+//					}
 //				}
 //
-//				// Put the whole thing here, need to fix because it is currently not working properly
 //				
+//				executor.submit(new Runnable() {
+//					public void run() {										
+//						table_scroll_pane.setViewportView(null);	// Hide table before filtering
+//						
+//						
+//						RowFilter<Object, Object> equalsAFilter = new RowFilter<Object, Object>() {
+//							// 1. FAST FILTER: NOT SURE IF FASTER THAN 2
+//							public boolean include(Entry<? extends Object, ? extends Object> entry) {				
+//								String varible_term = entry.getStringValue(1);
+//								String term;
+//								int count;
+//								
+//								
+//								
+//								term = Get_Variable_Information.get_layer1(varible_term);
+//								count = 0;
+//								for (JCheckBox layer1 : checkboxStaticIdentifiers.get(0)) {
+//									if ((layer1.isSelected() && (layer1.isVisible()) || !layer1.isEnabled()) && term.equals(layer1.getText())) {
+//										count++;
+//									}
+//								}
+//								if (count < 1) return false;		// return false so that this entry is not shown								
+//								
+//								
+//								
+//								term = Get_Variable_Information.get_layer2(varible_term);
+//								count = 0;
+//								for (JCheckBox layer2 : checkboxStaticIdentifiers.get(1)) {
+//									if ((layer2.isSelected() && (layer2.isVisible()) || !layer2.isEnabled()) && term.equals(layer2.getText())) {
+//										count++;
+//									}
+//								}
+//								if (count < 1) return false;		// return false so that this entry is not shown
+//								
+//								
+//								
+//								term = Get_Variable_Information.get_layer3(varible_term);
+//								count = 0;
+//								for (JCheckBox layer3 : checkboxStaticIdentifiers.get(2)) {
+//									if ((layer3.isSelected() && (layer3.isVisible()) || !layer3.isEnabled()) && term.equals(layer3.getText())) {
+//										count++;
+//									}
+//								}
+//								if (count < 1) return false;		// return false so that this entry is not shown
+//								
+//							
+//								
+//								term = Get_Variable_Information.get_layer4(varible_term);
+//								count = 0;
+//								for (JCheckBox layer4 : checkboxStaticIdentifiers.get(3)) {
+//									if ((layer4.isSelected() && (layer4.isVisible()) || !layer4.isEnabled()) && term.equals(layer4.getText())) {
+//										count++;
+//									}
+//								}
+//								if (count < 1) return false;		// return false so that this entry is not shown
+//								
+//								
+//								
+//								if (Get_Variable_Information.get_forest_status(varible_term) == "E") {		// Only applied for Existing Strata
+//									term = Get_Variable_Information.get_layer5(varible_term);
+//									count = 0;
+//									for (JCheckBox layer5 : checkboxStaticIdentifiers.get(4)) {
+//										if ((layer5.isSelected() && (layer5.isVisible()) || !layer5.isEnabled()) && term.equals(layer5.getText())) {
+//											count++;
+//										}
+//									}
+//									if (count < 1) return false;		// return false so that this entry is not shown
+//									
+//									
+//									
+//									term = Get_Variable_Information.get_layer6(varible_term);
+//									count = 0;
+//									for (JCheckBox layer6 : checkboxStaticIdentifiers.get(5)) {
+//										if ((layer6.isSelected() && (layer6.isVisible()) || !layer6.isEnabled()) && term.equals(layer6.getText())) {
+//											count++;
+//										}
+//									}
+//									if (count < 1) return false;		// return false so that this entry is not shown
+//								}
+//								
+//								
+//								
+//								term = Get_Variable_Information.get_method(varible_term) + "_" + Get_Variable_Information.get_forest_status(varible_term);
+//								count = 0;
+//								for (JCheckBox method : checkboxStaticIdentifiers.get(6)) {
+//									if ((method.isSelected() && (method.isVisible()) || !method.isEnabled()) && term.equals(method.getText())) {
+//										count++;
+//									}
+//								}
+//								if (count < 1) return false;		// return false so that this entry is not shown	
+//								
+//								
+//								
+//								term = String.valueOf(Get_Variable_Information.get_period(varible_term));
+//								count = 0;
+//								for (JCheckBox period : checkboxStaticIdentifiers.get(7)) {
+//									if ((period.isSelected() && (period.isVisible()) || !period.isEnabled()) && term.equals(period.getText())) {
+//										count++;
+//									}
+//								}
+//								if (count < 1) return false;		// return false so that this entry is not shown		
+//								
+//
+//								
+//								return true;	// return true to show the entry
+//							}
+//						};
+//						
+//						TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model);
+//						table.setRowSorter(sorter);
+//						sorter.setRowFilter(equalsAFilter);	
+//						
+//						
+//						table_scroll_pane.setViewportView(table);	// Show table after filtering is finished
+//					}
+//				});
+//
+//				try {
+//					if (executor.awaitTermination(-1, TimeUnit.SECONDS)) {	
+//						System.out.println("aaaaaaaaaaa");
+//					} else {				
+//						System.out.println("Task completed, other waiting Filters Threads are automatically shut down");
+//						PrismMain.get_main().revalidate();
+//						PrismMain.get_main().repaint();
+//					}
+//				} catch (InterruptedException e1) {
+//					System.out.println("Executor problem in Filter Threads in Customize Mode");
+//				}
+//								
 //				this.interrupt();
 //			}
 //		};
@@ -189,457 +355,1652 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 //		if (!Thread.currentThread().isInterrupted()) {
 //			Thread.currentThread().interrupt();
 //			filter_thread.start();
-//		}
+//		}		
+	}
+	
+	
+	
+	//--------------------------------------------------------------------------------------------------------------------------
+	public void create_table9() {
+		class comboBox_constraint_type extends JComboBox {	
+			public comboBox_constraint_type() {
+				addItem("SOFT");
+				addItem("HARD");
+				addItem("FREE");
+				setSelectedIndex(0);
+			}
+		}
 		
+			
+		//Setup the table------------------------------------------------------------	
+		if (is_table9_loaded == false) { // Create a fresh new if Load fail				
+			rowCount9 = 0;
+			colCount9 = 13;
+			data9 = new Object[rowCount9][colCount9];
+			columnNames9 = new String[] {"fc_id", "fc_description", "fc_type",  "fc_multiplier", "lowerbound", "lowerbound_perunit_penalty", "upperbound", "upperbound_perunit_penalty", "parameter_index", "static_identifiers", "dynamic_identifiers", "original_dynamic_identifiers", "fc_value"};	         				
+		}
+					
 		
-		
-		
-//		// 1. Good FILTER: using threads	
-//		Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-//		Thread[] threadArray = threadSet.toArray(new Thread[threadSet.size()]);
-//		for (Thread t : threadArray) {
-//			if (t.getState() == Thread.State.TIMED_WAITING) {
-//				t.interrupt();
-//				t.stop();
-//				Spectrum_Main.get_main().revalidate();
-//				Spectrum_Main.get_main().repaint();
-//			}
-//		}
-//		
-//
-//		
-//		executor.submit(new Runnable() {
-//			public void run() {
-//				try {
-//				      Thread.sleep(500);
-//				    } catch (InterruptedException e) {
-//				      System.out.println("Interrupted, so exiting.");
-//				      Spectrum_Main.get_main().revalidate();
-//				      Spectrum_Main.get_main().repaint();
-//				    }
-//				
-//				
-//				table_scroll_pane.setViewportView(null);	// Hide table before filtering
-//				
-//				
-//				RowFilter<Object, Object> equalsAFilter = new RowFilter<Object, Object>() {
-//					// 1. FAST FILTER: NOT SURE IF FASTER THAN 2
-//					public boolean include(Entry<? extends Object, ? extends Object> entry) {				
-//						Boolean is_finally_shown = false;
-//						String varible_term = entry.getStringValue(1);
-//						String term;
-//						
-//						
-//						term = Get_Variable_Information.get_layer1(entry.getStringValue(1));
-//						for (JCheckBox layer1 : checkboxStaticIdentifiers.get(0)) {
-//							if ((layer1.isSelected() && (layer1.isVisible()) || !layer1.isEnabled())
-//									&& term.equals(layer1.getText())) {
-//								is_finally_shown = true;
-//							}
-//						}
-//						
-//						
-//						term = Get_Variable_Information.get_layer2(entry.getStringValue(1));
-//						if (is_finally_shown) {
-//							int count = 0;
-//							for (JCheckBox layer2 : checkboxStaticIdentifiers.get(1)) {
-//								if ((layer2.isSelected() && (layer2.isVisible()) || !layer2.isEnabled())
-//										&& term.equals(layer2.getText())) {
-//									count++;
-//								}
-//							}
-//							if (count < 1)
-//								is_finally_shown = false;
-//						}
-//						
-//						
-//						term = Get_Variable_Information.get_layer3(entry.getStringValue(1));
-//						if (is_finally_shown) {
-//							int count = 0;
-//							for (JCheckBox layer3 : checkboxStaticIdentifiers.get(2)) {
-//								if ((layer3.isSelected() && (layer3.isVisible()) || !layer3.isEnabled())
-//										&& term.equals(layer3.getText())) {
-//									count++;
-//								}
-//							}
-//							if (count < 1)
-//								is_finally_shown = false;
-//						}
-//						
-//					
-//						term = Get_Variable_Information.get_layer4(entry.getStringValue(1));
-//						if (is_finally_shown) {
-//							int count = 0;
-//							for (JCheckBox layer4 : checkboxStaticIdentifiers.get(3)) {
-//								if ((layer4.isSelected() && (layer4.isVisible()) || !layer4.isEnabled())
-//										&& term.equals(layer4.getText())) {
-//									count++;
-//								}
-//							}
-//							if (count < 1)
-//								is_finally_shown = false;
-//						}
-//						
-//						
-//						term = Get_Variable_Information.get_layer5(entry.getStringValue(1));
-//						if (is_finally_shown) {
-//							int count = 0;
-//							for (JCheckBox layer5 : checkboxStaticIdentifiers.get(4)) {
-//								if ((layer5.isSelected() && (layer5.isVisible()) || !layer5.isEnabled())
-//										&& term.equals(layer5.getText())) {
-//									count++;
-//								}
-//							}
-//							if (count < 1)
-//								is_finally_shown = false;
-//						}
-//						
-//						
-//						
-//						// The following vary depending on what type of variable is
-//						if (varible_term.contains("xNGe_") || varible_term.contains("xPBe_")
-//								|| varible_term.contains("xGSe_") || varible_term.contains("xMSe_") 
-//								|| varible_term.contains("xBSe_") || varible_term.contains("xEAe_") ) {		
-//
-//							
-//							term = Get_Variable_Information.get_layer6(entry.getStringValue(1));
-//							if (is_finally_shown) {
-//								int count = 0;
-//								for (JCheckBox layer6 : checkboxStaticIdentifiers.get(5)) {
-//									if ((layer6.isSelected() && (layer6.isVisible()) || !layer6.isEnabled())
-//											&& term.equals(layer6.getText())) {
-//										count++;
-//									}
-//								}
-//								if (count < 1)
-//									is_finally_shown = false;
-//							}
-//							
-//
-//							term = Get_Variable_Information.get_method(entry.getStringValue(1)) + "e";				//NOTE NOTE NOTE Remove this + "e" later
-//							if (is_finally_shown) {
-//								int count = 0;
-//								for (JCheckBox method : checkboxStaticIdentifiers.get(6)) {
-//									if ((method.isSelected() && (method.isVisible()) || !method.isEnabled())
-//											&& term.equals(method.getText())) {
-//										count++;
-//									}
-//								}
-//								if (count < 1)
-//									is_finally_shown = false;
-//							}	
-//							
-//							
-//							term = String.valueOf(Get_Variable_Information.get_period(entry.getStringValue(1)));
-//							if (is_finally_shown) {
-//								int count = 0;
-//								for (JCheckBox period : checkboxStaticIdentifiers.get(7)) {
-//									if ((period.isSelected() && (period.isVisible()) || !period.isEnabled())
-//											&& term.equals(period.getText())) {
-//										count++;
-//									}
-//								}
-//								if (count < 1)
-//									is_finally_shown = false;
-//							}	
-//						}
-//						
-//						
-//						else if (varible_term.contains("xNGr_") || varible_term.contains("xPBr_")
-//								|| varible_term.contains("xGSr_") || varible_term.contains("xEAr_") ) {
-//							
-//							
-//							term = Get_Variable_Information.get_method(entry.getStringValue(1)) + "r";				//NOTE NOTE NOTE Remove this + "r" later
-//							if (is_finally_shown) {
-//								int count = 0;
-//								for (JCheckBox method : checkboxStaticIdentifiers.get(6)) {
-//									if ((method.isSelected() && (method.isVisible()) || !method.isEnabled())
-//											&& term.equals(method.getText())) {
-//										count++;
-//									}
-//								}
-//								if (count < 1)
-//									is_finally_shown = false;
-//							}	
-//							
-//							
-//							term = String.valueOf(Get_Variable_Information.get_period(entry.getStringValue(1)));
-//							if (is_finally_shown) {
-//								int count = 0;
-//								for (JCheckBox period : checkboxStaticIdentifiers.get(7)) {
-//									if ((period.isSelected() && (period.isVisible()) || !period.isEnabled())
-//											&& term.equals(period.getText())) {
-//										count++;
-//									}
-//								}
-//								if (count < 1)
-//									is_finally_shown = false;
-//							}	
-//						}
-//						
-//						return is_finally_shown;		// return false so that this entry is not shown
-//					}
-//				};
-//				
-//				TableRowSorter<TableModelSpectrum> sorter = new TableRowSorter<TableModelSpectrum>(model);
-//				table.setRowSorter(sorter);
-//				sorter.setRowFilter(equalsAFilter);	
-//				
-//				
-//				table_scroll_pane.setViewportView(table);	// Show table after filtering is finished
-//			}
-//		});
-//
-//		try {
-//			if (executor.awaitTermination(-1, TimeUnit.SECONDS)) {	
-//				System.out.println("aaaaaaaaaaa");
-//			} else {				
-//				System.out.println("Task completed, other waiting Filters Threads are automatically shut down");
-//				Spectrum_Main.get_main().revalidate();
-//				Spectrum_Main.get_main().repaint();
-//			}
-//		} catch (InterruptedException e1) {
-//			System.out.println("Executor problem in Filter Threads in Customize Mode");
-//		}
-		
-		
-
-		
-		
-		// THESE FOLLLOWING IS INTERESTING, SAME AS ABOVE BUT I PUT THE WHOLE THING INTO A THREAD AND NO NEED TO STOP ANY MORE --> just interrupt & AVOID TROUBLE OF FREEZING
-		// THESE FOLLLOWING IS INTERESTING, SAME AS ABOVE BUT I PUT THE WHOLE THING INTO A THREAD AND NO NEED TO STOP ANY MORE --> just interrupt & AVOID TROUBLE OF FREEZING
-		// THESE FOLLLOWING IS INTERESTING, SAME AS ABOVE BUT I PUT THE WHOLE THING INTO A THREAD AND NO NEED TO STOP ANY MORE --> just interrupt & AVOID TROUBLE OF FREEZING
-		
-		Thread filter_thread = new Thread() {
-			public void run() {	
-				Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-				Thread[] threadArray = threadSet.toArray(new Thread[threadSet.size()]);
-				for (Thread t : threadArray) {
-					if (t.getState() == Thread.State.RUNNABLE && t != Thread.currentThread()) {
-						t.interrupt();
-//						t.stop();
-						PrismMain.get_main().revalidate();
-						PrismMain.get_main().repaint();
-					}
+		//Create a table-------------------------------------------------------------		
+		model9 = new PrismTableModel(rowCount9, colCount9, data9, columnNames9) {
+			@Override
+			public Class getColumnClass(int c) {
+				if (c == 0) return Integer.class;      //column 0 accepts only Integer
+				else if (c >= 3 && c <= 7) return Double.class;      //column 3 to 7 accept only Double values  
+				else if (c == 12) return Double.class;      //column 3 to 7 accept only Double values 
+				else return String.class;				
+			}
+			
+			@Override
+			public boolean isCellEditable(int row, int col) {
+				if (col == 0 || col >= colCount9 - 5) { //  The first and the last 5 columns are un-editable
+					return false;
+				} else {
+					return true;
 				}
-
-				
-				executor.submit(new Runnable() {
-					public void run() {										
-						table_scroll_pane.setViewportView(null);	// Hide table before filtering
-						
-						
-						RowFilter<Object, Object> equalsAFilter = new RowFilter<Object, Object>() {
-							// 1. FAST FILTER: NOT SURE IF FASTER THAN 2
-							public boolean include(Entry<? extends Object, ? extends Object> entry) {				
-								String varible_term = entry.getStringValue(1);
-								String term;
-								int count;
-								
-								
-								
-								term = Get_Variable_Information.get_layer1(varible_term);
-								count = 0;
-								for (JCheckBox layer1 : checkboxStaticIdentifiers.get(0)) {
-									if ((layer1.isSelected() && (layer1.isVisible()) || !layer1.isEnabled()) && term.equals(layer1.getText())) {
-										count++;
-									}
+			}
+			
+			@Override
+			public void setValueAt(Object value, int row, int col) {
+				data9[row][col] = value;
+				if (col == 2) {
+					fireTableDataChanged();		// When constraint type change then this would register the change and make the selection disappear
+					table9.setRowSelectionInterval(table9.convertRowIndexToView(row), table9.convertRowIndexToView(row));			// select the row again
+				}
+				if (col == 3) {
+					data9[row][12] = null;
+					fireTableDataChanged();		// When constraint multiplier change then this would register the change and make the selection disappear
+					table9.setRowSelectionInterval(table9.convertRowIndexToView(row), table9.convertRowIndexToView(row));			// select the row again
+				}
+			}
+			
+			@Override
+			public void match_DataType() {
+				for (int row = 0; row < rowCount9; row++) {
+					for (int col = 0; col < colCount9; col++) {
+						if (String.valueOf(data9[row][col]).equals("null")) {
+							data9[row][col] = null;
+						} else {					
+							if (col == 0) {			//Column 0 is Integer
+								try {
+									data9[row][col] = Integer.valueOf(String.valueOf(data9[row][col]));
+								} catch (NumberFormatException e) {
+									System.err.println(e.getClass().getName() + ": " + e.getMessage() + " Fail to convert String to Integer values in create_table9");
+								}	
+							} else if (col >= 3 && col <= 7) {			//Column 3 to 7 are Double
+								try {
+									data9[row][col] = Double.valueOf(String.valueOf(data9[row][col]));
+								} catch (NumberFormatException e) {
+									System.err.println(e.getClass().getName() + ": " + e.getMessage() + " Fail to convert String to Double values in create_table9");
 								}
-								if (count < 1) return false;		// return false so that this entry is not shown								
-								
-								
-								
-								term = Get_Variable_Information.get_layer2(varible_term);
-								count = 0;
-								for (JCheckBox layer2 : checkboxStaticIdentifiers.get(1)) {
-									if ((layer2.isSelected() && (layer2.isVisible()) || !layer2.isEnabled()) && term.equals(layer2.getText())) {
-										count++;
-									}
-								}
-								if (count < 1) return false;		// return false so that this entry is not shown
-								
-								
-								
-								term = Get_Variable_Information.get_layer3(varible_term);
-								count = 0;
-								for (JCheckBox layer3 : checkboxStaticIdentifiers.get(2)) {
-									if ((layer3.isSelected() && (layer3.isVisible()) || !layer3.isEnabled()) && term.equals(layer3.getText())) {
-										count++;
-									}
-								}
-								if (count < 1) return false;		// return false so that this entry is not shown
-								
-							
-								
-								term = Get_Variable_Information.get_layer4(varible_term);
-								count = 0;
-								for (JCheckBox layer4 : checkboxStaticIdentifiers.get(3)) {
-									if ((layer4.isSelected() && (layer4.isVisible()) || !layer4.isEnabled()) && term.equals(layer4.getText())) {
-										count++;
-									}
-								}
-								if (count < 1) return false;		// return false so that this entry is not shown
-								
-								
-								
-								if (Get_Variable_Information.get_forest_status(varible_term) == "E") {		// Only applied for Existing Strata
-									term = Get_Variable_Information.get_layer5(varible_term);
-									count = 0;
-									for (JCheckBox layer5 : checkboxStaticIdentifiers.get(4)) {
-										if ((layer5.isSelected() && (layer5.isVisible()) || !layer5.isEnabled()) && term.equals(layer5.getText())) {
-											count++;
-										}
-									}
-									if (count < 1) return false;		// return false so that this entry is not shown
-									
-									
-									
-									term = Get_Variable_Information.get_layer6(varible_term);
-									count = 0;
-									for (JCheckBox layer6 : checkboxStaticIdentifiers.get(5)) {
-										if ((layer6.isSelected() && (layer6.isVisible()) || !layer6.isEnabled()) && term.equals(layer6.getText())) {
-											count++;
-										}
-									}
-									if (count < 1) return false;		// return false so that this entry is not shown
-								}
-								
-								
-								
-								term = Get_Variable_Information.get_method(varible_term) + "_" + Get_Variable_Information.get_forest_status(varible_term);
-								count = 0;
-								for (JCheckBox method : checkboxStaticIdentifiers.get(6)) {
-									if ((method.isSelected() && (method.isVisible()) || !method.isEnabled()) && term.equals(method.getText())) {
-										count++;
-									}
-								}
-								if (count < 1) return false;		// return false so that this entry is not shown	
-								
-								
-								
-								term = String.valueOf(Get_Variable_Information.get_period(varible_term));
-								count = 0;
-								for (JCheckBox period : checkboxStaticIdentifiers.get(7)) {
-									if ((period.isSelected() && (period.isVisible()) || !period.isEnabled()) && term.equals(period.getText())) {
-										count++;
-									}
-								}
-								if (count < 1) return false;		// return false so that this entry is not shown		
-								
-
-								
-								return true;	// return true to show the entry
+							} else {	//All other columns are String
+								data9[row][col] = String.valueOf(data9[row][col]);
 							}
-						};
-						
-						TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model);
-						table.setRowSorter(sorter);
-						sorter.setRowFilter(equalsAFilter);	
-						
-						
-						table_scroll_pane.setViewportView(table);	// Show table after filtering is finished
-					}
-				});
-
-				try {
-					if (executor.awaitTermination(-1, TimeUnit.SECONDS)) {	
-						System.out.println("aaaaaaaaaaa");
-					} else {				
-						System.out.println("Task completed, other waiting Filters Threads are automatically shut down");
-						PrismMain.get_main().revalidate();
-						PrismMain.get_main().repaint();
-					}
-				} catch (InterruptedException e1) {
-					System.out.println("Executor problem in Filter Threads in Customize Mode");
-				}
-								
-				this.interrupt();
+						}	
+					}	
+				}	
 			}
 		};
 		
-		if (!Thread.currentThread().isInterrupted()) {
-			Thread.currentThread().interrupt();
-			filter_thread.start();
-		}
 		
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-//		// 2. FAST FILTER: not sure, this may be faster but we need many more columns in the table	
-//	    TableRowSorter<TableModelSpectrum> sorter = new TableRowSorter<TableModelSpectrum>(model);
-//		table.setRowSorter(sorter);
-//		List<RowFilter<TableModelSpectrum, Object>> filters, filters2;
-//		filters2 = new ArrayList<RowFilter<TableModelSpectrum, Object>>();
-//		for (int i = 0; i < checkboxStaticIdentifiers.size(); i++) {
-//			RowFilter<TableModelSpectrum, Object> layer_filter = null;
-//			filters = new ArrayList<RowFilter<TableModelSpectrum, Object>>();
-//			for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {
-//				if (checkboxStaticIdentifiers.get(i).get(j).isSelected()) {
-//					filters.add(RowFilter.regexFilter(checkboxStaticIdentifiers.get(i).get(j).getText(), i + 1)); // i+1 is the table column containing the first layer	
-//				}
-//			}
-//			layer_filter = RowFilter.orFilter(filters);
-//			filters2.add(layer_filter);
-//		}
-//		RowFilter<TableModelSpectrum, Object> combine_AllFilters = null;
-//		combine_AllFilters = RowFilter.andFilter(filters2);
-//		sorter.setRowFilter(combine_AllFilters);		
-		
+		table9 = new JTable(model9) {
+			@Override			//These override is to make the width of the cell fit all contents of the cell
+			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+				// For the cells in table								
+				Component component = super.prepareRenderer(renderer, row, column);
+				int rendererWidth = component.getPreferredSize().width;
+				TableColumn tableColumn = getColumnModel().getColumn(column);
+				int maxWidth = Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth());
+				
+				// For the column names
+				TableCellRenderer renderer2 = table9.getTableHeader().getDefaultRenderer();	
+				Component component2 = renderer2.getTableCellRendererComponent(table9,
+			            tableColumn.getHeaderValue(), false, false, -1, column);
+				maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
+				
+				tableColumn.setPreferredWidth(maxWidth);			
+				return component;
+			}	
+		};
+
+    
+
+        // Set up Type for each column 2
+		table9.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new comboBox_constraint_type()));
 			
 		
+		// Hide the some columns: this hide is better than remove column from column model, this is basically set size to be zero
+		for (int i = 0; i < colCount9; i++) {
+			if (i != 0 && i != 1 && i != 3 & i!= 12) {
+				table9.getColumnModel().getColumn(i).setMinWidth(0);
+				table9.getColumnModel().getColumn(i).setMaxWidth(0);
+				table9.getColumnModel().getColumn(i).setWidth(0);
+			}
+		}
+         
+		table9.setAutoResizeMode(0);		// 0 = JTable.AUTO_RESIZE_OFF
+		table9.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);  
+		table9.getTableHeader().setReorderingAllowed(false);		//Disable columns move
+		table9.setPreferredScrollableViewportSize(new Dimension(200, 100));
+//		table9.setFillsViewportHeight(true);
+	}
+	
+	
+	
+	// Panel Fly Constraints--------------------------------------------------------------------------------------------------------
+	class Basic_Constraints_GUI extends JLayeredPane {
+		List<List<JCheckBox>> checkboxStaticIdentifiers;
+		ScrollPane_Parameters parametersScrollPanel;
+		ScrollPane_StaticIdentifiers static_identifiersScrollPanel;
+		ScrollPane_DynamicIdentifiers dynamic_identifiersScrollPanel;
+		JPanel button_table_Panel;
+		
+		QuickEdit_FlyConstraints_Panel quick_edit;
+		JScrollPane scrollpane_QuickEdit;
+		
+		public Basic_Constraints_GUI() {
+			setLayout(new GridBagLayout());
+			
+			// 1st grid ------------------------------------------------------------------------------		// Static identifiers	
+			String panel_name = "Static Identifiers  -  use strata attributes to filter variables";
+			static_identifiersScrollPanel = new ScrollPane_StaticIdentifiers(read_database, 2, panel_name);
+			checkboxStaticIdentifiers = static_identifiersScrollPanel.get_CheckboxStaticIdentifiers();		
+					
+			// Update GUI for time period 
+	    	for (int j = 0; j < checkboxStaticIdentifiers.get(checkboxStaticIdentifiers.size() - 1).size(); j++) {			//The last element is Time period			
+				if (j < total_Periods) {
+					checkboxStaticIdentifiers.get(checkboxStaticIdentifiers.size() - 1).get(j).setVisible(true);		//Periods to be visible 			
+				} else {
+					checkboxStaticIdentifiers.get(checkboxStaticIdentifiers.size() - 1).get(j).setVisible(false);		//Periods to be invisible
+					checkboxStaticIdentifiers.get(checkboxStaticIdentifiers.size() - 1).get(j).setSelected(false);		//Periods to be unselected
+				}
+			} 
+			// End of 1st grid -----------------------------------------------------------------------
+
+			
+			// 2nd Grid ------------------------------------------------------------------------------		// Dynamic identifiers
+			dynamic_identifiersScrollPanel = new ScrollPane_DynamicIdentifiers(read_database);
+			// End of 2nd Grid -----------------------------------------------------------------------
+				
+					
+			// 3rd grid ------------------------------------------------------------------------------		// Parameters
+			parametersScrollPanel = new ScrollPane_Parameters(read_database);
+			TitledBorder border = new TitledBorder("Parameters");
+			border.setTitleJustification(TitledBorder.CENTER);
+			parametersScrollPanel.setBorder(border);
+	    	parametersScrollPanel.setPreferredSize(new Dimension(200, 100));
+			// End of 3rd grid -----------------------------------------------------------------------
+			
+	    	
+
+			// 4th Grid ------------------------------------------------------------------------------		// Buttons	
+			// 4th Grid -----------------------------------------------------------------------------
+			// Add all buttons to a Panel----------------------------------
+			button_table_Panel = new JPanel(new GridBagLayout());
+			TitledBorder border3 = new TitledBorder("Fly Constraints - Queries based on the Optimal Solution");
+			border3.setTitleJustification(TitledBorder.CENTER);
+			button_table_Panel.setBorder(border3);
+			GridBagConstraints c2 = new GridBagConstraints();
+			c2.fill = GridBagConstraints.BOTH;
+			c2.insets = new Insets(0, 5, 10, 10); // padding top 0, left 5, bottom 10, right 10
+			
+			
+			JButton btn_NewSingle = new JButton();
+			btn_NewSingle.setFont(new Font(null, Font.BOLD, 14));
+//			btn_NewSingle.setText("NEW SINGLE");
+			btn_NewSingle.setToolTipText("New constraint");
+			btn_NewSingle.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_add.png"));
+					
+			c2.gridx = 0;
+			c2.gridy = 0;
+			c2.weightx = 0;
+			c2.weighty = 0;
+			button_table_Panel.add(btn_NewSingle, c2);
+			
+			
+			JButton btn_New_Multiple = new JButton();
+			btn_New_Multiple.setFont(new Font(null, Font.BOLD, 14));
+//			btn_New_Multiple.setText("NEW MULTIPLE");
+			btn_New_Multiple.setToolTipText("New set of constraints");
+			btn_New_Multiple.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_add3.png"));
+					
+			c2.gridx = 0;
+			c2.gridy = 1;
+			c2.weightx = 0;
+			c2.weighty = 0;
+			button_table_Panel.add(btn_New_Multiple, c2);
+			
+			JButton btn_Edit = new JButton();
+//			btn_Edit.setText("EDIT");
+			btn_Edit.setToolTipText("Modify constraint");
+			btn_Edit.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_swap.png"));
+			btn_Edit.setEnabled(false);
+					
+			c2.gridx = 0;
+			c2.gridy = 2;
+			c2.weightx = 0;
+			c2.weighty = 0;
+			button_table_Panel.add(btn_Edit, c2);
+			
+			
+			JButton btn_Delete = new JButton();
+			btn_Delete.setFont(new Font(null, Font.BOLD, 14));
+//			btn_Delete.setText("DELETE");
+			btn_Delete.setToolTipText("Delete constraints");
+			btn_Delete.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_erase.png"));
+			btn_Delete.setEnabled(false);
+					
+			c2.gridx = 0;
+			c2.gridy = 3;
+			c2.weightx = 0;
+			c2.weighty = 0;
+			button_table_Panel.add(btn_Delete, c2);
+			
+			
+			JToggleButton btn_Sort = new JToggleButton();
+			btn_Sort.setSelected(false);
+			btn_Sort.setFocusPainted(false);
+			btn_Sort.setFont(new Font(null, Font.BOLD, 12));
+			btn_Sort.setText("OFF");
+			btn_Sort.setToolTipText("Sorter mode: 'ON' click columns header to sort rows. 'OFF' retrieve original rows position");
+			btn_Sort.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_table.png"));
+					
+			c2.gridx = 0;
+			c2.gridy = 4;
+			c2.weightx = 0;
+			c2.weighty = 0;
+			button_table_Panel.add(btn_Sort, c2);
+			
+			
+			JButton btn_GetResult = new JButton();
+			btn_GetResult.setFont(new Font(null, Font.BOLD, 14));
+//			btn_GetResult.setText("Get Result");
+			btn_GetResult.setToolTipText("Update fc_value");
+			btn_GetResult.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_solve.png"));
+			btn_GetResult.setContentAreaFilled(false);
+			btn_GetResult.addMouseListener(new MouseAdapter() {
+			    public void mouseEntered(MouseEvent e) {
+			    	btn_GetResult.setContentAreaFilled(true);
+			    }
+
+			    public void mouseExited(MouseEvent e) {
+			    	btn_GetResult.setContentAreaFilled(false);
+			    }
+			});
+			
+					
+			c2.gridx = 0;
+			c2.gridy = 5;
+			c2.weightx = 0;
+			c2.weighty = 0;
+			button_table_Panel.add(btn_GetResult, c2);
+			
+			
+			c2.insets = new Insets(0, 0, 0, 0); // No padding
+			// Add Empty Label to make all buttons on top not middle
+			c2.gridx = 0;
+			c2.gridy = 6;
+			c2.weightx = 0;
+			c2.weighty = 1;
+			button_table_Panel.add(new JLabel(), c2);
+			
+			// Add table9				
+			create_table9();
+			JScrollPane table_ScrollPane = new JScrollPane(table9);	
+			c2.gridx = 1;
+			c2.gridy = 0;
+			c2.weightx = 1;
+			c2.weighty = 1;
+			c2.gridheight = 7;
+			button_table_Panel.add(table_ScrollPane, c2);
+			// End of 4th Grid -----------------------------------------------------------------------
+			// End of 4th Grid -----------------------------------------------------------------------	
+			
+			
+			
+			// Add Listeners for table9 & buttons----------------------------------------------------------
+			// Add Listeners for table9 & buttons----------------------------------------------------------
+			
+			// table9
+			table9.addMouseListener(new MouseAdapter() { // Add listener to DatabaseTree
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					int[] selectedRow = table9.getSelectedRows();
+					if (selectedRow.length == 1) {		// Reload Constraint & Enable Edit	when: 1 row is selected and no cell is editing
+						int currentRow = selectedRow[0];
+						currentRow = table9.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
+						static_identifiersScrollPanel.reload_this_constraint_static_identifiers((String) data9[currentRow][9]);	// 9 is the static_identifiers which have some attributes selected				
+						dynamic_identifiersScrollPanel.reload_this_constraint_dynamic_identifiers((String) data9[currentRow][10], (String) data9[currentRow][11]);	// 11 is the original_dynamic_identifiers column
+						parametersScrollPanel.reload_this_constraint_parameters((String) data9[currentRow][8]);	// 8 is the selected parameters of this constraint
+						btn_Edit.setEnabled(true);
+					} else {		// Disable Edit
+						btn_Edit.setEnabled(false);
+					}
+					
+					if (selectedRow.length >= 1 && table9.isEnabled()) {		// Enable Delete  when: >=1 row is selected, table is enable (often after Edit button finished its task)
+						btn_Delete.setEnabled(true);
+					} else {		// Disable Delete
+						btn_Delete.setEnabled(false);
+					}		
+				}
+			});
+			
+			table9.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+		        public void valueChanged(ListSelectionEvent event) {
+		        	int[] selectedRow = table9.getSelectedRows();
+					if (selectedRow.length == 1) {		// Enable Edit	when: 1 row is selected and no cell is editing
+						int currentRow = selectedRow[0];
+						currentRow = table9.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
+						static_identifiersScrollPanel.reload_this_constraint_static_identifiers((String) data9[currentRow][9]);	// 9 is the static_identifiers which have some attributes selected				
+						dynamic_identifiersScrollPanel.reload_this_constraint_dynamic_identifiers((String) data9[currentRow][10], (String) data9[currentRow][11]);	// 11 is the original_dynamic_identifiers column
+						parametersScrollPanel.reload_this_constraint_parameters((String) data9[currentRow][8]);	// 8 is the selected parameters of this constraint
+						btn_Edit.setEnabled(true);
+					} else {		// Disable Edit
+						btn_Edit.setEnabled(false);
+					}
+					
+					if (selectedRow.length >= 1 && table9.isEnabled()) {		// Enable Delete  when: >=1 row is selected,table is enable (often after Edit button finished its task)
+						btn_Delete.setEnabled(true);
+					} else {		// Disable Delete
+						btn_Delete.setEnabled(false);
+					}	
+		        }
+		    });
+			
+			
+
+			// New single
+			btn_NewSingle.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent actionEvent) {		
+					// Add 1 row
+					rowCount9++;
+					data9 = new Object[rowCount9][colCount9];
+					for (int ii = 0; ii < rowCount9 - 1; ii++) {
+						for (int jj = 0; jj < colCount9; jj++) {
+							data9[ii][jj] = model9.getValueAt(ii, jj);
+						}	
+					}
+									
+					data9[rowCount9 - 1][3] = (double) 1;
+					data9[rowCount9 - 1][8] = parametersScrollPanel.get_parameters_info_from_GUI();
+					data9[rowCount9 - 1][9] = static_identifiersScrollPanel.get_static_info_from_GUI();
+					data9[rowCount9 - 1][10] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();
+					data9[rowCount9 - 1][11] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
+					
+					model9.updateTableModelPrism(rowCount9, colCount9, data9, columnNames9);
+					update_id();
+					model9.fireTableDataChanged();
+					quick_edit = new QuickEdit_FlyConstraints_Panel(table9, data9);		// 2 lines to update data for Quick Edit Panel
+		 			scrollpane_QuickEdit.setViewportView(quick_edit);
+					
+					// Convert the new Row to model view and then select it 
+					int newRow = table9.convertRowIndexToView(rowCount9 - 1);
+					table9.setRowSelectionInterval(newRow, newRow);
+					table9.scrollRectToVisible(new Rectangle(table9.getCellRect(newRow, 0, true)));
+				}
+			});
+			
+			
+			// New Multiple
+			btn_New_Multiple.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent actionEvent) {		
+					
+					ScrollPane_ConstraintsSplit constraint_split_ScrollPanel = new ScrollPane_ConstraintsSplit(
+							static_identifiersScrollPanel.get_TitleAsCheckboxes(),
+							parametersScrollPanel.get_checkboxParameter(),
+							dynamic_identifiersScrollPanel.get_allDynamicIdentifiers());
+
+					
+					
+					String ExitOption[] = {"Add Constraints","Cancel"};
+					int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), constraint_split_ScrollPanel, "Create multiple constraints",
+							JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, ExitOption, ExitOption[1]);
+					if (response == 0)	// Add Constraints
+					{		
+						int total_Constraints = 1;
+						List<String> splitStatic_NameList = constraint_split_ScrollPanel.get_splitStatic_NameList();	// Names of static splitters
+
+						for (int i = 0; i < checkboxStaticIdentifiers.size(); i++) {
+							if (splitStatic_NameList.contains(static_identifiersScrollPanel.get_TitleAsCheckboxes().get(i).getText())) {	// IF this static must be splitted
+								int total_Checked_Elements = 0;
+								for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {
+									if (checkboxStaticIdentifiers.get(i).get(j).isSelected() && checkboxStaticIdentifiers.get(i).get(j).isVisible()) {	// If element of this static is checked		
+										total_Checked_Elements ++;	// Increase number of constraints
+									}
+								}
+								total_Constraints = total_Constraints * total_Checked_Elements;
+							}
+						}
+						System.out.println(total_Constraints);
+						
+						
+						
+						// Ask to confirm adding if there are more than 1000 constraints
+						int response2 = 0;	
+						if (total_Constraints > 1000) {
+							String ExitOption2[] = {"Yes","No"};
+							String warningText = "You are going to add " + total_Constraints + " constraints. It would take some time. Continue to add ?";
+							response2 = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warningText, "Confirm adding constraints",
+									JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption2, ExitOption2[1]);
+							
+						}
+							
+						if (response2 == 0)
+						{					
+							// After we know the total number of Constraints, then add info for each constraint
+							String[] static_info = new String[total_Constraints];
+							String[] description_extra = new String[total_Constraints];
+							for (int processing_constraint = 0; processing_constraint < total_Constraints; processing_constraint++) { 
+								static_info[processing_constraint] = "";
+								description_extra[processing_constraint] = "";
+							}
+								
+							
+							
+							for (int processing_constraint = 0; processing_constraint < total_Constraints; processing_constraint++) { 
+								int total_same_info_constraints = total_Constraints;
+								
+								
+								for (int i = 0; i < checkboxStaticIdentifiers.size(); i++) {
+									
+									static_info[processing_constraint] = static_info[processing_constraint] + i + " ";
+									
+									
+									
+									if (splitStatic_NameList.contains(static_identifiersScrollPanel.get_TitleAsCheckboxes().get(i).getText())) {	// IF this static must be splitted
+										int total_Checked_Elements = 0;
+										List<Integer> selected_Element_Index = new ArrayList<Integer>();
+										for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {
+											if (checkboxStaticIdentifiers.get(i).get(j).isSelected() && checkboxStaticIdentifiers.get(i).get(j).isVisible()) {	// If element of this static is checked		
+												selected_Element_Index.add(j);
+												total_Checked_Elements ++;	// Increase number of constraints
+											}			
+										}
+										total_same_info_constraints = total_same_info_constraints/total_Checked_Elements;
+//										System.out.println(total_same_info_constraints);
+										
+										
+
+										description_extra[processing_constraint] = description_extra[processing_constraint] + " - " + static_identifiersScrollPanel.get_TitleAsCheckboxes().get(i).getText()  + " ";
+											
+										for (int element_to_add = 0; element_to_add < selected_Element_Index.size(); element_to_add++) {
+											
+											for (int j = 0; j < total_same_info_constraints; j++) {
+												
+												// This is my smart check: example
+												/*			1	1	1
+												 * 			2	2	2
+												 * 			3		3
+												 * 					4
+												 *  Then the below If would help write out as: 1,1,1	1,1,2	1,1,3	1,1,4	1,2,1	1,2,2	1,2,3	1,2,4	......	
+												 *  Please figure out the logic by yourself :))									
+												*/
+												if ( processing_constraint % (selected_Element_Index.size() * total_same_info_constraints) == element_to_add * total_same_info_constraints + j) {							
+													String checkboxName = checkboxStaticIdentifiers.get(i).get(selected_Element_Index.get(element_to_add)).getText();												
+													//Add checkBox if it is (selected & visible) or disable
+													if ((checkboxStaticIdentifiers.get(i).get(selected_Element_Index.get(element_to_add)).isSelected() && (checkboxStaticIdentifiers.get(i).get(selected_Element_Index.get(element_to_add)).isVisible())
+															|| !checkboxStaticIdentifiers.get(i).get(selected_Element_Index.get(element_to_add)).isEnabled())) {
+														static_info[processing_constraint] = static_info[processing_constraint] + checkboxName + " ";
+														description_extra[processing_constraint] = description_extra[processing_constraint] + checkboxName; 
+													}		
+												}	
+											}
+										}
+										
+										
+										
+										
+									} else {		// IF this static would not be split
+										for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {		//Loop all elements in each layer
+											String checkboxName = checkboxStaticIdentifiers.get(i).get(j).getText();																						
+											//Add checkBox if it is (selected & visible) or disable
+											if ((checkboxStaticIdentifiers.get(i).get(j).isSelected() && (checkboxStaticIdentifiers.get(i).get(j).isVisible())
+													|| !checkboxStaticIdentifiers.get(i).get(j).isEnabled())) {
+												static_info[processing_constraint] = static_info[processing_constraint] + checkboxName + " ";										
+											}		
+										}
+										
+									}
+									
+									
+									if (!static_info[processing_constraint].equals("")) {
+										static_info[processing_constraint] = static_info[processing_constraint].substring(0, static_info[processing_constraint].length() - 1) + ";";		// remove the last space, and add ;
+									}
+								}	
+								
+								if (!static_info[processing_constraint].equals("")) {
+									static_info[processing_constraint] = static_info[processing_constraint].substring(0, static_info[processing_constraint].length() - 1);		// remove the last ;
+								}
+							}
+							
+							
+							
+							
+							for (int processing_constraint = 0; processing_constraint < total_Constraints; processing_constraint++) { 
+								System.out.println(static_info[processing_constraint]);
+							}
+							
+						
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							// Add All Constraints ----------------------------------------------------------------
+							if (total_Constraints > 0) {
+								rowCount9 = rowCount9 + total_Constraints;
+								data9 = new Object[rowCount9][colCount9];
+								for (int ii = 0; ii < rowCount9 - total_Constraints; ii++) {
+									for (int jj = 0; jj < colCount9; jj++) {
+										data9[ii][jj] = model9.getValueAt(ii, jj);
+									}	
+								}
+								
+								Object[][] temp_data = constraint_split_ScrollPanel.get_multiple_constraints_data();
+								JCheckBox autoDescription = constraint_split_ScrollPanel.get_autoDescription();
+								
+								for (int i = rowCount9 - total_Constraints; i < rowCount9; i++) {
+									for (int j = 0; j < colCount9; j++) {
+										if (autoDescription.isSelected()) {
+											if (temp_data[0][1] == null) {
+												data9[i][1] = "set constraint" + " " + (i - rowCount9 + total_Constraints + 1) + description_extra[i - rowCount9 + total_Constraints];
+											} else {
+												data9[i][1] = temp_data[0][1] + " " + (i - rowCount9 + total_Constraints + 1) + description_extra[i - rowCount9 + total_Constraints];
+											}
+										} else {
+											data9[i][1] = temp_data[0][1];
+										}
+										data9[i][0] = temp_data[0][0];
+										data9[i][2] = temp_data[0][2];
+										data9[i][3] = temp_data[0][3];
+										data9[i][4] = temp_data[0][4];
+										data9[i][5] = temp_data[0][5];
+										data9[i][6] = temp_data[0][6];
+										data9[i][7] = temp_data[0][7];
+										data9[i][8] = parametersScrollPanel.get_parameters_info_from_GUI();
+										data9[i][9] = static_info[i - rowCount9 + total_Constraints];		// Only these splitter are currently allowed
+										data9[i][10] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();	
+										data9[i][11] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
+									}	
+								}	
+												
+		
+								model9.updateTableModelPrism(rowCount9, colCount9, data9, columnNames9);
+								update_id();
+								model9.fireTableDataChanged();
+								quick_edit = new QuickEdit_FlyConstraints_Panel(table9, data9);	// 2 lines to update data for Quick Edit Panel
+					 			scrollpane_QuickEdit.setViewportView(quick_edit);
+								
+								// Convert the new Row to model view and then select it 
+								for (int i = rowCount9 - total_Constraints; i < rowCount9; i++) {
+									int newRow = table9.convertRowIndexToView(i);
+									table9.addRowSelectionInterval(newRow, newRow);
+								}	
+								table9.scrollRectToVisible(new Rectangle(table9.getCellRect(table9.convertRowIndexToView(rowCount9 - total_Constraints), 0, true)));
+							}
+						}
+											
+					}
+					if (response == 1)	// Cancel: do nothing
+					{
+					}
+				}
+			});			
+			
+			
+			// Edit
+			btn_Edit.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent actionEvent) {	
+					if (table9.isEnabled()) {
+						
+						//A  resizable popup panel indicating changes have been made
+						JPanel popup = new JPanel(new BorderLayout());
+						popup.setBorder(null);
+						popup.setPreferredSize(new Dimension(330, 150));	
+						JLabel temp_label = new JLabel(IconHandle.get_scaledImageIcon(150, 150, "pikachuHello.png"));									
+						popup.add(temp_label, BorderLayout.WEST);
+						
+						JTextArea temp_textarea = new JTextArea();
+						temp_textarea.setBorder(null);
+						temp_textarea.setBackground(ColorUtil.makeTransparent(Color.WHITE, 0)); 
+						temp_textarea.setFocusable(false);
+						temp_textarea.setEditable(false);
+						temp_textarea.setLineWrap(true);
+						temp_textarea.setWrapStyleWord(true);
+						temp_textarea.append("The following infomation (in rectangles surrounded by green border) will be applied to the highlighted (blue) constraint" + "\n \n");
+						temp_textarea.append("1. Static Identifiers" + "\n");
+						temp_textarea.append("2. Dynamic Identifiers" + "\n");
+						temp_textarea.append("3. Parameters" + "\n");
+						popup.add(temp_textarea, BorderLayout.CENTER);
+
+						popup.addHierarchyListener(new HierarchyListener() {
+						    public void hierarchyChanged(HierarchyEvent e) {
+						        Window window = SwingUtilities.getWindowAncestor(popup);
+						        if (window instanceof Dialog) {
+						            Dialog dialog = (Dialog)window;
+						            if (!dialog.isResizable()) {
+						                dialog.setResizable(true);
+						            }
+						        }
+						    }
+						});				
+
+						String ExitOption[] = {"Modify", "Do not modify"};
+						int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), popup, "Do you want to modify the highlighted constraint ?",
+								JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, ExitOption, ExitOption[0]);	
+												
+						if (response == 0) {
+							// Apply change
+							int selectedRow = table9.getSelectedRow();
+							selectedRow = table9.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems										
+							data9[selectedRow][8] = parametersScrollPanel.get_parameters_info_from_GUI();
+							data9[selectedRow][9] = static_identifiersScrollPanel.get_static_info_from_GUI();
+							data9[selectedRow][10] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();	
+							data9[selectedRow][11] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
+							data9[selectedRow][12] = null;
+							model9.fireTableDataChanged();	
+							
+							// Convert the edited Row to model view and then select it 
+							int editRow = table9.convertRowIndexToView(selectedRow);
+							table9.setRowSelectionInterval(editRow, editRow);
+							
+							// Enable buttons and table9
+							table9.setEnabled(true);
+							btn_NewSingle.setEnabled(true);
+							btn_New_Multiple.setEnabled(true);
+							btn_Delete.setEnabled(true);
+							btn_Sort.setEnabled(true);
+							btn_GetResult.setEnabled(true);	
+							btn_Edit.setEnabled(true);
+							table_ScrollPane.setViewportView(table9);
+							
+							// Reset the view
+							int currentRow = table9.getSelectedRow();
+							currentRow = table9.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
+							static_identifiersScrollPanel.reload_this_constraint_static_identifiers((String) data9[currentRow][9]);	// 9 is the static_identifiers which have some attributes selected				
+							dynamic_identifiersScrollPanel.reload_this_constraint_dynamic_identifiers((String) data9[currentRow][10], (String) data9[currentRow][11]);	// 11 is the original_dynamic_identifiers column
+							parametersScrollPanel.reload_this_constraint_parameters((String) data9[currentRow][8]);	// 8 is the selected parameters of this constraint
+						}
+						
+					} 
+				}
+			});
+			
+			
+			btn_Edit.addMouseListener(new MouseAdapter() { // Add listener
+				public void mouseEntered(java.awt.event.MouseEvent e) {
+					static_identifiersScrollPanel.setBackground(new Color(0, 255, 0));
+					dynamic_identifiersScrollPanel.setBackground(new Color(0, 255, 0));
+					parametersScrollPanel.setBackground(new Color(0, 255, 0));
+				}
+
+				public void mouseExited(java.awt.event.MouseEvent e) {
+					static_identifiersScrollPanel.setBackground(null);
+					dynamic_identifiersScrollPanel.setBackground(null);
+					parametersScrollPanel.setBackground(null);
+				}
+			});
+			
+				
+			// Delete
+			btn_Delete.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent actionEvent) {	
+					//Cancel editing before delete
+					if (table9.isEditing()) {
+						table9.getCellEditor().cancelCellEditing();
+					}				
+					
+					// Get selected rows
+					int[] selectedRow = table9.getSelectedRows();	
+					for (int i = 0; i < selectedRow.length; i++) {
+						selectedRow[i] = table9.convertRowIndexToModel(selectedRow[i]);	///Convert row index because "Sort" causes problems
+					}
+					
+					// Create a list of selected row indexes
+					List<Integer> selected_Index = new ArrayList<Integer>();				
+					for (int i: selectedRow) {
+						selected_Index.add(i);
+					}	
+					
+					// Get values to the new data9
+					data9 = new Object[rowCount9 - selectedRow.length][colCount9];
+					int newRow =0;
+					for (int ii = 0; ii < rowCount9; ii++) {
+						if (!selected_Index.contains(ii)) {			//If row not in the list then add to data9 row
+							for (int jj = 0; jj < colCount9; jj++) {
+								data9[newRow][jj] = model9.getValueAt(ii, jj);
+							}
+							newRow++;
+						}
+					}
+					// Pass back the info to table model
+					rowCount9 = rowCount9 - selectedRow.length;
+					model9.updateTableModelPrism(rowCount9, colCount9, data9, columnNames9);
+					model9.fireTableDataChanged();	
+					quick_edit = new QuickEdit_FlyConstraints_Panel(table9, data9);	// 2 lines to update data for Quick Edit Panel
+		 			scrollpane_QuickEdit.setViewportView(quick_edit);
+				}
+			});
+					
+			
+			// Sort
+			btn_Sort.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent actionEvent) {	
+					if (btn_Sort.getText().equals("ON")) {
+						table9.setRowSorter(null);
+						btn_Sort.setText("OFF");
+						btn_Sort.repaint();
+					} else if (btn_Sort.getText().equals("OFF")) {
+						TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model9); // Add sorter
+						table9.setRowSorter(sorter);
+						btn_Sort.setText("ON");
+						btn_Sort.repaint();
+					}	
+				}
+			});
+			
+			
+			
+			
+			// Get Result
+			btn_GetResult.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent actionEvent) {						
+					for (int i = 0; i < data9.length; i++) {	// Loop each row of the fly constraints table & get result for only the constraints with null value
+						if (data9[i][12] == null) {
+							double multiplier = (data9[i][3] != null) ?  (double) data9[i][3] : 0;	//if multiplier = null --> 0
+							String current_parameter_index = (String) data9[i][8];
+							String current_static_identifiers = (String) data9[i][9];
+							String current_dynamic_identifiers = (String) data9[i][10];
+													
+							List<List<String>> static_identifiers = get_static_identifiers_in_row(current_static_identifiers);
+							List<List<String>> dynamic_identifiers = get_dynamic_identifiers_in_row(current_dynamic_identifiers);
+							List<String> dynamic_dentifiers_column_indexes = get_dynamic_dentifiers_column_indexes_in_row(current_dynamic_identifiers);
+							List<String> parameters_indexes_list = get_parameters_indexes_list(current_parameter_index);
+													
+							// Process all the variables in output05 and use static_identifiers to trim to get the var_name_list & var_value_list
+							List<String> var_name_list = new ArrayList<String>(); 
+							List<Double> var_value_list = new ArrayList<Double>();						
+							for (int row = 0; row < data.length; row++) {
+								String var_name = String.valueOf(data[row][1]);
+								double var_value = Double.valueOf(String.valueOf(data[row][2]));
+								if (are_all_static_identifiers_matched(var_name, static_identifiers)) {
+									var_name_list.add(var_name);
+									var_value_list.add(var_value);
+								}	
+							}		
+													
+							// Now get the sum result and update the GUI table
+							data9[i][12] = get_results(read_database, var_name_list, var_value_list, multiplier, parameters_indexes_list, dynamic_dentifiers_column_indexes, dynamic_identifiers);
+							model9.fireTableDataChanged();
+						}
+					}
+				}
+			});			
+
+			// End of Listeners for table9 & buttons -----------------------------------------------------------------------
+			// End of Listeners for table9 & buttons -----------------------------------------------------------------------		    
+		    
+
+			
+			
+			
+	        // scrollPane Quick Edit ----------------------------------------------------------------------	
+			// scrollPane Quick Edit ----------------------------------------------------------------------	
+			quick_edit = new QuickEdit_FlyConstraints_Panel(table9, data9);
+				scrollpane_QuickEdit = new JScrollPane(quick_edit);
+				border = new TitledBorder("Quick Edit ");
+				border.setTitleJustification(TitledBorder.CENTER);
+				scrollpane_QuickEdit.setBorder(border);
+				scrollpane_QuickEdit.setVisible(false);		
+				
+		
+
+			// ToolBar Panel ----------------------------------------------------------------------------
+			// ToolBar Panel ----------------------------------------------------------------------------
+			ToolBarWithBgImage helpToolBar = new ToolBarWithBgImage("Project Tools", JToolBar.HORIZONTAL, null);
+			helpToolBar.setFloatable(false);	//to make a tool bar immovable
+			helpToolBar.setRollover(true);	//to visually indicate tool bar buttons when the user passes over them with the cursor
+			helpToolBar.setBorderPainted(false);
+			
+			// button Quick Edit
+				JToggleButton btnQuickEdit = new JToggleButton();
+				btnQuickEdit.setToolTipText("Show Quick Edit Tool");
+				btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
+				btnQuickEdit.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent actionEvent) {			
+						if (btnQuickEdit.getToolTipText().equals("Show Quick Edit Tool")) {
+							btnQuickEdit.setToolTipText("Hide Quick Edit Tool");
+							btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
+							scrollpane_QuickEdit.setVisible(true);
+							// Get everything show up nicely
+							PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
+						} else {
+							btnQuickEdit.setToolTipText("Show Quick Edit Tool");
+							btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
+							scrollpane_QuickEdit.setVisible(false);
+							// Get everything show up nicely
+							PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
+						}
+					}
+				});				
+			
+			// button Help
+			JButton btnHelp = new JButton();
+			btnHelp.setToolTipText("Help");
+			btnHelp.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_help.png"));
+			btnHelp.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent actionEvent) {
+					
+				}
+			});
+			
+			// Add all buttons to flow_panel
+			helpToolBar.add(Box.createGlue());	//Add glue for Right alignment
+			helpToolBar.add(btnQuickEdit);
+			helpToolBar.add(btnHelp);
+			// End of ToolBar Panel -----------------------------------------------------------------------
+			// End of ToolBar Panel ----------------------------------------------------------------------- 				
+				
+				
+			
+			    	
+		    
+			// Add all Grids to the Main Grid-----------------------------------------------------------------------
+			// Add all Grids to the Main Grid-----------------------------------------------------------------------
+			GridBagConstraints c = new GridBagConstraints();
+			c.fill = GridBagConstraints.BOTH;
+
+			// Add helpToolBar to the main Grid
+			c.gridx = 0;
+			c.gridy = 0;
+			c.gridwidth = 3;
+			c.gridheight = 1;
+			c.weightx = 0;
+		    c.weighty = 0;
+			super.add(helpToolBar, c);				
+			
+			// Add static_identifiersScrollPanel to the main Grid
+			c.gridx = 0;
+			c.gridy = 1;
+			c.gridwidth = 2;
+			c.gridheight = 1;
+			c.weightx = 0;
+		    c.weighty = 0;
+			super.add(static_identifiersScrollPanel, c);				
+		    		
+			// Add dynamic_identifiersPanel to the main Grid
+			c.gridx = 2;
+			c.gridy = 1;
+			c.gridwidth = 1;
+			c.gridheight = 1;
+			c.weightx = 1;
+			c.weighty = 0;
+			super.add(dynamic_identifiersScrollPanel, c);	
+			    		
+			// Add the parametersScrollPanel to the main Grid	
+			c.gridx = 0;
+			c.gridy = 2;
+			c.gridwidth = 1;
+			c.gridheight = 1;
+			c.weightx = 0;
+		    c.weighty = 1;
+			super.add(parametersScrollPanel, c);						
+		    	    		    
+		    // Add the button_table_Panel & scrollpane_QuickEdit to a new Panel then add that panel to the main Grid
+			JPanel button_table_qedit_panel = new JPanel();
+			button_table_qedit_panel.setLayout(new BorderLayout());
+			button_table_qedit_panel.add(button_table_Panel, BorderLayout.CENTER);
+			button_table_qedit_panel.add(scrollpane_QuickEdit, BorderLayout.EAST);			
+			c.gridx = 1;
+			c.gridy = 2;
+			c.gridwidth = 2; 
+			c.gridheight = 1;
+			c.weightx = 1;
+		    c.weighty = 1;
+			super.add(button_table_qedit_panel, c);
+		}
+		
+	    
+	    // Update id column. id needs to be unique in order to use in flow constraints-----------------
+	    public void update_id() {  		
+			List<Integer> id_list = new ArrayList<Integer>();			
+			
+			for (int row = 0; row < rowCount9; row++) {
+				if (data9[row][0] != null) {
+					id_list.add((int) data9[row][0]);
+				}
+			}			
+			
+			for (int row = 0; row < rowCount9; row++) {
+				if (data9[row][0] == null) {
+					int new_id = (id_list.size() > 0) ? Collections.max(id_list) + 1 : 1;	//new id = (max id + 1) or = 1 if no row
+					data9[row][0] = new_id;
+					id_list.add(new_id);
+				}
+			}			
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	// Get the following from each row-------------------------------------------------------------------------------------
+	private static Boolean are_all_static_identifiers_matched(String var_name, List<List<String>> static_identifiers) {	
+		if (!static_identifiers.get(0).contains(Get_Variable_Information.get_layer1(var_name))) return false;
+		if (!static_identifiers.get(1).contains(Get_Variable_Information.get_layer2(var_name))) return false;
+		if (!static_identifiers.get(2).contains(Get_Variable_Information.get_layer3(var_name))) return false;
+		if (!static_identifiers.get(3).contains(Get_Variable_Information.get_layer4(var_name))) return false;
+		if (Get_Variable_Information.get_forest_status(var_name).equals("E") && !Get_Variable_Information.get_method(var_name).equals("MS") && !Get_Variable_Information.get_method(var_name).equals("BS")) {
+			if (!static_identifiers.get(4).contains(Get_Variable_Information.get_layer5(var_name))) return false;	// layer5 cover type
+			if (!static_identifiers.get(5).contains(Get_Variable_Information.get_layer6(var_name))) return false;	// layer6: size class
+		}
+		if (!static_identifiers.get(6).contains(Get_Variable_Information.get_method(var_name) + "_" + Get_Variable_Information.get_forest_status(var_name))) return false;
+		if (!static_identifiers.get(7).contains(String.valueOf(Get_Variable_Information.get_period(var_name)))) return false;					
+		return true;
+	}
+	
+	
+	public List<List<String>> get_static_identifiers_in_row (String current_static_identifiers) {
+		List<List<String>> static_identifiers = new ArrayList<List<String>>();
+		
+		//Read the whole cell into array
+		String[] staticLayer_Info = current_static_identifiers.split(";");		//Note: row 0 is the title only, row 1 is constraint 1,.....
+		int total_staticIdentifiers = staticLayer_Info.length;
+		
+		//Get all static Identifiers to be in the list
+		for (int i = 0; i < total_staticIdentifiers; i++) {		//6 first identifiers is strata 6 layers (layer 0 to 5)		
+			List<String> thisIdentifier = new ArrayList<String>();
+			
+			String[] identifierElements = staticLayer_Info[i].split("\\s+");				//space delimited
+			for (int j = 1; j < identifierElements.length; j++) {		//Ignore the first element which is the identifier index, so we loop from 1 not 0
+				thisIdentifier.add(identifierElements[j].replaceAll("\\s+",""));		//Add element name, if name has spaces then remove all the spaces
+			}
+			
+			static_identifiers.add(thisIdentifier);
+		}
+			
+		return static_identifiers;
+	}
+	
+	
+	public List<List<String>> get_dynamic_identifiers_in_row (String current_dynamic_identifiers) {
+		List<List<String>> dynamic_identifiers = new ArrayList<List<String>>();
+		
+		//Read the whole cell into array
+		String[] dynamicLayer_Info = current_dynamic_identifiers.split(";");
+		int total_dynamicIdentifiers = dynamicLayer_Info.length;
+	
+		
+		//Get all dynamic Identifiers to be in the list
+		for (int i = 0; i < total_dynamicIdentifiers; i++) {	
+			List<String> thisIdentifier = new ArrayList<String>();
+			
+			String[] identifierElements = dynamicLayer_Info[i].split("\\s+");				//space delimited
+			for (int j = 1; j < identifierElements.length; j++) {		//Ignore the first element which is the identifier column index, so we loop from 1 not 0
+				thisIdentifier.add(identifierElements[j].replaceAll("\\s+",""));		//Add element name, if name has spaces then remove all the spaces
+			}
+			
+			dynamic_identifiers.add(thisIdentifier);
+		}
+			
+		return dynamic_identifiers;
+	}	
+	
+	
+	public List<String> get_dynamic_dentifiers_column_indexes_in_row (String current_dynamic_identifiers) {
+		List<String> dynamic_dentifiers_column_indexes = new ArrayList<String>();
+			
+		//Read the whole cell into array
+		String[] dynamicLayer_Info = current_dynamic_identifiers.split(";");		//Note: row 0 is the title only, row 1 is constraint 1,.....
+		int total_dynamicIdentifiers = dynamicLayer_Info.length;
+
+		//Get all dynamic Identifiers to be in the list
+		for (int i = 0; i < total_dynamicIdentifiers; i++) {	
+			String[] identifierElements = dynamicLayer_Info[i].split("\\s+");				//space delimited
+			//add the first element which is the identifier column index
+			dynamic_dentifiers_column_indexes.add(identifierElements[0].replaceAll("\\s+",""));
+		}
+			
+		return dynamic_dentifiers_column_indexes;
+	}	
+	
+	
+	public List<String> get_parameters_indexes_list (String current_parameter_index) {	
+		List<String> parameters_indexes_list = new ArrayList<String>();
+		
+		//Read the whole cell into array
+		String[] parameter_Info = current_parameter_index.split("\\s+");			
+		for (int i = 0; i < parameter_Info.length; i++) {	
+			parameters_indexes_list.add(parameter_Info[i].replaceAll("\\s+",""));
+		}				
+		return parameters_indexes_list;
+	}
+	// End of Get the following from each row-------------------------------------------------------------------------------------
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public double get_results(Read_Database read_database, List<String> var_name_list, List<Double> var_value_list,			// This var_name_list is the list after trim by static_identifiers already
+			double multiplier, List<String> parameters_indexes_list, List<String> dynamic_dentifiers_column_indexes, List<List<String>> dynamic_identifiers) {		
+		
+		double sum_all = 0;
+		
+		
+
+		
+		//Database Info
+		Object[][][] yield_tables_values = read_database.get_yield_tables_values();
+		Object[] yield_tables_names = read_database.get_yield_tables_names();								
+		
+		
+		
+		// Read input files to retrieve values later
+		Read_RunInputs read = new Read_RunInputs();
+		read.read_general_inputs(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_01_general_inputs.txt"));
+		read.read_model_strata(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_03_model_strata.txt"));
+		read.read_covertype_conversion_clearcut(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_04_covertype_conversion_clearcut.txt"));
+		read.read_covertype_conversion_replacing(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_05_covertype_conversion_replacing.txt"));
+		read.read_natural_disturbances_replacing(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_07_natural_disturbances_replacing.txt"));
+		read.read_management_cost(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_08_management_cost.txt"));
+		
+
+		
+		
+		// Get info: input_03_modeled_strata
+		List<String> model_strata, model_strata_without_sizeclass_and_covertype = new ArrayList<String>();
+		model_strata = read.get_model_strata();
+		model_strata_without_sizeclass_and_covertype = read.get_model_strata_without_sizeclass_and_covertype(); 
+					
+		// Get Info: input_04_covertype_conversion_clearcut
+		List<String> covertype_conversions, covertype_conversions_and_existing_rotation_ages, covertype_conversions_and_regeneration_rotation_ages = new ArrayList<String>();
+		covertype_conversions = read.get_covertype_conversions();
+		covertype_conversions_and_existing_rotation_ages = read.get_covertype_conversions_and_existing_rotation_ages();	
+		covertype_conversions_and_regeneration_rotation_ages = read.get_covertype_conversions_and_regeneration_rotation_ages();
+
+		// Get Info: input_05_covertype_conversion_replacing
+		double[] rdProportion = read.getRDProportion(); 		
+		
+		// Get Info: input_07_natural_disturbances_replacing
+		double[][] SRD_percent = read.getSRDProportion();		
+		
+		// Get info: input_08_management_cost
+		List<String> cost_condition_list = read.get_cost_condition_list(); 
+	
+
+		
+		
+
+
+		
+		
+		// Set up problem-------------------------------------------------			
+		List<List<String>> allLayers =  read_database.get_allLayers();	
+		List<String> layer1 = allLayers.get(0);
+		List<String> layer2 = allLayers.get(1);
+		List<String> layer3 = allLayers.get(2);
+		List<String> layer4 = allLayers.get(3);
+		List<String> layer5 = allLayers.get(4);
+		List<String> layer6 = allLayers.get(5);
+					
+		
+		
+		double annualDiscountRate = read.get_discount_rate() / 100;
+		int SRDage;
+		
+
 		
 		
 		
 	
 		
+
 		
+		
+		//Get the 2 parameter V(s1,s2,s3,s4,s5,s6) and A(s1,s2,s3,s4,s5,s6)
+		String[][] Input2_value = read.get_MO_Values();	
+		double[][][][][][] StrataArea = new double[layer1.size()][layer2.size()][layer3.size()][layer4.size()][layer5.size()][layer6.size()];
+		int[][][][][][] StartingAge = new int[layer1.size()][layer2.size()][layer3.size()][layer4.size()][layer5.size()][layer6.size()];			
+		
+		
+		
+		for (String strata: model_strata) {
+			int s1 = layer1.indexOf(strata.substring(0,1));
+			int s2 = layer2.indexOf(strata.substring(1,2));
+			int s3 = layer3.indexOf(strata.substring(2,3));
+			int s4 = layer4.indexOf(strata.substring(3,4));
+			int s5 = layer5.indexOf(strata.substring(4,5));
+			int s6 = layer6.indexOf(strata.substring(5,6));
+			String strataName = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4) + layer5.get(s5) + layer6.get(s6);
+			
+			//Loop through all modeled_strata to find if the names matched and get the total area and age class
+			for (int i = 0; i < read.get_MO_TotalRows(); i++) {			
+				if (Input2_value[i][0].equals(strataName)) {
+					StrataArea[s1][s2][s3][s4][s5][s6] = Double.parseDouble(Input2_value[i][7]);		//area
+					
+					if (Input2_value[i][read.get_MO_TotalColumns() - 2].toString().equals("null")) {
+						StartingAge[s1][s2][s3][s4][s5][s6] = 1;		//Assume age class = 1 if not found any yield table for this existing strata
+					} else {
+						StartingAge[s1][s2][s3][s4][s5][s6] = Integer.parseInt(Input2_value[i][read.get_MO_TotalColumns() - 2]);	//age class
+					}										
+				}	
+			}	
+		}						
+		
+							
+		
+
+		// Get the replacing disturbances %		
+		double[][] rdPercent = new double[layer5.size()][layer5.size()];
+		int item_Count = 0;
+		for (int s5 = 0; s5 < layer5.size(); s5++) {
+			for (int ss5 = 0; ss5 < layer5.size(); ss5++) {
+				rdPercent[s5][ss5] = rdProportion[item_Count];
+				item_Count++;	
+			}
+		}
 		
 
 		
-//		// 3. SLOWEST FILTER: BELOW IS THE OLD FREAKING SLOW FILTER --> THE 1st METHOD I WROTE IS MUCH MORE FASTER & SMARTER		
-//		long time_start = System.currentTimeMillis();		// measure time before solving
-//	
-//		
-//		RowFilter<Object, Object> startsWithAFilter = new RowFilter<Object, Object>() {
-//			public boolean include(Entry<? extends Object, ? extends Object> entry) {				
-////				for (int i = entry.getValueCount() - 1; i >= 0; i--) {	// Loop columns
-//				String modified_var_name = Get_Variable_Information.get_customized_variable_term(entry.getStringValue(1));		// entry.getStringValue(1) = column 1 = var_name
-//				if (checkbox_term_list.contains(modified_var_name) || checkbox_term_xEAr_list.contains(modified_var_name)) {
-//					return true;
-//				}
-////				}
-//
-//				return false; // return false so that this entry is not shown
-//			}
-//		};
-//		
-//		TableRowSorter<TableModelSpectrum> sorter = new TableRowSorter<TableModelSpectrum>(model);
-//		table.setRowSorter(sorter);
-//		sorter.setRowFilter(startsWithAFilter);
-//		
-//		
-//		long time_end = System.currentTimeMillis();		//measure time after solving
-//		double timeElapsed = (double) (time_end - time_start) / 1000;
-//		System.out.println("Total time filter = " + timeElapsed);
-	}
+		
+		// CREATE OBJECTIVE FUNCTION-------------------------------------------------
+		// CREATE OBJECTIVE FUNCTION-------------------------------------------------
+		// CREATE OBJECTIVE FUNCTION-------------------------------------------------
+				
+		// Removed
 
+		// CREATE CONSTRAINTS-------------------------------------------------
+		// CREATE CONSTRAINTS-------------------------------------------------
+		// CREATE CONSTRAINTS-------------------------------------------------
+		
+				
+		
+		// Constraints 15-------------------------------------------------	
+		
+			
+		// Loop all variables that were trim by the static filter already: then add to sum_all
+		for (String var_name: var_name_list) {
+			int current_var_index = var_name_list.indexOf(var_name);	// the index of the variable that is processing
+					
+			
+								
+			
+			// Add user_defined_variables and parameters------------------------------------
+			String method = Get_Variable_Information.get_method(var_name) + "_" + Get_Variable_Information.get_forest_status(var_name);
+			int period = Get_Variable_Information.get_period(var_name);
+			int rotation_period = Get_Variable_Information.get_rotation_period(var_name);			
+			String strata = 
+					Get_Variable_Information.get_layer1(var_name) +
+					Get_Variable_Information.get_layer2(var_name) +
+					Get_Variable_Information.get_layer3(var_name) +
+					Get_Variable_Information.get_layer4(var_name) +
+					Get_Variable_Information.get_layer5(var_name) +
+					Get_Variable_Information.get_layer6(var_name);
+			
+			
+					
+			
+			//Add xNGe
+			if (method.equals("NG_E")) {	
+				int s1 = layer1.indexOf(strata.substring(0,1));
+				int s2 = layer2.indexOf(strata.substring(1,2));
+				int s3 = layer3.indexOf(strata.substring(2,3));
+				int s4 = layer4.indexOf(strata.substring(3,4));
+				int s5 = layer5.indexOf(strata.substring(4,5));
+				int s6 = layer6.indexOf(strata.substring(5,6));	
+				int t = period;
+				//Find all parameter match the t and add them all to parameter
+				/*	Table Name = s5 + s6 convert then + method + timingChoice
+				 * Table column indexes for the parameters is identified by parameters_indexes_list
+				 * dynamic identifiers are identified by "all_dynamicIdentifiers_columnIndexes" & "all_dynamicIdentifiers"
+				 * Table row index = t - 1  
+				 */		
+				double currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
+						1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint	
+				int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
+				
+				
+				
+				List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
+				List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
+				SRDage = StartingAge[s1][s2][s3][s4][s5][s6] + t - 1; 
+				if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
+				for (int c = 0; c < layer5.size(); c++) {
+					if (rdPercent[s5][c] / 100 > 0) {
+						coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(c) + " " + "disturbance");
+						coversion_cost_after_disturbance_value_list.add(SRD_percent[s5][SRDage] / 100 * rdPercent[s5][c] / 100);
+					}														
+				}
+				
+																		
+												
+				double para_value = Get_Parameter_Information.get_total_value(
+						read_database, var_name, rotation_age,
+						yield_tables_names, yield_tables_values, parameters_indexes_list,
+						dynamic_dentifiers_column_indexes, dynamic_identifiers,
+						cost_condition_list,
+						coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+				para_value = para_value * currentDiscountValue * multiplier;
+
+				//Add to sum_all
+				sum_all = sum_all + para_value * var_value_list.get(current_var_index);
+			}	
+
+					
+			//Add xPBe[s1][s2][s3][s4][s5][s6][i][t]			
+			if (method.equals("PB_E")) {		
+				int s1 = layer1.indexOf(strata.substring(0,1));
+				int s2 = layer2.indexOf(strata.substring(1,2));
+				int s3 = layer3.indexOf(strata.substring(2,3));
+				int s4 = layer4.indexOf(strata.substring(3,4));
+				int s5 = layer5.indexOf(strata.substring(4,5));
+				int s6 = layer6.indexOf(strata.substring(5,6));	
+				int t = period;
+				//Find all parameter match the t and add them all to parameter
+				double currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
+						1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint		
+				int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
+				
+				
+				
+				List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
+				List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
+				SRDage = StartingAge[s1][s2][s3][s4][s5][s6] + t - 1; 
+				if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
+				for (int c = 0; c < layer5.size(); c++) {
+					if (rdPercent[s5][c] / 100 > 0) {
+						coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(c) + " " + "disturbance");
+						coversion_cost_after_disturbance_value_list.add(SRD_percent[s5][SRDage] / 100 * rdPercent[s5][c] / 100);
+					}														
+				}
+				
+				
+								
+				double para_value = Get_Parameter_Information.get_total_value(
+						read_database, var_name, rotation_age,
+						yield_tables_names, yield_tables_values, parameters_indexes_list,
+						dynamic_dentifiers_column_indexes, dynamic_identifiers,
+						cost_condition_list,
+						coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+				para_value = para_value * currentDiscountValue * multiplier;
+				
+				//Add to sum_all
+				sum_all = sum_all + para_value * var_value_list.get(current_var_index);	
+			}	
+						
+			
+			//Add xGSe[s1][s2][s3][s4][s5][s6][i][t]			
+			if (method.equals("GS_E")) {		
+				int s1 = layer1.indexOf(strata.substring(0,1));
+				int s2 = layer2.indexOf(strata.substring(1,2));
+				int s3 = layer3.indexOf(strata.substring(2,3));
+				int s4 = layer4.indexOf(strata.substring(3,4));
+				int s5 = layer5.indexOf(strata.substring(4,5));
+				int s6 = layer6.indexOf(strata.substring(5,6));	
+				int t = period;
+				//Find all parameter match the t and add them all to parameter
+				double currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
+						1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint	
+				int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
+				
+				
+				
+				List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
+				List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
+				SRDage = StartingAge[s1][s2][s3][s4][s5][s6] + t - 1; 
+				if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
+				for (int c = 0; c < layer5.size(); c++) {
+					if (rdPercent[s5][c] / 100 > 0) {
+						coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(c) + " " + "disturbance");
+						coversion_cost_after_disturbance_value_list.add(SRD_percent[s5][SRDage] / 100 * rdPercent[s5][c] / 100);
+					}														
+				}
+				
+				
+				
+				double para_value = Get_Parameter_Information.get_total_value(
+						read_database, var_name, rotation_age,
+						yield_tables_names, yield_tables_values, parameters_indexes_list,
+						dynamic_dentifiers_column_indexes, dynamic_identifiers,
+						cost_condition_list,
+						coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+				para_value = para_value * currentDiscountValue * multiplier;
+				
+				//Add to sum_all
+				sum_all = sum_all + para_value * var_value_list.get(current_var_index);	
+			}														
+
+					
+			//Add xMS[s1][s2][s3][s4][s5][s6][i][t]			
+			if (method.equals("MS_E")) {		
+				int s1 = layer1.indexOf(strata.substring(0,1));
+				int s2 = layer2.indexOf(strata.substring(1,2));
+				int s3 = layer3.indexOf(strata.substring(2,3));
+				int s4 = layer4.indexOf(strata.substring(3,4));
+				int s5 = layer5.indexOf(strata.substring(4,5));
+				int s6 = layer6.indexOf(strata.substring(5,6));	
+				int t = period;
+				//Find all parameter match the t and add them all to parameter
+				double currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
+						1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint		
+				int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
+				
+				
+				
+				
+				List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
+				List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
+				
+				
+				
+				
+				double para_value = Get_Parameter_Information.get_total_value(
+						read_database, var_name, rotation_age,
+						yield_tables_names, yield_tables_values, parameters_indexes_list,
+						dynamic_dentifiers_column_indexes, dynamic_identifiers,
+						cost_condition_list,
+						coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+				para_value = para_value * currentDiscountValue * multiplier;
+				
+				//Add to sum_all
+				sum_all = sum_all + para_value * var_value_list.get(current_var_index);	
+			}																
+			
+			
+			//Add xBS[s1][s2][s3][s4][s5][s6][i][t]			
+			if (method.equals("BS_E")) {				
+				int s1 = layer1.indexOf(strata.substring(0,1));
+				int s2 = layer2.indexOf(strata.substring(1,2));
+				int s3 = layer3.indexOf(strata.substring(2,3));
+				int s4 = layer4.indexOf(strata.substring(3,4));
+				int s5 = layer5.indexOf(strata.substring(4,5));
+				int s6 = layer6.indexOf(strata.substring(5,6));	
+				int t = period;
+				//Find all parameter match the t and add them all to parameter
+				double currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
+						1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint		
+				int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
+				
+				
+				
+				List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
+				List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
+				
+				
+				
+				double para_value = Get_Parameter_Information.get_total_value(
+						read_database, var_name, rotation_age,
+						yield_tables_names, yield_tables_values, parameters_indexes_list,
+						dynamic_dentifiers_column_indexes, dynamic_identifiers,
+						cost_condition_list,
+						coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+				para_value = para_value * currentDiscountValue * multiplier;
+				
+				//Add to sum_all
+				sum_all = sum_all + para_value * var_value_list.get(current_var_index);	
+			}							
+							
+			
+			// Add xEAe[s1][s2][s3][s4][s5][s6](tR)(s5R)(i)(t)
+			if (method.equals("EA_E")) {									
+				int s1 = layer1.indexOf(strata.substring(0,1));
+				int s2 = layer2.indexOf(strata.substring(1,2));
+				int s3 = layer3.indexOf(strata.substring(2,3));
+				int s4 = layer4.indexOf(strata.substring(3,4));
+				int s5 = layer5.indexOf(strata.substring(4,5));
+				int s6 = layer6.indexOf(strata.substring(5,6));	
+				int t = period;
+				int tR = rotation_period;
+				int rotation_age = tR + StartingAge[s1][s2][s3][s4][s5][s6] - 1;
+								
+				//Find all parameter match the t and add them all to parameter
+				double currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
+						1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint		
+				
+				
+				
+				
+				List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
+				List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
+				SRDage = StartingAge[s1][s2][s3][s4][s5][s6] + t - 1; 
+				if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
+				for (int s5RR = 0; s5RR < layer5.size(); s5RR++) {
+					if (rdPercent[s5][s5RR] / 100 > 0) {
+						coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(s5RR) + " " + "disturbance");
+						coversion_cost_after_disturbance_value_list.add(SRD_percent[s5][SRDage] / 100 * rdPercent[s5][s5RR] / 100);
+					}														
+				}
+				
+				
+				
+				double para_value = Get_Parameter_Information.get_total_value(
+			    		read_database, var_name, rotation_age,
+						yield_tables_names, yield_tables_values, parameters_indexes_list,
+						dynamic_dentifiers_column_indexes, dynamic_identifiers,
+						cost_condition_list,
+						coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+				para_value = para_value * currentDiscountValue * multiplier;
+				
+				//Add to sum_all
+				sum_all = sum_all + para_value * var_value_list.get(current_var_index);	
+			}	
+			
+			
+			//Add xEAr[s1][s2][s3][s4][s5][tR][aR][s5R][i][t]
+			if (method.equals("EA_R")) {	
+				int s1 = layer1.indexOf(strata.substring(0,1));
+				int s2 = layer2.indexOf(strata.substring(1,2));
+				int s3 = layer3.indexOf(strata.substring(2,3));
+				int s4 = layer4.indexOf(strata.substring(3,4));	
+				int s5 = layer5.indexOf(strata.substring(4,5));	
+				int t = period;
+				int tR = rotation_period;
+				int aR = Get_Variable_Information.get_rotation_age(var_name);
+				
+				
+							
+				//Find all parameter match the t and add them all to parameter
+				double currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
+						1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint					
+				int rotation_age = aR;
+				
+				
+				
+				
+				List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
+				List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
+				SRDage = aR - tR + t; 
+				if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
+				for (int s5RR = 0; s5RR < layer5.size(); s5RR++) {
+					if (rdPercent[s5][s5RR] / 100 > 0) {
+						coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(s5RR) + " " + "disturbance");
+						coversion_cost_after_disturbance_value_list.add(SRD_percent[s5][SRDage] / 100 * rdPercent[s5][s5RR] / 100);
+					}														
+				}
+				
+				
+				
+				
+				double  para_value = Get_Parameter_Information.get_total_value(
+			    		read_database, var_name, rotation_age,
+						yield_tables_names, yield_tables_values, parameters_indexes_list,
+						dynamic_dentifiers_column_indexes, dynamic_identifiers,
+						cost_condition_list,
+						coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+				para_value = para_value * currentDiscountValue * multiplier;
+				
+				//Add to sum_all
+				sum_all = sum_all + para_value * var_value_list.get(current_var_index);	
+			}					
+			
+
+			//Add xNGr
+			if (method.equals("NG_R")) {		
+				int s1 = layer1.indexOf(strata.substring(0,1));
+				int s2 = layer2.indexOf(strata.substring(1,2));
+				int s3 = layer3.indexOf(strata.substring(2,3));
+				int s4 = layer4.indexOf(strata.substring(3,4));
+				int s5 = layer5.indexOf(strata.substring(4,5));	
+				int t = period;
+				int a = Get_Variable_Information.get_age(var_name);
+				
+				//Find all parameter match the t and add them all to parameter
+				double currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
+						1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint																	
+				int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
+				
+				
+				
+				List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
+				List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
+				SRDage = a; 
+				if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
+				for (int s5R = 0; s5R < layer5.size(); s5R++) {
+					if (rdPercent[s5][s5R] / 100 > 0) {
+						coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(s5R) + " " + "disturbance");
+						coversion_cost_after_disturbance_value_list.add(SRD_percent[s5][SRDage] / 100 * rdPercent[s5][s5R] / 100);
+					}														
+				}
+				
+				
+				
+				double para_value = Get_Parameter_Information.get_total_value(
+			    		read_database, var_name, rotation_age,
+						yield_tables_names, yield_tables_values, parameters_indexes_list,
+						dynamic_dentifiers_column_indexes, dynamic_identifiers,
+						cost_condition_list,
+						coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+				para_value = para_value * currentDiscountValue * multiplier;
+				sum_all = sum_all + para_value * var_value_list.get(current_var_index);	
+			}							
+			
+
+			//Add xPBr
+			if (method.equals("PB_R")) {		
+				int s1 = layer1.indexOf(strata.substring(0,1));
+				int s2 = layer2.indexOf(strata.substring(1,2));
+				int s3 = layer3.indexOf(strata.substring(2,3));
+				int s4 = layer4.indexOf(strata.substring(3,4));
+				int s5 = layer5.indexOf(strata.substring(4,5));	
+				int t = period;
+				int a = Get_Variable_Information.get_age(var_name);
+				
+				//Find all parameter match the t and add them all to parameter
+				double currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
+						1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint	
+				int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
+				
+				
+				
+				
+				List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
+				List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
+				SRDage = a; 
+				if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
+				for (int s5R = 0; s5R < layer5.size(); s5R++) {
+					if (rdPercent[s5][s5R] / 100 > 0) {
+						coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(s5R) + " " + "disturbance");
+						coversion_cost_after_disturbance_value_list.add(SRD_percent[s5][SRDage] / 100 * rdPercent[s5][s5R] / 100);
+					}														
+				}
+				
+				
+				
+				
+				double para_value = Get_Parameter_Information.get_total_value(
+			    		read_database, var_name, rotation_age,
+						yield_tables_names, yield_tables_values, parameters_indexes_list,
+						dynamic_dentifiers_column_indexes, dynamic_identifiers,
+						cost_condition_list,
+						coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+				para_value = para_value * currentDiscountValue * multiplier;
+				
+				//Add to sum_all
+				sum_all = sum_all + para_value * var_value_list.get(current_var_index);
+			}						
+
+			
+			//Add xGSr
+			if (method.equals("GS_R")) {		
+				int s1 = layer1.indexOf(strata.substring(0,1));
+				int s2 = layer2.indexOf(strata.substring(1,2));
+				int s3 = layer3.indexOf(strata.substring(2,3));
+				int s4 = layer4.indexOf(strata.substring(3,4));
+				int s5 = layer5.indexOf(strata.substring(4,5));	
+				int t = period;
+				int a = Get_Variable_Information.get_age(var_name);
+				
+				
+				//Find all parameter match the t and add them all to parameter
+				double currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
+						1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint	
+				int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
+				
+				
+				
+				
+				List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
+				List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
+				SRDage = a; 
+				if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
+				for (int s5R = 0; s5R < layer5.size(); s5R++) {
+					if (rdPercent[s5][s5R] / 100 > 0) {
+						coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(s5R) + " " + "disturbance");
+						coversion_cost_after_disturbance_value_list.add(rdPercent[s5][s5R] / 100);
+					}														
+				}
+				
+				
+				
+				
+				double para_value = Get_Parameter_Information.get_total_value(
+			    		read_database, var_name, rotation_age,
+						yield_tables_names, yield_tables_values, parameters_indexes_list,
+						dynamic_dentifiers_column_indexes, dynamic_identifiers,
+						cost_condition_list,
+						coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+				para_value = para_value * currentDiscountValue * multiplier;
+				
+				//Add to sum_all
+				sum_all = sum_all + para_value * var_value_list.get(current_var_index);
+			}		
+		}		
+		
+		return sum_all;	
+	}			
+	
+	
 }	
+
+
