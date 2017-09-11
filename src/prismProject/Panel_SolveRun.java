@@ -16,8 +16,11 @@ import java.io.InputStreamReader;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.PrintStream;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -58,12 +61,13 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 	private Object[][] data;
 	
 	private File[] listOfEditRuns ;
-	private JScrollPane scrollPane_Left, scrollPane_Right;
+	private JScrollPane scrollpane_left, scrollpane_right;
 	
 	private File[] 	problem_file, solution_file, output_general_outputs_file, output_variables_file, output_constraints_file,
 					output_management_overview_file, output_management_details_file, output_fly_constraints_file, output_basic_constraints_file, output_flow_constraints_file;
 	
 	private DecimalFormat twoDForm = new DecimalFormat("#.##");	 //Only get 2 decimal will be assess
+	private DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd - HH:mm:ss");
 	
 	public Panel_SolveRun(File[] runsList) {
 		super.setLayout(new BorderLayout(0, 0));
@@ -97,6 +101,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 		displayTextArea = new JTextArea();
 		displayTextArea.setBackground(Color.BLACK); 
 		displayTextArea.setForeground(Color.WHITE);
+		displayTextArea.setFocusable(false);
 		displayTextArea.setEditable(false);
 		DefaultCaret caret = (DefaultCaret) displayTextArea.getCaret();
 		caret.setUpdatePolicy(DefaultCaret.OUT_BOTTOM);
@@ -111,12 +116,12 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 //		splitPanel.getComponent(2).setCursor(new Cursor(Cursor.HAND_CURSOR));
 		
 		// Left split panel--------------------------------------------------------------------------------
-		scrollPane_Left = new JScrollPane();
-		scrollPane_Left.setViewportView(table);			
+		scrollpane_left = new JScrollPane();
+		scrollpane_left.setViewportView(table);			
 		splitPanel2= new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		splitPanel2.setResizeWeight(1);
 		splitPanel2.setDividerSize(0);
-		splitPanel2.setLeftComponent(scrollPane_Left);
+		splitPanel2.setLeftComponent(scrollpane_left);
 		
 
 		java.net.URL imgURL = getClass().getResource("/pikachuRunning.gif");		//Name is case sensitive
@@ -247,9 +252,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								
 		
 		// Right split panel-------------------------------------------------------------------------------
-		scrollPane_Right = new JScrollPane();
-		scrollPane_Right.setViewportView(displayTextArea);
-		splitPanel.setRightComponent(scrollPane_Right);			
+		scrollpane_right = new JScrollPane();
+		scrollpane_right.setViewportView(displayTextArea);
+		splitPanel.setRightComponent(scrollpane_right);			
 		
 		
 		// Add all components to Panel_SolveRun------------------------------------------------------------
@@ -355,8 +360,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			List<String> flow_type_list = read.get_flow_type_list();
 			List<Double> flow_lowerbound_percentage_list = read.get_flow_lowerbound_percentage_list();
 			List<Double> flow_upperbound_percentage_list = read.get_flow_upperbound_percentage_list();
-
-
+			System.out.println("Reading process finished for all input files          " + dateFormat.format(new Date()));
+			System.out.println();
+			
 			
 			
 			// Set up problem-------------------------------------------------			
@@ -455,11 +461,10 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				int s4 = layer4.indexOf(strata.substring(3,4));
 				int s5 = layer5.indexOf(strata.substring(4,5));
 				int s6 = layer6.indexOf(strata.substring(5,6));
-				String strataName = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4) + layer5.get(s5) + layer6.get(s6);
 				
 				//Loop through all modeled_strata to find if the names matched and get the total area and age class
 				for (int i = 0; i < read.get_MO_TotalRows(); i++) {			
-					if (Input2_value[i][0].equals(strataName)) {
+					if (Input2_value[i][0].equals(strata)) {
 						StrataArea[s1][s2][s3][s4][s5][s6] = Double.parseDouble(Input2_value[i][7]);		//area
 						
 						if (Input2_value[i][read.get_MO_TotalColumns() - 2].toString().equals("null")) {
@@ -1026,8 +1031,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			double[] vub = Stream.of(vublist.toArray(new Double[vublist.size()])).mapToDouble(Double::doubleValue).toArray();
 			IloNumVarType[] vtype = vtlist.toArray(new IloNumVarType[vtlist.size()]);
 								//Note: vname and vtype may cause problems because of wrong casting
-	
+			System.out.println("Total decision variables as in PRISM obj. function eq. (1):   " + nvars + "             " + dateFormat.format(new Date()));
 					
+			
 			// CREATE CONSTRAINTS-------------------------------------------------
 			// CREATE CONSTRAINTS-------------------------------------------------
 			// CREATE CONSTRAINTS-------------------------------------------------
@@ -1071,7 +1077,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					c2_index[i][j] = c2_indexlist.get(i).get(j);
 					c2_value[i][j] = c2_valuelist.get(i).get(j);			
 				}
-			}									
+			}	
+			System.out.println("Total constraints as in PRISM model formualtion eq. (2):   " + c2_num + "             " + dateFormat.format(new Date()));
 			
 	
 			// Constraints 3-------------------------------------------------
@@ -1112,11 +1119,13 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					c3_index[i][j] = c3_indexlist.get(i).get(j);
 					c3_value[i][j] = c3_valuelist.get(i).get(j);			
 				}
-			}												
+			}	
+			System.out.println("Total constraints as in PRISM model formualtion eq. (3):   " + c3_num + "             " + dateFormat.format(new Date()));
 			
 			
 			// Constraints 4ab  (hard) and 4cd (free)------------------------------
 			// are set as the bounds of variables
+			System.out.println("Total constraints as in PRISM model formualtion eq. (4):   0             " + dateFormat.format(new Date()));
 			
 			
 			// Constraints 5 (flow)------------------------------------------------
@@ -1242,7 +1251,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					c5_index[i][j] = c5_indexlist.get(i).get(j);
 					c5_value[i][j] = c5_valuelist.get(i).get(j);			
 				}
-			}				
+			}		
+			System.out.println("Total constraints as in PRISM model formualtion eq. (5):   " + c5_num + "             " + dateFormat.format(new Date()));
 			
 			
 			// Constraints 6-------------------------------------------------
@@ -1285,6 +1295,57 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			}	
 					
 					
+			//6b
+			for (int s1 = 0; s1 < layer1.size(); s1++) {
+				for (int s2 = 0; s2 < layer2.size(); s2++) {
+					for (int s3 = 0; s3 < layer3.size(); s3++) {
+						for (int s4 = 0; s4 < layer4.size(); s4++) {
+							for (int s5 = 0; s5 < layer5.size(); s5++) {
+								for (int s6 = 0; s6 < layer6.size(); s6++) {
+									String strataName = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4) + layer5.get(s5) + layer6.get(s6);
+									if (model_strata.contains(strataName)) {
+										// Add constraint
+										c6_indexlist.add(new ArrayList<Integer>());
+										c6_valuelist.add(new ArrayList<Double>());
+
+										// Add x(s1,s2,s3,s4,s5,s6)(4)
+										c6_indexlist.get(c6_num).add(x[s1][s2][s3][s4][s5][s6][4]);
+										c6_valuelist.get(c6_num).add((double) 1);
+										
+										//Add - sigma(i) xMS(s1,s2,s3,s4,s5,s6)[i][1]
+										for (int i = 0; i < total_MS_Prescriptions; i++) {
+											if(xMS[s1][s2][s3][s4][s5][s6][i][1] > 0) {		// if variable is defined, this value would be > 0 
+												c6_indexlist.get(c6_num).add(xMS[s1][s2][s3][s4][s5][s6][i][1]);
+												c6_valuelist.get(c6_num).add((double) -1);
+											}
+										}
+
+										// add bounds
+										c6_lblist.add((double) 0);
+										c6_ublist.add((double) 0);
+										c6_num++;
+										
+										// Remove this constraint if total number of variables added is 1 (only x[s1][s2][s3][s4][s5][s6][4] is added)
+										if (c6_indexlist.get(c6_num - 1).size() == 1) {
+											c6_indexlist.remove(c6_num - 1);
+											c6_valuelist.remove(c6_num - 1);
+											c6_lblist.remove(c6_num - 1);
+											c6_ublist.remove(c6_num - 1);
+											c6_num--;
+											
+											// Set x[s1][s2][s3][s4][s5][s6][4] to be zero if boost 2 is implemented but associated prescriptions does not exist
+											vlb[x[s1][s2][s3][s4][s5][s6][4]] = 0;
+											vub[x[s1][s2][s3][s4][s5][s6][4]] = 0;
+										}									
+									}
+								}
+							}
+						}
+					}
+				}
+			}	
+			
+			
 			//6c
 			for (int s1 = 0; s1 < layer1.size(); s1++) {
 				for (int s2 = 0; s2 < layer2.size(); s2++) {
@@ -1294,39 +1355,26 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								for (int s6 = 0; s6 < layer6.size(); s6++) {
 									String strataName = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4) + layer5.get(s5) + layer6.get(s6);
 									if (model_strata.contains(strataName)) {
-										for (int t = 1; t <= total_Periods; t++) {
-											// Add constraint
-											c6_indexlist.add(new ArrayList<Integer>());
-											c6_valuelist.add(new ArrayList<Double>());
-	
-											// Add x(s1,s2,s3,s4,s5,s6)(4)
-											c6_indexlist.get(c6_num).add(x[s1][s2][s3][s4][s5][s6][4]);
-											c6_valuelist.get(c6_num).add((double) 1);
-											
-											//Add - sigma(i) xMS(s1,s2,s3,s4,s5,s6)[i][t]
-											for (int i = 0; i < total_MS_Prescriptions; i++) {
+										for (int i = 0; i < total_MS_Prescriptions; i++) {
+											for (int t = 1; t <= total_Periods - 1; t++) {
 												if(xMS[s1][s2][s3][s4][s5][s6][i][t] > 0) {		// if variable is defined, this value would be > 0 
+													// Add constraint
+													c6_indexlist.add(new ArrayList<Integer>());
+													c6_valuelist.add(new ArrayList<Double>());
+													
+													//Add xMS(s1,s2,s3,s4,s5,s6)[i][t]													
 													c6_indexlist.get(c6_num).add(xMS[s1][s2][s3][s4][s5][s6][i][t]);
+													c6_valuelist.get(c6_num).add((double) 1);
+													
+													//Add -xMS(s1,s2,s3,s4,s5,s6)[i][t+1]
+													c6_indexlist.get(c6_num).add(xMS[s1][s2][s3][s4][s5][s6][i][t + 1]);
 													c6_valuelist.get(c6_num).add((double) -1);
+													
+													//add bounds
+													c6_lblist.add((double) 0);
+													c6_ublist.add((double) 0);
+													c6_num++;
 												}
-											}
-	
-											// add bounds
-											c6_lblist.add((double) 0);
-											c6_ublist.add((double) 0);
-											c6_num++;
-											
-											// Remove this constraint if total number of variables added is 1 (only x[s1][s2][s3][s4][s5][s6][4] is added)
-											if (c6_indexlist.get(c6_num - 1).size() == 1) {
-												c6_indexlist.remove(c6_num - 1);
-												c6_valuelist.remove(c6_num - 1);
-												c6_lblist.remove(c6_num - 1);
-												c6_ublist.remove(c6_num - 1);
-												c6_num--;
-												
-												// Set x[s1][s2][s3][s4][s5][s6][4] to be zero if boost 2 is implemented but associated prescriptions does not exist
-												vlb[x[s1][s2][s3][s4][s5][s6][4]] = 0;
-												vub[x[s1][s2][s3][s4][s5][s6][4]] = 0;
 											}
 										}									
 									}
@@ -1335,9 +1383,60 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						}
 					}
 				}
-			}				
+			}	
 														
 					
+			//6d
+			for (int s1 = 0; s1 < layer1.size(); s1++) {
+				for (int s2 = 0; s2 < layer2.size(); s2++) {
+					for (int s3 = 0; s3 < layer3.size(); s3++) {
+						for (int s4 = 0; s4 < layer4.size(); s4++) {
+							for (int s5 = 0; s5 < layer5.size(); s5++) {
+								for (int s6 = 0; s6 < layer6.size(); s6++) {
+									String strataName = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4) + layer5.get(s5) + layer6.get(s6);
+									if (model_strata.contains(strataName)) {
+										// Add constraint
+										c6_indexlist.add(new ArrayList<Integer>());
+										c6_valuelist.add(new ArrayList<Double>());
+
+										// Add x(s1,s2,s3,s4,s5,s6)(5)
+										c6_indexlist.get(c6_num).add(x[s1][s2][s3][s4][s5][s6][5]);
+										c6_valuelist.get(c6_num).add((double) 1);
+										
+										//Add - sigma(i) xBS(s1,s2,s3,s4,s5,s6)[i][1]
+										for (int i = 0; i < total_BS_Prescriptions; i++) {
+											if(xBS[s1][s2][s3][s4][s5][s6][i][1] > 0) {		// if variable is defined, this value would be > 0 
+												c6_indexlist.get(c6_num).add(xBS[s1][s2][s3][s4][s5][s6][i][1]);
+												c6_valuelist.get(c6_num).add((double) -1);
+											}
+										}
+
+										// add bounds
+										c6_lblist.add((double) 0);
+										c6_ublist.add((double) 0);
+										c6_num++;
+										
+										// Remove this constraint if total number of variables added is 1 (only x[s1][s2][s3][s4][s5][s6][5] is added)
+										if (c6_indexlist.get(c6_num - 1).size() == 1) {
+											c6_indexlist.remove(c6_num - 1);
+											c6_valuelist.remove(c6_num - 1);
+											c6_lblist.remove(c6_num - 1);
+											c6_ublist.remove(c6_num - 1);
+											c6_num--;
+											
+											// Set x[s1][s2][s3][s4][s5][s6][5] to be zero if boost 2 is implemented but associated prescriptions does not exist
+											vlb[x[s1][s2][s3][s4][s5][s6][5]] = 0;
+											vub[x[s1][s2][s3][s4][s5][s6][5]] = 0;
+										}									
+									}
+								}
+							}
+						}
+					}
+				}
+			}		
+			
+			
 			//6e
 			for (int s1 = 0; s1 < layer1.size(); s1++) {
 				for (int s2 = 0; s2 < layer2.size(); s2++) {
@@ -1347,39 +1446,26 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								for (int s6 = 0; s6 < layer6.size(); s6++) {
 									String strataName = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4) + layer5.get(s5) + layer6.get(s6);
 									if (model_strata.contains(strataName)) {
-										for (int t = 1; t <= total_Periods; t++) {
-											// Add constraint
-											c6_indexlist.add(new ArrayList<Integer>());
-											c6_valuelist.add(new ArrayList<Double>());
-	
-											// Add x(s1,s2,s3,s4,s5,s6)(5)
-											c6_indexlist.get(c6_num).add(x[s1][s2][s3][s4][s5][s6][5]);
-											c6_valuelist.get(c6_num).add((double) 1);
-											
-											//Add - sigma(i) xBS(s1,s2,s3,s4,s5,s6)[i][t]
-											for (int i = 0; i < total_BS_Prescriptions; i++) {
+										for (int i = 0; i < total_BS_Prescriptions; i++) {
+											for (int t = 1; t <= total_Periods - 1; t++) {
 												if(xBS[s1][s2][s3][s4][s5][s6][i][t] > 0) {		// if variable is defined, this value would be > 0 
+													// Add constraint
+													c6_indexlist.add(new ArrayList<Integer>());
+													c6_valuelist.add(new ArrayList<Double>());
+													
+													//Add xBS(s1,s2,s3,s4,s5,s6)[i][t]													
 													c6_indexlist.get(c6_num).add(xBS[s1][s2][s3][s4][s5][s6][i][t]);
+													c6_valuelist.get(c6_num).add((double) 1);
+													
+													//Add -xBS(s1,s2,s3,s4,s5,s6)[i][t+1]
+													c6_indexlist.get(c6_num).add(xBS[s1][s2][s3][s4][s5][s6][i][t + 1]);
 													c6_valuelist.get(c6_num).add((double) -1);
+													
+													//add bounds
+													c6_lblist.add((double) 0);
+													c6_ublist.add((double) 0);
+													c6_num++;
 												}
-											}
-	
-											// add bounds
-											c6_lblist.add((double) 0);
-											c6_ublist.add((double) 0);
-											c6_num++;
-											
-											// Remove this constraint if total number of variables added is 1 (only x[s1][s2][s3][s4][s5][s6][5] is added)
-											if (c6_indexlist.get(c6_num - 1).size() == 1) {
-												c6_indexlist.remove(c6_num - 1);
-												c6_valuelist.remove(c6_num - 1);
-												c6_lblist.remove(c6_num - 1);
-												c6_ublist.remove(c6_num - 1);
-												c6_num--;
-												
-												// Set x[s1][s2][s3][s4][s5][s6][5] to be zero if boost 2 is implemented but associated prescriptions does not exist
-												vlb[x[s1][s2][s3][s4][s5][s6][5]] = 0;
-												vub[x[s1][s2][s3][s4][s5][s6][5]] = 0;
 											}
 										}									
 									}
@@ -1404,6 +1490,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					c6_value[i][j] = c6_valuelist.get(i).get(j);			
 				}
 			}
+			System.out.println("Total constraints as in PRISM model formualtion eq. (6):   " + c6_num + "             " + dateFormat.format(new Date()));
 			
 			
 			// Constraints 7-------------------------------------------------
@@ -1462,7 +1549,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				int s4 = layer4.indexOf(strata.substring(3,4));
 				int s5 = layer5.indexOf(strata.substring(4,5));
 				int s6 = layer6.indexOf(strata.substring(5,6));
-				for (int t = 1; t <= total_Periods-1; t++) {
+				for (int t = 1; t <= total_Periods - 1; t++) {
 					if(xNGe[s1][s2][s3][s4][s5][s6][1] > 0) {		// if variable is defined, this value would be > 0
 						//Add constraint
 						c7_indexlist.add(new ArrayList<Integer>());
@@ -1500,7 +1587,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					c7_index[i][j] = c7_indexlist.get(i).get(j);
 					c7_value[i][j] = c7_valuelist.get(i).get(j);			
 				}
-			}			
+			}		
+			System.out.println("Total constraints as in PRISM model formualtion eq. (7):   " + c7_num + "             " + dateFormat.format(new Date()));
 			
 			
 			// Constraints 8-------------------------------------------------
@@ -1603,7 +1691,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					c8_index[i][j] = c8_indexlist.get(i).get(j);
 					c8_value[i][j] = c8_valuelist.get(i).get(j);			
 				}
-			}				
+			}		
+			System.out.println("Total constraints as in PRISM model formualtion eq. (8):   " + c8_num + "             " + dateFormat.format(new Date()));
 			
 			
 			// Constraints 9-------------------------------------------------
@@ -1706,7 +1795,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					c9_index[i][j] = c9_indexlist.get(i).get(j);
 					c9_value[i][j] = c9_valuelist.get(i).get(j);			
 				}
-			}			
+			}	
+			System.out.println("Total constraints as in PRISM model formualtion eq. (9):   " + c9_num + "             " + dateFormat.format(new Date()));
 			
 			
 			// Constraints 10-------------------------------------------------
@@ -1779,7 +1869,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					c10_index[i][j] = c10_indexlist.get(i).get(j);
 					c10_value[i][j] = c10_valuelist.get(i).get(j);			
 				}
-			}			
+			}	
+			System.out.println("Total constraints as in PRISM model formualtion eq. (10):   " + c10_num + "             " + dateFormat.format(new Date()));
 			
 			
 			// Constraints 11-------------------------------------------------
@@ -1846,6 +1937,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					c11_value[i][j] = c11_valuelist.get(i).get(j);			
 				}
 			}
+			System.out.println("Total constraints as in PRISM model formualtion eq. (11):   " + c11_num + "             " + dateFormat.format(new Date()));
 			
 			
 			// Constraints 12-------------------------------------------------
@@ -2073,7 +2165,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					c12_index[i][j] = c12_indexlist.get(i).get(j);
 					c12_value[i][j] = c12_valuelist.get(i).get(j);			
 				}
-			}				
+			}		
+			System.out.println("Total constraints as in PRISM model formualtion eq. (12):   " + c12_num + "             " + dateFormat.format(new Date()));
 			
 			
 			// Constraints 13-------------------------------------------------
@@ -2202,7 +2295,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					c13_index[i][j] = c13_indexlist.get(i).get(j);
 					c13_value[i][j] = c13_valuelist.get(i).get(j);			
 				}
-			}						
+			}		
+			System.out.println("Total constraints as in PRISM model formualtion eq. (13):   " + c13_num + "             " + dateFormat.format(new Date()));
 
 			
 			// Constraints 14-------------------------------------------------
@@ -2378,7 +2472,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					c14_index[i][j] = c14_indexlist.get(i).get(j);
 					c14_value[i][j] = c14_valuelist.get(i).get(j);			
 				}
-			}			
+			}		
+			System.out.println("Total constraints as in PRISM model formualtion eq. (14):   " + c14_num + "             " + dateFormat.format(new Date()));
 			
 			
 			// Constraints 15------------------------------------------------- for y(j) and z(k) and v(n)
@@ -3119,14 +3214,14 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					c15_value[i][j] = c15_valuelist.get(i).get(j);			
 				}
 			}				
+			System.out.println("Total constraints as in PRISM model formualtion eq. (15):   " + c15_num + "             " + dateFormat.format(new Date()));
+			System.out.println();
+			
 			
 			
 			
 			// Solve problem-------------------------------------------------	
-			
 
-			
-			
 			
 //			// Set constraints set name: Notice THIS WILL EXTREMELY SLOW THE SOLVING PROCESS (recommend for debugging only)
 //			int indexOfC2 = c2_num;
@@ -3220,7 +3315,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 //																		// page 152, 154: https://www.ibm.com/support/knowledgecenter/SSSA5P_12.7.0/ilog.odms.studio.help/pdf/usrcplex.pdf
 //																		// https://www.ibm.com/support/knowledgecenter/en/SS9UKU_12.5.0/com.ibm.cplex.zos.help/UsrMan/topics/cont_optim/simplex/20_num_difficulty.html
 				
-				//Add table info
+				// Add table info
 				data[row][2] = cplex.getNcols();
 				data[row][3] = cplex.getNrows();
 				data[row][4] = "solving";
@@ -3230,6 +3325,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				if (read.get_export_problem()) cplex.exportModel(problem_file[row].getAbsolutePath());
 				long time_start = System.currentTimeMillis();		//measure time before solving
 				if (cplex.solve()) {
+					// Add table info
+					data[row][4] = "writing";
+					model.fireTableDataChanged();
+					
+					
 					long time_end = System.currentTimeMillis();		//measure time after solving
 					if (read.get_export_solution()) cplex.writeSolution(solution_file[row].getAbsolutePath());
 

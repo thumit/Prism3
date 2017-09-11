@@ -51,7 +51,7 @@ import prismConvenienceClass.RequestFocusListener;
 import prismConvenienceClass.StringHandle;
 import prismConvenienceClass.WindowAppearanceHandle;
 import prismDatabase.Panel_DatabaseManagement;
-import prismProject.Panel_YieldProject;
+import prismProject.Panel_Project;
 
 @SuppressWarnings("serial")
 public class PrismMain extends JFrame {
@@ -476,7 +476,7 @@ public class PrismMain extends JFrame {
 			
 		// Note: visible first for the JIframe to be selected, pack at the end would be fail for JIframe to be selected (PrismMain.mainFrameReturn().getSelectedFrame = null)
 		ProjectInternalFrame.setVisible(true); // show internal frame	
-		Panel_YieldProject YieldProjectPanel = new Panel_YieldProject(currentProject); // create new panel
+		Panel_Project YieldProjectPanel = new Panel_Project(currentProject); // create new panel
 		ProjectInternalFrame.add(YieldProjectPanel, BorderLayout.CENTER); // add panel
 //		ProjectInternalFrame.pack(); // set internal frame to size of contents
 		

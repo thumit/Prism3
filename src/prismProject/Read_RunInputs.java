@@ -298,7 +298,6 @@ public class Read_RunInputs {
 	public List<String> get_model_strata() {
 		List<String> modeled_strata = new ArrayList<String>();
 		for (int i = 0; i < MO_totalRows; i++) {		
-//			modeled_strata.add(MO_value[i][0]);	//1st column contains the full name with 6 layers letters
 			String combined_name = MO_value[i][1] + MO_value[i][2] + MO_value[i][3] + MO_value[i][4] + MO_value[i][5] + MO_value[i][6];
 			modeled_strata.add(combined_name);
 		}

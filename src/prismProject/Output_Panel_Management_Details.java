@@ -723,7 +723,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 			JButton btn_GetResult = new JButton();
 			btn_GetResult.setFont(new Font(null, Font.BOLD, 14));
 //			btn_GetResult.setText("Get Result");
-			btn_GetResult.setToolTipText("Update fly_value");
+			btn_GetResult.setToolTipText("Update fly_value & auto save");
 			btn_GetResult.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_solve.png"));
 			btn_GetResult.setContentAreaFilled(false);
 			btn_GetResult.addMouseListener(new MouseAdapter() {
@@ -1240,36 +1240,62 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 			// Get Result
 			btn_GetResult.addActionListener(new ActionListener() {
 				@Override
-				public void actionPerformed(ActionEvent actionEvent) {						
-					for (int i = 0; i < data9.length; i++) {	// Loop each row of the fly constraints table & get result for only the constraints with null value
-						if (data9[i][12] == null) {
-							double multiplier = (data9[i][3] != null) ?  (double) data9[i][3] : 0;	//if multiplier = null --> 0
-							String current_parameter_index = (String) data9[i][8];
-							String current_static_identifiers = (String) data9[i][9];
-							String current_dynamic_identifiers = (String) data9[i][10];
-													
-							List<List<String>> static_identifiers = get_static_identifiers_in_row(current_static_identifiers);
-							List<List<String>> dynamic_identifiers = get_dynamic_identifiers_in_row(current_dynamic_identifiers);
-							List<String> dynamic_dentifiers_column_indexes = get_dynamic_dentifiers_column_indexes_in_row(current_dynamic_identifiers);
-							List<String> parameters_indexes_list = get_parameters_indexes_list(current_parameter_index);
-													
-							// Process all the variables in output05 and use static_identifiers to trim to get the var_name_list & var_value_list
-							List<String> var_name_list = new ArrayList<String>(); 
-							List<Double> var_value_list = new ArrayList<Double>();						
-							for (int row = 0; row < data.length; row++) {
-								String var_name = String.valueOf(data[row][1]);
-								double var_value = Double.valueOf(String.valueOf(data[row][2]));
-								if (are_all_static_identifiers_matched(var_name, static_identifiers)) {
-									var_name_list.add(var_name);
-									var_value_list.add(var_value);
-								}	
-							}		
-													
-							// Now get the sum result and update the GUI table
-							data9[i][12] = get_results(read_database, var_name_list, var_value_list, multiplier, parameters_indexes_list, dynamic_dentifiers_column_indexes, dynamic_identifiers);
-							model9.fireTableDataChanged();
+				public void actionPerformed(ActionEvent actionEvent) {		
+					Thread thread_get_result = new Thread() {
+						public void run() {
+							btn_NewSingle.setVisible(false);
+							btn_New_Multiple.setVisible(false);
+							btn_Edit.setVisible(false);
+							btn_Delete.setVisible(false);
+							btn_Sort.setVisible(false);
+							btn_GetResult.setVisible(false);
+							btn_Save.setVisible(false);
+							
+							for (int i = 0; i < data9.length; i++) {	// Loop each row of the fly constraints table & get result for only the constraints with null value
+								if (data9[i][12] == null) {	
+									double multiplier = (data9[i][3] != null) ?  (double) data9[i][3] : 0;	//if multiplier = null --> 0
+									String current_parameter_index = (String) data9[i][8];
+									String current_static_identifiers = (String) data9[i][9];
+									String current_dynamic_identifiers = (String) data9[i][10];
+															
+									List<List<String>> static_identifiers = new ArrayList<>(get_static_identifiers_in_row(current_static_identifiers));
+									List<List<String>> dynamic_identifiers = new ArrayList<>(get_dynamic_identifiers_in_row(current_dynamic_identifiers));
+									List<String> dynamic_dentifiers_column_indexes = new ArrayList<>(get_dynamic_dentifiers_column_indexes_in_row(current_dynamic_identifiers));
+									List<String> parameters_indexes_list = new ArrayList<String>(get_parameters_indexes_list(current_parameter_index));
+															
+									// Process all the variables in output05 and use static_identifiers to trim to get the var_name_list & var_value_list
+									List<String> var_name_list = new ArrayList<String>(); 
+									List<Double> var_value_list = new ArrayList<Double>();						
+									for (int row = 0; row < data.length; row++) {
+										String var_name = String.valueOf(data[row][1]);
+										double var_value = Double.valueOf(String.valueOf(data[row][2]));
+										if (are_all_static_identifiers_matched(var_name, static_identifiers)) {
+											var_name_list.add(var_name);
+											var_value_list.add(var_value);
+										}	
+									}		
+											
+									// Get the sum result and update the GUI table
+									data9[i][12] = new Querry_Optimal_Solution().get_results(read_database, var_name_list, var_value_list, multiplier, parameters_indexes_list, dynamic_dentifiers_column_indexes, dynamic_identifiers);
+									table9.scrollRectToVisible(new Rectangle(table9.getCellRect(table9.convertRowIndexToView(i), 0, true)));
+									
+									// Get everything show up nicely
+									PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());	
+								}
+							}
+//							model9.fireTableDataChanged();	// Fire data changes
+							create_file_input_05_fly_constraints();		// Save changes after update fly_value						
+							btn_NewSingle.setVisible(true);
+							btn_New_Multiple.setVisible(true);
+							btn_Edit.setVisible(true);
+							btn_Delete.setVisible(true);
+							btn_Sort.setVisible(true);
+							btn_GetResult.setVisible(true);
+							btn_Save.setVisible(true);
+							this.interrupt();
 						}
-					}
+					};					
+					thread_get_result.start();
 				}
 			});		
 			
@@ -1542,597 +1568,579 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 	
 	
 	
-	
-	
-	
-	public double get_results(Read_Database read_database, List<String> var_name_list, List<Double> var_value_list,			// This var_name_list is the list after trim by static_identifiers already
-			double multiplier, List<String> parameters_indexes_list, List<String> dynamic_dentifiers_column_indexes, List<List<String>> dynamic_identifiers) {		
+	private class Querry_Optimal_Solution {
 		
-		double sum_all = 0;
-		
-		
-
-		
-		//Database Info
-		Object[][][] yield_tables_values = read_database.get_yield_tables_values();
-		Object[] yield_tables_names = read_database.get_yield_tables_names();								
-		
-		
-		
-		// Read input files to retrieve values later
-		Read_RunInputs read = new Read_RunInputs();
-		read.read_general_inputs(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_01_general_inputs.txt"));
-		read.read_model_strata(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_03_model_strata.txt"));
-		read.read_covertype_conversion_clearcut(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_04_covertype_conversion_clearcut.txt"));
-		read.read_covertype_conversion_replacing(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_05_covertype_conversion_replacing.txt"));
-		read.read_natural_disturbances_replacing(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_07_natural_disturbances_replacing.txt"));
-		read.read_management_cost(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_08_management_cost.txt"));
-		
-
-		
-		
-		// Get info: input_03_modeled_strata
-		List<String> model_strata, model_strata_without_sizeclass_and_covertype = new ArrayList<String>();
-		model_strata = read.get_model_strata();
-		model_strata_without_sizeclass_and_covertype = read.get_model_strata_without_sizeclass_and_covertype(); 
-					
-		// Get Info: input_04_covertype_conversion_clearcut
-		List<String> covertype_conversions, covertype_conversions_and_existing_rotation_ages, covertype_conversions_and_regeneration_rotation_ages = new ArrayList<String>();
-		covertype_conversions = read.get_covertype_conversions();
-		covertype_conversions_and_existing_rotation_ages = read.get_covertype_conversions_and_existing_rotation_ages();	
-		covertype_conversions_and_regeneration_rotation_ages = read.get_covertype_conversions_and_regeneration_rotation_ages();
-
-		// Get Info: input_05_covertype_conversion_replacing
-		double[] rdProportion = read.getRDProportion(); 		
-		
-		// Get Info: input_07_natural_disturbances_replacing
-		double[][] SRD_percent = read.getSRDProportion();		
-		
-		// Get info: input_08_management_cost
-		List<String> cost_condition_list = read.get_cost_condition_list(); 
-	
-
-		
-		
-
-
-		
-		
-		// Set up problem-------------------------------------------------			
-		List<List<String>> allLayers =  read_database.get_allLayers();	
-		List<String> layer1 = allLayers.get(0);
-		List<String> layer2 = allLayers.get(1);
-		List<String> layer3 = allLayers.get(2);
-		List<String> layer4 = allLayers.get(3);
-		List<String> layer5 = allLayers.get(4);
-		List<String> layer6 = allLayers.get(5);
-					
-		
-		
-		double annualDiscountRate = read.get_discount_rate() / 100;
-		int SRDage;
-		
-
-		
-		
-		
-	
-		
-
-		
-		
-		//Get the 2 parameter V(s1,s2,s3,s4,s5,s6) and A(s1,s2,s3,s4,s5,s6)
-		String[][] Input2_value = read.get_MO_Values();	
-		double[][][][][][] StrataArea = new double[layer1.size()][layer2.size()][layer3.size()][layer4.size()][layer5.size()][layer6.size()];
-		int[][][][][][] StartingAge = new int[layer1.size()][layer2.size()][layer3.size()][layer4.size()][layer5.size()][layer6.size()];			
-		
-		
-		
-		for (String strata: model_strata) {
-			int s1 = layer1.indexOf(strata.substring(0,1));
-			int s2 = layer2.indexOf(strata.substring(1,2));
-			int s3 = layer3.indexOf(strata.substring(2,3));
-			int s4 = layer4.indexOf(strata.substring(3,4));
-			int s5 = layer5.indexOf(strata.substring(4,5));
-			int s6 = layer6.indexOf(strata.substring(5,6));
-			String strataName = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4) + layer5.get(s5) + layer6.get(s6);
+		private double get_results(Read_Database read_database, List<String> var_name_list, List<Double> var_value_list,			// This var_name_list is the list after trim by static_identifiers already
+				double multiplier, List<String> parameters_indexes_list, List<String> dynamic_dentifiers_column_indexes, List<List<String>> dynamic_identifiers) {		
 			
-			//Loop through all modeled_strata to find if the names matched and get the total area and age class
-			for (int i = 0; i < read.get_MO_TotalRows(); i++) {			
-				if (Input2_value[i][0].equals(strataName)) {
-					StrataArea[s1][s2][s3][s4][s5][s6] = Double.parseDouble(Input2_value[i][7]);		//area
-					
-					if (Input2_value[i][read.get_MO_TotalColumns() - 2].toString().equals("null")) {
-						StartingAge[s1][s2][s3][s4][s5][s6] = 1;		//Assume age class = 1 if not found any yield table for this existing strata
-					} else {
-						StartingAge[s1][s2][s3][s4][s5][s6] = Integer.parseInt(Input2_value[i][read.get_MO_TotalColumns() - 2]);	//age class
-					}										
-				}	
-			}	
-		}						
-		
-							
-		
-
-		// Get the replacing disturbances %		
-		double[][] rdPercent = new double[layer5.size()][layer5.size()];
-		int item_Count = 0;
-		for (int s5 = 0; s5 < layer5.size(); s5++) {
-			for (int ss5 = 0; ss5 < layer5.size(); ss5++) {
-				rdPercent[s5][ss5] = rdProportion[item_Count];
-				item_Count++;	
-			}
-		}
-		
-
-		
-		
-		// CREATE OBJECTIVE FUNCTION-------------------------------------------------
-		// CREATE OBJECTIVE FUNCTION-------------------------------------------------
-		// CREATE OBJECTIVE FUNCTION-------------------------------------------------
-				
-		// Removed
-
-		// CREATE CONSTRAINTS-------------------------------------------------
-		// CREATE CONSTRAINTS-------------------------------------------------
-		// CREATE CONSTRAINTS-------------------------------------------------
-		
-				
-		
-		// Constraints 15-------------------------------------------------	
-		
+			double sum_all = 0;
 			
-		// Loop all variables that were trim by the static filter already: then add to sum_all
-		for (String var_name: var_name_list) {
-			int current_var_index = var_name_list.indexOf(var_name);	// the index of the variable that is processing
-					
-			
+						
+			//Database Info
+			Object[][][] yield_tables_values = read_database.get_yield_tables_values();
+			Object[] yield_tables_names = read_database.get_yield_tables_names();								
 								
-			
-			// Add user_defined_variables and parameters------------------------------------
-			String method = Get_Variable_Information.get_method(var_name) + "_" + Get_Variable_Information.get_forest_status(var_name);
-			int period = Get_Variable_Information.get_period(var_name);
-			int rotation_period = Get_Variable_Information.get_rotation_period(var_name);			
-			String strata = 
-					Get_Variable_Information.get_layer1(var_name) +
-					Get_Variable_Information.get_layer2(var_name) +
-					Get_Variable_Information.get_layer3(var_name) +
-					Get_Variable_Information.get_layer4(var_name) +
-					Get_Variable_Information.get_layer5(var_name) +
-					Get_Variable_Information.get_layer6(var_name);
-			
-			
-					
-			
-			//Add xNGe
-			if (method.equals("NG_E")) {	
-				int s1 = layer1.indexOf(strata.substring(0,1));
-				int s2 = layer2.indexOf(strata.substring(1,2));
-				int s3 = layer3.indexOf(strata.substring(2,3));
-				int s4 = layer4.indexOf(strata.substring(3,4));
-				int s5 = layer5.indexOf(strata.substring(4,5));
-				int s6 = layer6.indexOf(strata.substring(5,6));	
-				int t = period;
-				//Find all parameter match the t and add them all to parameter
-				/*	Table Name = s5 + s6 convert then + method + timingChoice
-				 * Table column indexes for the parameters is identified by parameters_indexes_list
-				 * dynamic identifiers are identified by "all_dynamicIdentifiers_columnIndexes" & "all_dynamicIdentifiers"
-				 * Table row index = t - 1  
-				 */		
-				double currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
-						1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint	
-				int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
-				
-				
-				
-				List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
-				List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
-				SRDage = StartingAge[s1][s2][s3][s4][s5][s6] + t - 1; 
-				if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
-				for (int c = 0; c < layer5.size(); c++) {
-					if (rdPercent[s5][c] / 100 > 0) {
-						coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(c) + " " + "disturbance");
-						coversion_cost_after_disturbance_value_list.add(SRD_percent[s5][SRDage] / 100 * rdPercent[s5][c] / 100);
-					}														
-				}
-				
-																		
-												
-				double para_value = Get_Parameter_Information.get_total_value(
-						read_database, var_name, rotation_age,
-						yield_tables_names, yield_tables_values, parameters_indexes_list,
-						dynamic_dentifiers_column_indexes, dynamic_identifiers,
-						cost_condition_list,
-						coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
-				para_value = para_value * currentDiscountValue * multiplier;
-
-				//Add to sum_all
-				sum_all = sum_all + para_value * var_value_list.get(current_var_index);
-			}	
-
-					
-			//Add xPBe[s1][s2][s3][s4][s5][s6][i][t]			
-			if (method.equals("PB_E")) {		
-				int s1 = layer1.indexOf(strata.substring(0,1));
-				int s2 = layer2.indexOf(strata.substring(1,2));
-				int s3 = layer3.indexOf(strata.substring(2,3));
-				int s4 = layer4.indexOf(strata.substring(3,4));
-				int s5 = layer5.indexOf(strata.substring(4,5));
-				int s6 = layer6.indexOf(strata.substring(5,6));	
-				int t = period;
-				//Find all parameter match the t and add them all to parameter
-				double currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
-						1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint		
-				int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
-				
-				
-				
-				List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
-				List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
-				SRDage = StartingAge[s1][s2][s3][s4][s5][s6] + t - 1; 
-				if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
-				for (int c = 0; c < layer5.size(); c++) {
-					if (rdPercent[s5][c] / 100 > 0) {
-						coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(c) + " " + "disturbance");
-						coversion_cost_after_disturbance_value_list.add(SRD_percent[s5][SRDage] / 100 * rdPercent[s5][c] / 100);
-					}														
-				}
-				
-				
-								
-				double para_value = Get_Parameter_Information.get_total_value(
-						read_database, var_name, rotation_age,
-						yield_tables_names, yield_tables_values, parameters_indexes_list,
-						dynamic_dentifiers_column_indexes, dynamic_identifiers,
-						cost_condition_list,
-						coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
-				para_value = para_value * currentDiscountValue * multiplier;
-				
-				//Add to sum_all
-				sum_all = sum_all + para_value * var_value_list.get(current_var_index);	
-			}	
+			// Read input files to retrieve values later
+			Read_RunInputs read = new Read_RunInputs();
+			read.read_general_inputs(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_01_general_inputs.txt"));
+			read.read_model_strata(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_03_model_strata.txt"));
+			read.read_covertype_conversion_clearcut(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_04_covertype_conversion_clearcut.txt"));
+			read.read_covertype_conversion_replacing(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_05_covertype_conversion_replacing.txt"));
+			read.read_natural_disturbances_replacing(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_07_natural_disturbances_replacing.txt"));
+			read.read_management_cost(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_08_management_cost.txt"));
 						
 			
-			//Add xGSe[s1][s2][s3][s4][s5][s6][i][t]			
-			if (method.equals("GS_E")) {		
-				int s1 = layer1.indexOf(strata.substring(0,1));
-				int s2 = layer2.indexOf(strata.substring(1,2));
-				int s3 = layer3.indexOf(strata.substring(2,3));
-				int s4 = layer4.indexOf(strata.substring(3,4));
-				int s5 = layer5.indexOf(strata.substring(4,5));
-				int s6 = layer6.indexOf(strata.substring(5,6));	
-				int t = period;
-				//Find all parameter match the t and add them all to parameter
-				double currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
-						1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint	
-				int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
-				
-				
-				
-				List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
-				List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
-				SRDage = StartingAge[s1][s2][s3][s4][s5][s6] + t - 1; 
-				if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
-				for (int c = 0; c < layer5.size(); c++) {
-					if (rdPercent[s5][c] / 100 > 0) {
-						coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(c) + " " + "disturbance");
-						coversion_cost_after_disturbance_value_list.add(SRD_percent[s5][SRDage] / 100 * rdPercent[s5][c] / 100);
-					}														
-				}
-				
-				
-				
-				double para_value = Get_Parameter_Information.get_total_value(
-						read_database, var_name, rotation_age,
-						yield_tables_names, yield_tables_values, parameters_indexes_list,
-						dynamic_dentifiers_column_indexes, dynamic_identifiers,
-						cost_condition_list,
-						coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
-				para_value = para_value * currentDiscountValue * multiplier;
-				
-				//Add to sum_all
-				sum_all = sum_all + para_value * var_value_list.get(current_var_index);	
-			}														
-
-					
-			//Add xMS[s1][s2][s3][s4][s5][s6][i][t]			
-			if (method.equals("MS_E")) {		
-				int s1 = layer1.indexOf(strata.substring(0,1));
-				int s2 = layer2.indexOf(strata.substring(1,2));
-				int s3 = layer3.indexOf(strata.substring(2,3));
-				int s4 = layer4.indexOf(strata.substring(3,4));
-				int s5 = layer5.indexOf(strata.substring(4,5));
-				int s6 = layer6.indexOf(strata.substring(5,6));	
-				int t = period;
-				//Find all parameter match the t and add them all to parameter
-				double currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
-						1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint		
-				int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
-				
-				
-				
-				
-				List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
-				List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
-				
-				
-				
-				
-				double para_value = Get_Parameter_Information.get_total_value(
-						read_database, var_name, rotation_age,
-						yield_tables_names, yield_tables_values, parameters_indexes_list,
-						dynamic_dentifiers_column_indexes, dynamic_identifiers,
-						cost_condition_list,
-						coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
-				para_value = para_value * currentDiscountValue * multiplier;
-				
-				//Add to sum_all
-				sum_all = sum_all + para_value * var_value_list.get(current_var_index);	
-			}																
-			
-			
-			//Add xBS[s1][s2][s3][s4][s5][s6][i][t]			
-			if (method.equals("BS_E")) {				
-				int s1 = layer1.indexOf(strata.substring(0,1));
-				int s2 = layer2.indexOf(strata.substring(1,2));
-				int s3 = layer3.indexOf(strata.substring(2,3));
-				int s4 = layer4.indexOf(strata.substring(3,4));
-				int s5 = layer5.indexOf(strata.substring(4,5));
-				int s6 = layer6.indexOf(strata.substring(5,6));	
-				int t = period;
-				//Find all parameter match the t and add them all to parameter
-				double currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
-						1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint		
-				int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
-				
-				
-				
-				List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
-				List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
-				
-				
-				
-				double para_value = Get_Parameter_Information.get_total_value(
-						read_database, var_name, rotation_age,
-						yield_tables_names, yield_tables_values, parameters_indexes_list,
-						dynamic_dentifiers_column_indexes, dynamic_identifiers,
-						cost_condition_list,
-						coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
-				para_value = para_value * currentDiscountValue * multiplier;
-				
-				//Add to sum_all
-				sum_all = sum_all + para_value * var_value_list.get(current_var_index);	
-			}							
-							
-			
-			// Add xEAe[s1][s2][s3][s4][s5][s6](tR)(s5R)(i)(t)
-			if (method.equals("EA_E")) {									
-				int s1 = layer1.indexOf(strata.substring(0,1));
-				int s2 = layer2.indexOf(strata.substring(1,2));
-				int s3 = layer3.indexOf(strata.substring(2,3));
-				int s4 = layer4.indexOf(strata.substring(3,4));
-				int s5 = layer5.indexOf(strata.substring(4,5));
-				int s6 = layer6.indexOf(strata.substring(5,6));	
-				int t = period;
-				int tR = rotation_period;
-				int rotation_age = tR + StartingAge[s1][s2][s3][s4][s5][s6] - 1;
-								
-				//Find all parameter match the t and add them all to parameter
-				double currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
-						1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint		
-				
-				
-				
-				
-				List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
-				List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
-				SRDage = StartingAge[s1][s2][s3][s4][s5][s6] + t - 1; 
-				if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
-				for (int s5RR = 0; s5RR < layer5.size(); s5RR++) {
-					if (rdPercent[s5][s5RR] / 100 > 0) {
-						coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(s5RR) + " " + "disturbance");
-						coversion_cost_after_disturbance_value_list.add(SRD_percent[s5][SRDage] / 100 * rdPercent[s5][s5RR] / 100);
-					}														
-				}
-				
-				
-				
-				double para_value = Get_Parameter_Information.get_total_value(
-			    		read_database, var_name, rotation_age,
-						yield_tables_names, yield_tables_values, parameters_indexes_list,
-						dynamic_dentifiers_column_indexes, dynamic_identifiers,
-						cost_condition_list,
-						coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
-				para_value = para_value * currentDiscountValue * multiplier;
-				
-				//Add to sum_all
-				sum_all = sum_all + para_value * var_value_list.get(current_var_index);	
-			}	
-			
-			
-			//Add xEAr[s1][s2][s3][s4][s5][tR][aR][s5R][i][t]
-			if (method.equals("EA_R")) {	
-				int s1 = layer1.indexOf(strata.substring(0,1));
-				int s2 = layer2.indexOf(strata.substring(1,2));
-				int s3 = layer3.indexOf(strata.substring(2,3));
-				int s4 = layer4.indexOf(strata.substring(3,4));	
-				int s5 = layer5.indexOf(strata.substring(4,5));	
-				int t = period;
-				int tR = rotation_period;
-				int aR = Get_Variable_Information.get_rotation_age(var_name);
-				
-				
-							
-				//Find all parameter match the t and add them all to parameter
-				double currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
-						1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint					
-				int rotation_age = aR;
-				
-				
-				
-				
-				List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
-				List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
-				SRDage = aR - tR + t; 
-				if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
-				for (int s5RR = 0; s5RR < layer5.size(); s5RR++) {
-					if (rdPercent[s5][s5RR] / 100 > 0) {
-						coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(s5RR) + " " + "disturbance");
-						coversion_cost_after_disturbance_value_list.add(SRD_percent[s5][SRDage] / 100 * rdPercent[s5][s5RR] / 100);
-					}														
-				}
-				
-				
-				
-				
-				double  para_value = Get_Parameter_Information.get_total_value(
-			    		read_database, var_name, rotation_age,
-						yield_tables_names, yield_tables_values, parameters_indexes_list,
-						dynamic_dentifiers_column_indexes, dynamic_identifiers,
-						cost_condition_list,
-						coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
-				para_value = para_value * currentDiscountValue * multiplier;
-				
-				//Add to sum_all
-				sum_all = sum_all + para_value * var_value_list.get(current_var_index);	
-			}					
-			
-
-			//Add xNGr
-			if (method.equals("NG_R")) {		
-				int s1 = layer1.indexOf(strata.substring(0,1));
-				int s2 = layer2.indexOf(strata.substring(1,2));
-				int s3 = layer3.indexOf(strata.substring(2,3));
-				int s4 = layer4.indexOf(strata.substring(3,4));
-				int s5 = layer5.indexOf(strata.substring(4,5));	
-				int t = period;
-				int a = Get_Variable_Information.get_age(var_name);
-				
-				//Find all parameter match the t and add them all to parameter
-				double currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
-						1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint																	
-				int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
-				
-				
-				
-				List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
-				List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
-				SRDage = a; 
-				if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
-				for (int s5R = 0; s5R < layer5.size(); s5R++) {
-					if (rdPercent[s5][s5R] / 100 > 0) {
-						coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(s5R) + " " + "disturbance");
-						coversion_cost_after_disturbance_value_list.add(SRD_percent[s5][SRDage] / 100 * rdPercent[s5][s5R] / 100);
-					}														
-				}
-				
-				
-				
-				double para_value = Get_Parameter_Information.get_total_value(
-			    		read_database, var_name, rotation_age,
-						yield_tables_names, yield_tables_values, parameters_indexes_list,
-						dynamic_dentifiers_column_indexes, dynamic_identifiers,
-						cost_condition_list,
-						coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
-				para_value = para_value * currentDiscountValue * multiplier;
-				sum_all = sum_all + para_value * var_value_list.get(current_var_index);	
-			}							
-			
-
-			//Add xPBr
-			if (method.equals("PB_R")) {		
-				int s1 = layer1.indexOf(strata.substring(0,1));
-				int s2 = layer2.indexOf(strata.substring(1,2));
-				int s3 = layer3.indexOf(strata.substring(2,3));
-				int s4 = layer4.indexOf(strata.substring(3,4));
-				int s5 = layer5.indexOf(strata.substring(4,5));	
-				int t = period;
-				int a = Get_Variable_Information.get_age(var_name);
-				
-				//Find all parameter match the t and add them all to parameter
-				double currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
-						1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint	
-				int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
-				
-				
-				
-				
-				List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
-				List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
-				SRDage = a; 
-				if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
-				for (int s5R = 0; s5R < layer5.size(); s5R++) {
-					if (rdPercent[s5][s5R] / 100 > 0) {
-						coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(s5R) + " " + "disturbance");
-						coversion_cost_after_disturbance_value_list.add(SRD_percent[s5][SRDage] / 100 * rdPercent[s5][s5R] / 100);
-					}														
-				}
-				
-				
-				
-				
-				double para_value = Get_Parameter_Information.get_total_value(
-			    		read_database, var_name, rotation_age,
-						yield_tables_names, yield_tables_values, parameters_indexes_list,
-						dynamic_dentifiers_column_indexes, dynamic_identifiers,
-						cost_condition_list,
-						coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
-				para_value = para_value * currentDiscountValue * multiplier;
-				
-				//Add to sum_all
-				sum_all = sum_all + para_value * var_value_list.get(current_var_index);
-			}						
-
-			
-			//Add xGSr
-			if (method.equals("GS_R")) {		
-				int s1 = layer1.indexOf(strata.substring(0,1));
-				int s2 = layer2.indexOf(strata.substring(1,2));
-				int s3 = layer3.indexOf(strata.substring(2,3));
-				int s4 = layer4.indexOf(strata.substring(3,4));
-				int s5 = layer5.indexOf(strata.substring(4,5));	
-				int t = period;
-				int a = Get_Variable_Information.get_age(var_name);
-				
-				
-				//Find all parameter match the t and add them all to parameter
-				double currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
-						1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint	
-				int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
-				
-				
-				
-				
-				List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
-				List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
-				SRDage = a; 
-				if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
-				for (int s5R = 0; s5R < layer5.size(); s5R++) {
-					if (rdPercent[s5][s5R] / 100 > 0) {
-						coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(s5R) + " " + "disturbance");
-						coversion_cost_after_disturbance_value_list.add(rdPercent[s5][s5R] / 100);
-					}														
-				}
-				
-				
-				
-				
-				double para_value = Get_Parameter_Information.get_total_value(
-			    		read_database, var_name, rotation_age,
-						yield_tables_names, yield_tables_values, parameters_indexes_list,
-						dynamic_dentifiers_column_indexes, dynamic_identifiers,
-						cost_condition_list,
-						coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
-				para_value = para_value * currentDiscountValue * multiplier;
-				
-				//Add to sum_all
-				sum_all = sum_all + para_value * var_value_list.get(current_var_index);
-			}		
-		}		
-		
-		return sum_all;	
-	}			
+			// Get info: input_03_modeled_strata
+			List<String> model_strata, model_strata_without_sizeclass_and_covertype = new ArrayList<String>();
+			model_strata = read.get_model_strata();
+			model_strata_without_sizeclass_and_covertype = read.get_model_strata_without_sizeclass_and_covertype(); 
+						
+			// Get Info: input_04_covertype_conversion_clearcut
+			List<String> covertype_conversions, covertype_conversions_and_existing_rotation_ages, covertype_conversions_and_regeneration_rotation_ages = new ArrayList<String>();
+			covertype_conversions = read.get_covertype_conversions();
+			covertype_conversions_and_existing_rotation_ages = read.get_covertype_conversions_and_existing_rotation_ages();	
+			covertype_conversions_and_regeneration_rotation_ages = read.get_covertype_conversions_and_regeneration_rotation_ages();
 	
+			// Get Info: input_05_covertype_conversion_replacing
+			double[] rdProportion = read.getRDProportion(); 		
+			
+			// Get Info: input_07_natural_disturbances_replacing
+			double[][] SRD_percent = read.getSRDProportion();		
+			
+			// Get info: input_08_management_cost
+			List<String> cost_condition_list = read.get_cost_condition_list(); 
+		
+	
+			
+			
+	
+	
+			
+			
+			// Set up problem-------------------------------------------------			
+			List<List<String>> allLayers =  read_database.get_allLayers();	
+			List<String> layer1 = allLayers.get(0);
+			List<String> layer2 = allLayers.get(1);
+			List<String> layer3 = allLayers.get(2);
+			List<String> layer4 = allLayers.get(3);
+			List<String> layer5 = allLayers.get(4);
+			List<String> layer6 = allLayers.get(5);
+						
+			
+			
+			double annualDiscountRate = read.get_discount_rate() / 100;
+			int SRDage;
+			
+	
+
+			//Get the 2 parameter V(s1,s2,s3,s4,s5,s6) and A(s1,s2,s3,s4,s5,s6)
+			String[][] Input2_value = read.get_MO_Values();	
+			double[][][][][][] StrataArea = new double[layer1.size()][layer2.size()][layer3.size()][layer4.size()][layer5.size()][layer6.size()];
+			int[][][][][][] StartingAge = new int[layer1.size()][layer2.size()][layer3.size()][layer4.size()][layer5.size()][layer6.size()];			
+			
+			
+			
+			for (String strata: model_strata) {
+				int s1 = layer1.indexOf(strata.substring(0,1));
+				int s2 = layer2.indexOf(strata.substring(1,2));
+				int s3 = layer3.indexOf(strata.substring(2,3));
+				int s4 = layer4.indexOf(strata.substring(3,4));
+				int s5 = layer5.indexOf(strata.substring(4,5));
+				int s6 = layer6.indexOf(strata.substring(5,6));
+				
+				//Loop through all modeled_strata to find if the names matched and get the total area and age class
+				for (int i = 0; i < read.get_MO_TotalRows(); i++) {			
+					if (Input2_value[i][0].equals(strata)) {
+						StrataArea[s1][s2][s3][s4][s5][s6] = Double.parseDouble(Input2_value[i][7]);		//area
+						
+						if (Input2_value[i][read.get_MO_TotalColumns() - 2].toString().equals("null")) {
+							StartingAge[s1][s2][s3][s4][s5][s6] = 1;		//Assume age class = 1 if not found any yield table for this existing strata
+						} else {
+							StartingAge[s1][s2][s3][s4][s5][s6] = Integer.parseInt(Input2_value[i][read.get_MO_TotalColumns() - 2]);	//age class
+						}										
+					}	
+				}	
+			}						
+			
+			
+	
+			// Get the replacing disturbances %		
+			double[][] rdPercent = new double[layer5.size()][layer5.size()];
+			int item_Count = 0;
+			for (int s5 = 0; s5 < layer5.size(); s5++) {
+				for (int ss5 = 0; ss5 < layer5.size(); ss5++) {
+					rdPercent[s5][ss5] = rdProportion[item_Count];
+					item_Count++;	
+				}
+			}
+			
+	
+			
+			
+			// CREATE OBJECTIVE FUNCTION-------------------------------------------------
+			// CREATE OBJECTIVE FUNCTION-------------------------------------------------
+			// CREATE OBJECTIVE FUNCTION-------------------------------------------------
+					
+			// Removed
+	
+			// CREATE CONSTRAINTS-------------------------------------------------
+			// CREATE CONSTRAINTS-------------------------------------------------
+			// CREATE CONSTRAINTS-------------------------------------------------
+			
+					
+			
+			// Constraints 15-------------------------------------------------	
+			// Loop all variables that were trim by the static filter already: then add to sum_all
+			for (String var_name: var_name_list) {
+				int current_var_index = var_name_list.indexOf(var_name);	// the index of the variable that is processing
+						
+				
+									
+				
+				// Add user_defined_variables and parameters------------------------------------
+				String method = Get_Variable_Information.get_method(var_name) + "_" + Get_Variable_Information.get_forest_status(var_name);
+				int period = Get_Variable_Information.get_period(var_name);
+				int rotation_period = Get_Variable_Information.get_rotation_period(var_name);			
+				String strata = 
+						Get_Variable_Information.get_layer1(var_name) +
+						Get_Variable_Information.get_layer2(var_name) +
+						Get_Variable_Information.get_layer3(var_name) +
+						Get_Variable_Information.get_layer4(var_name) +
+						Get_Variable_Information.get_layer5(var_name) +
+						Get_Variable_Information.get_layer6(var_name);
+				
+				
+						
+				
+				//Add xNGe
+				if (method.equals("NG_E")) {	
+					int s1 = layer1.indexOf(strata.substring(0,1));
+					int s2 = layer2.indexOf(strata.substring(1,2));
+					int s3 = layer3.indexOf(strata.substring(2,3));
+					int s4 = layer4.indexOf(strata.substring(3,4));
+					int s5 = layer5.indexOf(strata.substring(4,5));
+					int s6 = layer6.indexOf(strata.substring(5,6));	
+					int t = period;
+					//Find all parameter match the t and add them all to parameter
+					/*	Table Name = s5 + s6 convert then + method + timingChoice
+					 * Table column indexes for the parameters is identified by parameters_indexes_list
+					 * dynamic identifiers are identified by "all_dynamicIdentifiers_columnIndexes" & "all_dynamicIdentifiers"
+					 * Table row index = t - 1  
+					 */		
+					double currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
+							1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint	
+					int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
+					
+					
+					
+					List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
+					List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
+					SRDage = StartingAge[s1][s2][s3][s4][s5][s6] + t - 1; 
+					if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
+					for (int c = 0; c < layer5.size(); c++) {
+						if (rdPercent[s5][c] / 100 > 0) {
+							coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(c) + " " + "disturbance");
+							coversion_cost_after_disturbance_value_list.add(SRD_percent[s5][SRDage] / 100 * rdPercent[s5][c] / 100);
+						}														
+					}
+					
+																			
+													
+					double para_value = Get_Parameter_Information.get_total_value(
+							read_database, var_name, rotation_age,
+							yield_tables_names, yield_tables_values, parameters_indexes_list,
+							dynamic_dentifiers_column_indexes, dynamic_identifiers,
+							cost_condition_list,
+							coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+					para_value = para_value * currentDiscountValue * multiplier;
+	
+					//Add to sum_all
+					sum_all = sum_all + para_value * var_value_list.get(current_var_index);
+				}	
+	
+						
+				//Add xPBe[s1][s2][s3][s4][s5][s6][i][t]			
+				if (method.equals("PB_E")) {		
+					int s1 = layer1.indexOf(strata.substring(0,1));
+					int s2 = layer2.indexOf(strata.substring(1,2));
+					int s3 = layer3.indexOf(strata.substring(2,3));
+					int s4 = layer4.indexOf(strata.substring(3,4));
+					int s5 = layer5.indexOf(strata.substring(4,5));
+					int s6 = layer6.indexOf(strata.substring(5,6));	
+					int t = period;
+					//Find all parameter match the t and add them all to parameter
+					double currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
+							1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint		
+					int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
+					
+					
+					
+					List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
+					List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
+					SRDage = StartingAge[s1][s2][s3][s4][s5][s6] + t - 1; 
+					if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
+					for (int c = 0; c < layer5.size(); c++) {
+						if (rdPercent[s5][c] / 100 > 0) {
+							coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(c) + " " + "disturbance");
+							coversion_cost_after_disturbance_value_list.add(SRD_percent[s5][SRDage] / 100 * rdPercent[s5][c] / 100);
+						}														
+					}
+					
+					
+									
+					double para_value = Get_Parameter_Information.get_total_value(
+							read_database, var_name, rotation_age,
+							yield_tables_names, yield_tables_values, parameters_indexes_list,
+							dynamic_dentifiers_column_indexes, dynamic_identifiers,
+							cost_condition_list,
+							coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+					para_value = para_value * currentDiscountValue * multiplier;
+					
+					//Add to sum_all
+					sum_all = sum_all + para_value * var_value_list.get(current_var_index);	
+				}	
+							
+				
+				//Add xGSe[s1][s2][s3][s4][s5][s6][i][t]			
+				if (method.equals("GS_E")) {		
+					int s1 = layer1.indexOf(strata.substring(0,1));
+					int s2 = layer2.indexOf(strata.substring(1,2));
+					int s3 = layer3.indexOf(strata.substring(2,3));
+					int s4 = layer4.indexOf(strata.substring(3,4));
+					int s5 = layer5.indexOf(strata.substring(4,5));
+					int s6 = layer6.indexOf(strata.substring(5,6));	
+					int t = period;
+					//Find all parameter match the t and add them all to parameter
+					double currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
+							1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint	
+					int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
+					
+					
+					
+					List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
+					List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
+					SRDage = StartingAge[s1][s2][s3][s4][s5][s6] + t - 1; 
+					if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
+					for (int c = 0; c < layer5.size(); c++) {
+						if (rdPercent[s5][c] / 100 > 0) {
+							coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(c) + " " + "disturbance");
+							coversion_cost_after_disturbance_value_list.add(SRD_percent[s5][SRDage] / 100 * rdPercent[s5][c] / 100);
+						}														
+					}
+					
+					
+					
+					double para_value = Get_Parameter_Information.get_total_value(
+							read_database, var_name, rotation_age,
+							yield_tables_names, yield_tables_values, parameters_indexes_list,
+							dynamic_dentifiers_column_indexes, dynamic_identifiers,
+							cost_condition_list,
+							coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+					para_value = para_value * currentDiscountValue * multiplier;
+					
+					//Add to sum_all
+					sum_all = sum_all + para_value * var_value_list.get(current_var_index);	
+				}														
+	
+						
+				//Add xMS[s1][s2][s3][s4][s5][s6][i][t]			
+				if (method.equals("MS_E")) {		
+					int s1 = layer1.indexOf(strata.substring(0,1));
+					int s2 = layer2.indexOf(strata.substring(1,2));
+					int s3 = layer3.indexOf(strata.substring(2,3));
+					int s4 = layer4.indexOf(strata.substring(3,4));
+					int s5 = layer5.indexOf(strata.substring(4,5));
+					int s6 = layer6.indexOf(strata.substring(5,6));	
+					int t = period;
+					//Find all parameter match the t and add them all to parameter
+					double currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
+							1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint		
+					int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
+					
+					
+					
+					
+					List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
+					List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
+					
+					
+					
+					
+					double para_value = Get_Parameter_Information.get_total_value(
+							read_database, var_name, rotation_age,
+							yield_tables_names, yield_tables_values, parameters_indexes_list,
+							dynamic_dentifiers_column_indexes, dynamic_identifiers,
+							cost_condition_list,
+							coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+					para_value = para_value * currentDiscountValue * multiplier;
+					
+					//Add to sum_all
+					sum_all = sum_all + para_value * var_value_list.get(current_var_index);	
+				}																
+				
+				
+				//Add xBS[s1][s2][s3][s4][s5][s6][i][t]			
+				if (method.equals("BS_E")) {				
+					int s1 = layer1.indexOf(strata.substring(0,1));
+					int s2 = layer2.indexOf(strata.substring(1,2));
+					int s3 = layer3.indexOf(strata.substring(2,3));
+					int s4 = layer4.indexOf(strata.substring(3,4));
+					int s5 = layer5.indexOf(strata.substring(4,5));
+					int s6 = layer6.indexOf(strata.substring(5,6));	
+					int t = period;
+					//Find all parameter match the t and add them all to parameter
+					double currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
+							1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint		
+					int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
+					
+					
+					
+					List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
+					List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
+					
+					
+					
+					double para_value = Get_Parameter_Information.get_total_value(
+							read_database, var_name, rotation_age,
+							yield_tables_names, yield_tables_values, parameters_indexes_list,
+							dynamic_dentifiers_column_indexes, dynamic_identifiers,
+							cost_condition_list,
+							coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+					para_value = para_value * currentDiscountValue * multiplier;
+					
+					//Add to sum_all
+					sum_all = sum_all + para_value * var_value_list.get(current_var_index);	
+				}							
+								
+				
+				// Add xEAe[s1][s2][s3][s4][s5][s6](tR)(s5R)(i)(t)
+				if (method.equals("EA_E")) {									
+					int s1 = layer1.indexOf(strata.substring(0,1));
+					int s2 = layer2.indexOf(strata.substring(1,2));
+					int s3 = layer3.indexOf(strata.substring(2,3));
+					int s4 = layer4.indexOf(strata.substring(3,4));
+					int s5 = layer5.indexOf(strata.substring(4,5));
+					int s6 = layer6.indexOf(strata.substring(5,6));	
+					int t = period;
+					int tR = rotation_period;
+					int rotation_age = tR + StartingAge[s1][s2][s3][s4][s5][s6] - 1;
+									
+					//Find all parameter match the t and add them all to parameter
+					double currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
+							1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint		
+					
+					
+					
+					
+					List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
+					List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
+					SRDage = StartingAge[s1][s2][s3][s4][s5][s6] + t - 1; 
+					if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
+					for (int s5RR = 0; s5RR < layer5.size(); s5RR++) {
+						if (rdPercent[s5][s5RR] / 100 > 0) {
+							coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(s5RR) + " " + "disturbance");
+							coversion_cost_after_disturbance_value_list.add(SRD_percent[s5][SRDage] / 100 * rdPercent[s5][s5RR] / 100);
+						}														
+					}
+					
+					
+					
+					double para_value = Get_Parameter_Information.get_total_value(
+				    		read_database, var_name, rotation_age,
+							yield_tables_names, yield_tables_values, parameters_indexes_list,
+							dynamic_dentifiers_column_indexes, dynamic_identifiers,
+							cost_condition_list,
+							coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+					para_value = para_value * currentDiscountValue * multiplier;
+					
+					//Add to sum_all
+					sum_all = sum_all + para_value * var_value_list.get(current_var_index);	
+				}	
+				
+				
+				//Add xEAr[s1][s2][s3][s4][s5][tR][aR][s5R][i][t]
+				if (method.equals("EA_R")) {	
+					int s1 = layer1.indexOf(strata.substring(0,1));
+					int s2 = layer2.indexOf(strata.substring(1,2));
+					int s3 = layer3.indexOf(strata.substring(2,3));
+					int s4 = layer4.indexOf(strata.substring(3,4));	
+					int s5 = layer5.indexOf(strata.substring(4,5));	
+					int t = period;
+					int tR = rotation_period;
+					int aR = Get_Variable_Information.get_rotation_age(var_name);
+					
+					
+								
+					//Find all parameter match the t and add them all to parameter
+					double currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
+							1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint					
+					int rotation_age = aR;
+					
+					
+					
+					
+					List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
+					List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
+					SRDage = aR - tR + t; 
+					if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
+					for (int s5RR = 0; s5RR < layer5.size(); s5RR++) {
+						if (rdPercent[s5][s5RR] / 100 > 0) {
+							coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(s5RR) + " " + "disturbance");
+							coversion_cost_after_disturbance_value_list.add(SRD_percent[s5][SRDage] / 100 * rdPercent[s5][s5RR] / 100);
+						}														
+					}
+					
+					
+					
+					
+					double  para_value = Get_Parameter_Information.get_total_value(
+				    		read_database, var_name, rotation_age,
+							yield_tables_names, yield_tables_values, parameters_indexes_list,
+							dynamic_dentifiers_column_indexes, dynamic_identifiers,
+							cost_condition_list,
+							coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+					para_value = para_value * currentDiscountValue * multiplier;
+					
+					//Add to sum_all
+					sum_all = sum_all + para_value * var_value_list.get(current_var_index);	
+				}					
+				
+	
+				//Add xNGr
+				if (method.equals("NG_R")) {		
+					int s1 = layer1.indexOf(strata.substring(0,1));
+					int s2 = layer2.indexOf(strata.substring(1,2));
+					int s3 = layer3.indexOf(strata.substring(2,3));
+					int s4 = layer4.indexOf(strata.substring(3,4));
+					int s5 = layer5.indexOf(strata.substring(4,5));	
+					int t = period;
+					int a = Get_Variable_Information.get_age(var_name);
+					
+					//Find all parameter match the t and add them all to parameter
+					double currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
+							1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint																	
+					int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
+					
+					
+					
+					List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
+					List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
+					SRDage = a; 
+					if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
+					for (int s5R = 0; s5R < layer5.size(); s5R++) {
+						if (rdPercent[s5][s5R] / 100 > 0) {
+							coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(s5R) + " " + "disturbance");
+							coversion_cost_after_disturbance_value_list.add(SRD_percent[s5][SRDage] / 100 * rdPercent[s5][s5R] / 100);
+						}														
+					}
+					
+					
+					
+					double para_value = Get_Parameter_Information.get_total_value(
+				    		read_database, var_name, rotation_age,
+							yield_tables_names, yield_tables_values, parameters_indexes_list,
+							dynamic_dentifiers_column_indexes, dynamic_identifiers,
+							cost_condition_list,
+							coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+					para_value = para_value * currentDiscountValue * multiplier;
+					sum_all = sum_all + para_value * var_value_list.get(current_var_index);	
+				}							
+				
+	
+				//Add xPBr
+				if (method.equals("PB_R")) {		
+					int s1 = layer1.indexOf(strata.substring(0,1));
+					int s2 = layer2.indexOf(strata.substring(1,2));
+					int s3 = layer3.indexOf(strata.substring(2,3));
+					int s4 = layer4.indexOf(strata.substring(3,4));
+					int s5 = layer5.indexOf(strata.substring(4,5));	
+					int t = period;
+					int a = Get_Variable_Information.get_age(var_name);
+					
+					//Find all parameter match the t and add them all to parameter
+					double currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
+							1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint	
+					int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
+					
+					
+					
+					
+					List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
+					List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
+					SRDage = a; 
+					if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
+					for (int s5R = 0; s5R < layer5.size(); s5R++) {
+						if (rdPercent[s5][s5R] / 100 > 0) {
+							coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(s5R) + " " + "disturbance");
+							coversion_cost_after_disturbance_value_list.add(SRD_percent[s5][SRDage] / 100 * rdPercent[s5][s5R] / 100);
+						}														
+					}
+					
+					
+					
+					
+					double para_value = Get_Parameter_Information.get_total_value(
+				    		read_database, var_name, rotation_age,
+							yield_tables_names, yield_tables_values, parameters_indexes_list,
+							dynamic_dentifiers_column_indexes, dynamic_identifiers,
+							cost_condition_list,
+							coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+					para_value = para_value * currentDiscountValue * multiplier;
+					
+					//Add to sum_all
+					sum_all = sum_all + para_value * var_value_list.get(current_var_index);
+				}						
+	
+				
+				//Add xGSr
+				if (method.equals("GS_R")) {		
+					int s1 = layer1.indexOf(strata.substring(0,1));
+					int s2 = layer2.indexOf(strata.substring(1,2));
+					int s3 = layer3.indexOf(strata.substring(2,3));
+					int s4 = layer4.indexOf(strata.substring(3,4));
+					int s5 = layer5.indexOf(strata.substring(4,5));	
+					int t = period;
+					int a = Get_Variable_Information.get_age(var_name);
+					
+					
+					//Find all parameter match the t and add them all to parameter
+					double currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
+							1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint	
+					int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
+					
+					
+					
+					
+					List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
+					List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
+					SRDage = a; 
+					if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
+					for (int s5R = 0; s5R < layer5.size(); s5R++) {
+						if (rdPercent[s5][s5R] / 100 > 0) {
+							coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(s5R) + " " + "disturbance");
+							coversion_cost_after_disturbance_value_list.add(rdPercent[s5][s5R] / 100);
+						}														
+					}
+					
+					
+					
+					
+					double para_value = Get_Parameter_Information.get_total_value(
+				    		read_database, var_name, rotation_age,
+							yield_tables_names, yield_tables_values, parameters_indexes_list,
+							dynamic_dentifiers_column_indexes, dynamic_identifiers,
+							cost_condition_list,
+							coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+					para_value = para_value * currentDiscountValue * multiplier;
+					
+					//Add to sum_all
+					sum_all = sum_all + para_value * var_value_list.get(current_var_index);
+				}		
+			}		
+			
+			return sum_all;	
+		}			
+	}
 	
 }	
 

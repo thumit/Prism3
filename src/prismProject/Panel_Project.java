@@ -21,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JLayeredPane;
@@ -56,7 +57,7 @@ import prismConvenienceClass.PrismTableModel;
 import prismConvenienceClass.ToolBarWithBgImage;
 import prismRoot.PrismMain;
 @SuppressWarnings("serial")
-public class Panel_YieldProject extends JLayeredPane {
+public class Panel_Project extends JLayeredPane {
 	private JSplitPane splitPanel;
 	private Panel_EditRun editPanel;		// This panel only visible when "Start Editing"
 	private Panel_SolveRun solvePanel;		// This panel only visible when "Start Solving"
@@ -96,7 +97,7 @@ public class Panel_YieldProject extends JLayeredPane {
 	
 	private Thread thread_management_details;
 	
-	public Panel_YieldProject(String currentProject) {
+	public Panel_Project(String currentProject) {
 		
 		this.currentProject = currentProject;
 		this.currentProjectFolder = new File(FilesHandle.get_projectsFolder().getAbsolutePath() + "/" + this.currentProject);
@@ -126,7 +127,18 @@ public class Panel_YieldProject extends JLayeredPane {
 				if (thread_management_details != null && thread_management_details.isAlive()) {
 					thread_management_details.interrupt();	// stop the thread which creating the panel for output5
 					thread_management_details.stop();			// NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE : THIS IS DANGEROUS WAY TO STOP THREAD: DEPRICATED
-				}
+				}						
+//				// Interrupt all running threads				
+//				Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+//				Thread[] threadArray = threadSet.toArray(new Thread[threadSet.size()]);
+//				for (Thread t : threadArray) {
+//					if (t.getState() == Thread.State.RUNNABLE && t != Thread.currentThread()) {
+//						t.interrupt();
+//						PrismMain.get_main().revalidate();
+//						PrismMain.get_main().repaint();
+//					}
+//				}
+//				System.gc();	// collect memory				
 				doMousePressed(e);
 			}
 		});

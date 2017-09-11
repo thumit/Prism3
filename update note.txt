@@ -319,4 +319,38 @@ All changes in this block are associated with PrismAlpha1.0.03.jar, Prism Formul
 160. Panel_yieldProject: in public void refreshProjectTree(): do not allow output_05_fly_constraints to appear in the GUI
 
 All changes in this block are associated with PrismAlpha1.0.04.jar, Prism Formulation 01.docx, Prism Database 01.docx
+--------------------------------------------------------------------------
+
+161. Boost 6:
+	- Define var_name at the top to not have to define again
+	- Remove int[][][][][][][] xNGe
+	- Remove int[][][][][][][][] xPBe
+	- Remove int[][][][][][][][] xGSe
+	- Remove int[][][][][][][][][][] xEAe
+	- Remove int[][][][][][][][] xMS
+	- Remove int[][][][][][][][] xBS
+	- Remove int[][][][][][][] xNGr
+	- Remove int[][][][][][][] xPBr
+	- Remove int[][][][][][][] xGSr
+	- Remove int[][][][][][][][][][] xEAr
+Save at 09/08/2017 - Retrieve later if need this boost but probably will never use this bad boost
+--------------------------------------------------------------------------
+
+162. Auto save is triggered right after run querries using the "play" button in output05
+163. Output 05 querries are put into thread when "play" button is clicked. This is to avoid frozen screen
+164. Close all running threads and call gabage collector to retrieve memory after mouse click on Poject Jtree. This is important since It helps get memory back from the thread running querries in output05 (this threads add up memory if not call system.gc()) Note: ithe call system.gc sometimes does not trigger the collection. Note 2: This thing slow down the system --> disable.
+165. Print out more information during the solving process
+166. Bug 10 fixed (BS and MS timing choice jumping)
+	- 6c is now 6b, t-->1
+	- 6e is now 6d, t-->1
+	- Add 2 transitional equation 6c and 6d
+
+All changes in this block are associated with PrismAlpha1.0.05.jar, Prism Formulation 01.docx, Prism Database 01.docx
+
+
+
+
+
+
+
 
