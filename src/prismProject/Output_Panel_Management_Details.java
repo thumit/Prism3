@@ -82,7 +82,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 	private ScrollPane_StaticIdentifiers static_identifiersScrollPanel;
 	private ScrollPane_DynamicIdentifiers dynamic_identifiersScrollPanel;
 	
-	private File file_Database;
+	private File file_database;
 	private Read_Database read_database;
 	
 	private JScrollPane table_scroll_pane;
@@ -103,12 +103,21 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 		this.model = model;
 		
 		
-		// Some set up ---------------------------------------------------------------------------	
-		file_Database = new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/database.db");
+		// Some set up ---------------------------------------------------------------------------			
+		file_database = new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/database.db");
+		read_database = PrismMain.get_databases_linkedlist().return_read_database_if_exist(file_database);
+		if (read_database == null) {
+			read_database = new Read_Database(file_database);	// Read the database
+			PrismMain.get_databases_linkedlist().update(file_database, read_database);			
+			System.out.println(PrismMain.get_databases_linkedlist().size());
+			for (Read_Item rr: PrismMain.get_databases_linkedlist()) {
+				System.out.println(rr.file_database.getAbsolutePath() + rr.last_modify);
+			}
+		}
+		
 		read = new Read_RunInputs();
 		read.read_general_inputs(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_01_general_inputs.txt"));
-		total_Periods = read.get_total_periods();
-		read_database = new Read_Database(file_Database);	// Read the database			
+		total_Periods = read.get_total_periods();		
 		// End of set up ---------------------------------------------------------------------------			
 		
 		

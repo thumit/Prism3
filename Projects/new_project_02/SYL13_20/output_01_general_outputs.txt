@@ -2,8 +2,8 @@ description	value
 Optimization solver	CPLEX
 Solution status	Optimal
 Solution algorithm	1
-Simplex iterations	59
-Solving time (seconds)	13.52
+Simplex iterations	53
+Solving time (seconds)	9.2
 Total variables	472369
-Total constraints	347906
-Objective value	4.0427805643E8
+Total constraints	445300
+Objective value	4.1966211764E8

@@ -92,7 +92,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private JRadioButton[] radioButton_Right; 
 	
 	private File currentRunFolder;
-	private File file_Database;
+	private File file_database;
 	
 	private boolean is_first_time_loaded = true;
 	
@@ -115,7 +115,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private Flow_Constraints_Text panel_Flow_Constraints_Text;
 	
 	
-	private Read_Database read_Database;
+	private Read_Database read_database;
 	List<String> layers_Title;
 	List<String> layers_Title_ToolTip;
 	List<List<String>> allLayers;
@@ -303,16 +303,21 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		// Load database of the run if exist---------------------------------------------------------------------
 		File database_to_load = new File(currentRunFolder.getAbsolutePath() + "/database.db");
 		if (database_to_load.exists()) {	//Load if the file exists
-			file_Database = database_to_load;
+			file_database = database_to_load;
 			
 			// Read the tables (strata_definition, existing_strata, yield_tables) of the database-------------------
-			read_Database = new Read_Database(file_Database);	
-			layers_Title = read_Database.get_layers_Title();
-			layers_Title_ToolTip = read_Database.get_layers_Title_ToolTip();
-			allLayers =  read_Database.get_allLayers();
-			allLayers_ToolTips = read_Database.get_allLayers_ToolTips();
-			yieldTable_values = read_Database.get_yield_tables_values();
-			yieldTable_ColumnNames = read_Database.get_yield_tables_column_names();
+			read_database = PrismMain.get_databases_linkedlist().return_read_database_if_exist(file_database);
+			if (read_database == null) {
+				read_database = new Read_Database(file_database);	// Read the database
+				PrismMain.get_databases_linkedlist().update(file_database, read_database);			
+			}
+			
+			layers_Title = read_database.get_layers_Title();
+			layers_Title_ToolTip = read_database.get_layers_Title_ToolTip();
+			allLayers =  read_database.get_allLayers();
+			allLayers_ToolTips = read_database.get_allLayers_ToolTips();
+			yieldTable_values = read_database.get_yield_tables_values();
+			yieldTable_ColumnNames = read_database.get_yield_tables_column_names();
 						
 			panel_Silviculture_Method_GUI = new Silviculture_Method_GUI();
 			panel_Silviculture_Method_Text = new Silviculture_Method_Text();
@@ -333,7 +338,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			PrismMain.get_Prism_DesktopPane().getSelectedFrame().revalidate();
 			PrismMain.get_Prism_DesktopPane().getSelectedFrame().repaint();
 		}  else { 	// If file does not exist then use null database
-			file_Database = null;
+			file_database = null;
 			radioButton_Right[1].setEnabled(false);
 			radioButton_Right[2].setEnabled(false);
 			radioButton_Right[3].setEnabled(false);
@@ -595,7 +600,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		Reload_Table_Info tableLoader;
 		
 		
-		if (file_Database != null) {
+		if (file_database != null) {
 			button_import_database.doClick(); // Trigger   button_import_database.doClick()  if  file_Database != null
 		}
 		
@@ -1966,7 +1971,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			// This all_actions List contains all actions loaded from yield tables------------------------------------------------------------
 			List<String> action_list = new ArrayList<String>();
 			if (yieldTable_ColumnNames != null) {	//create table with column include yield tables columns
-				for (String action: read_Database.get_action_type()) {
+				for (String action: read_database.get_action_type()) {
 					action_list.add(action);					
 				}	
 				
@@ -2002,7 +2007,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		if (yieldTable_ColumnNames != null) {      
 	        for (int i = 2; i < colCount8a; i++) {
 	        	int yt_col = i - 2;
-	        	headerToolTips[i] = "currency per " + read_Database.get_ParameterToolTip(yieldTable_ColumnNames[yt_col]) + " (Column index: " + yt_col + ")";	
+	        	headerToolTips[i] = "currency per " + read_database.get_ParameterToolTip(yieldTable_ColumnNames[yt_col]) + " (Column index: " + yt_col + ")";	
 			}
 		}
 	
@@ -2912,7 +2917,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			button_import_database.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					File old_database = file_Database;
+					File old_database = file_database;
 					
 					try {	
 						button_import_database.setEnabled(false);
@@ -2926,18 +2931,18 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						change_database();
 						is_first_time_loaded = false;	
 					} catch (Exception e1) {
-						String warningText = "Importation is denied. " + file_Database.getName() + " does not meet PRISM's data requirements.";
+						String warningText = "Importation is denied. " + file_database.getName() + " does not meet PRISM's data requirements.";
 						String ExitOption[] = {"OK"};
 						int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warningText, "Database importation warning",
 								JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption, ExitOption[0]);
 						
-						file_Database = null;
+						file_database = null;
 					} finally {
 						button_import_database.setEnabled(true);
-						if (file_Database == null) { // if cancel browsing
-							file_Database = old_database;
+						if (file_database == null) { // if cancel browsing
+							file_database = old_database;
 						} 
-						if (file_Database != null) {
+						if (file_database != null) {
 							radioButton_Right[1].setEnabled(true);
 							radioButton_Right[2].setEnabled(true);
 							radioButton_Right[3].setEnabled(true);
@@ -2951,18 +2956,23 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 				private void change_database() {
 
-					if (!is_first_time_loaded || file_Database == null) {	// This is because the first load may have null or not null database
-						file_Database = FilesHandle.chosenDatabase();
+					if (!is_first_time_loaded || file_database == null) {	// This is because the first load may have null or not null database
+						file_database = FilesHandle.chosenDatabase();
 						
-						if (file_Database != null) {	// If cancel choosing file
-							// read the tables (strata_definition, existing_strata, yield_tables) of the database-------------------
-							read_Database = new Read_Database(file_Database);	
-							layers_Title = read_Database.get_layers_Title();
-							layers_Title_ToolTip = read_Database.get_layers_Title_ToolTip();
-							allLayers =  read_Database.get_allLayers();
-							allLayers_ToolTips = read_Database.get_allLayers_ToolTips();
-							yieldTable_values = read_Database.get_yield_tables_values();
-							yieldTable_ColumnNames = read_Database.get_yield_tables_column_names();
+						if (file_database != null) {	// If cancel choosing file
+							// read the tables (strata_definition, existing_strata, yield_tables) of the database-------------------							
+							read_database = PrismMain.get_databases_linkedlist().return_read_database_if_exist(file_database);
+							if (read_database == null) {
+								read_database = new Read_Database(file_database);	// Read the database
+								PrismMain.get_databases_linkedlist().update(file_database, read_database);			
+							}														
+							
+							layers_Title = read_database.get_layers_Title();
+							layers_Title_ToolTip = read_database.get_layers_Title_ToolTip();
+							allLayers =  read_database.get_allLayers();
+							allLayers_ToolTips = read_database.get_allLayers_ToolTips();
+							yieldTable_values = read_database.get_yield_tables_values();
+							yieldTable_ColumnNames = read_database.get_yield_tables_column_names();
 							
 							// Reset all panels except General Inputs----------------------------------------------------------------		
 							is_table_overview_loaded = false;
@@ -3018,9 +3028,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 									
 					
 
-					if (file_Database != null) {	// If cancel choosing file
+					if (file_database != null) {	// If cancel choosing file
 						// get the raw existing_strata from the database------------------------------------------------------
-						String[][] existing_strata_values = read_Database.get_existing_strata_values();
+						String[][] existing_strata_values = read_database.get_existing_strata_values();
 						rowCount3 = existing_strata_values.length;	// refresh total rows based on existing strata, we don't need to refresh the total columns
 						int existing_strata_colCount = existing_strata_values[0].length;
 	
@@ -3048,8 +3058,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						for (int row = 0; row < rowCount3; row++) {						
 							String s5 = data3[row][5].toString();
 							String s6 = data3[row][6].toString();
-							if (read_Database.get_starting_ageclass(s5, s6, "NG", "0") != null) {
-								data3[row][colCount3 - 2] = Integer.valueOf(read_Database.get_starting_ageclass(s5, s6, "A", "0"));	
+							if (read_database.get_starting_ageclass(s5, s6, "NG", "0") != null) {
+								data3[row][colCount3 - 2] = Integer.valueOf(read_database.get_starting_ageclass(s5, s6, "A", "0"));	
 							}												
 						}
 						
@@ -3068,7 +3078,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						// some final data update after import successfully
 						model3.fireTableDataChanged();
 						model3.update_model_overview();								        					
-						textField2.setText(file_Database.getAbsolutePath());
+						textField2.setText(file_database.getAbsolutePath());
 					}
 				}
 			});	
@@ -3259,7 +3269,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			// 1st grid -----------------------------------------------------------------------
 			// 1st grid -----------------------------------------------------------------------	
 			String panel_name = "Strata (Existing: layers 1 to 6, Regeneration: layers 1 to 4)";
-			static_identifiersScrollPanel = new ScrollPane_StaticIdentifiers(read_Database, 0, panel_name);
+			static_identifiersScrollPanel = new ScrollPane_StaticIdentifiers(read_database, 0, panel_name);
 			checkboxStaticIdentifiers = static_identifiersScrollPanel.get_CheckboxStaticIdentifiers();	
 			
 			for (int i = 0; i < checkboxStaticIdentifiers.size(); i++) {
@@ -3276,7 +3286,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			// 2nd grid -----------------------------------------------------------------------
 			// 2nd grid -----------------------------------------------------------------------	
 			panel_name = "Silviculture Method & Timing Choice to be implemented";
-			static_identifiersScrollPanel_silviculture = new ScrollPane_StaticIdentifiers(read_Database, 3, panel_name);
+			static_identifiersScrollPanel_silviculture = new ScrollPane_StaticIdentifiers(read_database, 3, panel_name);
 			checkboxStaticIdentifiers = static_identifiersScrollPanel_silviculture.get_CheckboxStaticIdentifiers();	
 			
 			for (int i = 0; i < checkboxStaticIdentifiers.size(); i++) {
@@ -3750,7 +3760,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			// 1st grid -----------------------------------------------------------------------
 			// 1st grid -----------------------------------------------------------------------	
 			String panel_name = "Strata Filter";
-			static_identifiersScrollPanel = new ScrollPane_StaticIdentifiers(read_Database, 0, panel_name);
+			static_identifiersScrollPanel = new ScrollPane_StaticIdentifiers(read_database, 0, panel_name);
 			checkboxStaticIdentifiers = static_identifiersScrollPanel.get_CheckboxStaticIdentifiers();	
 			
 			for (int i = 0; i < checkboxStaticIdentifiers.size(); i++) {
@@ -4348,13 +4358,13 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			// 1st grid ------------------------------------------------------------------------------		// Static identifiers	
 			String panel_name = "Static Identifiers  -  use strata attributes to filter variables";
-			static_identifiersScrollPanel = new ScrollPane_StaticIdentifiers(read_Database, 2, panel_name);
+			static_identifiersScrollPanel = new ScrollPane_StaticIdentifiers(read_database, 2, panel_name);
 			checkboxStaticIdentifiers = static_identifiersScrollPanel.get_CheckboxStaticIdentifiers();
 			// End of 1st grid -----------------------------------------------------------------------
 
 			
 			// 2nd Grid ------------------------------------------------------------------------------		// Dynamic identifiers
-			dynamic_identifiersScrollPanel = new ScrollPane_DynamicIdentifiers(read_Database);
+			dynamic_identifiersScrollPanel = new ScrollPane_DynamicIdentifiers(read_database);
 			// End of 2nd Grid -----------------------------------------------------------------------
 				
 					
@@ -4929,7 +4939,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	    	
 	      	//Update Dynamic Identifier Panel
 	    	if (yieldTable_ColumnNames != null && dynamic_identifiersScrollPanel.get_allDynamicIdentifiers() == null) {
-	    		dynamic_identifiersScrollPanel = new ScrollPane_DynamicIdentifiers(read_Database);	// "Get identifiers from yield table columns"
+	    		dynamic_identifiersScrollPanel = new ScrollPane_DynamicIdentifiers(read_database);	// "Get identifiers from yield table columns"
 	    	}	    	
 		}	
 		
@@ -4978,18 +4988,18 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			// 1st grid ------------------------------------------------------------------------------		// Static identifiers	
 			String panel_name = "Static Identifiers  -  use strata attributes to filter variables";
-			static_identifiersScrollPanel = new ScrollPane_StaticIdentifiers(read_Database, 2, panel_name);
+			static_identifiersScrollPanel = new ScrollPane_StaticIdentifiers(read_database, 2, panel_name);
 			checkboxStaticIdentifiers = static_identifiersScrollPanel.get_CheckboxStaticIdentifiers();
 			// End of 1st grid -----------------------------------------------------------------------
 
 			
 			// 2nd Grid ------------------------------------------------------------------------------		// Dynamic identifiers
-			dynamic_identifiersScrollPanel = new ScrollPane_DynamicIdentifiers(read_Database);
+			dynamic_identifiersScrollPanel = new ScrollPane_DynamicIdentifiers(read_database);
 			// End of 2nd Grid -----------------------------------------------------------------------
 				
 					
 			// 3rd grid ------------------------------------------------------------------------------		// Parameters
-			parametersScrollPanel = new ScrollPane_Parameters(read_Database);
+			parametersScrollPanel = new ScrollPane_Parameters(read_database);
 			TitledBorder border = new TitledBorder("Parameters");
 			border.setTitleJustification(TitledBorder.CENTER);
 			parametersScrollPanel.setBorder(border);
@@ -5732,12 +5742,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	    	
 	       	//Update Parameter Panel
 	    	if (yieldTable_ColumnNames != null && parametersScrollPanel.get_checkboxParameter() == null) {
-	    		parametersScrollPanel = new ScrollPane_Parameters(read_Database);	//"Get parameters from YT columns"
+	    		parametersScrollPanel = new ScrollPane_Parameters(read_database);	//"Get parameters from YT columns"
 	    	}
 	    	
 	      	//Update Dynamic Identifier Panel
 	    	if (yieldTable_ColumnNames != null && dynamic_identifiersScrollPanel.get_allDynamicIdentifiers() == null) {
-	    		dynamic_identifiersScrollPanel = new ScrollPane_DynamicIdentifiers(read_Database);	// "Get identifiers from yield table columns"
+	    		dynamic_identifiersScrollPanel = new ScrollPane_DynamicIdentifiers(read_database);	// "Get identifiers from yield table columns"
 	    	}
 
 	    	//Only set button_table_Panel visible when Parameter scroll Pane have checkboxes created
@@ -6724,7 +6734,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		File databaseFile = new File(currentRunFolder.getAbsolutePath() + "/" + "database.db");
 		
 		try {
-			if (file_Database != null) Files.copy(file_Database.toPath(), databaseFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			if (file_database != null) Files.copy(file_database.toPath(), databaseFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 		}

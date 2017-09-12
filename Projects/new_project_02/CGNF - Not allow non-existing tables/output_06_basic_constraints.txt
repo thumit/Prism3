@@ -1,5 +1,0 @@
-bc_id	bc_description	bc_type	bc_multiplier	lowerbound	lowerbound_perunit_penalty	upperbound	upperbound_perunit_penalty	bookeeping_var_id	bookeeping_var_name	bookeeping_var_value	bookeeping_var_reduced_cost	total_penalty
-1	100k of 1 - silvicultural method NGe - time period 1	HARD	1.0	100000.0	null	null	null	0	z_0	658414.2800000003	0.0	0.0
-2	100k of 2 - silvicultural method PBe - time period 1	HARD	1.0	100000.0	null	null	null	1	z_1	464405.96500000014	0.0	0.0
-3	100k of 3 - silvicultural method GSe - time period 1	HARD	1.0	100000.0	null	null	null	2	z_2	100000.0	0.0	0.0
-4	100k of 4 - silvicultural method EAe - time period 1	HARD	1.0	100000.0	null	null	null	3	z_3	259936.75499999998	0.0	0.0

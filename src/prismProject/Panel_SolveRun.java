@@ -47,6 +47,7 @@ import lpsolve.LpSolveException;
 import prismConvenienceClass.FilesHandle;
 import prismConvenienceClass.LibraryHandle;
 import prismConvenienceClass.PrismTableModel;
+import prismRoot.PrismMain;
 
 public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 	private JSplitPane splitPanel, splitPanel2;
@@ -286,7 +287,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			
 			// Database must be read first
 			File file_database = new File(runFolder.getAbsolutePath() + "/database.db");
-			Read_Database read_database = new Read_Database(file_database);
+			Read_Database read_database = PrismMain.get_databases_linkedlist().return_read_database_if_exist(file_database);
+			if (read_database == null) {
+				read_database = new Read_Database(file_database);	// Read the database
+				PrismMain.get_databases_linkedlist().update(file_database, read_database);			
+			}
 			
 			//Database Info
 			Object[][][] yield_tables_values = read_database.get_yield_tables_values();

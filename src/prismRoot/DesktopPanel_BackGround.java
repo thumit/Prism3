@@ -12,9 +12,10 @@ import javax.swing.JDesktopPane;
 
 @SuppressWarnings("serial")
 public class DesktopPanel_BackGround extends JDesktopPane {
-
+	private BufferedImage img;
+	
 	public DesktopPanel_BackGround() {
-		
+		process_image();
 	}
 	
 	
@@ -45,7 +46,6 @@ public class DesktopPanel_BackGround extends JDesktopPane {
 		}
 	}
 
-	private BufferedImage img;
 
 	@Override
 	public Dimension getPreferredSize() {
@@ -81,18 +81,6 @@ public class DesktopPanel_BackGround extends JDesktopPane {
 		super.paintComponent(g);
 		BufferedImage bg = getBackgroundImage();
 		if (bg != null) {
-//			g.drawImage(bg, 0, 0, getWidth(), getHeight(), this);
-			
-//			int x = (int) ((getWidth() - bg.getWidth())/2.5);
-//			int y = (int) ((getHeight() - bg.getHeight())/1.4);
-//			g.drawImage(bg, x, y, this);
-			
-			
-//			int x = (int) 10;
-//			int y = (int) 10;
-//			g.drawImage(bg, x, y, getWidth(), getWidth()/2, this);
-			
-			
 			//Fore spectrumlie2 picture only
 //			int x = (int) 10;
 //			int y = (int) getHeight() - 7;			
@@ -104,6 +92,15 @@ public class DesktopPanel_BackGround extends JDesktopPane {
 			int y = (int) getHeight() - 50;
 			g.drawImage(bg, x, y, this);
 
+			
+			
+//			try {
+//				x = (int) getWidth() - 120;
+//				y = (int) 10;
+//				BufferedImage img5 = ImageIO.read(getClass().getResource("/pikachuAss.gif"));
+//				g.drawImage(img5, x, y, this);
+//			} catch (IOException e) {
+//			}
 		}
 	}
 }

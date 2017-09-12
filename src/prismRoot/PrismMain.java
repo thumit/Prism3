@@ -51,6 +51,7 @@ import prismConvenienceClass.RequestFocusListener;
 import prismConvenienceClass.StringHandle;
 import prismConvenienceClass.WindowAppearanceHandle;
 import prismDatabase.Panel_DatabaseManagement;
+import prismProject.LinkedList_Databases;
 import prismProject.Panel_Project;
 
 @SuppressWarnings("serial")
@@ -75,6 +76,7 @@ public class PrismMain extends JFrame {
 	private static PrismMain 				main;
 	private static ComponentResizer 		cr;
 	
+	private static LinkedList_Databases databases_linkedlist = new LinkedList_Databases();
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public static void main(String[] args) {
 		
@@ -145,7 +147,6 @@ public class PrismMain extends JFrame {
 
 				
 				prism_DesktopPane = new DesktopPanel_BackGround();
-				prism_DesktopPane.process_image();
 				prism_Menubar = new MenuBar_Customize();
 				
 								
@@ -587,6 +588,10 @@ public class PrismMain extends JFrame {
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public static String getProjectName() {
 		return currentProject;
+	}
+
+	public static LinkedList_Databases get_databases_linkedlist() {
+		return databases_linkedlist;
 	}
 	
 }
