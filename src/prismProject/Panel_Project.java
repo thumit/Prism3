@@ -780,7 +780,10 @@ public class Panel_Project extends JLayeredPane {
 						File file = new File(currentProjectFolder + seperator + currentRun);
 						File[] contents = file.listFiles();		//Delete all input files inside a Run
 					    if (contents != null) {
-							for (File f : contents) {
+							for (File f : contents) {								
+								if (f.getName().endsWith(".db")) {
+										PrismMain.get_databases_linkedlist().remove(f);		// If this is the database then remove it from RAM before delete
+								}
 								f.delete();
 					        }
 					    }

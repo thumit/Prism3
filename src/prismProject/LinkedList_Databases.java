@@ -23,6 +23,14 @@ public class LinkedList_Databases extends LinkedList<Read_Item> {
 		Read_Item new_read_database_item = new Read_Item(file_database, String.valueOf(file_database.lastModified()), read_database);
 		this.add(new_read_database_item);
 	}	
+	
+	public void remove(File file_database) {		
+		for (int i = 0; i < this.size(); i++) {	
+			if (this.get(i).file_database.equals(file_database)) {
+				this.remove(i);
+			}
+		}	
+	}
 }
 
 class Read_Item {

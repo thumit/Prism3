@@ -6731,10 +6731,10 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 	
 	private void create_file_database() {	
-		File databaseFile = new File(currentRunFolder.getAbsolutePath() + "/" + "database.db");
-		
+		File databaseFile = new File(currentRunFolder.getAbsolutePath() + "/" + "database.db");	
 		try {
 			if (file_database != null) Files.copy(file_database.toPath(), databaseFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			PrismMain.get_databases_linkedlist().update(databaseFile, read_database);	// Allow saving the databse.db into remember list after stop editing and save					
 		} catch (IOException e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 		}
