@@ -1,0 +1,2 @@
+fly_id	fly_description	fly_type	fly_multiplier	lowerbound	lowerbound_perunit_penalty	upperbound	upperbound_perunit_penalty	parameter_index	static_identifiers	dynamic_identifiers	original_dynamic_identifiers	fly_value	
+1	null	null	1.0	null	null	null	null	NoParameter	0 B A;1 N;2 1 2 3 4 5 6;3 L B W U G O;4 B C D E F G H I;5 F G H I J K L M N O P Q R S;6 GS_E;7 1	NoIdentifier	NoIdentifier	133412.49499999997	
