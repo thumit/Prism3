@@ -53,7 +53,7 @@ public class Get_Parameter_Information {
 								// The following includes 1 list for the action_cost and 1 list for the conversion_cost
 								List<List<List<String>>> final_cost_list = get_final_action_cost_list_and_conversion_cost_list_for_this_variable(
 										cost_condition_list, var_name, var_rotation_age, var_action_type,
-										yield_tables_values, table_id_to_find, row_id_to_find, dynamic_dentifiers_column_indexes);
+										yield_tables_values, table_id_to_find, row_id_to_find);
 								
 								
 								// action_cost: include 2 lists for column name (i.e. hca_allsx) and value (i.e. 360)
@@ -155,7 +155,7 @@ public class Get_Parameter_Information {
 	// The following is for cost:	
 	private static List<List<List<String>>> get_final_action_cost_list_and_conversion_cost_list_for_this_variable(
 			List<String> cost_condition_list, String var_name, int var_rotation_age, String var_action_type,
-			Object[][][] yield_tables_values, int table_id_to_find, int row_id_to_find, List<String> dynamic_dentifiers_column_indexes) {	
+			Object[][][] yield_tables_values, int table_id_to_find, int row_id_to_find) {	
 		
 		List<String> final_action_cost_column_list = new ArrayList<String>();		// example: 	"acres", "...", "hca_allsx", ... -->see table 7a in the GUI of Cost Management
 		List<String> final_action_cost_value_list = new ArrayList<String>(); 		// example: 	"360", "...", "1.2", ...
@@ -168,10 +168,11 @@ public class Get_Parameter_Information {
 			String[] this_condition_info = cost_condition_list.get(priority).split("\t");
 			List<List<String>> cost_condition_static_identifiers = get_cost_condition_dynamic_identifiers(this_condition_info[4]);	// column 4 is static identifiers
 			List<List<String>> cost_condition_dynamic_identifiers = get_cost_condition_dynamic_identifiers(this_condition_info[5]);	// column 5 is dynamic identifiers
-									
+			List<String> cost_condition_dynamic_dentifiers_column_indexes = get_cost_condition_dynamic_dentifiers_column_indexes(this_condition_info[5]);	// column 5 is dynamic identifiers						
+			
 			// If this condition is satisfied
 			if (are_all_static_identifiers_matched(var_name, cost_condition_static_identifiers) && 
-					are_all_dynamic_identifiers_matched(yield_tables_values, table_id_to_find, row_id_to_find, dynamic_dentifiers_column_indexes,cost_condition_dynamic_identifiers)) {
+					are_all_dynamic_identifiers_matched(yield_tables_values, table_id_to_find, row_id_to_find, cost_condition_dynamic_dentifiers_column_indexes, cost_condition_dynamic_identifiers)) {
 				
 				// For action_cost
 				if (this_condition_info[2].length() > 0) {		// this guarantees the string is not ""
@@ -314,7 +315,21 @@ public class Get_Parameter_Information {
 	}
 	
 	
-	
+	private static List<String> get_cost_condition_dynamic_dentifiers_column_indexes(String dynamic_identifiers_info) {
+		List<String> cost_condition_dynamic_dentifiers_column_indexes = new ArrayList<String>();
+			
+		//Read the whole cell into array
+		String[] info = dynamic_identifiers_info.split(";");
+		int total_dynamic_identifiers = info.length;
+
+		//Get all dynamic Identifiers to be in the list
+		for (int i = 0; i < total_dynamic_identifiers; i++) {	
+			String[] identifierElements = info[i].split("\\s+");				//space delimited
+			//add the first element which is the identifier column index
+			cost_condition_dynamic_dentifiers_column_indexes.add(identifierElements[0].replaceAll("\\s+",""));
+		}			
+		return cost_condition_dynamic_dentifiers_column_indexes;
+	}
 	
 	
 	

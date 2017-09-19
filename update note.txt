@@ -357,7 +357,11 @@ All changes in this block are associated with PrismAlpha1.0.06.jar, Prism Formul
 	- For 12a, 13, 6a to 6e, and the definition of xEA_E: loops are rewritten
 All changes in this block are associated with PrismAlpha1.0.07.jar, Prism Formulation 01.docx, Prism Database 01.docx
 --------------------------------------------------------------------------
+
 171. Bug 10 fixed: not print out infinity any more
 172. Boost 8 completed: for existing variables: merge 6 dimensions, for regeneration variables: merge 4 layers
 All changes in this block are associated with PrismAlpha1.0.08.jar, Prism Formulation 01.docx, Prism Database 01.docx
+--------------------------------------------------------------------------
 
+173. Bug 12 fixed (Cost constraints & queries fail) --> Add one more method into Get_Parameter_Information
+All changes in this block are associated with PrismAlpha1.0.09.jar, Prism Formulation 01.docx, Prism Database 01.docx
