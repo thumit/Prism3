@@ -11,7 +11,7 @@ public class LinkedList_Databases extends LinkedList<Read_Item> {
 	
 	public Read_Database return_read_database_if_exist(File file_database) {		
 		for (int i = 0; i < this.size(); i++) {	
-			if (this.get(i).file_database.equals(file_database)
+			if (this != null && this.get(i).file_database.equals(file_database)
 					&& this.get(i).last_modify.equals(String.valueOf(file_database.lastModified()))) {
 				return this.get(i).read_database;
 			}

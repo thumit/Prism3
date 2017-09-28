@@ -365,3 +365,24 @@ All changes in this block are associated with PrismAlpha1.0.08.jar, Prism Formul
 
 173. Bug 12 fixed (Cost constraints & queries fail) --> Add one more method into Get_Parameter_Information
 All changes in this block are associated with PrismAlpha1.0.09.jar, Prism Formulation 01.docx, Prism Database 01.docx
+--------------------------------------------------------------------------
+
+174. Disable background colors of constraint type (free, soft, hard), use colorful icons for cells instead.
+175. Using join threads when import database (not the first time) to allow moving screen (not frozen) when import
+176. Also use join threads in Panel_EditRun with all threads start after the GUI is set up so all the runs are loaded properly.
+177. Auto make constraints type to be "FREE" when a basic or a flow is added, or when a split set of basic constraints is added without specifying the type
+178. Remove all join threads as described in 175 & 176 (use normal threads instead) because sometimes some runs are missed when many runs are loading using joind threads at the same time.
+179. Trim queries & re-define arrays in Read_Database: Read_yield_tables --> significantly cut time reading CGNF from 30 sec to less than 3 sec. This is DR Boost 1.
+180. Some minor changes: south textfield info would show nothing if nothing is highlighted, query textfield has the texts auto cleared with mouse enter & exit listeners
+181. Redesign the Model Strata window (change icons, quick edit window, etc.), Redesign General Inputs window
+182. In Database Management: change database JToolBar to GribBag layout so the queryTextField can stretch the toolbar.This help type and see very long query
+183. set default discount rate in General Inputs to zero
+184. Change size of Import Database Jchooser window to a preferred size of 800 * 500
+185. Allow users to write a readme file
+184. Design some convenience classes to trim codes: PrismTitleScrollPane, PrismGridBagLayoutHandle
+185. Main window has new function: "Rename" and "Copy"
+186. Change ShortCut Key for Database Management to ALT + D since CTRL + D would delete a line in eclipse IDM --> dangerous using CTRL + D
+187. If only level 3 note in Runs Tree is selected --> keep them all selected, not remove
+
+// Note: delete from memorize list when databases or tables in Databases Folder are deleted or renamed (This is important)
+All changes in this block are associated with PrismAlpha1.0.10.jar, Prism Formulation 01.docx, Prism Database 01.docx

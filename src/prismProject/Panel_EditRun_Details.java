@@ -7,6 +7,8 @@ import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -22,6 +24,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -33,9 +36,9 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.swing.AbstractAction;
+import javax.swing.AbstractButton;
 import javax.swing.Action;
 import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultListModel;
@@ -76,12 +79,15 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
+import javax.swing.text.DefaultCaret;
 import javax.swing.text.DefaultFormatter;
 
 import prismConvenienceClass.ColorUtil;
 import prismConvenienceClass.FilesHandle;
 import prismConvenienceClass.IconHandle;
+import prismConvenienceClass.PrismGridBagLayoutHandle;
 import prismConvenienceClass.PrismTableModel;
+import prismConvenienceClass.PrismTitleScrollPane;
 import prismConvenienceClass.ToolBarWithBgImage;
 import prismRoot.PrismMain;
 
@@ -232,6 +238,10 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private PrismTableModel model10;
 	private Object[][] data10;	
 	
+	//readme
+	private JTextArea readme;
+	
+	
 	private JButton button_import_database;
 	private JButton button_select_Strata;
 	
@@ -265,7 +275,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		
 		GUI_Text_splitPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		GUI_Text_splitPanel.setDividerSize(0);
-//		GUI_Text_splitPanel.setEnabled(false);
 			
 	
 		// Create all new 6 panels for the selected Run--------------------------------------------------
@@ -289,7 +298,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		
 		// Show the 2 panelInput of the selected Run
 		GUI_Text_splitPanel.setLeftComponent(paneL_General_Inputs_GUI);
-		GUI_Text_splitPanel.setRightComponent(panel_General_Inputs_Text);	
+//		GUI_Text_splitPanel.setRightComponent(panel_General_Inputs_Text);	
 		
 		
 		// Add all components to The Panel------------------------------------------------------------
@@ -357,14 +366,16 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			if (radioButton_Right[j].isSelected()) {		
 				if (j == 0) {
 					GUI_Text_splitPanel.setLeftComponent(paneL_General_Inputs_GUI);
-					GUI_Text_splitPanel.setRightComponent(panel_General_Inputs_Text);
+					GUI_Text_splitPanel.setRightComponent(null);
+//					GUI_Text_splitPanel.setRightComponent(panel_General_Inputs_Text);
 				} else if (j == 2) {
 					GUI_Text_splitPanel.setLeftComponent(panel_Silviculture_Method_GUI);
 					GUI_Text_splitPanel.setRightComponent(null);
 //					GUI_Text_splitPanel.setRightComponent(panel_Silviculture_Method_Text);
 				} else if (j == 1) {
 					GUI_Text_splitPanel.setLeftComponent(panel_Model_Strata_GUI);
-					GUI_Text_splitPanel.setRightComponent(panel_Model_Strata_Text);
+					GUI_Text_splitPanel.setRightComponent(null);
+//					GUI_Text_splitPanel.setRightComponent(panel_Model_Strata_Text);
 				} else if (j == 3) {
 					GUI_Text_splitPanel.setLeftComponent(panel_Covertype_Conversion_GUI);
 					GUI_Text_splitPanel.setRightComponent(null);
@@ -603,7 +614,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		if (file_database != null) {
 			button_import_database.doClick(); // Trigger   button_import_database.doClick()  if  file_Database != null
 		}
-		
+				
 		
 		// Find the data match to paste into Existing Strata		
 		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_03_model_strata.txt");
@@ -666,7 +677,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		} else { // Create a fresh new if Load fail
 			System.err.println("File not exists: input_04_covertype_conversion_clearcut.txt - New interface is created");
 		}
-			
+				
 		
 		
 //		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_05_covertype_conversion_replacing.txt");
@@ -779,7 +790,22 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		
 		//Create a table
         model_overview = new PrismTableModel(rowCount_overview, colCount_overview, data_overview, columnNames_overview);
-        table_overview = new JTable(model_overview);
+        table_overview = new JTable(model_overview) {
+        	@Override
+			protected void paintComponent(Graphics g) {					
+				Graphics2D g2d = (Graphics2D) g.create();
+				// Fill the background, this is VERY important. Fail to do this and you will have major problems
+				g2d.setColor(getBackground());
+				g2d.fillRect(0, 0, getWidth(), getHeight());
+				// Draw the background
+				ImageIcon bgImage = IconHandle.get_scaledImageIcon(70, 70, "minionDance.png");
+				Dimension size = this.getSize();
+				g2d.drawImage(bgImage.getImage(), size.width - bgImage.getIconWidth(), size.height - bgImage.getIconHeight(), this);
+				// Paint the component content, i.e. the text
+				getUI().paint(g2d, this);
+				g2d.dispose();
+			}
+        };
         DefaultTableCellRenderer renderer = (DefaultTableCellRenderer)table_overview.getDefaultRenderer(Object.class);
         renderer.setHorizontalAlignment(SwingConstants.LEFT);		// Set alignment of values in the table to the left side
 //      table_overview.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -1054,6 +1080,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 		
 		((JComponent) table3.getDefaultRenderer(Boolean.class)).setOpaque(true);	// It's a bug in the synth-installed renderer, quick hack is to force the rendering checkbox opacity to true
+		((AbstractButton) table3.getDefaultRenderer(Boolean.class)).setSelectedIcon(IconHandle.get_scaledImageIcon(12, 12, "icon_check.png"));
+//		((AbstractButton) table3.getDefaultRenderer(Boolean.class)).setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_whitebox.png"));
 		
 		
 //		table3.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -2549,20 +2577,30 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
 				
 				tableColumn.setPreferredWidth(maxWidth);
-				
-				
-				// Set background color
-				if (getValueAt(row, 2) == null || getValueAt(row, 2).toString().equals("FREE")) {
-					component.setBackground(getBackground());
-				} else if (getValueAt(row, 2).toString().equals("SOFT")) {
-					component.setBackground(ColorUtil.makeTransparent(new Color(27, 158, 119), 100));
-					
-				} else if (getValueAt(row, 2).toString().equals("HARD")) {
-					component.setBackground(ColorUtil.makeTransparent(new Color(217, 95, 2), 100));
-					
-				}
-				if (isRowSelected(row)) component.setBackground(getSelectionBackground());		// for selected row
 								
+//				// Set background color
+//				if (getValueAt(row, 2) == null || getValueAt(row, 2).toString().equals("FREE")) {
+//					component.setBackground(getBackground());
+//				} else if (getValueAt(row, 2).toString().equals("SOFT")) {
+//					component.setBackground(ColorUtil.makeTransparent(new Color(27, 158, 119), 100));
+//					
+//				} else if (getValueAt(row, 2).toString().equals("HARD")) {
+//					component.setBackground(ColorUtil.makeTransparent(new Color(217, 95, 2), 100));
+//					
+//				}
+//				if (isRowSelected(row)) component.setBackground(getSelectionBackground());		// for selected row
+										
+				// Set icon for cells
+				if (column == 2) {
+					if (getValueAt(row, 2) == null || getValueAt(row, 2).toString().equals("FREE")) {
+						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_gray.png"));
+					} else if (getValueAt(row, 2).toString().equals("SOFT")) {
+						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_yellow.png"));
+					} else if (getValueAt(row, 2).toString().equals("HARD")) {
+						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_red.png"));
+					}
+				}
+						
 				return component;
 			}
 			
@@ -2697,16 +2735,26 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
 				
 				tableColumn.setPreferredWidth(maxWidth);
+							
+//				// Set background color
+//				if (getValueAt(row, 3) == null || getValueAt(row, 3).toString().equals("FREE")) {
+//					component.setBackground(getBackground());				
+//				} else if (getValueAt(row, 3).toString().equals("HARD")) {
+//					component.setBackground(ColorUtil.makeTransparent(new Color(217, 95, 2), 100));
+//					
+//				}
+//				if (isRowSelected(row)) component.setBackground(getSelectionBackground());		// for selected row
 				
-				
-				// Set background color
-				if (getValueAt(row, 3) == null || getValueAt(row, 3).toString().equals("FREE")) {
-					component.setBackground(getBackground());				
-				} else if (getValueAt(row, 3).toString().equals("HARD")) {
-					component.setBackground(ColorUtil.makeTransparent(new Color(217, 95, 2), 100));
-					
+				// Set icon for cells
+				if (column == 3) {
+					if (getValueAt(row, 3) == null || getValueAt(row, 3).toString().equals("FREE")) {
+						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_gray.png"));
+					} else if (getValueAt(row, 3).toString().equals("SOFT")) {
+						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_yellow.png"));
+					} else if (getValueAt(row, 3).toString().equals("HARD")) {
+						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_red.png"));
+					}
 				}
-				if (isRowSelected(row)) component.setBackground(getSelectionBackground());		// for selected row
 				
 				return component;
 			}
@@ -2760,7 +2808,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			
 			//-----------------------------------------------------
-			label1 = new JLabel("Total planning periods (1 period = 10 years)");
+			label1 = new JLabel("Total planning periods (decades)");
 			combo1 = new JComboBox();		
 			for (int i = 1; i <= 50; i++) {
 				combo1.addItem(i);
@@ -2773,7 +2821,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				double value = (double) i/10;
 				combo2.addItem(value);
 			}
-			combo2.setSelectedItem((double) 3.5);
+			combo2.setSelectedItem((double) 0);
 			//-----------------------------------------------------						
 			label3 = new JLabel("Solver for optimization");
 			combo3 = new JComboBox();
@@ -2792,11 +2840,11 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			JFormattedTextField SpinnerText = ((DefaultEditor) spin4.getEditor()).getTextField();
 			SpinnerText.setHorizontalAlignment(JTextField.LEFT);
 			//-----------------------------------------------------
-			label5 = new JLabel("Export original problem file");
+			label5 = new JLabel("Export original problem file (.lp)");
 			check5 = new JCheckBox();
 			check5.setSelected(false);
 			//-----------------------------------------------------
-			label6 = new JLabel("Export original solution file");
+			label6 = new JLabel("Export original solution file (.sol)");
 			check6 = new JCheckBox();
 			check6.setSelected(false);
 			//-----------------------------------------------------
@@ -2892,24 +2940,16 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		    // Import Database Panel -----------------------------------------------------------------------
 		 	// Import Database Panel -----------------------------------------------------------------------
 			JPanel importPanel = new JPanel();
-			TitledBorder border0 = new TitledBorder("Import Database (model will be forced to reset)");
-			border0.setTitleJustification(TitledBorder.CENTER);
-			importPanel.setBorder(border0);
 			importPanel.setLayout(new GridBagLayout());
-			GridBagConstraints c0 = new GridBagConstraints();
-			c0.fill = GridBagConstraints.HORIZONTAL;
-			c0.weightx = 1;
-			c0.weighty = 1;			
-
-			
-			JTextField textField2 = new JTextField(30);
+			GridBagConstraints c = new GridBagConstraints();
+			JTextField textField2 = new JTextField(40);
 			textField2.setEditable(false);
-			c0.gridx = 0;
-			c0.gridy = 0;
-			c0.weightx = 1;
-		    c0.weighty = 0;
-			importPanel.add(textField2, c0);
-
+			importPanel.add(textField2, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
+					0, 0, 1, 1, 1, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+					0, 0, 0, 0));	// insets top, left, bottom, right	
+			
+			
+			
 			
 			button_import_database = new JButton();
 			button_import_database.setToolTipText("Browse");
@@ -2917,8 +2957,29 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			button_import_database.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
+					if (!is_first_time_loaded || file_database == null) {						
+						Thread thread = new Thread() {		// Not use join thread, if use then all the code after thread start will have to wait for the thread finished to be implemented
+							public void run() {
+								initialize_database_change();			
+								this.interrupt();
+							}
+						};					
+						
+//						try {
+//							thread.join();
+							thread.start();
+//						} catch (InterruptedException e2) {
+//							System.out.println("Thread join fail");
+//						}				
+//						System.out.println("This line could be written out only after all join threads are finished");
+					} else {
+						initialize_database_change();
+					}	
+				}
+				
+				private void initialize_database_change() {
 					File old_database = file_database;
-					
+				
 					try {	
 						button_import_database.setEnabled(false);
 						radioButton_Right[1].setEnabled(false);
@@ -2952,6 +3013,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 							radioButton_Right[7].setEnabled(true);
 						}
 					}
+
 				}
 
 				private void change_database() {
@@ -3083,169 +3145,154 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				}
 			});	
 
-
-			c0.gridx = 1;
-			c0.gridy = 0;
-			c0.weightx = 0;
-		    c0.weighty = 0;
-			importPanel.add(button_import_database, c0);
-		 			
-								
+			importPanel.add(button_import_database, PrismGridBagLayoutHandle.get_c( c, "HORIZONTAL", 
+					1, 0, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+					0, 0, 0, 0));	// insets top, left, bottom, right	
+						
 			// Add empty Label for everything above not resize
-			c0.gridx = 0;
-			c0.gridy = 1;
-			c0.weightx = 0;
-		    c0.weighty = 1;
-			importPanel.add(new JLabel(), c0);
+			importPanel.add(new JLabel(), PrismGridBagLayoutHandle.get_c( c, "HORIZONTAL", 
+					0, 1, 1, 1, 0, 1, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+					0, 0, 0, 0));		// insets top, left, bottom, right	
+			
+
+
+
 			// End of Import Database Panel -----------------------------------------------------------------------
 			// End of Import Database Panel -----------------------------------------------------------------------		    
 		    
 		    
+			
 		    
-		    
+ 			// Load readme file-----------------------------------------------------------------
+ 			// Load readme file-----------------------------------------------------------------
+ 			readme = new JTextArea() {
+				@Override
+				protected void paintComponent(Graphics g) {					
+					Graphics2D g2d = (Graphics2D) g.create();
+					// Fill the background, this is VERY important. Fail to do this and you will have major problems
+					g2d.setColor(getBackground());
+					g2d.fillRect(0, 0, getWidth(), getHeight());
+					// Draw the background
+					ImageIcon bgImage = IconHandle.get_scaledImageIcon(70, 70, "minionWrite.png");
+					Dimension size = this.getSize();
+					g2d.drawImage(bgImage.getImage(), size.width - bgImage.getIconWidth(), size.height - bgImage.getIconHeight() - 5, this);
+					// Paint the component content, i.e. the text
+					getUI().paint(g2d, this);
+					g2d.dispose();
+				}
+			};
+			readme.setBackground(ColorUtil.makeTransparent(Color.BLACK, 40));
+			readme.setForeground(ColorUtil.makeTransparent(Color.BLACK, 255));
+ 			DefaultCaret caret = (DefaultCaret) readme.getCaret();
+ 			caret.setUpdatePolicy(DefaultCaret.OUT_BOTTOM);
+ 			
+			try {
+				FileReader reader = new FileReader(currentRunFolder.getAbsolutePath() + "/readme.txt");
+				readme.read(reader, currentRunFolder.getAbsolutePath() + "/readme.txt");
+				reader.close();
+			} catch (IOException e1) {
+				System.err.println("File not exists: readme.txt - New interface is created");
+				readme.append("model_description\n"
+						+ "2nd line: Please keep 1st line (above) or replace it with a short & standard name (i.e. 2-3 words using only lowercase letters, numbers, underscore)\n"
+						+ "From the 2nd line, write or delete anything. You are recomended to write short lines (i.e. less than 25 words per line)\n");
+			}
+			
+			PrismTitleScrollPane readme_scrollpane = new PrismTitleScrollPane("Write your model description - exported as readme.txt", "LEFT", readme);
+ 			readme_scrollpane.setPreferredSize(new Dimension((int) (PrismMain.get_main().getPreferredSize().width * 0.55), 100));
+ 			// End of Load readme file-----------------------------------------------------------------
+ 			// End of Load readme file-----------------------------------------------------------------
 		    
 		        
+ 			
 		    
 			// Add all Grids to the Main Grid-----------------------------------------------------------------------
 			// Add all Grids to the Main Grid-----------------------------------------------------------------------
- 			GridBagConstraints c = new GridBagConstraints(); 			
- 			c.fill = GridBagConstraints.BOTH;
- 			c.weightx = 1;
- 		    c.weighty = 1;
-
+ 			
  		    // Add helpToolBar	
- 			c.gridx = 0;
- 			c.gridy = 0;
- 			c.weightx = 1;
- 		    c.weighty = 0;
- 			c.gridwidth = 3;
- 			c.gridheight = 1;
- 			super.add(helpToolBar, c);	 		    
- 		    
- 			c.insets = new Insets(0, 5, 10, 30); // padding top 0, left 5, bottom 10, right 30
+ 		   super.add(helpToolBar, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+					0, 0, 6, 1, 1, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+					0, 0, 0, 0));		// insets top, left, bottom, right
+		    		    
  			// Add 	
- 			c.gridx = 0;
- 			c.gridy = 1;
- 			c.weightx = 0;
- 		    c.weighty = 0;
- 			c.gridwidth = 1;
- 			c.gridheight = 1;
- 			super.add(label1, c);
- 			
+ 			 super.add(label1, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+ 					0, 1, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+ 					0, 12, 10, 30));		// insets top, left, bottom, right
+ 									
  			// Add	
- 			c.gridx = 1;
- 			c.gridy = 1;
- 			c.weightx = 0;
- 		    c.weighty = 0;
- 			c.gridwidth = 1;
- 			c.gridheight = 1;
- 			super.add(combo1, c);			
+ 			super.add(combo1, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+ 					1, 1, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+ 					0, 12, 10, 30));		// insets top, left, bottom, right		
  			
  			// Add 
- 			c.gridx = 0;
- 			c.gridy = 2;
- 			c.weightx = 0;
- 		    c.weighty = 0;
- 			c.gridwidth = 1;
- 			c.gridheight = 1;
- 			super.add(label2, c);
- 			
- 			// Add 	
- 			c.gridx = 1;
- 			c.gridy = 2;
- 			c.weightx = 0;
- 			c.weighty = 0;
- 			c.gridwidth = 1;
- 			c.gridheight = 1;
- 			super.add(combo2, c);	
+ 			super.add(label2, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+ 					0, 2, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+ 					0, 12, 10, 30));		// insets top, left, bottom, right	
+
+ 			// Add 
+ 			super.add(combo2, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+ 					1, 2, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+ 					0, 12, 10, 30));		// insets top, left, bottom, right	
+	
+ 			// Add 
+ 			super.add(label3, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+ 					0, 3, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+ 					0, 12, 10, 30));		// insets top, left, bottom, right	
  			
  			// Add 
- 			c.gridx = 0;
- 			c.gridy = 3;
- 			c.weightx = 0;
- 		    c.weighty = 0;
- 			c.gridwidth = 1;
- 			c.gridheight = 1;
- 			super.add(label3, c);
- 			
- 			// Add 	
- 			c.gridx = 1;
- 			c.gridy = 3;
- 			c.weightx = 0;
- 			c.weighty = 0;
- 			c.gridwidth = 1;
- 			c.gridheight = 1;
- 			super.add(combo3, c);
+ 			super.add(combo3, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+ 					1, 3, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+ 					0, 12, 10, 30));		// insets top, left, bottom, right
  			
  			// Add 
- 			c.gridx = 0;
- 			c.gridy = 4;
- 			c.weightx = 0;
- 		    c.weighty = 0;
- 			c.gridwidth = 1;
- 			c.gridheight = 1;
- 			super.add(label4, c);
- 			
- 			// Add 	
- 			c.gridx = 1;
- 			c.gridy = 4;
- 			c.weightx = 0;
- 			c.weighty = 0;
- 			c.gridwidth = 1;
- 			c.gridheight = 1;
- 			super.add(spin4, c);
+ 			super.add(label4, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+ 					0, 4, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+ 					0, 12, 10, 30));		// insets top, left, bottom, right	
+
+ 			// Add 
+ 			super.add(spin4, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+ 					1, 4, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+ 					0, 12, 10, 30));		// insets top, left, bottom, right
+		
+ 			// Add 
+ 			super.add(label5, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+ 					2, 1, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+ 					0, 12, 10, 30));		// insets top, left, bottom, right
  			
  			// Add 
- 			c.gridx = 0;
- 			c.gridy = 5;
- 			c.weightx = 0;
- 		    c.weighty = 0;
- 			c.gridwidth = 1;
- 			c.gridheight = 1;
- 			super.add(label5, c);
- 			
- 			// Add 	
- 			c.gridx = 1;
- 			c.gridy = 5;
- 			c.weightx = 0;
- 			c.weighty = 0;
- 			c.gridwidth = 1;
- 			c.gridheight = 1;
- 			super.add(check5, c);
+ 			super.add(check5, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+ 					3, 1, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+ 					0, 12, 10, 30));		// insets top, left, bottom, right
  			
  			// Add 
- 			c.gridx = 0;
- 			c.gridy = 6;
- 			c.weightx = 0;
- 		    c.weighty = 0;
- 			c.gridwidth = 1;
- 			c.gridheight = 1;
- 			super.add(label6, c);
+ 			super.add(label6, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+ 					2, 2, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+ 					0, 12, 10, 30));		// insets top, left, bottom, right
  			
- 			// Add 	
- 			c.gridx = 1;
- 			c.gridy = 6;
- 			c.weightx = 0;
- 			c.weighty = 0;
- 			c.gridwidth = 1;
- 			c.gridheight = 1;
- 			super.add(check6, c);
+ 			// Add 
+ 			super.add(check6, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+ 					3, 2, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+ 					0, 12, 10, 30));		// insets top, left, bottom, right
+
+ 			// Add 
+ 			super.add(new JLabel("Import Database - If successful information in other windows will be reset to default"), PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+ 					0, 5, 4, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+ 					5, 12, 0, 30));		// insets top, left, bottom, right
  						
- 			// Add
- 			c.gridx = 0;
- 			c.gridy = 7;
- 			c.weightx = 0;
- 			c.weighty = 0;
- 			c.gridwidth = 2;
- 			c.gridheight = 1;
- 			super.add(importPanel, c);
+ 			// Add 
+ 			super.add(importPanel, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+ 					0, 6, 4, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+ 					5, 10, 10, 30));		// insets top, left, bottom, right
+ 						
+ 			// Add 
+ 			super.add(readme_scrollpane, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+ 					0, 7, 5, 1, 0, 1, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+ 					25, 5, 0, 30));		// insets top, left, bottom, right
 		}
 	}
 
 	class General_Inputs_Text extends JScrollPane {
 		public General_Inputs_Text() {	
-			setBorder(null);
-//	        setViewportView(table1);		// No need to show this table
+			
 		}
 	}
 
@@ -3287,6 +3334,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			// 2nd grid -----------------------------------------------------------------------	
 			panel_name = "Silviculture Method & Timing Choice to be implemented";
 			static_identifiersScrollPanel_silviculture = new ScrollPane_StaticIdentifiers(read_database, 3, panel_name);
+			static_identifiersScrollPanel_silviculture.setPreferredSize(new Dimension(250, 250));	
 			checkboxStaticIdentifiers = static_identifiersScrollPanel_silviculture.get_CheckboxStaticIdentifiers();	
 			
 			for (int i = 0; i < checkboxStaticIdentifiers.size(); i++) {
@@ -3304,7 +3352,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			// 4th Grid -----------------------------------------------------------------------------
 			// Add all buttons to a Panel----------------------------------
 			button_table_Panel = new JPanel(new GridBagLayout());
-			TitledBorder border = new TitledBorder("Silviculture Method Information - Implementation is based on aggregation of all the below (if not set up all methods & choices will be eligible for implementation)");
+			TitledBorder border = new TitledBorder("Silviculture Method Information - Implementation based on aggregation of all the below (if not set up all methods & choices will be eligible for implementation)");
 			border.setTitleJustification(TitledBorder.CENTER);
 			button_table_Panel.setBorder(border);
 			GridBagConstraints c2 = new GridBagConstraints();
@@ -3755,6 +3803,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		List<List<JCheckBox>> checkboxStaticIdentifiers;
 		ScrollPane_StaticIdentifiers static_identifiersScrollPanel;
 		
+		QuickEdit_ModelStrata_Panel quick_edit;
+		JScrollPane scrollpane_QuickEdit;
+		
 		public Model_Strata_GUI() {
 			setLayout(new GridBagLayout());
 			// 1st grid -----------------------------------------------------------------------
@@ -3777,36 +3828,50 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			// 2nd grid -----------------------------------------------------------------------
 			// 2nd grid -----------------------------------------------------------------------			
-			JPanel inforPanel = new JPanel();		
-			TitledBorder border2 = new TitledBorder("Model Overview");
-			border2.setTitleJustification(TitledBorder.CENTER);
-			inforPanel.setBorder(border2);
-			inforPanel.setLayout(new GridBagLayout());
-			GridBagConstraints c2 = new GridBagConstraints();
-			c2.fill = GridBagConstraints.BOTH;
-			c2.weightx = 1;
-		    c2.weighty = 1;
-
-		    
-			// 1st line inside inforPanel
-			create_table_overview();        
-	        JScrollPane overviewScrollPane = new JScrollPane();
-	        overviewScrollPane.setViewportView(table_overview);
-	        
-		    c2.gridx = 0;
-			c2.gridy = 0;
-			c2.gridwidth = 3;
-			c2.weightx = 1;
-		    c2.weighty = 1;
-			inforPanel.add(overviewScrollPane, c2);
-
+			create_table_overview();      
+			PrismTitleScrollPane overviewScrollPane = new PrismTitleScrollPane("Model Overview", "CENTER", table_overview);
+			// End of 2nd grid -----------------------------------------------------------------------
+			// End of 2nd grid -----------------------------------------------------------------------
 			
-			// 2nd line inside inforPanel includes 2 buttons
+					
+			
+			// 3rd grid -----------------------------------------------------------------------
+			// 3rd grid -----------------------------------------------------------------------
+			create_table3();	
+			table3.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+				public void valueChanged(ListSelectionEvent event) {
+					int[] selectedRow = table3.getSelectedRows();	
+					for (int i = 0; i < selectedRow.length; i++) {
+						selectedRow[i] = table3.convertRowIndexToModel(selectedRow[i]);	///Convert row index because "Sort" causes problems
+					}
+					
+					int highlighted_strata = 0;
+					double highlighted_acres = 0;
+					for (int i: selectedRow) {
+						highlighted_strata++;
+						highlighted_acres = highlighted_acres + Double.parseDouble(data3[i][colCount3 - 3].toString());
+					}	
+					data_overview[2][1] = highlighted_strata + "   --o--   " + highlighted_acres;
+					model_overview.fireTableDataChanged();
+				}
+			});
+			 
+			PrismTitleScrollPane table_scrollPane = new PrismTitleScrollPane(
+					"Existing strata at the start of planning horizon. Only strata checked as model_strata would be included into optimization model", "CENTER", table3);
+			// End of 3rd grid -----------------------------------------------------------------------
+			// End of 3rd grid -----------------------------------------------------------------------
+			
+					
+			
+			
+			
+			// 2 buttons------------------------------------------------------------------------------
+			// 2 buttons------------------------------------------------------------------------------
 			//button 1
-			JButton remove_Strata = new JButton();
-			remove_Strata.setToolTipText("Remove highlighted strata from optimization model");
-			remove_Strata.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_erase.png"));
-			remove_Strata.addActionListener(new ActionListener() {
+			JButton button_remove_Strata = new JButton();
+			button_remove_Strata.setToolTipText("Uncheck highlighted strata");
+			button_remove_Strata.setIcon(IconHandle.get_scaledImageIcon(30, 30, "icon_uncheck.png"));
+			button_remove_Strata.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {		
 					
@@ -3823,19 +3888,23 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					}						
 				}
 			});
-			c2.gridx = 0;
-			c2.gridy = 1;
-			c2.gridwidth = 1;	
-			c2.weightx = 1;
-		    c2.weighty = 0;
-//		    c2.insets = new Insets(0, 10, 0, 0); // padding top 0, left 15, bottom 0, right 0
-			inforPanel.add(remove_Strata, c2);		
+			button_remove_Strata.setContentAreaFilled(false);
+			button_remove_Strata.addMouseListener(new MouseAdapter() {
+			    public void mouseEntered(MouseEvent e) {
+			    	button_remove_Strata.setContentAreaFilled(true);
+			    }
+
+			    public void mouseExited(MouseEvent e) {
+			    	button_remove_Strata.setContentAreaFilled(false);
+			    }
+			});
+	
 			
 			
 			//button 2	
 			button_select_Strata = new JButton();
-			button_select_Strata.setToolTipText("Add highlighted strata to optimization model");
-			button_select_Strata.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_check.png"));
+			button_select_Strata.setToolTipText("Check highlighted strata");
+			button_select_Strata.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_check.png"));
 			button_select_Strata.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {
@@ -3853,17 +3922,35 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					}	
 				}
 			});
-			c2.gridx = 1;
-			c2.gridy = 1;
-			c2.gridwidth = 1;	
-			c2.weightx = 1;
-		    c2.weighty = 0;
-//		    c2.insets = new Insets(0, 10, 0, 0); // padding top 0, left 15, bottom 0, right 0
-			inforPanel.add(button_select_Strata, c2);
-			// End of 2nd grid -----------------------------------------------------------------------
-			// End of 2nd grid -----------------------------------------------------------------------
+			button_select_Strata.setContentAreaFilled(false);
+			button_select_Strata.addMouseListener(new MouseAdapter() {
+			    public void mouseEntered(MouseEvent e) {
+			    	button_select_Strata.setContentAreaFilled(true);
+			    }
+
+			    public void mouseExited(MouseEvent e) {
+			    	button_select_Strata.setContentAreaFilled(false);
+			    }
+			});
+			// End of 2 buttons------------------------------------------------------------------------------
+			// End of 2 buttons------------------------------------------------------------------------------
+						
 			
 			
+			
+			// scrollPane Quick Edit ----------------------------------------------------------------------	
+			// scrollPane Quick Edit ----------------------------------------------------------------------	
+			quick_edit = new QuickEdit_ModelStrata_Panel(table3, data3);
+			quick_edit.setLayout(new FlowLayout());
+			quick_edit.add(button_select_Strata);
+			quick_edit.add(button_remove_Strata);		
+ 			scrollpane_QuickEdit = new JScrollPane(quick_edit);
+ 			TitledBorder border = new TitledBorder("Quick Edit");
+ 			border.setTitleJustification(TitledBorder.CENTER);
+ 			scrollpane_QuickEdit.setBorder(border);
+ 			scrollpane_QuickEdit.setVisible(false);	
+ 			
+ 			
 			
 			
 			// ToolBar Panel ----------------------------------------------------------------------------
@@ -3875,28 +3962,26 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			// button Strata Filter
 			JToggleButton btnQuickEdit = new JToggleButton();
-//			static_identifiersScrollPanel.setVisible(false);
 			btnQuickEdit.setToolTipText("Show Quick Edit Tool");
 			btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
 			btnQuickEdit.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {
-			
-//					if (btnQuickEdit.getToolTipText().equals("Show Strata Filter")) {
-//						btnQuickEdit.setToolTipText("Hide Strata Filter");
-//						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
-//						static_identifiersScrollPanel.setVisible(true);
-//						// Get everything show up nicely
-//						GUI_Text_splitPanel.setLeftComponent(panel_Model_Strata_GUI);
-//						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
-//					} else {
-//						btnQuickEdit.setToolTipText("Show Strata Filter");
-//						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
-//						static_identifiersScrollPanel.setVisible(false);
-//						// Get everything show up nicely
-//						GUI_Text_splitPanel.setLeftComponent(panel_Model_Strata_GUI);
-//						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
-//					}
+					if (btnQuickEdit.getToolTipText().equals("Show Quick Edit Tool")) {
+ 						btnQuickEdit.setToolTipText("Hide Quick Edit Tool");
+ 						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
+ 						scrollpane_QuickEdit.setVisible(true);
+ 						// Get everything show up nicely
+ 						GUI_Text_splitPanel.setLeftComponent(panel_Model_Strata_GUI);
+ 						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
+ 					} else {
+ 						btnQuickEdit.setToolTipText("Show Quick Edit Tool");
+ 						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
+ 						scrollpane_QuickEdit.setVisible(false);
+ 						// Get everything show up nicely
+ 						GUI_Text_splitPanel.setLeftComponent(panel_Model_Strata_GUI);
+ 						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
+ 					}
 				}
 			});
 			
@@ -3946,14 +4031,27 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c.gridheight = 1;
 			super.add(static_identifiersScrollPanel, c);
 			
-			// Add the 2nd grid - inforPanel to the main Grid	
+			// Add the 2nd grid - overviewScrollPane to the main Grid	
 			c.gridx = 1;
 			c.gridy = 1;
 			c.weightx = 1;
-		    c.weighty = 1;
+		    c.weighty = 0;
 			c.gridwidth = 1;
 			c.gridheight = 1;
-			super.add(inforPanel, c);
+			super.add(overviewScrollPane, c);
+									
+			// Add the table_scrollPane & scrollpane_QuickEdit to a new Panel then add that panel to the main Grid
+			JPanel table_qedit_panel = new JPanel();
+			table_qedit_panel.setLayout(new BorderLayout());
+			table_qedit_panel.add(table_scrollPane, BorderLayout.CENTER);
+			table_qedit_panel.add(scrollpane_QuickEdit, BorderLayout.EAST);			
+			c.gridx = 0;
+			c.gridy = 2;
+			c.gridwidth = 2; 
+			c.gridheight = 1;
+			c.weightx = 1;
+		    c.weighty = 1;
+			super.add(table_qedit_panel, c);
 		}
 		
 		
@@ -3988,32 +4086,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		
 	class Model_Strata_Text extends JLayeredPane {
 		public Model_Strata_Text() {
-			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));				
-			create_table3();	
 			
-			table3.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
-				public void valueChanged(ListSelectionEvent event) {
-					int[] selectedRow = table3.getSelectedRows();	
-					for (int i = 0; i < selectedRow.length; i++) {
-						selectedRow[i] = table3.convertRowIndexToModel(selectedRow[i]);	///Convert row index because "Sort" causes problems
-					}
-					
-					int highlighted_strata = 0;
-					double highlighted_acres = 0;
-					for (int i: selectedRow) {
-						highlighted_strata++;
-						highlighted_acres = highlighted_acres + Double.parseDouble(data3[i][colCount3 - 3].toString());
-					}	
-					data_overview[2][1] = highlighted_strata + "   --o--   " + highlighted_acres;
-					model_overview.fireTableDataChanged();
-				}
-			});
-			 
-			JScrollPane scrollPane = new JScrollPane(table3);
-			TitledBorder border = new TitledBorder("Existing strata at the start of planning horizon (period one). Only checked strata would be included into optimization model");
-			border.setTitleJustification(TitledBorder.CENTER);
-			scrollPane.setBorder(border);
-			add(scrollPane);
 		}
 	}
 	
@@ -4029,25 +4102,13 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			// 1st grid -----------------------------------------------------------------------
 			// 1st grid -----------------------------------------------------------------------
 	        create_table4();
-	        //Put table4 into CovertypeConversion_EA_ScrollPane
-	        JScrollPane CovertypeConversion_EA_ScrollPane = new JScrollPane();
-	        TitledBorder border = new TitledBorder("Cover type conversion & rotation ageclass for clear cut");
-			border.setTitleJustification(TitledBorder.CENTER);
-			CovertypeConversion_EA_ScrollPane.setBorder(border);
-	        CovertypeConversion_EA_ScrollPane.setViewportView(table4);									
+			PrismTitleScrollPane CovertypeConversion_EA_ScrollPane = new PrismTitleScrollPane("Cover type conversion & rotation ageclass for clear cut", "CENTER", table4);										    
 		    
-		    
-	        
+				        
 			// 2nd grid -----------------------------------------------------------------------
 			// 2nd grid -----------------------------------------------------------------------
 	        create_table5();
-	        //Put table5 into CovertypeConversion_SRD_ScrollPane
-			JScrollPane CovertypeConversion_SRD_ScrollPane = new JScrollPane();
-			border = new TitledBorder("Cover type conversion & regeneration for replacing disturbance");
-			border.setTitleJustification(TitledBorder.CENTER);
-			CovertypeConversion_SRD_ScrollPane.setBorder(border);
-	        CovertypeConversion_SRD_ScrollPane.setViewportView(table5);						
-			
+	        PrismTitleScrollPane CovertypeConversion_SRD_ScrollPane = new PrismTitleScrollPane("Cover type conversion & regeneration for replacing disturbance", "CENTER", table5);									
 		    
 
 			// scrollPane Quick Edit 1 & 2-----------------------------------------------------------------------
@@ -4055,7 +4116,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			JScrollPane scrollpane_QuickEdit_1 = new JScrollPane(new QuickEdit_EA_Conversion_Panel(table4, data4));
 			JScrollPane scrollpane_QuickEdit_2 = new JScrollPane(new QuickEdit_RD_Conversion_Panel(table5, data5));	
 			
-			border = new TitledBorder("Quick Edit ");
+			TitledBorder border = new TitledBorder("Quick Edit ");
 			border.setTitleJustification(TitledBorder.CENTER);
 			scrollpane_QuickEdit_1.setBorder(border);
 			scrollpane_QuickEdit_2.setBorder(border);
@@ -4190,33 +4251,23 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			// 1st grid -----------------------------------------------------------------------
 			// 1st grid -----------------------------------------------------------------------
 			create_table6();
-	        //Put table6 into MixedFire_ScrollPane
-	        JScrollPane nonStandReplacing_ScrollPane = new JScrollPane();
-	    	TitledBorder border = new TitledBorder("Proportion (%) of period-one existing strata suffered from NON-REPLACING DISTURBANCES across all time periods");
-			border.setTitleJustification(TitledBorder.CENTER);
-			nonStandReplacing_ScrollPane.setBorder(border);
-	        nonStandReplacing_ScrollPane.setViewportView(table6);			
+			PrismTitleScrollPane nonStandReplacing_ScrollPane = new PrismTitleScrollPane(
+					"Proportion (%) of period-one existing strata suffered from NON-REPLACING DISTURBANCES across all time periods", "CENTER", table6);		
 			
-		    
+		    			
 			// 2nd grid -----------------------------------------------------------------------
 			// 2nd grid -----------------------------------------------------------------------
 	        create_table7();
-	        //Put table7 into StandReplacing_ScrollPane
-	        JScrollPane StandReplacing_ScrollPane = new JScrollPane();
-	        TitledBorder border3 = new TitledBorder("Proportion (%) of existing strata or regeneration strata suffered from REPLACING DISTURBANCES in each time period");
-			border3.setTitleJustification(TitledBorder.CENTER);
-			StandReplacing_ScrollPane.setBorder(border3);
-	        StandReplacing_ScrollPane.setViewportView(table7);
-			
-	        
-	        
+	        PrismTitleScrollPane StandReplacing_ScrollPane = new PrismTitleScrollPane(
+	        		"Proportion (%) of existing strata or regeneration strata suffered from REPLACING DISTURBANCES in each time period", "CENTER", table7);	
+				        
 	        
 	        // scrollPane Quick Edit 1 & 2-----------------------------------------------------------------------
 	        // scrollPane Quick Edit 1 @ 2-----------------------------------------------------------------------		
  			JScrollPane scrollpane_QuickEdit_1 = new JScrollPane(new QuickEdit_NonRD_Percentage_Panel(table6, data6));
  			JScrollPane scrollpane_QuickEdit_2 = new JScrollPane(new QuickEdit_RD_Percentage_Panel(table7, data7));	
  			
- 			border = new TitledBorder("Quick Edit ");
+ 			TitledBorder border = new TitledBorder("Quick Edit ");
  			border.setTitleJustification(TitledBorder.CENTER);
  			scrollpane_QuickEdit_1.setBorder(border);
  			scrollpane_QuickEdit_2.setBorder(border);
@@ -5186,6 +5237,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						}	
 					}
 									
+					data9[rowCount9 - 1][2] = "FREE";
 					data9[rowCount9 - 1][3] = (double) 1;
 					data9[rowCount9 - 1][8] = parametersScrollPanel.get_parameters_info_from_GUI();
 					data9[rowCount9 - 1][9] = static_identifiersScrollPanel.get_static_info_from_GUI();
@@ -5381,7 +5433,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 											data9[i][1] = temp_data[0][1];
 										}
 										data9[i][0] = temp_data[0][0];
-										data9[i][2] = temp_data[0][2];
+										data9[i][2] = (temp_data[0][2] == null) ? "FREE" : temp_data[0][2];
 										data9[i][3] = temp_data[0][3];
 										data9[i][4] = temp_data[0][4];
 										data9[i][5] = temp_data[0][5];
@@ -5832,20 +5884,30 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
 					
 					tableColumn.setPreferredWidth(maxWidth);
-					
-					
-					// Set background color
-					if (getValueAt(row, 2) == null || getValueAt(row, 2).toString().equals("FREE")) {
-						component.setBackground(getBackground());
-					} else if (getValueAt(row, 2).toString().equals("SOFT")) {
-						component.setBackground(ColorUtil.makeTransparent(new Color(27, 158, 119), 100));
-						
-					} else if (getValueAt(row, 2).toString().equals("HARD")) {
-						component.setBackground(ColorUtil.makeTransparent(new Color(217, 95, 2), 100));
-						
-					}
-					if (isRowSelected(row)) component.setBackground(getSelectionBackground());		// for selected row
 									
+//					// Set background color
+//					if (getValueAt(row, 2) == null || getValueAt(row, 2).toString().equals("FREE")) {
+//						component.setBackground(getBackground());
+//					} else if (getValueAt(row, 2).toString().equals("SOFT")) {
+//						component.setBackground(ColorUtil.makeTransparent(new Color(27, 158, 119), 100));
+//						
+//					} else if (getValueAt(row, 2).toString().equals("HARD")) {
+//						component.setBackground(ColorUtil.makeTransparent(new Color(217, 95, 2), 100));
+//						
+//					}
+//					if (isRowSelected(row)) component.setBackground(getSelectionBackground());		// for selected row
+							
+					// Set icon for cells
+					if (column == 2) {
+						if (getValueAt(row, 2) == null || getValueAt(row, 2).toString().equals("FREE")) {
+							((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_gray.png"));
+						} else if (getValueAt(row, 2).toString().equals("SOFT")) {
+							((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_yellow.png"));
+						} else if (getValueAt(row, 2).toString().equals("HARD")) {
+							((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_red.png"));
+						}
+					}
+					
 					return component;
 				}
 			};
@@ -5885,11 +5947,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				basic_table.getColumnModel().getColumn(i).setWidth(0);
 			}
 			
-			
-			JScrollPane basic_table_scrollPane = new JScrollPane(basic_table);
-	        TitledBorder border = new TitledBorder("Sources (Basic Constraints)");
-			border.setTitleJustification(TitledBorder.CENTER);
-			basic_table_scrollPane.setBorder(border);	
+			PrismTitleScrollPane basic_table_scrollPane = new PrismTitleScrollPane("Sources (Basic Constraints)", "CENTER", basic_table);
 			basic_table_scrollPane.setPreferredSize(new Dimension(400, 250));
 			// End of 2nd Grid -----------------------------------------------------------------------							
 	    	
@@ -6071,6 +6129,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						}
 										
 						data10[rowCount10 - 1][2] = flow_scrollPane.get_flow_info_from_GUI();	
+						data10[rowCount10 - 1][3] = "FREE";
 //						data10[rowCount10 - 1][4] = (double) 100;
 //						data10[rowCount10 - 1][5] = (double) 100;
 						model10.updateTableModelPrism(rowCount10, colCount10, data10, columnNames10);
@@ -6257,7 +6316,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			// scrollPane Quick Edit ----------------------------------------------------------------------	
 			quick_edit = new QuickEdit_FlowConstraints_Panel(table10, data10);
  			scrollpane_QuickEdit = new JScrollPane(quick_edit);
- 			border = new TitledBorder("Quick Edit");
+ 			TitledBorder border = new TitledBorder("Quick Edit");
  			border.setTitleJustification(TitledBorder.CENTER);
  			scrollpane_QuickEdit.setBorder(border);
  			scrollpane_QuickEdit.setVisible(false);		
@@ -6450,7 +6509,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		create_file_input_09();		
 		create_file_input_10();	
 		create_file_database();		// Note for this file, we just copy overwritten
-		
+		create_readmeFile();
 		
 		
 //		// Just to save the rename method
@@ -6739,5 +6798,21 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 		}
 	}	
+	
+	private void create_readmeFile() {	
+        File readmeFile = new File(currentRunFolder.getAbsolutePath() + "/" + "readme.txt");
+		if (readmeFile.exists()) {
+			readmeFile.delete();		// Delete the old file before writing new contents
+		}
+			
+		FileWriter pw;
+		try {
+			pw = new FileWriter(currentRunFolder.getAbsolutePath() + "/" + "readme.txt");
+			readme.write(pw);
+			pw.close();
+		} catch (IOException e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+		}
+	}
 	
 }

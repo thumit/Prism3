@@ -6,6 +6,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsDevice.WindowTranslucency;
 import java.awt.GraphicsEnvironment;
@@ -25,6 +27,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -104,6 +107,30 @@ public class PrismMain extends JFrame {
 //			}
 							
 		} 		
+		
+		
+		
+		// These codes add button to the right
+		JLabel test_label = new JLabel() {
+			@Override
+			protected void paintComponent(Graphics g) {					
+				Graphics2D g2d = (Graphics2D) g.create();
+				// Fill the background, this is VERY important. Fail to do this and you will have major problems
+				g2d.setColor(getBackground());
+				g2d.fillRect(0, 0, getWidth(), getHeight());
+				// Draw the background
+				ImageIcon bgImage = IconHandle.get_scaledImageIcon(15, 15, "minionWrite.png");
+				Dimension size = this.getSize();
+				g2d.drawImage(bgImage.getImage(), size.width - bgImage.getIconWidth() - 5, size.height - bgImage.getIconHeight() - 5, this);
+				// Paint the component content, i.e. the text
+				getUI().paint(g2d, this);
+				g2d.dispose();
+			}
+		};
+		test_label.setSize(30, 30);
+		test_label.setBackground(ColorUtil.makeTransparent(Color.WHITE, 0));
+		main.setLayout(new BorderLayout());
+		main.add(test_label, BorderLayout.EAST);
 	}
 
 	//--------------------------------------------------------------------------------------------------------------------------------
@@ -396,7 +423,7 @@ public class PrismMain extends JFrame {
 				
 								
 				// Add listeners "DatabaseManagement"------------------------------------------------
-				DatabaseManagement.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_DOWN_MASK));
+				DatabaseManagement.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.ALT_DOWN_MASK));
 				DatabaseManagement.addActionListener(
 						new ActionListener() { // anonymous inner class
 							// display new internal window
@@ -468,9 +495,9 @@ public class PrismMain extends JFrame {
 		ProjectInternalFrame.setDefaultCloseOperation(JInternalFrame.DO_NOTHING_ON_CLOSE);
 				
 		prism_DesktopPane.add(ProjectInternalFrame, BorderLayout.CENTER); // attach internal frame
-		ProjectInternalFrame.setSize((int) (getWidth()/1.08),(int) (getHeight()/1.25));		
+		ProjectInternalFrame.setSize((int) (getWidth()/1.10),(int) (getHeight()/1.25));		
 		ProjectInternalFrame.setLocation((int) ((getWidth() - ProjectInternalFrame.getWidth())/2),
-				((int) ((getHeight() - ProjectInternalFrame.getHeight())/2.5)));	//Set the ProjectInternalFrame near the center of the Main frame
+				((int) ((getHeight() - ProjectInternalFrame.getHeight())/2.7)));	//Set the ProjectInternalFrame near the center of the Main frame
 		if (PrismMain.get_Prism_DesktopPane().getSelectedFrame() != null) {	//or Set the ProjectInternalFrame near the recently opened JInternalFrame
 			ProjectInternalFrame.setLocation(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getX() + 25, PrismMain.get_Prism_DesktopPane().getSelectedFrame().getY() + 25);
 		}

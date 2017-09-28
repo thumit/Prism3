@@ -1,5 +1,6 @@
 package prismConvenienceClass;
 
+import java.awt.Dimension;
 import java.awt.Image;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -167,6 +168,7 @@ public class FilesHandle {
 	
 	public static File chosenDatabase() {
 		JFileChooser chooser = new JFileChooser();
+		chooser.setPreferredSize(new Dimension(800, 500));
 		chooser.setCurrentDirectory(get_DatabasesFolder());
 		chooser.setDialogTitle("Select database file");
 		chooser.setMultiSelectionEnabled(false);

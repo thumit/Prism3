@@ -21,7 +21,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JLayeredPane;
@@ -74,14 +73,14 @@ public class Panel_Project extends JLayeredPane {
 	private JTree projectTree;
 	private DefaultMutableTreeNode root, processingNode;
 	private JTextField displayTextField;
-	private JTextArea rightPanelTextArea;
 
 	private String currentInputFile, currentProject, currentRun;
 	private int currentLevel;
 	private TreePath[] selectionPaths;
 	private TreePath editingPath;
+	private File oldfile;
 	private Boolean runName_Edit_HasChanged = false;
-	private Boolean renaming = false;
+	private Boolean renamingRun = false;
 
 	private ToolBarWithBgImage projectToolBar;
 	
@@ -151,7 +150,9 @@ public class Panel_Project extends JLayeredPane {
 	
 		projectTree.addFocusListener(new FocusListener(){		//change name whenever node stopped editing
 	         public void focusGained(FocusEvent e) {  
-	        	if ((runName_Edit_HasChanged == true || renaming == true) && !projectTree.isEditing())		{ applyNamechange(); }
+	        	if ((runName_Edit_HasChanged == true || renamingRun == true) && !projectTree.isEditing()) {
+					applyNamechange();
+				}
 	         }
 	         public void focusLost(FocusEvent e) {               
 	         }
@@ -162,10 +163,6 @@ public class Panel_Project extends JLayeredPane {
 		// Right split panel-------------------------------------------------------------------------------
 		scrollPane_Right = new JScrollPane();
 		splitPanel.setRightComponent(scrollPane_Right);
-		
-		rightPanelTextArea = new JTextArea();
-		rightPanelTextArea.setEditable(false);
-//		scrollPane_Right.setViewportView(rightPanelTextArea); 
 		
 		// TextField at South----------------------------------------------
 		displayTextField = new JTextField("", 0);
@@ -455,10 +452,8 @@ public class Panel_Project extends JLayeredPane {
 						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
 					}				
 										
-
-				} else if (currentLevel != 3) {		
-					rightPanelTextArea.setText("");
-					showNothing();
+				} else if (currentLevel != 3) {	
+					scrollPane_Right.setViewportView(null);
 					if (currentLevel == 2) currentRun = selectedNode.getUserObject().toString();	// the selected node is a Run
 					if (currentLevel == 1) currentRun = selectedNode.getUserObject().toString();	// the selected node is Root
 				}
@@ -480,26 +475,36 @@ public class Panel_Project extends JLayeredPane {
 			if (e.getClickCount() == 1) {				
 				
 				// Some set up when there is a right click---------------------------------------------------------------
-				Boolean rootSelected =false;			
+				Boolean rootSelected = false;		
 				selectionPaths = projectTree.getSelectionPaths();			//This is very important to get the most recent selected paths
-				int NodeCount=0;		//Count the number of nodes in selectionPaths
+				int NodeCount = 0;		//Count the number of nodes in selectionPaths
 				for (TreePath selectionPath : selectionPaths) {		//Loop through all selected nodes
 					processingNode = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
 					if (processingNode.isRoot()) rootSelected = true;
-					NodeCount++;		
-					}
-				// Deselect the root if this is a multiple Nodes selection and root is selected
-				TreePath rootpath = new TreePath(root);
-				if (NodeCount>1 && rootSelected==true) {
-					projectTree.getSelectionModel().removeSelectionPath(rootpath);
-					rootSelected =false;
-					NodeCount = NodeCount -1;
+					NodeCount++;
 				}
 				
-				// Deselect all level3 nodes if this is a multiple Nodes selection
+				// Deselect the root if this is a multiple Nodes selection and root is selected
+				TreePath rootpath = new TreePath(root);
+				if (NodeCount > 1 && rootSelected == true) {
+					projectTree.getSelectionModel().removeSelectionPath(rootpath);
+					rootSelected = false;
+					NodeCount = NodeCount - 1;
+				}
+				
+				// Check if at least a run is selected
+				boolean is_atleast_a_run_selected = false;
 				selectionPaths = projectTree.getSelectionPaths();
 				for (TreePath selectionPath : selectionPaths) { //Loop through all selected nodes
-					if (NodeCount>1 && selectionPath.getPathCount() == 3) {
+					if (selectionPath.getPathCount() == 2) {
+						is_atleast_a_run_selected = true;
+					}
+				} 
+									
+				// Deselect all level3 nodes if this is a multiple Nodes selection & at least a run is selected
+				selectionPaths = projectTree.getSelectionPaths();
+				for (TreePath selectionPath : selectionPaths) { //Loop through all selected nodes
+					if (NodeCount > 1 && selectionPath.getPathCount() == 3 && is_atleast_a_run_selected) {
 						projectTree.getSelectionModel().removeSelectionPath(selectionPath);
 						NodeCount = NodeCount - 1;
 					} else {
@@ -549,10 +554,42 @@ public class Panel_Project extends JLayeredPane {
 						});
 						popup.add(newMenuItem);
 					}
+					
+					
+					// Only nodes level 2 (Run) can be renamed--------------------------
+					// and this menuItem only shows up when 1 node is selected	
+					if (currentLevel == 2 && NodeCount == 1) {
+						final JMenuItem renameMenuItem = new JMenuItem("Rename");
+						renameMenuItem.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_rename.png"));
+						renameMenuItem.setMnemonic(KeyEvent.VK_N);
+						renameMenuItem.addActionListener(new ActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent actionEvent) {								
+								rename_Run();
+							}
+						});
+						popup.add(renameMenuItem);
+					}
+					
+					
+					// Only nodes level 2 (Run)can have "copy"--------------------------
+					// and this menuItem only shows up when 1 node is selected	
+					if (currentLevel == 2 && NodeCount == 1) {
+						final JMenuItem copyMenuItem = new JMenuItem("Make a Copy");
+						copyMenuItem.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_copy.png"));
+						copyMenuItem.setMnemonic(KeyEvent.VK_C);
+						copyMenuItem.addActionListener(new ActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent actionEvent) {								
+								copy_Run();
+							}
+						});
+						popup.add(copyMenuItem);
+					}
 				
 					
 					// Only nodes level 2 (Run) can be Edited--------------------------
-					if (currentLevel == 2 && rootSelected ==false) {					
+					if (currentLevel == 2 && rootSelected == false) {					
 						final JMenuItem editMenuItem = new JMenuItem("Start Editing");
 						editMenuItem.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_edit.png"));
 						editMenuItem.setMnemonic(KeyEvent.VK_E);
@@ -575,7 +612,7 @@ public class Panel_Project extends JLayeredPane {
 									
 					
 					// Only nodes level 2 (Run) can be Solved--------------------------
-					if (currentLevel == 2 && rootSelected ==false) {					
+					if (currentLevel == 2 && rootSelected == false) {					
 						final JMenuItem solveMenuItem = new JMenuItem("Start Solving");
 						solveMenuItem.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_solve.png"));
 						solveMenuItem.setMnemonic(KeyEvent.VK_S);
@@ -590,10 +627,10 @@ public class Panel_Project extends JLayeredPane {
 					
 					
 					// Only nodes level 2 (Run) can be Customize output--------------------------
-					if (currentLevel == 2 && rootSelected ==false) {					
+					if (currentLevel == 2 && rootSelected == false) {					
 						final JMenuItem customizeOutput_MenuItem = new JMenuItem("Customize Output");
 						customizeOutput_MenuItem.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_customize.png"));
-						customizeOutput_MenuItem.setMnemonic(KeyEvent.VK_C);
+						customizeOutput_MenuItem.setMnemonic(KeyEvent.VK_O);
 						customizeOutput_MenuItem.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent actionEvent) {								
@@ -605,7 +642,7 @@ public class Panel_Project extends JLayeredPane {
 					
 					
 					// Only nodes level 2 (Run) can be Deleted--------------------------
-					if (currentLevel == 2 && rootSelected ==false) {					
+					if (currentLevel == 2 && rootSelected == false) {					
 						final JMenuItem deleteMenuItem = new JMenuItem("Delete Runs");
 						deleteMenuItem.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_delete.png"));
 						deleteMenuItem.setMnemonic(KeyEvent.VK_D);
@@ -704,26 +741,73 @@ public class Panel_Project extends JLayeredPane {
 	}
 
 	//--------------------------------------------------------------------------------------------------------------------------------
+	public void rename_Run() {	
+		if (processingNode != null && currentLevel == 2) {		//rename Run
+			DefaultTreeModel model = (DefaultTreeModel) projectTree.getModel();	
+			TreeNode[] nodes = model.getPathToRoot(processingNode);
+			TreePath path = new TreePath(nodes);
+			projectTree.scrollPathToVisible(path);
+			projectTree.setEditable(true);
+			projectTree.setSelectionPath(path);
+			projectTree.startEditingAtPath(path);
+			editingPath = path;	
+			try {
+				// Get and save the old name
+				DefaultMutableTreeNode editingNode = (DefaultMutableTreeNode) editingPath.getLastPathComponent();  	
+		    	String nameWOext = editingNode.getUserObject().toString();		//Get the user typed name
+//		    	if(nameWOext.contains(".")) nameWOext= nameWOext.substring(0, nameWOext.lastIndexOf('.'));		//Remove extension if the name has it
+		    	String editingName = currentProjectFolder + seperator + nameWOext;
+		    	oldfile = new File(editingName);
+		    	// Then perform:	applyDatabase_Namechange
+				
+		    	displayTextField.setText("Type your new Run name");
+				renamingRun = true;
+			} catch (Exception e) {
+				System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			}
+		}		
+	}
+
+	//--------------------------------------------------------------------------------------------------------------------------------
 	public void applyNamechange (){
  		// This is the new Run name being applied after you finished the naming edit  		
     	DefaultMutableTreeNode editingNode = (DefaultMutableTreeNode) editingPath.getLastPathComponent();  	
     	String editingName = editingNode.getUserObject().toString();		//Get the user typed name
-    	
+    	File newfile = new File(currentProjectFolder + seperator + editingName);
     	String temptext = null;
-		currentRunFolder = new File(currentProjectFolder + "/" + editingName);
-		try {
-			if (currentRunFolder.mkdirs()) {
-				temptext = "New Run has been created";		
-			} else {
-				temptext = "New Run has not been created: Run with the same name exists, or name typed contains special characters";
+    	
+    	
+    	if (renamingRun == true) {		// For "rename Run"
+    		if (!newfile.exists()) {  			
+    			File[] contents = oldfile.listFiles();		// loop all files inside the old Run
+			    if (contents != null) {
+					for (File f : contents) {								
+						if (f.getName().endsWith(".db")) {
+							PrismMain.get_databases_linkedlist().remove(f);		// If this is the database then remove it from RAM because the old run is going to be renamed
+						}
+					}
+				}
+    			oldfile.renameTo(newfile);
+    			temptext = oldfile.getName() + " has been renamed to " + newfile.getName();		
+    		} else {
+    			temptext = "Rename fail: Run with the same name exists, or name typed contains special characters";	
+    		}				
+		} else {	// For "new Run"
+			currentRunFolder = new File(currentProjectFolder + "/" + editingName);
+			try {
+				if (currentRunFolder.mkdirs()) {
+					temptext = "New Run has been created";		
+				} else {
+					temptext = "New Run has not been created: Run with the same name exists, or name typed contains special characters";
+				}
+			} catch (Exception e) {
+				System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			}
-		} catch (Exception e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 		}
-		
+    			
 
 		// Make the new Run appear on the TREE----------->YEAHHHHHHHHHHHHHHH	
-		String RunName = currentRunFolder.getName();
+		String RunName = newfile.getName();
 		refreshProjectTree();
 		@SuppressWarnings("unchecked")
 		Enumeration<DefaultMutableTreeNode> e1 = root.depthFirstEnumeration();
@@ -743,8 +827,59 @@ public class Panel_Project extends JLayeredPane {
 		displayTextField.setText(temptext);
 		projectTree.setEditable(false);		// Disable editing
 		runName_Edit_HasChanged = false;
+		renamingRun = false;
 	}
 
+	//--------------------------------------------------------------------------------------------------------------------------------
+	public void copy_Run() {
+		DefaultMutableTreeNode processingNode = (DefaultMutableTreeNode) projectTree.getSelectionPath().getLastPathComponent();	// currentLevel = 2 & nodeCount =1 already
+		projectTree.setSelectionPath(null);
+		currentRun = processingNode.getUserObject().toString();
+				
+		File sourceFile = new File(currentProjectFolder + seperator + currentRun);
+		File deskFile = new File(currentProjectFolder + seperator + sourceFile.getName() + "_copy");
+		if (deskFile.exists()) {
+			String name = deskFile.getAbsolutePath();
+			int count = 2;
+			while (new File(name + count).exists()) {
+				count++;
+			}
+			deskFile = new File(name + count);
+		}
+		
+		try {
+			Files.copy(sourceFile.toPath(), deskFile.toPath());  // Make a folder copy of the Run	    
+			File[] contents = sourceFile.listFiles();
+		    if (contents != null) {
+				for (File file_from : contents) {								
+					File file_to = new File(deskFile.getAbsolutePath() + seperator + file_from.getName());
+					Files.copy(file_from.toPath(), file_to.toPath());			// Copy all files inside the selected Run to the copied Run
+		        }
+		    }				
+		} catch (IOException e) {
+			System.out.println("Fail to make a copy of " + currentRun);
+		}
+		
+		
+		// Make the new Run appear on the TREE----------->YEAHHHHHHHHHHHHHHH	
+		String RunName = deskFile.getName();
+		refreshProjectTree();
+		@SuppressWarnings("unchecked")
+		Enumeration<DefaultMutableTreeNode> e = root.depthFirstEnumeration();
+		while (e.hasMoreElements()) { // Search for the name that match
+			DefaultMutableTreeNode node = e.nextElement();
+			if (node.toString().equalsIgnoreCase(RunName) && root.isNodeChild(node)) {		// Name match, and node is child of root
+				DefaultTreeModel model = (DefaultTreeModel) projectTree.getModel();
+				TreeNode[] nodes = model.getPathToRoot(node);
+				TreePath path = new TreePath(nodes);
+				projectTree.scrollPathToVisible(path);
+				projectTree.setSelectionPath(path);
+				editingPath = path;
+				selectionPaths = projectTree.getSelectionPaths();
+			}
+		}
+	}
+	
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public void delete_Runs() {
 		//Some set up ---------------------------------------------------------------	
@@ -1032,7 +1167,7 @@ public class Panel_Project extends JLayeredPane {
 	
 	// --------------------------------------------------------------------------------------------------------------------------------		
 	public void showNothing() {
-//		displayTextField.setText(null); // Show nothing on the TextField
+		displayTextField.setText(null); // Show nothing on the TextField
 		scrollPane_Right.setViewportView(null);
 	}
 	

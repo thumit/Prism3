@@ -17,11 +17,10 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import prismConvenienceClass.ComponentResizer;
 import prismConvenienceClass.IconHandle;
-
-import javax.swing.UnsupportedLookAndFeelException;
 
 public class MenuItem_SetLookAndFeel extends JMenuItem {
 	private static boolean is_Nimbus_Without_titleBar = true;		//Set this to false if in the void main(String[] args), we do the following:

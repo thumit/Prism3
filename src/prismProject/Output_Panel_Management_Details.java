@@ -1473,7 +1473,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 	
 	
 	// Get the following from each row-------------------------------------------------------------------------------------
-	private static Boolean are_all_static_identifiers_matched(String var_name, List<List<String>> static_identifiers) {	
+	private Boolean are_all_static_identifiers_matched(String var_name, List<List<String>> static_identifiers) {	
 		if (!static_identifiers.get(0).contains(Get_Variable_Information.get_layer1(var_name))) return false;
 		if (!static_identifiers.get(1).contains(Get_Variable_Information.get_layer2(var_name))) return false;
 		if (!static_identifiers.get(2).contains(Get_Variable_Information.get_layer3(var_name))) return false;

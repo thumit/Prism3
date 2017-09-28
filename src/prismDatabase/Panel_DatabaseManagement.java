@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -106,6 +108,8 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 			public void mousePressed(MouseEvent e) {
 				DatabaseTree.setEnabled(true);
 				queryTextField.setText("Type your queries here");
+				queryTextField.setFocusable(false);
+				queryTextField.setFocusable(true);
 				doMousePressed(e);
 			}
 		});
@@ -118,8 +122,12 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 	
 		DatabaseTree.addFocusListener(new FocusListener() {	//change name whenever node stopped editing
 	         public void focusGained(FocusEvent e) {  
-	        	if ((Database_Name_Edit_HasChanged == true || renamingDatabase == true) && !DatabaseTree.isEditing())		{ applyDatabase_Namechange(); }
-	        	if ( renamingTable == true && !DatabaseTree.isEditing())											{ applyTable_Namechange(); }
+	        	if ((Database_Name_Edit_HasChanged == true || renamingDatabase == true) && !DatabaseTree.isEditing()) {
+					applyDatabase_Namechange();
+				}
+	        	if ( renamingTable == true && !DatabaseTree.isEditing()) {
+					applyTable_Namechange();
+				}
 	         }
 	         public void focusLost(FocusEvent e) {               
 	         }
@@ -162,10 +170,11 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		
 		// databaseToolBar & queryTextField at North----------------------------------------------------
 		databaseToolBar = new ToolBarWithBgImage("Project Tools", JToolBar.HORIZONTAL, null);
+		databaseToolBar.setLayout(new GridBagLayout());
 		databaseToolBar.setFloatable(false);	//to make a tool bar immovable
-		databaseToolBar.setRollover(true);	//to visually indicate tool bar buttons when the user passes over them with the cursor		
-		
-		
+		databaseToolBar.setRollover(true);	//to visually indicate tool bar buttons when the user passes over them with the cursor						
+
+	    		
 		btnNewDatabase = new JButton();
 		btnNewDatabase.setToolTipText("New Database");
 		btnNewDatabase.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_new.png"));
@@ -178,7 +187,16 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 				new_Database_or_Table();
 			}
 		});
-		databaseToolBar.add(btnNewDatabase);
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 0;
+		c.weightx = 0;
+	    c.weighty = 0;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		databaseToolBar.add(btnNewDatabase, c);
+		
 		
 		btnDelete = new JButton();
 		btnDelete.setToolTipText("Delete");
@@ -189,7 +207,13 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 				delete_Databases_or_Tables();
 			}
 		});
-		databaseToolBar.add(btnDelete);
+		c.gridx = 1;
+		c.gridy = 0;
+		c.weightx = 0;
+	    c.weighty = 0;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		databaseToolBar.add(btnDelete, c);
 		
 		
 		btnRefresh = new JButton();
@@ -201,16 +225,31 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 				refreshDatabaseTree();
 			}
 		});
-		databaseToolBar.add(btnRefresh);
+		c.gridx = 2;
+		c.gridy = 0;
+		c.weightx = 0;
+	    c.weighty = 0;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		databaseToolBar.add(btnRefresh, c);	
 		
 		
-		queryTextField = new JTextField("Type your queries here", 1000);					
+		queryTextField = new JTextField("Type your queries here");		
 		queryTextField.addMouseListener(new MouseAdapter(){			//When user click on queryTextField
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				DatabaseTree.setEnabled(false);		//disable the tree
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
 				if (queryTextField.getText().equals("Type your queries here")) {	//clear the text
-					queryTextField.setText(null);					
+					queryTextField.setText("");					
+				}
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				if (queryTextField.getText().equals("") && DatabaseTree.isEnabled()) {
+					queryTextField.setText("Type your queries here");					
 				}
 			}
 	     });//end addMouseListener
@@ -222,7 +261,13 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 				doQuery(currentSQLstatement);
 			}
 	     });//end addActionListener
-		databaseToolBar.add(queryTextField);
+		c.gridx = 3;
+		c.gridy = 0;
+		c.weightx = 1;
+	    c.weighty = 0;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		databaseToolBar.add(queryTextField, c);
 			
 	
 		// Add all components to JInternalFrame-----------------------------		
@@ -327,7 +372,6 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 						currenTableName = selectedNode.getUserObject().toString();
 						currentDatabase = selectedNode.getParent().toString();          			
 					} else if (currentLevel ==2) {		
-						scrollPane_Right.setViewportView(null);
 						selectedNode.getUserObject().toString();	// the selected node is a database
 					}
 				}
@@ -710,15 +754,15 @@ public class Panel_DatabaseManagement extends JLayeredPane {
     	File newfile = new File(editingName);
     	String temptext = null;
     	
-    	
-    	//For "rename database"
-		if (renamingDatabase == true) {
-			if (renamingDatabase == true) {
-				oldfile.renameTo(newfile);
-				temptext = oldfile.getName() + " has been renamed to " + newfile.getName();	
-			} 
-			// For "new database"
-		} else {
+    	  	
+		if (renamingDatabase == true) {	//For "rename database"
+			if (!newfile.exists()) {
+    			oldfile.renameTo(newfile);
+    			temptext = oldfile.getName() + " has been renamed to " + newfile.getName();	
+    		} else {
+    			temptext = "Rename fail: database with the same name exists, or name typed contains special characters";	
+    		}	
+		} else {	// For "new database"
 			try {
 				if (newfile.createNewFile()) {
 					temptext = "New database has been created";		
@@ -1859,7 +1903,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public void showNothing () {
-//		dataDisplayTextField.setText(null);	//Show nothing on the TextField
+		dataDisplayTextField.setText(null);	//Show nothing on the TextField
 		scrollPane_Right.setViewportView(null);
 	}
 	

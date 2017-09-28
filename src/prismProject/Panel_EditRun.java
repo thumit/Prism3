@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -13,8 +12,6 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-
-import prismRoot.PrismMain;
 
 public class Panel_EditRun extends JLayeredPane implements ActionListener {
 	private JSplitPane splitPanel;
@@ -49,40 +46,42 @@ public class Panel_EditRun extends JLayeredPane implements ActionListener {
 		radioButton_Left = new JRadioButton[listOfEditRuns.length];
 		for (int i = 0; i < listOfEditRuns.length; i++) {
 			radioButton_Left[i] = new JRadioButton(listOfEditRuns[i].getName());
-				radioGroup_Left.add(radioButton_Left[i]);
-				radioPanel_Left.add(radioButton_Left[i]);
-				radioButton_Left[i].addActionListener(this);
+			radioButton_Left[i].addActionListener(this);
+			radioGroup_Left.add(radioButton_Left[i]);
+			radioPanel_Left.add(radioButton_Left[i]);
 		}
-		radioButton_Left[0].setSelected(true);
+//		radioButton_Left[0].setSelected(true);
 		scrollPane_Left.setViewportView(radioPanel_Left);					
 		
 		
 		// Right split panel-------------------------------------------------------------------------------
 		scrollPane_Right = new JScrollPane();
 		splitPanel.setRightComponent(scrollPane_Right);
+				
 	
 		// Add all Panel_EditRun_Details for all selected Runs, but only show the 1st selected Run details
 		combinePanel = new Panel_EditRun_Details[listOfEditRuns.length];
+		Thread[] thread_array = new Thread[listOfEditRuns.length];
 		for (int i = 0; i < listOfEditRuns.length; i++) {
 			final int processingRun = i;
-			Thread thread = new Thread() {			// Make a thread so JFrame will not be frozen
+			thread_array[i] = new Thread() { // Make a thread so JFrame will not be frozen
 				public void run() {
 					combinePanel[processingRun] = new Panel_EditRun_Details(listOfEditRuns[processingRun]);
-					radioButton_Left[processingRun].setSelected(true);
-					scrollPane_Right.setViewportView(combinePanel[processingRun]);
-					this.interrupt();
+					if (combinePanel[processingRun] != null) {
+						radioButton_Left[processingRun].setSelected(true);
+						scrollPane_Right.setViewportView(combinePanel[processingRun]);
+						interrupt();
+					}
 				}
 			};
-			thread.start();
-		}			
-				
+			thread_array[i].start();			
+		}
+			
 		
 		// Add all components to JInternalFrame------------------------------------------------------------
 		super.add(splitPanel, BorderLayout.CENTER);
-		super.setOpaque(false);
-		
-		
-	} // end Panel_EditRun()
+		super.setOpaque(false);	
+	}
 
 	// Listener for radio buttons----------------------------------------------------------------------
     public void actionPerformed(ActionEvent e) {

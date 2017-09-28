@@ -119,64 +119,39 @@ public class Read_Database {
 				// For yield_tables
 				//-----------------------------------------------------------------------------------------------------------
 				// get total yield tables
-				int tableCount = 0;				
+				int total_prescriptions = 0;				
 				rs = st.executeQuery("SELECT COUNT(DISTINCT prescription) FROM yield_tables;");		//This only have 1 row and 1 column, the value is total number of unique prescription
 				while (rs.next()) {
-					tableCount = rs.getInt(1);	//column 1
-				}						
-				
-				yield_tables_names = new Object[tableCount];
-				yield_tables_values = new Object[tableCount][][];
+					total_prescriptions = rs.getInt(1);	//column 1
+				}									
+				yield_tables_names = new Object[total_prescriptions];
+				yield_tables_values = new Object[total_prescriptions][][];
 				
 				
 				//get the table name and put into array "nameOftable"
-				rs = st.executeQuery("SELECT DISTINCT prescription FROM yield_tables;");			
-				int tbl = 0;
+				rs = st.executeQuery("SELECT DISTINCT prescription, COUNT(prescription) as total_rows FROM yield_tables GROUP BY prescription;");	// prescription is auto sorted because of the "GROUP BY"		
+				int prescription_count = 0;
 				while (rs.next()) {
-					yield_tables_names[tbl] = rs.getString(1);		//column 1
-					tbl++;
-				}				
+					yield_tables_names[prescription_count] = rs.getString(1);		// column 1 = prescription
+					yield_tables_values[prescription_count] = new Object[Integer.valueOf(rs.getString(2))][];		// column 2 = total_rows of that prescription					
+					prescription_count++;
+				}			
 				
 				
+				rs = st.executeQuery("SELECT * FROM yield_tables ORDER BY prescription ASC;");				
 				// get total columns and "table_ColumnNames" for each yield table
-				rs = st.executeQuery("SELECT * FROM yield_tables;");	
 				rsmd = rs.getMetaData();
 				int colCount = rsmd.getColumnCount();
 				yield_tables_column_names = new String[colCount];
-				for (int i = 1; i <= colCount; i++) {		//this start from 1
-					yield_tables_column_names[i-1] = rsmd.getColumnName(i);			//Note that tableColumnNames start from 0
-				}
+				for (int i = 1; i <= colCount; i++) {		// this start from 1
+					yield_tables_column_names[i-1] = rsmd.getColumnName(i);			// Note that tableColumnNames start from 0
+				}				
 				
-				
-				// get total rows for each yield table
-				int[] rowCount = new int[tableCount];
-				for (int i = 0; i < tableCount; i++) {				
-					rowCount[i] = 0;
-				}
-				while (rs.next()) {
-					for (int i = 0; i < tableCount; i++) {				
-						if (rs.getString(1).equals(yield_tables_names[i])) {
-							rowCount[i]++;
-						}
-					}		
-				}	
-				
-				
-				// loop through all yield tables , get value of each table and put into array table_values[][][]
-				for (int i = 0; i < tableCount; i++) {				
-					//re-define table dimensions	--->	VERY IMPORTANT CODES
-					yield_tables_values[i] = new Object[rowCount[i]][];
-					for (int row = 0; row < rowCount[i]; row++) {
-						yield_tables_values[i][row] = new Object[colCount];
-					}
-				}
-					
-						
 				// get values for each table
-				rs = st.executeQuery("SELECT * FROM yield_tables;");
-				for (int i = 0; i < tableCount; i++) {
-					for (int row = 0; row < rowCount[i]; row++) {
+				for (int i = 0; i < yield_tables_values.length; i++) {
+					for (int row = 0; row < yield_tables_values[i].length; row++) {
 						rs.next();
+						yield_tables_values[i][row] = new Object[colCount];
 						for (int col = 0; col < colCount; col++) {
 							yield_tables_values[i][row][col] = rs.getString(col + 1);
 						}
@@ -209,7 +184,7 @@ public class Read_Database {
 				//-----------------------------------------------------------------------------------------------------------
 				// get total rows (strata count)
 				int rowCount2 = 0;				
-				rs = st.executeQuery("SELECT COUNT(DISTINCT strata_id) FROM existing_strata;");		//This only have 1 row and 1 column, the value is total number of unique strata
+				rs = st.executeQuery("SELECT COUNT(DISTINCT strata_id) FROM existing_strata;");		// This only have 1 row and 1 column, the value is total number of unique strata
 				while (rs.next()) {
 					rowCount2 = rs.getInt(1);	//column 1
 				}				
@@ -254,11 +229,11 @@ public class Read_Database {
 				//-----------------------------------------------------------------------------------------------------------
 				// For strata_definition
 				//-----------------------------------------------------------------------------------------------------------
-				// get total rows
+				// Get total rows
 				int rowCount3 = 0;				
-				rs = st.executeQuery("SELECT COUNT(layer_id) FROM strata_definition;");		//This only have 1 row and 1 column
+				rs = st.executeQuery("SELECT COUNT(layer_id) FROM strata_definition;");		// This only have 1 row and 1 column
 				while (rs.next()) {
-					rowCount3 = rs.getInt(1);	//column 1
+					rowCount3 = rs.getInt(1);	// column 1
 				}				
 				
 				// get total columns
@@ -286,14 +261,14 @@ public class Read_Database {
 				allLayers = new ArrayList<List<String>>();
 				allLayers_ToolTips = new ArrayList<List<String>>();				
 				
-				//Loop through all rows and add all layers information
+				// Loop through all rows and add all layers information
 				for (int i = 0; i < rowCount3; i++) {
-					if (! layers_Title.contains(strata_definition_values[i][0])) {  //If found a new layer
-						//Add Layer title and toolTip    	
+					if (! layers_Title.contains(strata_definition_values[i][0])) {  // If found a new layer
+						// Add Layer title and toolTip    	
 			        	layers_Title.add(strata_definition_values[i][0]);
 			        	layers_Title_ToolTip.add(strata_definition_values[i][1]);
 			        	
-			        	//Add 2 temporary Lists to the allLayers & allLayers_ToolTips
+			        	// Add 2 temporary Lists to the allLayers & allLayers_ToolTips
 			        	allLayers.add(new ArrayList<String>());
 			        	allLayers_ToolTips.add(new ArrayList<String>());
 					}
@@ -384,7 +359,7 @@ public class Read_Database {
 	
 	public String get_starting_ageclass(String cover_type, String size_class, String method, String timing_choice) {
 		if (!is_yield_tables_read) Read_yield_tables();
-		method = "NG";	//only use NG table to find starting age class
+		method = "NG";	// only use NG table to find starting age class
 		timing_choice ="0";
 		String forest_status = "E";
 		String tableName_toFind = cover_type + "_" + size_class + "_" + method + "_" + forest_status + "_" + timing_choice;
@@ -472,7 +447,7 @@ public class Read_Database {
 	// This block is For 2 extra layers ------------------------------------------------------------------------------------------------------
 	// This block is For 2 extra layers ------------------------------------------------------------------------------------------------------	
 	public List<String> get_method_period_layers_title() {
-		//Layers title
+		// Layers title
 		List<String> method_period_layers_title = new ArrayList<String>();
 		method_period_layers_title.add("silviculture method");
 		method_period_layers_title.add("time period");
@@ -481,7 +456,7 @@ public class Read_Database {
 
 	
 	public List<List<String>> get_method_period_layers() {
-		//Layers element name
+		// Layers element name
 		List<String> layer1 = new ArrayList<String>();		// methods
 		layer1.add("NG_E");
 		layer1.add("PB_E");
@@ -508,7 +483,7 @@ public class Read_Database {
 
 	
 	public List<String> get_method_choice_layers_title() {
-		//Layers title
+		// Layers title
 		List<String> method_choice_layers_title = new ArrayList<String>();
 		method_choice_layers_title.add("silviculture method");
 		method_choice_layers_title.add("timing choice");
@@ -517,7 +492,7 @@ public class Read_Database {
 
 	
 	public List<List<String>> get_method_choice_layers() {
-		//Layers element name
+		// Layers element name
 		List<String> layer1 = new ArrayList<String>();		// methods
 		layer1.add("NG_E");
 		layer1.add("PB_E");
@@ -547,10 +522,10 @@ public class Read_Database {
 		String toolTip = null;
 
 		
-		//Read library from the system
+		// Read library from the system
 		File file_PrismLibrary = null;
 		
-		if (file_PrismLibrary == null) {		//This is to make it read the file only once, after that no need to repeat reading this file any more
+		if (file_PrismLibrary == null) {		// This is to make it read the file only once, after that no need to repeat reading this file any more
 			try {
 				file_PrismLibrary = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "PrismLibrary.csv");
 				file_PrismLibrary.deleteOnExit();
@@ -582,15 +557,15 @@ public class Read_Database {
 			int totalCols = 2;
 			String[][] value = new String[totalRows][totalCols];
 
-			// read all values from all rows and columns
+			// Read all values from all rows and columns
 			for (int i = 0; i < totalRows; i++) { // Read from 1st row
 				String[] rowValue = a[i].split(delimited);
 				for (int j = 0; j < totalCols && j < rowValue.length; j++) {
-//					value[i][j] = rowValue[j].replaceAll("\\s+", "");		//Remove all the space in the String   
-					value[i][j] = rowValue[j];		//to make toolTip text separated with space, may need the above line if there is spaces in layer and elements name in the file StrataDefinition.csv
+//					value[i][j] = rowValue[j].replaceAll("\\s+", "");		// Remove all the space in the String   
+					value[i][j] = rowValue[j];		// to make toolTip text separated with space, may need the above line if there is spaces in layer and elements name in the file StrataDefinition.csv
 				
 				}				
-				//Tool tip identified by comparing the name before and after normalization
+				// Tool tip identified by comparing the name before and after normalization
 				if (yt_columnName.equals(value[i][0]) || StringHandle.normalize(yt_columnName).equals(StringHandle.normalize(value[i][0]))) {
 					toolTip = value[i][1];
 				}
