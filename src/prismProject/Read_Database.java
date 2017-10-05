@@ -190,7 +190,7 @@ public class Read_Database {
 				}				
 				
 				// get total columns
-				rs = st.executeQuery("SELECT * FROM existing_strata;");	
+				rs = st.executeQuery("SELECT * FROM existing_strata ORDER BY strata_id ASC;");	
 				rsmd = rs.getMetaData();
 				int colCount2 = rsmd.getColumnCount();
 				

@@ -273,15 +273,15 @@ All changes in this block are associated with v30.jar, formulation25.docx, datab
 	- reload_this_condition_action_cost_and_conversion_cost: add 2 if to make sure all null (or "") condition can be reloaded:
 		- if(action_cost_info.length() > 0) {
 		- if(conversion_cost_info.length() > 0) {
-136. Popup added for Cost Conditons, Basic Constraints, and Advanced Constraints so users have a change to not modify if accidently hit the button
+136. Popup added for Cost Conditons, Basic Constraints, and Advanced Constraints so users have a chance to not modify if accidently hit the button
 137. Allow: age_class (CGNF) or st_age_10 (CNPZ) to be searched as age, and hca_allsx (CNPZ) or rmcuft (CGNF) to show up as default in action cost
 138. Change name for the panels in edit_details, add a new panel "Silviculture Method"
 139. table_overview: add count strata and acres of the currently highlighted rows
 140. Remove agelass from the extra layer permanently (now only method and period are used as 2 extra layers)
 141. Redefine static_Identifiers scroll pane so it has more options of which layers to be added, also use it in Model Strata GUI (remove the previous long codes)
-142. Refactor (Rename) a lot os tables, data, etc. THIS IS DANGEROUS! but necessary for the new input: silviculture_method
+142. Refactor (Rename) a lot of tables, data, etc. THIS IS DANGEROUS! but necessary for the new input: silviculture_method
 143. GUI completed for Silviculture Method Panel
-144. Temporarily swith radioButton_Right (2 places at the start of edit_runs_details) to move Silvicultuer method after Model Strata
+144. Temporarily switch radioButton_Right (2 places at the start of edit_runs_details) to move Silvicultuer method after Model Strata
 145. Boost 5:
 	- Read_RunInputs: return unique model_strata_without_sizeclass_and_covertype, model_strata_without_sizeclass (this one is currently not used)
 	- Except 12a, 13, 6a to 6e, and the definition of xEA_E: all the other definition and equations have the for loop rewritten
@@ -291,7 +291,7 @@ All changes in this block are associated with v31Boost5BufFixed.jar, formulation
 --------------------------------------------------------------------------
 
 147. Some refactor in Panel_SolveRuns, Read_RunInputs, also fix some loops in Read_RunInputs (general_inputs & model_strata: remove the column header row before saving values)
-148. Remove IF Then (for sstactic_identifiers) in eq.15 by using common_strata & common_trata_without_sizeclass_and_covertype (retailAll method)
+148. Remove IF Then (for stactic_identifiers) in eq.15 by using common_strata & common_trata_without_sizeclass_and_covertype (retailAll method)
 149. SpectrumLite --> Prism : all names are replaced
 150. Boost 1 completed (NG_E NG_R are default applied to every strata)
 151. Hide the checkbox column in Silviculture Method (Could be deleted but still keep it incase if we need to use in the future)
@@ -308,7 +308,7 @@ All changes in this block are associated with PrismAlpha1.0.01.jar, Prism Formul
 153. Add null check for sm_strata & sm_strata_without_sizeclass_and_covertype: This would allow all methods eligible to be applied if users do not have any row set up in "Silviculture Method" window.
 154. Highlighted soft and hard constraints with colors
 155. Remove currentPeriod in Panel_solveRuns, it is t --> no need to define
-156. output05 now has the query works properly. Need more function nayway.
+156. output05 now has the query works properly. Need more function anyway.
 
 All changes in this block are associated with PrismAlpha1.0.03.jar, Prism Formulation 01.docx, Prism Database 01.docx
 --------------------------------------------------------------------------
@@ -338,12 +338,12 @@ Save at 09/08/2017 - Retrieve later if need this boost but probably will never u
 
 162. Auto save is triggered right after run querries using the "play" button in output05
 163. Output 05 querries are put into thread when "play" button is clicked. This is to avoid frozen screen
-164. Close all running threads and call gabage collector to retrieve memory after mouse click on Poject Jtree. This is important since It helps get memory back from the thread running querries in output05 (this threads add up memory if not call system.gc()) Note: ithe call system.gc sometimes does not trigger the collection. Note 2: This thing slow down the system --> disable.
+164. Close all running threads and call gabage collector to retrieve memory after mouse click on Poject Jtree. This is important since It helps get memory back from the thread running querries in output05 (this threads add up memory if not call system.gc()) Note: the call system.gc sometimes does not trigger the collection. Note 2: This thing slows down the system --> disable.
 165. Print out more information during the solving process
 166. Bug 10 fixed (BS and MS timing choice jumping)
 	- 6c is now 6b, t-->1
 	- 6e is now 6d, t-->1
-	- Add 2 transitional equation 6c and 6d
+	- Add 2 transitional equations 6c and 6d
 All changes in this block are associated with PrismAlpha1.0.05.jar, Prism Formulation 01.docx, Prism Database 01.docx
 --------------------------------------------------------------------------
 
@@ -381,8 +381,49 @@ All changes in this block are associated with PrismAlpha1.0.09.jar, Prism Formul
 185. Allow users to write a readme file
 184. Design some convenience classes to trim codes: PrismTitleScrollPane, PrismGridBagLayoutHandle
 185. Main window has new function: "Rename" and "Copy"
-186. Change ShortCut Key for Database Management to ALT + D since CTRL + D would delete a line in eclipse IDM --> dangerous using CTRL + D
-187. If only level 3 note in Runs Tree is selected --> keep them all selected, not remove
-
-// Note: delete from memorize list when databases or tables in Databases Folder are deleted or renamed (This is important)
+186. Change ShortCut Key for Database Management to ALT + D since CTRL + D would delete a line in eclipse IDE --> dangerous using CTRL + D
+187. If only level 3 nodes in Runs Tree are selected --> keep them all selected, not remove
 All changes in this block are associated with PrismAlpha1.0.10.jar, Prism Formulation 01.docx, Prism Database 01.docx
+--------------------------------------------------------------------------
+
+188. Define preferred size for nested scroll inside PrismTitleScrollPane to avoid misbehavior that the nested does not scroll properly and image lost.
+189. Define readme as a class, show this readme as textarea in main GUI --> no requirement to limit the line's length
+190. Fix Bug with readme by defining this at top of Panel_EditRun_Details: private JTextArea readme = new TextArea_ReadMe();
+191. Write reading_time, solving_time, and writing_time in general_outputs
+192. RR Boost 1: 
+	- add 2 new arrays to store indexes of prescription & row_id
+	- Move the search for prescription & row_id outside of Get_Parameter_Information --> private static int[] prescription_and_row (this function needs to be in both Panel_SolveRun & Output_Panel_Management_Details) 
+193. Rewrite the search of prescription & row_id for management_details output in Panel_SolveRun
+194. RR Boost 2 completed: Remove unnecessary duplicated "yield_tables_names_list.contains" method
+195. RR Boost 3a completed: binary search is implemented for "private static int[] get_prescription_and_row"
+196. RR Boost 3b completed: Binary search for model_strata (the 6 layers strata)
+	- Read_Database: Query for existing_strata is now sorted (Order By strata_id ASC)
+	- Panel_SolveRun: Binary search is implemented for model_strata  which returns the sorted strata_id. All system core constraints and user constraints are benefited with the searching of 30 arrays would be O(1).
+197. RR Boost 3c completed: Binary search for model_strata_without_sizeclass_and_covertype (the 4 layers strata)
+	- Do not need to sort because this strata 4 layers are extracted from strata 6 layers --> should be already sorted when added
+	- Panel_SolveRun: Binary search is implemented in many places that have 4 layers strata.
+198. RR Boost 3d: Binary search combined with other changes
+	- Binary search on the following: eq: 12a, 13
+	- Starting_age & strata_area: redimension by merging 6 layers. This would save memory although not significantly, and also save reading time
+	- Delete all the following when possible (6a, 6b, 6c, 6d, 7a, 7b, 8a, 9a, 9b, 10, 11, 12a, 12b, 13, 14a, 14b, 14c, 14d, 15). This would speed up reading time
+		int s1 = layer1.indexOf(strata.substring(0,1));
+		int s2 = layer2.indexOf(strata.substring(1,2));
+		int s3 = layer3.indexOf(strata.substring(2,3));
+		int s4 = layer4.indexOf(strata.substring(3,4));
+		int s5 = layer5.indexOf(strata.substring(4,5)); (exception: 7b, 8b, 9b, 10, 11, 12a, 12b, 13, 14a, 14b, 14c, 14d, 15)
+		int s6 = layer6.indexOf(strata.substring(5,6)); (exception: 12a, 12b, 13, 14a, 14b, 14c, 14d)
+	- Delete all the following when possible (15). This would speed up reading time
+		List<String> current_var_static_condition = new ArrayList<String>();
+		current_var_static_condition.add(layers_Title.get(0) + layer1.get(s1));	
+		current_var_static_condition.add(layers_Title.get(1) + layer2.get(s2));	
+		current_var_static_condition.add(layers_Title.get(2) + layer3.get(s3));	
+		current_var_static_condition.add(layers_Title.get(3) + layer4.get(s4));	
+		current_var_static_condition.add(layers_Title.get(4) + layer5.get(s5));	
+199. Also apply RR Boost 3d on Output_Panel_Management_Details for faster queries
+200. RR Boost 4: Binary Search --> No Search wherever possible		DISABLE DISABLE DISABLE since it not faster and code is hard to read, saved as RRB4 in prismBackups folder
+	- Remove binary search for following variables: x, 
+	- Remove binary search for following equations: 6a, 6b, 6c, 6d, 6e, 7a, 7b, 8a, 8b, 9a, 9b, 10, 11 (6 layers)
+	- Remove binary search for following equations: 12a, 12b, 13, 14a, 14b, 14c, 14d  (4 layers)
+	- Remove binary search for management_overview in Panel_SolveRun
+All changes in this block are associated with PrismAlpha1.0.11.jar, Prism Formulation 01.docx, Prism Database 01.docx
+--------------------------------------------------------------------------

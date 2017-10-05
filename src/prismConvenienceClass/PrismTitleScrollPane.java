@@ -2,6 +2,7 @@ package prismConvenienceClass;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
@@ -15,7 +16,7 @@ public class PrismTitleScrollPane extends JScrollPane {
 		JScrollPane nested_scrollpane = new JScrollPane(component);	
 		Border tempBorder = BorderFactory.createMatteBorder(1, 1, 1, 1, ColorUtil.makeTransparent(Color.BLACK, 75));
 		nested_scrollpane.setBorder(tempBorder);
-
+		nested_scrollpane.setPreferredSize(new Dimension(100, 100));
 		
 		TitledBorder border = new TitledBorder(title);
 		if (title_alignment.equals("LEFT")) {

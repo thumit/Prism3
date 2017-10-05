@@ -1,0 +1,13 @@
+flow_id	flow_description	flow_arrangement	flow_type	lowerbound_percentage	upperbound_percentage	
+1	NDEF CuFt	2;3;4;5;6;7;8;9;10;11;12;13;14;15;16	HARD	100.0	null	
+2	EndingInv	17;18	HARD	100.0	null	
+3	wui per1 bud	334;339	HARD	41.0	null	
+4	wui per2 bud	335;340	HARD	41.0	null	
+5	wui per3bud	336;341	HARD	41.0	null	
+6	wui per4 bud	337;342	HARD	41.0	null	
+7	wui per5 bud	338;343	HARD	41.0	null	
+8	Nonwui per1 bud	334;344	HARD	23.0	null	
+9	Nonwui per2 bud	335;345	HARD	23.0	null	
+10	Nonwui per3 bud	336;346	HARD	23.0	null	
+11	Nonwui per4 bud	337;347	HARD	23.0	null	
+12	Nonwui per5 bud	338;348	HARD	23.0	null	

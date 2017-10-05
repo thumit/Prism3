@@ -1,0 +1,545 @@
+bc_id	bc_description	bc_type	bc_multiplier	lowerbound	lowerbound_perunit_penalty	upperbound	upperbound_perunit_penalty	bookeeping_var_id	bookeeping_var_name	bookeeping_var_value	bookeeping_var_reduced_cost	total_penalty
+1	BdFtVol Per1	SOFT	1.0	9.99999999E8	0.05	null	null	0	y_0	1.5743359183065373E8	0.0	4.212832035846732E7
+2	CuFt Harv 1 - time period 1	FREE	1.0	null	null	null	null	1119	v_0	2.561841816736214E7	0.0	0.0
+3	CuFt Harv 2 - time period 2	FREE	1.0	null	null	null	null	1120	v_1	2.561841816736214E7	0.0	0.0
+4	CuFt Harv 3 - time period 3	FREE	1.0	null	null	null	null	1121	v_2	2.561841816736214E7	0.0	0.0
+5	CuFt Harv 4 - time period 4	FREE	1.0	null	null	null	null	1122	v_3	2.561841816736214E7	0.0	0.0
+6	CuFt Harv 5 - time period 5	FREE	1.0	null	null	null	null	1123	v_4	2.561841816736214E7	0.0	0.0
+7	CuFt Harv 6 - time period 6	FREE	1.0	null	null	null	null	1124	v_5	2.953974379743254E7	0.0	0.0
+8	CuFt Harv 7 - time period 7	FREE	1.0	null	null	null	null	1125	v_6	2.953974379743254E7	0.0	0.0
+9	CuFt Harv 8 - time period 8	FREE	1.0	null	null	null	null	1126	v_7	2.953974379743254E7	0.0	0.0
+10	CuFt Harv 9 - time period 9	FREE	1.0	null	null	null	null	1127	v_8	2.953974379743254E7	0.0	0.0
+11	CuFt Harv 10 - time period 10	FREE	1.0	null	null	null	null	1128	v_9	2.953974379743254E7	0.0	0.0
+12	CuFt Harv 11 - time period 11	FREE	1.0	null	null	null	null	1129	v_10	2.953974379743254E7	0.0	0.0
+13	CuFt Harv 12 - time period 12	FREE	1.0	null	null	null	null	1130	v_11	2.953974379743254E7	0.0	0.0
+14	CuFt Harv 13 - time period 13	FREE	1.0	null	null	null	null	1131	v_12	2.953974379743254E7	0.0	0.0
+15	CuFt Harv 14 - time period 14	FREE	1.0	null	null	null	null	1132	v_13	2.953974379743254E7	0.0	0.0
+16	CuFt Harv 15 - time period 15	FREE	1.0	null	null	null	null	1133	v_14	1.2931633343795523E8	0.0	0.0
+17	CuFt Inventory 5-14	FREE	0.1	null	null	null	null	1134	v_15	1.1211291526652417E9	0.0	0.0
+18	CuFtInventory 15	FREE	1.0	null	null	null	null	1135	v_16	1.1211291526652417E9	0.0	0.0
+19	msf 1 - time period 1	HARD	1.0	54500.0	null	null	null	903	z_0	54500.0	0.0	0.0
+20	msf 2 - time period 2	HARD	1.0	54500.0	null	null	null	904	z_1	54500.0	0.4274472433644866	0.0
+21	msf 3 - time period 3	HARD	1.0	54500.0	null	null	null	905	z_2	54500.0	0.03582327876555879	0.0
+22	msf 4 - time period 4	HARD	1.0	54500.0	null	null	null	906	z_3	54500.0	0.0016248147714091957	0.0
+23	msf 5 - time period 5	HARD	1.0	54500.0	null	null	null	907	z_4	56069.40000000009	0.0	0.0
+24	msf 6 - time period 6	HARD	1.0	54500.0	null	null	null	908	z_5	54500.0	0.0	0.0
+25	msf 7 - time period 7	HARD	1.0	54500.0	null	null	null	909	z_6	54500.0	0.0	0.0
+26	msf 8 - time period 8	HARD	1.0	54500.0	null	null	null	910	z_7	54500.00000000001	0.0	0.0
+27	msf 9 - time period 9	HARD	1.0	54500.0	null	null	null	911	z_8	54499.999999999985	0.0	0.0
+28	msf 10 - time period 10	HARD	1.0	54500.0	null	null	null	912	z_9	56069.40000000006	0.0	0.0
+29	msf 11 - time period 11	HARD	1.0	54500.0	null	null	null	913	z_10	54500.0	4.397945452682915	0.0
+30	msf 12 - time period 12	HARD	1.0	54500.0	null	null	null	914	z_11	54500.0	0.0	0.0
+31	msf 13 - time period 13	HARD	1.0	54500.0	null	null	null	915	z_12	54500.00000000001	0.0	0.0
+32	msf 14 - time period 14	HARD	1.0	54500.0	null	null	null	916	z_13	54499.999999999985	0.0	0.0
+33	msf 15 - time period 15	HARD	1.0	54500.0	null	null	null	917	z_14	56069.40000000006	0.0	0.0
+34	VegILowDensity 1 - time period 1	SOFT	1.0	222159.0	1.0	null	null	1	y_1	138949.0	0.0	83210.0
+35	VegILowDensity 2 - time period 2	SOFT	1.0	222159.0	1.0	null	null	2	y_2	211511.7926725092	0.0	10647.207327490789
+36	VegILowDensity 3 - time period 3	SOFT	1.0	222159.0	1.0	null	null	3	y_3	271883.02756217733	0.0	0.0
+37	VegILowDensity 4 - time period 4	SOFT	1.0	222159.0	1.0	null	null	4	y_4	350527.9755137289	0.0	0.0
+38	VegILowDensity 5 - time period 5	SOFT	1.0	222159.0	1.0	null	null	5	y_5	365615.1988970737	0.0	0.0
+39	VegILowDensity 6 - time period 6	SOFT	1.0	222159.0	0.5	null	0.0	6	y_6	413110.5268067922	0.0	0.0
+40	VegILowDensity 7 - time period 7	SOFT	1.0	222159.0	0.5	null	0.0	7	y_7	453061.6368081089	0.0	0.0
+41	VegILowDensity 8 - time period 8	SOFT	1.0	222159.0	0.5	null	0.0	8	y_8	449898.65351617907	0.0	0.0
+42	VegILowDensity 9 - time period 9	SOFT	1.0	222159.0	0.5	null	0.0	9	y_9	479274.5939982285	0.0	0.0
+43	VegILowDensity 10 - time period 10	SOFT	1.0	222159.0	0.5	null	0.0	10	y_10	487167.2194902279	0.0	0.0
+44	VegILowDensity 11 - time period 11	SOFT	1.0	222159.0	0.5	null	0.0	11	y_11	506045.9366362328	0.0	0.0
+45	VegILowDensity 12 - time period 12	SOFT	1.0	222159.0	0.5	null	0.0	12	y_12	524287.61059899634	0.0	0.0
+46	VegILowDensity 13 - time period 13	SOFT	1.0	222159.0	0.5	null	0.0	13	y_13	526603.1783389106	0.0	0.0
+47	VegILowDensity 14 - time period 14	SOFT	1.0	222159.0	0.5	null	0.0	14	y_14	534519.6148220615	0.0	0.0
+48	VegILowDensity 15 - time period 15	SOFT	1.0	222159.0	0.5	null	0.0	15	y_15	545823.4661227574	0.0	0.0
+49	FGH Low Density 1 - time period 1	SOFT	1.0	88136.0	1.0	null	null	16	y_16	170901.00000000006	0.0	0.0
+50	FGH Low Density 2 - time period 2	SOFT	1.0	88136.0	1.0	null	null	17	y_17	231819.0306725092	0.0	0.0
+51	FGH Low Density 3 - time period 3	SOFT	1.0	88136.0	1.0	null	null	18	y_18	309979.9748670174	0.0	0.0
+52	FGH Low Density 4 - time period 4	SOFT	1.0	88136.0	1.0	null	null	19	y_19	378276.6613922719	0.0	0.0
+53	FGH Low Density 5 - time period 5	SOFT	1.0	88136.0	1.0	null	null	20	y_20	401698.332933322	0.0	0.0
+54	FGH Low Density 6 - time period 6	SOFT	1.0	88136.0	0.5	null	0.0	21	y_21	449116.1528289387	0.0	0.0
+55	FGH Low Density 7 - time period 7	SOFT	1.0	88136.0	0.5	null	0.0	22	y_22	434395.65612657205	0.0	0.0
+56	FGH Low Density 8 - time period 8	SOFT	1.0	88136.0	0.5	null	0.0	23	y_23	459577.24846406415	0.0	0.0
+57	FGH Low Density 9 - time period 9	SOFT	1.0	88136.0	0.5	null	0.0	24	y_24	480361.4224820811	0.0	0.0
+58	FGH Low Density 10 - time period 10	SOFT	1.0	88136.0	0.5	null	0.0	25	y_25	488685.49810483784	0.0	0.0
+59	FGH Low Density 11 - time period 11	SOFT	1.0	88136.0	0.5	null	0.0	26	y_26	500853.4321653985	0.0	0.0
+60	FGH Low Density 12 - time period 12	SOFT	1.0	88136.0	0.5	null	0.0	27	y_27	517143.067964662	0.0	0.0
+61	FGH Low Density 13 - time period 13	SOFT	1.0	88136.0	0.5	null	0.0	28	y_28	530520.7944527119	0.0	0.0
+62	FGH Low Density 14 - time period 14	SOFT	1.0	88136.0	0.5	null	0.0	29	y_29	538802.3091024188	0.0	0.0
+63	FGH Low Density 15 - time period 15	SOFT	1.0	88136.0	0.5	null	0.0	30	y_30	552013.656805778	0.0	0.0
+64	CDE Low Density 1 - time period 1	SOFT	1.0	99907.0	1.0	null	null	31	y_31	135611.00000000003	0.0	0.0
+65	CDE Low Density 2 - time period 2	SOFT	1.0	99907.0	1.0	null	null	32	y_32	229537.16307250925	0.0	0.0
+66	CDE Low Density 3 - time period 3	SOFT	1.0	99907.0	1.0	null	null	33	y_33	287344.06594217726	0.0	0.0
+67	CDE Low Density 4 - time period 4	SOFT	1.0	99907.0	1.0	null	null	34	y_34	355136.3255782972	0.0	0.0
+68	CDE Low Density 5 - time period 5	SOFT	1.0	99907.0	1.0	null	null	35	y_35	396518.6855833342	0.0	0.0
+69	CDE Low Density 6 - time period 6	SOFT	1.0	99907.0	0.5	null	0.0	36	y_36	429903.47726034326	0.0	0.0
+70	CDE Low Density 7 - time period 7	SOFT	1.0	99907.0	0.5	null	0.0	37	y_37	489785.6295687758	0.0	0.0
+71	CDE Low Density 8 - time period 8	SOFT	1.0	99907.0	0.5	null	0.0	38	y_38	504396.7584805505	0.0	0.0
+72	CDE Low Density 9 - time period 9	SOFT	1.0	99907.0	0.5	null	0.0	39	y_39	526603.6828213388	0.0	0.0
+73	CDE Low Density 10 - time period 10	SOFT	1.0	99907.0	0.5	null	0.0	40	y_40	533114.6105204808	0.0	0.0
+74	CDE Low Density 11 - time period 11	SOFT	1.0	99907.0	0.5	null	0.0	41	y_41	553295.4762267596	0.0	0.0
+75	CDE Low Density 12 - time period 12	SOFT	1.0	99907.0	0.5	null	0.0	42	y_42	575818.0692067019	0.0	0.0
+76	CDE Low Density 13 - time period 13	SOFT	1.0	99907.0	0.5	null	0.0	43	y_43	590036.2991251195	0.0	0.0
+77	CDE Low Density 14 - time period 14	SOFT	1.0	99907.0	0.5	null	0.0	44	y_44	590853.2639925238	0.0	0.0
+78	CDE Low Density 15 - time period 15	SOFT	1.0	99907.0	0.5	null	0.0	45	y_45	600931.4675204884	0.0	0.0
+79	B Low Density 1 - time period 1	SOFT	1.0	170588.0	1.0	null	null	46	y_46	215175.00000000006	0.0	0.0
+80	B Low Density 2 - time period 2	SOFT	1.0	170588.0	1.0	null	null	47	y_47	272854.3427050135	0.0	0.0
+81	B Low Density 3 - time period 3	SOFT	1.0	170588.0	1.0	null	null	48	y_48	337312.5723037092	0.0	0.0
+82	B Low Density 4 - time period 4	SOFT	1.0	170588.0	1.0	null	null	49	y_49	400074.24254379555	0.0	0.0
+83	B Low Density 5 - time period 5	SOFT	1.0	170588.0	1.0	null	null	50	y_50	444919.21197097545	0.0	0.0
+84	B Low Density 6 - time period 6	SOFT	1.0	170588.0	0.5	null	0.0	51	y_51	484718.73466461105	0.0	0.0
+85	B Low Density 7 - time period 7	SOFT	1.0	170588.0	0.5	null	0.0	52	y_52	510617.9390949758	0.0	0.0
+86	B Low Density 8 - time period 8	SOFT	1.0	170588.0	0.5	null	0.0	53	y_53	530955.5805843767	0.0	0.0
+87	B Low Density 9 - time period 9	SOFT	1.0	170588.0	0.5	null	0.0	54	y_54	573683.6205687928	0.0	0.0
+88	B Low Density 10 - time period 10	SOFT	1.0	170588.0	0.5	null	0.0	55	y_55	577382.1876516717	0.0	0.0
+89	B Low Density 11 - time period 11	SOFT	1.0	170588.0	0.5	null	0.0	56	y_56	593441.3619272667	0.0	0.0
+90	B Low Density 12 - time period 12	SOFT	1.0	170588.0	0.5	null	0.0	57	y_57	609515.2267470022	0.0	0.0
+91	B Low Density 13 - time period 13	SOFT	1.0	170588.0	0.5	null	0.0	58	y_58	622690.8947702862	0.0	0.0
+92	B Low Density 14 - time period 14	SOFT	1.0	170588.0	0.5	null	0.0	59	y_59	629452.3768028403	0.0	0.0
+93	B Low Density 15 - time period 15	SOFT	1.0	170588.0	0.5	null	0.0	60	y_60	639837.8920790285	0.0	0.0
+94	I Med Density 1 - time period 1	SOFT	1.0	80785.0	1.0	null	null	61	y_61	98233.00000000001	0.0	0.0
+95	I Med Density 2 - time period 2	SOFT	1.0	80785.0	1.0	null	null	62	y_62	107635.1872	0.0	0.0
+96	I Med Density 3 - time period 3	SOFT	1.0	80785.0	1.0	null	null	63	y_63	116142.59232800001	0.0	0.0
+97	I Med Density 4 - time period 4	SOFT	1.0	80785.0	1.0	null	null	64	y_64	121039.5639676	0.0	0.0
+98	I Med Density 5 - time period 5	SOFT	1.0	80785.0	1.0	null	null	65	y_65	160994.34725334795	0.0	0.0
+99	I Med Density 6 - time period 6	SOFT	1.0	80785.0	0.5	null	0.0	66	y_66	160375.03997044035	0.0	0.0
+100	I Med Density 7 - time period 7	SOFT	1.0	80785.0	0.5	null	0.0	67	y_67	199806.87482078277	0.0	0.0
+101	I Med Density 8 - time period 8	SOFT	1.0	80785.0	0.5	null	0.0	68	y_68	242661.5228028248	0.0	0.0
+102	I Med Density 9 - time period 9	SOFT	1.0	80785.0	0.5	null	0.0	69	y_69	361348.13982211956	0.0	0.0
+103	I Med Density 10 - time period 10	SOFT	1.0	80785.0	0.5	null	0.0	70	y_70	383634.93701402994	0.0	0.0
+104	I Med Density 11 - time period 11	SOFT	1.0	80785.0	0.5	null	0.0	71	y_71	396168.1123237822	0.0	0.0
+105	I Med Density 12 - time period 12	SOFT	1.0	80785.0	0.5	null	0.0	72	y_72	406301.52656966296	0.0	0.0
+106	I Med Density 13 - time period 13	SOFT	1.0	80785.0	0.5	null	0.0	73	y_73	428929.85927574325	0.0	0.0
+107	I Med Density 14 - time period 14	SOFT	1.0	80785.0	0.5	null	0.0	74	y_74	440681.28698071826	0.0	0.0
+108	I Med Density 15 - time period 15	SOFT	1.0	80785.0	0.5	null	0.0	75	y_75	442601.4976824296	0.0	0.0
+109	FGH Med Density 1 - time period 1	SOFT	1.0	352543.0	1.0	null	null	76	y_76	173856.00000000003	0.0	178686.99999999997
+110	FGH Med Density 2 - time period 2	SOFT	1.0	352543.0	1.0	null	null	77	y_77	192540.78860000003	0.0	160002.21139999997
+111	FGH Med Density 3 - time period 3	SOFT	1.0	352543.0	1.0	null	null	78	y_78	219837.44667600005	0.0	132705.55332399995
+112	FGH Med Density 4 - time period 4	SOFT	1.0	352543.0	1.0	null	null	79	y_79	320423.68588058377	0.0	32119.31411941623
+113	FGH Med Density 5 - time period 5	SOFT	1.0	352543.0	1.0	null	null	80	y_80	441628.9951499187	0.0	0.0
+114	FGH Med Density 6 - time period 6	SOFT	1.0	352543.0	0.5	null	0.0	81	y_81	526082.9748022851	0.0	0.0
+115	FGH Med Density 7 - time period 7	SOFT	1.0	352543.0	0.5	null	0.0	82	y_82	575467.9670111437	0.0	0.0
+116	FGH Med Density 8 - time period 8	SOFT	1.0	352543.0	0.5	null	0.0	83	y_83	578801.4656598336	0.0	0.0
+117	FGH Med Density 9 - time period 9	SOFT	1.0	352543.0	0.5	null	0.0	84	y_84	587941.3148345918	0.0	0.0
+118	FGH Med Density 10 - time period 10	SOFT	1.0	352543.0	0.5	null	0.0	85	y_85	601674.3621279696	0.0	0.0
+119	FGH Med Density 11 - time period 11	SOFT	1.0	352543.0	0.5	null	0.0	86	y_86	613132.0075547036	0.0	0.0
+120	FGH Med Density 12 - time period 12	SOFT	1.0	352543.0	0.5	null	0.0	87	y_87	566939.3692042861	0.0	0.0
+121	FGH Med Density 13 - time period 13	SOFT	1.0	352543.0	0.5	null	0.0	88	y_88	564193.7322702957	0.0	0.0
+122	FGH Med Density 14 - time period 14	SOFT	1.0	352543.0	0.5	null	0.0	89	y_89	632323.2354222857	0.0	0.0
+123	FGH Med Density 15 - time period 15	SOFT	1.0	352543.0	0.5	null	0.0	90	y_90	626109.8869181066	0.0	0.0
+124	CDE Med Density 1 - time period 1	SOFT	1.0	139869.0	1.0	null	null	91	y_91	81183.9999999999	0.0	58685.0000000001
+125	CDE Med Density 2 - time period 2	SOFT	1.0	139869.0	1.0	null	null	92	y_92	89148.20324999996	0.0	50720.79675000004
+126	CDE Med Density 3 - time period 3	SOFT	1.0	139869.0	1.0	null	null	93	y_93	104655.91025520518	0.0	35213.08974479482
+127	CDE Med Density 4 - time period 4	SOFT	1.0	139869.0	1.0	null	null	94	y_94	107596.13610651671	0.0	32272.863893483285
+128	CDE Med Density 5 - time period 5	SOFT	1.0	139869.0	1.0	null	null	95	y_95	119291.10280948118	0.0	20577.897190518823
+129	CDE Med Density 6 - time period 6	SOFT	1.0	139869.0	0.5	null	0.0	96	y_96	125487.37737448099	0.0	7190.811312759506
+130	CDE Med Density 7 - time period 7	SOFT	1.0	139869.0	0.5	null	0.0	97	y_97	124234.11810103389	0.0	7817.440949483054
+131	CDE Med Density 8 - time period 8	SOFT	1.0	139869.0	0.5	null	0.0	98	y_98	138029.38043347202	0.0	919.8097832639905
+132	CDE Med Density 9 - time period 9	SOFT	1.0	139869.0	0.5	null	0.0	99	y_99	148344.13796555705	0.0	0.0
+133	CDE Med Density 10 - time period 10	SOFT	1.0	139869.0	0.5	null	0.0	100	y_100	169745.94278116513	0.0	0.0
+134	CDE Med Density 11 - time period 11	SOFT	1.0	139869.0	0.5	null	0.0	101	y_101	184903.2552693648	0.0	0.0
+135	CDE Med Density 12 - time period 12	SOFT	1.0	139869.0	0.5	null	0.0	102	y_102	188026.38593438012	0.0	0.0
+136	CDE Med Density 13 - time period 13	SOFT	1.0	139869.0	0.5	null	0.0	103	y_103	198803.02718214248	0.0	0.0
+137	CDE Med Density 14 - time period 14	SOFT	1.0	139869.0	0.5	null	0.0	104	y_104	222087.47831791913	0.0	0.0
+138	CDE Med Density 15 - time period 15	SOFT	1.0	139869.0	0.5	null	0.0	105	y_105	220324.8946362871	0.0	0.0
+139	B Med Density 1 - time period 1	SOFT	1.0	null	null	56863.0	1.0	106	y_106	62649.99999999999	0.0	5786.999999999993
+140	B Med Density 2 - time period 2	SOFT	1.0	null	null	56863.0	1.0	107	y_107	65233.06542652265	0.0	8370.065426522648
+141	B Med Density 3 - time period 3	SOFT	1.0	null	null	56863.0	1.0	108	y_108	52878.46809584147	0.0	0.0
+142	B Med Density 4 - time period 4	SOFT	1.0	null	null	56863.0	1.0	109	y_109	56863.0	0.0	0.0
+143	B Med Density 5 - time period 5	SOFT	1.0	null	null	56863.0	1.0	110	y_110	59736.00886605673	0.0	2873.008866056727
+144	B Med Density 6 - time period 6	SOFT	1.0	null	0.0	56863.0	0.5	111	y_111	53972.985566979376	0.0	0.0
+145	B Med Density 7 - time period 7	SOFT	1.0	null	0.0	56863.0	0.5	112	y_112	68555.6822236016	0.0	5846.341111800801
+146	B Med Density 8 - time period 8	SOFT	1.0	null	0.0	56863.0	0.5	113	y_113	86518.4295740549	0.0	14827.71478702745
+147	B Med Density 9 - time period 9	SOFT	1.0	null	0.0	56863.0	0.5	114	y_114	87241.99315696386	0.0	15189.496578481929
+148	B Med Density 10 - time period 10	SOFT	1.0	null	0.0	56863.0	0.5	115	y_115	115800.73611607101	0.0	29468.868058035507
+149	B Med Density 11 - time period 11	SOFT	1.0	null	0.0	56863.0	0.5	116	y_116	133716.27562004566	0.0	38426.63781002283
+150	B Med Density 12 - time period 12	SOFT	1.0	null	0.0	56863.0	0.5	117	y_117	146745.40137439052	0.0	44941.20068719526
+151	B Med Density 13 - time period 13	SOFT	1.0	null	0.0	56863.0	0.5	118	y_118	161865.14359370052	0.0	52501.07179685026
+152	B Med Density 14 - time period 14	SOFT	1.0	null	0.0	56863.0	0.5	119	y_119	178395.78512374655	0.0	60766.392561873276
+153	B Med Density 15 - time period 15	SOFT	1.0	null	0.0	56863.0	0.5	120	y_120	185078.3166424274	0.0	64107.658321213705
+154	I High Den 1 - time period 1	SOFT	1.0	null	null	40393.0	1.0	121	y_121	166658.0	0.0	126265.0
+155	I High Den 2 - time period 2	SOFT	1.0	null	null	40393.0	1.0	122	y_122	156838.72960000002	0.0	116445.72960000002
+156	I High Den 3 - time period 3	SOFT	1.0	null	null	40393.0	1.0	123	y_123	153701.955008	0.0	113308.95500799999
+157	I High Den 4 - time period 4	SOFT	1.0	null	null	40393.0	1.0	124	y_124	153264.4582336	0.0	112871.45823359999
+158	I High Den 5 - time period 5	SOFT	1.0	null	null	40393.0	1.0	125	y_125	150199.169068928	0.0	109806.169068928
+159	I High Den 6 - time period 6	SOFT	1.0	null	0.0	40393.0	0.5	126	y_126	150694.07873046747	0.0	55150.53936523374
+160	I High Den 7 - time period 7	SOFT	1.0	null	0.0	40393.0	0.5	127	y_127	122986.73081423786	0.0	41296.86540711893
+161	I High Den 8 - time period 8	SOFT	1.0	null	0.0	40393.0	0.5	128	y_128	126520.61202210198	0.0	43063.80601105099
+162	I High Den 9 - time period 9	SOFT	1.0	null	0.0	40393.0	0.5	129	y_129	26256.178193091477	0.0	0.0
+163	I High Den 10 - time period 10	SOFT	1.0	null	0.0	40393.0	0.5	130	y_130	33782.418000995014	0.0	0.0
+164	I High Den 11 - time period 11	SOFT	1.0	null	0.0	40393.0	0.5	131	y_131	41944.12813146057	0.0	775.5640657302865
+165	I High Den 12 - time period 12	SOFT	1.0	null	0.0	40393.0	0.5	132	y_132	48390.88838914935	0.0	3998.9441945746767
+166	I High Den 13 - time period 13	SOFT	1.0	null	0.0	40393.0	0.5	133	y_133	59590.51601191141	0.0	9598.758005955704
+167	I High Den 14 - time period 14	SOFT	1.0	null	0.0	40393.0	0.5	134	y_134	70391.73868629774	0.0	14999.369343148872
+168	I High Den 15 - time period 15	SOFT	1.0	null	0.0	40393.0	0.5	135	y_135	85142.25693567307	0.0	22374.628467836534
+169	FGH High Den 1 - time period 1	SOFT	1.0	null	null	352543.0	1.0	136	y_136	536339.9999999999	0.0	183796.99999999988
+170	FGH High Den 2 - time period 2	SOFT	1.0	null	null	352543.0	1.0	137	y_137	511943.588	0.0	159400.588
+171	FGH High Den 3 - time period 3	SOFT	1.0	null	null	352543.0	1.0	138	y_138	455388.50721916	0.0	102845.50721915998
+172	FGH High Den 4 - time period 4	SOFT	1.0	null	null	352543.0	1.0	139	y_139	353632.02855408	0.0	1089.028554079996
+173	FGH High Den 5 - time period 5	SOFT	1.0	null	null	352543.0	1.0	140	y_140	242323.01872792467	0.0	0.0
+174	FGH High Den 6 - time period 6	SOFT	1.0	null	0.0	352543.0	0.5	141	y_141	139921.25750328135	0.0	0.0
+175	FGH High Den 7 - time period 7	SOFT	1.0	null	0.0	352543.0	0.5	142	y_142	144525.88253676557	0.0	0.0
+176	FGH High Den 8 - time period 8	SOFT	1.0	null	0.0	352543.0	0.5	143	y_143	147290.27541476706	0.0	0.0
+177	FGH High Den 9 - time period 9	SOFT	1.0	null	0.0	352543.0	0.5	144	y_144	153661.71735704105	0.0	0.0
+178	FGH High Den 10 - time period 10	SOFT	1.0	null	0.0	352543.0	0.5	145	y_145	152765.333258701	0.0	0.0
+179	FGH High Den 11 - time period 11	SOFT	1.0	null	0.0	352543.0	0.5	146	y_146	153015.53826957507	0.0	0.0
+180	FGH High Den 12 - time period 12	SOFT	1.0	null	0.0	352543.0	0.5	147	y_147	202802.8192234853	0.0	0.0
+181	FGH High Den 13 - time period 13	SOFT	1.0	null	0.0	352543.0	0.5	148	y_148	210034.88925807245	0.0	0.0
+182	FGH High Den 14 - time period 14	SOFT	1.0	null	0.0	352543.0	0.5	149	y_149	150531.34176642896	0.0	0.0
+183	FGH High Den 15 - time period 15	SOFT	1.0	null	0.0	352543.0	0.5	150	y_150	161856.80061885956	0.0	0.0
+184	CDE High Den 1 - time period 1	SOFT	1.0	null	null	79925.0	1.0	151	y_151	182300.00000000015	0.0	102375.00000000015
+185	CDE High Den 2 - time period 2	SOFT	1.0	null	null	79925.0	1.0	152	y_152	128856.83399999997	0.0	48931.83399999997
+186	CDE High Den 3 - time period 3	SOFT	1.0	null	null	79925.0	1.0	153	y_153	103101.84906999995	0.0	23176.849069999953
+187	CDE High Den 4 - time period 4	SOFT	1.0	null	null	79925.0	1.0	154	y_154	94207.75737015119	0.0	14282.757370151186
+188	CDE High Den 5 - time period 5	SOFT	1.0	null	null	79925.0	1.0	155	y_155	79925.0	0.0	0.0
+189	CDE High Den 6 - time period 6	SOFT	1.0	null	0.0	79925.0	0.5	156	y_156	76691.79305164557	0.0	0.0
+190	CDE High Den 7 - time period 7	SOFT	1.0	null	0.0	79925.0	0.5	157	y_157	60304.9590316046	0.0	0.0
+191	CDE High Den 8 - time period 8	SOFT	1.0	null	0.0	79925.0	0.5	158	y_158	64249.76918108534	0.0	0.0
+192	CDE High Den 9 - time period 9	SOFT	1.0	null	0.0	79925.0	0.5	159	y_159	68366.4048409097	0.0	0.0
+193	CDE High Den 10 - time period 10	SOFT	1.0	null	0.0	79925.0	0.5	160	y_160	73374.68875441345	0.0	0.0
+194	CDE High Den 11 - time period 11	SOFT	1.0	null	0.0	79925.0	0.5	161	y_161	73760.99602799673	0.0	0.0
+195	CDE High Den 12 - time period 12	SOFT	1.0	null	0.0	79925.0	0.5	162	y_162	79925.0	0.0	0.0
+196	CDE High Den 13 - time period 13	SOFT	1.0	null	0.0	79925.0	0.5	163	y_163	88809.64578120422	0.0	4442.32289060211
+197	CDE High Den 14 - time period 14	SOFT	1.0	null	0.0	79925.0	0.5	164	y_164	93581.2329914794	0.0	6828.116495739698
+198	CDE High Den 15 - time period 15	SOFT	1.0	null	0.0	79925.0	0.5	165	y_165	109704.53825856076	0.0	14889.76912928038
+199	B High Den 1 - time period 1	SOFT	1.0	null	null	71078.0	1.0	166	y_166	6441.999999999999	0.0	0.0
+200	B High Den 2 - time period 2	SOFT	1.0	null	null	71078.0	1.0	167	y_167	3656.8659	0.0	0.0
+201	B High Den 3 - time period 3	SOFT	1.0	null	null	71078.0	1.0	168	y_168	3327.9505740000004	0.0	0.0
+202	B High Den 4 - time period 4	SOFT	1.0	null	null	71078.0	1.0	169	y_169	2911.15759364	0.0	0.0
+203	B High Den 5 - time period 5	SOFT	1.0	null	null	71078.0	1.0	170	y_170	2705.5483495512	0.0	0.0
+204	B High Den 6 - time period 6	SOFT	1.0	null	0.0	71078.0	0.5	171	y_171	13072.751934131025	0.0	0.0
+205	B High Den 7 - time period 7	SOFT	1.0	null	0.0	71078.0	0.5	172	y_172	18670.30015873634	0.0	0.0
+206	B High Den 8 - time period 8	SOFT	1.0	null	0.0	71078.0	0.5	173	y_173	23473.000585630645	0.0	0.0
+207	B High Den 9 - time period 9	SOFT	1.0	null	0.0	71078.0	0.5	174	y_174	28581.381806795962	0.0	0.0
+208	B High Den 10 - time period 10	SOFT	1.0	null	0.0	71078.0	0.5	175	y_175	35489.34349146616	0.0	0.0
+209	B High Den 11 - time period 11	SOFT	1.0	null	0.0	71078.0	0.5	176	y_176	43131.81674153376	0.0	0.0
+210	B High Den 12 - time period 12	SOFT	1.0	null	0.0	71078.0	0.5	177	y_177	51380.711346543336	0.0	0.0
+211	B High Den 13 - time period 13	SOFT	1.0	null	0.0	71078.0	0.5	178	y_178	62161.763755270236	0.0	0.0
+212	B High Den 14 - time period 14	SOFT	1.0	null	0.0	71078.0	0.5	179	y_179	72603.01174558637	0.0	762.5058727931828
+213	B High Den 15 - time period 15	SOFT	1.0	null	0.0	71078.0	0.5	180	y_180	85142.25693567307	0.0	7032.128467836534
+214	I FG Size 1 - time period 1	SOFT	1.0	0.0	0.0	141374.0	1.0	181	y_181	32991.0	0.0	0.0
+215	I FG Size 2 - time period 2	SOFT	1.0	0.0	0.0	141374.0	1.0	182	y_182	51491.62316999999	0.0	0.0
+216	I FG Size 3 - time period 3	SOFT	1.0	0.0	0.0	141374.0	1.0	183	y_183	65398.003309060005	0.0	0.0
+217	I FG Size 4 - time period 4	SOFT	1.0	0.0	0.0	141374.0	1.0	184	y_184	76429.59172014346	0.0	0.0
+218	I FG Size 5 - time period 5	SOFT	1.0	0.0	0.0	141374.0	1.0	185	y_185	65725.7032782068	0.0	0.0
+219	I FG Size 6 - time period 6	SOFT	1.0	0.0	0.0	141374.0	0.5	186	y_186	83194.08834607346	0.0	0.0
+220	I FG Size 7 - time period 7	SOFT	1.0	0.0	0.0	141374.0	0.5	187	y_187	106008.60215694274	0.0	0.0
+221	I FG Size 8 - time period 8	SOFT	1.0	0.0	0.0	141374.0	0.5	188	y_188	114396.87239067418	0.0	0.0
+222	I FG Size 9 - time period 9	SOFT	1.0	0.0	0.0	141374.0	0.5	189	y_189	127650.1001670473	0.0	0.0
+223	I FG Size 10 - time period 10	SOFT	1.0	0.0	0.0	141374.0	0.5	190	y_190	107304.24716606544	0.0	0.0
+224	I FG Size 11 - time period 11	SOFT	1.0	0.0	0.0	141374.0	0.5	191	y_191	98534.67501067012	0.0	0.0
+225	I FG Size 12 - time period 12	SOFT	1.0	0.0	0.0	141374.0	0.5	192	y_192	84604.93634350378	0.0	0.0
+226	I FG Size 13 - time period 13	SOFT	1.0	0.0	0.0	141374.0	0.5	193	y_193	88453.73251003177	0.0	0.0
+227	I FG Size 14 - time period 14	SOFT	1.0	0.0	0.0	141374.0	0.5	194	y_194	89563.44254799267	0.0	0.0
+228	I FG Size 15 - time period 15	SOFT	1.0	0.0	0.0	141374.0	0.5	195	y_195	86538.59152556435	0.0	0.0
+229	FGH FG Size 1 - time period 1	SOFT	1.0	null	null	352543.0	1.0	196	y_196	125606.99999999999	0.0	0.0
+230	FGH FG Size 2 - time period 2	SOFT	1.0	null	null	352543.0	1.0	197	y_197	132230.35556999999	0.0	0.0
+231	FGH FG Size 3 - time period 3	SOFT	1.0	null	null	352543.0	1.0	198	y_198	157632.85464106	0.0	0.0
+232	FGH FG Size 4 - time period 4	SOFT	1.0	null	null	352543.0	1.0	199	y_199	150818.9452094635	0.0	0.0
+233	FGH FG Size 5 - time period 5	SOFT	1.0	null	null	352543.0	1.0	200	y_200	137307.09092954174	0.0	0.0
+234	FGH FG Size 6 - time period 6	SOFT	1.0	null	0.0	352543.0	0.5	201	y_201	148098.53796600766	0.0	0.0
+235	FGH FG Size 7 - time period 7	SOFT	1.0	null	0.0	352543.0	0.5	202	y_202	112508.38293641638	0.0	0.0
+236	FGH FG Size 8 - time period 8	SOFT	1.0	null	0.0	352543.0	0.5	203	y_203	119962.87239067421	0.0	0.0
+237	FGH FG Size 9 - time period 9	SOFT	1.0	null	0.0	352543.0	0.5	204	y_204	133760.86016704733	0.0	0.0
+238	FGH FG Size 10 - time period 10	SOFT	1.0	null	0.0	352543.0	0.5	205	y_205	113513.36716606547	0.0	0.0
+239	FGH FG Size 11 - time period 11	SOFT	1.0	null	0.0	352543.0	0.5	206	y_206	104802.99501067014	0.0	0.0
+240	FGH FG Size 12 - time period 12	SOFT	1.0	null	0.0	352543.0	0.5	207	y_207	90587.25634350379	0.0	0.0
+241	FGH FG Size 13 - time period 13	SOFT	1.0	null	0.0	352543.0	0.5	208	y_208	95137.13251003178	0.0	0.0
+242	FGH FG Size 14 - time period 14	SOFT	1.0	null	0.0	352543.0	0.5	209	y_209	95674.2025479927	0.0	0.0
+243	FGH FG Size 15 - time period 15	SOFT	1.0	null	0.0	352543.0	0.5	210	y_210	92747.71152556436	0.0	0.0
+244	CDE FG Size 1 - time period 1	SOFT	1.0	null	null	239776.0	1.0	211	y_211	88367.99999999996	0.0	0.0
+245	CDE FG Size 2 - time period 2	SOFT	1.0	null	null	239776.0	1.0	212	y_212	25636.501970000005	0.0	0.0
+246	CDE FG Size 3 - time period 3	SOFT	1.0	null	null	239776.0	1.0	213	y_213	45204.74825706001	0.0	0.0
+247	CDE FG Size 4 - time period 4	SOFT	1.0	null	null	239776.0	1.0	214	y_214	55872.10055618347	0.0	0.0
+248	CDE FG Size 5 - time period 5	SOFT	1.0	null	null	239776.0	1.0	215	y_215	71830.3032782068	0.0	0.0
+249	CDE FG Size 6 - time period 6	SOFT	1.0	null	0.0	239776.0	0.5	216	y_216	89298.68834607347	0.0	0.0
+250	CDE FG Size 7 - time period 7	SOFT	1.0	null	0.0	239776.0	0.5	217	y_217	106133.44215694275	0.0	0.0
+251	CDE FG Size 8 - time period 8	SOFT	1.0	null	0.0	239776.0	0.5	218	y_218	113279.47239067419	0.0	0.0
+252	CDE FG Size 9 - time period 9	SOFT	1.0	null	0.0	239776.0	0.5	219	y_219	127650.1001670473	0.0	0.0
+253	CDE FG Size 10 - time period 10	SOFT	1.0	null	0.0	239776.0	0.5	220	y_220	107830.44716606544	0.0	0.0
+254	CDE FG Size 11 - time period 11	SOFT	1.0	null	0.0	239776.0	0.5	221	y_221	99060.87501067013	0.0	0.0
+255	CDE FG Size 12 - time period 12	SOFT	1.0	null	0.0	239776.0	0.5	222	y_222	85131.13634350378	0.0	0.0
+256	CDE FG Size 13 - time period 13	SOFT	1.0	null	0.0	239776.0	0.5	223	y_223	88979.93251003178	0.0	0.0
+257	CDE FG Size 14 - time period 14	SOFT	1.0	null	0.0	239776.0	0.5	224	y_224	89563.44254799267	0.0	0.0
+258	CDE FG Size 15 - time period 15	SOFT	1.0	null	0.0	239776.0	0.5	225	y_225	86538.59152556435	0.0	0.0
+259	B FG Size 1 - time period 1	SOFT	1.0	null	null	270097.0	1.0	226	y_226	109116.00000000001	0.0	0.0
+260	B FG Size 2 - time period 2	SOFT	1.0	null	null	270097.0	1.0	227	y_227	119084.30636999999	0.0	0.0
+261	B FG Size 3 - time period 3	SOFT	1.0	null	null	270097.0	1.0	228	y_228	33661.18916506	0.0	0.0
+262	B FG Size 4 - time period 4	SOFT	1.0	null	null	270097.0	1.0	229	y_229	47937.663384783475	0.0	0.0
+263	B FG Size 5 - time period 5	SOFT	1.0	null	null	270097.0	1.0	230	y_230	64491.5832782068	0.0	0.0
+264	B FG Size 6 - time period 6	SOFT	1.0	null	0.0	270097.0	0.5	231	y_231	81959.96834607345	0.0	0.0
+265	B FG Size 7 - time period 7	SOFT	1.0	null	0.0	270097.0	0.5	232	y_232	104791.72215694273	0.0	0.0
+266	B FG Size 8 - time period 8	SOFT	1.0	null	0.0	270097.0	0.5	233	y_233	113279.47239067419	0.0	0.0
+267	B FG Size 9 - time period 9	SOFT	1.0	null	0.0	270097.0	0.5	234	y_234	127650.1001670473	0.0	0.0
+268	B FG Size 10 - time period 10	SOFT	1.0	null	0.0	270097.0	0.5	235	y_235	107304.24716606544	0.0	0.0
+269	B FG Size 11 - time period 11	SOFT	1.0	null	0.0	270097.0	0.5	236	y_236	98534.67501067012	0.0	0.0
+270	B FG Size 12 - time period 12	SOFT	1.0	null	0.0	270097.0	0.5	237	y_237	84604.93634350378	0.0	0.0
+271	B FG Size 13 - time period 13	SOFT	1.0	null	0.0	270097.0	0.5	238	y_238	88453.73251003177	0.0	0.0
+272	B FG Size 14 - time period 14	SOFT	1.0	null	0.0	270097.0	0.5	239	y_239	89563.44254799267	0.0	0.0
+273	B FG Size 15 - time period 15	SOFT	1.0	null	0.0	270097.0	0.5	240	y_240	86538.59152556435	0.0	0.0
+274	I LargeSize 1 - time period 1	SOFT	1.0	181767.0	1.0	null	null	241	y_241	1847.0	0.0	179920.0
+275	I LargeSize 2 - time period 2	SOFT	1.0	181767.0	1.0	null	null	242	y_242	43966.13670250924	0.0	137800.86329749075
+276	I LargeSize 3 - time period 3	SOFT	1.0	181767.0	1.0	null	null	243	y_243	82905.40915311722	0.0	98861.59084688278
+277	I LargeSize 4 - time period 4	SOFT	1.0	181767.0	1.0	null	null	244	y_244	140546.9021438131	0.0	41220.09785618691
+278	I LargeSize 5 - time period 5	SOFT	1.0	181767.0	1.0	null	null	245	y_245	163417.4317766527	0.0	18349.568223347305
+279	I LargeSize 6 - time period 6	SOFT	1.0	181767.0	0.5	null	0.0	246	y_246	176159.02080614844	0.0	2803.9895969257777
+280	I LargeSize 7 - time period 7	SOFT	1.0	181767.0	0.5	null	0.0	247	y_247	181767.0	0.0	0.0
+281	I LargeSize 8 - time period 8	SOFT	1.0	181767.0	0.5	null	0.0	248	y_248	208934.17894240544	0.0	0.0
+282	I LargeSize 9 - time period 9	SOFT	1.0	181767.0	0.5	null	0.0	249	y_249	217179.88411695283	0.0	0.0
+283	I LargeSize 10 - time period 10	SOFT	1.0	181767.0	0.5	null	0.0	250	y_250	239123.6668308358	0.0	0.0
+284	I LargeSize 11 - time period 11	SOFT	1.0	181767.0	0.5	null	0.0	251	y_251	258686.52084714605	0.0	0.0
+285	I LargeSize 12 - time period 12	SOFT	1.0	181767.0	0.5	null	0.0	252	y_252	348301.57790360285	0.0	0.0
+286	I LargeSize 13 - time period 13	SOFT	1.0	181767.0	0.5	null	0.0	253	y_253	461227.3371795707	0.0	0.0
+287	I LargeSize 14 - time period 14	SOFT	1.0	181767.0	0.5	null	0.0	254	y_254	470926.74283980124	0.0	0.0
+288	I LargeSize 15 - time period 15	SOFT	1.0	181767.0	0.5	null	0.0	255	y_255	484703.0701257841	0.0	0.0
+289	FGH LargeSize 1 - time period 1	SOFT	1.0	176272.0	1.0	null	null	256	y_256	23333.00000000001	0.0	152939.0
+290	FGH LargeSize 2 - time period 2	SOFT	1.0	176272.0	1.0	null	null	257	y_257	64421.56770250925	0.0	111850.43229749074
+291	FGH LargeSize 3 - time period 3	SOFT	1.0	176272.0	1.0	null	null	258	y_258	103183.04611795746	0.0	73088.95388204254
+292	FGH LargeSize 4 - time period 4	SOFT	1.0	176272.0	1.0	null	null	259	y_259	164571.71317663646	0.0	11700.286823363538
+293	FGH LargeSize 5 - time period 5	SOFT	1.0	176272.0	1.0	null	null	260	y_260	234049.42586107893	0.0	0.0
+294	FGH LargeSize 6 - time period 6	SOFT	1.0	176272.0	0.5	null	0.0	261	y_261	288507.43589050404	0.0	0.0
+295	FGH LargeSize 7 - time period 7	SOFT	1.0	176272.0	0.5	null	0.0	262	y_262	299544.98561435705	0.0	0.0
+296	FGH LargeSize 8 - time period 8	SOFT	1.0	176272.0	0.5	null	0.0	263	y_263	302995.78936358134	0.0	0.0
+297	FGH LargeSize 9 - time period 9	SOFT	1.0	176272.0	0.5	null	0.0	264	y_264	320897.5350228969	0.0	0.0
+298	FGH LargeSize 10 - time period 10	SOFT	1.0	176272.0	0.5	null	0.0	265	y_265	526314.8792303908	0.0	0.0
+299	FGH LargeSize 11 - time period 11	SOFT	1.0	176272.0	0.5	null	0.0	266	y_266	535020.5240447812	0.0	0.0
+300	FGH LargeSize 12 - time period 12	SOFT	1.0	176272.0	0.5	null	0.0	267	y_267	559044.9791534758	0.0	0.0
+301	FGH LargeSize 13 - time period 13	SOFT	1.0	176272.0	0.5	null	0.0	268	y_268	560029.2924577177	0.0	0.0
+302	FGH LargeSize 14 - time period 14	SOFT	1.0	176272.0	0.5	null	0.0	269	y_269	562786.7214005343	0.0	0.0
+303	FGH LargeSize 15 - time period 15	SOFT	1.0	176272.0	0.5	null	0.0	270	y_270	571782.0433379747	0.0	0.0
+304	CDE LargeSize 1 - time period 1	SOFT	1.0	179832.0	1.0	null	null	271	y_271	11560.999999999995	0.0	168271.0
+305	CDE LargeSize 2 - time period 2	SOFT	1.0	179832.0	1.0	null	null	272	y_272	54185.69475250926	0.0	125646.30524749073
+306	CDE LargeSize 3 - time period 3	SOFT	1.0	179832.0	1.0	null	null	273	y_273	127084.55486632239	0.0	52747.44513367761
+307	CDE LargeSize 4 - time period 4	SOFT	1.0	179832.0	1.0	null	null	274	y_274	194296.71870874972	0.0	0.0
+308	CDE LargeSize 5 - time period 5	SOFT	1.0	179832.0	1.0	null	null	275	y_275	218957.62583588416	0.0	0.0
+309	CDE LargeSize 6 - time period 6	SOFT	1.0	179832.0	0.5	null	0.0	276	y_276	254071.9967190386	0.0	0.0
+310	CDE LargeSize 7 - time period 7	SOFT	1.0	179832.0	0.5	null	0.0	277	y_277	289293.6804201063	0.0	0.0
+311	CDE LargeSize 8 - time period 8	SOFT	1.0	179832.0	0.5	null	0.0	278	y_278	302088.54007748846	0.0	0.0
+312	CDE LargeSize 9 - time period 9	SOFT	1.0	179832.0	0.5	null	0.0	279	y_279	330749.7984102201	0.0	0.0
+313	CDE LargeSize 10 - time period 10	SOFT	1.0	179832.0	0.5	null	0.0	280	y_280	350315.23312039435	0.0	0.0
+314	CDE LargeSize 11 - time period 11	SOFT	1.0	179832.0	0.5	null	0.0	281	y_281	371348.9342197482	0.0	0.0
+315	CDE LargeSize 12 - time period 12	SOFT	1.0	179832.0	0.5	null	0.0	282	y_282	389520.302365408	0.0	0.0
+316	CDE LargeSize 13 - time period 13	SOFT	1.0	179832.0	0.5	null	0.0	283	y_283	403951.7477036585	0.0	0.0
+317	CDE LargeSize 14 - time period 14	SOFT	1.0	179832.0	0.5	null	0.0	284	y_284	413072.4088856365	0.0	0.0
+318	CDE LargeSize 15 - time period 15	SOFT	1.0	179832.0	0.5	null	0.0	285	y_285	426916.65797707875	0.0	0.0
+319	B LargeSize 1 - time period 1	SOFT	1.0	156372.0	1.0	null	null	286	y_286	21459.999999999996	0.0	134912.0
+320	B LargeSize 2 - time period 2	SOFT	1.0	156372.0	1.0	null	null	287	y_287	60983.39146153594	0.0	95388.60853846406
+321	B LargeSize 3 - time period 3	SOFT	1.0	156372.0	1.0	null	null	288	y_288	95415.79520849088	0.0	60956.204791509124
+322	B LargeSize 4 - time period 4	SOFT	1.0	156372.0	1.0	null	null	289	y_289	156372.0	0.0	0.0
+323	B LargeSize 5 - time period 5	SOFT	1.0	156372.0	1.0	null	null	290	y_290	197557.13449395882	0.0	0.0
+324	B LargeSize 6 - time period 6	SOFT	1.0	156372.0	0.5	null	0.0	291	y_291	208439.35491297906	0.0	0.0
+325	B LargeSize 7 - time period 7	SOFT	1.0	156372.0	0.5	null	0.0	292	y_292	259187.31312167572	0.0	0.0
+326	B LargeSize 8 - time period 8	SOFT	1.0	156372.0	0.5	null	0.0	293	y_293	270384.2113480302	0.0	0.0
+327	B LargeSize 9 - time period 9	SOFT	1.0	156372.0	0.5	null	0.0	294	y_294	307168.13098509406	0.0	0.0
+328	B LargeSize 10 - time period 10	SOFT	1.0	156372.0	0.5	null	0.0	295	y_295	330965.7143490388	0.0	0.0
+329	B LargeSize 11 - time period 11	SOFT	1.0	156372.0	0.5	null	0.0	296	y_296	347669.47286990786	0.0	0.0
+330	B LargeSize 12 - time period 12	SOFT	1.0	156372.0	0.5	null	0.0	297	y_297	365833.4616882109	0.0	0.0
+331	B LargeSize 13 - time period 13	SOFT	1.0	156372.0	0.5	null	0.0	298	y_298	425450.3669685586	0.0	0.0
+332	B LargeSize 14 - time period 14	SOFT	1.0	156372.0	0.5	null	0.0	299	y_299	438637.46066781	0.0	0.0
+333	B LargeSize 15 - time period 15	SOFT	1.0	156372.0	0.5	null	0.0	300	y_300	451822.71681308857	0.0	0.0
+334	budget 1 - time period 1	HARD	1.0	null	null	3.065726E7	null	918	z_15	3.065726E7	-0.24336928125602275	0.0
+335	budget 2 - time period 2	HARD	1.0	null	null	3.065726E7	null	919	z_16	3.065726E7	-0.02080088288480288	0.0
+336	budget 3 - time period 3	HARD	1.0	null	null	4.0657E7	null	920	z_17	4.0657E7	-0.0028448377524354336	0.0
+337	budget 4 - time period 4	HARD	1.0	null	null	4.0657E7	null	921	z_18	4.0657E7	-0.001389583965450345	0.0
+338	budget 5 - time period 5	HARD	1.0	null	null	4.0657E7	null	922	z_19	4.0657E7	-0.0013204429113478256	0.0
+339	WUI Cost 1 - time period 1	FREE	1.0	null	null	null	null	1136	v_17	1.25694766E7	0.0	0.0
+340	WUI Cost 2 - time period 2	FREE	1.0	null	null	null	null	1137	v_18	1.25694766E7	0.0	0.0
+341	WUI Cost 3 - time period 3	FREE	1.0	null	null	null	null	1138	v_19	1.6669369999999998E7	0.0	0.0
+342	WUI Cost 4 - time period 4	FREE	1.0	null	null	null	null	1139	v_20	1.9800482872090783E7	0.0	0.0
+343	WUI Cost 5 - time period 5	FREE	1.0	null	null	null	null	1140	v_21	1.6669369999999998E7	0.0	0.0
+344	nonWUI Cost 1 - time period 1	FREE	1.0	null	null	null	null	1141	v_22	1.4995246961933265E7	0.0	0.0
+345	nonWUI Cost 2 - time period 2	FREE	1.0	null	null	null	null	1142	v_23	1.6217167727231074E7	0.0	0.0
+346	nonWUI Cost 3 - time period 3	FREE	1.0	null	null	null	null	1143	v_24	2.185988868637487E7	0.0	0.0
+347	nonWUI Cost 4 - time period 4	FREE	1.0	null	null	null	null	1144	v_25	1.5207511238377625E7	0.0	0.0
+348	nonWUI Cost 5 - time period 5	FREE	1.0	null	null	null	null	1145	v_26	1.8159199370361686E7	0.0	0.0
+349	No EA for B in MAG 1-4	HARD	1.0	null	null	0.0	null	923	z_20	0.0	-114.13299024819759	0.0
+350	all Rx burn 1 - time period 1	HARD	1.0	null	null	100000.0	null	924	z_21	6636.1097366015765	0.0	0.0
+351	all Rx burn 2 - time period 2	HARD	1.0	null	null	100000.0	null	925	z_22	6578.743352667829	0.0	0.0
+352	all Rx burn 3 - time period 3	HARD	1.0	null	null	100000.0	null	926	z_23	26966.921388533407	0.0	0.0
+353	all Rx burn 4 - time period 4	HARD	1.0	null	null	100000.0	null	927	z_24	12083.723270723247	0.0	0.0
+354	all Rx burn 5 - time period 5	HARD	1.0	null	null	100000.0	null	928	z_25	6737.108421595642	0.0	0.0
+355	all Rx burn 6 - time period 6	HARD	1.0	null	null	100000.0	null	929	z_26	54235.959020394424	0.0	0.0
+356	all Rx burn 7 - time period 7	HARD	1.0	null	null	100000.0	null	930	z_27	23278.807408553257	0.0	0.0
+357	all Rx burn 8 - time period 8	HARD	1.0	null	null	100000.0	null	931	z_28	68980.41796659754	0.0	0.0
+358	all Rx burn 9 - time period 9	HARD	1.0	null	null	100000.0	null	932	z_29	33243.09512933941	0.0	0.0
+359	all Rx burn 10 - time period 10	HARD	1.0	null	null	100000.0	null	933	z_30	24433.631853397303	0.0	0.0
+360	all Rx burn 11 - time period 11	HARD	1.0	null	null	100000.0	null	934	z_31	19178.272170388296	0.0	0.0
+361	all Rx burn 12 - time period 12	HARD	1.0	null	null	100000.0	null	935	z_32	35686.46110258523	0.0	0.0
+362	all Rx burn 13 - time period 13	HARD	1.0	null	null	100000.0	null	936	z_33	14756.589594611556	0.0	0.0
+363	all Rx burn 14 - time period 14	HARD	1.0	null	null	100000.0	null	937	z_34	35968.916773576006	0.0	0.0
+364	all Rx burn 15 - time period 15	HARD	1.0	null	null	100000.0	null	938	z_35	63431.84679410214	0.0	0.0
+365	MAG 2 Opening 1 - time period 1	HARD	1.0	null	null	149000.0	null	939	z_36	77983.73306715251	0.0	0.0
+366	MAG 2 Opening 2 - time period 2	HARD	1.0	null	null	149000.0	null	940	z_37	74974.71401247593	0.0	0.0
+367	MAG 2 Opening 3 - time period 3	HARD	1.0	null	null	149000.0	null	941	z_38	67071.18440449247	0.0	0.0
+368	MAG 2 Opening 4 - time period 4	HARD	1.0	null	null	149000.0	null	942	z_39	64875.64416818425	0.0	0.0
+369	MAG 2 Opening 5 - time period 5	HARD	1.0	null	null	149000.0	null	943	z_40	62235.0051656479	0.0	0.0
+370	MAG 2 Opening 6 - time period 6	HARD	1.0	null	null	149000.0	null	944	z_41	66440.95541424809	0.0	0.0
+371	MAG 2 Opening 7 - time period 7	HARD	1.0	null	null	149000.0	null	945	z_42	60072.39176113136	0.0	0.0
+372	MAG 2 Opening 8 - time period 8	HARD	1.0	null	null	149000.0	null	946	z_43	62756.68963532028	0.0	0.0
+373	MAG 2 Opening 9 - time period 9	HARD	1.0	null	null	149000.0	null	947	z_44	73128.39581064609	0.0	0.0
+374	MAG 2 Opening 10 - time period 10	HARD	1.0	null	null	149000.0	null	948	z_45	73033.70168734493	0.0	0.0
+375	MAG 2 Opening 11 - time period 11	HARD	1.0	null	null	149000.0	null	949	z_46	91571.71370717921	0.0	0.0
+376	MAG 2 Opening 12 - time period 12	HARD	1.0	null	null	149000.0	null	950	z_47	75786.0809391131	0.0	0.0
+377	MAG 2 Opening 13 - time period 13	HARD	1.0	null	null	149000.0	null	951	z_48	62388.88878041752	0.0	0.0
+378	MAG 2 Opening 14 - time period 14	HARD	1.0	null	null	149000.0	null	952	z_49	94814.34358376468	0.0	0.0
+379	MAG 2 Opening 15 - time period 15	HARD	1.0	null	null	149000.0	null	953	z_50	96330.26108221668	0.0	0.0
+380	MAG 3 Opening 1 - time period 1	HARD	1.0	null	null	17700.0	null	954	z_51	16676.073040352145	0.0	0.0
+381	MAG 3 Opening 2 - time period 2	HARD	1.0	null	null	17700.0	null	955	z_52	14026.60189563063	0.0	0.0
+382	MAG 3 Opening 3 - time period 3	HARD	1.0	null	null	17700.0	null	956	z_53	14290.154628943172	0.0	0.0
+383	MAG 3 Opening 4 - time period 4	HARD	1.0	null	null	17700.0	null	957	z_54	15190.651194002665	0.0	0.0
+384	MAG 3 Opening 5 - time period 5	HARD	1.0	null	null	17700.0	null	958	z_55	14868.828988004696	0.0	0.0
+385	MAG 3 Opening 6 - time period 6	HARD	1.0	null	null	17700.0	null	959	z_56	12605.629121429127	0.0	0.0
+386	MAG 3 Opening 7 - time period 7	HARD	1.0	null	null	17700.0	null	960	z_57	10585.731717260416	0.0	0.0
+387	MAG 3 Opening 8 - time period 8	HARD	1.0	null	null	17700.0	null	961	z_58	16064.246082621357	0.0	0.0
+388	MAG 3 Opening 9 - time period 9	HARD	1.0	null	null	17700.0	null	962	z_59	17700.0	0.0	0.0
+389	MAG 3 Opening 10 - time period 10	HARD	1.0	null	null	17700.0	null	963	z_60	17244.04707361402	0.0	0.0
+390	MAG 3 Opening 11 - time period 11	HARD	1.0	null	null	17700.0	null	964	z_61	13438.046220374474	0.0	0.0
+391	MAG 3 Opening 12 - time period 12	HARD	1.0	null	null	17700.0	null	965	z_62	11164.142925233838	0.0	0.0
+392	MAG 3 Opening 13 - time period 13	HARD	1.0	null	null	17700.0	null	966	z_63	15093.988329417962	0.0	0.0
+393	MAG 3 Opening 14 - time period 14	HARD	1.0	null	null	17700.0	null	967	z_64	17700.0	0.0	0.0
+394	MAG 3 Opening 15 - time period 15	HARD	1.0	null	null	17700.0	null	968	z_65	17404.819527284773	0.0	0.0
+395	MAG 4 Opening 1 - time period 1	HARD	1.0	null	null	45000.0	null	969	z_66	44152.45512660025	0.0	0.0
+396	MAG 4 Opening 2 - time period 2	HARD	1.0	null	null	45000.0	null	970	z_67	36604.075915481844	0.0	0.0
+397	MAG 4 Opening 3 - time period 3	HARD	1.0	null	null	45000.0	null	971	z_68	33341.26894679582	0.0	0.0
+398	MAG 4 Opening 4 - time period 4	HARD	1.0	null	null	35000.0	null	972	z_69	31184.819406321214	0.0	0.0
+399	MAG 4 Opening 5 - time period 5	HARD	1.0	null	null	35000.0	null	973	z_70	31655.767043903896	0.0	0.0
+400	MAG 4 Opening 6 - time period 6	HARD	1.0	null	null	35000.0	null	974	z_71	25648.02440063665	0.0	0.0
+401	MAG 4 Opening 7 - time period 7	HARD	1.0	null	null	35000.0	null	975	z_72	21622.141409448268	0.0	0.0
+402	MAG 4 Opening 8 - time period 8	HARD	1.0	null	null	35000.0	null	976	z_73	35000.0	-0.043253321170035046	0.0
+403	MAG 4 Opening 9 - time period 9	HARD	1.0	null	null	35000.0	null	977	z_74	35000.0	-0.027363876763605362	0.0
+404	MAG 4 Opening 10 - time period 10	HARD	1.0	null	null	35000.0	null	978	z_75	35000.0	-7.919360411544087E-4	0.0
+405	MAG 4 Opening 11 - time period 11	HARD	1.0	null	null	35000.0	null	979	z_76	27039.85718085521	0.0	0.0
+406	MAG 4 Opening 12 - time period 12	HARD	1.0	null	null	35000.0	null	980	z_77	23034.92190647835	0.0	0.0
+407	MAG 4 Opening 13 - time period 13	HARD	1.0	null	null	35000.0	null	981	z_78	32674.642233734154	0.0	0.0
+408	MAG 4 Opening 14 - time period 14	HARD	1.0	null	null	35000.0	null	982	z_79	34429.666061512624	0.0	0.0
+409	MAG 4 Opening 15 - time period 15	HARD	1.0	null	null	35000.0	null	983	z_80	35000.0	-0.09415381787222925	0.0
+410	MAG 5 Opening 1 - time period 1	HARD	1.0	null	null	67400.0	null	984	z_81	37269.72595	0.0	0.0
+411	MAG 5 Opening 2 - time period 2	HARD	1.0	null	null	67400.0	null	985	z_82	47102.783571009655	0.0	0.0
+412	MAG 5 Opening 3 - time period 3	HARD	1.0	null	null	67400.0	null	986	z_83	42865.49323005608	0.0	0.0
+413	MAG 5 Opening 4 - time period 4	HARD	1.0	null	null	67400.0	null	987	z_84	39806.73667751284	0.0	0.0
+414	MAG 5 Opening 5 - time period 5	HARD	1.0	null	null	67400.0	null	988	z_85	38200.139585852776	0.0	0.0
+415	MAG 5 Opening 6 - time period 6	HARD	1.0	null	null	67400.0	null	989	z_86	44850.8890312125	0.0	0.0
+416	MAG 5 Opening 7 - time period 7	HARD	1.0	null	null	67400.0	null	990	z_87	50278.38844030307	0.0	0.0
+417	MAG 5 Opening 8 - time period 8	HARD	1.0	null	null	67400.0	null	991	z_88	47260.275308592456	0.0	0.0
+418	MAG 5 Opening 9 - time period 9	HARD	1.0	null	null	67400.0	null	992	z_89	40757.68406426914	0.0	0.0
+419	MAG 5 Opening 10 - time period 10	HARD	1.0	null	null	67400.0	null	993	z_90	41380.79196247254	0.0	0.0
+420	MAG 5 Opening 11 - time period 11	HARD	1.0	null	null	67400.0	null	994	z_91	44500.51860550968	0.0	0.0
+421	MAG 5 Opening 12 - time period 12	HARD	1.0	null	null	67400.0	null	995	z_92	47002.480948154334	0.0	0.0
+422	MAG 5 Opening 13 - time period 13	HARD	1.0	null	null	67400.0	null	996	z_93	43636.49036869779	0.0	0.0
+423	MAG 5 Opening 14 - time period 14	HARD	1.0	null	null	67400.0	null	997	z_94	40578.60739367377	0.0	0.0
+424	MAG 5 Opening 15 - time period 15	HARD	1.0	null	null	67400.0	null	998	z_95	42553.73483064675	0.0	0.0
+425	MAG 6 Opening 1 - time period 1	HARD	1.0	null	null	94000.0	null	999	z_96	71139.5769	0.0	0.0
+426	MAG 6 Opening 2 - time period 2	HARD	1.0	null	null	94000.0	null	1000	z_97	89232.52133381763	0.0	0.0
+427	MAG 6 Opening 3 - time period 3	HARD	1.0	null	null	94000.0	null	1001	z_98	79260.90937972393	0.0	0.0
+428	MAG 6 Opening 4 - time period 4	HARD	1.0	null	null	94000.0	null	1002	z_99	65034.408615263055	0.0	0.0
+429	MAG 6 Opening 5 - time period 5	HARD	1.0	null	null	94000.0	null	1003	z_100	53588.962937550095	0.0	0.0
+430	MAG 6 Opening 6 - time period 6	HARD	1.0	null	null	94000.0	null	1004	z_101	58139.81533860435	0.0	0.0
+431	MAG 6 Opening 7 - time period 7	HARD	1.0	null	null	94000.0	null	1005	z_102	79499.06667148323	0.0	0.0
+432	MAG 6 Opening 8 - time period 8	HARD	1.0	null	null	94000.0	null	1006	z_103	76954.87146278725	0.0	0.0
+433	MAG 6 Opening 9 - time period 9	HARD	1.0	null	null	94000.0	null	1007	z_104	61716.79252721247	0.0	0.0
+434	MAG 6 Opening 10 - time period 10	HARD	1.0	null	null	94000.0	null	1008	z_105	52462.64658313599	0.0	0.0
+435	MAG 6 Opening 11 - time period 11	HARD	1.0	null	null	94000.0	null	1009	z_106	65990.59545945533	0.0	0.0
+436	MAG 6 Opening 12 - time period 12	HARD	1.0	null	null	94000.0	null	1010	z_107	76776.65806852821	0.0	0.0
+437	MAG 6 Opening 13 - time period 13	HARD	1.0	null	null	94000.0	null	1011	z_108	71713.92356689848	0.0	0.0
+438	MAG 6 Opening 14 - time period 14	HARD	1.0	null	null	94000.0	null	1012	z_109	63845.025804950805	0.0	0.0
+439	MAG 6 Opening 15 - time period 15	HARD	1.0	null	null	94000.0	null	1013	z_110	60539.82226966762	0.0	0.0
+515	no PCT in CM Types in Lynx 1 - time period 1	HARD	1.0	null	null	0.0	null	1014	z_111	0.0	0.0	0.0
+516	no PCT in CM Types in Lynx 2 - time period 2	HARD	1.0	null	null	0.0	null	1015	z_112	0.0	-1.1333107724512654	0.0
+517	no PCT in CM Types in Lynx 3 - time period 3	HARD	1.0	null	null	0.0	null	1016	z_113	0.0	-3.5535120309958903	0.0
+518	no PCT in CM Types in Lynx 4 - time period 4	HARD	1.0	null	null	0.0	null	1017	z_114	0.0	-0.8271672760465147	0.0
+519	no PCT in CM Types in Lynx 5 - time period 5	HARD	1.0	null	null	0.0	null	1018	z_115	0.0	0.0	0.0
+520	no PCT in CM Types in Lynx 6 - time period 6	HARD	1.0	null	null	0.0	null	1019	z_116	0.0	0.0	0.0
+521	no PCT in CM Types in Lynx 7 - time period 7	HARD	1.0	null	null	0.0	null	1020	z_117	0.0	0.0	0.0
+522	no PCT in CM Types in Lynx 8 - time period 8	HARD	1.0	null	null	0.0	null	1021	z_118	0.0	0.0	0.0
+523	no PCT in CM Types in Lynx 9 - time period 9	HARD	1.0	null	null	0.0	null	1022	z_119	0.0	0.0	0.0
+524	no PCT in CM Types in Lynx 10 - time period 10	HARD	1.0	null	null	0.0	null	1023	z_120	0.0	0.0	0.0
+525	no PCT in CM Types in Lynx 11 - time period 11	HARD	1.0	null	null	0.0	null	1024	z_121	0.0	0.0	0.0
+526	no PCT in CM Types in Lynx 12 - time period 12	HARD	1.0	null	null	0.0	null	1025	z_122	0.0	0.0	0.0
+527	no PCT in CM Types in Lynx 13 - time period 13	HARD	1.0	null	null	0.0	null	1026	z_123	0.0	0.0	0.0
+528	no PCT in CM Types in Lynx 14 - time period 14	HARD	1.0	null	null	0.0	null	1027	z_124	0.0	0.0	0.0
+529	no PCT in CM Types in Lynx 15 - time period 15	HARD	1.0	null	null	0.0	null	1028	z_125	0.0	0.0	0.0
+530	No trt in LynxMS 1 - time period 1	HARD	1.0	null	null	0.0	null	1029	z_126	0.0	0.0	0.0
+531	No trt in LynxMS 2 - time period 2	HARD	1.0	null	null	0.0	null	1030	z_127	0.0	-3.2000598548825816	0.0
+532	No trt in LynxMS 3 - time period 3	HARD	1.0	null	null	0.0	null	1031	z_128	0.0	0.0	0.0
+533	No trt in LynxMS 4 - time period 4	HARD	1.0	null	null	0.0	null	1032	z_129	0.0	-2.7459508125648924	0.0
+534	No trt in LynxMS 5 - time period 5	HARD	1.0	null	null	0.0	null	1033	z_130	0.0	-0.2745603637158127	0.0
+535	No trt in LynxMS 6 - time period 6	HARD	1.0	null	null	0.0	null	1034	z_131	0.0	-1.0607816250949702	0.0
+536	No trt in LynxMS 7 - time period 7	HARD	1.0	null	null	0.0	null	1035	z_132	0.0	-0.0020200586084575534	0.0
+537	No trt in LynxMS 8 - time period 8	HARD	1.0	null	null	0.0	null	1036	z_133	0.0	0.0	0.0
+538	No trt in LynxMS 9 - time period 9	HARD	1.0	null	null	0.0	null	1037	z_134	0.0	-0.7461657453412136	0.0
+539	No trt in LynxMS 10 - time period 10	HARD	1.0	null	null	0.0	null	1038	z_135	0.0	-0.769243036434241	0.0
+540	No trt in LynxMS 11 - time period 11	HARD	1.0	null	null	0.0	null	1039	z_136	0.0	-0.9122969732967763	0.0
+541	No trt in LynxMS 12 - time period 12	HARD	1.0	null	null	0.0	null	1040	z_137	0.0	-1.1416161896916224	0.0
+542	No trt in LynxMS 13 - time period 13	HARD	1.0	null	null	0.0	null	1041	z_138	0.0	-1.3608634269154836	0.0
+543	No trt in LynxMS 14 - time period 14	HARD	1.0	null	null	0.0	null	1042	z_139	0.0	-6.2743109857641555	0.0
+544	No trt in LynxMS 15 - time period 15	HARD	1.0	null	null	0.0	null	1043	z_140	0.0	0.0	0.0
+545	Mag 2 15% Lynx Harv 1 - time period 1	HARD	1.0	null	null	35800.0	null	1044	z_141	-0.0	0.0	0.0
+546	Mag 2 15% Lynx Harv 2 - time period 2	HARD	1.0	null	null	35800.0	null	1045	z_142	-0.0	0.0	0.0
+547	Mag 2 15% Lynx Harv 3 - time period 3	HARD	1.0	null	null	35800.0	null	1046	z_143	165.73847565236548	0.0	0.0
+548	Mag 2 15% Lynx Harv 4 - time period 4	HARD	1.0	null	null	35800.0	null	1047	z_144	-0.0	0.0	0.0
+549	Mag 2 15% Lynx Harv 5 - time period 5	HARD	1.0	null	null	35800.0	null	1048	z_145	450.2557114496	0.0	0.0
+550	Mag 2 15% Lynx Harv 6 - time period 6	HARD	1.0	null	null	35800.0	null	1049	z_146	3616.033677396483	0.0	0.0
+551	Mag 2 15% Lynx Harv 7 - time period 7	HARD	1.0	null	null	35800.0	null	1050	z_147	3616.033677396483	0.0	0.0
+552	Mag 2 15% Lynx Harv 8 - time period 8	HARD	1.0	null	null	35800.0	null	1051	z_148	5450.433848718867	0.0	0.0
+553	Mag 2 15% Lynx Harv 9 - time period 9	HARD	1.0	null	null	35800.0	null	1052	z_149	5760.767823215761	0.0	0.0
+554	Mag 2 15% Lynx Harv 10 - time period 10	HARD	1.0	null	null	35800.0	null	1053	z_150	3438.56117227313	0.0	0.0
+555	Mag 2 15% Lynx Harv 11 - time period 11	HARD	1.0	null	null	35800.0	null	1054	z_151	1730.9740348354344	0.0	0.0
+556	Mag 2 15% Lynx Harv 12 - time period 12	HARD	1.0	null	null	35800.0	null	1055	z_152	3067.6011682494845	0.0	0.0
+557	Mag 2 15% Lynx Harv 13 - time period 13	HARD	1.0	null	null	35800.0	null	1056	z_153	3190.2822995965557	0.0	0.0
+558	Mag 2 15% Lynx Harv 14 - time period 14	HARD	1.0	null	null	35800.0	null	1057	z_154	8687.486796306846	0.0	0.0
+559	Mag 2 15% Lynx Harv 15 - time period 15	HARD	1.0	null	null	35800.0	null	1058	z_155	5424.130773109342	0.0	0.0
+560	Mag3 15% Lynx Harv 1 - time period 1	HARD	1.0	null	null	1350.0	null	1059	z_156	-0.0	0.0	0.0
+561	Mag3 15% Lynx Harv 2 - time period 2	HARD	1.0	null	null	1350.0	null	1060	z_157	-0.0	0.0	0.0
+562	Mag3 15% Lynx Harv 3 - time period 3	HARD	1.0	null	null	1350.0	null	1061	z_158	-0.0	0.0	0.0
+563	Mag3 15% Lynx Harv 4 - time period 4	HARD	1.0	null	null	1350.0	null	1062	z_159	-0.0	0.0	0.0
+564	Mag3 15% Lynx Harv 5 - time period 5	HARD	1.0	null	null	1350.0	null	1063	z_160	17.445934912000002	0.0	0.0
+565	Mag3 15% Lynx Harv 6 - time period 6	HARD	1.0	null	null	1350.0	null	1064	z_161	183.495350577208	0.0	0.0
+566	Mag3 15% Lynx Harv 7 - time period 7	HARD	1.0	null	null	1350.0	null	1065	z_162	183.495350577208	0.0	0.0
+567	Mag3 15% Lynx Harv 8 - time period 8	HARD	1.0	null	null	1350.0	null	1066	z_163	224.4196953899044	0.0	0.0
+568	Mag3 15% Lynx Harv 9 - time period 9	HARD	1.0	null	null	1350.0	null	1067	z_164	206.97376047790436	0.0	0.0
+569	Mag3 15% Lynx Harv 10 - time period 10	HARD	1.0	null	null	1350.0	null	1068	z_165	195.88369585201292	0.0	0.0
+570	Mag3 15% Lynx Harv 11 - time period 11	HARD	1.0	null	null	1350.0	null	1069	z_166	40.92434481269642	0.0	0.0
+571	Mag3 15% Lynx Harv 12 - time period 12	HARD	1.0	null	null	1350.0	null	1070	z_167	276.76189819698976	0.0	0.0
+572	Mag3 15% Lynx Harv 13 - time period 13	HARD	1.0	null	null	1350.0	null	1071	z_168	123.67309450625345	0.0	0.0
+573	Mag3 15% Lynx Harv 14 - time period 14	HARD	1.0	null	null	1350.0	null	1072	z_169	163.64328622019497	0.0	0.0
+574	Mag3 15% Lynx Harv 15 - time period 15	HARD	1.0	null	null	1350.0	null	1073	z_170	383.0971429193231	0.0	0.0
+575	Mag4 15% Lynx Harv 1 - time period 1	HARD	1.0	null	null	1650.0	null	1074	z_171	-0.0	0.0	0.0
+576	Mag4 15% Lynx Harv 2 - time period 2	HARD	1.0	null	null	1650.0	null	1075	z_172	-0.0	0.0	0.0
+577	Mag4 15% Lynx Harv 3 - time period 3	HARD	1.0	null	null	1650.0	null	1076	z_173	-0.0	0.0	0.0
+578	Mag4 15% Lynx Harv 4 - time period 4	HARD	1.0	null	null	1650.0	null	1077	z_174	-0.0	0.0	0.0
+579	Mag4 15% Lynx Harv 5 - time period 5	HARD	1.0	null	null	1650.0	null	1078	z_175	23.130734592	0.0	0.0
+580	Mag4 15% Lynx Harv 6 - time period 6	HARD	1.0	null	null	1650.0	null	1079	z_176	168.4888622024205	0.0	0.0
+581	Mag4 15% Lynx Harv 7 - time period 7	HARD	1.0	null	null	1650.0	null	1080	z_177	168.4888622024205	0.0	0.0
+582	Mag4 15% Lynx Harv 8 - time period 8	HARD	1.0	null	null	1650.0	null	1081	z_178	236.8531129998466	0.0	0.0
+583	Mag4 15% Lynx Harv 9 - time period 9	HARD	1.0	null	null	1650.0	null	1082	z_179	213.72237840784663	0.0	0.0
+584	Mag4 15% Lynx Harv 10 - time period 10	HARD	1.0	null	null	1650.0	null	1083	z_180	237.89229901335943	0.0	0.0
+585	Mag4 15% Lynx Harv 11 - time period 11	HARD	1.0	null	null	1650.0	null	1084	z_181	68.36425079742614	0.0	0.0
+586	Mag4 15% Lynx Harv 12 - time period 12	HARD	1.0	null	null	1650.0	null	1085	z_182	153.34680880405153	0.0	0.0
+587	Mag4 15% Lynx Harv 13 - time period 13	HARD	1.0	null	null	1650.0	null	1086	z_183	111.27995540830064	0.0	0.0
+588	Mag4 15% Lynx Harv 14 - time period 14	HARD	1.0	null	null	1650.0	null	1087	z_184	152.34619293263785	0.0	0.0
+589	Mag4 15% Lynx Harv 15 - time period 15	HARD	1.0	null	null	1650.0	null	1088	z_185	236.66894883985896	0.0	0.0
+590	Mag5 15% Lynx Harb 1 - time period 1	HARD	1.0	null	null	14000.0	null	1089	z_186	1156.96	0.0	0.0
+591	Mag5 15% Lynx Harb 2 - time period 2	HARD	1.0	null	null	14000.0	null	1090	z_187	545.5632	0.0	0.0
+592	Mag5 15% Lynx Harb 3 - time period 3	HARD	1.0	null	null	14000.0	null	1091	z_188	2982.5651551815477	0.0	0.0
+593	Mag5 15% Lynx Harb 4 - time period 4	HARD	1.0	null	null	14000.0	null	1092	z_189	656.20562742	0.0	0.0
+594	Mag5 15% Lynx Harb 5 - time period 5	HARD	1.0	null	null	14000.0	null	1093	z_190	2490.875588312374	0.0	0.0
+595	Mag5 15% Lynx Harb 6 - time period 6	HARD	1.0	null	null	14000.0	null	1094	z_191	3153.3401667451417	0.0	0.0
+596	Mag5 15% Lynx Harb 7 - time period 7	HARD	1.0	null	null	14000.0	null	1095	z_192	2621.9242167454913	0.0	0.0
+597	Mag5 15% Lynx Harb 8 - time period 8	HARD	1.0	null	null	14000.0	null	1096	z_193	5894.019082619995	0.0	0.0
+598	Mag5 15% Lynx Harb 9 - time period 9	HARD	1.0	null	null	14000.0	null	1097	z_194	2080.6855865125926	0.0	0.0
+599	Mag5 15% Lynx Harb 10 - time period 10	HARD	1.0	null	null	14000.0	null	1098	z_195	1944.0067336342622	0.0	0.0
+600	Mag5 15% Lynx Harb 11 - time period 11	HARD	1.0	null	null	14000.0	null	1099	z_196	5251.544651510667	0.0	0.0
+601	Mag5 15% Lynx Harb 12 - time period 12	HARD	1.0	null	null	14000.0	null	1100	z_197	2477.1080339250225	0.0	0.0
+602	Mag5 15% Lynx Harb 13 - time period 13	HARD	1.0	null	null	14000.0	null	1101	z_198	207.72489264518413	0.0	0.0
+603	Mag5 15% Lynx Harb 14 - time period 14	HARD	1.0	null	null	14000.0	null	1102	z_199	2162.9139492407376	0.0	0.0
+604	Mag5 15% Lynx Harb 15 - time period 15	HARD	1.0	null	null	14000.0	null	1103	z_200	6997.581526096755	0.0	0.0
+605	MAG6 15% LynxHarv 1 - time period 1	HARD	1.0	null	null	15500.0	null	1104	z_201	1193.56	0.0	0.0
+606	MAG6 15% LynxHarv 2 - time period 2	HARD	1.0	null	null	15500.0	null	1105	z_202	542.64	0.0	0.0
+607	MAG6 15% LynxHarv 3 - time period 3	HARD	1.0	null	null	15500.0	null	1106	z_203	335.479872	0.0	0.0
+608	MAG6 15% LynxHarv 4 - time period 4	HARD	1.0	null	null	15500.0	null	1107	z_204	559.3692294399999	0.0	0.0
+609	MAG6 15% LynxHarv 5 - time period 5	HARD	1.0	null	null	15500.0	null	1108	z_205	2525.458495760886	0.0	0.0
+610	MAG6 15% LynxHarv 6 - time period 6	HARD	1.0	null	null	15500.0	null	1109	z_206	4152.05884056318	0.0	0.0
+611	MAG6 15% LynxHarv 7 - time period 7	HARD	1.0	null	null	15500.0	null	1110	z_207	2606.9881149454695	0.0	0.0
+612	MAG6 15% LynxHarv 8 - time period 8	HARD	1.0	null	null	15500.0	null	1111	z_208	3172.5012275195068	0.0	0.0
+613	MAG6 15% LynxHarv 9 - time period 9	HARD	1.0	null	null	15500.0	null	1112	z_209	1580.3505990313265	0.0	0.0
+614	MAG6 15% LynxHarv 10 - time period 10	HARD	1.0	null	null	15500.0	null	1113	z_210	1664.1514852617147	0.0	0.0
+615	MAG6 15% LynxHarv 11 - time period 11	HARD	1.0	null	null	15500.0	null	1114	z_211	3195.0174397946525	0.0	0.0
+616	MAG6 15% LynxHarv 12 - time period 12	HARD	1.0	null	null	15500.0	null	1115	z_212	2242.632234005679	0.0	0.0
+617	MAG6 15% LynxHarv 13 - time period 13	HARD	1.0	null	null	15500.0	null	1116	z_213	3668.0807191467384	0.0	0.0
+618	MAG6 15% LynxHarv 14 - time period 14	HARD	1.0	null	null	15500.0	null	1117	z_214	2084.920093757014	0.0	0.0
+619	MAG6 15% LynxHarv 15 - time period 15	HARD	1.0	null	null	15500.0	null	1118	z_215	7862.489186075388	0.0	0.0

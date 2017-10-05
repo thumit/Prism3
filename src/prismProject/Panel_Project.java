@@ -14,6 +14,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -50,6 +51,7 @@ import javax.swing.tree.TreePath;
 
 import net.coderazzi.filters.gui.AutoChoices;
 import net.coderazzi.filters.gui.TableFilterHeader;
+import prismConvenienceClass.ColorUtil;
 import prismConvenienceClass.FilesHandle;
 import prismConvenienceClass.IconHandle;
 import prismConvenienceClass.PrismTableModel;
@@ -94,6 +96,7 @@ public class Panel_Project extends JLayeredPane {
 	private Object[][] data;	
 	private TableFilterHeader filterHeader = new TableFilterHeader();
 	
+	private TextArea_ReadMe readme;
 	private Thread thread_management_details;
 	
 	public Panel_Project(String currentProject) {
@@ -302,21 +305,10 @@ public class Panel_Project extends JLayeredPane {
 				currentLevel = path.getPathCount();
 				
 				// ------------Only show currentInputFile when the node level is 3
-				if (currentLevel == 3) {	// Selected node is an Input or Output
-							
+				if (currentLevel == 3) {	// Selected node is an Input or Output						
 					currentInputFile = selectedNode.getUserObject().toString();	// Get the URL of the current selected node			
 					currentRun = selectedNode.getParent().toString();    // Get the parent node which is the Run that contains the selected InputFile      
-					// Show the GUI for the currentInputFile here....	
-//					try {
-//						FileReader reader;
-//						reader = new FileReader(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/" + currentInputFile);
-//						rightPanelTextArea.read(reader,currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/" + currentInputFile);	
-//						reader.close();			//must close it otherwise, file is in use and cannot be deleted					
-//					} catch (IOException e1) {
-//						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
-//					}
-					
-					
+									
 					try {
 						String delimited = "\t";		// tab delimited
 						File file = new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/" + currentInputFile);
@@ -445,7 +437,20 @@ public class Panel_Project extends JLayeredPane {
 							table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 							Output_Panel_Flow_Constraints chart_panel = new Output_Panel_Flow_Constraints(table, data);
 							scrollPane_Right.setViewportView(chart_panel);
-						} else {		//Show the file as table
+						} else if (currentInputFile.equals("readme.txt")) {		// show the file as text area
+				 			readme = new TextArea_ReadMe();
+				 			readme.setBackground(ColorUtil.makeTransparent(Color.WHITE, 255));
+				 			readme.setEditable(false);
+				 			readme.setRequestFocusEnabled(false);
+							try {
+								FileReader reader = new FileReader(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/" + currentInputFile);
+								readme.read(reader, currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/" + currentInputFile);
+								reader.close();
+							} catch (IOException e1) {
+								System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+							}													
+							scrollPane_Right.setViewportView(readme);
+						} else {		// Show the file as table
 							scrollPane_Right.setViewportView(table); 
 						}				
 					} catch (IOException e1) {

@@ -3,7 +3,9 @@ Optimization solver	CPLEX
 Solution status	Optimal
 Solution algorithm	1
 Simplex iterations	53
-Solving time (seconds)	9.16
+Time reading (minutes & seconds)	9m57.24s
+Time solving (minutes & seconds)	0m10.83s
+Time writing (minutes & seconds)	0m4.37s
 Total variables	472369
 Total constraints	445338
 Objective value	4.332666064E8

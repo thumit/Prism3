@@ -7,8 +7,8 @@ import java.util.List;
 public class Get_Parameter_Information {
 
 	public static double get_total_value(
-			Read_Database read_database, String var_name, int var_rotation_age,
-			Object[] yield_tables_names, Object[][][] yield_tables_values, List<String> parameters_indexes_list,
+			Read_Database read_database, String var_name, int table_id_to_find, int row_id_to_find,
+			Object[][][] yield_tables_values, List<String> parameters_indexes_list,
 			List<String> dynamic_dentifiers_column_indexes, List<List<String>> dynamic_identifiers,
 			List<String> cost_condition_list,
 			List<String> coversion_cost_after_disturbance_name_list,		// i.e. P P disturbance		P D disturbance
@@ -25,23 +25,13 @@ public class Get_Parameter_Information {
 		if (dynamic_dentifiers_column_indexes.contains("NoIdentifier") && parameters_indexes_list.contains("NoParameter")) {	// This is the only case when we don't need to check yield table
 			value_to_return = 1;
 		} else {	// Check the yield table 				
-			List<String> yield_tables_name_list = new ArrayList<String>() {{ for (Object i : yield_tables_names) add(i.toString());}};		// Convert Object array to String list
-			String yield_table_name_to_find = Get_Variable_Information.get_yield_table_name_to_find(var_name);	
-			if (yield_table_name_to_find.contains("rotation_age")) {
-				yield_table_name_to_find = yield_table_name_to_find.replace("rotation_age", String.valueOf(var_rotation_age));
-			}
-			int row_id_to_find = Get_Variable_Information.get_yield_table_row_index_to_find(var_name);
 			
-			
-			if (yield_tables_name_list.contains(yield_table_name_to_find)) {		// If yield table name exists						
-				int table_id_to_find = yield_tables_name_list.indexOf(yield_table_name_to_find);
-				
-				
-				if (row_id_to_find < yield_tables_values[table_id_to_find].length) {
+			if (table_id_to_find != -9999) {		// If yield table name exists (if not exist then the table_id_to_find = -9999 and row_id_to_find = -9999)						
+				if (row_id_to_find < yield_tables_values[table_id_to_find].length && row_id_to_find != -9999) {
 					
 					boolean constraint_dynamicIdentifiers_matched = are_all_dynamic_identifiers_matched(yield_tables_values, table_id_to_find, row_id_to_find, dynamic_dentifiers_column_indexes, dynamic_identifiers);								
 					if (constraint_dynamicIdentifiers_matched) {					
-						if (parameters_indexes_list.contains("NoParameter")) {			//Return 1 if NoParameter & all dynamic identifiers match
+						if (parameters_indexes_list.contains("NoParameter")) {			// Return 1 if NoParameter & all dynamic identifiers match
 							value_to_return = 1;							
 						} 
 						
@@ -52,7 +42,7 @@ public class Get_Parameter_Information {
 								
 								// The following includes 1 list for the action_cost and 1 list for the conversion_cost
 								List<List<List<String>>> final_cost_list = get_final_action_cost_list_and_conversion_cost_list_for_this_variable(
-										cost_condition_list, var_name, var_rotation_age, var_action_type,
+										cost_condition_list, var_name, var_action_type,
 										yield_tables_values, table_id_to_find, row_id_to_find);
 								
 								
@@ -154,7 +144,7 @@ public class Get_Parameter_Information {
 	
 	// The following is for cost:	
 	private static List<List<List<String>>> get_final_action_cost_list_and_conversion_cost_list_for_this_variable(
-			List<String> cost_condition_list, String var_name, int var_rotation_age, String var_action_type,
+			List<String> cost_condition_list, String var_name, String var_action_type,
 			Object[][][] yield_tables_values, int table_id_to_find, int row_id_to_find) {	
 		
 		List<String> final_action_cost_column_list = new ArrayList<String>();		// example: 	"acres", "...", "hca_allsx", ... -->see table 7a in the GUI of Cost Management

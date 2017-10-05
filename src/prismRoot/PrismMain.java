@@ -495,7 +495,7 @@ public class PrismMain extends JFrame {
 		ProjectInternalFrame.setDefaultCloseOperation(JInternalFrame.DO_NOTHING_ON_CLOSE);
 				
 		prism_DesktopPane.add(ProjectInternalFrame, BorderLayout.CENTER); // attach internal frame
-		ProjectInternalFrame.setSize((int) (getWidth()/1.10),(int) (getHeight()/1.25));		
+		ProjectInternalFrame.setSize((int) (getWidth()/1.08),(int) (getHeight()/1.25));		
 		ProjectInternalFrame.setLocation((int) ((getWidth() - ProjectInternalFrame.getWidth())/2),
 				((int) ((getHeight() - ProjectInternalFrame.getHeight())/2.7)));	//Set the ProjectInternalFrame near the center of the Main frame
 		if (PrismMain.get_Prism_DesktopPane().getSelectedFrame() != null) {	//or Set the ProjectInternalFrame near the recently opened JInternalFrame

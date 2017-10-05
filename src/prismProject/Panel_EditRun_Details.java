@@ -79,7 +79,6 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
-import javax.swing.text.DefaultCaret;
 import javax.swing.text.DefaultFormatter;
 
 import prismConvenienceClass.ColorUtil;
@@ -239,7 +238,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private Object[][] data10;	
 	
 	//readme
-	private JTextArea readme;
+	private JTextArea readme = new TextArea_ReadMe();
 	
 	
 	private JButton button_import_database;
@@ -3165,39 +3164,16 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		    
  			// Load readme file-----------------------------------------------------------------
  			// Load readme file-----------------------------------------------------------------
- 			readme = new JTextArea() {
-				@Override
-				protected void paintComponent(Graphics g) {					
-					Graphics2D g2d = (Graphics2D) g.create();
-					// Fill the background, this is VERY important. Fail to do this and you will have major problems
-					g2d.setColor(getBackground());
-					g2d.fillRect(0, 0, getWidth(), getHeight());
-					// Draw the background
-					ImageIcon bgImage = IconHandle.get_scaledImageIcon(70, 70, "minionWrite.png");
-					Dimension size = this.getSize();
-					g2d.drawImage(bgImage.getImage(), size.width - bgImage.getIconWidth(), size.height - bgImage.getIconHeight() - 5, this);
-					// Paint the component content, i.e. the text
-					getUI().paint(g2d, this);
-					g2d.dispose();
-				}
-			};
-			readme.setBackground(ColorUtil.makeTransparent(Color.BLACK, 40));
-			readme.setForeground(ColorUtil.makeTransparent(Color.BLACK, 255));
- 			DefaultCaret caret = (DefaultCaret) readme.getCaret();
- 			caret.setUpdatePolicy(DefaultCaret.OUT_BOTTOM);
- 			
 			try {
 				FileReader reader = new FileReader(currentRunFolder.getAbsolutePath() + "/readme.txt");
 				readme.read(reader, currentRunFolder.getAbsolutePath() + "/readme.txt");
 				reader.close();
 			} catch (IOException e1) {
 				System.err.println("File not exists: readme.txt - New interface is created");
-				readme.append("model_description\n"
-						+ "2nd line: Please keep 1st line (above) or replace it with a short & standard name (i.e. 2-3 words using only lowercase letters, numbers, underscore)\n"
-						+ "From the 2nd line, write or delete anything. You are recomended to write short lines (i.e. less than 25 words per line)\n");
+				readme.append("Write anything to describe your model here");
 			}
 			
-			PrismTitleScrollPane readme_scrollpane = new PrismTitleScrollPane("Write your model description - exported as readme.txt", "LEFT", readme);
+			PrismTitleScrollPane readme_scrollpane = new PrismTitleScrollPane("Model description - exported as readme.txt", "LEFT", readme);
  			readme_scrollpane.setPreferredSize(new Dimension((int) (PrismMain.get_main().getPreferredSize().width * 0.55), 100));
  			// End of Load readme file-----------------------------------------------------------------
  			// End of Load readme file-----------------------------------------------------------------
@@ -3274,7 +3250,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
  					0, 12, 10, 30));		// insets top, left, bottom, right
 
  			// Add 
- 			super.add(new JLabel("Import Database - If successful information in other windows will be reset to default"), PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+ 			super.add(new JLabel("Import database - If successful information in other windows will be reset to default"), PrismGridBagLayoutHandle.get_c(c, "BOTH", 
  					0, 5, 4, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
  					5, 12, 0, 30));		// insets top, left, bottom, right
  						

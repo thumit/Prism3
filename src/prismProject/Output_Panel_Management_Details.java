@@ -1570,11 +1570,25 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 	
 	
 	
+	private static int[] get_prescription_and_row(List<String> yield_tables_names_list, String var_name, int var_rotation_age) {
+    	int[] array = new int [2];	// first index is prescription, second index is row_id   	
+    	int table_id_to_find = -9999, row_id_to_find = -9999;
+    	
+		String yield_table_name_to_find = Get_Variable_Information.get_yield_table_name_to_find(var_name);	
+		if (yield_table_name_to_find.contains("rotation_age")) {
+			yield_table_name_to_find = yield_table_name_to_find.replace("rotation_age", String.valueOf(var_rotation_age));
+		}		
 	
-	
-	
-	
-	
+		int id_to_search = Collections.binarySearch(yield_tables_names_list, yield_table_name_to_find);				
+		if (id_to_search >= 0) {		// If yield table name exists						
+			table_id_to_find = id_to_search;
+			row_id_to_find = Get_Variable_Information.get_yield_table_row_index_to_find(var_name);
+		}		
+		
+		array[0] = table_id_to_find;
+		array[1] = row_id_to_find;
+		return array;
+	}			
 	
 	
 	private class Querry_Optimal_Solution {
@@ -1585,9 +1599,11 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 			double sum_all = 0;
 			
 						
-			//Database Info
+			// Database Info
 			Object[][][] yield_tables_values = read_database.get_yield_tables_values();
-			Object[] yield_tables_names = read_database.get_yield_tables_names();								
+			Object[] yield_tables_names = read_database.get_yield_tables_names();
+			List<String> yield_tables_names_list = new ArrayList<String>() {{ for (Object i : yield_tables_names) add(i.toString());}};		// Convert Object array to String list
+			
 								
 			// Read input files to retrieve values later
 			Read_RunInputs read = new Read_RunInputs();
@@ -1644,31 +1660,19 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 
 			//Get the 2 parameter V(s1,s2,s3,s4,s5,s6) and A(s1,s2,s3,s4,s5,s6)
 			String[][] Input2_value = read.get_MO_Values();	
-			double[][][][][][] StrataArea = new double[layer1.size()][layer2.size()][layer3.size()][layer4.size()][layer5.size()][layer6.size()];
-			int[][][][][][] StartingAge = new int[layer1.size()][layer2.size()][layer3.size()][layer4.size()][layer5.size()][layer6.size()];			
+			double[] strata_area = new double[model_strata.size()];
+			int[] starting_age = new int[model_strata.size()];			
 			
 			
 			
-			for (String strata: model_strata) {
-				int s1 = layer1.indexOf(strata.substring(0,1));
-				int s2 = layer2.indexOf(strata.substring(1,2));
-				int s3 = layer3.indexOf(strata.substring(2,3));
-				int s4 = layer4.indexOf(strata.substring(3,4));
-				int s5 = layer5.indexOf(strata.substring(4,5));
-				int s6 = layer6.indexOf(strata.substring(5,6));
-				
-				//Loop through all modeled_strata to find if the names matched and get the total area and age class
-				for (int i = 0; i < read.get_MO_TotalRows(); i++) {			
-					if (Input2_value[i][0].equals(strata)) {
-						StrataArea[s1][s2][s3][s4][s5][s6] = Double.parseDouble(Input2_value[i][7]);		//area
-						
-						if (Input2_value[i][read.get_MO_TotalColumns() - 2].toString().equals("null")) {
-							StartingAge[s1][s2][s3][s4][s5][s6] = 1;		//Assume age class = 1 if not found any yield table for this existing strata
-						} else {
-							StartingAge[s1][s2][s3][s4][s5][s6] = Integer.parseInt(Input2_value[i][read.get_MO_TotalColumns() - 2]);	//age class
-						}										
-					}	
-				}	
+			// Loop through all modeled_strata to find if the names matched and get the total area and age class
+			for (int id = 0; id < model_strata.size(); id++) {
+				strata_area[id] = Double.parseDouble(Input2_value[id][7]);		// area in acres
+				if (Input2_value[id][read.get_MO_TotalColumns() - 2].toString().equals("null")) {
+					starting_age[id] = 1;		// assume age_class = 1 if not found any yield table for this existing strata
+				} else {
+					starting_age[id] = Integer.parseInt(Input2_value[id][read.get_MO_TotalColumns() - 2]);	// age_class
+				}		
 			}						
 			
 			
@@ -1723,12 +1727,9 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 				
 				//Add xNGe
 				if (method.equals("NG_E")) {	
-					int s1 = layer1.indexOf(strata.substring(0,1));
-					int s2 = layer2.indexOf(strata.substring(1,2));
-					int s3 = layer3.indexOf(strata.substring(2,3));
-					int s4 = layer4.indexOf(strata.substring(3,4));
+					int strata_id = Collections.binarySearch(model_strata, strata);		// Note we need index from model_strata not common_strata, the same is applied for other 6 layers strata
 					int s5 = layer5.indexOf(strata.substring(4,5));
-					int s6 = layer6.indexOf(strata.substring(5,6));	
+					
 					int t = period;
 					//Find all parameter match the t and add them all to parameter
 					/*	Table Name = s5 + s6 convert then + method + timingChoice
@@ -1738,13 +1739,12 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 					 */		
 					double currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
 							1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint	
-					int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
 					
 					
 					
 					List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
 					List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
-					SRDage = StartingAge[s1][s2][s3][s4][s5][s6] + t - 1; 
+					SRDage = starting_age[strata_id] + t - 1; 
 					if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
 					for (int c = 0; c < layer5.size(); c++) {
 						if (rdPercent[s5][c] / 100 > 0) {
@@ -1753,11 +1753,14 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 						}														
 					}
 					
-																			
-													
+					
+					
+					int[] prescription_and_row = get_prescription_and_row(yield_tables_names_list, var_name, -9999);							
 					double para_value = Get_Parameter_Information.get_total_value(
-							read_database, var_name, rotation_age,
-							yield_tables_names, yield_tables_values, parameters_indexes_list,
+							read_database, var_name,
+							prescription_and_row[0],
+							prescription_and_row[1],
+							yield_tables_values, parameters_indexes_list,
 							dynamic_dentifiers_column_indexes, dynamic_identifiers,
 							cost_condition_list,
 							coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
@@ -1770,23 +1773,19 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 						
 				//Add xPBe[s1][s2][s3][s4][s5][s6][i][t]			
 				if (method.equals("PB_E")) {		
-					int s1 = layer1.indexOf(strata.substring(0,1));
-					int s2 = layer2.indexOf(strata.substring(1,2));
-					int s3 = layer3.indexOf(strata.substring(2,3));
-					int s4 = layer4.indexOf(strata.substring(3,4));
+					int strata_id = Collections.binarySearch(model_strata, strata);
 					int s5 = layer5.indexOf(strata.substring(4,5));
-					int s6 = layer6.indexOf(strata.substring(5,6));	
+
 					int t = period;
 					//Find all parameter match the t and add them all to parameter
 					double currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
 							1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint		
-					int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
 					
 					
 					
 					List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
 					List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
-					SRDage = StartingAge[s1][s2][s3][s4][s5][s6] + t - 1; 
+					SRDage = starting_age[strata_id] + t - 1; 
 					if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
 					for (int c = 0; c < layer5.size(); c++) {
 						if (rdPercent[s5][c] / 100 > 0) {
@@ -1796,10 +1795,13 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 					}
 					
 					
-									
+							
+					int[] prescription_and_row = get_prescription_and_row(yield_tables_names_list, var_name, -9999);
 					double para_value = Get_Parameter_Information.get_total_value(
-							read_database, var_name, rotation_age,
-							yield_tables_names, yield_tables_values, parameters_indexes_list,
+							read_database, var_name,
+							prescription_and_row[0],
+							prescription_and_row[1],
+							yield_tables_values, parameters_indexes_list,
 							dynamic_dentifiers_column_indexes, dynamic_identifiers,
 							cost_condition_list,
 							coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
@@ -1812,23 +1814,19 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 				
 				//Add xGSe[s1][s2][s3][s4][s5][s6][i][t]			
 				if (method.equals("GS_E")) {		
-					int s1 = layer1.indexOf(strata.substring(0,1));
-					int s2 = layer2.indexOf(strata.substring(1,2));
-					int s3 = layer3.indexOf(strata.substring(2,3));
-					int s4 = layer4.indexOf(strata.substring(3,4));
+					int strata_id = Collections.binarySearch(model_strata, strata);
 					int s5 = layer5.indexOf(strata.substring(4,5));
-					int s6 = layer6.indexOf(strata.substring(5,6));	
+					
 					int t = period;
 					//Find all parameter match the t and add them all to parameter
 					double currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
 							1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint	
-					int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
 					
 					
 					
 					List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
 					List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
-					SRDage = StartingAge[s1][s2][s3][s4][s5][s6] + t - 1; 
+					SRDage = starting_age[strata_id] + t - 1; 
 					if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
 					for (int c = 0; c < layer5.size(); c++) {
 						if (rdPercent[s5][c] / 100 > 0) {
@@ -1839,9 +1837,12 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 					
 					
 					
+					int[] prescription_and_row = get_prescription_and_row(yield_tables_names_list, var_name, -9999);
 					double para_value = Get_Parameter_Information.get_total_value(
-							read_database, var_name, rotation_age,
-							yield_tables_names, yield_tables_values, parameters_indexes_list,
+							read_database, var_name,
+							prescription_and_row[0],
+							prescription_and_row[1],
+							yield_tables_values, parameters_indexes_list,
 							dynamic_dentifiers_column_indexes, dynamic_identifiers,
 							cost_condition_list,
 							coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
@@ -1853,31 +1854,26 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 	
 						
 				//Add xMS[s1][s2][s3][s4][s5][s6][i][t]			
-				if (method.equals("MS_E")) {		
-					int s1 = layer1.indexOf(strata.substring(0,1));
-					int s2 = layer2.indexOf(strata.substring(1,2));
-					int s3 = layer3.indexOf(strata.substring(2,3));
-					int s4 = layer4.indexOf(strata.substring(3,4));
-					int s5 = layer5.indexOf(strata.substring(4,5));
-					int s6 = layer6.indexOf(strata.substring(5,6));	
+				if (method.equals("MS_E")) {
+					
 					int t = period;
 					//Find all parameter match the t and add them all to parameter
 					double currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
 							1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint		
-					int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
 					
 					
-					
-					
+									
 					List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
 					List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
 					
 					
 					
-					
+					int[] prescription_and_row = get_prescription_and_row(yield_tables_names_list, var_name, -9999);
 					double para_value = Get_Parameter_Information.get_total_value(
-							read_database, var_name, rotation_age,
-							yield_tables_names, yield_tables_values, parameters_indexes_list,
+							read_database, var_name,
+							prescription_and_row[0],
+							prescription_and_row[1],
+							yield_tables_values, parameters_indexes_list,
 							dynamic_dentifiers_column_indexes, dynamic_identifiers,
 							cost_condition_list,
 							coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
@@ -1889,18 +1885,12 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 				
 				
 				//Add xBS[s1][s2][s3][s4][s5][s6][i][t]			
-				if (method.equals("BS_E")) {				
-					int s1 = layer1.indexOf(strata.substring(0,1));
-					int s2 = layer2.indexOf(strata.substring(1,2));
-					int s3 = layer3.indexOf(strata.substring(2,3));
-					int s4 = layer4.indexOf(strata.substring(3,4));
-					int s5 = layer5.indexOf(strata.substring(4,5));
-					int s6 = layer6.indexOf(strata.substring(5,6));	
+				if (method.equals("BS_E")) {
+					
 					int t = period;
 					//Find all parameter match the t and add them all to parameter
 					double currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
 							1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint		
-					int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
 					
 					
 					
@@ -1909,9 +1899,12 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 					
 					
 					
+					int[] prescription_and_row = get_prescription_and_row(yield_tables_names_list, var_name, -9999);
 					double para_value = Get_Parameter_Information.get_total_value(
-							read_database, var_name, rotation_age,
-							yield_tables_names, yield_tables_values, parameters_indexes_list,
+							read_database, var_name,
+							prescription_and_row[0],
+							prescription_and_row[1],
+							yield_tables_values, parameters_indexes_list,
 							dynamic_dentifiers_column_indexes, dynamic_identifiers,
 							cost_condition_list,
 							coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
@@ -1924,26 +1917,22 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 				
 				// Add xEAe[s1][s2][s3][s4][s5][s6](tR)(s5R)(i)(t)
 				if (method.equals("EA_E")) {									
-					int s1 = layer1.indexOf(strata.substring(0,1));
-					int s2 = layer2.indexOf(strata.substring(1,2));
-					int s3 = layer3.indexOf(strata.substring(2,3));
-					int s4 = layer4.indexOf(strata.substring(3,4));
+					int strata_id = Collections.binarySearch(model_strata, strata);
 					int s5 = layer5.indexOf(strata.substring(4,5));
-					int s6 = layer6.indexOf(strata.substring(5,6));	
+	
 					int t = period;
 					int tR = rotation_period;
-					int rotation_age = tR + StartingAge[s1][s2][s3][s4][s5][s6] - 1;
+					int rotation_age = tR + starting_age[strata_id] - 1;
 									
 					//Find all parameter match the t and add them all to parameter
 					double currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
 							1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint		
 					
-					
-					
+									
 					
 					List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
 					List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
-					SRDage = StartingAge[s1][s2][s3][s4][s5][s6] + t - 1; 
+					SRDage = starting_age[strata_id] + t - 1; 
 					if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
 					for (int s5RR = 0; s5RR < layer5.size(); s5RR++) {
 						if (rdPercent[s5][s5RR] / 100 > 0) {
@@ -1954,9 +1943,12 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 					
 					
 					
+					int[] prescription_and_row = get_prescription_and_row(yield_tables_names_list, var_name, rotation_age);
 					double para_value = Get_Parameter_Information.get_total_value(
-				    		read_database, var_name, rotation_age,
-							yield_tables_names, yield_tables_values, parameters_indexes_list,
+				    		read_database, var_name,
+				    		prescription_and_row[0],
+				    		prescription_and_row[1],
+							yield_tables_values, parameters_indexes_list,
 							dynamic_dentifiers_column_indexes, dynamic_identifiers,
 							cost_condition_list,
 							coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
@@ -1968,12 +1960,9 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 				
 				
 				//Add xEAr[s1][s2][s3][s4][s5][tR][aR][s5R][i][t]
-				if (method.equals("EA_R")) {	
-					int s1 = layer1.indexOf(strata.substring(0,1));
-					int s2 = layer2.indexOf(strata.substring(1,2));
-					int s3 = layer3.indexOf(strata.substring(2,3));
-					int s4 = layer4.indexOf(strata.substring(3,4));	
+				if (method.equals("EA_R")) {		
 					int s5 = layer5.indexOf(strata.substring(4,5));	
+					
 					int t = period;
 					int tR = rotation_period;
 					int aR = Get_Variable_Information.get_rotation_age(var_name);
@@ -1985,8 +1974,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 							1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint					
 					int rotation_age = aR;
 					
-					
-					
+										
 					
 					List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
 					List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
@@ -1999,12 +1987,14 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 						}														
 					}
 					
+									
 					
-					
-					
+					int[] prescription_and_row = get_prescription_and_row(yield_tables_names_list, var_name, rotation_age);
 					double  para_value = Get_Parameter_Information.get_total_value(
-				    		read_database, var_name, rotation_age,
-							yield_tables_names, yield_tables_values, parameters_indexes_list,
+				    		read_database, var_name,
+				    		prescription_and_row[0],
+				    		prescription_and_row[1],
+							yield_tables_values, parameters_indexes_list,
 							dynamic_dentifiers_column_indexes, dynamic_identifiers,
 							cost_condition_list,
 							coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
@@ -2017,18 +2007,14 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 	
 				//Add xNGr
 				if (method.equals("NG_R")) {		
-					int s1 = layer1.indexOf(strata.substring(0,1));
-					int s2 = layer2.indexOf(strata.substring(1,2));
-					int s3 = layer3.indexOf(strata.substring(2,3));
-					int s4 = layer4.indexOf(strata.substring(3,4));
 					int s5 = layer5.indexOf(strata.substring(4,5));	
+					
 					int t = period;
 					int a = Get_Variable_Information.get_age(var_name);
 					
 					//Find all parameter match the t and add them all to parameter
 					double currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
 							1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint																	
-					int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
 					
 					
 					
@@ -2045,9 +2031,12 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 					
 					
 					
+					int[] prescription_and_row = get_prescription_and_row(yield_tables_names_list, var_name, -9999);
 					double para_value = Get_Parameter_Information.get_total_value(
-				    		read_database, var_name, rotation_age,
-							yield_tables_names, yield_tables_values, parameters_indexes_list,
+				    		read_database, var_name,
+				    		prescription_and_row[0],
+							prescription_and_row[1],
+							yield_tables_values, parameters_indexes_list,
 							dynamic_dentifiers_column_indexes, dynamic_identifiers,
 							cost_condition_list,
 							coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
@@ -2058,21 +2047,16 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 	
 				//Add xPBr
 				if (method.equals("PB_R")) {		
-					int s1 = layer1.indexOf(strata.substring(0,1));
-					int s2 = layer2.indexOf(strata.substring(1,2));
-					int s3 = layer3.indexOf(strata.substring(2,3));
-					int s4 = layer4.indexOf(strata.substring(3,4));
 					int s5 = layer5.indexOf(strata.substring(4,5));	
+					
 					int t = period;
 					int a = Get_Variable_Information.get_age(var_name);
 					
 					//Find all parameter match the t and add them all to parameter
 					double currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
 							1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint	
-					int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
 					
-					
-					
+									
 					
 					List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
 					List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
@@ -2087,10 +2071,12 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 					
 					
 					
-					
+					int[] prescription_and_row = get_prescription_and_row(yield_tables_names_list, var_name, -9999);
 					double para_value = Get_Parameter_Information.get_total_value(
-				    		read_database, var_name, rotation_age,
-							yield_tables_names, yield_tables_values, parameters_indexes_list,
+				    		read_database, var_name,
+				    		prescription_and_row[0],
+							prescription_and_row[1],
+							yield_tables_values, parameters_indexes_list,
 							dynamic_dentifiers_column_indexes, dynamic_identifiers,
 							cost_condition_list,
 							coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
@@ -2103,11 +2089,8 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 				
 				//Add xGSr
 				if (method.equals("GS_R")) {		
-					int s1 = layer1.indexOf(strata.substring(0,1));
-					int s2 = layer2.indexOf(strata.substring(1,2));
-					int s3 = layer3.indexOf(strata.substring(2,3));
-					int s4 = layer4.indexOf(strata.substring(3,4));
 					int s5 = layer5.indexOf(strata.substring(4,5));	
+					
 					int t = period;
 					int a = Get_Variable_Information.get_age(var_name);
 					
@@ -2115,10 +2098,8 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 					//Find all parameter match the t and add them all to parameter
 					double currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
 							1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint	
-					int rotation_age = -9999;	// not need to use this, so put a -9999 here to note
 					
-					
-					
+							
 					
 					List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
 					List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
@@ -2131,12 +2112,14 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 						}														
 					}
 					
+									
 					
-					
-					
+					int[] prescription_and_row = get_prescription_and_row(yield_tables_names_list, var_name, -9999);
 					double para_value = Get_Parameter_Information.get_total_value(
-				    		read_database, var_name, rotation_age,
-							yield_tables_names, yield_tables_values, parameters_indexes_list,
+				    		read_database, var_name,
+				    		prescription_and_row[0],
+							prescription_and_row[1],
+							yield_tables_values, parameters_indexes_list,
 							dynamic_dentifiers_column_indexes, dynamic_identifiers,
 							cost_condition_list,
 							coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
