@@ -1762,8 +1762,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 							prescription_and_row[1],
 							yield_tables_values, parameters_indexes_list,
 							dynamic_dentifiers_column_indexes, dynamic_identifiers,
-							cost_condition_list,
-							coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+							88888);
 					para_value = para_value * currentDiscountValue * multiplier;
 	
 					//Add to sum_all
@@ -1803,8 +1802,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 							prescription_and_row[1],
 							yield_tables_values, parameters_indexes_list,
 							dynamic_dentifiers_column_indexes, dynamic_identifiers,
-							cost_condition_list,
-							coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+							88888);
 					para_value = para_value * currentDiscountValue * multiplier;
 					
 					//Add to sum_all
@@ -1844,8 +1842,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 							prescription_and_row[1],
 							yield_tables_values, parameters_indexes_list,
 							dynamic_dentifiers_column_indexes, dynamic_identifiers,
-							cost_condition_list,
-							coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+							88888);
 					para_value = para_value * currentDiscountValue * multiplier;
 					
 					//Add to sum_all
@@ -1875,8 +1872,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 							prescription_and_row[1],
 							yield_tables_values, parameters_indexes_list,
 							dynamic_dentifiers_column_indexes, dynamic_identifiers,
-							cost_condition_list,
-							coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+							88888);
 					para_value = para_value * currentDiscountValue * multiplier;
 					
 					//Add to sum_all
@@ -1906,8 +1902,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 							prescription_and_row[1],
 							yield_tables_values, parameters_indexes_list,
 							dynamic_dentifiers_column_indexes, dynamic_identifiers,
-							cost_condition_list,
-							coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+							88888);
 					para_value = para_value * currentDiscountValue * multiplier;
 					
 					//Add to sum_all
@@ -1950,8 +1945,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 				    		prescription_and_row[1],
 							yield_tables_values, parameters_indexes_list,
 							dynamic_dentifiers_column_indexes, dynamic_identifiers,
-							cost_condition_list,
-							coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+							88888);
 					para_value = para_value * currentDiscountValue * multiplier;
 					
 					//Add to sum_all
@@ -1996,8 +1990,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 				    		prescription_and_row[1],
 							yield_tables_values, parameters_indexes_list,
 							dynamic_dentifiers_column_indexes, dynamic_identifiers,
-							cost_condition_list,
-							coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+							88888);
 					para_value = para_value * currentDiscountValue * multiplier;
 					
 					//Add to sum_all
@@ -2038,8 +2031,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 							prescription_and_row[1],
 							yield_tables_values, parameters_indexes_list,
 							dynamic_dentifiers_column_indexes, dynamic_identifiers,
-							cost_condition_list,
-							coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+							88888);
 					para_value = para_value * currentDiscountValue * multiplier;
 					sum_all = sum_all + para_value * var_value_list.get(current_var_index);	
 				}							
@@ -2078,8 +2070,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 							prescription_and_row[1],
 							yield_tables_values, parameters_indexes_list,
 							dynamic_dentifiers_column_indexes, dynamic_identifiers,
-							cost_condition_list,
-							coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+							88888);
 					para_value = para_value * currentDiscountValue * multiplier;
 					
 					//Add to sum_all
@@ -2121,8 +2112,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 							prescription_and_row[1],
 							yield_tables_values, parameters_indexes_list,
 							dynamic_dentifiers_column_indexes, dynamic_identifiers,
-							cost_condition_list,
-							coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+							88888);
 					para_value = para_value * currentDiscountValue * multiplier;
 					
 					//Add to sum_all

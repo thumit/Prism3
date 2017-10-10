@@ -6,7 +6,6 @@ import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
-import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
 public class PrismTitleScrollPane extends JScrollPane {
@@ -14,8 +13,7 @@ public class PrismTitleScrollPane extends JScrollPane {
 	
 	public PrismTitleScrollPane(String title, String title_alignment, Component component) {
 		JScrollPane nested_scrollpane = new JScrollPane(component);	
-		Border tempBorder = BorderFactory.createMatteBorder(1, 1, 1, 1, ColorUtil.makeTransparent(Color.BLACK, 75));
-		nested_scrollpane.setBorder(tempBorder);
+		nested_scrollpane.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, ColorUtil.makeTransparent(Color.BLACK, 75)));
 		nested_scrollpane.setPreferredSize(new Dimension(100, 100));
 		
 		TitledBorder border = new TitledBorder(title);

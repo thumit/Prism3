@@ -2857,11 +2857,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			JButton btnHelp = new JButton();
 			btnHelp.setToolTipText("Help");
 			btnHelp.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_help.png"));
-			btnHelp.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent actionEvent) {
-					
-				}
+			btnHelp.addActionListener(e -> {
+								
 			});
 			
 			// Add all buttons to helpToolBar
@@ -3450,106 +3447,100 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					
 
 			// New single
-			btn_NewSingle.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent actionEvent) {		
-					// Add 1 row
-					rowCount2++;
-					data2 = new Object[rowCount2][colCount2];
-					for (int ii = 0; ii < rowCount2 - 1; ii++) {
-						for (int jj = 0; jj < colCount2; jj++) {
-							data2[ii][jj] = model2.getValueAt(ii, jj);
-						}	
-					}
-									
-					data2[rowCount2 - 1][2] = static_identifiersScrollPanel.get_static_info_from_GUI();
-					data2[rowCount2 - 1][3] = static_identifiersScrollPanel_silviculture.get_static_info_from_GUI();
-					data2[rowCount2 - 1][colCount2 - 1] = true;
-					model2.updateTableModelPrism(rowCount2, colCount2, data2, columnNames2);
-					update_id();
-					model2.fireTableDataChanged();
-					quick_edit = new QuickEdit_SilvicultureMethod_Panel(table2, data2);		// 2 lines to update data for Quick Edit Panel
-		 			scrollpane_QuickEdit.setViewportView(quick_edit);
-					
-					// Convert the new Row to model view and then select it 
-					int newRow = table2.convertRowIndexToView(rowCount2 - 1);
-					table2.setRowSelectionInterval(newRow, newRow);
-					table2.scrollRectToVisible(new Rectangle(table2.getCellRect(newRow, 0, true)));
+			btn_NewSingle.addActionListener(e -> {		
+				// Add 1 row
+				rowCount2++;
+				data2 = new Object[rowCount2][colCount2];
+				for (int ii = 0; ii < rowCount2 - 1; ii++) {
+					for (int jj = 0; jj < colCount2; jj++) {
+						data2[ii][jj] = model2.getValueAt(ii, jj);
+					}	
 				}
+								
+				data2[rowCount2 - 1][2] = static_identifiersScrollPanel.get_static_info_from_GUI();
+				data2[rowCount2 - 1][3] = static_identifiersScrollPanel_silviculture.get_static_info_from_GUI();
+				data2[rowCount2 - 1][colCount2 - 1] = true;
+				model2.updateTableModelPrism(rowCount2, colCount2, data2, columnNames2);
+				update_id();
+				model2.fireTableDataChanged();
+				quick_edit = new QuickEdit_SilvicultureMethod_Panel(table2, data2);		// 2 lines to update data for Quick Edit Panel
+	 			scrollpane_QuickEdit.setViewportView(quick_edit);
+				
+				// Convert the new Row to model view and then select it 
+				int newRow = table2.convertRowIndexToView(rowCount2 - 1);
+				table2.setRowSelectionInterval(newRow, newRow);
+				table2.scrollRectToVisible(new Rectangle(table2.getCellRect(newRow, 0, true)));
 			});
 										
 			
 			// Edit
-			btn_Edit.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent actionEvent) {	
-					if (table2.isEnabled()) {
-						
-						//A  resizable popup panel indicating changes have been made
-						JPanel popup = new JPanel(new BorderLayout());
-						popup.setBorder(null);
-						popup.setPreferredSize(new Dimension(400, 150));	
-						JLabel temp_label = new JLabel(IconHandle.get_scaledImageIcon(150, 150, "pikachuHello.png"));	
-//						JLabel temp_label = new JLabel(IconHandle.get_scaledImageIcon_replicate(150, 150, "pikachuDance.gif"));
-						popup.add(temp_label, BorderLayout.WEST);
-						
-						JTextArea temp_textarea = new JTextArea();
-						temp_textarea.setBorder(null);
-						temp_textarea.setBackground(ColorUtil.makeTransparent(Color.WHITE, 0)); 
-						temp_textarea.setFocusable(false);
-						temp_textarea.setEditable(false);
-						temp_textarea.setLineWrap(true);
-						temp_textarea.setWrapStyleWord(true);
-						temp_textarea.append("The following infomation (in rectangles surrounded by green border) will be applied to the highlighted (blue) sm" + "\n \n");
-						temp_textarea.append("1. Strata with selected Layers Attributes" + "\n");
-						temp_textarea.append("2. Silviculture Method & Timing Choice" + "\n");
-						popup.add(temp_textarea, BorderLayout.CENTER);
+			btn_Edit.addActionListener(e -> {
+				if (table2.isEnabled()) {			
+					
+					//A  resizable popup panel indicating changes have been made
+					JPanel popup = new JPanel(new BorderLayout());
+					popup.setBorder(null);
+					popup.setPreferredSize(new Dimension(400, 150));	
+					JLabel temp_label = new JLabel(IconHandle.get_scaledImageIcon(150, 150, "pikachuHello.png"));	
+//					JLabel temp_label = new JLabel(IconHandle.get_scaledImageIcon_replicate(150, 150, "pikachuDance.gif"));
+					popup.add(temp_label, BorderLayout.WEST);
+					
+					JTextArea temp_textarea = new JTextArea();
+					temp_textarea.setBorder(null);
+					temp_textarea.setBackground(ColorUtil.makeTransparent(Color.WHITE, 0)); 
+					temp_textarea.setFocusable(false);
+					temp_textarea.setEditable(false);
+					temp_textarea.setLineWrap(true);
+					temp_textarea.setWrapStyleWord(true);
+					temp_textarea.append("The following infomation (in rectangles surrounded by green border) will be applied to the highlighted (blue) sm" + "\n \n");
+					temp_textarea.append("1. Strata with selected Layers Attributes" + "\n");
+					temp_textarea.append("2. Silviculture Method & Timing Choice" + "\n");
+					popup.add(temp_textarea, BorderLayout.CENTER);
 
-						popup.addHierarchyListener(new HierarchyListener() {
-						    public void hierarchyChanged(HierarchyEvent e) {
-						        Window window = SwingUtilities.getWindowAncestor(popup);
-						        if (window instanceof Dialog) {
-						            Dialog dialog = (Dialog)window;
-						            if (!dialog.isResizable()) {
-						                dialog.setResizable(true);
-						            }
-						        }
-						    }
-						});				
-	
-						String ExitOption[] = {"Modify", "Do not modify"};
-						int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), popup, "Do you want to modify the highlighted sm ?",
-								JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, ExitOption, ExitOption[0]);	
-												
-						if (response == 0) {
-							// Apply change
-							int selectedRow = table2.getSelectedRow();
-							selectedRow = table2.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems		
-							data2[selectedRow][2] = static_identifiersScrollPanel.get_static_info_from_GUI();
-							data2[selectedRow][3] = static_identifiersScrollPanel_silviculture.get_static_info_from_GUI();
-							model2.fireTableDataChanged();	
-							
-							// Convert the edited Row to model view and then select it 
-							int editRow = table2.convertRowIndexToView(selectedRow);
-							table2.setRowSelectionInterval(editRow, editRow);
-							
-							// Enable buttons and table2
-							table2.setEnabled(true);
-							btn_NewSingle.setEnabled(true);
-							btn_Delete.setEnabled(true);
-							btn_Sort.setEnabled(true);
-							btn_Edit.setEnabled(true);
-							table_ScrollPane.setViewportView(table2);
-							
-							// Reset the view
-							int currentRow = table2.getSelectedRow();
-							currentRow = table2.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
-							static_identifiersScrollPanel.reload_this_constraint_static_identifiers((String) data2[currentRow][2]);	// 2 is the static_identifiers which have some attributes selected				
-							static_identifiersScrollPanel_silviculture.reload_this_constraint_static_identifiers((String) data2[currentRow][3]);	// 3 is the method & choice
-						}
+					popup.addHierarchyListener(new HierarchyListener() {
+					    public void hierarchyChanged(HierarchyEvent e) {
+					        Window window = SwingUtilities.getWindowAncestor(popup);
+					        if (window instanceof Dialog) {
+					            Dialog dialog = (Dialog)window;
+					            if (!dialog.isResizable()) {
+					                dialog.setResizable(true);
+					            }
+					        }
+					    }
+					});				
+
+					String ExitOption[] = {"Modify", "Do not modify"};
+					int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), popup, "Do you want to modify the highlighted sm ?",
+							JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, ExitOption, ExitOption[0]);	
+											
+					if (response == 0) {
+						// Apply change
+						int selectedRow = table2.getSelectedRow();
+						selectedRow = table2.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems		
+						data2[selectedRow][2] = static_identifiersScrollPanel.get_static_info_from_GUI();
+						data2[selectedRow][3] = static_identifiersScrollPanel_silviculture.get_static_info_from_GUI();
+						model2.fireTableDataChanged();	
 						
-					} 
-				}
+						// Convert the edited Row to model view and then select it 
+						int editRow = table2.convertRowIndexToView(selectedRow);
+						table2.setRowSelectionInterval(editRow, editRow);
+						
+						// Enable buttons and table2
+						table2.setEnabled(true);
+						btn_NewSingle.setEnabled(true);
+						btn_Delete.setEnabled(true);
+						btn_Sort.setEnabled(true);
+						btn_Edit.setEnabled(true);
+						table_ScrollPane.setViewportView(table2);
+						
+						// Reset the view
+						int currentRow = table2.getSelectedRow();
+						currentRow = table2.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
+						static_identifiersScrollPanel.reload_this_constraint_static_identifiers((String) data2[currentRow][2]);	// 2 is the static_identifiers which have some attributes selected				
+						static_identifiersScrollPanel_silviculture.reload_this_constraint_static_identifiers((String) data2[currentRow][3]);	// 3 is the method & choice
+					}
+					
+				} 
 			});
 			
 			
@@ -3567,62 +3558,56 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 				
 			// Delete
-			btn_Delete.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent actionEvent) {	
-					//Cancel editing before delete
-					if (table2.isEditing()) {
-						table2.getCellEditor().cancelCellEditing();
-					}				
-					
-					// Get selected rows
-					int[] selectedRow = table2.getSelectedRows();	
-					for (int i = 0; i < selectedRow.length; i++) {
-						selectedRow[i] = table2.convertRowIndexToModel(selectedRow[i]);	///Convert row index because "Sort" causes problems
-					}
-					
-					// Create a list of selected row indexes
-					List<Integer> selected_Index = new ArrayList<Integer>();				
-					for (int i: selectedRow) {
-						selected_Index.add(i);
-					}	
-					
-					// Get values to the new data2
-					data2 = new Object[rowCount2 - selectedRow.length][colCount2];
-					int newRow =0;
-					for (int ii = 0; ii < rowCount2; ii++) {
-						if (!selected_Index.contains(ii)) {			//If row not in the list then add to data2 row
-							for (int jj = 0; jj < colCount2; jj++) {
-								data2[newRow][jj] = model2.getValueAt(ii, jj);
-							}
-							newRow++;
-						}
-					}
-					// Pass back the info to table model
-					rowCount2 = rowCount2 - selectedRow.length;
-					model2.updateTableModelPrism(rowCount2, colCount2, data2, columnNames2);
-					model2.fireTableDataChanged();	
-					quick_edit = new QuickEdit_SilvicultureMethod_Panel(table2, data2);	// 2 lines to update data for Quick Edit Panel
-		 			scrollpane_QuickEdit.setViewportView(quick_edit);
+			btn_Delete.addActionListener(e -> {	
+				//Cancel editing before delete
+				if (table2.isEditing()) {
+					table2.getCellEditor().cancelCellEditing();
+				}				
+				
+				// Get selected rows
+				int[] selectedRow = table2.getSelectedRows();	
+				for (int i = 0; i < selectedRow.length; i++) {
+					selectedRow[i] = table2.convertRowIndexToModel(selectedRow[i]);	///Convert row index because "Sort" causes problems
 				}
+				
+				// Create a list of selected row indexes
+				List<Integer> selected_Index = new ArrayList<Integer>();				
+				for (int i: selectedRow) {
+					selected_Index.add(i);
+				}	
+				
+				// Get values to the new data2
+				data2 = new Object[rowCount2 - selectedRow.length][colCount2];
+				int newRow =0;
+				for (int ii = 0; ii < rowCount2; ii++) {
+					if (!selected_Index.contains(ii)) {			//If row not in the list then add to data2 row
+						for (int jj = 0; jj < colCount2; jj++) {
+							data2[newRow][jj] = model2.getValueAt(ii, jj);
+						}
+						newRow++;
+					}
+				}
+				// Pass back the info to table model
+				rowCount2 = rowCount2 - selectedRow.length;
+				model2.updateTableModelPrism(rowCount2, colCount2, data2, columnNames2);
+				model2.fireTableDataChanged();	
+				quick_edit = new QuickEdit_SilvicultureMethod_Panel(table2, data2);	// 2 lines to update data for Quick Edit Panel
+	 			scrollpane_QuickEdit.setViewportView(quick_edit);
 			});
 					
 			
 			// Sort
-			btn_Sort.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent actionEvent) {	
-					if (btn_Sort.getText().equals("ON")) {
-						table2.setRowSorter(null);
-						btn_Sort.setText("OFF");
-						btn_Sort.repaint();
-					} else if (btn_Sort.getText().equals("OFF")) {
-						TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model2); // Add sorter
-						table2.setRowSorter(sorter);
-						btn_Sort.setText("ON");
-						btn_Sort.repaint();
-					}	
-				}
+			btn_Sort.addActionListener(e -> {					
+				if (btn_Sort.getText().equals("ON")) {
+					table2.setRowSorter(null);
+					btn_Sort.setText("OFF");
+					btn_Sort.repaint();
+				} else if (btn_Sort.getText().equals("OFF")) {
+					TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model2); // Add sorter
+					table2.setRowSorter(sorter);
+					btn_Sort.setText("ON");
+					btn_Sort.repaint();
+				}	
 			});
 			// End of Listeners for table9 & buttons -----------------------------------------------------------------------
 			// End of Listeners for table9 & buttons -----------------------------------------------------------------------			
@@ -3653,36 +3638,30 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			JToggleButton btnQuickEdit = new JToggleButton();
 			btnQuickEdit.setToolTipText("Show Quick Edit Tool");
 			btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
-			btnQuickEdit.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent actionEvent) {			
- 					if (btnQuickEdit.getToolTipText().equals("Show Quick Edit Tool")) {
- 						btnQuickEdit.setToolTipText("Hide Quick Edit Tool");
- 						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
- 						scrollpane_QuickEdit.setVisible(true);
- 						// Get everything show up nicely
- 						GUI_Text_splitPanel.setLeftComponent(panel_Silviculture_Method_GUI);
- 						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
- 					} else {
- 						btnQuickEdit.setToolTipText("Show Quick Edit Tool");
- 						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
- 						scrollpane_QuickEdit.setVisible(false);
- 						// Get everything show up nicely
- 						GUI_Text_splitPanel.setLeftComponent(panel_Silviculture_Method_GUI);
- 						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
- 					}
- 				}
+			btnQuickEdit.addActionListener(e -> {		
+				if (btnQuickEdit.getToolTipText().equals("Show Quick Edit Tool")) {
+						btnQuickEdit.setToolTipText("Hide Quick Edit Tool");
+						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
+						scrollpane_QuickEdit.setVisible(true);
+						// Get everything show up nicely
+						GUI_Text_splitPanel.setLeftComponent(panel_Silviculture_Method_GUI);
+						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
+				} else {
+					btnQuickEdit.setToolTipText("Show Quick Edit Tool");
+					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
+					scrollpane_QuickEdit.setVisible(false);
+					// Get everything show up nicely
+					GUI_Text_splitPanel.setLeftComponent(panel_Silviculture_Method_GUI);
+					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
+				}				
 			});
 			
 			// button Help
 			JButton btnHelp = new JButton();
 			btnHelp.setToolTipText("Help");
 			btnHelp.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_help.png"));
-			btnHelp.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent actionEvent) {
-					
-				}
+			btnHelp.addActionListener(e -> {
+				
 			});
 			
 			// Add all buttons to flow_panel
@@ -3847,22 +3826,18 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			JButton button_remove_Strata = new JButton();
 			button_remove_Strata.setToolTipText("Uncheck highlighted strata");
 			button_remove_Strata.setIcon(IconHandle.get_scaledImageIcon(30, 30, "icon_uncheck.png"));
-			button_remove_Strata.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent actionEvent) {		
-					
-					int[] selectedRow = table3.getSelectedRows();	
-					///Convert row index because "Sort" causes problems
-					for (int i = 0; i < selectedRow.length; i++) {
-						selectedRow[i] = table3.convertRowIndexToModel(selectedRow[i]);
-					}
-					table3.clearSelection();	//To help trigger the row refresh: clear then add back the rows
-					for (int i: selectedRow) {
-						data3[i][colCount3 - 1] = false;
-						model3.setValueAt(data3[i][colCount3 - 1], i, colCount3 - 1);	// this is just to trigger the update_model_overview
-						table3.addRowSelectionInterval(table3.convertRowIndexToView(i),table3.convertRowIndexToView(i));
-					}						
+			button_remove_Strata.addActionListener(e -> {
+				int[] selectedRow = table3.getSelectedRows();	
+				///Convert row index because "Sort" causes problems
+				for (int i = 0; i < selectedRow.length; i++) {
+					selectedRow[i] = table3.convertRowIndexToModel(selectedRow[i]);
 				}
+				table3.clearSelection();	//To help trigger the row refresh: clear then add back the rows
+				for (int i: selectedRow) {
+					data3[i][colCount3 - 1] = false;
+					model3.setValueAt(data3[i][colCount3 - 1], i, colCount3 - 1);	// this is just to trigger the update_model_overview
+					table3.addRowSelectionInterval(table3.convertRowIndexToView(i),table3.convertRowIndexToView(i));
+				}						
 			});
 			button_remove_Strata.setContentAreaFilled(false);
 			button_remove_Strata.addMouseListener(new MouseAdapter() {
@@ -3881,22 +3856,18 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			button_select_Strata = new JButton();
 			button_select_Strata.setToolTipText("Check highlighted strata");
 			button_select_Strata.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_check.png"));
-			button_select_Strata.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent actionEvent) {
-					
-					int[] selectedRow = table3.getSelectedRows();	
-					///Convert row index because "Sort" causes problems
-					for (int i = 0; i < selectedRow.length; i++) {
-						selectedRow[i] = table3.convertRowIndexToModel(selectedRow[i]);
-					}
-					table3.clearSelection();	//To help trigger the row refresh: clear then add back the rows
-					for (int i: selectedRow) {
-						data3[i][colCount3 - 1] = true;
-						model3.setValueAt(data3[i][colCount3 - 1], i, colCount3 - 1);	// this is just to trigger the update_model_overview
-						table3.addRowSelectionInterval(table3.convertRowIndexToView(i),table3.convertRowIndexToView(i));
-					}	
+			button_select_Strata.addActionListener(e -> {					
+				int[] selectedRow = table3.getSelectedRows();	
+				///Convert row index because "Sort" causes problems
+				for (int i = 0; i < selectedRow.length; i++) {
+					selectedRow[i] = table3.convertRowIndexToModel(selectedRow[i]);
 				}
+				table3.clearSelection();	//To help trigger the row refresh: clear then add back the rows
+				for (int i: selectedRow) {
+					data3[i][colCount3 - 1] = true;
+					model3.setValueAt(data3[i][colCount3 - 1], i, colCount3 - 1);	// this is just to trigger the update_model_overview
+					table3.addRowSelectionInterval(table3.convertRowIndexToView(i),table3.convertRowIndexToView(i));
+				}	
 			});
 			button_select_Strata.setContentAreaFilled(false);
 			button_select_Strata.addMouseListener(new MouseAdapter() {
@@ -3940,24 +3911,21 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			JToggleButton btnQuickEdit = new JToggleButton();
 			btnQuickEdit.setToolTipText("Show Quick Edit Tool");
 			btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
-			btnQuickEdit.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent actionEvent) {
-					if (btnQuickEdit.getToolTipText().equals("Show Quick Edit Tool")) {
- 						btnQuickEdit.setToolTipText("Hide Quick Edit Tool");
- 						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
- 						scrollpane_QuickEdit.setVisible(true);
- 						// Get everything show up nicely
- 						GUI_Text_splitPanel.setLeftComponent(panel_Model_Strata_GUI);
- 						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
- 					} else {
- 						btnQuickEdit.setToolTipText("Show Quick Edit Tool");
- 						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
- 						scrollpane_QuickEdit.setVisible(false);
- 						// Get everything show up nicely
- 						GUI_Text_splitPanel.setLeftComponent(panel_Model_Strata_GUI);
- 						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
- 					}
+			btnQuickEdit.addActionListener(e -> {
+				if (btnQuickEdit.getToolTipText().equals("Show Quick Edit Tool")) {
+						btnQuickEdit.setToolTipText("Hide Quick Edit Tool");
+						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
+						scrollpane_QuickEdit.setVisible(true);
+						// Get everything show up nicely
+						GUI_Text_splitPanel.setLeftComponent(panel_Model_Strata_GUI);
+						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
+				} else {
+					btnQuickEdit.setToolTipText("Show Quick Edit Tool");
+					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
+					scrollpane_QuickEdit.setVisible(false);
+					// Get everything show up nicely
+					GUI_Text_splitPanel.setLeftComponent(panel_Model_Strata_GUI);
+					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				}
 			});
 			
@@ -3965,11 +3933,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			JButton btnHelp = new JButton();
 			btnHelp.setToolTipText("Help");
 			btnHelp.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_help.png"));
-			btnHelp.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent actionEvent) {
-					
-				}
+			btnHelp.addActionListener(e -> {
+
 			});
 			
 			// Add all buttons to flow_panel
@@ -4112,27 +4077,23 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			JToggleButton btnQuickEdit = new JToggleButton();
 			btnQuickEdit.setToolTipText("Show Quick Edit Tool");
 			btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
-			btnQuickEdit.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent actionEvent) {
-			
-					if (btnQuickEdit.getToolTipText().equals("Show Quick Edit Tool")) {
-						btnQuickEdit.setToolTipText("Hide Quick Edit Tool");
-						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
-						scrollpane_QuickEdit_1.setVisible(true);
-						scrollpane_QuickEdit_2.setVisible(true);
-						// Get everything show up nicely
-						GUI_Text_splitPanel.setLeftComponent(panel_Covertype_Conversion_GUI);
-						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
-					} else {
-						btnQuickEdit.setToolTipText("Show Quick Edit Tool");
-						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
-						scrollpane_QuickEdit_1.setVisible(false);
-						scrollpane_QuickEdit_2.setVisible(false);
-						// Get everything show up nicely
-						GUI_Text_splitPanel.setLeftComponent(panel_Covertype_Conversion_GUI);
-						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
-					}
+			btnQuickEdit.addActionListener(e -> {	
+				if (btnQuickEdit.getToolTipText().equals("Show Quick Edit Tool")) {
+					btnQuickEdit.setToolTipText("Hide Quick Edit Tool");
+					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
+					scrollpane_QuickEdit_1.setVisible(true);
+					scrollpane_QuickEdit_2.setVisible(true);
+					// Get everything show up nicely
+					GUI_Text_splitPanel.setLeftComponent(panel_Covertype_Conversion_GUI);
+					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
+				} else {
+					btnQuickEdit.setToolTipText("Show Quick Edit Tool");
+					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
+					scrollpane_QuickEdit_1.setVisible(false);
+					scrollpane_QuickEdit_2.setVisible(false);
+					// Get everything show up nicely
+					GUI_Text_splitPanel.setLeftComponent(panel_Covertype_Conversion_GUI);
+					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				}
 			});			
 			
@@ -4140,11 +4101,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			JButton btnHelp = new JButton();
 			btnHelp.setToolTipText("Help");
 			btnHelp.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_help.png"));
-			btnHelp.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent actionEvent) {
-					
-				}
+			btnHelp.addActionListener(e -> {
+
 			});
 			
 			// Add all buttons to flow_panel
@@ -4263,39 +4221,32 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
  			JToggleButton btnQuickEdit = new JToggleButton();
  			btnQuickEdit.setToolTipText("Show Quick Edit Tool");
  			btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
- 			btnQuickEdit.addActionListener(new ActionListener() {
- 				@Override
- 				public void actionPerformed(ActionEvent actionEvent) {
- 			
- 					if (btnQuickEdit.getToolTipText().equals("Show Quick Edit Tool")) {
- 						btnQuickEdit.setToolTipText("Hide Quick Edit Tool");
- 						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
- 						scrollpane_QuickEdit_1.setVisible(true);
- 						scrollpane_QuickEdit_2.setVisible(true);
- 						// Get everything show up nicely
- 						GUI_Text_splitPanel.setLeftComponent(panel_Natural_Disturbances_GUI);
- 						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
- 					} else {
- 						btnQuickEdit.setToolTipText("Show Quick Edit Tool");
- 						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
- 						scrollpane_QuickEdit_1.setVisible(false);
- 						scrollpane_QuickEdit_2.setVisible(false);
- 						// Get everything show up nicely
- 						GUI_Text_splitPanel.setLeftComponent(panel_Natural_Disturbances_GUI);
- 						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
- 					}
- 				}
+ 			btnQuickEdit.addActionListener(e -> {
+ 				if (btnQuickEdit.getToolTipText().equals("Show Quick Edit Tool")) {
+					btnQuickEdit.setToolTipText("Hide Quick Edit Tool");
+					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
+					scrollpane_QuickEdit_1.setVisible(true);
+					scrollpane_QuickEdit_2.setVisible(true);
+					// Get everything show up nicely
+					GUI_Text_splitPanel.setLeftComponent(panel_Natural_Disturbances_GUI);
+					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
+				} else {
+					btnQuickEdit.setToolTipText("Show Quick Edit Tool");
+					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
+					scrollpane_QuickEdit_1.setVisible(false);
+					scrollpane_QuickEdit_2.setVisible(false);
+					// Get everything show up nicely
+					GUI_Text_splitPanel.setLeftComponent(panel_Natural_Disturbances_GUI);
+					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
+				}
  			});			
 			
 			// button Help
 			JButton btnHelp = new JButton();
 			btnHelp.setToolTipText("Help");
 			btnHelp.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_help.png"));
-			btnHelp.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent actionEvent) {
-					
-				}
+			btnHelp.addActionListener(e -> {
+
 			});
 			
 			// Add all buttons to flow_panel
@@ -4554,9 +4505,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			
 			// EDIT MODE
-			btn_EditMode.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent actionEvent) {	
+			btn_EditMode.addActionListener(e -> {
 //					//	These codes make the popupPanel resizable --> the Big ScrollPane resizable --> JOptionPane resizable
 //					JScrollPane popup_scroll = new JScrollPane(panel_Management_Cost_GUI);
 //					popup_scroll.addHierarchyListener(new HierarchyListener() {
@@ -4580,116 +4529,107 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 //					}
 //					
 //					GUI_Text_splitPanel.setLeftComponent(panel_Management_Cost_GUI);
-				}
 			});
 			
 			
 			// New Condition
-			btn_New.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent actionEvent) {														
-					// Add 1 row
-					rowCount8++;
-					data8 = new Object[rowCount8][colCount8];
-					for (int ii = 0; ii < rowCount8 - 1; ii++) {
-						for (int jj = 0; jj < colCount8; jj++) {
-							data8[ii][jj] = model8.getValueAt(ii, jj);
-						}	
-					}
-						
-					data8[rowCount8 - 1][2] = cost_tables_ScrollPane.get_action_cost_info_from_GUI();
-					data8[rowCount8 - 1][3] = cost_tables_ScrollPane.get_conversion_cost_info_from_GUI();
-					data8[rowCount8 - 1][4] = static_identifiersScrollPanel.get_static_info_from_GUI();
-					data8[rowCount8 - 1][5] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();
-					data8[rowCount8 - 1][6] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
-									
-					model8.updateTableModelPrism(rowCount8, colCount8, data8, columnNames8);
-					model8.fireTableDataChanged();		
-					
-					// Convert the new Row to model view and then select it 
-					int newRow = table8.convertRowIndexToView(rowCount8 - 1);
-					table8.setRowSelectionInterval(newRow, newRow);
-					update_id();
-					table8.scrollRectToVisible(new Rectangle(table8.getCellRect(newRow, 0, true)));	
+			btn_New.addActionListener(e -> {														
+				// Add 1 row
+				rowCount8++;
+				data8 = new Object[rowCount8][colCount8];
+				for (int ii = 0; ii < rowCount8 - 1; ii++) {
+					for (int jj = 0; jj < colCount8; jj++) {
+						data8[ii][jj] = model8.getValueAt(ii, jj);
+					}	
 				}
+					
+				data8[rowCount8 - 1][2] = cost_tables_ScrollPane.get_action_cost_info_from_GUI();
+				data8[rowCount8 - 1][3] = cost_tables_ScrollPane.get_conversion_cost_info_from_GUI();
+				data8[rowCount8 - 1][4] = static_identifiersScrollPanel.get_static_info_from_GUI();
+				data8[rowCount8 - 1][5] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();
+				data8[rowCount8 - 1][6] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
+								
+				model8.updateTableModelPrism(rowCount8, colCount8, data8, columnNames8);
+				model8.fireTableDataChanged();		
+				
+				// Convert the new Row to model view and then select it 
+				int newRow = table8.convertRowIndexToView(rowCount8 - 1);
+				table8.setRowSelectionInterval(newRow, newRow);
+				update_id();
+				table8.scrollRectToVisible(new Rectangle(table8.getCellRect(newRow, 0, true)));	
 			});
 
 			
 			// Edit
-			btn_Edit.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent actionEvent) {	
-					if (table8.isEnabled()) {
+			btn_Edit.addActionListener(e -> {
+				if (table8.isEnabled()) {
+					//A  resizable popup panel indicating changes have been made
+					JPanel popup = new JPanel(new BorderLayout());
+					popup.setBorder(null);
+					popup.setPreferredSize(new Dimension(330, 150));	
+					JLabel temp_label = new JLabel(IconHandle.get_scaledImageIcon(150, 150, "pikachuHello.png"));									
+					popup.add(temp_label, BorderLayout.WEST);
+					
+					JTextArea temp_textarea = new JTextArea();
+					temp_textarea.setBorder(null);
+					temp_textarea.setBackground(ColorUtil.makeTransparent(Color.WHITE, 0)); 
+					temp_textarea.setFocusable(false);
+					temp_textarea.setEditable(false);
+					temp_textarea.setLineWrap(true);
+					temp_textarea.setWrapStyleWord(true);
+					temp_textarea.append("The following infomation (in rectangles surrounded by green border) will be applied to the highlighted (blue) condition" + "\n \n");
+					temp_textarea.append("1. Static Identifiers" + "\n");
+					temp_textarea.append("2. Dynamic Identifiers" + "\n");
+					temp_textarea.append("3. Action Cost" + "\n");
+					temp_textarea.append("4. Conversion Cost" + "\n");	
+					popup.add(temp_textarea, BorderLayout.CENTER);
 
-						//A  resizable popup panel indicating changes have been made
-						JPanel popup = new JPanel(new BorderLayout());
-						popup.setBorder(null);
-						popup.setPreferredSize(new Dimension(330, 150));	
-						JLabel temp_label = new JLabel(IconHandle.get_scaledImageIcon(150, 150, "pikachuHello.png"));									
-						popup.add(temp_label, BorderLayout.WEST);
+					popup.addHierarchyListener(new HierarchyListener() {
+					    public void hierarchyChanged(HierarchyEvent e) {
+					        Window window = SwingUtilities.getWindowAncestor(popup);
+					        if (window instanceof Dialog) {
+					            Dialog dialog = (Dialog)window;
+					            if (!dialog.isResizable()) {
+					                dialog.setResizable(true);
+					            }
+					        }
+					    }
+					});				
+
+					String ExitOption[] = {"Modify", "Do not modify"};
+					int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), popup, "Do you want to modify the highlighted condition ?",
+							JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, ExitOption, ExitOption[0]);	
+											
+					if (response == 0) {
+						// Apply change
+						int selectedRow = table8.getSelectedRow();
+						selectedRow = table8.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems	
+						data8[selectedRow][2] = cost_tables_ScrollPane.get_action_cost_info_from_GUI();
+						data8[selectedRow][3] = cost_tables_ScrollPane.get_conversion_cost_info_from_GUI();
+						data8[selectedRow][4] = static_identifiersScrollPanel.get_static_info_from_GUI();
+						data8[selectedRow][5] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();
+						data8[selectedRow][6] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
+						model8.fireTableDataChanged();	
 						
-						JTextArea temp_textarea = new JTextArea();
-						temp_textarea.setBorder(null);
-						temp_textarea.setBackground(ColorUtil.makeTransparent(Color.WHITE, 0)); 
-						temp_textarea.setFocusable(false);
-						temp_textarea.setEditable(false);
-						temp_textarea.setLineWrap(true);
-						temp_textarea.setWrapStyleWord(true);
-						temp_textarea.append("The following infomation (in rectangles surrounded by green border) will be applied to the highlighted (blue) condition" + "\n \n");
-						temp_textarea.append("1. Static Identifiers" + "\n");
-						temp_textarea.append("2. Dynamic Identifiers" + "\n");
-						temp_textarea.append("3. Action Cost" + "\n");
-						temp_textarea.append("4. Conversion Cost" + "\n");	
-						popup.add(temp_textarea, BorderLayout.CENTER);
-
-						popup.addHierarchyListener(new HierarchyListener() {
-						    public void hierarchyChanged(HierarchyEvent e) {
-						        Window window = SwingUtilities.getWindowAncestor(popup);
-						        if (window instanceof Dialog) {
-						            Dialog dialog = (Dialog)window;
-						            if (!dialog.isResizable()) {
-						                dialog.setResizable(true);
-						            }
-						        }
-						    }
-						});				
-	
-						String ExitOption[] = {"Modify", "Do not modify"};
-						int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), popup, "Do you want to modify the highlighted condition ?",
-								JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, ExitOption, ExitOption[0]);	
-												
-						if (response == 0) {
-							// Apply change
-							int selectedRow = table8.getSelectedRow();
-							selectedRow = table8.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems	
-							data8[selectedRow][2] = cost_tables_ScrollPane.get_action_cost_info_from_GUI();
-							data8[selectedRow][3] = cost_tables_ScrollPane.get_conversion_cost_info_from_GUI();
-							data8[selectedRow][4] = static_identifiersScrollPanel.get_static_info_from_GUI();
-							data8[selectedRow][5] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();
-							data8[selectedRow][6] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
-							model8.fireTableDataChanged();	
-							
-							// Convert the edited Row to model view and then select it 
-							int editRow = table8.convertRowIndexToView(selectedRow);
-							table8.setRowSelectionInterval(editRow, editRow);
-							
-							// Enable buttons and table8
-							table8.setEnabled(true);
-							btn_New.setEnabled(true);
-							btn_Delete.setEnabled(true);	
-							btn_Edit.setEnabled(true);
-							table_ScrollPane.setViewportView(table8);
-							
-							// Reset the view
-							int currentRow = table8.getSelectedRow();
-							currentRow = table8.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
-							static_identifiersScrollPanel.reload_this_constraint_static_identifiers((String) data8[currentRow][4]);	// 4 is the static_identifiers which have some attributes selected				
-							dynamic_identifiersScrollPanel.reload_this_constraint_dynamic_identifiers((String) data8[currentRow][5], (String) data8[currentRow][6]);	// 6 is the original_dynamic_identifiers column
-							cost_tables_ScrollPane.reload_this_condition_action_cost_and_conversion_cost((String) data8[currentRow][2], (String) data8[currentRow][3]);
-						}
-	
-					} 
-				}
+						// Convert the edited Row to model view and then select it 
+						int editRow = table8.convertRowIndexToView(selectedRow);
+						table8.setRowSelectionInterval(editRow, editRow);
+						
+						// Enable buttons and table8
+						table8.setEnabled(true);
+						btn_New.setEnabled(true);
+						btn_Delete.setEnabled(true);	
+						btn_Edit.setEnabled(true);
+						table_ScrollPane.setViewportView(table8);
+						
+						// Reset the view
+						int currentRow = table8.getSelectedRow();
+						currentRow = table8.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
+						static_identifiersScrollPanel.reload_this_constraint_static_identifiers((String) data8[currentRow][4]);	// 4 is the static_identifiers which have some attributes selected				
+						dynamic_identifiersScrollPanel.reload_this_constraint_dynamic_identifiers((String) data8[currentRow][5], (String) data8[currentRow][6]);	// 6 is the original_dynamic_identifiers column
+						cost_tables_ScrollPane.reload_this_condition_action_cost_and_conversion_cost((String) data8[currentRow][2], (String) data8[currentRow][3]);
+					}
+				} 
 			});			
 			
 			
@@ -4781,43 +4721,40 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		    
 			
 			// Delete
-			btn_Delete.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent actionEvent) {	
-					//Cancel editing before delete
-					if (table8.isEditing()) {
-						table8.getCellEditor().cancelCellEditing();
-					}				
-					
-					// Get selected rows
-					int[] selectedRow = table8.getSelectedRows();	
-					for (int i = 0; i < selectedRow.length; i++) {
-						selectedRow[i] = table8.convertRowIndexToModel(selectedRow[i]);	///Convert row index because "Sort" causes problems
-					}
-					
-					// Create a list of selected row indexes
-					List<Integer> selected_Index = new ArrayList<Integer>();				
-					for (int i: selectedRow) {
-						selected_Index.add(i);
-					}	
-					
-					// Get values to the new data8
-					data8 = new Object[rowCount8 - selectedRow.length][colCount8];
-					int newRow =0;
-					for (int ii = 0; ii < rowCount8; ii++) {
-						if (!selected_Index.contains(ii)) {			//If row not in the list then add to data8 row
-							for (int jj = 0; jj < colCount8; jj++) {
-								data8[newRow][jj] = model8.getValueAt(ii, jj);
-							}
-							newRow++;
-						}
-					}
-					// Pass back the info to table model
-					rowCount8 = rowCount8 - selectedRow.length;
-					model8.updateTableModelPrism(rowCount8, colCount8, data8, columnNames8);
-					
-					model8.fireTableDataChanged();	
+			btn_Delete.addActionListener(e -> {
+				//Cancel editing before delete
+				if (table8.isEditing()) {
+					table8.getCellEditor().cancelCellEditing();
+				}				
+				
+				// Get selected rows
+				int[] selectedRow = table8.getSelectedRows();	
+				for (int i = 0; i < selectedRow.length; i++) {
+					selectedRow[i] = table8.convertRowIndexToModel(selectedRow[i]);	///Convert row index because "Sort" causes problems
 				}
+				
+				// Create a list of selected row indexes
+				List<Integer> selected_Index = new ArrayList<Integer>();				
+				for (int i: selectedRow) {
+					selected_Index.add(i);
+				}	
+				
+				// Get values to the new data8
+				data8 = new Object[rowCount8 - selectedRow.length][colCount8];
+				int newRow =0;
+				for (int ii = 0; ii < rowCount8; ii++) {
+					if (!selected_Index.contains(ii)) {			//If row not in the list then add to data8 row
+						for (int jj = 0; jj < colCount8; jj++) {
+							data8[newRow][jj] = model8.getValueAt(ii, jj);
+						}
+						newRow++;
+					}
+				}
+				// Pass back the info to table model
+				rowCount8 = rowCount8 - selectedRow.length;
+				model8.updateTableModelPrism(rowCount8, colCount8, data8, columnNames8);
+				
+				model8.fireTableDataChanged();	
 			});			
 			// End of Listeners for table9 & buttons -----------------------------------------------------------------------
 			// End of Listeners for table9 & buttons -----------------------------------------------------------------------		    
@@ -4845,37 +4782,30 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
  			JToggleButton btnQuickEdit = new JToggleButton();
  			btnQuickEdit.setToolTipText("Show Quick Edit Tool");
  			btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
- 			btnQuickEdit.addActionListener(new ActionListener() {
- 				@Override
- 				public void actionPerformed(ActionEvent actionEvent) {
- 			
- 					if (btnQuickEdit.getToolTipText().equals("Show Quick Edit Tool")) {
- 						btnQuickEdit.setToolTipText("Hide Quick Edit Tool");
- 						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
- 						scrollpane_QuickEdit.setVisible(true);
- 						// Get everything show up nicely
- 						GUI_Text_splitPanel.setLeftComponent(panel_Management_Cost_GUI);
- 						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
- 					} else {
- 						btnQuickEdit.setToolTipText("Show Quick Edit Tool");
- 						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
- 						scrollpane_QuickEdit.setVisible(false);
- 						// Get everything show up nicely
- 						GUI_Text_splitPanel.setLeftComponent(panel_Management_Cost_GUI);
- 						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
- 					}
- 				}
+ 			btnQuickEdit.addActionListener(e -> {
+ 				if (btnQuickEdit.getToolTipText().equals("Show Quick Edit Tool")) {
+					btnQuickEdit.setToolTipText("Hide Quick Edit Tool");
+					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
+					scrollpane_QuickEdit.setVisible(true);
+					// Get everything show up nicely
+					GUI_Text_splitPanel.setLeftComponent(panel_Management_Cost_GUI);
+					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
+				} else {
+					btnQuickEdit.setToolTipText("Show Quick Edit Tool");
+					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
+					scrollpane_QuickEdit.setVisible(false);
+					// Get everything show up nicely
+					GUI_Text_splitPanel.setLeftComponent(panel_Management_Cost_GUI);
+					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
+				}
  			});				
 			
 			// button Help
 			JButton btnHelp = new JButton();
 			btnHelp.setToolTipText("Help");
 			btnHelp.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_help.png"));
-			btnHelp.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent actionEvent) {
-					
-				}
+			btnHelp.addActionListener(e -> {
+
 			});
 			
 			// Add all buttons to flow_panel
@@ -5201,327 +5131,315 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 
 			// New single
-			btn_NewSingle.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent actionEvent) {		
-					// Add 1 row
-					rowCount9++;
-					data9 = new Object[rowCount9][colCount9];
-					for (int ii = 0; ii < rowCount9 - 1; ii++) {
-						for (int jj = 0; jj < colCount9; jj++) {
-							data9[ii][jj] = model9.getValueAt(ii, jj);
-						}	
-					}
-									
-					data9[rowCount9 - 1][2] = "FREE";
-					data9[rowCount9 - 1][3] = (double) 1;
-					data9[rowCount9 - 1][8] = parametersScrollPanel.get_parameters_info_from_GUI();
-					data9[rowCount9 - 1][9] = static_identifiersScrollPanel.get_static_info_from_GUI();
-					data9[rowCount9 - 1][10] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();
-					data9[rowCount9 - 1][11] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
-					
-					model9.updateTableModelPrism(rowCount9, colCount9, data9, columnNames9);
-					update_id();
-					model9.fireTableDataChanged();
-					quick_edit = new QuickEdit_BasicConstraints_Panel(table9, data9);		// 2 lines to update data for Quick Edit Panel
-		 			scrollpane_QuickEdit.setViewportView(quick_edit);
-					
-					// Convert the new Row to model view and then select it 
-					int newRow = table9.convertRowIndexToView(rowCount9 - 1);
-					table9.setRowSelectionInterval(newRow, newRow);
-					table9.scrollRectToVisible(new Rectangle(table9.getCellRect(newRow, 0, true)));
+			btn_NewSingle.addActionListener(e -> {	
+				// Add 1 row
+				rowCount9++;
+				data9 = new Object[rowCount9][colCount9];
+				for (int ii = 0; ii < rowCount9 - 1; ii++) {
+					for (int jj = 0; jj < colCount9; jj++) {
+						data9[ii][jj] = model9.getValueAt(ii, jj);
+					}	
 				}
+								
+				data9[rowCount9 - 1][2] = "FREE";
+				data9[rowCount9 - 1][3] = (double) 1;
+				data9[rowCount9 - 1][8] = parametersScrollPanel.get_parameters_info_from_GUI();
+				data9[rowCount9 - 1][9] = static_identifiersScrollPanel.get_static_info_from_GUI();
+				data9[rowCount9 - 1][10] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();
+				data9[rowCount9 - 1][11] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
+				
+				model9.updateTableModelPrism(rowCount9, colCount9, data9, columnNames9);
+				update_id();
+				model9.fireTableDataChanged();
+				quick_edit = new QuickEdit_BasicConstraints_Panel(table9, data9);		// 2 lines to update data for Quick Edit Panel
+	 			scrollpane_QuickEdit.setViewportView(quick_edit);
+				
+				// Convert the new Row to model view and then select it 
+				int newRow = table9.convertRowIndexToView(rowCount9 - 1);
+				table9.setRowSelectionInterval(newRow, newRow);
+				table9.scrollRectToVisible(new Rectangle(table9.getCellRect(newRow, 0, true)));
 			});
 			
 			
 			// New Multiple
-			btn_New_Multiple.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent actionEvent) {		
-					
-					ScrollPane_ConstraintsSplit constraint_split_ScrollPanel = new ScrollPane_ConstraintsSplit(
-							static_identifiersScrollPanel.get_TitleAsCheckboxes(),
-							parametersScrollPanel.get_checkboxParameter(),
-							dynamic_identifiersScrollPanel.get_allDynamicIdentifiers());
+			btn_New_Multiple.addActionListener(e -> {
+				ScrollPane_ConstraintsSplit constraint_split_ScrollPanel = new ScrollPane_ConstraintsSplit(
+						static_identifiersScrollPanel.get_TitleAsCheckboxes(),
+						parametersScrollPanel.get_checkboxParameter(),
+						dynamic_identifiersScrollPanel.get_allDynamicIdentifiers());
 
-					
-					
-					String ExitOption[] = {"Add Constraints","Cancel"};
-					int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), constraint_split_ScrollPanel, "Create multiple constraints",
-							JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, ExitOption, ExitOption[1]);
-					if (response == 0)	// Add Constraints
-					{		
-						int total_Constraints = 1;
-						List<String> splitStatic_NameList = constraint_split_ScrollPanel.get_splitStatic_NameList();	// Names of static splitters
+				
+				
+				String ExitOption[] = {"Add Constraints","Cancel"};
+				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), constraint_split_ScrollPanel, "Create multiple constraints",
+						JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, ExitOption, ExitOption[1]);
+				if (response == 0)	// Add Constraints
+				{		
+					int total_Constraints = 1;
+					List<String> splitStatic_NameList = constraint_split_ScrollPanel.get_splitStatic_NameList();	// Names of static splitters
 
-						for (int i = 0; i < checkboxStaticIdentifiers.size(); i++) {
-							if (splitStatic_NameList.contains(static_identifiersScrollPanel.get_TitleAsCheckboxes().get(i).getText())) {	// IF this static must be splitted
-								int total_Checked_Elements = 0;
-								for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {
-									if (checkboxStaticIdentifiers.get(i).get(j).isSelected() && checkboxStaticIdentifiers.get(i).get(j).isVisible()) {	// If element of this static is checked		
-										total_Checked_Elements ++;	// Increase number of constraints
-									}
+					for (int i = 0; i < checkboxStaticIdentifiers.size(); i++) {
+						if (splitStatic_NameList.contains(static_identifiersScrollPanel.get_TitleAsCheckboxes().get(i).getText())) {	// IF this static must be splitted
+							int total_Checked_Elements = 0;
+							for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {
+								if (checkboxStaticIdentifiers.get(i).get(j).isSelected() && checkboxStaticIdentifiers.get(i).get(j).isVisible()) {	// If element of this static is checked		
+									total_Checked_Elements ++;	// Increase number of constraints
 								}
-								total_Constraints = total_Constraints * total_Checked_Elements;
 							}
+							total_Constraints = total_Constraints * total_Checked_Elements;
 						}
-						System.out.println(total_Constraints);
+					}
+					System.out.println(total_Constraints);
+					
+					
+					
+					// Ask to confirm adding if there are more than 1000 constraints
+					int response2 = 0;	
+					if (total_Constraints > 1000) {
+						String ExitOption2[] = {"Yes","No"};
+						String warningText = "You are going to add " + total_Constraints + " constraints. It would take some time. Continue to add ?";
+						response2 = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warningText, "Confirm adding constraints",
+								JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption2, ExitOption2[1]);
 						
+					}
 						
-						
-						// Ask to confirm adding if there are more than 1000 constraints
-						int response2 = 0;	
-						if (total_Constraints > 1000) {
-							String ExitOption2[] = {"Yes","No"};
-							String warningText = "You are going to add " + total_Constraints + " constraints. It would take some time. Continue to add ?";
-							response2 = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warningText, "Confirm adding constraints",
-									JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption2, ExitOption2[1]);
-							
+					if (response2 == 0)
+					{					
+						// After we know the total number of Constraints, then add info for each constraint
+						String[] static_info = new String[total_Constraints];
+						String[] description_extra = new String[total_Constraints];
+						for (int processing_constraint = 0; processing_constraint < total_Constraints; processing_constraint++) { 
+							static_info[processing_constraint] = "";
+							description_extra[processing_constraint] = "";
 						}
 							
-						if (response2 == 0)
-						{					
-							// After we know the total number of Constraints, then add info for each constraint
-							String[] static_info = new String[total_Constraints];
-							String[] description_extra = new String[total_Constraints];
-							for (int processing_constraint = 0; processing_constraint < total_Constraints; processing_constraint++) { 
-								static_info[processing_constraint] = "";
-								description_extra[processing_constraint] = "";
-							}
-								
+						
+						
+						for (int processing_constraint = 0; processing_constraint < total_Constraints; processing_constraint++) { 
+							int total_same_info_constraints = total_Constraints;
 							
 							
-							for (int processing_constraint = 0; processing_constraint < total_Constraints; processing_constraint++) { 
-								int total_same_info_constraints = total_Constraints;
+							for (int i = 0; i < checkboxStaticIdentifiers.size(); i++) {
+								
+								static_info[processing_constraint] = static_info[processing_constraint] + i + " ";
 								
 								
-								for (int i = 0; i < checkboxStaticIdentifiers.size(); i++) {
+								
+								if (splitStatic_NameList.contains(static_identifiersScrollPanel.get_TitleAsCheckboxes().get(i).getText())) {	// IF this static must be splitted
+									int total_Checked_Elements = 0;
+									List<Integer> selected_Element_Index = new ArrayList<Integer>();
+									for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {
+										if (checkboxStaticIdentifiers.get(i).get(j).isSelected() && checkboxStaticIdentifiers.get(i).get(j).isVisible()) {	// If element of this static is checked		
+											selected_Element_Index.add(j);
+											total_Checked_Elements ++;	// Increase number of constraints
+										}			
+									}
+									total_same_info_constraints = total_same_info_constraints/total_Checked_Elements;
+//									System.out.println(total_same_info_constraints);
 									
-									static_info[processing_constraint] = static_info[processing_constraint] + i + " ";
 									
-									
-									
-									if (splitStatic_NameList.contains(static_identifiersScrollPanel.get_TitleAsCheckboxes().get(i).getText())) {	// IF this static must be splitted
-										int total_Checked_Elements = 0;
-										List<Integer> selected_Element_Index = new ArrayList<Integer>();
-										for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {
-											if (checkboxStaticIdentifiers.get(i).get(j).isSelected() && checkboxStaticIdentifiers.get(i).get(j).isVisible()) {	// If element of this static is checked		
-												selected_Element_Index.add(j);
-												total_Checked_Elements ++;	// Increase number of constraints
-											}			
-										}
-										total_same_info_constraints = total_same_info_constraints/total_Checked_Elements;
-	//									System.out.println(total_same_info_constraints);
+
+									description_extra[processing_constraint] = description_extra[processing_constraint] + " - " + static_identifiersScrollPanel.get_TitleAsCheckboxes().get(i).getText()  + " ";
 										
+									for (int element_to_add = 0; element_to_add < selected_Element_Index.size(); element_to_add++) {
 										
-	
-										description_extra[processing_constraint] = description_extra[processing_constraint] + " - " + static_identifiersScrollPanel.get_TitleAsCheckboxes().get(i).getText()  + " ";
+										for (int j = 0; j < total_same_info_constraints; j++) {
 											
-										for (int element_to_add = 0; element_to_add < selected_Element_Index.size(); element_to_add++) {
-											
-											for (int j = 0; j < total_same_info_constraints; j++) {
-												
-												// This is my smart check: example
-												/*			1	1	1
-												 * 			2	2	2
-												 * 			3		3
-												 * 					4
-												 *  Then the below If would help write out as: 1,1,1	1,1,2	1,1,3	1,1,4	1,2,1	1,2,2	1,2,3	1,2,4	......	
-												 *  Please figure out the logic by yourself :))									
-												*/
-												if ( processing_constraint % (selected_Element_Index.size() * total_same_info_constraints) == element_to_add * total_same_info_constraints + j) {							
-													String checkboxName = checkboxStaticIdentifiers.get(i).get(selected_Element_Index.get(element_to_add)).getText();												
-													//Add checkBox if it is (selected & visible) or disable
-													if ((checkboxStaticIdentifiers.get(i).get(selected_Element_Index.get(element_to_add)).isSelected() && (checkboxStaticIdentifiers.get(i).get(selected_Element_Index.get(element_to_add)).isVisible())
-															|| !checkboxStaticIdentifiers.get(i).get(selected_Element_Index.get(element_to_add)).isEnabled())) {
-														static_info[processing_constraint] = static_info[processing_constraint] + checkboxName + " ";
-														description_extra[processing_constraint] = description_extra[processing_constraint] + checkboxName; 
-													}		
-												}	
-											}
+											// This is my smart check: example
+											/*			1	1	1
+											 * 			2	2	2
+											 * 			3		3
+											 * 					4
+											 *  Then the below If would help write out as: 1,1,1	1,1,2	1,1,3	1,1,4	1,2,1	1,2,2	1,2,3	1,2,4	......	
+											 *  Please figure out the logic by yourself :))									
+											*/
+											if ( processing_constraint % (selected_Element_Index.size() * total_same_info_constraints) == element_to_add * total_same_info_constraints + j) {							
+												String checkboxName = checkboxStaticIdentifiers.get(i).get(selected_Element_Index.get(element_to_add)).getText();												
+												//Add checkBox if it is (selected & visible) or disable
+												if ((checkboxStaticIdentifiers.get(i).get(selected_Element_Index.get(element_to_add)).isSelected() && (checkboxStaticIdentifiers.get(i).get(selected_Element_Index.get(element_to_add)).isVisible())
+														|| !checkboxStaticIdentifiers.get(i).get(selected_Element_Index.get(element_to_add)).isEnabled())) {
+													static_info[processing_constraint] = static_info[processing_constraint] + checkboxName + " ";
+													description_extra[processing_constraint] = description_extra[processing_constraint] + checkboxName; 
+												}		
+											}	
 										}
-										
-										
-										
-										
-									} else {		// IF this static would not be split
-										for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {		//Loop all elements in each layer
-											String checkboxName = checkboxStaticIdentifiers.get(i).get(j).getText();																						
-											//Add checkBox if it is (selected & visible) or disable
-											if ((checkboxStaticIdentifiers.get(i).get(j).isSelected() && (checkboxStaticIdentifiers.get(i).get(j).isVisible())
-													|| !checkboxStaticIdentifiers.get(i).get(j).isEnabled())) {
-												static_info[processing_constraint] = static_info[processing_constraint] + checkboxName + " ";										
-											}		
-										}
-										
 									}
 									
 									
-									if (!static_info[processing_constraint].equals("")) {
-										static_info[processing_constraint] = static_info[processing_constraint].substring(0, static_info[processing_constraint].length() - 1) + ";";		// remove the last space, and add ;
+									
+									
+								} else {		// IF this static would not be split
+									for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {		//Loop all elements in each layer
+										String checkboxName = checkboxStaticIdentifiers.get(i).get(j).getText();																						
+										//Add checkBox if it is (selected & visible) or disable
+										if ((checkboxStaticIdentifiers.get(i).get(j).isSelected() && (checkboxStaticIdentifiers.get(i).get(j).isVisible())
+												|| !checkboxStaticIdentifiers.get(i).get(j).isEnabled())) {
+											static_info[processing_constraint] = static_info[processing_constraint] + checkboxName + " ";										
+										}		
 									}
-								}	
+									
+								}
+								
 								
 								if (!static_info[processing_constraint].equals("")) {
-									static_info[processing_constraint] = static_info[processing_constraint].substring(0, static_info[processing_constraint].length() - 1);		// remove the last ;
+									static_info[processing_constraint] = static_info[processing_constraint].substring(0, static_info[processing_constraint].length() - 1) + ";";		// remove the last space, and add ;
 								}
-							}
+							}	
 							
-							
-							
-							
-							for (int processing_constraint = 0; processing_constraint < total_Constraints; processing_constraint++) { 
-								System.out.println(static_info[processing_constraint]);
-							}
-							
-						
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							// Add All Constraints ----------------------------------------------------------------
-							if (total_Constraints > 0) {
-								rowCount9 = rowCount9 + total_Constraints;
-								data9 = new Object[rowCount9][colCount9];
-								for (int ii = 0; ii < rowCount9 - total_Constraints; ii++) {
-									for (int jj = 0; jj < colCount9; jj++) {
-										data9[ii][jj] = model9.getValueAt(ii, jj);
-									}	
-								}
-								
-								Object[][] temp_data = constraint_split_ScrollPanel.get_multiple_constraints_data();
-								JCheckBox autoDescription = constraint_split_ScrollPanel.get_autoDescription();
-								
-								for (int i = rowCount9 - total_Constraints; i < rowCount9; i++) {
-									for (int j = 0; j < colCount9; j++) {
-										if (autoDescription.isSelected()) {
-											if (temp_data[0][1] == null) {
-												data9[i][1] = "set constraint" + " " + (i - rowCount9 + total_Constraints + 1) + description_extra[i - rowCount9 + total_Constraints];
-											} else {
-												data9[i][1] = temp_data[0][1] + " " + (i - rowCount9 + total_Constraints + 1) + description_extra[i - rowCount9 + total_Constraints];
-											}
-										} else {
-											data9[i][1] = temp_data[0][1];
-										}
-										data9[i][0] = temp_data[0][0];
-										data9[i][2] = (temp_data[0][2] == null) ? "FREE" : temp_data[0][2];
-										data9[i][3] = temp_data[0][3];
-										data9[i][4] = temp_data[0][4];
-										data9[i][5] = temp_data[0][5];
-										data9[i][6] = temp_data[0][6];
-										data9[i][7] = temp_data[0][7];
-										data9[i][8] = parametersScrollPanel.get_parameters_info_from_GUI();
-										data9[i][9] = static_info[i - rowCount9 + total_Constraints];		// Only these splitter are currently allowed
-										data9[i][10] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();	
-										data9[i][11] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
-									}	
-								}	
-												
-		
-								model9.updateTableModelPrism(rowCount9, colCount9, data9, columnNames9);
-								update_id();
-								model9.fireTableDataChanged();
-								quick_edit = new QuickEdit_BasicConstraints_Panel(table9, data9);	// 2 lines to update data for Quick Edit Panel
-					 			scrollpane_QuickEdit.setViewportView(quick_edit);
-								
-								// Convert the new Row to model view and then select it 
-								for (int i = rowCount9 - total_Constraints; i < rowCount9; i++) {
-									int newRow = table9.convertRowIndexToView(i);
-									table9.addRowSelectionInterval(newRow, newRow);
-								}	
-								table9.scrollRectToVisible(new Rectangle(table9.getCellRect(table9.convertRowIndexToView(rowCount9 - total_Constraints), 0, true)));
+							if (!static_info[processing_constraint].equals("")) {
+								static_info[processing_constraint] = static_info[processing_constraint].substring(0, static_info[processing_constraint].length() - 1);		// remove the last ;
 							}
 						}
+						
+						
+						
+						
+						for (int processing_constraint = 0; processing_constraint < total_Constraints; processing_constraint++) { 
+							System.out.println(static_info[processing_constraint]);
+						}
+						
+					
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						// Add All Constraints ----------------------------------------------------------------
+						if (total_Constraints > 0) {
+							rowCount9 = rowCount9 + total_Constraints;
+							data9 = new Object[rowCount9][colCount9];
+							for (int ii = 0; ii < rowCount9 - total_Constraints; ii++) {
+								for (int jj = 0; jj < colCount9; jj++) {
+									data9[ii][jj] = model9.getValueAt(ii, jj);
+								}	
+							}
+							
+							Object[][] temp_data = constraint_split_ScrollPanel.get_multiple_constraints_data();
+							JCheckBox autoDescription = constraint_split_ScrollPanel.get_autoDescription();
+							
+							for (int i = rowCount9 - total_Constraints; i < rowCount9; i++) {
+								for (int j = 0; j < colCount9; j++) {
+									if (autoDescription.isSelected()) {
+										if (temp_data[0][1] == null) {
+											data9[i][1] = "set constraint" + " " + (i - rowCount9 + total_Constraints + 1) + description_extra[i - rowCount9 + total_Constraints];
+										} else {
+											data9[i][1] = temp_data[0][1] + " " + (i - rowCount9 + total_Constraints + 1) + description_extra[i - rowCount9 + total_Constraints];
+										}
+									} else {
+										data9[i][1] = temp_data[0][1];
+									}
+									data9[i][0] = temp_data[0][0];
+									data9[i][2] = (temp_data[0][2] == null) ? "FREE" : temp_data[0][2];
+									data9[i][3] = temp_data[0][3];
+									data9[i][4] = temp_data[0][4];
+									data9[i][5] = temp_data[0][5];
+									data9[i][6] = temp_data[0][6];
+									data9[i][7] = temp_data[0][7];
+									data9[i][8] = parametersScrollPanel.get_parameters_info_from_GUI();
+									data9[i][9] = static_info[i - rowCount9 + total_Constraints];		// Only these splitter are currently allowed
+									data9[i][10] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();	
+									data9[i][11] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
+								}	
+							}	
 											
+	
+							model9.updateTableModelPrism(rowCount9, colCount9, data9, columnNames9);
+							update_id();
+							model9.fireTableDataChanged();
+							quick_edit = new QuickEdit_BasicConstraints_Panel(table9, data9);	// 2 lines to update data for Quick Edit Panel
+				 			scrollpane_QuickEdit.setViewportView(quick_edit);
+							
+							// Convert the new Row to model view and then select it 
+							for (int i = rowCount9 - total_Constraints; i < rowCount9; i++) {
+								int newRow = table9.convertRowIndexToView(i);
+								table9.addRowSelectionInterval(newRow, newRow);
+							}	
+							table9.scrollRectToVisible(new Rectangle(table9.getCellRect(table9.convertRowIndexToView(rowCount9 - total_Constraints), 0, true)));
+						}
 					}
-					if (response == 1)	// Cancel: do nothing
-					{
-					}
+										
+				}
+				if (response == 1) // Cancel: do nothing
+				{
 				}
 			});			
 			
 			
 			// Edit
-			btn_Edit.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent actionEvent) {	
-					if (table9.isEnabled()) {
-						
-						//A  resizable popup panel indicating changes have been made
-						JPanel popup = new JPanel(new BorderLayout());
-						popup.setBorder(null);
-						popup.setPreferredSize(new Dimension(330, 150));	
-						JLabel temp_label = new JLabel(IconHandle.get_scaledImageIcon(150, 150, "pikachuHello.png"));									
-						popup.add(temp_label, BorderLayout.WEST);
-						
-						JTextArea temp_textarea = new JTextArea();
-						temp_textarea.setBorder(null);
-						temp_textarea.setBackground(ColorUtil.makeTransparent(Color.WHITE, 0)); 
-						temp_textarea.setFocusable(false);
-						temp_textarea.setEditable(false);
-						temp_textarea.setLineWrap(true);
-						temp_textarea.setWrapStyleWord(true);
-						temp_textarea.append("The following infomation (in rectangles surrounded by green border) will be applied to the highlighted (blue) constraint" + "\n \n");
-						temp_textarea.append("1. Static Identifiers" + "\n");
-						temp_textarea.append("2. Dynamic Identifiers" + "\n");
-						temp_textarea.append("3. Parameters" + "\n");
-						popup.add(temp_textarea, BorderLayout.CENTER);
+			btn_Edit.addActionListener(e -> {
+				if (table9.isEnabled()) {					
+					//A  resizable popup panel indicating changes have been made
+					JPanel popup = new JPanel(new BorderLayout());
+					popup.setBorder(null);
+					popup.setPreferredSize(new Dimension(330, 150));	
+					JLabel temp_label = new JLabel(IconHandle.get_scaledImageIcon(150, 150, "pikachuHello.png"));									
+					popup.add(temp_label, BorderLayout.WEST);
+					
+					JTextArea temp_textarea = new JTextArea();
+					temp_textarea.setBorder(null);
+					temp_textarea.setBackground(ColorUtil.makeTransparent(Color.WHITE, 0)); 
+					temp_textarea.setFocusable(false);
+					temp_textarea.setEditable(false);
+					temp_textarea.setLineWrap(true);
+					temp_textarea.setWrapStyleWord(true);
+					temp_textarea.append("The following infomation (in rectangles surrounded by green border) will be applied to the highlighted (blue) constraint" + "\n \n");
+					temp_textarea.append("1. Static Identifiers" + "\n");
+					temp_textarea.append("2. Dynamic Identifiers" + "\n");
+					temp_textarea.append("3. Parameters" + "\n");
+					popup.add(temp_textarea, BorderLayout.CENTER);
 
-						popup.addHierarchyListener(new HierarchyListener() {
-						    public void hierarchyChanged(HierarchyEvent e) {
-						        Window window = SwingUtilities.getWindowAncestor(popup);
-						        if (window instanceof Dialog) {
-						            Dialog dialog = (Dialog)window;
-						            if (!dialog.isResizable()) {
-						                dialog.setResizable(true);
-						            }
-						        }
-						    }
-						});				
-	
-						String ExitOption[] = {"Modify", "Do not modify"};
-						int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), popup, "Do you want to modify the highlighted constraint ?",
-								JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, ExitOption, ExitOption[0]);	
-												
-						if (response == 0) {
-							// Apply change
-							int selectedRow = table9.getSelectedRow();
-							selectedRow = table9.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems										
-							data9[selectedRow][8] = parametersScrollPanel.get_parameters_info_from_GUI();
-							data9[selectedRow][9] = static_identifiersScrollPanel.get_static_info_from_GUI();
-							data9[selectedRow][10] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();	
-							data9[selectedRow][11] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
-							model9.fireTableDataChanged();	
-							
-							// Convert the edited Row to model view and then select it 
-							int editRow = table9.convertRowIndexToView(selectedRow);
-							table9.setRowSelectionInterval(editRow, editRow);
-							
-							// Enable buttons and table9
-							table9.setEnabled(true);
-							btn_NewSingle.setEnabled(true);
-							btn_New_Multiple.setEnabled(true);
-							btn_Delete.setEnabled(true);
-							btn_Sort.setEnabled(true);
-							btn_Validate.setEnabled(true);	
-							btn_Edit.setEnabled(true);
-							table_ScrollPane.setViewportView(table9);
-							
-							// Reset the view
-							int currentRow = table9.getSelectedRow();
-							currentRow = table9.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
-							static_identifiersScrollPanel.reload_this_constraint_static_identifiers((String) data9[currentRow][9]);	// 9 is the static_identifiers which have some attributes selected				
-							dynamic_identifiersScrollPanel.reload_this_constraint_dynamic_identifiers((String) data9[currentRow][10], (String) data9[currentRow][11]);	// 11 is the original_dynamic_identifiers column
-							parametersScrollPanel.reload_this_constraint_parameters((String) data9[currentRow][8]);	// 8 is the selected parameters of this constraint
-						}
+					popup.addHierarchyListener(new HierarchyListener() {
+					    public void hierarchyChanged(HierarchyEvent e) {
+					        Window window = SwingUtilities.getWindowAncestor(popup);
+					        if (window instanceof Dialog) {
+					            Dialog dialog = (Dialog)window;
+					            if (!dialog.isResizable()) {
+					                dialog.setResizable(true);
+					            }
+					        }
+					    }
+					});				
+
+					String ExitOption[] = {"Modify", "Do not modify"};
+					int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), popup, "Do you want to modify the highlighted constraint ?",
+							JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, ExitOption, ExitOption[0]);	
+											
+					if (response == 0) {
+						// Apply change
+						int selectedRow = table9.getSelectedRow();
+						selectedRow = table9.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems										
+						data9[selectedRow][8] = parametersScrollPanel.get_parameters_info_from_GUI();
+						data9[selectedRow][9] = static_identifiersScrollPanel.get_static_info_from_GUI();
+						data9[selectedRow][10] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();	
+						data9[selectedRow][11] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
+						model9.fireTableDataChanged();	
 						
-					} 
-				}
+						// Convert the edited Row to model view and then select it 
+						int editRow = table9.convertRowIndexToView(selectedRow);
+						table9.setRowSelectionInterval(editRow, editRow);
+						
+						// Enable buttons and table9
+						table9.setEnabled(true);
+						btn_NewSingle.setEnabled(true);
+						btn_New_Multiple.setEnabled(true);
+						btn_Delete.setEnabled(true);
+						btn_Sort.setEnabled(true);
+						btn_Validate.setEnabled(true);	
+						btn_Edit.setEnabled(true);
+						table_ScrollPane.setViewportView(table9);
+						
+						// Reset the view
+						int currentRow = table9.getSelectedRow();
+						currentRow = table9.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
+						static_identifiersScrollPanel.reload_this_constraint_static_identifiers((String) data9[currentRow][9]);	// 9 is the static_identifiers which have some attributes selected				
+						dynamic_identifiersScrollPanel.reload_this_constraint_dynamic_identifiers((String) data9[currentRow][10], (String) data9[currentRow][11]);	// 11 is the original_dynamic_identifiers column
+						parametersScrollPanel.reload_this_constraint_parameters((String) data9[currentRow][8]);	// 8 is the selected parameters of this constraint
+					}				
+				} 
 			});
 			
 			
@@ -5541,71 +5459,63 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 				
 			// Delete
-			btn_Delete.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent actionEvent) {	
-					//Cancel editing before delete
-					if (table9.isEditing()) {
-						table9.getCellEditor().cancelCellEditing();
-					}				
-					
-					// Get selected rows
-					int[] selectedRow = table9.getSelectedRows();	
-					for (int i = 0; i < selectedRow.length; i++) {
-						selectedRow[i] = table9.convertRowIndexToModel(selectedRow[i]);	///Convert row index because "Sort" causes problems
-					}
-					
-					// Create a list of selected row indexes
-					List<Integer> selected_Index = new ArrayList<Integer>();				
-					for (int i: selectedRow) {
-						selected_Index.add(i);
-					}	
-					
-					// Get values to the new data9
-					data9 = new Object[rowCount9 - selectedRow.length][colCount9];
-					int newRow =0;
-					for (int ii = 0; ii < rowCount9; ii++) {
-						if (!selected_Index.contains(ii)) {			//If row not in the list then add to data9 row
-							for (int jj = 0; jj < colCount9; jj++) {
-								data9[newRow][jj] = model9.getValueAt(ii, jj);
-							}
-							newRow++;
-						}
-					}
-					// Pass back the info to table model
-					rowCount9 = rowCount9 - selectedRow.length;
-					model9.updateTableModelPrism(rowCount9, colCount9, data9, columnNames9);
-					model9.fireTableDataChanged();	
-					quick_edit = new QuickEdit_BasicConstraints_Panel(table9, data9);	// 2 lines to update data for Quick Edit Panel
-		 			scrollpane_QuickEdit.setViewportView(quick_edit);
+			btn_Delete.addActionListener(e -> {
+				//Cancel editing before delete
+				if (table9.isEditing()) {
+					table9.getCellEditor().cancelCellEditing();
+				}				
+				
+				// Get selected rows
+				int[] selectedRow = table9.getSelectedRows();	
+				for (int i = 0; i < selectedRow.length; i++) {
+					selectedRow[i] = table9.convertRowIndexToModel(selectedRow[i]);	///Convert row index because "Sort" causes problems
 				}
+				
+				// Create a list of selected row indexes
+				List<Integer> selected_Index = new ArrayList<Integer>();				
+				for (int i: selectedRow) {
+					selected_Index.add(i);
+				}	
+				
+				// Get values to the new data9
+				data9 = new Object[rowCount9 - selectedRow.length][colCount9];
+				int newRow =0;
+				for (int ii = 0; ii < rowCount9; ii++) {
+					if (!selected_Index.contains(ii)) {			//If row not in the list then add to data9 row
+						for (int jj = 0; jj < colCount9; jj++) {
+							data9[newRow][jj] = model9.getValueAt(ii, jj);
+						}
+						newRow++;
+					}
+				}
+				// Pass back the info to table model
+				rowCount9 = rowCount9 - selectedRow.length;
+				model9.updateTableModelPrism(rowCount9, colCount9, data9, columnNames9);
+				model9.fireTableDataChanged();	
+				quick_edit = new QuickEdit_BasicConstraints_Panel(table9, data9);	// 2 lines to update data for Quick Edit Panel
+	 			scrollpane_QuickEdit.setViewportView(quick_edit);
 			});
 					
 			
 			// Sort
-			btn_Sort.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent actionEvent) {	
-					if (btn_Sort.getText().equals("ON")) {
-						table9.setRowSorter(null);
-						btn_Sort.setText("OFF");
-						btn_Sort.repaint();
-					} else if (btn_Sort.getText().equals("OFF")) {
-						TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model9); // Add sorter
-						table9.setRowSorter(sorter);
-						btn_Sort.setText("ON");
-						btn_Sort.repaint();
-					}	
-				}
+			btn_Sort.addActionListener(e -> {
+				if (btn_Sort.getText().equals("ON")) {
+					table9.setRowSorter(null);
+					btn_Sort.setText("OFF");
+					btn_Sort.repaint();
+				} else if (btn_Sort.getText().equals("OFF")) {
+					TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model9); // Add sorter
+					table9.setRowSorter(sorter);
+					btn_Sort.setText("ON");
+					btn_Sort.repaint();
+				}							
 			});
 			
 			
 			
 			
 			// Validate
-			btn_Validate.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent actionEvent) {						
+			btn_Validate.addActionListener(e -> {						
 //					// Apply change			
 //					int[] selectedRow = table9.getSelectedRows();	
 //					///Convert row index because "Sort" causes problems
@@ -5621,7 +5531,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 //						}
 //						table9.addRowSelectionInterval(table9.convertRowIndexToView(i),table9.convertRowIndexToView(i));
 //					}
-				}
 			});			
 
 			// End of Listeners for table9 & buttons -----------------------------------------------------------------------
@@ -5653,36 +5562,30 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
  			JToggleButton btnQuickEdit = new JToggleButton();
  			btnQuickEdit.setToolTipText("Show Quick Edit Tool");
  			btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
- 			btnQuickEdit.addActionListener(new ActionListener() {
- 				@Override
- 				public void actionPerformed(ActionEvent actionEvent) {			
- 					if (btnQuickEdit.getToolTipText().equals("Show Quick Edit Tool")) {
- 						btnQuickEdit.setToolTipText("Hide Quick Edit Tool");
- 						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
- 						scrollpane_QuickEdit.setVisible(true);
- 						// Get everything show up nicely
- 						GUI_Text_splitPanel.setLeftComponent(panel_Basic_Constraints_GUI);
- 						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
- 					} else {
- 						btnQuickEdit.setToolTipText("Show Quick Edit Tool");
- 						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
- 						scrollpane_QuickEdit.setVisible(false);
- 						// Get everything show up nicely
- 						GUI_Text_splitPanel.setLeftComponent(panel_Basic_Constraints_GUI);
- 						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
- 					}
- 				}
+ 			btnQuickEdit.addActionListener(e -> {		
+ 				if (btnQuickEdit.getToolTipText().equals("Show Quick Edit Tool")) {
+					btnQuickEdit.setToolTipText("Hide Quick Edit Tool");
+					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
+					scrollpane_QuickEdit.setVisible(true);
+					// Get everything show up nicely
+					GUI_Text_splitPanel.setLeftComponent(panel_Basic_Constraints_GUI);
+					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
+				} else {
+					btnQuickEdit.setToolTipText("Show Quick Edit Tool");
+					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
+					scrollpane_QuickEdit.setVisible(false);
+					// Get everything show up nicely
+					GUI_Text_splitPanel.setLeftComponent(panel_Basic_Constraints_GUI);
+					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
+				}
  			});				
 			
 			// button Help
 			JButton btnHelp = new JButton();
 			btnHelp.setToolTipText("Help");
 			btnHelp.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_help.png"));
-			btnHelp.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent actionEvent) {
-					
-				}
+			btnHelp.addActionListener(e -> {
+
 			});
 			
 			// Add all buttons to flow_panel
@@ -6091,94 +5994,86 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 
 			// New single
-			btn_NewSingle.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent actionEvent) {		
-					if (flow_scrollPane.get_flow_info_from_GUI().contains(";")) {	// Add constraint if there are at least 2 terms separated by ;
-						// Add 1 row
-						rowCount10++;
-						data10 = new Object[rowCount10][colCount10];
-						for (int ii = 0; ii < rowCount10 - 1; ii++) {
-							for (int jj = 0; jj < colCount10; jj++) {
-								data10[ii][jj] = model10.getValueAt(ii, jj);
-							}	
-						}
-										
-						data10[rowCount10 - 1][2] = flow_scrollPane.get_flow_info_from_GUI();	
-						data10[rowCount10 - 1][3] = "FREE";
-//						data10[rowCount10 - 1][4] = (double) 100;
-//						data10[rowCount10 - 1][5] = (double) 100;
-						model10.updateTableModelPrism(rowCount10, colCount10, data10, columnNames10);
-						update_id();
-						model10.fireTableDataChanged();
-						quick_edit = new QuickEdit_FlowConstraints_Panel(table10, data10);		// 2 lines to update data for Quick Edit Panel
-			 			scrollpane_QuickEdit.setViewportView(quick_edit);
-						
-						// Convert the new Row to model view and then select it 
-						int newRow = table10.convertRowIndexToView(rowCount10 - 1);
-						table10.setRowSelectionInterval(newRow, newRow);
-						table10.scrollRectToVisible(new Rectangle(table10.getCellRect(newRow, 0, true)));
-					}			
-				}
+			btn_NewSingle.addActionListener(e -> {	
+				if (flow_scrollPane.get_flow_info_from_GUI().contains(";")) {	// Add constraint if there are at least 2 terms separated by ;
+					// Add 1 row
+					rowCount10++;
+					data10 = new Object[rowCount10][colCount10];
+					for (int ii = 0; ii < rowCount10 - 1; ii++) {
+						for (int jj = 0; jj < colCount10; jj++) {
+							data10[ii][jj] = model10.getValueAt(ii, jj);
+						}	
+					}
+									
+					data10[rowCount10 - 1][2] = flow_scrollPane.get_flow_info_from_GUI();	
+					data10[rowCount10 - 1][3] = "FREE";
+//					data10[rowCount10 - 1][4] = (double) 100;
+//					data10[rowCount10 - 1][5] = (double) 100;
+					model10.updateTableModelPrism(rowCount10, colCount10, data10, columnNames10);
+					update_id();
+					model10.fireTableDataChanged();
+					quick_edit = new QuickEdit_FlowConstraints_Panel(table10, data10);		// 2 lines to update data for Quick Edit Panel
+		 			scrollpane_QuickEdit.setViewportView(quick_edit);
+					
+					// Convert the new Row to model view and then select it 
+					int newRow = table10.convertRowIndexToView(rowCount10 - 1);
+					table10.setRowSelectionInterval(newRow, newRow);
+					table10.scrollRectToVisible(new Rectangle(table10.getCellRect(newRow, 0, true)));
+				}			
 			});
 			
 			
 			
 			// Edit
-			btn_Edit.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent actionEvent) {	
-					if (table10.isEnabled()) {	
-						
-						//A  resizable popup panel indicating changes have been made
-						JPanel popup = new JPanel(new BorderLayout());
-						popup.setBorder(null);
-						popup.setPreferredSize(new Dimension(330, 150));	
-						JLabel temp_label = new JLabel(IconHandle.get_scaledImageIcon(150, 150, "pikachuHello.png"));									
-						popup.add(temp_label, BorderLayout.WEST);
-						
-						JTextArea temp_textarea = new JTextArea();
-						temp_textarea.setBorder(null);
-						temp_textarea.setBackground(ColorUtil.makeTransparent(Color.WHITE, 0)); 
-						temp_textarea.setFocusable(false);
-						temp_textarea.setEditable(false);
-						temp_textarea.setLineWrap(true);
-						temp_textarea.setWrapStyleWord(true);
-						temp_textarea.append("The following infomation (in rectangles surrounded by green border) will be applied to the highlighted (blue) flow" + "\n \n");
-						temp_textarea.append("1. Flow arrangement" + "\n");	
-						popup.add(temp_textarea, BorderLayout.CENTER);
+			btn_Edit.addActionListener(e -> {
+				if (table10.isEnabled()) {						
+					//A  resizable popup panel indicating changes have been made
+					JPanel popup = new JPanel(new BorderLayout());
+					popup.setBorder(null);
+					popup.setPreferredSize(new Dimension(330, 150));	
+					JLabel temp_label = new JLabel(IconHandle.get_scaledImageIcon(150, 150, "pikachuHello.png"));									
+					popup.add(temp_label, BorderLayout.WEST);
+					
+					JTextArea temp_textarea = new JTextArea();
+					temp_textarea.setBorder(null);
+					temp_textarea.setBackground(ColorUtil.makeTransparent(Color.WHITE, 0)); 
+					temp_textarea.setFocusable(false);
+					temp_textarea.setEditable(false);
+					temp_textarea.setLineWrap(true);
+					temp_textarea.setWrapStyleWord(true);
+					temp_textarea.append("The following infomation (in rectangles surrounded by green border) will be applied to the highlighted (blue) flow" + "\n \n");
+					temp_textarea.append("1. Flow arrangement" + "\n");	
+					popup.add(temp_textarea, BorderLayout.CENTER);
 
-						popup.addHierarchyListener(new HierarchyListener() {
-						    public void hierarchyChanged(HierarchyEvent e) {
-						        Window window = SwingUtilities.getWindowAncestor(popup);
-						        if (window instanceof Dialog) {
-						            Dialog dialog = (Dialog)window;
-						            if (!dialog.isResizable()) {
-						                dialog.setResizable(true);
-						            }
-						        }
-						    }
-						});				
-	
-						String ExitOption[] = {"Modify", "Do not modify"};
-						int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), popup, "Do you want to modify the highlighted flow ?",
-								JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, ExitOption, ExitOption[0]);	
-												
-						if (response == 0) {
-							int selectedRow = table10.getSelectedRow();
-							selectedRow = table10.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems										
-							
-							if (flow_scrollPane.get_flow_info_from_GUI().contains(";")) {	// Edit is accepted if there are at least 2 terms separated by ;
-								data10[selectedRow][2] = flow_scrollPane.get_flow_info_from_GUI();					
-								model10.fireTableDataChanged();	
-								
-								// Convert the edited Row to model view and then select it 
-								int editRow = table10.convertRowIndexToView(selectedRow);
-								table10.setRowSelectionInterval(editRow, editRow);
-							}
-						}
+					popup.addHierarchyListener(new HierarchyListener() {
+					    public void hierarchyChanged(HierarchyEvent e) {
+					        Window window = SwingUtilities.getWindowAncestor(popup);
+					        if (window instanceof Dialog) {
+					            Dialog dialog = (Dialog)window;
+					            if (!dialog.isResizable()) {
+					                dialog.setResizable(true);
+					            }
+					        }
+					    }
+					});				
+
+					String ExitOption[] = {"Modify", "Do not modify"};
+					int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), popup, "Do you want to modify the highlighted flow ?",
+							JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, ExitOption, ExitOption[0]);	
+											
+					if (response == 0) {
+						int selectedRow = table10.getSelectedRow();
+						selectedRow = table10.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems										
 						
-					}
+						if (flow_scrollPane.get_flow_info_from_GUI().contains(";")) {	// Edit is accepted if there are at least 2 terms separated by ;
+							data10[selectedRow][2] = flow_scrollPane.get_flow_info_from_GUI();					
+							model10.fireTableDataChanged();	
+							
+							// Convert the edited Row to model view and then select it 
+							int editRow = table10.convertRowIndexToView(selectedRow);
+							table10.setRowSelectionInterval(editRow, editRow);
+						}
+					}					
 				}
 			});
 			
@@ -6195,71 +6090,63 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 				
 			// Delete
-			btn_Delete.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent actionEvent) {	
-					//Cancel editing before delete
-					if (table10.isEditing()) {
-						table10.getCellEditor().cancelCellEditing();
-					}				
-					
-					// Get selected rows
-					int[] selectedRow = table10.getSelectedRows();	
-					for (int i = 0; i < selectedRow.length; i++) {
-						selectedRow[i] = table10.convertRowIndexToModel(selectedRow[i]);	///Convert row index because "Sort" causes problems
-					}
-					
-					// Create a list of selected row indexes
-					List<Integer> selected_Index = new ArrayList<Integer>();				
-					for (int i: selectedRow) {
-						selected_Index.add(i);
-					}	
-					
-					// Get values to the new data10
-					data10 = new Object[rowCount10 - selectedRow.length][colCount10];
-					int newRow =0;
-					for (int ii = 0; ii < rowCount10; ii++) {
-						if (!selected_Index.contains(ii)) {			//If row not in the list then add to data10 row
-							for (int jj = 0; jj < colCount10; jj++) {
-								data10[newRow][jj] = model10.getValueAt(ii, jj);
-							}
-							newRow++;
-						}
-					}
-					// Pass back the info to table model
-					rowCount10 = rowCount10 - selectedRow.length;
-					model10.updateTableModelPrism(rowCount10, colCount10, data10, columnNames10);
-					model10.fireTableDataChanged();	
-					quick_edit = new QuickEdit_FlowConstraints_Panel(table10, data10);		// 2 lines to update data for Quick Edit Panel
-		 			scrollpane_QuickEdit.setViewportView(quick_edit);
+			btn_Delete.addActionListener(e -> {	
+				//Cancel editing before delete
+				if (table10.isEditing()) {
+					table10.getCellEditor().cancelCellEditing();
+				}				
+				
+				// Get selected rows
+				int[] selectedRow = table10.getSelectedRows();	
+				for (int i = 0; i < selectedRow.length; i++) {
+					selectedRow[i] = table10.convertRowIndexToModel(selectedRow[i]);	///Convert row index because "Sort" causes problems
 				}
+				
+				// Create a list of selected row indexes
+				List<Integer> selected_Index = new ArrayList<Integer>();				
+				for (int i: selectedRow) {
+					selected_Index.add(i);
+				}	
+				
+				// Get values to the new data10
+				data10 = new Object[rowCount10 - selectedRow.length][colCount10];
+				int newRow =0;
+				for (int ii = 0; ii < rowCount10; ii++) {
+					if (!selected_Index.contains(ii)) {			//If row not in the list then add to data10 row
+						for (int jj = 0; jj < colCount10; jj++) {
+							data10[newRow][jj] = model10.getValueAt(ii, jj);
+						}
+						newRow++;
+					}
+				}
+				// Pass back the info to table model
+				rowCount10 = rowCount10 - selectedRow.length;
+				model10.updateTableModelPrism(rowCount10, colCount10, data10, columnNames10);
+				model10.fireTableDataChanged();	
+				quick_edit = new QuickEdit_FlowConstraints_Panel(table10, data10);		// 2 lines to update data for Quick Edit Panel
+	 			scrollpane_QuickEdit.setViewportView(quick_edit);
 			});
 					
 			
 			// Sort
-			btn_Sort.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent actionEvent) {	
-					if (btn_Sort.getText().equals("ON")) {
-						table10.setRowSorter(null);
-						btn_Sort.setText("OFF");
-						btn_Sort.repaint();
-					} else if (btn_Sort.getText().equals("OFF")) {
-						TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model10); // Add sorter
-						table10.setRowSorter(sorter);
-						btn_Sort.setText("ON");
-						btn_Sort.repaint();
-					}	
-				}
+			btn_Sort.addActionListener(e -> {
+				if (btn_Sort.getText().equals("ON")) {
+					table10.setRowSorter(null);
+					btn_Sort.setText("OFF");
+					btn_Sort.repaint();
+				} else if (btn_Sort.getText().equals("OFF")) {
+					TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model10); // Add sorter
+					table10.setRowSorter(sorter);
+					btn_Sort.setText("ON");
+					btn_Sort.repaint();
+				}	
 			});
 			
 			
 			
 			
 			// Validate
-			btn_Validate.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent actionEvent) {						
+			btn_Validate.addActionListener(e -> {					
 //					// Apply change			
 //					int[] selectedRow = table10.getSelectedRows();	
 //					///Convert row index because "Sort" causes problems
@@ -6275,7 +6162,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 //						}
 //						table10.addRowSelectionInterval(table10.convertRowIndexToView(i),table10.convertRowIndexToView(i));
 //					}
-				}
 			});			
 	
 			// End of Listeners for table10 & buttons -----------------------------------------------------------------------
@@ -6311,36 +6197,30 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
  			JToggleButton btnQuickEdit = new JToggleButton();
  			btnQuickEdit.setToolTipText("Show Quick Edit Tool");
  			btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
- 			btnQuickEdit.addActionListener(new ActionListener() {
- 				@Override
- 				public void actionPerformed(ActionEvent actionEvent) {			
- 					if (btnQuickEdit.getToolTipText().equals("Show Quick Edit Tool")) {
- 						btnQuickEdit.setToolTipText("Hide Quick Edit Tool");
- 						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
- 						scrollpane_QuickEdit.setVisible(true);
- 						// Get everything show up nicely
- 						GUI_Text_splitPanel.setLeftComponent(panel_Flow_Constraints_GUI);
- 						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
- 					} else {
- 						btnQuickEdit.setToolTipText("Show Quick Edit Tool");
- 						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
- 						scrollpane_QuickEdit.setVisible(false);
- 						// Get everything show up nicely
- 						GUI_Text_splitPanel.setLeftComponent(panel_Flow_Constraints_GUI);
- 						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
- 					}
- 				}
+ 			btnQuickEdit.addActionListener(e -> {		
+ 				if (btnQuickEdit.getToolTipText().equals("Show Quick Edit Tool")) {
+					btnQuickEdit.setToolTipText("Hide Quick Edit Tool");
+					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
+					scrollpane_QuickEdit.setVisible(true);
+					// Get everything show up nicely
+					GUI_Text_splitPanel.setLeftComponent(panel_Flow_Constraints_GUI);
+					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
+				} else {
+					btnQuickEdit.setToolTipText("Show Quick Edit Tool");
+					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
+					scrollpane_QuickEdit.setVisible(false);
+					// Get everything show up nicely
+					GUI_Text_splitPanel.setLeftComponent(panel_Flow_Constraints_GUI);
+					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
+				}
  			});				
 			
 			// button Help
 			JButton btnHelp = new JButton();
 			btnHelp.setToolTipText("Help");
 			btnHelp.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_help.png"));
-			btnHelp.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent actionEvent) {
-					
-				}
+			btnHelp.addActionListener(e -> {
+
 			});
 						
 			// spinner

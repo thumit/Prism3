@@ -23,7 +23,7 @@ public class Get_Variable_Information {
 			method = "NG";
 			timing_choice = 0;
 			forest_status = "E";
-			yield_table_name_to_find = layer5 + "_" + layer6  + "_"+ method + "_" + forest_status + "_" + timing_choice;
+			yield_table_name_to_find = layer5 + "_" + layer6 + "_"+ method + "_" + forest_status + "_" + timing_choice;
 			yield_table_row_index_to_find = period - 1;
 		} 
 		else if (var_name.startsWith("xPB_E_")) {
@@ -41,7 +41,7 @@ public class Get_Variable_Information {
 			
 			method = "PB";
 			forest_status = "E";
-			yield_table_name_to_find = layer5 + "_" + layer6  + "_"+ method + "_" + forest_status + "_" + timing_choice;
+			yield_table_name_to_find = layer5 + "_" + layer6 + "_"+ method + "_" + forest_status + "_" + timing_choice;
 			yield_table_row_index_to_find = period - 1;
 		}
 		else if (var_name.startsWith("xGS_E_")) {
@@ -59,7 +59,7 @@ public class Get_Variable_Information {
 			
 			method = "GS";
 			forest_status = "E";
-			yield_table_name_to_find = layer5 + "_" + layer6  + "_"+ method + "_" + forest_status + "_" + timing_choice;
+			yield_table_name_to_find = layer5 + "_" + layer6 + "_"+ method + "_" + forest_status + "_" + timing_choice;
 			yield_table_row_index_to_find = period - 1;
 		}
 		else if (var_name.startsWith("xMS_E_")) {
@@ -77,7 +77,7 @@ public class Get_Variable_Information {
 			
 			method = "MS";
 			forest_status = "E";
-			yield_table_name_to_find = layer5 + "_" + layer6  + "_"+ method + "_" + forest_status + "_" + timing_choice;
+			yield_table_name_to_find = layer5 + "_" + layer6 + "_"+ method + "_" + forest_status + "_" + timing_choice;
 			yield_table_row_index_to_find = period - 1;
 		}
 		else if (var_name.startsWith("xBS_E_")) {
@@ -95,7 +95,7 @@ public class Get_Variable_Information {
 			
 			method = "BS";
 			forest_status = "E";
-			yield_table_name_to_find = layer5 + "_" + layer6  + "_" + method + "_" + forest_status + "_" + timing_choice;
+			yield_table_name_to_find = layer5 + "_" + layer6 + "_" + method + "_" + forest_status + "_" + timing_choice;
 			yield_table_row_index_to_find = period - 1;
 		}
 		else if (var_name.startsWith("xEA_E_")) {				

@@ -178,14 +178,11 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		btnNewDatabase = new JButton();
 		btnNewDatabase.setToolTipText("New Database");
 		btnNewDatabase.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_new.png"));
-		btnNewDatabase.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent actionEvent) {
-				refreshDatabaseTree();
-				processingNode = root;
-				currentLevel = 1;
-				new_Database_or_Table();
-			}
+		btnNewDatabase.addActionListener(e -> {
+			refreshDatabaseTree();
+			processingNode = root;
+			currentLevel = 1;
+			new_Database_or_Table();
 		});
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -201,11 +198,8 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		btnDelete = new JButton();
 		btnDelete.setToolTipText("Delete");
 		btnDelete.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_delete.png"));
-		btnDelete.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent actionEvent) {
-				delete_Databases_or_Tables();
-			}
+		btnDelete.addActionListener(e -> {
+			delete_Databases_or_Tables();
 		});
 		c.gridx = 1;
 		c.gridy = 0;
@@ -219,11 +213,8 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		btnRefresh = new JButton();
 		btnRefresh.setToolTipText("Refresh");
 		btnRefresh.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_refresh.png"));
-		btnRefresh.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent actionEvent) {
-				refreshDatabaseTree();
-			}
+		btnRefresh.addActionListener(e -> {
+			refreshDatabaseTree();
 		});
 		c.gridx = 2;
 		c.gridy = 0;

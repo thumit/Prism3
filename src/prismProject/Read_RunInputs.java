@@ -836,8 +836,8 @@ public class Read_RunInputs {
 	}	
 	
 	
-	public List<String> get_dynamic_dentifiers_column_indexes_in_row (int row) {	//Column 8 in the GUI table "Dynamic identifiers". The whole is contained by UC_value[i][8]
-		List<String> dynamic_dentifiers_column_indexes = new ArrayList<String>();
+	public List<String> get_dynamic_identifiers_column_indexes_in_row (int row) {	//Column 8 in the GUI table "Dynamic identifiers". The whole is contained by UC_value[i][8]
+		List<String> dynamic_identifiers_column_indexes = new ArrayList<String>();
 			
 		//Read the whole cell into array
 		String[] dynamicLayer_Info = bc_values[row][dynamic_identifiers_col].split(";");		//Note: row 0 is the title only, row 1 is constraint 1,.....
@@ -847,10 +847,10 @@ public class Read_RunInputs {
 		for (int i = 0; i < total_dynamicIdentifiers; i++) {	
 			String[] identifierElements = dynamicLayer_Info[i].split("\\s+");				//space delimited
 			//add the first element which is the identifier column index
-			dynamic_dentifiers_column_indexes.add(identifierElements[0].replaceAll("\\s+",""));
+			dynamic_identifiers_column_indexes.add(identifierElements[0].replaceAll("\\s+",""));
 		}
 			
-		return dynamic_dentifiers_column_indexes;
+		return dynamic_identifiers_column_indexes;
 	}	
 	
 	

@@ -21,6 +21,7 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -156,99 +157,96 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 		runStatButton.setVerticalTextPosition(JButton.TOP);
 		runStatButton.setFont(new Font(null, Font.BOLD, 15));
 		runStatButton.setText("CLICK ME TO GET SOLUTIONS");
-		runStatButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent actionEvent) {
-				if (solvingstatus==false) {
-					//Solve runs when clicked
-					problem_file = new File[rowCount];
-					solution_file = new File[rowCount];
-					output_variables_file = new File[rowCount];
-					output_constraints_file = new File[rowCount];
-					output_general_outputs_file = new File[rowCount];
-					output_management_overview_file = new File[rowCount];
-					output_management_details_file = new File[rowCount];	
-					output_fly_constraints_file = new File[rowCount];
-					output_flow_constraints_file = new File[rowCount];
-					output_basic_constraints_file = new File[rowCount];
-					
+		runStatButton.addActionListener(e -> {
+			if (solvingstatus==false) {
+				//Solve runs when clicked
+				problem_file = new File[rowCount];
+				solution_file = new File[rowCount];
+				output_variables_file = new File[rowCount];
+				output_constraints_file = new File[rowCount];
+				output_general_outputs_file = new File[rowCount];
+				output_management_overview_file = new File[rowCount];
+				output_management_details_file = new File[rowCount];	
+				output_fly_constraints_file = new File[rowCount];
+				output_flow_constraints_file = new File[rowCount];
+				output_basic_constraints_file = new File[rowCount];
+				
 
-					// Open 2 new parallel threads: 1 for running CPLEX, 1 for redirecting console to displayTextArea
-					Thread thread2 = new Thread() {
-						public void run() {
-							try {
-								//redirect console to JTextArea
-								PipedOutputStream pOut = new PipedOutputStream();
-								System.setOut(new PrintStream(pOut));
-								System.setErr(new PrintStream(pOut));
-								PipedInputStream pIn = new PipedInputStream(pOut);
-								BufferedReader reader = new BufferedReader(new InputStreamReader(pIn));
-								
-								while(solvingstatus==true) {
-								    try {
-								        String line = reader.readLine();
-								        if(line != null) {
-								            // Write line to displayTextArea
-								        	displayTextArea.append(line + "\n");
-								        }
-								    } catch (IOException ex) {
-								    	System.err.println("Panel Solve Runs - Thread 2 error - " + ex.getClass().getName() + ": " + ex.getMessage());
-								    }
-								}
-								displayTextArea.append("--------------------------------------------------------------" + "\n");
-								displayTextArea.append("--------------------------------------------------------------" + "\n");
-								displayTextArea.append("SOLVING PROCESS IS COMPLETED" + "\n");
-								displayTextArea.append("--------------------------------------------------------------" + "\n");
-								displayTextArea.append("--------------------------------------------------------------" + "\n");
-								displayTextArea.append("\n" + "\n" + "\n");
-								
-								reader.close();
-								pIn.close();
-								pOut.close();
-							} catch (IOException e) {
-								System.err.println("Panel Solve Runs - Thread 2 error - " + e.getClass().getName() + ": " + e.getMessage());
-							}
-						}
-					};
-					
-					
-					Thread thread1 = new Thread() {
-						public void run() {
-							for (int row = 0; row < rowCount; row++) {
-								runStatButton.setText("searching for " + listOfEditRuns[row].getName() + " solution");
-								data[row][4] = "reading";
-								model.fireTableDataChanged();
-								SolveProblem(row, listOfEditRuns[row]);
-							}
-
-							try {
-								sleep(1000);			//sleep 1 second to so thread 2 can still print out report
-								thread2.interrupt();
-							} catch (InterruptedException e) {
-								System.err.println("Panel Solve Runs - Thread 1 sleep error - " + e.getClass().getName() + ": " + e.getMessage());
-							}
+				// Open 2 new parallel threads: 1 for running CPLEX, 1 for redirecting console to displayTextArea
+				Thread thread2 = new Thread() {
+					public void run() {
+						try {
+							//redirect console to JTextArea
+							PipedOutputStream pOut = new PipedOutputStream();
+							System.setOut(new PrintStream(pOut));
+							System.setErr(new PrintStream(pOut));
+							PipedInputStream pIn = new PipedInputStream(pOut);
+							BufferedReader reader = new BufferedReader(new InputStreamReader(pIn));
 							
-							solvingstatus=false;
-							runStatButton.setText("CLICK ME TO GET SOLUTIONS");
-							runStatButton.setEnabled(true);	
-						}
-					};
-					
-					
-					// Clear table info
-					for (int row = 0; row < rowCount; row++) {
-						for (int col = 0; col < colCount; col++) {
-							if (col != 0 && col != 4) {
-								data[row][col] = "";
-								model.fireTableDataChanged();
+							while(solvingstatus==true) {
+							    try {
+							        String line = reader.readLine();
+							        if(line != null) {
+							            // Write line to displayTextArea
+							        	displayTextArea.append(line + "\n");
+							        }
+							    } catch (IOException ex) {
+							    	System.err.println("Panel Solve Runs - Thread 2 error - " + ex.getClass().getName() + ": " + ex.getMessage());
+							    }
 							}
+							displayTextArea.append("--------------------------------------------------------------" + "\n");
+							displayTextArea.append("--------------------------------------------------------------" + "\n");
+							displayTextArea.append("SOLVING PROCESS IS COMPLETED" + "\n");
+							displayTextArea.append("--------------------------------------------------------------" + "\n");
+							displayTextArea.append("--------------------------------------------------------------" + "\n");
+							displayTextArea.append("\n" + "\n" + "\n");
+							
+							reader.close();
+							pIn.close();
+							pOut.close();
+						} catch (IOException e) {
+							System.err.println("Panel Solve Runs - Thread 2 error - " + e.getClass().getName() + ": " + e.getMessage());
 						}
-					}				
-					runStatButton.setEnabled(false);
-					solvingstatus=true;
-					thread1.start();
-					thread2.start();		//Note: Pipe broken due to disconnects before receiving responses. (safe Exception)		
-				}
+					}
+				};
+				
+				
+				Thread thread1 = new Thread() {
+					public void run() {
+						for (int row = 0; row < rowCount; row++) {
+							runStatButton.setText("searching for " + listOfEditRuns[row].getName() + " solution");
+							data[row][4] = "reading";
+							model.fireTableDataChanged();
+							SolveProblem(row, listOfEditRuns[row]);
+						}
+
+						try {
+							sleep(1000);			//sleep 1 second to so thread 2 can still print out report
+							thread2.interrupt();
+						} catch (InterruptedException e) {
+							System.err.println("Panel Solve Runs - Thread 1 sleep error - " + e.getClass().getName() + ": " + e.getMessage());
+						}
+						
+						solvingstatus=false;
+						runStatButton.setText("CLICK ME TO GET SOLUTIONS");
+						runStatButton.setEnabled(true);	
+					}
+				};
+				
+				
+				// Clear table info
+				for (int row = 0; row < rowCount; row++) {
+					for (int col = 0; col < colCount; col++) {
+						if (col != 0 && col != 4) {
+							data[row][col] = "";
+							model.fireTableDataChanged();
+						}
+					}
+				}				
+				runStatButton.setEnabled(false);
+				solvingstatus=true;
+				thread1.start();
+				thread2.start();		//Note: Pipe broken due to disconnects before receiving responses. (safe Exception)		
 			}
 		});
 		splitPanel2.setRightComponent(runStatButton);							
@@ -292,6 +290,272 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 		array[1] = row_id_to_find;
 		return array;
 	}
+	
+	
+	private class Cost_Calculation {
+		
+		private double get_cost_value(				
+				Read_Database read_database, String var_name, int table_id_to_find, int row_id_to_find,
+				Object[][][] yield_tables_values,
+				List<String> cost_condition_list,
+				List<String> coversion_cost_after_disturbance_name_list,		// i.e. P P disturbance		P D disturbance
+				List<Double> coversion_cost_after_disturbance_value_list) {
+			
+			
+			double value_to_return = 0;
+			
+			
+			if (table_id_to_find != -9999) {	// If prescription exists (not exist when table_id_to_find = -9999)						
+				if (row_id_to_find < yield_tables_values[table_id_to_find].length && row_id_to_find != -9999) { 	// If row in this prescription exists (not exists when row_id_to_find = -9999 or >= total rows in that prescription)
+					if (cost_condition_list != null) {		// If there is at least one cost condition	
+						
+						String[] yield_tables_column_names = read_database.get_yield_tables_column_names();
+						List<String> yield_tables_column_names_list = Arrays.asList(yield_tables_column_names);	// Convert array to list
+						
+																		
+						int action_type_index = yield_tables_column_names_list.indexOf("action_type");
+						String var_action_type = yield_tables_values[table_id_to_find][row_id_to_find][action_type_index].toString();
+						
+						// The following includes 1 list for the action_cost and 1 list for the conversion_cost
+						List<List<List<String>>> final_cost_list = get_final_action_cost_list_and_conversion_cost_list_for_this_variable(
+								cost_condition_list, var_name, var_action_type,
+								yield_tables_values, table_id_to_find, row_id_to_find);
+						
+						
+						// action_cost: include 2 lists for column name (i.e. hca_allsx) and value (i.e. 360)
+						for (int item = 0; item < final_cost_list.get(0).get(0).size(); item++) {	// loop list:  final_cost_list.get(0).get(0) which is final_action_cost_column_list
+							// Add cost per acre
+							if (final_cost_list.get(0).get(0).get(item).equals("acres")) {
+								value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(0).get(1).get(item));
+							} 
+							// Add cost per unit of the yield table column
+							else {
+								int col_id = yield_tables_column_names_list.indexOf(final_cost_list.get(0).get(0).get(item));
+								value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(0).get(1).get(item)) * Double.parseDouble(yield_tables_values[table_id_to_find][row_id_to_find][col_id].toString());
+							}
+						}								
+						
+						
+						// conversion_cost: include 2 lists for column name (i.e. P D action) and value (i.e. 240)
+						for (int item = 0; item < final_cost_list.get(1).get(0).size(); item++) {	// loop list:  final_cost_list.get(1).get(0) which is final_conversion_cost_column_list
+							// add conversion cost for post management action (i.e clear cut) or post replacing disturbance (i.e. SRFire)
+							// note only one of them is true: for example if it is clear cut --> no replacing disturbance anymore, replacing disturbance can happen in areas where no clear cut implemented
+							if (Get_Variable_Information.get_rotation_period(var_name) == Get_Variable_Information.get_period(var_name)) {	// period is the rotation period (this if guarantees variable to be EA_E or EA_R)
+								String conversion_cost_to_apply = 
+										Get_Variable_Information.get_layer5(var_name) + " " +
+										Get_Variable_Information.get_regenerated_covertype(var_name) + " " + "action";
+								if (final_cost_list.get(1).get(0).get(item).equals(conversion_cost_to_apply)) {
+									value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(1).get(1).get(item));
+								} 
+							} else {	// when period is not the rotation_period (variable can be anything except BS MS)
+								if (coversion_cost_after_disturbance_name_list != null && coversion_cost_after_disturbance_name_list.contains(final_cost_list.get(1).get(0).get(item))) {
+									int index = coversion_cost_after_disturbance_name_list.indexOf(final_cost_list.get(1).get(0).get(item));
+									value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(1).get(1).get(item)) * coversion_cost_after_disturbance_value_list.get(index);		
+								}
+							}	
+						}					
+					}
+					
+				}
+			}
+			return value_to_return;	
+		}
+	
+		
+		private List<List<List<String>>> get_final_action_cost_list_and_conversion_cost_list_for_this_variable(
+				List<String> cost_condition_list, String var_name, String var_action_type,
+				Object[][][] yield_tables_values, int table_id_to_find, int row_id_to_find) {	
+			
+			List<String> final_action_cost_column_list = new ArrayList<String>();		// example: 	"acres", "...", "hca_allsx", ... -->see table 7a in the GUI of Cost Management
+			List<String> final_action_cost_value_list = new ArrayList<String>(); 		// example: 	"360", "...", "1.2", ...
+			
+			List<String> final_conversion_cost_column_list = new ArrayList<String>();	// example: P D action         	W L disturbance 
+			List<String> final_conversion_cost_value_list = new ArrayList<String>();	// example: 240         		120 
+			
+										
+			for (int priority = 0; priority < cost_condition_list.size(); priority++) {		// Looping from the highest priority cost condition to the lowest
+				String[] this_condition_info = cost_condition_list.get(priority).split("\t");
+				List<List<String>> cost_condition_static_identifiers = get_cost_condition_dynamic_identifiers(this_condition_info[4]);	// column 4 is static identifiers
+				List<List<String>> cost_condition_dynamic_identifiers = get_cost_condition_dynamic_identifiers(this_condition_info[5]);	// column 5 is dynamic identifiers
+				List<String> cost_condition_dynamic_dentifiers_column_indexes = get_cost_condition_dynamic_dentifiers_column_indexes(this_condition_info[5]);	// column 5 is dynamic identifiers						
+				
+				// If this condition is satisfied
+				if (are_all_static_identifiers_matched(var_name, cost_condition_static_identifiers) && 
+						are_all_dynamic_identifiers_matched(yield_tables_values, table_id_to_find, row_id_to_find, cost_condition_dynamic_dentifiers_column_indexes, cost_condition_dynamic_identifiers)) {
+					
+					// For action_cost
+					if (this_condition_info[2].length() > 0) {		// this guarantees the string is not ""
+						List<String[]> action_cost_list = get_cost_condition_action_cost(this_condition_info[2], var_action_type);
+						for (String[] c: action_cost_list) {			// c example: clearcut acres 360		c example2: clearcut hca_allsx 0
+							if (!final_action_cost_column_list.contains(c[1])) {		// only null is escape, the GUI already guarantees the value >=0			
+								final_action_cost_column_list.add(c[1]);	// i.e. acres    hca_allsx
+								final_action_cost_value_list.add(c[2]);		// i.e. 360
+							}
+						}
+					}
+					
+					// For conversion cost
+					if (this_condition_info[3].length() > 0) {		// this guarantees the string is not ""
+						List<String[]> conversion_cost_list = get_cost_condition_conversion_cost(this_condition_info[3]);
+						for (String[] c: conversion_cost_list) {			// c example:  P D action 240         	W L disturbance 120
+							if (!final_conversion_cost_column_list.contains(c[0] + " " + c[1] + " " + c[2])) {		// only null is escape, the GUI already guarantees the value >=0				
+								final_conversion_cost_column_list.add(c[0] + " " + c[1] + " " + c[2]);		// i.e. P D action		W L disturbance
+								final_conversion_cost_value_list.add(c[3]);		// i.e. 240		120
+							}	
+						}
+					}
+					
+				}
+			}		
+					
+			// Combine the above 2 action_cost lists into a single new list
+			List<List<String>> final_action_cost_list = new ArrayList<List<String>>();
+			final_action_cost_list.add(final_action_cost_column_list);
+			final_action_cost_list.add(final_action_cost_value_list);
+			
+			// Combine the above 2 conversion_cost lists into a single new list
+			List<List<String>> final_conversion_cost_list = new ArrayList<List<String>>();
+			final_conversion_cost_list.add(final_conversion_cost_column_list);
+			final_conversion_cost_list.add(final_conversion_cost_value_list);
+			
+			// Combine the above 2 final lists into a single big final list
+			List<List<List<String>>> final_cost_list = new ArrayList<List<List<String>>>();
+			final_cost_list.add(final_action_cost_list);
+			final_cost_list.add(final_conversion_cost_list);
+			
+			return final_cost_list;
+		}
+		
+		
+		private Boolean are_all_dynamic_identifiers_matched(Object[][][] yield_table_values, int table_id_to_find, int row_id_to_find,
+				List<String> dynamic_identifiers_column_indexes, List<List<String>> dynamic_identifiers) {
+			
+			if (!dynamic_identifiers_column_indexes.contains("NoIdentifier")) {	//If there are dynamic identifiers
+				//Check if in the same row of this yield table we have all the dynamic identifiers match				
+				for (int dynamic_count = 0; dynamic_count < dynamic_identifiers_column_indexes.size(); dynamic_count++) {
+					int current_dynamic_column = Integer.parseInt(dynamic_identifiers_column_indexes.get(dynamic_count));		//This is the yield table column of the dynamic identifier								
+									
+					if (dynamic_identifiers.get(dynamic_count).get(0).contains(",")) {	//if this is a range identifier (the 1st element of this identifier contains ",")							
+						double yt_value = Double.parseDouble(yield_table_values[table_id_to_find][row_id_to_find][current_dynamic_column].toString());
+																
+						for (int element = 0; element < dynamic_identifiers.get(dynamic_count).size(); element++) {	//Loop all elements (all ranges) of this range identifier
+							String[] min_and_max = dynamic_identifiers.get(dynamic_count).get(element).split(",");									
+							double min_value = Double.parseDouble(min_and_max[0].replace("[", ""));
+							double max_value = Double.parseDouble(min_and_max[1].replace(")", ""));																	
+							if (!(min_value <= yt_value && yt_value < max_value)) {
+								return false;
+							}
+						}										
+					} else { // if this is a discrete identifier
+						if (!dynamic_identifiers.get(dynamic_count).contains(yield_table_values[table_id_to_find][row_id_to_find][current_dynamic_column].toString())) 	{	// If all selected items in this list do not contain the value in the same column (This is String comparison, we may need to change to present data manually change by users, ex. ponderosa 221 vs 221.00) 
+							return false;			
+						}
+					}
+				}
+			}	
+			return true;
+		}
+		
+		
+		private Boolean are_all_static_identifiers_matched(String var_name, List<List<String>> static_identifier) {	
+			if (!static_identifier.get(0).contains(Get_Variable_Information.get_layer1(var_name))) return false;
+			if (!static_identifier.get(1).contains(Get_Variable_Information.get_layer2(var_name))) return false;
+			if (!static_identifier.get(2).contains(Get_Variable_Information.get_layer3(var_name))) return false;
+			if (!static_identifier.get(3).contains(Get_Variable_Information.get_layer4(var_name))) return false;
+			if (Get_Variable_Information.get_forest_status(var_name).equals("E") && !Get_Variable_Information.get_method(var_name).equals("MS") && !Get_Variable_Information.get_method(var_name).equals("BS")) {
+				if (!static_identifier.get(4).contains(Get_Variable_Information.get_layer5(var_name))) return false;	// layer5 cover type
+				if (!static_identifier.get(5).contains(Get_Variable_Information.get_layer6(var_name))) return false;	// layer6: size class
+			}
+			if (!static_identifier.get(6).contains(Get_Variable_Information.get_method(var_name) + "_" + Get_Variable_Information.get_forest_status(var_name))) return false;
+			if (!static_identifier.get(7).contains(String.valueOf(Get_Variable_Information.get_period(var_name)))) return false;					
+			return true;
+		}			
+		
+		
+		private List<String[]> get_cost_condition_action_cost(String action_cost_info, String var_action_type) {	
+			//Read the whole cell into array
+			String[] action_cost_array = action_cost_info.split(";");
+			List<String[]> action_cost = new ArrayList<String[]>();		
+			for (String infor: action_cost_array) {
+				String[] info_array = infor.split("\\s+");		// info example: clearcut hca_allsx 360
+				if (info_array[0].equals(var_action_type)) {	// info_array[0] = clearcut			only get the info matched with the var_action_type
+					action_cost.add(info_array);
+				}
+			}		
+			return action_cost;
+		}
+		
+			
+		private List<String[]> get_cost_condition_conversion_cost(String conversion_cost_info) {	
+			//Read the whole cell into array
+			String[] conversion_cost_array = conversion_cost_info.split(";");
+			List<String[]> conversion_cost = new ArrayList<String[]>();		
+			for (String info: conversion_cost_array) {
+				String[] info_array = info.split("\\s+");		// info example: P D action 240         	W L disturbance 120
+				conversion_cost.add(info_array);
+			}		
+			return conversion_cost;
+		}
+			
+		
+		private List<List<String>> get_cost_condition_static_identifiers (String static_identifiers_info) {
+			List<List<String>> cost_condition_static_identifiers = new ArrayList<List<String>>();		
+			//Read the whole cell into array
+			String[] static_layer_info = static_identifiers_info.split(";");
+			int total_static_identifiers = static_layer_info.length;
+			
+			//Get all static Identifiers to be in the list
+			for (int i = 0; i < total_static_identifiers; i++) {		// 6 first identifiers are strata's 6 layers (layer 0 to 5)	then method (6) then period	(7)
+				List<String> thisIdentifier = new ArrayList<String>();			
+				String[] identifierElements = static_layer_info[i].split("\\s+");				//space delimited
+				for (int j = 1; j < identifierElements.length; j++) {		//Ignore the first element which is the identifier index, so we loop from 1 not 0
+					thisIdentifier.add(identifierElements[j].replaceAll("\\s+",""));		//Add element name, if name has spaces then remove all the spaces
+				}			
+				cost_condition_static_identifiers.add(thisIdentifier);
+			}
+				
+			return cost_condition_static_identifiers;
+		}
+		
+			
+		private List<List<String>> get_cost_condition_dynamic_identifiers(String dynamic_identifiers_info) {
+			List<List<String>> cost_condition_dynamic_identifiers = new ArrayList<List<String>>();		
+			//Read the whole cell into array
+			String[] info = dynamic_identifiers_info.split(";");
+			int total_dynamic_identifiers = info.length;
+				
+			//Get all dynamic Identifiers to be in the list
+			for (int i = 0; i < total_dynamic_identifiers; i++) {	
+				List<String> thisIdentifier = new ArrayList<String>();			
+				String[] identifierElements = info[i].split("\\s+");				//space delimited
+				for (int j = 1; j < identifierElements.length; j++) {		// Ignore the first element which is the identifier column index, so we loop from 1 not 0
+					thisIdentifier.add(identifierElements[j].replaceAll("\\s+",""));		//Add element name, if name has spaces then remove all the spaces
+				}			
+				cost_condition_dynamic_identifiers.add(thisIdentifier);
+			}			
+			return cost_condition_dynamic_identifiers;
+		}
+		
+		
+		private List<String> get_cost_condition_dynamic_dentifiers_column_indexes(String dynamic_identifiers_info) {
+			List<String> cost_condition_dynamic_dentifiers_column_indexes = new ArrayList<String>();
+				
+			//Read the whole cell into array
+			String[] info = dynamic_identifiers_info.split(";");
+			int total_dynamic_identifiers = info.length;
+
+			//Get all dynamic Identifiers to be in the list
+			for (int i = 0; i < total_dynamic_identifiers; i++) {	
+				String[] identifierElements = info[i].split("\\s+");				//space delimited
+				//add the first element which is the identifier column index
+				cost_condition_dynamic_dentifiers_column_indexes.add(identifierElements[0].replaceAll("\\s+",""));
+			}			
+			return cost_condition_dynamic_dentifiers_column_indexes;
+		}
+	}
+	
+	
+	
     
 	//--------------------------------------------------------------------------------------------------------------------------------
 	//Solve each run
@@ -389,6 +653,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			List<String> flow_type_list = read.get_flow_type_list();
 			List<Double> flow_lowerbound_percentage_list = read.get_flow_lowerbound_percentage_list();
 			List<Double> flow_upperbound_percentage_list = read.get_flow_upperbound_percentage_list();
+			
+			Cost_Calculation cost_calculation = new Cost_Calculation();
+			
 			System.out.println("Reading process finished for all input files          " + dateFormat.format(new Date()));
 			System.out.println();
 			
@@ -447,55 +714,66 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			int[][] xNGe = new int[model_strata.size()][total_Periods + 1];		//xNGe(s1,s2,s3,s4,s5,s6)(t)
 			int[][] xNGe_prescription = new int[model_strata.size()][total_Periods + 1];
 			int[][] xNGe_row_id = new int[model_strata.size()][total_Periods + 1];
+			double[][] xNGe_cost_value = new double[model_strata.size()][total_Periods + 1];
 			
 			
 			int[][][] xPBe = new int[model_strata.size()][total_PBe_Prescriptions][total_Periods + 1];		//xPBe(s1,s2,s3,s4,s5,s6)(i,t)
 			int[][][] xPBe_prescription = new int[model_strata.size()][total_PBe_Prescriptions][total_Periods + 1];
 			int[][][] xPBe_row_id = new int[model_strata.size()][total_PBe_Prescriptions][total_Periods + 1];
+			double[][][] xPBe_cost_value = new double[model_strata.size()][total_PBe_Prescriptions][total_Periods + 1];
 			
 			
 			int[][][] xGSe = new int[model_strata.size()][total_GSe_Prescriptions][total_Periods + 1];			//xGSe(s1,s2,s3,s4,s5,s6)(i,t)
 			int[][][] xGSe_prescription = new int[model_strata.size()][total_GSe_Prescriptions][total_Periods + 1];
 			int[][][] xGSe_row_id = new int[model_strata.size()][total_GSe_Prescriptions][total_Periods + 1];
+			double[][][] xGSe_cost_value = new double[model_strata.size()][total_GSe_Prescriptions][total_Periods + 1];
 			
 			
 			int[][][][][] xEAe = new int[model_strata.size()][total_Periods + 1][layer5.size()][total_EAe_Prescriptions][total_Periods + 1];		//xEAe(s1,s2,s3,s4,s5,s6)(tR)(s5R)(i)(t)
 									// total_Periods + 1 because tR starts from 1 to total_Periods, ignore the 0
 			int[][][][][] xEAe_prescription = new int[model_strata.size()][total_Periods + 1][layer5.size()][total_EAe_Prescriptions][total_Periods + 1];
 			int[][][][][] xEAe_row_id = new int[model_strata.size()][total_Periods + 1][layer5.size()][total_EAe_Prescriptions][total_Periods + 1];
+			double[][][][][] xEAe_cost_value = new double[model_strata.size()][total_Periods + 1][layer5.size()][total_EAe_Prescriptions][total_Periods + 1];
 			
 			
 			int[][][] xMS = new int[model_strata.size()][total_PBe_Prescriptions][total_Periods + 1];		//xMS(s1,s2,s3,s4,s5,s6)(i,t)
 			int[][][] xMS_prescription = new int[model_strata.size()][total_PBe_Prescriptions][total_Periods + 1];
 			int[][][] xMS_row_id = new int[model_strata.size()][total_PBe_Prescriptions][total_Periods + 1];
+			double[][][] xMS_cost_value = new double[model_strata.size()][total_PBe_Prescriptions][total_Periods + 1];
 			
 			
 			int[][][] xBS = new int[model_strata.size()][total_PBe_Prescriptions][total_Periods + 1];		//xBS(s1,s2,s3,s4,s5,s6)(i,t)			
 			int[][][] xBS_prescription = new int[model_strata.size()][total_PBe_Prescriptions][total_Periods + 1];
 			int[][][] xBS_row_id = new int[model_strata.size()][total_PBe_Prescriptions][total_Periods + 1];
+			double[][][] xBS_cost_value = new double[model_strata.size()][total_PBe_Prescriptions][total_Periods + 1];
 			
 			
 			int[][][][] xNGr = new int[model_strata_without_sizeclass_and_covertype.size()][layer5.size()][total_Periods + 1][total_AgeClasses + 1];		//xNGr(s1,s2,s3,s4,s5)(t)(a)
 									// total_Periods + 1 because t starts from 1 to total_Periods, ignore the 0
 			int[][][][] xNGr_prescription = new int[model_strata_without_sizeclass_and_covertype.size()][layer5.size()][total_Periods + 1][total_AgeClasses + 1];
 			int[][][][] xNGr_row_id = new int[model_strata_without_sizeclass_and_covertype.size()][layer5.size()][total_Periods + 1][total_AgeClasses + 1];
+			double[][][][] xNGr_cost_value = new double[model_strata_without_sizeclass_and_covertype.size()][layer5.size()][total_Periods + 1][total_AgeClasses + 1];
 			
 			
 			int[][][][][] xPBr = new int[model_strata_without_sizeclass_and_covertype.size()][layer5.size()][total_PBr_Prescriptions][total_Periods + 1][total_AgeClasses + 1];		//xPBr(s1,s2,s3,s4,s5)(i)(t)(a)
 									// total_Periods + 1 because t starts from 1 to total_Periods, ignore the 0
 			int[][][][][] xPBr_prescription = new int[model_strata_without_sizeclass_and_covertype.size()][layer5.size()][total_PBr_Prescriptions][total_Periods + 1][total_AgeClasses + 1];
 			int[][][][][] xPBr_row_id = new int[model_strata_without_sizeclass_and_covertype.size()][layer5.size()][total_PBr_Prescriptions][total_Periods + 1][total_AgeClasses + 1];
+			double[][][][][] xPBr_cost_value = new double[model_strata_without_sizeclass_and_covertype.size()][layer5.size()][total_PBr_Prescriptions][total_Periods + 1][total_AgeClasses + 1];
+			
 			
 			int[][][][][] xGSr = new int[model_strata_without_sizeclass_and_covertype.size()][layer5.size()][total_GSr_Prescriptions][total_Periods + 1][total_AgeClasses + 1];		//xGSr(s1,s2,s3,s4,s5)(i)(t)(a)
 									// total_Periods + 1 because t starts from 1 to total_Periods, ignore the 0
 			int[][][][][] xGSr_prescription = new int[model_strata_without_sizeclass_and_covertype.size()][layer5.size()][total_GSr_Prescriptions][total_Periods + 1][total_AgeClasses + 1];
 			int[][][][][] xGSr_row_id = new int[model_strata_without_sizeclass_and_covertype.size()][layer5.size()][total_GSr_Prescriptions][total_Periods + 1][total_AgeClasses + 1];
+			double[][][][][] xGSr_cost_value = new double[model_strata_without_sizeclass_and_covertype.size()][layer5.size()][total_GSr_Prescriptions][total_Periods + 1][total_AgeClasses + 1];
 			
 			
 			int[][][][][][][] xEAr = new int[model_strata_without_sizeclass_and_covertype.size()][layer5.size()][total_Periods + 1][total_AgeClasses + 1][layer5.size()][total_EAr_Prescriptions][total_Periods + 1];		//xEAr(s1,s2,s3,s4,s5)(tR)(a)(s5R)(i)(t)
 									// total_Periods + 1 because tR starts from 1 to total_Periods, ignore the 0
 			int[][][][][][][] xEAr_prescription = new int[model_strata_without_sizeclass_and_covertype.size()][layer5.size()][total_Periods + 1][total_AgeClasses + 1][layer5.size()][total_EAr_Prescriptions][total_Periods + 1];
 			int[][][][][][][] xEAr_row_id = new int[model_strata_without_sizeclass_and_covertype.size()][layer5.size()][total_Periods + 1][total_AgeClasses + 1][layer5.size()][total_EAr_Prescriptions][total_Periods + 1];
+			double[][][][][][][] xEAr_cost_value = new double[model_strata_without_sizeclass_and_covertype.size()][layer5.size()][total_Periods + 1][total_AgeClasses + 1][layer5.size()][total_EAr_Prescriptions][total_Periods + 1];
 			
 			
 			// Declare arrays to keep Fire variables	//f(s1,s2,s3,s4,s5,s6)(t)
@@ -669,6 +947,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								xNGe[strata_id][t] = nvars;
 								xNGe_prescription[strata_id][t] = prescription_and_row[0];
 								xNGe_row_id[strata_id][t] = prescription_and_row[1];
+								xNGe_cost_value[strata_id][t] = -9999;
 								nvars++;
 							}
 						} else {
@@ -680,6 +959,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 							xNGe[strata_id][t] = nvars;
 							xNGe_prescription[strata_id][t] = prescription_and_row[0];
 							xNGe_row_id[strata_id][t] = prescription_and_row[1];
+							xNGe_cost_value[strata_id][t] = -9999;
 							nvars++;
 						}
 					}
@@ -710,6 +990,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									xPBe[strata_id][i][t] = nvars;
 									xPBe_prescription[strata_id][i][t] = prescription_and_row[0];
 									xPBe_row_id[strata_id][i][t] = prescription_and_row[1];
+									xPBe_cost_value[strata_id][i][t] = -9999;
 									nvars++;
 								}
 							} else {
@@ -721,6 +1002,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								xPBe[strata_id][i][t] = nvars;
 								xPBe_prescription[strata_id][i][t] = prescription_and_row[0];
 								xPBe_row_id[strata_id][i][t] = prescription_and_row[1];
+								xPBe_cost_value[strata_id][i][t] = -9999;
 								nvars++;
 							}
 						}
@@ -752,6 +1034,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									xGSe[strata_id][i][t] = nvars;
 									xGSe_prescription[strata_id][i][t] = prescription_and_row[0];
 									xGSe_row_id[strata_id][i][t] = prescription_and_row[1];
+									xGSe_cost_value[strata_id][i][t] = -9999;
 									nvars++;
 								}
 							} else {
@@ -763,6 +1046,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								xGSe[strata_id][i][t] = nvars;
 								xGSe_prescription[strata_id][i][t] = prescription_and_row[0];
 								xGSe_row_id[strata_id][i][t] = prescription_and_row[1];
+								xGSe_cost_value[strata_id][i][t] = -9999;
 								nvars++;
 							}
 						}
@@ -799,6 +1083,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 												xEAe[strata_id][tR][s5R][i][t] = nvars;
 												xEAe_prescription[strata_id][tR][s5R][i][t] = prescription_and_row[0];
 												xEAe_row_id[strata_id][tR][s5R][i][t] = prescription_and_row[1];
+												xEAe_cost_value[strata_id][tR][s5R][i][t] = -9999;
 												nvars++;
 											}
 										} else {
@@ -810,6 +1095,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 											xEAe[strata_id][tR][s5R][i][t] = nvars;
 											xEAe_prescription[strata_id][tR][s5R][i][t] = prescription_and_row[0];
 											xEAe_row_id[strata_id][tR][s5R][i][t] = prescription_and_row[1];
+											xEAe_cost_value[strata_id][tR][s5R][i][t] = -9999;
 											nvars++;
 										}
 									}
@@ -844,6 +1130,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									xMS[strata_id][i][t] = nvars;
 									xMS_prescription[strata_id][i][t] = prescription_and_row[0];
 									xMS_row_id[strata_id][i][t] = prescription_and_row[1];
+									xMS_cost_value[strata_id][i][t] = -9999;
 									nvars++;	
 								}
 							} else {
@@ -855,6 +1142,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								xMS[strata_id][i][t] = nvars;
 								xMS_prescription[strata_id][i][t] = prescription_and_row[0];
 								xMS_row_id[strata_id][i][t] = prescription_and_row[1];
+								xMS_cost_value[strata_id][i][t] = -9999;
 								nvars++;
 							}
 						}
@@ -886,6 +1174,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									xBS[strata_id][i][t] = nvars;
 									xBS_prescription[strata_id][i][t] = prescription_and_row[0];
 									xBS_row_id[strata_id][i][t] = prescription_and_row[1];
+									xBS_cost_value[strata_id][i][t] = -9999;
 									nvars++;	
 								}
 							} else {
@@ -897,6 +1186,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								xBS[strata_id][i][t] = nvars;
 								xBS_prescription[strata_id][i][t] = prescription_and_row[0];
 								xBS_row_id[strata_id][i][t] = prescription_and_row[1];
+								xBS_cost_value[strata_id][i][t] = -9999;
 								nvars++;
 							}									
 						}
@@ -928,6 +1218,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										xNGr[strata_4layers_id][s5][t][a] = nvars;
 										xNGr_prescription[strata_4layers_id][s5][t][a] = prescription_and_row[0];
 										xNGr_row_id[strata_4layers_id][s5][t][a] = prescription_and_row[1];
+										xNGr_cost_value[strata_4layers_id][s5][t][a] = -9999;
 										nvars++;
 									}
 								} else {
@@ -939,6 +1230,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									xNGr[strata_4layers_id][s5][t][a] = nvars;
 									xNGr_prescription[strata_4layers_id][s5][t][a] = prescription_and_row[0];
 									xNGr_row_id[strata_4layers_id][s5][t][a] = prescription_and_row[1];
+									xNGr_cost_value[strata_4layers_id][s5][t][a] = -9999;
 									nvars++;
 								}
 							}
@@ -972,6 +1264,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 											xPBr[strata_4layers_id][s5][i][t][a] = nvars;
 											xPBr_prescription[strata_4layers_id][s5][i][t][a] = prescription_and_row[0];
 											xPBr_row_id[strata_4layers_id][s5][i][t][a] = prescription_and_row[1];
+											xPBr_cost_value[strata_4layers_id][s5][i][t][a] = -9999;
 											nvars++;
 										}
 									} else {
@@ -983,6 +1276,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										xPBr[strata_4layers_id][s5][i][t][a] = nvars;
 										xPBr_prescription[strata_4layers_id][s5][i][t][a] = prescription_and_row[0];
 										xPBr_row_id[strata_4layers_id][s5][i][t][a] = prescription_and_row[1];
+										xPBr_cost_value[strata_4layers_id][s5][i][t][a] = -9999;
 										nvars++;
 									}
 								}
@@ -1017,6 +1311,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 											xGSr[strata_4layers_id][s5][i][t][a] = nvars;
 											xGSr_prescription[strata_4layers_id][s5][i][t][a] = prescription_and_row[0];
 											xGSr_row_id[strata_4layers_id][s5][i][t][a] = prescription_and_row[1];
+											xGSr_cost_value[strata_4layers_id][s5][i][t][a] = -9999;
 											nvars++;
 										}
 									} else {
@@ -1028,6 +1323,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										xGSr[strata_4layers_id][s5][i][t][a] = nvars;
 										xGSr_prescription[strata_4layers_id][s5][i][t][a] = prescription_and_row[0];
 										xGSr_row_id[strata_4layers_id][s5][i][t][a] = prescription_and_row[1];
+										xGSr_cost_value[strata_4layers_id][s5][i][t][a] = -9999;
 										nvars++;
 									}
 								}
@@ -1037,7 +1333,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			}
 			nV = nvars;
 			
-			// Create decision variables xEAr(s1,s2,s3,s4,s5)(tR)(aR)(s5R)(t)
+			// Create decision variables xEAr(s1,s2,s3,s4,s5)(tR)(aR)(s5R)(i)(t)
 			for (String strata: model_strata_without_sizeclass_and_covertype) {
 				int strata_4layers_id = Collections.binarySearch(model_strata_without_sizeclass_and_covertype, strata);
 				int s1 = layer1.indexOf(strata.substring(0,1));
@@ -1053,7 +1349,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									for (int i = 0; i < total_EAr_Prescriptions; i++) {
 										if (sm_strata_without_sizeclass_and_covertype == null || sm_strata_without_sizeclass_and_covertype.contains(strata) && 
 												sm_method_choice_for_strata_without_sizeclass_and_covertype.get(sm_strata_without_sizeclass_and_covertype.indexOf(strata)).contains("EA_R" + " " + i))	// Boost 1 (a.k.a. Silviculture Method)
-											for (int t = tR-aR+1; t <= tR; t++) {
+											for (int t = tR - aR + 1; t <= tR; t++) {
 												String var_name = "xEA_R_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + tR + "," + aR + "," + layer5.get(s5R) + "," + i + "," + t;										
 												int[] prescription_and_row = get_prescription_and_row(yield_tables_names_list, var_name, aR);
 												if (!allow_Non_Existing_Prescription) {		// Boost 2
@@ -1066,6 +1362,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 														xEAr[strata_4layers_id][s5][tR][aR][s5R][i][t] = nvars;
 														xEAr_prescription[strata_4layers_id][s5][tR][aR][s5R][i][t] = prescription_and_row[0];
 														xEAr_row_id[strata_4layers_id][s5][tR][aR][s5R][i][t] = prescription_and_row[1];
+														xEAr_cost_value[strata_4layers_id][s5][tR][aR][s5R][i][t] = -9999;
 														nvars++;
 													}
 												} else {
@@ -1077,6 +1374,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 													xEAr[strata_4layers_id][s5][tR][aR][s5R][i][t] = nvars;
 													xEAr_prescription[strata_4layers_id][s5][tR][aR][s5R][i][t] = prescription_and_row[0];
 													xEAr_row_id[strata_4layers_id][s5][tR][aR][s5R][i][t] = prescription_and_row[1];
+													xEAr_cost_value[strata_4layers_id][s5][tR][aR][s5R][i][t] = -9999;
 													nvars++;
 												}
 											}
@@ -1122,6 +1420,12 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			double[] vlb = Stream.of(vlblist.toArray(new Double[vlblist.size()])).mapToDouble(Double::doubleValue).toArray();
 			double[] vub = Stream.of(vublist.toArray(new Double[vublist.size()])).mapToDouble(Double::doubleValue).toArray();
 			IloNumVarType[] vtype = vtlist.toArray(new IloNumVarType[vtlist.size()]);
+			// Clear the lists to save memory
+			objlist = null;
+			vnamelist = null;
+			vlblist = null;
+			vublist = null;
+			vtlist = null;		
 			System.out.println("Total decision variables as in PRISM obj. function eq. (1):   " + nvars + "             " + dateFormat.format(new Date()));
 					
 			
@@ -2480,17 +2784,15 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			int current_freeConstraint = 0;
 			int current_softConstraint = 0;
 			int current_hardConstraint = 0;	
-			double currentDiscountValue;
-			double para_value;
-			double multiplier;
 				
 			// Add -y(j) + user_defined_variables = 0		or 			-z(k) + user_defined_variables = 0		or 			-v(n) + user_defined_variables = 0
 			for (int id = 1; id < total_freeConstraints + total_softConstraints + total_hardConstraints + 1; id++) {	//Loop from 1 because the first row of the userConstraint file is just title
+				long bc_time_start = System.currentTimeMillis();		// measure time before adding each basic constraint
 				
 				// Get the parameter indexes list
 				List<String> parameters_indexes_list = read.get_parameters_indexes_list(id);
 				// Get the dynamic identifiers indexes list
-				List<String> dynamic_dentifiers_column_indexes = read.get_dynamic_dentifiers_column_indexes_in_row(id);
+				List<String> dynamic_dentifiers_column_indexes = read.get_dynamic_identifiers_column_indexes_in_row(id);
 				List<List<String>> dynamic_identifiers = read.get_dynamic_identifiers_in_row(id);
 				
 				
@@ -2531,7 +2833,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				List<String> static_strata_without_sizeclass_and_covertype = read.get_static_strata_without_sizeclass_and_covertype(id);
 				
 				int multiplier_col = constraint_column_names_list.indexOf("bc_multiplier");
-				multiplier = (!bc_values[id][multiplier_col].equals("null")) ?  Double.parseDouble(bc_values[id][multiplier_col]) : 0;	//if multiplier = null --> 0
+				double multiplier = (!bc_values[id][multiplier_col].equals("null")) ?  Double.parseDouble(bc_values[id][multiplier_col]) : 0;	//if multiplier = null --> 0
 				
 							
 				// Very important to keep the same elements of 1: model_strata vs static_strata
@@ -2553,42 +2855,52 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						if (integer_static_periods.size() > 0) {	
 							for (int t : integer_static_periods) {		//Loop all periods
 								if (t <= total_Periods) {
-									//Find all parameter match the t and add them all to parameter
-									/*	Table Name = s5 + s6 convert then + method + timingChoice
-									 * Table column indexes for the parameters is identified by parameters_indexes_list
-									 * dynamic identifiers are identified by "all_dynamicIdentifiers_columnIndexes" & "all_dynamicIdentifiers"
-									 * Table row index = t - 1  
-									 */		
-									currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
-											1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint																	
-
-									
-									
-									List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
-									List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
-									SRDage = starting_age[strata_id] + t - 1; 
-									if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
-									for (int c = 0; c < layer5.size(); c++) {
-										if (rdPercent[s5][c] / 100 > 0) {
-											coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(c) + " " + "disturbance");
-											coversion_cost_after_disturbance_value_list.add(SRD_percent[s5][SRDage] / 100 * rdPercent[s5][c] / 100);
-										}														
-									}
-									
-																							
-																	
-									para_value = Get_Parameter_Information.get_total_value(
-											read_database, vname[xNGe[strata_id][t]], 
-											xNGe_prescription[strata_id][t], 
-											xNGe_row_id[strata_id][t],
-											yield_tables_values, parameters_indexes_list,
-											dynamic_dentifiers_column_indexes, dynamic_identifiers,
-											cost_condition_list,
-											coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
-									para_value = para_value * currentDiscountValue * multiplier;
-
 									//Add xNGe(s1,s2,s3,s4,s5,s6)(t)
-									if(xNGe[strata_id][t] > 0) {		// if variable is defined, this value would be > 0 																
+									if(xNGe[strata_id][t] > 0) {		// if variable is defined, this value would be > 0 		
+										//Find all parameter match the t and add them all to parameter
+										/*	Table Name = s5 + s6 convert then + method + timingChoice
+										 * Table column indexes for the parameters is identified by parameters_indexes_list
+										 * dynamic identifiers are identified by "all_dynamicIdentifiers_columnIndexes" & "all_dynamicIdentifiers"
+										 * Table row index = t - 1  
+										 */		
+										
+										double cost_value = 0;									
+										
+										if (parameters_indexes_list.contains("CostParameter")) {
+											double currentDiscountValue = 1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1));
+																						
+											List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
+											List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
+											SRDage = starting_age[strata_id] + t - 1; 
+											if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
+											for (int c = 0; c < layer5.size(); c++) {
+												if (rdPercent[s5][c] / 100 > 0) {
+													coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(c) + " " + "disturbance");
+													coversion_cost_after_disturbance_value_list.add(SRD_percent[s5][SRDage] / 100 * rdPercent[s5][c] / 100);
+												}														
+											}
+											
+											if (xNGe_cost_value[strata_id][t] == -9999) {
+												xNGe_cost_value[strata_id][t] = cost_calculation.get_cost_value(
+														read_database, vname[xNGe[strata_id][t]], 
+														xNGe_prescription[strata_id][t], 
+														xNGe_row_id[strata_id][t], yield_tables_values,
+														cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+											}	
+											cost_value = xNGe_cost_value[strata_id][t] * currentDiscountValue;
+										}
+																																										
+																											
+										double para_value = Get_Parameter_Information.get_total_value(
+												read_database, vname[xNGe[strata_id][t]], 
+												xNGe_prescription[strata_id][t], 
+												xNGe_row_id[strata_id][t],
+												yield_tables_values, parameters_indexes_list,
+												dynamic_dentifiers_column_indexes, dynamic_identifiers,
+												cost_value);
+										para_value = para_value * multiplier;
+								
+																							
 										c15_indexlist.get(c15_num).add(xNGe[strata_id][t]);
 										c15_valuelist.get(c15_num).add((double) para_value);
 									}
@@ -2609,37 +2921,45 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 							if (integer_static_periods.size() > 0) {	
 								for (int t : integer_static_periods) {		//Loop all periods
 									if (t <= total_Periods) {
-										//Find all parameter match the t and add them all to parameter
-										currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
-												1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint																	
-										
-										
-										
-										List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
-										List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
-										SRDage = starting_age[strata_id] + t - 1; 
-										if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
-										for (int c = 0; c < layer5.size(); c++) {
-											if (rdPercent[s5][c] / 100 > 0) {
-												coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(c) + " " + "disturbance");
-												coversion_cost_after_disturbance_value_list.add(SRD_percent[s5][SRDage] / 100 * rdPercent[s5][c] / 100);
-											}														
-										}
-										
-										
-														
-										para_value = Get_Parameter_Information.get_total_value(
-												read_database, vname[xPBe[strata_id][i][t]], 
-												xPBe_prescription[strata_id][i][t], 
-												xPBe_row_id[strata_id][i][t],
-												yield_tables_values, parameters_indexes_list,
-												dynamic_dentifiers_column_indexes, dynamic_identifiers,
-												cost_condition_list,
-												coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
-										para_value = para_value * currentDiscountValue * multiplier;
-										
 										//Add xPBe[s1][s2][s3][s4][s5][s6][i][t]
-										if(xPBe[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 																
+										if(xPBe[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 
+											double cost_value = 0;									
+											
+											if (parameters_indexes_list.contains("CostParameter")) {
+												double currentDiscountValue = 1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1));
+																							
+												List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
+												List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
+												SRDage = starting_age[strata_id] + t - 1; 
+												if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
+												for (int c = 0; c < layer5.size(); c++) {
+													if (rdPercent[s5][c] / 100 > 0) {
+														coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(c) + " " + "disturbance");
+														coversion_cost_after_disturbance_value_list.add(SRD_percent[s5][SRDage] / 100 * rdPercent[s5][c] / 100);
+													}														
+												}
+																								
+												if (xPBe_cost_value[strata_id][i][t] == -9999) {
+													xPBe_cost_value[strata_id][i][t] = cost_calculation.get_cost_value(
+															read_database, vname[xPBe[strata_id][i][t]],  
+															xPBe_prescription[strata_id][i][t], 
+															xPBe_row_id[strata_id][i][t], yield_tables_values,
+															cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+												}
+												cost_value = xPBe_cost_value[strata_id][i][t] * currentDiscountValue; 
+											}
+											
+															
+											double para_value = Get_Parameter_Information.get_total_value(
+													read_database, vname[xPBe[strata_id][i][t]], 
+													xPBe_prescription[strata_id][i][t], 
+													xPBe_row_id[strata_id][i][t],
+													yield_tables_values, parameters_indexes_list,
+													dynamic_dentifiers_column_indexes, dynamic_identifiers,
+													cost_value);
+											para_value = para_value * multiplier;
+											
+																																					
 											c15_indexlist.get(c15_num).add(xPBe[strata_id][i][t]);
 											c15_valuelist.get(c15_num).add((double) para_value);
 										}
@@ -2661,37 +2981,45 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 							if (integer_static_periods.size() > 0) {	
 								for (int t : integer_static_periods) {		//Loop all periods
 									if (t <= total_Periods) {
-										//Find all parameter match the t and add them all to parameter
-										currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
-												1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint																	
-										
-										
-										
-										List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
-										List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
-										SRDage = starting_age[strata_id] + t - 1; 
-										if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
-										for (int c = 0; c < layer5.size(); c++) {
-											if (rdPercent[s5][c] / 100 > 0) {
-												coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(c) + " " + "disturbance");
-												coversion_cost_after_disturbance_value_list.add(SRD_percent[s5][SRDage] / 100 * rdPercent[s5][c] / 100);
-											}														
-										}
-										
-										
-										
-										para_value = Get_Parameter_Information.get_total_value(
-												read_database, vname[xGSe[strata_id][i][t]], 
-												xGSe_prescription[strata_id][i][t], 
-												xGSe_row_id[strata_id][i][t],
-												yield_tables_values, parameters_indexes_list,
-												dynamic_dentifiers_column_indexes, dynamic_identifiers,
-												cost_condition_list,
-												coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
-										para_value = para_value * currentDiscountValue * multiplier;
-										
 										//Add xGSe[s1][s2][s3][s4][s5][s6][i][t]
-										if(xGSe[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 																	
+										if(xGSe[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 	
+											double cost_value = 0;									
+											
+											if (parameters_indexes_list.contains("CostParameter")) {
+												double currentDiscountValue = 1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1));
+																							
+												List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
+												List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
+												SRDage = starting_age[strata_id] + t - 1; 
+												if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
+												for (int c = 0; c < layer5.size(); c++) {
+													if (rdPercent[s5][c] / 100 > 0) {
+														coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(c) + " " + "disturbance");
+														coversion_cost_after_disturbance_value_list.add(SRD_percent[s5][SRDage] / 100 * rdPercent[s5][c] / 100);
+													}														
+												}
+												
+												if (xGSe_cost_value[strata_id][i][t] == -9999) {
+													xGSe_cost_value[strata_id][i][t] = cost_calculation.get_cost_value(
+															read_database, vname[xGSe[strata_id][i][t]],  
+															xGSe_prescription[strata_id][i][t], 
+															xGSe_row_id[strata_id][i][t], yield_tables_values,
+															cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+												}
+												cost_value = xGSe_cost_value[strata_id][i][t] * currentDiscountValue;
+											}
+
+											
+											double para_value = Get_Parameter_Information.get_total_value(
+													read_database, vname[xGSe[strata_id][i][t]], 
+													xGSe_prescription[strata_id][i][t], 
+													xGSe_row_id[strata_id][i][t],
+													yield_tables_values, parameters_indexes_list,
+													dynamic_dentifiers_column_indexes, dynamic_identifiers,
+													cost_value);
+											para_value = para_value * multiplier;
+											
+																																					
 											c15_indexlist.get(c15_num).add(xGSe[strata_id][i][t]);
 											c15_valuelist.get(c15_num).add((double) para_value);
 										}
@@ -2712,29 +3040,38 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 							if (integer_static_periods.size() > 0) {	
 								for (int t : integer_static_periods) {		//Loop all periods
 									if (t <= total_Periods) {
-										//Find all parameter match the t and add them all to parameter
-										currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
-												1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint																	
-							
-										
-										
-										List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
-										List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
-																			
-										
-										
-										para_value = Get_Parameter_Information.get_total_value(
-												read_database, vname[xMS[strata_id][i][t]], 
-												xMS_prescription[strata_id][i][t], 
-												xMS_row_id[strata_id][i][t],
-												yield_tables_values, parameters_indexes_list,
-												dynamic_dentifiers_column_indexes, dynamic_identifiers,
-												cost_condition_list,
-												coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
-										para_value = para_value * currentDiscountValue * multiplier;
-										
 										//Add xMS[s1][s2][s3][s4][s5][s6][i][t]
-										if(xMS[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 															
+										if(xMS[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 
+											double cost_value = 0;									
+											
+											if (parameters_indexes_list.contains("CostParameter")) {
+												double currentDiscountValue = 1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1));
+																							
+												// Note: no stand replacing disturbance here --> no conversion cost due to replacing disturbance in MS area
+												List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
+												List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
+																
+												if (xMS_cost_value[strata_id][i][t] == -9999) {
+													xMS_cost_value[strata_id][i][t] = cost_calculation.get_cost_value(
+															read_database, vname[xMS[strata_id][i][t]], 
+															xMS_prescription[strata_id][i][t], 
+															xMS_row_id[strata_id][i][t], yield_tables_values,
+															cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+												}
+												cost_value = xMS_cost_value[strata_id][i][t] * currentDiscountValue;
+											}
+											
+											
+											double para_value = Get_Parameter_Information.get_total_value(
+													read_database, vname[xMS[strata_id][i][t]], 
+													xMS_prescription[strata_id][i][t], 
+													xMS_row_id[strata_id][i][t],
+													yield_tables_values, parameters_indexes_list,
+													dynamic_dentifiers_column_indexes, dynamic_identifiers,
+													cost_value);
+											para_value = para_value * multiplier;
+											
+																									
 											c15_indexlist.get(c15_num).add(xMS[strata_id][i][t]);
 											c15_valuelist.get(c15_num).add((double) para_value);
 										}
@@ -2755,29 +3092,38 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 							if (integer_static_periods.size() > 0) {	
 								for (int t : integer_static_periods) {		//Loop all periods
 									if (t <= total_Periods) {
-										//Find all parameter match the t and add them all to parameter
-										currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
-												1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint																	
-
-										
-										
-										List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
-										List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
-										
-										
-										
-										para_value = Get_Parameter_Information.get_total_value(
-												read_database, vname[xBS[strata_id][i][t]], 
-												xBS_prescription[strata_id][i][t], 
-												xBS_row_id[strata_id][i][t],
-												yield_tables_values, parameters_indexes_list,
-												dynamic_dentifiers_column_indexes, dynamic_identifiers,
-												cost_condition_list,
-												coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
-										para_value = para_value * currentDiscountValue * multiplier;
-										
 										//Add xBS[s1][s2][s3][s4][s5][s6][i][t]
-										if(xBS[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 															
+										if(xBS[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 	
+											double cost_value = 0;									
+											
+											if (parameters_indexes_list.contains("CostParameter")) {
+												double currentDiscountValue = 1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1));
+																							
+												// Note: no stand replacing disturbance here --> no conversion cost due to replacing disturbance in BS area
+												List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
+												List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
+												
+												if (xBS_cost_value[strata_id][i][t] == -9999) {
+													xBS_cost_value[strata_id][i][t] = cost_calculation.get_cost_value(
+															read_database, vname[xBS[strata_id][i][t]], 
+															xBS_prescription[strata_id][i][t], 
+															xBS_row_id[strata_id][i][t], yield_tables_values,
+															cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+												}
+												cost_value = xBS_cost_value[strata_id][i][t] * currentDiscountValue; 
+											}
+											
+		
+											double para_value = Get_Parameter_Information.get_total_value(
+													read_database, vname[xBS[strata_id][i][t]], 
+													xBS_prescription[strata_id][i][t], 
+													xBS_row_id[strata_id][i][t],
+													yield_tables_values, parameters_indexes_list,
+													dynamic_dentifiers_column_indexes, dynamic_identifiers,
+													cost_value);
+											para_value = para_value * multiplier;
+											
+																					
 											c15_indexlist.get(c15_num).add(xBS[strata_id][i][t]);
 											c15_valuelist.get(c15_num).add((double) para_value);	
 										}
@@ -2804,37 +3150,45 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										for (int i = 0; i < total_EAe_Prescriptions; i++) {
 											for (int t : integer_static_periods) {		//Loop all periods, 	final cut at t but we need parameter at time tR
 												if (t <= tR) {
-													//Find all parameter match the t and add them all to parameter
-													currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
-															1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint																	
-													
-															
-													
-													List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
-													List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
-													SRDage = starting_age[strata_id] + t - 1; 
-													if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
-													for (int s5RR = 0; s5RR < layer5.size(); s5RR++) {
-														if (rdPercent[s5][s5RR] / 100 > 0) {
-															coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(s5RR) + " " + "disturbance");
-															coversion_cost_after_disturbance_value_list.add(SRD_percent[s5][SRDage] / 100 * rdPercent[s5][s5RR] / 100);
-														}														
-													}
-													
-													
-													
-												    para_value = Get_Parameter_Information.get_total_value(
-												    		read_database, vname[xEAe[strata_id][tR][s5R][i][t]], 
-												    		xEAe_prescription[strata_id][tR][s5R][i][t], 
-												    		xEAe_row_id[strata_id][tR][s5R][i][t],
-															yield_tables_values, parameters_indexes_list,
-															dynamic_dentifiers_column_indexes, dynamic_identifiers,
-															cost_condition_list,
-															coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
-													para_value = para_value * currentDiscountValue * multiplier;
-													
 													//Add xEAe(s1,s2,s3,s4,s5,s6)(tR)(s5R)(i)(t)	final cut at tR but we need parameter at time t
-													if(xEAe[strata_id][tR][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0 																				
+													if(xEAe[strata_id][tR][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0
+														double cost_value = 0;									
+														
+														if (parameters_indexes_list.contains("CostParameter")) {
+															double currentDiscountValue = 1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1));
+																										
+															List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
+															List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
+															SRDage = starting_age[strata_id] + t - 1; 
+															if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
+															for (int s5RR = 0; s5RR < layer5.size(); s5RR++) {
+																if (rdPercent[s5][s5RR] / 100 > 0) {
+																	coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(s5RR) + " " + "disturbance");
+																	coversion_cost_after_disturbance_value_list.add(SRD_percent[s5][SRDage] / 100 * rdPercent[s5][s5RR] / 100);
+																}														
+															}
+					
+															if (xEAe_cost_value[strata_id][tR][s5R][i][t] == -9999) {
+																xEAe_cost_value[strata_id][tR][s5R][i][t] = cost_calculation.get_cost_value(
+																		read_database, vname[xEAe[strata_id][tR][s5R][i][t]], 
+															    		xEAe_prescription[strata_id][tR][s5R][i][t], 
+															    		xEAe_row_id[strata_id][tR][s5R][i][t], yield_tables_values,
+																		cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+															}
+															cost_value = xEAe_cost_value[strata_id][tR][s5R][i][t] * currentDiscountValue;
+														}
+														
+											
+														double para_value = Get_Parameter_Information.get_total_value(
+													    		read_database, vname[xEAe[strata_id][tR][s5R][i][t]], 
+													    		xEAe_prescription[strata_id][tR][s5R][i][t], 
+													    		xEAe_row_id[strata_id][tR][s5R][i][t],
+																yield_tables_values, parameters_indexes_list,
+																dynamic_dentifiers_column_indexes, dynamic_identifiers,
+																cost_value);
+														para_value = para_value * multiplier;
+														
+																																											
 														c15_indexlist.get(c15_num).add(xEAe[strata_id][tR][s5R][i][t]);
 														c15_valuelist.get(c15_num).add((double) para_value);
 													}
@@ -2863,39 +3217,47 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										if (covertype_conversions_and_regeneration_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
 											if (integer_static_periods.size() > 0) {	
 												for (int i = 0; i < total_EAr_Prescriptions; i++) {
-													for (int t : integer_static_periods) {		//Loop all periods, 	final cut at t but we need parameter at time tR
+													for (int t : integer_static_periods) {		//Loop all periods, 	final cut at tR but we need parameter at time t
 														if (t >= tR - aR + 1 && t <= tR) {
-															//Find all parameter match the t and add them all to parameter
-															currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
-																	1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint																	
-										
-												
-														
-															List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
-															List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
-															SRDage = aR - tR + t; 
-															if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
-															for (int s5RR = 0; s5RR < layer5.size(); s5RR++) {
-																if (rdPercent[s5][s5RR] / 100 > 0) {
-																	coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(s5RR) + " " + "disturbance");
-																	coversion_cost_after_disturbance_value_list.add(SRD_percent[s5][SRDage] / 100 * rdPercent[s5][s5RR] / 100);
-																}														
-															}
-																												
-															
-															
-														    para_value = Get_Parameter_Information.get_total_value(
-														    		read_database, vname[xEAr[strata_4layers_id][s5][tR][aR][s5R][i][t]],
-														    		xEAr_prescription[strata_4layers_id][s5][tR][aR][s5R][i][t], 
-														    		xEAr_row_id[strata_4layers_id][s5][tR][aR][s5R][i][t],
-																	yield_tables_values, parameters_indexes_list,
-																	dynamic_dentifiers_column_indexes, dynamic_identifiers,
-																	cost_condition_list,
-																	coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
-															para_value = para_value * currentDiscountValue * multiplier;
-															
 															//Add xEAr[s1][s2][s3][s4][s5][tR][aR][s5R][i][t]		final cut at tR but we need parameter at time t
 															if(xEAr[strata_4layers_id][s5][tR][aR][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0 
+																double cost_value = 0;									
+																
+																if (parameters_indexes_list.contains("CostParameter")) {
+																	double currentDiscountValue = 1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1));
+																												
+																	List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
+																	List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
+																	SRDage = aR - tR + t; 
+																	if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
+																	for (int s5RR = 0; s5RR < layer5.size(); s5RR++) {
+																		if (rdPercent[s5][s5RR] / 100 > 0) {
+																			coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(s5RR) + " " + "disturbance");
+																			coversion_cost_after_disturbance_value_list.add(SRD_percent[s5][SRDage] / 100 * rdPercent[s5][s5RR] / 100);
+																		}														
+																	}
+																	
+																	if (xEAr_cost_value[strata_4layers_id][s5][tR][aR][s5R][i][t] == -9999) {
+																		xEAr_cost_value[strata_4layers_id][s5][tR][aR][s5R][i][t] = cost_calculation.get_cost_value(
+																				read_database, vname[xEAr[strata_4layers_id][s5][tR][aR][s5R][i][t]],
+																	    		xEAr_prescription[strata_4layers_id][s5][tR][aR][s5R][i][t], 
+																	    		xEAr_row_id[strata_4layers_id][s5][tR][aR][s5R][i][t], yield_tables_values,
+																				cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+																	}
+																	cost_value = xEAr_cost_value[strata_4layers_id][s5][tR][aR][s5R][i][t] * currentDiscountValue;
+																}
+																
+
+																double para_value = Get_Parameter_Information.get_total_value(
+															    		read_database, vname[xEAr[strata_4layers_id][s5][tR][aR][s5R][i][t]],
+															    		xEAr_prescription[strata_4layers_id][s5][tR][aR][s5R][i][t], 
+															    		xEAr_row_id[strata_4layers_id][s5][tR][aR][s5R][i][t],
+																		yield_tables_values, parameters_indexes_list,
+																		dynamic_dentifiers_column_indexes, dynamic_identifiers,
+																		cost_value);
+																para_value = para_value * multiplier;
+																
+																												
 																c15_indexlist.get(c15_num).add(xEAr[strata_4layers_id][s5][tR][aR][s5R][i][t]);
 																c15_valuelist.get(c15_num).add((double) para_value);	
 															}
@@ -2921,45 +3283,52 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 							for (int tt = 2; tt <= total_Periods; tt++) {
 								for (int a = 1; a <= tt - 1; a++) {
 									if (integer_static_periods.size() > 0) {	
-										
-										//Combine all parameter together
-										double parameter = 0;
-										for (int t : integer_static_periods) {		//Loop all periods, t and tt are the same
-											if (t == tt) {
-												//Find all parameter match the t and add them all to parameter
-												currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
-														1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint																	
-																					
-												
-												
-												List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
-												List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
-												SRDage = a; 
-												if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
-												for (int s5R = 0; s5R < layer5.size(); s5R++) {
-													if (rdPercent[s5][s5R] / 100 > 0) {
-														coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(s5R) + " " + "disturbance");
-														coversion_cost_after_disturbance_value_list.add(SRD_percent[s5][SRDage] / 100 * rdPercent[s5][s5R] / 100);
-													}														
-												}
-												
-												
-												
-											    para_value = Get_Parameter_Information.get_total_value(
-											    		read_database, vname[xNGr[strata_4layers_id][s5][tt][a]],
-											    		xNGr_prescription[strata_4layers_id][s5][tt][a], 
-											    		xNGr_row_id[strata_4layers_id][s5][tt][a],
-														yield_tables_values, parameters_indexes_list,
-														dynamic_dentifiers_column_indexes, dynamic_identifiers,
-														cost_condition_list,
-														coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
-												para_value = para_value * currentDiscountValue * multiplier;
-												parameter = parameter + para_value;			
-											}
-										}
-										
 										//Add xNGr(s1,s2,s3,s4,s5)(tt)(a)
-										if(xNGr[strata_4layers_id][s5][tt][a] > 0) {		// if variable is defined, this value would be > 0 														
+										if(xNGr[strata_4layers_id][s5][tt][a] > 0) {		// if variable is defined, this value would be > 0 	
+											//Combine all parameter together
+											double parameter = 0;
+											for (int t : integer_static_periods) {		//Loop all periods, t and tt are the same
+												if (t == tt) {
+													double cost_value = 0;									
+													
+													if (parameters_indexes_list.contains("CostParameter")) {
+														double currentDiscountValue = 1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1));
+																									
+														List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
+														List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
+														SRDage = a; 
+														if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
+														for (int s5R = 0; s5R < layer5.size(); s5R++) {
+															if (rdPercent[s5][s5R] / 100 > 0) {
+																coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(s5R) + " " + "disturbance");
+																coversion_cost_after_disturbance_value_list.add(SRD_percent[s5][SRDage] / 100 * rdPercent[s5][s5R] / 100);
+															}														
+														}
+														
+														if (xNGr_cost_value[strata_4layers_id][s5][tt][a] == -9999) {
+															xNGr_cost_value[strata_4layers_id][s5][tt][a] = cost_calculation.get_cost_value(
+																	read_database, vname[xNGr[strata_4layers_id][s5][tt][a]],
+														    		xNGr_prescription[strata_4layers_id][s5][tt][a], 
+														    		xNGr_row_id[strata_4layers_id][s5][tt][a], yield_tables_values,
+																	cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+														}
+														cost_value = xNGr_cost_value[strata_4layers_id][s5][tt][a] * currentDiscountValue; 
+													}
+													
+		
+													double para_value = Get_Parameter_Information.get_total_value(
+												    		read_database, vname[xNGr[strata_4layers_id][s5][tt][a]],
+												    		xNGr_prescription[strata_4layers_id][s5][tt][a], 
+												    		xNGr_row_id[strata_4layers_id][s5][tt][a],
+															yield_tables_values, parameters_indexes_list,
+															dynamic_dentifiers_column_indexes, dynamic_identifiers,
+															cost_value);
+													para_value = para_value * multiplier;
+													parameter = parameter + para_value;			
+												}
+											}
+											
+																								
 											c15_indexlist.get(c15_num).add(xNGr[strata_4layers_id][s5][tt][a]);
 											c15_valuelist.get(c15_num).add((double) parameter);	
 										}
@@ -2981,45 +3350,52 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								for (int tt = 2; tt <= total_Periods; tt++) {
 									for (int a = 1; a <= tt - 1; a++) {
 										if (integer_static_periods.size() > 0) {	
-											
-											//Combine all parameter together
-											double parameter = 0;
-											for (int t : integer_static_periods) {		//Loop all periods, t and tt are the same
-												if (t == tt) {
-													//Find all parameter match the t and add them all to parameter
-													currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
-															1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint																	
-													
-															
-													
-													List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
-													List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
-													SRDage = a; 
-													if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
-													for (int s5R = 0; s5R < layer5.size(); s5R++) {
-														if (rdPercent[s5][s5R] / 100 > 0) {
-															coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(s5R) + " " + "disturbance");
-															coversion_cost_after_disturbance_value_list.add(SRD_percent[s5][SRDage] / 100 * rdPercent[s5][s5R] / 100);
-														}														
-													}
-													
-												
-													
-												    para_value = Get_Parameter_Information.get_total_value(
-												    		read_database, vname[xPBr[strata_4layers_id][s5][ii][tt][a]],
-												    		xPBr_prescription[strata_4layers_id][s5][ii][tt][a], 
-												    		xPBr_row_id[strata_4layers_id][s5][ii][tt][a],
-															yield_tables_values, parameters_indexes_list,
-															dynamic_dentifiers_column_indexes, dynamic_identifiers,
-															cost_condition_list,
-															coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
-													para_value = para_value * currentDiscountValue * multiplier;
-													parameter = parameter + para_value;			
-												}
-											}
-											
 											//Add xPBr(s1,s2,s3,s4,s5)(ii)(tt)(a)
 											if(xPBr[strata_4layers_id][s5][ii][tt][a] > 0) {		// if variable is defined, this value would be > 0 
+												//Combine all parameter together
+												double parameter = 0;
+												for (int t : integer_static_periods) {		//Loop all periods, t and tt are the same
+													if (t == tt) {
+														double cost_value = 0;									
+														
+														if (parameters_indexes_list.contains("CostParameter")) {
+															double currentDiscountValue = 1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1));
+																										
+															List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
+															List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
+															SRDage = a; 
+															if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
+															for (int s5R = 0; s5R < layer5.size(); s5R++) {
+																if (rdPercent[s5][s5R] / 100 > 0) {
+																	coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(s5R) + " " + "disturbance");
+																	coversion_cost_after_disturbance_value_list.add(SRD_percent[s5][SRDage] / 100 * rdPercent[s5][s5R] / 100);
+																}														
+															}
+																												
+															if (xPBr_cost_value[strata_4layers_id][s5][ii][tt][a] == -9999) {
+																xPBr_cost_value[strata_4layers_id][s5][ii][tt][a] = cost_calculation.get_cost_value(
+																		read_database, vname[xPBr[strata_4layers_id][s5][ii][tt][a]],
+															    		xPBr_prescription[strata_4layers_id][s5][ii][tt][a], 
+															    		xPBr_row_id[strata_4layers_id][s5][ii][tt][a], yield_tables_values,
+																		cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+															}
+															cost_value = xPBr_cost_value[strata_4layers_id][s5][ii][tt][a] * currentDiscountValue;
+														}															
+																												
+														
+														double para_value = Get_Parameter_Information.get_total_value(
+													    		read_database, vname[xPBr[strata_4layers_id][s5][ii][tt][a]],
+													    		xPBr_prescription[strata_4layers_id][s5][ii][tt][a], 
+													    		xPBr_row_id[strata_4layers_id][s5][ii][tt][a],
+																yield_tables_values, parameters_indexes_list,
+																dynamic_dentifiers_column_indexes, dynamic_identifiers,
+																cost_value);
+														para_value = para_value * multiplier;
+														parameter = parameter + para_value;			
+													}
+												}
+												
+												
 												c15_indexlist.get(c15_num).add(xPBr[strata_4layers_id][s5][ii][tt][a]);
 												c15_valuelist.get(c15_num).add((double) parameter);	
 											}
@@ -3042,45 +3418,52 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								for (int tt = 2; tt <= total_Periods; tt++) {
 									for (int a = 1; a <= tt - 1; a++) {
 										if (integer_static_periods.size() > 0) {	
-											
-											//Combine all parameter together
-											double parameter = 0;
-											for (int t : integer_static_periods) {		//Loop all periods, t and tt are the same
-												if (t == tt) {
-													//Find all parameter match the t and add them all to parameter
-													currentDiscountValue = (parameters_indexes_list.contains("CostParameter")) ? 	
-															1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1)) : 1;	//total discount = 1 if not cost constraint																	
-													
-												
-													
-													List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
-													List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
-													SRDage = a; 
-													if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
-													for (int s5R = 0; s5R < layer5.size(); s5R++) {
-														if (rdPercent[s5][s5R] / 100 > 0) {
-															coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(s5R) + " " + "disturbance");
-															coversion_cost_after_disturbance_value_list.add(rdPercent[s5][s5R] / 100);
-														}														
-													}
-													
-													
-													
-												    para_value = Get_Parameter_Information.get_total_value(
-												    		read_database, vname[xGSr[strata_4layers_id][s5][ii][tt][a]],
-												    		xGSr_prescription[strata_4layers_id][s5][ii][tt][a], 
-												    		xGSr_row_id[strata_4layers_id][s5][ii][tt][a],
-															yield_tables_values, parameters_indexes_list,
-															dynamic_dentifiers_column_indexes, dynamic_identifiers,
-															cost_condition_list,
-															coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
-													para_value = para_value * currentDiscountValue * multiplier;
-													parameter = parameter + para_value;			
-												}
-											}
-											
 											//Add xGSr(s1,s2,s3,s4,s5)(ii)(tt)(a)
 											if(xGSr[strata_4layers_id][s5][ii][tt][a] > 0) {		// if variable is defined, this value would be > 0 
+												//Combine all parameter together
+												double parameter = 0;
+												for (int t : integer_static_periods) {		//Loop all periods, t and tt are the same
+													if (t == tt) {
+														double cost_value = 0;									
+														
+														if (parameters_indexes_list.contains("CostParameter")) {
+															double currentDiscountValue = 1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1));
+																										
+															List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
+															List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
+															SRDage = a; 
+															if (SRDage >= SRD_percent[s5].length) 	SRDage = SRD_percent[s5].length - 1;		//Lump the age class if more than the max age has %
+															for (int s5R = 0; s5R < layer5.size(); s5R++) {
+																if (rdPercent[s5][s5R] / 100 > 0) {
+																	coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(s5R) + " " + "disturbance");
+																	coversion_cost_after_disturbance_value_list.add(rdPercent[s5][s5R] / 100);
+																}														
+															}
+																										
+															if (xGSr_cost_value[strata_4layers_id][s5][ii][tt][a] == -9999) {
+																xGSr_cost_value[strata_4layers_id][s5][ii][tt][a] = cost_calculation.get_cost_value(
+																		read_database, vname[xGSr[strata_4layers_id][s5][ii][tt][a]],
+															    		xGSr_prescription[strata_4layers_id][s5][ii][tt][a], 
+															    		xGSr_row_id[strata_4layers_id][s5][ii][tt][a], yield_tables_values,
+																		cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
+															}
+															cost_value = xGSr_cost_value[strata_4layers_id][s5][ii][tt][a] * currentDiscountValue;
+														}																	
+
+														
+														double para_value = Get_Parameter_Information.get_total_value(
+													    		read_database, vname[xGSr[strata_4layers_id][s5][ii][tt][a]],
+													    		xGSr_prescription[strata_4layers_id][s5][ii][tt][a], 
+													    		xGSr_row_id[strata_4layers_id][s5][ii][tt][a],
+																yield_tables_values, parameters_indexes_list,
+																dynamic_dentifiers_column_indexes, dynamic_identifiers,
+																cost_value);
+														para_value = para_value * multiplier;
+														parameter = parameter + para_value;			
+													}
+												}
+												
+												
 												c15_indexlist.get(c15_num).add(xGSr[strata_4layers_id][s5][ii][tt][a]);
 												c15_valuelist.get(c15_num).add((double) parameter);	
 											}
@@ -3097,6 +3480,12 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				c15_lblist.add((double) 0);
 				c15_ublist.add((double) 0);
 				c15_num++;
+				
+				long bc_time_end = System.currentTimeMillis();		// measure time after reading this basic constraint
+				double bc_time_reading = (double) (bc_time_end - bc_time_start) / 1000;
+				int id_col = constraint_column_names_list.indexOf("bc_id");
+				int description_col = constraint_column_names_list.indexOf("bc_description");
+				System.out.println("           - Time (seconds) for reading basic constraint " + bc_values[id][id_col] + " - " + bc_values[id][description_col] + "             " + bc_time_reading);
 			}
 
 
@@ -3119,9 +3508,69 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			
 			
 			
-			// Solve problem-------------------------------------------------	
-
 			
+			
+			// Clear arrays not used any more before solving -------------------------------------------------------------
+			xNGe = null;
+			xNGe_prescription = null;
+			xNGe_row_id = null;
+			xNGe_cost_value = null;
+			
+			xPBe = null;
+			xPBe_prescription = null;
+			xPBe_row_id = null;
+			xPBe_row_id = null;
+			
+			xGSe = null;
+			xGSe_prescription = null;
+			xGSe_cost_value = null;
+			
+			xEAe = null;
+			xEAe_prescription = null;
+			xEAe_row_id = null;
+			xEAe_cost_value = null;
+			
+			xMS = null;
+			xMS_prescription = null;
+			xMS_row_id = null;
+			xMS_cost_value = null;
+				
+			xBS = null;
+			xBS_prescription = null;
+			xBS_row_id = null;
+			xBS_cost_value = null;
+			
+			xNGr = null;
+			xNGr_prescription = null;
+			xNGr_row_id = null;
+			xNGr_cost_value = null;
+
+			xPBr = null;
+			xPBr_prescription = null;
+			xPBr_row_id = null;
+			xPBr_cost_value = null;
+					
+			xGSr = null;
+			xGSr_prescription = null;
+			xGSr_row_id = null;
+			xGSr_cost_value = null;
+			
+			xEAr = null;
+			xEAr_prescription = null;
+			xEAr_row_id = null;		
+			xEAr_cost_value = null;	
+			
+			
+			read_database = null;			
+			cost_calculation = null;
+//			System.gc();		Not call this to avoid poor performance. just let the collector auto starts when needed	
+			
+			
+					
+			
+			
+			
+			// Solve problem----------------------------------------------------------------------------------------------				
 //			// Set constraints set name: Notice THIS WILL EXTREMELY SLOW THE SOLVING PROCESS (recommend for debugging only)
 //			int indexOfC2 = c2_num;
 //			int indexOfC3 = indexOfC2 + c3_num;

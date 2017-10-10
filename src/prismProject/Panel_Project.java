@@ -182,24 +182,18 @@ public class Panel_Project extends JLayeredPane {
 		btnNewRun = new JButton();
 		btnNewRun.setToolTipText("New Run");
 		btnNewRun.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_new.png"));
-		btnNewRun.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent actionEvent) {
-				refreshProjectTree();
-				processingNode=root;
-				new_Run();
-			}
+		btnNewRun.addActionListener(e -> {
+			refreshProjectTree();
+			processingNode=root;
+			new_Run();
 		});
 		projectToolBar.add(btnNewRun);
 		
 		btnDeleteRun = new JButton();
 		btnDeleteRun.setToolTipText("Delete Runs");
 		btnDeleteRun.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_delete.png"));
-		btnDeleteRun.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent actionEvent) {
-				delete_Runs();
-			}
+		btnDeleteRun.addActionListener(e -> {
+			delete_Runs();
 		});
 		projectToolBar.add(btnDeleteRun);
 
@@ -207,11 +201,8 @@ public class Panel_Project extends JLayeredPane {
 		btnRefresh = new JButton();
 		btnRefresh.setToolTipText("Refresh");
 		btnRefresh.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_refresh.png"));
-		btnRefresh.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent actionEvent) {
-				refreshProjectTree();
-			}
+		btnRefresh.addActionListener(e -> {
+			refreshProjectTree();
 		});
 		projectToolBar.add(btnRefresh);
 		
@@ -219,19 +210,16 @@ public class Panel_Project extends JLayeredPane {
 		btnEditRun = new JButton();
 		btnEditRun.setToolTipText("Start Editing");
 		btnEditRun.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_edit.png"));
-		btnEditRun.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent actionEvent) {
-				Thread thread = new Thread() {			// Make a thread so JFrame will not be frozen
-					public void run() {
-						edit_Runs();
-						PrismMain.get_Prism_DesktopPane().getSelectedFrame().revalidate();
-						PrismMain.get_Prism_DesktopPane().getSelectedFrame().repaint();
-						this.interrupt();
-					}
-				};
-				thread.start();
-			}
+		btnEditRun.addActionListener(e -> {
+			Thread thread = new Thread() {			// Make a thread so JFrame will not be frozen
+				public void run() {
+					edit_Runs();
+					PrismMain.get_Prism_DesktopPane().getSelectedFrame().revalidate();
+					PrismMain.get_Prism_DesktopPane().getSelectedFrame().repaint();
+					this.interrupt();
+				}
+			};
+			thread.start();
 		});
 		projectToolBar.add(btnEditRun);
 		
@@ -239,11 +227,8 @@ public class Panel_Project extends JLayeredPane {
 		btnSolveRun = new JButton();
 		btnSolveRun.setToolTipText("Start Solving");
 		btnSolveRun.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_solve.png"));
-		btnSolveRun.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent actionEvent) {
-				solve_Runs();
-			}
+		btnSolveRun.addActionListener(e -> {
+			solve_Runs();
 		});
 		projectToolBar.add(btnSolveRun);
 		
@@ -251,11 +236,8 @@ public class Panel_Project extends JLayeredPane {
 		btnCustomizeOutput = new JButton();
 		btnCustomizeOutput.setToolTipText("Customize Output");
 		btnCustomizeOutput.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_customize.png"));
-		btnCustomizeOutput.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent actionEvent) {
-				customize_Output();
-			}
+		btnCustomizeOutput.addActionListener(e -> {
+			customize_Output();
 		});
 		projectToolBar.add(btnCustomizeOutput);
 

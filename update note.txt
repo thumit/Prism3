@@ -427,3 +427,15 @@ All changes in this block are associated with PrismAlpha1.0.10.jar, Prism Formul
 	- Remove binary search for management_overview in Panel_SolveRun
 All changes in this block are associated with PrismAlpha1.0.11.jar, Prism Formulation 01.docx, Prism Database 01.docx
 --------------------------------------------------------------------------
+
+201. Use Lamdar Code for all button's actionlisteners whenever possible to simplify codes: applied on Panl_EditRun_Details, Panel_SolveRun, Panel_DatabaseManagement, Panel_Project
+202. 30 larger arrays and 5 large lists are set to null when not being used any more (to help Garbage Collector)
+203. Print out more information during solving process (time for reading each basic constraint)
+204. RR Boost 5: Improve speed of reading cost constraints, including:
+	- Move Cost Check outside of Get_parameter_Information --> private class Cost_Calculation
+	- Define 10 more arrays to store cost_value for each variables, cost_value is read wheneded and will be stored in array to never read again --> speed up later cost constraints
+	- Rewrite eq (15) using the new class, also move check condition of defined variables to only calculate when necessary --> speed up
+	- Set the new 10 arrays to "null" when not use any more
+
+
+All changes in this block are associated with PrismAlpha1.0.12.jar, Prism Formulation 01.docx, Prism Database 01.docx
