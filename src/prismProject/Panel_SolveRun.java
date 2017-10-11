@@ -711,85 +711,35 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			int[][] x = new int[model_strata.size()][total_methods];		//x(s1,s2,s3,s4,s5,s6)(q)
 			
 			
-			int[][] xNGe = new int[model_strata.size()][total_Periods + 1];		//xNGe(s1,s2,s3,s4,s5,s6)(t)
-			int[][] xNGe_prescription = new int[model_strata.size()][total_Periods + 1];
-			int[][] xNGe_row_id = new int[model_strata.size()][total_Periods + 1];
-			double[][] xNGe_cost_value = new double[model_strata.size()][total_Periods + 1];
-			
-			
+			int[][] xNGe = new int[model_strata.size()][total_Periods + 1];		//xNGe(s1,s2,s3,s4,s5,s6)(t)	
 			int[][][] xPBe = new int[model_strata.size()][total_PBe_Prescriptions][total_Periods + 1];		//xPBe(s1,s2,s3,s4,s5,s6)(i,t)
-			int[][][] xPBe_prescription = new int[model_strata.size()][total_PBe_Prescriptions][total_Periods + 1];
-			int[][][] xPBe_row_id = new int[model_strata.size()][total_PBe_Prescriptions][total_Periods + 1];
-			double[][][] xPBe_cost_value = new double[model_strata.size()][total_PBe_Prescriptions][total_Periods + 1];
-			
-			
 			int[][][] xGSe = new int[model_strata.size()][total_GSe_Prescriptions][total_Periods + 1];			//xGSe(s1,s2,s3,s4,s5,s6)(i,t)
-			int[][][] xGSe_prescription = new int[model_strata.size()][total_GSe_Prescriptions][total_Periods + 1];
-			int[][][] xGSe_row_id = new int[model_strata.size()][total_GSe_Prescriptions][total_Periods + 1];
-			double[][][] xGSe_cost_value = new double[model_strata.size()][total_GSe_Prescriptions][total_Periods + 1];
-			
-			
 			int[][][][][] xEAe = new int[model_strata.size()][total_Periods + 1][layer5.size()][total_EAe_Prescriptions][total_Periods + 1];		//xEAe(s1,s2,s3,s4,s5,s6)(tR)(s5R)(i)(t)
 									// total_Periods + 1 because tR starts from 1 to total_Periods, ignore the 0
-			int[][][][][] xEAe_prescription = new int[model_strata.size()][total_Periods + 1][layer5.size()][total_EAe_Prescriptions][total_Periods + 1];
-			int[][][][][] xEAe_row_id = new int[model_strata.size()][total_Periods + 1][layer5.size()][total_EAe_Prescriptions][total_Periods + 1];
-			double[][][][][] xEAe_cost_value = new double[model_strata.size()][total_Periods + 1][layer5.size()][total_EAe_Prescriptions][total_Periods + 1];
-			
-			
 			int[][][] xMS = new int[model_strata.size()][total_PBe_Prescriptions][total_Periods + 1];		//xMS(s1,s2,s3,s4,s5,s6)(i,t)
-			int[][][] xMS_prescription = new int[model_strata.size()][total_PBe_Prescriptions][total_Periods + 1];
-			int[][][] xMS_row_id = new int[model_strata.size()][total_PBe_Prescriptions][total_Periods + 1];
-			double[][][] xMS_cost_value = new double[model_strata.size()][total_PBe_Prescriptions][total_Periods + 1];
-			
-			
 			int[][][] xBS = new int[model_strata.size()][total_PBe_Prescriptions][total_Periods + 1];		//xBS(s1,s2,s3,s4,s5,s6)(i,t)			
-			int[][][] xBS_prescription = new int[model_strata.size()][total_PBe_Prescriptions][total_Periods + 1];
-			int[][][] xBS_row_id = new int[model_strata.size()][total_PBe_Prescriptions][total_Periods + 1];
-			double[][][] xBS_cost_value = new double[model_strata.size()][total_PBe_Prescriptions][total_Periods + 1];
-			
-			
 			int[][][][] xNGr = new int[model_strata_without_sizeclass_and_covertype.size()][layer5.size()][total_Periods + 1][total_AgeClasses + 1];		//xNGr(s1,s2,s3,s4,s5)(t)(a)
-									// total_Periods + 1 because t starts from 1 to total_Periods, ignore the 0
-			int[][][][] xNGr_prescription = new int[model_strata_without_sizeclass_and_covertype.size()][layer5.size()][total_Periods + 1][total_AgeClasses + 1];
-			int[][][][] xNGr_row_id = new int[model_strata_without_sizeclass_and_covertype.size()][layer5.size()][total_Periods + 1][total_AgeClasses + 1];
-			double[][][][] xNGr_cost_value = new double[model_strata_without_sizeclass_and_covertype.size()][layer5.size()][total_Periods + 1][total_AgeClasses + 1];
-			
-			
+									// total_Periods + 1 because t starts from 1 to total_Periods, ignore the 0					
 			int[][][][][] xPBr = new int[model_strata_without_sizeclass_and_covertype.size()][layer5.size()][total_PBr_Prescriptions][total_Periods + 1][total_AgeClasses + 1];		//xPBr(s1,s2,s3,s4,s5)(i)(t)(a)
 									// total_Periods + 1 because t starts from 1 to total_Periods, ignore the 0
-			int[][][][][] xPBr_prescription = new int[model_strata_without_sizeclass_and_covertype.size()][layer5.size()][total_PBr_Prescriptions][total_Periods + 1][total_AgeClasses + 1];
-			int[][][][][] xPBr_row_id = new int[model_strata_without_sizeclass_and_covertype.size()][layer5.size()][total_PBr_Prescriptions][total_Periods + 1][total_AgeClasses + 1];
-			double[][][][][] xPBr_cost_value = new double[model_strata_without_sizeclass_and_covertype.size()][layer5.size()][total_PBr_Prescriptions][total_Periods + 1][total_AgeClasses + 1];
-			
-			
 			int[][][][][] xGSr = new int[model_strata_without_sizeclass_and_covertype.size()][layer5.size()][total_GSr_Prescriptions][total_Periods + 1][total_AgeClasses + 1];		//xGSr(s1,s2,s3,s4,s5)(i)(t)(a)
 									// total_Periods + 1 because t starts from 1 to total_Periods, ignore the 0
-			int[][][][][] xGSr_prescription = new int[model_strata_without_sizeclass_and_covertype.size()][layer5.size()][total_GSr_Prescriptions][total_Periods + 1][total_AgeClasses + 1];
-			int[][][][][] xGSr_row_id = new int[model_strata_without_sizeclass_and_covertype.size()][layer5.size()][total_GSr_Prescriptions][total_Periods + 1][total_AgeClasses + 1];
-			double[][][][][] xGSr_cost_value = new double[model_strata_without_sizeclass_and_covertype.size()][layer5.size()][total_GSr_Prescriptions][total_Periods + 1][total_AgeClasses + 1];
-			
-			
 			int[][][][][][][] xEAr = new int[model_strata_without_sizeclass_and_covertype.size()][layer5.size()][total_Periods + 1][total_AgeClasses + 1][layer5.size()][total_EAr_Prescriptions][total_Periods + 1];		//xEAr(s1,s2,s3,s4,s5)(tR)(a)(s5R)(i)(t)
-									// total_Periods + 1 because tR starts from 1 to total_Periods, ignore the 0
-			int[][][][][][][] xEAr_prescription = new int[model_strata_without_sizeclass_and_covertype.size()][layer5.size()][total_Periods + 1][total_AgeClasses + 1][layer5.size()][total_EAr_Prescriptions][total_Periods + 1];
-			int[][][][][][][] xEAr_row_id = new int[model_strata_without_sizeclass_and_covertype.size()][layer5.size()][total_Periods + 1][total_AgeClasses + 1][layer5.size()][total_EAr_Prescriptions][total_Periods + 1];
-			double[][][][][][][] xEAr_cost_value = new double[model_strata_without_sizeclass_and_covertype.size()][layer5.size()][total_Periods + 1][total_AgeClasses + 1][layer5.size()][total_EAr_Prescriptions][total_Periods + 1];
+									// total_Periods + 1 because tR starts from 1 to total_Periods, ignore the 0			
 			
-			
+					
 			// Declare arrays to keep Fire variables	//f(s1,s2,s3,s4,s5,s6)(t)
 			int[][][][] fire = new int
 					[model_strata_without_sizeclass_and_covertype.size()]
 							[layer5.size()][total_Periods + 1][layer5.size()];						
-			
-
+						
 			
 			// Get the 2 parameter V(s1,s2,s3,s4,s5,s6) and A(s1,s2,s3,s4,s5,s6)
 			String[][] Input2_value = read.get_MO_Values();	
 			double[] strata_area = new double[model_strata.size()];
 			int[] starting_age = new int[model_strata.size()];			
 			
-			
-			
+						
 			// Loop through all modeled_strata to find if the names matched and get the total area and age class
 			for (int id = 0; id < model_strata.size(); id++) {
 				strata_area[id] = Double.parseDouble(Input2_value[id][7]);		// area in acres
@@ -945,9 +895,6 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								vublist.add(Double.MAX_VALUE);
 								vtlist.add(IloNumVarType.Float);
 								xNGe[strata_id][t] = nvars;
-								xNGe_prescription[strata_id][t] = prescription_and_row[0];
-								xNGe_row_id[strata_id][t] = prescription_and_row[1];
-								xNGe_cost_value[strata_id][t] = -9999;
 								nvars++;
 							}
 						} else {
@@ -957,9 +904,6 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 							vublist.add(Double.MAX_VALUE);
 							vtlist.add(IloNumVarType.Float);
 							xNGe[strata_id][t] = nvars;
-							xNGe_prescription[strata_id][t] = prescription_and_row[0];
-							xNGe_row_id[strata_id][t] = prescription_and_row[1];
-							xNGe_cost_value[strata_id][t] = -9999;
 							nvars++;
 						}
 					}
@@ -988,9 +932,6 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									vublist.add(Double.MAX_VALUE);
 									vtlist.add(IloNumVarType.Float);
 									xPBe[strata_id][i][t] = nvars;
-									xPBe_prescription[strata_id][i][t] = prescription_and_row[0];
-									xPBe_row_id[strata_id][i][t] = prescription_and_row[1];
-									xPBe_cost_value[strata_id][i][t] = -9999;
 									nvars++;
 								}
 							} else {
@@ -1000,9 +941,6 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								vublist.add(Double.MAX_VALUE);
 								vtlist.add(IloNumVarType.Float);
 								xPBe[strata_id][i][t] = nvars;
-								xPBe_prescription[strata_id][i][t] = prescription_and_row[0];
-								xPBe_row_id[strata_id][i][t] = prescription_and_row[1];
-								xPBe_cost_value[strata_id][i][t] = -9999;
 								nvars++;
 							}
 						}
@@ -1032,9 +970,6 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									vublist.add(Double.MAX_VALUE);
 									vtlist.add(IloNumVarType.Float);
 									xGSe[strata_id][i][t] = nvars;
-									xGSe_prescription[strata_id][i][t] = prescription_and_row[0];
-									xGSe_row_id[strata_id][i][t] = prescription_and_row[1];
-									xGSe_cost_value[strata_id][i][t] = -9999;
 									nvars++;
 								}
 							} else {
@@ -1044,9 +979,6 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								vublist.add(Double.MAX_VALUE);
 								vtlist.add(IloNumVarType.Float);
 								xGSe[strata_id][i][t] = nvars;
-								xGSe_prescription[strata_id][i][t] = prescription_and_row[0];
-								xGSe_row_id[strata_id][i][t] = prescription_and_row[1];
-								xGSe_cost_value[strata_id][i][t] = -9999;
 								nvars++;
 							}
 						}
@@ -1074,16 +1006,13 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										String var_name = "xEA_E_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6) + "," + tR + "," + layer5.get(s5R) + "," + i + "," + t;
 										int[] prescription_and_row = get_prescription_and_row(yield_tables_names_list, var_name, rotationAge);
 										if (!allow_Non_Existing_Prescription) {		// Boost 2
-											if (get_prescription_and_row(yield_tables_names_list, var_name, rotationAge)[0] != -9999) {
+											if (prescription_and_row[0] != -9999) {
 												objlist.add((double) 0);
 												vnamelist.add(var_name);
 												vlblist.add((double) 0);
 												vublist.add(Double.MAX_VALUE);
 												vtlist.add(IloNumVarType.Float);
 												xEAe[strata_id][tR][s5R][i][t] = nvars;
-												xEAe_prescription[strata_id][tR][s5R][i][t] = prescription_and_row[0];
-												xEAe_row_id[strata_id][tR][s5R][i][t] = prescription_and_row[1];
-												xEAe_cost_value[strata_id][tR][s5R][i][t] = -9999;
 												nvars++;
 											}
 										} else {
@@ -1093,9 +1022,6 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 											vublist.add(Double.MAX_VALUE);
 											vtlist.add(IloNumVarType.Float);
 											xEAe[strata_id][tR][s5R][i][t] = nvars;
-											xEAe_prescription[strata_id][tR][s5R][i][t] = prescription_and_row[0];
-											xEAe_row_id[strata_id][tR][s5R][i][t] = prescription_and_row[1];
-											xEAe_cost_value[strata_id][tR][s5R][i][t] = -9999;
 											nvars++;
 										}
 									}
@@ -1128,9 +1054,6 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									vublist.add(Double.MAX_VALUE);
 									vtlist.add(IloNumVarType.Float);
 									xMS[strata_id][i][t] = nvars;
-									xMS_prescription[strata_id][i][t] = prescription_and_row[0];
-									xMS_row_id[strata_id][i][t] = prescription_and_row[1];
-									xMS_cost_value[strata_id][i][t] = -9999;
 									nvars++;	
 								}
 							} else {
@@ -1140,9 +1063,6 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								vublist.add(Double.MAX_VALUE);
 								vtlist.add(IloNumVarType.Float);
 								xMS[strata_id][i][t] = nvars;
-								xMS_prescription[strata_id][i][t] = prescription_and_row[0];
-								xMS_row_id[strata_id][i][t] = prescription_and_row[1];
-								xMS_cost_value[strata_id][i][t] = -9999;
 								nvars++;
 							}
 						}
@@ -1172,9 +1092,6 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									vublist.add(Double.MAX_VALUE);
 									vtlist.add(IloNumVarType.Float);
 									xBS[strata_id][i][t] = nvars;
-									xBS_prescription[strata_id][i][t] = prescription_and_row[0];
-									xBS_row_id[strata_id][i][t] = prescription_and_row[1];
-									xBS_cost_value[strata_id][i][t] = -9999;
 									nvars++;	
 								}
 							} else {
@@ -1184,9 +1101,6 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								vublist.add(Double.MAX_VALUE);
 								vtlist.add(IloNumVarType.Float);
 								xBS[strata_id][i][t] = nvars;
-								xBS_prescription[strata_id][i][t] = prescription_and_row[0];
-								xBS_row_id[strata_id][i][t] = prescription_and_row[1];
-								xBS_cost_value[strata_id][i][t] = -9999;
 								nvars++;
 							}									
 						}
@@ -1216,9 +1130,6 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										vublist.add(Double.MAX_VALUE);
 										vtlist.add(IloNumVarType.Float);
 										xNGr[strata_4layers_id][s5][t][a] = nvars;
-										xNGr_prescription[strata_4layers_id][s5][t][a] = prescription_and_row[0];
-										xNGr_row_id[strata_4layers_id][s5][t][a] = prescription_and_row[1];
-										xNGr_cost_value[strata_4layers_id][s5][t][a] = -9999;
 										nvars++;
 									}
 								} else {
@@ -1228,9 +1139,6 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									vublist.add(Double.MAX_VALUE);
 									vtlist.add(IloNumVarType.Float);
 									xNGr[strata_4layers_id][s5][t][a] = nvars;
-									xNGr_prescription[strata_4layers_id][s5][t][a] = prescription_and_row[0];
-									xNGr_row_id[strata_4layers_id][s5][t][a] = prescription_and_row[1];
-									xNGr_cost_value[strata_4layers_id][s5][t][a] = -9999;
 									nvars++;
 								}
 							}
@@ -1262,9 +1170,6 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 											vublist.add(Double.MAX_VALUE);
 											vtlist.add(IloNumVarType.Float);
 											xPBr[strata_4layers_id][s5][i][t][a] = nvars;
-											xPBr_prescription[strata_4layers_id][s5][i][t][a] = prescription_and_row[0];
-											xPBr_row_id[strata_4layers_id][s5][i][t][a] = prescription_and_row[1];
-											xPBr_cost_value[strata_4layers_id][s5][i][t][a] = -9999;
 											nvars++;
 										}
 									} else {
@@ -1274,9 +1179,6 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										vublist.add(Double.MAX_VALUE);
 										vtlist.add(IloNumVarType.Float);
 										xPBr[strata_4layers_id][s5][i][t][a] = nvars;
-										xPBr_prescription[strata_4layers_id][s5][i][t][a] = prescription_and_row[0];
-										xPBr_row_id[strata_4layers_id][s5][i][t][a] = prescription_and_row[1];
-										xPBr_cost_value[strata_4layers_id][s5][i][t][a] = -9999;
 										nvars++;
 									}
 								}
@@ -1309,9 +1211,6 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 											vublist.add(Double.MAX_VALUE);
 											vtlist.add(IloNumVarType.Float);
 											xGSr[strata_4layers_id][s5][i][t][a] = nvars;
-											xGSr_prescription[strata_4layers_id][s5][i][t][a] = prescription_and_row[0];
-											xGSr_row_id[strata_4layers_id][s5][i][t][a] = prescription_and_row[1];
-											xGSr_cost_value[strata_4layers_id][s5][i][t][a] = -9999;
 											nvars++;
 										}
 									} else {
@@ -1321,9 +1220,6 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										vublist.add(Double.MAX_VALUE);
 										vtlist.add(IloNumVarType.Float);
 										xGSr[strata_4layers_id][s5][i][t][a] = nvars;
-										xGSr_prescription[strata_4layers_id][s5][i][t][a] = prescription_and_row[0];
-										xGSr_row_id[strata_4layers_id][s5][i][t][a] = prescription_and_row[1];
-										xGSr_cost_value[strata_4layers_id][s5][i][t][a] = -9999;
 										nvars++;
 									}
 								}
@@ -1353,16 +1249,13 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 												String var_name = "xEA_R_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + tR + "," + aR + "," + layer5.get(s5R) + "," + i + "," + t;										
 												int[] prescription_and_row = get_prescription_and_row(yield_tables_names_list, var_name, aR);
 												if (!allow_Non_Existing_Prescription) {		// Boost 2
-													if (get_prescription_and_row(yield_tables_names_list, var_name, aR)[0] != -9999) {
+													if (prescription_and_row[0] != -9999) {
 														objlist.add((double) 0);
 														vnamelist.add(var_name);	
 														vlblist.add((double) 0);
 														vublist.add(Double.MAX_VALUE);
 														vtlist.add(IloNumVarType.Float);
 														xEAr[strata_4layers_id][s5][tR][aR][s5R][i][t] = nvars;
-														xEAr_prescription[strata_4layers_id][s5][tR][aR][s5R][i][t] = prescription_and_row[0];
-														xEAr_row_id[strata_4layers_id][s5][tR][aR][s5R][i][t] = prescription_and_row[1];
-														xEAr_cost_value[strata_4layers_id][s5][tR][aR][s5R][i][t] = -9999;
 														nvars++;
 													}
 												} else {
@@ -1372,9 +1265,6 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 													vublist.add(Double.MAX_VALUE);
 													vtlist.add(IloNumVarType.Float);
 													xEAr[strata_4layers_id][s5][tR][aR][s5R][i][t] = nvars;
-													xEAr_prescription[strata_4layers_id][s5][tR][aR][s5R][i][t] = prescription_and_row[0];
-													xEAr_row_id[strata_4layers_id][s5][tR][aR][s5R][i][t] = prescription_and_row[1];
-													xEAr_cost_value[strata_4layers_id][s5][tR][aR][s5R][i][t] = -9999;
 													nvars++;
 												}
 											}
@@ -1412,20 +1302,47 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			}					
 			nV = nvars;							
 			
-			
-			
+						
 			// Convert lists to 1-D arrays
 			double[] objvals = Stream.of(objlist.toArray(new Double[objlist.size()])).mapToDouble(Double::doubleValue).toArray();
 			String[] vname = vnamelist.toArray(new String[vnamelist.size()]);
 			double[] vlb = Stream.of(vlblist.toArray(new Double[vlblist.size()])).mapToDouble(Double::doubleValue).toArray();
 			double[] vub = Stream.of(vublist.toArray(new Double[vublist.size()])).mapToDouble(Double::doubleValue).toArray();
-			IloNumVarType[] vtype = vtlist.toArray(new IloNumVarType[vtlist.size()]);
+			IloNumVarType[] vtype = vtlist.toArray(new IloNumVarType[vtlist.size()]);						
 			// Clear the lists to save memory
 			objlist = null;
 			vnamelist = null;
 			vlblist = null;
 			vublist = null;
 			vtlist = null;		
+			
+			
+			// Define arrays containing prescription, row_id, cost_value of variables
+			int[] var_prescription = new int[vname.length];
+			int[] var_row_id  = new int[vname.length];
+			double[] var_cost_value  = new double[vname.length];
+			
+			for (int i = 0; i < vname.length; i++) {
+				int var_rotation_age = -9999;	// If variables is not EA variable	
+				
+				if (vname[i].startsWith("xEA_E_")) {
+					String strata = Get_Variable_Information.get_layer1(vname[i])
+							+ Get_Variable_Information.get_layer2(vname[i])
+							+ Get_Variable_Information.get_layer3(vname[i])
+							+ Get_Variable_Information.get_layer4(vname[i])
+							+ Get_Variable_Information.get_layer5(vname[i])
+							+ Get_Variable_Information.get_layer6(vname[i]);
+					int strata_id = Collections.binarySearch(model_strata, strata);							
+					var_rotation_age = Get_Variable_Information.get_rotation_period(vname[i]) + starting_age[strata_id] - 1;	// rotationAge = tR + starting_age[strata_id] - 1;
+				} else if (vname[i].startsWith("xEA_R_")) {
+					var_rotation_age = Get_Variable_Information.get_rotation_age(vname[i]); 
+				} 
+				
+				int[] prescription_and_row = get_prescription_and_row(yield_tables_names_list, vname[i], var_rotation_age);
+				var_prescription[i] = prescription_and_row[0];
+				var_row_id[i] = prescription_and_row[1];
+				var_cost_value[i] = -9999;	// Initialize it as -999 indicating not calculated yet
+			}
 			System.out.println("Total decision variables as in PRISM obj. function eq. (1):   " + nvars + "             " + dateFormat.format(new Date()));
 					
 			
@@ -2880,21 +2797,21 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 												}														
 											}
 											
-											if (xNGe_cost_value[strata_id][t] == -9999) {
-												xNGe_cost_value[strata_id][t] = cost_calculation.get_cost_value(
+											if (var_cost_value[xNGe[strata_id][t]] == -9999) {
+												var_cost_value[xNGe[strata_id][t]] = cost_calculation.get_cost_value(
 														read_database, vname[xNGe[strata_id][t]], 
-														xNGe_prescription[strata_id][t], 
-														xNGe_row_id[strata_id][t], yield_tables_values,
+														var_prescription[xNGe[strata_id][t]], 
+														var_row_id[xNGe[strata_id][t]], yield_tables_values,
 														cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 											}	
-											cost_value = xNGe_cost_value[strata_id][t] * currentDiscountValue;
+											cost_value = var_cost_value[xNGe[strata_id][t]] * currentDiscountValue;
 										}
 																																										
 																											
 										double para_value = Get_Parameter_Information.get_total_value(
 												read_database, vname[xNGe[strata_id][t]], 
-												xNGe_prescription[strata_id][t], 
-												xNGe_row_id[strata_id][t],
+												var_prescription[xNGe[strata_id][t]], 
+												var_row_id[xNGe[strata_id][t]],
 												yield_tables_values, parameters_indexes_list,
 												dynamic_dentifiers_column_indexes, dynamic_identifiers,
 												cost_value);
@@ -2939,21 +2856,21 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 													}														
 												}
 																								
-												if (xPBe_cost_value[strata_id][i][t] == -9999) {
-													xPBe_cost_value[strata_id][i][t] = cost_calculation.get_cost_value(
+												if (var_cost_value[xPBe[strata_id][i][t]] == -9999) {
+													var_cost_value[xPBe[strata_id][i][t]] = cost_calculation.get_cost_value(
 															read_database, vname[xPBe[strata_id][i][t]],  
-															xPBe_prescription[strata_id][i][t], 
-															xPBe_row_id[strata_id][i][t], yield_tables_values,
+															var_prescription[xPBe[strata_id][i][t]], 
+															var_row_id[xPBe[strata_id][i][t]], yield_tables_values,
 															cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 												}
-												cost_value = xPBe_cost_value[strata_id][i][t] * currentDiscountValue; 
+												cost_value = var_cost_value[xPBe[strata_id][i][t]] * currentDiscountValue; 
 											}
 											
 															
 											double para_value = Get_Parameter_Information.get_total_value(
 													read_database, vname[xPBe[strata_id][i][t]], 
-													xPBe_prescription[strata_id][i][t], 
-													xPBe_row_id[strata_id][i][t],
+													var_prescription[xPBe[strata_id][i][t]], 
+													var_row_id[xPBe[strata_id][i][t]],
 													yield_tables_values, parameters_indexes_list,
 													dynamic_dentifiers_column_indexes, dynamic_identifiers,
 													cost_value);
@@ -2999,21 +2916,21 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 													}														
 												}
 												
-												if (xGSe_cost_value[strata_id][i][t] == -9999) {
-													xGSe_cost_value[strata_id][i][t] = cost_calculation.get_cost_value(
+												if (var_cost_value[xGSe[strata_id][i][t]] == -9999) {
+													var_cost_value[xGSe[strata_id][i][t]] = cost_calculation.get_cost_value(
 															read_database, vname[xGSe[strata_id][i][t]],  
-															xGSe_prescription[strata_id][i][t], 
-															xGSe_row_id[strata_id][i][t], yield_tables_values,
+															var_prescription[xGSe[strata_id][i][t]], 
+															var_row_id[xGSe[strata_id][i][t]], yield_tables_values,
 															cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 												}
-												cost_value = xGSe_cost_value[strata_id][i][t] * currentDiscountValue;
+												cost_value = var_cost_value[xGSe[strata_id][i][t]] * currentDiscountValue;
 											}
 
 											
 											double para_value = Get_Parameter_Information.get_total_value(
 													read_database, vname[xGSe[strata_id][i][t]], 
-													xGSe_prescription[strata_id][i][t], 
-													xGSe_row_id[strata_id][i][t],
+													var_prescription[xGSe[strata_id][i][t]], 
+													var_row_id[xGSe[strata_id][i][t]],
 													yield_tables_values, parameters_indexes_list,
 													dynamic_dentifiers_column_indexes, dynamic_identifiers,
 													cost_value);
@@ -3051,21 +2968,21 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 												List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
 												List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
 																
-												if (xMS_cost_value[strata_id][i][t] == -9999) {
-													xMS_cost_value[strata_id][i][t] = cost_calculation.get_cost_value(
+												if (var_cost_value[xMS[strata_id][i][t]] == -9999) {
+													var_cost_value[xMS[strata_id][i][t]] = cost_calculation.get_cost_value(
 															read_database, vname[xMS[strata_id][i][t]], 
-															xMS_prescription[strata_id][i][t], 
-															xMS_row_id[strata_id][i][t], yield_tables_values,
+															var_prescription[xMS[strata_id][i][t]], 
+															var_row_id[xMS[strata_id][i][t]], yield_tables_values,
 															cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 												}
-												cost_value = xMS_cost_value[strata_id][i][t] * currentDiscountValue;
+												cost_value = var_cost_value[xMS[strata_id][i][t]] * currentDiscountValue;
 											}
 											
 											
 											double para_value = Get_Parameter_Information.get_total_value(
 													read_database, vname[xMS[strata_id][i][t]], 
-													xMS_prescription[strata_id][i][t], 
-													xMS_row_id[strata_id][i][t],
+													var_prescription[xMS[strata_id][i][t]], 
+													var_row_id[xMS[strata_id][i][t]],
 													yield_tables_values, parameters_indexes_list,
 													dynamic_dentifiers_column_indexes, dynamic_identifiers,
 													cost_value);
@@ -3103,21 +3020,21 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 												List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
 												List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
 												
-												if (xBS_cost_value[strata_id][i][t] == -9999) {
-													xBS_cost_value[strata_id][i][t] = cost_calculation.get_cost_value(
+												if (var_cost_value[xBS[strata_id][i][t]] == -9999) {
+													var_cost_value[xBS[strata_id][i][t]] = cost_calculation.get_cost_value(
 															read_database, vname[xBS[strata_id][i][t]], 
-															xBS_prescription[strata_id][i][t], 
-															xBS_row_id[strata_id][i][t], yield_tables_values,
+															var_prescription[xBS[strata_id][i][t]], 
+															var_row_id[xBS[strata_id][i][t]], yield_tables_values,
 															cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 												}
-												cost_value = xBS_cost_value[strata_id][i][t] * currentDiscountValue; 
+												cost_value = var_cost_value[xBS[strata_id][i][t]] * currentDiscountValue; 
 											}
 											
 		
 											double para_value = Get_Parameter_Information.get_total_value(
 													read_database, vname[xBS[strata_id][i][t]], 
-													xBS_prescription[strata_id][i][t], 
-													xBS_row_id[strata_id][i][t],
+													var_prescription[xBS[strata_id][i][t]], 
+													var_row_id[xBS[strata_id][i][t]],
 													yield_tables_values, parameters_indexes_list,
 													dynamic_dentifiers_column_indexes, dynamic_identifiers,
 													cost_value);
@@ -3168,21 +3085,21 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																}														
 															}
 					
-															if (xEAe_cost_value[strata_id][tR][s5R][i][t] == -9999) {
-																xEAe_cost_value[strata_id][tR][s5R][i][t] = cost_calculation.get_cost_value(
+															if (var_cost_value[xEAe[strata_id][tR][s5R][i][t]] == -9999) {
+																var_cost_value[xEAe[strata_id][tR][s5R][i][t]] = cost_calculation.get_cost_value(
 																		read_database, vname[xEAe[strata_id][tR][s5R][i][t]], 
-															    		xEAe_prescription[strata_id][tR][s5R][i][t], 
-															    		xEAe_row_id[strata_id][tR][s5R][i][t], yield_tables_values,
+																		var_prescription[xEAe[strata_id][tR][s5R][i][t]], 
+																		var_row_id[xEAe[strata_id][tR][s5R][i][t]], yield_tables_values,
 																		cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 															}
-															cost_value = xEAe_cost_value[strata_id][tR][s5R][i][t] * currentDiscountValue;
+															cost_value = var_cost_value[xEAe[strata_id][tR][s5R][i][t]] * currentDiscountValue;
 														}
 														
 											
 														double para_value = Get_Parameter_Information.get_total_value(
 													    		read_database, vname[xEAe[strata_id][tR][s5R][i][t]], 
-													    		xEAe_prescription[strata_id][tR][s5R][i][t], 
-													    		xEAe_row_id[strata_id][tR][s5R][i][t],
+													    		var_prescription[xEAe[strata_id][tR][s5R][i][t]], 
+																var_row_id[xEAe[strata_id][tR][s5R][i][t]],
 																yield_tables_values, parameters_indexes_list,
 																dynamic_dentifiers_column_indexes, dynamic_identifiers,
 																cost_value);
@@ -3237,21 +3154,21 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																		}														
 																	}
 																	
-																	if (xEAr_cost_value[strata_4layers_id][s5][tR][aR][s5R][i][t] == -9999) {
-																		xEAr_cost_value[strata_4layers_id][s5][tR][aR][s5R][i][t] = cost_calculation.get_cost_value(
+																	if (var_cost_value[xEAr[strata_4layers_id][s5][tR][aR][s5R][i][t]] == -9999) {
+																		var_cost_value[xEAr[strata_4layers_id][s5][tR][aR][s5R][i][t]] = cost_calculation.get_cost_value(
 																				read_database, vname[xEAr[strata_4layers_id][s5][tR][aR][s5R][i][t]],
-																	    		xEAr_prescription[strata_4layers_id][s5][tR][aR][s5R][i][t], 
-																	    		xEAr_row_id[strata_4layers_id][s5][tR][aR][s5R][i][t], yield_tables_values,
+																				var_prescription[xEAr[strata_4layers_id][s5][tR][aR][s5R][i][t]], 
+																				var_row_id[xEAr[strata_4layers_id][s5][tR][aR][s5R][i][t]], yield_tables_values,
 																				cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 																	}
-																	cost_value = xEAr_cost_value[strata_4layers_id][s5][tR][aR][s5R][i][t] * currentDiscountValue;
+																	cost_value = var_cost_value[xEAr[strata_4layers_id][s5][tR][aR][s5R][i][t]] * currentDiscountValue;
 																}
 																
 
 																double para_value = Get_Parameter_Information.get_total_value(
 															    		read_database, vname[xEAr[strata_4layers_id][s5][tR][aR][s5R][i][t]],
-															    		xEAr_prescription[strata_4layers_id][s5][tR][aR][s5R][i][t], 
-															    		xEAr_row_id[strata_4layers_id][s5][tR][aR][s5R][i][t],
+															    		var_prescription[xEAr[strata_4layers_id][s5][tR][aR][s5R][i][t]], 
+																		var_row_id[xEAr[strata_4layers_id][s5][tR][aR][s5R][i][t]],
 																		yield_tables_values, parameters_indexes_list,
 																		dynamic_dentifiers_column_indexes, dynamic_identifiers,
 																		cost_value);
@@ -3305,21 +3222,21 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 															}														
 														}
 														
-														if (xNGr_cost_value[strata_4layers_id][s5][tt][a] == -9999) {
-															xNGr_cost_value[strata_4layers_id][s5][tt][a] = cost_calculation.get_cost_value(
+														if (var_cost_value[xNGr[strata_4layers_id][s5][tt][a]] == -9999) {
+															var_cost_value[xNGr[strata_4layers_id][s5][tt][a]] = cost_calculation.get_cost_value(
 																	read_database, vname[xNGr[strata_4layers_id][s5][tt][a]],
-														    		xNGr_prescription[strata_4layers_id][s5][tt][a], 
-														    		xNGr_row_id[strata_4layers_id][s5][tt][a], yield_tables_values,
+																	var_prescription[xNGr[strata_4layers_id][s5][tt][a]], 
+																	var_row_id[xNGr[strata_4layers_id][s5][tt][a]], yield_tables_values,
 																	cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 														}
-														cost_value = xNGr_cost_value[strata_4layers_id][s5][tt][a] * currentDiscountValue; 
+														cost_value = var_cost_value[xNGr[strata_4layers_id][s5][tt][a]] * currentDiscountValue; 
 													}
 													
 		
 													double para_value = Get_Parameter_Information.get_total_value(
 												    		read_database, vname[xNGr[strata_4layers_id][s5][tt][a]],
-												    		xNGr_prescription[strata_4layers_id][s5][tt][a], 
-												    		xNGr_row_id[strata_4layers_id][s5][tt][a],
+												    		var_prescription[xNGr[strata_4layers_id][s5][tt][a]], 
+															var_row_id[xNGr[strata_4layers_id][s5][tt][a]],
 															yield_tables_values, parameters_indexes_list,
 															dynamic_dentifiers_column_indexes, dynamic_identifiers,
 															cost_value);
@@ -3372,21 +3289,21 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																}														
 															}
 																												
-															if (xPBr_cost_value[strata_4layers_id][s5][ii][tt][a] == -9999) {
-																xPBr_cost_value[strata_4layers_id][s5][ii][tt][a] = cost_calculation.get_cost_value(
+															if (var_cost_value[xPBr[strata_4layers_id][s5][ii][tt][a]] == -9999) {
+																var_cost_value[xPBr[strata_4layers_id][s5][ii][tt][a]] = cost_calculation.get_cost_value(
 																		read_database, vname[xPBr[strata_4layers_id][s5][ii][tt][a]],
-															    		xPBr_prescription[strata_4layers_id][s5][ii][tt][a], 
-															    		xPBr_row_id[strata_4layers_id][s5][ii][tt][a], yield_tables_values,
+																		var_prescription[xPBr[strata_4layers_id][s5][ii][tt][a]], 
+																		var_row_id[xPBr[strata_4layers_id][s5][ii][tt][a]], yield_tables_values,
 																		cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 															}
-															cost_value = xPBr_cost_value[strata_4layers_id][s5][ii][tt][a] * currentDiscountValue;
+															cost_value = var_cost_value[xPBr[strata_4layers_id][s5][ii][tt][a]] * currentDiscountValue;
 														}															
 																												
 														
 														double para_value = Get_Parameter_Information.get_total_value(
 													    		read_database, vname[xPBr[strata_4layers_id][s5][ii][tt][a]],
-													    		xPBr_prescription[strata_4layers_id][s5][ii][tt][a], 
-													    		xPBr_row_id[strata_4layers_id][s5][ii][tt][a],
+													    		var_prescription[xPBr[strata_4layers_id][s5][ii][tt][a]], 
+																var_row_id[xPBr[strata_4layers_id][s5][ii][tt][a]],
 																yield_tables_values, parameters_indexes_list,
 																dynamic_dentifiers_column_indexes, dynamic_identifiers,
 																cost_value);
@@ -3440,21 +3357,21 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																}														
 															}
 																										
-															if (xGSr_cost_value[strata_4layers_id][s5][ii][tt][a] == -9999) {
-																xGSr_cost_value[strata_4layers_id][s5][ii][tt][a] = cost_calculation.get_cost_value(
+															if (var_cost_value[xGSr[strata_4layers_id][s5][ii][tt][a]] == -9999) {
+																var_cost_value[xGSr[strata_4layers_id][s5][ii][tt][a]] = cost_calculation.get_cost_value(
 																		read_database, vname[xGSr[strata_4layers_id][s5][ii][tt][a]],
-															    		xGSr_prescription[strata_4layers_id][s5][ii][tt][a], 
-															    		xGSr_row_id[strata_4layers_id][s5][ii][tt][a], yield_tables_values,
+																		var_prescription[xGSr[strata_4layers_id][s5][ii][tt][a]], 
+																		var_row_id[xGSr[strata_4layers_id][s5][ii][tt][a]], yield_tables_values,
 																		cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 															}
-															cost_value = xGSr_cost_value[strata_4layers_id][s5][ii][tt][a] * currentDiscountValue;
+															cost_value = var_cost_value[xGSr[strata_4layers_id][s5][ii][tt][a]] * currentDiscountValue;
 														}																	
 
 														
 														double para_value = Get_Parameter_Information.get_total_value(
 													    		read_database, vname[xGSr[strata_4layers_id][s5][ii][tt][a]],
-													    		xGSr_prescription[strata_4layers_id][s5][ii][tt][a], 
-													    		xGSr_row_id[strata_4layers_id][s5][ii][tt][a],
+													    		var_prescription[xGSr[strata_4layers_id][s5][ii][tt][a]], 
+																var_row_id[xGSr[strata_4layers_id][s5][ii][tt][a]],
 																yield_tables_values, parameters_indexes_list,
 																dynamic_dentifiers_column_indexes, dynamic_identifiers,
 																cost_value);
@@ -3512,55 +3429,20 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			
 			// Clear arrays not used any more before solving -------------------------------------------------------------
 			xNGe = null;
-			xNGe_prescription = null;
-			xNGe_row_id = null;
-			xNGe_cost_value = null;
-			
 			xPBe = null;
-			xPBe_prescription = null;
-			xPBe_row_id = null;
-			xPBe_row_id = null;
-			
 			xGSe = null;
-			xGSe_prescription = null;
-			xGSe_cost_value = null;
-			
 			xEAe = null;
-			xEAe_prescription = null;
-			xEAe_row_id = null;
-			xEAe_cost_value = null;
-			
 			xMS = null;
-			xMS_prescription = null;
-			xMS_row_id = null;
-			xMS_cost_value = null;
-				
 			xBS = null;
-			xBS_prescription = null;
-			xBS_row_id = null;
-			xBS_cost_value = null;
-			
 			xNGr = null;
-			xNGr_prescription = null;
-			xNGr_row_id = null;
-			xNGr_cost_value = null;
-
 			xPBr = null;
-			xPBr_prescription = null;
-			xPBr_row_id = null;
-			xPBr_cost_value = null;
-					
 			xGSr = null;
-			xGSr_prescription = null;
-			xGSr_row_id = null;
-			xGSr_cost_value = null;
+			xEAr = null;		
 			
-			xEAr = null;
-			xEAr_prescription = null;
-			xEAr_row_id = null;		
-			xEAr_cost_value = null;	
-			
-			
+			var_prescription = null;
+			var_row_id = null;
+			var_cost_value = null;
+			               
 			read_database = null;			
 			cost_calculation = null;
 //			System.gc();		Not call this to avoid poor performance. just let the collector auto starts when needed	

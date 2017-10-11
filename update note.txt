@@ -436,6 +436,12 @@ All changes in this block are associated with PrismAlpha1.0.11.jar, Prism Formul
 	- Define 10 more arrays to store cost_value for each variables, cost_value is read wheneded and will be stored in array to never read again --> speed up later cost constraints
 	- Rewrite eq (15) using the new class, also move check condition of defined variables to only calculate when necessary --> speed up
 	- Set the new 10 arrays to "null" when not use any more
+205. Memory Boost 9:
+	- Delete 30 arrays storing prescription, row_id, cost_value
+	- Define 3 new arrays to store prescription, row_id, cost_value: int[] var_prescription, int[] var_row_id, double[] var_cost_value 
+	- Rewrite all the variables define (remove all 30 old arrays) & eq 15 (using the new 3 arrays) 
+	- Set the new 3 arrays to "null" when not use any more
 
+Note note note: implement RR Boost 5 on management_details so queries work
 
 All changes in this block are associated with PrismAlpha1.0.12.jar, Prism Formulation 01.docx, Prism Database 01.docx
