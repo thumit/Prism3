@@ -441,7 +441,6 @@ All changes in this block are associated with PrismAlpha1.0.11.jar, Prism Formul
 	- Define 3 new arrays to store prescription, row_id, cost_value: int[] var_prescription, int[] var_row_id, double[] var_cost_value 
 	- Rewrite all the variables define (remove all 30 old arrays) & eq 15 (using the new 3 arrays) 
 	- Set the new 3 arrays to "null" when not use any more
-
-Note note note: implement RR Boost 5 on management_details so queries work
-
+206. Move Cost_Calculation out to be a public class so it can be used for querying output_05_management_details --> Rename to Get_Cost_Information
+207. Query for output_05 is rewritten to use the class "Get_Cost_Information".
 All changes in this block are associated with PrismAlpha1.0.12.jar, Prism Formulation 01.docx, Prism Database 01.docx

@@ -1,0 +1,5 @@
+bc_id	bc_description	bc_type	bc_multiplier	lowerbound	lowerbound_perunit_penalty	upperbound	upperbound_perunit_penalty	bookeeping_var_id	bookeeping_var_name	bookeeping_var_value	bookeeping_var_reduced_cost	total_penalty
+1	0 acres	HARD	1.0	0.0	null	0.0	null	0	z_0	0.0	0.0	0.0
+2	total cost p1	FREE	1.0	null	null	null	null	1	v_0	3394.669200000001	0.0	0.0
+3	total cost p2	FREE	1.0	null	null	null	null	2	v_1	3394.6692000000035	0.0	0.0
+4	total cost p3	FREE	1.0	null	null	null	null	3	v_2	3394.669200000001	0.0	0.0
