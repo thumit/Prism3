@@ -2,6 +2,7 @@ package prismProject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class Get_Parameter_Information {
@@ -55,13 +56,14 @@ public class Get_Parameter_Information {
 		if (!dynamic_identifiers_column_indexes.contains("NoIdentifier")) {	//If there are dynamic identifiers
 			//Check if in the same row of this yield table we have all the dynamic identifiers match				
 			for (int dynamic_count = 0; dynamic_count < dynamic_identifiers_column_indexes.size(); dynamic_count++) {
-				int current_dynamic_column = Integer.parseInt(dynamic_identifiers_column_indexes.get(dynamic_count));		//This is the yield table column of the dynamic identifier								
+				int current_dynamic_column = Integer.parseInt(dynamic_identifiers_column_indexes.get(dynamic_count));		//This is the yield table column of the dynamic identifier
+				List<String> this_dynamic_identifier = dynamic_identifiers.get(dynamic_count);
 								
-				if (dynamic_identifiers.get(dynamic_count).get(0).contains(",")) {	//if this is a range identifier (the 1st element of this identifier contains ",")							
+				if (this_dynamic_identifier.get(0).contains(",")) {	//if this is a range identifier (the 1st element of this identifier contains ",")							
 					double yt_value = Double.parseDouble(yield_table_values[table_id_to_find][row_id_to_find][current_dynamic_column].toString());
 															
-					for (int element = 0; element < dynamic_identifiers.get(dynamic_count).size(); element++) {	//Loop all elements (all ranges) of this range identifier
-						String[] min_and_max = dynamic_identifiers.get(dynamic_count).get(element).split(",");									
+					for (int element = 0; element < this_dynamic_identifier.size(); element++) {	//Loop all elements (all ranges) of this range identifier
+						String[] min_and_max = this_dynamic_identifier.get(element).split(",");									
 						double min_value = Double.parseDouble(min_and_max[0].replace("[", ""));
 						double max_value = Double.parseDouble(min_and_max[1].replace(")", ""));																	
 						if (!(min_value <= yt_value && yt_value < max_value)) {
@@ -69,7 +71,8 @@ public class Get_Parameter_Information {
 						}
 					}										
 				} else { // if this is a discrete identifier
-					if (!dynamic_identifiers.get(dynamic_count).contains(yield_table_values[table_id_to_find][row_id_to_find][current_dynamic_column].toString())) 	{	// If all selected items in this list do not contain the value in the same column (This is String comparison, we may need to change to present data manually change by users, ex. ponderosa 221 vs 221.00) 
+					int index = Collections.binarySearch(this_dynamic_identifier, yield_table_values[table_id_to_find][row_id_to_find][current_dynamic_column].toString());
+					if (index < 0) 	{	// If all selected items in this list do not contain the value in the same column (This is String comparison, we may need to change to present data manually change by users, ex. ponderosa 221 vs 221.00) 
 						return false;			
 					}
 				}

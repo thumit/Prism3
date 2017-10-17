@@ -367,6 +367,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			
 			// Get info: input_08_management_cost
 			List<String> cost_condition_list = read.get_cost_condition_list(); 
+			Get_Cost_Information cost_info = new Get_Cost_Information(cost_condition_list);
 		
 			// Get info: input_09_basic_constraints
 			List<String> constraint_column_names_list = read.get_constraint_column_names_list();
@@ -388,9 +389,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			List<String> flow_arrangement_list = read.get_flow_arrangement_list();
 			List<String> flow_type_list = read.get_flow_type_list();
 			List<Double> flow_lowerbound_percentage_list = read.get_flow_lowerbound_percentage_list();
-			List<Double> flow_upperbound_percentage_list = read.get_flow_upperbound_percentage_list();
-			
-			Get_Cost_Information cost_info = new Get_Cost_Information();
+			List<Double> flow_upperbound_percentage_list = read.get_flow_upperbound_percentage_list();			
 			
 			System.out.println("Reading process finished for all input files          " + dateFormat.format(new Date()));
 			System.out.println();
@@ -2445,7 +2444,10 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				// Get the dynamic identifiers indexes list
 				List<String> dynamic_dentifiers_column_indexes = read.get_dynamic_identifiers_column_indexes_in_row(id);
 				List<List<String>> dynamic_identifiers = read.get_dynamic_identifiers_in_row(id);
-				
+				// Sort String so binary search could be used in "Get_PRAMETER_iNFORMATION - are_all_dynamic_identifiers_matched"
+				for (List<String> this_dynamic_identifier: dynamic_identifiers) {
+					Collections.sort(this_dynamic_identifier);
+				}
 				
 						
 				// Add constraint

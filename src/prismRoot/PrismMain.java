@@ -233,6 +233,28 @@ public class PrismMain extends JFrame {
 
 				
 				
+				// Print out Heap info------------------------------------------------------
+				prism_DesktopPane.setBackgroundImage(null);		// Hide logo
+				// Get current size of heap in bytes				
+				long heapSize = Runtime.getRuntime().totalMemory(); 
+				// Get maximum size of heap in bytes. The heap cannot grow beyond this size.// Any attempt will result in an OutOfMemoryException.
+				long heapMaxSize = Runtime.getRuntime().maxMemory();
+				 // Get amount of free memory within the heap in bytes. This size will increase // after garbage collection and decrease as new objects are created.
+				long heapFreeSize = Runtime.getRuntime().freeMemory(); 
+
+				// Print the heap info
+				String warningText 
+						= "Max Memory (PRISM is not allowed to use more than this):   " + formatSize(heapMaxSize)
+						+ "\nTotal Memory (PRISM can increase this to Max Memory):   " + formatSize(heapSize)
+						+ "\nCurrent Memory (PRISM is currently using this amount):   " + formatSize(heapSize - heapFreeSize)
+						+ "\nFree Memory (equals to Total Memory - Current Memory):   " + formatSize(heapFreeSize);
+				String ExitOption[] = {"OK"};
+				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warningText, "Java Virtual Machine Heap Information",
+						JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, IconHandle.get_scaledImageIcon(230, 70, "prism_ice.png"), ExitOption, ExitOption[0]);
+				prism_DesktopPane.process_image();		// Show logo
+				
+				
+				
 				// Add listener for "Window"------------------------------------------------
 				menuWindow.addMenuListener(new MenuListener() {
 					@Override
@@ -621,4 +643,9 @@ public class PrismMain extends JFrame {
 		return databases_linkedlist;
 	}
 	
+	public static String formatSize(long v) {
+	    if (v < 1024) return v + " B";
+	    int z = (63 - Long.numberOfLeadingZeros(v)) / 10;
+	    return String.format("%.1f %sB", (double)v / (1L << (z*10)), " KMGTPE".charAt(z));
+	}
 }

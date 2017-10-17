@@ -1632,9 +1632,8 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 			double[][] SRD_percent = read.getSRDProportion();		
 			
 			// Get info: input_08_management_cost
-			List<String> cost_condition_list = read.get_cost_condition_list(); 
-		
-			Get_Cost_Information cost_info = new Get_Cost_Information();
+			List<String> cost_condition_list = read.get_cost_condition_list(); 		
+			Get_Cost_Information cost_info = new Get_Cost_Information(cost_condition_list);
 				
 			
 			

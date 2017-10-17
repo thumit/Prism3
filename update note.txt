@@ -444,3 +444,13 @@ All changes in this block are associated with PrismAlpha1.0.11.jar, Prism Formul
 206. Move Cost_Calculation out to be a public class so it can be used for querying output_05_management_details --> Rename to Get_Cost_Information
 207. Query for output_05 is rewritten to use the class "Get_Cost_Information".
 All changes in this block are associated with PrismAlpha1.0.12.jar, Prism Formulation 01.docx, Prism Database 01.docx
+--------------------------------------------------------------------------
+
+208. RR Boost 3d completed
+209. RR Boost 6a completed: G1 is applied (for more details on how to set up G1 see issue #37: Java Heap Management), plus, create and read the following once to use for all basic constraints:
+	- List<List<String>>[] all_priority_cost_condition_static_identifiers;  
+	- List<List<String>>[] all_priority_cost_condition_dynamic_identifiers;
+	- List<String>[] all_priority_cost_condition_dynamic_dentifiers_column_indexes;
+	- String[][] all_priority_condition_info
+210. Show JVM heap info when PRISM starts
+All changes in this block are associated with PrismAlpha1.0.13.jar, Prism Formulation 01.docx, Prism Database 01.docx

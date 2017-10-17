@@ -2,9 +2,41 @@ package prismProject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class Get_Cost_Information {
+	List<List<String>>[] all_priority_cost_condition_static_identifiers;	
+	List<List<String>>[] all_priority_cost_condition_dynamic_identifiers;	
+	List<String>[] all_priority_cost_condition_dynamic_dentifiers_column_indexes;	
+	String[][] all_priority_condition_info;
+	
+	
+	public Get_Cost_Information(List<String> cost_condition_list) {
+		all_priority_cost_condition_static_identifiers = new ArrayList[cost_condition_list.size()];
+		all_priority_cost_condition_dynamic_identifiers = new ArrayList[cost_condition_list.size()];
+		all_priority_cost_condition_dynamic_dentifiers_column_indexes = new ArrayList[cost_condition_list.size()];
+		all_priority_condition_info = new String[cost_condition_list.size()][];
+		
+		// Just do this once when an object of this class is created, not every time we encounter a variable
+		for (int priority = 0; priority < cost_condition_list.size(); priority++) {		// Looping from the highest priority cost condition to the lowest
+			String[] this_condition_info = cost_condition_list.get(priority).split("\t");
+			List<List<String>> cost_condition_static_identifiers = get_cost_condition_dynamic_identifiers(this_condition_info[4]);	// column 4 is static identifiers
+			List<List<String>> cost_condition_dynamic_identifiers = get_cost_condition_dynamic_identifiers(this_condition_info[5]);	// column 5 is dynamic identifiers
+			List<String> cost_condition_dynamic_dentifiers_column_indexes = get_cost_condition_dynamic_dentifiers_column_indexes(this_condition_info[5]);	// column 5 is dynamic identifiers	
+			// Sort String so binary search could be used in "Get_PRAMETER_iNFORMATION - are_all_dynamic_identifiers_matched"
+			for (List<String> this_dynamic_identifier: cost_condition_dynamic_identifiers) {
+				Collections.sort(this_dynamic_identifier);
+			}
+			
+			
+			all_priority_condition_info[priority] = this_condition_info;
+			all_priority_cost_condition_static_identifiers[priority] = cost_condition_static_identifiers;
+			all_priority_cost_condition_dynamic_identifiers[priority] = cost_condition_dynamic_identifiers;
+			all_priority_cost_condition_dynamic_dentifiers_column_indexes[priority] = cost_condition_dynamic_dentifiers_column_indexes;
+		}
+	}
+			
 	
 	double get_cost_value(				
 			Read_Database read_database, String var_name, int table_id_to_find, int row_id_to_find,
@@ -85,19 +117,14 @@ public class Get_Cost_Information {
 		List<String> final_conversion_cost_value_list = new ArrayList<String>();	// example: 240         		120 
 		
 									
-		for (int priority = 0; priority < cost_condition_list.size(); priority++) {		// Looping from the highest priority cost condition to the lowest
-			String[] this_condition_info = cost_condition_list.get(priority).split("\t");
-			List<List<String>> cost_condition_static_identifiers = get_cost_condition_dynamic_identifiers(this_condition_info[4]);	// column 4 is static identifiers
-			List<List<String>> cost_condition_dynamic_identifiers = get_cost_condition_dynamic_identifiers(this_condition_info[5]);	// column 5 is dynamic identifiers
-			List<String> cost_condition_dynamic_dentifiers_column_indexes = get_cost_condition_dynamic_dentifiers_column_indexes(this_condition_info[5]);	// column 5 is dynamic identifiers						
-			
+		for (int priority = 0; priority < cost_condition_list.size(); priority++) {		// Looping from the highest priority cost condition to the lowest			
 			// If this condition is satisfied
-			if (are_all_static_identifiers_matched(var_name, cost_condition_static_identifiers) && 
-					are_all_dynamic_identifiers_matched(yield_tables_values, table_id_to_find, row_id_to_find, cost_condition_dynamic_dentifiers_column_indexes, cost_condition_dynamic_identifiers)) {
+			if (are_all_static_identifiers_matched(var_name, all_priority_cost_condition_static_identifiers[priority]) && 
+					are_all_dynamic_identifiers_matched(yield_tables_values, table_id_to_find, row_id_to_find, all_priority_cost_condition_dynamic_dentifiers_column_indexes[priority], all_priority_cost_condition_dynamic_identifiers[priority])) {
 				
 				// For action_cost
-				if (this_condition_info[2].length() > 0) {		// this guarantees the string is not ""
-					List<String[]> action_cost_list = get_cost_condition_action_cost(this_condition_info[2], var_action_type);
+				if (all_priority_condition_info[priority][2].length() > 0) {		// this guarantees the string is not ""
+					List<String[]> action_cost_list = get_cost_condition_action_cost(all_priority_condition_info[priority][2], var_action_type);
 					for (String[] c: action_cost_list) {			// c example: clearcut acres 360		c example2: clearcut hca_allsx 0
 						if (!final_action_cost_column_list.contains(c[1])) {		// only null is escape, the GUI already guarantees the value >=0			
 							final_action_cost_column_list.add(c[1]);	// i.e. acres    hca_allsx
@@ -107,8 +134,8 @@ public class Get_Cost_Information {
 				}
 				
 				// For conversion cost
-				if (this_condition_info[3].length() > 0) {		// this guarantees the string is not ""
-					List<String[]> conversion_cost_list = get_cost_condition_conversion_cost(this_condition_info[3]);
+				if (all_priority_condition_info[priority][3].length() > 0) {		// this guarantees the string is not ""
+					List<String[]> conversion_cost_list = get_cost_condition_conversion_cost(all_priority_condition_info[priority][3]);
 					for (String[] c: conversion_cost_list) {			// c example:  P D action 240         	W L disturbance 120
 						if (!final_conversion_cost_column_list.contains(c[0] + " " + c[1] + " " + c[2])) {		// only null is escape, the GUI already guarantees the value >=0				
 							final_conversion_cost_column_list.add(c[0] + " " + c[1] + " " + c[2]);		// i.e. P D action		W L disturbance
@@ -139,19 +166,20 @@ public class Get_Cost_Information {
 	}
 	
 	
-	private Boolean are_all_dynamic_identifiers_matched(Object[][][] yield_table_values, int table_id_to_find, int row_id_to_find,
+	private static Boolean are_all_dynamic_identifiers_matched(Object[][][] yield_table_values, int table_id_to_find, int row_id_to_find,
 			List<String> dynamic_identifiers_column_indexes, List<List<String>> dynamic_identifiers) {
 		
 		if (!dynamic_identifiers_column_indexes.contains("NoIdentifier")) {	//If there are dynamic identifiers
 			//Check if in the same row of this yield table we have all the dynamic identifiers match				
 			for (int dynamic_count = 0; dynamic_count < dynamic_identifiers_column_indexes.size(); dynamic_count++) {
-				int current_dynamic_column = Integer.parseInt(dynamic_identifiers_column_indexes.get(dynamic_count));		//This is the yield table column of the dynamic identifier								
+				int current_dynamic_column = Integer.parseInt(dynamic_identifiers_column_indexes.get(dynamic_count));		//This is the yield table column of the dynamic identifier
+				List<String> this_dynamic_identifier = dynamic_identifiers.get(dynamic_count);
 								
-				if (dynamic_identifiers.get(dynamic_count).get(0).contains(",")) {	//if this is a range identifier (the 1st element of this identifier contains ",")							
+				if (this_dynamic_identifier.get(0).contains(",")) {	//if this is a range identifier (the 1st element of this identifier contains ",")							
 					double yt_value = Double.parseDouble(yield_table_values[table_id_to_find][row_id_to_find][current_dynamic_column].toString());
 															
-					for (int element = 0; element < dynamic_identifiers.get(dynamic_count).size(); element++) {	//Loop all elements (all ranges) of this range identifier
-						String[] min_and_max = dynamic_identifiers.get(dynamic_count).get(element).split(",");									
+					for (int element = 0; element < this_dynamic_identifier.size(); element++) {	//Loop all elements (all ranges) of this range identifier
+						String[] min_and_max = this_dynamic_identifier.get(element).split(",");									
 						double min_value = Double.parseDouble(min_and_max[0].replace("[", ""));
 						double max_value = Double.parseDouble(min_and_max[1].replace(")", ""));																	
 						if (!(min_value <= yt_value && yt_value < max_value)) {
@@ -159,7 +187,8 @@ public class Get_Cost_Information {
 						}
 					}										
 				} else { // if this is a discrete identifier
-					if (!dynamic_identifiers.get(dynamic_count).contains(yield_table_values[table_id_to_find][row_id_to_find][current_dynamic_column].toString())) 	{	// If all selected items in this list do not contain the value in the same column (This is String comparison, we may need to change to present data manually change by users, ex. ponderosa 221 vs 221.00) 
+					int index = Collections.binarySearch(this_dynamic_identifier, yield_table_values[table_id_to_find][row_id_to_find][current_dynamic_column].toString());
+					if (index < 0) 	{	// If all selected items in this list do not contain the value in the same column (This is String comparison, we may need to change to present data manually change by users, ex. ponderosa 221 vs 221.00) 
 						return false;			
 					}
 				}
