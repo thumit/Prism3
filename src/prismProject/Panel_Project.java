@@ -420,7 +420,7 @@ public class Panel_Project extends JLayeredPane {
 							Output_Panel_Flow_Constraints chart_panel = new Output_Panel_Flow_Constraints(table, data);
 							scrollPane_Right.setViewportView(chart_panel);
 						} else if (currentInputFile.equals("readme.txt")) {		// show the file as text area
-				 			readme = new TextArea_ReadMe();
+				 			readme = new TextArea_ReadMe("minionWrite.png", 70, 70);
 				 			readme.setBackground(ColorUtil.makeTransparent(Color.WHITE, 255));
 				 			readme.setEditable(false);
 				 			readme.setRequestFocusEnabled(false);

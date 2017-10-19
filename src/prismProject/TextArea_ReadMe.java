@@ -13,8 +13,15 @@ import prismConvenienceClass.ColorUtil;
 import prismConvenienceClass.IconHandle;
 
 public class TextArea_ReadMe extends JTextArea{
-
-	public TextArea_ReadMe() {
+	private String png;
+	private int width;
+	private int height;
+	
+	public TextArea_ReadMe(String png, int width, int height) {
+		this.png = png;
+		this.width = width;
+		this.height = height;
+		
 		setBackground(ColorUtil.makeTransparent(Color.BLACK, 40));
 		setForeground(ColorUtil.makeTransparent(Color.BLACK, 255));
 		setLineWrap(true);
@@ -30,7 +37,7 @@ public class TextArea_ReadMe extends JTextArea{
 		g2d.setColor(getBackground());
 		g2d.fillRect(0, 0, getWidth(), getHeight());
 		// Draw the background
-		ImageIcon bgImage = IconHandle.get_scaledImageIcon(70, 70, "minionWrite.png");
+		ImageIcon bgImage = IconHandle.get_scaledImageIcon(width, height, png);
 		Dimension size = this.getSize();
 		g2d.drawImage(bgImage.getImage(), size.width - bgImage.getIconWidth(), size.height - bgImage.getIconHeight() - 5, this);
 		// Paint the component content, i.e. the text

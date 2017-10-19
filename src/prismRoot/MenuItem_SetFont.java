@@ -134,16 +134,6 @@ public class MenuItem_SetFont extends JMenuItem {
 				    });
 				    
 				    
-				    //-------------------------------------------------------------------------------------------------------------------- 
-	//			    JTextArea textarea = new JTextArea();
-	//			    textarea.setLineWrap(true);
-	//			    textarea.setWrapStyleWord(true);
-	//			    textarea.setBackground(ColorUtil.makeTransparent(scrollPane.getBackground(), 255));
-	//			    textarea.setBorder(BorderFactory.createTitledBorder(""));
-	//			    textarea.append("All internal windows must be closed to retrieve SpectrumLite's standard behavior. ");
-	//			    textarea.append("If editing, 'close later' is recommended so you can save your edits.");
-				    
-				    
 				    //--------------------------------------------------------------------------------------------------------------------
 					// Add Font size & type to a panel
 					JPanel combined_panel = new JPanel(new BorderLayout());
@@ -161,11 +151,8 @@ public class MenuItem_SetFont extends JMenuItem {
 					});
 					
 					combined_panel.add(spin, BorderLayout.NORTH);
-					combined_panel.add(scrollPane, BorderLayout.CENTER);
-	//				combined_panel.add(textarea, BorderLayout.SOUTH);
-					
-					
-					
+					combined_panel.add(scrollPane, BorderLayout.CENTER);					
+										
 					
 					// Add the panel to a pop-up panel
 					String ExitOption[] = { "Ok"};
@@ -174,9 +161,6 @@ public class MenuItem_SetFont extends JMenuItem {
 							IconHandle.get_scaledImageIcon(40, 40, "icon_font.png"), ExitOption, ExitOption[0]);
 	
 					if (response == 0) {
-	//					for (JInternalFrame i: Spectrum_Main.mainFrameReturn().getAllFrames()) {
-	//						i.dispose();
-	//					}
 					}
 				}
 

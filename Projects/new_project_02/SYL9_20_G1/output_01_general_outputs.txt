@@ -1,0 +1,11 @@
+description	value
+Optimization solver	CPLEX
+Solution status	Optimal
+Solution algorithm	1
+Simplex iterations	65
+Time reading (minutes & seconds)	1m9.75s
+Time solving (minutes & seconds)	0m13.05s
+Time writing (minutes & seconds)	0m1.38s
+Total variables	904450
+Total constraints	840976
+Objective value	3.7850730397E8

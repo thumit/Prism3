@@ -367,7 +367,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			
 			// Get info: input_08_management_cost
 			List<String> cost_condition_list = read.get_cost_condition_list(); 
-			Get_Cost_Information cost_info = new Get_Cost_Information(cost_condition_list);
+			Get_Cost_Information cost_info = null;
+			if (cost_condition_list != null) cost_info = new Get_Cost_Information(read_database, cost_condition_list);
 		
 			// Get info: input_09_basic_constraints
 			List<String> constraint_column_names_list = read.get_constraint_column_names_list();
@@ -2535,7 +2536,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 											
 											if (var_cost_value[xNGe[strata_id][t]] == -9999) {
 												var_cost_value[xNGe[strata_id][t]] = cost_info.get_cost_value(
-														read_database, vname[xNGe[strata_id][t]], 
+														vname[xNGe[strata_id][t]], 
 														var_prescription[xNGe[strata_id][t]], 
 														var_row_id[xNGe[strata_id][t]], yield_tables_values,
 														cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
@@ -2594,7 +2595,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																								
 												if (var_cost_value[xPBe[strata_id][i][t]] == -9999) {
 													var_cost_value[xPBe[strata_id][i][t]] = cost_info.get_cost_value(
-															read_database, vname[xPBe[strata_id][i][t]],  
+															vname[xPBe[strata_id][i][t]],  
 															var_prescription[xPBe[strata_id][i][t]], 
 															var_row_id[xPBe[strata_id][i][t]], yield_tables_values,
 															cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
@@ -2654,7 +2655,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 												
 												if (var_cost_value[xGSe[strata_id][i][t]] == -9999) {
 													var_cost_value[xGSe[strata_id][i][t]] = cost_info.get_cost_value(
-															read_database, vname[xGSe[strata_id][i][t]],  
+															vname[xGSe[strata_id][i][t]],  
 															var_prescription[xGSe[strata_id][i][t]], 
 															var_row_id[xGSe[strata_id][i][t]], yield_tables_values,
 															cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
@@ -2706,7 +2707,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																
 												if (var_cost_value[xMS[strata_id][i][t]] == -9999) {
 													var_cost_value[xMS[strata_id][i][t]] = cost_info.get_cost_value(
-															read_database, vname[xMS[strata_id][i][t]], 
+															vname[xMS[strata_id][i][t]], 
 															var_prescription[xMS[strata_id][i][t]], 
 															var_row_id[xMS[strata_id][i][t]], yield_tables_values,
 															cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
@@ -2758,7 +2759,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 												
 												if (var_cost_value[xBS[strata_id][i][t]] == -9999) {
 													var_cost_value[xBS[strata_id][i][t]] = cost_info.get_cost_value(
-															read_database, vname[xBS[strata_id][i][t]], 
+															vname[xBS[strata_id][i][t]], 
 															var_prescription[xBS[strata_id][i][t]], 
 															var_row_id[xBS[strata_id][i][t]], yield_tables_values,
 															cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
@@ -2823,7 +2824,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					
 															if (var_cost_value[xEAe[strata_id][tR][s5R][i][t]] == -9999) {
 																var_cost_value[xEAe[strata_id][tR][s5R][i][t]] = cost_info.get_cost_value(
-																		read_database, vname[xEAe[strata_id][tR][s5R][i][t]], 
+																		vname[xEAe[strata_id][tR][s5R][i][t]], 
 																		var_prescription[xEAe[strata_id][tR][s5R][i][t]], 
 																		var_row_id[xEAe[strata_id][tR][s5R][i][t]], yield_tables_values,
 																		cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
@@ -2892,7 +2893,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																	
 																	if (var_cost_value[xEAr[strata_4layers_id][s5][tR][aR][s5R][i][t]] == -9999) {
 																		var_cost_value[xEAr[strata_4layers_id][s5][tR][aR][s5R][i][t]] = cost_info.get_cost_value(
-																				read_database, vname[xEAr[strata_4layers_id][s5][tR][aR][s5R][i][t]],
+																				vname[xEAr[strata_4layers_id][s5][tR][aR][s5R][i][t]],
 																				var_prescription[xEAr[strata_4layers_id][s5][tR][aR][s5R][i][t]], 
 																				var_row_id[xEAr[strata_4layers_id][s5][tR][aR][s5R][i][t]], yield_tables_values,
 																				cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
@@ -2960,7 +2961,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 														
 														if (var_cost_value[xNGr[strata_4layers_id][s5][tt][a]] == -9999) {
 															var_cost_value[xNGr[strata_4layers_id][s5][tt][a]] = cost_info.get_cost_value(
-																	read_database, vname[xNGr[strata_4layers_id][s5][tt][a]],
+																	vname[xNGr[strata_4layers_id][s5][tt][a]],
 																	var_prescription[xNGr[strata_4layers_id][s5][tt][a]], 
 																	var_row_id[xNGr[strata_4layers_id][s5][tt][a]], yield_tables_values,
 																	cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
@@ -3027,7 +3028,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																												
 															if (var_cost_value[xPBr[strata_4layers_id][s5][ii][tt][a]] == -9999) {
 																var_cost_value[xPBr[strata_4layers_id][s5][ii][tt][a]] = cost_info.get_cost_value(
-																		read_database, vname[xPBr[strata_4layers_id][s5][ii][tt][a]],
+																		vname[xPBr[strata_4layers_id][s5][ii][tt][a]],
 																		var_prescription[xPBr[strata_4layers_id][s5][ii][tt][a]], 
 																		var_row_id[xPBr[strata_4layers_id][s5][ii][tt][a]], yield_tables_values,
 																		cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
@@ -3095,7 +3096,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																										
 															if (var_cost_value[xGSr[strata_4layers_id][s5][ii][tt][a]] == -9999) {
 																var_cost_value[xGSr[strata_4layers_id][s5][ii][tt][a]] = cost_info.get_cost_value(
-																		read_database, vname[xGSr[strata_4layers_id][s5][ii][tt][a]],
+																		vname[xGSr[strata_4layers_id][s5][ii][tt][a]],
 																		var_prescription[xGSr[strata_4layers_id][s5][ii][tt][a]], 
 																		var_row_id[xGSr[strata_4layers_id][s5][ii][tt][a]], yield_tables_values,
 																		cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);

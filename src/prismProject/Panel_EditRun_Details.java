@@ -238,7 +238,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private Object[][] data10;	
 	
 	//readme
-	private JTextArea readme = new TextArea_ReadMe();
+	private JTextArea readme = new TextArea_ReadMe("minionWrite.png", 70, 70);
 	
 	
 	private JButton button_import_database;

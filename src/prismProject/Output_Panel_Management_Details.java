@@ -1633,7 +1633,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 			
 			// Get info: input_08_management_cost
 			List<String> cost_condition_list = read.get_cost_condition_list(); 		
-			Get_Cost_Information cost_info = new Get_Cost_Information(cost_condition_list);
+			Get_Cost_Information cost_info = new Get_Cost_Information(read_database, cost_condition_list);
 				
 			
 			
@@ -1770,7 +1770,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 						
 						if (var_cost_value[i] == -9999) {
 							var_cost_value[i] = cost_info.get_cost_value(
-									read_database, vname[i], 
+									vname[i], 
 									var_prescription[i], 
 									var_row_id[i], yield_tables_values,
 									cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
@@ -1819,7 +1819,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 																		
 						if (var_cost_value[i] == -9999) {
 							var_cost_value[i] = cost_info.get_cost_value(
-									read_database, vname[i],  
+									vname[i],  
 									var_prescription[i], 
 									var_row_id[i], yield_tables_values,
 									cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
@@ -1868,7 +1868,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 																		
 						if (var_cost_value[i] == -9999) {
 							var_cost_value[i] = cost_info.get_cost_value(
-									read_database, vname[i],  
+									vname[i],  
 									var_prescription[i], 
 									var_row_id[i], yield_tables_values,
 									cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
@@ -1908,7 +1908,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 										
 						if (var_cost_value[i] == -9999) {
 							var_cost_value[i] = cost_info.get_cost_value(
-									read_database, vname[i],  
+									vname[i],  
 									var_prescription[i], 
 									var_row_id[i], yield_tables_values,
 									cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
@@ -1948,7 +1948,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 										
 						if (var_cost_value[i] == -9999) {
 							var_cost_value[i] = cost_info.get_cost_value(
-									read_database, vname[i],  
+									vname[i],  
 									var_prescription[i], 
 									var_row_id[i], yield_tables_values,
 									cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
@@ -1997,7 +1997,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 
 						if (var_cost_value[i] == -9999) {
 							var_cost_value[i] = cost_info.get_cost_value(
-									read_database, vname[i],  
+									vname[i],  
 									var_prescription[i], 
 									var_row_id[i], yield_tables_values,
 									cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
@@ -2047,7 +2047,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 						
 						if (var_cost_value[i] == -9999) {
 							var_cost_value[i] = cost_info.get_cost_value(
-									read_database, vname[i],  
+									vname[i],  
 									var_prescription[i], 
 									var_row_id[i], yield_tables_values,
 									cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
@@ -2096,7 +2096,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 						
 						if (var_cost_value[i] == -9999) {
 							var_cost_value[i] = cost_info.get_cost_value(
-									read_database, vname[i],  
+									vname[i],  
 									var_prescription[i], 
 									var_row_id[i], yield_tables_values,
 									cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
@@ -2145,7 +2145,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 																			
 						if (var_cost_value[i] == -9999) {
 							var_cost_value[i] = cost_info.get_cost_value(
-									read_database, vname[i],  
+									vname[i],  
 									var_prescription[i], 
 									var_row_id[i], yield_tables_values,
 									cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
@@ -2194,7 +2194,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 																	
 						if (var_cost_value[i] == -9999) {
 							var_cost_value[i] = cost_info.get_cost_value(
-									read_database, vname[i],  
+									vname[i],  
 									var_prescription[i], 
 									var_row_id[i], yield_tables_values,
 									cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);

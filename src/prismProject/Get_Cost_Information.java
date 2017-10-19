@@ -6,13 +6,16 @@ import java.util.Collections;
 import java.util.List;
 
 public class Get_Cost_Information {
-	List<List<String>>[] all_priority_cost_condition_static_identifiers;	
-	List<List<String>>[] all_priority_cost_condition_dynamic_identifiers;	
-	List<String>[] all_priority_cost_condition_dynamic_dentifiers_column_indexes;	
-	String[][] all_priority_condition_info;
+	private List<List<String>>[] all_priority_cost_condition_static_identifiers;	
+	private List<List<String>>[] all_priority_cost_condition_dynamic_identifiers;	
+	private List<String>[] all_priority_cost_condition_dynamic_dentifiers_column_indexes;	
+	private String[][] all_priority_condition_info;	
+	
+	private int action_type_col_id;
+	private List<String> yield_tables_column_names_list;
 	
 	
-	public Get_Cost_Information(List<String> cost_condition_list) {
+	public Get_Cost_Information(Read_Database read_database, List<String> cost_condition_list) {
 		all_priority_cost_condition_static_identifiers = new ArrayList[cost_condition_list.size()];
 		all_priority_cost_condition_dynamic_identifiers = new ArrayList[cost_condition_list.size()];
 		all_priority_cost_condition_dynamic_dentifiers_column_indexes = new ArrayList[cost_condition_list.size()];
@@ -35,11 +38,16 @@ public class Get_Cost_Information {
 			all_priority_cost_condition_dynamic_identifiers[priority] = cost_condition_dynamic_identifiers;
 			all_priority_cost_condition_dynamic_dentifiers_column_indexes[priority] = cost_condition_dynamic_dentifiers_column_indexes;
 		}
+		
+					
+		String[] yield_tables_column_names = read_database.get_yield_tables_column_names();
+		yield_tables_column_names_list = Arrays.asList(yield_tables_column_names);	// Convert array to list										
+		action_type_col_id = yield_tables_column_names_list.indexOf("action_type");
 	}
 			
 	
 	double get_cost_value(				
-			Read_Database read_database, String var_name, int table_id_to_find, int row_id_to_find,
+			String var_name, int table_id_to_find, int row_id_to_find,
 			Object[][][] yield_tables_values,
 			List<String> cost_condition_list,
 			List<String> coversion_cost_after_disturbance_name_list,		// i.e. P P disturbance		P D disturbance
@@ -52,13 +60,9 @@ public class Get_Cost_Information {
 		if (table_id_to_find != -9999) {	// If prescription exists (not exist when table_id_to_find = -9999)						
 			if (row_id_to_find < yield_tables_values[table_id_to_find].length && row_id_to_find != -9999) { 	// If row in this prescription exists (not exists when row_id_to_find = -9999 or >= total rows in that prescription)
 				if (cost_condition_list != null) {		// If there is at least one cost condition	
+
 					
-					String[] yield_tables_column_names = read_database.get_yield_tables_column_names();
-					List<String> yield_tables_column_names_list = Arrays.asList(yield_tables_column_names);	// Convert array to list
-					
-																	
-					int action_type_index = yield_tables_column_names_list.indexOf("action_type");
-					String var_action_type = yield_tables_values[table_id_to_find][row_id_to_find][action_type_index].toString();
+					String var_action_type = yield_tables_values[table_id_to_find][row_id_to_find][action_type_col_id].toString();
 					
 					// The following includes 1 list for the action_cost and 1 list for the conversion_cost
 					List<List<List<String>>> final_cost_list = get_final_action_cost_list_and_conversion_cost_list_for_this_variable(
