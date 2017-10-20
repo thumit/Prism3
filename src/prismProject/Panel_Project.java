@@ -56,6 +56,7 @@ import prismConvenienceClass.FilesHandle;
 import prismConvenienceClass.IconHandle;
 import prismConvenienceClass.PrismTableModel;
 import prismConvenienceClass.ToolBarWithBgImage;
+import prismRoot.OptionPane_Startup;
 import prismRoot.PrismMain;
 @SuppressWarnings("serial")
 public class Panel_Project extends JLayeredPane {
@@ -68,6 +69,7 @@ public class Panel_Project extends JLayeredPane {
 	private JButton btnRefresh;
 	private JButton btnSolveRun;
 	private JButton btnCustomizeOutput;
+	private JButton btnCollectMemory;
 	
 	private File[] listOfEditRuns;
 	private File currentProjectFolder, currentRunFolder;
@@ -241,6 +243,21 @@ public class Panel_Project extends JLayeredPane {
 		});
 		projectToolBar.add(btnCustomizeOutput);
 
+		
+		btnCollectMemory = new JButton();
+		btnCollectMemory.setToolTipText("Collect Memory (memory in use: " + OptionPane_Startup.memory_in_use() + ", memory left: " + OptionPane_Startup.memory_left());
+		btnCollectMemory.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_ram.png"));
+		btnCollectMemory.addActionListener(e -> {
+			OptionPane_Startup.Restart_Project(currentProject);
+		});
+		btnCollectMemory.addMouseListener(new MouseAdapter() {
+		    public void mouseEntered(java.awt.event.MouseEvent e) {
+		    	btnCollectMemory.setToolTipText("Collect Memory (memory in use: " + OptionPane_Startup.memory_in_use() + ", memory left: " + OptionPane_Startup.memory_left());
+		    }
+		});
+		projectToolBar.add(btnCollectMemory);
+		
+		
 		//------------------------------------------------------------------------------------------------
 		// Add all components to JInternalFrame------------------------------------------------------------
 		this.add(projectToolBar, BorderLayout.NORTH);

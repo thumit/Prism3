@@ -1039,16 +1039,17 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						
 			// Convert lists to 1-D arrays
 			double[] objvals = Stream.of(objlist.toArray(new Double[objlist.size()])).mapToDouble(Double::doubleValue).toArray();
+			objlist = null;	// Clear the lists to save memory
 			String[] vname = vnamelist.toArray(new String[vnamelist.size()]);
+			vnamelist = null;	// Clear the lists to save memory
 			double[] vlb = Stream.of(vlblist.toArray(new Double[vlblist.size()])).mapToDouble(Double::doubleValue).toArray();
+			vlblist = null;	// Clear the lists to save memory
 			double[] vub = Stream.of(vublist.toArray(new Double[vublist.size()])).mapToDouble(Double::doubleValue).toArray();
+			vublist = null;	// Clear the lists to save memory
 			IloNumVarType[] vtype = vtlist.toArray(new IloNumVarType[vtlist.size()]);						
-			// Clear the lists to save memory
-			objlist = null;
-			vnamelist = null;
-			vlblist = null;
-			vublist = null;
-			vtlist = null;		
+			vtlist = null;		// Clear the lists to save memory
+			
+			
 			
 			
 			// Define arrays containing prescription, row_id, cost_value of variables
@@ -1124,6 +1125,12 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					c2_value[i][j] = c2_valuelist.get(i).get(j);			
 				}
 			}	
+			
+			// Clear lists to save memory
+			c2_indexlist = null;	
+			c2_valuelist = null;
+			c2_lblist = null;	
+			c2_ublist = null;
 			System.out.println("Total constraints as in PRISM model formualtion eq. (2):   " + c2_num + "             " + dateFormat.format(new Date()));
 			
 	
@@ -1166,6 +1173,12 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					c3_value[i][j] = c3_valuelist.get(i).get(j);			
 				}
 			}	
+			
+			// Clear lists to save memory
+			c3_indexlist = null;	
+			c3_valuelist = null;
+			c3_lblist = null;	
+			c3_ublist = null;
 			System.out.println("Total constraints as in PRISM model formualtion eq. (3):   " + c3_num + "             " + dateFormat.format(new Date()));
 			
 			
@@ -1298,6 +1311,12 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					c5_value[i][j] = c5_valuelist.get(i).get(j);			
 				}
 			}		
+			
+			// Clear lists to save memory
+			c5_indexlist = null;	
+			c5_valuelist = null;
+			c5_lblist = null;	
+			c5_ublist = null;
 			System.out.println("Total constraints as in PRISM model formualtion eq. (5):   " + c5_num + "             " + dateFormat.format(new Date()));
 			
 			
@@ -1481,6 +1500,12 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					c6_value[i][j] = c6_valuelist.get(i).get(j);			
 				}
 			}
+			
+			// Clear lists to save memory
+			c6_indexlist = null;	
+			c6_valuelist = null;
+			c6_lblist = null;	
+			c6_ublist = null;
 			System.out.println("Total constraints as in PRISM model formualtion eq. (6):   " + c6_num + "             " + dateFormat.format(new Date()));
 			
 			
@@ -1571,7 +1596,13 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					c7_index[i][j] = c7_indexlist.get(i).get(j);
 					c7_value[i][j] = c7_valuelist.get(i).get(j);			
 				}
-			}		
+			}	
+			
+			// Clear lists to save memory
+			c7_indexlist = null;	
+			c7_valuelist = null;
+			c7_lblist = null;	
+			c7_ublist = null;
 			System.out.println("Total constraints as in PRISM model formualtion eq. (7):   " + c7_num + "             " + dateFormat.format(new Date()));
 			
 			
@@ -1669,6 +1700,12 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					c8_value[i][j] = c8_valuelist.get(i).get(j);			
 				}
 			}		
+			
+			// Clear lists to save memory
+			c8_indexlist = null;	
+			c8_valuelist = null;
+			c8_lblist = null;	
+			c8_ublist = null;
 			System.out.println("Total constraints as in PRISM model formualtion eq. (8):   " + c8_num + "             " + dateFormat.format(new Date()));
 			
 			
@@ -1766,6 +1803,12 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					c9_value[i][j] = c9_valuelist.get(i).get(j);			
 				}
 			}	
+			
+			// Clear lists to save memory
+			c9_indexlist = null;	
+			c9_valuelist = null;
+			c9_lblist = null;	
+			c9_ublist = null;
 			System.out.println("Total constraints as in PRISM model formualtion eq. (9):   " + c9_num + "             " + dateFormat.format(new Date()));
 			
 			
@@ -1837,6 +1880,12 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					c10_value[i][j] = c10_valuelist.get(i).get(j);			
 				}
 			}	
+			
+			// Clear lists to save memory
+			c10_indexlist = null;	
+			c10_valuelist = null;
+			c10_lblist = null;	
+			c10_ublist = null;
 			System.out.println("Total constraints as in PRISM model formualtion eq. (10):   " + c10_num + "             " + dateFormat.format(new Date()));
 			
 			
@@ -1901,6 +1950,12 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					c11_value[i][j] = c11_valuelist.get(i).get(j);			
 				}
 			}
+			
+			// Clear lists to save memory
+			c11_indexlist = null;	
+			c11_valuelist = null;
+			c11_lblist = null;	
+			c11_ublist = null;
 			System.out.println("Total constraints as in PRISM model formualtion eq. (11):   " + c11_num + "             " + dateFormat.format(new Date()));
 			
 			
@@ -2125,6 +2180,12 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					c12_value[i][j] = c12_valuelist.get(i).get(j);			
 				}
 			}		
+
+			// Clear lists to save memory
+			c12_indexlist = null;	
+			c12_valuelist = null;
+			c12_lblist = null;	
+			c12_ublist = null;
 			System.out.println("Total constraints as in PRISM model formualtion eq. (12):   " + c12_num + "             " + dateFormat.format(new Date()));
 			
 			
@@ -2253,6 +2314,12 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					c13_value[i][j] = c13_valuelist.get(i).get(j);			
 				}
 			}		
+			
+			// Clear lists to save memory
+			c13_indexlist = null;	
+			c13_valuelist = null;
+			c13_lblist = null;	
+			c13_ublist = null;
 			System.out.println("Total constraints as in PRISM model formualtion eq. (13):   " + c13_num + "             " + dateFormat.format(new Date()));
 
 			
@@ -2422,6 +2489,12 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					c14_value[i][j] = c14_valuelist.get(i).get(j);			
 				}
 			}		
+			
+			// Clear lists to save memory
+			c14_indexlist = null;	
+			c14_valuelist = null;
+			c14_lblist = null;	
+			c14_ublist = null;
 			System.out.println("Total constraints as in PRISM model formualtion eq. (14):   " + c14_num + "             " + dateFormat.format(new Date()));
 			
 			
@@ -3142,29 +3215,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				System.out.println("           - Time (seconds) for reading basic constraint " + bc_values[id][id_col] + " - " + bc_values[id][description_col] + "             " + bc_time_reading);
 			}
 
-
-			double[] c15_lb = Stream.of(c15_lblist.toArray(new Double[c15_lblist.size()])).mapToDouble(Double::doubleValue).toArray();
-			double[] c15_ub = Stream.of(c15_ublist.toArray(new Double[c15_ublist.size()])).mapToDouble(Double::doubleValue).toArray();		
-			int[][] c15_index = new int[c15_num][];
-			double[][] c15_value = new double[c15_num][];
-		
-			for (int i = 0; i < c15_num; i++) {
-				c15_index[i] = new int[c15_indexlist.get(i).size()];
-				c15_value[i] = new double[c15_indexlist.get(i).size()];
-				for (int j = 0; j < c15_indexlist.get(i).size(); j++) {
-					c15_index[i][j] = c15_indexlist.get(i).get(j);
-					c15_value[i][j] = c15_valuelist.get(i).get(j);			
-				}
-			}				
-			System.out.println("Total constraints as in PRISM model formualtion eq. (15):   " + c15_num + "             " + dateFormat.format(new Date()));
-			System.out.println();
 			
 			
-			
-			
-			
-			
-			// Clear arrays not used any more before solving -------------------------------------------------------------
+			// Clear arrays not used any more before final step of constraint 15 & solving -------------------------------------------------------------
 			xNGe = null;
 			xPBe = null;
 			xGSe = null;
@@ -3183,6 +3236,29 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			read_database = null;			
 			cost_info = null;
 //			System.gc();		Not call this to avoid poor performance. just let the collector auto starts when needed	
+			
+									
+
+			double[] c15_lb = Stream.of(c15_lblist.toArray(new Double[c15_lblist.size()])).mapToDouble(Double::doubleValue).toArray();
+			c15_lblist = null;	// Clear lists to save memory
+			double[] c15_ub = Stream.of(c15_ublist.toArray(new Double[c15_ublist.size()])).mapToDouble(Double::doubleValue).toArray();		
+			c15_ublist = null;	// Clear lists to save memory
+			int[][] c15_index = new int[c15_num][];
+			double[][] c15_value = new double[c15_num][];
+		
+			for (int i = 0; i < c15_num; i++) {
+				c15_index[i] = new int[c15_indexlist.get(i).size()];
+				c15_value[i] = new double[c15_indexlist.get(i).size()];
+				for (int j = 0; j < c15_indexlist.get(i).size(); j++) {
+					c15_index[i][j] = c15_indexlist.get(i).get(j);
+					c15_value[i][j] = c15_valuelist.get(i).get(j);			
+				}
+			}			
+			c15_indexlist = null;	// Clear lists to save memory
+			c15_valuelist = null;	// Clear lists to save memory						
+			System.out.println("Total constraints as in PRISM model formualtion eq. (15):   " + c15_num + "             " + dateFormat.format(new Date()) + "\n");
+			
+			
 			
 			
 					
@@ -3257,6 +3333,22 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				lp.addRows(c13_lb, c13_ub, c13_index, c13_value); // Constraints 13
 				lp.addRows(c14_lb, c14_ub, c14_index, c14_value); // Constraints 14
 				lp.addRows(c15_lb, c15_ub, c15_index, c15_value); // Constraints 15
+				
+				
+				// Clear arrays to save memory
+				c2_lb = null;  c2_ub = null;  c2_index = null;  c2_value = null;
+				c3_lb = null;  c3_ub = null;  c3_index = null;  c3_value = null;
+				c5_lb = null;  c5_ub = null;  c5_index = null;  c5_value = null;
+				c6_lb = null;  c6_ub = null;  c6_index = null;  c6_value = null;
+				c7_lb = null;  c7_ub = null;  c7_index = null;  c7_value = null;
+				c8_lb = null;  c8_ub = null;  c8_index = null;  c8_value = null;
+				c9_lb = null;  c9_ub = null;  c9_index = null;  c9_value = null;
+				c10_lb = null;  c10_ub = null;  c10_index = null;  c10_value = null;
+				c11_lb = null;  c11_ub = null;  c11_index = null;  c11_value = null;
+				c12_lb = null;  c12_ub = null;  c12_index = null;  c12_value = null;
+				c13_lb = null;  c13_ub = null;  c13_index = null;  c13_value = null;
+				c14_lb = null;  c14_ub = null;  c14_index = null;  c14_value = null;
+				c15_lb = null;  c15_ub = null;  c15_index = null;  c15_value = null;
 				
 				
 				cplex.addMinimize(cplex.scalProd(var, objvals)); // Set objective function to minimize
@@ -3613,10 +3705,13 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					data[row][1] = "valid";
 					data[row][4] = "successful";
 					model.fireTableDataChanged();
+					
+					value = null; reduceCost = null; dual = null; slack = null;	// Clear arrays to save memory
 				}
 				
 				cplex.endModel();
 				cplex.end();
+				vlb = null; vub = null; vtype = null; vname = null;	// Clear arrays to save memory
 			}
 			
 	

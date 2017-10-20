@@ -461,4 +461,11 @@ All changes in this block are associated with PrismAlpha1.0.13.jar, Prism Formul
 	- int action_type_col_id
         - List<String> yield_tables_column_names_list
 213. users are now allowed to change Heap Size dynamically through GUI when Prism starts. Prism also remembers your last set-up memory.
+All changes in this block are associated with PrismAlpha1.0.14.jar, Prism Formulation 01.docx, Prism Database 01.docx
+--------------------------------------------------------------------------
 
+214. Set more than 120 lists and arrays to null right after not using any more. This make PA_21_15 CGNF could be solved with only 7G Max Heap
+215. Collect Memory Feature added (It is basically a button to restart & reopen the last project user was working on)
+216. Collect Memory button also shows memory in use & memory left when moving mouse over it
+
+All changes in this block are associated with PrismAlpha1.0.15.jar, Prism Formulation 01.docx, Prism Database 01.docx

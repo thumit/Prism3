@@ -20,7 +20,6 @@ import java.awt.event.WindowEvent;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -316,7 +315,7 @@ public class PrismMain extends JFrame {
 								//if Name is valid and existing projects do not contain this Name
 								if (StringHandle.nameIsValid(currentProject)==true && !existingName_list.contains(currentProject)) {
 									if (new File(FilesHandle.get_projectsFolder().getAbsolutePath() + "/" + currentProject).mkdir()) {		//try if can create a folder with the existing project name
-										createNewJInternalFrame();		//create new internal frame for this existing project
+										createNewJInternalFrame(currentProject);		//create new internal frame for this existing project
 										stop_naming = true;
 									}
 								} else {
@@ -378,7 +377,7 @@ public class PrismMain extends JFrame {
 													}
 												}
 											} else {
-												createNewJInternalFrame(); // Open it
+												createNewJInternalFrame(currentProject); // Open it
 											}
 											
 											
@@ -492,7 +491,7 @@ public class PrismMain extends JFrame {
 			
 	
 	//--------------------------------------------------------------------------------------------------------------------------------
-	public void createNewJInternalFrame() {
+	public void createNewJInternalFrame(String currentProject) {
 		// create internal frame
 		JInternalFrame ProjectInternalFrame = new JInternalFrame(currentProject, 
 																true /*resizable*/, true, /*closable*/true/*maximizable*/, true/*iconifiable*/);	
