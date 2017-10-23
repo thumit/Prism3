@@ -1632,8 +1632,9 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 			double[][] SRD_percent = read.getSRDProportion();		
 			
 			// Get info: input_08_management_cost
-			List<String> cost_condition_list = read.get_cost_condition_list(); 		
-			Get_Cost_Information cost_info = new Get_Cost_Information(read_database, cost_condition_list);
+			List<String> cost_condition_list = read.get_cost_condition_list(); 
+			Get_Cost_Information cost_info = null;
+			if (cost_condition_list != null) cost_info = new Get_Cost_Information(read_database, cost_condition_list);
 				
 			
 			
@@ -1754,7 +1755,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 					
 					double cost_value = 0;									
 					
-					if (parameters_indexes_list.contains("CostParameter")) {
+					if (parameters_indexes_list.contains("CostParameter") && cost_info != null) {
 						double currentDiscountValue = 1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1));
 																	
 						List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
@@ -1803,7 +1804,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 					
 					double cost_value = 0;									
 					
-					if (parameters_indexes_list.contains("CostParameter")) {
+					if (parameters_indexes_list.contains("CostParameter") && cost_info != null) {
 						double currentDiscountValue = 1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1));
 																	
 						List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
@@ -1852,7 +1853,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 					
 					double cost_value = 0;									
 					
-					if (parameters_indexes_list.contains("CostParameter")) {
+					if (parameters_indexes_list.contains("CostParameter") && cost_info != null) {
 						double currentDiscountValue = 1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1));
 																	
 						List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
@@ -1899,7 +1900,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 					
 					double cost_value = 0;									
 					
-					if (parameters_indexes_list.contains("CostParameter")) {
+					if (parameters_indexes_list.contains("CostParameter") && cost_info != null) {
 						double currentDiscountValue = 1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1));
 																	
 						// Note: no stand replacing disturbance here --> no conversion cost due to replacing disturbance in MS area
@@ -1939,7 +1940,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 					
 					double cost_value = 0;									
 					
-					if (parameters_indexes_list.contains("CostParameter")) {
+					if (parameters_indexes_list.contains("CostParameter") && cost_info != null) {
 						double currentDiscountValue = 1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1));
 																	
 						// Note: no stand replacing disturbance here --> no conversion cost due to replacing disturbance in BS area
@@ -1981,7 +1982,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 					
 					double cost_value = 0;									
 					
-					if (parameters_indexes_list.contains("CostParameter")) {
+					if (parameters_indexes_list.contains("CostParameter") && cost_info != null) {
 						double currentDiscountValue = 1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1));
 																	
 						List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
@@ -2031,7 +2032,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 					
 					double cost_value = 0;									
 					
-					if (parameters_indexes_list.contains("CostParameter")) {
+					if (parameters_indexes_list.contains("CostParameter") && cost_info != null) {
 						double currentDiscountValue = 1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1));
 																	
 						List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
@@ -2080,7 +2081,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 
 					double cost_value = 0;									
 					
-					if (parameters_indexes_list.contains("CostParameter")) {
+					if (parameters_indexes_list.contains("CostParameter") && cost_info != null) {
 						double currentDiscountValue = 1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1));
 																	
 						List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
@@ -2129,7 +2130,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 					
 					double cost_value = 0;									
 					
-					if (parameters_indexes_list.contains("CostParameter")) {
+					if (parameters_indexes_list.contains("CostParameter") && cost_info != null) {
 						double currentDiscountValue = 1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1));
 																	
 						List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
@@ -2178,7 +2179,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 					
 					double cost_value = 0;									
 					
-					if (parameters_indexes_list.contains("CostParameter")) {
+					if (parameters_indexes_list.contains("CostParameter") && cost_info != null) {
 						double currentDiscountValue = 1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1));
 																	
 						List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance

@@ -2593,7 +2593,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										
 										double cost_value = 0;									
 										
-										if (parameters_indexes_list.contains("CostParameter")) {
+										if (parameters_indexes_list.contains("CostParameter") && cost_info != null) {
 											double currentDiscountValue = 1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1));
 																						
 											List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
@@ -2652,7 +2652,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										if(xPBe[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 
 											double cost_value = 0;									
 											
-											if (parameters_indexes_list.contains("CostParameter")) {
+											if (parameters_indexes_list.contains("CostParameter") && cost_info != null) {
 												double currentDiscountValue = 1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1));
 																							
 												List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
@@ -2712,7 +2712,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										if(xGSe[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 	
 											double cost_value = 0;									
 											
-											if (parameters_indexes_list.contains("CostParameter")) {
+											if (parameters_indexes_list.contains("CostParameter") && cost_info != null) {
 												double currentDiscountValue = 1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1));
 																							
 												List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
@@ -2771,7 +2771,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										if(xMS[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 
 											double cost_value = 0;									
 											
-											if (parameters_indexes_list.contains("CostParameter")) {
+											if (parameters_indexes_list.contains("CostParameter") && cost_info != null) {
 												double currentDiscountValue = 1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1));
 																							
 												// Note: no stand replacing disturbance here --> no conversion cost due to replacing disturbance in MS area
@@ -2823,7 +2823,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										if(xBS[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 	
 											double cost_value = 0;									
 											
-											if (parameters_indexes_list.contains("CostParameter")) {
+											if (parameters_indexes_list.contains("CostParameter") && cost_info != null) {
 												double currentDiscountValue = 1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1));
 																							
 												// Note: no stand replacing disturbance here --> no conversion cost due to replacing disturbance in BS area
@@ -2881,7 +2881,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 													if(xEAe[strata_id][tR][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0
 														double cost_value = 0;									
 														
-														if (parameters_indexes_list.contains("CostParameter")) {
+														if (parameters_indexes_list.contains("CostParameter") && cost_info != null) {
 															double currentDiscountValue = 1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1));
 																										
 															List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
@@ -2950,7 +2950,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 															if(xEAr[strata_4layers_id][s5][tR][aR][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0 
 																double cost_value = 0;									
 																
-																if (parameters_indexes_list.contains("CostParameter")) {
+																if (parameters_indexes_list.contains("CostParameter") && cost_info != null) {
 																	double currentDiscountValue = 1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1));
 																												
 																	List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
@@ -3018,7 +3018,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 												if (t == tt) {
 													double cost_value = 0;									
 													
-													if (parameters_indexes_list.contains("CostParameter")) {
+													if (parameters_indexes_list.contains("CostParameter") && cost_info != null) {
 														double currentDiscountValue = 1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1));
 																									
 														List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
@@ -3085,7 +3085,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 													if (t == tt) {
 														double cost_value = 0;									
 														
-														if (parameters_indexes_list.contains("CostParameter")) {
+														if (parameters_indexes_list.contains("CostParameter") && cost_info != null) {
 															double currentDiscountValue = 1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1));
 																										
 															List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
@@ -3153,7 +3153,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 													if (t == tt) {
 														double cost_value = 0;									
 														
-														if (parameters_indexes_list.contains("CostParameter")) {
+														if (parameters_indexes_list.contains("CostParameter") && cost_info != null) {
 															double currentDiscountValue = 1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1));
 																										
 															List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance

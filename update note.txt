@@ -467,5 +467,9 @@ All changes in this block are associated with PrismAlpha1.0.14.jar, Prism Formul
 214. Set more than 120 lists and arrays to null right after not using any more. This make PA_21_15 CGNF could be solved with only 7G Max Heap
 215. Collect Memory Feature added (It is basically a button to restart & reopen the last project user was working on)
 216. Collect Memory button also shows memory in use & memory left when moving mouse over it
-
 All changes in this block are associated with PrismAlpha1.0.15.jar, Prism Formulation 01.docx, Prism Database 01.docx
+--------------------------------------------------------------------------
+
+217. Fix cost check in eq 15 of Panel_SolveRun & Output05 to solve & do queries when there is cost cosntraints or queries but no cost management was set up.
+All changes in this block are associated with PrismAlpha1.0.16.jar, Prism Formulation 01.docx, Prism Database 01.docx
+--------------------------------------------------------------------------
