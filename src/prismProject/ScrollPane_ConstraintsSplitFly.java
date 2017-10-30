@@ -21,8 +21,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 
 import prismConvenienceClass.PrismTableModel;
+import prismConvenienceClass.TableColumnsHandle;
 
-public class ScrollPane_ConstraintsSplit  extends JScrollPane {
+public class ScrollPane_ConstraintsSplitFly  extends JScrollPane {
 
 	private List<JCheckBox> selected_staticCheckboxes;
 	private List<JCheckBox> selected_parametersCheckboxes;
@@ -31,7 +32,7 @@ public class ScrollPane_ConstraintsSplit  extends JScrollPane {
 	private JCheckBox autoDescription;
 	
 	
-	public ScrollPane_ConstraintsSplit (List<JCheckBox> staticCheckboxes, List<JCheckBox> parametersCheckboxes, List<JCheckBox> dynamicCheckboxes) {
+	public ScrollPane_ConstraintsSplitFly (List<JCheckBox> staticCheckboxes, List<JCheckBox> parametersCheckboxes, List<JCheckBox> dynamicCheckboxes) {
 		// staticScrollPane	------------------------------------------------------------------------------	
 		selected_staticCheckboxes = new ArrayList<JCheckBox>();
 		for (JCheckBox i : staticCheckboxes) {
@@ -56,7 +57,7 @@ public class ScrollPane_ConstraintsSplit  extends JScrollPane {
 		TitledBorder border = new TitledBorder("Static Identifiers");
 		border.setTitleJustification(TitledBorder.CENTER);
 		staticScrollPane.setBorder(border);
-		staticScrollPane.setPreferredSize(new Dimension(300, 250));
+		staticScrollPane.setPreferredSize(new Dimension(250, 250));
 
 		
 		
@@ -91,7 +92,7 @@ public class ScrollPane_ConstraintsSplit  extends JScrollPane {
 		border = new TitledBorder("Parameters");
 		border.setTitleJustification(TitledBorder.CENTER);
 		parametersScrollPane.setBorder(border);
-		parametersScrollPane.setPreferredSize(new Dimension(300, 250));		
+		parametersScrollPane.setPreferredSize(new Dimension(250, 250));		
 		
 		
 		
@@ -122,7 +123,7 @@ public class ScrollPane_ConstraintsSplit  extends JScrollPane {
 		border = new TitledBorder("Dynamic Identifiers");
 		border.setTitleJustification(TitledBorder.CENTER);
 		dynamicScrollPane.setBorder(border);
-		dynamicScrollPane.setPreferredSize(new Dimension(300, 250));					
+		dynamicScrollPane.setPreferredSize(new Dimension(250, 250));					
 		
 		
 		
@@ -131,7 +132,7 @@ public class ScrollPane_ConstraintsSplit  extends JScrollPane {
 		int rowCount = 1;
 		int colCount = 8;
 		data = new Object[rowCount][colCount];
-		String[] columnNames = new String[] {"bc_id", "bc_description", "bc_type",  "bc_multiplier", "lowerbound", "lowerbound_perunit_penalty", "upperbound", "upperbound_perunit_penalty"};	         				
+		String[] columnNames = new String[] {"query_id", "query_description", "query_type",  "query_multiplier", "lowerbound", "lowerbound_perunit_penalty", "upperbound", "upperbound_perunit_penalty"};	         				
 		data[0][3] = (double) 1;
 		
 		PrismTableModel model = new PrismTableModel(rowCount, colCount, data, columnNames) {
@@ -164,14 +165,9 @@ public class ScrollPane_ConstraintsSplit  extends JScrollPane {
 		}
 		
 		// Set up Type for each column 2
-		table.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new comboBox_constraint_type()));
-		
-		table.getColumnModel().getColumn(1).setPreferredWidth(200);	//Set width of Column bigger
-		table.getColumnModel().getColumn(3).setPreferredWidth(100);	//Set width of Column bigger
-		table.getColumnModel().getColumn(4).setPreferredWidth(100);	//Set width of Column bigger
-		table.getColumnModel().getColumn(5).setPreferredWidth(200);	//Set width of Column bigger
-		table.getColumnModel().getColumn(6).setPreferredWidth(100);	//Set width of Column bigger
-		table.getColumnModel().getColumn(7).setPreferredWidth(200);	//Set width of Column bigger
+		table.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new comboBox_constraint_type()));	
+		table.getColumnModel().getColumn(1).setPreferredWidth(400);	//Set width of Column bigger
+
 
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);  
 		table.getTableHeader().setReorderingAllowed(false);		//Disable columns move
@@ -182,7 +178,18 @@ public class ScrollPane_ConstraintsSplit  extends JScrollPane {
 		tableScrollPane.setBorder(border);
 		tableScrollPane.setPreferredSize(new Dimension(600, 100));		// only the 150 matters, 650 does not matter
 		//Hide the id column	
-		table.removeColumn(table.getColumnModel().getColumn(0));		// The data is not changed anyway
+		// Different way to hide columns
+		TableColumnsHandle table_handle = new TableColumnsHandle(table);
+		table_handle.setColumnVisible("query_id", false);
+		table_handle.setColumnVisible("query_type", false);
+		table_handle.setColumnVisible("lowerbound", false);
+		table_handle.setColumnVisible("lowerbound_perunit_penalty", false);
+		table_handle.setColumnVisible("upperbound", false);
+		table_handle.setColumnVisible("upperbound_perunit_penalty", false);
+		table_handle.setColumnVisible("parameter_index", false);
+		table_handle.setColumnVisible("static_identifiers", false);
+		table_handle.setColumnVisible("dynamic_identifiers", false);
+		table_handle.setColumnVisible("original_dynamic_identifiers", false);
 		
 
 		
@@ -237,7 +244,7 @@ public class ScrollPane_ConstraintsSplit  extends JScrollPane {
 		popupPanel.add(tableScrollPane, c);
 		
 		// Add autoDescription checkbox
-		autoDescription = new JCheckBox("Add splitting infomation to constraints description (i.e. bc_description)");
+		autoDescription = new JCheckBox("Add splitting infomation to query_description");
 		c.gridx = 1;
 		c.gridy = 2;
 		c.weightx = 1;

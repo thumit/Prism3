@@ -126,44 +126,42 @@ _AGEINT1, Stand Age Interval - 10 years
 
 
 
-_FIRE 0.00, Undefined (Canopy fuels so sparse. CBH undefined. CI&TI = -1)
-_FIRE 1.00, Low
-_FIRE 2.00, Moderate
-_FIRE 3.00, High
-_FIRE 4.00, Very High
-_FIRE 5.00, Extreme
+_FIRE 0, Undefined (Canopy fuels so sparse. CBH undefined. CI&TI = -1)
+_FIRE 1, Low
+_FIRE 2, Moderate
+_FIRE 3, High
+_FIRE 4, Very High
+_FIRE 5, Extreme
 
 
+_ESBTL 0, No Host
+_ESBTL 1, Low
+_ESBTL 2, Moderate
+_ESBTL 3, High
 
 
-_ESBTL 0.00, No Host
-_ESBTL 1.00, Low
-_ESBTL 2.00, Moderate
-_ESBTL 3.00, High
+_DFBTL 0, No Host
+_DFBTL 1, Low
+_DFBTL 2, Moderate
+_DFBTL 3, High
 
 
-_DFBTL 0.00, No Host
-_DFBTL 1.00, Low
-_DFBTL 2.00, Moderate
-_DFBTL 3.00, High
+_PPBTL 0, No Host
+_PPBTL 1, Low
+_PPBTL 2, Moderate
+_PPBTL 3, High
 
 
-_PPBTL 0.00, No Host
-_PPBTL 1.00, Low
-_PPBTL 2.00, Moderate
-_PPBTL 3.00, High
+_WPBTL 0, No Host
+_WPBTL 1, Low
+_WPBTL 2, Moderate
+_WPBTL 3, High
 
 
-_WPBTL 0.00, No Host
-_WPBTL 1.00, Low
-_WPBTL 2.00, Moderate
-_WPBTL 3.00, High
-
-
-_LPBTL 0.00, No Host
-_LPBTL 1.00, Low
-_LPBTL 2.00, Moderate
-_LPBTL 3.00, High
+_LPBTL 0, No Host
+_LPBTL 1, Low
+_LPBTL 2, Moderate
+_LPBTL 3, High
 
 
 _HZBTL 0.00, No Host

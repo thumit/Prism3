@@ -1,5 +1,6 @@
 package prismProject;
 
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -16,7 +17,7 @@ import prismConvenienceClass.IconHandle;
 
 public class QuickEdit_EA_Conversion_Panel extends JPanel {
 	public QuickEdit_EA_Conversion_Panel(JTable table, Object[][] data) {
-
+		setPreferredSize(new Dimension(200, 230));
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 

@@ -36,7 +36,7 @@ public class QuickEdit_NonRD_Percentage_Panel extends JPanel {
 		
 		// Add formatedTextfield
 		JFormattedTextField ms_FormatedTextfield = new JFormattedTextField();
-		ms_FormatedTextfield.setToolTipText("0 to 100 with maximum 2 digits after the dot");
+		ms_FormatedTextfield.setToolTipText("0-100 percent");
 		ms_FormatedTextfield.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
 			public void insertUpdate(DocumentEvent e) {
@@ -44,7 +44,8 @@ public class QuickEdit_NonRD_Percentage_Panel extends JPanel {
 					@Override
 					public void run() {
 						String text = ms_FormatedTextfield.getText();
-						if (!text.matches("\\d*(\\.\\d{0,2})?")) {		//	used regex: \\d*(\\.\\d{0,2})? because two decimal places is enough
+//						if (!text.matches("\\d*(\\.\\d{0,2})?")) {		//	used regex: \\d*(\\.\\d{0,2})? because two decimal places is enough
+						if (!text.matches("\\d*(\\.\\d{0,})?")) {		//	no restriction on number of digits after the dot
 							ms_FormatedTextfield.setText(text.substring(0, text.length() - 1));
 						} else {
 							if (!text.isEmpty() && !text.equals(".") && (Double.valueOf(text) < (double) 0 || Double.valueOf(text) > (double) 100)) {		// If the added String make value <0 or >100 then delete that String
@@ -121,7 +122,7 @@ public class QuickEdit_NonRD_Percentage_Panel extends JPanel {
 		
 		// Add formatedTextfield
 		JFormattedTextField bs_FormatedTextfield = new JFormattedTextField();
-		bs_FormatedTextfield.setToolTipText("0 to 100 with maximum 2 digits after the dot");
+		bs_FormatedTextfield.setToolTipText("0-100 percent");
 		bs_FormatedTextfield.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
 			public void insertUpdate(DocumentEvent e) {
@@ -129,7 +130,8 @@ public class QuickEdit_NonRD_Percentage_Panel extends JPanel {
 					@Override
 					public void run() {
 						String text = bs_FormatedTextfield.getText();
-						if (!text.matches("\\d*(\\.\\d{0,2})?")) {		//	used regex: \\d*(\\.\\d{0,2})? because two decimal places is enough
+//						if (!text.matches("\\d*(\\.\\d{0,2})?")) {		//	used regex: \\d*(\\.\\d{0,2})? because two decimal places is enough
+						if (!text.matches("\\d*(\\.\\d{0,})?")) {		//	no restriction on number of digits after the dot
 							bs_FormatedTextfield.setText(text.substring(0, text.length() - 1));
 						} else {
 							if (!text.isEmpty() && !text.equals(".") && (Double.valueOf(text) < (double) 0 || Double.valueOf(text) > (double) 100)) {		// If the added String make value <0 or >100 then delete that String

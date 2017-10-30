@@ -7,11 +7,16 @@ import java.io.File;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.JButton;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+
+import prismConvenienceClass.IconHandle;
+import prismRoot.PrismMain;
 
 public class Panel_EditRun extends JLayeredPane implements ActionListener {
 	private JSplitPane splitPanel;
@@ -21,10 +26,12 @@ public class Panel_EditRun extends JLayeredPane implements ActionListener {
 	private File[] listOfEditRuns;		// Return the selected Runs for editing
 	private JScrollPane scrollPane_Left, scrollPane_Right;
 	private Panel_EditRun_Details[] combinePanel;
+	private JButton btnSave;
 	
-	public Panel_EditRun(File[] runsList) {
+	public Panel_EditRun(File[] listOfEditRuns, JButton btnSave) {
 		super.setLayout(new BorderLayout(0, 0));
-		listOfEditRuns = runsList;
+		this.listOfEditRuns = listOfEditRuns;
+		this.btnSave = btnSave;
 		
 		splitPanel = new JSplitPane();
 		// splitPanel.setResizeWeight(0.15);
@@ -49,6 +56,7 @@ public class Panel_EditRun extends JLayeredPane implements ActionListener {
 			radioButton_Left[i].addActionListener(this);
 			radioGroup_Left.add(radioButton_Left[i]);
 			radioPanel_Left.add(radioButton_Left[i]);
+			radioButton_Left[i].setEnabled(false);
 		}
 //		radioButton_Left[0].setSelected(true);
 		scrollPane_Left.setViewportView(radioPanel_Left);					
@@ -70,6 +78,8 @@ public class Panel_EditRun extends JLayeredPane implements ActionListener {
 					if (combinePanel[processingRun] != null) {
 						radioButton_Left[processingRun].setSelected(true);
 						scrollPane_Right.setViewportView(combinePanel[processingRun]);
+						radioButton_Left[processingRun].setEnabled(true);
+						btnSave.setToolTipText("Save " + listOfEditRuns[processingRun].getName());
 						interrupt();
 					}
 				}
@@ -77,6 +87,39 @@ public class Panel_EditRun extends JLayeredPane implements ActionListener {
 			thread_array[i].start();			
 		}
 			
+		
+		// Button Save------------------------------------------------------------------------------------
+		if (btnSave.getActionListeners() != null) {
+			for (int i = 0; i < btnSave.getActionListeners().length; i++) {
+				btnSave.removeActionListener(btnSave.getActionListeners()[i]);
+			}
+		}
+		btnSave.addActionListener(e -> {
+			for (int i = 0; i < listOfEditRuns.length; i++) {
+				if (radioButton_Left[i].isSelected()) {
+					String[] ExitOption = { "Save", "Don't Save", "Cancel"};
+					int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(),"Outputs from " + listOfEditRuns[i].getName() + "  will be deleted when click 'Save'. Your option?", "Save Confirmation",
+							JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
+					
+					if (response == 0) {		
+						// Delete all output files, problem file, and solution file of the edited Runs
+						for (int j = 0; j < listOfEditRuns.length; j++) {
+							File[] contents = listOfEditRuns[j].listFiles();
+							if (contents != null) {
+								for (File f : contents) {
+									if (f.getName().contains("output") || f.getName().contains("problem") || f.getName().contains("solution")) {
+										f.delete();
+									}
+								}
+							}
+						}	
+						combinePanel[i].create_inputFiles_for_thisRun();
+			        }
+
+				}
+			}
+		});
+		
 		
 		// Add all components to JInternalFrame------------------------------------------------------------
 		super.add(splitPanel, BorderLayout.CENTER);
@@ -88,6 +131,7 @@ public class Panel_EditRun extends JLayeredPane implements ActionListener {
     	for (int i = 0; i < listOfEditRuns.length; i++) {
 			if (radioButton_Left[i].isSelected()) {
 				scrollPane_Right.setViewportView(combinePanel[i]);	
+				btnSave.setToolTipText("Save " + listOfEditRuns[i].getName());
 			}
 		}	
     }

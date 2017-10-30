@@ -487,7 +487,7 @@ public class Read_RunInputs {
 //	private List<String> condition_column_names_list;
 //	private int condition_total_rows, condition_total_columns;
 //	private String[][] condition_value;
-//	private int priority_col, condition_description_col, action_percentage_col, conversion_percentage_col, condition_static_identifiers_col, condition_dynamic_identifiers_col;	
+//	private int condition_id_col, condition_description_col, action_percentage_col, conversion_percentage_col, condition_static_identifiers_col, condition_dynamic_identifiers_col;	
 	
 	
 	public void read_management_cost (File file) {
@@ -502,7 +502,7 @@ public class Read_RunInputs {
 //
 //			// List of constraint column names
 //			condition_column_names_list = Arrays.asList(columnName);	
-//			priority_col = condition_column_names_list.indexOf("priority");
+//			condition_id_col = condition_column_names_list.indexOf("condition_id");
 //			condition_description_col = condition_column_names_list.indexOf("condition_description");
 //			action_percentage_col = condition_column_names_list.indexOf("action_percentage");
 //			conversion_percentage_col = condition_column_names_list.indexOf("conversion_percentage");

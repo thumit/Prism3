@@ -3677,13 +3677,28 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						fileOut.write("Simplex iterations" + "\t" + cplex.getNiterations64());
 						
 						fileOut.newLine();
-						fileOut.write("Time reading (minutes & seconds)" + "\t" + (int) (time_reading / 60) + "m"+ Double.valueOf(twoDForm.format(time_reading % 60)) + "s");
-									
-						fileOut.newLine();
-						fileOut.write("Time solving (minutes & seconds)" + "\t" + (int) (time_solving / 60) + "m"+ Double.valueOf(twoDForm.format(time_solving % 60)) + "s");
+						fileOut.write("Date & time problem solved" + "\t" + dateFormat.format(new Date()));
 						
 						fileOut.newLine();
-						fileOut.write("Time writing (minutes & seconds)" + "\t" + (int) (time_writing / 60) + "m"+ Double.valueOf(twoDForm.format(time_writing % 60)) + "s");
+						if ((int) (time_reading / 60) == 0) {
+							fileOut.write("Time reading (minutes & seconds)" + "\t" + Double.valueOf(twoDForm.format(time_reading % 60)) + "s");
+						} else {
+							fileOut.write("Time reading (minutes & seconds)" + "\t" + (int) (time_reading / 60) + "m" + Double.valueOf(twoDForm.format(time_reading % 60)) + "s");
+						}
+									
+						fileOut.newLine();
+						if ((int) (time_solving / 60) == 0) {
+							fileOut.write("Time solving (minutes & seconds)" + "\t" + Double.valueOf(twoDForm.format(time_solving % 60)) + "s");
+						} else {
+							fileOut.write("Time solving (minutes & seconds)" + "\t" + (int) (time_solving / 60) + "m" + Double.valueOf(twoDForm.format(time_solving % 60)) + "s");
+						}
+						
+						fileOut.newLine();
+						if ((int) (time_writing / 60) == 0) {
+							fileOut.write("Time writing (minutes & seconds)" + "\t" + Double.valueOf(twoDForm.format(time_writing % 60)) + "s");
+						} else {
+							fileOut.write("Time writing (minutes & seconds)" + "\t" + (int) (time_writing / 60) + "m" + Double.valueOf(twoDForm.format(time_writing % 60)) + "s");	
+						}
 
 						fileOut.newLine();
 						fileOut.write("Total variables" + "\t" + cplex.getNcols());

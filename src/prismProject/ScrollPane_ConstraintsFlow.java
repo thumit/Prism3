@@ -54,17 +54,20 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
+import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import javax.swing.border.TitledBorder;
 
 import prismConvenienceClass.ArrayListTransferHandler;
+import prismConvenienceClass.ColorUtil;
 import prismConvenienceClass.IconHandle;
 
 
 
-public class ScrollPane_ConstraintsFlow  extends JScrollPane {
+public class ScrollPane_ConstraintsFlow extends JScrollPane {
 	private ArrayListTransferHandler lh;
 	private JList[] flow_list;
 	private JList id_list;
@@ -278,8 +281,9 @@ public class ScrollPane_ConstraintsFlow  extends JScrollPane {
 				clear_all_sigma.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent actionEvent) {
-						for (JList list : flow_list) {
-							list.setModel(new DefaultListModel<>());
+						for (int i = 0; i < flow_list.length; i++) {
+							flow_list[i].setModel(new DefaultListModel<>());
+							list_model[i] = new DefaultListModel<>();		// Update the list model so when change the spinner value we have the most recent list model to keep the Sigma boxes
 						}
 					}
 				});
@@ -295,6 +299,7 @@ public class ScrollPane_ConstraintsFlow  extends JScrollPane {
 							@Override
 							public void actionPerformed(ActionEvent actionEvent) {
 								flow_list[current_sigma].setModel(new DefaultListModel<>());
+								list_model[current_sigma] = new DefaultListModel<>();		// Update the list model so when change the spinner value we have the most recent list model to keep the Sigma boxes
 							}
 						});
 					}
@@ -341,7 +346,7 @@ public class ScrollPane_ConstraintsFlow  extends JScrollPane {
 					}
 				});
 				auto_menu.add(id_to_sigma_backward);
-				// Auto Menu--------------------------------- ------------------------------------------------------------
+				// Auto Menu---------------------------------------------------------------------------------------------
 				
 				
 				
@@ -359,5 +364,41 @@ public class ScrollPane_ConstraintsFlow  extends JScrollPane {
 
 	public JScrollPane get_list_scroll() {
 		return list_scroll;
-	}	
+	}
+	
+	public DefaultListModel[] get_list_model() {
+		return list_model;
+	}
+	
+	public void reload_flow_arrangement_for_one_flow(JTable table10, Object[][] data10, JSpinner spin_sigma) {	
+		int[] selectedRow = table10.getSelectedRows();
+		if (selectedRow.length == 1) {	
+			// Reload GUI				
+			int currentRow = selectedRow[0];
+			currentRow = table10.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems				
+			String[] flow_arrangement = data10[currentRow][2].toString().split(";");
+			DefaultListModel[] list_model = new DefaultListModel[flow_arrangement.length];					
+			for (int i = 0; i < flow_arrangement.length; i++) {		
+				list_model[i] = new DefaultListModel();
+				String[] arrangement = flow_arrangement[i].split(" ");							
+				for (String a: arrangement) {
+					list_model[i].addElement(a);
+				}		
+			}
+			create_flow_arrangement_UI(list_model);	
+			spin_sigma.setValue(list_model.length);	// reload the spin sigma
+		}
+	}
+	
+	public void highlight() {			
+		flow_panel.setBackground(ColorUtil.makeTransparent(new Color(240, 255, 255), 255));
+		revalidate();
+		repaint();
+	}
+	
+	public void unhighlight() {			
+		flow_panel.setBackground(null);
+		revalidate();
+		repaint();
+	}
 }

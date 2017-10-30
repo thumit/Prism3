@@ -33,7 +33,7 @@ public class QuickEdit_FlyConstraints_Panel extends JPanel {
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		c.fill = GridBagConstraints.CENTER;
-		add(new JLabel("fly_multiplier"), c);
+		add(new JLabel("query_multiplier"), c);
 	
 		// Add JTextfield
 		Prism_FormatedTextfield multiplier_Textfield = new Prism_FormatedTextfield();
@@ -72,7 +72,7 @@ public class QuickEdit_FlyConstraints_Panel extends JPanel {
 	
 	private class Prism_FormatedTextfield extends JFormattedTextField {
 		public Prism_FormatedTextfield() {
-			setToolTipText("greater than 0 with maximum 2 digits after the dot");
+			setToolTipText("greater than or equal to zero");
 			getDocument().addDocumentListener(new DocumentListener() {
 				@Override
 				public void insertUpdate(DocumentEvent e) {
@@ -80,7 +80,8 @@ public class QuickEdit_FlyConstraints_Panel extends JPanel {
 						@Override
 						public void run() {
 							String text = getText();
-							if (!text.matches("\\d*(\\.\\d{0,2})?")) {		//	used regex: \\d*(\\.\\d{0,2})? because two decimal places is enough
+//							if (!text.matches("\\d*(\\.\\d{0,2})?")) {		//	used regex: \\d*(\\.\\d{0,2})? because two decimal places is enough
+							if (!text.matches("\\d*(\\.\\d{0,})?")) {		//	no restriction on number of digits after the dot
 								setText(text.substring(0, text.length() - 1));
 							} else {
 								if (!text.isEmpty() && !text.equals(".") && Double.valueOf(text) < (double) 0) {		// If the added String make value <0  then delete that String

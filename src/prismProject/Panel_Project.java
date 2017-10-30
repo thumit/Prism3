@@ -70,6 +70,7 @@ public class Panel_Project extends JLayeredPane {
 	private JButton btnSolveRun;
 	private JButton btnCustomizeOutput;
 	private JButton btnCollectMemory;
+	private JButton btnSave;
 	
 	private File[] listOfEditRuns;
 	private File currentProjectFolder, currentRunFolder;
@@ -258,6 +259,23 @@ public class Panel_Project extends JLayeredPane {
 		projectToolBar.add(btnCollectMemory);
 		
 		
+		btnSave = new JButton();
+		btnSave.setToolTipText("Save");
+		btnSave.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_save.png"));
+		btnSave.setContentAreaFilled(false);
+		btnSave.addMouseListener(new MouseAdapter() {
+		    public void mouseEntered(MouseEvent e) {
+		    	btnSave.setContentAreaFilled(true);
+		    }
+
+		    public void mouseExited(MouseEvent e) {
+		    	btnSave.setContentAreaFilled(false);
+		    }
+		});		
+		btnSave.setVisible(false);
+		projectToolBar.add(btnSave);
+		
+		
 		//------------------------------------------------------------------------------------------------
 		// Add all components to JInternalFrame------------------------------------------------------------
 		this.add(projectToolBar, BorderLayout.NORTH);
@@ -316,48 +334,53 @@ public class Panel_Project extends JLayeredPane {
 						String[] a = list.toArray(new String[list.size()]);					
 														
 						// Setup the table--------------------------------------------------------------------------------
-						columnNames = a[0].split(delimited);		//tab delimited		//Read the first row	
-						rowCount = a.length - 1;  // - 1st row which is the column name
-						colCount = columnNames.length;
-						data = new Object[rowCount][colCount];
+						try {
+							columnNames = a[0].split(delimited);		//tab delimited		//Read the first row	
+							rowCount = a.length - 1;  // - 1st row which is the column name
+							colCount = columnNames.length;
+							data = new Object[rowCount][colCount];
 					
 						
-						// Populate the data matrix
-						for (int row = 0; row < rowCount; row++) {
-							String[] rowValue = a[row + 1].split(delimited);	//tab delimited	
-							for (int col = 0; col < colCount; col++) {
-								data[row][col] = rowValue[col];
+							// Populate the data matrix
+							for (int row = 0; row < rowCount; row++) {
+								String[] rowValue = a[row + 1].split(delimited);	//tab delimited	
+								for (int col = 0; col < colCount; col++) {
+									data[row][col] = rowValue[col];
+								}	
 							}	
-						}	
-						
-						
-						// Create a table
-						model = new PrismTableModel(rowCount, colCount, data, columnNames);
-						table = new JTable(model) {
-							@Override			//These override is to make the width of the cell fit all contents of the cell
-							public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
-								// For the cells in table								
-								Component component = super.prepareRenderer(renderer, row, column);
-								int rendererWidth = component.getPreferredSize().width;
-								TableColumn tableColumn = getColumnModel().getColumn(column);
-								int maxWidth = Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth());
-								
-								// For the column names
-								TableCellRenderer renderer2 = table.getTableHeader().getDefaultRenderer();	
-								Component component2 = renderer2.getTableCellRendererComponent(table,
-							            tableColumn.getHeaderValue(), false, false, -1, column);
-								maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
-								
-								tableColumn.setPreferredWidth(maxWidth);
-								return component;
-							}
-						};
-												
-						DefaultTableCellRenderer renderer = (DefaultTableCellRenderer)table.getDefaultRenderer(Object.class);
-						renderer.setHorizontalAlignment(SwingConstants.LEFT);		// Set alignment of values in the table to the left side
-						table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-			     		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-				
+							
+							
+							// Create a table
+							model = new PrismTableModel(rowCount, colCount, data, columnNames);
+							table = new JTable(model) {
+								@Override			//These override is to make the width of the cell fit all contents of the cell
+								public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+									// For the cells in table								
+									Component component = super.prepareRenderer(renderer, row, column);
+									int rendererWidth = component.getPreferredSize().width;
+									TableColumn tableColumn = getColumnModel().getColumn(column);
+									int maxWidth = Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth());
+									
+									// For the column names
+									TableCellRenderer renderer2 = table.getTableHeader().getDefaultRenderer();	
+									Component component2 = renderer2.getTableCellRendererComponent(table,
+								            tableColumn.getHeaderValue(), false, false, -1, column);
+									maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
+									
+									tableColumn.setPreferredWidth(maxWidth);
+									return component;
+								}
+							};
+													
+							DefaultTableCellRenderer renderer = (DefaultTableCellRenderer)table.getDefaultRenderer(Object.class);
+							renderer.setHorizontalAlignment(SwingConstants.LEFT);		// Set alignment of values in the table to the left side
+							table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+				     		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+						} catch (Exception e2) {
+							System.out.println("Fail to create table data. Often this is only when Readme.txt has nothing");
+						}
+			     		
+			     					     		
 						// Show table on the scroll panel
 						if (currentInputFile.equals("output_04_management_overview.txt")) {		//show a panel with 2 pie charts
 							Output_Panel_Management_Overview chart_panel = new Output_Panel_Management_Overview(table, data);
@@ -910,8 +933,7 @@ public class Panel_Project extends JLayeredPane {
 				DefaultTreeModel model = (DefaultTreeModel) projectTree.getModel();
 				for (TreePath selectionPath : selectionPaths) { //Loop through and delete all level 2 nodes (Runs)
 					currentLevel = selectionPath.getPathCount();
-					DefaultMutableTreeNode processingNode = (DefaultMutableTreeNode) selectionPath
-							.getLastPathComponent();
+					DefaultMutableTreeNode processingNode = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
 					projectTree.setSelectionPath(null);
 					if (currentLevel == 2) { //DELETE selected Runs
 						currentRun = processingNode.getUserObject().toString();
@@ -957,13 +979,12 @@ public class Panel_Project extends JLayeredPane {
 			if (selectionPaths != null) { //at least 1 run has to be selected 
 				// Create a files list that contains selected runs
 				listOfEditRuns = new File[selectionPaths.length];
-				int fileCount=0;
-				
+				int fileCount = 0;
+
 				for (TreePath selectionPath : selectionPaths) { //Loop through all level 2 nodes (Runs)
 					currentLevel = selectionPath.getPathCount();
-					DefaultMutableTreeNode processingNode = (DefaultMutableTreeNode) selectionPath
-							.getLastPathComponent();
-					if (currentLevel == 2) { //Add to the list
+					DefaultMutableTreeNode processingNode = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
+					if (currentLevel == 2) { // Add to the list
 						currentRun = processingNode.getUserObject().toString();
 						File file = new File(currentProjectFolder + seperator + currentRun);
 						listOfEditRuns[fileCount] = file;
@@ -974,14 +995,14 @@ public class Panel_Project extends JLayeredPane {
 				this.setVisible(false); //----------------------------------------------
 				//Disable all other buttons, change name to "Stop Editing",  remove splitPanel and add editPanel
 				for (Component c : projectToolBar.getComponents()) c.setVisible(false);
-				displayTextField.setVisible(false);
-				
-				btnEditRun.setVisible(true);		
+				displayTextField.setVisible(false);				
+				btnSave.setVisible(true);
+				btnEditRun.setVisible(true); 
 				btnEditRun.setToolTipText("Stop Editing");
 				btnEditRun.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_back.png"));
 				btnEditRun.setForeground(Color.RED);
 				this.remove(splitPanel);
-				editPanel = new Panel_EditRun(listOfEditRuns);		// This panel only visible when "Start Editing"	
+				editPanel = new Panel_EditRun(listOfEditRuns, btnSave);		// This panel only visible when "Start Editing"	
 				this.add(editPanel);
 				this.setVisible(true); //----------------------------------------------
 			} 	
@@ -991,27 +1012,23 @@ public class Panel_Project extends JLayeredPane {
 		
 		// For Stop Editing
 		else if (btnEditRun.getToolTipText() == "Stop Editing") {
-			
-			
 			String[] ExitOption = { "Save", "Don't Save", "Cancel"};
-			int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(),"Save all changes you made ?", "Stop Editing",
+			int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(),"Outputs from all runs will be deleted when click 'Save'. Save all runs?", "Stop Editing",
 					JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
 			
-			if (response == 0 || response == 1)				//Yes or No
-			{
-				//Enable all other buttons, change name to "Start Editing",  remove editPanel and add splitPanel 
+			if (response == 0 || response == 1) { // Yes or No			
+				// Enable all other buttons, change name to "Start Editing",  remove editPanel and add splitPanel 
 				for (Component c : projectToolBar.getComponents()) c.setVisible(true);
 				displayTextField.setVisible(true);
-				
+				btnSave.setVisible(false);
 				btnEditRun.setToolTipText("Start Editing");
 				btnEditRun.setRolloverIcon(null);
 				btnEditRun.setForeground(null);
 				this.remove(editPanel);
 				this.add(splitPanel);
 				
-				if (response == 0)		//Yes option
-				{
-					//Delete all output files, problem file, and solution file of the edited Runs
+				if (response == 0) { // Yes option				
+					// Delete all output files, problem file, and solution file of the edited Runs
 					for (int i = 0; i < listOfEditRuns.length; i++) {
 						File[] contents = listOfEditRuns[i].listFiles();
 						if (contents != null) {
@@ -1021,16 +1038,14 @@ public class Panel_Project extends JLayeredPane {
 								}
 							}
 						}
-					}
-					
-					//Create new Input Files for the edited runs & Refresh the tree		
-					editPanel.createInputFiles();	
-					refreshProjectTree();
+					}										
+					editPanel.createInputFiles();	// Create new Input Files for the edited runs
 				}
+				
+				// Refresh the tree regardless of Yes or No			
+				refreshProjectTree();
 	        }
-			
-
-		}  //End of stop editing
+		}  // End of stop editing
 	}
 
 	//--------------------------------------------------------------------------------------------------------------------------------
@@ -1090,7 +1105,7 @@ public class Panel_Project extends JLayeredPane {
 			//Enable all other buttons and splitPanel and change name to "Start Solving"
 			for (Component c : projectToolBar.getComponents()) c.setVisible(true);
 			displayTextField.setVisible(true);
-			
+			btnSave.setVisible(false);
 			btnSolveRun.setToolTipText("Start Solving");
 			btnSolveRun.setRolloverIcon(null);
 			btnSolveRun.setForeground(null);
@@ -1158,7 +1173,7 @@ public class Panel_Project extends JLayeredPane {
 			//Enable all other buttons and splitPanel and change name to "Customize Output"
 			for (Component c : projectToolBar.getComponents()) c.setVisible(true);
 			displayTextField.setVisible(true);
-			
+			btnSave.setVisible(false);
 			btnCustomizeOutput.setToolTipText("Customize Output");
 			btnCustomizeOutput.setRolloverIcon(null);
 			btnCustomizeOutput.setForeground(null);

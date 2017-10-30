@@ -1,5 +1,6 @@
 package prismProject;
 
+import java.awt.Color;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -31,6 +32,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import prismConvenienceClass.ColorUtil;
 import prismConvenienceClass.IconHandle;
 import prismRoot.PrismMain;
 
@@ -40,7 +42,10 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 	private List<JScrollPane> allDynamicIdentifiers_ScrollPane;
 	private List<List<JCheckBox>> checkboxDynamicIdentifiers;
 	private JScrollPane defineScrollPane;		//for Definition of dynamic identifier
-
+	
+	private JPanel[] allDynamicIdentifiers_JPanel;
+	private JPanel dynamic_identifiersPanel;
+	private JPanel select_Panel;
 	
 	public ScrollPane_DynamicIdentifiers(Read_Database read_Database) {	
 		
@@ -48,7 +53,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 		String[] yieldTable_ColumnNames = read_Database.get_yield_tables_column_names();	
 		
 		// Define the Panel contains everything --------------------------
-		JPanel dynamic_identifiersPanel = new JPanel();
+		dynamic_identifiersPanel = new JPanel();
 		dynamic_identifiersPanel.setLayout(new GridBagLayout());
 		GridBagConstraints c3 = new GridBagConstraints();
 		c3.fill = GridBagConstraints.BOTH;
@@ -60,7 +65,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 	
 
 		//This is the Panel for select all available identifiers--------------------------
-		JPanel select_Panel = new JPanel();	
+		select_Panel = new JPanel();	
 		select_Panel.setLayout(new GridBagLayout());
 		GridBagConstraints c2 = new GridBagConstraints();
 		c2.fill = GridBagConstraints.HORIZONTAL;
@@ -142,7 +147,8 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 				c3.gridx =1 + i;
 				c3.gridy = 0;
 				dynamic_identifiersPanel.add(allDynamicIdentifiers_ScrollPane.get(i), c3);
-			}					
+			}		
+			allDynamicIdentifiers_JPanel = new JPanel[yieldTable_ColumnNames.length];
 													
 			
 			// Add listeners to checkBoxes
@@ -569,6 +575,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 								}
 
 								// Set Scroll Pane view to the tempPanel
+								allDynamicIdentifiers_JPanel[currentCheckBoxIndex] = tempPanel;
 								allDynamicIdentifiers_ScrollPane.get(currentCheckBoxIndex).setViewportView(tempPanel);
 								// Re draw the super scroll pane to make new identifiers show up (especially for cost adjustment set - add) 
 								validate();
@@ -760,6 +767,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 					tempPanel.add(checkboxDynamicIdentifiers.get(current_identifier_id).get(j), c_temp);
 				}	
 				
+				allDynamicIdentifiers_JPanel[current_identifier_id] = tempPanel;
 				allDynamicIdentifiers_ScrollPane.get(current_identifier_id).setViewportView(tempPanel);	// Set Scroll Pane view to the tempPanel
 				allDynamicIdentifiers_ScrollPane.get(current_identifier_id).setVisible(true);
 			}	
@@ -779,4 +787,25 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 		}	
 	}
 	
+	public void highlight() {
+		setBackground(new Color(240, 255, 255));
+		dynamic_identifiersPanel.setBackground(ColorUtil.makeTransparent(new Color(240, 255, 255), 255));
+		select_Panel.setBackground(ColorUtil.makeTransparent(new Color(240, 255, 255), 255));	
+		for (JPanel i : allDynamicIdentifiers_JPanel) {
+			if (i != null) i.setBackground(ColorUtil.makeTransparent(new Color(240, 255, 255), 255));
+		}
+		revalidate();
+		repaint();
+	}
+	
+	public void unhighlight() {			
+		setBackground(null);
+		dynamic_identifiersPanel.setBackground(null);
+		select_Panel.setBackground(null);
+		for (JPanel i : allDynamicIdentifiers_JPanel) {
+			if (i != null) i.setBackground(null);
+		}
+		revalidate();
+		repaint();
+	}
 }

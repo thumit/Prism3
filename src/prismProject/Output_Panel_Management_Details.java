@@ -38,18 +38,25 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
+import javax.swing.JSpinner.DefaultEditor;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.ListSelectionModel;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellRenderer;
@@ -59,6 +66,7 @@ import javax.swing.table.TableRowSorter;
 import prismConvenienceClass.ColorUtil;
 import prismConvenienceClass.IconHandle;
 import prismConvenienceClass.PrismTableModel;
+import prismConvenienceClass.TableColumnsHandle;
 import prismConvenienceClass.ToolBarWithBgImage;
 import prismRoot.PrismMain;
 
@@ -493,7 +501,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 			rowCount9 = 0;
 			colCount9 = 13;
 			data9 = new Object[rowCount9][colCount9];
-			columnNames9 = new String[] {"fly_id", "fly_description", "fly_type",  "fly_multiplier", "lowerbound", "lowerbound_perunit_penalty", "upperbound", "upperbound_perunit_penalty", "parameter_index", "static_identifiers", "dynamic_identifiers", "original_dynamic_identifiers", "fly_value"};	         				
+			columnNames9 = new String[] {"query_id", "query_description", "query_type",  "query_multiplier", "lowerbound", "lowerbound_perunit_penalty", "upperbound", "upperbound_perunit_penalty", "parameter_index", "static_identifiers", "dynamic_identifiers", "original_dynamic_identifiers", "query_value"};	         				
 		}
 					
 		
@@ -586,14 +594,26 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 		table9.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new comboBox_constraint_type()));
 			
 		
-		// Hide the some columns: this hide is better than remove column from column model, this is basically set size to be zero
-		for (int i = 0; i < colCount9; i++) {
-			if (i != 0 && i != 1 && i != 3 & i!= 12) {
-				table9.getColumnModel().getColumn(i).setMinWidth(0);
-				table9.getColumnModel().getColumn(i).setMaxWidth(0);
-				table9.getColumnModel().getColumn(i).setWidth(0);
-			}
-		}
+//		// Hide the some columns: this hide is better than remove column from column model, this is basically set size to be zero
+//		for (int i = 0; i < colCount9; i++) {
+//			if (i != 0 && i != 1 && i != 3 & i!= 12) {
+//				table9.getColumnModel().getColumn(i).setMinWidth(0);
+//				table9.getColumnModel().getColumn(i).setMaxWidth(0);
+//				table9.getColumnModel().getColumn(i).setWidth(0);
+//			}
+//		}
+		// Different way to hide columns
+		TableColumnsHandle table_handle = new TableColumnsHandle(table9);
+		table_handle.setColumnVisible("query_type", false);
+		table_handle.setColumnVisible("lowerbound", false);
+		table_handle.setColumnVisible("lowerbound_perunit_penalty", false);
+		table_handle.setColumnVisible("upperbound", false);
+		table_handle.setColumnVisible("upperbound_perunit_penalty", false);
+		table_handle.setColumnVisible("parameter_index", false);
+		table_handle.setColumnVisible("static_identifiers", false);
+		table_handle.setColumnVisible("dynamic_identifiers", false);
+		table_handle.setColumnVisible("original_dynamic_identifiers", false);
+		
          
 		table9.setAutoResizeMode(0);		// 0 = JTable.AUTO_RESIZE_OFF
 		table9.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);  
@@ -666,9 +686,8 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 			JButton btn_NewSingle = new JButton();
 			btn_NewSingle.setFont(new Font(null, Font.BOLD, 14));
 //			btn_NewSingle.setText("NEW SINGLE");
-			btn_NewSingle.setToolTipText("New constraint");
-			btn_NewSingle.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_add.png"));
-					
+			btn_NewSingle.setToolTipText("New");
+			btn_NewSingle.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_add.png"));					
 			c2.gridx = 0;
 			c2.gridy = 0;
 			c2.weightx = 0;
@@ -679,21 +698,20 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 			JButton btn_New_Multiple = new JButton();
 			btn_New_Multiple.setFont(new Font(null, Font.BOLD, 14));
 //			btn_New_Multiple.setText("NEW MULTIPLE");
-			btn_New_Multiple.setToolTipText("New set of constraints");
-			btn_New_Multiple.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_add3.png"));
-					
+			btn_New_Multiple.setToolTipText("New multiple");
+			btn_New_Multiple.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_add3.png"));				
 			c2.gridx = 0;
 			c2.gridy = 1;
 			c2.weightx = 0;
 			c2.weighty = 0;
 			button_table_Panel.add(btn_New_Multiple, c2);
 			
+			
 			JButton btn_Edit = new JButton();
 //			btn_Edit.setText("EDIT");
-			btn_Edit.setToolTipText("Modify constraint");
+			btn_Edit.setToolTipText("Modify");
 			btn_Edit.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_swap.png"));
-			btn_Edit.setEnabled(false);
-					
+			btn_Edit.setEnabled(false);					
 			c2.gridx = 0;
 			c2.gridy = 2;
 			c2.weightx = 0;
@@ -701,15 +719,30 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 			button_table_Panel.add(btn_Edit, c2);
 			
 			
+			JSpinner spin_move_rows = new JSpinner (new SpinnerNumberModel(1, 0, 2, 1));
+			spin_move_rows.setToolTipText("Move");
+			JFormattedTextField SpinnerText = ((DefaultEditor) spin_move_rows.getEditor()).getTextField();
+			SpinnerText.setHorizontalAlignment(JTextField.LEFT);
+			SpinnerText.setEditable(false);
+			SpinnerText.setFocusable(false);
+//			DefaultFormatter formatter = (DefaultFormatter) SpinnerText.getFormatter();
+//		    formatter.setCommitsOnValidEdit(true);
+		    spin_move_rows.setEnabled(false);
+		    c2.gridx = 0;
+			c2.gridy = 3;
+			c2.weightx = 0;
+			c2.weighty = 0;
+			button_table_Panel.add(spin_move_rows, c2);
+			
+			
 			JButton btn_Delete = new JButton();
 			btn_Delete.setFont(new Font(null, Font.BOLD, 14));
 //			btn_Delete.setText("DELETE");
-			btn_Delete.setToolTipText("Delete constraints");
+			btn_Delete.setToolTipText("Delete");
 			btn_Delete.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_erase.png"));
-			btn_Delete.setEnabled(false);
-					
+			btn_Delete.setEnabled(false);					
 			c2.gridx = 0;
-			c2.gridy = 3;
+			c2.gridy = 4;
 			c2.weightx = 0;
 			c2.weighty = 0;
 			button_table_Panel.add(btn_Delete, c2);
@@ -721,10 +754,9 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 			btn_Sort.setFont(new Font(null, Font.BOLD, 12));
 			btn_Sort.setText("OFF");
 			btn_Sort.setToolTipText("Sorter mode: 'ON' click columns header to sort rows. 'OFF' retrieve original rows position");
-			btn_Sort.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_table.png"));
-					
+			btn_Sort.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_table.png"));					
 			c2.gridx = 0;
-			c2.gridy = 4;
+			c2.gridy = 5;
 			c2.weightx = 0;
 			c2.weighty = 0;
 			button_table_Panel.add(btn_Sort, c2);
@@ -733,7 +765,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 			JButton btn_GetResult = new JButton();
 			btn_GetResult.setFont(new Font(null, Font.BOLD, 14));
 //			btn_GetResult.setText("Get Result");
-			btn_GetResult.setToolTipText("Update fly_value & auto save");
+			btn_GetResult.setToolTipText("Calculate query_value & Save");
 			btn_GetResult.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_solve.png"));
 			btn_GetResult.setContentAreaFilled(false);
 			btn_GetResult.addMouseListener(new MouseAdapter() {
@@ -746,7 +778,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 			    }
 			});		
 			c2.gridx = 0;
-			c2.gridy = 5;
+			c2.gridy = 6;
 			c2.weightx = 0;
 			c2.weighty = 0;
 			button_table_Panel.add(btn_GetResult, c2);
@@ -755,8 +787,8 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 			JButton btn_Save = new JButton();
 			btn_Save.setFont(new Font(null, Font.BOLD, 14));
 //			btn_Save.setText("Save");
-			btn_Save.setToolTipText("Save all");
-			btn_Save.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_save.png"));
+			btn_Save.setToolTipText("Save");
+			btn_Save.setIcon(IconHandle.get_scaledImageIcon(23, 23, "icon_save.png"));
 			btn_Save.setContentAreaFilled(false);
 			btn_Save.addMouseListener(new MouseAdapter() {
 			    public void mouseEntered(MouseEvent e) {
@@ -768,7 +800,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 			    }
 			});		
 			c2.gridx = 0;
-			c2.gridy = 6;
+			c2.gridy = 7;
 			c2.weightx = 0;
 			c2.weighty = 0;
 			button_table_Panel.add(btn_Save, c2);
@@ -777,7 +809,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 			c2.insets = new Insets(0, 0, 0, 0); // No padding
 			// Add Empty Label to make all buttons on top not middle
 			c2.gridx = 0;
-			c2.gridy = 7;
+			c2.gridy = 8;
 			c2.weightx = 0;
 			c2.weighty = 1;
 			button_table_Panel.add(new JLabel(), c2);
@@ -789,7 +821,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 			c2.gridy = 0;
 			c2.weightx = 1;
 			c2.weighty = 1;
-			c2.gridheight = 8;
+			c2.gridheight = 9;
 			button_table_Panel.add(table_ScrollPane, c2);
 			// End of 4th Grid -----------------------------------------------------------------------
 			// End of 4th Grid -----------------------------------------------------------------------	
@@ -820,6 +852,12 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 					} else {		// Disable Delete
 						btn_Delete.setEnabled(false);
 					}		
+					
+					if (selectedRow.length >= 1 && btn_Sort.getText().equals("OFF")) {	// Enable Spinner when: >=1 row is selected and Sorter is off
+						spin_move_rows.setEnabled(true);
+					} else {		// Disable Spinner
+						spin_move_rows.setEnabled(false);
+					}
 				}
 			});
 			
@@ -842,6 +880,12 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 					} else {		// Disable Delete
 						btn_Delete.setEnabled(false);
 					}	
+					
+					if (selectedRow.length >= 1 && btn_Sort.getText().equals("OFF")) {	// Enable Spinner when: >=1 row is selected and Sorter is off
+						spin_move_rows.setEnabled(true);
+					} else {		// Disable Spinner
+						spin_move_rows.setEnabled(false);
+					}
 		        }
 		    });
 			
@@ -885,15 +929,15 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {		
 					
-					ScrollPane_ConstraintsSplit constraint_split_ScrollPanel = new ScrollPane_ConstraintsSplit(
+					ScrollPane_ConstraintsSplitFly constraint_split_ScrollPanel = new ScrollPane_ConstraintsSplitFly(
 							static_identifiersScrollPanel.get_TitleAsCheckboxes(),
 							parametersScrollPanel.get_checkboxParameter(),
 							dynamic_identifiersScrollPanel.get_allDynamicIdentifiers());
 
 					
 					
-					String ExitOption[] = {"Add Constraints","Cancel"};
-					int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), constraint_split_ScrollPanel, "Create multiple constraints",
+					String ExitOption[] = {"Add Queries","Cancel"};
+					int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), constraint_split_ScrollPanel, "Create multiple queries",
 							JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, ExitOption, ExitOption[1]);
 					if (response == 0)	// Add Constraints
 					{		
@@ -919,8 +963,8 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 						int response2 = 0;	
 						if (total_Constraints > 1000) {
 							String ExitOption2[] = {"Yes","No"};
-							String warningText = "You are going to add " + total_Constraints + " constraints. It would take some time. Continue to add ?";
-							response2 = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warningText, "Confirm adding constraints",
+							String warningText = "You are going to add " + total_Constraints + " queries. It would take some time. Continue to add ?";
+							response2 = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warningText, "Confirm adding queries",
 									JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption2, ExitOption2[1]);
 							
 						}
@@ -1047,7 +1091,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 									for (int j = 0; j < colCount9; j++) {
 										if (autoDescription.isSelected()) {
 											if (temp_data[0][1] == null) {
-												data9[i][1] = "set constraint" + " " + (i - rowCount9 + total_Constraints + 1) + description_extra[i - rowCount9 + total_Constraints];
+												data9[i][1] = "set query" + " " + (i - rowCount9 + total_Constraints + 1) + description_extra[i - rowCount9 + total_Constraints];
 											} else {
 												data9[i][1] = temp_data[0][1] + " " + (i - rowCount9 + total_Constraints + 1) + description_extra[i - rowCount9 + total_Constraints];
 											}
@@ -1097,95 +1141,113 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {	
 					if (table9.isEnabled()) {
+						int selectedRow = table9.getSelectedRow();
+						selectedRow = table9.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems	
 						
-						//A  resizable popup panel indicating changes have been made
-						JPanel popup = new JPanel(new BorderLayout());
-						popup.setBorder(null);
-						popup.setPreferredSize(new Dimension(330, 150));	
-						JLabel temp_label = new JLabel(IconHandle.get_scaledImageIcon(150, 150, "pikachuHello.png"));									
-						popup.add(temp_label, BorderLayout.WEST);
+						// Apply change
+						data9[selectedRow][8] = parametersScrollPanel.get_parameters_info_from_GUI();
+						data9[selectedRow][9] = static_identifiersScrollPanel.get_static_info_from_GUI();
+						data9[selectedRow][10] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();	
+						data9[selectedRow][11] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
+						data9[selectedRow][12] = null;
+						model9.fireTableDataChanged();	
 						
-						JTextArea temp_textarea = new JTextArea();
-						temp_textarea.setBorder(null);
-						temp_textarea.setBackground(ColorUtil.makeTransparent(Color.WHITE, 0)); 
-						temp_textarea.setFocusable(false);
-						temp_textarea.setEditable(false);
-						temp_textarea.setLineWrap(true);
-						temp_textarea.setWrapStyleWord(true);
-						temp_textarea.append("The following infomation (in rectangles surrounded by green border) will be applied to the highlighted (blue) constraint" + "\n \n");
-						temp_textarea.append("1. Static Identifiers" + "\n");
-						temp_textarea.append("2. Dynamic Identifiers" + "\n");
-						temp_textarea.append("3. Parameters" + "\n");
-						popup.add(temp_textarea, BorderLayout.CENTER);
-
-						popup.addHierarchyListener(new HierarchyListener() {
-						    public void hierarchyChanged(HierarchyEvent e) {
-						        Window window = SwingUtilities.getWindowAncestor(popup);
-						        if (window instanceof Dialog) {
-						            Dialog dialog = (Dialog)window;
-						            if (!dialog.isResizable()) {
-						                dialog.setResizable(true);
-						            }
-						        }
-						    }
-						});				
-
-						String ExitOption[] = {"Modify", "Do not modify"};
-						int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), popup, "Do you want to modify the highlighted constraint ?",
-								JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, ExitOption, ExitOption[0]);	
-												
-						if (response == 0) {
-							// Apply change
-							int selectedRow = table9.getSelectedRow();
-							selectedRow = table9.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems										
-							data9[selectedRow][8] = parametersScrollPanel.get_parameters_info_from_GUI();
-							data9[selectedRow][9] = static_identifiersScrollPanel.get_static_info_from_GUI();
-							data9[selectedRow][10] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();	
-							data9[selectedRow][11] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
-							data9[selectedRow][12] = null;
-							model9.fireTableDataChanged();	
-							
-							// Convert the edited Row to model view and then select it 
-							int editRow = table9.convertRowIndexToView(selectedRow);
-							table9.setRowSelectionInterval(editRow, editRow);
-							
-							// Enable buttons and table9
-							table9.setEnabled(true);
-							btn_NewSingle.setEnabled(true);
-							btn_New_Multiple.setEnabled(true);
-							btn_Delete.setEnabled(true);
-							btn_Sort.setEnabled(true);
-							btn_GetResult.setEnabled(true);	
-							btn_Edit.setEnabled(true);
-							table_ScrollPane.setViewportView(table9);
-							
-							// Reset the view
-							int currentRow = table9.getSelectedRow();
-							currentRow = table9.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
-							static_identifiersScrollPanel.reload_this_constraint_static_identifiers((String) data9[currentRow][9]);	// 9 is the static_identifiers which have some attributes selected				
-							dynamic_identifiersScrollPanel.reload_this_constraint_dynamic_identifiers((String) data9[currentRow][10], (String) data9[currentRow][11]);	// 11 is the original_dynamic_identifiers column
-							parametersScrollPanel.reload_this_constraint_parameters((String) data9[currentRow][8]);	// 8 is the selected parameters of this constraint
-						}
+						// Convert the edited Row to model view and then select it 
+						int editRow = table9.convertRowIndexToView(selectedRow);
+						table9.setRowSelectionInterval(editRow, editRow);
 						
-					} 
+						static_identifiersScrollPanel.highlight();
+						dynamic_identifiersScrollPanel.highlight();
+						parametersScrollPanel.highlight();
+					}
 				}
 			});
 			
 			
 			btn_Edit.addMouseListener(new MouseAdapter() { // Add listener
 				public void mouseEntered(java.awt.event.MouseEvent e) {
-					static_identifiersScrollPanel.setBackground(new Color(0, 255, 0));
-					dynamic_identifiersScrollPanel.setBackground(new Color(0, 255, 0));
-					parametersScrollPanel.setBackground(new Color(0, 255, 0));
+					if (table9.getSelectedRows().length == 1) {
+						static_identifiersScrollPanel.highlight();
+						dynamic_identifiersScrollPanel.highlight();
+						parametersScrollPanel.highlight();
+					}		
 				}
 
 				public void mouseExited(java.awt.event.MouseEvent e) {
-					static_identifiersScrollPanel.setBackground(null);
-					dynamic_identifiersScrollPanel.setBackground(null);
-					parametersScrollPanel.setBackground(null);
+					if (table9.getSelectedRows().length == 1) {
+						static_identifiersScrollPanel.unhighlight();
+						dynamic_identifiersScrollPanel.unhighlight();
+						parametersScrollPanel.unhighlight();
+					}
 				}
 			});
 			
+			
+			// Spinner
+		    spin_move_rows.addChangeListener(new ChangeListener() {
+		        @Override
+		        public void stateChanged(ChangeEvent e) {
+					int up_or_down = (int) spin_move_rows.getValue() - 1;										
+					spin_move_rows.setValue((int) 1);	// Reset spinner value to 1
+										
+					if (up_or_down == 1) {	// move up
+						// Cancel editing before moving conditions up or down
+						if (table9.isEditing()) {
+							table9.getCellEditor().cancelCellEditing();
+						}	
+						
+						// Get selected rows
+						int[] selectedRow = table9.getSelectedRows();		// No need to convert row index because we never allow Sort when moving rows
+						List<Integer> selectedRowList = new ArrayList<Integer>() {{ for (int i : selectedRow) add(i);}};	// Convert array to list
+						
+						if (selectedRowList.size() >=1 && selectedRowList.get(0) > 0) {	// If there is at least 1 row selected & the first row is not selected
+							for (int i = 0; i < rowCount9; i++) {
+								if (selectedRowList.contains(i)) {		
+									for (int j = 0; j < colCount9; j++) {
+										Object temp = data9[i - 1][j];
+										data9[i - 1][j] = data9[i][j];
+										data9[i][j] = temp;
+									}
+								}
+							}							
+							model9.fireTableDataChanged();	// Update the changes and select the currently selected conditions
+							for (int i: selectedRow) {
+								table9.addRowSelectionInterval(i - 1, i - 1);
+							}
+						}
+					}
+										
+					if (up_or_down == -1) {	// move down						
+						if (table9.isEditing()) {
+							table9.getCellEditor().cancelCellEditing();	// cancel editing before moving conditions up or down
+						}	
+						
+						// Get selected rows
+						int[] selectedRow = table9.getSelectedRows();		// No need to convert row index because we never allow Sort when moving rows
+						List<Integer> selectedRowList = new ArrayList<Integer>() {{ for (int i : selectedRow) add(i);}};	// Convert array to list
+						
+						if (selectedRowList.size() >=1 && selectedRowList.get(selectedRowList.size() - 1) < rowCount9 - 1) {	// If ...
+							for (int i = rowCount9 - 1; i >= 0; i--) {
+								if (selectedRowList.contains(i)) {		
+									for (int j = 0; j < colCount9; j++) {
+										Object temp = data9[i + 1][j];
+										data9[i + 1][j] = data9[i][j];
+										data9[i][j] = temp;
+									}
+								}
+							}						
+							model9.fireTableDataChanged();	// Update the changes and select the currently selected conditions
+							for (int i: selectedRow) {
+								table9.addRowSelectionInterval(i + 1, i + 1);
+							}	
+						}						
+					}
+					
+					// Scroll to the first row of the current selected rows
+					table9.scrollRectToVisible(new Rectangle(table9.getCellRect(table9.convertRowIndexToView(table9.getSelectedRow()), 0, true)));	
+		        }
+		    });
+		    
 				
 			// Delete
 			btn_Delete.addActionListener(new ActionListener() {
@@ -1234,10 +1296,14 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {	
 					if (btn_Sort.getText().equals("ON")) {
+						btn_GetResult.setEnabled(true);
+						btn_Save.setEnabled(true);
 						table9.setRowSorter(null);
 						btn_Sort.setText("OFF");
 						btn_Sort.repaint();
 					} else if (btn_Sort.getText().equals("OFF")) {
+						btn_GetResult.setEnabled(false);
+						btn_Save.setEnabled(false);
 						TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model9); // Add sorter
 						table9.setRowSorter(sorter);
 						btn_Sort.setText("ON");
@@ -1256,6 +1322,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 							btn_NewSingle.setVisible(false);
 							btn_New_Multiple.setVisible(false);
 							btn_Edit.setVisible(false);
+							spin_move_rows.setVisible(false);
 							btn_Delete.setVisible(false);
 							btn_Sort.setVisible(false);
 							btn_GetResult.setVisible(false);
@@ -1294,7 +1361,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 									table9.scrollRectToVisible(new Rectangle(table9.getCellRect(table9.convertRowIndexToView(i), 0, true)));
 									
 									// Get everything show up nicely
-									PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());	
+									table9.setRowSelectionInterval(i, i);
 								}
 							}
 //							model9.fireTableDataChanged();	// Fire data changes
@@ -1302,6 +1369,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 							btn_NewSingle.setVisible(true);
 							btn_New_Multiple.setVisible(true);
 							btn_Edit.setVisible(true);
+							spin_move_rows.setVisible(true);
 							btn_Delete.setVisible(true);
 							btn_Sort.setVisible(true);
 							btn_GetResult.setVisible(true);
@@ -1483,7 +1551,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 		if (!static_identifiers.get(1).contains(Get_Variable_Information.get_layer2(var_name))) return false;
 		if (!static_identifiers.get(2).contains(Get_Variable_Information.get_layer3(var_name))) return false;
 		if (!static_identifiers.get(3).contains(Get_Variable_Information.get_layer4(var_name))) return false;
-		if (Get_Variable_Information.get_forest_status(var_name).equals("E") && !Get_Variable_Information.get_method(var_name).equals("MS") && !Get_Variable_Information.get_method(var_name).equals("BS")) {
+		if (Get_Variable_Information.get_forest_status(var_name).equals("E")) {
 			if (!static_identifiers.get(4).contains(Get_Variable_Information.get_layer5(var_name))) return false;	// layer5 cover type
 			if (!static_identifiers.get(5).contains(Get_Variable_Information.get_layer6(var_name))) return false;	// layer6: size class
 		}

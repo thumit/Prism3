@@ -17,11 +17,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.TitledBorder;
 
+import prismConvenienceClass.ColorUtil;
+
 
 
 public class ScrollPane_StaticIdentifiers extends JScrollPane {
 	private List<List<JCheckBox>> checkboxStaticIdentifiers;
 	private List<JLabel> layers_Title_Label;
+	private JPanel identifiersPanel;
 
 	public ScrollPane_StaticIdentifiers (Read_Database read_Database, int option, String panel_name) {
 		// option = 0 --> 6 layers		1 --> 4 layers       2 --> 6 layers + method_period      3 --> method_choice 
@@ -107,8 +110,7 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 		
 		
 		//Add all layers labels and CheckBoxes to identifiersPanel
-		JPanel identifiersPanel = new JPanel();		
-		identifiersPanel.setLayout(new GridBagLayout());
+		identifiersPanel = new JPanel(new GridBagLayout());		
 		GridBagConstraints c1 = new GridBagConstraints();
 		c1.fill = GridBagConstraints.HORIZONTAL;
 		c1.weightx = 1;
@@ -201,11 +203,12 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 		
 	    
 	    
-		this.setViewportView(identifiersPanel);
+		setViewportView(identifiersPanel);
+		setViewportBorder(null);
 		TitledBorder border = new TitledBorder(panel_name);
 		border.setTitleJustification(TitledBorder.CENTER);
-		this.setBorder(border);
-		this.setPreferredSize(new Dimension(550, 250));
+		setBorder(border);
+		setPreferredSize(new Dimension(570, 250));
 	}
 	
 	
@@ -277,4 +280,17 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 		}
 	}
 	
+	public void highlight() {
+		setBackground(new Color(240, 255, 255));
+		identifiersPanel.setBackground(ColorUtil.makeTransparent(new Color(240, 255, 255), 255));
+		revalidate();
+		repaint();
+	}
+	
+	public void unhighlight() {			
+		setBackground(null);
+		identifiersPanel.setBackground(null);
+		revalidate();
+		repaint();
+	}
 }

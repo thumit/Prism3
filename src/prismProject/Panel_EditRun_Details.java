@@ -3,7 +3,6 @@ package prismProject;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -13,11 +12,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Rectangle;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.HierarchyEvent;
-import java.awt.event.HierarchyListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
@@ -67,7 +63,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
@@ -81,12 +76,12 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 import javax.swing.text.DefaultFormatter;
 
-import prismConvenienceClass.ColorUtil;
 import prismConvenienceClass.FilesHandle;
 import prismConvenienceClass.IconHandle;
 import prismConvenienceClass.PrismGridBagLayoutHandle;
 import prismConvenienceClass.PrismTableModel;
 import prismConvenienceClass.PrismTitleScrollPane;
+import prismConvenienceClass.TableColumnsHandle;
 import prismConvenienceClass.ToolBarWithBgImage;
 import prismRoot.PrismMain;
 
@@ -121,10 +116,10 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 	
 	private Read_Database read_database;
-	List<String> layers_Title;
-	List<String> layers_Title_ToolTip;
-	List<List<String>> allLayers;
-	List<List<String>> allLayers_ToolTips;
+	private List<String> layers_Title;
+	private List<String> layers_Title_ToolTip;
+	private List<List<String>> allLayers;
+	private List<List<String>> allLayers_ToolTips;
 	private Object[][][] yieldTable_values;
 	private String [] yieldTable_ColumnNames;
 	
@@ -937,6 +932,11 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		};
 
     
+		// Hide columns
+		TableColumnsHandle table_handle = new TableColumnsHandle(table2);
+		table_handle.setColumnVisible("sm_static_identifiers", false);
+		table_handle.setColumnVisible("sm_method_choice", false);
+		table_handle.setColumnVisible("sm_implementation", false);
 
         // Set up Type for the last column    
 		((JComponent) table2.getDefaultRenderer(Boolean.class)).setOpaque(true);	// It's a bug in the synth-installed renderer, quick hack is to force the rendering checkbox opacity to true
@@ -2064,6 +2064,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
     			} else {
     				data8a[row][col] = value;
     			}
+        		fireTableDataChanged();		// any value change would be registered immediately
     		}
         	
         	@Override
@@ -2252,6 +2253,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
     			} else {
     				data8b[row][col] = value;   				
     			}
+        		fireTableDataChanged();		// any value change would be registered immediately
     		}
         	
         	@Override
@@ -2389,7 +2391,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			rowCount8 = 0;
 			colCount8 = 7;
 			data8 = new Object[rowCount8][colCount8];
-			columnNames8 = new String[] {"priority", "condition_description", "action_cost", "conversion_cost", "static_identifiers", "dynamic_identifiers", "original_dynamic_identifiers"};	         				
+			columnNames8 = new String[] {"condition_id", "condition_description", "action_cost", "conversion_cost", "static_identifiers", "dynamic_identifiers", "original_dynamic_identifiers"};	         				
 		}
 					
 		
@@ -2467,12 +2469,13 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		
 			
 		
-		// Hide all except first 2 columns: this hide is better than remove column from column model, this is basically set size to be zero
-		for (int i = 2; i < colCount8; i++) {
-			table8.getColumnModel().getColumn(i).setMinWidth(0);
-			table8.getColumnModel().getColumn(i).setMaxWidth(0);
-			table8.getColumnModel().getColumn(i).setWidth(0);
-		}
+		// Hide columns
+		TableColumnsHandle table_handle = new TableColumnsHandle(table8);
+		table_handle.setColumnVisible("action_cost", false);
+		table_handle.setColumnVisible("conversion_cost", false);
+		table_handle.setColumnVisible("static_identifiers", false);
+		table_handle.setColumnVisible("dynamic_identifiers", false);
+		table_handle.setColumnVisible("original_dynamic_identifiers", false);
   
 		table8.setAutoResizeMode(0);		// 0 = JTable.AUTO_RESIZE_OFF
 		table8.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);  
@@ -2622,14 +2625,13 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
         // Set up Type for each column 2
 		table9.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new comboBox_constraint_type()));
-			
-		
-		// Hide the last 4 columns: this hide is better than remove column from column model, this is basically set size to be zero
-		for (int i = colCount9 - 4; i < colCount9; i++) {
-			table9.getColumnModel().getColumn(i).setMinWidth(0);
-			table9.getColumnModel().getColumn(i).setMaxWidth(0);
-			table9.getColumnModel().getColumn(i).setWidth(0);
-		}
+					
+		// Hide columns
+		TableColumnsHandle table_handle = new TableColumnsHandle(table9);
+		table_handle.setColumnVisible("parameter_index", false);
+		table_handle.setColumnVisible("static_identifiers", false);
+		table_handle.setColumnVisible("dynamic_identifiers", false);
+		table_handle.setColumnVisible("original_dynamic_identifiers", false);
          
 		table9.setAutoResizeMode(0);		// 0 = JTable.AUTO_RESIZE_OFF
 		table9.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);  
@@ -3359,6 +3361,22 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			button_table_Panel.add(btn_Edit, c2);
 			
 			
+			JSpinner spin_move_rows = new JSpinner (new SpinnerNumberModel(1, 0, 2, 1));
+			spin_move_rows.setToolTipText("Move");
+			JFormattedTextField SpinnerText = ((DefaultEditor) spin_move_rows.getEditor()).getTextField();
+			SpinnerText.setHorizontalAlignment(JTextField.LEFT);
+			SpinnerText.setEditable(false);
+			SpinnerText.setFocusable(false);
+//			DefaultFormatter formatter = (DefaultFormatter) SpinnerText.getFormatter();
+//		    formatter.setCommitsOnValidEdit(true);
+		    spin_move_rows.setEnabled(false);
+		    c2.gridx = 0;
+			c2.gridy = 2;
+			c2.weightx = 0;
+			c2.weighty = 0;
+			button_table_Panel.add(spin_move_rows, c2);
+			
+			
 			JButton btn_Delete = new JButton();
 			btn_Delete.setFont(new Font(null, Font.BOLD, 14));
 //			btn_Delete.setText("DELETE");
@@ -3367,7 +3385,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			btn_Delete.setEnabled(false);
 					
 			c2.gridx = 0;
-			c2.gridy = 2;
+			c2.gridy = 3;
 			c2.weightx = 0;
 			c2.weighty = 0;
 			button_table_Panel.add(btn_Delete, c2);
@@ -3382,7 +3400,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			btn_Sort.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_table.png"));
 					
 			c2.gridx = 0;
-			c2.gridy = 3;
+			c2.gridy = 4;
 			c2.weightx = 0;
 			c2.weighty = 0;
 			button_table_Panel.add(btn_Sort, c2);
@@ -3391,7 +3409,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c2.insets = new Insets(0, 0, 0, 0); // No padding
 			// Add Empty Label to make all buttons on top not middle
 			c2.gridx = 0;
-			c2.gridy = 4;
+			c2.gridy = 5;
 			c2.weightx = 0;
 			c2.weighty = 1;
 			button_table_Panel.add(new JLabel(), c2);
@@ -3403,7 +3421,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c2.gridy = 0;
 			c2.weightx = 1;
 			c2.weighty = 1;
-			c2.gridheight = 5;
+			c2.gridheight = 6;
 			button_table_Panel.add(table_ScrollPane, c2);
 			// End of 4th Grid -----------------------------------------------------------------------
 			// End of 4th Grid -----------------------------------------------------------------------	
@@ -3415,6 +3433,34 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			
 			// table2
+			table2.addMouseListener(new MouseAdapter() { // Add listener
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					int[] selectedRow = table2.getSelectedRows();
+					if (selectedRow.length == 1) {		// Reload Constraint & Enable Edit	when: 1 row is selected and no cell is editing
+						int currentRow = selectedRow[0];
+						currentRow = table2.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
+						static_identifiersScrollPanel.reload_this_constraint_static_identifiers((String) data2[currentRow][2]);	// 2 is the static_identifiers which have some attributes selected				
+						static_identifiersScrollPanel_silviculture.reload_this_constraint_static_identifiers((String) data2[currentRow][3]);	// 3 is the method & choice
+						btn_Edit.setEnabled(true);
+					} else {		// Disable Edit
+						btn_Edit.setEnabled(false);
+					}
+					
+					if (selectedRow.length >= 1 && table2.isEnabled()) {		// Enable Delete  when: >=1 row is selected, table is enable (often after Edit button finished its task)
+						btn_Delete.setEnabled(true);
+					} else {		// Disable Delete
+						btn_Delete.setEnabled(false);
+					}
+					
+					if (selectedRow.length >= 1 && btn_Sort.getText().equals("OFF")) {	// Enable Spinner when: >=1 row is selected and Sorter is off
+						spin_move_rows.setEnabled(true);
+					} else {		// Disable Spinner
+						spin_move_rows.setEnabled(false);
+					}
+				}
+			});
+			
 			table2.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
 		        public void valueChanged(ListSelectionEvent event) {
 		        	int[] selectedRow = table2.getSelectedRows();
@@ -3432,20 +3478,18 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						btn_Delete.setEnabled(true);
 					} else {		// Disable Delete
 						btn_Delete.setEnabled(false);
-					}	
+					}
+					
+					if (selectedRow.length >= 1 && btn_Sort.getText().equals("OFF")) {	// Enable Spinner when: >=1 row is selected and Sorter is off
+						spin_move_rows.setEnabled(true);
+					} else {		// Disable Spinner
+						spin_move_rows.setEnabled(false);
+					}
 		        }
 		    });			
 			table2.setAutoResizeMode(0);		// 0 = JTable.AUTO_RESIZE_OFF
 
 			
-			// Hide the column 2 and 3 and 4: this hide is better than remove column from column model, this is basically set size to be zero
-			for (int i = 2; i < 5; i++) {
-				table2.getColumnModel().getColumn(i).setMinWidth(0);
-				table2.getColumnModel().getColumn(i).setMaxWidth(0);
-				table2.getColumnModel().getColumn(i).setWidth(0);
-			}
-					
-
 			// New single
 			btn_NewSingle.addActionListener(e -> {		
 				// Add 1 row
@@ -3476,86 +3520,106 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			// Edit
 			btn_Edit.addActionListener(e -> {
 				if (table2.isEnabled()) {			
+					int selectedRow = table2.getSelectedRow();
+					selectedRow = table2.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems	
+	
+					// Apply change	
+					data2[selectedRow][2] = static_identifiersScrollPanel.get_static_info_from_GUI();
+					data2[selectedRow][3] = static_identifiersScrollPanel_silviculture.get_static_info_from_GUI();
+					model2.fireTableDataChanged();	
 					
-					//A  resizable popup panel indicating changes have been made
-					JPanel popup = new JPanel(new BorderLayout());
-					popup.setBorder(null);
-					popup.setPreferredSize(new Dimension(400, 150));	
-					JLabel temp_label = new JLabel(IconHandle.get_scaledImageIcon(150, 150, "pikachuHello.png"));	
-//					JLabel temp_label = new JLabel(IconHandle.get_scaledImageIcon_replicate(150, 150, "pikachuDance.gif"));
-					popup.add(temp_label, BorderLayout.WEST);
+					// Convert the edited Row to model view and then select it 
+					int editRow = table2.convertRowIndexToView(selectedRow);
+					table2.setRowSelectionInterval(editRow, editRow);
 					
-					JTextArea temp_textarea = new JTextArea();
-					temp_textarea.setBorder(null);
-					temp_textarea.setBackground(ColorUtil.makeTransparent(Color.WHITE, 0)); 
-					temp_textarea.setFocusable(false);
-					temp_textarea.setEditable(false);
-					temp_textarea.setLineWrap(true);
-					temp_textarea.setWrapStyleWord(true);
-					temp_textarea.append("The following infomation (in rectangles surrounded by green border) will be applied to the highlighted (blue) sm" + "\n \n");
-					temp_textarea.append("1. Strata with selected Layers Attributes" + "\n");
-					temp_textarea.append("2. Silviculture Method & Timing Choice" + "\n");
-					popup.add(temp_textarea, BorderLayout.CENTER);
-
-					popup.addHierarchyListener(new HierarchyListener() {
-					    public void hierarchyChanged(HierarchyEvent e) {
-					        Window window = SwingUtilities.getWindowAncestor(popup);
-					        if (window instanceof Dialog) {
-					            Dialog dialog = (Dialog)window;
-					            if (!dialog.isResizable()) {
-					                dialog.setResizable(true);
-					            }
-					        }
-					    }
-					});				
-
-					String ExitOption[] = {"Modify", "Do not modify"};
-					int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), popup, "Do you want to modify the highlighted sm ?",
-							JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, ExitOption, ExitOption[0]);	
-											
-					if (response == 0) {
-						// Apply change
-						int selectedRow = table2.getSelectedRow();
-						selectedRow = table2.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems		
-						data2[selectedRow][2] = static_identifiersScrollPanel.get_static_info_from_GUI();
-						data2[selectedRow][3] = static_identifiersScrollPanel_silviculture.get_static_info_from_GUI();
-						model2.fireTableDataChanged();	
-						
-						// Convert the edited Row to model view and then select it 
-						int editRow = table2.convertRowIndexToView(selectedRow);
-						table2.setRowSelectionInterval(editRow, editRow);
-						
-						// Enable buttons and table2
-						table2.setEnabled(true);
-						btn_NewSingle.setEnabled(true);
-						btn_Delete.setEnabled(true);
-						btn_Sort.setEnabled(true);
-						btn_Edit.setEnabled(true);
-						table_ScrollPane.setViewportView(table2);
-						
-						// Reset the view
-						int currentRow = table2.getSelectedRow();
-						currentRow = table2.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
-						static_identifiersScrollPanel.reload_this_constraint_static_identifiers((String) data2[currentRow][2]);	// 2 is the static_identifiers which have some attributes selected				
-						static_identifiersScrollPanel_silviculture.reload_this_constraint_static_identifiers((String) data2[currentRow][3]);	// 3 is the method & choice
-					}
-					
+					static_identifiersScrollPanel.highlight();
+					static_identifiersScrollPanel_silviculture.highlight();
 				} 
 			});
 			
 			
 			btn_Edit.addMouseListener(new MouseAdapter() { // Add listener
 				public void mouseEntered(java.awt.event.MouseEvent e) {
-					static_identifiersScrollPanel.setBackground(new Color(0, 255, 0));
-					static_identifiersScrollPanel_silviculture.setBackground(new Color(0, 255, 0));
+					if (table2.getSelectedRows().length == 1) {
+						static_identifiersScrollPanel.highlight();
+						static_identifiersScrollPanel_silviculture.highlight();
+					}
 				}
 
 				public void mouseExited(java.awt.event.MouseEvent e) {
-					static_identifiersScrollPanel.setBackground(null);
-					static_identifiersScrollPanel_silviculture.setBackground(null);
+					if (table2.getSelectedRows().length == 1) {
+						static_identifiersScrollPanel.unhighlight();
+						static_identifiersScrollPanel_silviculture.unhighlight();
+					}
 				}
 			});
 			
+			
+			// Spinner
+		    spin_move_rows.addChangeListener(new ChangeListener() {
+		        @Override
+		        public void stateChanged(ChangeEvent e) {
+					int up_or_down = (int) spin_move_rows.getValue() - 1;										
+					spin_move_rows.setValue((int) 1);	// Reset spinner value to 1
+										
+					if (up_or_down == 1) {	// move up
+						// Cancel editing before moving conditions up or down
+						if (table2.isEditing()) {
+							table2.getCellEditor().cancelCellEditing();
+						}	
+						
+						// Get selected rows
+						int[] selectedRow = table2.getSelectedRows();		// No need to convert row index because we never allow Sort when moving rows
+						List<Integer> selectedRowList = new ArrayList<Integer>() {{ for (int i : selectedRow) add(i);}};	// Convert array to list
+						
+						if (selectedRowList.size() >=1 && selectedRowList.get(0) > 0) {	// If there is at least 1 row selected & the first row is not selected
+							for (int i = 0; i < rowCount2; i++) {
+								if (selectedRowList.contains(i)) {		
+									for (int j = 0; j < colCount2; j++) {
+										Object temp = data2[i - 1][j];
+										data2[i - 1][j] = data2[i][j];
+										data2[i][j] = temp;
+									}
+								}
+							}							
+							model2.fireTableDataChanged();	// Update the changes and select the currently selected conditions
+							for (int i: selectedRow) {
+								table2.addRowSelectionInterval(i - 1, i - 1);
+							}
+						}
+					}
+										
+					if (up_or_down == -1) {	// move down						
+						if (table2.isEditing()) {
+							table2.getCellEditor().cancelCellEditing();	// cancel editing before moving conditions up or down
+						}	
+						
+						// Get selected rows
+						int[] selectedRow = table2.getSelectedRows();		// No need to convert row index because we never allow Sort when moving rows
+						List<Integer> selectedRowList = new ArrayList<Integer>() {{ for (int i : selectedRow) add(i);}};	// Convert array to list
+						
+						if (selectedRowList.size() >=1 && selectedRowList.get(selectedRowList.size() - 1) < rowCount2 - 1) {	// If ...
+							for (int i = rowCount2 - 1; i >= 0; i--) {
+								if (selectedRowList.contains(i)) {		
+									for (int j = 0; j < colCount2; j++) {
+										Object temp = data2[i + 1][j];
+										data2[i + 1][j] = data2[i][j];
+										data2[i][j] = temp;
+									}
+								}
+							}						
+							model2.fireTableDataChanged();	// Update the changes and select the currently selected conditions
+							for (int i: selectedRow) {
+								table2.addRowSelectionInterval(i + 1, i + 1);
+							}	
+						}						
+					}
+					
+					// Scroll to the first row of the current selected rows
+					table2.scrollRectToVisible(new Rectangle(table2.getCellRect(table2.convertRowIndexToView(table2.getSelectedRow()), 0, true)));	
+		        }
+		    });
+		    
 				
 			// Delete
 			btn_Delete.addActionListener(e -> {	
@@ -4044,13 +4108,13 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			// 1st grid -----------------------------------------------------------------------
 	        create_table4();
 			PrismTitleScrollPane CovertypeConversion_EA_ScrollPane = new PrismTitleScrollPane("Cover type conversion & rotation ageclass for clear cut", "CENTER", table4);										    
-		    
+			
 				        
 			// 2nd grid -----------------------------------------------------------------------
 			// 2nd grid -----------------------------------------------------------------------
 	        create_table5();
 	        PrismTitleScrollPane CovertypeConversion_SRD_ScrollPane = new PrismTitleScrollPane("Cover type conversion & regeneration for replacing disturbance", "CENTER", table5);									
-		    
+	        
 
 			// scrollPane Quick Edit 1 & 2-----------------------------------------------------------------------
 			// scrollPane Quick Edit 1 @ 2-----------------------------------------------------------------------		
@@ -4121,7 +4185,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c.weightx = 1;
 		    c.weighty = 1;
 
-		    // Add btnQuickEdit	
+		    // Add helpToolBar	
 			c.gridx = 0;
 			c.gridy = 0;
 			c.weightx = 0;
@@ -4352,13 +4416,14 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 //			model8a.match_DataType();		//a smart way to retrieve the original data type :))))))
 //			model8b.match_DataType();		//a smart way to retrieve the original data type :))))))
 			cost_tables_ScrollPane = new ScrollPane_CostTables(table8a, data8a, columnNames8a, table8b, data8b, columnNames8b);
+			cost_tables_ScrollPane.update_2_tables_data(data8a, data8b);
 			// End of 3rd grid -----------------------------------------------------------------------
 				    			
 	
 			// 4th Grid ------------------------------------------------------------------------------		// Buttons	
 			// 4th Grid -----------------------------------------------------------------------------
 			JPanel cost_condition_panel = new JPanel(new GridBagLayout());
-			TitledBorder border = new TitledBorder("Conditons to apply Costs in Priority Order");
+			TitledBorder border = new TitledBorder("Prioritized Cost Conditons (top row = highest priority)");
 			border.setTitleJustification(TitledBorder.CENTER);
 			cost_condition_panel.setBorder(border);
 			GridBagConstraints c = new GridBagConstraints();
@@ -4404,10 +4469,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 			// Add Spinner to move priority up or down
 			JSpinner spin_priority = new JSpinner (new SpinnerNumberModel(1, 0, 2, 1));
-			spin_priority.setToolTipText("Increase or decrease priority");
+			spin_priority.setToolTipText("Move conditions");
 			JFormattedTextField SpinnerText = ((DefaultEditor) spin_priority.getEditor()).getTextField();
 			SpinnerText.setHorizontalAlignment(JTextField.LEFT);
-			DefaultFormatter formatter = (DefaultFormatter) SpinnerText.getFormatter();
+			SpinnerText.setEditable(false);
+			SpinnerText.setFocusable(false);
+//			DefaultFormatter formatter = (DefaultFormatter) SpinnerText.getFormatter();
 //		    formatter.setCommitsOnValidEdit(true);
 		    spin_priority.setEnabled(false);
 		    c.gridx = 0;
@@ -4450,11 +4517,19 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						
 			
 			// Add Listeners for buttons----------------------------------------------------------
-			// Add Listeners for buttons----------------------------------------------------------		
+			// Add Listeners for buttons----------------------------------------------------------							
 			// table8
 			table8.addMouseListener(new MouseAdapter() { // Add listener
 				@Override
 				public void mouseReleased(MouseEvent e) {
+					// Cancel editing before moving conditions up or down
+					if (table8a.isEditing()) {
+						table8a.getCellEditor().cancelCellEditing();
+					}		
+					if (table8b.isEditing()) {
+						table8b.getCellEditor().cancelCellEditing();
+					}
+										
 					int[] selectedRow = table8.getSelectedRows();
 					
 					if (selectedRow.length == 1) {		// Show the set's identifiers
@@ -4463,23 +4538,39 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						static_identifiersScrollPanel.reload_this_constraint_static_identifiers((String) data8[currentRow][4]);	// 4 is the static_identifiers which have some attributes selected				
 						dynamic_identifiersScrollPanel.reload_this_constraint_dynamic_identifiers((String) data8[currentRow][5], (String) data8[currentRow][6]);	// 6 is the original_dynamic_identifiers column
 						cost_tables_ScrollPane.reload_this_condition_action_cost_and_conversion_cost((String) data8[currentRow][2], (String) data8[currentRow][3]);
+						cost_tables_ScrollPane.show_active_columns_after_reload();
+						
 						btn_Edit.setEnabled(true);
+						cost_tables_ScrollPane.show_2_tables();
 					} else {		// Disable Edit
 						btn_Edit.setEnabled(false);
+						cost_tables_ScrollPane.hide_2_tables();
 					}
 					
-					if (selectedRow.length >= 1 && table8.isEnabled()) {		// Enable Delete & Spinner when: >=1 row is selected, table is enable (often after Edit button finished its task)
+					if (selectedRow.length >= 1 && table8.isEnabled()) {	// Enable Delete  when: >=1 row is selected, table is enable (often after Edit button finished its task)
 						btn_Delete.setEnabled(true);
-						spin_priority.setEnabled(true);
 					} else {		// Disable Delete & Spinner
 						btn_Delete.setEnabled(false);
+					}	
+					
+					if (selectedRow.length >= 1) {	// Enable Spinner when: >=1 row is selected
+						spin_priority.setEnabled(true);
+					} else {		// Disable Delete & Spinner
 						spin_priority.setEnabled(false);
-					}		
+					}
 				}
 			});
 			
 			table8.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
 		        public void valueChanged(ListSelectionEvent event) {
+		        	// Cancel editing before moving conditions up or down
+					if (table8a.isEditing()) {
+						table8a.getCellEditor().cancelCellEditing();
+					}		
+					if (table8b.isEditing()) {
+						table8b.getCellEditor().cancelCellEditing();
+					}
+					
 		        	int[] selectedRow = table8.getSelectedRows();
 		        	
 		        	if (selectedRow.length == 1) {		// Show the set's identifiers
@@ -4488,18 +4579,43 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						static_identifiersScrollPanel.reload_this_constraint_static_identifiers((String) data8[currentRow][4]);	// 4 is the static_identifiers which have some attributes selected				
 						dynamic_identifiersScrollPanel.reload_this_constraint_dynamic_identifiers((String) data8[currentRow][5], (String) data8[currentRow][6]);	// 6 is the original_dynamic_identifiers column
 						cost_tables_ScrollPane.reload_this_condition_action_cost_and_conversion_cost((String) data8[currentRow][2], (String) data8[currentRow][3]);
+						cost_tables_ScrollPane.show_active_columns_after_reload();
 						btn_Edit.setEnabled(true);
+						cost_tables_ScrollPane.show_2_tables();
 					} else {		// Disable Edit
 						btn_Edit.setEnabled(false);
+						cost_tables_ScrollPane.hide_2_tables();
 					}
 		        	
-					if (selectedRow.length >= 1 && table8.isEnabled()) {		// Enable Delete & Spinner when: >=1 row is selected,table is enable (often after Edit button finished its task)
+					if (selectedRow.length >= 1 && table8.isEnabled()) {	// Enable Delete  when: >=1 row is selected, table is enable (often after Edit button finished its task)
 						btn_Delete.setEnabled(true);
-						spin_priority.setEnabled(true);
 					} else {		// Disable Delete & Spinner
 						btn_Delete.setEnabled(false);
+					}	
+					
+					if (selectedRow.length >= 1) {	// Enable Spinner when: >=1 row is selected
+						spin_priority.setEnabled(true);
+					} else {		// Disable Delete & Spinner
 						spin_priority.setEnabled(false);
 					}	
+		        }
+		    });
+			
+			table8a.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+		        public void valueChanged(ListSelectionEvent event) {
+		        	int currentRow = table8.getSelectedRow();		        	
+					currentRow = table8.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
+					cost_tables_ScrollPane.update_2_tables_data(data8a, data8b);	// Update so we have the latest data of table 8a & 8b to retrieve and write to table8 below
+					data8[currentRow][2] = cost_tables_ScrollPane.get_action_cost_info_from_GUI();					
+		        }
+		    });
+			
+			table8b.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+		        public void valueChanged(ListSelectionEvent event) {
+		        	int currentRow = table8.getSelectedRow();		        	
+					currentRow = table8.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
+					cost_tables_ScrollPane.update_2_tables_data(data8a, data8b);	// Update so we have the latest data of table 8a & 8b to retrieve and write to table8 below
+					data8[currentRow][3] = cost_tables_ScrollPane.get_conversion_cost_info_from_GUI();				
 		        }
 		    });
 			
@@ -4563,101 +4679,49 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			// Edit
 			btn_Edit.addActionListener(e -> {
 				if (table8.isEnabled()) {
-					//A  resizable popup panel indicating changes have been made
-					JPanel popup = new JPanel(new BorderLayout());
-					popup.setBorder(null);
-					popup.setPreferredSize(new Dimension(330, 150));	
-					JLabel temp_label = new JLabel(IconHandle.get_scaledImageIcon(150, 150, "pikachuHello.png"));									
-					popup.add(temp_label, BorderLayout.WEST);
+					int selectedRow = table8.getSelectedRow();
+					selectedRow = table8.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems	
 					
-					JTextArea temp_textarea = new JTextArea();
-					temp_textarea.setBorder(null);
-					temp_textarea.setBackground(ColorUtil.makeTransparent(Color.WHITE, 0)); 
-					temp_textarea.setFocusable(false);
-					temp_textarea.setEditable(false);
-					temp_textarea.setLineWrap(true);
-					temp_textarea.setWrapStyleWord(true);
-					temp_textarea.append("The following infomation (in rectangles surrounded by green border) will be applied to the highlighted (blue) condition" + "\n \n");
-					temp_textarea.append("1. Static Identifiers" + "\n");
-					temp_textarea.append("2. Dynamic Identifiers" + "\n");
-					temp_textarea.append("3. Action Cost" + "\n");
-					temp_textarea.append("4. Conversion Cost" + "\n");	
-					popup.add(temp_textarea, BorderLayout.CENTER);
-
-					popup.addHierarchyListener(new HierarchyListener() {
-					    public void hierarchyChanged(HierarchyEvent e) {
-					        Window window = SwingUtilities.getWindowAncestor(popup);
-					        if (window instanceof Dialog) {
-					            Dialog dialog = (Dialog)window;
-					            if (!dialog.isResizable()) {
-					                dialog.setResizable(true);
-					            }
-					        }
-					    }
-					});				
-
-					String ExitOption[] = {"Modify", "Do not modify"};
-					int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), popup, "Do you want to modify the highlighted condition ?",
-							JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, ExitOption, ExitOption[0]);	
-											
-					if (response == 0) {
-						// Apply change
-						int selectedRow = table8.getSelectedRow();
-						selectedRow = table8.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems	
-						data8[selectedRow][2] = cost_tables_ScrollPane.get_action_cost_info_from_GUI();
-						data8[selectedRow][3] = cost_tables_ScrollPane.get_conversion_cost_info_from_GUI();
-						data8[selectedRow][4] = static_identifiersScrollPanel.get_static_info_from_GUI();
-						data8[selectedRow][5] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();
-						data8[selectedRow][6] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
-						model8.fireTableDataChanged();	
-						
-						// Convert the edited Row to model view and then select it 
-						int editRow = table8.convertRowIndexToView(selectedRow);
-						table8.setRowSelectionInterval(editRow, editRow);
-						
-						// Enable buttons and table8
-						table8.setEnabled(true);
-						btn_New.setEnabled(true);
-						btn_Delete.setEnabled(true);	
-						btn_Edit.setEnabled(true);
-						table_ScrollPane.setViewportView(table8);
-						
-						// Reset the view
-						int currentRow = table8.getSelectedRow();
-						currentRow = table8.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
-						static_identifiersScrollPanel.reload_this_constraint_static_identifiers((String) data8[currentRow][4]);	// 4 is the static_identifiers which have some attributes selected				
-						dynamic_identifiersScrollPanel.reload_this_constraint_dynamic_identifiers((String) data8[currentRow][5], (String) data8[currentRow][6]);	// 6 is the original_dynamic_identifiers column
-						cost_tables_ScrollPane.reload_this_condition_action_cost_and_conversion_cost((String) data8[currentRow][2], (String) data8[currentRow][3]);
-					}
+					// Apply change
+					data8[selectedRow][4] = static_identifiersScrollPanel.get_static_info_from_GUI();
+					data8[selectedRow][5] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();
+					data8[selectedRow][6] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
+					model8.fireTableDataChanged();	
+					
+					// Convert the edited Row to model view and then select it 
+					int editRow = table8.convertRowIndexToView(selectedRow);
+					table8.setRowSelectionInterval(editRow, editRow);
+					
+					static_identifiersScrollPanel.highlight();
+					dynamic_identifiersScrollPanel.highlight();			
 				} 
 			});			
 			
 			
 			btn_Edit.addMouseListener(new MouseAdapter() { // Add listener
 				public void mouseEntered(java.awt.event.MouseEvent e) {
-					static_identifiersScrollPanel.setBackground(new Color(0, 255, 0));
-					dynamic_identifiersScrollPanel.setBackground(new Color(0, 255, 0));
-					cost_tables_ScrollPane.get_action_base_adjust_scrollpane().setBackground(new Color(0, 255, 0));
-					cost_tables_ScrollPane.get_conversion_base_adjust_scrollpane().setBackground(new Color(0, 255, 0));
+					if (table8.getSelectedRows().length == 1) {
+						static_identifiersScrollPanel.highlight();
+						dynamic_identifiersScrollPanel.highlight();
+					}
 				}
 
 				public void mouseExited(java.awt.event.MouseEvent e) {
-					static_identifiersScrollPanel.setBackground(null);
-					dynamic_identifiersScrollPanel.setBackground(null);
-					cost_tables_ScrollPane.get_action_base_adjust_scrollpane().setBackground(null);
-					cost_tables_ScrollPane.get_conversion_base_adjust_scrollpane().setBackground(null);
+					if (table8.getSelectedRows().length == 1) {
+						static_identifiersScrollPanel.unhighlight();
+						dynamic_identifiersScrollPanel.unhighlight();
+					}
 				}
 			});
 			
 			
 			// Spinner
-		    spin_priority.addChangeListener(new ChangeListener() {
+			spin_priority.addChangeListener(new ChangeListener() {
 		        @Override
 		        public void stateChanged(ChangeEvent e) {
 					int up_or_down = (int) spin_priority.getValue() - 1;										
 					spin_priority.setValue((int) 1);	// Reset spinner value to 1
-					
-					
+										
 					if (up_or_down == 1) {	// move up
 						// Cancel editing before moving conditions up or down
 						if (table8.isEditing()) {
@@ -4665,57 +4729,54 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						}	
 						
 						// Get selected rows
-						int[] selectedRow = table8.getSelectedRows();		// No need to convert row index because we never allow Sort on this table
+						int[] selectedRow = table8.getSelectedRows();		// No need to convert row index because we never allow Sort when moving rows
 						List<Integer> selectedRowList = new ArrayList<Integer>() {{ for (int i : selectedRow) add(i);}};	// Convert array to list
 						
-						if (selectedRowList.get(0) > 0) {	// If the first row (1st priority condition) is not selected
+						if (selectedRowList.size() >=1 && selectedRowList.get(0) > 0) {	// If there is at least 1 row selected & the first row is not selected
 							for (int i = 0; i < rowCount8; i++) {
 								if (selectedRowList.contains(i)) {		
-									for (int j = 1; j < colCount8; j++) {	// not change the number in the priority column (j=0)
+									for (int j = 0; j < colCount8; j++) {
 										Object temp = data8[i - 1][j];
 										data8[i - 1][j] = data8[i][j];
 										data8[i][j] = temp;
 									}
 								}
-							}
-							// Update the changes and select the currently selected conditions
-							model8.fireTableDataChanged();
+							}							
+							model8.fireTableDataChanged();	// Update the changes and select the currently selected conditions
 							for (int i: selectedRow) {
 								table8.addRowSelectionInterval(i - 1, i - 1);
 							}
 						}
 					}
-					
-					
-					if (up_or_down == -1) {	// move down
-						//Cancel editing before moving conditions up or down
+										
+					if (up_or_down == -1) {	// move down						
 						if (table8.isEditing()) {
-							table8.getCellEditor().cancelCellEditing();
+							table8.getCellEditor().cancelCellEditing();	// cancel editing before moving conditions up or down
 						}	
 						
 						// Get selected rows
-						int[] selectedRow = table8.getSelectedRows();		// No need to convert row index because we never allow Sort on this table
+						int[] selectedRow = table8.getSelectedRows();		// No need to convert row index because we never allow Sort when moving rows
 						List<Integer> selectedRowList = new ArrayList<Integer>() {{ for (int i : selectedRow) add(i);}};	// Convert array to list
 						
-						if (selectedRowList.get(selectedRowList.size() - 1) < rowCount8 - 1) {	// If 
+						if (selectedRowList.size() >=1 && selectedRowList.get(selectedRowList.size() - 1) < rowCount8 - 1) {	// If ...
 							for (int i = rowCount8 - 1; i >= 0; i--) {
 								if (selectedRowList.contains(i)) {		
-									for (int j = 1; j < colCount8; j++) {	// not change the number in the priority column (j=0)
+									for (int j = 0; j < colCount8; j++) {
 										Object temp = data8[i + 1][j];
 										data8[i + 1][j] = data8[i][j];
 										data8[i][j] = temp;
 									}
 								}
 							}						
-							// Update the changes and select the currently selected conditions
-							model8.fireTableDataChanged();
+							model8.fireTableDataChanged();	// Update the changes and select the currently selected conditions
 							for (int i: selectedRow) {
 								table8.addRowSelectionInterval(i + 1, i + 1);
 							}	
-						}
-						
-
+						}						
 					}
+					
+					// Scroll to the first row of the current selected rows
+					table8.scrollRectToVisible(new Rectangle(table8.getCellRect(table8.convertRowIndexToView(table8.getSelectedRow()), 0, true)));	
 		        }
 		    });
 		    
@@ -4759,10 +4820,11 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			// End of Listeners for table9 & buttons -----------------------------------------------------------------------
 			// End of Listeners for table9 & buttons -----------------------------------------------------------------------		    
 		    
-	
 			
-				
-	        // scrollPane Quick Edit ----------------------------------------------------------------------	
+			
+			
+			
+			// scrollPane Quick Edit ----------------------------------------------------------------------	
 			// scrollPane Quick Edit ----------------------------------------------------------------------	
 			JScrollPane scrollpane_QuickEdit = new JScrollPane(new QuickEdit_ManagementCost_Panel(table8a, data8a, columnNames8a, table8b, data8b));			
 			border = new TitledBorder("Quick Edit ");
@@ -4813,9 +4875,33 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			helpToolBar.add(btnQuickEdit);
 			helpToolBar.add(btnHelp);
 			// End of ToolBar Panel -----------------------------------------------------------------------
-			// End of ToolBar Panel ----------------------------------------------------------------------- 				
+			// End of ToolBar Panel ----------------------------------------------------------------------- 
+	
+			
+			
+						
+			
+			// Add 3 tables into the same panel
+			JPanel combine_panel = new JPanel(new GridBagLayout());
+			c = new GridBagConstraints();
+			
+			// Add the cost_condition_panel	
+			combine_panel.add(cost_condition_panel, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+					0, 0, 1, 2, 1, 1, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+					0, 0, 0, 0));		// insets top, left, bottom, right
 				
-				
+			// Add the cost_tables_ScrollPane to the main Grid	
+			combine_panel.add(cost_tables_ScrollPane, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+					1, 0, 1, 1, 0, 1, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+					0, 0, 0, 0));		// insets top, left, bottom, right
+	
+			// Add scrollpane_QuickEdit	
+			combine_panel.add(scrollpane_QuickEdit, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+					1, 1, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+					0, 0, 0, 0));		// insets top, left, bottom, right
+			
+
+						
 			
 			    			    
 			// Add all Grids to the Main Grid-----------------------------------------------------------------------
@@ -4826,7 +4912,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			// Add helpToolBar to the main Grid
 			c.gridx = 0;
 			c.gridy = 0;
-			c.gridwidth = 4;
+			c.gridwidth = 2;
 			c.gridheight = 1;
 			c.weightx = 0;
 		    c.weighty = 0;
@@ -4844,39 +4930,20 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			// Add dynamic_identifiersPanel to the main Grid
 			c.gridx = 1;
 			c.gridy = 1;
-			c.gridwidth = 3;
+			c.gridwidth = 1;
 			c.gridheight = 1;
 			c.weightx = 1;
 			c.weighty = 0;
 			super.add(dynamic_identifiersScrollPanel, c);	
-			
-			    		
-			// Add the cost_tables_ScrollPane to the main Grid	
+						    				
+			// Add the combine_panel to the main Grid	
 			c.gridx = 0;
 			c.gridy = 2;
 			c.gridwidth = 2;
 			c.gridheight = 1;
 			c.weightx = 0;
 		    c.weighty = 1;
-			super.add(cost_tables_ScrollPane, c);	
-			
-			// Add scrollpane_QuickEdit	
-			c.gridx = 2;
-			c.gridy = 2;
-			c.weightx = 0;
-		    c.weighty = 0;
-			c.gridwidth = 1;
-			c.gridheight = 1;
-			super.add(scrollpane_QuickEdit, c);	
-		    	    		    
-		    // Add the cost_condition_panel	
-			c.gridx = 3;
-			c.gridy = 2;
-			c.gridwidth = 1; 
-			c.gridheight = 1;
-			c.weightx = 1;
-		    c.weighty = 1;
-			super.add(cost_condition_panel, c);
+			super.add(combine_panel, c);	
 			
 			//when radioButton_Right[5] is selected, time period GUI will be updated
 			radioButton_Right[5].addActionListener(this);			
@@ -4980,9 +5047,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			JButton btn_NewSingle = new JButton();
 			btn_NewSingle.setFont(new Font(null, Font.BOLD, 14));
 //			btn_NewSingle.setText("NEW SINGLE");
-			btn_NewSingle.setToolTipText("New constraint");
-			btn_NewSingle.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_add.png"));
-					
+			btn_NewSingle.setToolTipText("New");
+			btn_NewSingle.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_add.png"));					
 			c2.gridx = 0;
 			c2.gridy = 0;
 			c2.weightx = 0;
@@ -4993,9 +5059,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			JButton btn_New_Multiple = new JButton();
 			btn_New_Multiple.setFont(new Font(null, Font.BOLD, 14));
 //			btn_New_Multiple.setText("NEW MULTIPLE");
-			btn_New_Multiple.setToolTipText("New set of constraints");
-			btn_New_Multiple.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_add3.png"));
-					
+			btn_New_Multiple.setToolTipText("New multiple");
+			btn_New_Multiple.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_add3.png"));					
 			c2.gridx = 0;
 			c2.gridy = 1;
 			c2.weightx = 0;
@@ -5004,10 +5069,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			JButton btn_Edit = new JButton();
 //			btn_Edit.setText("EDIT");
-			btn_Edit.setToolTipText("Modify constraint");
+			btn_Edit.setToolTipText("Modify");
 			btn_Edit.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_swap.png"));
-			btn_Edit.setEnabled(false);
-					
+			btn_Edit.setEnabled(false);					
 			c2.gridx = 0;
 			c2.gridy = 2;
 			c2.weightx = 0;
@@ -5015,15 +5079,30 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			button_table_Panel.add(btn_Edit, c2);
 			
 			
+			JSpinner spin_move_rows = new JSpinner (new SpinnerNumberModel(1, 0, 2, 1));
+			spin_move_rows.setToolTipText("Move");
+			JFormattedTextField SpinnerText = ((DefaultEditor) spin_move_rows.getEditor()).getTextField();
+			SpinnerText.setHorizontalAlignment(JTextField.LEFT);
+			SpinnerText.setEditable(false);
+			SpinnerText.setFocusable(false);
+//			DefaultFormatter formatter = (DefaultFormatter) SpinnerText.getFormatter();
+//		    formatter.setCommitsOnValidEdit(true);
+		    spin_move_rows.setEnabled(false);
+		    c2.gridx = 0;
+			c2.gridy = 3;
+			c2.weightx = 0;
+			c2.weighty = 0;
+			button_table_Panel.add(spin_move_rows, c2);
+			
+			
 			JButton btn_Delete = new JButton();
 			btn_Delete.setFont(new Font(null, Font.BOLD, 14));
 //			btn_Delete.setText("DELETE");
-			btn_Delete.setToolTipText("Delete constraints");
+			btn_Delete.setToolTipText("Delete");
 			btn_Delete.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_erase.png"));
-			btn_Delete.setEnabled(false);
-					
+			btn_Delete.setEnabled(false);					
 			c2.gridx = 0;
-			c2.gridy = 3;
+			c2.gridy = 4;
 			c2.weightx = 0;
 			c2.weighty = 0;
 			button_table_Panel.add(btn_Delete, c2);
@@ -5035,10 +5114,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			btn_Sort.setFont(new Font(null, Font.BOLD, 12));
 			btn_Sort.setText("OFF");
 			btn_Sort.setToolTipText("Sorter mode: 'ON' click columns header to sort rows. 'OFF' retrieve original rows position");
-			btn_Sort.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_table.png"));
-					
+			btn_Sort.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_table.png"));					
 			c2.gridx = 0;
-			c2.gridy = 4;
+			c2.gridy = 5;
 			c2.weightx = 0;
 			c2.weighty = 0;
 			button_table_Panel.add(btn_Sort, c2);
@@ -5048,10 +5126,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			btn_Validate.setFont(new Font(null, Font.BOLD, 14));
 //			btn_Validate.setText("VALIDATE");
 			btn_Validate.setToolTipText("Validate constraints");
-			btn_Validate.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_zoom.png"));
-					
+			btn_Validate.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_zoom.png"));					
 			c2.gridx = 0;
-			c2.gridy = 5;
+			c2.gridy = 6;
 			c2.weightx = 0;
 			c2.weighty = 0;
 			button_table_Panel.add(btn_Validate, c2);
@@ -5060,7 +5137,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c2.insets = new Insets(0, 0, 0, 0); // No padding
 			// Add Empty Label to make all buttons on top not middle
 			c2.gridx = 0;
-			c2.gridy = 6;
+			c2.gridy = 7;
 			c2.weightx = 0;
 			c2.weighty = 1;
 			button_table_Panel.add(new JLabel(), c2);
@@ -5072,7 +5149,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c2.gridy = 0;
 			c2.weightx = 1;
 			c2.weighty = 1;
-			c2.gridheight = 7;
+			c2.gridheight = 8;
 			button_table_Panel.add(table_ScrollPane, c2);
 			// End of 4th Grid -----------------------------------------------------------------------
 			// End of 4th Grid -----------------------------------------------------------------------	
@@ -5103,6 +5180,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					} else {		// Disable Delete
 						btn_Delete.setEnabled(false);
 					}		
+					
+					if (selectedRow.length >= 1 && btn_Sort.getText().equals("OFF")) {	// Enable Spinner when: >=1 row is selected and Sorter is off
+						spin_move_rows.setEnabled(true);
+					} else {		// Disable Spinner
+						spin_move_rows.setEnabled(false);
+					}
 				}
 			});
 			
@@ -5125,6 +5208,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					} else {		// Disable Delete
 						btn_Delete.setEnabled(false);
 					}	
+					
+					if (selectedRow.length >= 1 && btn_Sort.getText().equals("OFF")) {	// Enable Spinner when: >=1 row is selected and Sorter is off
+						spin_move_rows.setEnabled(true);
+					} else {		// Disable Spinner
+						spin_move_rows.setEnabled(false);
+					}
 		        }
 		    });
 			
@@ -5163,7 +5252,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			// New Multiple
 			btn_New_Multiple.addActionListener(e -> {
-				ScrollPane_ConstraintsSplit constraint_split_ScrollPanel = new ScrollPane_ConstraintsSplit(
+				ScrollPane_ConstraintsSplitBasic constraint_split_ScrollPanel = new ScrollPane_ConstraintsSplitBasic(
 						static_identifiersScrollPanel.get_TitleAsCheckboxes(),
 						parametersScrollPanel.get_checkboxParameter(),
 						dynamic_identifiersScrollPanel.get_allDynamicIdentifiers());
@@ -5371,92 +5460,112 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			// Edit
 			btn_Edit.addActionListener(e -> {
-				if (table9.isEnabled()) {					
-					//A  resizable popup panel indicating changes have been made
-					JPanel popup = new JPanel(new BorderLayout());
-					popup.setBorder(null);
-					popup.setPreferredSize(new Dimension(330, 150));	
-					JLabel temp_label = new JLabel(IconHandle.get_scaledImageIcon(150, 150, "pikachuHello.png"));									
-					popup.add(temp_label, BorderLayout.WEST);
+				if (table9.isEnabled()) {				
+					int selectedRow = table9.getSelectedRow();
+					selectedRow = table9.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems		
 					
-					JTextArea temp_textarea = new JTextArea();
-					temp_textarea.setBorder(null);
-					temp_textarea.setBackground(ColorUtil.makeTransparent(Color.WHITE, 0)); 
-					temp_textarea.setFocusable(false);
-					temp_textarea.setEditable(false);
-					temp_textarea.setLineWrap(true);
-					temp_textarea.setWrapStyleWord(true);
-					temp_textarea.append("The following infomation (in rectangles surrounded by green border) will be applied to the highlighted (blue) constraint" + "\n \n");
-					temp_textarea.append("1. Static Identifiers" + "\n");
-					temp_textarea.append("2. Dynamic Identifiers" + "\n");
-					temp_textarea.append("3. Parameters" + "\n");
-					popup.add(temp_textarea, BorderLayout.CENTER);
-
-					popup.addHierarchyListener(new HierarchyListener() {
-					    public void hierarchyChanged(HierarchyEvent e) {
-					        Window window = SwingUtilities.getWindowAncestor(popup);
-					        if (window instanceof Dialog) {
-					            Dialog dialog = (Dialog)window;
-					            if (!dialog.isResizable()) {
-					                dialog.setResizable(true);
-					            }
-					        }
-					    }
-					});				
-
-					String ExitOption[] = {"Modify", "Do not modify"};
-					int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), popup, "Do you want to modify the highlighted constraint ?",
-							JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, ExitOption, ExitOption[0]);	
-											
-					if (response == 0) {
-						// Apply change
-						int selectedRow = table9.getSelectedRow();
-						selectedRow = table9.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems										
-						data9[selectedRow][8] = parametersScrollPanel.get_parameters_info_from_GUI();
-						data9[selectedRow][9] = static_identifiersScrollPanel.get_static_info_from_GUI();
-						data9[selectedRow][10] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();	
-						data9[selectedRow][11] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
-						model9.fireTableDataChanged();	
-						
-						// Convert the edited Row to model view and then select it 
-						int editRow = table9.convertRowIndexToView(selectedRow);
-						table9.setRowSelectionInterval(editRow, editRow);
-						
-						// Enable buttons and table9
-						table9.setEnabled(true);
-						btn_NewSingle.setEnabled(true);
-						btn_New_Multiple.setEnabled(true);
-						btn_Delete.setEnabled(true);
-						btn_Sort.setEnabled(true);
-						btn_Validate.setEnabled(true);	
-						btn_Edit.setEnabled(true);
-						table_ScrollPane.setViewportView(table9);
-						
-						// Reset the view
-						int currentRow = table9.getSelectedRow();
-						currentRow = table9.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
-						static_identifiersScrollPanel.reload_this_constraint_static_identifiers((String) data9[currentRow][9]);	// 9 is the static_identifiers which have some attributes selected				
-						dynamic_identifiersScrollPanel.reload_this_constraint_dynamic_identifiers((String) data9[currentRow][10], (String) data9[currentRow][11]);	// 11 is the original_dynamic_identifiers column
-						parametersScrollPanel.reload_this_constraint_parameters((String) data9[currentRow][8]);	// 8 is the selected parameters of this constraint
-					}				
-				} 
+					// Apply change
+					data9[selectedRow][8] = parametersScrollPanel.get_parameters_info_from_GUI();
+					data9[selectedRow][9] = static_identifiersScrollPanel.get_static_info_from_GUI();
+					data9[selectedRow][10] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();	
+					data9[selectedRow][11] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
+					model9.fireTableDataChanged();	
+					
+					// Convert the edited Row to model view and then select it 
+					int editRow = table9.convertRowIndexToView(selectedRow);
+					table9.setRowSelectionInterval(editRow, editRow);
+					
+					static_identifiersScrollPanel.highlight();
+					dynamic_identifiersScrollPanel.highlight();
+					parametersScrollPanel.highlight();
+				}
 			});
 			
 			
 			btn_Edit.addMouseListener(new MouseAdapter() { // Add listener
 				public void mouseEntered(java.awt.event.MouseEvent e) {
-					static_identifiersScrollPanel.setBackground(new Color(0, 255, 0));
-					dynamic_identifiersScrollPanel.setBackground(new Color(0, 255, 0));
-					parametersScrollPanel.setBackground(new Color(0, 255, 0));
+					if (table9.getSelectedRows().length == 1) {
+						static_identifiersScrollPanel.highlight();
+						dynamic_identifiersScrollPanel.highlight();
+						parametersScrollPanel.highlight();
+					}
 				}
 
 				public void mouseExited(java.awt.event.MouseEvent e) {
-					static_identifiersScrollPanel.setBackground(null);
-					dynamic_identifiersScrollPanel.setBackground(null);
-					parametersScrollPanel.setBackground(null);
+					if (table9.getSelectedRows().length == 1) {
+						static_identifiersScrollPanel.unhighlight();
+						dynamic_identifiersScrollPanel.unhighlight();
+						parametersScrollPanel.unhighlight();
+					}
 				}
 			});
 			
+			
+			// Spinner
+		    spin_move_rows.addChangeListener(new ChangeListener() {
+		        @Override
+		        public void stateChanged(ChangeEvent e) {
+					int up_or_down = (int) spin_move_rows.getValue() - 1;										
+					spin_move_rows.setValue((int) 1);	// Reset spinner value to 1
+										
+					if (up_or_down == 1) {	// move up
+						// Cancel editing before moving conditions up or down
+						if (table9.isEditing()) {
+							table9.getCellEditor().cancelCellEditing();
+						}	
+						
+						// Get selected rows
+						int[] selectedRow = table9.getSelectedRows();		// No need to convert row index because we never allow Sort when moving rows
+						List<Integer> selectedRowList = new ArrayList<Integer>() {{ for (int i : selectedRow) add(i);}};	// Convert array to list
+						
+						if (selectedRowList.size() >=1 && selectedRowList.get(0) > 0) {	// If there is at least 1 row selected & the first row is not selected
+							for (int i = 0; i < rowCount9; i++) {
+								if (selectedRowList.contains(i)) {		
+									for (int j = 0; j < colCount9; j++) {
+										Object temp = data9[i - 1][j];
+										data9[i - 1][j] = data9[i][j];
+										data9[i][j] = temp;
+									}
+								}
+							}							
+							model9.fireTableDataChanged();	// Update the changes and select the currently selected conditions
+							for (int i: selectedRow) {
+								table9.addRowSelectionInterval(i - 1, i - 1);
+							}
+						}
+					}
+										
+					if (up_or_down == -1) {	// move down						
+						if (table9.isEditing()) {
+							table9.getCellEditor().cancelCellEditing();	// cancel editing before moving conditions up or down
+						}	
+						
+						// Get selected rows
+						int[] selectedRow = table9.getSelectedRows();		// No need to convert row index because we never allow Sort when moving rows
+						List<Integer> selectedRowList = new ArrayList<Integer>() {{ for (int i : selectedRow) add(i);}};	// Convert array to list
+						
+						if (selectedRowList.size() >=1 && selectedRowList.get(selectedRowList.size() - 1) < rowCount9 - 1) {	// If ...
+							for (int i = rowCount9 - 1; i >= 0; i--) {
+								if (selectedRowList.contains(i)) {		
+									for (int j = 0; j < colCount9; j++) {
+										Object temp = data9[i + 1][j];
+										data9[i + 1][j] = data9[i][j];
+										data9[i][j] = temp;
+									}
+								}
+							}						
+							model9.fireTableDataChanged();	// Update the changes and select the currently selected conditions
+							for (int i: selectedRow) {
+								table9.addRowSelectionInterval(i + 1, i + 1);
+							}	
+						}						
+					}
+					
+					// Scroll to the first row of the current selected rows
+					table9.scrollRectToVisible(new Rectangle(table9.getCellRect(table9.convertRowIndexToView(table9.getSelectedRow()), 0, true)));	
+		        }
+		    });
+		    
 				
 			// Delete
 			btn_Delete.addActionListener(e -> {
@@ -5724,6 +5833,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		DefaultListModel id_list_model;
 		JList id_list;
 		JPanel button_table_Panel;
+		JSpinner spin_sigma;
 		
 		QuickEdit_FlowConstraints_Panel quick_edit;
 		JScrollPane scrollpane_QuickEdit;
@@ -5762,19 +5872,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				            tableColumn.getHeaderValue(), false, false, -1, column);
 					maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
 					
-					tableColumn.setPreferredWidth(maxWidth);
-									
-//					// Set background color
-//					if (getValueAt(row, 2) == null || getValueAt(row, 2).toString().equals("FREE")) {
-//						component.setBackground(getBackground());
-//					} else if (getValueAt(row, 2).toString().equals("SOFT")) {
-//						component.setBackground(ColorUtil.makeTransparent(new Color(27, 158, 119), 100));
-//						
-//					} else if (getValueAt(row, 2).toString().equals("HARD")) {
-//						component.setBackground(ColorUtil.makeTransparent(new Color(217, 95, 2), 100));
-//						
-//					}
-//					if (isRowSelected(row)) component.setBackground(getSelectionBackground());		// for selected row
+					tableColumn.setPreferredWidth(maxWidth);									
 							
 					// Set icon for cells
 					if (column == 2) {
@@ -5789,20 +5887,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					
 					return component;
 				}
-			};
-			
-//			basic_table.addMouseListener(new MouseAdapter() { // Add listener to get the currently selected rows and put IDs into the id_list
-//				public void mouseReleased(MouseEvent e) {
-//					id_list_model = new DefaultListModel<>();					
-//					int[] selectedRow = basic_table.getSelectedRows();	
-//					for (int i = 0; i < selectedRow.length; i++) {
-//						selectedRow[i] = basic_table.convertRowIndexToModel(selectedRow[i]);	///Convert row index because "Sort" causes problems
-//						id_list_model.addElement(data9[selectedRow[i]][0]);				
-//					}	
-//					id_list.setModel(id_list_model);
-//				}
-//			});
-			
+			};			
 			
 			// Add listener to get the currently selected rows and put IDs into the id_list
 			basic_table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
@@ -5817,14 +5902,13 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		        }
 		    });			
 			basic_table.setAutoResizeMode(0);		// 0 = JTable.AUTO_RESIZE_OFF
-
 			
-			// Hide the last 4 columns: this hide is better than remove column from column model, this is basically set size to be zero
-			for (int i = basic_table.getColumnCount() - 4; i < basic_table.getColumnCount(); i++) {
-				basic_table.getColumnModel().getColumn(i).setMinWidth(0);
-				basic_table.getColumnModel().getColumn(i).setMaxWidth(0);
-				basic_table.getColumnModel().getColumn(i).setWidth(0);
-			}
+			// Hide columns
+			TableColumnsHandle table_handle = new TableColumnsHandle(basic_table);
+			table_handle.setColumnVisible("parameter_index", false);
+			table_handle.setColumnVisible("static_identifiers", false);
+			table_handle.setColumnVisible("dynamic_identifiers", false);
+			table_handle.setColumnVisible("original_dynamic_identifiers", false);
 			
 			PrismTitleScrollPane basic_table_scrollPane = new PrismTitleScrollPane("Sources (Basic Constraints)", "CENTER", basic_table);
 			basic_table_scrollPane.setPreferredSize(new Dimension(400, 250));
@@ -5845,7 +5929,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			JButton btn_NewSingle = new JButton();
 			btn_NewSingle.setFont(new Font(null, Font.BOLD, 14));
-			btn_NewSingle.setToolTipText("New flow");
+			btn_NewSingle.setToolTipText("New: require at least 2 unempty Sigma boxes");
 			btn_NewSingle.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_add.png"));					
 			c2.gridx = 0;
 			c2.gridy = 0;
@@ -5855,7 +5939,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			
 			JButton btn_Edit = new JButton();
-			btn_Edit.setToolTipText("Modify flow");
+			btn_Edit.setToolTipText("Modify");
 			btn_Edit.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_swap.png"));
 			btn_Edit.setEnabled(false);					
 			c2.gridx = 0;
@@ -5865,13 +5949,29 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			button_table_Panel.add(btn_Edit, c2);
 			
 			
+			JSpinner spin_move_rows = new JSpinner (new SpinnerNumberModel(1, 0, 2, 1));
+			spin_move_rows.setToolTipText("Move");
+			JFormattedTextField SpinnerText = ((DefaultEditor) spin_move_rows.getEditor()).getTextField();
+			SpinnerText.setHorizontalAlignment(JTextField.LEFT);
+			SpinnerText.setEditable(false);
+			SpinnerText.setFocusable(false);
+//			DefaultFormatter formatter = (DefaultFormatter) SpinnerText.getFormatter();
+//		    formatter.setCommitsOnValidEdit(true);
+		    spin_move_rows.setEnabled(false);
+		    c2.gridx = 0;
+			c2.gridy = 2;
+			c2.weightx = 0;
+			c2.weighty = 0;
+			button_table_Panel.add(spin_move_rows, c2);
+			
+			
 			JButton btn_Delete = new JButton();
 			btn_Delete.setFont(new Font(null, Font.BOLD, 14));
-			btn_Delete.setToolTipText("Delete flows");
+			btn_Delete.setToolTipText("Delete");
 			btn_Delete.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_erase.png"));
 			btn_Delete.setEnabled(false);				
 			c2.gridx = 0;
-			c2.gridy = 2;
+			c2.gridy = 3;
 			c2.weightx = 0;
 			c2.weighty = 0;
 			button_table_Panel.add(btn_Delete, c2);
@@ -5885,7 +5985,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			btn_Sort.setToolTipText("Sorter mode: 'ON' click columns header to sort rows. 'OFF' retrieve original rows position");
 			btn_Sort.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_table.png"));				
 			c2.gridx = 0;
-			c2.gridy = 3;
+			c2.gridy = 4;
 			c2.weightx = 0;
 			c2.weighty = 0;
 			button_table_Panel.add(btn_Sort, c2);
@@ -5896,7 +5996,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			btn_Validate.setToolTipText("Validate flows");
 			btn_Validate.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_zoom.png"));				
 			c2.gridx = 0;
-			c2.gridy = 4;
+			c2.gridy = 5;
 			c2.weightx = 0;
 			c2.weighty = 0;
 			button_table_Panel.add(btn_Validate, c2);
@@ -5905,7 +6005,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c2.insets = new Insets(0, 0, 0, 0); // No padding
 			// Add Empty Label to make all buttons on top not middle
 			c2.gridx = 0;
-			c2.gridy = 5;
+			c2.gridy = 6;
 			c2.weightx = 0;
 			c2.weighty = 1;
 			button_table_Panel.add(new JLabel(), c2);
@@ -5917,7 +6017,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c2.gridy = 0;
 			c2.weightx = 1;
 			c2.weighty = 1;
-			c2.gridheight = 6;
+			c2.gridheight = 7;
 			button_table_Panel.add(table_ScrollPane, c2);
 			// End of 4th Grid -----------------------------------------------------------------------
 			// End of 4th Grid -----------------------------------------------------------------------	
@@ -5933,23 +6033,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				public void mouseReleased(MouseEvent e) {
 					int[] selectedRow = table10.getSelectedRows();
 					if (selectedRow.length == 1) {		// Enable Edit	when: 1 row is selected and no cell is editing						
-						// Reload GUI				
-						int currentRow = selectedRow[0];
-						currentRow = table10.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems							
-						String[] flow_arrangement = data10[currentRow][2].toString().split(";");
-						DefaultListModel[] list_model = new DefaultListModel[flow_arrangement.length];					
-						for (int i = 0; i < flow_arrangement.length; i++) {		
-							list_model[i] = new DefaultListModel();
-							String[] arrangement = flow_arrangement[i].split(" ");							
-							for (String a: arrangement) {
-								list_model[i].addElement(a);
-							}		
-						}
-						flow_scrollPane.create_flow_arrangement_UI(list_model);	
-						
+						flow_scrollPane.reload_flow_arrangement_for_one_flow(table10, data10, spin_sigma);
 						btn_Edit.setEnabled(true);
 					} else {		// Disable Edit
 						btn_Edit.setEnabled(false);
+						flow_scrollPane.create_flow_arrangement_UI(new DefaultListModel[0]);	// show nothing: no Sigma box
+						spin_sigma.setValue(0);	// set the spin sigma to zero
 					}
 					
 					if (selectedRow.length >= 1 && table10.isEnabled()) {		// Enable Delete  when: >=1 row is selected, table is enable (often after Edit button finished its task)
@@ -5957,6 +6046,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					} else {		// Disable Delete
 						btn_Delete.setEnabled(false);
 					}		
+					
+					if (selectedRow.length >= 1 && btn_Sort.getText().equals("OFF")) {	// Enable Spinner when: >=1 row is selected and Sorter is off
+						spin_move_rows.setEnabled(true);
+					} else {		// Disable Spinner
+						spin_move_rows.setEnabled(false);
+					}
 				}
 			});
 			
@@ -5964,23 +6059,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		        public void valueChanged(ListSelectionEvent event) {
 		        	int[] selectedRow = table10.getSelectedRows();
 					if (selectedRow.length == 1) {		// Enable Edit	when: 1 row is selected and no cell is editing
-						// Reload GUI				
-						int currentRow = selectedRow[0];
-						currentRow = table10.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems				
-						String[] flow_arrangement = data10[currentRow][2].toString().split(";");
-						DefaultListModel[] list_model = new DefaultListModel[flow_arrangement.length];					
-						for (int i = 0; i < flow_arrangement.length; i++) {		
-							list_model[i] = new DefaultListModel();
-							String[] arrangement = flow_arrangement[i].split(" ");							
-							for (String a: arrangement) {
-								list_model[i].addElement(a);
-							}		
-						}
-						flow_scrollPane.create_flow_arrangement_UI(list_model);	
-						
+						flow_scrollPane.reload_flow_arrangement_for_one_flow(table10, data10, spin_sigma);
 						btn_Edit.setEnabled(true);
 					} else {		// Disable Edit
 						btn_Edit.setEnabled(false);
+						flow_scrollPane.create_flow_arrangement_UI(new DefaultListModel[0]);	// show nothing:  no Sigma box
+						spin_sigma.setValue(0);	// set the spin sigma to zero
 					}
 					
 					if (selectedRow.length >= 1 && table10.isEnabled()) {		// Enable Delete  when: >=1 row is selected,table is enable (often after Edit button finished its task)
@@ -5988,6 +6072,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					} else {		// Disable Delete
 						btn_Delete.setEnabled(false);
 					}	
+					
+					if (selectedRow.length >= 1 && btn_Sort.getText().equals("OFF")) {	// Enable Spinner when: >=1 row is selected and Sorter is off
+						spin_move_rows.setEnabled(true);
+					} else {		// Disable Spinner
+						spin_move_rows.setEnabled(false);
+					}
 		        }
 		    });
 			
@@ -6019,75 +6109,113 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					int newRow = table10.convertRowIndexToView(rowCount10 - 1);
 					table10.setRowSelectionInterval(newRow, newRow);
 					table10.scrollRectToVisible(new Rectangle(table10.getCellRect(newRow, 0, true)));
+					
+					flow_scrollPane.reload_flow_arrangement_for_one_flow(table10, data10, spin_sigma);
 				}			
-			});
-			
+			});			
 			
 			
 			// Edit
 			btn_Edit.addActionListener(e -> {
 				if (table10.isEnabled()) {						
-					//A  resizable popup panel indicating changes have been made
-					JPanel popup = new JPanel(new BorderLayout());
-					popup.setBorder(null);
-					popup.setPreferredSize(new Dimension(330, 150));	
-					JLabel temp_label = new JLabel(IconHandle.get_scaledImageIcon(150, 150, "pikachuHello.png"));									
-					popup.add(temp_label, BorderLayout.WEST);
+					int selectedRow = table10.getSelectedRow();
+					selectedRow = table10.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems										
 					
-					JTextArea temp_textarea = new JTextArea();
-					temp_textarea.setBorder(null);
-					temp_textarea.setBackground(ColorUtil.makeTransparent(Color.WHITE, 0)); 
-					temp_textarea.setFocusable(false);
-					temp_textarea.setEditable(false);
-					temp_textarea.setLineWrap(true);
-					temp_textarea.setWrapStyleWord(true);
-					temp_textarea.append("The following infomation (in rectangles surrounded by green border) will be applied to the highlighted (blue) flow" + "\n \n");
-					temp_textarea.append("1. Flow arrangement" + "\n");	
-					popup.add(temp_textarea, BorderLayout.CENTER);
-
-					popup.addHierarchyListener(new HierarchyListener() {
-					    public void hierarchyChanged(HierarchyEvent e) {
-					        Window window = SwingUtilities.getWindowAncestor(popup);
-					        if (window instanceof Dialog) {
-					            Dialog dialog = (Dialog)window;
-					            if (!dialog.isResizable()) {
-					                dialog.setResizable(true);
-					            }
-					        }
-					    }
-					});				
-
-					String ExitOption[] = {"Modify", "Do not modify"};
-					int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), popup, "Do you want to modify the highlighted flow ?",
-							JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, ExitOption, ExitOption[0]);	
-											
-					if (response == 0) {
-						int selectedRow = table10.getSelectedRow();
-						selectedRow = table10.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems										
+					if (flow_scrollPane.get_flow_info_from_GUI().contains(";")) {	// Edit is accepted if there are at least 2 terms separated by ;
+						data10[selectedRow][2] = flow_scrollPane.get_flow_info_from_GUI();					
+						model10.fireTableDataChanged();	
 						
-						if (flow_scrollPane.get_flow_info_from_GUI().contains(";")) {	// Edit is accepted if there are at least 2 terms separated by ;
-							data10[selectedRow][2] = flow_scrollPane.get_flow_info_from_GUI();					
-							model10.fireTableDataChanged();	
-							
-							// Convert the edited Row to model view and then select it 
-							int editRow = table10.convertRowIndexToView(selectedRow);
-							table10.setRowSelectionInterval(editRow, editRow);
-						}
-					}					
+						// Convert the edited Row to model view and then select it 
+						int editRow = table10.convertRowIndexToView(selectedRow);
+						table10.setRowSelectionInterval(editRow, editRow);
+						
+						flow_scrollPane.reload_flow_arrangement_for_one_flow(table10, data10, spin_sigma);
+					}									
 				}
 			});
 			
 			
 			btn_Edit.addMouseListener(new MouseAdapter() { // Add listener
 				public void mouseEntered(java.awt.event.MouseEvent e) {
-					flow_scrollPane.get_list_scroll().setBackground(new Color(0, 255, 0));
+					if (table10.getSelectedRows().length == 1) {
+						flow_scrollPane.highlight();
+					}
 				}
 
 				public void mouseExited(java.awt.event.MouseEvent e) {
-					flow_scrollPane.get_list_scroll().setBackground(null);
+					if (table10.getSelectedRows().length == 1) {
+						flow_scrollPane.unhighlight();
+					}
 				}
 			});
 			
+			
+			// Spinner
+		    spin_move_rows.addChangeListener(new ChangeListener() {
+		        @Override
+		        public void stateChanged(ChangeEvent e) {
+					int up_or_down = (int) spin_move_rows.getValue() - 1;										
+					spin_move_rows.setValue((int) 1);	// Reset spinner value to 1
+										
+					if (up_or_down == 1) {	// move up
+						// Cancel editing before moving conditions up or down
+						if (table10.isEditing()) {
+							table10.getCellEditor().cancelCellEditing();
+						}	
+						
+						// Get selected rows
+						int[] selectedRow = table10.getSelectedRows();		// No need to convert row index because we never allow Sort when moving rows
+						List<Integer> selectedRowList = new ArrayList<Integer>() {{ for (int i : selectedRow) add(i);}};	// Convert array to list
+						
+						if (selectedRowList.size() >=1 && selectedRowList.get(0) > 0) {	// If there is at least 1 row selected & the first row is not selected
+							for (int i = 0; i < rowCount10; i++) {
+								if (selectedRowList.contains(i)) {		
+									for (int j = 0; j < colCount10; j++) {
+										Object temp = data10[i - 1][j];
+										data10[i - 1][j] = data10[i][j];
+										data10[i][j] = temp;
+									}
+								}
+							}							
+							model10.fireTableDataChanged();	// Update the changes and select the currently selected conditions
+							for (int i: selectedRow) {
+								table10.addRowSelectionInterval(i - 1, i - 1);
+							}
+						}
+					}
+										
+					if (up_or_down == -1) {	// move down						
+						if (table10.isEditing()) {
+							table10.getCellEditor().cancelCellEditing();	// cancel editing before moving conditions up or down
+						}	
+						
+						// Get selected rows
+						int[] selectedRow = table10.getSelectedRows();		// No need to convert row index because we never allow Sort when moving rows
+						List<Integer> selectedRowList = new ArrayList<Integer>() {{ for (int i : selectedRow) add(i);}};	// Convert array to list
+						
+						if (selectedRowList.size() >=1 && selectedRowList.get(selectedRowList.size() - 1) < rowCount10 - 1) {	// If ...
+							for (int i = rowCount10 - 1; i >= 0; i--) {
+								if (selectedRowList.contains(i)) {		
+									for (int j = 0; j < colCount10; j++) {
+										Object temp = data10[i + 1][j];
+										data10[i + 1][j] = data10[i][j];
+										data10[i][j] = temp;
+									}
+								}
+							}						
+							model10.fireTableDataChanged();	// Update the changes and select the currently selected conditions
+							for (int i: selectedRow) {
+								table10.addRowSelectionInterval(i + 1, i + 1);
+							}	
+						}						
+					}
+					
+					// Scroll to the first row of the current selected rows
+					table10.scrollRectToVisible(new Rectangle(table10.getCellRect(table10.convertRowIndexToView(table10.getSelectedRow()), 0, true)));	
+					flow_scrollPane.reload_flow_arrangement_for_one_flow(table10, data10, spin_sigma);
+		        }
+		    });
+		    
 				
 			// Delete
 			btn_Delete.addActionListener(e -> {	
@@ -6224,29 +6352,37 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			});
 						
 			// spinner
-			JSpinner spin = new JSpinner (new SpinnerNumberModel(5, 0, 1000, 1));
-			spin.setToolTipText("Total number of Sigma");
-			JFormattedTextField SpinnerText = ((DefaultEditor) spin.getEditor()).getTextField();
-			SpinnerText.setHorizontalAlignment(JTextField.LEFT);		
-			DefaultFormatter formatter = (DefaultFormatter) SpinnerText.getFormatter();
+			spin_sigma = new JSpinner (new SpinnerNumberModel(5, 0, 1000, 1));
+			spin_sigma.setToolTipText("Total number of Sigma");
+			JFormattedTextField SpinnerText2 = ((DefaultEditor) spin_sigma.getEditor()).getTextField();
+			SpinnerText2.setHorizontalAlignment(JTextField.LEFT);		
+			DefaultFormatter formatter = (DefaultFormatter) SpinnerText2.getFormatter();
 		    formatter.setCommitsOnValidEdit(true);
-		    spin.addChangeListener(new ChangeListener() {
+		    spin_sigma.addChangeListener(new ChangeListener() {
 		        @Override
 		        public void stateChanged(ChangeEvent e) {
-		        	spin.setValue(spin.getValue());
-		        	int total_sigma = (int) spin.getValue();
-		        	DefaultListModel[] list_model = new DefaultListModel[total_sigma];
-					for (int i = 0; i < total_sigma; i++) {
+//		        	spin_sigma.setValue(spin_sigma.getValue());
+		        	SpinnerText2.setValue(flow_scrollPane.get_list_model().length);
+		        	
+		        	int total_sigma = (int) spin_sigma.getValue();
+		        	DefaultListModel[] list_model = new DefaultListModel[total_sigma];	
+		        	
+		        	for (int i = 0; i < total_sigma; i++) {	// Make empty Sigma boxes first
 						list_model[i] = new DefaultListModel<>();				
 					}
-					flow_scrollPane.create_flow_arrangement_UI(list_model);
 		        	
+		        	for (int i = 0; i < flow_scrollPane.get_list_model().length; i++) {	// Then assign the recent non-empty Sigma boxes to the empty ones if possible
+		        		if (i < total_sigma) {
+		        			list_model[i] = flow_scrollPane.get_list_model()[i];
+		        		}
+		        	}		        					
+					flow_scrollPane.create_flow_arrangement_UI(list_model);		        	
 		        }
 		    });	
 						
 						
 			// Add all buttons to flow_panel
-		    helpToolBar.add(spin);
+		    helpToolBar.add(spin_sigma);
 			helpToolBar.add(Box.createGlue());	//Add glue for Right alignment
 			helpToolBar.add(btnQuickEdit);
 			helpToolBar.add(btnHelp);

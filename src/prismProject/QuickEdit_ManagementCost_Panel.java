@@ -7,6 +7,8 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +30,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import prismConvenienceClass.IconHandle;
+import prismConvenienceClass.PrismGridBagLayoutHandle;
 import prismConvenienceClass.TableColumnsHandle;
 import prismRoot.PrismMain;
 
@@ -35,45 +38,43 @@ public class QuickEdit_ManagementCost_Panel extends JPanel {
 	
 	public QuickEdit_ManagementCost_Panel(JTable table8a, Object[][] data8a, String[] columnNames8a, JTable table8b, Object[][] data8b) {
 		setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
 		
+		
+		
+		
+		
+		JPanel qd1 = new JPanel();
+		qd1.setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+				
 		
 		// Add Button-------------------------------------------------------------------------------------------------
 		Prism_ShowHideColumnsButtons btnApply_showhide = new Prism_ShowHideColumnsButtons(table8a, data8a, columnNames8a);
-		c.gridx = 0;
-		c.gridy = 1;
-		c.weightx = 0;
-		c.weighty = 0;
-		c.gridwidth = 1;
-		c.gridheight = 1;
-		c.fill = GridBagConstraints.BOTH;
-		add(btnApply_showhide, c);	
-		
-		// Add empty Label to organize
-		c.gridx = 1;
-		c.gridy = 1;
-		c.weightx = 1;
-		c.weighty = 0;
-		c.gridwidth = 1;
-		c.gridheight = 1;
-		c.fill = GridBagConstraints.BOTH;
-		add(new JLabel(), c);
+		btnApply_showhide.setContentAreaFilled(false);
+		btnApply_showhide.addMouseListener(new MouseAdapter() {
+		    public void mouseEntered(MouseEvent e) {
+		    	btnApply_showhide.setContentAreaFilled(true);
+		    }
+
+		    public void mouseExited(MouseEvent e) {
+		    	btnApply_showhide.setContentAreaFilled(false);
+		    }
+		});
+		qd1.add(btnApply_showhide, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
+				0, 0, 1, 1, 0, 1, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				0, 0, 0, 50));		// insets top, left, bottom, right
 		
 		
 		// Add Label-------------------------------------------------------------------------------------------------
-		c.gridx = 1;
-		c.gridy = 2;
-		c.weightx = 0;
-		c.weighty = 0;
-		c.gridwidth = 1;
-		c.gridheight = 1;
-		c.fill = GridBagConstraints.CENTER;
-		add(new JLabel("Action Cost"), c);
-
+		qd1.add(new JLabel("Action Cost"), PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
+				1, 0, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				0, 0, 0, 0));		// insets top, left, bottom, right
+				
 		
 		// Add formatedTextfield
 		JFormattedTextField formatedTextfield = new JFormattedTextField();
-		formatedTextfield.setToolTipText("greater than 0 with maximum 2 digits after the dot");
+		formatedTextfield.setColumns(8);
+		formatedTextfield.setToolTipText("greater than or equal to zero");
 		formatedTextfield.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
 			public void insertUpdate(DocumentEvent e) {
@@ -81,7 +82,8 @@ public class QuickEdit_ManagementCost_Panel extends JPanel {
 					@Override
 					public void run() {
 						String text = formatedTextfield.getText();
-						if (!text.matches("\\d*(\\.\\d{0,2})?")) {		//	used regex: \\d*(\\.\\d{0,2})? because two decimal places is enough
+//						if (!text.matches("\\d*(\\.\\d{0,2})?")) {		//	used regex: \\d*(\\.\\d{0,2})? because two decimal places is enough
+						if (!text.matches("\\d*(\\.\\d{0,})?")) {		//	no restriction on number of digits after the dot
 							formatedTextfield.setText(text.substring(0, text.length() - 1));
 						} else {
 							if (!text.isEmpty() && !text.equals(".") && Double.valueOf(text) < (double) 0) {		// If the added String make value <0 then delete that String
@@ -103,20 +105,25 @@ public class QuickEdit_ManagementCost_Panel extends JPanel {
 
 			}
 		});
-		c.gridx = 1;
-		c.gridy = 3;
-		c.weightx = 1;
-		c.weighty = 0;
-		c.gridwidth = 1;
-		c.gridheight = 1;
-		c.fill = GridBagConstraints.BOTH;
-		add(formatedTextfield, c);
-		
+		qd1.add(formatedTextfield, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
+				2, 0, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				0, 0, 0, 0));		// insets top, left, bottom, right
+				
 		
 		// Add button apply
 		JButton btnApplyActionBaseCost = new JButton();
+		btnApplyActionBaseCost.setContentAreaFilled(false);
+		btnApplyActionBaseCost.addMouseListener(new MouseAdapter() {
+		    public void mouseEntered(MouseEvent e) {
+		    	btnApplyActionBaseCost.setContentAreaFilled(true);
+		    }
+
+		    public void mouseExited(MouseEvent e) {
+		    	btnApplyActionBaseCost.setContentAreaFilled(false);
+		    }
+		});				
 		btnApplyActionBaseCost.setToolTipText("make changes to all highlighted cells, except cells in column action_list");
-		btnApplyActionBaseCost.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_left.png"));
+		btnApplyActionBaseCost.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_split.png"));
 		btnApplyActionBaseCost.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
@@ -145,30 +152,35 @@ public class QuickEdit_ManagementCost_Panel extends JPanel {
 				}
 			}
 		});
-		c.gridx = 0;
-		c.gridy = 3;
-		c.weightx = 0;
-		c.weighty = 0;
-		c.gridwidth = 1;
-		c.gridheight = 1;
-		c.fill = GridBagConstraints.BOTH;
-		add(btnApplyActionBaseCost, c);
+		qd1.add(btnApplyActionBaseCost, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
+				3, 0, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				0, 0, 0, 0));		// insets top, left, bottom, right
+				
+
+		// Add empty JLabel
+		qd1.add(new JLabel(), PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
+				4, 0, 1, 1, 1, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				0, 0, 0, 0));		// insets top, left, bottom, right
 		
+		
+		
+
+		
+		JPanel qd2 = new JPanel();
+		qd2.setLayout(new GridBagLayout());
+		c = new GridBagConstraints();
+			
 		
 		// Add Label-------------------------------------------------------------------------------------------------
-		c.gridx = 1;
-		c.gridy = 4;
-		c.weightx = 0;
-		c.weighty = 0;
-		c.gridwidth = 1;
-		c.gridheight = 1;
-		c.fill = GridBagConstraints.CENTER;
-		add(new JLabel("Conversion Cost"), c);
+		qd2.add(new JLabel("Conversion Cost"), PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
+				1, 0, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				0, 0, 0, 0));		// insets top, left, bottom, right
 
 		
 		// Add formatedTextfield
 		JFormattedTextField formatedTextfield_2 = new JFormattedTextField();
-		formatedTextfield_2.setToolTipText("greater than 0 with maximum 2 digits after the dot");
+		formatedTextfield_2.setColumns(8);
+		formatedTextfield_2.setToolTipText("greater than or equal to zero");
 		formatedTextfield_2.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
 			public void insertUpdate(DocumentEvent e) {
@@ -176,7 +188,8 @@ public class QuickEdit_ManagementCost_Panel extends JPanel {
 					@Override
 					public void run() {
 						String text = formatedTextfield_2.getText();
-						if (!text.matches("\\d*(\\.\\d{0,2})?")) {		//	used regex: \\d*(\\.\\d{0,2})? because two decimal places is enough
+//						if (!text.matches("\\d*(\\.\\d{0,2})?")) {		//	used regex: \\d*(\\.\\d{0,2})? because two decimal places is enough
+						if (!text.matches("\\d*(\\.\\d{0,})?")) {		//	no restriction on number of digits after the dot
 							formatedTextfield_2.setText(text.substring(0, text.length() - 1));
 						} else {
 							if (!text.isEmpty() && !text.equals(".") && Double.valueOf(text) < (double) 0) {		// If the added String make value <0 then delete that String
@@ -198,20 +211,25 @@ public class QuickEdit_ManagementCost_Panel extends JPanel {
 
 			}
 		});
-		c.gridx = 1;
-		c.gridy = 5;
-		c.weightx = 1;
-		c.weighty = 0;
-		c.gridwidth = 1;
-		c.gridheight = 1;
-		c.fill = GridBagConstraints.BOTH;
-		add(formatedTextfield_2, c);
+		qd2.add(formatedTextfield_2, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
+				2, 0, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				0, 0, 0, 0));		// insets top, left, bottom, right
 		
-		
+				
 		// Add button apply
 		JButton btnApplyConversionBaseCost = new JButton();
+		btnApplyConversionBaseCost.setContentAreaFilled(false);
+		btnApplyConversionBaseCost.addMouseListener(new MouseAdapter() {
+		    public void mouseEntered(MouseEvent e) {
+		    	btnApplyConversionBaseCost.setContentAreaFilled(true);
+		    }
+
+		    public void mouseExited(MouseEvent e) {
+		    	btnApplyConversionBaseCost.setContentAreaFilled(false);
+		    }
+		});	
 		btnApplyConversionBaseCost.setToolTipText("make changes to all highlighted cells, except cells in columns covertype_before & covertype_after");
-		btnApplyConversionBaseCost.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_left.png"));
+		btnApplyConversionBaseCost.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_split.png"));
 		btnApplyConversionBaseCost.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
@@ -239,29 +257,49 @@ public class QuickEdit_ManagementCost_Panel extends JPanel {
 					}
 				}
 			}
-		});
+		});		
+		qd2.add(btnApplyConversionBaseCost, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
+				3, 0, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				0, 0, 0, 0));		// insets top, left, bottom, right
+				
+
+		
+		
+		
+		// Add 2 panels to this big Panel
+		c = new GridBagConstraints();
+		c.fill = GridBagConstraints.HORIZONTAL;
+		
 		c.gridx = 0;
-		c.gridy = 5;
-		c.weightx = 0;
+		c.gridy = 0;
+		c.weightx = 1;
 		c.weighty = 0;
 		c.gridwidth = 1;
 		c.gridheight = 1;
-		c.fill = GridBagConstraints.BOTH;
-		add(btnApplyConversionBaseCost, c);
+		add(qd1, c);
+		
+		c.gridx = 1;
+		c.gridy = 0;
+		c.weightx = 1;
+		c.weighty = 0;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		add(qd2, c);
 	}
+
 	
 	
 	private class Prism_ShowHideColumnsButtons extends JButton {
+		private JRadioButton[] radioButton;
+		
 		public Prism_ShowHideColumnsButtons(JTable table8a,  Object[][] data8a, String[] columnNames8a) {
-
-			
 			// Must set this show/hide column method when all columns are still visible------------------------------------------------------
 			TableColumnsHandle column_handle = new TableColumnsHandle(table8a);
 			Read_Database read_Database = new Read_Database(null);
 			
 						
 			// Create a radio buttons-----------------------------------------------------------------------------
-			JRadioButton[] radioButton = new JRadioButton[2];		
+			radioButton = new JRadioButton[2];		
 			radioButton[0] = new JRadioButton("Select default columns (acres and harvested volume in cubic feet per acre)");
 			radioButton[1] = new JRadioButton("Select active columns (active column has at least one cell with unempty value)");
 			
@@ -417,7 +455,7 @@ public class QuickEdit_ManagementCost_Panel extends JPanel {
 				setEnabled(false);
 			}
 			setToolTipText("show/hide yield tables columns");
-			setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_binoculars.png"));
+			setIcon(IconHandle.get_scaledImageIcon(30, 30, "icon_binoculars.png"));
 			addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {
@@ -433,8 +471,7 @@ public class QuickEdit_ManagementCost_Panel extends JPanel {
 				}
 			});
 		}
-	}	
-	
+	}
 	
 }
 

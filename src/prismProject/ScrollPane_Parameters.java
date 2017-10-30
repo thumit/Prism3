@@ -1,5 +1,6 @@
 package prismProject;
 
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -12,18 +13,20 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.UIManager;
 
+import prismConvenienceClass.ColorUtil;
 import prismConvenienceClass.IconHandle;
 import prismRoot.PrismMain;
 
 public class ScrollPane_Parameters extends JScrollPane {	
 	private JCheckBox checkboxNoParameter, checkboxCostParameter;
 	private List<JCheckBox> checkboxParameter;
+	private JPanel parametersPanel;
 	
 	public ScrollPane_Parameters(Read_Database read_Database) {		
 		
 		String[] yieldTable_ColumnNames = read_Database.get_yield_tables_column_names();
 		
-		JPanel parametersPanel = new JPanel();	
+		parametersPanel = new JPanel();	
 		parametersPanel.setLayout(new GridBagLayout());
 		GridBagConstraints c2 = new GridBagConstraints();
 		c2.fill = GridBagConstraints.HORIZONTAL;
@@ -31,6 +34,7 @@ public class ScrollPane_Parameters extends JScrollPane {
 	    c2.weighty = 1;
 	    
 		setViewportView(parametersPanel);
+		setViewportBorder(null);
 	    		
 		if (yieldTable_ColumnNames != null && checkboxParameter == null) {				
 			checkboxParameter = new ArrayList<JCheckBox>();
@@ -194,5 +198,19 @@ public class ScrollPane_Parameters extends JScrollPane {
 				checkboxParameter.get(current_parameter_id).setSelected(true);						
 			}
 		}
+	}
+	
+	public void highlight() {			
+		setBackground(new Color(240, 255, 255));
+		parametersPanel.setBackground(ColorUtil.makeTransparent(new Color(240, 255, 255), 255));
+		revalidate();
+		repaint();
+	}
+	
+	public void unhighlight() {			
+		setBackground(null);
+		parametersPanel.setBackground(null);
+		revalidate();
+		repaint();
 	}
 }

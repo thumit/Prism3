@@ -1,14 +1,12 @@
 package prismProject;
 
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -18,10 +16,12 @@ import prismConvenienceClass.IconHandle;
 
 public class QuickEdit_RD_Conversion_Panel extends JPanel {
 	public QuickEdit_RD_Conversion_Panel(JTable table, Object[][] data) {
-
+		setPreferredSize(new Dimension(200, 230));
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 
+		
+		
 		// Add Label-------------------------------------------------------------------------------------------------
 		c.gridx = 1;
 		c.gridy = 0;
