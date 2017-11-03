@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -71,6 +72,7 @@ public class Panel_Project extends JLayeredPane {
 	private JButton btnCustomizeOutput;
 	private JButton btnCollectMemory;
 	private JButton btnSave;
+	private List<JButton> buttons_list;
 	
 	private File[] listOfEditRuns;
 	private File currentProjectFolder, currentRunFolder;
@@ -261,19 +263,33 @@ public class Panel_Project extends JLayeredPane {
 		
 		btnSave = new JButton();
 		btnSave.setToolTipText("Save");
-		btnSave.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_save.png"));
-		btnSave.setContentAreaFilled(false);
-		btnSave.addMouseListener(new MouseAdapter() {
-		    public void mouseEntered(MouseEvent e) {
-		    	btnSave.setContentAreaFilled(true);
-		    }
-
-		    public void mouseExited(MouseEvent e) {
-		    	btnSave.setContentAreaFilled(false);
-		    }
-		});		
+		btnSave.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_save.png"));	
 		btnSave.setVisible(false);
 		projectToolBar.add(btnSave);
+		
+		
+		// Make this list to make all buttons in this windows not focus on the ugly blue border after click
+		buttons_list = new ArrayList<JButton>();
+		buttons_list.add(btnNewRun);
+		buttons_list.add(btnDeleteRun);
+		buttons_list.add(btnEditRun);
+		buttons_list.add(btnRefresh);
+		buttons_list.add(btnSolveRun);
+		buttons_list.add(btnCustomizeOutput);
+		buttons_list.add(btnCollectMemory);
+		buttons_list.add(btnSave);
+		for (JButton i : buttons_list) {
+			i.setContentAreaFilled(false);
+			i.addMouseListener(new MouseAdapter() {
+			    public void mouseEntered(MouseEvent e) {
+			    	i.setContentAreaFilled(true);
+			    }
+
+			    public void mouseExited(MouseEvent e) {
+			    	i.setContentAreaFilled(false);
+			    }
+			});	
+		}		
 		
 		
 		//------------------------------------------------------------------------------------------------

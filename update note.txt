@@ -507,4 +507,18 @@ All changes in this block are associated with PrismAlpha1.0.16.jar, Prism Formul
 	- Flow arrangement is reloaded right after clicking the buttons: New, Modify, Move
 237. Sigma boxes will not be cleared when using the spinner. Instead, non-empty Sigma boxes showing in the UI will be kept if possible
 238. Save button is designed for each loaded run
-239. 
+All changes in this block are associated with PrismAlpha1.0.17.jar, Prism Formulation 01.docx, Prism Database 01.docx
+--------------------------------------------------------------------------
+
+239. Use "setContentAreaFilled" to make all buttons not focused after click (Panel_Projects & Panel_DatabaseManagement)
+240. Sort & implement binary search on all layer lists icluding: layer1, layer2, layer3,..., layer6 (might lead to another optimum)
+241. Reactiavted Boost 6 with additional improvements:
+	- Delete 4 lists: objlist, vlblist, vublist, vtlist. Only keep vnamelist
+	- Delete arrays xEA_E, xEA_R, xPB_E, xPB_R, xGS_E, xGS_R, xNG_E, xNG_R, xMS_E, xBS_E 
+	- For defining variables: First time loop: just define & add variable to vnamelist
+	- For defining variables: Second time loop: base on the compacted vnamelist --> sort, then define all compacted arrays: vname, objvals, vlb, vub, vtype with regards to the sorted vname & delete the vnamelist (set to null)
+	- Anytime encounter the above arrays --> use binary search
+242. Solve_Problem is now split into: Solve_Problem_Fast (without using MemoryBoost10) & Solve_Problem_Slow (using MemoryBoost10)
+243. Move the Var_cost_value check so we don't have to create the 2 lists (coversion_cost_after_disturbance_name_list & coversion_cost_after_disturbance_value_list) every time.
+All changes in this block are associated with PrismAlpha1.0.18.jar, Prism Formulation 01.docx, Prism Database 01.docx
+--------------------------------------------------------------------------

@@ -81,7 +81,8 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 
 	private ToolBarWithBgImage databaseToolBar;
 	private JScrollPane scrollPane_Left, scrollPane_Right;
-	private JButton btnNewDatabase, btnDelete, btnEdit, btnRefresh;
+	private JButton btnNewDatabase, btnDelete, btnRefresh;
+	private List<JButton> buttons_list;
 
 	public Panel_DatabaseManagement() {
 		super.setLayout(new BorderLayout(0, 0));
@@ -260,6 +261,25 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		c.gridheight = 1;
 		databaseToolBar.add(queryTextField, c);
 			
+		
+		// Make this list to make all buttons in this windows not focus on the ugly blue border after click
+		buttons_list = new ArrayList<JButton>();
+		buttons_list.add(btnNewDatabase);
+		buttons_list.add(btnDelete);
+		buttons_list.add(btnRefresh);
+		for (JButton i : buttons_list) {
+			i.setContentAreaFilled(false);
+			i.addMouseListener(new MouseAdapter() {
+				public void mouseEntered(MouseEvent e) {
+					i.setContentAreaFilled(true);
+				}
+
+				public void mouseExited(MouseEvent e) {
+					i.setContentAreaFilled(false);
+				}
+			});	
+		}	
+		
 	
 		// Add all components to JInternalFrame-----------------------------		
 		super.add(databaseToolBar, BorderLayout.NORTH);

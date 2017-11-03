@@ -1,0 +1,9 @@
+covertype_before_cut	covertype_after_cut	min_age_cut_existing	max_age_cut_existing	min_age_cut_regeneration	max_age_cut_regeneration	implementation	
+B	B	20	24	10	15	true	
+C	C	20	24	10	15	true	
+D	D	20	24	10	15	true	
+E	E	20	24	10	15	true	
+F	F	20	24	10	15	true	
+G	G	20	24	10	15	true	
+H	H	20	24	10	15	true	
+I	I	20	24	10	15	true	

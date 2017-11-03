@@ -45,7 +45,7 @@ public class ImageWhenClicked extends MouseAdapter {
 					capture_all.addActionListener(new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent actionEvent) {
-							create_desktop_image(PrismMain.get_main(), "SpectrumLite_Main");
+							create_desktop_image(PrismMain.get_main(), "PRISM");
 							popup.setVisible(false);
 						}
 					});
@@ -56,7 +56,7 @@ public class ImageWhenClicked extends MouseAdapter {
 					capture_component.addActionListener(new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent actionEvent) {
-							create_desktop_image(comp, "SpectrumLite_Component");
+							create_desktop_image(comp, "PRISM_Component");
 							popup.setVisible(false);
 						}
 					});
@@ -66,7 +66,7 @@ public class ImageWhenClicked extends MouseAdapter {
 					capture_parent_component.addActionListener(new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent actionEvent) {
-							create_desktop_image(comp.getParent(), "SpectrumLite_Parents_Component");
+							create_desktop_image(comp.getParent(), "PRISM_Parents_Component");
 							popup.setVisible(false);
 						}
 					});
@@ -76,7 +76,7 @@ public class ImageWhenClicked extends MouseAdapter {
 					capture_grandparent_component.addActionListener(new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent actionEvent) {
-							create_desktop_image(comp.getParent().getParent(), "SpectrumLite_GrandParents_Component");
+							create_desktop_image(comp.getParent().getParent(), "PRISM_GrandParents_Component");
 							popup.setVisible(false);
 						}
 					});
