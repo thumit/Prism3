@@ -32,10 +32,11 @@
 
 
 package prismProject;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -64,6 +65,7 @@ import javax.swing.border.TitledBorder;
 import prismConvenienceClass.ArrayListTransferHandler;
 import prismConvenienceClass.ColorUtil;
 import prismConvenienceClass.IconHandle;
+import prismConvenienceClass.PrismGridBagLayoutHandle;
 
 
 
@@ -80,10 +82,10 @@ public class ScrollPane_ConstraintsFlow extends JScrollPane {
 		id_list = outside_id_list;
 		
 		lh = new ArrayListTransferHandler(); 
-        flow_panel = new JPanel(new GridLayout(0,3,20,0));
+		flow_panel = new JPanel(new GridLayout(0, 3, 20, 0));
 		list_scroll = new JScrollPane(flow_panel);
-		list_scroll.setPreferredSize(new Dimension(400, 250));
-		TitledBorder border = new TitledBorder("Flow arrangement");
+		list_scroll.setPreferredSize(new Dimension(300, 0));
+		TitledBorder border = new TitledBorder("Flow Arrangement");
 		border.setTitleJustification(TitledBorder.CENTER);
 		list_scroll.setBorder(border);	
 //		list_scroll.setBorder(BorderFactory.createTitledBorder("Flow arrangement"));
@@ -104,8 +106,8 @@ public class ScrollPane_ConstraintsFlow extends JScrollPane {
         setMappings(id_list);
         
         JScrollPane id_scroll = new JScrollPane(id_list);
-        id_scroll.setPreferredSize(new Dimension(150,300));
-        border = new TitledBorder("IDs container");
+		id_scroll.setPreferredSize(new Dimension(150, 0));
+        border = new TitledBorder("IDs Container");
 		border.setTitleJustification(TitledBorder.CENTER);
         id_scroll.setBorder(border);
 
@@ -127,9 +129,16 @@ public class ScrollPane_ConstraintsFlow extends JScrollPane {
 		
      			
         // Add id and list scroll panels to a JPanel
-		JPanel panel_all = new JPanel(new BorderLayout());
-        panel_all.add(list_scroll, BorderLayout.CENTER);
-        panel_all.add(id_scroll, BorderLayout.EAST);
+		JPanel panel_all = new JPanel();
+		panel_all.setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstraints.BOTH;
+		panel_all.add(list_scroll, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+					0, 0, 1, 1, 0.9, 1, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+					0, 0, 0, 0));		// insets top, left, bottom, right
+		panel_all.add(id_scroll, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+				1, 0, 1, 1, 0.1, 1, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				0, 0, 0, 0));		// insets top, left, bottom, right
 
         
         // Add the JPanel to the super scroll pane
@@ -234,7 +243,7 @@ public class ScrollPane_ConstraintsFlow extends JScrollPane {
 
 			list_scrollpane[i] = new JScrollPane(flow_list[i]);
 			list_scrollpane[i].setBorder(BorderFactory.createTitledBorder("Sigma " + (int) (i + 1)));
-			list_scrollpane[i].setPreferredSize(new Dimension(80, 80));			
+			list_scrollpane[i].setPreferredSize(new Dimension(120, 100));			
 			flow_panel.add(list_scrollpane[i]);
 			
 			// Add mouse listeners

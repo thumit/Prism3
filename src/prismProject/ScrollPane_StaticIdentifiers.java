@@ -208,7 +208,7 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 		TitledBorder border = new TitledBorder(panel_name);
 		border.setTitleJustification(TitledBorder.CENTER);
 		setBorder(border);
-		setPreferredSize(new Dimension(570, 250));
+		setPreferredSize(new Dimension(0, 250));
 	}
 	
 	

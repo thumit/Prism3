@@ -33,6 +33,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -162,6 +163,7 @@ public class PrismMain extends JFrame {
 								| UnsupportedLookAndFeelException e1) {
 							System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
 						}
+						SwingUtilities.updateComponentTreeUI(main);
 					}
 				}		
 

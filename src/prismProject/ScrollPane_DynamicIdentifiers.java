@@ -10,12 +10,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -39,6 +42,7 @@ import prismRoot.PrismMain;
 public class ScrollPane_DynamicIdentifiers extends JScrollPane {	
 	private JCheckBox checkboxNoIdentifier;
 	private List<JCheckBox> allDynamicIdentifiers;
+	private JScrollPane selectIdentifiersScrollPanel;
 	private List<JScrollPane> allDynamicIdentifiers_ScrollPane;
 	private List<List<JCheckBox>> checkboxDynamicIdentifiers;
 	private JScrollPane defineScrollPane;		//for Definition of dynamic identifier
@@ -117,6 +121,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 						for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
 							allDynamicIdentifiers.get(i).setSelected(false);
 							allDynamicIdentifiers_ScrollPane.get(i).setVisible(false);		//Set invisible all scrollPanes of dynamic identifiers
+							selectIdentifiersScrollPanel.setBorder(BorderFactory.createTitledBorder(null, "Dynamic Identifiers  -  use yield attributes to filter variables", TitledBorder.CENTER, 0));
 							
 							//Do a resize to same size for JInteral Frame of the project to help repaint	
 							revalidate();
@@ -149,7 +154,19 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 				dynamic_identifiersPanel.add(allDynamicIdentifiers_ScrollPane.get(i), c3);
 			}		
 			allDynamicIdentifiers_JPanel = new JPanel[yieldTable_ColumnNames.length];
-													
+						
+			
+			// add listeners to select all or de-select all
+			for (int i = 0; i < allDynamicIdentifiers_ScrollPane.size(); i ++) {
+				int curent_index = i;
+				allDynamicIdentifiers_ScrollPane.get(curent_index).addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						check_or_uncheck_all(checkboxDynamicIdentifiers.get(curent_index));
+					}
+				});
+			}
+			
 			
 			// Add listeners to checkBoxes
 			for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
@@ -484,7 +501,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 											        	
 														
 											        	// Apply change to the GUI
-														defineScrollPane.setViewportView(rangePanel);	
+														defineScrollPane.setViewportView(rangePanel);
 										        	} else {
 										        		JOptionPane.showMessageDialog(PrismMain.get_Prism_DesktopPane(), "'Min value' must be less than or equal to 'Max value'");														        																							
 										        	}
@@ -552,7 +569,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 									"Add   '" + currentCheckBoxName + "'   to the set of dynamic identifiers ?", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null);
 							if (response == JOptionPane.NO_OPTION) {
 								allDynamicIdentifiers.get(currentCheckBoxIndex).setSelected(false);
-							} else if (response == JOptionPane.YES_OPTION && checkboxDynamicIdentifiers.get(currentCheckBoxIndex).size()>0) {
+							} else if (response == JOptionPane.YES_OPTION && checkboxDynamicIdentifiers.get(currentCheckBoxIndex).size() > 0) {
 								//Deselect the No Identifier checkBox
 								checkboxNoIdentifier.setSelected(false);
 								
@@ -577,6 +594,8 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 								// Set Scroll Pane view to the tempPanel
 								allDynamicIdentifiers_JPanel[currentCheckBoxIndex] = tempPanel;
 								allDynamicIdentifiers_ScrollPane.get(currentCheckBoxIndex).setViewportView(tempPanel);
+								selectIdentifiersScrollPanel.setBorder(BorderFactory.createTitledBorder(null, "Dynamic Identifiers", TitledBorder.CENTER, 0));
+								
 								// Re draw the super scroll pane to make new identifiers show up (especially for cost adjustment set - add) 
 								validate();
 								repaint();
@@ -609,10 +628,8 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 		
 
 		//ScrollPane contains the identifiers that are able to be selected
-		JScrollPane selectIdentifiersScrollPanel = new JScrollPane(select_Panel);
-		TitledBorder border3_2 = new TitledBorder("Select Identifiers");
-		border3_2.setTitleJustification(TitledBorder.CENTER);
-		selectIdentifiersScrollPanel.setBorder(border3_2);
+		selectIdentifiersScrollPanel = new JScrollPane(select_Panel);
+		selectIdentifiersScrollPanel.setBorder(BorderFactory.createTitledBorder(null, "Dynamic Identifiers  -  use yield attributes to filter variables", TitledBorder.CENTER, 0));
 		selectIdentifiersScrollPanel.setPreferredSize(new Dimension(200, 100));
 		
 		//Add the above ScrollPane
@@ -624,10 +641,9 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 		//Add dynamic_identifiersPanel to this Class which is a mother JSCrollPanel
 		setViewportView(dynamic_identifiersPanel);		
 		
-		TitledBorder border = new TitledBorder("Dynamic Identifiers  -  use yield attributes to filter variables");
-		border.setTitleJustification(TitledBorder.CENTER);
-		this.setBorder(border);
-		this.setPreferredSize(new Dimension(250, 250));	
+		
+		this.setBorder(null);
+		this.setPreferredSize(new Dimension(0, 250));	
 	}
 	
 	public List<List<JCheckBox>> get_CheckboxDynamicIdentifiers() {
@@ -644,6 +660,23 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 	
 	public List<JScrollPane> get_allDynamicIdentifiers_ScrollPane() {
 		return allDynamicIdentifiers_ScrollPane;
+	}
+	
+	public void check_or_uncheck_all(List<JCheckBox> one_identifier_checkboxes) {
+		boolean is_atleast_one_item_checked = false;
+		for (JCheckBox item: one_identifier_checkboxes) {
+			if (item.isSelected()) is_atleast_one_item_checked = true;
+		}
+		
+		if (is_atleast_one_item_checked) {
+			for (JCheckBox item: one_identifier_checkboxes) {
+				item.setSelected(false);
+			}
+		} else {
+			for (JCheckBox item: one_identifier_checkboxes) {
+				item.setSelected(true);
+			}
+		}
 	}
 	
 	
@@ -724,6 +757,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 		
 		if (original_dynamic_identifiers_info.equalsIgnoreCase("NoIdentifier")) {
 			checkboxNoIdentifier.setSelected(true);
+			selectIdentifiersScrollPanel.setBorder(BorderFactory.createTitledBorder(null, "Dynamic Identifiers  -  use yield attributes to filter variables", TitledBorder.CENTER, 0));
 		} else {
 			// Read the whole cell into array
 			String[] info = dynamic_identifiers_info.split(";");
@@ -770,6 +804,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 				allDynamicIdentifiers_JPanel[current_identifier_id] = tempPanel;
 				allDynamicIdentifiers_ScrollPane.get(current_identifier_id).setViewportView(tempPanel);	// Set Scroll Pane view to the tempPanel
 				allDynamicIdentifiers_ScrollPane.get(current_identifier_id).setVisible(true);
+				selectIdentifiersScrollPanel.setBorder(BorderFactory.createTitledBorder(null, "Dynamic Identifiers", TitledBorder.CENTER, 0));
 			}	
 		}
 			
@@ -788,8 +823,6 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 	}
 	
 	public void highlight() {
-		setBackground(new Color(240, 255, 255));
-		dynamic_identifiersPanel.setBackground(ColorUtil.makeTransparent(new Color(240, 255, 255), 255));
 		select_Panel.setBackground(ColorUtil.makeTransparent(new Color(240, 255, 255), 255));	
 		for (JPanel i : allDynamicIdentifiers_JPanel) {
 			if (i != null) i.setBackground(ColorUtil.makeTransparent(new Color(240, 255, 255), 255));
@@ -799,8 +832,6 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 	}
 	
 	public void unhighlight() {			
-		setBackground(null);
-		dynamic_identifiersPanel.setBackground(null);
 		select_Panel.setBackground(null);
 		for (JPanel i : allDynamicIdentifiers_JPanel) {
 			if (i != null) i.setBackground(null);

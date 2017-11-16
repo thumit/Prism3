@@ -1,20 +1,16 @@
 package prismProject;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.HierarchyEvent;
-import java.awt.event.HierarchyListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
@@ -33,6 +29,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Stream;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
@@ -46,14 +43,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JSpinner.DefaultEditor;
+import javax.swing.JSplitPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -63,7 +59,6 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
-import prismConvenienceClass.ColorUtil;
 import prismConvenienceClass.IconHandle;
 import prismConvenienceClass.PrismTableModel;
 import prismConvenienceClass.TableColumnsHandle;
@@ -637,7 +632,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 		JScrollPane scrollpane_QuickEdit;
 		
 		public Fly_Constraints_GUI() {
-			setLayout(new GridBagLayout());
+			setLayout(new BorderLayout());
 			
 			// 1st grid ------------------------------------------------------------------------------		// Static identifiers	
 			String panel_name = "Static Identifiers  -  use strata attributes to filter variables";
@@ -658,14 +653,13 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 			
 			// 2nd Grid ------------------------------------------------------------------------------		// Dynamic identifiers
 			dynamic_identifiersScrollPanel = new ScrollPane_DynamicIdentifiers(read_database);
+			dynamic_identifiersScrollPanel.setPreferredSize(new Dimension(0, 250));
 			// End of 2nd Grid -----------------------------------------------------------------------
 				
 					
 			// 3rd grid ------------------------------------------------------------------------------		// Parameters
 			parametersScrollPanel = new ScrollPane_Parameters(read_database);
-			TitledBorder border = new TitledBorder("Parameters");
-			border.setTitleJustification(TitledBorder.CENTER);
-			parametersScrollPanel.setBorder(border);
+			parametersScrollPanel.setBorder(BorderFactory.createTitledBorder(null, "Parameters", TitledBorder.CENTER, 0));
 	    	parametersScrollPanel.setPreferredSize(new Dimension(200, 100));
 			// End of 3rd grid -----------------------------------------------------------------------
 			
@@ -675,9 +669,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 			// 4th Grid -----------------------------------------------------------------------------
 			// Add all buttons to a Panel----------------------------------
 			button_table_Panel = new JPanel(new GridBagLayout());
-			TitledBorder border3 = new TitledBorder("Fly Constraints - Queries based on the Optimal Solution");
-			border3.setTitleJustification(TitledBorder.CENTER);
-			button_table_Panel.setBorder(border3);
+			button_table_Panel.setBorder(BorderFactory.createTitledBorder(null, "Optimal Solution Queries", TitledBorder.CENTER, 0));
 			GridBagConstraints c2 = new GridBagConstraints();
 			c2.fill = GridBagConstraints.BOTH;
 			c2.insets = new Insets(0, 5, 10, 10); // padding top 0, left 5, bottom 10, right 10
@@ -754,7 +746,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 			btn_Sort.setFont(new Font(null, Font.BOLD, 12));
 			btn_Sort.setText("OFF");
 			btn_Sort.setToolTipText("Sorter mode: 'ON' click columns header to sort rows. 'OFF' retrieve original rows position");
-			btn_Sort.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_table.png"));					
+			btn_Sort.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_sort.png"));					
 			c2.gridx = 0;
 			c2.gridy = 5;
 			c2.weightx = 0;
@@ -762,21 +754,17 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 			button_table_Panel.add(btn_Sort, c2);
 			
 			
-			JButton btn_GetResult = new JButton();
+			JButton btn_GetResult = new JButton() {
+				public Point getToolTipLocation(MouseEvent event) {
+					return new Point(getWidth() - 10, 8);
+				}
+			};
 			btn_GetResult.setFont(new Font(null, Font.BOLD, 14));
 //			btn_GetResult.setText("Get Result");
-			btn_GetResult.setToolTipText("Calculate query_value & Save");
-			btn_GetResult.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_solve.png"));
+			btn_GetResult.setToolTipText("Calculate & Save");
+			btn_GetResult.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_calculator.png"));
+			btn_GetResult.setRolloverIcon(IconHandle.get_scaledImageIcon(35, 35, "icon_calculator.png"));
 			btn_GetResult.setContentAreaFilled(false);
-			btn_GetResult.addMouseListener(new MouseAdapter() {
-			    public void mouseEntered(MouseEvent e) {
-			    	btn_GetResult.setContentAreaFilled(true);
-			    }
-
-			    public void mouseExited(MouseEvent e) {
-			    	btn_GetResult.setContentAreaFilled(false);
-			    }
-			});		
 			c2.gridx = 0;
 			c2.gridy = 6;
 			c2.weightx = 0;
@@ -784,21 +772,17 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 			button_table_Panel.add(btn_GetResult, c2);
 			
 			
-			JButton btn_Save = new JButton();
+			JButton btn_Save = new JButton() {
+				public Point getToolTipLocation(MouseEvent event) {
+					return new Point(getWidth() - 10, 5);
+				}
+			};
 			btn_Save.setFont(new Font(null, Font.BOLD, 14));
 //			btn_Save.setText("Save");
 			btn_Save.setToolTipText("Save");
-			btn_Save.setIcon(IconHandle.get_scaledImageIcon(23, 23, "icon_save.png"));
+			btn_Save.setIcon(IconHandle.get_scaledImageIcon(20, 20, "icon_save.png"));
+			btn_Save.setRolloverIcon(IconHandle.get_scaledImageIcon(27, 27, "icon_save.png"));
 			btn_Save.setContentAreaFilled(false);
-			btn_Save.addMouseListener(new MouseAdapter() {
-			    public void mouseEntered(MouseEvent e) {
-			    	btn_Save.setContentAreaFilled(true);
-			    }
-
-			    public void mouseExited(MouseEvent e) {
-			    	btn_Save.setContentAreaFilled(false);
-			    }
-			});		
 			c2.gridx = 0;
 			c2.gridy = 7;
 			c2.weightx = 0;
@@ -1319,17 +1303,18 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 				public void actionPerformed(ActionEvent actionEvent) {		
 					Thread thread_get_result = new Thread() {
 						public void run() {
-							btn_NewSingle.setVisible(false);
-							btn_New_Multiple.setVisible(false);
-							btn_Edit.setVisible(false);
-							spin_move_rows.setVisible(false);
-							btn_Delete.setVisible(false);
-							btn_Sort.setVisible(false);
-							btn_GetResult.setVisible(false);
-							btn_Save.setVisible(false);
-							
 							for (int i = 0; i < data9.length; i++) {	// Loop each row of the fly constraints table & get result for only the constraints with null value
 								if (data9[i][12] == null) {	
+									btn_NewSingle.setVisible(false);		// Hide buttons only when there is at least 1 calculation
+									btn_New_Multiple.setVisible(false);
+									btn_Edit.setVisible(false);
+									spin_move_rows.setVisible(false);
+									btn_Delete.setVisible(false);
+									btn_Sort.setVisible(false);
+									btn_GetResult.setVisible(false);
+									btn_Save.setVisible(false);
+									
+									
 									double multiplier = (data9[i][3] != null) ?  (double) data9[i][3] : 0;	//if multiplier = null --> 0
 									String current_parameter_index = (String) data9[i][8];
 									String current_static_identifiers = (String) data9[i][9];
@@ -1364,7 +1349,8 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 									table9.setRowSelectionInterval(i, i);
 								}
 							}
-//							model9.fireTableDataChanged();	// Fire data changes
+
+							
 							create_file_input_05_fly_constraints();		// Save changes after update fly_value						
 							btn_NewSingle.setVisible(true);
 							btn_New_Multiple.setVisible(true);
@@ -1400,9 +1386,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 			// scrollPane Quick Edit ----------------------------------------------------------------------	
 			quick_edit = new QuickEdit_FlyConstraints_Panel(table9, data9);
 				scrollpane_QuickEdit = new JScrollPane(quick_edit);
-				border = new TitledBorder("Quick Edit ");
-				border.setTitleJustification(TitledBorder.CENTER);
-				scrollpane_QuickEdit.setBorder(border);
+				scrollpane_QuickEdit.setBorder(BorderFactory.createTitledBorder(null, "Quick Edit", TitledBorder.CENTER, 0));
 				scrollpane_QuickEdit.setVisible(false);		
 				
 		
@@ -1461,6 +1445,19 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 		    
 			// Add all Grids to the Main Grid-----------------------------------------------------------------------
 			// Add all Grids to the Main Grid-----------------------------------------------------------------------
+			JSplitPane split_pane = new JSplitPane();
+			split_pane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+			split_pane.setDividerSize(3);
+						
+			JPanel upper_panel = new JPanel();
+			upper_panel.setBorder(null);
+			upper_panel.setLayout(new GridBagLayout());			
+			
+			JPanel lower_panel = new JPanel();
+			lower_panel.setBorder(null);
+			lower_panel.setLayout(new GridBagLayout());
+
+			
 			GridBagConstraints c = new GridBagConstraints();
 			c.fill = GridBagConstraints.BOTH;
 
@@ -1471,25 +1468,25 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 			c.gridheight = 1;
 			c.weightx = 0;
 		    c.weighty = 0;
-			super.add(helpToolBar, c);				
+		    upper_panel.add(helpToolBar, c);				
 			
 			// Add static_identifiersScrollPanel to the main Grid
 			c.gridx = 0;
 			c.gridy = 1;
 			c.gridwidth = 2;
 			c.gridheight = 1;
-			c.weightx = 0;
-		    c.weighty = 0;
-			super.add(static_identifiersScrollPanel, c);				
+			c.weightx = 0.4;
+		    c.weighty = 1;
+		    upper_panel.add(static_identifiersScrollPanel, c);				
 		    		
 			// Add dynamic_identifiersPanel to the main Grid
 			c.gridx = 2;
 			c.gridy = 1;
 			c.gridwidth = 1;
 			c.gridheight = 1;
-			c.weightx = 1;
-			c.weighty = 0;
-			super.add(dynamic_identifiersScrollPanel, c);	
+			c.weightx = 0.5;
+			c.weighty = 1;
+			upper_panel.add(dynamic_identifiersScrollPanel, c);	
 			    		
 			// Add the parametersScrollPanel to the main Grid	
 			c.gridx = 0;
@@ -1498,7 +1495,7 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 			c.gridheight = 1;
 			c.weightx = 0;
 		    c.weighty = 1;
-			super.add(parametersScrollPanel, c);						
+		    lower_panel.add(parametersScrollPanel, c);						
 		    	    		    
 		    // Add the button_table_Panel & scrollpane_QuickEdit to a new Panel then add that panel to the main Grid
 			JPanel button_table_qedit_panel = new JPanel();
@@ -1511,7 +1508,12 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 			c.gridheight = 1;
 			c.weightx = 1;
 		    c.weighty = 1;
-			super.add(button_table_qedit_panel, c);
+		    lower_panel.add(button_table_qedit_panel, c);
+			
+
+			split_pane.setLeftComponent(upper_panel);
+			split_pane.setRightComponent(lower_panel);
+			super.add(split_pane, BorderLayout.CENTER);
 		}
 		
 	    

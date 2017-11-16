@@ -17,11 +17,11 @@ public class Get_Variable_Information {
 			layer4 = term[3];
 			layer5 = term[4];
 			layer6 = term[5];
-			period = Integer.parseInt(term[6]);
+			timing_choice = Integer.parseInt(term[6]);
+			period = Integer.parseInt(term[7]);
 			
 			
 			method = "NG";
-			timing_choice = 0;
 			forest_status = "E";
 			yield_table_name_to_find = layer5 + "_" + layer6 + "_"+ method + "_" + forest_status + "_" + timing_choice;
 			yield_table_row_index_to_find = period - 1;
@@ -146,12 +146,12 @@ public class Get_Variable_Information {
 			layer3 = term[2];
 			layer4 = term[3];
 			layer5 = term[4];
-			period = Integer.parseInt(term[5]);
-			age = Integer.parseInt(term[6]);
+			timing_choice = Integer.parseInt(term[5]);
+			period = Integer.parseInt(term[6]);
+			age = Integer.parseInt(term[7]);
 
 			
 			method = "NG";
-			timing_choice = 0;
 			forest_status = "R";
 			yield_table_name_to_find = layer5 + "_" + method + "_" + forest_status + "_" + timing_choice;
 			yield_table_row_index_to_find = age - 1;

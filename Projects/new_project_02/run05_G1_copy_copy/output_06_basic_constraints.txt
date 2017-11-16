@@ -1,0 +1,27 @@
+bc_id	bc_description	bc_type	bc_multiplier	lowerbound	lowerbound_perunit_penalty	upperbound	upperbound_perunit_penalty	bookeeping_var_id	bookeeping_var_name	bookeeping_var_value	bookeeping_var_reduced_cost	total_penalty
+1	Ponderosa P5	FREE	1.0	null	null	null	null	9924	v_0	2292.3197989625105	0.0	0.0
+2	Ponderosa P4	FREE	1.0	null	null	null	null	9925	v_1	2290.2460911448	0.0	0.0
+4	total cost in 1 - time period 1	FREE	1.0	null	null	null	null	9936	v_2	12766.214000000005	0.0	0.0
+5	total cost in 2 - time period 2	FREE	1.0	null	null	null	null	9941	v_3	12973.427999999998	0.0	0.0
+6	total cost in 3 - time period 3	FREE	1.0	null	null	null	null	9942	v_4	18625.427999999996	0.0	0.0
+7	total cost in 4 - time period 4	FREE	1.0	null	null	null	null	9943	v_5	12973.427999999998	0.0	0.0
+8	total cost in 5 - time period 5	FREE	1.0	null	null	null	null	9944	v_6	65627.67870183483	0.0	0.0
+9	5k acres EAe period 1	SOFT	1.0	5000.0	1.0	5000.0	1.0	34833	y_0	5000.0	0.0	0.0
+10	penaly for each dollar used	SOFT	1.0	null	null	0.0	0.01	34834	y_1	122966.17670183482	0.0	1229.6617670183482
+11	total acre period 1	FREE	1.0	null	null	null	null	9945	v_7	84935.94999999998	0.0	0.0
+12	total acre period 2	FREE	1.0	null	null	null	null	9946	v_8	84935.94999999998	0.0	0.0
+13	total acre period 3	FREE	1.0	null	null	null	null	9947	v_9	84935.95000000001	0.0	0.0
+14	total acre period 4	FREE	1.0	null	null	null	null	9926	v_10	84935.95000000001	0.0	0.0
+15	total acre period 5	FREE	1.0	null	null	null	null	9927	v_11	84935.95000000001	0.0	0.0
+16	total cares p3 dom_group1 size 12 	FREE	1.0	null	null	null	null	9928	v_12	30400.3624502	0.0	0.0
+17	total cares p3 dom_group1 size 13	FREE	1.0	null	null	null	null	9929	v_13	4038.9486085999993	0.0	0.0
+18	total cares p3 dom_group1 size 20	FREE	1.0	null	null	null	null	9930	v_14	1744.7988014000002	0.0	0.0
+19	total cares p3 dom_group1 size 30	FREE	1.0	null	null	null	null	9931	v_15	34.17339240000001	0.0	0.0
+20	total cares p3 dom_group2 size 12	FREE	1.0	null	null	null	null	9932	v_16	47282.820959400044	0.0	0.0
+21	total cares p3 dom_group2 size 13	FREE	1.0	null	null	null	null	9933	v_17	2323.8226363999997	0.0	0.0
+22	total cares p3 dom_group2 size 20	FREE	1.0	null	null	null	null	9934	v_18	63.7570432	0.0	0.0
+23	total cares p3 dom_group2 size 30	FREE	1.0	null	null	null	null	9935	v_19	169.09669720000005	0.0	0.0
+24	total cares p3 dom_group3 size 12	FREE	1.0	null	null	null	null	9937	v_20	30.55	0.0	0.0
+25	total cares p3 dom_group3 size 13	FREE	1.0	null	null	null	null	9938	v_21	406.1194820000001	0.0	0.0
+26	total cares p3 dom_group3 size 20	FREE	1.0	null	null	null	null	9939	v_22	-0.0	0.0	0.0
+27	total cares p3 dom_group3 size 30	FREE	1.0	null	null	null	null	9940	v_23	1286.5499291999997	0.0	0.0

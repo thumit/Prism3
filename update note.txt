@@ -522,3 +522,26 @@ All changes in this block are associated with PrismAlpha1.0.17.jar, Prism Formul
 243. Move the Var_cost_value check so we don't have to create the 2 lists (coversion_cost_after_disturbance_name_list & coversion_cost_after_disturbance_value_list) every time.
 All changes in this block are associated with PrismAlpha1.0.18.jar, Prism Formulation 01.docx, Prism Database 01.docx
 --------------------------------------------------------------------------
+
+244. Delete all Text Panels in Panel_EditRun_Details
+245. Change database import icon & interaction
+246. Allow resize on Silviculture Method, Management Cost, Basic Constraints, Flow Constraints, output05 (with SplitPane), also redesign dynamic identifiders GUI
+247. For each dynamic identifier panle, select all & de-select all are allowed
+248. Allow timing choices for Natural Growth (both existing & regeneration)
+	- Changes in formulation: 
+		- add i to variables NGe NGr
+		- change eq. (7a), (7b), (12a), (13), (14a), (15)
+		- rewrite definition & explaination
+	- Changes in codes: 
+		- Get_variable_Information: add timing_choice search for xNGe, xNGr
+		- Panel_SolveRun: both Fast and Slow
+			- Add total NGe & total_NGr prescriptions
+			- change dimension of xNGe, xNGr
+			- create decision variables: add loop for timing choice for xNGe, xNGr
+			- change eq. (7a), (7b), (12a), (13), (14a), (15)
+249. Use icons for Project Jtree to better recognize inputs & outputs 
+All changes in this block are associated with PrismAlpha1.0.19.jar, Prism Formulation 02.docx, Prism Database 02.docx
+-------------------------------------------------------------------------- 
+
+
+		

@@ -46,6 +46,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.text.DefaultCaret;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
@@ -124,6 +125,35 @@ public class Panel_Project extends JLayeredPane {
 		splitPanel.setLeftComponent(scrollPane_Left);
 		root = new DefaultMutableTreeNode("Runs");
 		projectTree = new JTree(root); // Add the root of projectTree
+		
+		class CustomIconRenderer extends DefaultTreeCellRenderer {	// set icon fior tree node
+			public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded,
+					boolean leaf, int row, boolean hasFocus) {
+				super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+				Object nodeObj = ((DefaultMutableTreeNode) value).getUserObject();
+				DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
+
+				// check whatever you need to on the node user object
+				if (nodeObj.toString().startsWith("input") && node.getLevel() == 2) {
+					setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_new.png"));
+				} 
+				if (nodeObj.toString().startsWith("output") && node.getLevel() == 2) {
+					setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_new1.png"));
+				} 
+				if (nodeObj.toString().startsWith("output_04") && node.getLevel() == 2) {
+					setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_pie.png"));
+				}
+				if (nodeObj.toString().startsWith("output_07") && node.getLevel() == 2) {
+					setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_flow.png"));
+				}
+				if (nodeObj.toString().startsWith("readme") && node.getLevel() == 2) {
+					setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_new1.png"));
+				}
+				return this;
+			}
+		}
+		projectTree.setCellRenderer(new CustomIconRenderer());
+		
 		// projectTree.setEditable(true);
 		projectTree.setInvokesStopCellEditing(true); // Even when we leave the node by clicking mouse, the name editing will be kept
 
@@ -240,7 +270,7 @@ public class Panel_Project extends JLayeredPane {
 		
 		btnCustomizeOutput = new JButton();
 		btnCustomizeOutput.setToolTipText("Customize Output");
-		btnCustomizeOutput.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_customize.png"));
+		btnCustomizeOutput.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_flow2.png"));
 		btnCustomizeOutput.addActionListener(e -> {
 			customize_Output();
 		});
@@ -412,7 +442,7 @@ public class Panel_Project extends JLayeredPane {
 							runStatButton.setHorizontalTextPosition(JButton.CENTER);
 							runStatButton.setVerticalTextPosition(JButton.TOP);
 							runStatButton.setFont(new Font(null, Font.BOLD, 15));
-							runStatButton.setText("Loading Customize Mode - Click me to stop");
+							runStatButton.setText("        Loading Query Mode  -  Click me to stop        ");
 							runStatButton.addActionListener(new ActionListener() {
 								@Override
 								public void actionPerformed(ActionEvent e) {
@@ -428,7 +458,7 @@ public class Panel_Project extends JLayeredPane {
 							DefaultCaret caret = (DefaultCaret) tempArea.getCaret();
 							caret.setUpdatePolicy(DefaultCaret.OUT_BOTTOM);		
 							tempArea.append("\n \n");
-							tempArea.append("It takes time reading database to enter Customize Mode. Example:");	
+							tempArea.append("It takes time reading database to enter Query Mode. Example:");	
 							tempArea.append("\n \n");
 							tempArea.append("CNPZ: approximately 16,000 rows & 100 columns: 5 seconds");					
 							tempArea.append("\n \n");	
@@ -672,7 +702,7 @@ public class Panel_Project extends JLayeredPane {
 					// Only nodes level 2 (Run) can be Customize output--------------------------
 					if (currentLevel == 2 && rootSelected == false) {					
 						final JMenuItem customizeOutput_MenuItem = new JMenuItem("Customize Output");
-						customizeOutput_MenuItem.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_customize.png"));
+						customizeOutput_MenuItem.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_flow2.png"));
 						customizeOutput_MenuItem.setMnemonic(KeyEvent.VK_O);
 						customizeOutput_MenuItem.addActionListener(new ActionListener() {
 							@Override
@@ -715,8 +745,8 @@ public class Panel_Project extends JLayeredPane {
 		filterHeader.setTable(null);		//set null filter after refresh: this is important
 		
 		// Remove all children nodes from the root of projectTree, and reload the tree
-		DefaultTreeModel model = (DefaultTreeModel)projectTree.getModel();
-		DefaultMutableTreeNode root = (DefaultMutableTreeNode)model.getRoot();
+		DefaultTreeModel model = (DefaultTreeModel) projectTree.getModel();
+		DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
 		root.removeAllChildren();
 		model.reload(root);	
 	

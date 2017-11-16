@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -69,24 +71,24 @@ public class Panel_EditRun extends JLayeredPane implements ActionListener {
 	
 		// Add all Panel_EditRun_Details for all selected Runs, but only show the 1st selected Run details
 		combinePanel = new Panel_EditRun_Details[listOfEditRuns.length];
-		Thread[] thread_array = new Thread[listOfEditRuns.length];
-		for (int i = 0; i < listOfEditRuns.length; i++) {
-			final int processingRun = i;
-			thread_array[i] = new Thread() { // Make a thread so JFrame will not be frozen
-				public void run() {
-					combinePanel[processingRun] = new Panel_EditRun_Details(listOfEditRuns[processingRun]);
-					if (combinePanel[processingRun] != null) {
-						radioButton_Left[processingRun].setSelected(true);
-						scrollPane_Right.setViewportView(combinePanel[processingRun]);
-						radioButton_Left[processingRun].setEnabled(true);
-						btnSave.setToolTipText("Save " + listOfEditRuns[processingRun].getName());
-						interrupt();
-					}
-				}
-			};
-			thread_array[i].start();			
-		}
-			
+//		Thread[] thread_array = new Thread[listOfEditRuns.length];
+//		for (int i = 0; i < listOfEditRuns.length; i++) {
+//			final int processingRun = i;
+//			thread_array[i] = new Thread() { // Make a thread so JFrame will not be frozen
+//				public void run() {
+//					combinePanel[processingRun] = new Panel_EditRun_Details(listOfEditRuns[processingRun]);
+//					if (combinePanel[processingRun] != null) {
+//						radioButton_Left[processingRun].setSelected(true);
+//						scrollPane_Right.setViewportView(combinePanel[processingRun]);
+//						radioButton_Left[processingRun].setEnabled(true);
+//						btnSave.setToolTipText("Save " + listOfEditRuns[processingRun].getName());
+//						interrupt();
+//					}
+//				}
+//			};
+//			thread_array[i].start();	
+//	}
+					
 		
 		// Button Save------------------------------------------------------------------------------------
 		if (btnSave.getActionListeners() != null) {
@@ -97,7 +99,7 @@ public class Panel_EditRun extends JLayeredPane implements ActionListener {
 		btnSave.addActionListener(e -> {
 			for (int i = 0; i < listOfEditRuns.length; i++) {
 				if (radioButton_Left[i].isSelected()) {
-					String[] ExitOption = { "Save", "Don't Save", "Cancel"};
+					String[] ExitOption = { "Save", "Cancel"};
 					int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(),"Outputs from " + listOfEditRuns[i].getName() + "  will be deleted when click 'Save'. Your option?", "Save Confirmation",
 							JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
 					
@@ -124,6 +126,53 @@ public class Panel_EditRun extends JLayeredPane implements ActionListener {
 		// Add all components to JInternalFrame------------------------------------------------------------
 		super.add(splitPanel, BorderLayout.CENTER);
 		super.setOpaque(false);	
+		
+		
+		
+//		class MyThread implements Runnable {
+//			int processingRun;
+//			
+//			MyThread(int processingRun) {
+//				this.processingRun = processingRun;
+//			}
+//
+//			@Override
+//			public void run() {
+//				combinePanel[processingRun] = new Panel_EditRun_Details(listOfEditRuns[processingRun]);
+//				System.out.println("thread " + processingRun + " is working");
+//				radioButton_Left[processingRun].setSelected(true);
+//				scrollPane_Right.setViewportView(combinePanel[processingRun]);
+//				radioButton_Left[processingRun].setEnabled(true);
+//				btnSave.setToolTipText("Save " + listOfEditRuns[processingRun].getName());
+//			}
+//		}
+//		
+//		ExecutorService executor = Executors.newFixedThreadPool(20);		
+//		for (int i = 0; i < listOfEditRuns.length; i++) {	
+//			executor.submit(new MyThread(i));
+//		}
+		
+		
+		
+		
+		
+		ExecutorService executor = Executors.newFixedThreadPool(listOfEditRuns.length);		
+		for (int i = 0; i < listOfEditRuns.length; i++) {	
+			int processing_run = i;					
+			Runnable task = () -> {
+				combinePanel[processing_run] = new Panel_EditRun_Details(listOfEditRuns[processing_run]);
+				System.out.println("thread " + processing_run + " is working");
+				radioButton_Left[processing_run].setSelected(true);
+				scrollPane_Right.setViewportView(combinePanel[processing_run]);
+				radioButton_Left[processing_run].setEnabled(true);
+				btnSave.setToolTipText("Save " + listOfEditRuns[processing_run].getName());
+			};			
+			executor.submit(new Thread(task));
+		}
+		executor.shutdown();
+		
+		
+		
 	}
 
 	// Listener for radio buttons----------------------------------------------------------------------
@@ -133,7 +182,34 @@ public class Panel_EditRun extends JLayeredPane implements ActionListener {
 				scrollPane_Right.setViewportView(combinePanel[i]);	
 				btnSave.setToolTipText("Save " + listOfEditRuns[i].getName());
 			}
-		}	
+    	}
+			
+    	
+    	// This is to reload the unsuccessful runs, triggered when any run is on click
+    	Thread reload_the_unsuccessful_runs = new Thread() {
+			public void run() {		
+	    		boolean check = true;
+	    		for (int i = 0; i < listOfEditRuns.length; i++) {  			
+	    			if (!radioButton_Left[i].isEnabled()) check = false;
+	    		}
+	    		
+	    		if (check == false) {
+	    			ExecutorService executor = Executors.newFixedThreadPool(listOfEditRuns.length);
+			    	for (int i = 0; i < listOfEditRuns.length; i++) {			
+			    		if (!radioButton_Left[i].isEnabled()) {
+							int processing_run = i;
+							Runnable task = () -> {
+								combinePanel[processing_run] = new Panel_EditRun_Details(listOfEditRuns[processing_run]);
+								radioButton_Left[processing_run].setEnabled(true);
+							};
+							executor.submit(new Thread(task));
+						}
+					}	
+			    	executor.shutdown();
+	    		}
+			}
+		};
+		reload_the_unsuccessful_runs.start();
     }
 
     

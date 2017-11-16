@@ -8,11 +8,12 @@ import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
 import javax.swing.border.TitledBorder;
 
-public class PrismTitleScrollPane extends JScrollPane {
+public class PrismTitleScrollPane extends JScrollPane {	
 	// Scroll Panel with Title and the nested ScrollPane with Border
+	private JScrollPane nested_scrollpane;
 	
 	public PrismTitleScrollPane(String title, String title_alignment, Component component) {
-		JScrollPane nested_scrollpane = new JScrollPane(component);	
+		nested_scrollpane = new JScrollPane(component);	
 		nested_scrollpane.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, ColorUtil.makeTransparent(Color.BLACK, 75)));
 		nested_scrollpane.setPreferredSize(new Dimension(100, 100));
 		
@@ -29,5 +30,9 @@ public class PrismTitleScrollPane extends JScrollPane {
 		setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);	
 		setViewportView(nested_scrollpane);
+	}
+	
+	public JScrollPane get_nested_scrollpane() {
+		return nested_scrollpane;	
 	}
 }
