@@ -1385,9 +1385,9 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 	        // scrollPane Quick Edit ----------------------------------------------------------------------	
 			// scrollPane Quick Edit ----------------------------------------------------------------------	
 			quick_edit = new QuickEdit_FlyConstraints_Panel(table9, data9);
-				scrollpane_QuickEdit = new JScrollPane(quick_edit);
-				scrollpane_QuickEdit.setBorder(BorderFactory.createTitledBorder(null, "Quick Edit", TitledBorder.CENTER, 0));
-				scrollpane_QuickEdit.setVisible(false);		
+			scrollpane_QuickEdit = new JScrollPane(quick_edit);
+			scrollpane_QuickEdit.setBorder(BorderFactory.createTitledBorder(null, "Quick Edit", TitledBorder.CENTER, 0));
+			scrollpane_QuickEdit.setVisible(false);		
 				
 		
 
@@ -1399,27 +1399,27 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 			helpToolBar.setBorderPainted(false);
 			
 			// button Quick Edit
-				JToggleButton btnQuickEdit = new JToggleButton();
-				btnQuickEdit.setToolTipText("Show Quick Edit Tool");
-				btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
-				btnQuickEdit.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent actionEvent) {			
-						if (btnQuickEdit.getToolTipText().equals("Show Quick Edit Tool")) {
-							btnQuickEdit.setToolTipText("Hide Quick Edit Tool");
-							btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
-							scrollpane_QuickEdit.setVisible(true);
-							// Get everything show up nicely
-							PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
-						} else {
-							btnQuickEdit.setToolTipText("Show Quick Edit Tool");
-							btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
-							scrollpane_QuickEdit.setVisible(false);
-							// Get everything show up nicely
-							PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
-						}
+			JToggleButton btnQuickEdit = new JToggleButton();
+			btnQuickEdit.setToolTipText("Show Quick Edit Tool");
+			btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
+			btnQuickEdit.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent actionEvent) {			
+					if (btnQuickEdit.getToolTipText().equals("Show Quick Edit Tool")) {
+						btnQuickEdit.setToolTipText("Hide Quick Edit Tool");
+						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
+						scrollpane_QuickEdit.setVisible(true);
+						// Get everything show up nicely
+						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
+					} else {
+						btnQuickEdit.setToolTipText("Show Quick Edit Tool");
+						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
+						scrollpane_QuickEdit.setVisible(false);
+						// Get everything show up nicely
+						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 					}
-				});				
+				}
+			});				
 			
 			// button Help
 			JButton btnHelp = new JButton();

@@ -1,6 +1,8 @@
 package prismRoot;
 
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
@@ -17,10 +19,12 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.plaf.FontUIResource;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import prismConvenienceClass.ComponentResizer;
 import prismConvenienceClass.IconHandle;
+import prismConvenienceClass.WindowAppearanceHandle;
 
 public class MenuItem_SetLookAndFeel extends JMenuItem {
 	private static boolean is_Nimbus_Without_titleBar = true;		//Set this to false if in the void main(String[] args), we do the following:
@@ -77,7 +81,9 @@ public class MenuItem_SetLookAndFeel extends JMenuItem {
 												is_Nimbus_Without_titleBar = true;
 											}
 																														
-											UIManager.setLookAndFeel(info.getClassName());									
+											UIManager.setLookAndFeel(info.getClassName());	
+											UIManager.getLookAndFeelDefaults().put("info", new Color(255, 250, 205));		// Change the ugly yellow color of ToolTip --> lemon chiffon
+											WindowAppearanceHandle.setUIFont(new FontUIResource("Century Schoolbook", Font.PLAIN, 12));		//Change Font for the current LAF
 											cr.deregisterComponent(main);
 											cr.registerComponent(main);
 	

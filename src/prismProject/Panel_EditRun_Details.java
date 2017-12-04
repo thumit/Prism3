@@ -27,6 +27,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -716,7 +717,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		
 				
 		// Matching data types after finishing reloads
-		if (data2 != null) model2.match_DataType();		//a smart way to retrieve the original data type :))))))
+		model2.match_DataType();		//a smart way to retrieve the original data type :))))))
 		model3.match_DataType();		//a smart way to retrieve the original data type :))))))	
 		model4.match_DataType();		//a smart way to retrieve the original data type :))))))
 		model5.match_DataType();		//a smart way to retrieve the original data type :))))))
@@ -1019,8 +1020,11 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				}
 		        
 		        
-		        data_overview[0][1] = rowCount3 + "   --o--   " + availableAcres;
-				data_overview[1][1] = modeledStrata + "   --o--   " + modeledAcres;
+		        DecimalFormat formatter = new DecimalFormat("###,###.###");
+				formatter.setMinimumFractionDigits(0);
+				formatter.setMaximumFractionDigits(10);	// show value with max 10 digits after the dot if it is double value						        
+		        data_overview[0][1] = rowCount3 + "   --o--   " + formatter.format((Number) availableAcres);
+				data_overview[1][1] = modeledStrata + "   --o--   " + formatter.format((Number) modeledAcres);
 		        data_overview[3][1] = yieldTable_values.length;
 		        data_overview[4][1] = total_yieldtable;
 				model_overview.fireTableDataChanged();
@@ -1398,18 +1402,18 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					}	
 				}
 				
-				//Calculate and write percentage
-				table_row=0;
+				// Calculate and write percentage
+				table_row = 0;
 				for (int i = 0; i < total_CoverType; i++) {
 					for (int j = 0; j < total_CoverType; j++) {					
-						data5[table_row][3]	= Double.parseDouble(data5[table_row][2].toString())/total_Weight[i]*100;			
+						data5[table_row][3] = Double.parseDouble(data5[table_row][2].toString()) / total_Weight[i] * 100;	
 						table_row++;
 					}	
 				}
 				
 				// Get selected rows
 				int[] selectedRow = table5.getSelectedRows();
-				/// Convert row index because "Sort" causes problems
+				// Convert row index because "Sort" causes problems
 				for (int i = 0; i < selectedRow.length; i++) {
 					selectedRow[i] = table5.convertRowIndexToModel(selectedRow[i]);
 				}
@@ -1499,7 +1503,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
             @Override
             public Component getTableCellRendererComponent(JTable table, Object
 			value, boolean isSelected, boolean hasFocus, int row, int column) {
-				super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 				// setForeground(Color.RED);
 				setHorizontalAlignment(JLabel.LEFT);
 				if (column == 3) {
@@ -1513,7 +1516,16 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				}
 				setIcon(imageIconArray[column]);	// Set icons for cells in some columns
 				setIconTextGap(15);		// Set the distance between icon and the actual data value
-                return this;
+				
+				// show value with max 10 digits after the dot if it is double value
+				DecimalFormat formatter = new DecimalFormat("###,###.###");
+				formatter.setMinimumFractionDigits(0);
+				formatter.setMaximumFractionDigits(10);
+				if (value instanceof Double) {
+					value = formatter.format((Number) value);
+				}
+				
+				return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             }
         };						
 			
@@ -1729,7 +1741,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		}
 		
 				
-		//Set Color and Alignment for Cells
+		// Set Color and Alignment for cells
         DefaultTableCellRenderer r = new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object
@@ -1749,12 +1761,30 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
             }
         };						
 		
+            
+		// Set DOuble precision for cells
+		DefaultTableCellRenderer r2 = new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object
+			value, boolean isSelected, boolean hasFocus, int row, int column) {			
+				setHorizontalAlignment(JLabel.RIGHT);			
+				DecimalFormat formatter = new DecimalFormat("###,###.###");
+				formatter.setMinimumFractionDigits(0);
+				formatter.setMaximumFractionDigits(10);	// show value with max 10 digits after the dot if it is double value
+				if (value instanceof Double) {
+					value = formatter.format((Number) value);
+				}
+				return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            }
+        };	
 		
       
-        for (int i=0; i<columnNames6.length; i++) {
+		for (int i = 0; i < columnNames6.length; i++) {
         	if (i < 2) {
         		table6.getColumnModel().getColumn(i).setCellRenderer(r);
-        	} 
+        	} else {
+        		table6.getColumnModel().getColumn(i).setCellRenderer(r2);
+        	}
         }
        
         
@@ -1916,12 +1946,11 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
  		}
  		
  	       
-		//Set Color and Alignment for Cells
+		// Set Color and Alignment for Cells
         DefaultTableCellRenderer r = new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object
                 value, boolean isSelected, boolean hasFocus, int row, int column) {
-				super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 				// setForeground(Color.RED);
 				setHorizontalAlignment(JLabel.LEFT);
 				// setFont(getFont().deriveFont(Font.BOLD));               	
@@ -1932,14 +1961,33 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 //				setHorizontalAlignment(JLabel.LEFT); 
 //              setIcon(imageIconArray[column]);	// Set icons for cells in some columns
 // 				setIconTextGap(15);		// Set the distance between icon and the actual data value				
-                return this;
+				return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             }
         };
+        
+        
+		// Set DOuble precision for cells
+		DefaultTableCellRenderer r2 = new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object
+			value, boolean isSelected, boolean hasFocus, int row, int column) {			
+				setHorizontalAlignment(JLabel.RIGHT);			
+				DecimalFormat formatter = new DecimalFormat("###,###.###");
+				formatter.setMinimumFractionDigits(0);
+				formatter.setMaximumFractionDigits(10);	// show value with max 10 digits after the dot if it is double value
+				if (value instanceof Double) {
+					value = formatter.format((Number) value);
+				}
+				return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            }
+        };	
         
         
 		for (int i = 0; i < columnNames7.length; i++) {
 			if (i == 0) {
 				table7.getColumnModel().getColumn(i).setCellRenderer(r);		// first column is shaded
+			} else {
+				table7.getColumnModel().getColumn(i).setCellRenderer(r2);
 			}
 		}
 
@@ -2137,10 +2185,29 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
             }
         };						
 		
+        
+		// Set Double precision for cells
+		DefaultTableCellRenderer r2 = new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object
+			value, boolean isSelected, boolean hasFocus, int row, int column) {			
+				setHorizontalAlignment(JLabel.RIGHT);			
+				DecimalFormat formatter = new DecimalFormat("###,###.###");
+				formatter.setMinimumFractionDigits(0);
+				formatter.setMaximumFractionDigits(10);	// show value with max 10 digits after the dot if it is double value
+				if (value instanceof Double) {
+					value = formatter.format((Number) value);
+				}
+				return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            }
+        };
+        
 		
 		for (int i = 0; i < columnNames8a.length; i++) {
 			if (i == 0) {
 				table8a.getColumnModel().getColumn(i).setCellRenderer(r);		// first column is shaded
+			} else {
+				table8a.getColumnModel().getColumn(i).setCellRenderer(r2);
 			}
 		}
 			
@@ -2326,10 +2393,29 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
             }
         };						
 		
+        
+        // Set Double precision for cells
+        DefaultTableCellRenderer r2 = new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object
+			value, boolean isSelected, boolean hasFocus, int row, int column) {			
+				setHorizontalAlignment(JLabel.RIGHT);			
+				DecimalFormat formatter = new DecimalFormat("###,###.###");
+				formatter.setMinimumFractionDigits(0);
+				formatter.setMaximumFractionDigits(10);	// show value with max 10 digits after the dot if it is double value
+				if (value instanceof Double) {
+					value = formatter.format((Number) value);
+				}
+				return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            }
+        };
+             
 		
 		for (int i = 0; i < columnNames8b.length; i++) {
 			if (i < 2) {
 				table8b.getColumnModel().getColumn(i).setCellRenderer(r);		// first 2 columns is shaded
+			} else {
+				table8b.getColumnModel().getColumn(i).setCellRenderer(r2);
 			}
 		}
 			
@@ -2473,7 +2559,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			data9 = new Object[rowCount9][colCount9];
 			columnNames9 = new String[] {"bc_id", "bc_description", "bc_type",  "bc_multiplier", "lowerbound", "lowerbound_perunit_penalty", "upperbound", "upperbound_perunit_penalty", "parameter_index", "static_identifiers", "dynamic_identifiers", "original_dynamic_identifiers"};	         				
 		}
-					
+
 		
 		//Create a table-------------------------------------------------------------		
 		model9 = new PrismTableModel(rowCount9, colCount9, data9, columnNames9) {
@@ -2570,6 +2656,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					} else if (getValueAt(row, 2).toString().equals("HARD")) {
 						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_red.png"));
 					}
+				} else {
+					((DefaultTableCellRenderer) component).setIcon(null);
 				}
 						
 				return component;
@@ -2590,6 +2678,32 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 //             }		
 		};
 
+		
+        // Set Double precision for cells
+        DefaultTableCellRenderer r2 = new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object
+			value, boolean isSelected, boolean hasFocus, int row, int column) {			
+				setHorizontalAlignment(JLabel.RIGHT);			
+				DecimalFormat formatter = new DecimalFormat("###,###.###");
+				formatter.setMinimumFractionDigits(0);
+				formatter.setMaximumFractionDigits(10);	// show value with max 10 digits after the dot if it is double value
+				if (value instanceof Double) {
+					value = formatter.format((Number) value);
+				}
+				return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            }
+        };
+             
+		
+		for (int i = 0; i < columnNames9.length; i++) {
+			if (i < 3 || i > 8) {
+
+			} else {
+				table9.getColumnModel().getColumn(i).setCellRenderer(r2);
+			}
+		}
+		
     
 
         // Set up Type for each column 2
@@ -2724,6 +2838,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					} else if (getValueAt(row, 3).toString().equals("HARD")) {
 						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_red.png"));
 					}
+				} else {
+					((DefaultTableCellRenderer) component).setIcon(null);
 				}
 				
 				return component;
@@ -2744,6 +2860,30 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 //             }		
 		};
 
+        // Set Double precision for cells
+        DefaultTableCellRenderer r2 = new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object
+			value, boolean isSelected, boolean hasFocus, int row, int column) {			
+				setHorizontalAlignment(JLabel.RIGHT);			
+				DecimalFormat formatter = new DecimalFormat("###,###.###");
+				formatter.setMinimumFractionDigits(0);
+				formatter.setMaximumFractionDigits(10);	// show value with max 10 digits after the dot if it is double value
+				if (value instanceof Double) {
+					value = formatter.format((Number) value);
+				}
+				return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            }
+        };
+             
+		
+		for (int i = 0; i < columnNames10.length; i++) {
+			if (i < 4 || i > 5) {
+
+			} else {
+				table10.getColumnModel().getColumn(i).setCellRenderer(r2);
+			}
+		}
     
 
         // Set up Type for column 3
@@ -2962,7 +3102,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						radioButton_Right[7].setEnabled(false);
 						change_database();
 						is_first_time_loaded = false;	
-					} catch (Exception e1) {
+					} catch (Exception e) {
 						String warningText = "Importation is denied. " + file_database.getName() + " does not meet PRISM's data requirements.";
 						String ExitOption[] = {"OK"};
 						int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warningText, "Database importation warning",
@@ -3029,15 +3169,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 							panel_Covertype_Conversion_GUI = new Covertype_Conversion_GUI();
 							panel_Natural_Disturbances_GUI = new Natural_Disturbances_GUI();
 							panel_Management_Cost_GUI = new Management_Cost_GUI();
-							panel_Silviculture_Method_GUI = new Silviculture_Method_GUI();
 							panel_Basic_Constraints_GUI = new Basic_Constraints_GUI();
 							panel_Flow_Constraints_GUI = new Flow_Constraints_GUI();
 						}
-						
 					}
 
 									
-					
 
 					if (file_database != null) {	// If cancel choosing file
 						// get the raw existing_strata from the database------------------------------------------------------
@@ -3826,7 +3963,11 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						highlighted_strata++;
 						highlighted_acres = highlighted_acres + Double.parseDouble(data3[i][colCount3 - 3].toString());
 					}	
-					data_overview[2][1] = highlighted_strata + "   --o--   " + highlighted_acres;
+
+					DecimalFormat formatter = new DecimalFormat("###,###.###");
+					formatter.setMinimumFractionDigits(0);
+					formatter.setMaximumFractionDigits(10);	// show value with max 10 digits after the dot if it is double value						        
+					data_overview[2][1] = highlighted_strata + "   --o--   " + formatter.format((Number) highlighted_acres);
 					model_overview.fireTableDataChanged();
 				}
 			});
@@ -4956,6 +5097,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		ScrollPane_Parameters parametersScrollPanel;
 		ScrollPane_StaticIdentifiers static_identifiersScrollPanel;
 		ScrollPane_DynamicIdentifiers dynamic_identifiersScrollPanel;
+		JScrollPane table_scrollpane;	
 		JPanel button_table_Panel;
 		
 		QuickEdit_BasicConstraints_Panel quick_edit;
@@ -5099,13 +5241,13 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			// Add table9				
 			create_table9();
-			JScrollPane table_ScrollPane = new JScrollPane(table9);	
+			table_scrollpane = new JScrollPane(table9);	
 			c2.gridx = 1;
 			c2.gridy = 0;
 			c2.weightx = 1;
 			c2.weighty = 1;
 			c2.gridheight = 8;
-			button_table_Panel.add(table_ScrollPane, c2);
+			button_table_Panel.add(table_scrollpane, c2);
 			// End of 4th Grid -----------------------------------------------------------------------
 			// End of 4th Grid -----------------------------------------------------------------------	
 			
@@ -5743,8 +5885,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		
 		// Listener for this class----------------------------------------------------------------------
 	    public void actionPerformed(ActionEvent e) {
-	    	
-	    	//Update GUI for time period 
+	    	// Update GUI for time period 
 	    	for (int j = 0; j < checkboxStaticIdentifiers.get(checkboxStaticIdentifiers.size() - 1).size(); j++) {			//The last element is Time period			
 				if (j < totalPeriod) {
 					checkboxStaticIdentifiers.get(checkboxStaticIdentifiers.size() - 1).get(j).setVisible(true);		//Periods to be visible 			
@@ -5754,23 +5895,22 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				}
 			}  	
 	    	
-	       	//Update Parameter Panel
+	       	// Update Parameter Panel
 	    	if (yieldTable_ColumnNames != null && parametersScrollPanel.get_checkboxParameter() == null) {
 	    		parametersScrollPanel = new ScrollPane_Parameters(read_database);	//"Get parameters from YT columns"
 	    	}
 	    	
-	      	//Update Dynamic Identifier Panel
+	      	// Update Dynamic Identifier Panel
 	    	if (yieldTable_ColumnNames != null && dynamic_identifiersScrollPanel.get_allDynamicIdentifiers() == null) {
 	    		dynamic_identifiersScrollPanel = new ScrollPane_DynamicIdentifiers(read_database);	// "Get identifiers from yield table columns"
 	    	}
 
-	    	//Only set button_table_Panel visible when Parameter scroll Pane have checkboxes created
+	    	// Only set button_table_Panel visible when Parameter scroll Pane have checkboxes created
 	    	if (parametersScrollPanel.get_checkboxParameter() == null) {
 	    		button_table_Panel.setVisible(false);
 	    	} else {
 	    		button_table_Panel.setVisible(true);
 	    	}
-	    	
 	    }
 	    
 	    // Update id column. id needs to be unique in order to use in flow constraints-----------------
@@ -5811,14 +5951,20 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			setLayout(new BorderLayout());
 			
 			
-			// 1st grid ------------------------------------------------------------------------------		// 
+			// 1st grid ------------------------------------------------------------------------------
 			id_list_model= new DefaultListModel<>();
 			id_list = new JList(id_list_model);		
-			ScrollPane_ConstraintsFlow flow_scrollPane = new ScrollPane_ConstraintsFlow(id_list);
+			ScrollPane_ConstraintsFlow flow_scrollPane = new ScrollPane_ConstraintsFlow(id_list) {
+				@Override
+				public void update_spin_sigma() {
+					if (spin_sigma != null && get_list_model() != null) spin_sigma.setValue(get_list_model().length);	// need the if here to avoid fail reloading GUI
+				}
+			};
 			flow_scrollPane.setBorder(null);
 			// End of 1st grid -----------------------------------------------------------------------
 
 			
+			// 2nd Grid ------------------------------------------------------------------------------		// Basic Constraint Table			
 			// 2nd Grid ------------------------------------------------------------------------------		// Basic Constraint Table
 			model_basic = new PrismTableModel(rowCount9, colCount9, data9, columnNames9) {
 				@Override
@@ -5852,6 +5998,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						} else if (getValueAt(row, 2).toString().equals("HARD")) {
 							((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_red.png"));
 						}
+					} else {
+						((DefaultTableCellRenderer) component).setIcon(null);
 					}
 					
 					return component;
@@ -5871,6 +6019,31 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		        }
 		    });			
 			basic_table.setAutoResizeMode(0);		// 0 = JTable.AUTO_RESIZE_OFF
+			
+	        // Set Double precision for cells
+	        DefaultTableCellRenderer r2 = new DefaultTableCellRenderer() {
+	            @Override
+	            public Component getTableCellRendererComponent(JTable table, Object
+				value, boolean isSelected, boolean hasFocus, int row, int column) {			
+					setHorizontalAlignment(JLabel.RIGHT);			
+					DecimalFormat formatter = new DecimalFormat("###,###.###");
+					formatter.setMinimumFractionDigits(0);
+					formatter.setMaximumFractionDigits(10);	// show value with max 10 digits after the dot if it is double value
+					if (value instanceof Double) {
+						value = formatter.format((Number) value);
+					}
+					return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+	            }
+	        };
+	             
+			
+			for (int i = 0; i < basic_table.getColumnCount(); i++) {
+				if (i < 3 || i > 8) {
+
+				} else {
+					basic_table.getColumnModel().getColumn(i).setCellRenderer(r2);
+				}
+			}
 			
 			// Hide columns
 			TableColumnsHandle table_handle = new TableColumnsHandle(basic_table);
@@ -6324,16 +6497,13 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			// spinner
 			spin_sigma = new JSpinner (new SpinnerNumberModel(5, 0, 1000, 1));
 			spin_sigma.setToolTipText("Total number of Sigma");
-			JFormattedTextField SpinnerText2 = ((DefaultEditor) spin_sigma.getEditor()).getTextField();
-			SpinnerText2.setHorizontalAlignment(JTextField.LEFT);		
-			DefaultFormatter formatter = (DefaultFormatter) SpinnerText2.getFormatter();
+			JFormattedTextField sigma_spinner_text = ((DefaultEditor) spin_sigma.getEditor()).getTextField();
+			sigma_spinner_text.setHorizontalAlignment(JTextField.LEFT);		
+			DefaultFormatter formatter = (DefaultFormatter) sigma_spinner_text.getFormatter();
 		    formatter.setCommitsOnValidEdit(true);
 		    spin_sigma.addChangeListener(new ChangeListener() {
 		        @Override
 		        public void stateChanged(ChangeEvent e) {
-//		        	spin_sigma.setValue(spin_sigma.getValue());
-		        	SpinnerText2.setValue(flow_scrollPane.get_list_model().length);
-		        	
 		        	int total_sigma = (int) spin_sigma.getValue();
 		        	DefaultListModel[] list_model = new DefaultListModel[total_sigma];	
 		        	

@@ -15,7 +15,7 @@ import javax.swing.JScrollPane;
 
 import prismRoot.PrismMain;
 
-public class PrismIconPanel extends JPanel{
+public class PrismIconPanel extends JPanel {
 
 	public PrismIconPanel(Component nestedCOmponent) {
 		setLayout(new GridBagLayout());

@@ -184,43 +184,9 @@ public class ScrollPane_ConstraintsFlow extends JScrollPane {
 		return flow_info;
 	} 
 	
-	public void create_flow_arrangement_UI(DefaultListModel[] new_list_model) {		
+	public void create_flow_arrangement_UI(DefaultListModel[] new_list_model) {	
 		flow_panel.removeAll();
-		int total_Flow = (new_list_model != null) ? new_list_model.length : 5;			// new or reload
-		
-		
-		
-		
-//		// spinner
-//		JLabel label = new JLabel("Number of Sigma");
-//		JSpinner spin = new JSpinner (new SpinnerNumberModel(total_Flow, 0, 1000, 1));
-//		spin.setToolTipText("Total number of Sigma");
-//		JFormattedTextField SpinnerText = ((DefaultEditor) spin.getEditor()).getTextField();
-//		SpinnerText.setHorizontalAlignment(JTextField.LEFT);		
-//		DefaultFormatter formatter = (DefaultFormatter) SpinnerText.getFormatter();
-//	    formatter.setCommitsOnValidEdit(true);
-//	    spin.addChangeListener(new ChangeListener() {
-//	        @Override
-//	        public void stateChanged(ChangeEvent e) {
-//	        	spin.setValue(spin.getValue());
-//	        	int total_sigma = (int) spin.getValue();
-//	        	DefaultListModel[] list_model = new DefaultListModel[total_sigma];
-//				for (int i = 0; i < total_sigma; i++) {
-//					list_model[i] = new DefaultListModel<>();				
-//				}
-//				create_flow_arrangement_UI(list_model);	        	
-//	        }
-//	    });				
-//		
-//	    panel.add(label);
-//	    panel.add(spin);
-//	    panel.add(new JLabel());
-
-		
-		
-		
-		
-		
+		int total_Flow = (new_list_model != null) ? new_list_model.length : 5;			// new or reload		
 				
 		// List of flows container
 		flow_list = new JList[total_Flow];
@@ -257,6 +223,7 @@ public class ScrollPane_ConstraintsFlow extends JScrollPane {
 			list_scrollpane[i].setViewportBorder(null);
 		}
 		list_scroll.setViewportView(flow_panel);	
+		update_spin_sigma();
 	} 
 	
 	
@@ -379,6 +346,11 @@ public class ScrollPane_ConstraintsFlow extends JScrollPane {
 		return list_model;
 	}
 	
+	public void update_spin_sigma() {
+		// nothing here. we will have an override in Flow_Constraints_GUI to update the spin_sigma 
+		// spin_sigma is always updated after   "create_flow_arrangement_UI"
+	}
+		
 	public void reload_flow_arrangement_for_one_flow(JTable table10, Object[][] data10, JSpinner spin_sigma) {	
 		int[] selectedRow = table10.getSelectedRows();
 		if (selectedRow.length == 1) {	
@@ -395,7 +367,6 @@ public class ScrollPane_ConstraintsFlow extends JScrollPane {
 				}		
 			}
 			create_flow_arrangement_UI(list_model);	
-			spin_sigma.setValue(list_model.length);	// reload the spin sigma
 		}
 	}
 	

@@ -519,7 +519,7 @@ public class Read_Database {
 
 	
 	public String get_ParameterToolTip(String yt_columnName) {
-		String toolTip = null;
+		String toolTip = "";
 
 		
 		// Read library from the system

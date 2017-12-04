@@ -1,4 +1,0 @@
-flow_id	flow_description	flow_arrangement	flow_type	lowerbound_percentage	upperbound_percentage	
-1	Ponderosa in 4 and 5	2;1	null	null	null	
-2	Total acres in each period	11;12;13;14;15	null	null	null	
-3	Total acres in period 3 - classified by dom_group and size	16;17;18;19;20;21;22;23;24;25	null	null	null	

@@ -117,7 +117,7 @@ public class Panel_Project extends JLayeredPane {
 		// splitPane.setResizeWeight(0.15);
 		splitPanel.setOneTouchExpandable(true);
 		splitPanel.setDividerLocation(245);
-		// splitPane.setDividerSize(5);
+//		splitPanel.setDividerSize(5);
 //		splitPanel.getComponent(2).setCursor(new Cursor(Cursor.HAND_CURSOR));
 
 		// Left split panel--------------------------------------------------------------------------------
@@ -126,7 +126,7 @@ public class Panel_Project extends JLayeredPane {
 		root = new DefaultMutableTreeNode("Runs");
 		projectTree = new JTree(root); // Add the root of projectTree
 		
-		class CustomIconRenderer extends DefaultTreeCellRenderer {	// set icon fior tree node
+		class CustomIconRenderer extends DefaultTreeCellRenderer {	// set icon for tree node
 			public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded,
 					boolean leaf, int row, boolean hasFocus) {
 				super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
@@ -503,7 +503,7 @@ public class Panel_Project extends JLayeredPane {
 							}
 						} else if (currentInputFile.equals("output_07_flow_constraints.txt")) {		//show a panel with bar and line charts
 							table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-							Output_Panel_Flow_Constraints chart_panel = new Output_Panel_Flow_Constraints(table, data);
+							Output_Panel_Flow_Constraints chart_panel = new Output_Panel_Flow_Constraints(currentProjectFolder, currentRun, table, data);
 							scrollPane_Right.setViewportView(chart_panel);
 						} else if (currentInputFile.equals("readme.txt")) {		// show the file as text area
 				 			readme = new TextArea_ReadMe("minionWrite.png", 70, 70);

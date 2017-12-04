@@ -200,6 +200,7 @@ public class FilesHandle {
 		if (response == 0)
 		{
 			JFileChooser chooser = new JFileChooser();
+			chooser.setPreferredSize(new Dimension(800, 500));
 			chooser.setCurrentDirectory(new File(get_workingLocation()));
 			chooser.setDialogTitle("Select strata definition file");
 			chooser.setMultiSelectionEnabled(false);

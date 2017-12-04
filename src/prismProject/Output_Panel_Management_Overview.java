@@ -270,7 +270,7 @@ class Output_Panel_Management_Overview extends JLayeredPane {
 		plot.setExplodePercent(1, 0.1);
 		
 		PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(
-	            "{0}: {1} ({2})", new DecimalFormat("0.00 acres"), new DecimalFormat("0.0%"));			// "{0}: {1} ({2})"
+	            "{0}: {1} ({2})", new DecimalFormat("###,### acres"), new DecimalFormat("#.#%"));			// "{0}: {1} ({2})"
 	    plot.setLabelGenerator(gen);	    
 	    plot.setLabelBackgroundPaint(null);
 	    plot.setLabelShadowPaint(null);

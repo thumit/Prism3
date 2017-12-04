@@ -182,7 +182,7 @@ class ScrollPane_Popup extends JScrollPane {
 		info_TextArea.setEditable(false);
 		// Get total computer memory in bytes
 		MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
-		Object attribute = null;
+		Object attribute = "";
 		try {
 			attribute = mBeanServer.getAttribute(new ObjectName("java.lang","type","OperatingSystem"), "TotalPhysicalMemorySize");
 		} catch (AttributeNotFoundException | InstanceNotFoundException | MalformedObjectNameException | MBeanException

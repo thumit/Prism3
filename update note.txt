@@ -503,7 +503,7 @@ All changes in this block are associated with PrismAlpha1.0.16.jar, Prism Formul
 234. Rename tooltip names of all buttons in many windows to be concise
 235. output05: calculate & save are disable when SORT mode is on
 236. Flow Constraints: 
-	- The Sigma Spinner is reloaded when a slow is selected
+	- The Sigma Spinner is reloaded when a flow is selected
 	- Flow arrangement is reloaded right after clicking the buttons: New, Modify, Move
 237. Sigma boxes will not be cleared when using the spinner. Instead, non-empty Sigma boxes showing in the UI will be kept if possible
 238. Save button is designed for each loaded run
@@ -512,7 +512,7 @@ All changes in this block are associated with PrismAlpha1.0.17.jar, Prism Formul
 
 239. Use "setContentAreaFilled" to make all buttons not focused after click (Panel_Projects & Panel_DatabaseManagement)
 240. Sort & implement binary search on all layer lists icluding: layer1, layer2, layer3,..., layer6 (might lead to another optimum)
-241. Reactiavted Boost 6 with additional improvements:
+241. Reactivate Boost 6 with additional improvements:
 	- Delete 4 lists: objlist, vlblist, vublist, vtlist. Only keep vnamelist
 	- Delete arrays xEA_E, xEA_R, xPB_E, xPB_R, xGS_E, xGS_R, xNG_E, xNG_R, xMS_E, xBS_E 
 	- For defining variables: First time loop: just define & add variable to vnamelist
@@ -526,7 +526,7 @@ All changes in this block are associated with PrismAlpha1.0.18.jar, Prism Formul
 244. Delete all Text Panels in Panel_EditRun_Details
 245. Change database import icon & interaction
 246. Allow resize on Silviculture Method, Management Cost, Basic Constraints, Flow Constraints, output05 (with SplitPane), also redesign dynamic identifiders GUI
-247. For each dynamic identifier panle, select all & de-select all are allowed
+247. For each dynamic identifier panel, select all & de-select all are allowed
 248. Allow timing choices for Natural Growth (both existing & regeneration)
 	- Changes in formulation: 
 		- add i to variables NGe NGr
@@ -543,5 +543,26 @@ All changes in this block are associated with PrismAlpha1.0.18.jar, Prism Formul
 All changes in this block are associated with PrismAlpha1.0.19.jar, Prism Formulation 02.docx, Prism Database 02.docx
 -------------------------------------------------------------------------- 
 
+250. Bug 13 fixed
+251. All JfileChoosers have dimension of 800 width, 500 height
+252. In all tables, show maximum 10 digits after the dot
+253. The sigma spinner in Flow_Constraints_GUI is now also updated when auto-adding flows by mouse's right-click
+254. onput07 flow chart is improved by: 
+	- keep only one series (flow value) & create new interval lines for LB and UB
+ 	- change color to better recognize HARD flow vs FREE flow
+	- auto-resize chart panel when number of columns > 15 (dynamic size) vs <=15 (same size)
+	- Hide unnecessary columns of output_07 table
+	- Add a dynamic legend table by reading input_09_basic_constraints.txt and find the IDs that match to add to legend table
+	- Write all Flow Value, LB and UB in the legend table. Show all bounds if possible for both HARD and FLOW
+	- Can show multiple flows at the same time
+	- Data for each of the flow in multipe flows could be accessed by users
+	- Customize 10 colors for 10 flows, the rest (if users select more than 10 flows) use default and ugly colors
+	- Support 5 chart options: 2 single and 3 multiple
+	- Chart would not be cleared but would be updated when changing to a different chart option (the 5 options)
+255. Change tool tips for NoParameter & CostParameter to describe a more meaningfull/correct definition
+	Note: the 253 updates caused the 257, 258, 259 Bug:
+256. Fix the if then in "update_spin_sigma" in Flow_Constraints_GUI to remove the bug when new database could not be imported into existing run with existing database
+257. Fix in the code for changing/import database, Silviculture_GUI is created twice --> Delete the duplicated codes
+258. 
 
 		

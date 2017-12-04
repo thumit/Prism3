@@ -63,7 +63,7 @@ public class ScrollPane_Parameters extends JScrollPane {
 			checkboxNoParameter.setText("NoParameter");	
 			checkboxNoParameter.setRolloverIcon(UIManager.getIcon("CheckBox.icon"));
 			checkboxNoParameter.setSelectedIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_check.png"));
-			checkboxNoParameter.setToolTipText("1 is used as multiplier (parameter), no column will be used as parameter");		//set toolTip
+			checkboxNoParameter.setToolTipText("Area (acres)");		//set toolTip
 			// add the checkBox to the Panel
 			c2.gridx = 0;
 			c2.gridy = 0;
@@ -77,7 +77,7 @@ public class ScrollPane_Parameters extends JScrollPane {
 			checkboxCostParameter.setText("CostParameter");	
 			checkboxCostParameter.setRolloverIcon(UIManager.getIcon("CheckBox.icon"));
 			checkboxCostParameter.setSelectedIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_check.png"));
-			checkboxCostParameter.setToolTipText("CostParameter details are based on Management Cost window");		//set toolTip			
+			checkboxCostParameter.setToolTipText("Cost (currency) with details based on Management Cost window");		//set toolTip			
 			// add the checkBox to the Panel
 			c2.gridx = 0;
 			c2.gridy = 1;

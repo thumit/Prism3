@@ -1,6 +1,0 @@
-bc_id	bc_description	bc_type	bc_multiplier	lowerbound	lowerbound_perunit_penalty	upperbound	upperbound_perunit_penalty	bookeeping_var_id	bookeeping_var_name	bookeeping_var_value	bookeeping_var_reduced_cost	total_penalty
-1	null	FREE	1.0	null	null	null	null	0	v_0	8933340.000000034	0.0	0.0
-2	null	FREE	1.0	null	null	null	null	1	v_1	8933340.000000034	0.0	0.0
-3	null	FREE	1.0	null	null	null	null	2	v_2	8933340.000000034	0.0	0.0
-4	null	FREE	1.0	null	null	null	null	3	v_3	8933340.000000034	0.0	0.0
-5	null	FREE	5.3453464646	8.3453535	0.3533	0.1357688	0.12	4	v_4	4.775179738606938E7	0.0	0.0

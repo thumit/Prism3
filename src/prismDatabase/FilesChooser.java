@@ -1,5 +1,6 @@
 package prismDatabase;
 
+import java.awt.Dimension;
 import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -11,6 +12,7 @@ public class FilesChooser {
 	
 	public static File[] chosenTables() {
 		JFileChooser chooser = new JFileChooser("Select files to be imported as tables");
+		chooser.setPreferredSize(new Dimension(800, 500));
 		chooser.setCurrentDirectory(new File(FilesHandle.get_workingLocation()));
 		chooser.setMultiSelectionEnabled(true);
 		
@@ -28,6 +30,7 @@ public class FilesChooser {
 	
 	public static File[] chosenDatabases() {
 		JFileChooser chooser = new JFileChooser("Select .db files to be imported as databasses");
+		chooser.setPreferredSize(new Dimension(800, 500));
 		chooser.setCurrentDirectory(new File(FilesHandle.get_workingLocation()));
 		chooser.setMultiSelectionEnabled(true);
 		

@@ -219,7 +219,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 							List<String> uniqueValueList = read_Database.get_col_unique_values_list(currentCheckBoxIndex);									
 							//Sort the list	
 							try {	//Sort Double
-								Collections.sort(uniqueValueList,new Comparator<String>() {
+								Collections.sort(uniqueValueList, new Comparator<String>() {
 									@Override
 								    public int compare(String o1, String o2) {
 								        return Double.valueOf(o1).compareTo(Double.valueOf(o2));
@@ -389,7 +389,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 										c_dP.gridx = 1;
 										c_dP.gridy = 2;
 										JTextField max_TF = new JTextField(10);															
-										max_TF.setText(uniqueValueList.get(uniqueValueList.size()-1));
+										max_TF.setText(uniqueValueList.get(uniqueValueList.size() - 1));
 										rangePanel.add(max_TF, c_dP);
 										
 										

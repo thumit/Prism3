@@ -98,7 +98,7 @@ public class MenuItem_SetFont extends JMenuItem {
 					
 					JScrollPane scrollPane = new JScrollPane(radioPanel);
 					scrollPane.setBorder(BorderFactory.createTitledBorder("Font style"));
-					scrollPane.setPreferredSize(new Dimension(600, 300));
+					scrollPane.setPreferredSize(new Dimension(650, 500));
 	
 					
 					//--------------------------------------------------------------------------------------------------------------------
