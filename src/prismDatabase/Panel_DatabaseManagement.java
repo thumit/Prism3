@@ -1,6 +1,7 @@
 package prismDatabase;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -30,6 +31,7 @@ import java.util.Enumeration;
 import java.util.List;
 
 import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLayeredPane;
@@ -54,6 +56,7 @@ import javax.swing.tree.TreePath;
 
 import net.coderazzi.filters.gui.AutoChoices;
 import net.coderazzi.filters.gui.TableFilterHeader;
+import prismConvenienceClass.ColorUtil;
 import prismConvenienceClass.FilesHandle;
 import prismConvenienceClass.IconHandle;
 import prismProject.Read_Database;
@@ -99,6 +102,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		
 		//Left split panel-----------------------------------
 		scrollPane_Left = new JScrollPane();
+		scrollPane_Left.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, ColorUtil.makeTransparent(Color.BLACK, 70)));
 		splitPane.setLeftComponent(scrollPane_Left);
 		root = new DefaultMutableTreeNode("Databases");
 		DatabaseTree = new JTree(root);	//Add the root of DatabaseTree
@@ -139,6 +143,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		
 		//Right split panel-----------------------------------
 		scrollPane_Right = new JScrollPane();
+		scrollPane_Right.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, ColorUtil.makeTransparent(Color.BLACK, 70)));
 		splitPane.setRightComponent(scrollPane_Right);
 		DatabaseTable = new JTable() {
 			@Override			//These override is to make the width of the cell fit all contents of the cell

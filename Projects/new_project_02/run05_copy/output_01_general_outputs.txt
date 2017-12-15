@@ -1,0 +1,13 @@
+description	value
+Optimization solver	CPLEX
+Solution status	Optimal
+Solution algorithm	2
+Simplex iterations	1
+Prism version when problem solved	PRISM ALPHA 1.0.21
+Date & time problem solved	2017/12/15 - 05:18:12
+Time reading (minutes & seconds)	24.47s
+Time solving (minutes & seconds)	0.05s
+Time writing (minutes & seconds)	0.08s
+Total variables	34835
+Total constraints	30235
+Objective value	1229.66

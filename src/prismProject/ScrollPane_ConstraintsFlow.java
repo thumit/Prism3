@@ -65,6 +65,7 @@ import javax.swing.border.TitledBorder;
 import prismConvenienceClass.ArrayListTransferHandler;
 import prismConvenienceClass.ColorUtil;
 import prismConvenienceClass.IconHandle;
+import prismConvenienceClass.MenuScroller;
 import prismConvenienceClass.PrismGridBagLayoutHandle;
 
 
@@ -249,6 +250,7 @@ public class ScrollPane_ConstraintsFlow extends JScrollPane {
 				
 				// Clear Menu--------------------------------- ------------------------------------------------------------
 				final JMenu clear_menu = new JMenu("Clear");
+				MenuScroller.setScrollerFor(clear_menu, 5, 125, 4, 1);
 				clear_menu.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_sweep.png"));
 				popup.add(clear_menu);		
 				

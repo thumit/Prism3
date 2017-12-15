@@ -449,8 +449,8 @@ public class Read_Database {
 	public List<String> get_method_period_layers_title() {
 		// Layers title
 		List<String> method_period_layers_title = new ArrayList<String>();
-		method_period_layers_title.add("silviculture method");
-		method_period_layers_title.add("time period");
+		method_period_layers_title.add("method");
+		method_period_layers_title.add("period");
 		return method_period_layers_title;
 	}
 
@@ -485,8 +485,8 @@ public class Read_Database {
 	public List<String> get_method_choice_layers_title() {
 		// Layers title
 		List<String> method_choice_layers_title = new ArrayList<String>();
-		method_choice_layers_title.add("silviculture method");
-		method_choice_layers_title.add("timing choice");
+		method_choice_layers_title.add("method");
+		method_choice_layers_title.add("choice");
 		return method_choice_layers_title;
 	}
 

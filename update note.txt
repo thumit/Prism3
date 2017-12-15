@@ -563,6 +563,28 @@ All changes in this block are associated with PrismAlpha1.0.19.jar, Prism Formul
 	Note: the 253 updates caused the 257, 258, 259 Bug:
 256. Fix the if then in "update_spin_sigma" in Flow_Constraints_GUI to remove the bug when new database could not be imported into existing run with existing database
 257. Fix in the code for changing/import database, Silviculture_GUI is created twice --> Delete the duplicated codes
-258. 
+All changes in this block are associated with PrismAlpha1.0.20.jar, Prism Formulation 02.docx, Prism Database 02.docx
+-------------------------------------------------------------------------- 
 
-		
+258. Split function (basic constraint) is rewritten using a permutation class (remove the old & hard-to-understand codes)
+259. Now all the static identifiers, dynamic identifiers, and parameters could be split. The Split popup window is also redesigned (simplified by removing border)
+260. Split is implemented for both basic constraints and output_05 in customize mode
+261. Adding up and down arrows to the top and bottom of the menu if there are too many items (i.e. File-->Open for Projects, Auto-->Clear for Sigma Boxes)
+262. Add mouse click behavior when clicking the title of:
+	- Static Identifiers: select all / deselect all 
+	- Dynamic Identifiers: just select NoIdentifier
+	- Parameters: just select NoParameter
+263. Switch Dynamic Identifiers and Parameters boxes when splitting using "New Multiple"
+264. simplify terms: "silviculture method" --> "method", "time period" --> "period", "timing choice" --> choice
+265. Description is always auto (with complete information), applied on:
+	- Basic Constraints
+	- output_05_management_details
+	- Management Cost 
+	- Silviculture Method
+266. For "New Multiple" pop-up window, the auto_description checkbox is always checked when the window is opened
+267. Reset readme in General_Inputs whenever a new database is imported
+268. output_01_general_output: also write the PRISM version when the problem is solved
+269. Allow select & copy (CTRL + C) the "readme" at the project tree
+270. use narrow Border for both scrollPane_Left & scrollPane_Right in Panel_EditRuns, Panel_Projects, and Panel_Database_Management --> Better UI
+All changes in this block are associated with PrismAlpha1.0.21.jar, Prism Formulation 02.docx, Prism Database 02.docx
+--------------------------------------------------------------------------

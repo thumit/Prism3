@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLayeredPane;
 import javax.swing.JMenuItem;
@@ -122,6 +123,7 @@ public class Panel_Project extends JLayeredPane {
 
 		// Left split panel--------------------------------------------------------------------------------
 		scrollPane_Left = new JScrollPane();
+		scrollPane_Left.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, ColorUtil.makeTransparent(Color.BLACK, 70)));
 		splitPanel.setLeftComponent(scrollPane_Left);
 		root = new DefaultMutableTreeNode("Runs");
 		projectTree = new JTree(root); // Add the root of projectTree
@@ -200,6 +202,7 @@ public class Panel_Project extends JLayeredPane {
 
 		// Right split panel-------------------------------------------------------------------------------
 		scrollPane_Right = new JScrollPane();
+		scrollPane_Right.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, ColorUtil.makeTransparent(Color.BLACK, 70)));
 		splitPanel.setRightComponent(scrollPane_Right);
 		
 		// TextField at South----------------------------------------------
@@ -509,14 +512,13 @@ public class Panel_Project extends JLayeredPane {
 				 			readme = new TextArea_ReadMe("minionWrite.png", 70, 70);
 				 			readme.setBackground(ColorUtil.makeTransparent(Color.WHITE, 255));
 				 			readme.setEditable(false);
-				 			readme.setRequestFocusEnabled(false);
 							try {
 								FileReader reader = new FileReader(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/" + currentInputFile);
 								readme.read(reader, currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/" + currentInputFile);
 								reader.close();
 							} catch (IOException e1) {
 								System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
-							}													
+							}			
 							scrollPane_Right.setViewportView(readme);
 						} else {		// Show the file as table
 							scrollPane_Right.setViewportView(table); 

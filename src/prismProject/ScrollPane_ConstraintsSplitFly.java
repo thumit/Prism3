@@ -173,7 +173,7 @@ public class ScrollPane_ConstraintsSplitFly  extends JScrollPane {
 		table.getTableHeader().setReorderingAllowed(false);		//Disable columns move
 
 		JScrollPane tableScrollPane = new JScrollPane(table);
-		border = new TitledBorder("Infomation below is applied for all new constraints");
+		border = new TitledBorder("Infomation below is applied for all new queries");
 		border.setTitleJustification(TitledBorder.CENTER);
 		tableScrollPane.setBorder(border);
 		tableScrollPane.setPreferredSize(new Dimension(600, 100));		// only the 150 matters, 650 does not matter
@@ -221,19 +221,19 @@ public class ScrollPane_ConstraintsSplitFly  extends JScrollPane {
 		c.weighty = 1;
 		popupPanel.add(staticScrollPane, c);
 
-		// Add Parameters Splitters
+		// Add Dynamic Splitters
 		c.gridx = 1;
 		c.gridy = 0;
 		c.weightx = 1;
 		c.weighty = 1;
-		popupPanel.add(parametersScrollPane, c);
+		popupPanel.add(dynamicScrollPane, c);
 
-		// Add Dynamic Splitters
+		// Add Parameters Splitters
 		c.gridx = 2;
 		c.gridy = 0;
 		c.weightx = 1;
 		c.weighty = 1;
-		popupPanel.add(dynamicScrollPane, c);
+		popupPanel.add(parametersScrollPane, c);
 		
 		// Add tableScrollPane
 		c.gridx = 0;
@@ -245,7 +245,9 @@ public class ScrollPane_ConstraintsSplitFly  extends JScrollPane {
 		
 		// Add autoDescription checkbox
 		autoDescription = new JCheckBox("Add splitting infomation to query_description");
-		c.gridx = 1;
+		autoDescription.setSelected(true);
+		c.fill = GridBagConstraints.CENTER;
+		c.gridx = 0;
 		c.gridy = 2;
 		c.weightx = 1;
 		c.weighty = 0;
@@ -254,22 +256,37 @@ public class ScrollPane_ConstraintsSplitFly  extends JScrollPane {
 
 		
 		
-		//Add the Panel to this Big ScrollPane------------------------------------------------------------------------------
-		border = new TitledBorder("Select items you want to split - currently supports splitting only Static Identifiers (future: Dynamic Identifiers & Parameters)");
-		border.setTitleJustification(TitledBorder.CENTER);
-		setBorder(border);
+		// Add the Panel to this Big ScrollPane------------------------------------------------------------------------------
+		setBorder(null);
 		setViewportView(popupPanel);			
 	}
 	
 	
-	public List<String> get_splitStatic_NameList() {
-		List<String> splitStatic_NameList = new ArrayList<String>();
-		for (JCheckBox i : selected_staticCheckboxes) {
+	public List<Integer> get_static_split_id() {
+		List<Integer> static_split_id = new ArrayList<Integer>();
+		for (int i = 0; i < selected_staticCheckboxes.size(); i++) {
+			if (selected_staticCheckboxes.get(i).isSelected()) {
+				static_split_id.add(i);
+			}
+		}
+		return static_split_id;
+	}
+	
+	
+	public List<String> get_dynamic_split_name() {
+		List<String> dynamic_split_name = new ArrayList<String>();
+		for (JCheckBox i: selected_dynamicCheckboxes) {
 			if (i.isSelected()) {
-				splitStatic_NameList.add(i.getText());
-			}		
-		}	
-		return splitStatic_NameList;
+				dynamic_split_name.add(i.getText());
+			}
+		}
+		return dynamic_split_name;
+	}
+	
+	
+	public Boolean is_parameters_split() {
+		if (selected_parametersCheckboxes.get(0).isSelected()) return true;
+		return false;
 	}
 	
 	

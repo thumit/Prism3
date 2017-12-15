@@ -627,18 +627,35 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 
 		
 
-		//ScrollPane contains the identifiers that are able to be selected
+		// ScrollPane contains the identifiers that are able to be selected
 		selectIdentifiersScrollPanel = new JScrollPane(select_Panel);
 		selectIdentifiersScrollPanel.setBorder(BorderFactory.createTitledBorder(null, "Dynamic Identifiers  -  use yield attributes to filter variables", TitledBorder.CENTER, 0));
 		selectIdentifiersScrollPanel.setPreferredSize(new Dimension(200, 100));
 		
-		//Add the above ScrollPane
+		// add listeners to select NoIdentifier only
+		selectIdentifiersScrollPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				checkboxNoIdentifier.setSelected(true);
+				for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
+					allDynamicIdentifiers.get(i).setSelected(false);
+					allDynamicIdentifiers_ScrollPane.get(i).setVisible(false);		// Set invisible all scrollPanes of dynamic identifiers
+					selectIdentifiersScrollPanel.setBorder(BorderFactory.createTitledBorder(null, "Dynamic Identifiers  -  use yield attributes to filter variables", TitledBorder.CENTER, 0));
+				} 
+				// Do a resize to same size for JInteral Frame of the project to help repaint	
+				revalidate();
+				repaint();
+				PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
+			}
+		});	
+		
+		// Add the above ScrollPane
 		c3.gridx = 0;
 		c3.gridy = 0;
 		dynamic_identifiersPanel.add(selectIdentifiersScrollPanel, c3);
 		
 		
-		//Add dynamic_identifiersPanel to this Class which is a mother JSCrollPanel
+		// Add dynamic_identifiersPanel to this Class which is a mother JSCrollPanel
 		setViewportView(dynamic_identifiersPanel);		
 		
 		
@@ -646,7 +663,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 		this.setPreferredSize(new Dimension(0, 250));	
 	}
 	
-	public List<List<JCheckBox>> get_CheckboxDynamicIdentifiers() {
+	public List<List<JCheckBox>> get_checkboxDynamicIdentifiers() {
 		return checkboxDynamicIdentifiers;
 	}
 	
@@ -676,6 +693,49 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 			for (JCheckBox item: one_identifier_checkboxes) {
 				item.setSelected(true);
 			}
+		}
+	}
+	
+	
+	public String get_dynamic_description_from_GUI() {		
+		List<String> temp = new ArrayList<String>();
+		
+		for (int i = 0; i < allDynamicIdentifiers_ScrollPane.size(); i++) {		//Loop all dynamic identifier ScrollPanes
+			// Count the total of checked items in each identifier 
+			int total_check_items = 0;
+			int total_items = 0;
+			if (allDynamicIdentifiers_ScrollPane.get(i).isVisible() && checkboxDynamicIdentifiers.get(i).size() > 0) {	// get the active identifiers (when identifier ScrollPane is visible and List size >0)
+				for (int j = 0; j < checkboxDynamicIdentifiers.get(i).size(); j++) { //Loop all checkBoxes in this active identifier
+					if ((checkboxDynamicIdentifiers.get(i).get(j).isSelected() && (checkboxDynamicIdentifiers.get(i).get(j).isVisible())
+							|| !checkboxDynamicIdentifiers.get(i).get(j).isEnabled())) {
+						total_check_items++;
+					}
+					if (checkboxDynamicIdentifiers.get(i).get(j).isVisible()) {
+						total_items++;
+					}
+				}
+			}
+			
+			// Add to description only when the total of checked items < the total items
+			if (total_check_items < total_items) {
+				String dynamic_info = allDynamicIdentifiers.get(i).getText();
+				
+				for (int j = 0; j < checkboxDynamicIdentifiers.get(i).size(); j++) { 	// Loop all checkBoxes in this active identifier
+					String checkboxName = checkboxDynamicIdentifiers.get(i).get(j).getText();									
+					//Add checkBox if it is (selected & visible) or disable
+					if ((checkboxDynamicIdentifiers.get(i).get(j).isSelected() && (checkboxDynamicIdentifiers.get(i).get(j).isVisible())
+							|| !checkboxDynamicIdentifiers.get(i).get(j).isEnabled()))	
+						dynamic_info = String.join(" ", dynamic_info, checkboxName);	
+				}
+				temp.add(dynamic_info);
+			}
+		}	
+		
+		if (temp.isEmpty()) {
+			return "No dynamic restriction";
+		} else {
+			String joined_string = String.join(" | ", temp);
+			return joined_string;
 		}
 	}
 	

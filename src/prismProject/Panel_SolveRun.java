@@ -3783,6 +3783,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						fileOut.write("Simplex iterations" + "\t" + cplex.getNiterations64());
 						
 						fileOut.newLine();
+						fileOut.write("Prism version when problem solved" + "\t" + PrismMain.get_prism_version());
+						
+						fileOut.newLine();
 						fileOut.write("Date & time problem solved" + "\t" + dateFormat.format(new Date()));
 						
 						fileOut.newLine();
@@ -8396,6 +8399,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 
 						fileOut.newLine();
 						fileOut.write("Simplex iterations" + "\t" + cplex.getNiterations64());
+						
+						fileOut.newLine();
+						fileOut.write("Prism version when problem solved" + "\t" + PrismMain.get_prism_version());
 						
 						fileOut.newLine();
 						fileOut.write("Date & time problem solved" + "\t" + dateFormat.format(new Date()));

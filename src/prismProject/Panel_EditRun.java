@@ -1,12 +1,14 @@
 package prismProject;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -17,6 +19,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 
+import prismConvenienceClass.ColorUtil;
 import prismConvenienceClass.IconHandle;
 import prismRoot.PrismMain;
 
@@ -45,6 +48,7 @@ public class Panel_EditRun extends JLayeredPane implements ActionListener {
 		
 		// Left split panel--------------------------------------------------------------------------------
 		scrollPane_Left = new JScrollPane();
+		scrollPane_Left.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, ColorUtil.makeTransparent(Color.BLACK, 70)));
 		splitPanel.setLeftComponent(scrollPane_Left);
 		
 		// Add all selected Runs to radioPanel and add that panel to scrollPane_Left
@@ -66,6 +70,7 @@ public class Panel_EditRun extends JLayeredPane implements ActionListener {
 		
 		// Right split panel-------------------------------------------------------------------------------
 		scrollPane_Right = new JScrollPane();
+		scrollPane_Right.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, ColorUtil.makeTransparent(Color.BLACK, 70)));
 		splitPanel.setRightComponent(scrollPane_Right);
 				
 	

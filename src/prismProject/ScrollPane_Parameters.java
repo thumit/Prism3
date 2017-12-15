@@ -1,10 +1,13 @@
 package prismProject;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +15,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.UIManager;
+import javax.swing.border.TitledBorder;
 
 import prismConvenienceClass.ColorUtil;
 import prismConvenienceClass.IconHandle;
@@ -143,6 +147,23 @@ public class ScrollPane_Parameters extends JScrollPane {
 			PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());	
 		}
 
+		
+		// add listeners to select NoParameter only
+		addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				checkboxNoParameter.setSelected(true);
+				for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
+					checkboxParameter.get(i).setSelected(false);
+				} 
+			}
+		});
+				
+		
+		TitledBorder border = new TitledBorder("Parameters");
+		border.setTitleJustification(TitledBorder.CENTER);
+		setBorder(border);
+    	setPreferredSize(new Dimension(200, 100));
 	}
 	
 	public JCheckBox get_checkboxNoParameter() {
@@ -153,8 +174,29 @@ public class ScrollPane_Parameters extends JScrollPane {
 		return checkboxCostParameter;
 	}
 	
-	public List<JCheckBox> get_checkboxParameter() {
+	public List<JCheckBox> get_checkboxParameters() {
 		return checkboxParameter;
+	}
+	
+	public String get_parameters_description_from_GUI() {	
+		List<String> temp = new ArrayList<String>(); 
+		
+		for (JCheckBox i : checkboxParameter) {
+			if (i.isSelected()) {
+				temp.add(i.getText());	// add the the selected Columns names to this list
+			}
+		}
+		
+		if (temp.isEmpty()) {
+			if (checkboxCostParameter.isSelected()) {
+				temp.add("Cost (i.e. dollars)");
+			} else {
+				temp.add("Area (i.e. acres)");
+			}
+		}		
+
+		String joined_string = String.join(" + ", temp);
+		return joined_string;
 	}
 	
 	public String get_parameters_info_from_GUI() {			

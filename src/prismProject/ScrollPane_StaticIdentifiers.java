@@ -25,8 +25,11 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 	private List<List<JCheckBox>> checkboxStaticIdentifiers;
 	private List<JLabel> layers_Title_Label;
 	private JPanel identifiersPanel;
+	private int option;
 
 	public ScrollPane_StaticIdentifiers (Read_Database read_Database, int option, String panel_name) {
+		this.option = option;
+		
 		// option = 0 --> 6 layers		1 --> 4 layers       2 --> 6 layers + method_period      3 --> method_choice 
 		List<String> layers_Title = new ArrayList<>(read_Database.get_layers_Title());
 		List<String> layers_Title_ToolTip = new ArrayList<>(read_Database.get_layers_Title_ToolTip());
@@ -201,6 +204,37 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 		}
 		
 		
+		
+		
+		// add listeners to select all or de-select all
+		addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				boolean is_at_least_one_item_checked = false;
+				for (int i = 0; i < total_staticIdentifiers; i++) {		//Loop all layers
+					for (int j = 0; j < allLayers.get(i).size(); j++) {		//Loop all elements in each layer
+						if (checkboxStaticIdentifiers.get(i).get(j).isSelected()) {
+							is_at_least_one_item_checked = true;
+							break;
+						}
+					}
+				}
+				
+				if (is_at_least_one_item_checked) {
+					for (int i = 0; i < total_staticIdentifiers; i++) {		//Loop all layers
+						for (int j = 0; j < allLayers.get(i).size(); j++) {		//Loop all elements in each layer
+							checkboxStaticIdentifiers.get(i).get(j).setSelected(false);
+						}
+					}
+				} else {
+					for (int i = 0; i < total_staticIdentifiers; i++) {		//Loop all layers
+						for (int j = 0; j < allLayers.get(i).size(); j++) {		//Loop all elements in each layer
+							checkboxStaticIdentifiers.get(i).get(j).setSelected(true);
+						}
+					}
+				}
+			}
+		});		
 	    
 	    
 		setViewportView(identifiersPanel);
@@ -217,12 +251,59 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 	}
 	
 	
-	public List<JCheckBox> get_TitleAsCheckboxes() {
-		List<JCheckBox> temp_List = new ArrayList<JCheckBox>();		//A temporary List
+	public List<JCheckBox> get_static_layer_title_as_checkboxes() {
+		List<JCheckBox> temp_List = new ArrayList<JCheckBox>();		// a temporary List
 		for (int i = 0; i < layers_Title_Label.size(); i++) {
 			temp_List.add(new JCheckBox(layers_Title_Label.get(i).getText()));
 		}
 		return temp_List;
+	}
+	
+	
+	public String get_static_description_from_GUI() {		
+		List<String> temp = new ArrayList<String>();
+		
+		for (int i = 0; i < checkboxStaticIdentifiers.size(); i++) {		//Loop all static identifiers
+			// Count the total of checked items in each layer 
+			int total_check_items = 0;
+			int total_items = 0;
+			for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {		//Loop all elements in each layer
+				if ((checkboxStaticIdentifiers.get(i).get(j).isSelected() && (checkboxStaticIdentifiers.get(i).get(j).isVisible())
+						|| !checkboxStaticIdentifiers.get(i).get(j).isEnabled())) {
+					total_check_items++;
+				}
+				if (checkboxStaticIdentifiers.get(i).get(j).isVisible()) {
+					total_items++;
+				}	
+			}
+			
+			// Add to description only when the total of checked items < the total items
+			if (total_check_items < total_items) {
+				String static_info = layers_Title_Label.get(i).getText();
+				
+				for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {		//Loop all elements in each layer
+					String checkboxName = checkboxStaticIdentifiers.get(i).get(j).getText();				
+					//Add checkBox if it is (selected & visible) or disable
+					if ((checkboxStaticIdentifiers.get(i).get(j).isSelected() && (checkboxStaticIdentifiers.get(i).get(j).isVisible())
+							|| !checkboxStaticIdentifiers.get(i).get(j).isEnabled()))	
+						static_info = String.join(" ", static_info, checkboxName);	
+				}
+				temp.add(static_info);
+			}
+		}	
+		
+		if (temp.isEmpty()) {
+			if (option == 0) {
+				return "all strata";
+			} else if (option == 3) {
+				return "All methods and choices";
+			} else {
+				return "No static restriction";
+			}
+		} else {
+			String joined_string = String.join(" | ", temp);
+			return joined_string;
+		}
 	}
 	
 	

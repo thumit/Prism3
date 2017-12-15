@@ -50,6 +50,7 @@ import prismConvenienceClass.ColorUtil;
 import prismConvenienceClass.ComponentResizer;
 import prismConvenienceClass.FilesHandle;
 import prismConvenienceClass.IconHandle;
+import prismConvenienceClass.MenuScroller;
 import prismConvenienceClass.Processing;
 import prismConvenienceClass.RequestFocusListener;
 import prismConvenienceClass.StringHandle;
@@ -75,6 +76,7 @@ public class PrismMain extends JFrame {
 	private MenuItem_SetTransparency 	setTransparency;	// For menuWindow
 	private MenuItem_CaptureGUI 		captureGUI;	// For menuWindow
 		
+	private static String 					prism_version = "PRISM ALPHA 1.0.21";
 	private static DesktopPanel_BackGround 	prism_DesktopPane;
 	private static String 					currentProject;
 	private static PrismMain 				main;
@@ -181,7 +183,7 @@ public class PrismMain extends JFrame {
 								
 				// Define components: Menubar, Menus, MenuItems----------------------------------
 				newProject = new JMenuItem("New");
-				menuOpenProject = new JMenu("Open");
+				menuOpenProject = new JMenu("Open");	MenuScroller.setScrollerFor(menuOpenProject, 6, 125, 3, 1);
 				exitSoftware = new JMenuItem("Exit");
 				DatabaseManagement = new JMenuItem("Database Management");
 				DatabaseManagement.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_database.png"));
@@ -525,7 +527,7 @@ public class PrismMain extends JFrame {
 
 		      public void internalFrameClosing(InternalFrameEvent e) {
 		  		String ExitOption[] = {"Close","Cancel"};
-				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(),"Stop Editing can save changes you made. Close project ?", "Close Project",
+				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(),"Close now?", "Close Project",
 						JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
 				if (response == 0)
 				{
@@ -558,7 +560,7 @@ public class PrismMain extends JFrame {
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public void exitPRISM() {
 		String ExitOption[] = {"Exit","Cancel"};
-		int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(),"Stop Editing can save changes you made. Exit PRISM ?", "Exit PRISM",
+		int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(),"Exit now?", "Exit PRISM",
 				JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
 		if (response == 0) {		
 //			main.setVisible(false);
@@ -609,6 +611,10 @@ public class PrismMain extends JFrame {
 	}
 	
 	//--------------------------------------------------------------------------------------------------------------------------------
+	public static String get_prism_version() {
+		return prism_version;
+	}
+	
 	public static DesktopPanel_BackGround get_Prism_DesktopPane() {
 		return prism_DesktopPane;
 	}
@@ -616,8 +622,7 @@ public class PrismMain extends JFrame {
 	public static PrismMain get_main() {
 		return main;
 	}
-	
-	//--------------------------------------------------------------------------------------------------------------------------------
+
 	public static String getProjectName() {
 		return currentProject;
 	}
