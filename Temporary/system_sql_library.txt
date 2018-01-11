@@ -1,0 +1,105 @@
+------------------------------------------------------------COUNT------------------------------------------------------------
+
+----------
+1. Count total number of prescriptions by silviculture method & cover type
+SELECT
+SUBSTR(DISTINCT prescription, 1, INSTR(DISTINCT prescription, "_")-1) as CoverType,
+SUM(case when prescription LIKE '%_NG_E%' then 1 else 0 end) NG_E,
+SUM(case when prescription LIKE '%_NG_R%' then 1 else 0 end) NG_R,
+SUM(case when prescription LIKE '%_PB_E%' then 1 else 0 end) PB_E,
+SUM(case when prescription LIKE '%_PB_R%' then 1 else 0 end) PB_R,
+SUM(case when prescription LIKE '%_GS_E%' then 1 else 0 end) GS_E,
+SUM(case when prescription LIKE '%_GS_R%' then 1 else 0 end) GS_R,
+SUM(case when prescription LIKE '%_EA_E%' then 1 else 0 end) EA_E,
+SUM(case when prescription LIKE '%_EA_R%' then 1 else 0 end) EA_R,
+SUM(case when prescription LIKE '%_MS_E%' then 1 else 0 end) MS_E,
+SUM(case when prescription LIKE '%_BS_E%' then 1 else 0 end) BS_E,
+SUM(case when prescription LIKE '%%' then 1 else 0 end) Total_Prescriptions
+FROM (SELECT DISTINCT prescription FROM yield_tables)
+GROUP BY CoverType
+
+UNION ALL
+
+SELECT
+'Total_Prescriptions' as CoverType2,
+SUM(case when prescription LIKE '%_NG_E%' then 1 else 0 end) NG_E,
+SUM(case when prescription LIKE '%_NG_R%' then 1 else 0 end) NG_R,
+SUM(case when prescription LIKE '%_PB_E%' then 1 else 0 end) PB_E,
+SUM(case when prescription LIKE '%_PB_R%' then 1 else 0 end) PB_R,
+SUM(case when prescription LIKE '%_GS_E%' then 1 else 0 end) GS_E,
+SUM(case when prescription LIKE '%_GS_R%' then 1 else 0 end) GS_R,
+SUM(case when prescription LIKE '%_EA_E%' then 1 else 0 end) EA_E,
+SUM(case when prescription LIKE '%_EA_R%' then 1 else 0 end) EA_R,
+SUM(case when prescription LIKE '%_MS_E%' then 1 else 0 end) MS_E,
+SUM(case when prescription LIKE '%_BS_E%' then 1 else 0 end) BS_E,
+SUM(case when prescription LIKE '%%' then 1 else 0 end) Total_Prescriptions
+FROM (SELECT DISTINCT prescription FROM yield_tables)
+----------
+2. Count total number of "existing" prescriptions by silviculture method, cover type, size class
+SELECT
+SUBSTR(DISTINCT prescription, 1, INSTR(DISTINCT prescription, "_")-1) as CoverType,
+SUBSTR(DISTINCT prescription, 3, INSTR(DISTINCT prescription, "_")-1) as SizeClass,
+SUM(case when prescription LIKE '%_NG_E%' then 1 else 0 end) NG_E,
+SUM(case when prescription LIKE '%_PB_E%' then 1 else 0 end) PB_E,
+SUM(case when prescription LIKE '%_GS_E%' then 1 else 0 end) GS_E,
+SUM(case when prescription LIKE '%_EA_E%' then 1 else 0 end) EA_E,
+SUM(case when prescription LIKE '%_MS_E%' then 1 else 0 end) MS_E,
+SUM(case when prescription LIKE '%_BS_E%' then 1 else 0 end) BS_E,
+SUM(case when SUBSTR(DISTINCT prescription, 8, INSTR(DISTINCT prescription, "_")-1) LIKE 'E' then 1 else 0 end) Total_Prescriptions
+FROM 
+(SELECT DISTINCT prescription FROM yield_tables
+WHERE prescription LIKE '%_NG_E%'
+OR prescription LIKE '%_PB_E%'
+OR prescription LIKE '%_GS_E%'
+OR prescription LIKE '%_EA_E%'
+OR  prescription LIKE '%_MS_E%'
+OR prescription LIKE '%_BS_E%')
+GROUP BY CoverType, SizeClass
+----------
+--------------------------------------------------------------LIST--------------------------------------------------------------
+
+----------
+10. List all prescriptions
+SELECT DISTINCT prescription, action_type AS final_activity, MIN(CAST(age_class as decimal)) AS min_age_class, MAX(CAST(age_class as decimal)) AS max_age_class, COUNT(action_type) AS total_rows
+FROM yield_tables GROUP BY prescription;
+----------
+11. List "Natural Growth Existing" prescriptions
+SELECT DISTINCT prescription AS NG_E_prescription, action_type AS final_activity, MIN(CAST(age_class as decimal)) AS min_age_class, MAX(CAST(age_class as decimal)) AS max_age_class, COUNT(action_type) AS total_rows
+FROM yield_tables WHERE prescription LIKE '%_NG_E%' GROUP BY prescription;
+----------
+12. List "Natural Growth Regeneration" prescriptions
+SELECT DISTINCT prescription AS NG_R_prescription, action_type AS final_activity, MIN(CAST(age_class as decimal)) AS min_age_class, MAX(CAST(age_class as decimal)) AS max_age_class, COUNT(action_type) AS total_rows
+FROM yield_tables WHERE prescription LIKE '%_NG_R%' GROUP BY prescription;
+----------
+13. List "Prescribed Burn Existing" prescriptions
+SELECT DISTINCT prescription AS PB_E_prescription, action_type AS final_activity, MIN(CAST(age_class as decimal)) AS min_age_class, MAX(CAST(age_class as decimal)) AS max_age_class, COUNT(action_type) AS total_rows
+FROM yield_tables WHERE prescription LIKE '%_PB_E%' GROUP BY prescription;
+----------
+14. List "Prescribed Burn Regeneration" prescriptions
+SELECT DISTINCT prescription AS PB_R_prescription, action_type AS final_activity, MIN(CAST(age_class as decimal)) AS min_age_class, MAX(CAST(age_class as decimal)) AS max_age_class, COUNT(action_type) AS total_rows
+FROM yield_tables WHERE prescription LIKE '%_PB_R%' GROUP BY prescription;
+----------
+15. List "Group Selection Existing" prescriptions
+SELECT DISTINCT prescription AS GS_E_prescription, action_type AS final_activity, MIN(CAST(age_class as decimal)) AS min_age_class, MAX(CAST(age_class as decimal)) AS max_age_class, COUNT(action_type) AS total_rows
+FROM yield_tables WHERE prescription LIKE '%_GS_E%' GROUP BY prescription;
+----------
+16. List "Group Selection Regeneration" prescriptions
+SELECT DISTINCT prescription AS GS_R_prescription, action_type AS final_activity, MIN(CAST(age_class as decimal)) AS min_age_class, MAX(CAST(age_class as decimal)) AS max_age_class, COUNT(action_type) AS total_rows
+FROM yield_tables WHERE prescription LIKE '%_GS_R%' GROUP BY prescription;
+----------
+17. List "Even Age Existing" prescriptions
+SELECT DISTINCT prescription AS EA_E_prescription, action_type AS final_activity, MIN(CAST(age_class as decimal)) AS min_age_class, MAX(CAST(age_class as decimal)) AS max_age_class, COUNT(action_type) AS total_rows
+FROM yield_tables WHERE prescription LIKE '%_EA_E%' GROUP BY prescription;
+----------
+18. List "Even Age Regeneration" prescriptions
+SELECT DISTINCT prescription AS EA_R_prescription, action_type AS final_activity, MIN(CAST(age_class as decimal)) AS min_age_class, MAX(CAST(age_class as decimal)) AS max_age_class, COUNT(action_type) AS total_rows
+FROM yield_tables WHERE prescription LIKE '%_EA_R%' GROUP BY prescription;
+----------
+19. List "Mixed Severity Fire" prescriptions
+SELECT DISTINCT prescription AS MS_E_prescription, action_type AS final_activity, MIN(CAST(age_class as decimal)) AS min_age_class, MAX(CAST(age_class as decimal)) AS max_age_class, COUNT(action_type) AS total_rows
+FROM yield_tables WHERE prescription LIKE '%_MS_E%' GROUP BY prescription;
+----------
+20. List "Severe Bark Beetle" prescriptions
+SELECT DISTINCT prescription AS BS_E_prescription, action_type AS final_activity, MIN(CAST(age_class as decimal)) AS min_age_class, MAX(CAST(age_class as decimal)) AS max_age_class, COUNT(action_type) AS total_rows
+FROM yield_tables WHERE prescription LIKE '%_BS_E%' GROUP BY prescription;
+----------

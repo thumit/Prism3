@@ -28,6 +28,7 @@ public class ScrollPane_ConstraintsSplitFly  extends JScrollPane {
 	private List<JCheckBox> selected_staticCheckboxes;
 	private List<JCheckBox> selected_parametersCheckboxes;
 	private List<JCheckBox> selected_dynamicCheckboxes;
+	private JTable table;
 	private Object[][] data;
 	private JCheckBox autoDescription;
 	
@@ -153,7 +154,7 @@ public class ScrollPane_ConstraintsSplitFly  extends JScrollPane {
 			}
 		};
 		
-		JTable table = new JTable(model);
+		table = new JTable(model);
 		
 		class comboBox_constraint_type extends JComboBox {	
 			public comboBox_constraint_type() {
@@ -297,5 +298,11 @@ public class ScrollPane_ConstraintsSplitFly  extends JScrollPane {
 	
 	public JCheckBox get_autoDescription() {
 		return autoDescription;
+	}
+	
+	public void stop_editing() {
+		if (table.isEditing()) {
+			table.getCellEditor().stopCellEditing();
+		}
 	}
 }

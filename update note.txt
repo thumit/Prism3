@@ -588,3 +588,34 @@ All changes in this block are associated with PrismAlpha1.0.20.jar, Prism Formul
 270. use narrow Border for both scrollPane_Left & scrollPane_Right in Panel_EditRuns, Panel_Projects, and Panel_Database_Management --> Better UI
 All changes in this block are associated with PrismAlpha1.0.21.jar, Prism Formulation 02.docx, Prism Database 02.docx
 --------------------------------------------------------------------------
+271. Remove Panel_CustomizeOutput since we will never need it
+272. Upgrade Database Management System:
+	- Query functions could be accessed by selecting a database or a table in a databse, and then right click on the right window panel. 
+	- Query functions are always auto-updated upon doing "Right Click"
+	- Add 2 libraries for queries: system library & user library
+		- System queries library (queries are designed specifically for CGNF database) could be saved in Temporary folder (deleted upon exit PRISM) but always be restored to default when right click "Setting"
+		- Users queries library could be customized (edited) using a GUI and saved in Temporary folder
+	- Query could now be executed in the pop-up window using the button "Execute Query"
+	- doQuery: query statement is formatted before executed (i.e. multiple spaces --> one space, leading and ending spaces --> removed)
+	- show_nothing() --> everything is set to null
+	- Allow when multiple nodes are selected in the databse tree --> just get the last database and allow query popup functions on right click
+273. Bug 17 fixed by adding stopCellEditing for all buttons in:
+	- Silviculture Method
+	- Management Cost
+	- Basic Constraints
+	- Flow Constraints
+	- output_05_Management_Details
+274. Adding void stop_editing and add that void call into buttion "New Multiple" so we do not need to press enter to register the changes when using split function. Those changes are applied to:
+	- ScrollPane_ConstraintsSplitFly (add void) & Output_Panel_Management_Details (call the void when using "New Multiple" button)
+	- ScrollPane_ConstraintsSplitBasic (add void) & Basic_Constraints_GUI (call the void when using "New Multiple" button)
+275. Fix the exception error (when using "Copy" function in Database Management to copy tables, but "Cancel" the funtion --> error) by moving some codes into the "if then" when user presses OK.
+276. Add feature "Make a copy" when a database is selected
+277. Bug 18 clear by adding an if then to doMousePressed(), and rewriting applyTableNameChange & applyDatabaseNameChange
+278. Auto update the following: editingPath, selectionPaths, processingNode = node, currentDatabase, currentTable, currentLevel after:
+	- New databse
+	- Rename database or table
+	- Make a Copy (copy_database)
+	- Copy tables (copy_tables)
+279. Table Filter is fixed so when query functions (from system library or user library) are executed --> no problem with showing the updated database table. When user go to "Setting" the table filter will always be disable (set to null)
+All changes in this block are associated with PrismAlpha1.0.23.jar, Prism Formulation 02.docx, Prism Database 02.docx
+--------------------------------------------------------------------------

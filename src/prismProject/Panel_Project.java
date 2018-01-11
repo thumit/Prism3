@@ -66,12 +66,10 @@ public class Panel_Project extends JLayeredPane {
 	private JSplitPane splitPanel;
 	private Panel_EditRun editPanel;		// This panel only visible when "Start Editing"
 	private Panel_SolveRun solvePanel;		// This panel only visible when "Start Solving"
-	private Panel_CustomizeOutput customizeOutputPanel;		// This panel only visible when Start "Customize Output"
 	private JButton btnNewRun, btnDeleteRun;
 	private JButton btnEditRun;
 	private JButton btnRefresh;
 	private JButton btnSolveRun;
-	private JButton btnCustomizeOutput;
 	private JButton btnCollectMemory;
 	private JButton btnSave;
 	private List<JButton> buttons_list;
@@ -196,8 +194,8 @@ public class Panel_Project extends JLayeredPane {
 	         }
 	         public void focusLost(FocusEvent e) {               
 	         }
-	     });//end addFocusListener		
-		refreshProjectTree();	//Refresh the tree
+	     });		
+		refreshProjectTree();	// Refresh the tree
 		scrollPane_Left.setViewportView(projectTree);
 
 		// Right split panel-------------------------------------------------------------------------------
@@ -249,7 +247,7 @@ public class Panel_Project extends JLayeredPane {
 		btnEditRun.setToolTipText("Start Editing");
 		btnEditRun.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_edit.png"));
 		btnEditRun.addActionListener(e -> {
-			Thread thread = new Thread() {			// Make a thread so JFrame will not be frozen
+			Thread thread = new Thread() {	// Create a thread so JFrame will not be frozen
 				public void run() {
 					edit_Runs();
 					PrismMain.get_Prism_DesktopPane().getSelectedFrame().revalidate();
@@ -269,15 +267,6 @@ public class Panel_Project extends JLayeredPane {
 			solve_Runs();
 		});
 		projectToolBar.add(btnSolveRun);
-		
-		
-		btnCustomizeOutput = new JButton();
-		btnCustomizeOutput.setToolTipText("Customize Output");
-		btnCustomizeOutput.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_flow2.png"));
-		btnCustomizeOutput.addActionListener(e -> {
-			customize_Output();
-		});
-		projectToolBar.add(btnCustomizeOutput);
 
 		
 		btnCollectMemory = new JButton();
@@ -308,7 +297,6 @@ public class Panel_Project extends JLayeredPane {
 		buttons_list.add(btnEditRun);
 		buttons_list.add(btnRefresh);
 		buttons_list.add(btnSolveRun);
-		buttons_list.add(btnCustomizeOutput);
 		buttons_list.add(btnCollectMemory);
 		buttons_list.add(btnSave);
 		for (JButton i : buttons_list) {
@@ -699,21 +687,6 @@ public class Panel_Project extends JLayeredPane {
 						});
 						popup.add(solveMenuItem);
 					}	
-					
-					
-					// Only nodes level 2 (Run) can be Customize output--------------------------
-					if (currentLevel == 2 && rootSelected == false) {					
-						final JMenuItem customizeOutput_MenuItem = new JMenuItem("Customize Output");
-						customizeOutput_MenuItem.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_flow2.png"));
-						customizeOutput_MenuItem.setMnemonic(KeyEvent.VK_O);
-						customizeOutput_MenuItem.addActionListener(new ActionListener() {
-							@Override
-							public void actionPerformed(ActionEvent actionEvent) {								
-								customize_Output();
-							}
-						});
-						popup.add(customizeOutput_MenuItem);
-					}
 					
 					
 					// Only nodes level 2 (Run) can be Deleted--------------------------
@@ -1162,75 +1135,6 @@ public class Panel_Project extends JLayeredPane {
 			refreshProjectTree(); //Refresh the tree
 		}
 	}
-
-	//--------------------------------------------------------------------------------------------------------------------------------
-	public void customize_Output() {
-		
-		// For Start Customizing
-		if (btnCustomizeOutput.getToolTipText()=="Customize Output") {
-			//Some set up ---------------------------------------------------------------	
-			if (selectionPaths != null) {
-				int node_Level;
-				for (TreePath selectionPath : selectionPaths) { //Loop through all selected nodes
-					node_Level = selectionPath.getPathCount();		
-					if (node_Level == 1 || node_Level == 3) {
-						projectTree.getSelectionModel().removeSelectionPath(selectionPath);		//Deselect all level 1 and level 3 nodes
-					}				
-				}
-				selectionPaths = projectTree.getSelectionPaths(); //This is very important to get the most recent selected paths
-			}
-			//End of set up---------------------------------------------------------------
-			
-					
-			if (selectionPaths != null) { //at least 1 run has to be selected 
-				// Create a files list that contains selected runs
-				listOfEditRuns = new File[selectionPaths.length];
-				int fileCount=0;
-				
-
-				for (TreePath selectionPath : selectionPaths) { //Loop through all level 2 nodes (Runs)
-					currentLevel = selectionPath.getPathCount();
-					DefaultMutableTreeNode processingNode = (DefaultMutableTreeNode) selectionPath
-							.getLastPathComponent();
-					if (currentLevel == 2) { //Add to the list
-						currentRun = processingNode.getUserObject().toString();
-						File file = new File(currentProjectFolder + seperator + currentRun);
-						listOfEditRuns[fileCount] = file;
-						fileCount++;
-					}
-				}
-				
-				// Disable all other buttons, change name to "Return to Main Window", remove splitPanel and add editPanel
-				for (Component c : projectToolBar.getComponents()) c.setVisible(false);
-				displayTextField.setVisible(false);
-				
-				btnCustomizeOutput.setVisible(true);
-				btnCustomizeOutput.setToolTipText("Return to Main Window");
-				btnCustomizeOutput.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_back.png"));
-				btnCustomizeOutput.setForeground(Color.RED);
-				this.remove(splitPanel);
-				customizeOutputPanel = new Panel_CustomizeOutput(listOfEditRuns); // This panel only visible when Start "Customize Output"
-				this.add(customizeOutputPanel);
-			}
-		} // End of start solving
-		
-		
-		
-		// For Stop Customizing
-		else if (btnCustomizeOutput.getToolTipText() == "Return to Main Window") {
-			//Enable all other buttons and splitPanel and change name to "Customize Output"
-			for (Component c : projectToolBar.getComponents()) c.setVisible(true);
-			displayTextField.setVisible(true);
-			btnSave.setVisible(false);
-			btnCustomizeOutput.setToolTipText("Customize Output");
-			btnCustomizeOutput.setRolloverIcon(null);
-			btnCustomizeOutput.setForeground(null);
-			this.remove(customizeOutputPanel);
-			this.add(splitPanel);
-			refreshProjectTree(); //Refresh the tree
-		}
-	}
-			
 	
 	// --------------------------------------------------------------------------------------------------------------------------------		
 	public void showNothing() {

@@ -889,6 +889,10 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 			btn_NewSingle.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {		
+					if (table9.isEditing()) {
+						table9.getCellEditor().cancelCellEditing();
+					}
+					
 					// Add 1 row
 					rowCount9++;
 					data9 = new Object[rowCount9][colCount9];
@@ -925,7 +929,11 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 			// New Multiple
 			btn_New_Multiple.addActionListener(new ActionListener() {
 				@Override
-				public void actionPerformed(ActionEvent actionEvent) {		
+				public void actionPerformed(ActionEvent actionEvent) {	
+					if (table9.isEditing()) {
+						table9.getCellEditor().cancelCellEditing();
+					}
+					
 					ScrollPane_ConstraintsSplitFly constraint_split_ScrollPanel = new ScrollPane_ConstraintsSplitFly(
 							static_identifiersScrollPanel.get_static_layer_title_as_checkboxes(),
 							parametersScrollPanel.get_checkboxParameters(),
@@ -1009,7 +1017,10 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 							
 						}
 							
-						if (response2 == 0) {					
+						if (response2 == 0) {	
+							constraint_split_ScrollPanel.stop_editing();
+							
+							
 //							// Example: 
 //							List<List<String>> lists = new ArrayList<List<String>>();
 //							lists.add(Arrays.asList(new String[] { "lay1 a", "lay1 b", "lay1 c" }));
@@ -1347,6 +1358,10 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 			btn_Edit.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {	
+					if (table9.isEditing()) {
+						table9.getCellEditor().cancelCellEditing();
+					}
+					
 					if (table9.isEnabled()) {
 						int selectedRow = table9.getSelectedRow();
 						selectedRow = table9.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems	
@@ -1501,7 +1516,11 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 			// Sort
 			btn_Sort.addActionListener(new ActionListener() {
 				@Override
-				public void actionPerformed(ActionEvent actionEvent) {	
+				public void actionPerformed(ActionEvent actionEvent) {
+					if (table9.isEditing()) {
+						table9.getCellEditor().cancelCellEditing();
+					}
+					
 					if (btn_Sort.getText().equals("ON")) {
 						btn_GetResult.setEnabled(true);
 						btn_Save.setEnabled(true);
@@ -1526,6 +1545,10 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 				public void actionPerformed(ActionEvent actionEvent) {		
 					Thread thread_get_result = new Thread() {
 						public void run() {
+							if (table9.isEditing()) {
+								table9.getCellEditor().cancelCellEditing();
+							}
+							
 							for (int i = 0; i < data9.length; i++) {	// Loop each row of the fly constraints table & get result for only the constraints with null value
 								if (data9[i][12] == null) {	
 									btn_NewSingle.setVisible(false);		// Hide buttons only when there is at least 1 calculation
@@ -1594,7 +1617,11 @@ public class Output_Panel_Management_Details extends JLayeredPane implements Ite
 			// Save
 			btn_Save.addActionListener(new ActionListener() {
 				@Override
-				public void actionPerformed(ActionEvent actionEvent) {						
+				public void actionPerformed(ActionEvent actionEvent) {		
+					if (table9.isEditing()) {
+						table9.getCellEditor().cancelCellEditing();
+					}
+					
 					create_file_input_05_fly_constraints();
 				}
 			});	

@@ -3587,7 +3587,11 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 			
 			// New single
-			btn_NewSingle.addActionListener(e -> {		
+			btn_NewSingle.addActionListener(e -> {
+				if (table2.isEditing()) {
+					table2.getCellEditor().stopCellEditing();
+				}
+				
 				// Add 1 row
 				rowCount2++;
 				data2 = new Object[rowCount2][colCount2];
@@ -3618,6 +3622,10 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			// Edit
 			btn_Edit.addActionListener(e -> {
+				if (table2.isEditing()) {
+					table2.getCellEditor().stopCellEditing();
+				}
+				
 				if (table2.isEnabled()) {			
 					int selectedRow = table2.getSelectedRow();
 					selectedRow = table2.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems	
@@ -3760,7 +3768,11 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					
 			
 			// Sort
-			btn_Sort.addActionListener(e -> {					
+			btn_Sort.addActionListener(e -> {	
+				if (table2.isEditing()) {
+					table2.getCellEditor().stopCellEditing();
+				}
+				
 				if (btn_Sort.getText().equals("ON")) {
 					table2.setRowSorter(null);
 					btn_Sort.setText("OFF");
@@ -4532,25 +4544,13 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			c.insets = new Insets(0, 5, 10, 10); // padding top 0, left 5, bottom 10, right 10
 			
 			
-			JButton btn_EditMode = new JButton();
-			btn_EditMode.setFont(new Font(null, Font.BOLD, 14));
-//			btn_EditMode.setText("EDIT MODE");
-			btn_EditMode.setToolTipText("OPEN FLEXIBLE VIEW MODE");
-			btn_EditMode.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_solve1.png"));
-			c.gridx = 0;
-			c.gridy = 0;
-			c.weightx = 0;
-			c.weighty = 0;
-			cost_condition_panel.add(btn_EditMode, c);
-			
-			
 			JButton btn_New = new JButton();
 			btn_New.setFont(new Font(null, Font.BOLD, 14));
 //			btn_New.setText("NEW SET");
 			btn_New.setToolTipText("New");
 			btn_New.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_add.png"));	
 			c.gridx = 0;
-			c.gridy = 1;
+			c.gridy = 0;
 			c.weightx = 0;
 			c.weighty = 0;
 			cost_condition_panel.add(btn_New, c);		
@@ -4567,7 +4567,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 //		    formatter.setCommitsOnValidEdit(true);
 		    spin_priority.setEnabled(false);
 		    c.gridx = 0;
-			c.gridy = 2;
+			c.gridy = 1;
 			c.weightx = 0;
 			c.weighty = 0;
 			cost_condition_panel.add(spin_priority, c);
@@ -4579,7 +4579,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			btn_Edit.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_swap.png"));
 			btn_Edit.setEnabled(false);	
 			c.gridx = 0;
-			c.gridy = 3;
+			c.gridy = 2;
 			c.weightx = 0;
 			c.weighty = 0;
 			cost_condition_panel.add(btn_Edit, c);
@@ -4592,7 +4592,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			btn_Delete.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_erase.png"));
 			btn_Delete.setEnabled(false);
 			c.gridx = 0;
-			c.gridy = 4;
+			c.gridy = 3;
 			c.weightx = 0;
 			c.weighty = 0;
 			cost_condition_panel.add(btn_Delete, c);
@@ -4601,7 +4601,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			// Add Empty Label to make all buttons on top not middle
 			c.insets = new Insets(0, 0, 0, 0); // No padding			
 			c.gridx = 0;
-			c.gridy = 5;
+			c.gridy = 4;
 			c.weightx = 0;
 			c.weighty = 1;
 			cost_condition_panel.add(new JLabel(), c);
@@ -4721,36 +4721,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		    });
 			
 			
-			// EDIT MODE
-			btn_EditMode.addActionListener(e -> {
-//					//	These codes make the popupPanel resizable --> the Big ScrollPane resizable --> JOptionPane resizable
-//					JScrollPane popup_scroll = new JScrollPane(panel_Management_Cost_GUI);
-//					popup_scroll.addHierarchyListener(new HierarchyListener() {
-//					    public void hierarchyChanged(HierarchyEvent e) {
-//					        Window window = SwingUtilities.getWindowAncestor(popup_scroll);
-//					        if (window instanceof Dialog) {
-//					            Dialog dialog = (Dialog)window;
-//					            if (!dialog.isResizable()) {
-//					                dialog.setResizable(true);
-//					            }
-//					        }
-//					    }
-//					});				
-//					popup_scroll.setBorder(null);
-//					popup_scroll.setPreferredSize(new Dimension((int) (PrismMain.get_main().getWidth() * 0.85), (int) (PrismMain.get_main().getHeight() * 0.65)));	
-//
-//					String ExitOption[] = {"EXIT"};
-//					int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), popup_scroll, "Flexible View Mode - You can resize this window",
-//							JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, ExitOption, ExitOption[0]);					
-//					if (response == 0) {																									
-//					}
-//					
-//					GUI_Text_splitPanel.setLeftComponent(panel_Management_Cost_GUI);
-			});
-			
-			
 			// New Condition
-			btn_New.addActionListener(e -> {														
+			btn_New.addActionListener(e -> {	
+				if (table8.isEditing()) {
+					table8.getCellEditor().stopCellEditing();
+				}
+				
 				// Add 1 row
 				rowCount8++;
 				data8 = new Object[rowCount8][colCount8];
@@ -4782,6 +4758,10 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			// Edit
 			btn_Edit.addActionListener(e -> {
+				if (table8.isEditing()) {
+					table8.getCellEditor().stopCellEditing();
+				}
+				
 				if (table8.isEnabled()) {
 					int selectedRow = table8.getSelectedRow();
 					selectedRow = table8.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems	
@@ -5345,6 +5325,10 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 			// New single
 			btn_NewSingle.addActionListener(e -> {	
+				if (table9.isEditing()) {
+					table9.getCellEditor().stopCellEditing();
+				}
+				
 				// Add 1 row
 				rowCount9++;
 				data9 = new Object[rowCount9][colCount9];
@@ -5381,6 +5365,10 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			// New Multiple
 			btn_New_Multiple.addActionListener(e -> {
+				if (table9.isEditing()) {
+					table9.getCellEditor().stopCellEditing();
+				}
+				
 				ScrollPane_ConstraintsSplitBasic constraint_split_ScrollPanel = new ScrollPane_ConstraintsSplitBasic(
 						static_identifiersScrollPanel.get_static_layer_title_as_checkboxes(),
 						parametersScrollPanel.get_checkboxParameters(),
@@ -5464,7 +5452,10 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						
 					}
 						
-					if (response2 == 0) {					
+					if (response2 == 0) {	
+						constraint_split_ScrollPanel.stop_editing();
+						
+						
 //						// Example: 
 //						List<List<String>> lists = new ArrayList<List<String>>();
 //						lists.add(Arrays.asList(new String[] { "lay1 a", "lay1 b", "lay1 c" }));
@@ -5800,6 +5791,10 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			// Edit
 			btn_Edit.addActionListener(e -> {
+				if (table9.isEditing()) {
+					table9.getCellEditor().stopCellEditing();
+				}
+				
 				if (table9.isEnabled()) {				
 					int selectedRow = table9.getSelectedRow();
 					selectedRow = table9.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems		
@@ -5948,6 +5943,10 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			// Sort
 			btn_Sort.addActionListener(e -> {
+				if (table9.isEditing()) {
+					table9.getCellEditor().stopCellEditing();
+				}
+				
 				if (btn_Sort.getText().equals("ON")) {
 					table9.setRowSorter(null);
 					btn_Sort.setText("OFF");
@@ -6472,6 +6471,10 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			// New single
 			btn_NewSingle.addActionListener(e -> {	
 				if (flow_scrollPane.get_flow_info_from_GUI().contains(";")) {	// Add constraint if there are at least 2 terms separated by ;
+					if (table10.isEditing()) {
+						table10.getCellEditor().stopCellEditing();
+					}
+					
 					// Add 1 row
 					rowCount10++;
 					data10 = new Object[rowCount10][colCount10];
@@ -6503,6 +6506,10 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			// Edit
 			btn_Edit.addActionListener(e -> {
+				if (table10.isEditing()) {
+					table10.getCellEditor().stopCellEditing();
+				}
+				
 				if (table10.isEnabled()) {						
 					int selectedRow = table10.getSelectedRow();
 					selectedRow = table10.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems										
@@ -6644,6 +6651,10 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			// Sort
 			btn_Sort.addActionListener(e -> {
+				if (table10.isEditing()) {
+					table10.getCellEditor().stopCellEditing();
+				}
+				
 				if (btn_Sort.getText().equals("ON")) {
 					table10.setRowSorter(null);
 					btn_Sort.setText("OFF");
