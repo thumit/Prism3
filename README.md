@@ -6,7 +6,7 @@
 PRISM is a forest management decision support system. The name stands for: Plan-level foRest actIvity Scheduling Model.
 
 
-PRISM is currently in Alpha version of development. For more information on how to try the current version, please contact PRISM development team.
+PRISM is currently in Alpha version of development. For more information on how to try with the current version, please contact PRISM development team.
 
 
 Development team:
