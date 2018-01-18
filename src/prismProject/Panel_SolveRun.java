@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * Copyright (C) 2016-2018 Dung Nguyen
+ * 
+ * PRISM is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * PRISM is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with PRISM.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package prismProject;
 
 import java.awt.BorderLayout;
@@ -6,7 +22,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -18,7 +33,6 @@ import java.io.InputStreamReader;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.PrintStream;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -31,7 +45,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
@@ -54,6 +67,7 @@ import ilog.cplex.IloCplex;
 import lpsolve.LpSolve;
 import lpsolve.LpSolveException;
 import prismConvenienceClass.FilesHandle;
+import prismConvenienceClass.IconHandle;
 import prismConvenienceClass.LibraryHandle;
 import prismConvenienceClass.PrismGridBagLayoutHandle;
 import prismConvenienceClass.PrismTableModel;
@@ -146,29 +160,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				
 		
         // Set up a JScrollPane containing a button----------------------------------------------------------------------------------
-		URL imgURL = getClass().getResource("/pikachuRunning.gif");		//Name is case sensitive
-		URL imgURL2 = getClass().getResource("/pikachuAss.gif");			//Name is case sensitive
-//		URL imgURL2 = getClass().getResource("/pikachuRoll2.gif");			//Name is case sensitive
-
-		
-//		try {		//Activate this if want some picture from Internet
-//			//	https://media.giphy.com/media/TFhobYtkih62k/giphy.gif
-//			//	http://www.lovethisgif.com/uploaded_images/56753-Pikachu-Running-Animation-By-Cadetderp-On-Deviantart.gif
-//			//	http://orig11.deviantart.net/b288/f/2009/260/9/5/pikachu_vector_by_elfaceitoso.png	
-//			imgURL = new java.net.URL("http://www.lovethisgif.com/uploaded_images/56753-Pikachu-Running-Animation-By-Cadetderp-On-Deviantart.gif");
-//			imgURL2 = new java.net.URL("http://orig11.deviantart.net/b288/f/2009/260/9/5/pikachu_vector_by_elfaceitoso.png");
-//		} catch (MalformedURLException e1) {
-//			System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
-//		}	
-		      	
-		ImageIcon icon = new ImageIcon(imgURL);		//Image is in the same location of this class
-		ImageIcon icon2 = new ImageIcon(imgURL2);		//Image is in the same location of this class
-				
-		Image scaleImage = icon.getImage().getScaledInstance(200, 150,Image.SCALE_SMOOTH);
-		Image scaleImage2 = icon2.getImage().getScaledInstance(138, 150,Image.SCALE_REPLICATE);
-	
-		button_solve = new JButton(new ImageIcon(scaleImage2));
-		button_solve.setDisabledIcon(new ImageIcon(scaleImage));
+		button_solve = new JButton(IconHandle.get_scaledImageIcon_replicate(200, 150, "pikachuAss.gif"));
+		button_solve.setDisabledIcon(IconHandle.get_scaledImageIcon(138, 150, "pikachuRunning.gif"));
 		button_solve.setHorizontalTextPosition(JButton.CENTER);
 		button_solve.setVerticalTextPosition(JButton.TOP);
 		button_solve.setFont(new Font(null, Font.BOLD, 15));

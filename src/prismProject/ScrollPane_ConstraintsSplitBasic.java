@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * Copyright (C) 2016-2018 Dung Nguyen
+ * 
+ * PRISM is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * PRISM is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with PRISM.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package prismProject;
 
 import java.awt.Dialog;
@@ -33,7 +49,7 @@ public class ScrollPane_ConstraintsSplitBasic  extends JScrollPane {
 	
 	
 	public ScrollPane_ConstraintsSplitBasic (List<JCheckBox> staticCheckboxes, List<JCheckBox> parametersCheckboxes, List<JCheckBox> dynamicCheckboxes) {
-		// staticScrollPane	------------------------------------------------------------------------------	
+		// staticScrollPane	----------------------------------------------------------------------------------	
 		selected_staticCheckboxes = new ArrayList<JCheckBox>();
 		for (JCheckBox i : staticCheckboxes) {
 			selected_staticCheckboxes.add(new JCheckBox(i.getText()));
@@ -63,14 +79,6 @@ public class ScrollPane_ConstraintsSplitBasic  extends JScrollPane {
 		
 		
 		// parametersScrollPane	------------------------------------------------------------------------------	
-//		List<JCheckBox> selected_parametersCheckboxes = new ArrayList<JCheckBox>();
-//		for (JCheckBox i : parametersCheckboxes) {
-//			if (i.isSelected()) {
-//				selected_parametersCheckboxes.add(new JCheckBox(i.getText()));
-//			}		
-//		}
-		
-		
 		selected_parametersCheckboxes = new ArrayList<JCheckBox>();
 		selected_parametersCheckboxes.add(new JCheckBox("Selected Parameters"));
 		

@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * Copyright (C) 2016-2018 Dung Nguyen
+ * 
+ * PRISM is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * PRISM is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with PRISM.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package prismRoot;
 
 
@@ -76,13 +92,14 @@ public class PrismMain extends JFrame {
 	private MenuItem_SetTransparency 	setTransparency;	// For menuWindow
 	private MenuItem_CaptureGUI 		captureGUI;	// For menuWindow
 		
-	private static String 					prism_version = "PRISM ALPHA 1.0.23";
+	private static String 					prism_version = "PRISM ALPHA 1.0.24";
 	private static DesktopPanel_BackGround 	prism_DesktopPane;
 	private static String 					currentProject;
 	private static PrismMain 				main;
 	private static ComponentResizer 		cr;
 	
 	private static LinkedList_Databases databases_linkedlist = new LinkedList_Databases();
+	
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public static void main(String[] args) {
 		
@@ -415,6 +432,22 @@ public class PrismMain extends JFrame {
 							prism_DesktopPane.process_image();
 							setLogo.setText("Hide Logo");
 						}						
+					}
+				});
+				
+				
+				// Disable the functions that are not yet written
+				contents.setEnabled(false);
+				update.setEnabled(false);
+				contact.setEnabled(false);
+				
+				
+				// Add listeners "about"-----------------------------------------------------
+				about.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_main.png"));
+//				about.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_2, InputEvent.CTRL_DOWN_MASK));
+				about.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent event) {
+						new OptionPane_License();					
 					}
 				});
 				

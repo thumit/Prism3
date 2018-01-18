@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * Copyright (C) 2016-2018 Dung Nguyen
+ * 
+ * PRISM is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * PRISM is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with PRISM.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package prismDatabase;
 
 import java.awt.BorderLayout;
@@ -461,6 +477,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
     						} else { 
     							newMenuItem.setText("New table");		
     							newMenuItem.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_new1.png"));
+    							newMenuItem.setEnabled(false);	// Disable until I have time to write the function
     						}
     						newMenuItem.addActionListener(new ActionListener() {
     							@Override
@@ -593,6 +610,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
     					if (currentLevel == 3 && currenTableName.equalsIgnoreCase("yield_tables") && NodeCount==1) {
     						final JMenuItem sampleMenuItem = new JMenuItem("Create sample testing data - Do not use this, developers only");
     						sampleMenuItem.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_warning.png"));
+    						sampleMenuItem.setEnabled(false);	// Disable
     						sampleMenuItem.addActionListener(new ActionListener() {
     							@Override
     							public void actionPerformed(ActionEvent actionEvent) {								

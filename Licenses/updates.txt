@@ -1,3 +1,19 @@
+#-------------------------------------------------------------------------------
+# Copyright (C) 2016-2018 Dung Nguyen
+# 
+# PRISM is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# PRISM is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with PRISM.  If not, see <http://www.gnu.org/licenses/>.
+#-------------------------------------------------------------------------------
 1. DB connection changed to close properly (doQuerry): put close on finally at the end of try catch.
 2. Fixed error import tables the 1st time when open 'database management' since it requires to left click to identify current level and current database. Now any click would identify those two.
 3. Move get_parameter_tooltip from Read_Identifiers to Get_Parameter_Information to avoid read "strata_definition" file each time we need YT column's tooltip
@@ -618,4 +634,8 @@ All changes in this block are associated with PrismAlpha1.0.21.jar, Prism Formul
 	- Copy tables (copy_tables)
 279. Table Filter is fixed so when query functions (from system library or user library) are executed --> no problem with showing the updated database table. When user go to "Setting" the table filter will always be disable (set to null)
 All changes in this block are associated with PrismAlpha1.0.23.jar, Prism Formulation 02.docx, Prism Database 02.docx
+--------------------------------------------------------------------------
+
+280. Licenses
+All changes in this block are associated with PrismAlpha1.0.24.jar, Prism Formulation 02.docx, Prism Database 02.docx
 --------------------------------------------------------------------------

@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * Copyright (C) 2016-2018 Dung Nguyen
+ * 
+ * PRISM is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * PRISM is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with PRISM.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package prismProject;
 
 import java.awt.BorderLayout;
@@ -17,6 +33,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -427,8 +445,6 @@ public class Panel_Project extends JLayeredPane {
 							GridBagConstraints c = new GridBagConstraints();
 							c.fill = GridBagConstraints.BOTH;
 																			
-//							JButton runStatButton = new JButton(IconHandle.get_scaledImageIcon(200, 150, "pikachuRunning.gif"));
-//							JButton runStatButton = new JButton(IconHandle.get_scaledImageIcon_replicate(160, 200, "pikachuWierd.gif"));
 							JButton runStatButton = new JButton(IconHandle.get_scaledImageIcon_replicate(200, 200, "pikachuWalk.gif"));
 							runStatButton.setHorizontalTextPosition(JButton.CENTER);
 							runStatButton.setVerticalTextPosition(JButton.TOP);
@@ -1114,8 +1130,33 @@ public class Panel_Project extends JLayeredPane {
 				btnSolveRun.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_back.png"));
 				btnSolveRun.setForeground(Color.RED);
 				this.remove(splitPanel);
-				solvePanel = new Panel_SolveRun(listOfEditRuns); // This panel only visible when "Start Solving"
-				this.add(solvePanel);
+				
+				try {
+					solvePanel = new Panel_SolveRun(listOfEditRuns); // This panel only visible when "Start Solving"
+				} catch (Exception e) {
+				} finally {
+					if (solvePanel != null) {
+						this.add(solvePanel);
+					} else {
+						File jar_file = new File(PrismMain.get_main().getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
+						String directory ="";
+						try {
+							directory = URLDecoder.decode(jar_file.getParentFile().getAbsolutePath(), "utf-8");
+						} catch (UnsupportedEncodingException e) {
+						}
+						String msg = "To make this window visible, you need: \n"
+								+ "Step 1. Obtain 'cplex.jar' and 'cplex1261.dll' from IBM - ILOG CPLEX \n"
+								+ "Step 2. Put 'cplex.jar' into the folder '" + directory.replaceAll("\\\\", "/") + "/" + jar_file.getName().replace(".jar", "") + "_lib' \n"
+								+ "Step 3. Put 'cplex1261.dll' into the folder '" + directory.replaceAll("\\\\", "/") + "/Temporary \n\n"
+								+ "Note: \n"
+								+ "1. CPLEX should be free for academic use: www.ibm.com/products/ilog-cplex-optimization-studio \n"
+								+ "2. Use the correct version (32bit or 64bit) of the .jar and .dll files for all the above 3 steps \n"
+								+ "3. If your CPLEX version is higher than 12.61, just rename the .dll file to 'cplex1261.dll' before doing step 3 \n";
+						String[] ExitOption = { "OK"};
+						int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), msg, "Solver Requirement",
+								JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_Warning.png"), ExitOption, ExitOption[0]);
+					}
+				}
 			}
 		} // End of start solving
 		
@@ -1130,7 +1171,7 @@ public class Panel_Project extends JLayeredPane {
 			btnSolveRun.setToolTipText("Start Solving");
 			btnSolveRun.setRolloverIcon(null);
 			btnSolveRun.setForeground(null);
-			this.remove(solvePanel);
+			if (solvePanel != null) this.remove(solvePanel);
 			this.add(splitPanel);
 			refreshProjectTree(); //Refresh the tree
 		}
