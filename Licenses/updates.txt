@@ -637,5 +637,5 @@ All changes in this block are associated with PrismAlpha1.0.23.jar, Prism Formul
 --------------------------------------------------------------------------
 
 280. Licenses
-All changes in this block are associated with PrismAlpha1.0.24.jar, Prism Formulation 02.docx, Prism Database 02.docx
+All changes in this block are associated with PrismAlpha1.0.24.jar, Prism Formulation 02.docx, Prism Database 02.docx  
 --------------------------------------------------------------------------
