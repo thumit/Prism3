@@ -1,3 +1,0 @@
-bc_id	bc_description	bc_type	bc_multiplier	lowerbound	lowerbound_perunit_penalty	upperbound	upperbound_perunit_penalty	bookeeping_var_id	bookeeping_var_name	bookeeping_var_value	bookeeping_var_reduced_cost	total_penalty
-1	300k PBe GSe 1 - silvicultural method PB_E	SOFT	1.0	300000.0	1.0	300000.0	1.0	0	y_0	300000.0	0.0	0.0
-2	300k PBe GSe 2 - silvicultural method GS_E	SOFT	1.0	300000.0	1.0	300000.0	1.0	1	y_1	133412.49499999997	0.0	166587.50500000003
