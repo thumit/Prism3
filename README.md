@@ -41,4 +41,4 @@ PRISM also uses icons from different sources to build its GUI. Below are details
 	"Despicable me 2 minions" designed by "Design Bolts" at http://www.designbolts.com, downloaded at https://www.iconfinder.com/iconsets/despicable-me-2-minions, license: Free for non commercial use, all characters are by Universal Pictures
 	"Mobile Icons" designed by "WebIconSet.com" at http://www.webiconset.com, downloaded at https://www.iconfinder.com/iconsets/Mobile-Icons, license: Free for commercial use
 	"Human o2" designed by "Oliver Scholtz (and others)" at https://schollidesign.deviantart.com, downloaded at https://www.iconfinder.com/iconsets/humano2, license: Free for non commercial use
-	"Gloss set: Basic" designed by "Momenticons" at http://momentumdesignlab.com, downloaded at https://www.iconfinder.com/iconsets/momenticons-gloss-basic, license: Creative Commons (Attribution 3.0 Unported) 
+	"Gloss set: Basic" designed by "Momenticons" at http://momentumdesignlab.com, downloaded at https://www.iconfinder.com/iconsets/momenticons-gloss-basic, license: Creative Commons (Attribution 3.0 Unported)
