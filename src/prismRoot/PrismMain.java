@@ -190,7 +190,7 @@ public class PrismMain extends JFrame {
 				setIconImage(new ImageIcon(getClass().getResource("/icon_main.png")).getImage());
 				//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-				addWindowListener(new WindowAdapter() {@Override public void windowClosing(WindowEvent e){exitPRISM();}});				
+				addWindowListener(new WindowAdapter() {@Override public void windowClosing(WindowEvent e){exitPRISM();}});
 				getContentPane().setLayout(new BorderLayout());	
 
 				
