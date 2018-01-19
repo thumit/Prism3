@@ -55,7 +55,7 @@ public class Get_Cost_Information {
 			all_priority_cost_condition_dynamic_dentifiers_column_indexes[priority] = cost_condition_dynamic_dentifiers_column_indexes;
 		}
 		
-					
+		
 		String[] yield_tables_column_names = read_database.get_yield_tables_column_names();
 		yield_tables_column_names_list = Arrays.asList(yield_tables_column_names);	// Convert array to list										
 		action_type_col_id = yield_tables_column_names_list.indexOf("action_type");
