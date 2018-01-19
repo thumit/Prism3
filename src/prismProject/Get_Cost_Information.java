@@ -22,9 +22,9 @@ import java.util.Collections;
 import java.util.List;
 
 public class Get_Cost_Information {
-	private List<List<String>>[] all_priority_cost_condition_static_identifiers;	
-	private List<List<String>>[] all_priority_cost_condition_dynamic_identifiers;	
-	private List<String>[] all_priority_cost_condition_dynamic_dentifiers_column_indexes;	
+	private List<List<String>>[] all_priority_cost_condition_static_identifiers;
+	private List<List<String>>[] all_priority_cost_condition_dynamic_identifiers;
+	private List<String>[] all_priority_cost_condition_dynamic_dentifiers_column_indexes;
 	private String[][] all_priority_condition_info;	
 	
 	private int action_type_col_id;
