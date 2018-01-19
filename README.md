@@ -1,24 +1,24 @@
-/*******************************************************************************
- * Copyright (C) 2016-2018 PRISM Development Team
- * 
- * PRISM is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * PRISM is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with PRISM.  If not, see <http://www.gnu.org/licenses/>.
- ******************************************************************************/
+#-------------------------------------------------------------------------------
+# Copyright (C) 2016-2018 PRISM Development Team
+# 
+# PRISM is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# PRISM is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with PRISM.  If not, see <http://www.gnu.org/licenses/>.
+#-------------------------------------------------------------------------------
 
 
-----------------------------------------
+---------------------------------------
 1. INTRODUCTION
-----------------------------------------
+---------------------------------------
 
 
 PRISM is a forest management decision support system. The name stands for: Plan-level foRest actIvity Scheduling Model.
@@ -59,10 +59,3 @@ PRISM also uses icons from different sources to build its GUI. Below are details
 	"Mobile Icons" designed by "WebIconSet.com" at http://www.webiconset.com, downloaded at https://www.iconfinder.com/iconsets/Mobile-Icons, license: Free for commercial use
 	"Human o2" designed by "Oliver Scholtz (and others)" at https://schollidesign.deviantart.com, downloaded at https://www.iconfinder.com/iconsets/humano2, license: Free for non commercial use
 	"Gloss set: Basic" designed by "Momenticons" at http://momentumdesignlab.com, downloaded at https://www.iconfinder.com/iconsets/momenticons-gloss-basic, license: Creative Commons (Attribution 3.0 Unported)
-
-
- 
-
-  
-
-
