@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2016-2018 Dung Nguyen
+ * Copyright (C) 2016-2018 PRISM Development Team
  * 
  * PRISM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -120,7 +120,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
         DefaultTableCellRenderer renderer = (DefaultTableCellRenderer)table.getDefaultRenderer(Object.class);
         renderer.setHorizontalAlignment(SwingConstants.LEFT);		// Set alignment of values in the table to the left side
 //      table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-//        table.setPreferredScrollableViewportSize(new Dimension(100, 150));
+//      table.setPreferredScrollableViewportSize(new Dimension(100, 150));
         table.setFillsViewportHeight(true);
         table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);        
 		scrollpane_table = new JScrollPane(table);
@@ -160,12 +160,14 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				
 		
         // Set up a JScrollPane containing a button----------------------------------------------------------------------------------
-		button_solve = new JButton(IconHandle.get_scaledImageIcon_replicate(200, 150, "pikachuAss.gif"));
-		button_solve.setDisabledIcon(IconHandle.get_scaledImageIcon(138, 150, "pikachuRunning.gif"));
+		button_solve = new JButton(IconHandle.get_scaledImageIcon(128, 128, "icon_light_off.png"));
+		button_solve.setDisabledIcon(IconHandle.get_scaledImageIcon(128, 128, "icon_light_on.png"));
+		button_solve.setBackground(Color.WHITE);
 		button_solve.setHorizontalTextPosition(JButton.CENTER);
-		button_solve.setVerticalTextPosition(JButton.TOP);
+		button_solve.setVerticalTextPosition(JButton.BOTTOM);
 		button_solve.setFont(new Font(null, Font.BOLD, 15));
-		button_solve.setText("CLICK ME TO GET SOLUTIONS");
+		button_solve.setText("CLICK TO GET SOLUTIONS");
+		button_solve.setRequestFocusEnabled(false);
 		button_solve.addActionListener(e -> {
 			if (solvingstatus == false) {
 				// Solve runs when clicked
@@ -245,8 +247,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						}
 						
 						solvingstatus = false;
-						button_solve.setText("CLICK ME TO GET SOLUTIONS");
-						button_solve.setEnabled(true);	
+						button_solve.setText("CLICK TO GET SOLUTIONS");
+						button_solve.setIcon(IconHandle.get_scaledImageIcon(128, 128, "icon_light_off.png"));
+//						button_solve.setEnabled(true);
 						for (int i = 0; i < radioButton.length; i++) {
 							radioButton[i].setEnabled(true);
 						}
@@ -262,8 +265,10 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						}
 					}
 				}				
-				button_solve.setEnabled(false);
-				solvingstatus=true;
+				
+				solvingstatus = true;
+				button_solve.setIcon(IconHandle.get_scaledImageIcon(128, 128, "icon_light_on.png"));
+//				button_solve.setEnabled(false);
 				thread1.start();
 				thread2.start();		//Note: Pipe broken due to disconnects before receiving responses. (safe Exception)		
 			}

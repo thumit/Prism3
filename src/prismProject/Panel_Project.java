@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2016-2018 Dung Nguyen
+ * Copyright (C) 2016-2018 PRISM Development Team
  * 
  * PRISM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -445,11 +445,12 @@ public class Panel_Project extends JLayeredPane {
 							GridBagConstraints c = new GridBagConstraints();
 							c.fill = GridBagConstraints.BOTH;
 																			
-							JButton runStatButton = new JButton(IconHandle.get_scaledImageIcon_replicate(200, 200, "pikachuWalk.gif"));
+							JButton runStatButton = new JButton(IconHandle.get_scaledImageIcon_replicate(128, 128, "light.gif"));
+							runStatButton.setBackground(Color.WHITE);
 							runStatButton.setHorizontalTextPosition(JButton.CENTER);
 							runStatButton.setVerticalTextPosition(JButton.TOP);
 							runStatButton.setFont(new Font(null, Font.BOLD, 15));
-							runStatButton.setText("        Loading Query Mode  -  Click me to stop        ");
+							runStatButton.setText("        Loading Query Mode  -  Click to stop        ");
 							runStatButton.addActionListener(new ActionListener() {
 								@Override
 								public void actionPerformed(ActionEvent e) {
@@ -513,7 +514,7 @@ public class Panel_Project extends JLayeredPane {
 							Output_Panel_Flow_Constraints chart_panel = new Output_Panel_Flow_Constraints(currentProjectFolder, currentRun, table, data);
 							scrollPane_Right.setViewportView(chart_panel);
 						} else if (currentInputFile.equals("readme.txt")) {		// show the file as text area
-				 			readme = new TextArea_ReadMe("minionWrite.png", 70, 70);
+				 			readme = new TextArea_ReadMe("icon_tree.png", 70, 70);
 				 			readme.setBackground(ColorUtil.makeTransparent(Color.WHITE, 255));
 				 			readme.setEditable(false);
 							try {

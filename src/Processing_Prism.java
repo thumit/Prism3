@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2016-2018 Dung Nguyen
+ * Copyright (C) 2016-2018 PRISM Development Team
  * 
  * PRISM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with PRISM.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-
 public class Processing_Prism { // do not use processing now. If use later then activate the codes in comments
 	
 }

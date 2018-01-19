@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2016-2018 Dung Nguyen
+ * Copyright (C) 2016-2018 PRISM Development Team
  * 
  * PRISM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -246,7 +246,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	private Object[][] data10;	
 	
 	//readme
-	private JTextArea readme = new TextArea_ReadMe("minionWrite.png", 70, 70);
+	private JTextArea readme = new TextArea_ReadMe("icon_tree.png", 70, 70);
 	
 	
 	private JButton button_import_database;
@@ -782,7 +782,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				g2d.setColor(getBackground());
 				g2d.fillRect(0, 0, getWidth(), getHeight());
 				// Draw the background
-				ImageIcon bgImage = IconHandle.get_scaledImageIcon(70, 70, "minionDance.png");
+				ImageIcon bgImage = IconHandle.get_scaledImageIcon(70, 70, "icon_tree.png");
 				Dimension size = this.getSize();
 				g2d.drawImage(bgImage.getImage(), size.width - bgImage.getIconWidth(), size.height - bgImage.getIconHeight(), this);
 				// Paint the component content, i.e. the text

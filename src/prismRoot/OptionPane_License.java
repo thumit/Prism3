@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2016-2018 Dung Nguyen
+ * Copyright (C) 2016-2018 PRISM Development Team
  * 
  * PRISM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -76,7 +76,7 @@ class ScrollPane_License_Popup extends JScrollPane {
 		
 		
 		// Print to text area-----------------------------------------------------------------------------------------		
-		TextArea_ReadMe license_TextArea = new TextArea_ReadMe("minionWrite.png", 75, 75);
+		TextArea_ReadMe license_TextArea = new TextArea_ReadMe("icon_tree.png", 75, 75);
 		license_TextArea.setEditable(false);
 		BufferedReader buff = null;
 		try {

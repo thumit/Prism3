@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2016-2018 Dung Nguyen
+ * Copyright (C) 2016-2018 PRISM Development Team
  * 
  * PRISM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -194,7 +194,7 @@ class ScrollPane_Popup extends JScrollPane {
 		
 		
 		//-----------------------------------------------------------------------------------------		
-		TextArea_ReadMe info_TextArea = new TextArea_ReadMe("minionDance.png", 75, 75);	
+		TextArea_ReadMe info_TextArea = new TextArea_ReadMe("icon_tree.png", 75, 75);	
 		info_TextArea.setEditable(false);
 		// Get total computer memory in bytes
 		MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();

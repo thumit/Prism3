@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2016-2018 Dung Nguyen
+ * Copyright (C) 2016-2018 PRISM Development Team
  * 
  * PRISM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -139,7 +139,7 @@ public class PrismMain extends JFrame {
 				g2d.setColor(getBackground());
 				g2d.fillRect(0, 0, getWidth(), getHeight());
 				// Draw the background
-				ImageIcon bgImage = IconHandle.get_scaledImageIcon(15, 15, "minionWrite.png");
+				ImageIcon bgImage = IconHandle.get_scaledImageIcon(10, 10, "icon_tree.png");
 				Dimension size = this.getSize();
 				g2d.drawImage(bgImage.getImage(), size.width - bgImage.getIconWidth() - 5, size.height - bgImage.getIconHeight() - 5, this);
 				// Paint the component content, i.e. the text
