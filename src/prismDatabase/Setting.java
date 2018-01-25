@@ -480,21 +480,7 @@ public class Setting {
 		    table.setRowHeight(20);
 		    
 		    
-	        // Set up Type for each column 2
-//			class comboBox_constraint_type extends JComboBox {	
-//				public comboBox_constraint_type() {
-//					addItem("SOFT");
-//					addItem("HARD");
-//					addItem("FREE");
-//					setSelectedIndex(0);
-//				}
-//			}
-//			table.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(new comboBox_constraint_type()));
-						
-			// Hide columns
-//			TableColumnsHandle table_handle = new TableColumnsHandle(table);
-//			table_handle.setColumnVisible("parameter_index", false);
-			
+		    
 //			table.setAutoResizeMode(0);		// 0 = JTable.AUTO_RESIZE_OFF
 			table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);  
 			table.getTableHeader().setReorderingAllowed(false);		//Disable columns move

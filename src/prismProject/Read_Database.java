@@ -46,8 +46,6 @@ public class Read_Database {
 	
 	
 	private String[][] existing_strata_values;
-	
-	
 	private String[][] strata_definition_values;	
 	private List<String> layers_Title;
 	private List<String> layers_Title_ToolTip;
@@ -132,8 +130,6 @@ public class Read_Database {
 
 				
 				//-----------------------------------------------------------------------------------------------------------
-				// For yield_tables
-				//-----------------------------------------------------------------------------------------------------------
 				// get total yield tables
 				int total_prescriptions = 0;				
 				rs = st.executeQuery("SELECT COUNT(DISTINCT prescription) FROM yield_tables;");		//This only have 1 row and 1 column, the value is total number of unique prescription
@@ -195,9 +191,6 @@ public class Read_Database {
 				st = conn.createStatement();
 
 				
-				//-----------------------------------------------------------------------------------------------------------
-				// For existing_strata
-				//-----------------------------------------------------------------------------------------------------------
 				// get total rows (strata count)
 				int rowCount2 = 0;				
 				rs = st.executeQuery("SELECT COUNT(DISTINCT strata_id) FROM existing_strata;");		// This only have 1 row and 1 column, the value is total number of unique strata
@@ -241,10 +234,6 @@ public class Read_Database {
 				st = conn.createStatement();
 
 				
-				
-				//-----------------------------------------------------------------------------------------------------------
-				// For strata_definition
-				//-----------------------------------------------------------------------------------------------------------
 				// Get total rows
 				int rowCount3 = 0;				
 				rs = st.executeQuery("SELECT COUNT(layer_id) FROM strata_definition;");		// This only have 1 row and 1 column
@@ -462,6 +451,110 @@ public class Read_Database {
 	// This block is For 2 extra layers ------------------------------------------------------------------------------------------------------
 	// This block is For 2 extra layers ------------------------------------------------------------------------------------------------------
 	// This block is For 2 extra layers ------------------------------------------------------------------------------------------------------	
+	public ArrayList<String>[] get_rotation_ranges() {
+		ArrayList<String>[] rotation_ranges = null;		
+		try {			
+			if (file_Database.exists()) {	
+				Class.forName("org.sqlite.JDBC").newInstance();
+				conn = DriverManager.getConnection("jdbc:sqlite:" + file_Database);
+				st = conn.createStatement();
+
+				
+				//-----------------------------------------------------------------------------------------------------------
+				// this will be used to generate combo box values in the "Cover type Conversion" windows
+				rs = st.executeQuery("SELECT e_table.e_covertype, "
+						+ "e_table.e_min_rotation_age, "
+						+ "e_table.e_max_rotation_age, "
+						+ "r_table.r_min_rotation_age, "
+						+ "r_table.r_max_rotation_age FROM ( "
+						
+						+ "(SELECT SUBSTR(DISTINCT EA_E_prescription, 1, INSTR(DISTINCT EA_E_prescription, '_')-1) as e_covertype, "
+								+ "MIN(CAST(rotation_age as decimal)) AS e_min_rotation_age, "
+								+ "MAX(CAST(rotation_age as decimal)) AS e_max_rotation_age "
+								+ " FROM "
+								+ "(SELECT DISTINCT prescription AS EA_E_prescription, "
+								+ "action_type AS final_activity, CAST(age_class as decimal) AS rotation_age FROM yield_tables WHERE prescription LIKE '%_EA_E%' GROUP BY prescription) "
+						+ "GROUP BY e_covertype) AS e_table "
+								
+						+ "LEFT JOIN"
+						
+						+ "(SELECT SUBSTR(DISTINCT EA_R_prescription, 1, INSTR(DISTINCT EA_R_prescription, '_')-1) as r_covertype, "
+							+ "MIN(CAST(rotation_age as decimal)) AS r_min_rotation_age, "
+							+ "MAX(CAST(rotation_age as decimal)) AS r_max_rotation_age "
+							+ "FROM "
+							+ "(SELECT DISTINCT prescription AS EA_R_prescription, "
+							+ "action_type AS final_activity, CAST(age_class as decimal) AS rotation_age FROM yield_tables WHERE prescription LIKE '%_EA_R%' GROUP BY prescription) "
+						+ "GROUP BY r_covertype) AS r_table "
+						
+						+ "ON e_table.e_covertype = r_table.r_covertype)"
+						
+						
+				+ "UNION ALL "
+						
+						
+						+"SELECT r_table.r_covertype, "
+						+ "e_table.e_min_rotation_age, "
+						+ "e_table.e_max_rotation_age, "
+						+ "r_table.r_min_rotation_age, "
+						+ "r_table.r_max_rotation_age FROM ( "
+						
+						+ "(SELECT SUBSTR(DISTINCT EA_R_prescription, 1, INSTR(DISTINCT EA_R_prescription, '_')-1) as r_covertype, "
+							+ "MIN(CAST(rotation_age as decimal)) AS r_min_rotation_age, "
+							+ "MAX(CAST(rotation_age as decimal)) AS r_max_rotation_age "
+							+ "FROM "
+							+ "(SELECT DISTINCT prescription AS EA_R_prescription, "
+							+ "action_type AS final_activity, CAST(age_class as decimal) AS rotation_age FROM yield_tables WHERE prescription LIKE '%_EA_R%' GROUP BY prescription) "
+						+ "GROUP BY r_covertype) AS r_table "
+						
+						+ "LEFT JOIN"
+						
+						+ "(SELECT SUBSTR(DISTINCT EA_E_prescription, 1, INSTR(DISTINCT EA_E_prescription, '_')-1) as e_covertype, "
+							+ "MIN(CAST(rotation_age as decimal)) AS e_min_rotation_age, "
+							+ "MAX(CAST(rotation_age as decimal)) AS e_max_rotation_age "
+							+ " FROM "
+							+ "(SELECT DISTINCT prescription AS EA_E_prescription, "
+							+ "action_type AS final_activity, CAST(age_class as decimal) AS rotation_age FROM yield_tables WHERE prescription LIKE '%_EA_E%' GROUP BY prescription) "
+						+ "GROUP BY e_covertype) AS e_table "
+						
+						+ "ON e_table.e_covertype = r_table.r_covertype)"
+				
+				+ "WHERE  e_table.e_covertype IS NULL"
+				);				
+				rsmd = rs.getMetaData();
+				int colCount = rsmd.getColumnCount();
+				
+				rotation_ranges = new ArrayList[5]; // see query 2.3. in system_sql_library
+				for (int i = 0; i < rotation_ranges.length; i++) {
+					rotation_ranges[i] = new ArrayList<String>();	// initialize the 5 lists
+				}
+				 
+				while (rs.next()) {	// add to all 5 lists
+					for (int i = 0; i < colCount; i++) {
+						if (rs.getString(i + 1) != null) {
+							rotation_ranges[i].add(rs.getString(i + 1));
+						} else{
+							rotation_ranges[i].add("-9999");
+						}
+					}
+				}
+				
+				for (int i = 0; i < colCount; i++) {
+					System.out.println("Testing 5 lists of rotation_ranges");
+					System.out.println(rotation_ranges[i]);	// printing the 5 lists to test
+				}
+			}
+		} catch (Exception e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Read_Database   -   Database connection error");
+		} finally {
+			// Close in case not closing properly, not need to print out because the exception only happens when there is null to close
+		    try { rs.close(); } catch (Exception e) { /* ignored */}	
+		    try { st.close(); } catch (Exception e) { /* ignored */}
+		    try { conn.close(); } catch (Exception e) { /* ignored */}
+		}	
+		return rotation_ranges;
+	}
+	
+	
 	public List<String> get_method_period_layers_title() {
 		// Layers title
 		List<String> method_period_layers_title = new ArrayList<String>();

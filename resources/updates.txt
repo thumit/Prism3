@@ -624,3 +624,15 @@ All changes in this block are associated with PrismAlpha1.0.23.jar, Prism Formul
 280. Licenses
 All changes in this block are associated with PrismAlpha1.0.24.jar, Prism Formulation 02.docx, Prism Database 02.docx  
 --------------------------------------------------------------------------
+
+281. system_sql_libary has more functions added to identify ranges of rotation ages
+282. Dynamically load rotation ages (min and max) from yield_tables into "Covertype Conversion" window
+	- Read_Database --> Read_yield_tables: add a query to save rotation info into a list (see query 2.3 in system_sql_libary for reference. Its complex)
+	- Panel_EditRun_Details --> create_table_04(): dynamic loading is built by a new class "CustomComboBoxEditor"
+	- QuickEdit_EA_Conversion_Panel: is rewritten to have 
+		- comboboxes have the min and max calculated from rotation_ranges across all cover types
+		- "apply" buttons when clicked will auto adjust the values to match with which are in the rotation_ranges of "the cover type in each selected row"
+283. Some gif icons updated
+All changes in this block are associated with PrismAlpha1.0.25.jar, Prism Formulation 02.docx, Prism Database 02.docx  
+--------------------------------------------------------------------------
+

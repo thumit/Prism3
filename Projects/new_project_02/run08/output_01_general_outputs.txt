@@ -3,10 +3,11 @@ Optimization solver	CPLEX
 Solution status	Optimal
 Solution algorithm	2
 Simplex iterations	0
-Date & time problem solved	2017/11/15 - 21:04:08
-Time reading (minutes & seconds)	23.75s
-Time solving (minutes & seconds)	0.13s
-Time writing (minutes & seconds)	0.11s
+Prism version when problem solved	PRISM ALPHA 1.0.25
+Date & time problem solved	2018/01/19 - 17:17:18
+Time reading (minutes & seconds)	20.49s
+Time solving (minutes & seconds)	0.11s
+Time writing (minutes & seconds)	0.12s
 Total variables	105097
 Total constraints	83458
 Objective value	0.0

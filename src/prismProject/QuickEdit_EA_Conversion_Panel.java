@@ -21,6 +21,9 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -32,11 +35,69 @@ import javax.swing.JTable;
 import prismConvenienceClass.IconHandle;
 
 public class QuickEdit_EA_Conversion_Panel extends JPanel {
-	public QuickEdit_EA_Conversion_Panel(JTable table, Object[][] data) {
+	public QuickEdit_EA_Conversion_Panel(JTable table, Object[][] data, ArrayList<String>[] rotation_ranges) {
 		setPreferredSize(new Dimension(200, 230));
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 
+		
+		// Some set up for combobox---------------------------------------------------------------------------------------------
+		List<Integer> existing_min_age_list = new ArrayList<Integer>();
+		List<Integer> existing_max_age_list = new ArrayList<Integer>();
+		List<Integer> regeneration_min_age_list = new ArrayList<Integer>();
+		List<Integer> regeneration_max_age_list = new ArrayList<Integer>();
+		
+		for (String s : rotation_ranges[1]) existing_min_age_list.add(Integer.valueOf(s));
+		for (String s : rotation_ranges[2]) existing_max_age_list.add(Integer.valueOf(s));
+		for (String s : rotation_ranges[3]) regeneration_min_age_list.add(Integer.valueOf(s));
+		for (String s : rotation_ranges[4]) regeneration_max_age_list.add(Integer.valueOf(s));
+		
+		if (existing_min_age_list.indexOf(-9999) >= 0) existing_min_age_list.remove(existing_min_age_list.indexOf((-9999)));
+		if (existing_max_age_list.indexOf(-9999) >= 0) existing_max_age_list.remove(existing_max_age_list.indexOf((-9999)));
+		if (regeneration_min_age_list.indexOf(-9999) >= 0) regeneration_min_age_list.remove(regeneration_min_age_list.indexOf((-9999)));
+		if (regeneration_max_age_list.indexOf(-9999) >= 0) regeneration_max_age_list.remove(regeneration_max_age_list.indexOf((-9999)));
+		
+		int min_age_for_combo_e = Collections.min(existing_min_age_list);
+		int max_age_for_combo_e = Collections.max(existing_max_age_list);
+		int min_age_for_combo_r = Collections.min(regeneration_min_age_list);
+		int max_age_for_combo_r = Collections.max(regeneration_max_age_list);
+		
+		
+		class Combo_e_minage extends JComboBox {
+			public Combo_e_minage() {
+				for (int i = min_age_for_combo_e; i <= max_age_for_combo_e; i++) {
+					addItem(i);
+				}
+				setSelectedItem(min_age_for_combo_e);
+			}
+		}
+		
+		class Combo_e_maxage extends JComboBox {
+			public Combo_e_maxage() {
+				for (int i = min_age_for_combo_e; i <= max_age_for_combo_e; i++) {
+					addItem(i);
+				}
+				setSelectedItem(max_age_for_combo_e);
+			}
+		}
+		
+		class Combo_r_minage extends JComboBox {
+			public Combo_r_minage() {
+				for (int i = min_age_for_combo_r; i <= max_age_for_combo_r; i++) {
+					addItem(i);
+				}
+				setSelectedItem(min_age_for_combo_r);
+			}
+		}
+		
+		class Combo_r_maxage extends JComboBox {
+			public Combo_r_maxage() {
+				for (int i = min_age_for_combo_r; i <= max_age_for_combo_r; i++) {
+					addItem(i);
+				}
+				setSelectedItem(max_age_for_combo_r);
+			}
+		}
 		
 		
 		// Add Label-------------------------------------------------------------------------------------------------
@@ -51,14 +112,6 @@ public class QuickEdit_EA_Conversion_Panel extends JPanel {
 
 		
 		// Add comboBox
-		class Combo_e_minage extends JComboBox {
-			public Combo_e_minage() {
-				for (int i = 1; i <= 100; i++) {
-					addItem(i);
-				}
-				setSelectedItem((int) 20);
-			}
-		}
 		JComboBox combo_e_min = new Combo_e_minage();
 		c.gridx = 1;
 		c.gridy = 1;
@@ -85,7 +138,20 @@ public class QuickEdit_EA_Conversion_Panel extends JPanel {
 				}
 				table.clearSelection(); // To help trigger the row refresh: clear then add back the rows
 				for (int i : selectedRow) {
-					data[i][2] = combo_e_min.getSelectedItem();
+					String covertype = (String) data[i][0];
+					int min_age_cut_existing = (rotation_ranges[0].indexOf(covertype) >= 0) ? Integer.valueOf(rotation_ranges[1].get(rotation_ranges[0].indexOf(covertype))) : -9999;
+				    int max_age_cut_existing = (rotation_ranges[0].indexOf(covertype) >= 0) ? Integer.valueOf(rotation_ranges[2].get(rotation_ranges[0].indexOf(covertype))) : -9999;
+				    int min_age_cut_regeneration = (rotation_ranges[0].indexOf(covertype) >= 0) ? Integer.valueOf(rotation_ranges[3].get(rotation_ranges[0].indexOf(covertype))) : -9999;
+				    int max_age_cut_regeneration = (rotation_ranges[0].indexOf(covertype) >= 0) ? Integer.valueOf(rotation_ranges[4].get(rotation_ranges[0].indexOf(covertype))) : -9999;
+				    
+				    if ((int) combo_e_min.getSelectedItem() > max_age_cut_existing) {
+				    	if ((int) data[i][2] != -9999) data[i][2] = max_age_cut_existing;
+					} else if ((int) combo_e_min.getSelectedItem() < min_age_cut_existing) {
+						if ((int) data[i][2] != -9999) data[i][2] = min_age_cut_existing;
+					} else {
+						if ((int) data[i][2] != -9999) data[i][2] = combo_e_min.getSelectedItem();
+					}
+				    
 					table.addRowSelectionInterval(table.convertRowIndexToView(i), table.convertRowIndexToView(i));
 				}
 			}
@@ -113,14 +179,6 @@ public class QuickEdit_EA_Conversion_Panel extends JPanel {
 		
 		
 		// Add comboBox
-		class Combo_e_maxage extends JComboBox {
-			public Combo_e_maxage() {
-				for (int i = 1; i <= 100; i++) {
-					addItem(i);
-				}
-				setSelectedItem((int) 24);
-			}
-		}
 		JComboBox combo_e_max = new Combo_e_maxage();
 		c.gridx = 1;
 		c.gridy = 3;
@@ -147,7 +205,20 @@ public class QuickEdit_EA_Conversion_Panel extends JPanel {
 				}
 				table.clearSelection(); // To help trigger the row refresh: clear then add back the rows
 				for (int i : selectedRow) {
-					data[i][3] = combo_e_max.getSelectedItem();
+					String covertype = (String) data[i][0];
+					int min_age_cut_existing = (rotation_ranges[0].indexOf(covertype) >= 0) ? Integer.valueOf(rotation_ranges[1].get(rotation_ranges[0].indexOf(covertype))) : -9999;
+				    int max_age_cut_existing = (rotation_ranges[0].indexOf(covertype) >= 0) ? Integer.valueOf(rotation_ranges[2].get(rotation_ranges[0].indexOf(covertype))) : -9999;
+				    int min_age_cut_regeneration = (rotation_ranges[0].indexOf(covertype) >= 0) ? Integer.valueOf(rotation_ranges[3].get(rotation_ranges[0].indexOf(covertype))) : -9999;
+				    int max_age_cut_regeneration = (rotation_ranges[0].indexOf(covertype) >= 0) ? Integer.valueOf(rotation_ranges[4].get(rotation_ranges[0].indexOf(covertype))) : -9999;
+				    
+				    if ((int) combo_e_max.getSelectedItem() > max_age_cut_existing) {
+				    	if ((int) data[i][3] != -9999) data[i][3] = max_age_cut_existing;
+					} else if ((int) combo_e_max.getSelectedItem() < min_age_cut_existing) {
+						if ((int) data[i][3] != -9999) data[i][3] = min_age_cut_existing;
+					} else {
+						if ((int) data[i][3] != -9999) data[i][3] = combo_e_max.getSelectedItem();
+					}
+				    
 					table.addRowSelectionInterval(table.convertRowIndexToView(i), table.convertRowIndexToView(i));
 				}
 			}
@@ -175,14 +246,6 @@ public class QuickEdit_EA_Conversion_Panel extends JPanel {
 
 		
 		// Add comboBox
-		class Combo_r_minage extends JComboBox {
-			public Combo_r_minage() {
-				for (int i = 1; i <= 100; i++) {
-					addItem(i);
-				}
-				setSelectedItem((int) 10);
-			}
-		}
 		JComboBox combo_r_min = new Combo_r_minage();
 		c.gridx = 1;
 		c.gridy = 5;
@@ -209,7 +272,20 @@ public class QuickEdit_EA_Conversion_Panel extends JPanel {
 				}
 				table.clearSelection(); // To help trigger the row refresh: clear then add back the rows
 				for (int i : selectedRow) {
-					data[i][4] = combo_r_min.getSelectedItem();
+					String covertype = (String) data[i][0];
+					int min_age_cut_existing = (rotation_ranges[0].indexOf(covertype) >= 0) ? Integer.valueOf(rotation_ranges[1].get(rotation_ranges[0].indexOf(covertype))) : -9999;
+				    int max_age_cut_existing = (rotation_ranges[0].indexOf(covertype) >= 0) ? Integer.valueOf(rotation_ranges[2].get(rotation_ranges[0].indexOf(covertype))) : -9999;
+				    int min_age_cut_regeneration = (rotation_ranges[0].indexOf(covertype) >= 0) ? Integer.valueOf(rotation_ranges[3].get(rotation_ranges[0].indexOf(covertype))) : -9999;
+				    int max_age_cut_regeneration = (rotation_ranges[0].indexOf(covertype) >= 0) ? Integer.valueOf(rotation_ranges[4].get(rotation_ranges[0].indexOf(covertype))) : -9999;
+				    
+				    if ((int) combo_r_min.getSelectedItem() > max_age_cut_regeneration) {
+				    	if ((int) data[i][4] != -9999) data[i][4] = max_age_cut_regeneration;
+					} else if ((int) combo_r_min.getSelectedItem() < min_age_cut_regeneration) {
+						if ((int) data[i][4] != -9999) data[i][4] = min_age_cut_regeneration;
+					} else {
+						if ((int) data[i][4] != -9999) data[i][4] = combo_r_min.getSelectedItem();
+					}
+				    
 					table.addRowSelectionInterval(table.convertRowIndexToView(i), table.convertRowIndexToView(i));
 				}
 			}
@@ -237,14 +313,6 @@ public class QuickEdit_EA_Conversion_Panel extends JPanel {
 		
 		
 		// Add comboBox
-		class Combo_r_maxage extends JComboBox {
-			public Combo_r_maxage() {
-				for (int i = 1; i <= 100; i++) {
-					addItem(i);
-				}
-				setSelectedItem((int) 15);
-			}
-		}
 		JComboBox combo_r_max = new Combo_r_maxage();
 		c.gridx = 1;
 		c.gridy = 7;
@@ -271,7 +339,20 @@ public class QuickEdit_EA_Conversion_Panel extends JPanel {
 				}
 				table.clearSelection(); // To help trigger the row refresh: clear then add back the rows
 				for (int i : selectedRow) {
-					data[i][5] = combo_r_max.getSelectedItem();
+					String covertype = (String) data[i][0];
+					int min_age_cut_existing = (rotation_ranges[0].indexOf(covertype) >= 0) ? Integer.valueOf(rotation_ranges[1].get(rotation_ranges[0].indexOf(covertype))) : -9999;
+				    int max_age_cut_existing = (rotation_ranges[0].indexOf(covertype) >= 0) ? Integer.valueOf(rotation_ranges[2].get(rotation_ranges[0].indexOf(covertype))) : -9999;
+				    int min_age_cut_regeneration = (rotation_ranges[0].indexOf(covertype) >= 0) ? Integer.valueOf(rotation_ranges[3].get(rotation_ranges[0].indexOf(covertype))) : -9999;
+				    int max_age_cut_regeneration = (rotation_ranges[0].indexOf(covertype) >= 0) ? Integer.valueOf(rotation_ranges[4].get(rotation_ranges[0].indexOf(covertype))) : -9999;
+				    
+				    if ((int) combo_r_max.getSelectedItem() > max_age_cut_regeneration) {
+						if ((int) data[i][5] != -9999) data[i][5] = max_age_cut_regeneration;
+					} else if ((int) combo_r_max.getSelectedItem() < min_age_cut_regeneration) {
+						if ((int) data[i][5] != -9999) data[i][5] = min_age_cut_regeneration;
+					} else {
+						if ((int) data[i][5] != -9999) data[i][5] = combo_r_max.getSelectedItem();
+					}
+				    
 					table.addRowSelectionInterval(table.convertRowIndexToView(i), table.convertRowIndexToView(i));
 				}
 			}

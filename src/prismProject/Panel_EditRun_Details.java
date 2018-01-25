@@ -57,6 +57,7 @@ import javax.swing.Action;
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultCellEditor;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -129,6 +130,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 	
 	private Read_Database read_database;
+	private ArrayList<String>[] rotation_ranges;
 	private List<String> layers_Title;
 	private List<String> layers_Title_ToolTip;
 	private List<List<String>> allLayers;
@@ -320,9 +322,10 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				PrismMain.get_databases_linkedlist().update(file_database, read_database);			
 			}
 			
+			rotation_ranges = read_database.get_rotation_ranges();
 			layers_Title = read_database.get_layers_Title();
 			layers_Title_ToolTip = read_database.get_layers_Title_ToolTip();
-			allLayers =  read_database.get_allLayers();
+			allLayers = read_database.get_allLayers();
 			allLayers_ToolTips = read_database.get_allLayers_ToolTips();
 			yieldTable_values = read_database.get_yield_tables_values();
 			yieldTable_ColumnNames = read_database.get_yield_tables_column_names();
@@ -1104,10 +1107,17 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				for (int j = 0; j < total_CoverType; j++) {
 					data4[table_row][0] = allLayers.get(4).get(i);
 					data4[table_row][1] = allLayers.get(4).get(j);	
-					data4[table_row][2] = 20;
-					data4[table_row][3] = 24;
-					data4[table_row][4] = 10;
-					data4[table_row][5] = 15;
+					
+					String covertype = allLayers.get(4).get(i);
+					int min_age_cut_existing = (rotation_ranges[0].indexOf(covertype) >= 0) ? Integer.valueOf(rotation_ranges[1].get(rotation_ranges[0].indexOf(covertype))) : -9999;
+				    int max_age_cut_existing = (rotation_ranges[0].indexOf(covertype) >= 0) ? Integer.valueOf(rotation_ranges[2].get(rotation_ranges[0].indexOf(covertype))) : -9999;
+				    int min_age_cut_regeneration = (rotation_ranges[0].indexOf(covertype) >= 0) ? Integer.valueOf(rotation_ranges[3].get(rotation_ranges[0].indexOf(covertype))) : -9999;
+				    int max_age_cut_regeneration = (rotation_ranges[0].indexOf(covertype) >= 0) ? Integer.valueOf(rotation_ranges[4].get(rotation_ranges[0].indexOf(covertype))) : -9999;
+					
+					data4[table_row][2] = min_age_cut_existing;
+					data4[table_row][3] = max_age_cut_existing;
+					data4[table_row][4] = min_age_cut_regeneration;
+					data4[table_row][5] = max_age_cut_regeneration;
 					if (i==j) data4[table_row][6] = true; 
 					table_row++;
 				}
@@ -1270,49 +1280,52 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		
 		
 		// Set up Types for each  Columns-------------------------------------------------------------------------------
-		class comboBox_MinAge extends JComboBox {
-			public comboBox_MinAge() {
-				for (int i = 1; i <= 100; i++) {
-					addItem(i);
+		class CustomComboBoxEditor extends DefaultCellEditor {
+			private DefaultComboBoxModel model;
+
+			public CustomComboBoxEditor() {
+				super(new JComboBox());
+				this.model = (DefaultComboBoxModel) ((JComboBox) getComponent()).getModel();
+			}
+
+			@Override
+			public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+			    String covertype = table.getValueAt(row, 0).toString();
+				int min_age_cut_existing = (rotation_ranges[0].indexOf(covertype) >= 0) ? Integer.valueOf(rotation_ranges[1].get(rotation_ranges[0].indexOf(covertype))) : -9999;
+			    int max_age_cut_existing = (rotation_ranges[0].indexOf(covertype) >= 0) ? Integer.valueOf(rotation_ranges[2].get(rotation_ranges[0].indexOf(covertype))) : -9999;
+			    int min_age_cut_regeneration = (rotation_ranges[0].indexOf(covertype) >= 0) ? Integer.valueOf(rotation_ranges[3].get(rotation_ranges[0].indexOf(covertype))) : -9999;
+			    int max_age_cut_regeneration = (rotation_ranges[0].indexOf(covertype) >= 0) ? Integer.valueOf(rotation_ranges[4].get(rotation_ranges[0].indexOf(covertype))) : -9999;
+			    
+				if (column == 2 || column == 3) {
+					if (rotation_ranges[0].contains(covertype)) {
+						model.removeAllElements();
+						for (int i = min_age_cut_existing; i <= max_age_cut_existing; i++) {		
+							model.addElement(i);
+						}
+
+					} else {
+						model.removeAllElements();
+					}
+				} else if (column == 4 || column == 5) {
+					if (rotation_ranges[0].contains(covertype)) {
+						model.removeAllElements();
+						for (int i = min_age_cut_regeneration; i <= max_age_cut_regeneration; i++) {		
+							model.addElement(i);
+						}
+
+					} else {
+						model.removeAllElements();
+					}
 				}
-				setSelectedItem((int) 20);
+			      
+				return super.getTableCellEditorComponent(table, value, isSelected, row, column);
 			}
 		}
 		
-		class comboBox_MaxAge extends JComboBox {
-			public comboBox_MaxAge() {
-				for (int i = 1; i <= 100; i++) {
-					addItem(i);
-				}
-				setSelectedItem((int) 24);
-			}
-		}
-		
-//		class checkbox_Option extends JCheckBox implements TableCellRenderer {
-//			public checkbox_Option() {
-//				setHorizontalAlignment(JLabel.CENTER);
-//			}
-//
-//			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-//					boolean hasFocus, int row, int column) {
-//				if (isSelected) {
-//					setForeground(table4.getSelectionForeground());
-//					setBackground(table4.getSelectionBackground());
-//				} else {
-//					setForeground(table4.getForeground());
-//					setBackground(table4.getBackground());
-//				}
-//				setSelected((value != null && ((Boolean) value).booleanValue()));
-//				this.setOpaque(true);
-//				return this;
-//			}
-//		}
-		  
-		table4.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new comboBox_MinAge()));
-		table4.getColumnModel().getColumn(3).setCellEditor(new DefaultCellEditor(new comboBox_MaxAge()));
-		table4.getColumnModel().getColumn(4).setCellEditor(new DefaultCellEditor(new comboBox_MinAge()));
-		table4.getColumnModel().getColumn(5).setCellEditor(new DefaultCellEditor(new comboBox_MaxAge()));
-//		table4.getColumnModel().getColumn(6).setCellEditor(new DefaultCellEditor(new checkbox_Option()));
+		table4.getColumnModel().getColumn(2).setCellEditor(new CustomComboBoxEditor());
+		table4.getColumnModel().getColumn(3).setCellEditor(new CustomComboBoxEditor());
+		table4.getColumnModel().getColumn(4).setCellEditor(new CustomComboBoxEditor());
+		table4.getColumnModel().getColumn(5).setCellEditor(new CustomComboBoxEditor());
 		((JComponent) table4.getDefaultRenderer(Boolean.class)).setOpaque(true);	// It's a bug in the synth-installed renderer, quick hack is to force the rendering checkbox opacity to true		
 		// End of Set up Types for each  Columns------------------------------------------------------------------------
 		
@@ -3144,7 +3157,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 							radioButton_Right[7].setEnabled(true);
 						}
 					}
-
 				}
 
 				private void change_database() {
@@ -3160,6 +3172,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 								PrismMain.get_databases_linkedlist().update(file_database, read_database);			
 							}														
 							
+							rotation_ranges = read_database.get_rotation_ranges();
 							layers_Title = read_database.get_layers_Title();
 							layers_Title_ToolTip = read_database.get_layers_Title_ToolTip();
 							allLayers =  read_database.get_allLayers();
@@ -4259,7 +4272,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 			// scrollPane Quick Edit 1 & 2-----------------------------------------------------------------------
 			// scrollPane Quick Edit 1 @ 2-----------------------------------------------------------------------		
-			JScrollPane scrollpane_QuickEdit_1 = new JScrollPane(new QuickEdit_EA_Conversion_Panel(table4, data4));
+			JScrollPane scrollpane_QuickEdit_1 = new JScrollPane(new QuickEdit_EA_Conversion_Panel(table4, data4, rotation_ranges));
 			JScrollPane scrollpane_QuickEdit_2 = new JScrollPane(new QuickEdit_RD_Conversion_Panel(table5, data5));	
 			
 			TitledBorder border = new TitledBorder("Quick Edit ");

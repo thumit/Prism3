@@ -1,7 +1,7 @@
 ------------------------------------------------------------COUNT------------------------------------------------------------
 
 ----------
-1. Count total number of prescriptions by silviculture method & cover type
+1.0. Count total number of prescriptions by silviculture method & cover type
 SELECT
 SUBSTR(DISTINCT prescription, 1, INSTR(DISTINCT prescription, "_")-1) as CoverType,
 SUM(case when prescription LIKE '%_NG_E%' then 1 else 0 end) NG_E,
@@ -35,7 +35,7 @@ SUM(case when prescription LIKE '%_BS_E%' then 1 else 0 end) BS_E,
 SUM(case when prescription LIKE '%%' then 1 else 0 end) Total_Prescriptions
 FROM (SELECT DISTINCT prescription FROM yield_tables)
 ----------
-2. Count total number of "existing" prescriptions by silviculture method, cover type, size class
+1.1. Count total number of "existing" prescriptions by silviculture method, cover type, size class
 SELECT
 SUBSTR(DISTINCT prescription, 1, INSTR(DISTINCT prescription, "_")-1) as CoverType,
 SUBSTR(DISTINCT prescription, 3, INSTR(DISTINCT prescription, "_")-1) as SizeClass,
@@ -56,50 +56,201 @@ OR  prescription LIKE '%_MS_E%'
 OR prescription LIKE '%_BS_E%')
 GROUP BY CoverType, SizeClass
 ----------
+-------------------------------------------------EVEN AGE ROTATION-------------------------------------------------
+
+----------
+2.0. Rotation age ranges for EA_E by cover type & size class
+SELECT
+SUBSTR(DISTINCT EA_E_prescription, 1, INSTR(DISTINCT EA_E_prescription, "_")-1) as e_covertype,
+SUBSTR(DISTINCT EA_E_prescription, 3, INSTR(DISTINCT EA_E_prescription, "_")-1) as e_sizeclass,
+MIN(CAST(rotation_age as decimal)) AS e_min_rotation_age, 
+MAX(CAST(rotation_age as decimal)) AS e_max_rotation_age
+FROM 
+
+(SELECT DISTINCT prescription AS EA_E_prescription, 
+action_type AS final_activity, 
+CAST(age_class as decimal) AS rotation_age
+FROM yield_tables WHERE prescription LIKE '%_EA_E%' GROUP BY prescription)
+
+GROUP BY e_covertype, e_sizeclass
+----------
+2.1. Rotation age ranges for EA_E by cover type
+SELECT
+SUBSTR(DISTINCT EA_E_prescription, 1, INSTR(DISTINCT EA_E_prescription, "_")-1) as e_covertype,
+MIN(CAST(rotation_age as decimal)) AS e_min_rotation_age, 
+MAX(CAST(rotation_age as decimal)) AS e_max_rotation_age
+FROM 
+
+(SELECT DISTINCT prescription AS EA_E_prescription, 
+action_type AS final_activity, 
+CAST(age_class as decimal) AS rotation_age
+FROM yield_tables WHERE prescription LIKE '%_EA_E%' GROUP BY prescription)
+
+GROUP BY e_covertype
+----------
+2.2. Rotation age ranges for EA_R by cover type
+SELECT
+SUBSTR(DISTINCT EA_R_prescription, 1, INSTR(DISTINCT EA_R_prescription, "_")-1) as r_covertype,
+MIN(CAST(rotation_age as decimal)) AS r_min_rotation_age, 
+MAX(CAST(rotation_age as decimal)) AS r_max_rotation_age
+FROM 
+
+(SELECT DISTINCT prescription AS EA_R_prescription, 
+action_type AS final_activity, 
+CAST(age_class as decimal) AS rotation_age
+FROM yield_tables WHERE prescription LIKE '%_EA_R%' GROUP BY prescription)
+
+GROUP BY r_covertype
+----------
+2.3. Rotation age ranges for EA_E and EA_R by covertype (FULL OUTER JOIN of 2.1 & 2.2)
+SELECT
+e_table.e_covertype,
+e_table.e_min_rotation_age,
+e_table.e_max_rotation_age,
+r_table.r_min_rotation_age,
+r_table.r_max_rotation_age
+FROM
+(
+
+
+
+
+(SELECT
+SUBSTR(DISTINCT EA_E_prescription, 1, INSTR(DISTINCT EA_E_prescription, "_")-1) as e_covertype,
+MIN(CAST(rotation_age as decimal)) AS e_min_rotation_age, 
+MAX(CAST(rotation_age as decimal)) AS e_max_rotation_age
+FROM 
+
+(SELECT DISTINCT prescription AS EA_E_prescription, 
+action_type AS final_activity, 
+CAST(age_class as decimal) AS rotation_age
+FROM yield_tables WHERE prescription LIKE '%_EA_E%' GROUP BY prescription)
+
+GROUP BY e_covertype) AS e_table
+
+
+LEFT JOIN
+
+
+(SELECT
+SUBSTR(DISTINCT EA_R_prescription, 1, INSTR(DISTINCT EA_R_prescription, "_")-1) as r_covertype,
+MIN(CAST(rotation_age as decimal)) AS r_min_rotation_age, 
+MAX(CAST(rotation_age as decimal)) AS r_max_rotation_age
+FROM 
+
+(SELECT DISTINCT prescription AS EA_R_prescription, 
+action_type AS final_activity, 
+CAST(age_class as decimal) AS rotation_age
+FROM yield_tables WHERE prescription LIKE '%_EA_R%' GROUP BY prescription)
+
+GROUP BY r_covertype) AS r_table
+
+
+ON e_table.e_covertype = r_table.r_covertype)
+
+
+
+
+
+UNION ALL
+
+
+
+
+
+SELECT
+r_table.r_covertype,
+e_table.e_min_rotation_age,
+e_table.e_max_rotation_age,
+r_table.r_min_rotation_age,
+r_table.r_max_rotation_age
+FROM
+(
+
+
+(SELECT
+SUBSTR(DISTINCT EA_R_prescription, 1, INSTR(DISTINCT EA_R_prescription, "_")-1) as r_covertype,
+MIN(CAST(rotation_age as decimal)) AS r_min_rotation_age, 
+MAX(CAST(rotation_age as decimal)) AS r_max_rotation_age
+FROM 
+
+(SELECT DISTINCT prescription AS EA_R_prescription, 
+action_type AS final_activity, 
+CAST(age_class as decimal) AS rotation_age
+FROM yield_tables WHERE prescription LIKE '%_EA_R%' GROUP BY prescription)
+
+GROUP BY r_covertype) AS r_table
+
+
+LEFT JOIN
+
+
+(SELECT
+SUBSTR(DISTINCT EA_E_prescription, 1, INSTR(DISTINCT EA_E_prescription, "_")-1) as e_covertype,
+MIN(CAST(rotation_age as decimal)) AS e_min_rotation_age, 
+MAX(CAST(rotation_age as decimal)) AS e_max_rotation_age
+FROM 
+
+(SELECT DISTINCT prescription AS EA_E_prescription, 
+action_type AS final_activity, 
+CAST(age_class as decimal) AS rotation_age
+FROM yield_tables WHERE prescription LIKE '%_EA_E%' GROUP BY prescription)
+
+GROUP BY e_covertype) AS e_table
+
+
+ON e_table.e_covertype = r_table.r_covertype)
+
+
+
+
+
+WHERE  e_table.e_covertype IS NULL
+----------
 --------------------------------------------------------------LIST--------------------------------------------------------------
 
 ----------
-10. List all prescriptions
+3.0. List all prescriptions
 SELECT DISTINCT prescription, action_type AS final_activity, MIN(CAST(age_class as decimal)) AS min_age_class, MAX(CAST(age_class as decimal)) AS max_age_class, COUNT(action_type) AS total_rows
 FROM yield_tables GROUP BY prescription;
 ----------
-11. List "Natural Growth Existing" prescriptions
+3.1. List "Natural Growth Existing" prescriptions
 SELECT DISTINCT prescription AS NG_E_prescription, action_type AS final_activity, MIN(CAST(age_class as decimal)) AS min_age_class, MAX(CAST(age_class as decimal)) AS max_age_class, COUNT(action_type) AS total_rows
 FROM yield_tables WHERE prescription LIKE '%_NG_E%' GROUP BY prescription;
 ----------
-12. List "Natural Growth Regeneration" prescriptions
+3.2. List "Natural Growth Regeneration" prescriptions
 SELECT DISTINCT prescription AS NG_R_prescription, action_type AS final_activity, MIN(CAST(age_class as decimal)) AS min_age_class, MAX(CAST(age_class as decimal)) AS max_age_class, COUNT(action_type) AS total_rows
 FROM yield_tables WHERE prescription LIKE '%_NG_R%' GROUP BY prescription;
 ----------
-13. List "Prescribed Burn Existing" prescriptions
+3.3. List "Prescribed Burn Existing" prescriptions
 SELECT DISTINCT prescription AS PB_E_prescription, action_type AS final_activity, MIN(CAST(age_class as decimal)) AS min_age_class, MAX(CAST(age_class as decimal)) AS max_age_class, COUNT(action_type) AS total_rows
 FROM yield_tables WHERE prescription LIKE '%_PB_E%' GROUP BY prescription;
 ----------
-14. List "Prescribed Burn Regeneration" prescriptions
+3.4. List "Prescribed Burn Regeneration" prescriptions
 SELECT DISTINCT prescription AS PB_R_prescription, action_type AS final_activity, MIN(CAST(age_class as decimal)) AS min_age_class, MAX(CAST(age_class as decimal)) AS max_age_class, COUNT(action_type) AS total_rows
 FROM yield_tables WHERE prescription LIKE '%_PB_R%' GROUP BY prescription;
 ----------
-15. List "Group Selection Existing" prescriptions
+3.5. List "Group Selection Existing" prescriptions
 SELECT DISTINCT prescription AS GS_E_prescription, action_type AS final_activity, MIN(CAST(age_class as decimal)) AS min_age_class, MAX(CAST(age_class as decimal)) AS max_age_class, COUNT(action_type) AS total_rows
 FROM yield_tables WHERE prescription LIKE '%_GS_E%' GROUP BY prescription;
 ----------
-16. List "Group Selection Regeneration" prescriptions
+3.6. List "Group Selection Regeneration" prescriptions
 SELECT DISTINCT prescription AS GS_R_prescription, action_type AS final_activity, MIN(CAST(age_class as decimal)) AS min_age_class, MAX(CAST(age_class as decimal)) AS max_age_class, COUNT(action_type) AS total_rows
 FROM yield_tables WHERE prescription LIKE '%_GS_R%' GROUP BY prescription;
 ----------
-17. List "Even Age Existing" prescriptions
+3.7. List "Even Age Existing" prescriptions
 SELECT DISTINCT prescription AS EA_E_prescription, action_type AS final_activity, MIN(CAST(age_class as decimal)) AS min_age_class, MAX(CAST(age_class as decimal)) AS max_age_class, COUNT(action_type) AS total_rows
 FROM yield_tables WHERE prescription LIKE '%_EA_E%' GROUP BY prescription;
 ----------
-18. List "Even Age Regeneration" prescriptions
+3.8. List "Even Age Regeneration" prescriptions
 SELECT DISTINCT prescription AS EA_R_prescription, action_type AS final_activity, MIN(CAST(age_class as decimal)) AS min_age_class, MAX(CAST(age_class as decimal)) AS max_age_class, COUNT(action_type) AS total_rows
 FROM yield_tables WHERE prescription LIKE '%_EA_R%' GROUP BY prescription;
 ----------
-19. List "Mixed Severity Fire" prescriptions
+3.9. List "Mixed Severity Fire" prescriptions
 SELECT DISTINCT prescription AS MS_E_prescription, action_type AS final_activity, MIN(CAST(age_class as decimal)) AS min_age_class, MAX(CAST(age_class as decimal)) AS max_age_class, COUNT(action_type) AS total_rows
 FROM yield_tables WHERE prescription LIKE '%_MS_E%' GROUP BY prescription;
 ----------
-20. List "Severe Bark Beetle" prescriptions
+3.10. List "Severe Bark Beetle" prescriptions
 SELECT DISTINCT prescription AS BS_E_prescription, action_type AS final_activity, MIN(CAST(age_class as decimal)) AS min_age_class, MAX(CAST(age_class as decimal)) AS max_age_class, COUNT(action_type) AS total_rows
 FROM yield_tables WHERE prescription LIKE '%_BS_E%' GROUP BY prescription;
 ----------

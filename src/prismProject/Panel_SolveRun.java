@@ -160,8 +160,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				
 		
         // Set up a JScrollPane containing a button----------------------------------------------------------------------------------
-		button_solve = new JButton(IconHandle.get_scaledImageIcon(128, 128, "icon_light_off.png"));
-		button_solve.setDisabledIcon(IconHandle.get_scaledImageIcon(128, 128, "icon_light_on.png"));
+		button_solve = new JButton(IconHandle.get_scaledImageIcon(128, 128, "icon_main_off.png"));
+		button_solve.setDisabledIcon(IconHandle.get_scaledImageIcon(128, 128, "icon_main.png"));
+//		button_solve.setDisabledIcon(IconHandle.get_scaledImageIcon_replicate(128, 128, "main_animation.gif"));
 		button_solve.setBackground(Color.WHITE);
 		button_solve.setHorizontalTextPosition(JButton.CENTER);
 		button_solve.setVerticalTextPosition(JButton.BOTTOM);
@@ -248,7 +249,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						
 						solvingstatus = false;
 						button_solve.setText("CLICK TO GET SOLUTIONS");
-						button_solve.setIcon(IconHandle.get_scaledImageIcon(128, 128, "icon_light_off.png"));
+						button_solve.setIcon(IconHandle.get_scaledImageIcon(128, 128, "icon_main_off.png"));
 //						button_solve.setEnabled(true);
 						for (int i = 0; i < radioButton.length; i++) {
 							radioButton[i].setEnabled(true);
@@ -267,7 +268,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				}				
 				
 				solvingstatus = true;
-				button_solve.setIcon(IconHandle.get_scaledImageIcon(128, 128, "icon_light_on.png"));
+				button_solve.setIcon(IconHandle.get_scaledImageIcon_replicate(128, 128, "main_animation.gif"));
 //				button_solve.setEnabled(false);
 				thread1.start();
 				thread2.start();		//Note: Pipe broken due to disconnects before receiving responses. (safe Exception)		
@@ -1116,13 +1117,13 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						
 			// Convert lists to 1-D arrays
 			double[] objvals = Stream.of(objlist.toArray(new Double[objlist.size()])).mapToDouble(Double::doubleValue).toArray();
-			objlist = null;	// Clear the lists to save memory
+			objlist = null;		// Clear the lists to save memory
 			String[] vname = vnamelist.toArray(new String[vnamelist.size()]);
 			vnamelist = null;	// Clear the lists to save memory
 			double[] vlb = Stream.of(vlblist.toArray(new Double[vlblist.size()])).mapToDouble(Double::doubleValue).toArray();
-			vlblist = null;	// Clear the lists to save memory
+			vlblist = null;		// Clear the lists to save memory
 			double[] vub = Stream.of(vublist.toArray(new Double[vublist.size()])).mapToDouble(Double::doubleValue).toArray();
-			vublist = null;	// Clear the lists to save memory
+			vublist = null;		// Clear the lists to save memory
 			IloNumVarType[] vtype = vtlist.toArray(new IloNumVarType[vtlist.size()]);						
 			vtlist = null;		// Clear the lists to save memory
 			
@@ -1153,7 +1154,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				int[] prescription_and_row = get_prescription_and_row(yield_tables_names_list, vname[i], var_rotation_age);
 				var_prescription[i] = prescription_and_row[0];
 				var_row_id[i] = prescription_and_row[1];
-				var_cost_value[i] = -9999;	// Initialize it as -999 indicating not calculated yet
+				var_cost_value[i] = -9999;	// Initialize it as -9999 to indicate not calculated yet
 			}
 			System.out.println("Total decision variables as in PRISM obj. function eq. (1):   " + nvars + "             " + dateFormat.format(new Date()));
 					
