@@ -636,3 +636,26 @@ All changes in this block are associated with PrismAlpha1.0.24.jar, Prism Formul
 All changes in this block are associated with PrismAlpha1.0.25.jar, Prism Formulation 02.docx, Prism Database 02.docx  
 --------------------------------------------------------------------------
 
+284. Fix "Covertype Conversion" Window to make the combo box value show -9999 if there is no EA prescription (if !rotation_ranges[0].contains(covertype)) --> exported as PrismAlpha1.0.25.jar
+285. Fix bug 19 where some variables are defnied incorrectly with total_prescriptions dimension
+286. Allow PRISM to capture 12 choices (0-11) for MS prescriptions, and 6 choices (0-5) for both EA_E and EA_R precriptions --> exported as PrismAlpha1.0.26.jar
+287. Add a matching check for existing_strata into system_sql_library
+288. user_sql_library: row height is restored to normal size (20) after SAVE
+289. Redesign output_05_management_details to have another option (window) for sql queries:
+	- output_05: move db_status to before db_prescription and db_row_id
+	- output_05: name chanages: db_status --> data_connection, db_prescription --> precription, db_row_id --> row_id
+	- Get_Variable_Information: "Not Available" --> ""
+	- Panel_SolveRun: write all info from yield_tables to output_05 (both Solve Fast and Solve Slow)
+	- Panel_SolveRun: split all variables indexes to columns and write to output_05 (both Solve Fast and Solve Slow)
+	- Panel_SolveRun: output_05_management_details is exported as a table inside the database.db in the run folder (both Solve Fast and Solve Slow)
+	- Move get_file_system_sql_library() and get_file_user_sql_library() from Setting to FilesHandle --> This is to use the Setting for output_05 similar to for Database Management
+	- Change file names and also change method get_file_system_sql_library() --> get_file_dbms_system_sql_library, get_dbms_file_user_sql_library()
+	- Add 2 more libraries for output_05: get_file_output_system_sql_library(), get_file_output_user_sql_library()
+	- UI for output_05 is plit into SQL Mode and NOSQL Mode and make the SQL Mode behave similaly to as in Database Management
+	- Rewrite maangement_details_thread to hae better bahavior, remove temporary panel, always load database in SQL Mode, and when successfully loaded --> enable Switch button
+290. Update readme: Change the way writting predefined text when a new database is imported into the run, and also write info when the run is saved and edited the last time.
+291. Add option to "turn on/off the filter" as a JMenuItem when right click on output_05 SQL window or database management SQL window
+292. Show title for the scrollpane after executing a query (in system/user libraries)
+	- In output_05: show the title directly
+	- In Database Management: show the title in the query textfield
+All changes in this block are associated with PrismAlpha1.0.27.jar, Prism Formulation 02.docx, Prism Database 02.docx  

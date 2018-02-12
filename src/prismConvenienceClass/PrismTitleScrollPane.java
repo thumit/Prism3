@@ -27,13 +27,14 @@ import javax.swing.border.TitledBorder;
 public class PrismTitleScrollPane extends JScrollPane {	
 	// Scroll Panel with Title and the nested ScrollPane with Border
 	private JScrollPane nested_scrollpane;
+	private TitledBorder border;
 	
 	public PrismTitleScrollPane(String title, String title_alignment, Component component) {
 		nested_scrollpane = new JScrollPane(component);	
 		nested_scrollpane.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, ColorUtil.makeTransparent(Color.BLACK, 75)));
 		nested_scrollpane.setPreferredSize(new Dimension(100, 100));
 		
-		TitledBorder border = new TitledBorder(title);
+		border = new TitledBorder(title);
 		if (title_alignment.equals("LEFT")) {
 			border.setTitleJustification(TitledBorder.LEFT);
 		} else if (title_alignment.equals("RIGHT")) {
@@ -50,5 +51,9 @@ public class PrismTitleScrollPane extends JScrollPane {
 	
 	public JScrollPane get_nested_scrollpane() {
 		return nested_scrollpane;	
+	}
+	
+	public void set_title(String title) {
+		border.setTitle(title);	
 	}
 }

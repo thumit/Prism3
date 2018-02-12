@@ -19,9 +19,6 @@ package prismProject;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -47,12 +44,10 @@ import javax.swing.JButton;
 import javax.swing.JLayeredPane;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.JTree;
@@ -61,9 +56,9 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-import javax.swing.text.DefaultCaret;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
@@ -109,18 +104,21 @@ public class Panel_Project extends JLayeredPane {
 
 	private ToolBarWithBgImage projectToolBar;
 	
-	private JScrollPane scrollPane_Left, scrollPane_Right;
+	private JScrollPane scrollPane_Left;
+	private static JScrollPane scrollPane_Right;
 
 	
 	private int rowCount, colCount;
 	private String[] columnNames;
-	private JTable table;
+	private JTable table, database_table;
 	private PrismTableModel model;
 	private Object[][] data;	
 	private TableFilterHeader filterHeader = new TableFilterHeader();
 	
+	
 	private TextArea_ReadMe readme;
-	private Thread thread_management_details;
+	private static Output_Panel_Management_Details_NOSQL management_details_NOSQL_panel;
+	private static Output_Panel_Management_Details_SQL management_details_SQL_panel;
 	
 	public Panel_Project(String currentProject) {
 		
@@ -179,10 +177,6 @@ public class Panel_Project extends JLayeredPane {
 		
 		projectTree.addMouseListener(new MouseAdapter() { // Add listener to projectTree
 			public void mousePressed(MouseEvent e) {
-				if (thread_management_details != null && thread_management_details.isAlive()) {
-					thread_management_details.interrupt();	// stop the thread which creating the panel for output5
-					thread_management_details.stop();			// NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE : THIS IS DANGEROUS WAY TO STOP THREAD: DEPRICATED
-				}						
 //				// Interrupt all running threads				
 //				Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
 //				Thread[] threadArray = threadSet.toArray(new Thread[threadSet.size()]);
@@ -427,10 +421,41 @@ public class Panel_Project extends JLayeredPane {
 								}
 							};
 													
-							DefaultTableCellRenderer renderer = (DefaultTableCellRenderer)table.getDefaultRenderer(Object.class);
+							DefaultTableCellRenderer renderer = (DefaultTableCellRenderer) table.getDefaultRenderer(Object.class);
 							renderer.setHorizontalAlignment(SwingConstants.LEFT);		// Set alignment of values in the table to the left side
 							table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 				     		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
+				     		
+							// Create a table for SQL Mode
+							if (currentInputFile.equals("output_05_management_details.txt")) {	
+								DefaultTableModel model = new DefaultTableModel(data, columnNames);
+								database_table = new JTable(model) {
+									@Override			//These override is to make the width of the cell fit all contents of the cell
+									public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+										// For the cells in table								
+										Component component = super.prepareRenderer(renderer, row, column);
+										int rendererWidth = component.getPreferredSize().width;
+										TableColumn tableColumn = getColumnModel().getColumn(column);
+										int maxWidth = Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth());
+										
+										// For the column names
+										TableCellRenderer renderer2 = table.getTableHeader().getDefaultRenderer();	
+										Component component2 = renderer2.getTableCellRendererComponent(table,
+									            tableColumn.getHeaderValue(), false, false, -1, column);
+										maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
+										
+										tableColumn.setPreferredWidth(maxWidth);
+										return component;
+									}
+								};
+														
+								DefaultTableCellRenderer renderer2 = (DefaultTableCellRenderer) database_table.getDefaultRenderer(Object.class);
+								renderer2.setHorizontalAlignment(SwingConstants.LEFT);		// set alignment of values in the database_table to the left side
+								database_table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+								database_table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+								database_table.setDefaultEditor(Object.class, null);	// make the data un-editable
+							}
 						} catch (Exception e2) {
 							System.out.println("Fail to create table data. Often this is only when Readme.txt has nothing");
 						}
@@ -441,74 +466,87 @@ public class Panel_Project extends JLayeredPane {
 							Output_Panel_Management_Overview chart_panel = new Output_Panel_Management_Overview(table, data);
 							scrollPane_Right.setViewportView(chart_panel);
 						} else if (currentInputFile.equals("output_05_management_details.txt")) {							
-							JPanel tempPanel = new JPanel(new GridBagLayout());
-							GridBagConstraints c = new GridBagConstraints();
-							c.fill = GridBagConstraints.BOTH;
-																			
-							JButton runStatButton = new JButton(IconHandle.get_scaledImageIcon_replicate(128, 128, "light.gif"));
-							runStatButton.setBackground(Color.WHITE);
-							runStatButton.setHorizontalTextPosition(JButton.CENTER);
-							runStatButton.setVerticalTextPosition(JButton.TOP);
-							runStatButton.setFont(new Font(null, Font.BOLD, 15));
-							runStatButton.setText("        Loading Query Mode  -  Click to stop        ");
-							runStatButton.addActionListener(new ActionListener() {
-								@Override
-								public void actionPerformed(ActionEvent e) {
-									thread_management_details.stop();			// NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE : THIS IS DANGEROUS WAY TO STOP THREAD: DEPRICATED	
-									scrollPane_Right.setViewportView(table);
-								}						
-							});
+//							JPanel tempPanel = new JPanel(new GridBagLayout());
+//							GridBagConstraints c = new GridBagConstraints();
+//							c.fill = GridBagConstraints.BOTH;
+//																			
+//							JButton runStatButton = new JButton(IconHandle.get_scaledImageIcon_replicate(128, 128, "light.gif"));
+//							runStatButton.setBackground(Color.WHITE);
+//							runStatButton.setHorizontalTextPosition(JButton.CENTER);
+//							runStatButton.setVerticalTextPosition(JButton.TOP);
+//							runStatButton.setFont(new Font(null, Font.BOLD, 15));
+//							runStatButton.setText("        Loading Query Mode  -  Click to stop        ");
+//							runStatButton.addActionListener(new ActionListener() {
+//								@Override
+//								public void actionPerformed(ActionEvent e) {
+////									thread_management_details.stop();			// NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE : THIS IS DANGEROUS WAY TO STOP THREAD: DEPRICATED	
+//									scrollPane_Right.setViewportView(management_details_SQL_panel);
+//								}						
+//							});
+//							
+//							JTextArea tempArea = new JTextArea();
+//							tempArea.setFocusable(false);
+//							tempArea.setOpaque(false);
+//							tempArea.setEditable(false);
+//							DefaultCaret caret = (DefaultCaret) tempArea.getCaret();
+//							caret.setUpdatePolicy(DefaultCaret.OUT_BOTTOM);		
+//							tempArea.append("\n \n");
+//							tempArea.append("It takes time reading database to enter Query Mode. Example:");	
+//							tempArea.append("\n \n");
+//							tempArea.append("CNPZ: approximately 16,000 rows & 100 columns: 5 seconds");					
+//							tempArea.append("\n \n");	
+//							tempArea.append("CGNF: approximately 40,000 rows & 60 columns: 25 seconds");
+//							tempArea.append("\n \n");	
+//							tempArea.append("Plus time loading Preset Filter: 1 - 10 seconds ");
+//							tempArea.append("\n \n");
+//							tempArea.append("Please be patient...");
+//														
+//							c.gridx = 0;
+//							c.gridy = 0;
+//							c.gridheight = 2;
+//							c.weightx = 1;
+//							c.weighty = 1;	
+//							tempPanel.add(new JScrollPane(table), c);
+//									
+//							c.gridx = 1;
+//							c.gridy = 0;
+//							c.gridheight = 1;
+//							c.weightx = 0;
+//							c.weighty = 0;	
+//							tempPanel.add(runStatButton, c);
+//							
+//							c.gridx = 1;
+//							c.gridy = 1;
+//							c.gridheight = 1;
+//							c.weightx = 0;
+//							c.weighty = 1;	
+//							tempPanel.add(tempArea, c);
 							
-							JTextArea tempArea = new JTextArea();
-							tempArea.setFocusable(false);
-							tempArea.setOpaque(false);
-							tempArea.setEditable(false);
-							DefaultCaret caret = (DefaultCaret) tempArea.getCaret();
-							caret.setUpdatePolicy(DefaultCaret.OUT_BOTTOM);		
-							tempArea.append("\n \n");
-							tempArea.append("It takes time reading database to enter Query Mode. Example:");	
-							tempArea.append("\n \n");
-							tempArea.append("CNPZ: approximately 16,000 rows & 100 columns: 5 seconds");					
-							tempArea.append("\n \n");	
-							tempArea.append("CGNF: approximately 40,000 rows & 60 columns: 25 seconds");
-							tempArea.append("\n \n");	
-							tempArea.append("Plus time loading Preset Filter: 1 - 10 seconds ");
-							tempArea.append("\n \n");
-							tempArea.append("Please be patient...");
-														
-							c.gridx = 0;
-							c.gridy = 0;
-							c.gridheight = 2;
-							c.weightx = 1;
-							c.weighty = 1;	
-							tempPanel.add(new JScrollPane(table), c);
-									
-							c.gridx = 1;
-							c.gridy = 0;
-							c.gridheight = 1;
-							c.weightx = 0;
-							c.weighty = 0;	
-							tempPanel.add(runStatButton, c);
+							management_details_SQL_panel= null;
+							management_details_NOSQL_panel = null;
+							String conn_path = "jdbc:sqlite:" + currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/database.db";
+							management_details_SQL_panel = new Output_Panel_Management_Details_SQL(database_table, conn_path);
+							scrollPane_Right.setViewportView(management_details_SQL_panel);
 							
-							c.gridx = 1;
-							c.gridy = 1;
-							c.gridheight = 1;
-							c.weightx = 0;
-							c.weighty = 1;	
-							tempPanel.add(tempArea, c);
-							
-							
-							scrollPane_Right.setViewportView(tempPanel);
-							if (thread_management_details == null || !thread_management_details.isAlive()) {	// don't create new Thread if the current thread is still alive
-								thread_management_details = new Thread() {			// Make a thread for output5
-									public void run() {
-										Output_Panel_Management_Details management_details_panel = new Output_Panel_Management_Details(currentProjectFolder, currentRun, table, data, model);
-										scrollPane_Right.setViewportView(management_details_panel);
-										this.interrupt();
+							management_details_SQL_panel.get_btnSwitch().setEnabled(false);
+						    Thread thread_management_details = new Thread() {			// Make a thread for output5
+								public void run() {
+									File file_database = new File(conn_path);
+									Read_Database read_database = PrismMain.get_databases_linkedlist().return_read_database_if_exist(file_database);
+									if (read_database == null) {
+										read_database = new Read_Database(file_database);	// Read the database
+										PrismMain.get_databases_linkedlist().update(file_database, read_database);			
+										System.out.println(PrismMain.get_databases_linkedlist().size());
+										for (Read_Item rr: PrismMain.get_databases_linkedlist()) {
+											System.out.println(rr.file_database.getAbsolutePath() + rr.last_modify);
+										}
 									}
-								};
-								thread_management_details.start();
-							}
+									management_details_NOSQL_panel = new Output_Panel_Management_Details_NOSQL(currentProjectFolder, currentRun, table, data, model);
+									management_details_SQL_panel.get_btnSwitch().setEnabled(true);
+									this.interrupt();
+								}
+							};
+							thread_management_details.start();
 						} else if (currentInputFile.equals("output_07_flow_constraints.txt")) {		//show a panel with bar and line charts
 							table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 							Output_Panel_Flow_Constraints chart_panel = new Output_Panel_Flow_Constraints(currentProjectFolder, currentRun, table, data);
@@ -539,13 +577,8 @@ public class Panel_Project extends JLayeredPane {
 				}
 			} else if (e.getClickCount() == 2) {
 				// Do something here
-				if (currentLevel == 3) {
-					if (currentInputFile.equals("output_05_management_details.txt")) {
-						thread_management_details.stop();			// NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE : THIS IS DANGEROUS WAY TO STOP THREAD: DEPRICATED
-						scrollPane_Right.setViewportView(table);
-					}
-					
-					//show the filter only when double left click
+				if (currentLevel == 3 && !currentInputFile.equals("output_05_management_details.txt")) {
+					// show the filter only when double left click
 					filterHeader = new TableFilterHeader(table, AutoChoices.ENABLED);
 					filterHeader.setTable(table);
 					filterHeader.setFilterOnUpdates(true);
@@ -1182,6 +1215,14 @@ public class Panel_Project extends JLayeredPane {
 	public void showNothing() {
 		displayTextField.setText(null); // Show nothing on the TextField
 		scrollPane_Right.setViewportView(null);
+	}
+	
+	public static void show_management_details_SQL_panel() {
+		scrollPane_Right.setViewportView(management_details_SQL_panel);
+	}
+	
+	public static void show_management_details_NOSQL_panel() {
+		scrollPane_Right.setViewportView(management_details_NOSQL_panel);
 	}
 	
 }

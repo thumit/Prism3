@@ -1,0 +1,4 @@
+sm_id	sm_description	sm_static_identifiers	sm_method_choice	sm_implementation	
+1	method NG PB.....eligible to apply on..... all strata	0 B I U W;1 1 2 3 4 5 6;2 B G L O;3 N;4 C D E F G H I T V W;5 F G H I J K L M N O P Q R S	0 NG_E PB_E BS_E NG_R PB_R;1 0 1 2 3 4	true	
+2	method GS_E EA_E GS_R EA_R .....eligible to apply on..... layer2 6 3 4 5 2	0 W U I B;1 6 3 4 5 2;2 B G L O;3 N;4 C D T E F V G W H I;5 F G H I J K L M N O P Q R S	0 GS_E EA_E GS_R EA_R;1 0 1 2 3 4	true	
+3	method MS_E .....eligible to apply on..... all strata	0 B I U W;1 1 2 3 4 5 6;2 B G L O;3 N;4 C D E F G H I T V W;5 F G H I J K L M N O P Q R S	0 MS_E;1 0 1 2 3 4 5 6 7 8 9 10 11	true	

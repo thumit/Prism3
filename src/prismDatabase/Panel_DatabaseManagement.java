@@ -193,7 +193,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		database_table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); // this solve problems when resizing --> column width of the table becomes too narrow 
 //		DatabaseTable.setColumnSelectionAllowed(true);
 //		DatabaseTable.setRowSelectionAllowed(false);
-		database_table.setDefaultEditor(Object.class, null);		//make the data un-editable
+		database_table.setDefaultEditor(Object.class, null);	// make the data un-editable
 		scrollPane_Right.setViewportView(database_table);
 		
 		MouseAdapter mouse_listener = new MouseAdapter() { 	// Add listener
@@ -637,11 +637,11 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 	public void update_query_function_popup() {
 		JPopupMenu popup = new JPopupMenu();
 		String conn_path = "jdbc:sqlite:" + databasesFolder + seperator + currentDatabase;
-		Setting setting = new Setting(database_table, conn_path);
+		Setting setting = new Setting(FilesHandle.get_file_dbms_system_sql_library(), FilesHandle.get_file_dbms_user_sql_library(), database_table, conn_path);
 		
 		
 		// System Queries
-		final JMenu system_queries_menu = new JMenu("System Queries");
+		final JMenu system_queries_menu = new JMenu("System Library");
 		MenuScroller.setScrollerFor(system_queries_menu, 25, 15, 0, 0);		// 1st number --> in the range, 2nd number --> milliseconds, 3rd number --> on top, 4th number --> at bottom
 		system_queries_menu.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_database.png"));
 		popup.add(system_queries_menu);	
@@ -653,9 +653,11 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 			default_function.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {
+					String query_name = (String) system_queries_list[0].get(current_i);
 					String query_statement = String.join(" ", (String[]) system_queries_list[1].get(current_i)).trim();
 					if (!query_statement.equals("")) {
 						doQuery(query_statement);
+						queryTextField.setText("System Library:   " + query_name);
 					}
 				}
 			});
@@ -664,7 +666,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		
 		
 		// Users Queries
-		final JMenu user_queries_menu = new JMenu("User Queries");
+		final JMenu user_queries_menu = new JMenu("User Library");
 		MenuScroller.setScrollerFor(user_queries_menu, 25, 15, 0, 0);		// 1st number --> in the range, 2nd number --> milliseconds, 3rd number --> on top, 4th number --> at bottom
 		user_queries_menu.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_database.png"));
 		popup.add(user_queries_menu);
@@ -676,9 +678,11 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 			user_function.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {
+					String query_name = (String) user_queries_list[0].get(current_i);
 					String query_statement = String.join(" ", (String[]) user_queries_list[1].get(current_i)).trim();
 					if (!query_statement.equals("")) {
 						doQuery(query_statement);
+						queryTextField.setText("User Library:   " + query_name);
 					}
 				}
 			});
@@ -698,6 +702,24 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 			}
 		});
 		popup.add(setting_menuitem);
+		
+		
+		// Filter
+		final JMenuItem filter_menuitem = new JMenuItem("Filter ON/OFF");
+		filter_menuitem.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_filter.png"));
+		filter_menuitem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				if (filterHeader.getTable() == null) {
+					filterHeader.setTable(database_table);
+					is_filter_visible = true;
+				} else {
+					filterHeader.setTable(null);
+					is_filter_visible = false;
+				}
+			}
+		});
+		popup.add(filter_menuitem);
 		
 		
 		// Set popup menu on right click
@@ -1446,7 +1468,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 						if (fileDelimited != null) {
 							// Get info from the file
 							SQLite.create_importTable_Stm(currentfile, fileDelimited);		//Read file into arrays
-							String[] statement = new String [SQLite.get_importTable_TotalLines()];		//this arrays hold all the statements
+							String[] statement = new String[SQLite.get_importTable_TotalLines()];		//this arrays hold all the statements
 							statement = SQLite.get_importTable_Stm();	
 
 							// prepared execution

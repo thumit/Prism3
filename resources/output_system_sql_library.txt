@@ -1,0 +1,27 @@
+1. Show all records with positive harvested volume
+SELECT var_layer1 as layer1, var_layer2 as layer2, var_layer3 as layer3, var_layer4 as layer4,var_layer5 as layer5, var_layer6 as layer6, var_forest_status as forest_status, age_class as forest_age, var_period as period, prescription, row_id, var_method as method, action_type as activity, var_value as acres, var_value*rmcuft as volume
+
+FROM output_05_management_details
+
+WHERE CAST(volume AS DECIMAL) > 0
+
+ORDER BY forest_status, CAST(period AS DECIMAL), method, activity, layer1, layer2, layer3, layer4, layer5, layer6
+----------
+2. Show records with positive harvested volume - Existing Forest only
+SELECT var_layer1 as layer1, var_layer2 as layer2, var_layer3 as layer3, var_layer4 as layer4,var_layer5 as layer5, var_layer6 as layer6, var_forest_status as forest_status, age_class as forest_age, var_period as period, prescription, row_id, var_method as method, action_type as activity, var_value as acres, var_value*rmcuft as volume
+
+FROM output_05_management_details
+
+WHERE CAST(volume AS DECIMAL) > 0 AND forest_status = 'E'
+
+ORDER BY forest_status, CAST(period AS DECIMAL), method, activity, layer1, layer2, layer3, layer4, layer5, layer6
+----------
+3. Show records with positive harvested volume - Regeneration Forest only
+SELECT var_layer1 as layer1, var_layer2 as layer2, var_layer3 as layer3, var_layer4 as layer4,var_layer5 as layer5, var_layer6 as layer6, var_forest_status as forest_status, age_class as forest_age, var_period as period, prescription, row_id, var_method as method, action_type as activity, var_value as acres, var_value*rmcuft as volume
+
+FROM output_05_management_details
+
+WHERE CAST(volume AS DECIMAL) > 0 AND forest_status = 'R'
+
+ORDER BY forest_status, CAST(period AS DECIMAL), method, activity, layer1, layer2, layer3, layer4, layer5, layer6
+----------

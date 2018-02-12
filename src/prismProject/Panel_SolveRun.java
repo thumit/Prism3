@@ -33,6 +33,10 @@ import java.io.InputStreamReader;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.PrintStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -47,6 +51,7 @@ import java.util.stream.Stream;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -71,6 +76,7 @@ import prismConvenienceClass.IconHandle;
 import prismConvenienceClass.LibraryHandle;
 import prismConvenienceClass.PrismGridBagLayoutHandle;
 import prismConvenienceClass.PrismTableModel;
+import prismDatabase.SQLite;
 import prismRoot.PrismMain;
 
 public class Panel_SolveRun extends JLayeredPane implements ActionListener {
@@ -90,7 +96,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 	private int solving_method = 0;
 	
 	private File[] 	problem_file, solution_file, output_general_outputs_file, output_variables_file, output_constraints_file,
-					output_management_overview_file, output_management_details_file, output_fly_constraints_file, output_basic_constraints_file, output_flow_constraints_file;
+					output_management_overview_file, output_management_details_file, output_fly_constraints_file, output_basic_constraints_file, output_flow_constraints_file,
+					file_database;
 	
 	private DecimalFormat twoDForm = new DecimalFormat("#.##");	 // Only get 2 decimal
 	private DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd - HH:mm:ss");
@@ -182,6 +189,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				output_fly_constraints_file = new File[rowCount];
 				output_flow_constraints_file = new File[rowCount];
 				output_basic_constraints_file = new File[rowCount];
+				file_database = new File[rowCount];
 				
 				// Open 2 new parallel threads: 1 for running CPLEX, 1 for redirecting console to displayTextArea
 				Thread thread2 = new Thread() {
@@ -374,15 +382,16 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			output_flow_constraints_file[row] = new File(runFolder.getAbsolutePath() + "/output_07_flow_constraints.txt");
 			
 			// Database must be read first
-			File file_database = new File(runFolder.getAbsolutePath() + "/database.db");
-			Read_Database read_database = PrismMain.get_databases_linkedlist().return_read_database_if_exist(file_database);
+			file_database[row] = new File(runFolder.getAbsolutePath() + "/database.db");
+			Read_Database read_database = PrismMain.get_databases_linkedlist().return_read_database_if_exist(file_database[row]);
 			if (read_database == null) {
-				read_database = new Read_Database(file_database);	// Read the database
-				PrismMain.get_databases_linkedlist().update(file_database, read_database);			
+				read_database = new Read_Database(file_database[row]);	// Read the database
+				PrismMain.get_databases_linkedlist().update(file_database[row], read_database);			
 			}
 			
 			// Database Info
 			Object[][][] yield_tables_values = read_database.get_yield_tables_values();
+			String[] yield_tables_column_names = read_database.get_yield_tables_column_names();
 			Object[] yield_tables_names = read_database.get_yield_tables_names();			
 			List<String> yield_tables_names_list = new ArrayList<String>() {{ for (Object i : yield_tables_names) add(i.toString());}};		// Convert Object array to String list
 				
@@ -487,13 +496,13 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			int total_NGe_Prescriptions = 5;
 			int total_PBe_Prescriptions = 5;
 			int total_GSe_Prescriptions = 5;
-			int total_EAe_Prescriptions = 5;
-			int total_MS_Prescriptions = 5;
+			int total_EAe_Prescriptions = 6;
+			int total_MS_Prescriptions = 12;
 			int total_BS_Prescriptions = 5;
 			int total_NGr_Prescriptions = 5;
 			int total_PBr_Prescriptions = 5;
 			int total_GSr_Prescriptions = 5;
-			int total_EAr_Prescriptions = 5;
+			int total_EAr_Prescriptions = 6;
 			int SRDage;
 			
 			boolean allow_Non_Existing_Prescription = false;
@@ -519,14 +528,14 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			int[][] x = new int[model_strata.size()][total_methods];		//x(s1,s2,s3,s4,s5,s6)(q)
 			
 			
-			int[][][] xNGe = new int[model_strata.size()][total_PBe_Prescriptions][total_Periods + 1];		//xNGe(s1,s2,s3,s4,s5,s6)(i,t)	
+			int[][][] xNGe = new int[model_strata.size()][total_NGe_Prescriptions][total_Periods + 1];		//xNGe(s1,s2,s3,s4,s5,s6)(i,t)	
 			int[][][] xPBe = new int[model_strata.size()][total_PBe_Prescriptions][total_Periods + 1];		//xPBe(s1,s2,s3,s4,s5,s6)(i,t)
 			int[][][] xGSe = new int[model_strata.size()][total_GSe_Prescriptions][total_Periods + 1];			//xGSe(s1,s2,s3,s4,s5,s6)(i,t)
 			int[][][][][] xEAe = new int[model_strata.size()][total_Periods + 1][layer5.size()][total_EAe_Prescriptions][total_Periods + 1];		//xEAe(s1,s2,s3,s4,s5,s6)(tR)(s5R)(i)(t)
 									// total_Periods + 1 because tR starts from 1 to total_Periods, ignore the 0
-			int[][][] xMS = new int[model_strata.size()][total_PBe_Prescriptions][total_Periods + 1];		//xMS(s1,s2,s3,s4,s5,s6)(i,t)
-			int[][][] xBS = new int[model_strata.size()][total_PBe_Prescriptions][total_Periods + 1];		//xBS(s1,s2,s3,s4,s5,s6)(i,t)			
-			int[][][][][] xNGr = new int[model_strata_without_sizeclass_and_covertype.size()][layer5.size()][total_PBe_Prescriptions][total_Periods + 1][total_AgeClasses + 1];		//xNGr(s1,s2,s3,s4,s5)(i)(t)(a)
+			int[][][] xMS = new int[model_strata.size()][total_MS_Prescriptions][total_Periods + 1];		//xMS(s1,s2,s3,s4,s5,s6)(i,t)
+			int[][][] xBS = new int[model_strata.size()][total_BS_Prescriptions][total_Periods + 1];		//xBS(s1,s2,s3,s4,s5,s6)(i,t)			
+			int[][][][][] xNGr = new int[model_strata_without_sizeclass_and_covertype.size()][layer5.size()][total_NGr_Prescriptions][total_Periods + 1][total_AgeClasses + 1];		//xNGr(s1,s2,s3,s4,s5)(i)(t)(a)
 									// total_Periods + 1 because t starts from 1 to total_Periods, ignore the 0					
 			int[][][][][] xPBr = new int[model_strata_without_sizeclass_and_covertype.size()][layer5.size()][total_PBr_Prescriptions][total_Periods + 1][total_AgeClasses + 1];		//xPBr(s1,s2,s3,s4,s5)(i)(t)(a)
 									// total_Periods + 1 because t starts from 1 to total_Periods, ignore the 0
@@ -3592,8 +3601,14 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					try (BufferedWriter fileOut = new BufferedWriter(
 							new FileWriter(output_management_details_file[row]))) {
 						// Write variables info
-						fileOut.write("var_id" + "\t" + "var_name" + "\t" + "var_value" + "\t" + "var_reduced_cost"
-								+ "\t" + "db_prescription" + "\t" + "db_row_id" + "\t" + "db_status");
+						fileOut.write("var_id" + "\t" + "var_name" + "\t" + "var_value" + "\t" + "var_reduced_cost" + "\t" 
+						+ "var_method" + "\t" + "var_forest_status" + "\t" + "var_layer1" + "\t" + "var_layer2" + "\t" + "var_layer3" + "\t" + "var_layer4" + "\t" + "var_layer5" + "\t" + "var_layer6" + "\t" 
+						+ "var_choice" + "\t" + "var_period" + "\t" + "var_age" + "\t" + "var_rotation_period" + "\t" + "var_rotation_age" + "\t" + "var_regen_covertype" + "\t"
+						+ "data_connection" + "\t" + "prescription" + "\t" + "row_id");
+						for (int col = 2; col < yield_tables_column_names.length; col++) {		// do not write prescription & row_id column header
+							fileOut.write("\t" + yield_tables_column_names[col]);
+						}
+						
 						for (int i = 0; i < value.length; i++) {
 							if (value[i] != 0 && (vname[i].contains("NG") || vname[i].contains("PB") || vname[i].contains("GS") 
 									|| vname[i].contains("MS") || vname[i].contains("BS") || vname[i].contains("EA"))) {
@@ -3628,13 +3643,13 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									table_id_to_find = prescription_and_row[0];
 									row_id_to_find = prescription_and_row[1];
 								}
-								String db_status = "good";
+								String data_connection = "good";
 								
 								if (table_id_to_find == -9999) {
-									db_status = "missing yield table";
+									data_connection = "missing yield table";
 								} else {
 									if (yield_tables_values[table_id_to_find].length <= row_id_to_find) {
-										db_status = "missing row id = " + row_id_to_find;
+										data_connection = "missing row id = " + row_id_to_find;
 									}
 								}
 
@@ -3642,7 +3657,23 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								fileOut.write(i + "\t" + vname[i] 
 										+ "\t" + Double.valueOf(value[i] /*Double.valueOf(twoDForm.format(value[i])*/)
 										+ "\t" + Double.valueOf(reduceCost[i]) /*Double.valueOf(twoDForm.format(reduceCost[i]))*/ 
-										+ "\t" + yield_table_name_to_find + "\t" + row_id_to_find + "\t" + db_status);
+										+ "\t" + Get_Variable_Information.get_method(vname[i]) + "\t" + Get_Variable_Information.get_forest_status(vname[i])
+										+ "\t" + Get_Variable_Information.get_layer1(vname[i]) + "\t" + Get_Variable_Information.get_layer2(vname[i])
+										+ "\t" + Get_Variable_Information.get_layer3(vname[i]) + "\t" + Get_Variable_Information.get_layer4(vname[i])
+										+ "\t" + Get_Variable_Information.get_layer5(vname[i]) + "\t" + Get_Variable_Information.get_layer6(vname[i])
+										+ "\t" + Get_Variable_Information.get_timing_choice(vname[i]) + "\t" + Get_Variable_Information.get_period(vname[i])
+										+ "\t" + String.valueOf(Get_Variable_Information.get_age(vname[i])).replace("-9999",  "") 
+										+ "\t" + String.valueOf(Get_Variable_Information.get_rotation_period(vname[i])).replace("-9999",  "") 
+										+ "\t" + String.valueOf(Get_Variable_Information.get_rotation_age(vname[i])).replace("-9999",  "") 
+										+ "\t" + Get_Variable_Information.get_regenerated_covertype(vname[i])
+										+ "\t" + data_connection + "\t" + yield_table_name_to_find + "\t" + row_id_to_find);
+								for (int col = 2; col < yield_tables_column_names.length; col++) {		// do not write prescription & row_id in the yield_tables
+									if (data_connection.equals("good")) {
+										fileOut.write("\t" + yield_tables_values[table_id_to_find][row_id_to_find][col].toString());
+									} else {
+										fileOut.write("\t" + "");
+									}
+								}
 							}
 						}
 						fileOut.close();
@@ -3651,6 +3682,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					}
 					output_management_details_file[row].createNewFile();
 					
+					// Create a table inside the database.db
+					import_file_as_table_into_database(output_management_details_file[row], file_database[row]);
 					
 					// fly_constraints --> don't need to create this file, just delete the old file
 					output_fly_constraints_file[row].delete();		
@@ -4289,15 +4322,16 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			output_flow_constraints_file[row] = new File(runFolder.getAbsolutePath() + "/output_07_flow_constraints.txt");
 			
 			// Database must be read first
-			File file_database = new File(runFolder.getAbsolutePath() + "/database.db");
-			Read_Database read_database = PrismMain.get_databases_linkedlist().return_read_database_if_exist(file_database);
+			file_database[row] = new File(runFolder.getAbsolutePath() + "/database.db");
+			Read_Database read_database = PrismMain.get_databases_linkedlist().return_read_database_if_exist(file_database[row]);
 			if (read_database == null) {
-				read_database = new Read_Database(file_database);	// Read the database
-				PrismMain.get_databases_linkedlist().update(file_database, read_database);			
+				read_database = new Read_Database(file_database[row]);	// Read the database
+				PrismMain.get_databases_linkedlist().update(file_database[row], read_database);			
 			}
 			
 			// Database Info
 			Object[][][] yield_tables_values = read_database.get_yield_tables_values();
+			String[] yield_tables_column_names = read_database.get_yield_tables_column_names();
 			Object[] yield_tables_names = read_database.get_yield_tables_names();			
 			List<String> yield_tables_names_list = new ArrayList<String>() {{ for (Object i : yield_tables_names) add(i.toString());}};		// Convert Object array to String list
 				
@@ -4402,13 +4436,13 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			int total_NGe_Prescriptions = 5;
 			int total_PBe_Prescriptions = 5;
 			int total_GSe_Prescriptions = 5;
-			int total_EAe_Prescriptions = 5;
-			int total_MS_Prescriptions = 5;
+			int total_EAe_Prescriptions = 6;
+			int total_MS_Prescriptions = 12;
 			int total_BS_Prescriptions = 5;
 			int total_NGr_Prescriptions = 5;
 			int total_PBr_Prescriptions = 5;
 			int total_GSr_Prescriptions = 5;
-			int total_EAr_Prescriptions = 5;
+			int total_EAr_Prescriptions = 6;
 			int SRDage;
 			
 			boolean allow_Non_Existing_Prescription = false;
@@ -4440,8 +4474,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 //			int[][][] xGSe = new int[model_strata.size()][total_GSe_Prescriptions][total_Periods + 1];			//xGSe(s1,s2,s3,s4,s5,s6)(i,t)
 //			int[][][][][] xEAe = new int[model_strata.size()][total_Periods + 1][layer5.size()][total_EAe_Prescriptions][total_Periods + 1];		//xEAe(s1,s2,s3,s4,s5,s6)(tR)(s5R)(i)(t)
 //									// total_Periods + 1 because tR starts from 1 to total_Periods, ignore the 0
-//			int[][][] xMS = new int[model_strata.size()][total_PBe_Prescriptions][total_Periods + 1];		//xMS(s1,s2,s3,s4,s5,s6)(i,t)
-//			int[][][] xBS = new int[model_strata.size()][total_PBe_Prescriptions][total_Periods + 1];		//xBS(s1,s2,s3,s4,s5,s6)(i,t)			
+//			int[][][] xMS = new int[model_strata.size()][total_MS_Prescriptions][total_Periods + 1];		//xMS(s1,s2,s3,s4,s5,s6)(i,t)
+//			int[][][] xBS = new int[model_strata.size()][total_BS_Prescriptions][total_Periods + 1];		//xBS(s1,s2,s3,s4,s5,s6)(i,t)			
 //			int[][][][] xNGr = new int[model_strata_without_sizeclass_and_covertype.size()][layer5.size()][total_Periods + 1][total_AgeClasses + 1];		//xNGr(s1,s2,s3,s4,s5)(t)(a)
 //									// total_Periods + 1 because t starts from 1 to total_Periods, ignore the 0					
 //			int[][][][][] xPBr = new int[model_strata_without_sizeclass_and_covertype.size()][layer5.size()][total_PBr_Prescriptions][total_Periods + 1][total_AgeClasses + 1];		//xPBr(s1,s2,s3,s4,s5)(i)(t)(a)
@@ -8210,8 +8244,14 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					try (BufferedWriter fileOut = new BufferedWriter(
 							new FileWriter(output_management_details_file[row]))) {
 						// Write variables info
-						fileOut.write("var_id" + "\t" + "var_name" + "\t" + "var_value" + "\t" + "var_reduced_cost"
-								+ "\t" + "db_prescription" + "\t" + "db_row_id" + "\t" + "db_status");
+						fileOut.write("var_id" + "\t" + "var_name" + "\t" + "var_value" + "\t" + "var_reduced_cost" + "\t" 
+						+ "var_method" + "\t" + "var_forest_status" + "\t" + "var_layer1" + "\t" + "var_layer2" + "\t" + "var_layer3" + "\t" + "var_layer4" + "\t" + "var_layer5" + "\t" + "var_layer6" + "\t" 
+						+ "var_choice" + "\t" + "var_period" + "\t" + "var_age" + "\t" + "var_rotation_period" + "\t" + "var_rotation_age" + "\t" + "var_regen_covertype" + "\t"
+						+ "data_connection" + "\t" + "prescription" + "\t" + "row_id");
+						for (int col = 2; col < yield_tables_column_names.length; col++) {		// do not write prescription & row_id column header
+							fileOut.write("\t" + yield_tables_column_names[col]);
+						}
+						
 						for (int i = 0; i < value.length; i++) {
 							if (value[i] != 0 && (vname[i].contains("NG") || vname[i].contains("PB") || vname[i].contains("GS") 
 									|| vname[i].contains("MS") || vname[i].contains("BS") || vname[i].contains("EA"))) {
@@ -8229,7 +8269,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										int s3 = Collections.binarySearch(layer3, term[2]);
 										int s4 = Collections.binarySearch(layer4, term[3]);
 										int s5 = Collections.binarySearch(layer5, term[4]);
-										int s6 = Collections.binarySearch(layer6, term[5]);			
+										int s6 = Collections.binarySearch(layer6, term[5]);		
 										String strata_name = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4) + layer5.get(s5) + layer6.get(s6);
 										int strata_id = Collections.binarySearch(model_strata, strata_name);
 										
@@ -8246,13 +8286,13 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									table_id_to_find = prescription_and_row[0];
 									row_id_to_find = prescription_and_row[1];
 								}
-								String db_status = "good";
+								String data_connection = "good";
 								
 								if (table_id_to_find == -9999) {
-									db_status = "missing yield table";
+									data_connection = "missing yield table";
 								} else {
 									if (yield_tables_values[table_id_to_find].length <= row_id_to_find) {
-										db_status = "missing row id = " + row_id_to_find;
+										data_connection = "missing row id = " + row_id_to_find;
 									}
 								}
 
@@ -8260,7 +8300,23 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								fileOut.write(i + "\t" + vname[i] 
 										+ "\t" + Double.valueOf(value[i] /*Double.valueOf(twoDForm.format(value[i])*/)
 										+ "\t" + Double.valueOf(reduceCost[i]) /*Double.valueOf(twoDForm.format(reduceCost[i]))*/ 
-										+ "\t" + yield_table_name_to_find + "\t" + row_id_to_find + "\t" + db_status);
+										+ "\t" + Get_Variable_Information.get_method(vname[i]) + "\t" + Get_Variable_Information.get_forest_status(vname[i])
+										+ "\t" + Get_Variable_Information.get_layer1(vname[i]) + "\t" + Get_Variable_Information.get_layer2(vname[i])
+										+ "\t" + Get_Variable_Information.get_layer3(vname[i]) + "\t" + Get_Variable_Information.get_layer4(vname[i])
+										+ "\t" + Get_Variable_Information.get_layer5(vname[i]) + "\t" + Get_Variable_Information.get_layer6(vname[i])
+										+ "\t" + Get_Variable_Information.get_timing_choice(vname[i]) + "\t" + Get_Variable_Information.get_period(vname[i])
+										+ "\t" + String.valueOf(Get_Variable_Information.get_age(vname[i])).replace("-9999",  "") 
+										+ "\t" + String.valueOf(Get_Variable_Information.get_rotation_period(vname[i])).replace("-9999",  "") 
+										+ "\t" + String.valueOf(Get_Variable_Information.get_rotation_age(vname[i])).replace("-9999",  "") 
+										+ "\t" + Get_Variable_Information.get_regenerated_covertype(vname[i])
+										+ "\t" + data_connection + "\t" + yield_table_name_to_find + "\t" + row_id_to_find);
+								for (int col = 2; col < yield_tables_column_names.length; col++) {		// do not write prescription & row_id in the yield_tables
+									if (data_connection.equals("good")) {
+										fileOut.write("\t" + yield_tables_values[table_id_to_find][row_id_to_find][col].toString());
+									} else {
+										fileOut.write("\t" + "");
+									}
+								}
 							}
 						}
 						fileOut.close();
@@ -8269,6 +8325,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					}
 					output_management_details_file[row].createNewFile();
 					
+					// Create a table inside the database.db
+					import_file_as_table_into_database(output_management_details_file[row], file_database[row]);
 					
 					// fly_constraints --> don't need to create this file, just delete the old file
 					output_fly_constraints_file[row].delete();		
@@ -8895,6 +8953,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 	}
 	
 	
+	
+	// For LPSOLVE only ----------------------------------------------------------------------------------------
 	private static int[] plus1toIndex(int[] array) {
 		int[] plus1Array = new int[array.length];
 		for (int i = 0; i < array.length; ++i) {
@@ -8937,4 +8997,49 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 	private static boolean isSolutionValid(int status) {
 		return (status == 0) || (status == 1) || (status == 11) || (status == 12);
 	}
+	// End of For LPSOLVE only ----------------------------------------------------------------------------------------
+	
+	
+	
+	private void import_file_as_table_into_database(File file_to_import, File database_file) {
+		try {
+			Class.forName("org.sqlite.JDBC").newInstance();
+			Connection conn = DriverManager.getConnection("jdbc:sqlite:" + database_file.getAbsolutePath());
+
+			conn.setAutoCommit(false);										
+			PreparedStatement pst = null;
+			
+			// Get info from the file
+			SQLite.create_importTable_Stm(file_to_import, "\t");		// Read file into arrays
+			String[] statement = new String[SQLite.get_importTable_TotalLines()];		// this arrays hold all the statements
+			statement = SQLite.get_importTable_Stm();	
+
+			// Prepared execution
+			String tableName = file_to_import.getName();
+			if (tableName.contains(".")) tableName = tableName.substring(0, tableName.lastIndexOf('.'));
+			pst = conn.prepareStatement("DROP TABLE IF EXISTS " + "[" + tableName + "]");
+			pst.executeUpdate();
+			
+			for (int line = 0; line < SQLite.get_importTable_TotalLines(); line++) {
+				pst = conn.prepareStatement(statement[line]);
+				pst.executeUpdate();
+			}
+		
+			// Commit execution
+			pst.close();
+			conn.commit(); // commit all prepared execution, this is important
+			conn.close();
+
+		} catch (InstantiationException e) {
+			JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
+		} catch (IllegalAccessException e) {
+			JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
+		} catch (ClassNotFoundException e) {
+			JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
+		}
+	}
+	
+	
 }

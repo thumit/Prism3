@@ -95,6 +95,7 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultFormatter;
 
 import prismConvenienceClass.FilesHandle;
@@ -1302,9 +1303,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						for (int i = min_age_cut_existing; i <= max_age_cut_existing; i++) {		
 							model.addElement(i);
 						}
-
 					} else {
 						model.removeAllElements();
+						model.addElement((int) -9999);
 					}
 				} else if (column == 4 || column == 5) {
 					if (rotation_ranges[0].contains(covertype)) {
@@ -1312,9 +1313,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						for (int i = min_age_cut_regeneration; i <= max_age_cut_regeneration; i++) {		
 							model.addElement(i);
 						}
-
 					} else {
 						model.removeAllElements();
+						model.addElement((int) -9999);
 					}
 				}
 			      
@@ -3207,11 +3208,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 							// update readme.txt in General Inputs
 							DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd   -   HH:mm:ss");
 							readme.setText(null);
+							
+							readme.append("Model is last edited by:     " + PrismMain.get_prism_version()  + "     on     " + dateFormat.format(new Date()) + "\n");
+							readme.append("Model is created by:     " + PrismMain.get_prism_version()   + "     on     " + dateFormat.format(new Date()) + "\n");
 							readme.append("Model location:     " + currentRunFolder + "\n");
 							readme.append("Model database:     " + currentRunFolder.getAbsolutePath() + "\\database.db" + "\n");
 							readme.append("Original database:     " + file_database.getAbsolutePath() + "\n");
-							readme.append("Date and time when original database is imported:     " + dateFormat.format(new Date()) + "\n");
-							readme.append("Model is edited by:     " + PrismMain.get_prism_version() + "\n");
 							readme.append("------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
 							readme.append("----------------------------------------------------- ADDITIONAL MODEL DESCRIPTION -----------------------------------------------------\n");
 							readme.append("------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
@@ -7229,10 +7231,18 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 		FileWriter pw;
 		try {
+			// Clear first line
+			if (readme.getText().startsWith("Model is last edited by")) {
+				int end = readme.getLineEndOffset(0); 
+				readme.replaceRange("", 0, end);
+			}
+			// Write new last time edited
+			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd   -   HH:mm:ss");
+			readme.getDocument().insertString(0, "Model is last edited by:     " + PrismMain.get_prism_version()  + "     on     " + dateFormat.format(new Date()) + "\n", null);
 			pw = new FileWriter(currentRunFolder.getAbsolutePath() + "/" + "readme.txt");
 			readme.write(pw);
 			pw.close();
-		} catch (IOException e) {
+		} catch (BadLocationException | IOException e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 		}
 	}

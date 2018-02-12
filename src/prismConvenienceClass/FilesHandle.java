@@ -162,6 +162,7 @@ public class FilesHandle {
 		return databasesFolder;
 	}	
 
+	
 	public static File get_temporaryFolder() {		
 		String workingLocation = get_workingLocation();
 		File temporaryFolder = new File(workingLocation + "/Temporary");
@@ -203,6 +204,68 @@ public class FilesHandle {
 
 		return file;
 	}			
+	
+	
+	public static File get_file_dbms_system_sql_library() {
+		// Read sql_library from the system
+		File file_dbms_system_sql_library = null;
+		try {
+			file_dbms_system_sql_library = new File(get_temporaryFolder().getAbsolutePath() + "/" + "dbms_system_sql_library.txt");
+			file_dbms_system_sql_library.deleteOnExit();
+
+			InputStream initialStream = PrismMain.get_main().getClass().getResourceAsStream("/dbms_system_sql_library.txt");
+			byte[] buffer = new byte[initialStream.available()];
+			initialStream.read(buffer);
+
+			OutputStream outStream = new FileOutputStream(file_dbms_system_sql_library);
+			outStream.write(buffer);
+
+			initialStream.close();
+			outStream.close();
+		} catch (FileNotFoundException e1) {
+			System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+		} catch (IOException e2) {
+			System.err.println(e2.getClass().getName() + ": " + e2.getMessage());
+		} 
+		return file_dbms_system_sql_library;
+	}
+	
+	
+	public static File get_file_dbms_user_sql_library() {
+		File file_dbms_user_sql_library = new File(get_temporaryFolder().getAbsolutePath() + "/" + "dbms_user_sql_library.txt");
+		return file_dbms_user_sql_library;
+	}
+	
+	
+	public static File get_file_output_system_sql_library() {
+		// Read sql_library from the system
+		File file_output_system_sql_library = null;
+		try {
+			file_output_system_sql_library = new File(get_temporaryFolder().getAbsolutePath() + "/" + "output_system_sql_library.txt");
+			file_output_system_sql_library.deleteOnExit();
+
+			InputStream initialStream = PrismMain.get_main().getClass().getResourceAsStream("/output_system_sql_library.txt");
+			byte[] buffer = new byte[initialStream.available()];
+			initialStream.read(buffer);
+
+			OutputStream outStream = new FileOutputStream(file_output_system_sql_library);
+			outStream.write(buffer);
+
+			initialStream.close();
+			outStream.close();
+		} catch (FileNotFoundException e1) {
+			System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+		} catch (IOException e2) {
+			System.err.println(e2.getClass().getName() + ": " + e2.getMessage());
+		} 
+		return file_output_system_sql_library;
+	}
+	
+	
+	public static File get_file_output_user_sql_library() {
+		File file_output_user_sql_library = new File(get_temporaryFolder().getAbsolutePath() + "/" + "output_user_sql_library.txt");
+		return file_output_user_sql_library;
+	}
 	
 	
 	public static File chosenDefinition() {

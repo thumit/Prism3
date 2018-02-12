@@ -615,7 +615,7 @@ public class Read_Database {
 		layer1.add("EA_R");
 		
 		List<String> layer2 = new ArrayList<String>();		// timing choice
-		for (int i = 0; i <= 4; i++) {
+		for (int i = 0; i <= 11; i++) {
 			layer2.add(Integer.toString(i));
 		}		
 			

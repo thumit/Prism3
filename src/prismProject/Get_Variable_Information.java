@@ -212,43 +212,43 @@ public class Get_Variable_Information {
 	
 	
 	public static String get_layer1(String var_name) {
-		layer1 = "Not Vailable";
+		layer1 = "";
 		get_all_terms_from_name(var_name);
 		return layer1;
 	}
 
 	public static String get_layer2(String var_name) {
-		layer2 = "Not Vailable";
+		layer2 = "";
 		get_all_terms_from_name(var_name);
 		return layer2;
 	}	
 	
 	public static String get_layer3(String var_name) {
-		layer3 = "Not Vailable";
+		layer3 = "";
 		get_all_terms_from_name(var_name);
 		return layer3;
 	}
 	
 	public static String get_layer4(String var_name) {
-		layer4 = "Not Vailable";
+		layer4 = "";
 		get_all_terms_from_name(var_name);
 		return layer4;
 	}
 	
 	public static String get_layer5(String var_name) {
-		layer5 = "Not Vailable";
+		layer5 = "";
 		get_all_terms_from_name(var_name);
 		return layer5;
 	}
 	
 	public static String get_layer6(String var_name) {
-		layer6 = "Not Vailable";
+		layer6 = "";
 		get_all_terms_from_name(var_name);
 		return layer6;
 	}
 	
 	public static String get_method(String var_name) {
-		method = "Not Vailable";
+		method = "";
 		get_all_terms_from_name(var_name);
 		return method;
 	}
@@ -260,7 +260,7 @@ public class Get_Variable_Information {
 	}	
 	
 	public static String get_forest_status(String var_name) {
-		forest_status = "Not Vailable";
+		forest_status = "";
 		get_all_terms_from_name(var_name);
 		return forest_status;
 	}

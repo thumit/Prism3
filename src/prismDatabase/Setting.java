@@ -38,12 +38,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -87,7 +83,6 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
-import prismConvenienceClass.FilesHandle;
 import prismConvenienceClass.IconHandle;
 import prismConvenienceClass.PrismTableModel;
 import prismConvenienceClass.ToolBarWithBgImage;
@@ -96,8 +91,8 @@ import prismRoot.PrismMain;
 public class Setting {
 	private Panel_Query_Libraries query_panel;
 	
-	public Setting(JTable database_table, String conn_path) {
-		query_panel = new Panel_Query_Libraries(database_table, conn_path);
+	public Setting(File file_system_sql_library, File file_user_sql_library, JTable database_table, String conn_path) {
+		query_panel = new Panel_Query_Libraries(file_system_sql_library, file_user_sql_library, database_table, conn_path);
 	}
 	
 	public void show_popup() {
@@ -120,7 +115,7 @@ public class Setting {
 		popup_scroll.setViewportView(query_panel);
 
 		String ExitOption[] = { "Exit" };
-		int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), popup_scroll, "Customize Queries - Note that Prism always restores 'SYSTEM LIBRARY' to default",
+		int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), popup_scroll, "Customize Queries - Note that Prism always restores 'System Library' to default",
 				JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, ExitOption, ExitOption[0]);
 		if (response == 0) {
 		}
@@ -134,7 +129,7 @@ public class Setting {
 	
 	
 	//--------------------------------------------------------------------------------------------------------------------------
-	class Panel_Query_Libraries extends JLayeredPane {
+	public class Panel_Query_Libraries extends JLayeredPane {
 		private JPanel radio_panel; 
 		private ButtonGroup radio_group; 
 		private JRadioButton[] radio_button; 
@@ -145,11 +140,9 @@ public class Setting {
 		
 		private JScrollPane database_table_scrollpane = new JScrollPane();
 		
-		public Panel_Query_Libraries(JTable database_table, String conn_path) {
+		public Panel_Query_Libraries(File file_system_sql_library, File file_user_sql_library, JTable database_table, String conn_path) {
 			setLayout(new BorderLayout());
 			// Some set up
-			File file_system_sql_library = get_file_system_sql_library();
-			File file_user_sql_library = get_file_user_sql_library();
 			system_queries_list = get_queries_list(file_system_sql_library); 
 			user_queries_list = get_queries_list(file_user_sql_library); 
 			system_table_panel = new Table_Panel(database_table_scrollpane, database_table, conn_path, file_system_sql_library, system_queries_list);
@@ -171,8 +164,8 @@ public class Setting {
 			radio_group = new ButtonGroup();
 			
 			radio_button  = new JRadioButton[2];
-			radio_button[0]= new JRadioButton("SYSTEM LIBRARY");
-			radio_button[1]= new JRadioButton("USER LIBRARY");
+			radio_button[0]= new JRadioButton("System Library");
+			radio_button[1]= new JRadioButton("User Library");
 			radio_button[1].setSelected(true);
 			for (int i = 0; i < radio_button.length; i++) {
 					radio_group.add(radio_button[i]);
@@ -266,37 +259,6 @@ public class Setting {
 			
 			super.add(radio_panel, BorderLayout.NORTH);
 			super.add(split_pane, BorderLayout.CENTER);
-		}
-		
-		//--------------------------------------------------------------------------------------------------------------------------
-		public File get_file_system_sql_library() {
-			// Read sql_library from the system
-			File file_system_sql_library = null;
-			try {
-				file_system_sql_library = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "system_sql_library.txt");
-				file_system_sql_library.deleteOnExit();
-
-				InputStream initialStream = getClass().getResourceAsStream("/system_sql_library.txt");
-				byte[] buffer = new byte[initialStream.available()];
-				initialStream.read(buffer);
-
-				OutputStream outStream = new FileOutputStream(file_system_sql_library);
-				outStream.write(buffer);
-
-				initialStream.close();
-				outStream.close();
-			} catch (FileNotFoundException e1) {
-				System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
-			} catch (IOException e2) {
-				System.err.println(e2.getClass().getName() + ": " + e2.getMessage());
-			} 
-			return file_system_sql_library;
-		}
-		
-		//--------------------------------------------------------------------------------------------------------------------------
-		public File get_file_user_sql_library() {
-			File file_user_sql_library = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "user_sql_library.txt");
-			return file_user_sql_library;
 		}
 		
 		//--------------------------------------------------------------------------------------------------------------------------
@@ -875,6 +837,7 @@ public class Setting {
 							System.err.println(e.getClass().getName() + ": " + e.getMessage());
 						} 
 					}
+					table.setRowHeight(20);
 				}
 			});	
 
