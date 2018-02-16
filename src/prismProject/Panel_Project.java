@@ -394,7 +394,7 @@ public class Panel_Project extends JLayeredPane {
 							for (int row = 0; row < rowCount; row++) {
 								String[] rowValue = a[row + 1].split(delimited);	//tab delimited	
 								for (int col = 0; col < colCount; col++) {
-									data[row][col] = rowValue[col];
+									data[row][col] = (col < rowValue.length) ? rowValue[col] : "";
 								}	
 							}	
 							
@@ -457,7 +457,10 @@ public class Panel_Project extends JLayeredPane {
 								database_table.setDefaultEditor(Object.class, null);	// make the data un-editable
 							}
 						} catch (Exception e2) {
+							System.err.println(e2.getClass().getName() + ": " + e2.getMessage());
 							System.out.println("Fail to create table data. Often this is only when Readme.txt has nothing");
+							table = new JTable();
+							database_table = new JTable();
 						}
 			     		
 			     					     		
@@ -522,7 +525,7 @@ public class Panel_Project extends JLayeredPane {
 //							c.weighty = 1;	
 //							tempPanel.add(tempArea, c);
 							
-							management_details_SQL_panel= null;
+							management_details_SQL_panel = null;
 							management_details_NOSQL_panel = null;
 							String conn_path = "jdbc:sqlite:" + currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/database.db";
 							management_details_SQL_panel = new Output_Panel_Management_Details_SQL(database_table, conn_path);

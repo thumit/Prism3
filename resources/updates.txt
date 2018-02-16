@@ -659,3 +659,17 @@ All changes in this block are associated with PrismAlpha1.0.25.jar, Prism Formul
 	- In output_05: show the title directly
 	- In Database Management: show the title in the query textfield
 All changes in this block are associated with PrismAlpha1.0.27.jar, Prism Formulation 02.docx, Prism Database 02.docx  
+--------------------------------------------------------------------------
+
+293. Fix to allow import table with some records having total values less or more than the total columns headers. The fix is implemented on:
+	- SQLite --> create_importTable_Stm
+	- Panel_Project --> data[row][col] = (col < rowValue.length) ? rowValue[col] : "";   (when populate data matrix for table and database_table)
+294. If either creating table or database-table is fail --> set both tables to null. So the click when fail would not load the previous table or database_table
+295. For output_05_management_details --> Print out var_age for all variables, and var_rotation_age for EA_E variable
+	- Get_Variable_Information: get_all_terms_from_name --> add age calculation for EA_R
+	- Get_Variable_Information: get_age --> add age calculation for existing variable
+	- Get_Variable_Information: get_rotation_age --> add rotation_age calculation for EA_E variable
+	- Also fix (trim) many places in Panel_SolveRun to use get_rotation_age()
+296. Add some more queries into output_system_sql_library
+All changes in this block are associated with PrismAlpha1.0.28.jar, Prism Formulation 02.docx, Prism Database 02.docx
+--------------------------------------------------------------------------

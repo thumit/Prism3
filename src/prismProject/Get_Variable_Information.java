@@ -16,6 +16,9 @@
  ******************************************************************************/
 package prismProject;
 
+import java.util.Collections;
+import java.util.List;
+
 public class Get_Variable_Information {
 
 	private static String layer1, layer2, layer3, layer4, layer5, layer6, method, regenerated_covertype;	// regenerated_covertype = s5R = covertype_after, while layer5 = covertype_before
@@ -147,7 +150,7 @@ public class Get_Variable_Information {
 			regenerated_covertype = term[7];
 			timing_choice = Integer.parseInt(term[8]);
 			period = Integer.parseInt(term[9]);
-
+			age = rotation_age + period - rotation_period; // a = aR + t - tR
 			
 			method = "EA";
 			forest_status = "R";
@@ -271,9 +274,16 @@ public class Get_Variable_Information {
 		return rotation_period;
 	}
 	
-	public static int get_rotation_age(String var_name) {
+	public static int get_rotation_age(String var_name, int[] starting_age, List<String> model_strata) {
 		rotation_age = -9999;
 		get_all_terms_from_name(var_name);
+		
+		// Recalculate age for existing variable
+		if (method.equals("EA") && forest_status.equals("E")) {	// EA_E variables
+			String strata = layer1 + layer2 + layer3 + layer4 + layer5 + layer6;
+			int strata_id = Collections.binarySearch(model_strata, strata);
+			rotation_age = rotation_period + starting_age[strata_id] - 1;
+		}
 		return rotation_age;
 	}
 	
@@ -283,9 +293,16 @@ public class Get_Variable_Information {
 		return period;
 	}
 	
-	public static int get_age(String var_name) {
+	public static int get_age(String var_name, int[] starting_age, List<String> model_strata) {
 		age = -9999;
 		get_all_terms_from_name(var_name);
+		
+		// Recalculate age for existing variable
+		if (forest_status.equals("E")) {	// existing variables
+			String strata = layer1 + layer2 + layer3 + layer4 + layer5 + layer6;
+			int strata_id = Collections.binarySearch(model_strata, strata);
+			age = starting_age[strata_id] + period - 1;
+		}
 		return age;
 	}
 	

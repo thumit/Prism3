@@ -2050,21 +2050,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			double[] var_cost_value  = new double[vname.length];
 			
 			for (int i = 0; i < vname.length; i++) {
-				int var_rotation_age = -9999;	// If variables is not EA variable	
-				
-				if (vname[i].startsWith("xEA_E_")) {
-					String strata = Get_Variable_Information.get_layer1(vname[i])
-							+ Get_Variable_Information.get_layer2(vname[i])
-							+ Get_Variable_Information.get_layer3(vname[i])
-							+ Get_Variable_Information.get_layer4(vname[i])
-							+ Get_Variable_Information.get_layer5(vname[i])
-							+ Get_Variable_Information.get_layer6(vname[i]);
-					int strata_id = Collections.binarySearch(model_strata, strata);							
-					var_rotation_age = Get_Variable_Information.get_rotation_period(vname[i]) + starting_age[strata_id] - 1;	// rotationAge = tR + starting_age[strata_id] - 1;
-				} else if (vname[i].startsWith("xEA_R_")) {
-					var_rotation_age = Get_Variable_Information.get_rotation_age(vname[i]); 
-				} 
-				
+				int var_rotation_age = Get_Variable_Information.get_rotation_age(vname[i], starting_age, model_strata); 
 				int[] prescription_and_row = get_prescription_and_row(yield_tables_names_list, vname[i], var_rotation_age);
 				var_prescription[i] = prescription_and_row[0];
 				var_row_id[i] = prescription_and_row[1];
@@ -2382,7 +2368,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 					int s5 = layer5.indexOf(strata.substring(4,5));						
 					int t = period;
 					int tR = rotation_period;
-					int aR = Get_Variable_Information.get_rotation_age(var_name);
+					int aR = Get_Variable_Information.get_rotation_age(var_name, starting_age, model_strata);
 					
 					
 					double cost_value = 0;									
@@ -2431,7 +2417,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 				if (method.equals("NG_R")) {		
 					int s5 = layer5.indexOf(strata.substring(4,5));						
 					int t = period;
-					int a = Get_Variable_Information.get_age(var_name);
+					int a = Get_Variable_Information.get_age(var_name, starting_age, model_strata);
 					
 
 					double cost_value = 0;									
@@ -2480,7 +2466,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 				if (method.equals("PB_R")) {		
 					int s5 = layer5.indexOf(strata.substring(4,5));						
 					int t = period;
-					int a = Get_Variable_Information.get_age(var_name);
+					int a = Get_Variable_Information.get_age(var_name, starting_age, model_strata);
 					
 					
 					double cost_value = 0;									
@@ -2529,7 +2515,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 				if (method.equals("GS_R")) {		
 					int s5 = layer5.indexOf(strata.substring(4,5));						
 					int t = period;
-					int a = Get_Variable_Information.get_age(var_name);
+					int a = Get_Variable_Information.get_age(var_name, starting_age, model_strata);
 					
 					
 					double cost_value = 0;									

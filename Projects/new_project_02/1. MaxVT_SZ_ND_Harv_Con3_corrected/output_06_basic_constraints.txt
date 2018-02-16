@@ -1,0 +1,402 @@
+bc_id	bc_description	bc_type	bc_multiplier	lowerbound	lowerbound_perunit_penalty	upperbound	upperbound_perunit_penalty	bookeeping_var_id	bookeeping_var_name	bookeeping_var_value	bookeeping_var_reduced_cost	total_penalty
+1	No T,V,W in IR	HARD	1.0	null	null	0.0	null	630	z_0	0.0	-49.53562808495686	0.0
+2	No D,F,G in BF	HARD	1.0	null	null	0.0	null	631	z_1	0.0	-32.20317231183383	0.0
+123	vtc ..... No dynamic restriction ..... period 1	SOFT	1.0	363500.0	1.0	726900.0	1.0	0	y_0	93132.95760000007	0.0	270367.0423999999
+124	vtc ..... No dynamic restriction ..... period 2	SOFT	1.0	363500.0	1.0	726900.0	1.0	1	y_1	123714.89497070207	0.0	239785.10502929793
+125	vtc ..... No dynamic restriction ..... period 3	SOFT	1.0	363500.0	1.0	726900.0	1.0	2	y_2	142967.28021913182	0.0	220532.71978086818
+126	vtc ..... No dynamic restriction ..... period 4	SOFT	1.0	363500.0	1.0	726900.0	1.0	3	y_3	179925.1132046104	0.0	183574.8867953896
+127	vtc ..... No dynamic restriction ..... period 5	SOFT	1.0	363500.0	1.0	726900.0	1.0	4	y_4	187844.59165275746	0.0	175655.40834724254
+128	vtc ..... No dynamic restriction ..... period 6	SOFT	1.0	363500.0	1.0	726900.0	1.0	5	y_5	216546.91518601123	0.0	146953.08481398877
+129	vtc ..... No dynamic restriction ..... period 7	SOFT	1.0	363500.0	1.0	726900.0	1.0	6	y_6	249063.5937799593	0.0	114436.40622004069
+130	vtc ..... No dynamic restriction ..... period 8	SOFT	1.0	363500.0	1.0	726900.0	1.0	7	y_7	270618.1960671142	0.0	92881.80393288581
+131	vtc ..... No dynamic restriction ..... period 9	SOFT	1.0	363500.0	1.0	726900.0	1.0	8	y_8	290834.9752873991	0.0	72665.02471260092
+132	vtc ..... No dynamic restriction ..... period 10	SOFT	1.0	363500.0	1.0	726900.0	1.0	9	y_9	308782.06590867153	0.0	54717.93409132847
+133	vtc ..... No dynamic restriction ..... period 11	SOFT	1.0	363500.0	1.0	726900.0	1.0	10	y_10	318480.750290713	0.0	45019.24970928702
+134	vtc ..... No dynamic restriction ..... period 12	SOFT	1.0	363500.0	1.0	726900.0	1.0	11	y_11	327268.1896090039	0.0	36231.81039099611
+135	vtc ..... No dynamic restriction ..... period 13	SOFT	1.0	363500.0	1.0	726900.0	1.0	12	y_12	334739.95238874	0.0	28760.04761125997
+136	vtc ..... No dynamic restriction ..... period 14	SOFT	1.0	363500.0	1.0	726900.0	1.0	13	y_13	342022.47534755076	0.0	21477.52465244924
+137	vtc ..... No dynamic restriction ..... period 15	SOFT	1.0	363500.0	1.0	726900.0	1.0	14	y_14	347755.67060657253	0.0	15744.32939342747
+138	vtd ..... No dynamic restriction ..... period 1	SOFT	1.0	242300.0	1.0	363500.0	1.0	15	y_15	759726.518799999	0.0	396226.51879999903
+139	vtd ..... No dynamic restriction ..... period 2	SOFT	1.0	242300.0	1.0	363500.0	1.0	16	y_16	719830.766510365	0.0	356330.76651036495
+140	vtd ..... No dynamic restriction ..... period 3	SOFT	1.0	242300.0	1.0	363500.0	1.0	17	y_17	702302.3166436536	0.0	338802.31664365355
+141	vtd ..... No dynamic restriction ..... period 4	SOFT	1.0	242300.0	1.0	363500.0	1.0	18	y_18	670284.6619734522	0.0	306784.6619734522
+142	vtd ..... No dynamic restriction ..... period 5	SOFT	1.0	242300.0	1.0	363500.0	1.0	19	y_19	668222.71306713	0.0	304722.71306712995
+143	vtd ..... No dynamic restriction ..... period 6	SOFT	1.0	242300.0	1.0	363500.0	1.0	20	y_20	642069.7211612714	0.0	278569.72116127145
+144	vtd ..... No dynamic restriction ..... period 7	SOFT	1.0	242300.0	1.0	363500.0	1.0	21	y_21	613434.4512437502	0.0	249934.45124375017
+145	vtd ..... No dynamic restriction ..... period 8	SOFT	1.0	242300.0	1.0	363500.0	1.0	22	y_22	594116.7132351525	0.0	230616.71323515254
+146	vtd ..... No dynamic restriction ..... period 9	SOFT	1.0	242300.0	1.0	363500.0	1.0	23	y_23	590261.219818019	0.0	226761.21981801896
+147	vtd ..... No dynamic restriction ..... period 10	SOFT	1.0	242300.0	1.0	363500.0	1.0	24	y_24	609316.4744619805	0.0	245816.4744619805
+148	vtd ..... No dynamic restriction ..... period 11	SOFT	1.0	242300.0	1.0	363500.0	1.0	25	y_25	603653.9116722286	0.0	240153.9116722286
+149	vtd ..... No dynamic restriction ..... period 12	SOFT	1.0	242300.0	1.0	363500.0	1.0	26	y_26	600256.1693491504	0.0	236756.16934915038
+150	vtd ..... No dynamic restriction ..... period 13	SOFT	1.0	242300.0	1.0	363500.0	1.0	27	y_27	589690.8823072334	0.0	226190.8823072334
+151	vtd ..... No dynamic restriction ..... period 14	SOFT	1.0	242300.0	1.0	363500.0	1.0	28	y_28	551604.3118657892	0.0	188104.31186578923
+152	vtd ..... No dynamic restriction ..... period 15	SOFT	1.0	242300.0	1.0	363500.0	1.0	29	y_29	550369.5394642926	0.0	186869.53946429258
+153	vte ..... No dynamic restriction ..... period 1	SOFT	1.0	121200.0	1.0	242300.0	1.0	30	y_30	222245.47360000006	0.0	0.0
+154	vte ..... No dynamic restriction ..... period 2	SOFT	1.0	121200.0	1.0	242300.0	1.0	31	y_31	231559.28851893175	0.0	0.0
+155	vte ..... No dynamic restriction ..... period 3	SOFT	1.0	121200.0	1.0	242300.0	1.0	32	y_32	229835.35313721484	0.0	0.0
+156	vte ..... No dynamic restriction ..... period 4	SOFT	1.0	121200.0	1.0	242300.0	1.0	33	y_33	224638.3836666947	0.0	0.0
+157	vte ..... No dynamic restriction ..... period 5	SOFT	1.0	121200.0	1.0	242300.0	1.0	34	y_34	218284.04948230367	0.0	0.0
+158	vte ..... No dynamic restriction ..... period 6	SOFT	1.0	121200.0	1.0	242300.0	1.0	35	y_35	215637.9329826962	0.0	0.0
+159	vte ..... No dynamic restriction ..... period 7	SOFT	1.0	121200.0	1.0	242300.0	1.0	36	y_36	211812.75208993035	0.0	0.0
+160	vte ..... No dynamic restriction ..... period 8	SOFT	1.0	121200.0	1.0	242300.0	1.0	37	y_37	209610.41482465682	0.0	0.0
+161	vte ..... No dynamic restriction ..... period 9	SOFT	1.0	121200.0	1.0	242300.0	1.0	38	y_38	193287.70808774163	0.0	0.0
+162	vte ..... No dynamic restriction ..... period 10	SOFT	1.0	121200.0	1.0	242300.0	1.0	39	y_39	156303.59007096026	0.0	0.0
+163	vte ..... No dynamic restriction ..... period 11	SOFT	1.0	121200.0	1.0	242300.0	1.0	40	y_40	151771.28132815106	0.0	0.0
+164	vte ..... No dynamic restriction ..... period 12	SOFT	1.0	121200.0	1.0	242300.0	1.0	41	y_41	146398.33654871432	0.0	0.0
+165	vte ..... No dynamic restriction ..... period 13	SOFT	1.0	121200.0	1.0	242300.0	1.0	42	y_42	149574.8300977838	0.0	0.0
+166	vte ..... No dynamic restriction ..... period 14	SOFT	1.0	121200.0	1.0	242300.0	1.0	43	y_43	180763.7407182896	0.0	0.0
+167	vte ..... No dynamic restriction ..... period 15	SOFT	1.0	121200.0	1.0	242300.0	1.0	44	y_44	176271.61997505417	0.0	0.0
+168	vtf ..... No dynamic restriction ..... period 1	SOFT	1.0	242300.0	1.0	363500.0	1.0	45	y_45	331704.4145000001	0.0	0.0
+169	vtf ..... No dynamic restriction ..... period 2	SOFT	1.0	242300.0	1.0	363500.0	1.0	46	y_46	334948.5859296439	0.0	0.0
+170	vtf ..... No dynamic restriction ..... period 3	SOFT	1.0	242300.0	1.0	363500.0	1.0	47	y_47	329226.8414311516	0.0	0.0
+171	vtf ..... No dynamic restriction ..... period 4	SOFT	1.0	242300.0	1.0	363500.0	1.0	48	y_48	325262.25797348877	0.0	0.0
+172	vtf ..... No dynamic restriction ..... period 5	SOFT	1.0	242300.0	1.0	363500.0	1.0	49	y_49	321317.81142546225	0.0	0.0
+173	vtf ..... No dynamic restriction ..... period 6	SOFT	1.0	242300.0	1.0	363500.0	1.0	50	y_50	313687.1780008039	0.0	0.0
+174	vtf ..... No dynamic restriction ..... period 7	SOFT	1.0	242300.0	1.0	363500.0	1.0	51	y_51	310866.5087900905	0.0	0.0
+175	vtf ..... No dynamic restriction ..... period 8	SOFT	1.0	242300.0	1.0	363500.0	1.0	52	y_52	371158.52105583827	0.0	7658.521055838268
+176	vtf ..... No dynamic restriction ..... period 9	SOFT	1.0	242300.0	1.0	363500.0	1.0	53	y_53	380575.07163612347	0.0	17075.071636123466
+177	vtf ..... No dynamic restriction ..... period 10	SOFT	1.0	242300.0	1.0	363500.0	1.0	54	y_54	375450.85897417966	0.0	11950.85897417966
+178	vtf ..... No dynamic restriction ..... period 11	SOFT	1.0	242300.0	1.0	363500.0	1.0	55	y_55	373195.8725011539	0.0	9695.872501153906
+179	vtf ..... No dynamic restriction ..... period 12	SOFT	1.0	242300.0	1.0	363500.0	1.0	56	y_56	370142.07717200066	0.0	6642.07717200066
+180	vtf ..... No dynamic restriction ..... period 13	SOFT	1.0	242300.0	1.0	363500.0	1.0	57	y_57	366573.6866317896	0.0	3073.6866317896056
+181	vtf ..... No dynamic restriction ..... period 14	SOFT	1.0	242300.0	1.0	363500.0	1.0	58	y_58	362586.0055977943	0.0	0.0
+182	vtf ..... No dynamic restriction ..... period 15	SOFT	1.0	242300.0	1.0	363500.0	1.0	59	y_59	363500.0	0.0	0.0
+183	vtg ..... No dynamic restriction ..... period 1	SOFT	1.0	363500.0	1.0	726900.0	1.0	60	y_60	319525.3699000004	0.0	43974.6300999996
+184	vtg ..... No dynamic restriction ..... period 2	SOFT	1.0	363500.0	1.0	726900.0	1.0	61	y_61	315737.0191660643	0.0	47762.980833935726
+185	vtg ..... No dynamic restriction ..... period 3	SOFT	1.0	363500.0	1.0	726900.0	1.0	62	y_62	311741.7107789681	0.0	51758.28922103188
+186	vtg ..... No dynamic restriction ..... period 4	SOFT	1.0	363500.0	1.0	726900.0	1.0	63	y_63	310394.42590159795	0.0	53105.57409840205
+187	vtg ..... No dynamic restriction ..... period 5	SOFT	1.0	363500.0	1.0	726900.0	1.0	64	y_64	305045.03976913786	0.0	58454.96023086214
+188	vtg ..... No dynamic restriction ..... period 6	SOFT	1.0	363500.0	1.0	726900.0	1.0	65	y_65	306634.0205504206	0.0	56865.979449579376
+189	vtg ..... No dynamic restriction ..... period 7	SOFT	1.0	363500.0	1.0	726900.0	1.0	66	y_66	304684.076945336	0.0	58815.92305466399
+190	vtg ..... No dynamic restriction ..... period 8	SOFT	1.0	363500.0	1.0	726900.0	1.0	67	y_67	244157.17968389904	0.0	119342.82031610096
+191	vtg ..... No dynamic restriction ..... period 9	SOFT	1.0	363500.0	1.0	726900.0	1.0	68	y_68	240812.74053359468	0.0	122687.25946640532
+192	vtg ..... No dynamic restriction ..... period 10	SOFT	1.0	363500.0	1.0	726900.0	1.0	69	y_69	238295.93256030642	0.0	125204.06743969358
+193	vtg ..... No dynamic restriction ..... period 11	SOFT	1.0	363500.0	1.0	726900.0	1.0	70	y_70	238423.66193750827	0.0	125076.33806249173
+194	vtg ..... No dynamic restriction ..... period 12	SOFT	1.0	363500.0	1.0	726900.0	1.0	71	y_71	233497.62063072863	0.0	130002.37936927137
+195	vtg ..... No dynamic restriction ..... period 13	SOFT	1.0	363500.0	1.0	726900.0	1.0	72	y_72	228138.41549984977	0.0	135361.58450015023
+196	vtg ..... No dynamic restriction ..... period 14	SOFT	1.0	363500.0	1.0	726900.0	1.0	73	y_73	228042.49160631592	0.0	135457.50839368408
+197	vtg ..... No dynamic restriction ..... period 15	SOFT	1.0	363500.0	1.0	726900.0	1.0	74	y_74	216710.27145451182	0.0	146789.72854548818
+198	vth ..... No dynamic restriction ..... period 1	SOFT	1.0	24200.0	1.0	121200.0	1.0	75	y_75	287813.8655999999	0.0	166613.8655999999
+199	vth ..... No dynamic restriction ..... period 2	SOFT	1.0	24200.0	1.0	121200.0	1.0	76	y_76	288358.0449042921	0.0	167158.0449042921
+200	vth ..... No dynamic restriction ..... period 3	SOFT	1.0	24200.0	1.0	121200.0	1.0	77	y_77	298075.0977898803	0.0	176875.0977898803
+201	vth ..... No dynamic restriction ..... period 4	SOFT	1.0	24200.0	1.0	121200.0	1.0	78	y_78	303643.7572801546	0.0	182443.75728015462
+202	vth ..... No dynamic restriction ..... period 5	SOFT	1.0	24200.0	1.0	121200.0	1.0	79	y_79	313434.3946032083	0.0	192234.3946032083
+203	vth ..... No dynamic restriction ..... period 6	SOFT	1.0	24200.0	1.0	121200.0	1.0	80	y_80	319572.8321187961	0.0	198372.83211879613
+204	vth ..... No dynamic restriction ..... period 7	SOFT	1.0	24200.0	1.0	121200.0	1.0	81	y_81	324287.2171509338	0.0	203087.2171509338
+205	vth ..... No dynamic restriction ..... period 8	SOFT	1.0	24200.0	1.0	121200.0	1.0	82	y_82	324487.57513333944	0.0	203287.57513333944
+206	vth ..... No dynamic restriction ..... period 9	SOFT	1.0	24200.0	1.0	121200.0	1.0	83	y_83	318376.8846371219	0.0	197176.88463712193
+207	vth ..... No dynamic restriction ..... period 10	SOFT	1.0	24200.0	1.0	121200.0	1.0	84	y_84	325999.67802390136	0.0	204799.67802390136
+208	vth ..... No dynamic restriction ..... period 11	SOFT	1.0	24200.0	1.0	121200.0	1.0	85	y_85	328623.12227024446	0.0	207423.12227024446
+209	vth ..... No dynamic restriction ..... period 12	SOFT	1.0	24200.0	1.0	121200.0	1.0	86	y_86	336586.2066904016	0.0	215386.2066904016
+210	vth ..... No dynamic restriction ..... period 13	SOFT	1.0	24200.0	1.0	121200.0	1.0	87	y_87	345430.8330746026	0.0	224230.8330746026
+211	vth ..... No dynamic restriction ..... period 14	SOFT	1.0	24200.0	1.0	121200.0	1.0	88	y_88	349129.57486425975	0.0	227929.57486425975
+212	vth ..... No dynamic restriction ..... period 15	SOFT	1.0	24200.0	1.0	121200.0	1.0	89	y_89	359541.49849956785	0.0	238341.49849956785
+213	vti ..... No dynamic restriction ..... period 1	SOFT	1.0	387700.0	1.0	411900.0	1.0	90	y_90	408979.9099999999	0.0	0.0
+214	vti ..... No dynamic restriction ..... period 2	SOFT	1.0	387700.0	1.0	411900.0	1.0	91	y_91	408979.9099999998	0.0	0.0
+215	vti ..... No dynamic restriction ..... period 3	SOFT	1.0	387700.0	1.0	411900.0	1.0	92	y_92	408979.90999999986	0.0	0.0
+216	vti ..... No dynamic restriction ..... period 4	SOFT	1.0	387700.0	1.0	411900.0	1.0	93	y_93	408979.9099999998	0.0	0.0
+217	vti ..... No dynamic restriction ..... period 5	SOFT	1.0	387700.0	1.0	411900.0	1.0	94	y_94	408979.91	0.0	0.0
+218	vti ..... No dynamic restriction ..... period 6	SOFT	1.0	387700.0	1.0	411900.0	1.0	95	y_95	408979.91	0.0	0.0
+219	vti ..... No dynamic restriction ..... period 7	SOFT	1.0	387700.0	1.0	411900.0	1.0	96	y_96	408979.90999999957	0.0	0.0
+220	vti ..... No dynamic restriction ..... period 8	SOFT	1.0	387700.0	1.0	411900.0	1.0	97	y_97	408979.90999999974	0.0	0.0
+221	vti ..... No dynamic restriction ..... period 9	SOFT	1.0	387700.0	1.0	411900.0	1.0	98	y_98	408979.9099999999	0.0	0.0
+222	vti ..... No dynamic restriction ..... period 10	SOFT	1.0	387700.0	1.0	411900.0	1.0	99	y_99	408979.91000000027	0.0	0.0
+223	vti ..... No dynamic restriction ..... period 11	SOFT	1.0	387700.0	1.0	411900.0	1.0	100	y_100	408979.91	0.0	0.0
+224	vti ..... No dynamic restriction ..... period 12	SOFT	1.0	387700.0	1.0	411900.0	1.0	101	y_101	408979.9099999998	0.0	0.0
+225	vti ..... No dynamic restriction ..... period 13	SOFT	1.0	387700.0	1.0	411900.0	1.0	102	y_102	408979.90999999986	0.0	0.0
+226	vti ..... No dynamic restriction ..... period 14	SOFT	1.0	387700.0	1.0	411900.0	1.0	103	y_103	408979.9099999998	0.0	0.0
+227	vti ..... No dynamic restriction ..... period 15	SOFT	1.0	387700.0	1.0	411900.0	1.0	104	y_104	408979.91000000015	0.0	0.0
+228	scf + scg ..... No dynamic restriction ..... period 1	SOFT	1.0	121200.0	1.0	605800.0	1.0	105	y_105	303030.74549999996	0.0	0.0
+229	scf + scg ..... No dynamic restriction ..... period 2	SOFT	1.0	121200.0	1.0	605800.0	1.0	106	y_106	334478.24377669883	0.0	0.0
+230	scf + scg ..... No dynamic restriction ..... period 3	SOFT	1.0	121200.0	1.0	605800.0	1.0	107	y_107	348440.8097469027	0.0	0.0
+231	scf + scg ..... No dynamic restriction ..... period 4	SOFT	1.0	121200.0	1.0	605800.0	1.0	108	y_108	352817.9268208608	0.0	0.0
+232	scf + scg ..... No dynamic restriction ..... period 5	SOFT	1.0	121200.0	1.0	605800.0	1.0	109	y_109	366814.4343719511	0.0	0.0
+233	scf + scg ..... No dynamic restriction ..... period 6	SOFT	1.0	121200.0	1.0	605800.0	1.0	110	y_110	380308.76924884453	0.0	0.0
+234	scf + scg ..... No dynamic restriction ..... period 7	SOFT	1.0	121200.0	1.0	605800.0	1.0	111	y_111	359202.8560034568	0.0	0.0
+235	scf + scg ..... No dynamic restriction ..... period 8	SOFT	1.0	121200.0	1.0	605800.0	1.0	112	y_112	340918.7955960039	0.0	0.0
+236	scf + scg ..... No dynamic restriction ..... period 9	SOFT	1.0	121200.0	1.0	605800.0	1.0	113	y_113	334215.63175210904	0.0	0.0
+237	scf + scg ..... No dynamic restriction ..... period 10	SOFT	1.0	121200.0	1.0	605800.0	1.0	114	y_114	323499.1898081008	0.0	0.0
+238	scf + scg ..... No dynamic restriction ..... period 11	SOFT	1.0	121200.0	1.0	605800.0	1.0	115	y_115	314497.52061869256	0.0	0.0
+239	scf + scg ..... No dynamic restriction ..... period 12	SOFT	1.0	121200.0	1.0	605800.0	1.0	116	y_116	320899.4731365137	0.0	0.0
+240	scf + scg ..... No dynamic restriction ..... period 13	SOFT	1.0	121200.0	1.0	605800.0	1.0	117	y_117	310743.9971838226	0.0	0.0
+241	scf + scg ..... No dynamic restriction ..... period 14	SOFT	1.0	121200.0	1.0	605800.0	1.0	118	y_118	309324.9488240076	0.0	0.0
+242	scf + scg ..... No dynamic restriction ..... period 15	SOFT	1.0	121200.0	1.0	605800.0	1.0	119	y_119	307930.20783215284	0.0	0.0
+243	sch + sci ..... No dynamic restriction ..... period 1	SOFT	1.0	48500.0	1.0	121200.0	1.0	120	y_120	109624.69280000014	0.0	0.0
+244	sch + sci ..... No dynamic restriction ..... period 2	SOFT	1.0	48500.0	1.0	121200.0	1.0	121	y_121	134485.89451306942	0.0	13285.89451306942
+245	sch + sci ..... No dynamic restriction ..... period 3	SOFT	1.0	48500.0	1.0	121200.0	1.0	122	y_122	132916.38005520962	0.0	11716.380055209622
+246	sch + sci ..... No dynamic restriction ..... period 4	SOFT	1.0	48500.0	1.0	121200.0	1.0	123	y_123	157017.31397689978	0.0	35817.31397689978
+247	sch + sci ..... No dynamic restriction ..... period 5	SOFT	1.0	48500.0	1.0	121200.0	1.0	124	y_124	171953.0632216048	0.0	50753.063221604796
+248	sch + sci ..... No dynamic restriction ..... period 6	SOFT	1.0	48500.0	1.0	121200.0	1.0	125	y_125	169209.05443056586	0.0	48009.054430565855
+249	sch + sci ..... No dynamic restriction ..... period 7	SOFT	1.0	48500.0	1.0	121200.0	1.0	126	y_126	166492.47754915126	0.0	45292.477549151256
+250	sch + sci ..... No dynamic restriction ..... period 8	SOFT	1.0	48500.0	1.0	121200.0	1.0	127	y_127	172181.55819354212	0.0	50981.55819354212
+251	sch + sci ..... No dynamic restriction ..... period 9	SOFT	1.0	48500.0	1.0	121200.0	1.0	128	y_128	166614.9361097778	0.0	45414.9361097778
+252	sch + sci ..... No dynamic restriction ..... period 10	SOFT	1.0	48500.0	1.0	121200.0	1.0	129	y_129	182576.25569255083	0.0	61376.255692550825
+253	sch + sci ..... No dynamic restriction ..... period 11	SOFT	1.0	48500.0	1.0	121200.0	1.0	130	y_130	189878.22918264347	0.0	68678.22918264347
+254	sch + sci ..... No dynamic restriction ..... period 12	SOFT	1.0	48500.0	1.0	121200.0	1.0	131	y_131	187903.6019532286	0.0	66703.60195322859
+255	sch + sci ..... No dynamic restriction ..... period 13	SOFT	1.0	48500.0	1.0	121200.0	1.0	132	y_132	192100.98518167154	0.0	70900.98518167154
+256	sch + sci ..... No dynamic restriction ..... period 14	SOFT	1.0	48500.0	1.0	121200.0	1.0	133	y_133	192261.22507939988	0.0	71061.22507939988
+257	sch + sci ..... No dynamic restriction ..... period 15	SOFT	1.0	48500.0	1.0	121200.0	1.0	134	y_134	181061.77762681394	0.0	59861.77762681394
+258	scj + sck ..... No dynamic restriction ..... period 1	SOFT	1.0	121200.0	1.0	363500.0	1.0	135	y_135	776062.2416000009	0.0	412562.2416000009
+259	scj + sck ..... No dynamic restriction ..... period 2	SOFT	1.0	121200.0	1.0	363500.0	1.0	136	y_136	626713.3422413152	0.0	263213.3422413152
+260	scj + sck ..... No dynamic restriction ..... period 3	SOFT	1.0	121200.0	1.0	363500.0	1.0	137	y_137	568212.3636483247	0.0	204712.36364832474
+261	scj + sck ..... No dynamic restriction ..... period 4	SOFT	1.0	121200.0	1.0	363500.0	1.0	138	y_138	521762.9942555666	0.0	158262.99425556662
+262	scj + sck ..... No dynamic restriction ..... period 5	SOFT	1.0	121200.0	1.0	363500.0	1.0	139	y_139	472301.8689137523	0.0	108801.86891375232
+263	scj + sck ..... No dynamic restriction ..... period 6	SOFT	1.0	121200.0	1.0	363500.0	1.0	140	y_140	442922.20051443845	0.0	79422.20051443845
+264	scj + sck ..... No dynamic restriction ..... period 7	SOFT	1.0	121200.0	1.0	363500.0	1.0	141	y_141	435362.45504937443	0.0	71862.45504937443
+265	scj + sck ..... No dynamic restriction ..... period 8	SOFT	1.0	121200.0	1.0	363500.0	1.0	142	y_142	385066.63672129135	0.0	21566.636721291346
+266	scj + sck ..... No dynamic restriction ..... period 9	SOFT	1.0	121200.0	1.0	363500.0	1.0	143	y_143	387155.38285655476	0.0	23655.38285655476
+267	scj + sck ..... No dynamic restriction ..... period 10	SOFT	1.0	121200.0	1.0	363500.0	1.0	144	y_144	385321.03217009903	0.0	21821.03217009903
+268	scj + sck ..... No dynamic restriction ..... period 11	SOFT	1.0	121200.0	1.0	363500.0	1.0	145	y_145	395994.25554711116	0.0	32494.255547111155
+269	scj + sck ..... No dynamic restriction ..... period 12	SOFT	1.0	121200.0	1.0	363500.0	1.0	146	y_146	387968.01902071753	0.0	24468.019020717533
+270	scj + sck ..... No dynamic restriction ..... period 13	SOFT	1.0	121200.0	1.0	363500.0	1.0	147	y_147	393111.75148648943	0.0	29611.751486489433
+271	scj + sck ..... No dynamic restriction ..... period 14	SOFT	1.0	121200.0	1.0	363500.0	1.0	148	y_148	429342.16990459635	0.0	65842.16990459635
+272	scj + sck ..... No dynamic restriction ..... period 15	SOFT	1.0	121200.0	1.0	363500.0	1.0	149	y_149	435218.89422678616	0.0	71718.89422678616
+273	scl + scm ..... No dynamic restriction ..... period 1	SOFT	1.0	24200.0	1.0	121200.0	1.0	150	y_150	125988.05276386753	0.0	4788.052763867527
+274	scl + scm ..... No dynamic restriction ..... period 2	SOFT	1.0	24200.0	1.0	121200.0	1.0	151	y_151	203259.00932407647	0.0	82059.00932407647
+275	scl + scm ..... No dynamic restriction ..... period 3	SOFT	1.0	24200.0	1.0	121200.0	1.0	152	y_152	220869.75571078013	0.0	99669.75571078013
+276	scl + scm ..... No dynamic restriction ..... period 4	SOFT	1.0	24200.0	1.0	121200.0	1.0	153	y_153	192940.10654573125	0.0	71740.10654573125
+277	scl + scm ..... No dynamic restriction ..... period 5	SOFT	1.0	24200.0	1.0	121200.0	1.0	154	y_154	199794.28672239816	0.0	78594.28672239816
+278	scl + scm ..... No dynamic restriction ..... period 6	SOFT	1.0	24200.0	1.0	121200.0	1.0	155	y_155	199183.57962745815	0.0	77983.57962745815
+279	scl + scm ..... No dynamic restriction ..... period 7	SOFT	1.0	24200.0	1.0	121200.0	1.0	156	y_156	213714.1717403172	0.0	92514.1717403172
+280	scl + scm ..... No dynamic restriction ..... period 8	SOFT	1.0	24200.0	1.0	121200.0	1.0	157	y_157	233216.86744966722	0.0	112016.86744966722
+281	scl + scm ..... No dynamic restriction ..... period 9	SOFT	1.0	24200.0	1.0	121200.0	1.0	158	y_158	219909.95437592137	0.0	98709.95437592137
+282	scl + scm ..... No dynamic restriction ..... period 10	SOFT	1.0	24200.0	1.0	121200.0	1.0	159	y_159	192663.06936410515	0.0	71463.06936410515
+283	scl + scm ..... No dynamic restriction ..... period 11	SOFT	1.0	24200.0	1.0	121200.0	1.0	160	y_160	204755.17180505797	0.0	83555.17180505797
+284	scl + scm ..... No dynamic restriction ..... period 12	SOFT	1.0	24200.0	1.0	121200.0	1.0	161	y_161	231196.3386652406	0.0	109996.33866524059
+285	scl + scm ..... No dynamic restriction ..... period 13	SOFT	1.0	24200.0	1.0	121200.0	1.0	162	y_162	211540.92197511025	0.0	90340.92197511025
+286	scl + scm ..... No dynamic restriction ..... period 14	SOFT	1.0	24200.0	1.0	121200.0	1.0	163	y_163	198507.4885862079	0.0	77307.48858620791
+287	scl + scm ..... No dynamic restriction ..... period 15	SOFT	1.0	24200.0	1.0	121200.0	1.0	164	y_164	184056.8153917684	0.0	62856.81539176841
+288	scn + sco ..... No dynamic restriction ..... period 1	SOFT	1.0	121200.0	1.0	363500.0	1.0	165	y_165	974072.5143	0.0	610572.5143
+289	scn + sco ..... No dynamic restriction ..... period 2	SOFT	1.0	121200.0	1.0	363500.0	1.0	166	y_166	864836.8659489151	0.0	501336.86594891513
+290	scn + sco ..... No dynamic restriction ..... period 3	SOFT	1.0	121200.0	1.0	363500.0	1.0	167	y_167	808047.9739792129	0.0	444547.9739792129
+291	scn + sco ..... No dynamic restriction ..... period 4	SOFT	1.0	121200.0	1.0	363500.0	1.0	168	y_168	730637.5902384175	0.0	367137.5902384175
+292	scn + sco ..... No dynamic restriction ..... period 5	SOFT	1.0	121200.0	1.0	363500.0	1.0	169	y_169	669444.5019585042	0.0	305944.5019585042
+293	scn + sco ..... No dynamic restriction ..... period 6	SOFT	1.0	121200.0	1.0	363500.0	1.0	170	y_170	598297.8906327849	0.0	234797.89063278493
+294	scn + sco ..... No dynamic restriction ..... period 7	SOFT	1.0	121200.0	1.0	363500.0	1.0	171	y_171	562802.3708285792	0.0	199302.37082857918
+295	scn + sco ..... No dynamic restriction ..... period 8	SOFT	1.0	121200.0	1.0	363500.0	1.0	172	y_172	481032.3977013834	0.0	117532.3977013834
+296	scn + sco ..... No dynamic restriction ..... period 9	SOFT	1.0	121200.0	1.0	363500.0	1.0	173	y_173	413863.03453254094	0.0	50363.03453254094
+297	scn + sco ..... No dynamic restriction ..... period 10	SOFT	1.0	121200.0	1.0	363500.0	1.0	174	y_174	383986.3893703612	0.0	20486.389370361227
+298	scn + sco ..... No dynamic restriction ..... period 11	SOFT	1.0	121200.0	1.0	363500.0	1.0	175	y_175	335094.6730583267	0.0	0.0
+299	scn + sco ..... No dynamic restriction ..... period 12	SOFT	1.0	121200.0	1.0	363500.0	1.0	176	y_176	323981.26306071435	0.0	0.0
+300	scn + sco ..... No dynamic restriction ..... period 13	SOFT	1.0	121200.0	1.0	363500.0	1.0	177	y_177	315697.06991498265	0.0	0.0
+301	scn + sco ..... No dynamic restriction ..... period 14	SOFT	1.0	121200.0	1.0	363500.0	1.0	178	y_178	257487.63670902257	0.0	0.0
+302	scn + sco ..... No dynamic restriction ..... period 15	SOFT	1.0	121200.0	1.0	363500.0	1.0	179	y_179	244787.76143395103	0.0	0.0
+303	scp + scq ..... No dynamic restriction ..... period 1	SOFT	1.0	484600.0	1.0	726900.0	1.0	180	y_180	37603.99693613247	0.0	446996.0030638675
+304	scp + scq ..... No dynamic restriction ..... period 2	SOFT	1.0	484600.0	1.0	726900.0	1.0	181	y_181	124681.18032026378	0.0	359918.8196797362
+305	scp + scq ..... No dynamic restriction ..... period 3	SOFT	1.0	484600.0	1.0	726900.0	1.0	182	y_182	178236.279989044	0.0	306363.720010956
+306	scp + scq ..... No dynamic restriction ..... period 4	SOFT	1.0	484600.0	1.0	726900.0	1.0	183	y_183	264467.1031071291	0.0	220132.8968928709
+307	scp + scq ..... No dynamic restriction ..... period 5	SOFT	1.0	484600.0	1.0	726900.0	1.0	184	y_184	290521.9866699953	0.0	194078.0133300047
+308	scp + scq ..... No dynamic restriction ..... period 6	SOFT	1.0	484600.0	1.0	726900.0	1.0	185	y_185	331701.93177015614	0.0	152898.06822984386
+309	scp + scq ..... No dynamic restriction ..... period 7	SOFT	1.0	484600.0	1.0	726900.0	1.0	186	y_186	375902.92869759194	0.0	108697.07130240806
+310	scp + scq ..... No dynamic restriction ..... period 8	SOFT	1.0	484600.0	1.0	726900.0	1.0	187	y_187	471702.6724129032	0.0	12897.327587096777
+311	scp + scq ..... No dynamic restriction ..... period 9	SOFT	1.0	484600.0	1.0	726900.0	1.0	188	y_188	573973.04073778	0.0	0.0
+312	scp + scq ..... No dynamic restriction ..... period 10	SOFT	1.0	484600.0	1.0	726900.0	1.0	189	y_189	600404.0433817452	0.0	0.0
+313	scp + scq ..... No dynamic restriction ..... period 11	SOFT	1.0	484600.0	1.0	726900.0	1.0	190	y_190	619408.6597881679	0.0	0.0
+314	scp + scq ..... No dynamic restriction ..... period 12	SOFT	1.0	484600.0	1.0	726900.0	1.0	191	y_191	585701.8225849719	0.0	0.0
+315	scp + scq ..... No dynamic restriction ..... period 13	SOFT	1.0	484600.0	1.0	726900.0	1.0	192	y_192	607258.5789937354	0.0	0.0
+316	scp + scq ..... No dynamic restriction ..... period 14	SOFT	1.0	484600.0	1.0	726900.0	1.0	193	y_193	620243.8496715939	0.0	0.0
+317	scp + scq ..... No dynamic restriction ..... period 15	SOFT	1.0	484600.0	1.0	726900.0	1.0	194	y_194	612748.1092897258	0.0	0.0
+318	 ..... scr + scs ..... No dynamic restriction ..... period 1	SOFT	1.0	363500.0	1.0	605800.0	1.0	195	y_195	96746.26610000011	0.0	266753.7338999999
+319	 ..... scr + scs ..... No dynamic restriction ..... period 2	SOFT	1.0	363500.0	1.0	605800.0	1.0	196	y_196	134673.97387566316	0.0	228826.02612433684
+320	 ..... scr + scs ..... No dynamic restriction ..... period 3	SOFT	1.0	363500.0	1.0	605800.0	1.0	197	y_197	166404.9468705245	0.0	197095.0531294755
+321	 ..... scr + scs ..... No dynamic restriction ..... period 4	SOFT	1.0	363500.0	1.0	605800.0	1.0	198	y_198	203485.47505539376	0.0	160014.52494460624
+322	 ..... scr + scs ..... No dynamic restriction ..... period 5	SOFT	1.0	363500.0	1.0	605800.0	1.0	199	y_199	252298.3681417955	0.0	111201.63185820449
+323	 ..... scr + scs ..... No dynamic restriction ..... period 6	SOFT	1.0	363500.0	1.0	605800.0	1.0	200	y_200	301505.0837757533	0.0	61994.91622424673
+324	 ..... scr + scs ..... No dynamic restriction ..... period 7	SOFT	1.0	363500.0	1.0	605800.0	1.0	201	y_201	309651.25013152853	0.0	53848.74986847147
+325	 ..... scr + scs ..... No dynamic restriction ..... period 8	SOFT	1.0	363500.0	1.0	605800.0	1.0	202	y_202	339009.5819252079	0.0	24490.418074792076
+326	 ..... scr + scs ..... No dynamic restriction ..... period 9	SOFT	1.0	363500.0	1.0	605800.0	1.0	203	y_203	327396.52963531605	0.0	36103.47036468395
+327	 ..... scr + scs ..... No dynamic restriction ..... period 10	SOFT	1.0	363500.0	1.0	605800.0	1.0	204	y_204	354678.53021303803	0.0	8821.46978696197
+328	 ..... scr + scs ..... No dynamic restriction ..... period 11	SOFT	1.0	363500.0	1.0	605800.0	1.0	205	y_205	363500.0	0.0	0.0
+329	 ..... scr + scs ..... No dynamic restriction ..... period 12	SOFT	1.0	363500.0	1.0	605800.0	1.0	206	y_206	385477.99157861294	0.0	0.0
+330	 ..... scr + scs ..... No dynamic restriction ..... period 13	SOFT	1.0	363500.0	1.0	605800.0	1.0	207	y_207	392675.2052641888	0.0	0.0
+331	 ..... scr + scs ..... No dynamic restriction ..... period 14	SOFT	1.0	363500.0	1.0	605800.0	1.0	208	y_208	415961.1912251738	0.0	0.0
+332	 ..... scr + scs ..... No dynamic restriction ..... period 15	SOFT	1.0	363500.0	1.0	605800.0	1.0	209	y_209	457324.9441988047	0.0	0.0
+333	Beetle Period 4	HARD	1.0	92100.0	null	null	null	632	z_2	92100.0	333.5813602991258	0.0
+334	vtc ..... action_type msf ..... period 1	HARD	1.0	5800.0	null	null	null	633	z_3	5800.0	0.4710479387880113	0.0
+335	vtc ..... action_type msf ..... period 2	HARD	1.0	5800.0	null	null	null	634	z_4	5800.0	1.249722380755209	0.0
+336	vtc ..... action_type msf ..... period 3	HARD	1.0	5800.0	null	null	null	635	z_5	5800.0	1.181186959190665	0.0
+337	vtc ..... action_type msf ..... period 4	HARD	1.0	5800.0	null	null	null	636	z_6	5800.0	0.26757442192902303	0.0
+338	vtc ..... action_type msf ..... period 5	HARD	1.0	5800.0	null	null	null	637	z_7	6300.062094647089	0.0	0.0
+339	vtd ..... action_type msf ..... period 1	HARD	1.0	28000.0	null	null	null	638	z_8	46855.348501060056	0.0	0.0
+340	vtd ..... action_type msf ..... period 2	HARD	1.0	28000.0	null	null	null	639	z_9	28000.0	1.2335261906300534	0.0
+341	vtd ..... action_type msf ..... period 3	HARD	1.0	28000.0	null	null	null	640	z_10	28000.0	1.6296964003629522	0.0
+342	vtd ..... action_type msf ..... period 4	HARD	1.0	28000.0	null	null	null	641	z_11	28000.0	1.661072663054954	0.0
+343	vtd ..... action_type msf ..... period 5	HARD	1.0	28000.0	null	null	null	642	z_12	28000.0	0.6600844177649492	0.0
+344	vte ..... action_type msf ..... period 1	HARD	1.0	8000.0	null	null	null	643	z_13	8277.408899999999	0.0	0.0
+345	vte ..... action_type msf ..... period 2	HARD	1.0	8000.0	null	null	null	644	z_14	8000.0	0.08782098959341056	0.0
+346	vte ..... action_type msf ..... period 3	HARD	1.0	8000.0	null	null	null	645	z_15	12042.03088263074	0.0	0.0
+347	vte ..... action_type msf ..... period 4	HARD	1.0	8000.0	null	null	null	646	z_16	11583.29384999998	0.0	0.0
+348	vte ..... action_type msf ..... period 5	HARD	1.0	8000.0	null	null	null	647	z_17	11035.200107369272	0.0	0.0
+349	vtf ..... action_type msf ..... period 1	HARD	1.0	17500.0	null	null	null	648	z_18	17500.0	37.35653425312627	0.0
+350	vtf ..... action_type msf ..... period 2	HARD	1.0	17500.0	null	null	null	649	z_19	17500.0	42.90743247053817	0.0
+351	vtf ..... action_type msf ..... period 3	HARD	1.0	17500.0	null	null	null	650	z_20	17500.0	44.0468410010931	0.0
+352	vtf ..... action_type msf ..... period 4	HARD	1.0	17500.0	null	null	null	651	z_21	17500.0	3.529268760503472	0.0
+353	vtf ..... action_type msf ..... period 5	HARD	1.0	17500.0	null	null	null	652	z_22	18354.50962832896	0.0	0.0
+354	vtg ..... action_type msf ..... period 1	HARD	1.0	3000.0	null	null	null	653	z_23	3000.0	0.20386593360505378	0.0
+355	vtg ..... action_type msf ..... period 2	HARD	1.0	3000.0	null	null	null	654	z_24	3000.0	0.31821763294360395	0.0
+356	vtg ..... action_type msf ..... period 3	HARD	1.0	3000.0	null	null	null	655	z_25	4831.994120999995	0.0	0.0
+357	vtg ..... action_type msf ..... period 4	HARD	1.0	3000.0	null	null	null	656	z_26	5374.716508974582	0.0	0.0
+358	vtg ..... action_type msf ..... period 5	HARD	1.0	3000.0	null	null	null	657	z_27	3996.960847050146	0.0	0.0
+359	vth ..... action_type msf ..... period 1	HARD	1.0	11000.0	null	null	null	658	z_28	14622.833596749717	0.0	0.0
+360	vth ..... action_type msf ..... period 2	HARD	1.0	11000.0	null	null	null	659	z_29	17200.00000000005	0.0	0.0
+361	vth ..... action_type msf ..... period 3	HARD	1.0	11000.0	null	null	null	660	z_30	11325.97499636937	0.0	0.0
+362	vth ..... action_type msf ..... period 4	HARD	1.0	11000.0	null	null	null	661	z_31	11241.989641025446	0.0	0.0
+363	vth ..... action_type msf ..... period 5	HARD	1.0	11000.0	null	null	null	662	z_32	11000.0	0.06853357291833362	0.0
+364	vti ..... action_type msf ..... period 1	HARD	1.0	19000.0	null	null	null	663	z_33	19000.0	0.1576398281186151	0.0
+365	vti ..... action_type msf ..... period 2	HARD	1.0	19000.0	null	null	null	664	z_34	19000.0	0.7577839796268648	0.0
+366	vti ..... action_type msf ..... period 3	HARD	1.0	19000.0	null	null	null	665	z_35	19000.0	0.6398619885677803	0.0
+367	vti ..... action_type msf ..... period 4	HARD	1.0	19000.0	null	null	null	666	z_36	19000.0	0.46502259029521387	0.0
+368	vti ..... action_type msf ..... period 5	HARD	1.0	19000.0	null	null	null	667	z_37	19813.267322604523	0.0	0.0
+369	msf per period	HARD	1.0	98500.0	null	null	null	668	z_38	115055.59099780975	0.0	0.0
+370	msf per period	HARD	1.0	98500.0	null	null	null	669	z_39	98500.00000000007	0.0	0.0
+371	msf per period	HARD	1.0	98500.0	null	null	null	670	z_40	98500.00000000006	0.0	0.0
+372	msf per period	HARD	1.0	98500.0	null	null	null	671	z_41	98500.0	0.4297565159915143	0.0
+373	msf per period	HARD	1.0	98500.0	null	null	null	672	z_42	98500.0	0.039330690642840865	0.0
+374	msf per period	HARD	1.0	98500.0	null	null	null	673	z_43	115055.59099780966	0.0	0.0
+375	msf per period	HARD	1.0	98500.0	null	null	null	674	z_44	98500.0000000001	0.0	0.0
+376	msf per period	HARD	1.0	98500.0	null	null	null	675	z_45	98500.0	0.19974416545826798	0.0
+377	msf per period	HARD	1.0	98500.0	null	null	null	676	z_46	98500.0	0.17289191083793598	0.0
+378	msf per period	HARD	1.0	98500.0	null	null	null	677	z_47	98500.0	0.21683850755037234	0.0
+379	msf per period	HARD	1.0	98500.0	null	null	null	678	z_48	115055.59099780982	0.0	0.0
+380	msf per period	HARD	1.0	98500.0	null	null	null	679	z_49	98500.0	0.038833026933853376	0.0
+381	msf per period	HARD	1.0	98500.0	null	null	null	680	z_50	98500.0	0.20263068495531567	0.0
+382	msf per period	HARD	1.0	98500.0	null	null	null	681	z_51	98500.0	0.5416059776177037	0.0
+383	msf per period	HARD	1.0	98500.0	null	null	null	682	z_52	98500.0	0.5275173890591616	0.0
+384	Max UE	HARD	1.0	null	null	5000.0	null	683	z_53	-0.0	0.0	0.0
+385	Max UE	HARD	1.0	null	null	5000.0	null	684	z_54	-0.0	0.0	0.0
+386	Max UE	HARD	1.0	null	null	5000.0	null	685	z_55	-0.0	0.0	0.0
+387	Max UE	HARD	1.0	null	null	5000.0	null	686	z_56	-0.0	0.0	0.0
+388	Max UE	HARD	1.0	null	null	5000.0	null	687	z_57	-0.0	0.0	0.0
+389	Max UE	HARD	1.0	null	null	5000.0	null	688	z_58	-0.0	0.0	0.0
+390	Max UE	HARD	1.0	null	null	5000.0	null	689	z_59	-0.0	0.0	0.0
+391	Max UE	HARD	1.0	null	null	5000.0	null	690	z_60	1461.5195668118392	0.0	0.0
+392	Max UE	HARD	1.0	null	null	5000.0	null	691	z_61	-0.0	0.0	0.0
+393	Max UE	HARD	1.0	null	null	5000.0	null	692	z_62	-0.0	0.0	0.0
+394	Max UE	HARD	1.0	null	null	5000.0	null	693	z_63	5000.0	-6.470810348037222	0.0
+395	Max UE	HARD	1.0	null	null	5000.0	null	694	z_64	5000.0	-9.445616107631963	0.0
+396	Max UE	HARD	1.0	null	null	5000.0	null	695	z_65	5000.0	-7.490804273606669	0.0
+397	Max UE	HARD	1.0	null	null	5000.0	null	696	z_66	5000.0	-10.969129981109905	0.0
+398	Max UE	HARD	1.0	null	null	5000.0	null	697	z_67	5000.0	-10.334376314609823	0.0
+399	CommThin < 2000/year	HARD	1.0	null	null	20000.0	null	698	z_68	2555.7457397258368	0.0	0.0
+400	CommThin < 2000/year	HARD	1.0	null	null	20000.0	null	699	z_69	20000.0	-0.1873541962819525	0.0
+401	CommThin < 2000/year	HARD	1.0	null	null	20000.0	null	700	z_70	1263.99954847008	0.0	0.0
+402	CommThin < 2000/year	HARD	1.0	null	null	20000.0	null	701	z_71	6395.951135494793	0.0	0.0
+403	CommThin < 2000/year	HARD	1.0	null	null	20000.0	null	702	z_72	-0.0	0.0	0.0
+404	CommThin < 2000/year	HARD	1.0	null	null	20000.0	null	703	z_73	9253.656655445759	0.0	0.0
+405	CommThin < 2000/year	HARD	1.0	null	null	20000.0	null	704	z_74	333.114408282455	0.0	0.0
+406	CommThin < 2000/year	HARD	1.0	null	null	20000.0	null	705	z_75	1807.7553431491203	0.0	0.0
+407	CommThin < 2000/year	HARD	1.0	null	null	20000.0	null	706	z_76	343.1964871766696	0.0	0.0
+408	CommThin < 2000/year	HARD	1.0	null	null	20000.0	null	707	z_77	63.28132900545738	0.0	0.0
+409	CommThin < 2000/year	HARD	1.0	null	null	20000.0	null	708	z_78	238.38075680062303	0.0	0.0
+410	CommThin < 2000/year	HARD	1.0	null	null	20000.0	null	709	z_79	-0.0	0.0	0.0
+411	CommThin < 2000/year	HARD	1.0	null	null	20000.0	null	710	z_80	-0.0	0.0	0.0
+412	CommThin < 2000/year	HARD	1.0	null	null	20000.0	null	711	z_81	-0.0	0.0	0.0
+413	CommThin < 2000/year	HARD	1.0	null	null	20000.0	null	712	z_82	-0.0	0.0	0.0
+414	rmcuft ..... No dynamic restriction ..... period 1	FREE	1.0	null	null	null	null	729	v_0	4.4626560966415934E7	0.0	0.0
+415	rmcuft ..... No dynamic restriction ..... period 2	FREE	1.0	null	null	null	null	730	v_1	4.4626560966415934E7	0.0	0.0
+416	rmcuft ..... No dynamic restriction ..... period 3	FREE	1.0	null	null	null	null	731	v_2	4.4626560966415934E7	0.0	0.0
+417	rmcuft ..... No dynamic restriction ..... period 4	FREE	1.0	null	null	null	null	732	v_3	4.4626560966415934E7	0.0	0.0
+418	rmcuft ..... No dynamic restriction ..... period 5	FREE	1.0	null	null	null	null	733	v_4	4.4626560966415934E7	0.0	0.0
+419	rmcuft ..... No dynamic restriction ..... period 6	FREE	1.0	null	null	null	null	734	v_5	4.4626560966415934E7	0.0	0.0
+420	rmcuft ..... No dynamic restriction ..... period 7	FREE	1.0	null	null	null	null	735	v_6	4.4626560966415934E7	0.0	0.0
+421	rmcuft ..... No dynamic restriction ..... period 8	FREE	1.0	null	null	null	null	736	v_7	4.4626560966415934E7	0.0	0.0
+422	rmcuft ..... No dynamic restriction ..... period 9	FREE	1.0	null	null	null	null	737	v_8	4.4626560966415934E7	0.0	0.0
+423	rmcuft ..... No dynamic restriction ..... period 10	FREE	1.0	null	null	null	null	738	v_9	4.4626560966415934E7	0.0	0.0
+424	rmcuft ..... No dynamic restriction ..... period 11	FREE	1.0	null	null	null	null	739	v_10	4.4626560966415934E7	0.0	0.0
+425	rmcuft ..... No dynamic restriction ..... period 12	FREE	1.0	null	null	null	null	740	v_11	4.4626560966415934E7	0.0	0.0
+426	rmcuft ..... No dynamic restriction ..... period 13	FREE	1.0	null	null	null	null	741	v_12	4.4626560966415934E7	0.0	0.0
+427	rmcuft ..... No dynamic restriction ..... period 14	FREE	1.0	null	null	null	null	742	v_13	4.4626560966415934E7	0.0	0.0
+428	rmcuft ..... No dynamic restriction ..... period 15	FREE	1.0	null	null	null	null	743	v_14	4.4626560966415934E7	0.0	0.0
+429	avg. mcuft inventory vol period 5-14	FREE	0.1	null	null	null	null	744	v_15	4.809685173551418E9	0.0	0.0
+430	mcuft ..... No dynamic restriction ..... period 15	FREE	1.0	null	null	null	null	745	v_16	4.854311734517835E9	0.0	0.0
+431	Harv Ac period	FREE	1.0	null	null	null	null	746	v_17	37634.01251389533	0.0	0.0
+432	Harv Ac period	FREE	1.0	null	null	null	null	747	v_18	39320.04531218332	0.0	0.0
+433	Harv Ac period	FREE	1.0	null	null	null	null	748	v_19	40908.30968005859	0.0	0.0
+434	Harv Ac period	FREE	1.0	null	null	null	null	749	v_20	14295.951135494779	0.0	0.0
+435	Harv Ac period	FREE	1.0	null	null	null	null	750	v_21	32845.516679550565	0.0	0.0
+436	Harv Ac period	FREE	1.0	null	null	null	null	751	v_22	38551.45323489108	0.0	0.0
+437	Harv Ac period	FREE	1.0	null	null	null	null	752	v_23	17235.512265534446	0.0	0.0
+438	Harv Ac period	FREE	1.0	null	null	null	null	753	v_24	19755.820120521785	0.0	0.0
+439	Harv Ac period	FREE	1.0	null	null	null	null	754	v_25	11329.39137417452	0.0	0.0
+440	Harv Ac period	FREE	1.0	null	null	null	null	755	v_26	7963.281329005443	0.0	0.0
+441	Harv Ac period	FREE	1.0	null	null	null	null	756	v_27	18849.618488170614	0.0	0.0
+442	Harv Ac period	FREE	1.0	null	null	null	null	757	v_28	19511.915562369046	0.0	0.0
+443	Harv Ac period	FREE	1.0	null	null	null	null	758	v_29	20000.0	0.0	0.0
+444	Harv Ac period	FREE	1.0	null	null	null	null	759	v_30	21980.89692899289	0.0	0.0
+445	Harv Ac period	FREE	1.0	null	null	null	null	760	v_31	24014.300738861235	0.0	0.0
+446	MAG2 Harv Ac	FREE	1.0	null	null	null	null	761	v_32	1881.7006256947666	0.0	0.0
+447	MAG2 Harv Ac	FREE	1.0	null	null	null	null	762	v_33	1966.002265609166	0.0	0.0
+448	MAG2 Harv Ac	FREE	1.0	null	null	null	null	763	v_34	2045.4154840029296	0.0	0.0
+449	MAG2 Harv Ac	FREE	1.0	null	null	null	null	764	v_35	714.797556774739	0.0	0.0
+450	MAG2 Harv Ac	FREE	1.0	null	null	null	null	765	v_36	1642.2758339775282	0.0	0.0
+451	MAG2 Harv Ac	FREE	1.0	null	null	null	null	766	v_37	1927.5726617445541	0.0	0.0
+452	MAG2 Harv Ac	FREE	1.0	null	null	null	null	767	v_38	861.7756132767223	0.0	0.0
+453	MAG2 Harv Ac	FREE	1.0	null	null	null	null	768	v_39	987.7910060260892	0.0	0.0
+454	MAG2 Harv Ac	FREE	1.0	null	null	null	null	769	v_40	566.469568708726	0.0	0.0
+455	MAG2 Harv Ac	FREE	1.0	null	null	null	null	770	v_41	398.1640664502722	0.0	0.0
+456	MAG2 Harv Ac	FREE	1.0	null	null	null	null	771	v_42	942.4809244085308	0.0	0.0
+457	MAG2 Harv Ac	FREE	1.0	null	null	null	null	772	v_43	975.5957781184524	0.0	0.0
+458	MAG2 Harv Ac	FREE	1.0	null	null	null	null	773	v_44	1000.0	0.0	0.0
+459	MAG2 Harv Ac	FREE	1.0	null	null	null	null	774	v_45	1099.0448464496446	0.0	0.0
+460	MAG2 Harv Ac	FREE	1.0	null	null	null	null	775	v_46	1200.7150369430617	0.0	0.0
+461	MAG3 HarvAc	FREE	1.0	null	null	null	null	776	v_47	3763.401251389533	0.0	0.0
+462	MAG3 HarvAc	FREE	1.0	null	null	null	null	777	v_48	1966.0022656091674	0.0	0.0
+463	MAG3 HarvAc	FREE	1.0	null	null	null	null	778	v_49	4090.830968005859	0.0	0.0
+464	MAG3 HarvAc	FREE	1.0	null	null	null	null	779	v_50	714.797556774739	0.0	0.0
+465	MAG3 HarvAc	FREE	1.0	null	null	null	null	780	v_51	3284.5516679550565	0.0	0.0
+466	MAG3 HarvAc	FREE	1.0	null	null	null	null	781	v_52	3855.1453234891083	0.0	0.0
+467	MAG3 HarvAc	FREE	1.0	null	null	null	null	782	v_53	1723.5512265534446	0.0	0.0
+468	MAG3 HarvAc	FREE	1.0	null	null	null	null	783	v_54	1975.5820120521785	0.0	0.0
+469	MAG3 HarvAc	FREE	1.0	null	null	null	null	784	v_55	1132.939137417452	0.0	0.0
+470	MAG3 HarvAc	FREE	1.0	null	null	null	null	785	v_56	796.3281329005443	0.0	0.0
+471	MAG3 HarvAc	FREE	1.0	null	null	null	null	786	v_57	1884.9618488170615	0.0	0.0
+472	MAG3 HarvAc	FREE	1.0	null	null	null	null	787	v_58	1951.1915562369047	0.0	0.0
+473	MAG3 HarvAc	FREE	1.0	null	null	null	null	788	v_59	2000.0	0.0	0.0
+474	MAG3 HarvAc	FREE	1.0	null	null	null	null	789	v_60	2198.0896928992893	0.0	0.0
+475	MAG3 HarvAc	FREE	1.0	null	null	null	null	790	v_61	2401.4300738861234	0.0	0.0
+476	MAG4 HarvAc	FREE	1.0	null	null	null	null	791	v_62	7526.8025027790645	0.0	0.0
+477	MAG4 HarvAc	FREE	1.0	null	null	null	null	792	v_63	9830.01132804583	0.0	0.0
+478	MAG4 HarvAc	FREE	1.0	null	null	null	null	793	v_64	8181.661936011723	0.0	0.0
+479	MAG4 HarvAc	FREE	1.0	null	null	null	null	794	v_65	3573.9877838736948	0.0	0.0
+480	MAG4 HarvAc	FREE	1.0	null	null	null	null	795	v_66	6569.103335910117	0.0	0.0
+481	MAG4 HarvAc	FREE	1.0	null	null	null	null	796	v_67	7710.290646978201	0.0	0.0
+482	MAG4 HarvAc	FREE	1.0	null	null	null	null	797	v_68	3447.102453106888	0.0	0.0
+483	MAG4 HarvAc	FREE	1.0	null	null	null	null	798	v_69	3951.164024104358	0.0	0.0
+484	MAG4 HarvAc	FREE	1.0	null	null	null	null	799	v_70	2265.878274834904	0.0	0.0
+485	MAG4 HarvAc	FREE	1.0	null	null	null	null	800	v_71	1592.6562658010926	0.0	0.0
+486	MAG4 HarvAc	FREE	1.0	null	null	null	null	801	v_72	3769.9236976341203	0.0	0.0
+487	MAG4 HarvAc	FREE	1.0	null	null	null	null	802	v_73	3902.383112473807	0.0	0.0
+488	MAG4 HarvAc	FREE	1.0	null	null	null	null	803	v_74	3999.999999999992	0.0	0.0
+489	MAG4 HarvAc	FREE	1.0	null	null	null	null	804	v_75	4396.179385798576	0.0	0.0
+490	MAG4 HarvAc	FREE	1.0	null	null	null	null	805	v_76	4802.860147772251	0.0	0.0
+491	MAG56 HarvAc	FREE	1.0	null	null	null	null	806	v_77	24462.108134031965	0.0	0.0
+492	MAG56 HarvAc	FREE	1.0	null	null	null	null	807	v_78	25558.02945291916	0.0	0.0
+493	MAG56 HarvAc	FREE	1.0	null	null	null	null	808	v_79	26590.401292038085	0.0	0.0
+494	MAG56 HarvAc	FREE	1.0	null	null	null	null	809	v_80	9292.368238071607	0.0	0.0
+495	MAG56 HarvAc	FREE	1.0	null	null	null	null	810	v_81	21349.585841707867	0.0	0.0
+496	MAG56 HarvAc	FREE	1.0	null	null	null	null	811	v_82	25058.444602679203	0.0	0.0
+497	MAG56 HarvAc	FREE	1.0	null	null	null	null	812	v_83	11203.08297259739	0.0	0.0
+498	MAG56 HarvAc	FREE	1.0	null	null	null	null	813	v_84	12841.28307833916	0.0	0.0
+499	MAG56 HarvAc	FREE	1.0	null	null	null	null	814	v_85	7364.104393213438	0.0	0.0
+500	MAG56 HarvAc	FREE	1.0	null	null	null	null	815	v_86	5176.132863853538	0.0	0.0
+501	MAG56 HarvAc	FREE	1.0	null	null	null	null	816	v_87	12252.252017310899	0.0	0.0
+502	MAG56 HarvAc	FREE	1.0	null	null	null	null	817	v_88	12682.74511553988	0.0	0.0
+503	MAG56 HarvAc	FREE	1.0	null	null	null	null	818	v_89	13000.0	0.0	0.0
+504	MAG56 HarvAc	FREE	1.0	null	null	null	null	819	v_90	14287.583003845379	0.0	0.0
+505	MAG56 HarvAc	FREE	1.0	null	null	null	null	820	v_91	15609.295480259803	0.0	0.0
+506	RxBurn bounds	HARD	1.0	20000.0	null	100000.0	null	713	z_83	63430.972456322925	0.0	0.0
+507	RxBurn bounds	HARD	1.0	20000.0	null	100000.0	null	714	z_84	41164.55176523333	0.0	0.0
+508	RxBurn bounds	HARD	1.0	20000.0	null	100000.0	null	715	z_85	42972.852538662024	0.0	0.0
+509	RxBurn bounds	HARD	1.0	20000.0	null	100000.0	null	716	z_86	100000.0	-30.956243652507318	0.0
+510	RxBurn bounds	HARD	1.0	20000.0	null	100000.0	null	717	z_87	38165.704980561684	0.0	0.0
+511	RxBurn bounds	HARD	1.0	20000.0	null	100000.0	null	718	z_88	29297.796579445312	0.0	0.0
+512	RxBurn bounds	HARD	1.0	20000.0	null	100000.0	null	719	z_89	20000.0	1.4791321492341447	0.0
+513	RxBurn bounds	HARD	1.0	20000.0	null	100000.0	null	720	z_90	20000.0	3.6216100494631234	0.0
+514	RxBurn bounds	HARD	1.0	20000.0	null	100000.0	null	721	z_91	20000.0	3.620308358361528	0.0
+515	RxBurn bounds	HARD	1.0	20000.0	null	100000.0	null	722	z_92	100000.0	-298.426826415077	0.0
+516	RxBurn bounds	HARD	1.0	20000.0	null	100000.0	null	723	z_93	20000.0	0.06199489235679678	0.0
+517	RxBurn bounds	HARD	1.0	20000.0	null	100000.0	null	724	z_94	20000.0	1.5669033237806562	0.0
+518	RxBurn bounds	HARD	1.0	20000.0	null	100000.0	null	725	z_95	20000.0	0.6314488901968472	0.0
+519	RxBurn bounds	HARD	1.0	20000.0	null	100000.0	null	726	z_96	21980.896928992886	0.0	0.0
+520	RxBurn bounds	HARD	1.0	20000.0	null	100000.0	null	727	z_97	24073.494838861192	0.0	0.0
+521	No PCT acres in Lynx Hab Type G or H	HARD	1.0	null	null	0.0	null	728	z_98	0.0	-165.9779612279954	0.0

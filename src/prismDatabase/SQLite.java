@@ -122,8 +122,17 @@ private static int totalLines;
 				statement[0] = "CREATE TABLE " + "[" + tableName + "]" + " (" + string1 + ");";		// [] surrounds tableName	
 			
 				// And here are statement to import from the second record (or line) to the end of the file
+//				for (int i = 1; i < a.length; i++) {
+//					String[] currentRow = a[i].split(delimited);
+				
+				String[] currentRow = new String[a[0].split(delimited).length];
 				for (int i = 1; i < a.length; i++) {
-					String[] currentRow = a[i].split(delimited);
+					String[] temp_currentRow = a[i].split(delimited);
+					for (int kk = 0; kk < currentRow.length; kk++) {
+						currentRow[kk] = (kk < temp_currentRow.length) ? temp_currentRow[kk] : "";
+					}
+					
+					
 					int rowCount = currentRow.length;
 					String string2 = "";
 					// make it to be: 'rowValue',

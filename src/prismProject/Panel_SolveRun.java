@@ -1145,21 +1145,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			double[] var_cost_value  = new double[vname.length];
 			
 			for (int i = 0; i < vname.length; i++) {
-				int var_rotation_age = -9999;	// If variables is not EA variable	
-				
-				if (vname[i].startsWith("xEA_E_")) {
-					String strata = Get_Variable_Information.get_layer1(vname[i])
-							+ Get_Variable_Information.get_layer2(vname[i])
-							+ Get_Variable_Information.get_layer3(vname[i])
-							+ Get_Variable_Information.get_layer4(vname[i])
-							+ Get_Variable_Information.get_layer5(vname[i])
-							+ Get_Variable_Information.get_layer6(vname[i]);
-					int strata_id = Collections.binarySearch(model_strata, strata);							
-					var_rotation_age = Get_Variable_Information.get_rotation_period(vname[i]) + starting_age[strata_id] - 1;	// rotationAge = tR + starting_age[strata_id] - 1;
-				} else if (vname[i].startsWith("xEA_R_")) {
-					var_rotation_age = Get_Variable_Information.get_rotation_age(vname[i]); 
-				} 
-				
+				int var_rotation_age = Get_Variable_Information.get_rotation_age(vname[i], starting_age, model_strata); 
 				int[] prescription_and_row = get_prescription_and_row(yield_tables_names_list, vname[i], var_rotation_age);
 				var_prescription[i] = prescription_and_row[0];
 				var_row_id[i] = prescription_and_row[1];
@@ -3616,35 +3602,17 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								int table_id_to_find = -9999;
 								int row_id_to_find = -9999;
 								
-								String yield_table_name_to_find = Get_Variable_Information.get_yield_table_name_to_find(vname[i]);
-								if (yield_table_name_to_find.contains("rotation_age")) {	// replace the String "rotation_age" with the integer value of rotation_age
-									if (vname[i].contains("xEA_E_")) {
-										String var_name = vname[i].replace("xEA_E_", "");
-										String[] term = var_name.toString().split(",");	
-										int s1 = Collections.binarySearch(layer1, term[0]);
-										int s2 = Collections.binarySearch(layer2, term[1]);
-										int s3 = Collections.binarySearch(layer3, term[2]);
-										int s4 = Collections.binarySearch(layer4, term[3]);
-										int s5 = Collections.binarySearch(layer5, term[4]);
-										int s6 = Collections.binarySearch(layer6, term[5]);		
-										String strata_name = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4) + layer5.get(s5) + layer6.get(s6);
-										int strata_id = Collections.binarySearch(model_strata, strata_name);
-										
-										int rotation_period = Integer.parseInt(term[6]);
-										int rotation_age = rotation_period + starting_age[strata_id] - 1;	
-										yield_table_name_to_find = yield_table_name_to_find.replace("rotation_age", String.valueOf(rotation_age));
-										
-										int[] prescription_and_row = get_prescription_and_row(yield_tables_names_list, vname[i], rotation_age);
-										table_id_to_find = prescription_and_row[0];
-										row_id_to_find = prescription_and_row[1];
-									}					
-								} else {
-									int[] prescription_and_row = get_prescription_and_row(yield_tables_names_list, vname[i], Get_Variable_Information.get_rotation_age(vname[i]));
-									table_id_to_find = prescription_and_row[0];
-									row_id_to_find = prescription_and_row[1];
-								}
-								String data_connection = "good";
 								
+								int var_rotation_age = Get_Variable_Information.get_rotation_age(vname[i], starting_age, model_strata); 
+								String yield_table_name_to_find = Get_Variable_Information.get_yield_table_name_to_find(vname[i]);
+								yield_table_name_to_find = yield_table_name_to_find.replace("rotation_age", String.valueOf(var_rotation_age));	// in EA_E variable
+								
+								int[] prescription_and_row = get_prescription_and_row(yield_tables_names_list, vname[i], var_rotation_age);
+								table_id_to_find = prescription_and_row[0];
+								row_id_to_find = prescription_and_row[1];
+								
+
+								String data_connection = "good";
 								if (table_id_to_find == -9999) {
 									data_connection = "missing yield table";
 								} else {
@@ -3662,9 +3630,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										+ "\t" + Get_Variable_Information.get_layer3(vname[i]) + "\t" + Get_Variable_Information.get_layer4(vname[i])
 										+ "\t" + Get_Variable_Information.get_layer5(vname[i]) + "\t" + Get_Variable_Information.get_layer6(vname[i])
 										+ "\t" + Get_Variable_Information.get_timing_choice(vname[i]) + "\t" + Get_Variable_Information.get_period(vname[i])
-										+ "\t" + String.valueOf(Get_Variable_Information.get_age(vname[i])).replace("-9999",  "") 
+										+ "\t" + String.valueOf(Get_Variable_Information.get_age(vname[i], starting_age, model_strata)).replace("-9999",  "") 
 										+ "\t" + String.valueOf(Get_Variable_Information.get_rotation_period(vname[i])).replace("-9999",  "") 
-										+ "\t" + String.valueOf(Get_Variable_Information.get_rotation_age(vname[i])).replace("-9999",  "") 
+										+ "\t" + String.valueOf(Get_Variable_Information.get_rotation_age(vname[i], starting_age, model_strata)).replace("-9999",  "") 
 										+ "\t" + Get_Variable_Information.get_regenerated_covertype(vname[i])
 										+ "\t" + data_connection + "\t" + yield_table_name_to_find + "\t" + row_id_to_find);
 								for (int col = 2; col < yield_tables_column_names.length; col++) {		// do not write prescription & row_id in the yield_tables
@@ -5563,21 +5531,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			double[] var_cost_value  = new double[vname.length];
 			
 			for (int i = 0; i < vname.length; i++) {
-				int var_rotation_age = -9999;	// If variables is not EA variable	
-				
-				if (vname[i].startsWith("xEA_E_")) {
-					String strata = Get_Variable_Information.get_layer1(vname[i])
-							+ Get_Variable_Information.get_layer2(vname[i])
-							+ Get_Variable_Information.get_layer3(vname[i])
-							+ Get_Variable_Information.get_layer4(vname[i])
-							+ Get_Variable_Information.get_layer5(vname[i])
-							+ Get_Variable_Information.get_layer6(vname[i]);
-					int strata_id = Collections.binarySearch(model_strata, strata);							
-					var_rotation_age = Get_Variable_Information.get_rotation_period(vname[i]) + starting_age[strata_id] - 1;	// rotationAge = tR + starting_age[strata_id] - 1;
-				} else if (vname[i].startsWith("xEA_R_")) {
-					var_rotation_age = Get_Variable_Information.get_rotation_age(vname[i]); 
-				} 
-				
+				int var_rotation_age = Get_Variable_Information.get_rotation_age(vname[i], starting_age, model_strata); 
 				int[] prescription_and_row = get_prescription_and_row(yield_tables_names_list, vname[i], var_rotation_age);
 				var_prescription[i] = prescription_and_row[0];
 				var_row_id[i] = prescription_and_row[1];
@@ -8259,35 +8213,17 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								int table_id_to_find = -9999;
 								int row_id_to_find = -9999;
 								
-								String yield_table_name_to_find = Get_Variable_Information.get_yield_table_name_to_find(vname[i]);
-								if (yield_table_name_to_find.contains("rotation_age")) {	// replace the String "rotation_age" with the integer value of rotation_age
-									if (vname[i].contains("xEA_E_")) {
-										String var_name = vname[i].replace("xEA_E_", "");
-										String[] term = var_name.toString().split(",");	
-										int s1 = Collections.binarySearch(layer1, term[0]);
-										int s2 = Collections.binarySearch(layer2, term[1]);
-										int s3 = Collections.binarySearch(layer3, term[2]);
-										int s4 = Collections.binarySearch(layer4, term[3]);
-										int s5 = Collections.binarySearch(layer5, term[4]);
-										int s6 = Collections.binarySearch(layer6, term[5]);		
-										String strata_name = layer1.get(s1) + layer2.get(s2) + layer3.get(s3) + layer4.get(s4) + layer5.get(s5) + layer6.get(s6);
-										int strata_id = Collections.binarySearch(model_strata, strata_name);
-										
-										int rotation_period = Integer.parseInt(term[6]);
-										int rotation_age = rotation_period + starting_age[strata_id] - 1;	
-										yield_table_name_to_find = yield_table_name_to_find.replace("rotation_age", String.valueOf(rotation_age));
-										
-										int[] prescription_and_row = get_prescription_and_row(yield_tables_names_list, vname[i], rotation_age);
-										table_id_to_find = prescription_and_row[0];
-										row_id_to_find = prescription_and_row[1];
-									}					
-								} else {
-									int[] prescription_and_row = get_prescription_and_row(yield_tables_names_list, vname[i], Get_Variable_Information.get_rotation_age(vname[i]));
-									table_id_to_find = prescription_and_row[0];
-									row_id_to_find = prescription_and_row[1];
-								}
-								String data_connection = "good";
 								
+								int var_rotation_age = Get_Variable_Information.get_rotation_age(vname[i], starting_age, model_strata); 
+								String yield_table_name_to_find = Get_Variable_Information.get_yield_table_name_to_find(vname[i]);
+								yield_table_name_to_find = yield_table_name_to_find.replace("rotation_age", String.valueOf(var_rotation_age));	// in EA_E variable
+								
+								int[] prescription_and_row = get_prescription_and_row(yield_tables_names_list, vname[i], var_rotation_age);
+								table_id_to_find = prescription_and_row[0];
+								row_id_to_find = prescription_and_row[1];
+								
+
+								String data_connection = "good";
 								if (table_id_to_find == -9999) {
 									data_connection = "missing yield table";
 								} else {
@@ -8305,9 +8241,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 										+ "\t" + Get_Variable_Information.get_layer3(vname[i]) + "\t" + Get_Variable_Information.get_layer4(vname[i])
 										+ "\t" + Get_Variable_Information.get_layer5(vname[i]) + "\t" + Get_Variable_Information.get_layer6(vname[i])
 										+ "\t" + Get_Variable_Information.get_timing_choice(vname[i]) + "\t" + Get_Variable_Information.get_period(vname[i])
-										+ "\t" + String.valueOf(Get_Variable_Information.get_age(vname[i])).replace("-9999",  "") 
+										+ "\t" + String.valueOf(Get_Variable_Information.get_age(vname[i], starting_age, model_strata)).replace("-9999",  "") 
 										+ "\t" + String.valueOf(Get_Variable_Information.get_rotation_period(vname[i])).replace("-9999",  "") 
-										+ "\t" + String.valueOf(Get_Variable_Information.get_rotation_age(vname[i])).replace("-9999",  "") 
+										+ "\t" + String.valueOf(Get_Variable_Information.get_rotation_age(vname[i], starting_age, model_strata)).replace("-9999",  "") 
 										+ "\t" + Get_Variable_Information.get_regenerated_covertype(vname[i])
 										+ "\t" + data_connection + "\t" + yield_table_name_to_find + "\t" + row_id_to_find);
 								for (int col = 2; col < yield_tables_column_names.length; col++) {		// do not write prescription & row_id in the yield_tables
