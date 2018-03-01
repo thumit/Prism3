@@ -78,6 +78,7 @@ import prismConvenienceClass.FilesHandle;
 import prismConvenienceClass.IconHandle;
 import prismConvenienceClass.MenuScroller;
 import prismProject.Read_Database;
+import prismRoot.PrismMain;
 
 @SuppressWarnings("serial")
 public class Panel_DatabaseManagement extends JLayeredPane {
@@ -1657,12 +1658,10 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		try {
 			if (selectionPaths != null) {		//at least 1 database or table has to be selected 
 				//Ask to delete 
-				int response = JOptionPane.showConfirmDialog(this, "Delete highlighted tables & all tables in highlighted databases ?", "Confirm Delete",
-				        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-				
-				if (response == JOptionPane.NO_OPTION) {
-					
-				} else if (response == JOptionPane.YES_OPTION) {
+				String ExitOption[] = {"Delete", "Cancel"};
+				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), "Delete highlighted tables & all tables in highlighted databases?", "Confirm Delete",
+						JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[1]);
+				if (response == 0) {
 					DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();	
 						
 					

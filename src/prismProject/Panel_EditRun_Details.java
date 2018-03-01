@@ -1462,7 +1462,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
         
         
 		table5 = new JTable(model5) {
-             //Implement table cell tool tips           
+            //Implement table cell tool tips           
 			public String getToolTipText(MouseEvent e) {
 				String tip = null;
 				java.awt.Point p = e.getPoint();
@@ -1639,6 +1639,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		//Create a table-------------------------------------------------------------			
         model6 = new PrismTableModel(rowCount6, colCount6, data6, columnNames6) {
         	@Override
+			public Class getColumnClass(int c) {
+				if (c > 1) return Double.class;      // columns > 1 accept only Double  
+				else return String.class;				
+			}
+        	
+        	@Override
     		public boolean isCellEditable(int row, int col) {
     			if (col < 2) { // Only the last column are editable
     				return false;
@@ -1649,12 +1655,13 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
         	@Override
     		public void setValueAt(Object value, int row, int col) {
-    			if ((col == 2 || col == 3) && (((Number) value).doubleValue() < 0 || ((Number) value).doubleValue() > 100)) {
+    			if ((value != null) && (col == 2 || col == 3) && (((Number) value).doubleValue() < 0 || ((Number) value).doubleValue() > 100)) {		// allow null to be set
     				JOptionPane.showMessageDialog(PrismMain.get_Prism_DesktopPane(),
     						"Your input has not been accepted. Only double values in the range 0-100 (%) would be allowed.");
     			} else {
     				data6[row][col] = value;
     			}
+    			fireTableDataChanged();		// any value change would be registered immediately
     		}
         	
         	@Override
@@ -2581,6 +2588,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				addItem("SOFT");
 				addItem("HARD");
 				addItem("FREE");
+				addItem("IDLE");
 				setSelectedIndex(0);
 			}
 		}
@@ -2619,6 +2627,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				if (col == 2) {
 					fireTableDataChanged();		// When constraint type change then this would register the change and make the selection disappear
 					table9.setRowSelectionInterval(table9.convertRowIndexToView(row), table9.convertRowIndexToView(row));			// select the row again
+					is_IDLE_basic_constraints_used_in_flow_constraints();
 				}
 			}
 			
@@ -2653,38 +2662,32 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		
 		
 		table9 = new JTable(model9) {
-			@Override			//These override is to make the width of the cell fit all contents of the cell
+			@Override		// These override is to make the width of the cell fit all contents of the cell
 			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
-				// For the cells in table								
+				// For the cell width								
 				Component component = super.prepareRenderer(renderer, row, column);
 				int rendererWidth = component.getPreferredSize().width;
 				TableColumn tableColumn = getColumnModel().getColumn(column);
 				int maxWidth = Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth());
 				
-				// For the column names
+				// For the column header width
 				TableCellRenderer renderer2 = table9.getTableHeader().getDefaultRenderer();	
 				Component component2 = renderer2.getTableCellRendererComponent(table9,
 			            tableColumn.getHeaderValue(), false, false, -1, column);
 				maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
 				
-				tableColumn.setPreferredWidth(maxWidth);
+				if (column != 1) {
+					tableColumn.setPreferredWidth(maxWidth);
+				} else {
+					tableColumn.setMinWidth(140);
+				}
 								
-//				// Set background color
-//				if (getValueAt(row, 2) == null || getValueAt(row, 2).toString().equals("FREE")) {
-//					component.setBackground(getBackground());
-//				} else if (getValueAt(row, 2).toString().equals("SOFT")) {
-//					component.setBackground(ColorUtil.makeTransparent(new Color(27, 158, 119), 100));
-//					
-//				} else if (getValueAt(row, 2).toString().equals("HARD")) {
-//					component.setBackground(ColorUtil.makeTransparent(new Color(217, 95, 2), 100));
-//					
-//				}
-//				if (isRowSelected(row)) component.setBackground(getSelectionBackground());		// for selected row
-										
 				// Set icon for cells
 				if (column == 2) {
-					if (getValueAt(row, 2) == null || getValueAt(row, 2).toString().equals("FREE")) {
+					if (getValueAt(row, 2) == null || getValueAt(row, 2).toString().equals("IDLE")) {
 						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_gray.png"));
+					} else if (getValueAt(row, 2).toString().equals("FREE")) {
+						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_blue.png"));
 					} else if (getValueAt(row, 2).toString().equals("SOFT")) {
 						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_yellow.png"));
 					} else if (getValueAt(row, 2).toString().equals("HARD")) {
@@ -2697,19 +2700,21 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				return component;
 			}
 			
-//             //Implement table cell tool tips           
-//             public String getToolTipText(MouseEvent e) {
-//                 String tip = null;
-//                 java.awt.Point p = e.getPoint();
-//                 int rowIndex = rowAtPoint(p);
-//                 int colIndex = columnAtPoint(p);
-//                 try {
-//                       tip = getValueAt(rowIndex, colIndex).toString();
-//                 } catch (RuntimeException e1) {
-//                	 System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
-//                 }
-//                 return tip;
-//             }		
+			@Override	// Implement table cell tool tips           
+			public String getToolTipText(MouseEvent e) {
+				String tip = null;
+				java.awt.Point p = e.getPoint();
+				int row = rowAtPoint(p);
+				int col = columnAtPoint(p);
+				if (table9.getColumnName(col).equals("bc_description")) {
+					try {
+						tip = getValueAt(row, col).toString();
+					} catch (RuntimeException e1) {
+						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+					}
+				}
+				return tip;
+			}	
 		};
 
 		
@@ -2867,8 +2872,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				if (column == 3) {
 					if (getValueAt(row, 3) == null || getValueAt(row, 3).toString().equals("FREE")) {
 						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_gray.png"));
-					} else if (getValueAt(row, 3).toString().equals("SOFT")) {
-						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_yellow.png"));
 					} else if (getValueAt(row, 3).toString().equals("HARD")) {
 						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_red.png"));
 					}
@@ -3208,7 +3211,6 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 							// update readme.txt in General Inputs
 							DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd   -   HH:mm:ss");
 							readme.setText(null);
-							
 							readme.append("Model is last edited by:     " + PrismMain.get_prism_version()  + "     on     " + dateFormat.format(new Date()) + "\n");
 							readme.append("Model is created by:     " + PrismMain.get_prism_version()   + "     on     " + dateFormat.format(new Date()) + "\n");
 							readme.append("Model location:     " + currentRunFolder + "\n");
@@ -3435,7 +3437,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			// 2nd grid -----------------------------------------------------------------------
 			// 2nd grid -----------------------------------------------------------------------	
-			panel_name = "Silviculture Method & Timing Choice to be implemented";
+			panel_name = "Silviculture Method & Choice to be implemented";
 			static_identifiersScrollPanel_silviculture = new ScrollPane_StaticIdentifiers(read_database, 3, panel_name);
 			checkboxStaticIdentifiers = static_identifiersScrollPanel_silviculture.get_CheckboxStaticIdentifiers();	
 			
@@ -3760,41 +3762,47 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		    
 				
 			// Delete
-			btn_Delete.addActionListener(e -> {	
+			btn_Delete.addActionListener(e -> {
 				//Cancel editing before delete
 				if (table2.isEditing()) {
 					table2.getCellEditor().cancelCellEditing();
 				}				
 				
-				// Get selected rows
-				int[] selectedRow = table2.getSelectedRows();	
-				for (int i = 0; i < selectedRow.length; i++) {
-					selectedRow[i] = table2.convertRowIndexToModel(selectedRow[i]);	///Convert row index because "Sort" causes problems
-				}
-				
-				// Create a list of selected row indexes
-				List<Integer> selected_Index = new ArrayList<Integer>();				
-				for (int i: selectedRow) {
-					selected_Index.add(i);
-				}	
-				
-				// Get values to the new data2
-				data2 = new Object[rowCount2 - selectedRow.length][colCount2];
-				int newRow =0;
-				for (int ii = 0; ii < rowCount2; ii++) {
-					if (!selected_Index.contains(ii)) {			//If row not in the list then add to data2 row
-						for (int jj = 0; jj < colCount2; jj++) {
-							data2[newRow][jj] = model2.getValueAt(ii, jj);
-						}
-						newRow++;
+				String ExitOption[] = {"Delete", "Cancel"};
+				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), "Delete now?", "Confirm Delete",
+						JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[1]);
+				if (response == 0) {
+					// Get selected rows
+					int[] selectedRow = table2.getSelectedRows();
+					for (int i = 0; i < selectedRow.length; i++) {
+						selectedRow[i] = table2.convertRowIndexToModel(selectedRow[i]);	///Convert row index because "Sort" causes problems
 					}
+					
+					// Create a list of selected row indexes
+					List<Integer> selected_Index = new ArrayList<Integer>();				
+					for (int i: selectedRow) {
+						selected_Index.add(i);
+					}	
+					
+					// Get values to the new data2
+					data2 = new Object[rowCount2 - selectedRow.length][colCount2];
+					int newRow =0;
+					for (int ii = 0; ii < rowCount2; ii++) {
+						if (!selected_Index.contains(ii)) {			//If row not in the list then add to data2 row
+							for (int jj = 0; jj < colCount2; jj++) {
+								data2[newRow][jj] = model2.getValueAt(ii, jj);
+							}
+							newRow++;
+						}
+					}
+					// Pass back the info to table model
+					rowCount2 = rowCount2 - selectedRow.length;
+					model2.updateTableModelPrism(rowCount2, colCount2, data2, columnNames2);
+					model2.fireTableDataChanged();	
+					quick_edit = new QuickEdit_SilvicultureMethod_Panel(table2, data2);	// 2 lines to update data for Quick Edit Panel
+		 			scrollpane_QuickEdit.setViewportView(quick_edit);
 				}
-				// Pass back the info to table model
-				rowCount2 = rowCount2 - selectedRow.length;
-				model2.updateTableModelPrism(rowCount2, colCount2, data2, columnNames2);
-				model2.fireTableDataChanged();	
-				quick_edit = new QuickEdit_SilvicultureMethod_Panel(table2, data2);	// 2 lines to update data for Quick Edit Panel
-	 			scrollpane_QuickEdit.setViewportView(quick_edit);
+				
 			});
 					
 			
@@ -4903,34 +4911,39 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					table8.getCellEditor().cancelCellEditing();
 				}				
 				
-				// Get selected rows
-				int[] selectedRow = table8.getSelectedRows();	
-				for (int i = 0; i < selectedRow.length; i++) {
-					selectedRow[i] = table8.convertRowIndexToModel(selectedRow[i]);	///Convert row index because "Sort" causes problems
-				}
-				
-				// Create a list of selected row indexes
-				List<Integer> selected_Index = new ArrayList<Integer>();				
-				for (int i: selectedRow) {
-					selected_Index.add(i);
-				}	
-				
-				// Get values to the new data8
-				data8 = new Object[rowCount8 - selectedRow.length][colCount8];
-				int newRow =0;
-				for (int ii = 0; ii < rowCount8; ii++) {
-					if (!selected_Index.contains(ii)) {			//If row not in the list then add to data8 row
-						for (int jj = 0; jj < colCount8; jj++) {
-							data8[newRow][jj] = model8.getValueAt(ii, jj);
-						}
-						newRow++;
+				String ExitOption[] = {"Delete", "Cancel"};
+				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), "Delete now?", "Confirm Delete",
+						JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[1]);
+				if (response == 0) {
+					// Get selected rows
+					int[] selectedRow = table8.getSelectedRows();	
+					for (int i = 0; i < selectedRow.length; i++) {
+						selectedRow[i] = table8.convertRowIndexToModel(selectedRow[i]);	///Convert row index because "Sort" causes problems
 					}
+					
+					// Create a list of selected row indexes
+					List<Integer> selected_Index = new ArrayList<Integer>();				
+					for (int i: selectedRow) {
+						selected_Index.add(i);
+					}	
+					
+					// Get values to the new data8
+					data8 = new Object[rowCount8 - selectedRow.length][colCount8];
+					int newRow =0;
+					for (int ii = 0; ii < rowCount8; ii++) {
+						if (!selected_Index.contains(ii)) {			//If row not in the list then add to data8 row
+							for (int jj = 0; jj < colCount8; jj++) {
+								data8[newRow][jj] = model8.getValueAt(ii, jj);
+							}
+							newRow++;
+						}
+					}
+					// Pass back the info to table model
+					rowCount8 = rowCount8 - selectedRow.length;
+					model8.updateTableModelPrism(rowCount8, colCount8, data8, columnNames8);
+					
+					model8.fireTableDataChanged();	
 				}
-				// Pass back the info to table model
-				rowCount8 = rowCount8 - selectedRow.length;
-				model8.updateTableModelPrism(rowCount8, colCount8, data8, columnNames8);
-				
-				model8.fireTableDataChanged();	
 			});			
 			// End of Listeners for table9 & buttons -----------------------------------------------------------------------
 			// End of Listeners for table9 & buttons -----------------------------------------------------------------------		    
@@ -5384,7 +5397,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				model9.updateTableModelPrism(rowCount9, colCount9, data9, columnNames9);
 				update_id();
 				model9.fireTableDataChanged();
-				quick_edit = new QuickEdit_BasicConstraints_Panel(table9, data9);		// 2 lines to update data for Quick Edit Panel
+				quick_edit = new QuickEdit_BasicConstraints_Panel(table9, data9) {		// 2 lines to update data for Quick Edit Panel
+					@Override
+					public void check_IDLE_constraints_vs_flows() {
+						is_IDLE_basic_constraints_used_in_flow_constraints();
+					}
+				};
 	 			scrollpane_QuickEdit.setViewportView(quick_edit);
 				
 				// Convert the new Row to model view and then select it 
@@ -5476,8 +5494,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					// Ask to confirm adding if there are more than 1000 constraints
 					int response2 = 0;	
 					if (total_constraints > 1000) {
-						String ExitOption2[] = {"Yes","No"};
-						String warningText = "You are going to add " + total_constraints + " constraints. It would take some time. Continue to add ?";
+						String ExitOption2[] = {"Add","Cancel"};
+						String warningText = "Prism is going to add " + total_constraints + " constraints. It might take time. Continue to add?";
 						response2 = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warningText, "Confirm adding constraints",
 								JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption2, ExitOption2[1]);
 						
@@ -5804,7 +5822,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 							model9.updateTableModelPrism(rowCount9, colCount9, data9, columnNames9);
 							update_id();
 							model9.fireTableDataChanged();
-							quick_edit = new QuickEdit_BasicConstraints_Panel(table9, data9);	// 2 lines to update data for Quick Edit Panel
+							quick_edit = new QuickEdit_BasicConstraints_Panel(table9, data9) {		// 2 lines to update data for Quick Edit Panel
+								@Override
+								public void check_IDLE_constraints_vs_flows() {
+									is_IDLE_basic_constraints_used_in_flow_constraints();
+								}
+							};
 				 			scrollpane_QuickEdit.setViewportView(quick_edit);
 							
 							// Convert the new Row to model view and then select it 
@@ -5882,11 +5905,11 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						
 						// Get selected rows
 						int[] selectedRow = table9.getSelectedRows();		// No need to convert row index because we never allow Sort when moving rows
-						List<Integer> selectedRowList = new ArrayList<Integer>() {{ for (int i : selectedRow) add(i);}};	// Convert array to list
+						List<Integer> selected_ids = new ArrayList<Integer>() {{ for (int i : selectedRow) add(i);}};	// Convert array to list
 						
-						if (selectedRowList.size() >=1 && selectedRowList.get(0) > 0) {	// If there is at least 1 row selected & the first row is not selected
+						if (selected_ids.size() >=1 && selected_ids.get(0) > 0) {	// If there is at least 1 row selected & the first row is not selected
 							for (int i = 0; i < rowCount9; i++) {
-								if (selectedRowList.contains(i)) {		
+								if (selected_ids.contains(i)) {		
 									for (int j = 0; j < colCount9; j++) {
 										Object temp = data9[i - 1][j];
 										data9[i - 1][j] = data9[i][j];
@@ -5947,28 +5970,92 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				}
 				
 				// Create a list of selected row indexes
-				List<Integer> selected_Index = new ArrayList<Integer>();				
+				List<Integer> selected_ids = new ArrayList<Integer>();	
+				List<Integer> selected_basic_ids = new ArrayList<Integer>();	
 				for (int i: selectedRow) {
-					selected_Index.add(i);
+					selected_ids.add(i);
+					selected_basic_ids.add((Integer) data9[i][0]);
 				}	
 				
-				// Get values to the new data9
-				data9 = new Object[rowCount9 - selectedRow.length][colCount9];
-				int newRow =0;
-				for (int ii = 0; ii < rowCount9; ii++) {
-					if (!selected_Index.contains(ii)) {			//If row not in the list then add to data9 row
-						for (int jj = 0; jj < colCount9; jj++) {
-							data9[newRow][jj] = model9.getValueAt(ii, jj);
+				Collections.sort(selected_basic_ids);	//sort to search binary
+
+				// create a list for each flow constraint, each contains the ids used in that flow
+				List<Integer>[] flow_list = new ArrayList[data10.length];
+				String warning_message = "";
+				for (int i = 0; i < data10.length; i++) {	// loop each flow
+					flow_list[i] = new ArrayList<Integer>();
+					String[] flow_arrangement = data10[i][2].toString().split(";");
+					for (String each_sigma: flow_arrangement) {		// a sigma box might have several ids, separated by a space
+						for (String id: each_sigma.split("\\s+")) {
+							flow_list[i].add(Integer.valueOf(id));
 						}
-						newRow++;
+					}
+					
+			        // check if the flow contains IDLE basic constraints
+					List<Integer> basic_ids_in_this_flow = new ArrayList<Integer>();
+					for (int id: flow_list[i]) {
+						int index = Collections.binarySearch(selected_basic_ids, id);
+						if (index >= 0) basic_ids_in_this_flow.add(id);		// if id in this flow is not found as in active (hard/soft/free) basic constraints --> add
+					}
+
+					// test print
+					if (!basic_ids_in_this_flow.isEmpty()) {
+						warning_message = warning_message + (data10[i][0] + " " + data10[i][1] + " ----->");
+						for (int id: basic_ids_in_this_flow) {
+							warning_message = warning_message + (" " + id);
+						}
+						warning_message = warning_message + "\n";
+					}
+				}	
+				
+				// Popup for Delete
+				if (warning_message.equals("")) {  // the case when basic ids are NOT in the flows
+					String ExitOption[] = {"Delete", "Cancel"};
+					int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), "Delete now?", "Confirm Delete",
+							JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[1]);
+					if (response == 0) {
+						// Get values to the new data9
+						data9 = new Object[rowCount9 - selectedRow.length][colCount9];
+						int newRow =0;
+						for (int ii = 0; ii < rowCount9; ii++) {
+							if (!selected_ids.contains(ii)) {			//If row not in the list then add to data9 row
+								for (int jj = 0; jj < colCount9; jj++) {
+									data9[newRow][jj] = model9.getValueAt(ii, jj);
+								}
+								newRow++;
+							}
+						}
+						// Pass back the info to table model
+						rowCount9 = rowCount9 - selectedRow.length;
+						model9.updateTableModelPrism(rowCount9, colCount9, data9, columnNames9);
+						model9.fireTableDataChanged();	
+						quick_edit = new QuickEdit_BasicConstraints_Panel(table9, data9) {		// 2 lines to update data for Quick Edit Panel
+							@Override
+							public void check_IDLE_constraints_vs_flows() {
+								is_IDLE_basic_constraints_used_in_flow_constraints();
+							}
+						};
+			 			scrollpane_QuickEdit.setViewportView(quick_edit);
+					}
+				} else {  // the case when some basic ids are in the flows
+					warning_message = "Basic constraints can be deleted only when they are not used in any flow constraint.\n"
+							+ "The below list shows: flow constraint -----> basic constraints in the flow which you want to delete.\n\n"
+							+ warning_message;
+					TextArea_ReadMe warning_textarea = new TextArea_ReadMe("icon_tree.png", 70, 70);
+					warning_textarea.append(warning_message);
+					warning_textarea.setSelectionStart(0);	// scroll to top
+					warning_textarea.setSelectionEnd(0);
+					warning_textarea.setEditable(false);
+					PrismTitleScrollPane warning_scrollpane = new PrismTitleScrollPane("", "LEFT", warning_textarea);
+					warning_scrollpane.get_nested_scrollpane().setPreferredSize(new Dimension(550, 300));
+					
+					String ExitOption[] = {"OK"};
+					int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warning_scrollpane, "Delete is denied",
+							JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption, ExitOption[0]);
+					if (response == 0) {
+						
 					}
 				}
-				// Pass back the info to table model
-				rowCount9 = rowCount9 - selectedRow.length;
-				model9.updateTableModelPrism(rowCount9, colCount9, data9, columnNames9);
-				model9.fireTableDataChanged();	
-				quick_edit = new QuickEdit_BasicConstraints_Panel(table9, data9);	// 2 lines to update data for Quick Edit Panel
-	 			scrollpane_QuickEdit.setViewportView(quick_edit);
 			});
 					
 			
@@ -6021,7 +6108,12 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 	        // scrollPane Quick Edit ----------------------------------------------------------------------	
 			// scrollPane Quick Edit ----------------------------------------------------------------------	
-			quick_edit = new QuickEdit_BasicConstraints_Panel(table9, data9);
+			quick_edit = new QuickEdit_BasicConstraints_Panel(table9, data9) {		// 2 lines to update data for Quick Edit Panel
+				@Override
+				public void check_IDLE_constraints_vs_flows() {
+					is_IDLE_basic_constraints_used_in_flow_constraints();
+				}
+			};
  			scrollpane_QuickEdit = new JScrollPane(quick_edit);
  			TitledBorder border = new TitledBorder("Quick Edit ");
  			border.setTitleJustification(TitledBorder.CENTER);
@@ -6208,7 +6300,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 		
 
-	// Panel Advanced Constraints--------------------------------------------------------------------------------------------------------
+	// Panel Flow Constraints--------------------------------------------------------------------------------------------------------
 	class Flow_Constraints_GUI extends JLayeredPane implements ActionListener {
 		JTable basic_table;
 		PrismTableModel model_basic;
@@ -6246,26 +6338,32 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				}
 			};
 			basic_table = new JTable(model_basic) {
-				@Override			//These override is to make the width of the cell fit all contents of the cell
+				@Override		// These override is to make the width of the cell fit all contents of the cell
 				public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
-					// For the cells in table								
+					// For the cell width								
 					Component component = super.prepareRenderer(renderer, row, column);
 					int rendererWidth = component.getPreferredSize().width;
 					TableColumn tableColumn = getColumnModel().getColumn(column);
 					int maxWidth = Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth());
 					
-					// For the column names
-					TableCellRenderer renderer2 = table9.getTableHeader().getDefaultRenderer();	
-					Component component2 = renderer2.getTableCellRendererComponent(table9,
+					// For the column header width
+					TableCellRenderer renderer2 = basic_table.getTableHeader().getDefaultRenderer();	
+					Component component2 = renderer2.getTableCellRendererComponent(basic_table,
 				            tableColumn.getHeaderValue(), false, false, -1, column);
 					maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
 					
-					tableColumn.setPreferredWidth(maxWidth);									
-							
+					if (column != 1) {
+						tableColumn.setPreferredWidth(maxWidth);
+					} else {
+						tableColumn.setMinWidth(140);
+					}
+									
 					// Set icon for cells
 					if (column == 2) {
-						if (getValueAt(row, 2) == null || getValueAt(row, 2).toString().equals("FREE")) {
+						if (getValueAt(row, 2) == null || getValueAt(row, 2).toString().equals("IDLE")) {
 							((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_gray.png"));
+						} else if (getValueAt(row, 2).toString().equals("FREE")) {
+							((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_blue.png"));
 						} else if (getValueAt(row, 2).toString().equals("SOFT")) {
 							((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_yellow.png"));
 						} else if (getValueAt(row, 2).toString().equals("HARD")) {
@@ -6274,9 +6372,25 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					} else {
 						((DefaultTableCellRenderer) component).setIcon(null);
 					}
-					
+							
 					return component;
 				}
+				
+				@Override	// Implement table cell tool tips           
+				public String getToolTipText(MouseEvent e) {
+					String tip = null;
+					java.awt.Point p = e.getPoint();
+					int row = rowAtPoint(p);
+					int col = columnAtPoint(p);
+					if (basic_table.getColumnName(col).equals("bc_description")) {
+						try {
+							tip = getValueAt(row, col).toString();
+						} catch (RuntimeException e1) {
+							System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+						}
+					}
+					return tip;
+				}	
 			};			
 			
 			// Add listener to get the currently selected rows and put IDs into the id_list
@@ -6326,7 +6440,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			table_handle.setColumnVisible("original_dynamic_identifiers", false);
 			
 			PrismTitleScrollPane basic_table_scrollPane = new PrismTitleScrollPane("Sources (Basic Constraints)", "CENTER", basic_table);
-			basic_table_scrollPane.get_nested_scrollpane().setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+//			basic_table_scrollPane.get_nested_scrollpane().setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 			basic_table_scrollPane.setPreferredSize(new Dimension(500, 0));
 			// End of 2nd Grid -----------------------------------------------------------------------							
 	    	
@@ -6502,59 +6616,91 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			// New single
 			btn_NewSingle.addActionListener(e -> {	
 				if (flow_scrollPane.get_flow_info_from_GUI().contains(";")) {	// Add constraint if there are at least 2 terms separated by ;
-					if (table10.isEditing()) {
-						table10.getCellEditor().stopCellEditing();
+					if (idle_ids_in_the_flow(flow_scrollPane.get_basic_ids_from_GUI()).isEmpty()) {  // the case when flow arrangement does not contain IDLE constraints
+						if (table10.isEditing()) {
+							table10.getCellEditor().stopCellEditing();
+						}
+						
+						// Add 1 row
+						rowCount10++;
+						data10 = new Object[rowCount10][colCount10];
+						for (int ii = 0; ii < rowCount10 - 1; ii++) {
+							for (int jj = 0; jj < colCount10; jj++) {
+								data10[ii][jj] = model10.getValueAt(ii, jj);
+							}	
+						}
+						
+						data10[rowCount10 - 1][2] = flow_scrollPane.get_flow_info_from_GUI();	
+						data10[rowCount10 - 1][3] = "FREE";
+						model10.updateTableModelPrism(rowCount10, colCount10, data10, columnNames10);
+						update_id();
+						model10.fireTableDataChanged();
+						quick_edit = new QuickEdit_FlowConstraints_Panel(table10, data10);		// 2 lines to update data for Quick Edit Panel
+			 			scrollpane_QuickEdit.setViewportView(quick_edit);
+						
+						// Convert the new Row to model view and then select it 
+						int newRow = table10.convertRowIndexToView(rowCount10 - 1);
+						table10.setRowSelectionInterval(newRow, newRow);
+						table10.scrollRectToVisible(new Rectangle(table10.getCellRect(newRow, 0, true)));
+						
+						flow_scrollPane.reload_flow_arrangement_for_one_flow(table10, data10, spin_sigma);
+					} else {
+						String warning_message = "Flow can be added only when Flow Arrangement does not contain any IDLE (or non-existing) basic constraint.\n\n"
+								+ "Current Flow Arrangement contains the following IDLE (or non-existing) basic constraints:\n"
+								+ idle_ids_in_the_flow(flow_scrollPane.get_basic_ids_from_GUI());
+						TextArea_ReadMe warning_textarea = new TextArea_ReadMe("icon_tree.png", 70, 70);
+						warning_textarea.append(warning_message);
+						warning_textarea.setSelectionStart(0);	// scroll to top
+						warning_textarea.setSelectionEnd(0);
+						warning_textarea.setEditable(false);
+						PrismTitleScrollPane warning_scrollpane = new PrismTitleScrollPane("", "LEFT", warning_textarea);
+						warning_scrollpane.get_nested_scrollpane().setPreferredSize(new Dimension(550, 300));
+						
+						String ExitOption[] = {"OK"};
+						int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warning_scrollpane, "Flow cannot be added",
+								JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption, ExitOption[0]);
 					}
-					
-					// Add 1 row
-					rowCount10++;
-					data10 = new Object[rowCount10][colCount10];
-					for (int ii = 0; ii < rowCount10 - 1; ii++) {
-						for (int jj = 0; jj < colCount10; jj++) {
-							data10[ii][jj] = model10.getValueAt(ii, jj);
-						}	
-					}
-									
-					data10[rowCount10 - 1][2] = flow_scrollPane.get_flow_info_from_GUI();	
-					data10[rowCount10 - 1][3] = "FREE";
-//					data10[rowCount10 - 1][4] = (double) 100;
-//					data10[rowCount10 - 1][5] = (double) 100;
-					model10.updateTableModelPrism(rowCount10, colCount10, data10, columnNames10);
-					update_id();
-					model10.fireTableDataChanged();
-					quick_edit = new QuickEdit_FlowConstraints_Panel(table10, data10);		// 2 lines to update data for Quick Edit Panel
-		 			scrollpane_QuickEdit.setViewportView(quick_edit);
-					
-					// Convert the new Row to model view and then select it 
-					int newRow = table10.convertRowIndexToView(rowCount10 - 1);
-					table10.setRowSelectionInterval(newRow, newRow);
-					table10.scrollRectToVisible(new Rectangle(table10.getCellRect(newRow, 0, true)));
-					
-					flow_scrollPane.reload_flow_arrangement_for_one_flow(table10, data10, spin_sigma);
 				}			
 			});			
 			
 			
 			// Edit
 			btn_Edit.addActionListener(e -> {
-				if (table10.isEditing()) {
-					table10.getCellEditor().stopCellEditing();
-				}
-				
-				if (table10.isEnabled()) {						
-					int selectedRow = table10.getSelectedRow();
-					selectedRow = table10.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems										
+				if (idle_ids_in_the_flow(flow_scrollPane.get_basic_ids_from_GUI()).isEmpty()) {  // the case when flow arrangement does not contain IDLE constraints
+					if (table10.isEditing()) {
+						table10.getCellEditor().stopCellEditing();
+					}
 					
-					if (flow_scrollPane.get_flow_info_from_GUI().contains(";")) {	// Edit is accepted if there are at least 2 terms separated by ;
-						data10[selectedRow][2] = flow_scrollPane.get_flow_info_from_GUI();					
-						model10.fireTableDataChanged();	
+					if (table10.isEnabled()) {						
+						int selectedRow = table10.getSelectedRow();
+						selectedRow = table10.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems										
 						
-						// Convert the edited Row to model view and then select it 
-						int editRow = table10.convertRowIndexToView(selectedRow);
-						table10.setRowSelectionInterval(editRow, editRow);
-						
-						flow_scrollPane.reload_flow_arrangement_for_one_flow(table10, data10, spin_sigma);
-					}									
+						if (flow_scrollPane.get_flow_info_from_GUI().contains(";")) {	// Edit is accepted if there are at least 2 terms separated by ;
+							data10[selectedRow][2] = flow_scrollPane.get_flow_info_from_GUI();					
+							model10.fireTableDataChanged();	
+							
+							// Convert the edited Row to model view and then select it 
+							int editRow = table10.convertRowIndexToView(selectedRow);
+							table10.setRowSelectionInterval(editRow, editRow);
+							
+							flow_scrollPane.reload_flow_arrangement_for_one_flow(table10, data10, spin_sigma);
+						}									
+					}
+				} else {
+					String warning_message = "Flow can be modified only when Flow Arrangement does not contain any IDLE (or non-existing) basic constraint.\n\n"
+							+ "The current Flow Arrangemnet contains the following IDLE (or non-existing) basic constraints:\n"
+							+ idle_ids_in_the_flow(flow_scrollPane.get_basic_ids_from_GUI());
+					TextArea_ReadMe warning_textarea = new TextArea_ReadMe("icon_tree.png", 70, 70);
+					warning_textarea.append(warning_message);
+					warning_textarea.setSelectionStart(0);	// scroll to top
+					warning_textarea.setSelectionEnd(0);
+					warning_textarea.setEditable(false);
+					PrismTitleScrollPane warning_scrollpane = new PrismTitleScrollPane("", "LEFT", warning_textarea);
+					warning_scrollpane.get_nested_scrollpane().setPreferredSize(new Dimension(550, 300));
+					
+					String ExitOption[] = {"OK"};
+					int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warning_scrollpane, "Flow cannot be modified",
+							JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption, ExitOption[0]);
 				}
 			});
 			
@@ -6648,35 +6794,40 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					table10.getCellEditor().cancelCellEditing();
 				}				
 				
-				// Get selected rows
-				int[] selectedRow = table10.getSelectedRows();	
-				for (int i = 0; i < selectedRow.length; i++) {
-					selectedRow[i] = table10.convertRowIndexToModel(selectedRow[i]);	///Convert row index because "Sort" causes problems
-				}
-				
-				// Create a list of selected row indexes
-				List<Integer> selected_Index = new ArrayList<Integer>();				
-				for (int i: selectedRow) {
-					selected_Index.add(i);
-				}	
-				
-				// Get values to the new data10
-				data10 = new Object[rowCount10 - selectedRow.length][colCount10];
-				int newRow =0;
-				for (int ii = 0; ii < rowCount10; ii++) {
-					if (!selected_Index.contains(ii)) {			//If row not in the list then add to data10 row
-						for (int jj = 0; jj < colCount10; jj++) {
-							data10[newRow][jj] = model10.getValueAt(ii, jj);
-						}
-						newRow++;
+				String ExitOption[] = {"Delete", "Cancel"};
+				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), "Delete now?", "Confirm Delete",
+						JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[1]);
+				if (response == 0) {
+					// Get selected rows
+					int[] selectedRow = table10.getSelectedRows();	
+					for (int i = 0; i < selectedRow.length; i++) {
+						selectedRow[i] = table10.convertRowIndexToModel(selectedRow[i]);	///Convert row index because "Sort" causes problems
 					}
+					
+					// Create a list of selected row indexes
+					List<Integer> selected_Index = new ArrayList<Integer>();				
+					for (int i: selectedRow) {
+						selected_Index.add(i);
+					}	
+					
+					// Get values to the new data10
+					data10 = new Object[rowCount10 - selectedRow.length][colCount10];
+					int newRow =0;
+					for (int ii = 0; ii < rowCount10; ii++) {
+						if (!selected_Index.contains(ii)) {			//If row not in the list then add to data10 row
+							for (int jj = 0; jj < colCount10; jj++) {
+								data10[newRow][jj] = model10.getValueAt(ii, jj);
+							}
+							newRow++;
+						}
+					}
+					// Pass back the info to table model
+					rowCount10 = rowCount10 - selectedRow.length;
+					model10.updateTableModelPrism(rowCount10, colCount10, data10, columnNames10);
+					model10.fireTableDataChanged();	
+					quick_edit = new QuickEdit_FlowConstraints_Panel(table10, data10);		// 2 lines to update data for Quick Edit Panel
+		 			scrollpane_QuickEdit.setViewportView(quick_edit);
 				}
-				// Pass back the info to table model
-				rowCount10 = rowCount10 - selectedRow.length;
-				model10.updateTableModelPrism(rowCount10, colCount10, data10, columnNames10);
-				model10.fireTableDataChanged();	
-				quick_edit = new QuickEdit_FlowConstraints_Panel(table10, data10);		// 2 lines to update data for Quick Edit Panel
-	 			scrollpane_QuickEdit.setViewportView(quick_edit);
 			});
 					
 			
@@ -6918,6 +7069,96 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 	
 	
 	//--------------------------------------------------------------------------------------------------------------------------------
+	public boolean is_IDLE_basic_constraints_used_in_flow_constraints() {
+		String warning_message = "";
+		List<Integer> idle_to_free_list = new ArrayList<Integer>();
+		
+		// create a list of active basic constraints
+		List<Integer> active_basic_constraints_list = new ArrayList<Integer>();				
+		for (int i = 0; i < data9.length; i++) {
+			if (!data9[i][2].equals("IDLE")) {
+				active_basic_constraints_list.add((Integer) data9[i][0]);
+			}
+		}	
+		Collections.sort(active_basic_constraints_list);	// sort to search binary
+
+		// create a list for each flow constraint, each contains the ids used in that flow
+		List<Integer>[] flow_list = new ArrayList[data10.length];
+		for (int i = 0; i < data10.length; i++) {	// loop each flow
+			flow_list[i] = new ArrayList<Integer>();
+			String[] flow_arrangement = data10[i][2].toString().split(";");
+			for (String each_sigma: flow_arrangement) {		// a sigma box might have several ids, separated by a space
+				for (String id: each_sigma.split("\\s+")) {
+					flow_list[i].add(Integer.valueOf(id));
+				}
+			}
+			
+	        // check if the flow contains IDLE basic constraints
+			List<Integer> ids_in_this_flow_but_not_active_basic_constraints = new ArrayList<Integer>();
+			for (int id: flow_list[i]) {
+				int index = Collections.binarySearch(active_basic_constraints_list, id);
+				if (index < 0) {	// if id in this flow is not found as in active (hard/soft/free) basic constraints --> add
+					ids_in_this_flow_but_not_active_basic_constraints.add(id);
+					if (!idle_to_free_list.contains(id)) idle_to_free_list.add(id);
+				}
+			}
+
+			// test print
+			if (!ids_in_this_flow_but_not_active_basic_constraints.isEmpty()) {
+				warning_message = warning_message + (data10[i][0] + " " + data10[i][1] + " -----> ");
+				for (int id: ids_in_this_flow_but_not_active_basic_constraints) {
+					warning_message = warning_message + (id + " ");
+				}
+				warning_message = warning_message + "\n";
+			}
+		}	
+		
+		// if there are IDLE constraints used in the flows
+		if (!idle_to_free_list.isEmpty()) {
+			// turn IDLE into FREE
+			for (int i = 0; i < data9.length; i++) {
+				if (data9[i][2].equals("IDLE") && idle_to_free_list.contains((Integer) data9[i][0])) {
+					data9[i][2] = "FREE";
+				}
+			}	
+			
+			// show popup
+			warning_message = "PRISM makes some basic constraints FREE since they are used in flow constraints:\n"
+					+ idle_to_free_list + "\n\n"
+					+ "Below list shows:\n"
+					+ "flow constraint -----> basic constraints you want to be IDLE but PRISM turns into FREE:\n"
+					+ warning_message;
+			TextArea_ReadMe warning_textarea = new TextArea_ReadMe("icon_tree.png", 70, 70);
+			warning_textarea.append(warning_message);
+			warning_textarea.setSelectionStart(0);	// scroll to top
+			warning_textarea.setSelectionEnd(0);
+			warning_textarea.setEditable(false);
+			PrismTitleScrollPane warning_scrollpane = new PrismTitleScrollPane("", "LEFT", warning_textarea);
+			warning_scrollpane.get_nested_scrollpane().setPreferredSize(new Dimension(550, 300));
+			
+			String ExitOption[] = {"OK"};
+			int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warning_scrollpane, "Constraints turn into FREE",
+					JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption, ExitOption[0]);
+			
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public List<Integer> idle_ids_in_the_flow(List<Integer> basic_ids_in_the_flow) {
+		// create a list of IDLE basic constraints
+		List<Integer> idle_constraints_ids_list = new ArrayList<Integer>();
+		for (int i = 0; i < data9.length; i++) {
+			if (data9[i][2].equals("IDLE")) {
+				idle_constraints_ids_list.add((Integer) data9[i][0]);
+			}
+		}
+		basic_ids_in_the_flow.retainAll(idle_constraints_ids_list);
+		return basic_ids_in_the_flow;
+	}
+	
+	//--------------------------------------------------------------------------------------------------------------------------------
 	// Get values to pass to other classes
 	
 	//Add all input Files to a list
@@ -6935,12 +7176,10 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		create_file_database();		// Note for this file, we just copy overwritten
 		create_readmeFile();
 		
-		
 //		// Just to save the rename method
 //		File temp = new File(currentRunFolder.getAbsolutePath() + "/" + databaseFile.getName());			
 //		databaseFile.renameTo(temp);
 	}
-	
 
 	
 	private void create_file_input_01() {

@@ -673,3 +673,22 @@ All changes in this block are associated with PrismAlpha1.0.27.jar, Prism Formul
 296. Add some more queries into output_system_sql_library
 All changes in this block are associated with PrismAlpha1.0.28.jar, Prism Formulation 02.docx, Prism Database 02.docx
 --------------------------------------------------------------------------
+
+297. Turn ON/OFF for MS and BS precentages --> exported as PrismAlpha1.0.29.jar
+298. Add IDLE option for basic constraints:
+	- Modify to add "IDLE" combo box for table9, basic_table, quickedit area, and table inside ScrollPane_ConstraintsSplitBasic
+	- Change colors: "IDLE" -->gray, "FREE" --> blue
+	- ScrollPane_ConstraintsSplitBasic: always show "FREE" when popup is opened
+	- ScrollPane_ConstraintsSplitBasic: also show colorful icons for bc_type in the table
+	- Read_RunInputs -- > read_basic_constraints: remove IDLE line after reading input basic constraints
+	- Read_RunInputs -- > get_total_freeConstraints: no need to convert null to FREE constraint anymore because in the EDIT we do not allow null bc_type anymore
+299. Add popup widows to confirm delete for all delete buttons
+300. Basic contraints are not allowed to delete if are currently in the flows
+301. A flow constraint can be added or modified only if Flow Arragement does not contain any IDLE basic constraint
+302. Changing bc_type both by directly using combox box in table9 or by using quick edit apply button:
+	- Check whether IDLE constraints are in the flows
+	- Auto change IDLE into FREE if they are currently used in the flows
+303. Bug 20 clear (fail display when multiple projects are open) --> create 2 link buttons in Panel_Projects & remove all the static definitions.
+304. Three tables in Basic Constraints, Flow Constraints, output_05 have "description" column not auto-resized & have tooltip displayed
+All changes in this block are associated with PrismAlpha1.0.30.jar, Prism Formulation 02.docx, Prism Database 02.docx
+--------------------------------------------------------------------------

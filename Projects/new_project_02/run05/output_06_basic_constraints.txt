@@ -8,11 +8,11 @@ bc_id	bc_description	bc_type	bc_multiplier	lowerbound	lowerbound_perunit_penalty
 8	total cost in 5 - time period 5	FREE	1.0	null	null	null	null	12	v_6	60855.07870183483	0.0	0.0
 9	5k acres EAe period 1	SOFT	1.0	5000.0	1.0	5000.0	1.0	0	y_0	5000.0	0.0	0.0
 10	penaly for each dollar used	SOFT	1.0	null	null	0.0	0.01	1	y_1	122966.17670183483	0.0	1229.6617670183484
-11	total acre period 1	FREE	1.0	null	null	null	null	13	v_7	84935.94999999998	0.0	0.0
-12	total acre period 2	FREE	1.0	null	null	null	null	14	v_8	84935.94999999998	0.0	0.0
-13	total acre period 3	FREE	1.0	null	null	null	null	15	v_9	84935.95000000001	0.0	0.0
-14	total acre period 4	FREE	1.0	null	null	null	null	16	v_10	84935.95000000001	0.0	0.0
-15	total acre period 5	FREE	1.0	null	null	null	null	17	v_11	84935.94999999997	0.0	0.0
+11	total acre period 1	FREE	1.0	null	null	null	null	13	v_7	83391.95000000001	0.0	0.0
+12	total acre period 2	FREE	1.0	null	null	null	null	14	v_8	83391.95000000001	0.0	0.0
+13	total acre period 3	FREE	1.0	null	null	null	null	15	v_9	83391.95000000003	0.0	0.0
+14	total acre period 4	FREE	1.0	null	null	null	null	16	v_10	83391.95000000003	0.0	0.0
+15	total acre period 5	FREE	1.0	null	null	null	null	17	v_11	83391.94999999998	0.0	0.0
 16	total cares p3 dom_group1 size 12 	FREE	1.0	null	null	null	null	18	v_12	0.0	0.0	0.0
 17	total cares p3 dom_group1 size 13	FREE	1.0	null	null	null	null	19	v_13	0.0	0.0	0.0
 18	total cares p3 dom_group1 size 20	FREE	1.0	null	null	null	null	20	v_14	0.0	0.0	0.0

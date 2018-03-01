@@ -26,6 +26,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.Action;
 import javax.swing.ActionMap;
@@ -168,6 +170,17 @@ public class ScrollPane_ConstraintsFlow extends JScrollPane {
 		
 		return flow_info;
 	} 
+	
+	public List<Integer> get_basic_ids_from_GUI() {
+		List<Integer> basic_ids_list = new ArrayList<Integer>();
+		for (JList list : flow_list) {
+			for (int i = 0; i < list.getModel().getSize(); i++) {
+				Object obj = list.getModel().getElementAt(i);
+				basic_ids_list.add(Integer.valueOf(obj.toString()));
+			}
+		}
+		return basic_ids_list;
+	}
 	
 	public void create_flow_arrangement_UI(DefaultListModel[] new_list_model) {	
 		flow_panel.removeAll();

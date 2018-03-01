@@ -108,8 +108,8 @@ public class QuickEdit_NonRD_Percentage_Panel extends JPanel {
 				}
 				table.clearSelection(); // To help trigger the row refresh: clear then add back the rows
 				for (int i : selectedRow) {
-					if (!ms_FormatedTextfield.getText().isEmpty() && !ms_FormatedTextfield.getText().equals(".")) {	// Only apply the changes to selected rows when the text is not empty
-						data[i][2] = Double.valueOf(ms_FormatedTextfield.getText());
+					if (!ms_FormatedTextfield.getText().equals(".")) {	// Only apply the changes to selected rows when the text is not empty
+						data[i][2] = (ms_FormatedTextfield.getText().isEmpty())? null : Double.valueOf(ms_FormatedTextfield.getText());
 					}
 					table.addRowSelectionInterval(table.convertRowIndexToView(i), table.convertRowIndexToView(i));
 				}
@@ -194,8 +194,8 @@ public class QuickEdit_NonRD_Percentage_Panel extends JPanel {
 				}
 				table.clearSelection(); // To help trigger the row refresh: clear then add back the rows
 				for (int i : selectedRow) {
-					if (!bs_FormatedTextfield.getText().isEmpty() && !bs_FormatedTextfield.getText().equals(".")) {	// Only apply the changes to selected rows when the text is not empty
-						data[i][3] = Double.valueOf(bs_FormatedTextfield.getText());
+					if (!bs_FormatedTextfield.getText().equals(".")) {	// Only apply the changes to selected rows when the text is not empty
+						data[i][3] = (bs_FormatedTextfield.getText().isEmpty())? null : Double.valueOf(bs_FormatedTextfield.getText());
 					}
 					table.addRowSelectionInterval(table.convertRowIndexToView(i), table.convertRowIndexToView(i));
 				}

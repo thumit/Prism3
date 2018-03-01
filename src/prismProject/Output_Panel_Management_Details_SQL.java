@@ -64,7 +64,7 @@ public class Output_Panel_Management_Details_SQL extends JLayeredPane {
 	private Boolean is_filter_visible;
 	
 	
-	public Output_Panel_Management_Details_SQL(JTable table, String conn_path) {
+	public Output_Panel_Management_Details_SQL(JTable table, String conn_path, JButton SQL_link_button) {
 		// Some set up -------------------------------------------------------------------------------------------------------
 		this.database_table = table;
 		this.conn_path = conn_path;
@@ -103,7 +103,7 @@ public class Output_Panel_Management_Details_SQL extends JLayeredPane {
 		btnSwitch.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {	
-				Panel_Project.show_management_details_NOSQL_panel();
+				SQL_link_button.doClick();
 			}
 		});				
 		

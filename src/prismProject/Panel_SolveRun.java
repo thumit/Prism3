@@ -107,7 +107,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 	public Panel_SolveRun(File[] runsList) {
 		super.setLayout(new BorderLayout(0, 0));
 		listOfEditRuns = runsList;
-
+		
 		
 		
 		// Set up a JScrollPane containing a table--------------------------------------------------------------------------------
@@ -671,11 +671,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				for (int q = 0; q < total_methods; q++) {
 					objlist.add((double) 0);
 					vnamelist.add("x_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6) + "," + q);
-					if (q == 4) {	// Mixed Fire
+					if (q == 4 && msPercent[s5][s6] != -9999) {	// Mixed Fire 		// -9999 indicate the bounds should be turned off
 						vlblist.add((double) msPercent[s5][s6] / 100 * strata_area[strata_id]);
 						vublist.add((double) msPercent[s5][s6] / 100 * strata_area[strata_id]);
 					} 
-					else if (q == 5) {	// Bark Beetle
+					else if (q == 5 && bsPercent[s5][s6] != -9999) {	// Bark Beetle		// -9999 indicate the bounds should be turned off
 						vlblist.add((double) bsPercent[s5][s6] / 100 * strata_area[strata_id]);
 						vublist.add((double) bsPercent[s5][s6] / 100 * strata_area[strata_id]);
 					}
@@ -5019,11 +5019,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					
 					objvals[new_var_index] =((double) 0);
 					vname[new_var_index] =("x_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6) + "," + q);
-					if (q == 4) {	// Mixed Fire
+					if (q == 4 && msPercent[s5][s6] != -9999) {	// Mixed Fire 		// -9999 indicate the bounds should be turned off
 						vlb[new_var_index] =((double) msPercent[s5][s6] / 100 * strata_area[strata_id]);
 						vub[new_var_index] =((double) msPercent[s5][s6] / 100 * strata_area[strata_id]);
 					} 
-					else if (q == 5) {	// Bark Beetle
+					else if (q == 5 && bsPercent[s5][s6] != -9999) {	// Bark Beetle		// -9999 indicate the bounds should be turned off
 						vlb[new_var_index] =((double) bsPercent[s5][s6] / 100 * strata_area[strata_id]);
 						vub[new_var_index] =((double) bsPercent[s5][s6] / 100 * strata_area[strata_id]);
 					}

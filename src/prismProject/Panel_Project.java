@@ -105,7 +105,7 @@ public class Panel_Project extends JLayeredPane {
 	private ToolBarWithBgImage projectToolBar;
 	
 	private JScrollPane scrollPane_Left;
-	private static JScrollPane scrollPane_Right;
+	private JScrollPane scrollPane_Right;
 
 	
 	private int rowCount, colCount;
@@ -117,8 +117,8 @@ public class Panel_Project extends JLayeredPane {
 	
 	
 	private TextArea_ReadMe readme;
-	private static Output_Panel_Management_Details_NOSQL management_details_NOSQL_panel;
-	private static Output_Panel_Management_Details_SQL management_details_SQL_panel;
+	private Output_Panel_Management_Details_NOSQL management_details_NOSQL_panel;
+	private Output_Panel_Management_Details_SQL management_details_SQL_panel;
 	
 	public Panel_Project(String currentProject) {
 		
@@ -525,10 +525,27 @@ public class Panel_Project extends JLayeredPane {
 //							c.weighty = 1;	
 //							tempPanel.add(tempArea, c);
 							
+							
+							// 2 links buttons (to clear bug 20). This is to remove all static definitions (static would make display fails when multiple projects are open)
+							JButton SQL_link_button = new JButton();
+							SQL_link_button.addActionListener(new ActionListener() {
+								@Override
+								public void actionPerformed(ActionEvent actionEvent) {	
+									scrollPane_Right.setViewportView(management_details_NOSQL_panel);
+								}
+							});	
+							JButton NoSQL_link_button = new JButton();
+							NoSQL_link_button.addActionListener(new ActionListener() {
+								@Override
+								public void actionPerformed(ActionEvent actionEvent) {	
+									scrollPane_Right.setViewportView(management_details_SQL_panel);
+								}
+							});	
+							
 							management_details_SQL_panel = null;
 							management_details_NOSQL_panel = null;
 							String conn_path = "jdbc:sqlite:" + currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/database.db";
-							management_details_SQL_panel = new Output_Panel_Management_Details_SQL(database_table, conn_path);
+							management_details_SQL_panel = new Output_Panel_Management_Details_SQL(database_table, conn_path, SQL_link_button);
 							scrollPane_Right.setViewportView(management_details_SQL_panel);
 							
 							management_details_SQL_panel.get_btnSwitch().setEnabled(false);
@@ -544,7 +561,7 @@ public class Panel_Project extends JLayeredPane {
 											System.out.println(rr.file_database.getAbsolutePath() + rr.last_modify);
 										}
 									}
-									management_details_NOSQL_panel = new Output_Panel_Management_Details_NOSQL(currentProjectFolder, currentRun, table, data, model);
+									management_details_NOSQL_panel = new Output_Panel_Management_Details_NOSQL(currentProjectFolder, currentRun, table, data, model, NoSQL_link_button);
 									management_details_SQL_panel.get_btnSwitch().setEnabled(true);
 									this.interrupt();
 								}
@@ -999,11 +1016,10 @@ public class Panel_Project extends JLayeredPane {
 		
 		if (selectionPaths != null) {		//at least 1 run has to be selected 
 			//Ask to delete 
-			int response = JOptionPane.showConfirmDialog(this, "Selected Runs will be deleted ?", "Confirm Delete",
-					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-			if (response == JOptionPane.NO_OPTION) {
-
-			} else if (response == JOptionPane.YES_OPTION) {
+			String ExitOption[] = {"Delete", "Cancel"};
+			int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), "Selected Runs will be deleted?", "Confirm Delete",
+					JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[1]);
+			if (response == 0) {
 				DefaultTreeModel model = (DefaultTreeModel) projectTree.getModel();
 				for (TreePath selectionPath : selectionPaths) { //Loop through and delete all level 2 nodes (Runs)
 					currentLevel = selectionPath.getPathCount();
@@ -1219,13 +1235,4 @@ public class Panel_Project extends JLayeredPane {
 		displayTextField.setText(null); // Show nothing on the TextField
 		scrollPane_Right.setViewportView(null);
 	}
-	
-	public static void show_management_details_SQL_panel() {
-		scrollPane_Right.setViewportView(management_details_SQL_panel);
-	}
-	
-	public static void show_management_details_NOSQL_panel() {
-		scrollPane_Right.setViewportView(management_details_NOSQL_panel);
-	}
-	
 }

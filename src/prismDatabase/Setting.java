@@ -748,37 +748,42 @@ public class Setting {
 				
 			// Delete
 			btn_Delete.addActionListener(e -> {
-				if (table.isEditing()) {
-					table.getCellEditor().stopCellEditing();
-				}				
-				
-				// Get selected rows
-				int[] selectedRow = table.getSelectedRows();	
-				for (int i = 0; i < selectedRow.length; i++) {
-					selectedRow[i] = table.convertRowIndexToModel(selectedRow[i]);	///Convert row index because "Sort" causes problems
-				}
-				
-				// Create a list of selected row indexes
-				List<Integer> selected_Index = new ArrayList<Integer>();				
-				for (int i: selectedRow) {
-					selected_Index.add(i);
-				}	
-				
-				// Get values to the new data9
-				data = new Object[rowCount - selectedRow.length][colCount];
-				int newRow =0;
-				for (int ii = 0; ii < rowCount; ii++) {
-					if (!selected_Index.contains(ii)) {			//If row not in the list then add to data9 row
-						for (int jj = 0; jj < colCount; jj++) {
-							data[newRow][jj] = model.getValueAt(ii, jj);
-						}
-						newRow++;
+				String ExitOption[] = {"Delete", "Cancel"};
+				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), "Delete now?", "Confirm Delete",
+						JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[1]);
+				if (response == 0) {
+					if (table.isEditing()) {
+						table.getCellEditor().stopCellEditing();
+					}				
+					
+					// Get selected rows
+					int[] selectedRow = table.getSelectedRows();	
+					for (int i = 0; i < selectedRow.length; i++) {
+						selectedRow[i] = table.convertRowIndexToModel(selectedRow[i]);	///Convert row index because "Sort" causes problems
 					}
+					
+					// Create a list of selected row indexes
+					List<Integer> selected_Index = new ArrayList<Integer>();				
+					for (int i: selectedRow) {
+						selected_Index.add(i);
+					}	
+					
+					// Get values to the new data9
+					data = new Object[rowCount - selectedRow.length][colCount];
+					int newRow =0;
+					for (int ii = 0; ii < rowCount; ii++) {
+						if (!selected_Index.contains(ii)) {			//If row not in the list then add to data9 row
+							for (int jj = 0; jj < colCount; jj++) {
+								data[newRow][jj] = model.getValueAt(ii, jj);
+							}
+							newRow++;
+						}
+					}
+					// Pass back the info to table model
+					rowCount = rowCount - selectedRow.length;
+					model.updateTableModelPrism(rowCount, colCount, data, columnNames);
+					model.fireTableDataChanged();
 				}
-				// Pass back the info to table model
-				rowCount = rowCount - selectedRow.length;
-				model.updateTableModelPrism(rowCount, colCount, data, columnNames);
-				model.fireTableDataChanged();	
 			});
 					
 			

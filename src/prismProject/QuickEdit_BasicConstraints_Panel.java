@@ -22,7 +22,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
@@ -57,6 +56,7 @@ public class QuickEdit_BasicConstraints_Panel extends JPanel {
 				addItem("SOFT");
 				addItem("HARD");
 				addItem("FREE");
+				addItem("IDLE");
 				setSelectedIndex(0);
 			}
 		}
@@ -88,6 +88,7 @@ public class QuickEdit_BasicConstraints_Panel extends JPanel {
 					data[i][2] = typeComBo.getSelectedItem();
 					table.addRowSelectionInterval(table.convertRowIndexToView(i), table.convertRowIndexToView(i));
 				}
+				check_IDLE_constraints_vs_flows();
 			}
 		});
 		c.gridx = 0;
@@ -311,6 +312,10 @@ public class QuickEdit_BasicConstraints_Panel extends JPanel {
 				}
 			});
 		}
+	}
+	
+	
+	public void check_IDLE_constraints_vs_flows() {
 	}
 	
 	

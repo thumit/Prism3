@@ -16,6 +16,7 @@
  ******************************************************************************/
 package prismProject;
 
+import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -35,7 +36,11 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 
+import prismConvenienceClass.IconHandle;
 import prismConvenienceClass.PrismTableModel;
 
 public class ScrollPane_ConstraintsSplitBasic  extends JScrollPane {
@@ -140,7 +145,8 @@ public class ScrollPane_ConstraintsSplitBasic  extends JScrollPane {
 		int rowCount = 1;
 		int colCount = 8;
 		data = new Object[rowCount][colCount];
-		String[] columnNames = new String[] {"bc_id", "bc_description", "bc_type",  "bc_multiplier", "lowerbound", "lowerbound_perunit_penalty", "upperbound", "upperbound_perunit_penalty"};	         				
+		String[] columnNames = new String[] {"bc_id", "bc_description", "bc_type",  "bc_multiplier", "lowerbound", "lowerbound_perunit_penalty", "upperbound", "upperbound_perunit_penalty"};
+		data[0][2] = (String) "FREE";
 		data[0][3] = (double) 1;
 		
 		PrismTableModel model = new PrismTableModel(rowCount, colCount, data, columnNames) {
@@ -161,13 +167,34 @@ public class ScrollPane_ConstraintsSplitBasic  extends JScrollPane {
 			}
 		};
 		
-		table = new JTable(model);
+		table = new JTable(model) {
+			@Override			//These override is to make the width of the cell fit all contents of the cell
+			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+				Component component = super.prepareRenderer(renderer, row, column);
+				if (column == 1) {		// this is bc_type column, 1 because we remove the bc_id column in the codes (about 30 lines below)
+					if (getValueAt(row, 1) == null || getValueAt(row, 1).toString().equals("IDLE")) {
+						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_gray.png"));
+					} else if (getValueAt(row, 1).toString().equals("FREE")) {
+						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_blue.png"));
+					} else if (getValueAt(row, 1).toString().equals("SOFT")) {
+						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_yellow.png"));
+					} else if (getValueAt(row, 1).toString().equals("HARD")) {
+						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_red.png"));
+					}
+				} else {
+					((DefaultTableCellRenderer) component).setIcon(null);
+				}
+						
+				return component;
+			}
+		};
 		
 		class comboBox_constraint_type extends JComboBox {	
 			public comboBox_constraint_type() {
 				addItem("SOFT");
 				addItem("HARD");
 				addItem("FREE");
+				addItem("IDLE");
 				setSelectedIndex(0);
 			}
 		}

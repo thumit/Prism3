@@ -23,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -438,7 +439,9 @@ public class Read_RunInputs {
 			msProportion_list = new ArrayList<Double>();
 			bsProportion_list = new ArrayList<Double>();
 			for (int i = 0; i < list.size(); i++) {
-				String[] values = list.get(i).split("\t");				
+				String[] values = list.get(i).split("\t");		
+				if (values[2].equals("null")) values[2] = "-9999";		// null --> -9999 indicate the bounds should be turned off
+				if (values[3].equals("null")) values[3] = "-9999";		// null --> -9999 indicate the bounds should be turned off
 				msProportion_list.add(Double.parseDouble(values[2]));
 				bsProportion_list.add(Double.parseDouble(values[3]));
 			}
@@ -569,6 +572,13 @@ public class Read_RunInputs {
 			// All lines to be in array
 			List<String> list;
 			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
+			List<String> remove_list = new ArrayList<String>();	// this list contains all lines which have bc_type = IDLE
+			for (String i : list) {
+				if (i.split(delimited)[2].equals("IDLE")) {
+					remove_list.add(i);
+				}
+			}
+			list.removeAll(remove_list);	// remove bc_type = IDLE lines from the list
 			String[] a = list.toArray(new String[list.size()]);
 						
 			//Read the first row into array. This will be Column names
@@ -704,7 +714,6 @@ public class Read_RunInputs {
 	public int get_total_freeConstraints () {
 		int total =0;	
 		for (int i = 1; i < bc_total_rows; i++) {		//From 2nd row		
-			if (bc_values[i][constraint_type_col].equals("null")) bc_values[i][constraint_type_col] = "FREE";
 			if (bc_values[i][constraint_type_col].equals("FREE")) total++;
 		}	
 		return total;

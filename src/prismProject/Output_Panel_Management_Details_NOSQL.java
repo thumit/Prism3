@@ -72,6 +72,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
@@ -91,6 +92,13 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 	private JTable table9;
 	private PrismTableModel model9;
 	private Object[][] data9;
+	
+	private boolean is_input_table9_loaded = false;
+	private int input_rowCount9, input_colCount9;
+	private String[] input_columnNames9;
+	private JTable input_table9;
+	private PrismTableModel input_model9;
+	private Object[][] input_data9;
 	
 	
 	Read_RunInputs read;
@@ -113,16 +121,18 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 	private JTable table;
 	private Object[][] data;
 	private PrismTableModel model;
+	private JButton NOSQL_link_button;
 	
 	private Thread thread_filter;
 	private ExecutorService executor = Executors.newFixedThreadPool(1);
 	
-	public Output_Panel_Management_Details_NOSQL(File currentProjectFolder, String currentRun, JTable table, Object[][] data, PrismTableModel model) {
+	public Output_Panel_Management_Details_NOSQL(File currentProjectFolder, String currentRun, JTable table, Object[][] data, PrismTableModel model, JButton NOSQL_link_button) {
 		this.currentProjectFolder = currentProjectFolder;
 		this.currentRun = currentRun;
 		this.table = table;
 		this.data = data;
 		this.model = model;
+		this.NOSQL_link_button = NOSQL_link_button;
 		
 		
 		// Some set up ---------------------------------------------------------------------------			
@@ -414,7 +424,20 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			is_table9_loaded = true;
 		} else { // Create a fresh new if Load fail
 			System.err.println("File not exists: output_05_fly_constraints.txt - New interface is created");
-		}		 	
+		}		
+		
+		
+		table_file = new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_09_basic_constraints.txt");
+		if (table_file.exists()) { // Load from input
+			tableLoader = new Reload_Table_Info(table_file);
+			input_rowCount9 = tableLoader.get_rowCount();
+			input_colCount9 = tableLoader.get_colCount();
+			input_data9 = tableLoader.get_input_data();
+			input_columnNames9 = tableLoader.get_columnNames();
+			is_input_table9_loaded = true;
+		} else { // Create a fresh new if Load fail
+			System.err.println("File not exists: input_09_basic_constraints.txt - New interface is created");
+		} 
     }
 	
 	
@@ -577,27 +600,47 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 					}	
 				}	
 			}
-		};
+		}; 
 		
 		
 		
 		table9 = new JTable(model9) {
-			@Override			//These override is to make the width of the cell fit all contents of the cell
+			@Override		// These override is to make the width of the cell fit all contents of the cell
 			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
-				// For the cells in table								
+				// For the cell width								
 				Component component = super.prepareRenderer(renderer, row, column);
 				int rendererWidth = component.getPreferredSize().width;
 				TableColumn tableColumn = getColumnModel().getColumn(column);
 				int maxWidth = Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth());
 				
-				// For the column names
+				// For the column header width
 				TableCellRenderer renderer2 = table9.getTableHeader().getDefaultRenderer();	
 				Component component2 = renderer2.getTableCellRendererComponent(table9,
 			            tableColumn.getHeaderValue(), false, false, -1, column);
 				maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
 				
-				tableColumn.setPreferredWidth(maxWidth);			
+				if (column != 1) {
+					tableColumn.setPreferredWidth(maxWidth);
+				} else {
+					tableColumn.setMinWidth(400);
+				}
 				return component;
+			}
+			
+			@Override	// Implement table cell tool tips           
+			public String getToolTipText(MouseEvent e) {
+				String tip = null;
+				java.awt.Point p = e.getPoint();
+				int row = rowAtPoint(p);
+				int col = columnAtPoint(p);
+				if (table9.getColumnName(col).equals("query_description")) {
+					try {
+						tip = getValueAt(row, col).toString();
+					} catch (RuntimeException e1) {
+						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+					}
+				}
+				return tip;
 			}	
 		};
 
@@ -699,7 +742,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			button_table_Panel.setBorder(BorderFactory.createTitledBorder(null, "Optimal Solution Queries", TitledBorder.CENTER, 0));
 			GridBagConstraints c2 = new GridBagConstraints();
 			c2.fill = GridBagConstraints.BOTH;
-			c2.insets = new Insets(0, 5, 10, 10); // padding top 0, left 5, bottom 10, right 10
+			c2.insets = new Insets(0, 5, 5, 10); // padding top 0, left 5, bottom 10, right 10
 			
 			
 			JButton btn_NewSingle = new JButton();
@@ -726,6 +769,18 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			button_table_Panel.add(btn_New_Multiple, c2);
 			
 			
+			JButton btn_Import_basic_Constraints = new JButton();
+			btn_Import_basic_Constraints.setFont(new Font(null, Font.BOLD, 14));
+//			btn_Import_basic_Constraints.setText("IMPORT");
+			btn_Import_basic_Constraints.setToolTipText("Import Basic Constraints");
+			btn_Import_basic_Constraints.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_add4.png"));				
+			c2.gridx = 0;
+			c2.gridy = 2;
+			c2.weightx = 0;
+			c2.weighty = 0;
+			button_table_Panel.add(btn_Import_basic_Constraints, c2);
+			
+			
 			JSpinner spin_move_rows = new JSpinner (new SpinnerNumberModel(1, 0, 2, 1));
 			spin_move_rows.setToolTipText("Move");
 			JFormattedTextField SpinnerText = ((DefaultEditor) spin_move_rows.getEditor()).getTextField();
@@ -736,7 +791,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 //		    formatter.setCommitsOnValidEdit(true);
 		    spin_move_rows.setEnabled(false);
 		    c2.gridx = 0;
-			c2.gridy = 2;
+			c2.gridy = 3;
 			c2.weightx = 0;
 			c2.weighty = 0;
 			button_table_Panel.add(spin_move_rows, c2);
@@ -748,7 +803,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			btn_Edit.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_swap.png"));
 			btn_Edit.setEnabled(false);					
 			c2.gridx = 0;
-			c2.gridy = 3;
+			c2.gridy = 4;
 			c2.weightx = 0;
 			c2.weighty = 0;
 			button_table_Panel.add(btn_Edit, c2);
@@ -761,7 +816,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			btn_Delete.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_erase.png"));
 			btn_Delete.setEnabled(false);					
 			c2.gridx = 0;
-			c2.gridy = 4;
+			c2.gridy = 5;
 			c2.weightx = 0;
 			c2.weighty = 0;
 			button_table_Panel.add(btn_Delete, c2);
@@ -775,7 +830,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			btn_Sort.setToolTipText("Sorter mode: 'ON' click columns header to sort rows. 'OFF' retrieve original rows position");
 			btn_Sort.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_sort.png"));					
 			c2.gridx = 0;
-			c2.gridy = 5;
+			c2.gridy = 6;
 			c2.weightx = 0;
 			c2.weighty = 0;
 			button_table_Panel.add(btn_Sort, c2);
@@ -793,7 +848,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			btn_GetResult.setRolloverIcon(IconHandle.get_scaledImageIcon(35, 35, "icon_calculator.png"));
 			btn_GetResult.setContentAreaFilled(false);
 			c2.gridx = 0;
-			c2.gridy = 6;
+			c2.gridy = 7;
 			c2.weightx = 0;
 			c2.weighty = 0;
 			button_table_Panel.add(btn_GetResult, c2);
@@ -811,7 +866,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			btn_Save.setRolloverIcon(IconHandle.get_scaledImageIcon(27, 27, "icon_save.png"));
 			btn_Save.setContentAreaFilled(false);
 			c2.gridx = 0;
-			c2.gridy = 7;
+			c2.gridy = 8;
 			c2.weightx = 0;
 			c2.weighty = 0;
 			button_table_Panel.add(btn_Save, c2);
@@ -820,7 +875,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			c2.insets = new Insets(0, 0, 0, 0); // No padding
 			// Add Empty Label to make all buttons on top not middle
 			c2.gridx = 0;
-			c2.gridy = 8;
+			c2.gridy = 9;
 			c2.weightx = 0;
 			c2.weighty = 1;
 			button_table_Panel.add(new JLabel(), c2);
@@ -832,7 +887,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			c2.gridy = 0;
 			c2.weightx = 1;
 			c2.weighty = 1;
-			c2.gridheight = 9;
+			c2.gridheight = 10;
 			button_table_Panel.add(table_ScrollPane, c2);
 			// End of 4th Grid -----------------------------------------------------------------------
 			// End of 4th Grid -----------------------------------------------------------------------	
@@ -1371,6 +1426,43 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			});			
 			
 			
+			// Import
+			btn_Import_basic_Constraints.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent actionEvent) {		
+					if (table9.isEditing()) {
+						table9.getCellEditor().cancelCellEditing();
+					}
+					
+					// Add all basic constraints
+					rowCount9 = rowCount9 + input_rowCount9;
+					data9 = new Object[rowCount9][colCount9];
+					for (int ii = 0; ii < rowCount9; ii++) {
+						for (int jj = 0; jj < colCount9; jj++) {
+							if (ii < rowCount9 - input_rowCount9) {
+								data9[ii][jj] = model9.getValueAt(ii, jj);
+							} else {
+								if (jj < input_colCount9) data9[ii][jj] = input_data9[ii - rowCount9 + input_rowCount9][jj];
+							}
+							
+						}	
+					}
+					model9.match_DataType();
+					
+					model9.updateTableModelPrism(rowCount9, colCount9, data9, columnNames9);
+					update_id();
+					model9.fireTableDataChanged();
+					quick_edit = new QuickEdit_FlyConstraints_Panel(table9, data9);		// 2 lines to update data for Quick Edit Panel
+		 			scrollpane_QuickEdit.setViewportView(quick_edit);
+					
+					// Convert the new Row to model view and then select it 
+					int newRow = table9.convertRowIndexToView(rowCount9 - 1);
+					table9.setRowSelectionInterval(newRow, newRow);
+					table9.scrollRectToVisible(new Rectangle(table9.getCellRect(newRow, 0, true)));
+				}
+			});
+			
+			
 			// Edit
 			btn_Edit.addActionListener(new ActionListener() {
 				@Override
@@ -1492,40 +1584,45 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			btn_Delete.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {	
-					//Cancel editing before delete
-					if (table9.isEditing()) {
-						table9.getCellEditor().cancelCellEditing();
-					}				
-					
-					// Get selected rows
-					int[] selectedRow = table9.getSelectedRows();	
-					for (int i = 0; i < selectedRow.length; i++) {
-						selectedRow[i] = table9.convertRowIndexToModel(selectedRow[i]);	///Convert row index because "Sort" causes problems
-					}
-					
-					// Create a list of selected row indexes
-					List<Integer> selected_Index = new ArrayList<Integer>();				
-					for (int i: selectedRow) {
-						selected_Index.add(i);
-					}	
-					
-					// Get values to the new data9
-					data9 = new Object[rowCount9 - selectedRow.length][colCount9];
-					int newRow =0;
-					for (int ii = 0; ii < rowCount9; ii++) {
-						if (!selected_Index.contains(ii)) {			//If row not in the list then add to data9 row
-							for (int jj = 0; jj < colCount9; jj++) {
-								data9[newRow][jj] = model9.getValueAt(ii, jj);
-							}
-							newRow++;
+					String ExitOption[] = {"Delete", "Cancel"};
+					int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), "Delete now?", "Confirm Delete",
+							JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[1]);
+					if (response == 0) {
+						//Cancel editing before delete
+						if (table9.isEditing()) {
+							table9.getCellEditor().cancelCellEditing();
+						}				
+						
+						// Get selected rows
+						int[] selectedRow = table9.getSelectedRows();	
+						for (int i = 0; i < selectedRow.length; i++) {
+							selectedRow[i] = table9.convertRowIndexToModel(selectedRow[i]);	///Convert row index because "Sort" causes problems
 						}
+						
+						// Create a list of selected row indexes
+						List<Integer> selected_Index = new ArrayList<Integer>();				
+						for (int i: selectedRow) {
+							selected_Index.add(i);
+						}	
+						
+						// Get values to the new data9
+						data9 = new Object[rowCount9 - selectedRow.length][colCount9];
+						int newRow =0;
+						for (int ii = 0; ii < rowCount9; ii++) {
+							if (!selected_Index.contains(ii)) {			//If row not in the list then add to data9 row
+								for (int jj = 0; jj < colCount9; jj++) {
+									data9[newRow][jj] = model9.getValueAt(ii, jj);
+								}
+								newRow++;
+							}
+						}
+						// Pass back the info to table model
+						rowCount9 = rowCount9 - selectedRow.length;
+						model9.updateTableModelPrism(rowCount9, colCount9, data9, columnNames9);
+						model9.fireTableDataChanged();	
+						quick_edit = new QuickEdit_FlyConstraints_Panel(table9, data9);	// 2 lines to update data for Quick Edit Panel
+			 			scrollpane_QuickEdit.setViewportView(quick_edit);
 					}
-					// Pass back the info to table model
-					rowCount9 = rowCount9 - selectedRow.length;
-					model9.updateTableModelPrism(rowCount9, colCount9, data9, columnNames9);
-					model9.fireTableDataChanged();	
-					quick_edit = new QuickEdit_FlyConstraints_Panel(table9, data9);	// 2 lines to update data for Quick Edit Panel
-		 			scrollpane_QuickEdit.setViewportView(quick_edit);
 				}
 			});
 					
@@ -1570,6 +1667,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 								if (data9[i][12] == null) {	
 									btn_NewSingle.setVisible(false);		// Hide buttons only when there is at least 1 calculation
 									btn_New_Multiple.setVisible(false);
+									btn_Import_basic_Constraints.setVisible(false);
 									btn_Edit.setVisible(false);
 									spin_move_rows.setVisible(false);
 									btn_Delete.setVisible(false);
@@ -1617,6 +1715,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 							create_file_input_05_fly_constraints();		// Save changes after update fly_value						
 							btn_NewSingle.setVisible(true);
 							btn_New_Multiple.setVisible(true);
+							btn_Import_basic_Constraints.setVisible(true);
 							btn_Edit.setVisible(true);
 							spin_move_rows.setVisible(true);
 							btn_Delete.setVisible(true);
@@ -1695,7 +1794,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			btnSwitch.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {	
-					Panel_Project.show_management_details_SQL_panel();
+					NOSQL_link_button.doClick();
 				}
 			});	
 			
@@ -1808,7 +1907,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			
 			for (int row = 0; row < rowCount9; row++) {
 				if (data9[row][0] != null) {
-					id_list.add((int) data9[row][0]);
+					id_list.add(Integer.valueOf(data9[row][0].toString()));
 				}
 			}			
 			

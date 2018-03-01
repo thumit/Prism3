@@ -1,0 +1,6 @@
+aaa
+SELECT
+strata_id, layer1, layer2, layer3, layer4, layer5, layer6 ,
+CASE WHEN strata_id = (layer1 || layer2 || layer3 || layer4 || layer5 || layer6) then 'correct' else 'do not match - need to fix' end AS strata_vs_layers
+FROM existing_strata
+----------

@@ -92,7 +92,7 @@ public class PrismMain extends JFrame {
 	private MenuItem_SetTransparency 	setTransparency;	// For menuWindow
 	private MenuItem_CaptureGUI 		captureGUI;	// For menuWindow
 		
-	private static String 					prism_version = "PRISM ALPHA 1.0.28";
+	private static String 					prism_version = "PRISM ALPHA 1.0.30";
 	private static DesktopPanel_BackGround 	prism_DesktopPane;
 	private static String 					currentProject;
 	private static PrismMain 				main;
@@ -530,8 +530,7 @@ public class PrismMain extends JFrame {
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public void createNewJInternalFrame(String currentProject) {
 		// create internal frame
-		JInternalFrame ProjectInternalFrame = new JInternalFrame(currentProject, 
-																true /*resizable*/, true, /*closable*/true/*maximizable*/, true/*iconifiable*/);	
+		JInternalFrame ProjectInternalFrame = new JInternalFrame(currentProject, true /*resizable*/, true, /*closable*/true/*maximizable*/, true/*iconifiable*/);	
 		ProjectInternalFrame.setDefaultCloseOperation(JInternalFrame.DO_NOTHING_ON_CLOSE);
 				
 		prism_DesktopPane.add(ProjectInternalFrame, BorderLayout.CENTER); // attach internal frame
