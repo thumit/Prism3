@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
+	
 public class Get_Cost_Information {
 	private List<List<String>>[] all_priority_cost_condition_static_identifiers;
 	private List<List<String>>[] all_priority_cost_condition_dynamic_identifiers;
