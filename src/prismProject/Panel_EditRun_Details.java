@@ -1036,7 +1036,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				}
 				
 				
-		        int total_yieldtable =0;
+				int total_yieldtable = 0;
 		        for (int row = 0; row < rowCount3; row++) {				        	
 		        	if (data3[row][colCount3 - 2] == null) {
 		        		total_yieldtable = total_yieldtable + 1;
@@ -1046,7 +1046,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		        
 		        DecimalFormat formatter = new DecimalFormat("###,###.###");
 				formatter.setMinimumFractionDigits(0);
-				formatter.setMaximumFractionDigits(10);	// show value with max 10 digits after the dot if it is double value						        
+//				formatter.setMaximumFractionDigits(10);	// show value with max 2 digits after the dot if it is double value						        
 		        data_overview[0][1] = rowCount3 + "   --o--   " + formatter.format((Number) availableAcres);
 				data_overview[1][1] = modeledStrata + "   --o--   " + formatter.format((Number) modeledAcres);
 		        data_overview[3][1] = yieldTable_values.length;
@@ -2871,7 +2871,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				// Set icon for cells
 				if (column == 3) {
 					if (getValueAt(row, 3) == null || getValueAt(row, 3).toString().equals("FREE")) {
-						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_gray.png"));
+						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_blue.png"));
 					} else if (getValueAt(row, 3).toString().equals("HARD")) {
 						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_red.png"));
 					}
@@ -4035,7 +4035,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 
 					DecimalFormat formatter = new DecimalFormat("###,###.###");
 					formatter.setMinimumFractionDigits(0);
-					formatter.setMaximumFractionDigits(10);	// show value with max 10 digits after the dot if it is double value						        
+//					formatter.setMaximumFractionDigits(10);	// show value with max 10 digits after the dot if it is double value						        
 					data_overview[2][1] = highlighted_strata + "   --o--   " + formatter.format((Number) highlighted_acres);
 					model_overview.fireTableDataChanged();
 				}
@@ -6616,7 +6616,21 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			// New single
 			btn_NewSingle.addActionListener(e -> {	
 				if (flow_scrollPane.get_flow_info_from_GUI().contains(";")) {	// Add constraint if there are at least 2 terms separated by ;
-					if (idle_ids_in_the_flow(flow_scrollPane.get_basic_ids_from_GUI()).isEmpty()) {  // the case when flow arrangement does not contain IDLE constraints
+					if (!non_existing_ids_in_the_flow(flow_scrollPane.get_basic_ids_from_GUI()).isEmpty()) {  // the case when flow arrangement contain non-existing basic constraints
+						String warning_message = "Flow cannot be added because Flow Arrangement contains non-existing basic constraints:\n"
+								+ non_existing_ids_in_the_flow(flow_scrollPane.get_basic_ids_from_GUI());
+						TextArea_ReadMe warning_textarea = new TextArea_ReadMe("icon_tree.png", 70, 70);
+						warning_textarea.append(warning_message);
+						warning_textarea.setSelectionStart(0);	// scroll to top
+						warning_textarea.setSelectionEnd(0);
+						warning_textarea.setEditable(false);
+						PrismTitleScrollPane warning_scrollpane = new PrismTitleScrollPane("", "LEFT", warning_textarea);
+						warning_scrollpane.get_nested_scrollpane().setPreferredSize(new Dimension(550, 200));
+						
+						String ExitOption[] = {"OK"};
+						int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warning_scrollpane, "Flow cannot be added",
+								JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption, ExitOption[0]);
+					} else {	  // the case when flow arrangement does not contain any non-existing basic constraints --> add flow
 						if (table10.isEditing()) {
 							table10.getCellEditor().stopCellEditing();
 						}
@@ -6644,21 +6658,36 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 						table10.scrollRectToVisible(new Rectangle(table10.getCellRect(newRow, 0, true)));
 						
 						flow_scrollPane.reload_flow_arrangement_for_one_flow(table10, data10, spin_sigma);
-					} else {
-						String warning_message = "Flow can be added only when Flow Arrangement does not contain any IDLE (or non-existing) basic constraint.\n\n"
-								+ "Current Flow Arrangement contains the following IDLE (or non-existing) basic constraints:\n"
-								+ idle_ids_in_the_flow(flow_scrollPane.get_basic_ids_from_GUI());
-						TextArea_ReadMe warning_textarea = new TextArea_ReadMe("icon_tree.png", 70, 70);
-						warning_textarea.append(warning_message);
-						warning_textarea.setSelectionStart(0);	// scroll to top
-						warning_textarea.setSelectionEnd(0);
-						warning_textarea.setEditable(false);
-						PrismTitleScrollPane warning_scrollpane = new PrismTitleScrollPane("", "LEFT", warning_textarea);
-						warning_scrollpane.get_nested_scrollpane().setPreferredSize(new Dimension(550, 300));
 						
-						String ExitOption[] = {"OK"};
-						int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warning_scrollpane, "Flow cannot be added",
-								JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption, ExitOption[0]);
+						
+						if (idle_ids_in_the_flow(flow_scrollPane.get_basic_ids_from_GUI()).isEmpty()) {  // when flow arrangement does not contain IDLE constraints
+							// do nothing
+						} else {  // when flow arrangement contains some IDLE constraints 
+							String warning_message = "Below list shows IDLE basic constraints which are turned into FREE:\n"
+									+ idle_ids_in_the_flow(flow_scrollPane.get_basic_ids_from_GUI());
+							TextArea_ReadMe warning_textarea = new TextArea_ReadMe("icon_tree.png", 70, 70);
+							warning_textarea.append(warning_message);
+							warning_textarea.setSelectionStart(0);	// scroll to top
+							warning_textarea.setSelectionEnd(0);
+							warning_textarea.setEditable(false);
+							PrismTitleScrollPane warning_scrollpane = new PrismTitleScrollPane("", "LEFT", warning_textarea);
+							warning_scrollpane.get_nested_scrollpane().setPreferredSize(new Dimension(550, 200));
+							
+							// turn IDLE basic constraints into FREE (both table 9 and basic_table)
+							for (int i = 0; i < data9.length; i++) {
+								if (idle_ids_in_the_flow(flow_scrollPane.get_basic_ids_from_GUI()).contains((int) data9[i][0])) {
+									data9[i][2] = "FREE";
+								}
+							}
+							model9.fireTableDataChanged();
+							panel_Flow_Constraints_GUI.get_model_basic().updateTableModelPrism(rowCount9, colCount9, data9, columnNames9);
+							panel_Flow_Constraints_GUI.get_model_basic().fireTableDataChanged();
+							
+							// show message that IDLE will be changed to FREE
+							String ExitOption[] = {"OK"};
+							int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warning_scrollpane, "Flow is added by turning some IDLE basic constraints into FREE",
+									JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption, ExitOption[0]);
+						}
 					}
 				}			
 			});			
@@ -6666,42 +6695,73 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			
 			// Edit
 			btn_Edit.addActionListener(e -> {
-				if (idle_ids_in_the_flow(flow_scrollPane.get_basic_ids_from_GUI()).isEmpty()) {  // the case when flow arrangement does not contain IDLE constraints
-					if (table10.isEditing()) {
-						table10.getCellEditor().stopCellEditing();
-					}
-					
-					if (table10.isEnabled()) {						
-						int selectedRow = table10.getSelectedRow();
-						selectedRow = table10.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems										
+				if (flow_scrollPane.get_flow_info_from_GUI().contains(";")) {	// Add constraint if there are at least 2 terms separated by ;
+					if (!non_existing_ids_in_the_flow(flow_scrollPane.get_basic_ids_from_GUI()).isEmpty()) {  // the case when flow arrangement contain non-existing basic constraints
+						String warning_message = "Flow cannot be modified because Flow Arrangement contains non-existing basic constraints:\n"
+								+ non_existing_ids_in_the_flow(flow_scrollPane.get_basic_ids_from_GUI());
+						TextArea_ReadMe warning_textarea = new TextArea_ReadMe("icon_tree.png", 70, 70);
+						warning_textarea.append(warning_message);
+						warning_textarea.setSelectionStart(0);	// scroll to top
+						warning_textarea.setSelectionEnd(0);
+						warning_textarea.setEditable(false);
+						PrismTitleScrollPane warning_scrollpane = new PrismTitleScrollPane("", "LEFT", warning_textarea);
+						warning_scrollpane.get_nested_scrollpane().setPreferredSize(new Dimension(550, 200));
 						
-						if (flow_scrollPane.get_flow_info_from_GUI().contains(";")) {	// Edit is accepted if there are at least 2 terms separated by ;
-							data10[selectedRow][2] = flow_scrollPane.get_flow_info_from_GUI();					
-							model10.fireTableDataChanged();	
+						String ExitOption[] = {"OK"};
+						int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warning_scrollpane, "Flow cannot be modified",
+								JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption, ExitOption[0]);
+					} else {	  // the case when flow arrangement does not contain any non-existing basic constraints --> add flow
+						if (table10.isEditing()) {
+							table10.getCellEditor().stopCellEditing();
+						}
+						
+						if (table10.isEnabled()) {						
+							int selectedRow = table10.getSelectedRow();
+							selectedRow = table10.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems										
 							
-							// Convert the edited Row to model view and then select it 
-							int editRow = table10.convertRowIndexToView(selectedRow);
-							table10.setRowSelectionInterval(editRow, editRow);
+							if (flow_scrollPane.get_flow_info_from_GUI().contains(";")) {	// Edit is accepted if there are at least 2 terms separated by ;
+								data10[selectedRow][2] = flow_scrollPane.get_flow_info_from_GUI();					
+								model10.fireTableDataChanged();	
+								
+								// Convert the edited Row to model view and then select it 
+								int editRow = table10.convertRowIndexToView(selectedRow);
+								table10.setRowSelectionInterval(editRow, editRow);
+								
+								flow_scrollPane.reload_flow_arrangement_for_one_flow(table10, data10, spin_sigma);
+							}									
+						}
+						
+						
+						if (idle_ids_in_the_flow(flow_scrollPane.get_basic_ids_from_GUI()).isEmpty()) {  // when flow arrangement does not contain IDLE constraints
+							// do nothing
+						} else {  // when flow arrangement contains some IDLE constraints 
+							String warning_message = "Below list shows IDLE basic constraints which are turned into FREE:\n"
+									+ idle_ids_in_the_flow(flow_scrollPane.get_basic_ids_from_GUI());
+							TextArea_ReadMe warning_textarea = new TextArea_ReadMe("icon_tree.png", 70, 70);
+							warning_textarea.append(warning_message);
+							warning_textarea.setSelectionStart(0);	// scroll to top
+							warning_textarea.setSelectionEnd(0);
+							warning_textarea.setEditable(false);
+							PrismTitleScrollPane warning_scrollpane = new PrismTitleScrollPane("", "LEFT", warning_textarea);
+							warning_scrollpane.get_nested_scrollpane().setPreferredSize(new Dimension(550, 200));
 							
-							flow_scrollPane.reload_flow_arrangement_for_one_flow(table10, data10, spin_sigma);
-						}									
+							// turn IDLE basic constraints into FREE (both table 9 and basic_table)
+							for (int i = 0; i < data9.length; i++) {
+								if (idle_ids_in_the_flow(flow_scrollPane.get_basic_ids_from_GUI()).contains((int) data9[i][0])) {
+									data9[i][2] = "FREE";
+								}
+							}
+							model9.fireTableDataChanged();
+							panel_Flow_Constraints_GUI.get_model_basic().updateTableModelPrism(rowCount9, colCount9, data9, columnNames9);
+							panel_Flow_Constraints_GUI.get_model_basic().fireTableDataChanged();
+							
+							// show message that IDLE will be changed to FREE
+							String ExitOption[] = {"OK"};
+							int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warning_scrollpane, "Flow is modified by turning some IDLE basic constraints into FREE",
+									JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption, ExitOption[0]);
+						}
 					}
-				} else {
-					String warning_message = "Flow can be modified only when Flow Arrangement does not contain any IDLE (or non-existing) basic constraint.\n\n"
-							+ "The current Flow Arrangemnet contains the following IDLE (or non-existing) basic constraints:\n"
-							+ idle_ids_in_the_flow(flow_scrollPane.get_basic_ids_from_GUI());
-					TextArea_ReadMe warning_textarea = new TextArea_ReadMe("icon_tree.png", 70, 70);
-					warning_textarea.append(warning_message);
-					warning_textarea.setSelectionStart(0);	// scroll to top
-					warning_textarea.setSelectionEnd(0);
-					warning_textarea.setEditable(false);
-					PrismTitleScrollPane warning_scrollpane = new PrismTitleScrollPane("", "LEFT", warning_textarea);
-					warning_scrollpane.get_nested_scrollpane().setPreferredSize(new Dimension(550, 300));
-					
-					String ExitOption[] = {"OK"};
-					int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warning_scrollpane, "Flow cannot be modified",
-							JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption, ExitOption[0]);
-				}
+				}	
 			});
 			
 			
@@ -7046,6 +7106,10 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			model_basic.updateTableModelPrism(rowCount9, colCount9, data9, columnNames9);	// Update table9 to the Sources in Advanced constraints GUI
 	    }
 	    
+	    public PrismTableModel get_model_basic() {  		
+			return model_basic;
+		}
+	    
 	    // Update id column. id needs to be unique in order to use in flow constraints-----------------
 	    public void update_id() {  		
 			List<Integer> id_list = new ArrayList<Integer>();			
@@ -7156,6 +7220,17 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		}
 		basic_ids_in_the_flow.retainAll(idle_constraints_ids_list);
 		return basic_ids_in_the_flow;
+	}
+	
+	public List<Integer> non_existing_ids_in_the_flow(List<Integer> basic_ids_in_the_flow) {
+		// create a list of IDLE basic constraints
+		List<Integer> all_constraints_ids_list = new ArrayList<Integer>();
+		for (int i = 0; i < data9.length; i++) {
+			all_constraints_ids_list.add((Integer) data9[i][0]);
+		}
+		List<Integer> not_present = new ArrayList<Integer>(basic_ids_in_the_flow);
+		not_present.removeAll(all_constraints_ids_list);
+		return not_present;
 	}
 	
 	//--------------------------------------------------------------------------------------------------------------------------------

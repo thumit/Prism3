@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 	
 public class Get_Cost_Information {
 	private List<List<String>>[] all_priority_cost_condition_static_identifiers;
@@ -28,8 +29,9 @@ public class Get_Cost_Information {
 	private String[][] all_priority_condition_info;	
 	
 	private int action_type_col_id;
-	private List<String> yield_tables_column_names_list;
-	
+	private Object[][][] yield_tables_values;
+	private List<String> yield_tables_original_col_names_list, yield_tables_sorted_col_names_list;
+	private int[] get_original_col_id_from_sorted_col_id;
 	
 	public Get_Cost_Information(Read_Database read_database, List<String> cost_condition_list) {
 		all_priority_cost_condition_static_identifiers = new ArrayList[cost_condition_list.size()];
@@ -40,36 +42,54 @@ public class Get_Cost_Information {
 		// Just do this once when an object of this class is created, not every time we encounter a variable
 		for (int priority = 0; priority < cost_condition_list.size(); priority++) {		// Looping from the highest priority cost condition to the lowest
 			String[] this_condition_info = cost_condition_list.get(priority).split("\t");
-			List<List<String>> cost_condition_static_identifiers = get_cost_condition_dynamic_identifiers(this_condition_info[4]);	// column 4 is static identifiers
-			List<List<String>> cost_condition_dynamic_identifiers = get_cost_condition_dynamic_identifiers(this_condition_info[5]);	// column 5 is dynamic identifiers
-			List<String> cost_condition_dynamic_dentifiers_column_indexes = get_cost_condition_dynamic_dentifiers_column_indexes(this_condition_info[5]);	// column 5 is dynamic identifiers	
-			// Sort String so binary search could be used in "Get_PRAMETER_iNFORMATION - are_all_dynamic_identifiers_matched"
-			for (List<String> this_dynamic_identifier: cost_condition_dynamic_identifiers) {
-				Collections.sort(this_dynamic_identifier);
-			}
-			
-			
 			all_priority_condition_info[priority] = this_condition_info;
-			all_priority_cost_condition_static_identifiers[priority] = cost_condition_static_identifiers;
-			all_priority_cost_condition_dynamic_identifiers[priority] = cost_condition_dynamic_identifiers;
-			all_priority_cost_condition_dynamic_dentifiers_column_indexes[priority] = cost_condition_dynamic_dentifiers_column_indexes;
+			all_priority_cost_condition_static_identifiers[priority] = get_cost_condition_static_identifiers(this_condition_info[4]);	// column 4 is static identifiers
+			all_priority_cost_condition_dynamic_identifiers[priority] = get_cost_condition_dynamic_identifiers(this_condition_info[5]);	// column 5 is dynamic identifiers
+			all_priority_cost_condition_dynamic_dentifiers_column_indexes[priority] = get_cost_condition_dynamic_dentifiers_column_indexes(this_condition_info[5]);	// column 5 is dynamic identifiers
+		
+			
+			// sort for Binary search used in:     are_all_static_identifiers_matched()
+			for (List<String> this_static_identifier: all_priority_cost_condition_static_identifiers[priority]) {
+				Collections.sort(this_static_identifier);
+			}	
+			
+			// sort for Binary search used in:     are_all_dynamic_identifiers_matched()
+			for (List<String> this_dynamic_identifier: all_priority_cost_condition_dynamic_identifiers[priority]) {
+				Collections.sort(this_dynamic_identifier);
+			}			
+		
 		}
 		
+		// Some more set up
+		this.yield_tables_values = read_database.get_yield_tables_values();
 		
-		String[] yield_tables_column_names = read_database.get_yield_tables_column_names();
-		yield_tables_column_names_list = Arrays.asList(yield_tables_column_names);	// Convert array to list										
-		action_type_col_id = yield_tables_column_names_list.indexOf("action_type");
+		// This is to prepare for Binary Search on column index  --->   get_cost_value
+		// Basically, we need a sorted list, use binary search to get the sorted id, then convert the sorted id to original (unsorted) id 
+		yield_tables_original_col_names_list = Arrays.asList(read_database.get_yield_tables_column_names());	// Convert array to list	
+		yield_tables_sorted_col_names_list = new ArrayList<String>(yield_tables_original_col_names_list); 
+		Collections.sort(yield_tables_sorted_col_names_list);
+		get_original_col_id_from_sorted_col_id = new int[yield_tables_sorted_col_names_list.size()];
+		for (String sorted_name: yield_tables_sorted_col_names_list) {
+			for (String original_name: yield_tables_original_col_names_list) {
+				int sorted_id = yield_tables_sorted_col_names_list.indexOf(sorted_name);
+				int original_id = yield_tables_original_col_names_list.indexOf(original_name);
+				if (sorted_name.equals(original_name)) {
+					get_original_col_id_from_sorted_col_id[sorted_id] = original_id;
+				}
+			}
+		}
+		
+		action_type_col_id = yield_tables_original_col_names_list.indexOf("action_type");
 	}
 			
 	
 	double get_cost_value(				
 			String var_name, int table_id_to_find, int row_id_to_find,
-			Object[][][] yield_tables_values,
 			List<String> cost_condition_list,
-			List<String> coversion_cost_after_disturbance_name_list,		// i.e. P P disturbance		P D disturbance
-			List<Double> coversion_cost_after_disturbance_value_list) {
+			List<String> conversion_cost_after_disturbance_name_list,		// i.e. P P disturbance		P D disturbance			This is already sorted because we already sorted all layers, including layer5
+			List<Double> conversion_cost_after_disturbance_value_list) {
 		
-		
+
 		double value_to_return = 0;
 		
 		
@@ -83,7 +103,7 @@ public class Get_Cost_Information {
 					// The following includes 1 list for the action_cost and 1 list for the conversion_cost
 					List<List<List<String>>> final_cost_list = get_final_action_cost_list_and_conversion_cost_list_for_this_variable(
 							cost_condition_list, var_name, var_action_type,
-							yield_tables_values, table_id_to_find, row_id_to_find);
+							table_id_to_find, row_id_to_find);
 					
 					
 					// action_cost: include 2 lists for column name (i.e. hca_allsx) and value (i.e. 360)
@@ -94,10 +114,15 @@ public class Get_Cost_Information {
 						} 
 						// Add cost per unit of the yield table column
 						else {
-							int col_id = yield_tables_column_names_list.indexOf(final_cost_list.get(0).get(0).get(item));
+							int sorted_id = Collections.binarySearch(yield_tables_sorted_col_names_list, final_cost_list.get(0).get(0).get(item));
+							int col_id = get_original_col_id_from_sorted_col_id[sorted_id];
 							value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(0).get(1).get(item)) * Double.parseDouble(yield_tables_values[table_id_to_find][row_id_to_find][col_id].toString());
 						}
 					}								
+					
+					
+					// convert list to 1-D array since it is faster to get item from array than get item from list
+					double[] conversion_cost_after_disturbance_value = Stream.of(conversion_cost_after_disturbance_value_list.toArray(new Double[conversion_cost_after_disturbance_value_list.size()])).mapToDouble(Double::doubleValue).toArray();
 					
 					
 					// conversion_cost: include 2 lists for column name (i.e. P D action) and value (i.e. 240)
@@ -112,9 +137,9 @@ public class Get_Cost_Information {
 								value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(1).get(1).get(item));
 							} 
 						} else {	// when period is not the rotation_period (variable can be anything except BS MS)
-							if (coversion_cost_after_disturbance_name_list != null && coversion_cost_after_disturbance_name_list.contains(final_cost_list.get(1).get(0).get(item))) {
-								int index = coversion_cost_after_disturbance_name_list.indexOf(final_cost_list.get(1).get(0).get(item));
-								value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(1).get(1).get(item)) * coversion_cost_after_disturbance_value_list.get(index);		
+							int index = Collections.binarySearch(conversion_cost_after_disturbance_name_list, final_cost_list.get(1).get(0).get(item));
+							if (index >= 0) {
+								value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(1).get(1).get(item)) * conversion_cost_after_disturbance_value[index];		
 							}
 						}	
 					}					
@@ -128,7 +153,7 @@ public class Get_Cost_Information {
 	
 	private List<List<List<String>>> get_final_action_cost_list_and_conversion_cost_list_for_this_variable(
 			List<String> cost_condition_list, String var_name, String var_action_type,
-			Object[][][] yield_tables_values, int table_id_to_find, int row_id_to_find) {	
+			int table_id_to_find, int row_id_to_find) {	
 		
 		List<String> final_action_cost_column_list = new ArrayList<String>();		// example: 	"acres", "...", "hca_allsx", ... -->see table 7a in the GUI of Cost Management
 		List<String> final_action_cost_value_list = new ArrayList<String>(); 		// example: 	"360", "...", "1.2", ...
@@ -219,17 +244,30 @@ public class Get_Cost_Information {
 	
 	
 	private Boolean are_all_static_identifiers_matched(String var_name, List<List<String>> static_identifier) {	
-		if (!static_identifier.get(0).contains(Get_Variable_Information.get_layer1(var_name))) return false;
-		if (!static_identifier.get(1).contains(Get_Variable_Information.get_layer2(var_name))) return false;
-		if (!static_identifier.get(2).contains(Get_Variable_Information.get_layer3(var_name))) return false;
-		if (!static_identifier.get(3).contains(Get_Variable_Information.get_layer4(var_name))) return false;
+		if (Collections.binarySearch(static_identifier.get(0), Get_Variable_Information.get_layer1(var_name)) < 0) return false;
+		if (Collections.binarySearch(static_identifier.get(1), Get_Variable_Information.get_layer2(var_name)) < 0) return false;
+		if (Collections.binarySearch(static_identifier.get(2), Get_Variable_Information.get_layer3(var_name)) < 0) return false;
+		if (Collections.binarySearch(static_identifier.get(3), Get_Variable_Information.get_layer4(var_name)) < 0) return false;
 		if (Get_Variable_Information.get_forest_status(var_name).equals("E") && !Get_Variable_Information.get_method(var_name).equals("MS") && !Get_Variable_Information.get_method(var_name).equals("BS")) {
-			if (!static_identifier.get(4).contains(Get_Variable_Information.get_layer5(var_name))) return false;	// layer5 cover type
-			if (!static_identifier.get(5).contains(Get_Variable_Information.get_layer6(var_name))) return false;	// layer6: size class
+			if (Collections.binarySearch(static_identifier.get(4), Get_Variable_Information.get_layer5(var_name)) < 0) return false;	// layer5 cover type
+			if (Collections.binarySearch(static_identifier.get(5), Get_Variable_Information.get_layer6(var_name)) < 0) return false;	// layer6: size class
 		}
-		if (!static_identifier.get(6).contains(Get_Variable_Information.get_method(var_name) + "_" + Get_Variable_Information.get_forest_status(var_name))) return false;
-		if (!static_identifier.get(7).contains(String.valueOf(Get_Variable_Information.get_period(var_name)))) return false;					
+		if (Collections.binarySearch(static_identifier.get(6), Get_Variable_Information.get_method(var_name) + "_" + Get_Variable_Information.get_forest_status(var_name)) < 0) return false;
+		if (Collections.binarySearch(static_identifier.get(7), String.valueOf(Get_Variable_Information.get_period(var_name))) < 0) return false;
 		return true;
+		
+		
+//		if (!static_identifier.get(0).contains(Get_Variable_Information.get_layer1(var_name))) return false;
+//		if (!static_identifier.get(1).contains(Get_Variable_Information.get_layer2(var_name))) return false;
+//		if (!static_identifier.get(2).contains(Get_Variable_Information.get_layer3(var_name))) return false;
+//		if (!static_identifier.get(3).contains(Get_Variable_Information.get_layer4(var_name))) return false;
+//		if (Get_Variable_Information.get_forest_status(var_name).equals("E") && !Get_Variable_Information.get_method(var_name).equals("MS") && !Get_Variable_Information.get_method(var_name).equals("BS")) {
+//			if (!static_identifier.get(4).contains(Get_Variable_Information.get_layer5(var_name))) return false;	// layer5 cover type
+//			if (!static_identifier.get(5).contains(Get_Variable_Information.get_layer6(var_name))) return false;	// layer6: size class
+//		}
+//		if (!static_identifier.get(6).contains(Get_Variable_Information.get_method(var_name) + "_" + Get_Variable_Information.get_forest_status(var_name))) return false;
+//		if (!static_identifier.get(7).contains(String.valueOf(Get_Variable_Information.get_period(var_name)))) return false;					
+//		return true;
 	}			
 	
 	
@@ -259,7 +297,7 @@ public class Get_Cost_Information {
 	}
 		
 	
-	private List<List<String>> get_cost_condition_static_identifiers (String static_identifiers_info) {
+	private List<List<String>> get_cost_condition_static_identifiers(String static_identifiers_info) {
 		List<List<String>> cost_condition_static_identifiers = new ArrayList<List<String>>();		
 		//Read the whole cell into array
 		String[] static_layer_info = static_identifiers_info.split(";");
@@ -271,7 +309,7 @@ public class Get_Cost_Information {
 			String[] identifierElements = static_layer_info[i].split("\\s+");				//space delimited
 			for (int j = 1; j < identifierElements.length; j++) {		//Ignore the first element which is the identifier index, so we loop from 1 not 0
 				thisIdentifier.add(identifierElements[j].replaceAll("\\s+",""));		//Add element name, if name has spaces then remove all the spaces
-			}			
+			}		
 			cost_condition_static_identifiers.add(thisIdentifier);
 		}
 			

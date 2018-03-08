@@ -172,6 +172,7 @@ public class ScrollPane_Parameters extends JScrollPane {
 				for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
 					checkboxParameter.get(i).setSelected(false);
 				} 
+				checkboxCostParameter.setSelected(false);
 			}
 		});
 				

@@ -2699,7 +2699,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 													var_cost_value[xNGe[strata_id][i][t]] = cost_info.get_cost_value(
 															vname[xNGe[strata_id][i][t]],  
 															var_prescription[xNGe[strata_id][i][t]], 
-															var_row_id[xNGe[strata_id][i][t]], yield_tables_values,
+															var_row_id[xNGe[strata_id][i][t]],
 															cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 												}
 												cost_value = var_cost_value[xNGe[strata_id][i][t]] * currentDiscountValue; 
@@ -2760,7 +2760,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 													var_cost_value[xPBe[strata_id][i][t]] = cost_info.get_cost_value(
 															vname[xPBe[strata_id][i][t]],  
 															var_prescription[xPBe[strata_id][i][t]], 
-															var_row_id[xPBe[strata_id][i][t]], yield_tables_values,
+															var_row_id[xPBe[strata_id][i][t]],
 															cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 												}
 												cost_value = var_cost_value[xPBe[strata_id][i][t]] * currentDiscountValue; 
@@ -2821,7 +2821,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 													var_cost_value[xGSe[strata_id][i][t]] = cost_info.get_cost_value(
 															vname[xGSe[strata_id][i][t]],  
 															var_prescription[xGSe[strata_id][i][t]], 
-															var_row_id[xGSe[strata_id][i][t]], yield_tables_values,
+															var_row_id[xGSe[strata_id][i][t]],
 															cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 												}
 												cost_value = var_cost_value[xGSe[strata_id][i][t]] * currentDiscountValue;
@@ -2874,7 +2874,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 													var_cost_value[xMS[strata_id][i][t]] = cost_info.get_cost_value(
 															vname[xMS[strata_id][i][t]], 
 															var_prescription[xMS[strata_id][i][t]], 
-															var_row_id[xMS[strata_id][i][t]], yield_tables_values,
+															var_row_id[xMS[strata_id][i][t]],
 															cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 												}
 												cost_value = var_cost_value[xMS[strata_id][i][t]] * currentDiscountValue;
@@ -2927,7 +2927,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 													var_cost_value[xBS[strata_id][i][t]] = cost_info.get_cost_value(
 															vname[xBS[strata_id][i][t]], 
 															var_prescription[xBS[strata_id][i][t]], 
-															var_row_id[xBS[strata_id][i][t]], yield_tables_values,
+															var_row_id[xBS[strata_id][i][t]],
 															cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 												}
 												cost_value = var_cost_value[xBS[strata_id][i][t]] * currentDiscountValue; 
@@ -2993,7 +2993,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																var_cost_value[xEAe[strata_id][tR][s5R][i][t]] = cost_info.get_cost_value(
 																		vname[xEAe[strata_id][tR][s5R][i][t]], 
 																		var_prescription[xEAe[strata_id][tR][s5R][i][t]], 
-																		var_row_id[xEAe[strata_id][tR][s5R][i][t]], yield_tables_values,
+																		var_row_id[xEAe[strata_id][tR][s5R][i][t]],
 																		cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 															}
 															cost_value = var_cost_value[xEAe[strata_id][tR][s5R][i][t]] * currentDiscountValue;
@@ -3063,7 +3063,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																		var_cost_value[xEAr[strata_4layers_id][s5][tR][aR][s5R][i][t]] = cost_info.get_cost_value(
 																				vname[xEAr[strata_4layers_id][s5][tR][aR][s5R][i][t]],
 																				var_prescription[xEAr[strata_4layers_id][s5][tR][aR][s5R][i][t]], 
-																				var_row_id[xEAr[strata_4layers_id][s5][tR][aR][s5R][i][t]], yield_tables_values,
+																				var_row_id[xEAr[strata_4layers_id][s5][tR][aR][s5R][i][t]],
 																				cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 																	}
 																	cost_value = var_cost_value[xEAr[strata_4layers_id][s5][tR][aR][s5R][i][t]] * currentDiscountValue;
@@ -3133,7 +3133,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																var_cost_value[xNGr[strata_4layers_id][s5][ii][tt][a]] = cost_info.get_cost_value(
 																		vname[xNGr[strata_4layers_id][s5][ii][tt][a]],
 																		var_prescription[xNGr[strata_4layers_id][s5][ii][tt][a]], 
-																		var_row_id[xNGr[strata_4layers_id][s5][ii][tt][a]], yield_tables_values,
+																		var_row_id[xNGr[strata_4layers_id][s5][ii][tt][a]],
 																		cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 															}
 															cost_value = var_cost_value[xNGr[strata_4layers_id][s5][ii][tt][a]] * currentDiscountValue;
@@ -3202,7 +3202,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																var_cost_value[xPBr[strata_4layers_id][s5][ii][tt][a]] = cost_info.get_cost_value(
 																		vname[xPBr[strata_4layers_id][s5][ii][tt][a]],
 																		var_prescription[xPBr[strata_4layers_id][s5][ii][tt][a]], 
-																		var_row_id[xPBr[strata_4layers_id][s5][ii][tt][a]], yield_tables_values,
+																		var_row_id[xPBr[strata_4layers_id][s5][ii][tt][a]],
 																		cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 															}
 															cost_value = var_cost_value[xPBr[strata_4layers_id][s5][ii][tt][a]] * currentDiscountValue;
@@ -3271,7 +3271,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																var_cost_value[xGSr[strata_4layers_id][s5][ii][tt][a]] = cost_info.get_cost_value(
 																		vname[xGSr[strata_4layers_id][s5][ii][tt][a]],
 																		var_prescription[xGSr[strata_4layers_id][s5][ii][tt][a]], 
-																		var_row_id[xGSr[strata_4layers_id][s5][ii][tt][a]], yield_tables_values,
+																		var_row_id[xGSr[strata_4layers_id][s5][ii][tt][a]],
 																		cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 															}
 															cost_value = var_cost_value[xGSr[strata_4layers_id][s5][ii][tt][a]] * currentDiscountValue;
@@ -7260,7 +7260,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 													var_cost_value[var_index] = cost_info.get_cost_value(
 															vname[var_index],  
 															var_prescription[var_index], 
-															var_row_id[var_index], yield_tables_values,
+															var_row_id[var_index],
 															cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 												}
 												cost_value = var_cost_value[var_index] * currentDiscountValue; 
@@ -7328,7 +7328,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 													var_cost_value[var_index] = cost_info.get_cost_value(
 															vname[var_index],  
 															var_prescription[var_index], 
-															var_row_id[var_index], yield_tables_values,
+															var_row_id[var_index],
 															cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 												}
 												cost_value = var_cost_value[var_index] * currentDiscountValue; 
@@ -7396,7 +7396,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 													var_cost_value[var_index] = cost_info.get_cost_value(
 															vname[var_index],  
 															var_prescription[var_index], 
-															var_row_id[var_index], yield_tables_values,
+															var_row_id[var_index],
 															cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 												}
 												cost_value = var_cost_value[var_index] * currentDiscountValue;
@@ -7456,7 +7456,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 													var_cost_value[var_index] = cost_info.get_cost_value(
 															vname[var_index], 
 															var_prescription[var_index], 
-															var_row_id[var_index], yield_tables_values,
+															var_row_id[var_index],
 															cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 												}
 												cost_value = var_cost_value[var_index] * currentDiscountValue;
@@ -7516,7 +7516,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 													var_cost_value[var_index] = cost_info.get_cost_value(
 															vname[var_index], 
 															var_prescription[var_index], 
-															var_row_id[var_index], yield_tables_values,
+															var_row_id[var_index],
 															cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 												}
 												cost_value = var_cost_value[var_index] * currentDiscountValue; 
@@ -7589,7 +7589,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																var_cost_value[var_index] = cost_info.get_cost_value(
 																		vname[var_index], 
 																		var_prescription[var_index], 
-																		var_row_id[var_index], yield_tables_values,
+																		var_row_id[var_index],
 																		cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 															}
 															cost_value = var_cost_value[var_index] * currentDiscountValue;
@@ -7664,7 +7664,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																		var_cost_value[var_index] = cost_info.get_cost_value(
 																				vname[var_index],
 																				var_prescription[var_index], 
-																				var_row_id[var_index], yield_tables_values,
+																				var_row_id[var_index],
 																				cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 																	}
 																	cost_value = var_cost_value[var_index] * currentDiscountValue;
@@ -7741,7 +7741,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																var_cost_value[var_index] = cost_info.get_cost_value(
 																		vname[var_index],
 																		var_prescription[var_index], 
-																		var_row_id[var_index], yield_tables_values,
+																		var_row_id[var_index],
 																		cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 															}
 															cost_value = var_cost_value[var_index] * currentDiscountValue;
@@ -7817,7 +7817,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																var_cost_value[var_index] = cost_info.get_cost_value(
 																		vname[var_index],
 																		var_prescription[var_index], 
-																		var_row_id[var_index], yield_tables_values,
+																		var_row_id[var_index],
 																		cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 															}
 															cost_value = var_cost_value[var_index] * currentDiscountValue;
@@ -7893,7 +7893,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 																var_cost_value[var_index] = cost_info.get_cost_value(
 																		vname[var_index],
 																		var_prescription[var_index], 
-																		var_row_id[var_index], yield_tables_values,
+																		var_row_id[var_index],
 																		cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 															}
 															cost_value = var_cost_value[var_index] * currentDiscountValue;

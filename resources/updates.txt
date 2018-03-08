@@ -692,3 +692,15 @@ All changes in this block are associated with PrismAlpha1.0.28.jar, Prism Formul
 304. Three tables in Basic Constraints, Flow Constraints, output_05 have "description" column not auto-resized & have tooltip displayed
 All changes in this block are associated with PrismAlpha1.0.30.jar, Prism Formulation 02.docx, Prism Database 02.docx
 --------------------------------------------------------------------------
+
+305. Change color of FREE flow icon to blue
+306. issue 52 (BitBucket): fixed by always sorting strata_definition (--> sort by layers and layers attributes)
+307. Memory Boost RR3f completed
+308. Memory Boost RR3g completed
+309. Memory Boost RR3h completed (all 3 boosts decreases 10% reading time, tested on SR6 HLC model)
+310. Fix when basic constraints are deleted --> non-existing, but could still be added into a flow
+311. Prism would automatically change IDLE basic constraints into FREE so the flow could be added or modified
+312. table overview: fix showing too many digits after the dot by disabling "setMaximumFractionDigits"
+313. Fix at Parameter Scroll: when Cost is check, then click on the border of the scroll --> both CostParameter and NoParameter are checked. Now, only NoParameter is checked.
+All changes in this block are associated with PrismAlpha1.0.31.jar, Prism Formulation 02.docx, Prism Database 02.docx
+--------------------------------------------------------------------------

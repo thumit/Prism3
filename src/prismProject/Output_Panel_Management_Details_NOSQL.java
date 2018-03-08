@@ -1456,9 +1456,10 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 		 			scrollpane_QuickEdit.setViewportView(quick_edit);
 					
 					// Convert the new Row to model view and then select it 
-					int newRow = table9.convertRowIndexToView(rowCount9 - 1);
-					table9.setRowSelectionInterval(newRow, newRow);
-					table9.scrollRectToVisible(new Rectangle(table9.getCellRect(newRow, 0, true)));
+					int startRow = table9.convertRowIndexToView(rowCount9 - input_rowCount9);
+					int endRow = table9.convertRowIndexToView(rowCount9 - 1);
+					table9.setRowSelectionInterval(startRow, endRow);
+					table9.scrollRectToVisible(new Rectangle(table9.getCellRect(startRow, 0, true)));
 				}
 			});
 			
@@ -2100,7 +2101,14 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			List<String> layer4 = allLayers.get(3);
 			List<String> layer5 = allLayers.get(4);
 			List<String> layer6 = allLayers.get(5);
-						
+					
+			// Sort all lists
+			Collections.sort(layer1);
+			Collections.sort(layer2);
+			Collections.sort(layer3);
+			Collections.sort(layer4);
+			Collections.sort(layer5);
+			Collections.sort(layer6);
 			
 			
 			double annualDiscountRate = read.get_discount_rate() / 100;
@@ -2213,7 +2221,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 							var_cost_value[i] = cost_info.get_cost_value(
 									vname[i], 
 									var_prescription[i], 
-									var_row_id[i], yield_tables_values,
+									var_row_id[i],
 									cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 						}	
 						cost_value = var_cost_value[i] * currentDiscountValue;
@@ -2262,7 +2270,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 							var_cost_value[i] = cost_info.get_cost_value(
 									vname[i],  
 									var_prescription[i], 
-									var_row_id[i], yield_tables_values,
+									var_row_id[i],
 									cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 						}
 						cost_value = var_cost_value[i] * currentDiscountValue; 
@@ -2311,7 +2319,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 							var_cost_value[i] = cost_info.get_cost_value(
 									vname[i],  
 									var_prescription[i], 
-									var_row_id[i], yield_tables_values,
+									var_row_id[i],
 									cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 						}
 						cost_value = var_cost_value[i] * currentDiscountValue; 
@@ -2351,7 +2359,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 							var_cost_value[i] = cost_info.get_cost_value(
 									vname[i],  
 									var_prescription[i], 
-									var_row_id[i], yield_tables_values,
+									var_row_id[i],
 									cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 						}
 						cost_value = var_cost_value[i] * currentDiscountValue; 
@@ -2391,7 +2399,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 							var_cost_value[i] = cost_info.get_cost_value(
 									vname[i],  
 									var_prescription[i], 
-									var_row_id[i], yield_tables_values,
+									var_row_id[i],
 									cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 						}
 						cost_value = var_cost_value[i] * currentDiscountValue; 
@@ -2440,7 +2448,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 							var_cost_value[i] = cost_info.get_cost_value(
 									vname[i],  
 									var_prescription[i], 
-									var_row_id[i], yield_tables_values,
+									var_row_id[i],
 									cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 						}
 						cost_value = var_cost_value[i] * currentDiscountValue; 
@@ -2490,7 +2498,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 							var_cost_value[i] = cost_info.get_cost_value(
 									vname[i],  
 									var_prescription[i], 
-									var_row_id[i], yield_tables_values,
+									var_row_id[i],
 									cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 						}
 						cost_value = var_cost_value[i] * currentDiscountValue; 
@@ -2539,7 +2547,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 							var_cost_value[i] = cost_info.get_cost_value(
 									vname[i],  
 									var_prescription[i], 
-									var_row_id[i], yield_tables_values,
+									var_row_id[i],
 									cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 						}
 						cost_value = var_cost_value[i] * currentDiscountValue; 
@@ -2588,7 +2596,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 							var_cost_value[i] = cost_info.get_cost_value(
 									vname[i],  
 									var_prescription[i], 
-									var_row_id[i], yield_tables_values,
+									var_row_id[i],
 									cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 						}
 						cost_value = var_cost_value[i] * currentDiscountValue; 
@@ -2637,7 +2645,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 							var_cost_value[i] = cost_info.get_cost_value(
 									vname[i],  
 									var_prescription[i], 
-									var_row_id[i], yield_tables_values,
+									var_row_id[i],
 									cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);
 						}
 						cost_value = var_cost_value[i] * currentDiscountValue; 

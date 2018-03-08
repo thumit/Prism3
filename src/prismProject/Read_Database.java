@@ -33,6 +33,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -257,7 +258,17 @@ public class Read_Database {
 					}
 				}
 				
-				
+				// always sort strata definition
+				Arrays.sort(strata_definition_values, new Comparator<String[]>(){
+					@Override
+					public int compare(String[] first, String[] second) {
+						int comparedTo = first[0].compareTo(second[0]);	// compare the first element (layer)
+						if (comparedTo == 0)
+							return first[2].compareTo(second[2]);	// if the first element (layer) is same (result is 0), compare the third element (attribute)
+						else
+							return comparedTo;
+					}
+				});
 					
 
 				layers_Title = new ArrayList<String>();
@@ -284,17 +295,17 @@ public class Read_Database {
 				
 				
 				
-				// Testing Linked List
-				layers = new LinkedList_Layers();
-				for (int i = 0; i < rowCount3; i++) {				
-					if (layers.isEmpty() || ! layers.get(layers.size() - 1).layer_id.equalsIgnoreCase(strata_definition_values[i][0])) {  // If found a new layer then add the layer
-						Layer_Item new_layer = new Layer_Item(strata_definition_values[i][0], strata_definition_values[i][1], new LinkedList<Attribute_Item>());
-						layers.add(new_layer);
-					}									
-					Attribute_Item new_attribute = new Attribute_Item(strata_definition_values[i][2], strata_definition_values[i][3]);	// add the attribute to the attributes of the last added layer		
-					layers.get(layers.size() - 1).attributes.add(new_attribute);
-				}	
-															
+//				// Testing Linked List
+//				layers = new LinkedList_Layers();
+//				for (int i = 0; i < rowCount3; i++) {				
+//					if (layers.isEmpty() || ! layers.get(layers.size() - 1).layer_id.equalsIgnoreCase(strata_definition_values[i][0])) {  // If found a new layer then add the layer
+//						Layer_Item new_layer = new Layer_Item(strata_definition_values[i][0], strata_definition_values[i][1], new LinkedList<Attribute_Item>());
+//						layers.add(new_layer);
+//					}									
+//					Attribute_Item new_attribute = new Attribute_Item(strata_definition_values[i][2], strata_definition_values[i][3]);	// add the attribute to the attributes of the last added layer		
+//					layers.get(layers.size() - 1).attributes.add(new_attribute);
+//				}	
+//															
 //				for (Layer_Item i : layers) {					
 //					for (Attribute_Item j : i.attributes) {
 //						System.out.println(i.layer_id + " " + i.layer_description + " " + j.attribute_id + " " + j.attribute_description);
