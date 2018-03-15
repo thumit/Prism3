@@ -3357,7 +3357,19 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			
 			
 			if (read.get_solver().equals("CPLEX")) {
-				// Load jar file dynamically at run time   (this is just for solving by CPLEX while running PRISM in Eclipse IDE)
+//				File file = new File("C:\\Users\\Dung Nguyen\\Desktop\\Temporary\\prismcplex.jar");
+//				URL url = file.toURI().toURL();
+//				ClassLoader loader = URLClassLoader.newInstance(new URL[] { url }, getClass().getClassLoader());
+//				Class<?> clazz = Class.forName("prismcplex.Cplex_Wrapper", true, loader);
+//				Class<? extends Runnable> runClass = clazz.asSubclass(Runnable.class);
+//				// Avoid Class.newInstance, for it is evil.
+//				Constructor<? extends Runnable> ctor = runClass.getConstructor();
+//				Runnable doRun = ctor.newInstance();
+//				doRun.run();
+				
+				
+				// Load jar file dynamically at run time   (this is just for solving by CPLEX while running PRISM in Eclipse IDE)   
+				// This first try-catch works in Java SE-8 but not works in Java SE-9 --> ClassLoader.getSystemClassLoader() sequences will no longer execute:              https://blog.codefx.org/java/java-9-migration-guide/#Casting-To-URL-Class-Loader
 				try {
 					File file = new File("C:\\Users\\Dung Nguyen\\Desktop\\Temporary\\cplex.jar");
 					URL url = file.toURI().toURL();
@@ -7912,7 +7924,19 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			
 			
 			if (read.get_solver().equals("CPLEX")) {
-				// Load jar file dynamically at run time   (this is just for solving by CPLEX while running PRISM in Eclipse IDE)
+//				File file = new File("C:\\Users\\Dung Nguyen\\Desktop\\Temporary\\prismcplex.jar");
+//				URL url = file.toURI().toURL();
+//				ClassLoader loader = URLClassLoader.newInstance(new URL[] { url }, getClass().getClassLoader());
+//				Class<?> clazz = Class.forName("prismcplex.Cplex_Wrapper", true, loader);
+//				Class<? extends Runnable> runClass = clazz.asSubclass(Runnable.class);
+//				// Avoid Class.newInstance, for it is evil.
+//				Constructor<? extends Runnable> ctor = runClass.getConstructor();
+//				Runnable doRun = ctor.newInstance();
+//				doRun.run();
+				
+				
+				// Load jar file dynamically at run time   (this is just for solving by CPLEX while running PRISM in Eclipse IDE)   
+				// This first try-catch works in Java SE-8 but not works in Java SE-9 --> ClassLoader.getSystemClassLoader() sequences will no longer execute:              https://blog.codefx.org/java/java-9-migration-guide/#Casting-To-URL-Class-Loader
 				try {
 					File file = new File("C:\\Users\\Dung Nguyen\\Desktop\\Temporary\\cplex.jar");
 					URL url = file.toURI().toURL();
@@ -7920,32 +7944,48 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
 					method.setAccessible(true);
 					method.invoke(classLoader, url);	
-					System.out.println("Successfully added cplex.jar files from " + "C:\\Users\\Dung Nguyen\\Desktop\\Temporary\\cplex.jar");	
+					System.out.println("Successfully loaded cplex.jar from C:\\Users\\Dung Nguyen\\Desktop\\Temporary");	
 				} catch (Exception e) {
 					System.err.println("cplex error - " + e.getClass().getName() + ": " + e.getMessage());
+					
+					// If not successful then:
+					// Load jar file dynamically at run time   (this is just for solving by CPLEX while running PRISM outside of Eclipse IDE - running the PrismAlphax.x.x.jar)
+					//  ........currently not working, need to find a way
+					try {
+						File file = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "cplex.jar");
+						URL url = file.toURI().toURL();
+						URLClassLoader classLoader = (URLClassLoader)ClassLoader.getSystemClassLoader();
+						Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
+						method.setAccessible(true);
+						method.invoke(classLoader, url);	
+						System.out.println("Successfully loaded cplex.jar from " + FilesHandle.get_temporaryFolder().getAbsolutePath());
+					} catch (Exception e1) {
+						System.err.println("cplex error - " + e1.getClass().getName() + ": " + e1.getMessage());
+					}
 				}
 				
-				// Load jar file dynamically at run time   (this is just for solving by CPLEX while running PRISM outside of Eclipse IDE - running the PrismAlphax.x.x.jar) ........currently not working for jar
+				
+				
+				// Add the CPLEX native library path dynamically at run time   (this is just for solving by CPLEX while running PRISM in Eclipse IDE, we do not have some .dll in Temporary folder in this case, for i.e. cple1261.dll)
 				try {
-					File file = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "cplex.jar");
-					URL url = file.toURI().toURL();
-					URLClassLoader classLoader = (URLClassLoader)ClassLoader.getSystemClassLoader();
-					Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
-					method.setAccessible(true);
-					method.invoke(classLoader, url);	
-					System.out.println("Successfully added cplex.jar files from " + FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "cplex.jar");	
+//					LibraryHandle.setLibraryPath("C:\\Users\\Dung Nguyen\\Desktop\\Temporary");
+					LibraryHandle.addLibraryPath("C:\\Users\\Dung Nguyen\\Desktop\\Temporary");
+					System.out.println("Successfully added all .dll files in C:\\Users\\Dung Nguyen\\Desktop\\Temporary");	
 				} catch (Exception e) {
 					System.err.println("cplex error - " + e.getClass().getName() + ": " + e.getMessage());
+
 				}
 				
-				// Add the CPLEX native library path dynamically at run time
+				// Add the CPLEX native library path dynamically at run time. When running PRISM outside of Eclipse IDE --> Temporary folder should have all .dll including cplex1261.dll
 				try {
-					LibraryHandle.setLibraryPath(FilesHandle.get_temporaryFolder().getAbsolutePath().toString());
+//					LibraryHandle.setLibraryPath(FilesHandle.get_temporaryFolder().getAbsolutePath().toString());
 					LibraryHandle.addLibraryPath(FilesHandle.get_temporaryFolder().getAbsolutePath().toString());
-					System.out.println("Successfully added .dll files from " + FilesHandle.get_temporaryFolder().getAbsolutePath().toString());	
+					System.out.println("Successfully added all .dll files in " + FilesHandle.get_temporaryFolder().getAbsolutePath().toString());	
 				} catch (Exception e) {
 					System.err.println("cplex error - " + e.getClass().getName() + ": " + e.getMessage());
 				}
+				
+				
 				
 				
 				int solvingTimeLimit = read.get_solving_time() * 60;

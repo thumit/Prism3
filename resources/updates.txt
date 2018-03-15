@@ -719,3 +719,10 @@ All changes in this block are associated with PrismAlpha1.0.31.jar, Prism Formul
 319. In Panel_SolveRun: not using "setLibraryPath" any more, just use "addLibraryPath". Reasons are:
 	- It seems like set will clear everything and keep only the path we set to.
 	- need to not use cplex****.dll in the TEmporary folder of the eclipse IDL --> add that dll file in a fixed location in my computer for convenient working
+320. Update Eclipse Neon --> Eclipse Oxygen so Java SE-9 could be used in Eclipse IDE
+	- https://moduliertersingvogel.de/2017/07/30/update-eclipse-from-neon-to-oxygen/
+	- https://dzone.com/articles/working-with-java-9-in-eclipse
+321. Change default execution environment to Java SE-9 (jre-9.04)for both projects: prism & prismcplex --> need to check if there are some improvements in Prism performance.
+322. Fix some places that is not compiled due to new Java SE-9 (happned only on Jtree): Enumeration<TreeNode> is used, and (DefaultMutableTreeNode) is used to casr for e.nextElement()
+All changes in this block are associated with PrismAlpha1.0.31.jar, Prism Formulation 02.docx, Prism Database 02.docx
+--------------------------------------------------------------------------

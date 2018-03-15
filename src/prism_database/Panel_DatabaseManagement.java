@@ -980,9 +980,9 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		String DatabaseName = newfile.getName();
 		refreshDatabaseTree();
 		@SuppressWarnings("unchecked")
-		Enumeration<DefaultMutableTreeNode> e1 = root.depthFirstEnumeration();
+		Enumeration<TreeNode> e1 = root.depthFirstEnumeration();
 		while (e1.hasMoreElements()) { // Search for the name that match
-			DefaultMutableTreeNode node = e1.nextElement();
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode) e1.nextElement();
 			if (node.toString().equalsIgnoreCase(DatabaseName) && root.isNodeChild(node)) {		//Name match, and node is child of root
 				DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();
 				TreeNode[] nodes = model.getPathToRoot(node);
@@ -1016,14 +1016,14 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 			
 			// Make the table appeared on the tree
 			refreshDatabaseTree();
-			Enumeration<DefaultMutableTreeNode> e = root.depthFirstEnumeration();
+			Enumeration<TreeNode> e = root.depthFirstEnumeration();
 			while (e.hasMoreElements()) { // Search for the name that match
-				DefaultMutableTreeNode node = e.nextElement();
+				DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.nextElement();
 				if (node.toString().equalsIgnoreCase(currentDatabase) && root.isNodeChild(node)) {		//Name match, and node is child of root
-					Enumeration<DefaultMutableTreeNode> e2 = node.depthFirstEnumeration();
+					Enumeration<TreeNode> e2 = node.depthFirstEnumeration();
 					
 					while (e2.hasMoreElements()) { // Search for the name that match
-						DefaultMutableTreeNode newNode = e2.nextElement();
+						DefaultMutableTreeNode newNode = (DefaultMutableTreeNode) e2.nextElement();
 						if (newNode.toString().equalsIgnoreCase(nameWOext) && node.isNodeChild(newNode)) {		//Name match, and node is child of the database
 							DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();
 							TreeNode[] nodes = model.getPathToRoot(newNode);
@@ -1087,9 +1087,9 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		String databaseName = deskFile.getName();
 		refreshDatabaseTree();
 		@SuppressWarnings("unchecked")
-		Enumeration<DefaultMutableTreeNode> e = root.depthFirstEnumeration();
+		Enumeration<TreeNode> e = root.depthFirstEnumeration();
 		while (e.hasMoreElements()) { // Search for the name that match
-			DefaultMutableTreeNode node = e.nextElement();
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.nextElement();
 			if (node.toString().equalsIgnoreCase(databaseName) && root.isNodeChild(node)) {		// Name match, and node is child of root
 				DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();
 				TreeNode[] nodes = model.getPathToRoot(node);
@@ -1161,9 +1161,9 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 				
 				// Find the destination node
 				DefaultMutableTreeNode destinationNode = new DefaultMutableTreeNode(destinationFileName);
-				Enumeration<DefaultMutableTreeNode> e = root.depthFirstEnumeration();
+				Enumeration<TreeNode> e = root.depthFirstEnumeration();
 				while (e.hasMoreElements()) {		//Search for the name that match
-					DefaultMutableTreeNode node = e.nextElement();
+					DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.nextElement();
 					if (node.toString().equalsIgnoreCase(destinationFileName) && root.isNodeChild(node)) {		//Name match, and node is child of root
 						destinationNode = node;
 					}
@@ -1205,9 +1205,9 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 	
 					else if (currentLevel == 2) { // Level 2 nodes: databases
 						// Loop through all tables in this database to get information		
-						Enumeration<DefaultMutableTreeNode> e1 = processingNode.depthFirstEnumeration();
+						Enumeration<TreeNode> e1 = processingNode.depthFirstEnumeration();
 						while (e1.hasMoreElements()) {		//Search for the name that match
-							DefaultMutableTreeNode childnode = e1.nextElement();
+							DefaultMutableTreeNode childnode = (DefaultMutableTreeNode) e1.nextElement();
 							if (processingNode.isNodeChild(childnode)) {		//If table (childnode) is child of that database (processingNode)
 								database_of_copiedTables[ii] = childnode.getParent().toString();
 								copiedTables_names[ii] = childnode.getUserObject().toString();
@@ -1359,9 +1359,9 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 				String DatabaseName = deskFile.getName();
 				refreshDatabaseTree();
 				@SuppressWarnings("unchecked")
-				Enumeration<DefaultMutableTreeNode> e = root.depthFirstEnumeration();
+				Enumeration<TreeNode> e = root.depthFirstEnumeration();
 				while (e.hasMoreElements()) { // Search for the name that match
-					DefaultMutableTreeNode node = e.nextElement();
+					DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.nextElement();
 					if (node.toString().equalsIgnoreCase(DatabaseName) && root.isNodeChild(node)) {		//Name match, and node is child of root
 						DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();
 						TreeNode[] nodes = model.getPathToRoot(node);
@@ -1583,14 +1583,14 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 				// Make the combine_table appeared on the tree
 				refreshDatabaseTree();
 				@SuppressWarnings("unchecked")
-				Enumeration<DefaultMutableTreeNode> e = root.depthFirstEnumeration();
+				Enumeration<TreeNode> e = root.depthFirstEnumeration();
 				while (e.hasMoreElements()) { // Search for the name that match
-					DefaultMutableTreeNode node = e.nextElement();
+					DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.nextElement();
 					if (node.toString().equalsIgnoreCase(currentDatabase) && root.isNodeChild(node)) {		//Name match, and node is child of root
-						Enumeration<DefaultMutableTreeNode> e2 = node.depthFirstEnumeration();
+						Enumeration<TreeNode> e2 = node.depthFirstEnumeration();
 						
 						while (e2.hasMoreElements()) { // Search for the name that match
-							DefaultMutableTreeNode newNode = e2.nextElement();
+							DefaultMutableTreeNode newNode = (DefaultMutableTreeNode) e2.nextElement();
 							if (newNode.toString().equalsIgnoreCase("combine_table") && node.isNodeChild(newNode)) {		//Name match, and node is child of the database
 								/*DefaultTreeModel */model = (DefaultTreeModel) DatabaseTree.getModel();
 								TreeNode[] nodes = model.getPathToRoot(newNode);
@@ -1805,14 +1805,14 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 				// Make the combine_table appeared on the tree
 				refreshDatabaseTree();
 				@SuppressWarnings("unchecked")
-				Enumeration<DefaultMutableTreeNode> e = root.depthFirstEnumeration();
+				Enumeration<TreeNode> e = root.depthFirstEnumeration();
 				while (e.hasMoreElements()) { // Search for the name that match
-					DefaultMutableTreeNode node = e.nextElement();
+					DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.nextElement();
 					if (node.toString().equalsIgnoreCase(currentDatabase) && root.isNodeChild(node)) {		//Name match, and node is child of root
-						Enumeration<DefaultMutableTreeNode> e2 = node.depthFirstEnumeration();
+						Enumeration<TreeNode> e2 = node.depthFirstEnumeration();
 						
 						while (e2.hasMoreElements()) { // Search for the name that match
-							DefaultMutableTreeNode newNode = e2.nextElement();
+							DefaultMutableTreeNode newNode = (DefaultMutableTreeNode) e2.nextElement();
 							if (newNode.toString().equalsIgnoreCase("yield_tables_definition") && node.isNodeChild(newNode)) {		//Name match, and node is child of the database
 								DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();
 								TreeNode[] nodes = model.getPathToRoot(newNode);

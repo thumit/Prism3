@@ -937,9 +937,9 @@ public class Panel_Project extends JLayeredPane {
 		String RunName = newfile.getName();
 		refreshProjectTree();
 		@SuppressWarnings("unchecked")
-		Enumeration<DefaultMutableTreeNode> e1 = root.depthFirstEnumeration();
+		Enumeration<TreeNode> e1 = root.depthFirstEnumeration();
 		while (e1.hasMoreElements()) { // Search for the name that match
-			DefaultMutableTreeNode node = e1.nextElement();
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode) e1.nextElement();
 			if (node.toString().equalsIgnoreCase(RunName) && root.isNodeChild(node)) {		//Name match, and node is child of root
 				DefaultTreeModel model = (DefaultTreeModel) projectTree.getModel();
 				TreeNode[] nodes = model.getPathToRoot(node);
@@ -992,9 +992,9 @@ public class Panel_Project extends JLayeredPane {
 		String RunName = deskFile.getName();
 		refreshProjectTree();
 		@SuppressWarnings("unchecked")
-		Enumeration<DefaultMutableTreeNode> e = root.depthFirstEnumeration();
+		Enumeration<TreeNode> e = root.depthFirstEnumeration();
 		while (e.hasMoreElements()) { // Search for the name that match
-			DefaultMutableTreeNode node = e.nextElement();
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.nextElement();
 			if (node.toString().equalsIgnoreCase(RunName) && root.isNodeChild(node)) {		// Name match, and node is child of root
 				DefaultTreeModel model = (DefaultTreeModel) projectTree.getModel();
 				TreeNode[] nodes = model.getPathToRoot(node);
