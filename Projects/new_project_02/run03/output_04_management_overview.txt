@@ -1,0 +1,2 @@
+strata_id	layer1	layer2	layer3	layer4	layer5	layer6	NG_E_acres	PB_E_acres	GS_E_acres	EA_E_acres	MS_E_acres	BS_E_acres
+AUUUAS	A	U	U	U	A	S	5739.53086875656	0.0	0.0	0.0	0.0	0.0

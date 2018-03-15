@@ -704,3 +704,18 @@ All changes in this block are associated with PrismAlpha1.0.30.jar, Prism Formul
 313. Fix at Parameter Scroll: when Cost is check, then click on the border of the scroll --> both CostParameter and NoParameter are checked. Now, only NoParameter is checked.
 All changes in this block are associated with PrismAlpha1.0.31.jar, Prism Formulation 02.docx, Prism Database 02.docx
 --------------------------------------------------------------------------
+
+314. Decouple CPLEX
+	- Panel_SolveRun (both Fast & Slow Solve): delete "nV", use "nvars" only
+	- Panel_SolveRun (both Fast & Slow Solve): not use vtype anymore --> move it to "Cplex_Wrapper" class
+	- "Cplex_Wrapper"is a new class, created to mimic CPLEX functions (sometimes, several functions are combined into a void). This class is put into a new java project "prismcplex". The readme.txt in this project would describe detailed steps for the connection between "Prism" and "Cplex" through "prismcplex"
+	- Panel_SolveRun (both Fast & Slow Solve): also load cplex.jar dynamically in Temporary folder C:\\Users\\...\cplex.jar so CPLEX could be run when working in Eclipse IDE
+315. GS_E and GS_R --> choices 0 to 5.
+316. Fix to correct output_04 printing out when LPSOLVE is used as solver
+317. Bug 21 fixed: when we dont have or lack data in rotation age ranges (rotation_ranges) then import in EDIT RUN fails:  ---> re-upload as PrismAlpha1.0.31.jar
+	- Fix in create_table4
+	- QuickEdit_EA_Conversion_Panel
+318. refactor almost all packages and classes
+319. In Panel_SolveRun: not using "setLibraryPath" any more, just use "addLibraryPath". Reasons are:
+	- It seems like set will clear everything and keep only the path we set to.
+	- need to not use cplex****.dll in the TEmporary folder of the eclipse IDL --> add that dll file in a fixed location in my computer for convenient working

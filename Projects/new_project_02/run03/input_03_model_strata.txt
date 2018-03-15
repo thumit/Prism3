@@ -1,0 +1,2 @@
+strata_id	layer1	layer2	layer3	layer4	layer5	layer6	acres	ageclass	model_strata	
+AUUUAS	A	U	U	U	A	S	5739.53086875656	1	true	

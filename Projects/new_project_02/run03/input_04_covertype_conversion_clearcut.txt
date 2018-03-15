@@ -1,0 +1,9 @@
+covertype_before_cut	covertype_after_cut	min_age_cut_existing	max_age_cut_existing	min_age_cut_regeneration	max_age_cut_regeneration	implementation	
+A	A	-9999	-9999	-9999	-9999	true	
+F	F	-9999	-9999	-9999	-9999	true	
+G	G	-9999	-9999	-9999	-9999	true	
+L	L	-9999	-9999	-9999	-9999	true	
+M	M	-9999	-9999	-9999	-9999	true	
+P	P	-9999	-9999	-9999	-9999	true	
+S	S	-9999	-9999	-9999	-9999	true	
+Z	Z	-9999	-9999	-9999	-9999	true	
