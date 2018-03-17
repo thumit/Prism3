@@ -1,4 +1,0 @@
-var_id	var_name	var_value	var_reduced_cost
-0	x_A,U,U,U,A,S,0	5739.53086875656	0.0
-6	xNG_E_A,U,U,U,A,S,0,1	5739.53086875656	0.0
-7	xNG_E_A,U,U,U,A,S,0,2	5739.53086875656	0.0

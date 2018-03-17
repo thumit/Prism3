@@ -6,7 +6,7 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/prism documents/Setup/sqlite-jdbc-3.8.11.2.jar"/>
+	<classpathentry kind="lib" path="C:/prism documents/Setup/sqlite-jdbc-3.21.0.jar"/>
 	<classpathentry kind="lib" path="C:/prism documents/Setup/lp_solve_5.5_java/lib/lpsolve55j.jar"/>
 	<classpathentry kind="lib" path="C:/prism documents/Setup/tablefilter-swing-5.3.0.jar"/>
 	<classpathentry kind="lib" path="C:/prism documents/Setup/jfreechart-1.0.19/lib/jfreechart-1.0.19.jar"/>

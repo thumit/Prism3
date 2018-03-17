@@ -111,13 +111,13 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 			for (int i = 0; i < allmethods_ToolTips.get(0).size(); i++) {	// 0 is method, 1 is choice
 				if (allmethods_ToolTips.get(0).get(i).equals("NG_E")) 	allmethods_ToolTips.get(0).set(i, "Natural Growth existing: choices 0-4");
 				if (allmethods_ToolTips.get(0).get(i).equals("PB_E")) 	allmethods_ToolTips.get(0).set(i, "Prescribed Burn existing: choices 0-4");
-				if (allmethods_ToolTips.get(0).get(i).equals("GS_E")) 	allmethods_ToolTips.get(0).set(i, "Group Selection existing: choices 0-4");
+				if (allmethods_ToolTips.get(0).get(i).equals("GS_E")) 	allmethods_ToolTips.get(0).set(i, "Group Selection existing: choices 0-5");
 				if (allmethods_ToolTips.get(0).get(i).equals("EA_E")) 	allmethods_ToolTips.get(0).set(i, "Even Age existing: choices 0-5");
 				if (allmethods_ToolTips.get(0).get(i).equals("MS_E")) 	allmethods_ToolTips.get(0).set(i, "Mixed Severity Wildfire: choices 0-11");
 				if (allmethods_ToolTips.get(0).get(i).equals("BS_E")) 	allmethods_ToolTips.get(0).set(i, "Severe Bark Beetle: choices 0-4");
 				if (allmethods_ToolTips.get(0).get(i).equals("NG_R")) 	allmethods_ToolTips.get(0).set(i, "Natural Growth regeneration: choices 0-4");
 				if (allmethods_ToolTips.get(0).get(i).equals("PB_R")) 	allmethods_ToolTips.get(0).set(i, "Prescribed Burn regeneration: choices 0-4");
-				if (allmethods_ToolTips.get(0).get(i).equals("GS_R")) 	allmethods_ToolTips.get(0).set(i, "Group Selection regeneration: choices 0-4");
+				if (allmethods_ToolTips.get(0).get(i).equals("GS_R")) 	allmethods_ToolTips.get(0).set(i, "Group Selection regeneration: choices 0-5");
 				if (allmethods_ToolTips.get(0).get(i).equals("EA_R")) 	allmethods_ToolTips.get(0).set(i, "Even Age regeneration: choices 0-5");		
 			}	
 			allLayers_ToolTips.addAll(allmethods_ToolTips);			
@@ -241,12 +241,14 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 					for (int i = 0; i < total_staticIdentifiers; i++) {		//Loop all layers
 						for (int j = 0; j < allLayers.get(i).size(); j++) {		//Loop all elements in each layer
 							checkboxStaticIdentifiers.get(i).get(j).setSelected(false);
+							layers_Title_Label.get(i).setEnabled(false);
 						}
 					}
 				} else {
 					for (int i = 0; i < total_staticIdentifiers; i++) {		//Loop all layers
 						for (int j = 0; j < allLayers.get(i).size(); j++) {		//Loop all elements in each layer
 							checkboxStaticIdentifiers.get(i).get(j).setSelected(true);
+							layers_Title_Label.get(i).setEnabled(true);
 						}
 					}
 				}

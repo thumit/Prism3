@@ -1626,11 +1626,11 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 				for (int j = 0; j < total_SizeClass; j++) {
 					data6[table_row][0] = allLayers.get(4).get(i);
 					data6[table_row][1] = allLayers.get(5).get(j);	
-					data6[table_row][2] = 5.0;
-					data6[table_row][3] = 4.5;
+					data6[table_row][2] = 0;
+					data6[table_row][3] = 0;
 					if (allLayers.get(4).get(i).equals("N")) {
-						data6[table_row][2] = 0.0;	//Non-stocked --> No MS
-						data6[table_row][3] = 0.0;	//Non-stocked --> No BS
+						data6[table_row][2] = 0;	//Non-stocked --> No MS
+						data6[table_row][3] = 0;	//Non-stocked --> No BS
 					}
 					table_row++;
 				}
@@ -1870,8 +1870,8 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			for (int i = 0; i < rowCount7; i++) {
 				data7[i][0] = i+1;			//Age class column, age starts from 1
 				for (int j = 1; j < colCount7; j++) {	//all other columns
-					data7[i][j] = 0.2;
-					if (allLayers.get(4).get(j-1).equals("N"))	data7[i][j] = 0.0;	//Non-stocked --> No SR Fire
+					data7[i][j] = 0;
+					if (allLayers.get(4).get(j-1).equals("N"))	data7[i][j] = 0;	//Non-stocked --> No SR Fire
 				}
 			}								
 		}

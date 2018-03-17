@@ -3424,79 +3424,64 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				int solvingTimeLimit = read.get_solving_time() * 60;
 				prismcplex.Cplex_Wrapper cplex_wrapper = new prismcplex.Cplex_Wrapper(nvars, vlb, vub, vname, objvals, solvingTimeLimit);
 				
-				// Add constraints
-				cplex_wrapper.addRows(c2_lb, c2_ub, c2_index, c2_value); // Constraints 2
-				cplex_wrapper.addRows(c3_lb, c3_ub, c3_index, c3_value); // Constraints 3
-				cplex_wrapper.addRows(c5_lb, c5_ub, c5_index, c5_value); // Constraints 5 (flow)
-				cplex_wrapper.addRows(c6_lb, c6_ub, c6_index, c6_value); // Constraints 6
-				cplex_wrapper.addRows(c7_lb, c7_ub, c7_index, c7_value); // Constraints 7
-				cplex_wrapper.addRows(c8_lb, c8_ub, c8_index, c8_value); // Constraints 8
-				cplex_wrapper.addRows(c9_lb, c9_ub, c9_index, c9_value); // Constraints 9
-				cplex_wrapper.addRows(c10_lb, c10_ub, c10_index, c10_value); // Constraints 10
-				cplex_wrapper.addRows(c11_lb, c11_ub, c11_index, c11_value); // Constraints 11
-				cplex_wrapper.addRows(c12_lb, c12_ub, c12_index, c12_value); // Constraints 12
-				cplex_wrapper.addRows(c13_lb, c13_ub, c13_index, c13_value); // Constraints 13
-				cplex_wrapper.addRows(c14_lb, c14_ub, c14_index, c14_value); // Constraints 14
-				cplex_wrapper.addRows(c15_lb, c15_ub, c15_index, c15_value); // Constraints 15
-				
-				
-				// Clear arrays to save memory
-				c2_lb = null;  c2_ub = null;  c2_index = null;  c2_value = null;
-				c3_lb = null;  c3_ub = null;  c3_index = null;  c3_value = null;
-				c5_lb = null;  c5_ub = null;  c5_index = null;  c5_value = null;
-				c6_lb = null;  c6_ub = null;  c6_index = null;  c6_value = null;
-				c7_lb = null;  c7_ub = null;  c7_index = null;  c7_value = null;
-				c8_lb = null;  c8_ub = null;  c8_index = null;  c8_value = null;
-				c9_lb = null;  c9_ub = null;  c9_index = null;  c9_value = null;
-				c10_lb = null;  c10_ub = null;  c10_index = null;  c10_value = null;
-				c11_lb = null;  c11_ub = null;  c11_index = null;  c11_value = null;
-				c12_lb = null;  c12_ub = null;  c12_index = null;  c12_value = null;
-				c13_lb = null;  c13_ub = null;  c13_index = null;  c13_value = null;
-				c14_lb = null;  c14_ub = null;  c14_index = null;  c14_value = null;
-				c15_lb = null;  c15_ub = null;  c15_index = null;  c15_value = null;
-				
+				// add constraints & Clear arrays to save memory
+				cplex_wrapper.addRows(c2_lb, c2_ub, c2_index, c2_value); 	c2_lb = null;  c2_ub = null;  c2_index = null;  c2_value = null;	// Constraints 2
+				cplex_wrapper.addRows(c3_lb, c3_ub, c3_index, c3_value); 	c3_lb = null;  c3_ub = null;  c3_index = null;  c3_value = null;	// Constraints 3
+				cplex_wrapper.addRows(c5_lb, c5_ub, c5_index, c5_value); 	c5_lb = null;  c5_ub = null;  c5_index = null;  c5_value = null;	// Constraints 5 (flow)
+				cplex_wrapper.addRows(c6_lb, c6_ub, c6_index, c6_value); 	c6_lb = null;  c6_ub = null;  c6_index = null;  c6_value = null;	// Constraints 6
+				cplex_wrapper.addRows(c7_lb, c7_ub, c7_index, c7_value); 	c7_lb = null;  c7_ub = null;  c7_index = null;  c7_value = null;	// Constraints 7
+				cplex_wrapper.addRows(c8_lb, c8_ub, c8_index, c8_value); 	c8_lb = null;  c8_ub = null;  c8_index = null;  c8_value = null;	// Constraints 8
+				cplex_wrapper.addRows(c9_lb, c9_ub, c9_index, c9_value); 	c9_lb = null;  c9_ub = null;  c9_index = null;  c9_value = null;	// Constraints 9
+				cplex_wrapper.addRows(c10_lb, c10_ub, c10_index, c10_value); 	c10_lb = null;  c10_ub = null;  c10_index = null;  c10_value = null;	// Constraints 10
+				cplex_wrapper.addRows(c11_lb, c11_ub, c11_index, c11_value); 	c11_lb = null;  c11_ub = null;  c11_index = null;  c11_value = null;	// Constraints 11
+				cplex_wrapper.addRows(c12_lb, c12_ub, c12_index, c12_value); 	c12_lb = null;  c12_ub = null;  c12_index = null;  c12_value = null;	// Constraints 12
+				cplex_wrapper.addRows(c13_lb, c13_ub, c13_index, c13_value); 	c13_lb = null;  c13_ub = null;  c13_index = null;  c13_value = null;	// Constraints 13
+				cplex_wrapper.addRows(c14_lb, c14_ub, c14_index, c14_value); 	c14_lb = null;  c14_ub = null;  c14_index = null;  c14_value = null;	// Constraints 14
+				cplex_wrapper.addRows(c15_lb, c15_ub, c15_index, c15_value); 	c15_lb = null;  c15_ub = null;  c15_index = null;  c15_value = null;	// Constraints 15
 				
 				// set up cplex environments
 				cplex_wrapper.setup();
+				int cplex_total_variables = cplex_wrapper.getNcols();
+				int cplex_total_constraints = cplex_wrapper.getNrows();
 				
-
-				// Add table info
-				data[row][2] = cplex_wrapper.getNcols();
-				data[row][3] = cplex_wrapper.getNrows();
+				// solve model
+				data[row][2] = cplex_total_variables;
+				data[row][3] = cplex_total_constraints;
 				data[row][4] = "solving";
-				model.fireTableDataChanged();
-				
-				
-				if (read.get_export_problem()) cplex_wrapper.exportModel(problem_file[row].getAbsolutePath());
 				time_start = System.currentTimeMillis();		// measure time before solving
+				model.fireTableDataChanged();
 				if (cplex_wrapper.solve()) {
-					// Add table info
-					data[row][4] = "writing";
-					model.fireTableDataChanged();
-					
-					
-					time_end = System.currentTimeMillis();		// measure time after solving
-					time_solving = (double) (time_end - time_start)/1000;
-					time_start = System.currentTimeMillis();		// measure time before writing
-//					if (read.get_export_problem()) cplex.exportModel(problem_file[row].getAbsolutePath());
+					// get output info after solving & then stop cplex
+					if (read.get_export_problem()) cplex_wrapper.exportModel(problem_file[row].getAbsolutePath());
 					if (read.get_export_solution()) cplex_wrapper.writeSolution(solution_file[row].getAbsolutePath());
-
-					
-					//Get output info to array
 					double[] value = cplex_wrapper.getValues();
 					double[] reduceCost = cplex_wrapper.getReducedCosts();
 					double[] dual = cplex_wrapper.getDuals();
 					double[] slack = cplex_wrapper.getSlacks();
-
+					double objective_value = cplex_wrapper.getObjValue();
+					String cplex_status = cplex_wrapper.getStatus();
+					int cplex_algorithm = cplex_wrapper.getAlgorithm();
+					long cplex_iteration = cplex_wrapper.getNiterations64();
+					cplex_wrapper.end_the_run();
+					cplex_wrapper = null;
+					time_end = System.currentTimeMillis();		// measure time after solving
+					time_solving = (double) (time_end - time_start) / 1000;
 					
-					// Write Solution files
-					// Variables if value <> 0
+					
+					
+					
+					// write Solution files
+					data[row][4] = "writing";
+					model.fireTableDataChanged();
+					time_start = System.currentTimeMillis();	// measure time before writing
+					
+					
+					// output_02_variable
 					output_variables_file[row].delete();
 					try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_variables_file[row]))) {
-						// Write variables info
 						fileOut.write("var_id" + "\t" + "var_name" + "\t" + "var_value" + "\t" + "var_reduced_cost");
 						for (int i = 0; i < value.length; i++) {
-							if (value[i] != 0) {
+							if (value[i] != 0) {	// only write variable that is not zero
 								fileOut.newLine();
 								fileOut.write(i + "\t" + vname[i] 
 										+ "\t" + Double.valueOf(value[i]) /*Double.valueOf(twoDForm.format(value[i]))*/ 
@@ -3511,10 +3496,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					output_variables_file[row].createNewFile();
 
 					
-					// Constraints if dual or slack <> 0
+					// output_03_constraints
 					output_constraints_file[row].delete();
 					try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_constraints_file[row]))) {
-						// Write constraints info
 						fileOut.write("cons_id" + "\t" + "cons_slack" + "\t" + "cons_dual");
 						for (int j = 0; j < dual.length; j++) {
 							if (slack[j] != 0 || dual[j] != 0) {
@@ -3532,15 +3516,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					output_constraints_file[row].createNewFile();
 
 					
-					// management_overview
+					// output_04_management_overview
 					output_management_overview_file[row].delete();
-					try (BufferedWriter fileOut = new BufferedWriter(
-							new FileWriter(output_management_overview_file[row]))) {
-						// Write info
+					try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_management_overview_file[row]))) {
 						fileOut.write("strata_id" + "\t" + "layer1" + "\t" + "layer2" + "\t" + "layer3" + "\t" + "layer4" + "\t" + "layer5" + "\t" + "layer6" + "\t" 
-						+ "NG_E_acres" + "\t" + "PB_E_acres" + "\t" + "GS_E_acres" + "\t"
-						+ "EA_E_acres" + "\t" + "MS_E_acres"  + "\t" + "BS_E_acres");
-
+								+ "NG_E_acres" + "\t" + "PB_E_acres" + "\t" + "GS_E_acres" + "\t" + "EA_E_acres" + "\t" + "MS_E_acres" + "\t" + "BS_E_acres");
 						for (String strata: model_strata) {
 							int strata_id = Collections.binarySearch(model_strata, strata);
 							int s1 = Collections.binarySearch(layer1, strata.substring(0, 1));
@@ -3549,15 +3529,13 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 							int s4 = Collections.binarySearch(layer4, strata.substring(3, 4));
 							int s5 = Collections.binarySearch(layer5, strata.substring(4, 5));
 							int s6 = Collections.binarySearch(layer6, strata.substring(5, 6));	
-
-							//New line for each strata
+							// new line for each stratum
 							fileOut.newLine();
-							//Write StrataID and 6 layers info
-							fileOut.write(
-									strata + "\t" + layer1.get(s1) + "\t" + layer2.get(s2)
+							// write StrataID and 6 layers info
+							fileOut.write(strata + "\t" + layer1.get(s1) + "\t" + layer2.get(s2)
 											+ "\t" + layer3.get(s3) + "\t" + layer4.get(s4)
 											+ "\t" + layer5.get(s5) + "\t" + layer6.get(s6));
-							//Write acres from each method
+							// write acres from each method
 							for (int q = 0; q < total_methods; q++) {
 								int this_var_index = x[strata_id][q];
 								fileOut.write("\t" + Double.valueOf(value[this_var_index]) /*Double.valueOf(twoDForm.format(value[this_var_index]))*/);
@@ -3570,25 +3548,21 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					output_management_overview_file[row].createNewFile();
 					
 					
+					// output_05_management_details
 					output_management_details_file[row].delete();
-					try (BufferedWriter fileOut = new BufferedWriter(
-							new FileWriter(output_management_details_file[row]))) {
-						// Write variables info
+					try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_management_details_file[row]))) {
 						fileOut.write("var_id" + "\t" + "var_name" + "\t" + "var_value" + "\t" + "var_reduced_cost" + "\t" 
-						+ "var_method" + "\t" + "var_forest_status" + "\t" + "var_layer1" + "\t" + "var_layer2" + "\t" + "var_layer3" + "\t" + "var_layer4" + "\t" + "var_layer5" + "\t" + "var_layer6" + "\t" 
-						+ "var_choice" + "\t" + "var_period" + "\t" + "var_age" + "\t" + "var_rotation_period" + "\t" + "var_rotation_age" + "\t" + "var_regen_covertype" + "\t"
-						+ "data_connection" + "\t" + "prescription" + "\t" + "row_id");
+								+ "var_method" + "\t" + "var_forest_status" + "\t" + "var_layer1" + "\t" + "var_layer2" + "\t" + "var_layer3" + "\t" + "var_layer4" + "\t" + "var_layer5" + "\t" + "var_layer6" + "\t" 
+								+ "var_choice" + "\t" + "var_period" + "\t" + "var_age" + "\t" + "var_rotation_period" + "\t" + "var_rotation_age" + "\t" + "var_regen_covertype" + "\t"
+								+ "data_connection" + "\t" + "prescription" + "\t" + "row_id");
 						for (int col = 2; col < yield_tables_column_names.length; col++) {		// do not write prescription & row_id column header
 							fileOut.write("\t" + yield_tables_column_names[col]);
 						}
 						
 						for (int i = 0; i < value.length; i++) {
-							if (value[i] != 0 && (vname[i].contains("NG") || vname[i].contains("PB") || vname[i].contains("GS") 
-									|| vname[i].contains("MS") || vname[i].contains("BS") || vname[i].contains("EA"))) {
-								
+							if (value[i] != 0 && (vname[i].contains("NG") || vname[i].contains("PB") || vname[i].contains("GS") || vname[i].contains("MS") || vname[i].contains("BS") || vname[i].contains("EA"))) {
 								int table_id_to_find = -9999;
 								int row_id_to_find = -9999;
-								
 								
 								int var_rotation_age = Get_Variable_Information.get_rotation_age(vname[i], starting_age, model_strata); 
 								String yield_table_name_to_find = Get_Variable_Information.get_yield_table_name_to_find(vname[i]);
@@ -3597,7 +3571,6 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								int[] prescription_and_row = get_prescription_and_row(yield_tables_names_list, vname[i], var_rotation_age);
 								table_id_to_find = prescription_and_row[0];
 								row_id_to_find = prescription_and_row[1];
-								
 
 								String data_connection = "good";
 								if (table_id_to_find == -9999) {
@@ -3637,22 +3610,20 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					}
 					output_management_details_file[row].createNewFile();
 					
-					// Create a table inside the database.db
+					// create a table inside the database.db
 					import_file_as_table_into_database(output_management_details_file[row], file_database[row]);
 					
 					// fly_constraints --> don't need to create this file, just delete the old file
 					output_fly_constraints_file[row].delete();		
 					
 					
-					// basic_constraints
+					// output_06basic_constraints
 					if (total_freeConstraints + total_softConstraints + total_hardConstraints > 0) {		// write basic constraints if there is at least a constraint set up
 						output_basic_constraints_file[row].delete();
-						try (BufferedWriter fileOut = new BufferedWriter(
-								new FileWriter(output_basic_constraints_file[row]))) {
-							// Write info
+						try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_basic_constraints_file[row]))) {
 							fileOut.write("bc_id" + "\t" + "bc_description" + "\t" + "bc_type" + "\t" + "bc_multiplier" + "\t" + "lowerbound" + "\t" 
-							+ "lowerbound_perunit_penalty" + "\t" + "upperbound" + "\t" + "upperbound_perunit_penalty" + "\t"
-							+ "bookeeping_var_id" + "\t" + "bookeeping_var_name" + "\t" + "bookeeping_var_value" + "\t" + "bookeeping_var_reduced_cost" + "\t" + "total_penalty");
+									+ "lowerbound_perunit_penalty" + "\t" + "upperbound" + "\t" + "upperbound_perunit_penalty" + "\t"
+									+ "bookeeping_var_id" + "\t" + "bookeeping_var_name" + "\t" + "bookeeping_var_value" + "\t" + "bookeeping_var_reduced_cost" + "\t" + "total_penalty");
 	
 							current_freeConstraint = 0;
 							current_softConstraint = 0;
@@ -3663,9 +3634,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 							int upperbound_col = constraint_column_names_list.indexOf("upperbound");
 							int upperbound_perunit_penalty_col = constraint_column_names_list.indexOf("upperbound_perunit_penalty");
 							
-							for (int i = 1; i < total_freeConstraints + total_softConstraints + total_hardConstraints + 1; i++) {	// Loop from 1 because the first row of the Basic Constraints file is just title												
+							for (int i = 1; i < total_freeConstraints + total_softConstraints + total_hardConstraints + 1; i++) {	// loop from 1 because the first row of the Basic Constraints file is just title												
 								fileOut.newLine();
-								for (int j = 0; j < 8; j++) { //just print the first 7 columns of basic constraints
+								for (int j = 0; j < 8; j++) { 	// just print the first 7 columns of basic constraints
 									fileOut.write(bc_values[i][j] + "\t");
 								}
 								
@@ -3710,14 +3681,13 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						output_basic_constraints_file[row].createNewFile();					
 					}							
 					
-					// flow_constraints 					
+					// output_07_flow_constraints 					
 					if (flow_set_list.size() > 0) {		// write flow constraints if there is at least a flow set
 						output_flow_constraints_file[row].delete();
 						try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_flow_constraints_file[row]))) {
-							// Write info
 							fileOut.write("flow_id" + "\t" + "flow_description" + "\t" + "flow_arrangement" + "\t"
 									+ "flow_type" + "\t" + "lowerbound_percentage" + "\t" + "upperbound_percentage" + "\t" + "flow_output_original");
-							// Add constraints for each flow set
+							// add constraints for each flow set
 							for (int i = 0; i < flow_set_list.size(); i++) {		// loop each flow set (or each row of the flow_constraints_table)								
 								String temp = flow_id_list.get(i) + "\t" + flow_description_list.get(i) + "\t"
 										+ flow_arrangement_list.get(i) + "\t" + flow_type_list.get(i) + "\t"
@@ -3733,7 +3703,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									}
 									temp = temp + Double.valueOf(aggragated_value) /*Double.valueOf(twoDForm.format(aggragated_value))*/ + ";";	
 								}	
-								temp = temp.substring(0, temp.length() - 1) + "\t";		// remove the last ; and add a tab									
+								temp = temp.substring(0, temp.length() - 1) + "\t";	// remove the last ; and add a tab									
 								temp = temp.substring(0, temp.length() - 1);		// remove the last ;								
 								
 								// write the whole line
@@ -3751,7 +3721,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					time_end = System.currentTimeMillis();		// measure time after writing
 					time_writing = (double) (time_end - time_start) / 1000;
 					
-					//General Info (write at the end since we need writing time)
+					// output_01_general input (write at the end since we need writing time)
 					output_general_outputs_file[row].delete();
 					try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_general_outputs_file[row]))) {
 						// Write variables info
@@ -3761,13 +3731,13 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						fileOut.write("Optimization solver" + "\t" + "CPLEX");
 
 						fileOut.newLine();
-						fileOut.write("Solution status" + "\t" + cplex_wrapper.getStatus());
+						fileOut.write("Solution status" + "\t" + cplex_status);
 
 						fileOut.newLine();
-						fileOut.write("Solution algorithm" + "\t" + cplex_wrapper.getAlgorithm());
+						fileOut.write("Solution algorithm" + "\t" + cplex_algorithm);
 
 						fileOut.newLine();
-						fileOut.write("Simplex iterations" + "\t" + cplex_wrapper.getNiterations64());
+						fileOut.write("Simplex iterations" + "\t" + cplex_iteration);
 						
 						fileOut.newLine();
 						fileOut.write("Prism version when problem solved" + "\t" + PrismMain.get_prism_version());
@@ -3797,13 +3767,13 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						}
 
 						fileOut.newLine();
-						fileOut.write("Total variables" + "\t" + cplex_wrapper.getNcols());
+						fileOut.write("Total variables" + "\t" + cplex_total_variables);
 
 						fileOut.newLine();
-						fileOut.write("Total constraints" + "\t" + cplex_wrapper.getNrows());
+						fileOut.write("Total constraints" + "\t" + cplex_total_constraints);
 
 						fileOut.newLine();
-						fileOut.write("Objective value" + "\t" + Double.valueOf(twoDForm.format(cplex_wrapper.getObjValue())));
+						fileOut.write("Objective value" + "\t" + Double.valueOf(twoDForm.format(objective_value)));
 
 						fileOut.close();
 					} catch (IOException e) {
@@ -3812,15 +3782,17 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					output_general_outputs_file[row].createNewFile();
 					
 					
-					//Show successful or fail in the GUI
+					// show successful or fail in the GUI
 					data[row][1] = "valid";
 					data[row][4] = "successful";
 					model.fireTableDataChanged();
-					
-					value = null; reduceCost = null; dual = null; slack = null;	// Clear arrays to save memory
+					value = null; reduceCost = null; dual = null; slack = null;		// clear arrays to save memory
+				} else {
+					if (read.get_export_problem()) cplex_wrapper.exportModel(problem_file[row].getAbsolutePath());
+					data[row][1] = "valid";
+					data[row][4] = "fail";
+					model.fireTableDataChanged();
 				}
-				
-				cplex_wrapper.end_the_run();
 			}
 			
 	
@@ -4195,7 +4167,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 		
 		}
 		catch (IOException e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Panel Solve Runs   -   Create 4 output files exception for "+ listOfEditRuns[row].getName());			
+			System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Panel Solve Runs   -   Create output files exception for "+ listOfEditRuns[row].getName());			
 		
 			data[row][1] = "cannot create outputs";
 			data[row][4] = "fail";
@@ -7991,79 +7963,64 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				int solvingTimeLimit = read.get_solving_time() * 60;
 				prismcplex.Cplex_Wrapper cplex_wrapper = new prismcplex.Cplex_Wrapper(nvars, vlb, vub, vname, objvals, solvingTimeLimit);
 				
-				// Add constraints
-				cplex_wrapper.addRows(c2_lb, c2_ub, c2_index, c2_value); // Constraints 2
-				cplex_wrapper.addRows(c3_lb, c3_ub, c3_index, c3_value); // Constraints 3
-				cplex_wrapper.addRows(c5_lb, c5_ub, c5_index, c5_value); // Constraints 5 (flow)
-				cplex_wrapper.addRows(c6_lb, c6_ub, c6_index, c6_value); // Constraints 6
-				cplex_wrapper.addRows(c7_lb, c7_ub, c7_index, c7_value); // Constraints 7
-				cplex_wrapper.addRows(c8_lb, c8_ub, c8_index, c8_value); // Constraints 8
-				cplex_wrapper.addRows(c9_lb, c9_ub, c9_index, c9_value); // Constraints 9
-				cplex_wrapper.addRows(c10_lb, c10_ub, c10_index, c10_value); // Constraints 10
-				cplex_wrapper.addRows(c11_lb, c11_ub, c11_index, c11_value); // Constraints 11
-				cplex_wrapper.addRows(c12_lb, c12_ub, c12_index, c12_value); // Constraints 12
-				cplex_wrapper.addRows(c13_lb, c13_ub, c13_index, c13_value); // Constraints 13
-				cplex_wrapper.addRows(c14_lb, c14_ub, c14_index, c14_value); // Constraints 14
-				cplex_wrapper.addRows(c15_lb, c15_ub, c15_index, c15_value); // Constraints 15
-				
-				
-				// Clear arrays to save memory
-				c2_lb = null;  c2_ub = null;  c2_index = null;  c2_value = null;
-				c3_lb = null;  c3_ub = null;  c3_index = null;  c3_value = null;
-				c5_lb = null;  c5_ub = null;  c5_index = null;  c5_value = null;
-				c6_lb = null;  c6_ub = null;  c6_index = null;  c6_value = null;
-				c7_lb = null;  c7_ub = null;  c7_index = null;  c7_value = null;
-				c8_lb = null;  c8_ub = null;  c8_index = null;  c8_value = null;
-				c9_lb = null;  c9_ub = null;  c9_index = null;  c9_value = null;
-				c10_lb = null;  c10_ub = null;  c10_index = null;  c10_value = null;
-				c11_lb = null;  c11_ub = null;  c11_index = null;  c11_value = null;
-				c12_lb = null;  c12_ub = null;  c12_index = null;  c12_value = null;
-				c13_lb = null;  c13_ub = null;  c13_index = null;  c13_value = null;
-				c14_lb = null;  c14_ub = null;  c14_index = null;  c14_value = null;
-				c15_lb = null;  c15_ub = null;  c15_index = null;  c15_value = null;
-				
+				// add constraints & Clear arrays to save memory
+				cplex_wrapper.addRows(c2_lb, c2_ub, c2_index, c2_value); 	c2_lb = null;  c2_ub = null;  c2_index = null;  c2_value = null;	// Constraints 2
+				cplex_wrapper.addRows(c3_lb, c3_ub, c3_index, c3_value); 	c3_lb = null;  c3_ub = null;  c3_index = null;  c3_value = null;	// Constraints 3
+				cplex_wrapper.addRows(c5_lb, c5_ub, c5_index, c5_value); 	c5_lb = null;  c5_ub = null;  c5_index = null;  c5_value = null;	// Constraints 5 (flow)
+				cplex_wrapper.addRows(c6_lb, c6_ub, c6_index, c6_value); 	c6_lb = null;  c6_ub = null;  c6_index = null;  c6_value = null;	// Constraints 6
+				cplex_wrapper.addRows(c7_lb, c7_ub, c7_index, c7_value); 	c7_lb = null;  c7_ub = null;  c7_index = null;  c7_value = null;	// Constraints 7
+				cplex_wrapper.addRows(c8_lb, c8_ub, c8_index, c8_value); 	c8_lb = null;  c8_ub = null;  c8_index = null;  c8_value = null;	// Constraints 8
+				cplex_wrapper.addRows(c9_lb, c9_ub, c9_index, c9_value); 	c9_lb = null;  c9_ub = null;  c9_index = null;  c9_value = null;	// Constraints 9
+				cplex_wrapper.addRows(c10_lb, c10_ub, c10_index, c10_value); 	c10_lb = null;  c10_ub = null;  c10_index = null;  c10_value = null;	// Constraints 10
+				cplex_wrapper.addRows(c11_lb, c11_ub, c11_index, c11_value); 	c11_lb = null;  c11_ub = null;  c11_index = null;  c11_value = null;	// Constraints 11
+				cplex_wrapper.addRows(c12_lb, c12_ub, c12_index, c12_value); 	c12_lb = null;  c12_ub = null;  c12_index = null;  c12_value = null;	// Constraints 12
+				cplex_wrapper.addRows(c13_lb, c13_ub, c13_index, c13_value); 	c13_lb = null;  c13_ub = null;  c13_index = null;  c13_value = null;	// Constraints 13
+				cplex_wrapper.addRows(c14_lb, c14_ub, c14_index, c14_value); 	c14_lb = null;  c14_ub = null;  c14_index = null;  c14_value = null;	// Constraints 14
+				cplex_wrapper.addRows(c15_lb, c15_ub, c15_index, c15_value); 	c15_lb = null;  c15_ub = null;  c15_index = null;  c15_value = null;	// Constraints 15
 				
 				// set up cplex environments
 				cplex_wrapper.setup();
+				int cplex_total_variables = cplex_wrapper.getNcols();
+				int cplex_total_constraints = cplex_wrapper.getNrows();
 				
-
-				// Add table info
-				data[row][2] = cplex_wrapper.getNcols();
-				data[row][3] = cplex_wrapper.getNrows();
+				// solve model
+				data[row][2] = cplex_total_variables;
+				data[row][3] = cplex_total_constraints;
 				data[row][4] = "solving";
-				model.fireTableDataChanged();
-				
-				
-				if (read.get_export_problem()) cplex_wrapper.exportModel(problem_file[row].getAbsolutePath());
 				time_start = System.currentTimeMillis();		// measure time before solving
+				model.fireTableDataChanged();
 				if (cplex_wrapper.solve()) {
-					// Add table info
-					data[row][4] = "writing";
-					model.fireTableDataChanged();
-					
-					
-					time_end = System.currentTimeMillis();		// measure time after solving
-					time_solving = (double) (time_end - time_start)/1000;
-					time_start = System.currentTimeMillis();		// measure time before writing
-//					if (read.get_export_problem()) cplex.exportModel(problem_file[row].getAbsolutePath());
+					// get output info after solving & then stop cplex
+					if (read.get_export_problem()) cplex_wrapper.exportModel(problem_file[row].getAbsolutePath());
 					if (read.get_export_solution()) cplex_wrapper.writeSolution(solution_file[row].getAbsolutePath());
-
-					
-					//Get output info to array
 					double[] value = cplex_wrapper.getValues();
 					double[] reduceCost = cplex_wrapper.getReducedCosts();
 					double[] dual = cplex_wrapper.getDuals();
 					double[] slack = cplex_wrapper.getSlacks();
-
+					double objective_value = cplex_wrapper.getObjValue();
+					String cplex_status = cplex_wrapper.getStatus();
+					int cplex_algorithm = cplex_wrapper.getAlgorithm();
+					long cplex_iteration = cplex_wrapper.getNiterations64();
+					cplex_wrapper.end_the_run();
+					cplex_wrapper = null;
+					time_end = System.currentTimeMillis();		// measure time after solving
+					time_solving = (double) (time_end - time_start) / 1000;
 					
-					// Write Solution files
-					// Variables if value <> 0
+					
+					
+					
+					// write Solution files
+					data[row][4] = "writing";
+					model.fireTableDataChanged();
+					time_start = System.currentTimeMillis();	// measure time before writing
+					
+					
+					// output_02_variable
 					output_variables_file[row].delete();
 					try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_variables_file[row]))) {
-						// Write variables info
 						fileOut.write("var_id" + "\t" + "var_name" + "\t" + "var_value" + "\t" + "var_reduced_cost");
 						for (int i = 0; i < value.length; i++) {
-							if (value[i] != 0) {
+							if (value[i] != 0) {	// only write variable that is not zero
 								fileOut.newLine();
 								fileOut.write(i + "\t" + vname[i] 
 										+ "\t" + Double.valueOf(value[i]) /*Double.valueOf(twoDForm.format(value[i]))*/ 
@@ -8078,10 +8035,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					output_variables_file[row].createNewFile();
 
 					
-					// Constraints if dual or slack <> 0
+					// output_03_constraints
 					output_constraints_file[row].delete();
 					try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_constraints_file[row]))) {
-						// Write constraints info
 						fileOut.write("cons_id" + "\t" + "cons_slack" + "\t" + "cons_dual");
 						for (int j = 0; j < dual.length; j++) {
 							if (slack[j] != 0 || dual[j] != 0) {
@@ -8099,15 +8055,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					output_constraints_file[row].createNewFile();
 
 					
-					// management_overview
+					// output_04_management_overview
 					output_management_overview_file[row].delete();
-					try (BufferedWriter fileOut = new BufferedWriter(
-							new FileWriter(output_management_overview_file[row]))) {
-						// Write info
+					try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_management_overview_file[row]))) {
 						fileOut.write("strata_id" + "\t" + "layer1" + "\t" + "layer2" + "\t" + "layer3" + "\t" + "layer4" + "\t" + "layer5" + "\t" + "layer6" + "\t" 
-						+ "NG_E_acres" + "\t" + "PB_E_acres" + "\t" + "GS_E_acres" + "\t"
-						+ "EA_E_acres" + "\t" + "MS_E_acres"  + "\t" + "BS_E_acres");
-
+								+ "NG_E_acres" + "\t" + "PB_E_acres" + "\t" + "GS_E_acres" + "\t" + "EA_E_acres" + "\t" + "MS_E_acres" + "\t" + "BS_E_acres");
 						for (String strata: model_strata) {
 							int strata_id = Collections.binarySearch(model_strata, strata);
 							int s1 = Collections.binarySearch(layer1, strata.substring(0, 1));
@@ -8116,15 +8068,13 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 							int s4 = Collections.binarySearch(layer4, strata.substring(3, 4));
 							int s5 = Collections.binarySearch(layer5, strata.substring(4, 5));
 							int s6 = Collections.binarySearch(layer6, strata.substring(5, 6));	
-
-							//New line for each strata
+							// new line for each stratum
 							fileOut.newLine();
-							//Write StrataID and 6 layers info
-							fileOut.write(
-									strata + "\t" + layer1.get(s1) + "\t" + layer2.get(s2)
+							// write StrataID and 6 layers info
+							fileOut.write(strata + "\t" + layer1.get(s1) + "\t" + layer2.get(s2)
 											+ "\t" + layer3.get(s3) + "\t" + layer4.get(s4)
 											+ "\t" + layer5.get(s5) + "\t" + layer6.get(s6));
-							//Write acres from each method
+							// write acres from each method
 							for (int q = 0; q < total_methods; q++) {
 								int this_var_index = x[strata_id][q];
 								fileOut.write("\t" + Double.valueOf(value[this_var_index]) /*Double.valueOf(twoDForm.format(value[this_var_index]))*/);
@@ -8137,25 +8087,21 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					output_management_overview_file[row].createNewFile();
 					
 					
+					// output_05_management_details
 					output_management_details_file[row].delete();
-					try (BufferedWriter fileOut = new BufferedWriter(
-							new FileWriter(output_management_details_file[row]))) {
-						// Write variables info
+					try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_management_details_file[row]))) {
 						fileOut.write("var_id" + "\t" + "var_name" + "\t" + "var_value" + "\t" + "var_reduced_cost" + "\t" 
-						+ "var_method" + "\t" + "var_forest_status" + "\t" + "var_layer1" + "\t" + "var_layer2" + "\t" + "var_layer3" + "\t" + "var_layer4" + "\t" + "var_layer5" + "\t" + "var_layer6" + "\t" 
-						+ "var_choice" + "\t" + "var_period" + "\t" + "var_age" + "\t" + "var_rotation_period" + "\t" + "var_rotation_age" + "\t" + "var_regen_covertype" + "\t"
-						+ "data_connection" + "\t" + "prescription" + "\t" + "row_id");
+								+ "var_method" + "\t" + "var_forest_status" + "\t" + "var_layer1" + "\t" + "var_layer2" + "\t" + "var_layer3" + "\t" + "var_layer4" + "\t" + "var_layer5" + "\t" + "var_layer6" + "\t" 
+								+ "var_choice" + "\t" + "var_period" + "\t" + "var_age" + "\t" + "var_rotation_period" + "\t" + "var_rotation_age" + "\t" + "var_regen_covertype" + "\t"
+								+ "data_connection" + "\t" + "prescription" + "\t" + "row_id");
 						for (int col = 2; col < yield_tables_column_names.length; col++) {		// do not write prescription & row_id column header
 							fileOut.write("\t" + yield_tables_column_names[col]);
 						}
 						
 						for (int i = 0; i < value.length; i++) {
-							if (value[i] != 0 && (vname[i].contains("NG") || vname[i].contains("PB") || vname[i].contains("GS") 
-									|| vname[i].contains("MS") || vname[i].contains("BS") || vname[i].contains("EA"))) {
-								
+							if (value[i] != 0 && (vname[i].contains("NG") || vname[i].contains("PB") || vname[i].contains("GS") || vname[i].contains("MS") || vname[i].contains("BS") || vname[i].contains("EA"))) {
 								int table_id_to_find = -9999;
 								int row_id_to_find = -9999;
-								
 								
 								int var_rotation_age = Get_Variable_Information.get_rotation_age(vname[i], starting_age, model_strata); 
 								String yield_table_name_to_find = Get_Variable_Information.get_yield_table_name_to_find(vname[i]);
@@ -8164,7 +8110,6 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								int[] prescription_and_row = get_prescription_and_row(yield_tables_names_list, vname[i], var_rotation_age);
 								table_id_to_find = prescription_and_row[0];
 								row_id_to_find = prescription_and_row[1];
-								
 
 								String data_connection = "good";
 								if (table_id_to_find == -9999) {
@@ -8204,22 +8149,20 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					}
 					output_management_details_file[row].createNewFile();
 					
-					// Create a table inside the database.db
+					// create a table inside the database.db
 					import_file_as_table_into_database(output_management_details_file[row], file_database[row]);
 					
 					// fly_constraints --> don't need to create this file, just delete the old file
 					output_fly_constraints_file[row].delete();		
 					
 					
-					// basic_constraints
+					// output_06basic_constraints
 					if (total_freeConstraints + total_softConstraints + total_hardConstraints > 0) {		// write basic constraints if there is at least a constraint set up
 						output_basic_constraints_file[row].delete();
-						try (BufferedWriter fileOut = new BufferedWriter(
-								new FileWriter(output_basic_constraints_file[row]))) {
-							// Write info
+						try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_basic_constraints_file[row]))) {
 							fileOut.write("bc_id" + "\t" + "bc_description" + "\t" + "bc_type" + "\t" + "bc_multiplier" + "\t" + "lowerbound" + "\t" 
-							+ "lowerbound_perunit_penalty" + "\t" + "upperbound" + "\t" + "upperbound_perunit_penalty" + "\t"
-							+ "bookeeping_var_id" + "\t" + "bookeeping_var_name" + "\t" + "bookeeping_var_value" + "\t" + "bookeeping_var_reduced_cost" + "\t" + "total_penalty");
+									+ "lowerbound_perunit_penalty" + "\t" + "upperbound" + "\t" + "upperbound_perunit_penalty" + "\t"
+									+ "bookeeping_var_id" + "\t" + "bookeeping_var_name" + "\t" + "bookeeping_var_value" + "\t" + "bookeeping_var_reduced_cost" + "\t" + "total_penalty");
 	
 							current_freeConstraint = 0;
 							current_softConstraint = 0;
@@ -8230,9 +8173,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 							int upperbound_col = constraint_column_names_list.indexOf("upperbound");
 							int upperbound_perunit_penalty_col = constraint_column_names_list.indexOf("upperbound_perunit_penalty");
 							
-							for (int i = 1; i < total_freeConstraints + total_softConstraints + total_hardConstraints + 1; i++) {	// Loop from 1 because the first row of the Basic Constraints file is just title												
+							for (int i = 1; i < total_freeConstraints + total_softConstraints + total_hardConstraints + 1; i++) {	// loop from 1 because the first row of the Basic Constraints file is just title												
 								fileOut.newLine();
-								for (int j = 0; j < 8; j++) { //just print the first 7 columns of basic constraints
+								for (int j = 0; j < 8; j++) { 	// just print the first 7 columns of basic constraints
 									fileOut.write(bc_values[i][j] + "\t");
 								}
 								
@@ -8277,14 +8220,13 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						output_basic_constraints_file[row].createNewFile();					
 					}							
 					
-					// flow_constraints 					
+					// output_07_flow_constraints 					
 					if (flow_set_list.size() > 0) {		// write flow constraints if there is at least a flow set
 						output_flow_constraints_file[row].delete();
 						try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_flow_constraints_file[row]))) {
-							// Write info
 							fileOut.write("flow_id" + "\t" + "flow_description" + "\t" + "flow_arrangement" + "\t"
 									+ "flow_type" + "\t" + "lowerbound_percentage" + "\t" + "upperbound_percentage" + "\t" + "flow_output_original");
-							// Add constraints for each flow set
+							// add constraints for each flow set
 							for (int i = 0; i < flow_set_list.size(); i++) {		// loop each flow set (or each row of the flow_constraints_table)								
 								String temp = flow_id_list.get(i) + "\t" + flow_description_list.get(i) + "\t"
 										+ flow_arrangement_list.get(i) + "\t" + flow_type_list.get(i) + "\t"
@@ -8300,7 +8242,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									}
 									temp = temp + Double.valueOf(aggragated_value) /*Double.valueOf(twoDForm.format(aggragated_value))*/ + ";";	
 								}	
-								temp = temp.substring(0, temp.length() - 1) + "\t";		// remove the last ; and add a tab									
+								temp = temp.substring(0, temp.length() - 1) + "\t";	// remove the last ; and add a tab									
 								temp = temp.substring(0, temp.length() - 1);		// remove the last ;								
 								
 								// write the whole line
@@ -8318,7 +8260,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					time_end = System.currentTimeMillis();		// measure time after writing
 					time_writing = (double) (time_end - time_start) / 1000;
 					
-					//General Info (write at the end since we need writing time)
+					// output_01_general input (write at the end since we need writing time)
 					output_general_outputs_file[row].delete();
 					try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_general_outputs_file[row]))) {
 						// Write variables info
@@ -8328,13 +8270,13 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						fileOut.write("Optimization solver" + "\t" + "CPLEX");
 
 						fileOut.newLine();
-						fileOut.write("Solution status" + "\t" + cplex_wrapper.getStatus());
+						fileOut.write("Solution status" + "\t" + cplex_status);
 
 						fileOut.newLine();
-						fileOut.write("Solution algorithm" + "\t" + cplex_wrapper.getAlgorithm());
+						fileOut.write("Solution algorithm" + "\t" + cplex_algorithm);
 
 						fileOut.newLine();
-						fileOut.write("Simplex iterations" + "\t" + cplex_wrapper.getNiterations64());
+						fileOut.write("Simplex iterations" + "\t" + cplex_iteration);
 						
 						fileOut.newLine();
 						fileOut.write("Prism version when problem solved" + "\t" + PrismMain.get_prism_version());
@@ -8364,13 +8306,13 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						}
 
 						fileOut.newLine();
-						fileOut.write("Total variables" + "\t" + cplex_wrapper.getNcols());
+						fileOut.write("Total variables" + "\t" + cplex_total_variables);
 
 						fileOut.newLine();
-						fileOut.write("Total constraints" + "\t" + cplex_wrapper.getNrows());
+						fileOut.write("Total constraints" + "\t" + cplex_total_constraints);
 
 						fileOut.newLine();
-						fileOut.write("Objective value" + "\t" + Double.valueOf(twoDForm.format(cplex_wrapper.getObjValue())));
+						fileOut.write("Objective value" + "\t" + Double.valueOf(twoDForm.format(objective_value)));
 
 						fileOut.close();
 					} catch (IOException e) {
@@ -8379,15 +8321,17 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					output_general_outputs_file[row].createNewFile();
 					
 					
-					//Show successful or fail in the GUI
+					// show successful or fail in the GUI
 					data[row][1] = "valid";
 					data[row][4] = "successful";
 					model.fireTableDataChanged();
-					
-					value = null; reduceCost = null; dual = null; slack = null;	// Clear arrays to save memory
+					value = null; reduceCost = null; dual = null; slack = null;		// clear arrays to save memory
+				} else {
+					if (read.get_export_problem()) cplex_wrapper.exportModel(problem_file[row].getAbsolutePath());
+					data[row][1] = "valid";
+					data[row][4] = "fail";
+					model.fireTableDataChanged();
 				}
-				
-				cplex_wrapper.end_the_run();
 			}
 			
 	
@@ -8762,7 +8706,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 		
 		}
 		catch (IOException e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Panel Solve Runs   -   Create 4 output files exception for "+ listOfEditRuns[row].getName());			
+			System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Panel Solve Runs   -   Create output files exception for "+ listOfEditRuns[row].getName());			
 		
 			data[row][1] = "cannot create outputs";
 			data[row][4] = "fail";
