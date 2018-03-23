@@ -147,7 +147,7 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 			layers_Title_Label.add(title);
 			if ((i == 4 || i == 5) && (option == 0 || option == 2)){
 				title.setForeground(Color.RED);
-				layers_Title_Label.get(i).setToolTipText(title_tooltip + " in period one (apply to existing strata, not apply to regenerated strata. For periods > 1 you should use Dynamic Identifiers)");
+				layers_Title_Label.get(i).setToolTipText(title_tooltip + " (as in prescription, apply to existing strata, does not apply to regenerated strata)");
 			} else {
 				layers_Title_Label.get(i).setToolTipText(title_tooltip);
 			}					

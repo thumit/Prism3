@@ -4,3 +4,15 @@ strata_id, layer1, layer2, layer3, layer4, layer5, layer6 ,
 CASE WHEN strata_id = (layer1 || layer2 || layer3 || layer4 || layer5 || layer6) then 'correct' else 'do not match - need to fix' end AS strata_vs_layers
 FROM existing_strata
 ----------
+test join 2
+SELECT *
+FROM output_05_management_details
+INNER JOIN yield_tables
+ON output_05_management_details.prescription = yield_tables.prescription AND output_05_management_details.row_id = yield_tables.row_id
+----------
+test join 3
+SELECT output_05_management_details.prescription
+FROM output_05_management_details
+INNER JOIN yield_tables
+ON output_05_management_details.prescription = yield_tables.prescription AND output_05_management_details.row_id = yield_tables.row_id
+----------

@@ -3422,7 +3422,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				
 				
 				int solvingTimeLimit = read.get_solving_time() * 60;
-				prismcplex.Cplex_Wrapper cplex_wrapper = new prismcplex.Cplex_Wrapper(nvars, vlb, vub, vname, objvals, solvingTimeLimit);
+				prismcplex.Cplex_Wrapper cplex_wrapper = new prismcplex.Cplex_Wrapper(nvars, vlb, vub, vname, objvals, solvingTimeLimit);		vlb = null; vub = null; objvals = null;	// cannot clear vame because it is going to be used
 				
 				// add constraints & Clear arrays to save memory
 				cplex_wrapper.addRows(c2_lb, c2_ub, c2_index, c2_value); 	c2_lb = null;  c2_ub = null;  c2_index = null;  c2_value = null;	// Constraints 2
@@ -3521,6 +3521,23 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_management_overview_file[row]))) {
 						fileOut.write("strata_id" + "\t" + "layer1" + "\t" + "layer2" + "\t" + "layer3" + "\t" + "layer4" + "\t" + "layer5" + "\t" + "layer6" + "\t" 
 								+ "NG_E_acres" + "\t" + "PB_E_acres" + "\t" + "GS_E_acres" + "\t" + "EA_E_acres" + "\t" + "MS_E_acres" + "\t" + "BS_E_acres");
+//						for (int strata_id = 0; strata_id < x.length; strata_id++) {
+//							String[] term = vname[x[strata_id][0]].replace("x_", "").split(",");
+//							String strata = term[0] + term[1] + term[2] + term[3] + term[4] + term[5];
+//							// new line for each stratum
+//							fileOut.newLine();
+//							// write StrataID and 6 layers info
+//							fileOut.write(strata + "\t" + term[0] + "\t" + term[1] + "\t" + term[2] + "\t" + term[3] + "\t" + term[4] + "\t" + term[5]);
+//							// write acres from each method
+//							for (int q = 0; q < x[strata_id].length; q++) {
+//								int this_var_index = x[strata_id][q];
+//								fileOut.write("\t" + Double.valueOf(value[this_var_index]) /*Double.valueOf(twoDForm.format(value[this_var_index]))*/);
+//							}
+//						}
+//						fileOut.close();
+						
+						
+						
 						for (String strata: model_strata) {
 							int strata_id = Collections.binarySearch(model_strata, strata);
 							int s1 = Collections.binarySearch(layer1, strata.substring(0, 1));
@@ -3623,7 +3640,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_basic_constraints_file[row]))) {
 							fileOut.write("bc_id" + "\t" + "bc_description" + "\t" + "bc_type" + "\t" + "bc_multiplier" + "\t" + "lowerbound" + "\t" 
 									+ "lowerbound_perunit_penalty" + "\t" + "upperbound" + "\t" + "upperbound_perunit_penalty" + "\t"
-									+ "bookeeping_var_id" + "\t" + "bookeeping_var_name" + "\t" + "bookeeping_var_value" + "\t" + "bookeeping_var_reduced_cost" + "\t" + "total_penalty");
+									+ "var_id" + "\t" + "var_name" + "\t" + "var_value" + "\t" + "var_reduced_cost" + "\t" + "total_penalty");
 	
 							current_freeConstraint = 0;
 							current_softConstraint = 0;
@@ -3787,6 +3804,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					data[row][4] = "successful";
 					model.fireTableDataChanged();
 					value = null; reduceCost = null; dual = null; slack = null;		// clear arrays to save memory
+					vlb = null; vub = null; vname = null; objvals = null;			// clear arrays to save memory
 				} else {
 					if (read.get_export_problem()) cplex_wrapper.exportModel(problem_file[row].getAbsolutePath());
 					data[row][1] = "valid";
@@ -7961,7 +7979,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				
 				
 				int solvingTimeLimit = read.get_solving_time() * 60;
-				prismcplex.Cplex_Wrapper cplex_wrapper = new prismcplex.Cplex_Wrapper(nvars, vlb, vub, vname, objvals, solvingTimeLimit);
+				prismcplex.Cplex_Wrapper cplex_wrapper = new prismcplex.Cplex_Wrapper(nvars, vlb, vub, vname, objvals, solvingTimeLimit);		vlb = null; vub = null; objvals = null;	// cannot clear vame because it is going to be used
 				
 				// add constraints & Clear arrays to save memory
 				cplex_wrapper.addRows(c2_lb, c2_ub, c2_index, c2_value); 	c2_lb = null;  c2_ub = null;  c2_index = null;  c2_value = null;	// Constraints 2
@@ -8162,7 +8180,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_basic_constraints_file[row]))) {
 							fileOut.write("bc_id" + "\t" + "bc_description" + "\t" + "bc_type" + "\t" + "bc_multiplier" + "\t" + "lowerbound" + "\t" 
 									+ "lowerbound_perunit_penalty" + "\t" + "upperbound" + "\t" + "upperbound_perunit_penalty" + "\t"
-									+ "bookeeping_var_id" + "\t" + "bookeeping_var_name" + "\t" + "bookeeping_var_value" + "\t" + "bookeeping_var_reduced_cost" + "\t" + "total_penalty");
+									+ "var_id" + "\t" + "var_name" + "\t" + "var_value" + "\t" + "var_reduced_cost" + "\t" + "total_penalty");
 	
 							current_freeConstraint = 0;
 							current_softConstraint = 0;
@@ -8326,6 +8344,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					data[row][4] = "successful";
 					model.fireTableDataChanged();
 					value = null; reduceCost = null; dual = null; slack = null;		// clear arrays to save memory
+					vlb = null; vub = null; vname = null; objvals = null;			// clear arrays to save memory
 				} else {
 					if (read.get_export_problem()) cplex_wrapper.exportModel(problem_file[row].getAbsolutePath());
 					data[row][1] = "valid";

@@ -103,7 +103,7 @@ class ScrollPane_License_Popup extends JScrollPane {
 		            Dialog dialog = (Dialog)window;
 		            if (!dialog.isResizable()) {
 		                dialog.setResizable(true);
-		                dialog.setPreferredSize(new Dimension((int) (PrismMain.get_main().getWidth() * 0.75), (int) (PrismMain.get_main().getHeight() * 0.8)));
+		                dialog.setPreferredSize(new Dimension((int) (PrismMain.get_main().getWidth() * 0.87), (int) (PrismMain.get_main().getHeight() * 0.8)));
 		            }
 		        }
 		    }

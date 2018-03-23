@@ -718,20 +718,26 @@ All changes in this block are associated with PrismAlpha1.0.31.jar, Prism Formul
 318. refactor almost all packages and classes
 319. In Panel_SolveRun: not using "setLibraryPath" any more, just use "addLibraryPath". Reasons are:
 	- It seems like set will clear everything and keep only the path we set to.
-	- need to not use cplex****.dll in the TEmporary folder of the eclipse IDL --> add that dll file in a fixed location in my computer for convenient working
+	- need to not use cplex****.dll in the Temporary folder of the eclipse IDE --> add that dll file in a fixed location in my computer for convenient working
 320. Update Eclipse Neon --> Eclipse Oxygen so Java SE-9 could be used in Eclipse IDE
 	- https://moduliertersingvogel.de/2017/07/30/update-eclipse-from-neon-to-oxygen/
 	- https://dzone.com/articles/working-with-java-9-in-eclipse
 321. Change default execution environment to Java SE-9 (jre-9.04)for both projects: prism & prismcplex --> need to check if there are some improvements in Prism performance.
-322. Fix some places that is not compiled due to new Java SE-9 (happned only on Jtree): Enumeration<TreeNode> is used, and (DefaultMutableTreeNode) is used to casr for e.nextElement()
-All changes in this block are associated with PrismAlpha1.0.31.jar, Prism Formulation 02.docx, Prism Database 02.docx
+322. Fix some places that is not compiled due to new Java SE-9 (happned only on Jtree): Enumeration<TreeNode> is used, and (DefaultMutableTreeNode) is used to cast e.nextElement()
+All changes in this block are associated with PrismAlpha1.0.32.jar, Prism Formulation 02.docx, Prism Database 02.docx
 --------------------------------------------------------------------------
 
 323. Fix to enable/disable (unfaded/faded) layer title when the scrollpane border is clicked (select/deselect all items). Apply on: ScrollPane_StaticIdentifiers
-324. Re-arrange cplex_wrapper to be in one place so memory could be clear before writting outputs; also clear arrays right after eachh "cplex_wrapper.addRows" to manage memory better
+324. Re-arrange cplex_wrapper to be in one place so memory could be cleared before writting outputs; also clear arrays right after each "cplex_wrapper.addRows" to manage memory better
 325. Also print out "fail" in the table in Solve window when the problem is infeasible
 326. Set default % for non-replacing and replacing disturbances to 0%
 327. Update dependent library: SQLite 3.8 --> SQlite 3.21, license is also updated to Apache 2.0
 328. Update dependent library: CPLEX 12.61 --> CPLEX 12.80 (just in dzung's testing computer, users could do the same if they have the jar and dll files)
-329.  Update dependent library: TableFilter 5.3.0 --> 5.3.1, readme in license folder is also updated
-330. 
+329. Update dependent library: TableFilter 5.3.0 --> 5.3.1, readme in license folder is also updated
+330. Panel_Projects --> doMousePressed: Clear memory after reading file & loading into Jtable 
+331. Update all queries (system library in management_details & Database Management, and query in Read_Database) to use escape '_'
+332. output_06: not printing out bookeeping any more (i.e. bookeeping_var_id --> var_id, etc.)
+333. Some more of clear arrays in prismcplex & prism (after: cplex_wrapper = new prismcplex.Cplex_Wrapper)
+334. Add some queries for output_05 (populate output_04 and more)
+All changes in this block are associated with PrismAlpha1.0.33.jar, Prism Formulation 03.docx, Prism Database 03.docx
+--------------------------------------------------------------------------

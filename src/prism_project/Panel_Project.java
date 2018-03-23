@@ -470,6 +470,9 @@ public class Panel_Project extends JLayeredPane {
 							System.out.println("Fail to create table data. Often this is only when Readme.txt has nothing");
 							table = new JTable();
 							database_table = new JTable();
+						} finally {
+							list = null;	// clear memory after reading file	
+							a = null;		// clear memory after reading file
 						}
 			     		
 			     					     		

@@ -1,13 +1,32 @@
-1. Check whether model age class (var_age) vs dynamic age class (age_class) match
+---------------------------------------------------------LOGIC CHECK-----------------------------------------------------
+
+----------
+1.0. check whether database is incomplete
 SELECT
 
 COUNT(prescription) AS total_records,
-SUM(case when var_age LIKE age_class then 1 else 0 end) AS total_records_matched,
-SUM(case when var_age NOT LIKE age_class then 1 else 0 end) AS total_records_not_matched
+SUM(case when data_connection LIKE 'good' then 1 else 0 end) AS complete_records,
+SUM(case when data_connection NOT LIKE 'good' then 1 else 0 end) AS incomplete_records
 
 FROM output_05_management_details
 ----------
-2. Show records where model age class (var_age in model formualtion) and dynamic age class (age_class in yield tables) are different
+1.1. show records where database is incomplete
+SELECT 
+
+var_id, var_name, data_connection, prescription, row_id
+
+FROM output_05_management_details WHERE data_connection NOT LIKE 'good'
+----------
+1.2. check whether model age (var_age) and yield table age (age_class) are unmatched
+SELECT
+
+COUNT(prescription) AS total_records,
+SUM(case when var_age LIKE age_class then 1 else 0 end) AS matched_records,
+SUM(case when var_age NOT LIKE age_class then 1 else 0 end) AS unmatched_records
+
+FROM output_05_management_details
+----------
+1.3. show records where model age (var_age) & yield table age (age_class) are unmatched
 SELECT 
 
 var_id, var_name, var_age,
@@ -15,26 +34,224 @@ age_class, prescription, row_id
 
 FROM output_05_management_details WHERE var_age NOT LIKE age_class
 ----------
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------ACRE-------------------------------------------------------------
 
 ----------
-3. Show records (full details) with positve activity (action_type is not "no_action")
-SELECT *
+2.0. acres by period, method
+SELECT period,
+SUM(CASE WHEN t.method = 'NG' THEN t.grouped_acres END) AS NG_acres,
+SUM(CASE WHEN t.method = 'PB' THEN t.grouped_acres END) AS PB_acres,
+SUM(CASE WHEN t.method = 'GS' THEN t.grouped_acres END) AS GS_acres,
+SUM(CASE WHEN t.method = 'EA' THEN t.grouped_acres END) AS EA_acres,
+SUM(CASE WHEN t.method = 'MS' THEN t.grouped_acres END) AS MS_acres,
+SUM(CASE WHEN t.method = 'BS' THEN t.grouped_acres END) AS BS_acres
+FROM
 
+
+(SELECT 
+CAST(var_period AS DECIMAL) as period,
+var_method as method, SUM(var_value) as grouped_acres
 FROM output_05_management_details
+GROUP BY (period || method)
+ORDER BY (period || method)) AS t
 
-WHERE action_type NOT LIKE 'no_action'
+
+GROUP BY period
 ----------
-4. Show records (less details) with positve activity (action_type is not "no_action")
-SELECT var_layer1 as layer1, var_layer2 as layer2, var_layer3 as layer3, var_layer4 as layer4,var_layer5 as layer5, var_layer6 as layer6, var_forest_status as forest_status, age_class as forest_age, var_period as period, prescription, row_id, var_method as method, action_type as activity, var_value as acres
+2.1. acres by period, method, forest_status
+SELECT period,
+SUM(CASE WHEN t.method_status = 'NGE' THEN t.grouped_acres END) AS NG_E_acres,
+SUM(CASE WHEN t.method_status = 'PBE' THEN t.grouped_acres END) AS PB_E_acres,
+SUM(CASE WHEN t.method_status = 'GSE' THEN t.grouped_acres END) AS GS_E_acres,
+SUM(CASE WHEN t.method_status = 'EAE' THEN t.grouped_acres END) AS EA_E_acres,
+SUM(CASE WHEN t.method_status = 'MSE' THEN t.grouped_acres END) AS MS_E_acres,
+SUM(CASE WHEN t.method_status = 'BSE' THEN t.grouped_acres END) AS BS_E_acres,
+SUM(CASE WHEN t.method_status = 'NGR' THEN t.grouped_acres END) AS NG_R_acres,
+SUM(CASE WHEN t.method_status = 'PBR' THEN t.grouped_acres END) AS PB_R_acres,
+SUM(CASE WHEN t.method_status = 'GSR' THEN t.grouped_acres END) AS GS_R_acres,
+SUM(CASE WHEN t.method_status = 'EAR' THEN t.grouped_acres END) AS EA_R_acres
+FROM
 
+
+(SELECT 
+CAST(var_period AS DECIMAL) as period,
+(var_method || var_forest_status) AS method_status, SUM(var_value) as grouped_acres
 FROM output_05_management_details
+GROUP BY (period || method_status)
+ORDER BY (period || method_status)) AS t
 
-WHERE action_type NOT LIKE 'no_action'
+
+GROUP BY period
 ----------
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+2.2. acres by period, method, activity
+SELECT period, action_type as activity,
+SUM(CASE WHEN t.method = 'NG' THEN t.grouped_acres END) AS NG_acres,
+SUM(CASE WHEN t.method = 'PB' THEN t.grouped_acres END) AS PB_acres,
+SUM(CASE WHEN t.method = 'GS' THEN t.grouped_acres END) AS GS_acres,
+SUM(CASE WHEN t.method = 'EA' THEN t.grouped_acres END) AS EA_acres,
+SUM(CASE WHEN t.method = 'MS' THEN t.grouped_acres END) AS MS_acres,
+SUM(CASE WHEN t.method = 'BS' THEN t.grouped_acres END) AS BS_acres
+FROM
+
+
+(SELECT 
+CAST(var_period AS DECIMAL) as period, action_type, var_method AS method, SUM(var_value) as grouped_acres
+FROM output_05_management_details
+GROUP BY (period || action_type || method)
+ORDER BY (period || action_type  || method)) AS t
+
+
+GROUP BY period, activity
 ----------
-5. Show all records with positive harvested volume
+2.3. acres by period, method, forest_status, activity
+SELECT period, action_type as activity,
+SUM(CASE WHEN t.method_status = 'NGE' THEN t.grouped_acres END) AS NG_E_acres,
+SUM(CASE WHEN t.method_status = 'PBE' THEN t.grouped_acres END) AS PB_E_acres,
+SUM(CASE WHEN t.method_status = 'GSE' THEN t.grouped_acres END) AS GS_E_acres,
+SUM(CASE WHEN t.method_status = 'EAE' THEN t.grouped_acres END) AS EA_E_acres,
+SUM(CASE WHEN t.method_status = 'MSE' THEN t.grouped_acres END) AS MS_E_acres,
+SUM(CASE WHEN t.method_status = 'BSE' THEN t.grouped_acres END) AS BS_E_acres,
+SUM(CASE WHEN t.method_status = 'NGR' THEN t.grouped_acres END) AS NG_R_acres,
+SUM(CASE WHEN t.method_status = 'PBR' THEN t.grouped_acres END) AS PB_R_acres,
+SUM(CASE WHEN t.method_status = 'GSR' THEN t.grouped_acres END) AS GS_R_acres,
+SUM(CASE WHEN t.method_status = 'EAR' THEN t.grouped_acres END) AS EA_R_acres
+FROM
+
+
+(SELECT 
+CAST(var_period AS DECIMAL) as period, action_type,
+(var_method || var_forest_status) AS method_status, SUM(var_value) as grouped_acres
+FROM output_05_management_details
+GROUP BY (period || action_type || method_status)
+ORDER BY (period || action_type  || method_status)) AS t
+
+
+GROUP BY period, activity
+----------
+2.4. acres by period 1, method,  existing strata  (exact output04)
+SELECT strata_id, layer1, layer2, layer3, layer4, layer5, layer6,
+SUM(CASE WHEN t.method_status = 'NGE' THEN t.grouped_acres END) AS NG_E_acres,
+SUM(CASE WHEN t.method_status = 'PBE' THEN t.grouped_acres END) AS PB_E_acres,
+SUM(CASE WHEN t.method_status = 'GSE' THEN t.grouped_acres END) AS GS_E_acres,
+SUM(CASE WHEN t.method_status = 'EAE' THEN t.grouped_acres END) AS EA_E_acres,
+SUM(CASE WHEN t.method_status = 'MSE' THEN t.grouped_acres END) AS MS_E_acres,
+SUM(CASE WHEN t.method_status = 'BSE' THEN t.grouped_acres END) AS BS_E_acres
+FROM
+
+
+(SELECT 
+(var_layer1 || var_layer2 || var_layer3 || var_layer4 || var_layer5 || var_layer6) as strata_id,
+var_layer1 as layer1, var_layer2 as layer2, var_layer3 as layer3, var_layer4 as layer4,var_layer5 as layer5, var_layer6 as layer6, (var_method || var_forest_status) AS method_status, var_value as grouped_acres
+FROM output_05_management_details
+WHERE CAST(var_period AS DECIMAL) = 1
+GROUP BY (layer1 || layer2 || layer3 || layer4 || layer5 || layer6 || method_status)
+ORDER BY (layer1 || layer2 || layer3 || layer4 || layer5 || layer6 || method_status)) AS t
+
+
+GROUP BY strata_id
+----------
+-----------------------------------------VOLUME (if rmcuft column exists)-----------------------------------------
+
+----------
+3.0. harvested volume by period, method
+SELECT period,
+SUM(CASE WHEN t.method = 'NG' THEN t.volume END) AS NG_volume,
+SUM(CASE WHEN t.method = 'PB' THEN t.volume  END) AS PB_volume,
+SUM(CASE WHEN t.method = 'GS' THEN t.volume  END) AS GS_volume,
+SUM(CASE WHEN t.method = 'EA' THEN t.volume  END) AS EA_volume,
+SUM(CASE WHEN t.method = 'MS' THEN t.volume  END) AS MS_volume,
+SUM(CASE WHEN t.method = 'BS' THEN t.volume  END) AS BS_volume
+FROM
+
+
+(SELECT 
+CAST(var_period AS DECIMAL) as period, var_method as method, 
+SUM(var_value*rmcuft) as volume
+FROM output_05_management_details
+GROUP BY (period || method)
+ORDER BY (period || method)) AS t
+
+
+GROUP BY period
+----------
+3.1. harvested volume by period, method, forest_status
+SELECT period,
+SUM(CASE WHEN t.method_status = 'NGE' THEN t.volume END) AS NG_E_volume,
+SUM(CASE WHEN t.method_status = 'PBE' THEN t.volume END) AS PB_E_volume,
+SUM(CASE WHEN t.method_status = 'GSE' THEN t.volume END) AS GS_E_volume,
+SUM(CASE WHEN t.method_status = 'EAE' THEN t.volume END) AS EA_E_volume,
+SUM(CASE WHEN t.method_status = 'MSE' THEN t.volume END) AS MS_E_volume,
+SUM(CASE WHEN t.method_status = 'BSE' THEN t.volume END) AS BS_E_volume,
+SUM(CASE WHEN t.method_status = 'NGR' THEN t.volume END) AS NG_R_volume,
+SUM(CASE WHEN t.method_status = 'PBR' THEN t.volume END) AS PB_R_volume,
+SUM(CASE WHEN t.method_status = 'GSR' THEN t.volume END) AS GS_R_volume,
+SUM(CASE WHEN t.method_status = 'EAR' THEN t.volume END) AS EA_R_volume
+FROM
+
+
+(SELECT 
+CAST(var_period AS DECIMAL) as period,
+(var_method || var_forest_status) AS method_status, 
+SUM(var_value*rmcuft) as volume
+FROM output_05_management_details
+GROUP BY (period || method_status)
+ORDER BY (period || method_status)) AS t
+
+
+GROUP BY period
+----------
+3.2. harvested volume by period, method, activity
+SELECT period, action_type as activity,
+SUM(CASE WHEN t.method = 'NG' THEN t.volume END) AS NG_volume,
+SUM(CASE WHEN t.method = 'PB' THEN t.volume END) AS PB_volume,
+SUM(CASE WHEN t.method = 'GS' THEN t.volume END) AS GS_volume,
+SUM(CASE WHEN t.method = 'EA' THEN t.volume END) AS EA_volume,
+SUM(CASE WHEN t.method = 'MS' THEN t.volume END) AS MS_volume,
+SUM(CASE WHEN t.method = 'BS' THEN t.volume END) AS BS_volume
+FROM
+
+
+(SELECT 
+CAST(var_period AS DECIMAL) as period, action_type, var_method AS method, 
+SUM(var_value*rmcuft) as volume
+FROM output_05_management_details
+GROUP BY (period || action_type || method)
+ORDER BY (period || action_type  || method)) AS t
+
+
+GROUP BY period, activity
+HAVING 
+NG_volume > 0 OR PB_volume  > 0 OR GS_volume  > 0 OR EA_volume  > 0 OR MS_volume  > 0 OR BS_volume  > 0
+----------
+3.3. harvested volume by period, method, forest_status, activity
+SELECT period, action_type as activity,
+SUM(CASE WHEN t.method_status = 'NGE' THEN t.volume END) AS NG_E_volume,
+SUM(CASE WHEN t.method_status = 'PBE' THEN t.volume END) AS PB_E_volume,
+SUM(CASE WHEN t.method_status = 'GSE' THEN t.volume END) AS GS_E_volume,
+SUM(CASE WHEN t.method_status = 'EAE' THEN t.volume END) AS EA_E_volume,
+SUM(CASE WHEN t.method_status = 'MSE' THEN t.volume END) AS MS_E_volume,
+SUM(CASE WHEN t.method_status = 'BSE' THEN t.volume END) AS BS_E_volume,
+SUM(CASE WHEN t.method_status = 'NGR' THEN t.volume END) AS NG_R_volume,
+SUM(CASE WHEN t.method_status = 'PBR' THEN t.volume END) AS PB_R_volume,
+SUM(CASE WHEN t.method_status = 'GSR' THEN t.volume END) AS GS_R_volume,
+SUM(CASE WHEN t.method_status = 'EAR' THEN t.volume END) AS EA_R_volume
+FROM
+
+
+(SELECT 
+CAST(var_period AS DECIMAL) as period, action_type,
+(var_method || var_forest_status) AS method_status, 
+SUM(var_value*rmcuft) as volume
+FROM output_05_management_details
+GROUP BY (period || action_type || method_status)
+ORDER BY (period || action_type  || method_status)) AS t
+
+
+GROUP BY period, activity
+HAVING 
+NG_E_volume > 0 OR PB_E_volume  > 0 OR GS_E_volume  > 0 OR EA_E_volume  > 0 OR MS_E_volume  > 0 OR BS_E_volume  > 0 OR NG_R_volume  > 0 OR PB_R_volume  > 0 OR GS_R_volume  > 0 OR EA_R_volume  > 0
+----------
+3.4. positive harvested volume - Existing & Regeneration strata
 SELECT var_layer1 as layer1, var_layer2 as layer2, var_layer3 as layer3, var_layer4 as layer4,var_layer5 as layer5, var_layer6 as layer6, var_forest_status as forest_status, age_class as forest_age, var_period as period, prescription, row_id, var_method as method, action_type as activity, var_value as acres, var_value*rmcuft as volume
 
 FROM output_05_management_details
@@ -43,7 +260,7 @@ WHERE CAST(volume AS DECIMAL) > 0
 
 ORDER BY forest_status, CAST(period AS DECIMAL), method, activity, layer1, layer2, layer3, layer4, layer5, layer6
 ----------
-6. Show records with positive harvested volume - Existing Forest only
+3.5. positive harvested volume - Existing strata
 SELECT var_layer1 as layer1, var_layer2 as layer2, var_layer3 as layer3, var_layer4 as layer4,var_layer5 as layer5, var_layer6 as layer6, var_forest_status as forest_status, age_class as forest_age, var_period as period, prescription, row_id, var_method as method, action_type as activity, var_value as acres, var_value*rmcuft as volume
 
 FROM output_05_management_details
@@ -52,7 +269,7 @@ WHERE CAST(volume AS DECIMAL) > 0 AND forest_status = 'E'
 
 ORDER BY forest_status, CAST(period AS DECIMAL), method, activity, layer1, layer2, layer3, layer4, layer5, layer6
 ----------
-7. Show records with positive harvested volume - Regeneration Forest only
+3.6. positive harvested volume - Regeneration strata
 SELECT var_layer1 as layer1, var_layer2 as layer2, var_layer3 as layer3, var_layer4 as layer4,var_layer5 as layer5, var_layer6 as layer6, var_forest_status as forest_status, age_class as forest_age, var_period as period, prescription, row_id, var_method as method, action_type as activity, var_value as acres, var_value*rmcuft as volume
 
 FROM output_05_management_details
@@ -60,4 +277,21 @@ FROM output_05_management_details
 WHERE CAST(volume AS DECIMAL) > 0 AND forest_status = 'R'
 
 ORDER BY forest_status, CAST(period AS DECIMAL), method, activity, layer1, layer2, layer3, layer4, layer5, layer6
+----------
+-----------------------------------------------------------ACTIVITY---------------------------------------------------------
+
+----------
+4.0. positive activity (full details, excluding "no-action" activity)
+SELECT *
+
+FROM output_05_management_details
+
+WHERE action_type NOT LIKE 'no-action'
+----------
+4.1. positive activity (less details, excluding "no-action" activity)
+SELECT var_layer1 as layer1, var_layer2 as layer2, var_layer3 as layer3, var_layer4 as layer4,var_layer5 as layer5, var_layer6 as layer6, var_forest_status as forest_status, age_class as forest_age, var_period as period, prescription, row_id, var_method as method, action_type as activity, var_value as acres
+
+FROM output_05_management_details
+
+WHERE action_type NOT LIKE 'no-action'
 ----------

@@ -484,7 +484,7 @@ public class Read_Database {
 								+ "MAX(CAST(rotation_age as decimal)) AS e_max_rotation_age "
 								+ " FROM "
 								+ "(SELECT DISTINCT prescription AS EA_E_prescription, "
-								+ "action_type AS final_activity, CAST(age_class as decimal) AS rotation_age FROM yield_tables WHERE prescription LIKE '%_EA_E%' GROUP BY prescription) "
+								+ "action_type AS final_activity, CAST(age_class as decimal) AS rotation_age FROM yield_tables WHERE prescription LIKE '%\"_EA\"_E%' ESCAPE '\"' GROUP BY prescription) "
 						+ "GROUP BY e_covertype) AS e_table "
 								
 						+ "LEFT JOIN"
@@ -494,7 +494,7 @@ public class Read_Database {
 							+ "MAX(CAST(rotation_age as decimal)) AS r_max_rotation_age "
 							+ "FROM "
 							+ "(SELECT DISTINCT prescription AS EA_R_prescription, "
-							+ "action_type AS final_activity, CAST(age_class as decimal) AS rotation_age FROM yield_tables WHERE prescription LIKE '%_EA_R%' GROUP BY prescription) "
+							+ "action_type AS final_activity, CAST(age_class as decimal) AS rotation_age FROM yield_tables WHERE prescription LIKE '%\"_EA\"_R%' ESCAPE '\"' GROUP BY prescription) "
 						+ "GROUP BY r_covertype) AS r_table "
 						
 						+ "ON e_table.e_covertype = r_table.r_covertype)"
@@ -514,7 +514,7 @@ public class Read_Database {
 							+ "MAX(CAST(rotation_age as decimal)) AS r_max_rotation_age "
 							+ "FROM "
 							+ "(SELECT DISTINCT prescription AS EA_R_prescription, "
-							+ "action_type AS final_activity, CAST(age_class as decimal) AS rotation_age FROM yield_tables WHERE prescription LIKE '%_EA_R%' GROUP BY prescription) "
+							+ "action_type AS final_activity, CAST(age_class as decimal) AS rotation_age FROM yield_tables WHERE prescription LIKE '%\"_EA\"_R%' ESCAPE '\"' GROUP BY prescription) "
 						+ "GROUP BY r_covertype) AS r_table "
 						
 						+ "LEFT JOIN"
@@ -524,7 +524,7 @@ public class Read_Database {
 							+ "MAX(CAST(rotation_age as decimal)) AS e_max_rotation_age "
 							+ " FROM "
 							+ "(SELECT DISTINCT prescription AS EA_E_prescription, "
-							+ "action_type AS final_activity, CAST(age_class as decimal) AS rotation_age FROM yield_tables WHERE prescription LIKE '%_EA_E%' GROUP BY prescription) "
+							+ "action_type AS final_activity, CAST(age_class as decimal) AS rotation_age FROM yield_tables WHERE prescription LIKE '%\"_EA\"_E%' ESCAPE '\"' GROUP BY prescription) "
 						+ "GROUP BY e_covertype) AS e_table "
 						
 						+ "ON e_table.e_covertype = r_table.r_covertype)"

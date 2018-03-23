@@ -270,7 +270,7 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 			@Override
 			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 				if (value.toString().equals("FREE")) {
-					setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_gray.png"));
+					setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_blue.png"));
 				} else if (value.toString().equals("HARD")) {
 					setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_red.png"));
 				}
