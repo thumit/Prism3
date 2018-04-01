@@ -22,34 +22,43 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsDevice.WindowTranslucency;
 import java.awt.GraphicsEnvironment;
+import java.awt.Paint;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.FilenameFilter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -90,15 +99,17 @@ public class PrismMain extends JFrame {
 	private MenuItem_SetFont 			setFont;			// For menuWindow
 	private MenuItem_SetLookAndFeel 	setLookAndFeel;		// For menuWindow
 	private MenuItem_SetTransparency 	setTransparency;	// For menuWindow
-	private MenuItem_CaptureGUI 		captureGUI;	// For menuWindow
+	private MenuItem_CaptureGUI 		captureGUI;			// For menuWindow
 		
-	private static String 					prism_version = "PRISM ALPHA 1.0.33";
+	private static String 					prism_version = "PRISM ALPHA 1.0.34";
+	private String 							currentProject;
 	private static DesktopPanel_BackGround 	prism_DesktopPane;
-	private static String 					currentProject;
+	private Repaint_JPanel 					content_panel;
 	private static PrismMain 				main;
 	private static ComponentResizer 		cr;
 	
 	private static LinkedList_Databases databases_linkedlist = new LinkedList_Databases();
+
 	
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public static void main(String[] args) {
@@ -106,10 +117,11 @@ public class PrismMain extends JFrame {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice gd = ge.getDefaultScreenDevice();
 		if (gd.isWindowTranslucencySupported(WindowTranslucency.TRANSLUCENT)) {
-//			setDefaultLookAndFeelDecorated(true);
+//			setDefaultLookAndFeelDecorated(true);												// 1: activate this 1 with 2  --> then we can disable 2 lines in the middle
 			main = new PrismMain();
 		 	main.setUndecorated(true);		// to help make translucent windows
-			main.setOpacity(0.95f);
+			main.setOpacity(0.92f);
+//			main.setBackground(new Color(0, 0, 0, 0.0f)); // alpha <1 = transparent;			// 2: activate this 2 with 1  --> then we can disable 2 lines in the middle
 			
 			//Need border so cr can work
 			Border tempBorder = BorderFactory.createMatteBorder(3, 1, 1, 1, ColorUtil.makeTransparent(Color.BLACK, 255));
@@ -125,32 +137,7 @@ public class PrismMain extends JFrame {
 //				Runtime.getRuntime().exec("C://Users//Dung Nguyen//Desktop//Planets//application.windows64//Planets.exe", null, new File("C://Users//Dung Nguyen//Desktop//Planets//application.windows64//"));
 //			} catch (IOException e) {
 //			}
-							
 		} 		
-		
-		
-		
-		// These codes add button to the right
-		JLabel test_label = new JLabel() {
-			@Override
-			protected void paintComponent(Graphics g) {					
-				Graphics2D g2d = (Graphics2D) g.create();
-				// Fill the background, this is VERY important. Fail to do this and you will have major problems
-				g2d.setColor(getBackground());
-				g2d.fillRect(0, 0, getWidth(), getHeight());
-				// Draw the background
-				ImageIcon bgImage = IconHandle.get_scaledImageIcon(10, 10, "icon_tree.png");
-				Dimension size = this.getSize();
-				g2d.drawImage(bgImage.getImage(), size.width - bgImage.getIconWidth() - 5, size.height - bgImage.getIconHeight() - 5, this);
-				// Paint the component content, i.e. the text
-				getUI().paint(g2d, this);
-				g2d.dispose();
-			}
-		};
-		test_label.setSize(30, 30);
-		test_label.setBackground(ColorUtil.makeTransparent(Color.WHITE, 0));
-		main.setLayout(new BorderLayout());
-		main.add(test_label, BorderLayout.EAST);
 	}
 
 	//--------------------------------------------------------------------------------------------------------------------------------
@@ -175,11 +162,22 @@ public class PrismMain extends JFrame {
 					if (info.getName().equals("Nimbus")) {
 						try {
 							UIManager.setLookAndFeel(info.getClassName());
-							UIManager.getLookAndFeelDefaults().put("info", new Color(255, 250, 205));		// Change the ugly yellow color of ToolTip --> lemon chiffon
-//							UIManager.getLookAndFeelDefaults().put("defaultFont", new Font("Century Schoolbook", Font.PLAIN, 12));
-							WindowAppearanceHandle.setUIFont(new FontUIResource("Century Schoolbook", Font.PLAIN, 12));		//Change Font for the current LAF
-						} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
-								| UnsupportedLookAndFeelException e1) {
+							File memory_file = new File(FilesHandle.get_temporaryFolder() + "/prism_memory.txt");	// Store the last time MAx Memory is saved by users: just an integer number
+							String font_name = "Century Schoolbook";
+							int font_size = 12;
+							try {		
+								List<String> list = Files.readAllLines(Paths.get(memory_file.getAbsolutePath()), StandardCharsets.UTF_8);			
+								font_name = list.get(2).split("\t")[0];		// space delimited between Font Name and Font Size
+								font_size = Integer.parseInt(list.get(2).split("\t")[1]);	// space delimited between Font Name and Font Size
+							} catch (Exception e) {
+								System.out.println("File prism_memory.txt does not exists");
+							} finally {
+								UIManager.getLookAndFeelDefaults().put("info", new Color(255, 250, 205));		// Change the ugly yellow color of ToolTip --> lemon chiffon
+								UIManager.getLookAndFeelDefaults().put("defaultFont", new Font(font_name, Font.PLAIN, font_size));	// Since the update to eclipse Oxygen and update to java9, 
+																																				// this line is required to make it not fail when click File --> Open after changing Look and Feel in Eclise IDE
+								WindowAppearanceHandle.setUIFont(new FontUIResource(font_name, Font.PLAIN, font_size));				// Change Font for the current LAF
+							}
+						} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e1) {
 							System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
 						}
 						SwingUtilities.updateComponentTreeUI(main);
@@ -188,12 +186,8 @@ public class PrismMain extends JFrame {
 
 				
 				setIconImage(new ImageIcon(getClass().getResource("/icon_main.png")).getImage());
-				//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 				addWindowListener(new WindowAdapter() {@Override public void windowClosing(WindowEvent e){exitPRISM();}});
-				getContentPane().setLayout(new BorderLayout());	
-
-				
 				prism_DesktopPane = new DesktopPanel_BackGround();
 				prism_Menubar = new MenuBar_Customize();
 				
@@ -208,7 +202,7 @@ public class PrismMain extends JFrame {
 				setFont = new MenuItem_SetFont(main);
 				setTransparency = new MenuItem_SetTransparency(main);
 				setLookAndFeel = new MenuItem_SetLookAndFeel(main, cr);
-				captureGUI = new MenuItem_CaptureGUI(main);
+				captureGUI = new MenuItem_CaptureGUI();
 				contents = new JMenuItem("Contents");
 				update = new JMenuItem("Check for updates");
 				contact = new JMenuItem("Contact us");
@@ -231,7 +225,6 @@ public class PrismMain extends JFrame {
 				menuWindow.add(setFont);
 				menuWindow.add(setLookAndFeel);
 				
-				
 				menuHelp.add(contents);
 				menuHelp.add(update);
 				menuHelp.add(contact);
@@ -244,8 +237,43 @@ public class PrismMain extends JFrame {
 				prism_Menubar.addFrameFeatures();
 
 				setJMenuBar(prism_Menubar);	
+				
+//				JPanel content_panel = new JPanel() {
+//					private int angle = 200;
+//		            @Override
+//		            protected void paintComponent(Graphics g) {
+//		                if (g instanceof Graphics2D) {
+//							final int R = 0;
+//							final int G = 0;
+//							final int B = 0;
+////							Paint p = new GradientPaint(0.0f, 0.0f, new Color(R, G, B, 0.3f), 0.0f, getHeight(), new Color(0, 130, 180, 150), true);
+////							Paint p = new GradientPaint(0.0f, 0.0f, new Color(0, 130, 180, 200), 0.0f, getHeight(), new Color(R, G, B, 0.9f), true);
+//							Paint p = new GradientPaint(0.0f, getHeight() / 3, new Color(R, G, B, 0.05f), getHeight() / 3, getHeight() / 2, new Color(0, 130, 180, angle), true);
+////							final int R = 240;
+////							final int G = 240;
+////							final int B = 240;
+////							Paint p = new GradientPaint(0.0f, 0.0f, new Color(R, G, B, 255), 0.0f, getHeight(), new Color(0, 130, 180, 125), true);
+//							Graphics2D g2d = (Graphics2D) g;
+//							g2d.setPaint(p);
+//							g2d.fillRect(0, 0, getWidth(), getHeight());
+//		                }
+//		            }
+//
+//		        };
+				content_panel = new Repaint_JPanel();	// This line uses repainted JPanel so the above codes could be ignored
+		        setContentPane(content_panel);
+				getContentPane().setLayout(new BorderLayout());	
 				getContentPane().add(prism_DesktopPane);
+				// testing transparent, works by activating the below line, but font is in bad quality. 2 System.setProperty lines probably works on old java (before 9) for anti-alias, but not for java 9
+//				setBackground(new Color(0, 0, 0, 0.0f)); // alpha <1 = transparent
+			 	prism_DesktopPane.setBackground(new Color(0, 0, 0, 0)); // alpha <1 = transparent
+				System.setProperty("awt.useSystemAAFontSettings", "on");
+				System.setProperty("swing.aatext", "true");
+			 	/*
+			 	-Dawt.useSystemAAFontSettings=on -Dswing.aatext=true			// --> use for VMargument
+			 	*/
 				WindowAppearanceHandle.setOpaqueForAll(prism_Menubar, false);
+				WindowAppearanceHandle.setOpaqueForAll(content_panel, false);
 				WindowAppearanceHandle.setOpaqueForAll(prism_DesktopPane, false);
 				
 				pack();
@@ -253,8 +281,10 @@ public class PrismMain extends JFrame {
 				setVisible(true);
 				
 				
-				// Allow users to modify max heap size------------------------------------------------------
+				// Allow users to modify max heap size on PRISM start up------------------------------------------------------
+				content_panel.stop_painting();
 				OptionPane_Startup.Set_Memory();
+				continue_painting_content_panel_if_no_internal_frame_opened();
 				
 								
 				// Add listener for "Window"-----------------------------------------------------------------
@@ -312,8 +342,7 @@ public class PrismMain extends JFrame {
 					  		String ExitOption[] = {"OK","Cancel"};
 							int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), projectName_JTextField, titleText,
 									JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
-							if (response == 0) 
-							{
+							if (response == 0) {
 								// Find all the existing projects in the "Projects" folder		
 								File[] listOfFiles = FilesHandle.get_projectsFolder().listFiles(new FilenameFilter() {
 									@Override
@@ -334,21 +363,18 @@ public class PrismMain extends JFrame {
 								}
 												
 								//if Name is valid and existing projects do not contain this Name
-								if (StringHandle.nameIsValid(currentProject)==true && !existingName_list.contains(currentProject)) {
+								if (StringHandle.nameIsValid(currentProject) == true && !existingName_list.contains(currentProject) && !currentProject.equals("Database Management")) {
 									if (new File(FilesHandle.get_projectsFolder().getAbsolutePath() + "/" + currentProject).mkdir()) {		//try if can create a folder with the existing project name
-										createNewJInternalFrame(currentProject);		//create new internal frame for this existing project
+										create_project_internal_frame(currentProject);		//create new internal frame for this existing project
 										stop_naming = true;
 									}
 								} else {
-									titleText = "Name already exists or contains special characters. Try a different name:";									
+									titleText = "Name exists or contains special characters. Try a different name:";									
 								}
-							} 		
-							
-							else {
+							} else {
 								stop_naming = true;
 							}
 					    }
-						
 					}
 				});	
 
@@ -375,33 +401,10 @@ public class PrismMain extends JFrame {
 									fileName = listOfFiles[i].getName();
 									existingProject = new JMenuItem(fileName);
 									menuOpenProject.add(existingProject);			// Add all existing projects
-
 									existingProject.addActionListener(new ActionListener() {
 										public void actionPerformed(ActionEvent event) {
 											currentProject = fileName;
-											
-											JInternalFrame[] opened_InternalFrames = PrismMain.get_Prism_DesktopPane().getAllFrames();	// All displayed internalFrames
-											List<String> openedFrames_list = new ArrayList<String>();					// List of Frames Names					
-											for (int i = 0; i < opened_InternalFrames.length; i++) {
-												openedFrames_list.add(opened_InternalFrames[i].getTitle());		// Loop all displayed IFrames to get Names and add to the list
-											}
-											
-											// Only open if it is not opened yet
-											if (openedFrames_list.contains(fileName)) {
-												for (int i = 0; i < opened_InternalFrames.length; i++) {
-													if (opened_InternalFrames[i].getTitle().equals(fileName)) { 
-														try {
-															opened_InternalFrames[i].setSelected(true);
-														} catch (PropertyVetoException e) {
-															System.err.println(e.getClass().getName() + ": " + e.getMessage());
-														}
-													}
-												}
-											} else {
-												createNewJInternalFrame(currentProject); // Open it
-											}
-											
-											
+											create_project_internal_frame(currentProject); // IF the project exists --> creates mean Open
 										}
 									});
 								}
@@ -416,7 +419,6 @@ public class PrismMain extends JFrame {
 			        @Override
 			        public void menuCanceled(MenuEvent e) {
 			        }
-					
 				});	
 				
 				
@@ -447,7 +449,7 @@ public class PrismMain extends JFrame {
 //				about.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_2, InputEvent.CTRL_DOWN_MASK));
 				about.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent event) {
-						new OptionPane_License();					
+						new OptionPane_About();					
 					}
 				});
 				
@@ -464,129 +466,145 @@ public class PrismMain extends JFrame {
 								
 				// Add listeners "DatabaseManagement"------------------------------------------------
 				DatabaseManagement.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.ALT_DOWN_MASK));
-				DatabaseManagement.addActionListener(
-						new ActionListener() { // anonymous inner class
-							// display new internal window
-							public void actionPerformed(ActionEvent event) {
-								// create internal frame
-								JInternalFrame DatabaseManagement_Frame = new JInternalFrame("Database Management", 
-																						true /*resizable*/, true, /*closable*/true/*maximizable*/, true/*iconifiable*/);								
-								
-								prism_DesktopPane.add(DatabaseManagement_Frame, BorderLayout.CENTER); // attach internal frame
-								DatabaseManagement_Frame.setSize((int) (getWidth()/1.08),(int) (getHeight()/1.21));
-								DatabaseManagement_Frame.setLocation((int) ((getWidth() - DatabaseManagement_Frame.getWidth())/2),
-										((int) ((getHeight() - DatabaseManagement_Frame.getHeight())/2.75)));	//Set the DatabaseManagement_Frame near the center of the Main frame
-								if (PrismMain.get_Prism_DesktopPane().getSelectedFrame() != null) {	//or Set the DatabaseManagement_Frame near the recently opened JInternalFrame
-									DatabaseManagement_Frame.setLocation(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getX() + 25, PrismMain.get_Prism_DesktopPane().getSelectedFrame().getY() + 25);
+				DatabaseManagement.addActionListener(new ActionListener() { // anonymous inner class
+					public void actionPerformed(ActionEvent event) {
+						boolean is_Database_Management_opened = false;
+						
+						// display Database Management if it was already created
+						for (JInternalFrame i : PrismMain.get_Prism_DesktopPane().getAllFrames()) {		// Loop all displayed internalFrames
+							if (i.getTitle().equals("Database Management")) {
+								try {
+									i.setSelected(true);
+								} catch (PropertyVetoException e1) {
+									e1.printStackTrace();
 								}
-								
-								// Note: visible first for the JIframe to be selected, pack at the end would be fail for JIframe to be selected (PrismMain.mainFrameReturn().getSelectedFrame = null)
-								DatabaseManagement_Frame.setVisible(true); // show internal frame					
-								Panel_DatabaseManagement DatabaseManagementPanel = new Panel_DatabaseManagement(); // create new panel
-								DatabaseManagement_Frame.add(DatabaseManagementPanel, BorderLayout.CENTER); // add panel
-//								DatabaseManagement_Frame.pack(); // set internal frame to size of contents
-								
-
-								DatabaseManagement.setEnabled(false); //Disable "DatabaseManagement" menuItem when it is already opened
-								InternalFrameListener DatabaseInternalFrame_listener = new InternalFrameListener() {
-								      public void internalFrameActivated(InternalFrameEvent e) {
-								   
-								      }
-
-								      public void internalFrameClosed(InternalFrameEvent e) {
-								    	  DatabaseManagement.setEnabled(true); //Enable
-								      }
-
-								      public void internalFrameClosing(InternalFrameEvent e) {							 
-
-								      }
-
-								      public void internalFrameDeactivated(InternalFrameEvent e) {
-								      
-								      }
-
-								      public void internalFrameDeiconified(InternalFrameEvent e) {
-								      
-								      }
-
-								      public void internalFrameIconified(InternalFrameEvent e) {
-								      
-								      }
-
-								      public void internalFrameOpened(InternalFrameEvent e) {
-								      
-								      }
-								    };
-								    DatabaseManagement_Frame.addInternalFrameListener(DatabaseInternalFrame_listener);
-							} // end method actionPerformed
-						} // end anonymous inner class
-				); // end call to addActionListener	
+								is_Database_Management_opened = true;
+							}
+						} 
+														
+						// if not exist, create new internal frame
+						if (!is_Database_Management_opened) {
+							JInternalFrame DatabaseManagement_Frame = new JInternalFrame("Database Management", true /*resizable*/, true, /*closable*/true/*maximizable*/, true/*iconifiable*/);								
+							prism_DesktopPane.add(DatabaseManagement_Frame, BorderLayout.CENTER); // attach internal frame
+							DatabaseManagement_Frame.setSize((int) (getWidth()/1.08),(int) (getHeight()/1.21));
+							DatabaseManagement_Frame.setLocation((int) ((getWidth() - DatabaseManagement_Frame.getWidth())/2),
+																((int) ((getHeight() - DatabaseManagement_Frame.getHeight())/2.75)));	//Set the DatabaseManagement_Frame near the center of the Main frame
+							if (PrismMain.get_Prism_DesktopPane().getSelectedFrame() != null) {	//or Set the DatabaseManagement_Frame near the recently opened JInternalFrame
+								DatabaseManagement_Frame.setLocation(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getX() + 25, PrismMain.get_Prism_DesktopPane().getSelectedFrame().getY() + 25);
+							}
 							
-			} //end public void run()					
+							// Note: visible first for the JIframe to be selected, pack at the end would be fail for JIframe to be selected (PrismMain.mainFrameReturn().getSelectedFrame = null)
+							DatabaseManagement_Frame.setVisible(true); // show internal frame					
+							DatabaseManagement_Frame.add(new Panel_DatabaseManagement(), BorderLayout.CENTER); // add panel
+							DatabaseManagement_Frame.addInternalFrameListener(new InternalFrameListener() {
+								public void internalFrameActivated(InternalFrameEvent e) {
+
+								}
+
+								public void internalFrameClosed(InternalFrameEvent e) {
+									continue_painting_content_panel_if_no_internal_frame_opened();
+								}
+
+								public void internalFrameClosing(InternalFrameEvent e) {
+
+								}
+
+								public void internalFrameDeactivated(InternalFrameEvent e) {
+
+								}
+
+								public void internalFrameDeiconified(InternalFrameEvent e) {
+
+								}
+
+								public void internalFrameIconified(InternalFrameEvent e) {
+
+								}
+
+								public void internalFrameOpened(InternalFrameEvent e) {
+
+								}
+							});
+							continue_painting_content_panel_if_no_internal_frame_opened();
+						}
+					}
+				});
+							
+			} // end public void run()
 		}); // end EventQueue.invokeLater
 	} // end public Prism_Main
 			
 	
 	//--------------------------------------------------------------------------------------------------------------------------------
-	public void createNewJInternalFrame(String currentProject) {
-		// create internal frame
-		JInternalFrame ProjectInternalFrame = new JInternalFrame(currentProject, true /*resizable*/, true, /*closable*/true/*maximizable*/, true/*iconifiable*/);	
-		ProjectInternalFrame.setDefaultCloseOperation(JInternalFrame.DO_NOTHING_ON_CLOSE);
-				
-		prism_DesktopPane.add(ProjectInternalFrame, BorderLayout.CENTER); // attach internal frame
-		ProjectInternalFrame.setSize((int) (getWidth()/1.08),(int) (getHeight()/1.21));		
-		ProjectInternalFrame.setLocation((int) ((getWidth() - ProjectInternalFrame.getWidth())/2),
-				((int) ((getHeight() - ProjectInternalFrame.getHeight())/2.75)));	//Set the ProjectInternalFrame near the center of the Main frame
-		if (PrismMain.get_Prism_DesktopPane().getSelectedFrame() != null) {	//or Set the ProjectInternalFrame near the recently opened JInternalFrame
-			ProjectInternalFrame.setLocation(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getX() + 25, PrismMain.get_Prism_DesktopPane().getSelectedFrame().getY() + 25);
-		}
-			
-		// Note: visible first for the JIframe to be selected, pack at the end would be fail for JIframe to be selected (PrismMain.mainFrameReturn().getSelectedFrame = null)
-		ProjectInternalFrame.setVisible(true); // show internal frame	
-		Panel_Project YieldProjectPanel = new Panel_Project(currentProject); // create new panel
-		ProjectInternalFrame.add(YieldProjectPanel, BorderLayout.CENTER); // add panel
-//		ProjectInternalFrame.pack(); // set internal frame to size of contents
+	public void create_project_internal_frame(String currentProject) {
+		boolean is_currentProject_opened = false;
 		
-								
-		InternalFrameListener ProjectInternalFrame_listener = new InternalFrameListener() {
-		      public void internalFrameActivated(InternalFrameEvent e) {
-
-		      }
-
-		      public void internalFrameClosed(InternalFrameEvent e) {
-
-		      }
-
-		      public void internalFrameClosing(InternalFrameEvent e) {
-		  		String ExitOption[] = {"Close","Cancel"};
-				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(),"Close now?", "Close Project",
-						JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
-				if (response == 0)
-				{
-					 ProjectInternalFrame.dispose();
+		// display project if it was already created
+		for (JInternalFrame i : PrismMain.get_Prism_DesktopPane().getAllFrames()) {		// Loop all displayed internalFrames
+			if (i.getTitle().equals(currentProject)) {
+				try {
+					i.setSelected(true);
+				} catch (PropertyVetoException e1) {
+					e1.printStackTrace();
 				}
-				if (response == 1)
-				{
-		        }
-		      }
+				is_currentProject_opened = true;
+			}
+		} 
+										
+		// if not exist, create new internal frame
+		if (!is_currentProject_opened) {
+			// create internal frame
+			JInternalFrame ProjectInternalFrame = new JInternalFrame(currentProject, true /*resizable*/, true, /*closable*/true/*maximizable*/, true/*iconifiable*/);	
+			ProjectInternalFrame.setDefaultCloseOperation(JInternalFrame.DO_NOTHING_ON_CLOSE);
+					
+			prism_DesktopPane.add(ProjectInternalFrame, BorderLayout.CENTER); // attach internal frame
+			ProjectInternalFrame.setSize((int) (getWidth()/1.08),(int) (getHeight()/1.21));		
+			ProjectInternalFrame.setLocation((int) ((getWidth() - ProjectInternalFrame.getWidth())/2),
+											((int) ((getHeight() - ProjectInternalFrame.getHeight())/2.75)));	//Set the ProjectInternalFrame near the center of the Main frame
+			if (PrismMain.get_Prism_DesktopPane().getSelectedFrame() != null) {	//or Set the ProjectInternalFrame near the recently opened JInternalFrame
+				ProjectInternalFrame.setLocation(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getX() + 25, PrismMain.get_Prism_DesktopPane().getSelectedFrame().getY() + 25);
+			}
+				
+			// Note: visible first for the JIframe to be selected, pack at the end would be fail for JIframe to be selected (PrismMain.mainFrameReturn().getSelectedFrame = null)
+			ProjectInternalFrame.setVisible(true); // show internal frame	
+			ProjectInternalFrame.add(new Panel_Project(currentProject), BorderLayout.CENTER); // add panel
+			ProjectInternalFrame.addInternalFrameListener(new InternalFrameListener() {
+				public void internalFrameActivated(InternalFrameEvent e) {
 
-		      public void internalFrameDeactivated(InternalFrameEvent e) {
-		     
-		      }
+				}
 
-		      public void internalFrameDeiconified(InternalFrameEvent e) {
-		   
-		      }
+				public void internalFrameClosed(InternalFrameEvent e) {
 
-		      public void internalFrameIconified(InternalFrameEvent e) {
-		      
-		      }
+				}
 
-		      public void internalFrameOpened(InternalFrameEvent e) {
-		     
-		      }
-		    };
-			ProjectInternalFrame.addInternalFrameListener(ProjectInternalFrame_listener);	
+				public void internalFrameClosing(InternalFrameEvent e) {
+					String ExitOption[] = { "Close", "Cancel" };
+					int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), "Close now?",
+							"Close Project", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
+					if (response == 0) {
+						ProjectInternalFrame.dispose();
+						continue_painting_content_panel_if_no_internal_frame_opened();
+					}
+				}
+
+				public void internalFrameDeactivated(InternalFrameEvent e) {
+
+				}
+
+				public void internalFrameDeiconified(InternalFrameEvent e) {
+
+				}
+
+				public void internalFrameIconified(InternalFrameEvent e) {
+
+				}
+
+				public void internalFrameOpened(InternalFrameEvent e) {
+
+				}
+			});
+			continue_painting_content_panel_if_no_internal_frame_opened();
+		}
 	}
 	 
 	//--------------------------------------------------------------------------------------------------------------------------------
@@ -596,7 +614,7 @@ public class PrismMain extends JFrame {
 				JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
 		if (response == 0) {		
 //			main.setVisible(false);
-//			Thread exitThread = new Thread() { // Make a thread for output5
+//			Thread exitThread = new Thread() { // Make a thread
 //				public void run() {
 //					try {
 //						PApplet.main("Processing_Prism"); // Start processing animation						
@@ -626,7 +644,18 @@ public class PrismMain extends JFrame {
 			main.setExtendedState(JFrame.NORMAL);
 		}		
 	}
+	
+	
+	//--------------------------------------------------------------------------------------------------------------------------------
+	public void continue_painting_content_panel_if_no_internal_frame_opened() {
+		if (PrismMain.get_Prism_DesktopPane().getAllFrames().length == 0) { // the case no internal frame is opened
+			content_panel.start_painting();
+		} else { // the case at least one internal frame is opened
+			content_panel.stop_painting();
+		}
+	}
 
+	
 	//--------------------------------------------------------------------------------------------------------------------------------
 	@Override
 	public Dimension getPreferredSize() {
@@ -655,12 +684,116 @@ public class PrismMain extends JFrame {
 		return main;
 	}
 
-	public static String getProjectName() {
-		return currentProject;
-	}
-
 	public static LinkedList_Databases get_databases_linkedlist() {
 		return databases_linkedlist;
 	}
 	
+	
+
+	
+	// PRISM super panel + rotator classes. I am proud of myself!!!
+	private class Rotator extends Timer implements ActionListener {
+		private Repaint_JPanel panel;
+		private double angle;
+		private double demo_time = 0;
+
+		Rotator(final Repaint_JPanel panel) {
+			super(50, null);
+			this.panel = panel;
+			this.angle = panel.get_angle();
+			addActionListener(this);
+		}
+
+		public void actionPerformed(final ActionEvent event) {
+			if (angle <= 10) {
+				angle = angle + 0.5;
+			} else {
+				angle = angle + 0.03;
+			}
+			
+	        if (angle > 30) {
+	            angle = 0.5;
+	            panel.set_random_paint();
+	        }
+	        panel.set_angle(angle);
+	        panel.revalidate();
+	        panel.repaint();
+	        
+	        demo_time = demo_time + 1;
+//	        if (demo_time == 600) stop();   // each 200 units of 50 millisoconds = 10 seconds			// Activate this line if we want the rotator stops after certain time
+	        System.out.println(angle + " " + demo_time);
+		}
+	}
+	
+	private class Repaint_JPanel extends JPanel {
+		final Rotator rotator;
+		private double angle = 0.5;
+		private float horizon_of_point_one = 0.0f;
+		private float horizon_of_point_two = 289.0f;
+		
+		{
+			rotator = new Rotator(this);
+	        rotator.start(); 
+	        
+	        addMouseListener(new MouseAdapter() { // Add listener to projectTree
+				boolean is_rotating = true;
+				public void mousePressed(MouseEvent e) {
+					if (SwingUtilities.isLeftMouseButton(e)) {
+						if (is_rotating) {
+							stop_painting();
+							is_rotating = false;
+						} else {
+							start_painting();
+							is_rotating = true;
+						}
+					}
+				}
+			});
+		}
+
+		@Override
+		protected void paintComponent(Graphics g) {
+			if (g instanceof Graphics2D) {
+				final int R = 0;
+				final int G = 0;
+				final int B = 0;
+//				Paint p = new GradientPaint(0.0f, 0.0f, new Color(R, G, B, 0.3f), 0.0f, getHeight(), new Color(0, 130, 180, 150), true);
+//				Paint p = new GradientPaint(0.0f, 0.0f, new Color(0, 130, 180, 200), 0.0f, getHeight(), new Color(R, G, B, 0.9f), true);
+//				Paint p = new GradientPaint(0.0f, getHeight() / 3, new Color(R, G, B, 0.05f), getHeight() / 3, (float) (getHeight() / angle), new Color(0, (int) (5 * angle + 100), 180, (int) (5 * angle + 100)), true);
+				Paint p = new GradientPaint(horizon_of_point_one, getHeight() / 3, new Color(R, G, B, 0.05f), horizon_of_point_two, (float) (getHeight() / angle), new Color(0, (int) (5 * angle + 100), 180, (int) (5 * angle + 100)), true);
+				Graphics2D g2d = (Graphics2D) g;
+				g2d.setPaint(p);
+				g2d.fillRect(0, 0, getWidth(), getHeight());
+			}
+		}
+            
+		@Override
+		public Dimension getPreferredSize() {
+			return new Dimension(this.getWidth(), this.getHeight());
+		}
+
+		public void set_angle(double new_angle) {
+			this.angle = new_angle;
+		}
+
+		public double get_angle() {
+			return this.angle;
+		}
+		
+		public void set_random_paint() {
+			horizon_of_point_one = new Random().nextInt(600) + 1;
+			horizon_of_point_two = 600 - new Random().nextInt(600);
+		}
+		
+		public void start_painting() {
+			if (!rotator.isRunning()) rotator.start();
+		}
+		
+		public void stop_painting() {
+			if (rotator.isRunning()) rotator.stop();
+//			angle = 13;		// activate these codes if you want a good display when Rotator stops
+//			revalidate();
+//	        repaint();
+		}
+	}
 }

@@ -38,11 +38,11 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.stream.Stream;
 
 import javax.swing.BorderFactory;
@@ -66,12 +66,14 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
@@ -132,9 +134,10 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 	private JButton NOSQL_link_button;
 	
 	private Thread thread_filter;
-	private ExecutorService executor = Executors.newFixedThreadPool(1);
+	private ExecutorService executor;
 	
-	public Output_Panel_Management_Details_NOSQL(File currentProjectFolder, String currentRun, JTable table, Object[][] data, PrismTableModel model, JButton NOSQL_link_button) {
+	public Output_Panel_Management_Details_NOSQL(ExecutorService executor, File currentProjectFolder, String currentRun, JTable table, Object[][] data, PrismTableModel model, JButton NOSQL_link_button) {
+		this.executor = executor;
 		this.currentProjectFolder = currentProjectFolder;
 		this.currentRun = currentRun;
 		this.table = table;
@@ -555,7 +558,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			public Class getColumnClass(int c) {
 				if (c == 0) return Integer.class;      //column 0 accepts only Integer
 				else if (c >= 3 && c <= 7) return Double.class;      //column 3 to 7 accept only Double values  
-				else if (c == 12) return Double.class;      //column 3 to 7 accept only Double values 
+				else if (c == 12) return Double.class;      //column 12 accept only Double values 
 				else return String.class;				
 			}
 			
@@ -652,6 +655,30 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			}	
 		};
 
+		// set accuracy and alignment for Cells
+        DefaultTableCellRenderer r = new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object
+			value, boolean isSelected, boolean hasFocus, int row, int column) {
+				// show value with max 10 digits after the dot if it is double value
+				DecimalFormat formatter = new DecimalFormat("###,###,###.#");
+				formatter.setMinimumFractionDigits(1);
+				formatter.setMaximumFractionDigits(1);
+				if (value instanceof Double) {
+					value = formatter.format((Number) value);
+				}
+				// set alignment RIGHT
+				setHorizontalAlignment(SwingConstants.RIGHT);
+				
+				return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            }
+        };						
+			
+		for (int i = 0; i < columnNames9.length; i++) {
+			if (table9.getColumnName(i).equals("query_value")) {	// this is query_value column
+        		table9.getColumnModel().getColumn(i).setCellRenderer(r);
+        	} 
+		}	
     
 
         // Set up Type for each column 2
@@ -1666,75 +1693,71 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			btn_GetResult.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {		
-					Thread thread_get_result = new Thread() {
-						public void run() {
-							if (table9.isEditing()) {
-								table9.getCellEditor().cancelCellEditing();
-							}
-							
-							for (int i = 0; i < data9.length; i++) {	// Loop each row of the fly constraints table & get result for only the constraints with null value
-								if (data9[i][12] == null) {	
-									btn_NewSingle.setVisible(false);		// Hide buttons only when there is at least 1 calculation
-									btn_New_Multiple.setVisible(false);
-									btn_Import_basic_Constraints.setVisible(false);
-									btn_Edit.setVisible(false);
-									spin_move_rows.setVisible(false);
-									btn_Delete.setVisible(false);
-									btn_Sort.setVisible(false);
-									btn_GetResult.setVisible(false);
-									btn_Save.setVisible(false);
-									
-									
-									double multiplier = (data9[i][3] != null) ?  (double) data9[i][3] : 0;	//if multiplier = null --> 0
-									String current_parameter_index = (String) data9[i][8];
-									String current_static_identifiers = (String) data9[i][9];
-									String current_dynamic_identifiers = (String) data9[i][10];
-															
-									List<List<String>> static_identifiers = new ArrayList<>(get_static_identifiers_in_row(current_static_identifiers));
-									List<List<String>> dynamic_identifiers = new ArrayList<>(get_dynamic_identifiers_in_row(current_dynamic_identifiers));
-									List<String> dynamic_dentifiers_column_indexes = new ArrayList<>(get_dynamic_dentifiers_column_indexes_in_row(current_dynamic_identifiers));
-									List<String> parameters_indexes_list = new ArrayList<String>(get_parameters_indexes_list(current_parameter_index));
-															
-									// Process all the variables in output05 and use static_identifiers to trim to get the var_name_list & var_value_list
-									List<String> var_name_list = new ArrayList<String>(); 
-									List<Double> var_value_list = new ArrayList<Double>();						
-									for (int row = 0; row < data.length; row++) {
-										String var_name = String.valueOf(data[row][1]);
-										double var_value = Double.valueOf(String.valueOf(data[row][2]));
-										if (are_all_static_identifiers_matched(var_name, static_identifiers)) {
-											var_name_list.add(var_name);
-											var_value_list.add(var_value);
-										}	
-									}	
-									
-									// Convert lists to 1-D arrays
-									String[] vname = var_name_list.toArray(new String[var_name_list.size()]);
-									double[] vvalue = Stream.of(var_value_list.toArray(new Double[var_value_list.size()])).mapToDouble(Double::doubleValue).toArray();
-											
-									// Get the sum result and update the GUI table
-									data9[i][12] = new Querry_Optimal_Solution().get_results(read_database, vname, vvalue, multiplier, parameters_indexes_list, dynamic_dentifiers_column_indexes, dynamic_identifiers);
-									table9.scrollRectToVisible(new Rectangle(table9.getCellRect(table9.convertRowIndexToView(i), 0, true)));
-									
-									// Get everything show up nicely
-									table9.setRowSelectionInterval(i, i);
-								}
-							}
-
-							
-							create_file_input_05_fly_constraints();		// Save changes after update fly_value						
-							btn_NewSingle.setVisible(true);
-							btn_New_Multiple.setVisible(true);
-							btn_Import_basic_Constraints.setVisible(true);
-							btn_Edit.setVisible(true);
-							spin_move_rows.setVisible(true);
-							btn_Delete.setVisible(true);
-							btn_Sort.setVisible(true);
-							btn_GetResult.setVisible(true);
-							btn_Save.setVisible(true);
-							this.interrupt();
+					executor.submit(() -> {
+						if (table9.isEditing()) {
+							table9.getCellEditor().cancelCellEditing();
 						}
-					};					
-					thread_get_result.start();
+						
+						for (int i = 0; i < data9.length; i++) {	// Loop each row of the fly constraints table & get result for only the constraints with null value
+							if (data9[i][12] == null) {	
+								btn_NewSingle.setVisible(false);		// Hide buttons only when there is at least 1 calculation
+								btn_New_Multiple.setVisible(false);
+								btn_Import_basic_Constraints.setVisible(false);
+								btn_Edit.setVisible(false);
+								spin_move_rows.setVisible(false);
+								btn_Delete.setVisible(false);
+								btn_Sort.setVisible(false);
+								btn_GetResult.setVisible(false);
+								btn_Save.setVisible(false);
+								
+								
+								double multiplier = (data9[i][3] != null) ?  (double) data9[i][3] : 0;	//if multiplier = null --> 0
+								String current_parameter_index = (String) data9[i][8];
+								String current_static_identifiers = (String) data9[i][9];
+								String current_dynamic_identifiers = (String) data9[i][10];
+														
+								List<List<String>> static_identifiers = new ArrayList<>(get_static_identifiers_in_row(current_static_identifiers));
+								List<List<String>> dynamic_identifiers = new ArrayList<>(get_dynamic_identifiers_in_row(current_dynamic_identifiers));
+								List<String> dynamic_dentifiers_column_indexes = new ArrayList<>(get_dynamic_dentifiers_column_indexes_in_row(current_dynamic_identifiers));
+								List<String> parameters_indexes_list = new ArrayList<String>(get_parameters_indexes_list(current_parameter_index));
+														
+								// Process all the variables in output05 and use static_identifiers to trim to get the var_name_list & var_value_list
+								List<String> var_name_list = new ArrayList<String>(); 
+								List<Double> var_value_list = new ArrayList<Double>();						
+								for (int row = 0; row < data.length; row++) {
+									String var_name = String.valueOf(data[row][1]);
+									double var_value = Double.valueOf(String.valueOf(data[row][2]));
+									if (are_all_static_identifiers_matched(var_name, static_identifiers)) {
+										var_name_list.add(var_name);
+										var_value_list.add(var_value);
+									}	
+								}	
+								
+								// Convert lists to 1-D arrays
+								String[] vname = var_name_list.toArray(new String[var_name_list.size()]);
+								double[] vvalue = Stream.of(var_value_list.toArray(new Double[var_value_list.size()])).mapToDouble(Double::doubleValue).toArray();
+										
+								// Get the sum result and update the GUI table
+								data9[i][12] = new Querry_Optimal_Solution().get_results(read_database, vname, vvalue, multiplier, parameters_indexes_list, dynamic_dentifiers_column_indexes, dynamic_identifiers);
+								table9.scrollRectToVisible(new Rectangle(table9.getCellRect(table9.convertRowIndexToView(i), 0, true)));
+								
+								// Get everything show up nicely
+								table9.setRowSelectionInterval(i, i);
+							}
+						}
+
+						
+						create_file_input_05_fly_constraints();		// Save changes after update fly_value						
+						btn_NewSingle.setVisible(true);
+						btn_New_Multiple.setVisible(true);
+						btn_Import_basic_Constraints.setVisible(true);
+						btn_Edit.setVisible(true);
+						spin_move_rows.setVisible(true);
+						btn_Delete.setVisible(true);
+						btn_Sort.setVisible(true);
+						btn_GetResult.setVisible(true);
+						btn_Save.setVisible(true);
+					});					
 				}
 			});		
 			

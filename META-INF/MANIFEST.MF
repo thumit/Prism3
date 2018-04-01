@@ -1,0 +1,24 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: prism
+Bundle-SymbolicName: prism
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: prism.jar,
+  Setup/sqlite-jdbc-3.21.0.jar,
+  Setup/lp_solve_5.5_java/lib/lpsolve55j.jar,
+  Setup/tablefilter-swing-5.3.1.jar,
+  Setup/jfreechart-1.0.19/lib/jfreechart-1.0.19.jar,
+  Licenses,
+  resources,
+  Setup/jfreechart-1.0.19/lib/jcommon-1.0.23.jar,
+  Setup/cplex_wrapper/prismcplex.jar,
+  Setup/x64_win64(CPLEX 1280)/cplex.jar
+Export-Package: .,
+ prism_convenience_class,
+ prism_database,
+ prism_project,
+ prism_project.data_process,
+ prism_project.edit,
+ prism_project.output,
+ prism_project.solve,
+ prism_root

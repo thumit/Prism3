@@ -27,6 +27,7 @@ import java.awt.event.MouseMotionListener;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -34,6 +35,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
+import javax.swing.border.Border;
 
 import prism_convenience_class.ColorUtil;
 import prism_convenience_class.IconHandle;
@@ -45,6 +47,8 @@ public class MenuBar_Customize extends JMenuBar implements MouseListener, MouseM
 	
 	public MenuBar_Customize() {
 		ToolTipManager.sharedInstance().setInitialDelay(0);		//Show toolTip immediately
+		Border border = BorderFactory.createMatteBorder(0, 0, 1, 0, ColorUtil.makeTransparent(Color.BLACK, 125));
+		setBorder(border);
 	}	
 	
 	public void addFrameFeatures() {	

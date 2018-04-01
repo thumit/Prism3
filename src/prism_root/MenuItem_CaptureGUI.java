@@ -22,12 +22,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
 import prism_convenience_class.IconHandle;
@@ -35,10 +38,9 @@ import prism_convenience_class.ImageWhenClicked;
 
 public class MenuItem_CaptureGUI extends JMenuItem {
 
-	public MenuItem_CaptureGUI(PrismMain main) {
-		setText("5s Image Capture OFF");
+	public MenuItem_CaptureGUI() {
+		setText("5s Image Capture");
 		setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_camera.png"));
-		JMenuItem this_menu_item = this;
 		ImageWhenClicked listener = new ImageWhenClicked();
 		
 		List<Component> comp_list = new ArrayList<Component>();
@@ -46,33 +48,54 @@ public class MenuItem_CaptureGUI extends JMenuItem {
 		setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1, InputEvent.CTRL_DOWN_MASK));
 		addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
-				Thread thread = new Thread() { // Make a thread to allow capture screen within 5 seconds
-					public void run() {
-						if (!this_menu_item.isSelected()) {
-							
-							this_menu_item.setSelected(true);
-							setText("5s Capture Mode ON");
-							for (Component comp : getAllComponents(PrismMain.get_main())) {
-								comp.addMouseListener(listener);
-								comp_list.add(comp);
+				if (getText().equals("5s Image Capture")) {			// This is to not create new thread when the old thread is still going
+					
+					String warningText = "You have 5 seconds to \"right click\" anywhere inside Prism.\nPicture will be saved to Desktop.";
+					String ExitOption[] = { "Start now", "Cancel" };
+					int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warningText, "Image Capture",
+							JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(32, 32, "icon_camera.png"), ExitOption, ExitOption[0]);
+					if (response == 0) {
+						Thread thread = new Thread() { // Make a thread to allow capture screen within 5 seconds
+							public void run() {
+								if (!isSelected()) {
+									setSelected(true);
+									setText("5s Image Capture ON");
+									
+									// Get all components - except JMenu
+									for (Component comp : getAllComponents(PrismMain.get_main())) {
+										if (!(comp instanceof JMenu)) comp_list.add(comp);
+									}
+									
+									Object[] comp_listener = new Object[comp_list.size()];
+									for (int i = 0; i < comp_list.size(); i++) {
+										comp_listener[i] = new ArrayList<MouseListener>();
+										for (MouseListener ml: comp_list.get(i).getMouseListeners()) {
+											((ArrayList<MouseListener>) comp_listener[i]).add(ml);
+											 comp_list.get(i).removeMouseListener(ml);		// Get all listeners of each component: save to a list then remove all		--> this Fix is implemented because of java 9
+										}
+										comp_list.get(i).addMouseListener(listener);		// Add the listener which show option for screen capture
+									}
+									
+									try { // sleep for 5 seconds: this is 5 seconds for screen capture
+										TimeUnit.SECONDS.sleep(5);	
+									} catch (InterruptedException e) {
+									}
+									
+									for (int i = 0; i < comp_list.size(); i++) {
+										for (MouseListener ml: (ArrayList<MouseListener>) comp_listener[i]) {
+											 comp_list.get(i).addMouseListener(ml);			// Add all old listeners of each component		--> this Fix is implemented because of java 9
+										}
+										comp_list.get(i).removeMouseListener(listener);		// Remove the listener which show option for screen capture
+									}
+									setSelected(false);
+									setText("5s Image Capture");
+								}
+								this.interrupt();
 							}
-
-							try { // sleep for 5 seconds
-								TimeUnit.SECONDS.sleep(5);	
-							} catch (InterruptedException e) {
-							}
-							
-							this_menu_item.setSelected(false);
-							setText("5s Capture Mode OFF");
-							for (Component comp : comp_list) {
-								comp.removeMouseListener(listener);
-							}
-							
-						}
-						this.interrupt();
+						};
+						thread.start();
 					}
-				};
-				thread.start();
+				}
 			}
 		});
 	}

@@ -34,23 +34,23 @@ age_class, prescription, row_id
 
 FROM output_05_management_details WHERE var_age NOT LIKE age_class
 ----------
---------------------------------------------------------------ACRE-------------------------------------------------------------
+---------------------------------------------------------------AREA------------------------------------------------------------
 
 ----------
-2.0. acres by period, method
+2.0. area by period, method
 SELECT period,
-SUM(CASE WHEN t.method = 'NG' THEN t.grouped_acres END) AS NG_acres,
-SUM(CASE WHEN t.method = 'PB' THEN t.grouped_acres END) AS PB_acres,
-SUM(CASE WHEN t.method = 'GS' THEN t.grouped_acres END) AS GS_acres,
-SUM(CASE WHEN t.method = 'EA' THEN t.grouped_acres END) AS EA_acres,
-SUM(CASE WHEN t.method = 'MS' THEN t.grouped_acres END) AS MS_acres,
-SUM(CASE WHEN t.method = 'BS' THEN t.grouped_acres END) AS BS_acres
+SUM(CASE WHEN t.method = 'NG' THEN t.grouped_area END) AS NG_area,
+SUM(CASE WHEN t.method = 'PB' THEN t.grouped_area END) AS PB_area,
+SUM(CASE WHEN t.method = 'GS' THEN t.grouped_area END) AS GS_area,
+SUM(CASE WHEN t.method = 'EA' THEN t.grouped_area END) AS EA_area,
+SUM(CASE WHEN t.method = 'MS' THEN t.grouped_area END) AS MS_area,
+SUM(CASE WHEN t.method = 'BS' THEN t.grouped_area END) AS BS_area
 FROM
 
 
 (SELECT 
 CAST(var_period AS DECIMAL) as period,
-var_method as method, SUM(var_value) as grouped_acres
+var_method as method, ROUND(SUM(var_value), 1) as grouped_area
 FROM output_05_management_details
 GROUP BY (period || method)
 ORDER BY (period || method)) AS t
@@ -58,24 +58,24 @@ ORDER BY (period || method)) AS t
 
 GROUP BY period
 ----------
-2.1. acres by period, method, forest_status
+2.1. area by period, method, forest_status
 SELECT period,
-SUM(CASE WHEN t.method_status = 'NGE' THEN t.grouped_acres END) AS NG_E_acres,
-SUM(CASE WHEN t.method_status = 'PBE' THEN t.grouped_acres END) AS PB_E_acres,
-SUM(CASE WHEN t.method_status = 'GSE' THEN t.grouped_acres END) AS GS_E_acres,
-SUM(CASE WHEN t.method_status = 'EAE' THEN t.grouped_acres END) AS EA_E_acres,
-SUM(CASE WHEN t.method_status = 'MSE' THEN t.grouped_acres END) AS MS_E_acres,
-SUM(CASE WHEN t.method_status = 'BSE' THEN t.grouped_acres END) AS BS_E_acres,
-SUM(CASE WHEN t.method_status = 'NGR' THEN t.grouped_acres END) AS NG_R_acres,
-SUM(CASE WHEN t.method_status = 'PBR' THEN t.grouped_acres END) AS PB_R_acres,
-SUM(CASE WHEN t.method_status = 'GSR' THEN t.grouped_acres END) AS GS_R_acres,
-SUM(CASE WHEN t.method_status = 'EAR' THEN t.grouped_acres END) AS EA_R_acres
+SUM(CASE WHEN t.method_status = 'NGE' THEN t.grouped_area END) AS NG_E_area,
+SUM(CASE WHEN t.method_status = 'PBE' THEN t.grouped_area END) AS PB_E_area,
+SUM(CASE WHEN t.method_status = 'GSE' THEN t.grouped_area END) AS GS_E_area,
+SUM(CASE WHEN t.method_status = 'EAE' THEN t.grouped_area END) AS EA_E_area,
+SUM(CASE WHEN t.method_status = 'MSE' THEN t.grouped_area END) AS MS_E_area,
+SUM(CASE WHEN t.method_status = 'BSE' THEN t.grouped_area END) AS BS_E_area,
+SUM(CASE WHEN t.method_status = 'NGR' THEN t.grouped_area END) AS NG_R_area,
+SUM(CASE WHEN t.method_status = 'PBR' THEN t.grouped_area END) AS PB_R_area,
+SUM(CASE WHEN t.method_status = 'GSR' THEN t.grouped_area END) AS GS_R_area,
+SUM(CASE WHEN t.method_status = 'EAR' THEN t.grouped_area END) AS EA_R_area
 FROM
 
 
 (SELECT 
 CAST(var_period AS DECIMAL) as period,
-(var_method || var_forest_status) AS method_status, SUM(var_value) as grouped_acres
+(var_method || var_forest_status) AS method_status, ROUND(SUM(var_value), 1) as grouped_area
 FROM output_05_management_details
 GROUP BY (period || method_status)
 ORDER BY (period || method_status)) AS t
@@ -83,19 +83,19 @@ ORDER BY (period || method_status)) AS t
 
 GROUP BY period
 ----------
-2.2. acres by period, method, activity
+2.2. area by period, method, activity
 SELECT period, action_type as activity,
-SUM(CASE WHEN t.method = 'NG' THEN t.grouped_acres END) AS NG_acres,
-SUM(CASE WHEN t.method = 'PB' THEN t.grouped_acres END) AS PB_acres,
-SUM(CASE WHEN t.method = 'GS' THEN t.grouped_acres END) AS GS_acres,
-SUM(CASE WHEN t.method = 'EA' THEN t.grouped_acres END) AS EA_acres,
-SUM(CASE WHEN t.method = 'MS' THEN t.grouped_acres END) AS MS_acres,
-SUM(CASE WHEN t.method = 'BS' THEN t.grouped_acres END) AS BS_acres
+SUM(CASE WHEN t.method = 'NG' THEN t.grouped_area END) AS NG_area,
+SUM(CASE WHEN t.method = 'PB' THEN t.grouped_area END) AS PB_area,
+SUM(CASE WHEN t.method = 'GS' THEN t.grouped_area END) AS GS_area,
+SUM(CASE WHEN t.method = 'EA' THEN t.grouped_area END) AS EA_area,
+SUM(CASE WHEN t.method = 'MS' THEN t.grouped_area END) AS MS_area,
+SUM(CASE WHEN t.method = 'BS' THEN t.grouped_area END) AS BS_area
 FROM
 
 
 (SELECT 
-CAST(var_period AS DECIMAL) as period, action_type, var_method AS method, SUM(var_value) as grouped_acres
+CAST(var_period AS DECIMAL) as period, action_type, var_method AS method, ROUND(SUM(var_value), 1) as grouped_area
 FROM output_05_management_details
 GROUP BY (period || action_type || method)
 ORDER BY (period || action_type  || method)) AS t
@@ -103,24 +103,24 @@ ORDER BY (period || action_type  || method)) AS t
 
 GROUP BY period, activity
 ----------
-2.3. acres by period, method, forest_status, activity
+2.3. area by period, method, forest_status, activity
 SELECT period, action_type as activity,
-SUM(CASE WHEN t.method_status = 'NGE' THEN t.grouped_acres END) AS NG_E_acres,
-SUM(CASE WHEN t.method_status = 'PBE' THEN t.grouped_acres END) AS PB_E_acres,
-SUM(CASE WHEN t.method_status = 'GSE' THEN t.grouped_acres END) AS GS_E_acres,
-SUM(CASE WHEN t.method_status = 'EAE' THEN t.grouped_acres END) AS EA_E_acres,
-SUM(CASE WHEN t.method_status = 'MSE' THEN t.grouped_acres END) AS MS_E_acres,
-SUM(CASE WHEN t.method_status = 'BSE' THEN t.grouped_acres END) AS BS_E_acres,
-SUM(CASE WHEN t.method_status = 'NGR' THEN t.grouped_acres END) AS NG_R_acres,
-SUM(CASE WHEN t.method_status = 'PBR' THEN t.grouped_acres END) AS PB_R_acres,
-SUM(CASE WHEN t.method_status = 'GSR' THEN t.grouped_acres END) AS GS_R_acres,
-SUM(CASE WHEN t.method_status = 'EAR' THEN t.grouped_acres END) AS EA_R_acres
+SUM(CASE WHEN t.method_status = 'NGE' THEN t.grouped_area END) AS NG_E_area,
+SUM(CASE WHEN t.method_status = 'PBE' THEN t.grouped_area END) AS PB_E_area,
+SUM(CASE WHEN t.method_status = 'GSE' THEN t.grouped_area END) AS GS_E_area,
+SUM(CASE WHEN t.method_status = 'EAE' THEN t.grouped_area END) AS EA_E_area,
+SUM(CASE WHEN t.method_status = 'MSE' THEN t.grouped_area END) AS MS_E_area,
+SUM(CASE WHEN t.method_status = 'BSE' THEN t.grouped_area END) AS BS_E_area,
+SUM(CASE WHEN t.method_status = 'NGR' THEN t.grouped_area END) AS NG_R_area,
+SUM(CASE WHEN t.method_status = 'PBR' THEN t.grouped_area END) AS PB_R_area,
+SUM(CASE WHEN t.method_status = 'GSR' THEN t.grouped_area END) AS GS_R_area,
+SUM(CASE WHEN t.method_status = 'EAR' THEN t.grouped_area END) AS EA_R_area
 FROM
 
 
 (SELECT 
 CAST(var_period AS DECIMAL) as period, action_type,
-(var_method || var_forest_status) AS method_status, SUM(var_value) as grouped_acres
+(var_method || var_forest_status) AS method_status, ROUND(SUM(var_value), 1) as grouped_area
 FROM output_05_management_details
 GROUP BY (period || action_type || method_status)
 ORDER BY (period || action_type  || method_status)) AS t
@@ -128,20 +128,20 @@ ORDER BY (period || action_type  || method_status)) AS t
 
 GROUP BY period, activity
 ----------
-2.4. acres by period 1, method,  existing strata  (exact output04)
+2.4. area by period 1, method,  existing strata  (exact output04)
 SELECT strata_id, layer1, layer2, layer3, layer4, layer5, layer6,
-SUM(CASE WHEN t.method_status = 'NGE' THEN t.grouped_acres END) AS NG_E_acres,
-SUM(CASE WHEN t.method_status = 'PBE' THEN t.grouped_acres END) AS PB_E_acres,
-SUM(CASE WHEN t.method_status = 'GSE' THEN t.grouped_acres END) AS GS_E_acres,
-SUM(CASE WHEN t.method_status = 'EAE' THEN t.grouped_acres END) AS EA_E_acres,
-SUM(CASE WHEN t.method_status = 'MSE' THEN t.grouped_acres END) AS MS_E_acres,
-SUM(CASE WHEN t.method_status = 'BSE' THEN t.grouped_acres END) AS BS_E_acres
+SUM(CASE WHEN t.method_status = 'NGE' THEN t.grouped_area END) AS NG_E_area,
+SUM(CASE WHEN t.method_status = 'PBE' THEN t.grouped_area END) AS PB_E_area,
+SUM(CASE WHEN t.method_status = 'GSE' THEN t.grouped_area END) AS GS_E_area,
+SUM(CASE WHEN t.method_status = 'EAE' THEN t.grouped_area END) AS EA_E_area,
+SUM(CASE WHEN t.method_status = 'MSE' THEN t.grouped_area END) AS MS_E_area,
+SUM(CASE WHEN t.method_status = 'BSE' THEN t.grouped_area END) AS BS_E_area
 FROM
 
 
 (SELECT 
 (var_layer1 || var_layer2 || var_layer3 || var_layer4 || var_layer5 || var_layer6) as strata_id,
-var_layer1 as layer1, var_layer2 as layer2, var_layer3 as layer3, var_layer4 as layer4,var_layer5 as layer5, var_layer6 as layer6, (var_method || var_forest_status) AS method_status, var_value as grouped_acres
+var_layer1 as layer1, var_layer2 as layer2, var_layer3 as layer3, var_layer4 as layer4,var_layer5 as layer5, var_layer6 as layer6, (var_method || var_forest_status) AS method_status, ROUND(var_value, 1) as grouped_area
 FROM output_05_management_details
 WHERE CAST(var_period AS DECIMAL) = 1
 GROUP BY (layer1 || layer2 || layer3 || layer4 || layer5 || layer6 || method_status)
@@ -155,18 +155,19 @@ GROUP BY strata_id
 ----------
 3.0. harvested volume by period, method
 SELECT period,
-SUM(CASE WHEN t.method = 'NG' THEN t.volume END) AS NG_volume,
-SUM(CASE WHEN t.method = 'PB' THEN t.volume  END) AS PB_volume,
-SUM(CASE WHEN t.method = 'GS' THEN t.volume  END) AS GS_volume,
-SUM(CASE WHEN t.method = 'EA' THEN t.volume  END) AS EA_volume,
-SUM(CASE WHEN t.method = 'MS' THEN t.volume  END) AS MS_volume,
-SUM(CASE WHEN t.method = 'BS' THEN t.volume  END) AS BS_volume
+SUM(CASE WHEN t.method = 'NG' AND t.volume > 0 THEN t.volume END) AS NG_volume,
+SUM(CASE WHEN t.method = 'PB' AND t.volume > 0 THEN t.volume  END) AS PB_volume,
+SUM(CASE WHEN t.method = 'GS' AND t.volume > 0 THEN t.volume  END) AS GS_volume,
+SUM(CASE WHEN t.method = 'EA' AND t.volume > 0 THEN t.volume  END) AS EA_volume,
+SUM(CASE WHEN t.method = 'MS' AND t.volume > 0 THEN t.volume  END) AS MS_volume,
+SUM(CASE WHEN t.method = 'BS' AND t.volume > 0 THEN t.volume  END) AS BS_volume,
+SUM(CASE WHEN t.volume > 0 THEN t.volume  END) AS total_volume
 FROM
 
 
 (SELECT 
 CAST(var_period AS DECIMAL) as period, var_method as method, 
-SUM(var_value*rmcuft) as volume
+ROUND(SUM(var_value*rmcuft), 1) as volume
 FROM output_05_management_details
 GROUP BY (period || method)
 ORDER BY (period || method)) AS t
@@ -176,23 +177,23 @@ GROUP BY period
 ----------
 3.1. harvested volume by period, method, forest_status
 SELECT period,
-SUM(CASE WHEN t.method_status = 'NGE' THEN t.volume END) AS NG_E_volume,
-SUM(CASE WHEN t.method_status = 'PBE' THEN t.volume END) AS PB_E_volume,
-SUM(CASE WHEN t.method_status = 'GSE' THEN t.volume END) AS GS_E_volume,
-SUM(CASE WHEN t.method_status = 'EAE' THEN t.volume END) AS EA_E_volume,
-SUM(CASE WHEN t.method_status = 'MSE' THEN t.volume END) AS MS_E_volume,
-SUM(CASE WHEN t.method_status = 'BSE' THEN t.volume END) AS BS_E_volume,
-SUM(CASE WHEN t.method_status = 'NGR' THEN t.volume END) AS NG_R_volume,
-SUM(CASE WHEN t.method_status = 'PBR' THEN t.volume END) AS PB_R_volume,
-SUM(CASE WHEN t.method_status = 'GSR' THEN t.volume END) AS GS_R_volume,
-SUM(CASE WHEN t.method_status = 'EAR' THEN t.volume END) AS EA_R_volume
+SUM(CASE WHEN t.method_status = 'NGE' AND t.volume > 0 THEN t.volume END) AS NG_E_volume,
+SUM(CASE WHEN t.method_status = 'PBE' AND t.volume > 0 THEN t.volume END) AS PB_E_volume,
+SUM(CASE WHEN t.method_status = 'GSE' AND t.volume > 0 THEN t.volume END) AS GS_E_volume,
+SUM(CASE WHEN t.method_status = 'EAE' AND t.volume > 0 THEN t.volume END) AS EA_E_volume,
+SUM(CASE WHEN t.method_status = 'MSE' AND t.volume > 0 THEN t.volume END) AS MS_E_volume,
+SUM(CASE WHEN t.method_status = 'BSE' AND t.volume > 0 THEN t.volume END) AS BS_E_volume,
+SUM(CASE WHEN t.method_status = 'NGR' AND t.volume > 0 THEN t.volume END) AS NG_R_volume,
+SUM(CASE WHEN t.method_status = 'PBR' AND t.volume > 0 THEN t.volume END) AS PB_R_volume,
+SUM(CASE WHEN t.method_status = 'GSR' AND t.volume > 0 THEN t.volume END) AS GS_R_volume,
+SUM(CASE WHEN t.method_status = 'EAR' AND t.volume > 0 THEN t.volume END) AS EA_R_volume
 FROM
 
 
 (SELECT 
 CAST(var_period AS DECIMAL) as period,
 (var_method || var_forest_status) AS method_status, 
-SUM(var_value*rmcuft) as volume
+ROUND(SUM(var_value*rmcuft), 1) as volume
 FROM output_05_management_details
 GROUP BY (period || method_status)
 ORDER BY (period || method_status)) AS t
@@ -213,7 +214,7 @@ FROM
 
 (SELECT 
 CAST(var_period AS DECIMAL) as period, action_type, var_method AS method, 
-SUM(var_value*rmcuft) as volume
+ROUND(SUM(var_value*rmcuft), 1) as volume
 FROM output_05_management_details
 GROUP BY (period || action_type || method)
 ORDER BY (period || action_type  || method)) AS t
@@ -241,7 +242,7 @@ FROM
 (SELECT 
 CAST(var_period AS DECIMAL) as period, action_type,
 (var_method || var_forest_status) AS method_status, 
-SUM(var_value*rmcuft) as volume
+ROUND(SUM(var_value*rmcuft), 1) as volume
 FROM output_05_management_details
 GROUP BY (period || action_type || method_status)
 ORDER BY (period || action_type  || method_status)) AS t
@@ -251,8 +252,8 @@ GROUP BY period, activity
 HAVING 
 NG_E_volume > 0 OR PB_E_volume  > 0 OR GS_E_volume  > 0 OR EA_E_volume  > 0 OR MS_E_volume  > 0 OR BS_E_volume  > 0 OR NG_R_volume  > 0 OR PB_R_volume  > 0 OR GS_R_volume  > 0 OR EA_R_volume  > 0
 ----------
-3.4. positive harvested volume - Existing & Regeneration strata
-SELECT var_layer1 as layer1, var_layer2 as layer2, var_layer3 as layer3, var_layer4 as layer4,var_layer5 as layer5, var_layer6 as layer6, var_forest_status as forest_status, age_class as forest_age, var_period as period, prescription, row_id, var_method as method, action_type as activity, var_value as acres, var_value*rmcuft as volume
+3.4. harvested volume by attributes of Existing & Regeneration strata
+SELECT var_layer1 as layer1, var_layer2 as layer2, var_layer3 as layer3, var_layer4 as layer4,var_layer5 as layer5, var_layer6 as layer6, var_forest_status as forest_status, age_class as forest_age, var_period as period, prescription, row_id, var_method as method, action_type as activity, ROUND(var_value, 1) as area, ROUND(var_value*rmcuft, 1) as volume
 
 FROM output_05_management_details
 
@@ -260,8 +261,8 @@ WHERE CAST(volume AS DECIMAL) > 0
 
 ORDER BY forest_status, CAST(period AS DECIMAL), method, activity, layer1, layer2, layer3, layer4, layer5, layer6
 ----------
-3.5. positive harvested volume - Existing strata
-SELECT var_layer1 as layer1, var_layer2 as layer2, var_layer3 as layer3, var_layer4 as layer4,var_layer5 as layer5, var_layer6 as layer6, var_forest_status as forest_status, age_class as forest_age, var_period as period, prescription, row_id, var_method as method, action_type as activity, var_value as acres, var_value*rmcuft as volume
+3.5. harvested volume by attributes of Existing strata
+SELECT var_layer1 as layer1, var_layer2 as layer2, var_layer3 as layer3, var_layer4 as layer4,var_layer5 as layer5, var_layer6 as layer6, var_forest_status as forest_status, age_class as forest_age, var_period as period, prescription, row_id, var_method as method, action_type as activity, ROUND(var_value, 1) as area, ROUND(var_value*rmcuft, 1) as volume
 
 FROM output_05_management_details
 
@@ -269,8 +270,8 @@ WHERE CAST(volume AS DECIMAL) > 0 AND forest_status = 'E'
 
 ORDER BY forest_status, CAST(period AS DECIMAL), method, activity, layer1, layer2, layer3, layer4, layer5, layer6
 ----------
-3.6. positive harvested volume - Regeneration strata
-SELECT var_layer1 as layer1, var_layer2 as layer2, var_layer3 as layer3, var_layer4 as layer4,var_layer5 as layer5, var_layer6 as layer6, var_forest_status as forest_status, age_class as forest_age, var_period as period, prescription, row_id, var_method as method, action_type as activity, var_value as acres, var_value*rmcuft as volume
+3.6. harvested volume by attributes of Regeneration strata
+SELECT var_layer1 as layer1, var_layer2 as layer2, var_layer3 as layer3, var_layer4 as layer4,var_layer5 as layer5, var_layer6 as layer6, var_forest_status as forest_status, age_class as forest_age, var_period as period, prescription, row_id, var_method as method, action_type as activity, ROUND(var_value, 1) as area, ROUND(var_value*rmcuft, 1) as volume
 
 FROM output_05_management_details
 
@@ -281,15 +282,15 @@ ORDER BY forest_status, CAST(period AS DECIMAL), method, activity, layer1, layer
 -----------------------------------------------------------ACTIVITY---------------------------------------------------------
 
 ----------
-4.0. positive activity (full details, excluding "no-action" activity)
+4.0. positive activity (excluding "no-action", full details)
 SELECT *
 
 FROM output_05_management_details
 
 WHERE action_type NOT LIKE 'no-action'
 ----------
-4.1. positive activity (less details, excluding "no-action" activity)
-SELECT var_layer1 as layer1, var_layer2 as layer2, var_layer3 as layer3, var_layer4 as layer4,var_layer5 as layer5, var_layer6 as layer6, var_forest_status as forest_status, age_class as forest_age, var_period as period, prescription, row_id, var_method as method, action_type as activity, var_value as acres
+4.1. positive activity (excluding "no-action", less details)
+SELECT var_layer1 as layer1, var_layer2 as layer2, var_layer3 as layer3, var_layer4 as layer4,var_layer5 as layer5, var_layer6 as layer6, var_forest_status as forest_status, age_class as forest_age, var_period as period, prescription, row_id, var_method as method, action_type as activity, ROUND(var_value, 1) as area
 
 FROM output_05_management_details
 

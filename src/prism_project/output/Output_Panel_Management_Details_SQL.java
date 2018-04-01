@@ -16,6 +16,7 @@
  ******************************************************************************/
 package prism_project.output;
 
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -23,6 +24,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -40,10 +42,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.JToolBar;
+import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 
 import net.coderazzi.filters.gui.AutoChoices;
 import net.coderazzi.filters.gui.TableFilterHeader;
@@ -55,8 +62,11 @@ import prism_convenience_class.ToolBarWithBgImage;
 import prism_database.Setting;
 
 public class Output_Panel_Management_Details_SQL extends JLayeredPane {
-	private JTable database_table;
+	private File output_05_management_details_file;
 	private String conn_path;
+	
+	private JTable database_table;
+	private DefaultTableModel model;
 	
 	private PrismTitleScrollPane database_table_scrollpane;
 	private JButton btnSwitch;
@@ -64,10 +74,13 @@ public class Output_Panel_Management_Details_SQL extends JLayeredPane {
 	private Boolean is_filter_visible;
 	
 	
-	public Output_Panel_Management_Details_SQL(JTable table, String conn_path, JButton SQL_link_button) {
+	public Output_Panel_Management_Details_SQL(File output_05_management_details_file, String[] columnNames, Object[][] data, JButton SQL_link_button) {
 		// Some set up -------------------------------------------------------------------------------------------------------
-		this.database_table = table;
-		this.conn_path = conn_path;
+		this.output_05_management_details_file = output_05_management_details_file;
+		set_up_database_table(columnNames, data);
+		conn_path = "jdbc:sqlite:" + output_05_management_details_file.getParentFile().getAbsolutePath() + "/database.db";
+		
+		
 		database_table_scrollpane = new PrismTitleScrollPane("All records of the optimal solution", "CENTER", database_table);
 		database_table_scrollpane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		database_table_scrollpane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -153,6 +166,61 @@ public class Output_Panel_Management_Details_SQL extends JLayeredPane {
 		c.weightx = 1;
 	    c.weighty = 1;
 	    add(database_table_scrollpane, c);				
+	}
+	
+	
+	
+	public void set_up_database_table(String[] columnNames, Object[][] data) {
+		// Setup the table--------------------------------------------------------------------------------
+		// create database_table for SQL Mode
+		model = new DefaultTableModel(data, columnNames);
+		database_table = new JTable(model) {
+			@Override			//These override is to make the width of the cell fit all contents of the cell
+			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+				// For the cells in table								
+				Component component = super.prepareRenderer(renderer, row, column);
+				int rendererWidth = component.getPreferredSize().width;
+				TableColumn tableColumn = getColumnModel().getColumn(column);
+				int maxWidth = Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth());
+				
+				// For the column names
+				TableCellRenderer renderer2 = database_table.getTableHeader().getDefaultRenderer();	
+				Component component2 = renderer2.getTableCellRendererComponent(database_table,
+			            tableColumn.getHeaderValue(), false, false, -1, column);
+				maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
+				
+				tableColumn.setPreferredWidth(maxWidth);
+				return component;
+			}
+			
+			DefaultTableCellRenderer renderRight = new DefaultTableCellRenderer();
+			{ // initializer block
+		        renderRight.setHorizontalAlignment(SwingConstants.RIGHT);	// set alignment of values in the database_table to the right side
+		    }
+			@Override
+		    public TableCellRenderer getCellRenderer (int row, int column) {
+				renderRight.setHorizontalAlignment(SwingConstants.RIGHT);		
+		        return renderRight;
+		    }
+		};
+		
+//		// set Alignment for cells --> another method, this could not capture dynamic column changes
+//        DefaultTableCellRenderer r = new DefaultTableCellRenderer() {
+//            @Override
+//            public Component getTableCellRendererComponent(JTable table, Object
+//			value, boolean isSelected, boolean hasFocus, int row, int column) {
+//				super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+//				setHorizontalAlignment(JLabel.RIGHT);
+//                return this;
+//            }
+//        };
+//		for (int i = 0; i < database_table.getColumnCount(); i++) {
+//			database_table.getColumnModel().getColumn(i).setCellRenderer(r);
+//		}
+								
+		database_table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		database_table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		database_table.setDefaultEditor(Object.class, null);	// make the data un-editable
 	}
 	
 	

@@ -18,14 +18,17 @@ package prism_convenience_class;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Paint;
 
 import javax.swing.ImageIcon;
 import javax.swing.JTextArea;
+import javax.swing.UIManager;
 import javax.swing.text.DefaultCaret;
 
-public class PrismTextAreaReadMe extends JTextArea{
+public class PrismTextAreaReadMe extends JTextArea {
 	private String png;
 	private int width;
 	private int height;
@@ -35,8 +38,13 @@ public class PrismTextAreaReadMe extends JTextArea{
 		this.width = width;
 		this.height = height;
 		
-		setBackground(ColorUtil.makeTransparent(Color.BLACK, 40));
-		setForeground(ColorUtil.makeTransparent(Color.BLACK, 255));
+		if (UIManager.getLookAndFeel().getName().equals("Nimbus"))  {
+			setBackground(ColorUtil.makeTransparent(Color.BLACK, 40));
+			setForeground(ColorUtil.makeTransparent(Color.BLACK, 255));
+		} else {	// This is because the transparent fails when changing look and feel which makes the text area has problem with color painted
+			setBackground(Color.LIGHT_GRAY);
+			setForeground(Color.BLACK);
+		}
 		setLineWrap(true);
 		setWrapStyleWord(true);
 		DefaultCaret caret = (DefaultCaret) this.getCaret();
@@ -46,6 +54,15 @@ public class PrismTextAreaReadMe extends JTextArea{
 	@Override
 	protected void paintComponent(Graphics g) {					
 		Graphics2D g2d = (Graphics2D) g.create();
+		
+		// Paint gradient color
+		final int R = 240;
+		final int G = 240;
+		final int B = 240;
+		Paint p = new GradientPaint(0.0f, 0.0f, new Color(R, G, B, 255), 0.0f, getHeight(), new Color(130, 220, 240, 255), true);
+		g2d.setPaint(p);
+		g2d.fillRect(0, 0, getWidth(), getHeight());
+		
 		// Fill the background, this is VERY important. Fail to do this and you will have major problems
 		g2d.setColor(getBackground());
 		g2d.fillRect(0, 0, getWidth(), getHeight());

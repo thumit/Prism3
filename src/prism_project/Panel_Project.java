@@ -38,6 +38,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -56,7 +58,6 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -119,7 +120,7 @@ public class Panel_Project extends JLayeredPane {
 	
 	private int rowCount, colCount;
 	private String[] columnNames;
-	private JTable table, database_table;
+	private JTable table;
 	private PrismTableModel model;
 	private Object[][] data;	
 	private TableFilterHeader filterHeader = new TableFilterHeader();
@@ -128,6 +129,9 @@ public class Panel_Project extends JLayeredPane {
 	private PrismTextAreaReadMe readme;
 	private Output_Panel_Management_Details_NOSQL management_details_NOSQL_panel;
 	private Output_Panel_Management_Details_SQL management_details_SQL_panel;
+	
+	private ExecutorService executor = Executors.newSingleThreadExecutor();
+	private Thread current_mouse_click_thread;
 	
 	public Panel_Project(String currentProject) {
 		
@@ -196,8 +200,34 @@ public class Panel_Project extends JLayeredPane {
 //						PrismMain.get_main().repaint();
 //					}
 //				}
-//				System.gc();	// collect memory				
-				doMousePressed(e);
+//				System.gc();	// collect memory		
+				
+				
+				
+				try {
+					executor.shutdownNow();
+				} catch (Exception e1) {
+					System.err.println("Thread shut down fails - " + e1.getClass().getName() + ": " + e1.getMessage());
+				}
+				executor = Executors.newSingleThreadExecutor();
+				executor.submit(() -> {
+					doMousePressed(e);
+				});
+				
+				
+				
+//				if (current_mouse_click_thread != null && current_mouse_click_thread.isAlive()) {
+//					current_mouse_click_thread.interrupt();		// stop the current running thread
+//					current_mouse_click_thread.stop();			// NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE : THIS IS DANGEROUS WAY TO STOP THREAD: DEPRICATED
+//				}
+//				
+//				current_mouse_click_thread = new Thread() {		// new thread
+//					public void run() {
+//						doMousePressed(e);
+//						this.interrupt();
+//					}
+//				};
+//				current_mouse_click_thread.start();
 			}
 		});
 		
@@ -268,15 +298,7 @@ public class Panel_Project extends JLayeredPane {
 		btnEditRun.setToolTipText("Start Editing");
 		btnEditRun.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_edit.png"));
 		btnEditRun.addActionListener(e -> {
-			Thread thread = new Thread() {	// Create a thread so JFrame will not be frozen
-				public void run() {
-					edit_Runs();
-					PrismMain.get_Prism_DesktopPane().getSelectedFrame().revalidate();
-					PrismMain.get_Prism_DesktopPane().getSelectedFrame().repaint();
-					this.interrupt();
-				}
-			};
-			thread.start();
+			edit_Runs();
 		});
 		projectToolBar.add(btnEditRun);
 		
@@ -383,12 +405,11 @@ public class Panel_Project extends JLayeredPane {
 				if (currentLevel == 3) {	// Selected node is an Input or Output						
 					currentInputFile = selectedNode.getUserObject().toString();	// Get the URL of the current selected node			
 					currentRun = selectedNode.getParent().toString();    // Get the parent node which is the Run that contains the selected InputFile      
-									
+					File file = new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/" + currentInputFile);	
+					
 					try {
 						String delimited = "\t";		// tab delimited
-						File file = new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/" + currentInputFile);
-						List<String> list;
-						list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);			
+						List<String> list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);			
 						String[] a = list.toArray(new String[list.size()]);					
 														
 						// Setup the table--------------------------------------------------------------------------------
@@ -398,17 +419,16 @@ public class Panel_Project extends JLayeredPane {
 							colCount = columnNames.length;
 							data = new Object[rowCount][colCount];
 					
-						
-							// Populate the data matrix
+							// populate the data matrix
 							for (int row = 0; row < rowCount; row++) {
+//								data[row] = a[row + 1].split(delimited);	//tab delimited	
 								String[] rowValue = a[row + 1].split(delimited);	//tab delimited	
 								for (int col = 0; col < colCount; col++) {
 									data[row][col] = (col < rowValue.length) ? rowValue[col] : "";
 								}	
 							}	
 							
-							
-							// Create a table
+							// create a table
 							model = new PrismTableModel(rowCount, colCount, data, columnNames);
 							table = new JTable(model) {
 								@Override			//These override is to make the width of the cell fit all contents of the cell
@@ -434,42 +454,10 @@ public class Panel_Project extends JLayeredPane {
 							renderer.setHorizontalAlignment(SwingConstants.LEFT);		// Set alignment of values in the table to the left side
 							table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 				     		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-
-				     		
-							// Create a table for SQL Mode
-							if (currentInputFile.equals("output_05_management_details.txt")) {	
-								DefaultTableModel model = new DefaultTableModel(data, columnNames);
-								database_table = new JTable(model) {
-									@Override			//These override is to make the width of the cell fit all contents of the cell
-									public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
-										// For the cells in table								
-										Component component = super.prepareRenderer(renderer, row, column);
-										int rendererWidth = component.getPreferredSize().width;
-										TableColumn tableColumn = getColumnModel().getColumn(column);
-										int maxWidth = Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth());
-										
-										// For the column names
-										TableCellRenderer renderer2 = table.getTableHeader().getDefaultRenderer();	
-										Component component2 = renderer2.getTableCellRendererComponent(table,
-									            tableColumn.getHeaderValue(), false, false, -1, column);
-										maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
-										
-										tableColumn.setPreferredWidth(maxWidth);
-										return component;
-									}
-								};
-														
-								DefaultTableCellRenderer renderer2 = (DefaultTableCellRenderer) database_table.getDefaultRenderer(Object.class);
-								renderer2.setHorizontalAlignment(SwingConstants.LEFT);		// set alignment of values in the database_table to the left side
-								database_table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-								database_table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-								database_table.setDefaultEditor(Object.class, null);	// make the data un-editable
-							}
 						} catch (Exception e2) {
 							System.err.println(e2.getClass().getName() + ": " + e2.getMessage());
 							System.out.println("Fail to create table data. Often this is only when Readme.txt has nothing");
 							table = new JTable();
-							database_table = new JTable();
 						} finally {
 							list = null;	// clear memory after reading file	
 							a = null;		// clear memory after reading file
@@ -481,63 +469,6 @@ public class Panel_Project extends JLayeredPane {
 							Output_Panel_Management_Overview chart_panel = new Output_Panel_Management_Overview(table, data);
 							scrollPane_Right.setViewportView(chart_panel);
 						} else if (currentInputFile.equals("output_05_management_details.txt")) {							
-//							JPanel tempPanel = new JPanel(new GridBagLayout());
-//							GridBagConstraints c = new GridBagConstraints();
-//							c.fill = GridBagConstraints.BOTH;
-//																			
-//							JButton runStatButton = new JButton(IconHandle.get_scaledImageIcon_replicate(128, 128, "light.gif"));
-//							runStatButton.setBackground(Color.WHITE);
-//							runStatButton.setHorizontalTextPosition(JButton.CENTER);
-//							runStatButton.setVerticalTextPosition(JButton.TOP);
-//							runStatButton.setFont(new Font(null, Font.BOLD, 15));
-//							runStatButton.setText("        Loading Query Mode  -  Click to stop        ");
-//							runStatButton.addActionListener(new ActionListener() {
-//								@Override
-//								public void actionPerformed(ActionEvent e) {
-////									thread_management_details.stop();			// NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE : THIS IS DANGEROUS WAY TO STOP THREAD: DEPRICATED	
-//									scrollPane_Right.setViewportView(management_details_SQL_panel);
-//								}						
-//							});
-//							
-//							JTextArea tempArea = new JTextArea();
-//							tempArea.setFocusable(false);
-//							tempArea.setOpaque(false);
-//							tempArea.setEditable(false);
-//							DefaultCaret caret = (DefaultCaret) tempArea.getCaret();
-//							caret.setUpdatePolicy(DefaultCaret.OUT_BOTTOM);		
-//							tempArea.append("\n \n");
-//							tempArea.append("It takes time reading database to enter Query Mode. Example:");	
-//							tempArea.append("\n \n");
-//							tempArea.append("CNPZ: approximately 16,000 rows & 100 columns: 5 seconds");					
-//							tempArea.append("\n \n");	
-//							tempArea.append("CGNF: approximately 40,000 rows & 60 columns: 25 seconds");
-//							tempArea.append("\n \n");	
-//							tempArea.append("Plus time loading Preset Filter: 1 - 10 seconds ");
-//							tempArea.append("\n \n");
-//							tempArea.append("Please be patient...");
-//														
-//							c.gridx = 0;
-//							c.gridy = 0;
-//							c.gridheight = 2;
-//							c.weightx = 1;
-//							c.weighty = 1;	
-//							tempPanel.add(new JScrollPane(table), c);
-//									
-//							c.gridx = 1;
-//							c.gridy = 0;
-//							c.gridheight = 1;
-//							c.weightx = 0;
-//							c.weighty = 0;	
-//							tempPanel.add(runStatButton, c);
-//							
-//							c.gridx = 1;
-//							c.gridy = 1;
-//							c.gridheight = 1;
-//							c.weightx = 0;
-//							c.weighty = 1;	
-//							tempPanel.add(tempArea, c);
-							
-							
 							// 2 links buttons (to clear bug 20). This is to remove all static definitions (static would make display fails when multiple projects are open)
 							JButton SQL_link_button = new JButton();
 							SQL_link_button.addActionListener(new ActionListener() {
@@ -556,14 +487,13 @@ public class Panel_Project extends JLayeredPane {
 							
 							management_details_SQL_panel = null;
 							management_details_NOSQL_panel = null;
-							String conn_path = "jdbc:sqlite:" + currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/database.db";
-							management_details_SQL_panel = new Output_Panel_Management_Details_SQL(database_table, conn_path, SQL_link_button);
+							management_details_SQL_panel = new Output_Panel_Management_Details_SQL(file, columnNames, data, SQL_link_button);
 							scrollPane_Right.setViewportView(management_details_SQL_panel);
 							
 							management_details_SQL_panel.get_btnSwitch().setEnabled(false);
 						    Thread thread_management_details = new Thread() {			// Make a thread for output5
 								public void run() {
-									File file_database = new File(conn_path);
+									File file_database = new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/database.db");
 									Read_Database read_database = PrismMain.get_databases_linkedlist().return_read_database_if_exist(file_database);
 									if (read_database == null) {
 										read_database = new Read_Database(file_database);	// Read the database
@@ -573,7 +503,7 @@ public class Panel_Project extends JLayeredPane {
 											System.out.println(rr.file_database.getAbsolutePath() + rr.last_modify);
 										}
 									}
-									management_details_NOSQL_panel = new Output_Panel_Management_Details_NOSQL(currentProjectFolder, currentRun, table, data, model, NoSQL_link_button);
+									management_details_NOSQL_panel = new Output_Panel_Management_Details_NOSQL(executor, currentProjectFolder, currentRun, table, data, model, NoSQL_link_button);
 									management_details_SQL_panel.get_btnSwitch().setEnabled(true);
 									this.interrupt();
 								}
@@ -585,7 +515,7 @@ public class Panel_Project extends JLayeredPane {
 							scrollPane_Right.setViewportView(chart_panel);
 						} else if (currentInputFile.equals("readme.txt")) {		// show the file as text area
 				 			readme = new PrismTextAreaReadMe("icon_tree.png", 70, 70);
-				 			readme.setBackground(ColorUtil.makeTransparent(Color.WHITE, 255));
+//				 			readme.setBackground(ColorUtil.makeTransparent(Color.WHITE, 255));
 				 			readme.setEditable(false);
 							try {
 								FileReader reader = new FileReader(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/" + currentInputFile);

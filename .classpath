@@ -14,5 +14,6 @@
 	<classpathentry kind="lib" path="resources"/>
 	<classpathentry kind="lib" path="C:/prism documents/Setup/jfreechart-1.0.19/lib/jcommon-1.0.23.jar"/>
 	<classpathentry kind="lib" path="C:/prism documents/Setup/cplex_wrapper/prismcplex.jar"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

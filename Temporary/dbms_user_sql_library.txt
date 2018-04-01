@@ -16,3 +16,6 @@ FROM output_05_management_details
 INNER JOIN yield_tables
 ON output_05_management_details.prescription = yield_tables.prescription AND output_05_management_details.row_id = yield_tables.row_id
 ----------
+vacuum
+vacuum
+----------

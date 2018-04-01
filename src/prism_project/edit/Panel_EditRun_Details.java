@@ -59,6 +59,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
+import javax.swing.DefaultListSelectionModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -85,11 +86,13 @@ import javax.swing.RowFilter;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.ToolTipManager;
+import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.plaf.basic.BasicComboBoxRenderer;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
@@ -103,9 +106,9 @@ import prism_convenience_class.IconHandle;
 import prism_convenience_class.MixedRangeCombinationIterable;
 import prism_convenience_class.PrismGridBagLayoutHandle;
 import prism_convenience_class.PrismTableModel;
+import prism_convenience_class.PrismTextAreaReadMe;
 import prism_convenience_class.PrismTitleScrollPane;
 import prism_convenience_class.TableColumnsHandle;
-import prism_convenience_class.PrismTextAreaReadMe;
 import prism_convenience_class.ToolBarWithBgImage;
 import prism_project.data_process.Read_Database;
 import prism_root.PrismMain;
@@ -774,7 +777,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 		data_overview[1][0] = "model strata   --o--   model acres";
 		data_overview[2][0] = "highlighted strata   --o--   highlighted acres";
 		data_overview[3][0] = "prescriptions in your database";
-		data_overview[4][0] = "existing strata without NG_E prescriptions";
+		data_overview[4][0] = "existing strata without NG_E_0 prescriptions";
 		
 		
 		
@@ -2973,7 +2976,58 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			combo2.setSelectedItem((double) 0);
 			//-----------------------------------------------------						
 			label3 = new JLabel("Solver for optimization");
-			combo3 = new JComboBox();
+			class DisabledJComboBoxRenderer extends BasicComboBoxRenderer {	// I played a trick with this class by changing Enabled List to Disabled List, The reason is to show my desired color for items in the combo boxes.
+				private final ListSelectionModel disabledItems;
+
+				// Constructs a new renderer for a JComboBox which enables/disables items based upon the parameter model.
+				public DisabledJComboBoxRenderer(ListSelectionModel disabled) {
+					super();
+					this.disabledItems = disabled;
+				}
+
+				// Custom implementation to color items as enabled or disabled.
+				@Override
+				public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+					Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+
+					if (disabledItems.isSelectedIndex(index)) { // not enabled
+						if (isSelected) {
+							c.setBackground(UIManager.getColor("Tree.selectionBackground"));	// this works to have the desired color
+							c.setForeground(Color.RED);
+						} else {
+							c.setBackground(super.getBackground());
+							c.setForeground(Color.LIGHT_GRAY);
+						}
+					} else {
+						if (isSelected) {
+							c.setBackground(UIManager.getColor("Tree.selectionBackground"));	// this works to have the desired color
+							c.setForeground(Color.WHITE);
+						} else {
+							c.setBackground(super.getBackground());
+							c.setForeground(Color.BLACK);
+						}
+					}
+					
+					if (String.valueOf(value).equals("CPLEX")) {
+						list.setToolTipText("active when users have CPLEX jar and dll files successfully set up. PRISM provides all outputs of the optimal solution");
+					} else if (String.valueOf(value).equals("LPSOLVE")) {
+						list.setToolTipText("active. PRISM provides only first 4 outputs of the optimal solution");
+					} else {
+						list.setToolTipText("inactive. " + String.valueOf(value) + " will be integrated in future PRISM updates");
+					}
+					
+					return c;
+				}
+			}
+
+			combo3 = new JComboBox() {
+				@Override
+				public void setSelectedIndex(int index) {
+					if (index <= 1) {
+						super.setSelectedIndex(index);	// 0 and 1 are Cplex and Lpsolve, if other solver is selected --> do not change the current selected item
+					}
+				}
+			};
 			combo3.addItem("CPLEX");
 			combo3.addItem("LPSOLVE");
 			combo3.addItem("CBC");
@@ -2983,6 +3037,10 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 			combo3.addItem("SPCIP");
 			combo3.addItem("SOPLEX");
 			combo3.addItem("XPRESS");	
+			DefaultListSelectionModel model = new DefaultListSelectionModel();
+			model.addSelectionInterval(2, 8);	// These are disabled items in the Combo Box
+			DisabledJComboBoxRenderer disableRenderer = new DisabledJComboBoxRenderer(model);
+			combo3.setRenderer(disableRenderer);	
 			//-----------------------------------------------------
 			label4 = new JLabel("Maximum solving time (minutes)");
 			spin4 = new JSpinner (new SpinnerNumberModel(20, 0, 60, 1));

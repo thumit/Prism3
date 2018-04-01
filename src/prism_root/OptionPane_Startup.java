@@ -48,13 +48,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 
 import prism_convenience_class.FilesHandle;
 import prism_convenience_class.IconHandle;
 import prism_convenience_class.PrismGridBagLayoutHandle;
-import prism_convenience_class.PrismTitleScrollPane;
 import prism_convenience_class.PrismTextAreaReadMe;
+import prism_convenience_class.PrismTitleScrollPane;
 
 public class OptionPane_Startup extends JOptionPane {
 
@@ -73,12 +74,12 @@ public class OptionPane_Startup extends JOptionPane {
 		
 		File memory_file = new File(FilesHandle.get_temporaryFolder() + "/prism_memory.txt");	// Store the last time MAx Memory is saved by users: just an integer number
 		int previous_max_memory = 0;
-		String previous_project_name = null;
+		String previous_project_name = "";
 		try {		
 			List<String> list;
 			list = Files.readAllLines(Paths.get(memory_file.getAbsolutePath()), StandardCharsets.UTF_8);			
 			previous_max_memory = Integer.valueOf(list.get(0));
-			previous_project_name = (list.size() == 2) ? list.get(1) : null;
+			previous_project_name = list.get(1);
 		} catch (Exception e) {
 			System.out.println("File prism_memory.txt does not exists");
 			previous_max_memory = 1;
@@ -98,7 +99,7 @@ public class OptionPane_Startup extends JOptionPane {
 				System.exit(0);
 			}
 		} else {			
-			if (previous_project_name == null) {						
+			if (previous_project_name.equals("")) {						
 				PrismMain.get_main().setVisible(false);
 				String ExitOption[] = {"Start","Exit"};
 				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), new ScrollPane_Popup(jar_file, memory_file), "Welcome",
@@ -110,10 +111,13 @@ public class OptionPane_Startup extends JOptionPane {
 					System.exit(0);
 				}
 				PrismMain.get_main().setVisible(true);
+			} else if (previous_project_name.equals("after change font")) {
+				restart.delete();
+				Memory_File.create_memory_file(memory_file, previous_max_memory, "");
 			} else {	// When people press the collect memory button in the Panel_Project --> don't need to show the interface to change max memory, open the project instead
 				restart.delete();
-				PrismMain.get_main().createNewJInternalFrame(previous_project_name);
-				Memory_File.create_memory_file(memory_file, previous_max_memory, null);
+				PrismMain.get_main().create_project_internal_frame(previous_project_name);
+				Memory_File.create_memory_file(memory_file, previous_max_memory, "");
 			}
 		}	
 	}
@@ -132,20 +136,10 @@ public class OptionPane_Startup extends JOptionPane {
 				previous_max_memory = Integer.valueOf(list.get(0));
 			} catch (Exception ex) {
 				System.out.println("File prism_memory.txt does not exists");
+				previous_max_memory = 1;
 			}
 			
-			if (memory_file.exists()) {
-				memory_file.delete();		// Delete the old file before writing new contents
-			}
-			
-			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(memory_file))) {			
-				fileOut.write(String.valueOf(previous_max_memory));		
-				fileOut.write( "\n" + currentProject);
-				fileOut.close();
-			} catch (IOException e) {
-				System.err.println(e.getClass().getName() + ": " + e.getMessage());
-			} 		
-			
+			Memory_File.create_memory_file(memory_file, previous_max_memory, currentProject);		
 			Set_Memory();
 		}
 	}
@@ -196,6 +190,7 @@ class ScrollPane_Popup extends JScrollPane {
 		//-----------------------------------------------------------------------------------------		
 		PrismTextAreaReadMe info_TextArea = new PrismTextAreaReadMe("icon_tree.png", 75, 75);	
 		info_TextArea.setEditable(false);
+		info_TextArea.setHighlighter(null);
 		// Get total computer memory in bytes
 		MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
 		Object attribute = "";
@@ -238,7 +233,7 @@ class ScrollPane_Popup extends JScrollPane {
 				if (jar_file.getName().endsWith(".jar")) {	// If not running in Eclipse --> restart
 					try {
 						String new_max_heap = combo.getSelectedItem().toString();
-						Memory_File.create_memory_file(memory_file, Integer.valueOf(new_max_heap), null);
+						Memory_File.create_memory_file(memory_file, Integer.valueOf(new_max_heap), "");
 						String command_to_execute = "javaw -Xmx" + new_max_heap + "G -XX:+UseG1GC -jar " + jar_file.getName();
 						Runtime.getRuntime().exec(command_to_execute, null, new File(FilesHandle.get_workingLocation()));
 					} catch (IOException ex) {
@@ -304,7 +299,8 @@ class Memory_File {
 		
 		try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(memory_file))) {			
 			fileOut.write(String.valueOf(max_heap));		
-			if (previous_project_name != null) fileOut.write( "\n" + previous_project_name);	
+			fileOut.newLine();		fileOut.write(previous_project_name);
+			fileOut.newLine();		fileOut.write(UIManager.getLookAndFeelDefaults().getFont("MenuBar.font").getFontName() + "\t");	fileOut.write(String.valueOf(UIManager.getLookAndFeelDefaults().getFont("MenuBar.font").getSize()));
 			fileOut.close();
 		} catch (IOException e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());

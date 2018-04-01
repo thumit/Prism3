@@ -110,8 +110,7 @@ public class Setting {
 			}
 		});
 		popup_scroll.setBorder(null);
-		popup_scroll.setPreferredSize(new Dimension((int) (PrismMain.get_main().getWidth() * 0.8),
-				(int) (PrismMain.get_main().getHeight() * 0.8)));
+		popup_scroll.setPreferredSize(new Dimension((int) (PrismMain.get_main().getWidth() * 0.8), (int) (PrismMain.get_main().getHeight() * 0.8)));
 		popup_scroll.setViewportView(query_panel);
 
 		String ExitOption[] = { "Exit" };

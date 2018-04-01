@@ -741,3 +741,36 @@ All changes in this block are associated with PrismAlpha1.0.32.jar, Prism Formul
 334. Add some queries for output_05 (populate output_04 and more)
 All changes in this block are associated with PrismAlpha1.0.33.jar, Prism Formulation 03.docx, Prism Database 03.docx
 --------------------------------------------------------------------------
+
+335. Queries in output_05 System Library: 
+	- acres --> area
+	- Round to 1 digit after the dot
+	- show only value > 0
+	- table has RIGHT alignment
+	- move the codes to create database _table from Panel_Projects --> Output_Panel_Management_Details_SQL (set_up_database_table()), also simplify the class call
+336. Put DomousePressed on Project window to thread again, but thread now is submitted by ExecutorService
+337. Inject executor to the class Output_Panel_Management_Details_NOSQL: reason is when querying results, then click on other tables in the project tree --> the thread to get_results is still going on. We need it stopped by injecting executor inside this class.
+338. Remove thread when click Edit Runs in Panel_Projects (not necessary using thread here)
+339. Rewrite Executor Service in Panel_EditRun (simplifier, and use 4 threads in the Pool)
+340. Combobox in "General Inputs" GUI will now have only CPLEX & LPSOLVE selectable, the other inactive solvers are faded in gray. Tool tips are also shown
+341. For the query_value in NOSQL mode (output_05) --> set alignment to RIGHT and accuracy to 1 digit after the dot
+342. PrismTextAreaReadMe: Fix the bug of failed color JTextArea when changing Look and Feel --> by using transparent color only for Nibus, but not others LAFs.
+343. Activate line 179 in PrismMain class to fix the bug when clicking File --> Open fails right after changing Look and Feel when running PRISM in Eclipse IDE
+344. Fix Screen Capture (Note 5 in issue 18 in BitBucket) by:
+	- removing all listeners of all components in the GUI
+	- add those listeners back after 5s capture is done
+	- add an if then so another Screen Capture thread will not start if the previous thread is still not completed
+345. Fix Font Change (Note 4 in issue 18 in BitBucket) by:
+	- Add 1 more line in the file prism_memory (3rd line) with Font Name and Font Size, separated by tab
+	- Change the codes in PrismMain to load the Font in the above file when starting Prism runnable jar
+	- Change the codes in OptionPane_Startup to capture the new line set up
+346. Change Look and Feel now will not change Font (keep the old Font of the previous LAFs)
+347. Set Font feature: users have option to set Font to default, and are able to see Font illustration on the fly
+348. PaintComponent is applied for some GUI components. Looks Great! Especially the content_panel
+349. About Prism --> hide all internal frames on click, show again when done
+350. ALways enable Database_Management MenuItem, ALT + D would show the internalframe it it was already created
+351. Simplify the codes for looping displayed internalframes for many purposes in PrismMain
+352. Image Capture is now having a pop-up panel to confirm
+353. Image Capture now will not show up on right click if you click on the JMenu (i.e. File, Utility, Window, Help) by not adding the listener to JMenu. This is to prevent the popup mess when JMenu is clicked when Capture Mode is on
+All changes in this block are associated with PrismAlpha1.0.34.jar, Prism Formulation 03.docx, Prism Database 03.docx
+--------------------------------------------------------------------------

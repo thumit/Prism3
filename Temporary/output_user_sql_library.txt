@@ -1,0 +1,105 @@
+test generating output 04 - test 01 - different methods in different rows
+SELECT var_layer1 as layer1, var_layer2 as layer2, var_layer3 as layer3, var_layer4 as layer4,var_layer5 as layer5, var_layer6 as layer6, (var_method || '_' || var_forest_status) AS method_status, var_value as grouped_acres
+
+FROM output_05_management_details
+WHERE CAST(var_period AS DECIMAL) = 1
+
+GROUP BY (layer1 || layer2 || layer3 || layer4 || layer5 || layer6 || method_status)
+ORDER BY (layer1 || layer2 || layer3 || layer4 || layer5 || layer6 || method_status)
+----------
+acres by existing strata, period 1, existing method  (exact output04)
+SELECT strata_id, layer1, layer2, layer3, layer4, layer5, layer6,
+SUM(CASE WHEN t.method_status = 'NGE' THEN t.grouped_acres END) AS NG_E_acres,
+SUM(CASE WHEN t.method_status = 'PBE' THEN t.grouped_acres END) AS PB_E_acres,
+SUM(CASE WHEN t.method_status = 'GSE' THEN t.grouped_acres END) AS GS_E_acres,
+SUM(CASE WHEN t.method_status = 'EAE' THEN t.grouped_acres END) AS EA_E_acres,
+SUM(CASE WHEN t.method_status = 'MSE' THEN t.grouped_acres END) AS MS_E_acres,
+SUM(CASE WHEN t.method_status = 'BSE' THEN t.grouped_acres END) AS BS_E_acres
+FROM
+
+
+(SELECT 
+(var_layer1 || var_layer2 || var_layer3 || var_layer4 || var_layer5 || var_layer6) as strata_id,
+var_layer1 as layer1, var_layer2 as layer2, var_layer3 as layer3, var_layer4 as layer4,var_layer5 as layer5, var_layer6 as layer6, (var_method || var_forest_status) AS method_status, var_value as grouped_acres
+FROM output_05_management_details
+WHERE CAST(var_period AS DECIMAL) = 1
+GROUP BY (layer1 || layer2 || layer3 || layer4 || layer5 || layer6 || method_status)
+ORDER BY (layer1 || layer2 || layer3 || layer4 || layer5 || layer6 || method_status)) AS t
+
+
+GROUP BY strata_id
+----------
+acres by period, method
+SELECT period,
+SUM(CASE WHEN t.method = 'NG' THEN t.grouped_acres END) AS NG_acres,
+SUM(CASE WHEN t.method = 'PB' THEN t.grouped_acres END) AS PB_acres,
+SUM(CASE WHEN t.method = 'GS' THEN t.grouped_acres END) AS GS_acres,
+SUM(CASE WHEN t.method = 'EA' THEN t.grouped_acres END) AS EA_acres,
+SUM(CASE WHEN t.method = 'MS' THEN t.grouped_acres END) AS MS_acres,
+SUM(CASE WHEN t.method = 'BS' THEN t.grouped_acres END) AS BS_acres
+FROM
+
+
+(SELECT 
+CAST(var_period AS DECIMAL) as period,
+var_method as method, SUM(var_value) as grouped_acres
+FROM output_05_management_details
+GROUP BY (period || method)
+ORDER BY (period || method)) AS t
+
+
+GROUP BY period
+----------
+acres by period, method, forest_status
+SELECT period,
+SUM(CASE WHEN t.method_status = 'NGE' THEN t.grouped_acres END) AS NG_E_acres,
+SUM(CASE WHEN t.method_status = 'PBE' THEN t.grouped_acres END) AS PB_E_acres,
+SUM(CASE WHEN t.method_status = 'GSE' THEN t.grouped_acres END) AS GS_E_acres,
+SUM(CASE WHEN t.method_status = 'EAE' THEN t.grouped_acres END) AS EA_E_acres,
+SUM(CASE WHEN t.method_status = 'MSE' THEN t.grouped_acres END) AS MS_E_acres,
+SUM(CASE WHEN t.method_status = 'BSE' THEN t.grouped_acres END) AS BS_E_acres,
+SUM(CASE WHEN t.method_status = 'NGR' THEN t.grouped_acres END) AS NG_R_acres,
+SUM(CASE WHEN t.method_status = 'PBR' THEN t.grouped_acres END) AS PB_R_acres,
+SUM(CASE WHEN t.method_status = 'GSR' THEN t.grouped_acres END) AS GS_R_acres,
+SUM(CASE WHEN t.method_status = 'EAR' THEN t.grouped_acres END) AS EA_R_acres
+FROM
+
+
+(SELECT 
+CAST(var_period AS DECIMAL) as period,
+(var_method || var_forest_status) AS method_status, SUM(var_value) as grouped_acres
+FROM output_05_management_details
+GROUP BY (period || method_status)
+ORDER BY (period || method_status)) AS t
+
+
+GROUP BY period
+----------
+acres by period, method, forest_status, activity
+SELECT period, action_type as activity,
+SUM(CASE WHEN t.method_status = 'NGE' THEN t.grouped_acres END) AS NG_E_acres,
+SUM(CASE WHEN t.method_status = 'PBE' THEN t.grouped_acres END) AS PB_E_acres,
+SUM(CASE WHEN t.method_status = 'GSE' THEN t.grouped_acres END) AS GS_E_acres,
+SUM(CASE WHEN t.method_status = 'EAE' THEN t.grouped_acres END) AS EA_E_acres,
+SUM(CASE WHEN t.method_status = 'MSE' THEN t.grouped_acres END) AS MS_E_acres,
+SUM(CASE WHEN t.method_status = 'BSE' THEN t.grouped_acres END) AS BS_E_acres,
+SUM(CASE WHEN t.method_status = 'NGR' THEN t.grouped_acres END) AS NG_R_acres,
+SUM(CASE WHEN t.method_status = 'PBR' THEN t.grouped_acres END) AS PB_R_acres,
+SUM(CASE WHEN t.method_status = 'GSR' THEN t.grouped_acres END) AS GS_R_acres,
+SUM(CASE WHEN t.method_status = 'EAR' THEN t.grouped_acres END) AS EA_R_acres
+FROM
+
+
+(SELECT 
+CAST(var_period AS DECIMAL) as period, action_type,
+(var_method || var_forest_status) AS method_status, SUM(var_value) as grouped_acres
+FROM output_05_management_details
+GROUP BY (period || action_type || method_status)
+ORDER BY (period || action_type  || method_status)) AS t
+
+
+GROUP BY period, action_type
+----------
+vacuum
+vacuum
+----------
