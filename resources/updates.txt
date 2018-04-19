@@ -807,3 +807,11 @@ All changes in this block are associated with PrismAlpha1.0.34.jar, Prism Formul
 364. table2, 7, 8, 10 now have description columns not auto resize to avoid very long line after auto description is added. this column has tooltip show up
 All changes in this block are associated with PrismAlpha1.1.01.jar, Prism Formulation 04.docx, Prism Database 03.docx
 --------------------------------------------------------------------------
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+			VERSION IS NOW 1.1.01
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+
+365. Fix printing out wrong percentages for MS, BS, EA with period = rotation_period in output_05. Fixed (line 1172 in Panel_SolveRun)  --> exported as PrismAlpha1.0.02

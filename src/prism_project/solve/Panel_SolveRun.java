@@ -1168,6 +1168,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									coversion_cost_after_disturbance_value_list.add(total_percentage / 100);
 								}														
 							}
+						} else {
+							var_rd_condition_id[var_index] = -9999;		// fix percentage bug, printing out wrong percentages in output_05 for areas of MS, BS, EA where t = tR
 						}
 						
 						var_cost_value[var_index] = cost_info.get_cost_value(
