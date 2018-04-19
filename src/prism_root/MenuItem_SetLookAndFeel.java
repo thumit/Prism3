@@ -124,14 +124,9 @@ public class MenuItem_SetLookAndFeel extends JMenuItem {
 					});
 				}
 				
-				
-				JScrollPane scrollPane = new JScrollPane(radioPanel);
-				scrollPane.setPreferredSize(new Dimension(450, 30));
-				scrollPane.setBorder(null);
-				
 				// Add lookfeelPanel to a Popup Panel
 				String ExitOption[] = { "Ok" };
-				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), scrollPane,
+				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), radioPanel,
 						"Select a Look and Feel", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
 						IconHandle.get_scaledImageIcon(40, 40, "icon_laf.png"), ExitOption, ExitOption[0]);
 

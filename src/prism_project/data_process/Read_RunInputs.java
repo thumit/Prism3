@@ -64,25 +64,29 @@ public class Read_RunInputs {
 	public int get_total_periods() {
 		return Integer.parseInt(gi_value[0][1]);
 	}
+	
+	public int get_total_replacing_disturbances() {
+		return Integer.parseInt(gi_value[1][1]);
+	}
 
 	public double get_discount_rate() {
-		return Double.parseDouble(gi_value[1][1]);
+		return Double.parseDouble(gi_value[2][1]);
 	}
 
 	public String get_solver() {
-		return gi_value[2][1].toString();
+		return gi_value[3][1].toString();
 	}
 
 	public int get_solving_time() {
-		return Integer.parseInt(gi_value[3][1]);
+		return Integer.parseInt(gi_value[4][1]);
 	}
 
 	public boolean get_export_problem() {
-		return Boolean.parseBoolean(gi_value[4][1]);
+		return Boolean.parseBoolean(gi_value[5][1]);
 	}
 
 	public boolean get_export_solution() {
-		return Boolean.parseBoolean(gi_value[5][1]);
+		return Boolean.parseBoolean(gi_value[6][1]);
 	}
 	
 	
@@ -94,23 +98,6 @@ public class Read_RunInputs {
 	private List<String> sm_strata_without_sizeclass_and_covertype;
 	private List<List<String>> sm_method_choice_for_strata;
 	private List<List<String>> sm_method_choice_for_strata_without_sizeclass_and_covertype;
-
-//	private class LinkedList_Silviculture_Method extends LinkedList<Silviculture_Method_Item> {
-//		public LinkedList_Silviculture_Method() {
-//		}
-//	}
-//
-//	class Silviculture_Method_Item {
-//		String strata, method;
-//		List<Integer> timing_choice;
-//
-//		public Silviculture_Method_Item(String strata, String method, List<Integer> timing_choice) {
-//			this.strata = strata;
-//			this.method = method;
-//			this.timing_choice = timing_choice;
-//		}
-//	}
-		
 
 	public void read_silviculture_method(File file) {
 		String delimited = "\t";		// tab delimited
@@ -463,86 +450,29 @@ public class Read_RunInputs {
 	
 	//-------------------------------------------------------------------------------------------------------------------------------------------------	
 	//For input_07_natural_disturbances_replacing
-	private double[][] SRDProportion;	
+	private List<String> disturbance_condition_list;
 	
 	public void read_natural_disturbances_replacing (File file) {
 		try {
 			// All lines except the 1st line to be in a list;		
-			List<String> list;	
-			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
-			list.remove(0);	//Remove the first row (Column names)
-			int ageClass = 0;
-			int s5 = 0;
-		
-			//Define the size of array
-			String[] firstRowValue = list.get(0).split("\t");
-			int totalRows = list.size();
-			int totalColumns = firstRowValue.length;	
-			SRDProportion = new double[totalColumns - 1][totalRows + 1];		//This is 	P(s5,a)				since age = row + 1 the size should be [totalRows + 1]			
-																											// - 1st column which is the age class column	
-			
-			//Put the values to arrays
-			for (int i = 0; i < totalRows; i++) {
-				ageClass = i + 1;
-				String[] values = list.get(i).split("\t");	
-				for (int j = 1; j < totalColumns; j++) {
-					s5 = j - 1;
-					SRDProportion[s5][ageClass] = Double.parseDouble(values[j]);							
-				}
-			}
-			
+			disturbance_condition_list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
+			disturbance_condition_list.remove(0);	// Remove the first row (Column names)
+
 		} catch (IOException e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 		}
 	}		
 							
-	public double[][] getSRDProportion () {		
-		return SRDProportion;
+	public List<String> get_disturbance_condition_list() {
+		return disturbance_condition_list;
 	}			
 				
 	//-------------------------------------------------------------------------------------------------------------------------------------------------	
 	//For input_08_management_cost
 	private List<String> cost_condition_list;
-//	private List<String> condition_column_names_list;
-//	private int condition_total_rows, condition_total_columns;
-//	private String[][] condition_value;
-//	private int condition_id_col, condition_description_col, action_percentage_col, conversion_percentage_col, condition_static_identifiers_col, condition_dynamic_identifiers_col;	
-	
 	
 	public void read_management_cost (File file) {
 		try {
-//			// All lines to be in array
-//			List<String> list;
-//			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
-//			String[] a = list.toArray(new String[list.size()]);
-//
-//			// Read the first row into array. This will be Column names
-//			String[] columnName = a[0].split("\t");
-//
-//			// List of constraint column names
-//			condition_column_names_list = Arrays.asList(columnName);	
-//			condition_id_col = condition_column_names_list.indexOf("condition_id");
-//			condition_description_col = condition_column_names_list.indexOf("condition_description");
-//			action_percentage_col = condition_column_names_list.indexOf("action_percentage");
-//			conversion_percentage_col = condition_column_names_list.indexOf("conversion_percentage");
-//			condition_static_identifiers_col = condition_column_names_list.indexOf("static_identifiers");
-//			condition_dynamic_identifiers_col = condition_column_names_list.indexOf("dynamic_identifiers");
-//	
-//			
-//			// Values in all rows and columns
-//			condition_total_rows = a.length;
-//			condition_total_columns = columnName.length;				
-//			condition_value = new String[condition_total_rows][condition_total_columns];
-//		
-//			// Read all values from all rows and columns
-//			for (int i = 1; i < condition_total_rows; i++) { // From 2nd row
-//				String[] rowValue = a[i].split("\t");
-//				for (int j = 0; j < condition_total_columns; j++) {
-//					condition_value[i][j] = rowValue[j];
-//				}
-//			}		
-			
-			
 			// All lines except the 1st line to be in a list;		
 			cost_condition_list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
 			cost_condition_list.remove(0);	// Remove the first row (Column names)
@@ -879,7 +809,7 @@ public class Read_RunInputs {
 	}	
 	
 	
-	public List<String> get_parameters_indexes_list (int row) {	
+	public List<String> get_parameters_indexes (int row) {	
 		List<String> parameters_indexes_list = new ArrayList<String>();
 		
 		//Read the whole cell into array

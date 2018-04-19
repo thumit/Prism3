@@ -16,23 +16,25 @@
  ******************************************************************************/
 package prism_project.data_process;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public class Get_Parameter_Information {
-
-	public static double get_total_value(
-			Read_Database read_database, String var_name, int table_id_to_find, int row_id_to_find,
-			Object[][][] yield_tables_values, List<String> parameters_indexes_list,
-			List<String> dynamic_dentifiers_column_indexes, List<List<String>> dynamic_identifiers,
+	private Object[][][] yield_tables_values;
+	
+	public Get_Parameter_Information(Read_Database read_database) {
+		// Some more set up
+		this.yield_tables_values = read_database.get_yield_tables_values();
+	}
+	
+	public double get_total_value(String var_name, int table_id_to_find, int row_id_to_find,
+			List<String> parameters_indexes, List<String> dynamic_dentifiers_column_indexes, List<List<String>> dynamic_identifiers,
 			double cost_value) {
 		
 		
 		double value_to_return = 0;						
 		
-		if (dynamic_dentifiers_column_indexes.contains("NoIdentifier") && parameters_indexes_list.contains("NoParameter")) {	// This is the only case when we don't need to check yield table
+		if (dynamic_dentifiers_column_indexes.contains("NoIdentifier") && parameters_indexes.contains("NoParameter")) {	// This is the only case when we don't need to check yield table
 			value_to_return = 1;
 		} else {	// Check the yield table 				
 			
@@ -41,13 +43,13 @@ public class Get_Parameter_Information {
 					
 					boolean constraint_dynamicIdentifiers_matched = are_all_dynamic_identifiers_matched(yield_tables_values, table_id_to_find, row_id_to_find, dynamic_dentifiers_column_indexes, dynamic_identifiers);								
 					if (constraint_dynamicIdentifiers_matched) {					
-						if (parameters_indexes_list.contains("NoParameter")) {			// Return 1 if NoParameter & all dynamic identifiers match
+						if (parameters_indexes.contains("NoParameter")) {			// Return 1 if NoParameter & all dynamic identifiers match
 							value_to_return = 1;							
-						} else if (parameters_indexes_list.contains("CostParameter")) {			// If this is a cost constrain
+						} else if (parameters_indexes.contains("CostParameter")) {			// If this is a cost constrain
 							value_to_return = cost_value;			
 						} else {	// If this is a constraint with Parameters		
-							for (int j = 0; j < parameters_indexes_list.size(); j++) {		// Loop all parameters_indexes_list 	
-								int col = Integer.parseInt(parameters_indexes_list.get(j));						
+							for (int j = 0; j < parameters_indexes.size(); j++) {		// Loop all parameters_indexes_list 	
+								int col = Integer.parseInt(parameters_indexes.get(j));						
 								value_to_return = value_to_return + Double.parseDouble(yield_tables_values[table_id_to_find][row_id_to_find][col].toString());		// then add to the total of all parameters found
 							}
 						}						
@@ -66,7 +68,7 @@ public class Get_Parameter_Information {
 	}
 		
 
-	private static Boolean are_all_dynamic_identifiers_matched(Object[][][] yield_table_values, int table_id_to_find, int row_id_to_find,
+	private Boolean are_all_dynamic_identifiers_matched(Object[][][] yield_tables_values, int table_id_to_find, int row_id_to_find,
 			List<String> dynamic_identifiers_column_indexes, List<List<String>> dynamic_identifiers) {
 		
 		if (!dynamic_identifiers_column_indexes.contains("NoIdentifier")) {	//If there are dynamic identifiers
@@ -76,7 +78,7 @@ public class Get_Parameter_Information {
 				List<String> this_dynamic_identifier = dynamic_identifiers.get(dynamic_count);
 								
 				if (this_dynamic_identifier.get(0).contains(",")) {	//if this is a range identifier (the 1st element of this identifier contains ",")							
-					double yt_value = Double.parseDouble(yield_table_values[table_id_to_find][row_id_to_find][current_dynamic_column].toString());
+					double yt_value = Double.parseDouble(yield_tables_values[table_id_to_find][row_id_to_find][current_dynamic_column].toString());
 															
 					for (int element = 0; element < this_dynamic_identifier.size(); element++) {	//Loop all elements (all ranges) of this range identifier
 						String[] min_and_max = this_dynamic_identifier.get(element).split(",");									
@@ -87,7 +89,7 @@ public class Get_Parameter_Information {
 						}
 					}										
 				} else { // if this is a discrete identifier
-					int index = Collections.binarySearch(this_dynamic_identifier, yield_table_values[table_id_to_find][row_id_to_find][current_dynamic_column].toString());
+					int index = Collections.binarySearch(this_dynamic_identifier, yield_tables_values[table_id_to_find][row_id_to_find][current_dynamic_column].toString());
 					if (index < 0) 	{	// If all selected items in this list do not contain the value in the same column (This is String comparison, we may need to change to present data manually change by users, ex. ponderosa 221 vs 221.00) 
 						return false;			
 					}

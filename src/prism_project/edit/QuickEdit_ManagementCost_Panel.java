@@ -83,9 +83,9 @@ public class QuickEdit_ManagementCost_Panel extends JPanel {
 		
 		
 		// Add Label-------------------------------------------------------------------------------------------------
-		qd1.add(new JLabel("Action Cost"), PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
+		qd1.add(new JLabel("Activity cost"), PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
 				1, 0, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
-				0, 0, 0, 0));		// insets top, left, bottom, right
+				0, 0, 0, 10));		// insets top, left, bottom, right
 				
 		
 		// Add formatedTextfield
@@ -157,16 +157,19 @@ public class QuickEdit_ManagementCost_Panel extends JPanel {
 					selectedCol[j] = table8a.convertColumnIndexToModel(selectedCol[j]);
 				}
 				
-				table8a.clearSelection(); // To help trigger the row refresh: clear then add back the rows
 				for (int i : selectedRow) {
 					for (int j : selectedCol) {
 						if (!formatedTextfield.getText().equals(".") && j != 0) {	// Only apply the changes to selected cells in columns > 0 (from 'acres' column)
 							data8a[i][j] = (formatedTextfield.getText().isEmpty())? null : Double.valueOf(formatedTextfield.getText());
 						}
-						table8a.addRowSelectionInterval(table8a.convertRowIndexToView(i), table8a.convertRowIndexToView(i));
-						table8a.addColumnSelectionInterval(table8a.convertColumnIndexToView(j), table8a.convertColumnIndexToView(j));
 					}
 				}
+				
+				table8a.setValueAt(data8a[table8a.convertRowIndexToModel(0)][table8a.convertColumnIndexToModel(0)], 0, 0);		// Just to activate firesTabelDatachanged()
+				// Reselect the current selected cells
+				table8a.clearSelection(); // To help trigger the row refresh: clear then add back the rows
+				for (int i : selectedRow) { table8a.addRowSelectionInterval(table8a.convertRowIndexToView(i), table8a.convertRowIndexToView(i)); }
+				for (int j : selectedCol) { table8a.addColumnSelectionInterval(table8a.convertColumnIndexToView(j), table8a.convertColumnIndexToView(j)); }
 			}
 		});
 		qd1.add(btnApplyActionBaseCost, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
@@ -189,9 +192,9 @@ public class QuickEdit_ManagementCost_Panel extends JPanel {
 			
 		
 		// Add Label-------------------------------------------------------------------------------------------------
-		qd2.add(new JLabel("Conversion Cost"), PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
+		qd2.add(new JLabel("Conversion cost"), PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
 				1, 0, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
-				0, 0, 0, 0));		// insets top, left, bottom, right
+				0, 0, 0, 10));		// insets top, left, bottom, right
 
 		
 		// Add formatedTextfield
@@ -263,16 +266,19 @@ public class QuickEdit_ManagementCost_Panel extends JPanel {
 					selectedCol[j] = table8b.convertColumnIndexToModel(selectedCol[j]);
 				}
 				
-				table8b.clearSelection(); // To help trigger the row refresh: clear then add back the rows
 				for (int i : selectedRow) {
 					for (int j : selectedCol) {
-						if (!formatedTextfield_2.getText().equals(".") && j > 1) {	// Only apply the changes to selected cells in columns > 1
+						if (!formatedTextfield_2.getText().equals(".") && j >= 2) {	// Only apply the changes to selected cells in columns > 2
 							data8b[i][j] = (formatedTextfield_2.getText().isEmpty())? null : Double.valueOf(formatedTextfield_2.getText());
 						}
-						table8b.addRowSelectionInterval(table8b.convertRowIndexToView(i), table8b.convertRowIndexToView(i));
-						table8b.addColumnSelectionInterval(table8b.convertColumnIndexToView(j), table8b.convertColumnIndexToView(j));
 					}
 				}
+				
+				table8b.setValueAt(data8b[table8b.convertRowIndexToModel(0)][table8b.convertColumnIndexToModel(0)], 0, 0);		// Just to activate firesTabelDatachanged()
+				// Reselect the current selected cells
+				table8b.clearSelection(); // To help trigger the row refresh: clear then add back the rows
+				for (int i : selectedRow) { table8b.addRowSelectionInterval(table8b.convertRowIndexToView(i), table8b.convertRowIndexToView(i)); }
+				for (int j : selectedCol) { table8b.addColumnSelectionInterval(table8b.convertColumnIndexToView(j), table8b.convertColumnIndexToView(j)); }
 			}
 		});		
 		qd2.add(btnApplyConversionBaseCost, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
@@ -401,7 +407,7 @@ public class QuickEdit_ManagementCost_Panel extends JPanel {
 			// Add check_panel to a scroll panel
 			JScrollPane scrollPane = new JScrollPane(check_panel);				
 			scrollPane.setBorder(BorderFactory.createTitledBorder("Available columns (disable if unit is not per acre)"));
-			scrollPane.setPreferredSize(new Dimension(600, 300));
+			scrollPane.setPreferredSize(new Dimension(600, 350));
 			
 			
 			// Add listeners for radio buttons			
@@ -476,7 +482,7 @@ public class QuickEdit_ManagementCost_Panel extends JPanel {
 			addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {
-					radioGroup.clearSelection();
+					radioButton[1].doClick();
 					String ExitOption[] = { "Ok" };
 					int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), combined_panel,
 							"Select yield tables columns to show", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,

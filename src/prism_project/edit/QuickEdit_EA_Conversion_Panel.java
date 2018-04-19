@@ -36,7 +36,7 @@ import prism_convenience_class.IconHandle;
 
 public class QuickEdit_EA_Conversion_Panel extends JPanel {
 	public QuickEdit_EA_Conversion_Panel(JTable table, Object[][] data, ArrayList<String>[] rotation_ranges) {
-		setPreferredSize(new Dimension(200, 230));
+		setPreferredSize(new Dimension(200, 0));
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 

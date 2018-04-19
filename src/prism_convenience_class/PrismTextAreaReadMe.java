@@ -38,13 +38,16 @@ public class PrismTextAreaReadMe extends JTextArea {
 		this.width = width;
 		this.height = height;
 		
-		if (UIManager.getLookAndFeel().getName().equals("Nimbus"))  {
-			setBackground(ColorUtil.makeTransparent(Color.BLACK, 40));
-			setForeground(ColorUtil.makeTransparent(Color.BLACK, 255));
-		} else {	// This is because the transparent fails when changing look and feel which makes the text area has problem with color painted
-			setBackground(Color.LIGHT_GRAY);
-			setForeground(Color.BLACK);
-		}
+		setBackground(ColorUtil.makeTransparent(Color.BLACK, 40));
+		setForeground(ColorUtil.makeTransparent(Color.BLACK, 255));
+		
+//		if (UIManager.getLookAndFeel().getName().equals("Nimbus"))  {
+//			setBackground(ColorUtil.makeTransparent(Color.BLACK, 40));
+//			setForeground(ColorUtil.makeTransparent(Color.BLACK, 255));
+//		} else {	// This is because the transparent fails when changing look and feel which makes the text area has problem with color painted
+//			setBackground(Color.LIGHT_GRAY);
+//			setForeground(Color.BLACK);
+//		}
 		setLineWrap(true);
 		setWrapStyleWord(true);
 		DefaultCaret caret = (DefaultCaret) this.getCaret();

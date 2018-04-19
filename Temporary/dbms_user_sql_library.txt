@@ -19,3 +19,18 @@ ON output_05_management_details.prescription = yield_tables.prescription AND out
 vacuum
 vacuum
 ----------
+test
+SELECT
+SUBSTR(prescription, 1, INSTR(prescription, "_")-1) as CoverType,
+vegt
+
+FROM yield_tables
+----------
+compare cover type
+SELECT
+SUBSTR(prescription, 1, INSTR(prescription, "_")-1) as prescription_vegt, vegt,
+
+CASE WHEN SUBSTR(prescription, 1, INSTR(prescription, "_")-1) = vegt then 'correct' else 'fail' end AS Compare
+
+From yield_tables;
+----------

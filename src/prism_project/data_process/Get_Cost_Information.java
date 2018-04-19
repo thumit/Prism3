@@ -22,10 +22,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 	
+
+// IMPORTANT:  DO NOT TOUCH THESE FREAKING COMPLICATED CODES BECAUSE EVEN I TAKE A LOT OF TIME TO UNDERSTAND WHAT THE ...^..&^*&..?#$.. I WROTE
+// MY APPOLOGY  ^^:
+
+
+//This class is created only when there is at least 1 condition --> no need to check null condition
 public class Get_Cost_Information {
-	private List<List<String>>[] all_priority_cost_condition_static_identifiers;
-	private List<List<String>>[] all_priority_cost_condition_dynamic_identifiers;
-	private List<String>[] all_priority_cost_condition_dynamic_dentifiers_column_indexes;
+	private List<List<String>>[] all_priority_condition_static_identifiers;
+	private List<List<String>>[] all_priority_condition_dynamic_identifiers;
+	private List<String>[] all_priority_condition_dynamic_dentifiers_column_indexes;
 	private String[][] all_priority_condition_info;	
 	
 	private int action_type_col_id;
@@ -34,27 +40,27 @@ public class Get_Cost_Information {
 	private int[] get_original_col_id_from_sorted_col_id;
 	
 	public Get_Cost_Information(Read_Database read_database, List<String> cost_condition_list) {
-		all_priority_cost_condition_static_identifiers = new ArrayList[cost_condition_list.size()];
-		all_priority_cost_condition_dynamic_identifiers = new ArrayList[cost_condition_list.size()];
-		all_priority_cost_condition_dynamic_dentifiers_column_indexes = new ArrayList[cost_condition_list.size()];
+		all_priority_condition_static_identifiers = new ArrayList[cost_condition_list.size()];
+		all_priority_condition_dynamic_identifiers = new ArrayList[cost_condition_list.size()];
+		all_priority_condition_dynamic_dentifiers_column_indexes = new ArrayList[cost_condition_list.size()];
 		all_priority_condition_info = new String[cost_condition_list.size()][];
 		
 		// Just do this once when an object of this class is created, not every time we encounter a variable
 		for (int priority = 0; priority < cost_condition_list.size(); priority++) {		// Looping from the highest priority cost condition to the lowest
 			String[] this_condition_info = cost_condition_list.get(priority).split("\t");
 			all_priority_condition_info[priority] = this_condition_info;
-			all_priority_cost_condition_static_identifiers[priority] = get_cost_condition_static_identifiers(this_condition_info[4]);	// column 4 is static identifiers
-			all_priority_cost_condition_dynamic_identifiers[priority] = get_cost_condition_dynamic_identifiers(this_condition_info[5]);	// column 5 is dynamic identifiers
-			all_priority_cost_condition_dynamic_dentifiers_column_indexes[priority] = get_cost_condition_dynamic_dentifiers_column_indexes(this_condition_info[5]);	// column 5 is dynamic identifiers
+			all_priority_condition_static_identifiers[priority] = get_condition_static_identifiers(this_condition_info[4]);	// column 4 is static identifiers
+			all_priority_condition_dynamic_identifiers[priority] = get_condition_dynamic_identifiers(this_condition_info[5]);	// column 5 is dynamic identifiers
+			all_priority_condition_dynamic_dentifiers_column_indexes[priority] = get_condition_dynamic_dentifiers_column_indexes(this_condition_info[5]);	// column 5 is dynamic identifiers
 		
 			
 			// sort for Binary search used in:     are_all_static_identifiers_matched()
-			for (List<String> this_static_identifier: all_priority_cost_condition_static_identifiers[priority]) {
+			for (List<String> this_static_identifier: all_priority_condition_static_identifiers[priority]) {
 				Collections.sort(this_static_identifier);
 			}	
 			
 			// sort for Binary search used in:     are_all_dynamic_identifiers_matched()
-			for (List<String> this_dynamic_identifier: all_priority_cost_condition_dynamic_identifiers[priority]) {
+			for (List<String> this_dynamic_identifier: all_priority_condition_dynamic_identifiers[priority]) {
 				Collections.sort(this_dynamic_identifier);
 			}			
 		
@@ -95,54 +101,50 @@ public class Get_Cost_Information {
 		
 		if (table_id_to_find != -9999) {	// If prescription exists (not exist when table_id_to_find = -9999)						
 			if (row_id_to_find < yield_tables_values[table_id_to_find].length && row_id_to_find != -9999) { 	// If row in this prescription exists (not exists when row_id_to_find = -9999 or >= total rows in that prescription)
-				if (cost_condition_list != null) {		// If there is at least one cost condition	
-
-					
-					String var_action_type = yield_tables_values[table_id_to_find][row_id_to_find][action_type_col_id].toString();
-					
-					// The following includes 1 list for the action_cost and 1 list for the conversion_cost
-					List<List<List<String>>> final_cost_list = get_final_action_cost_list_and_conversion_cost_list_for_this_variable(
-							cost_condition_list, var_name, var_action_type,
-							table_id_to_find, row_id_to_find);
-					
-					
-					// action_cost: include 2 lists for column name (i.e. hca_allsx) and value (i.e. 360)
-					for (int item = 0; item < final_cost_list.get(0).get(0).size(); item++) {	// loop list:  final_cost_list.get(0).get(0) which is final_action_cost_column_list
-						// Add cost per acre
-						if (final_cost_list.get(0).get(0).get(item).equals("acres")) {
-							value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(0).get(1).get(item));
+				String var_action_type = yield_tables_values[table_id_to_find][row_id_to_find][action_type_col_id].toString();
+				
+				// The following includes 1 list for the action_cost and 1 list for the conversion_cost
+				List<List<List<String>>> final_cost_list = get_final_action_cost_list_and_conversion_cost_list_for_this_variable(
+						cost_condition_list, var_name, var_action_type,
+						table_id_to_find, row_id_to_find);
+				
+				
+				// action_cost: include 2 lists for column name (i.e. hca_allsx) and value (i.e. 360)
+				for (int item = 0; item < final_cost_list.get(0).get(0).size(); item++) {	// loop list:  final_cost_list.get(0).get(0) which is final_action_cost_column_list
+					// Add cost per acre
+					if (final_cost_list.get(0).get(0).get(item).equals("acres")) {
+						value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(0).get(1).get(item));
+					} 
+					// Add cost per unit of the yield table column
+					else {
+						int sorted_id = Collections.binarySearch(yield_tables_sorted_col_names_list, final_cost_list.get(0).get(0).get(item));
+						int col_id = get_original_col_id_from_sorted_col_id[sorted_id];
+						value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(0).get(1).get(item)) * Double.parseDouble(yield_tables_values[table_id_to_find][row_id_to_find][col_id].toString());
+					}
+				}								
+				
+				
+				// convert list to 1-D array since it is faster to get item from array than get item from list?????? --> should I remove this?
+				double[] conversion_cost_after_disturbance_value = Stream.of(conversion_cost_after_disturbance_value_list.toArray(new Double[conversion_cost_after_disturbance_value_list.size()])).mapToDouble(Double::doubleValue).toArray();
+				
+				
+				// conversion_cost: include 2 lists for column name (i.e. P D action) and value (i.e. 240)
+				for (int item = 0; item < final_cost_list.get(1).get(0).size(); item++) {	// loop list:  final_cost_list.get(1).get(0) which is final_conversion_cost_column_list
+					// add conversion cost for post management action (i.e clear cut) or post replacing disturbance (i.e. SRFire)
+					// note only one of them is true: for example if it is clear cut --> no replacing disturbance anymore, replacing disturbance can happen in areas where no clear cut implemented
+					if (Get_Variable_Information.get_rotation_period(var_name) == Get_Variable_Information.get_period(var_name)) {	// period is the rotation period (this if guarantees variable to be EA_E or EA_R)
+						String conversion_cost_to_apply = 
+								Get_Variable_Information.get_layer5(var_name) + " " +
+								Get_Variable_Information.get_regenerated_covertype(var_name) + " " + "action";
+						if (final_cost_list.get(1).get(0).get(item).equals(conversion_cost_to_apply)) {
+							value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(1).get(1).get(item));
 						} 
-						// Add cost per unit of the yield table column
-						else {
-							int sorted_id = Collections.binarySearch(yield_tables_sorted_col_names_list, final_cost_list.get(0).get(0).get(item));
-							int col_id = get_original_col_id_from_sorted_col_id[sorted_id];
-							value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(0).get(1).get(item)) * Double.parseDouble(yield_tables_values[table_id_to_find][row_id_to_find][col_id].toString());
+					} else {	// when period is not the rotation_period (variable can be anything except BS MS)
+						int index = Collections.binarySearch(conversion_cost_after_disturbance_name_list, final_cost_list.get(1).get(0).get(item));
+						if (index >= 0) {
+							value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(1).get(1).get(item)) * conversion_cost_after_disturbance_value[index];		
 						}
-					}								
-					
-					
-					// convert list to 1-D array since it is faster to get item from array than get item from list
-					double[] conversion_cost_after_disturbance_value = Stream.of(conversion_cost_after_disturbance_value_list.toArray(new Double[conversion_cost_after_disturbance_value_list.size()])).mapToDouble(Double::doubleValue).toArray();
-					
-					
-					// conversion_cost: include 2 lists for column name (i.e. P D action) and value (i.e. 240)
-					for (int item = 0; item < final_cost_list.get(1).get(0).size(); item++) {	// loop list:  final_cost_list.get(1).get(0) which is final_conversion_cost_column_list
-						// add conversion cost for post management action (i.e clear cut) or post replacing disturbance (i.e. SRFire)
-						// note only one of them is true: for example if it is clear cut --> no replacing disturbance anymore, replacing disturbance can happen in areas where no clear cut implemented
-						if (Get_Variable_Information.get_rotation_period(var_name) == Get_Variable_Information.get_period(var_name)) {	// period is the rotation period (this if guarantees variable to be EA_E or EA_R)
-							String conversion_cost_to_apply = 
-									Get_Variable_Information.get_layer5(var_name) + " " +
-									Get_Variable_Information.get_regenerated_covertype(var_name) + " " + "action";
-							if (final_cost_list.get(1).get(0).get(item).equals(conversion_cost_to_apply)) {
-								value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(1).get(1).get(item));
-							} 
-						} else {	// when period is not the rotation_period (variable can be anything except BS MS)
-							int index = Collections.binarySearch(conversion_cost_after_disturbance_name_list, final_cost_list.get(1).get(0).get(item));
-							if (index >= 0) {
-								value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(1).get(1).get(item)) * conversion_cost_after_disturbance_value[index];		
-							}
-						}	
-					}					
+					}	
 				}
 				
 			}
@@ -155,7 +157,7 @@ public class Get_Cost_Information {
 			List<String> cost_condition_list, String var_name, String var_action_type,
 			int table_id_to_find, int row_id_to_find) {	
 		
-		List<String> final_action_cost_column_list = new ArrayList<String>();		// example: 	"acres", "...", "hca_allsx", ... -->see table 7a in the GUI of Cost Management
+		List<String> final_action_cost_column_list = new ArrayList<String>();		// example: 	"acres", "...", "hca_allsx", ... -->see table 8a in the GUI of Cost Management
 		List<String> final_action_cost_value_list = new ArrayList<String>(); 		// example: 	"360", "...", "1.2", ...
 		
 		List<String> final_conversion_cost_column_list = new ArrayList<String>();	// example: P D action         	W L disturbance 
@@ -164,12 +166,12 @@ public class Get_Cost_Information {
 									
 		for (int priority = 0; priority < cost_condition_list.size(); priority++) {		// Looping from the highest priority cost condition to the lowest			
 			// If this condition is satisfied
-			if (are_all_static_identifiers_matched(var_name, all_priority_cost_condition_static_identifiers[priority]) && 
-					are_all_dynamic_identifiers_matched(yield_tables_values, table_id_to_find, row_id_to_find, all_priority_cost_condition_dynamic_dentifiers_column_indexes[priority], all_priority_cost_condition_dynamic_identifiers[priority])) {
+			if (are_all_static_identifiers_matched(var_name, all_priority_condition_static_identifiers[priority]) && 
+					are_all_dynamic_identifiers_matched(yield_tables_values, table_id_to_find, row_id_to_find, all_priority_condition_dynamic_dentifiers_column_indexes[priority], all_priority_condition_dynamic_identifiers[priority])) {
 				
 				// For action_cost
 				if (all_priority_condition_info[priority][2].length() > 0) {		// this guarantees the string is not ""
-					List<String[]> action_cost_list = get_cost_condition_action_cost(all_priority_condition_info[priority][2], var_action_type);
+					List<String[]> action_cost_list = get_condition_action_cost(all_priority_condition_info[priority][2], var_action_type);
 					for (String[] c: action_cost_list) {			// c example: clearcut acres 360		c example2: clearcut hca_allsx 0
 						if (!final_action_cost_column_list.contains(c[1])) {		// only null is escape, the GUI already guarantees the value >=0			
 							final_action_cost_column_list.add(c[1]);	// i.e. acres    hca_allsx
@@ -180,7 +182,7 @@ public class Get_Cost_Information {
 				
 				// For conversion cost
 				if (all_priority_condition_info[priority][3].length() > 0) {		// this guarantees the string is not ""
-					List<String[]> conversion_cost_list = get_cost_condition_conversion_cost(all_priority_condition_info[priority][3]);
+					List<String[]> conversion_cost_list = get_condition_conversion_cost(all_priority_condition_info[priority][3]);
 					for (String[] c: conversion_cost_list) {			// c example:  P D action 240         	W L disturbance 120
 						if (!final_conversion_cost_column_list.contains(c[0] + " " + c[1] + " " + c[2])) {		// only null is escape, the GUI already guarantees the value >=0				
 							final_conversion_cost_column_list.add(c[0] + " " + c[1] + " " + c[2]);		// i.e. P D action		W L disturbance
@@ -211,7 +213,7 @@ public class Get_Cost_Information {
 	}
 	
 	
-	private static Boolean are_all_dynamic_identifiers_matched(Object[][][] yield_table_values, int table_id_to_find, int row_id_to_find,
+	private Boolean are_all_dynamic_identifiers_matched(Object[][][] yield_tables_values, int table_id_to_find, int row_id_to_find,
 			List<String> dynamic_identifiers_column_indexes, List<List<String>> dynamic_identifiers) {
 		
 		if (!dynamic_identifiers_column_indexes.contains("NoIdentifier")) {	//If there are dynamic identifiers
@@ -221,7 +223,7 @@ public class Get_Cost_Information {
 				List<String> this_dynamic_identifier = dynamic_identifiers.get(dynamic_count);
 								
 				if (this_dynamic_identifier.get(0).contains(",")) {	//if this is a range identifier (the 1st element of this identifier contains ",")							
-					double yt_value = Double.parseDouble(yield_table_values[table_id_to_find][row_id_to_find][current_dynamic_column].toString());
+					double yt_value = Double.parseDouble(yield_tables_values[table_id_to_find][row_id_to_find][current_dynamic_column].toString());
 															
 					for (int element = 0; element < this_dynamic_identifier.size(); element++) {	//Loop all elements (all ranges) of this range identifier
 						String[] min_and_max = this_dynamic_identifier.get(element).split(",");									
@@ -232,7 +234,7 @@ public class Get_Cost_Information {
 						}
 					}										
 				} else { // if this is a discrete identifier
-					int index = Collections.binarySearch(this_dynamic_identifier, yield_table_values[table_id_to_find][row_id_to_find][current_dynamic_column].toString());
+					int index = Collections.binarySearch(this_dynamic_identifier, yield_tables_values[table_id_to_find][row_id_to_find][current_dynamic_column].toString());
 					if (index < 0) 	{	// If all selected items in this list do not contain the value in the same column (This is String comparison, we may need to change to present data manually change by users, ex. ponderosa 221 vs 221.00) 
 						return false;			
 					}
@@ -271,7 +273,7 @@ public class Get_Cost_Information {
 	}			
 	
 	
-	private List<String[]> get_cost_condition_action_cost(String action_cost_info, String var_action_type) {	
+	private List<String[]> get_condition_action_cost(String action_cost_info, String var_action_type) {	
 		//Read the whole cell into array
 		String[] action_cost_array = action_cost_info.split(";");
 		List<String[]> action_cost = new ArrayList<String[]>();		
@@ -285,7 +287,7 @@ public class Get_Cost_Information {
 	}
 	
 		
-	private List<String[]> get_cost_condition_conversion_cost(String conversion_cost_info) {	
+	private List<String[]> get_condition_conversion_cost(String conversion_cost_info) {	
 		//Read the whole cell into array
 		String[] conversion_cost_array = conversion_cost_info.split(";");
 		List<String[]> conversion_cost = new ArrayList<String[]>();		
@@ -297,7 +299,7 @@ public class Get_Cost_Information {
 	}
 		
 	
-	private List<List<String>> get_cost_condition_static_identifiers(String static_identifiers_info) {
+	private List<List<String>> get_condition_static_identifiers(String static_identifiers_info) {
 		List<List<String>> cost_condition_static_identifiers = new ArrayList<List<String>>();		
 		//Read the whole cell into array
 		String[] static_layer_info = static_identifiers_info.split(";");
@@ -317,7 +319,7 @@ public class Get_Cost_Information {
 	}
 	
 		
-	private List<List<String>> get_cost_condition_dynamic_identifiers(String dynamic_identifiers_info) {
+	private List<List<String>> get_condition_dynamic_identifiers(String dynamic_identifiers_info) {
 		List<List<String>> cost_condition_dynamic_identifiers = new ArrayList<List<String>>();		
 		//Read the whole cell into array
 		String[] info = dynamic_identifiers_info.split(";");
@@ -336,7 +338,7 @@ public class Get_Cost_Information {
 	}
 	
 	
-	private List<String> get_cost_condition_dynamic_dentifiers_column_indexes(String dynamic_identifiers_info) {
+	private List<String> get_condition_dynamic_dentifiers_column_indexes(String dynamic_identifiers_info) {
 		List<String> cost_condition_dynamic_dentifiers_column_indexes = new ArrayList<String>();
 			
 		//Read the whole cell into array

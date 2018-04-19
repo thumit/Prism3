@@ -101,7 +101,7 @@ public class PrismMain extends JFrame {
 	private MenuItem_SetTransparency 	setTransparency;	// For menuWindow
 	private MenuItem_CaptureGUI 		captureGUI;			// For menuWindow
 		
-	private static String 					prism_version = "PRISM ALPHA 1.0.34";
+	private static String 					prism_version = "PRISM ALPHA 1.1.01";
 	private String 							currentProject;
 	private static DesktopPanel_BackGround 	prism_DesktopPane;
 	private Repaint_JPanel 					content_panel;
@@ -473,12 +473,16 @@ public class PrismMain extends JFrame {
 						// display Database Management if it was already created
 						for (JInternalFrame i : PrismMain.get_Prism_DesktopPane().getAllFrames()) {		// Loop all displayed internalFrames
 							if (i.getTitle().equals("Database Management")) {
-								try {
-									i.setSelected(true);
-								} catch (PropertyVetoException e1) {
-									e1.printStackTrace();
-								}
 								is_Database_Management_opened = true;
+								if (!i.isSelected()) {	 // if it is not selected --> select it
+									try {
+										i.setSelected(true);
+									} catch (PropertyVetoException e1) {
+										e1.printStackTrace();
+									}
+								} else {	// if it is selected --> close
+									i.dispose();
+								}
 							}
 						} 
 														
@@ -721,7 +725,7 @@ public class PrismMain extends JFrame {
 	        
 	        demo_time = demo_time + 1;
 //	        if (demo_time == 600) stop();   // each 200 units of 50 millisoconds = 10 seconds			// Activate this line if we want the rotator stops after certain time
-	        System.out.println(angle + " " + demo_time);
+//	        System.out.println(angle + " " + demo_time);
 		}
 	}
 	

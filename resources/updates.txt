@@ -754,7 +754,7 @@ All changes in this block are associated with PrismAlpha1.0.33.jar, Prism Formul
 339. Rewrite Executor Service in Panel_EditRun (simplifier, and use 4 threads in the Pool)
 340. Combobox in "General Inputs" GUI will now have only CPLEX & LPSOLVE selectable, the other inactive solvers are faded in gray. Tool tips are also shown
 341. For the query_value in NOSQL mode (output_05) --> set alignment to RIGHT and accuracy to 1 digit after the dot
-342. PrismTextAreaReadMe: Fix the bug of failed color JTextArea when changing Look and Feel --> by using transparent color only for Nibus, but not others LAFs.
+342. PrismTextAreaReadMe: Fix the bug of failed color JTextArea when changing Look and Feel --> by using transparent color only for Nimbus, but not others LAFs.
 343. Activate line 179 in PrismMain class to fix the bug when clicking File --> Open fails right after changing Look and Feel when running PRISM in Eclipse IDE
 344. Fix Screen Capture (Note 5 in issue 18 in BitBucket) by:
 	- removing all listeners of all components in the GUI
@@ -773,4 +773,37 @@ All changes in this block are associated with PrismAlpha1.0.33.jar, Prism Formul
 352. Image Capture is now having a pop-up panel to confirm
 353. Image Capture now will not show up on right click if you click on the JMenu (i.e. File, Utility, Window, Help) by not adding the listener to JMenu. This is to prevent the popup mess when JMenu is clicked when Capture Mode is on
 All changes in this block are associated with PrismAlpha1.0.34.jar, Prism Formulation 03.docx, Prism Database 03.docx
+--------------------------------------------------------------------------
+
+354. Simplify codes in MenuItem_SetFont (trim to be more concise)
+355. Revert 342, can now use transparent background and foreground in PrismTextAreaReadMe. The reason is to show same color painted in different LAFs
+356. public void update_regen_percentage_column() --> now allow all 0
+357. Allow ALT + D --> both open and close the "Database Management" internal frame
+358. When open an attribute column for cost (Quick Edit: use the binocular button) --> refresh UI with active columns only (by using radioButton[1].doClick();)
+359. Extend total number of planning periods to 99
+360. Stand-replacing disturbance redesign:
+	- Formulation: huge changes
+		- Use new definitions for replacing-percentage parameters (all kinds of P)
+		- Change 7b, 8b, 9b, 11, 14a, 14b, 14c, 14d
+		- Remove 12b, modify 12a and change 12a --> 12
+		- Rewrite indexes in eq. 13, both in formulation and codes
+	- GUI:
+		- Add total replacing disturbances combo box to "General Inputs". Limit total number of replacing disturbances up to 99
+		- Replacing distubances GUI uses both static identifiers and dynamic identifiers, and has the ability to define occurence probability & regeneration distribution (percentage)
+		- Invisible disturbances (unused) still have the information saved
+	- Code: huge changes
+		- Panel_EditRun: Modify Natural Disturbances to capture new GUI for replacing disturbances with 2 tables for probability and regeneration
+		- Panel_EditRun: --> "Natural Disturbance" class: --> listener should be used for Radiobutton[4] 
+		- Add class: Get_Disturbance_Information
+		- Panel_SolveRun: Always process replacing disturbaces and cost at the start of solving process, then use later
+		- Panel_SolveRun: Simplify codes for eq. 15 constraints
+		- Output_Panel_Management_Details_NOSQL (output_05): change the codes (closed to codes in Panel_SolveRun) to implement new replacing disturbance logic
+		- Get_Parameter_Information: static --> non static. This reduces memory consumption while solving (i.e. HLC_SR6 model has peak memory reduced from 19G --> 16G)
+		- Simplify void call method in many places
+		- Refactors in many places
+361. VERY IMPORTANT: change read yield tables in class Read_Database:  need to order by both prescription and row_id --> All models without row_id inthe database will not be able to load to solve any more (example SYL_9_20)
+362. use try catch for solving so if it is fail the button,... come back to normal status (no animation...)
+363. output_05 table has percentages from all SR disturbances written, and also management cost per area unit written (i.e. per acre). This is to support future queries
+364. table2, 7, 8, 10 now have description columns not auto resize to avoid very long line after auto description is added. this column has tooltip show up
+All changes in this block are associated with PrismAlpha1.1.01.jar, Prism Formulation 04.docx, Prism Database 03.docx
 --------------------------------------------------------------------------

@@ -41,10 +41,9 @@ import prism_convenience_class.FilesHandle;
 import prism_convenience_class.StringHandle;
 
 public class Read_Database {
-	private Object[][][] yield_tables_values;			// Note: indexes start from 0 
+	private Object[][][] yield_tables_values;
 	private Object[] yield_tables_names;
 	private String[] yield_tables_column_names;
-	
 	
 	private String[][] existing_strata_values;
 	private String[][] strata_definition_values;	
@@ -53,20 +52,14 @@ public class Read_Database {
 	private List<List<String>> allLayers;
 	private List<List<String>> allLayers_ToolTips;
 	
-	
-	private LinkedList_Layers layers;
-	
-	
 	private Connection conn = null;
 	private Statement st = null;
 	private ResultSet rs = null;
 	private ResultSetMetaData rsmd = null;
-
 	
 	private File file_Database;
-	private boolean is_yield_tables_read = false;
-	private boolean is_existing_strata_read = false;
-	private boolean is_strata_definitions_read = false;
+	
+	private LinkedList_Layers layers;
 	
 	public Read_Database(File file_Database) {
 		this.file_Database = file_Database;
@@ -151,7 +144,7 @@ public class Read_Database {
 				}			
 				
 				
-				rs = st.executeQuery("SELECT * FROM yield_tables ORDER BY prescription ASC;");				
+				rs = st.executeQuery("SELECT * FROM yield_tables ORDER BY prescription, CAST(row_id as decimal) ASC;");				
 				// get total columns and "table_ColumnNames" for each yield table
 				rsmd = rs.getMetaData();
 				int colCount = rsmd.getColumnCount();
@@ -171,7 +164,6 @@ public class Read_Database {
 					}
 				}							
 			}
-			is_yield_tables_read = true;
 		} catch (Exception e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Read_Database   -   Database connection error");
 		} finally {
@@ -215,7 +207,6 @@ public class Read_Database {
 					}
 				}
 			}
-			is_existing_strata_read = true;
 		} catch (Exception e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Read_Database   -   Database connection error");
 		} finally {
@@ -312,7 +303,6 @@ public class Read_Database {
 //					}
 //				}		
 			}
-			is_strata_definitions_read = true;
 		} catch (Exception e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Read_Database   -   Database connection error");
 		} finally {
@@ -330,22 +320,18 @@ public class Read_Database {
 	// This block is For yield_tales ------------------------------------------------------------------------------------------------------
 	// This block is For yield_tales ------------------------------------------------------------------------------------------------------
 	public Object[][][] get_yield_tables_values() {	
-		if (!is_yield_tables_read) Read_yield_tables(); 
 		return yield_tables_values;
 	}
 	
 	public String[] get_yield_tables_column_names() {
-		if (!is_yield_tables_read) Read_yield_tables();
 		return yield_tables_column_names;
 	}
 
 	public Object[] get_yield_tables_names() {
-		if (!is_yield_tables_read) Read_yield_tables();
 		return yield_tables_names;
 	}
 	
 	public String[] get_action_type() {
-		if (!is_yield_tables_read) Read_yield_tables();		
 		List<String> actionList = null;
 		
 		List<String> yield_tables_column_names_list = Arrays.asList(yield_tables_column_names);	// Convert array to list		
@@ -358,7 +344,6 @@ public class Read_Database {
 	}
 	
 	public List<String> get_col_unique_values_list(int columnIndex) {
-		if (!is_yield_tables_read) Read_yield_tables();
 		List<String> listOfUniqueValues = new ArrayList<String>();
 		
 		for (int tb = 0; tb < yield_tables_values.length; tb++) {
@@ -374,7 +359,6 @@ public class Read_Database {
 	
 	
 	public String get_starting_ageclass(String cover_type, String size_class, String method, String timing_choice) {
-		if (!is_yield_tables_read) Read_yield_tables();
 		method = "NG";	// only use NG table to find starting age class
 		timing_choice ="0";
 		String forest_status = "E";
@@ -397,7 +381,6 @@ public class Read_Database {
 		
 		return valueReturn;	
 	}
-	
 
 	
 	
@@ -406,10 +389,8 @@ public class Read_Database {
 	// This block is For existing_strata ------------------------------------------------------------------------------------------------------
 	// This block is For existing_strata ------------------------------------------------------------------------------------------------------	
 	public String[][] get_existing_strata_values() {
-		if (!is_existing_strata_read) Read_existing_strata();
 		return existing_strata_values;
 	}
-	
 	
 	
 	
@@ -417,44 +398,28 @@ public class Read_Database {
 	// This block is For strata_definition ------------------------------------------------------------------------------------------------------
 	// This block is For strata_definition ------------------------------------------------------------------------------------------------------
 	// This block is For strata_definition ------------------------------------------------------------------------------------------------------	
-//	public LayerLinkedList get_layers() {       
-//		return layers;
-//	}
-	
-	
-	
 	public String[][] get_strata_definition_values() {
-		if (!is_strata_definitions_read) Read_strata_definition();
 		return strata_definition_values;
 	}	
 	
 	
 	public List<String> get_layers_Title() {   
-		if (!is_strata_definitions_read) Read_strata_definition();
 		return layers_Title;
 	}
 
 	
 	public List<String> get_layers_Title_ToolTip() {	
-		if (!is_strata_definitions_read) Read_strata_definition();
 		return layers_Title_ToolTip;
 	}
 	
 	
 	public List<List<String>> get_allLayers() {		
-		if (!is_strata_definitions_read) Read_strata_definition();
 		return allLayers;
 	}
 	
 	public List<List<String>> get_allLayers_ToolTips() {
-		if (!is_strata_definitions_read) Read_strata_definition();
 		return allLayers_ToolTips;
 	}	
-
-
-	
-	
-	
 	
 	
 	
@@ -590,7 +555,7 @@ public class Read_Database {
 		layer1.add("EA_R");
 		
 		List<String> layer2 = new ArrayList<String>();		// periods
-		for (int i = 1; i <= 50; i++) {
+		for (int i = 1; i <= 99; i++) {
 			layer2.add(Integer.toString(i));
 		}		
 			

@@ -17,8 +17,16 @@
 package prism_root;
 
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.Shape;
+import java.awt.font.FontRenderContext;
+import java.awt.font.GlyphVector;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -43,7 +51,7 @@ public class DesktopPanel_BackGround extends JDesktopPane {
 			BufferedImage bg = img;
 			
 
-			//Rescale buffered image-----------------
+			// Rescale buffered image-----------------
 			final float FACTOR  = 4f;
 			int scaleX = (int) (bg.getWidth() * FACTOR);
 			int scaleY = (int) (bg.getHeight() * FACTOR);
@@ -52,7 +60,6 @@ public class DesktopPanel_BackGround extends JDesktopPane {
 			Image scaleImage = bg.getScaledInstance(150, 40, Image.SCALE_SMOOTH);
 			BufferedImage bg2 = new BufferedImage(scaleX, scaleY, BufferedImage.TYPE_INT_ARGB);
 			bg2.getGraphics().drawImage(scaleImage, 0, 0 , null);
-			//End of Rescaling buffered image-----------------
 					
 			
 //			setBackgroundImage(bg);
@@ -66,20 +73,20 @@ public class DesktopPanel_BackGround extends JDesktopPane {
 	@Override
 	public Dimension getPreferredSize() {
 		BufferedImage img = getBackgroundImage();
-
 		Dimension size = super.getPreferredSize();
 		if (img != null) {
 			size.width = Math.max(size.width, img.getWidth());
 			size.height = Math.max(size.height, img.getHeight());
 		}
-
 		return size;
 	}
 
+	
 	public BufferedImage getBackgroundImage() {
 		return img;
 	}
 
+	
 	public void setBackgroundImage(BufferedImage value) {
 		if (img != value) {
 			BufferedImage old = img;
@@ -92,8 +99,6 @@ public class DesktopPanel_BackGround extends JDesktopPane {
 
 	@Override
 	protected void paintComponent(Graphics g) {
-//		g.setColor(getBackground());
-//		g.fillRect(0, 0, getWidth(), getHeight());
 		super.paintComponent(g);
 		BufferedImage bg = getBackgroundImage();
 		if (bg != null) {
@@ -107,16 +112,29 @@ public class DesktopPanel_BackGround extends JDesktopPane {
 			int x = (int) getWidth() - 155;
 			int y = (int) getHeight() - 50;
 			g.drawImage(bg, x, y, this);
-
-			
-			
-//			try {
-//				x = (int) getWidth() - 120;
-//				y = (int) 10;
-//				BufferedImage img5 = ImageIO.read(getClass().getResource("/pikachuAss.gif"));
-//				g.drawImage(img5, x, y, this);
-//			} catch (IOException e) {
-//			}
 		}
+		
+		
+//		// drawing circle text
+//		if (g instanceof Graphics2D) {
+//			Graphics2D g2d = (Graphics2D) g;
+//			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+//			String s = "Java Source and Support";
+//			Font font = new Font("Serif", Font.PLAIN, 30);
+//			FontRenderContext frc = g2d.getFontRenderContext();
+//			g2d.translate(400, 200);
+//
+//			GlyphVector gv = font.createGlyphVector(frc, s);
+//			int length = gv.getNumGlyphs();
+//			for (int i = 0; i < length; i++) {
+//				Point2D point = gv.getGlyphPosition(i);
+//				double theta = (double) i / (double) (length - 1) * Math.PI / 4;
+//				AffineTransform at = AffineTransform.getTranslateInstance(point.getX(), point.getY());
+//				at.rotate(theta);
+//				Shape glyph = gv.getGlyphOutline(i);
+//				Shape transformedGlyph = at.createTransformedShape(glyph);
+//				g2d.fill(transformedGlyph);
+//			}
+//		}
 	}
 }

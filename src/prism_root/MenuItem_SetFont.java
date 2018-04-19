@@ -97,20 +97,10 @@ public class MenuItem_SetFont extends JMenuItem {
 				for (JRadioButton i : radioButton) {
 					radioGroup.add(i);
 					radioPanel.add(i);
-				
-					if (UIManager.getLookAndFeelDefaults().getFont("MenuBar.font").getFontName().equals(i.getText())) {		// Use MenuBar to get current Font
-						i.setSelected(true);		//Select the radioButton of the current Font
-					}
 					
-					String font_name = i.getText();
 					i.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent event) {													
-							String font_name = "";
-							for (JRadioButton i : radioButton) {
-								if (i.isSelected()) {
-									font_name = i.getText();
-								}
-							}
+							String font_name = i.getText();
 							int font_size = (Integer) spin.getValue();
 							testing_font.setText("THIS Font is " + font_name + " - Size " + font_size);
 				        	testing_font.setFont(new Font(font_name, Font.PLAIN, font_size));
@@ -148,6 +138,15 @@ public class MenuItem_SetFont extends JMenuItem {
 			        	testing_font.setFont(new Font(font_name, Font.PLAIN, font_size));
 					}
 				});
+			    
+			    
+			    //--------------------------------------------------------------------------------------------------------------------
+			    for (JRadioButton i : radioButton) {
+					if (UIManager.getLookAndFeelDefaults().getFont("MenuBar.font").getFontName().equals(i.getText())) {		// Use MenuBar to get current Font
+						i.setSelected(true);	// select the radioButton of the current Font
+						i.doClick();			// this is to trigger showing the testing_font right when we open the pop-up JOptionPane
+					}
+				}
 			    
 			    
 			    //--------------------------------------------------------------------------------------------------------------------

@@ -103,3 +103,25 @@ GROUP BY period, action_type
 vacuum
 vacuum
 ----------
+test Rounded
+SELECT period,
+ROUND(SUM(CASE WHEN t.method = 'NG' AND t.volume > 0 THEN t.volume END), 1) AS NG_volume,
+ROUND(SUM(CASE WHEN t.method = 'PB' AND t.volume > 0 THEN t.volume  END), 1) AS PB_volume,
+ROUND(SUM(CASE WHEN t.method = 'GS' AND t.volume > 0 THEN t.volume  END), 1) AS GS_volume,
+ROUND(SUM(CASE WHEN t.method = 'EA' AND t.volume > 0 THEN t.volume  END), 1) AS EA_volume,
+ROUND(SUM(CASE WHEN t.method = 'MS' AND t.volume > 0 THEN t.volume  END), 1) AS MS_volume,
+ROUND(SUM(CASE WHEN t.method = 'BS' AND t.volume > 0 THEN t.volume  END), 1) AS BS_volume,
+ROUND(SUM(CASE WHEN t.volume > 0 THEN t.volume  END), 1) AS total_volume
+FROM
+
+
+(SELECT 
+CAST(var_period AS DECIMAL) as period, var_method as method, 
+SUM(var_value*rmcuft) as volume
+FROM output_05_management_details
+GROUP BY (period || method)
+ORDER BY (period || method)) AS t
+
+
+GROUP BY period
+----------

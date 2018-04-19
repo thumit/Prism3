@@ -32,7 +32,6 @@ import prism_convenience_class.IconHandle;
 
 public class QuickEdit_RD_Conversion_Panel extends JPanel {
 	public QuickEdit_RD_Conversion_Panel(JTable table, Object[][] data) {
-		setPreferredSize(new Dimension(200, 230));
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 
