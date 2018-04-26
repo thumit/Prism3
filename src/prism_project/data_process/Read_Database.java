@@ -192,7 +192,7 @@ public class Read_Database {
 				}				
 				
 				// get total columns
-				rs = st.executeQuery("SELECT * FROM existing_strata ORDER BY strata_id ASC;");	
+				rs = st.executeQuery("SELECT * FROM existing_strata ORDER BY strata_id ASC;");	// always sort by strata_id
 				rsmd = rs.getMetaData();
 				int colCount2 = rsmd.getColumnCount();
 				
@@ -234,7 +234,7 @@ public class Read_Database {
 				}				
 				
 				// get total columns
-				rs = st.executeQuery("SELECT * FROM strata_definition;");	
+				rs = st.executeQuery("SELECT * FROM strata_definition ORDER BY layer_id, attribute_id ASC;");		// always sort by layer_id & attribute_id
 				rsmd = rs.getMetaData();
 				int colCount3 = rsmd.getColumnCount();
 				
@@ -249,17 +249,17 @@ public class Read_Database {
 					}
 				}
 				
-				// always sort strata definition
-				Arrays.sort(strata_definition_values, new Comparator<String[]>(){
-					@Override
-					public int compare(String[] first, String[] second) {
-						int comparedTo = first[0].compareTo(second[0]);	// compare the first element (layer)
-						if (comparedTo == 0)
-							return first[2].compareTo(second[2]);	// if the first element (layer) is same (result is 0), compare the third element (attribute)
-						else
-							return comparedTo;
-					}
-				});
+//				// This is saved for another way to sort strata definition by layer_id & attribute_id
+//				Arrays.sort(strata_definition_values, new Comparator<String[]>(){
+//					@Override
+//					public int compare(String[] first, String[] second) {
+//						int comparedTo = first[0].compareTo(second[0]);	// compare the first element (layer)
+//						if (comparedTo == 0)
+//							return first[2].compareTo(second[2]);	// if the first element (layer) is same (result is 0), compare the third element (attribute)
+//						else
+//							return comparedTo;
+//					}
+//				});
 					
 
 				layers_Title = new ArrayList<String>();
@@ -270,7 +270,7 @@ public class Read_Database {
 				
 				// Loop through all rows and add all layers information
 				for (int i = 0; i < rowCount3; i++) {
-					if (! layers_Title.contains(strata_definition_values[i][0])) {  // If found a new layer
+					if (!layers_Title.contains(strata_definition_values[i][0])) {  // If found a new layer
 						// Add Layer title and toolTip    	
 			        	layers_Title.add(strata_definition_values[i][0]);
 			        	layers_Title_ToolTip.add(strata_definition_values[i][1]);
@@ -344,17 +344,29 @@ public class Read_Database {
 	}
 	
 	public List<String> get_col_unique_values_list(int columnIndex) {
-		List<String> listOfUniqueValues = new ArrayList<String>();
+		List<String> unique_values_list = new ArrayList<String>();
 		
 		for (int tb = 0; tb < yield_tables_values.length; tb++) {
 			for (int rowIndex = 0; rowIndex < yield_tables_values[tb].length; rowIndex++) {
-				if (!listOfUniqueValues.contains(yield_tables_values[tb][rowIndex][columnIndex].toString())) {	// only add to list if list does not contain the value
-					listOfUniqueValues.add(yield_tables_values[tb][rowIndex][columnIndex].toString());
+				if (!unique_values_list.contains(yield_tables_values[tb][rowIndex][columnIndex].toString())) {	// only add to list if list does not contain the value
+					unique_values_list.add(yield_tables_values[tb][rowIndex][columnIndex].toString());
 				}
 			}
 		}
+		
+		// Sort the list	
+		try {	//Sort Double
+			Collections.sort(unique_values_list, new Comparator<String>() {
+				@Override
+			    public int compare(String o1, String o2) {
+			        return Double.valueOf(o1).compareTo(Double.valueOf(o2));
+			    }
+			});	
+		} catch (Exception e1) {
+			Collections.sort(unique_values_list);	//Sort String
+		}
 
-		return listOfUniqueValues;
+		return unique_values_list;
 	}
 	
 	
@@ -646,7 +658,6 @@ public class Read_Database {
 			for (int i = 0; i < totalRows; i++) { // Read from 1st row
 				String[] rowValue = a[i].split(delimited);
 				for (int j = 0; j < totalCols && j < rowValue.length; j++) {
-//					value[i][j] = rowValue[j].replaceAll("\\s+", "");		// Remove all the space in the String   
 					value[i][j] = rowValue[j];		// to make toolTip text separated with space, may need the above line if there is spaces in layer and elements name in the file StrataDefinition.csv
 				
 				}				

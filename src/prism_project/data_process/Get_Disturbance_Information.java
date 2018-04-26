@@ -182,7 +182,7 @@ public class Get_Disturbance_Information {
 		if (Collections.binarySearch(static_identifier.get(1), Get_Variable_Information.get_layer2(var_name)) < 0) return false;
 		if (Collections.binarySearch(static_identifier.get(2), Get_Variable_Information.get_layer3(var_name)) < 0) return false;
 		if (Collections.binarySearch(static_identifier.get(3), Get_Variable_Information.get_layer4(var_name)) < 0) return false;
-		if (Get_Variable_Information.get_forest_status(var_name).equals("E") && !Get_Variable_Information.get_method(var_name).equals("MS") && !Get_Variable_Information.get_method(var_name).equals("BS")) {
+		if (Get_Variable_Information.get_forest_status(var_name).equals("E")) {
 			if (Collections.binarySearch(static_identifier.get(4), Get_Variable_Information.get_layer5(var_name)) < 0) return false;	// layer5 cover type
 			if (Collections.binarySearch(static_identifier.get(5), Get_Variable_Information.get_layer6(var_name)) < 0) return false;	// layer6: size class
 		}

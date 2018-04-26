@@ -815,3 +815,29 @@ All changes in this block are associated with PrismAlpha1.1.01.jar, Prism Formul
 --------------------------------------------------------------------------
 
 365. Fix printing out wrong percentages for MS, BS, EA with period = rotation_period in output_05. Fixed (line 1172 in Panel_SolveRun)  --> exported as PrismAlpha1.0.02
+366. Allow replacing disturbances on MS and BS areas. Now, only EA_E and EA_R where the final activity is implemented (period = rotation period) would not be subjected to SR
+	- Change formulation: 6c, 6e, 12
+	- Change codes
+		- Panel_SolveRun: add loss percentage for 6c, 6e, and add MS and BS variables for 12
+		- Get_Cost_Information: remove the exclusion of MS and BS in "are_all_static_identifiers_matched" --> means include MS and BS into the regeneration conversion cost calculation (since SR can now happen in MS and BS areas)
+		- Get_Disturbance_Information: remove the exclusion of MS and BS in "are_all_static_identifiers_matched" --> means MS and BS areas could be subjected to SR
+		- Panel_SolveRun: In the place where we calculate all costs for all variables: remove the exclusion of MS and BS --> means include MS and BS into the regeneration conversion cost calculation
+		- Output_Panel_Management_Details_NOSQL: In the place where we calculate all costs for all variables: remove the exclusion of MS and BS --> means include MS and BS into the regeneration conversion cost calculation
+367. Move the sort for unique_values_list from ScrollPane_DynamicIdentifiers --> Read_Database: get_col_unique_values_list
+368. Output_Panel_Management_Details_NOSQL --> Querry_Optimal_Solution  --> Simplify get_results() by using var_unit_management_cost column. It is now much more faster to do calculation on cost (i.e. using CostParameter).
+All the above associated with Prism Formulation 05.docx
+
+369. Rearrange model formulation: note same objetive optimal solution, but different variables solution values --> OK
+	- 2, 3 --> 2a, 2b
+	- 4a, 4b --> 3a, 3b
+	- 5 --> 16
+	- 6a --> 5
+	- 6b, 6c --> 10a, 10b
+	- 6d, 6e --> 11a, 11b
+	- 7a, 7b --> 6a, 6b
+	- 8a, 8b --> 7a, 7b
+	- 9a, 9b --> 8a, 8b
+	- 10, 11 --> 9a, 9b
+All changes in this block are associated with PrismAlpha1.1.03.jar, Prism Formulation 06.docx, Prism Database 03.docx	
+--------------------------------------------------------------------------	
+

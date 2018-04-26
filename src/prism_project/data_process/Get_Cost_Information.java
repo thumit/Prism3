@@ -139,7 +139,7 @@ public class Get_Cost_Information {
 						if (final_cost_list.get(1).get(0).get(item).equals(conversion_cost_to_apply)) {
 							value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(1).get(1).get(item));
 						} 
-					} else {	// when period is not the rotation_period (variable can be anything except BS MS)
+					} else {	// when period is not the rotation_period (variable can be anything except EA_E or EA_R in period = rotation period when clear cut happens). Here replacing disturbances can happen
 						int index = Collections.binarySearch(conversion_cost_after_disturbance_name_list, final_cost_list.get(1).get(0).get(item));
 						if (index >= 0) {
 							value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(1).get(1).get(item)) * conversion_cost_after_disturbance_value[index];		
@@ -250,7 +250,7 @@ public class Get_Cost_Information {
 		if (Collections.binarySearch(static_identifier.get(1), Get_Variable_Information.get_layer2(var_name)) < 0) return false;
 		if (Collections.binarySearch(static_identifier.get(2), Get_Variable_Information.get_layer3(var_name)) < 0) return false;
 		if (Collections.binarySearch(static_identifier.get(3), Get_Variable_Information.get_layer4(var_name)) < 0) return false;
-		if (Get_Variable_Information.get_forest_status(var_name).equals("E") && !Get_Variable_Information.get_method(var_name).equals("MS") && !Get_Variable_Information.get_method(var_name).equals("BS")) {
+		if (Get_Variable_Information.get_forest_status(var_name).equals("E")) {
 			if (Collections.binarySearch(static_identifier.get(4), Get_Variable_Information.get_layer5(var_name)) < 0) return false;	// layer5 cover type
 			if (Collections.binarySearch(static_identifier.get(5), Get_Variable_Information.get_layer6(var_name)) < 0) return false;	// layer6: size class
 		}

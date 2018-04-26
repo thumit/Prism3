@@ -233,26 +233,15 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 							c_list.weighty = 1;
 							
 							
-							List<String> uniqueValueList = read_Database.get_col_unique_values_list(currentCheckBoxIndex);									
-							//Sort the list	
-							try {	//Sort Double
-								Collections.sort(uniqueValueList, new Comparator<String>() {
-									@Override
-								    public int compare(String o1, String o2) {
-								        return Double.valueOf(o1).compareTo(Double.valueOf(o2));
-								    }
-								});	
-							} catch (Exception e1) {
-								Collections.sort(uniqueValueList);	//Sort String
-							}
+							List<String> unique_values_list = read_Database.get_col_unique_values_list(currentCheckBoxIndex);									
 							
 							//Add Labels of unique values to listPanel
-							for (int j = 0; j < uniqueValueList.size(); j++) {
+							for (int j = 0; j < unique_values_list.size(); j++) {
 								c_list.gridx = 0;
 								c_list.gridy = j;
 								c_list.weightx = 1;
 								c_list.weighty = 1;
-								listPanel.add(new JLabel(uniqueValueList.get(j)), c_list);		
+								listPanel.add(new JLabel(unique_values_list.get(j)), c_list);		
 							}
 							
 							//ScrollPane contains the listPanel
@@ -268,10 +257,10 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 							columnInfo_TArea.setEditable(false);
 							columnInfo_TArea.setLineWrap(true);
 							columnInfo_TArea.setWrapStyleWord(true);
-							columnInfo_TArea.append("PRISM found " + uniqueValueList.size() + 
+							columnInfo_TArea.append("PRISM found " + unique_values_list.size() + 
 									" unique values for this identifier (across " + yieldTable_values.length + " prescriptions in your database)."  + "\n");
 							
-							if (uniqueValueList.size()<=20) {
+							if (unique_values_list.size()<=20) {
 								columnInfo_TArea.append("'DISCRETE IDENTIFIER' is recommended.");
 							} else {
 								columnInfo_TArea.append("'RANGE IDENTIFIER' is recommended.");
@@ -319,10 +308,10 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 										discretePanel.add(new JLabel("Define Name (Below are suggestions from PRISM-Library)"), c_dP);
 										
 										//Add all discrete values and textField for the toolTip
-										for (int j = 0; j < uniqueValueList.size(); j++) {
-											String nameOfColumnAndUniqueValue = currentCheckBoxName + " " + uniqueValueList.get(j);	//The name
+										for (int j = 0; j < unique_values_list.size(); j++) {
+											String nameOfColumnAndUniqueValue = currentCheckBoxName + " " + unique_values_list.get(j);	//The name
 																		
-											checkboxDynamicIdentifiers.get(currentCheckBoxIndex).add(new JCheckBox(uniqueValueList.get(j)));
+											checkboxDynamicIdentifiers.get(currentCheckBoxIndex).add(new JCheckBox(unique_values_list.get(j)));
 											checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(j).setToolTipText(read_Database.get_ParameterToolTip(nameOfColumnAndUniqueValue));	//ToolTip of this Name from Prism Library;
 											c_dP.gridx = 0;
 											c_dP.gridy = 1 + j;
@@ -394,7 +383,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 										c_dP.gridx = 1;
 										c_dP.gridy = 1;
 										JTextField min_TF = new JTextField(10);															
-										min_TF.setText(uniqueValueList.get(0));
+										min_TF.setText(unique_values_list.get(0));
 										rangePanel.add(min_TF, c_dP);
 										
 										
@@ -406,7 +395,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 										c_dP.gridx = 1;
 										c_dP.gridy = 2;
 										JTextField max_TF = new JTextField(10);															
-										max_TF.setText(uniqueValueList.get(uniqueValueList.size() - 1));
+										max_TF.setText(unique_values_list.get(unique_values_list.size() - 1));
 										rangePanel.add(max_TF, c_dP);
 										
 										
@@ -466,8 +455,8 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 													
 											        	//Add all ranges and textField for the toolTip
 														for (int j = 0; j < numberofRanges; j++) {																									
-															String valueFrom = String.format("%.2f", minValue + (maxValue-minValue)/numberofRanges*j);
-															String valueTo = String.format("%.2f", minValue + (maxValue-minValue)/numberofRanges*(j+1));
+															String valueFrom = String.format("%.2f", minValue + (maxValue - minValue) / numberofRanges * j);
+															String valueTo = String.format("%.2f", minValue + (maxValue - minValue) / numberofRanges * (j + 1));
 															
 															checkboxDynamicIdentifiers.get(currentCheckBoxIndex).add(new JCheckBox("[" + valueFrom + "," + valueTo + ")"));
 															c_dP.gridx = 0;

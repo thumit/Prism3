@@ -1,4 +1,4 @@
-Model is last edited by:     PRISM ALPHA 1.1.02     on     2018/04/19   -   07:36:14
+Model is last edited by:     PRISM ALPHA 1.1.03     on     2018/04/20   -   18:09:32
 Model is created by:     PRISM ALPHA 1.1.02     on     2018/04/19   -   07:36:01
 Model location:     C:\prism\Projects\new_project_02\run05
 Model database:     C:\prism\Projects\new_project_02\run05\database.db

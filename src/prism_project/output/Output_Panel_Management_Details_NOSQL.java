@@ -83,8 +83,6 @@ import prism_convenience_class.MixedRangeCombinationIterable;
 import prism_convenience_class.PrismTableModel;
 import prism_convenience_class.TableColumnsHandle;
 import prism_convenience_class.ToolBarWithBgImage;
-import prism_project.data_process.Get_Cost_Information;
-import prism_project.data_process.Get_Disturbance_Information;
 import prism_project.data_process.Get_Parameter_Information;
 import prism_project.data_process.Get_Variable_Information;
 import prism_project.data_process.LinkedList_Databases_Item;
@@ -111,22 +109,12 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 	private PrismTableModel input_model9;
 	private Object[][] input_data9;
 	
-	
 	Read_RunInputs read;
 	int total_Periods;
-	
-	
-	
-	
-	private List<List<JCheckBox>> checkboxStaticIdentifiers;
-	private ScrollPane_Parameters parametersScrollPanel;
-	private ScrollPane_StaticIdentifiers static_identifiersScrollPanel;
-	private ScrollPane_DynamicIdentifiers dynamic_identifiersScrollPanel;
 	
 	private File file_database;
 	private Read_Database read_database;
 	
-	private JScrollPane table_scroll_pane;
 	private File currentProjectFolder;
 	private String currentRun;
 	private JTable table;
@@ -134,7 +122,6 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 	private PrismTableModel model;
 	private JButton NOSQL_link_button;
 	
-	private Thread thread_filter;
 	private ExecutorService executor;
 	
 	public Output_Panel_Management_Details_NOSQL(ExecutorService executor, File currentProjectFolder, String currentRun, JTable table, Object[][] data, PrismTableModel model, JButton NOSQL_link_button) {
@@ -165,95 +152,6 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 		// End of set up ---------------------------------------------------------------------------			
 		
 		
-//		// 1st grid ------------------------------------------------------------------------------		// Static identifiers	
-//		String panel_name = "Static Identifiers  -  use strata attributes to filter variables";
-//		static_identifiersScrollPanel = new ScrollPane_StaticIdentifiers(read_Database, 2, panel_name);
-//		checkboxStaticIdentifiers = static_identifiersScrollPanel.get_CheckboxStaticIdentifiers();		
-//				
-//		// Update GUI for time period 
-//    	for (int j = 0; j < checkboxStaticIdentifiers.get(checkboxStaticIdentifiers.size() - 1).size(); j++) {			//The last element is Time period			
-//			if (j < total_Periods) {
-//				checkboxStaticIdentifiers.get(checkboxStaticIdentifiers.size() - 1).get(j).setVisible(true);		//Periods to be visible 			
-//			} else {
-//				checkboxStaticIdentifiers.get(checkboxStaticIdentifiers.size() - 1).get(j).setVisible(false);		//Periods to be invisible
-//				checkboxStaticIdentifiers.get(checkboxStaticIdentifiers.size() - 1).get(j).setSelected(false);		//Periods to be unselected
-//			}
-//		} 
-//    	    	
-//    	
-//		// Listeners for checkboxStaticIdentifiers
-//		for (int i = 0; i < checkboxStaticIdentifiers.size(); i++) {
-//			for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {
-//				checkboxStaticIdentifiers.get(i).get(j).addItemListener(this);
-//			}
-//		}	
-//
-//		
-//		// 2nd Grid ------------------------------------------------------------------------------		// Dynamic identifiers
-//		dynamic_identifiersScrollPanel = new ScrollPane_DynamicIdentifiers(read_Database);
-//			
-//				
-//		// 3rd grid ------------------------------------------------------------------------------		// Parameters
-//		parametersScrollPanel = new ScrollPane_Parameters(read_Database);
-//		TitledBorder border = new TitledBorder("Parameters");
-//		border.setTitleJustification(TitledBorder.CENTER);
-//		parametersScrollPanel.setBorder(border);
-//    	parametersScrollPanel.setPreferredSize(new Dimension(200, 100));			
-//		
-//    	    	
-//    	// 4th grid ------------------------------------------------------------------------------		// table scroll pane
-//        table_scroll_pane = new JScrollPane();
-//        border = new TitledBorder("Filtered Result based on Optimal Solution");
-//		border.setTitleJustification(TitledBorder.CENTER);
-//		table_scroll_pane.setBorder(border);
-//		table_scroll_pane.setViewportView(table);
-//		table_scroll_pane.setPreferredSize(new Dimension(200, 100));
-//		
-//    	
-//    	
-//		
-//    	// Add all Grids to the Main Grid-----------------------------------------------------------------------
-//    	// Add all Grids to the Main Grid-----------------------------------------------------------------------
-//    	setLayout(new GridBagLayout());
-//		GridBagConstraints c = new GridBagConstraints();
-//		c.fill = GridBagConstraints.BOTH;
-//		
-//		
-//		// Add static_identifiersScrollPanel to the main Grid
-//		c.gridx = 0;
-//		c.gridy = 1;
-//		c.gridwidth = 2;
-//		c.gridheight = 1;
-//		c.weightx = 0;
-//	    c.weighty = 0;
-//		super.add(static_identifiersScrollPanel, c);				
-//	    		
-//		// Add dynamic_identifiersPanel to the main Grid
-//		c.gridx = 2;
-//		c.gridy = 1;
-//		c.gridwidth = 1;
-//		c.gridheight = 1;
-//		c.weightx = 1;
-//		c.weighty = 0;
-//		super.add(dynamic_identifiersScrollPanel, c);	
-//		    		
-//		// Add the parametersScrollPanel to the main Grid	
-//		c.gridx = 0;
-//		c.gridy = 2;
-//		c.gridwidth = 1;
-//		c.gridheight = 1;
-//		c.weightx = 0;
-//	    c.weighty = 1;
-//		super.add(parametersScrollPanel, c);						
-//	    	    		    
-//	    // Add the table	
-//		c.gridx = 1;
-//		c.gridy = 2;
-//		c.gridwidth = 2; 
-//		c.gridheight = 1;
-//		c.weightx = 1;
-//	    c.weighty = 1;
-//		super.add(table_scroll_pane, c);		
 		setLayout(new BorderLayout());
 		reload_inputs_before_creating_GUI();
 		super.add(new Fly_Constraints_GUI(), BorderLayout.CENTER);		
@@ -262,162 +160,9 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 	
 	//Listeners for this class------------------------------------------------------------------------------------------------------------------------
 	public void itemStateChanged(ItemEvent e) {
-		// THESE FOLLLOWING IS INTERESTING, SAME AS ABOVE BUT I PUT THE WHOLE THING INTO A THREAD AND NO NEED TO STOP ANY MORE --> just interrupt & AVOID TROUBLE OF FREEZING
-		// THESE FOLLLOWING IS INTERESTING, SAME AS ABOVE BUT I PUT THE WHOLE THING INTO A THREAD AND NO NEED TO STOP ANY MORE --> just interrupt & AVOID TROUBLE OF FREEZING
-		// THESE FOLLLOWING IS INTERESTING, SAME AS ABOVE BUT I PUT THE WHOLE THING INTO A THREAD AND NO NEED TO STOP ANY MORE --> just interrupt & AVOID TROUBLE OF FREEZING
-		
-//		Thread filter_thread = new Thread() {
-//			public void run() {	
-//				Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-//				Thread[] threadArray = threadSet.toArray(new Thread[threadSet.size()]);
-//				for (Thread t : threadArray) {
-//					if (t.getState() == Thread.State.RUNNABLE && t != Thread.currentThread()) {
-//						t.interrupt();
-////						t.stop();
-//						PrismMain.get_main().revalidate();
-//						PrismMain.get_main().repaint();
-//					}
-//				}
-//
-//				
-//				executor.submit(new Runnable() {
-//					public void run() {										
-//						table_scroll_pane.setViewportView(null);	// Hide table before filtering
-//						
-//						
-//						RowFilter<Object, Object> equalsAFilter = new RowFilter<Object, Object>() {
-//							// 1. FAST FILTER: NOT SURE IF FASTER THAN 2
-//							public boolean include(Entry<? extends Object, ? extends Object> entry) {				
-//								String varible_term = entry.getStringValue(1);
-//								String term;
-//								int count;
-//								
-//								
-//								
-//								term = Get_Variable_Information.get_layer1(varible_term);
-//								count = 0;
-//								for (JCheckBox layer1 : checkboxStaticIdentifiers.get(0)) {
-//									if ((layer1.isSelected() && (layer1.isVisible()) || !layer1.isEnabled()) && term.equals(layer1.getText())) {
-//										count++;
-//									}
-//								}
-//								if (count < 1) return false;		// return false so that this entry is not shown								
-//								
-//								
-//								
-//								term = Get_Variable_Information.get_layer2(varible_term);
-//								count = 0;
-//								for (JCheckBox layer2 : checkboxStaticIdentifiers.get(1)) {
-//									if ((layer2.isSelected() && (layer2.isVisible()) || !layer2.isEnabled()) && term.equals(layer2.getText())) {
-//										count++;
-//									}
-//								}
-//								if (count < 1) return false;		// return false so that this entry is not shown
-//								
-//								
-//								
-//								term = Get_Variable_Information.get_layer3(varible_term);
-//								count = 0;
-//								for (JCheckBox layer3 : checkboxStaticIdentifiers.get(2)) {
-//									if ((layer3.isSelected() && (layer3.isVisible()) || !layer3.isEnabled()) && term.equals(layer3.getText())) {
-//										count++;
-//									}
-//								}
-//								if (count < 1) return false;		// return false so that this entry is not shown
-//								
-//							
-//								
-//								term = Get_Variable_Information.get_layer4(varible_term);
-//								count = 0;
-//								for (JCheckBox layer4 : checkboxStaticIdentifiers.get(3)) {
-//									if ((layer4.isSelected() && (layer4.isVisible()) || !layer4.isEnabled()) && term.equals(layer4.getText())) {
-//										count++;
-//									}
-//								}
-//								if (count < 1) return false;		// return false so that this entry is not shown
-//								
-//								
-//								
-//								if (Get_Variable_Information.get_forest_status(varible_term) == "E") {		// Only applied for Existing Strata
-//									term = Get_Variable_Information.get_layer5(varible_term);
-//									count = 0;
-//									for (JCheckBox layer5 : checkboxStaticIdentifiers.get(4)) {
-//										if ((layer5.isSelected() && (layer5.isVisible()) || !layer5.isEnabled()) && term.equals(layer5.getText())) {
-//											count++;
-//										}
-//									}
-//									if (count < 1) return false;		// return false so that this entry is not shown
-//									
-//									
-//									
-//									term = Get_Variable_Information.get_layer6(varible_term);
-//									count = 0;
-//									for (JCheckBox layer6 : checkboxStaticIdentifiers.get(5)) {
-//										if ((layer6.isSelected() && (layer6.isVisible()) || !layer6.isEnabled()) && term.equals(layer6.getText())) {
-//											count++;
-//										}
-//									}
-//									if (count < 1) return false;		// return false so that this entry is not shown
-//								}
-//								
-//								
-//								
-//								term = Get_Variable_Information.get_method(varible_term) + "_" + Get_Variable_Information.get_forest_status(varible_term);
-//								count = 0;
-//								for (JCheckBox method : checkboxStaticIdentifiers.get(6)) {
-//									if ((method.isSelected() && (method.isVisible()) || !method.isEnabled()) && term.equals(method.getText())) {
-//										count++;
-//									}
-//								}
-//								if (count < 1) return false;		// return false so that this entry is not shown	
-//								
-//								
-//								
-//								term = String.valueOf(Get_Variable_Information.get_period(varible_term));
-//								count = 0;
-//								for (JCheckBox period : checkboxStaticIdentifiers.get(7)) {
-//									if ((period.isSelected() && (period.isVisible()) || !period.isEnabled()) && term.equals(period.getText())) {
-//										count++;
-//									}
-//								}
-//								if (count < 1) return false;		// return false so that this entry is not shown		
-//								
-//
-//								
-//								return true;	// return true to show the entry
-//							}
-//						};
-//						
-//						TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model);
-//						table.setRowSorter(sorter);
-//						sorter.setRowFilter(equalsAFilter);	
-//						
-//						
-//						table_scroll_pane.setViewportView(table);	// Show table after filtering is finished
-//					}
-//				});
-//
-//				try {
-//					if (executor.awaitTermination(-1, TimeUnit.SECONDS)) {	
-//						System.out.println("aaaaaaaaaaa");
-//					} else {				
-//						System.out.println("Task completed, other waiting Filters Threads are automatically shut down");
-//						PrismMain.get_main().revalidate();
-//						PrismMain.get_main().repaint();
-//					}
-//				} catch (InterruptedException e1) {
-//					System.out.println("Executor problem in Filter Threads in Customize Mode");
-//				}
-//								
-//				this.interrupt();
-//			}
-//		};
-//		
-//		if (!Thread.currentThread().isInterrupted()) {
-//			Thread.currentThread().interrupt();
-//			filter_thread.start();
-//		}		
 	}
+	
+	
 	
 	
 	private void reload_inputs_before_creating_GUI() {		
@@ -631,10 +376,13 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			            tableColumn.getHeaderValue(), false, false, -1, column);
 				maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
 				
-				if (column != 1) {
-					tableColumn.setPreferredWidth(maxWidth);
-				} else {
+				if (getColumnName(column).equals("query_description")) {
 					tableColumn.setMinWidth(400);
+					
+				} else if (getColumnName(column).equals("query_value")) {
+					tableColumn.setMinWidth(150);
+				} else {
+					tableColumn.setPreferredWidth(maxWidth);
 				}
 				return component;
 			}
@@ -684,17 +432,8 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 
         // Set up Type for each column 2
 		table9.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new comboBox_constraint_type()));
-			
 		
-//		// Hide the some columns: this hide is better than remove column from column model, this is basically set size to be zero
-//		for (int i = 0; i < colCount9; i++) {
-//			if (i != 0 && i != 1 && i != 3 & i!= 12) {
-//				table9.getColumnModel().getColumn(i).setMinWidth(0);
-//				table9.getColumnModel().getColumn(i).setMaxWidth(0);
-//				table9.getColumnModel().getColumn(i).setWidth(0);
-//			}
-//		}
-		// Different way to hide columns
+		// Hide columns
 		TableColumnsHandle table_handle = new TableColumnsHandle(table9);
 		table_handle.setColumnVisible("query_type", false);
 		table_handle.setColumnVisible("lowerbound", false);
@@ -1723,23 +1462,30 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 								List<String> parameters_indexes = new ArrayList<String>(get_parameters_indexes(current_parameter_index));
 														
 								// Process all the variables in output05 and use static_identifiers to trim to get the var_name_list & var_value_list
+								int name_col = table.getColumn("var_name").getModelIndex();
+								int value_col = table.getColumn("var_value").getModelIndex();
+								int cost_col = table.getColumn("var_unit_management_cost").getModelIndex();
 								List<String> var_name_list = new ArrayList<String>(); 
-								List<Double> var_value_list = new ArrayList<Double>();						
+								List<Double> var_value_list = new ArrayList<Double>();	
+								List<Double> var_cost_list = new ArrayList<Double>();
 								for (int row = 0; row < data.length; row++) {
-									String var_name = String.valueOf(data[row][1]);
-									double var_value = Double.valueOf(String.valueOf(data[row][2]));
+									String var_name = String.valueOf(data[row][name_col]);
+									double var_value = Double.valueOf(String.valueOf(data[row][value_col]));
+									double var_cost = Double.valueOf(String.valueOf(data[row][cost_col]));
 									if (are_all_static_identifiers_matched(var_name, static_identifiers)) {
 										var_name_list.add(var_name);
 										var_value_list.add(var_value);
+										var_cost_list.add(var_cost);
 									}	
 								}	
 								
 								// Convert lists to 1-D arrays
 								String[] vname = var_name_list.toArray(new String[var_name_list.size()]);
 								double[] vvalue = Stream.of(var_value_list.toArray(new Double[var_value_list.size()])).mapToDouble(Double::doubleValue).toArray();
+								double[] vcost = Stream.of(var_cost_list.toArray(new Double[var_cost_list.size()])).mapToDouble(Double::doubleValue).toArray();
 										
 								// Get the sum result and update the GUI table
-								data9[i][12] = new Querry_Optimal_Solution().get_results(read_database, vname, vvalue, multiplier, parameters_indexes, dynamic_dentifiers_column_indexes, dynamic_identifiers);
+								data9[i][12] = new Querry_Optimal_Solution().get_results(read_database, vname, vvalue, vcost, multiplier, parameters_indexes, dynamic_dentifiers_column_indexes, dynamic_identifiers);
 								table9.scrollRectToVisible(new Rectangle(table9.getCellRect(table9.convertRowIndexToView(i), 0, true)));
 								
 								// Get everything show up nicely
@@ -2084,76 +1830,30 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 	
 	
 	private class Querry_Optimal_Solution {
-		
-		private double get_results(Read_Database read_database, String[] vname, double[] vvalue,			// This vname is the array after filtered by static_identifiers
-				double multiplier, List<String> parameters_indexes_list, List<String> dynamic_dentifiers_column_indexes, List<List<String>> dynamic_identifiers) {		
+
+		private double get_results(Read_Database read_database, String[] vname, double[] vvalue, double[] vcost, double multiplier,			// vname, vvalue, vcost are results after filtered by static_identifiers
+				 List<String> parameters_indexes_list, List<String> dynamic_dentifiers_column_indexes, List<List<String>> dynamic_identifiers) {		
 			
-			double sum_all = 0;
 			
 			
 			// Database Info
-			Object[][][] yield_tables_values = read_database.get_yield_tables_values();
-			String[] yield_tables_column_names = read_database.get_yield_tables_column_names();
 			Object[] yield_tables_names = read_database.get_yield_tables_names();			
 			List<String> yield_tables_names_list = new ArrayList<String>() {{ for (Object i : yield_tables_names) add(i.toString());}};		// Convert Object array to String list
 						
 			// Read input files to retrieve values later
 			Read_RunInputs read = new Read_RunInputs();
-			read.read_general_inputs(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_01_general_inputs.txt"));
 			read.read_model_strata(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_03_model_strata.txt"));
-			read.read_covertype_conversion_clearcut(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_04_covertype_conversion_clearcut.txt"));
-			read.read_natural_disturbances_replacing(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_07_natural_disturbances_replacing.txt"));
-			read.read_management_cost(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_08_management_cost.txt"));
-						
-			// Get info: input_01_general_inputs
-			int total_Periods = read.get_total_periods();
-			int total_replacing_disturbances = read.get_total_replacing_disturbances();
-			double annualDiscountRate = read.get_discount_rate() / 100;
-						
+
 			// Get info: input_03_modeled_strata
-			List<String> model_strata = new ArrayList<String>();
-			model_strata = read.get_model_strata();
+			List<String> model_strata = read.get_model_strata();
 						
-			// Get Info: input_07_natural_disturbances_replacing
-			List<String> disturbance_condition_list = read.get_disturbance_condition_list(); 		
-			
-			// Get info: input_08_management_cost
-			List<String> cost_condition_list = read.get_cost_condition_list(); 
-
 			// Some more data process definitions
-			Get_Disturbance_Information disturbance_info = (disturbance_condition_list != null) ? new Get_Disturbance_Information(read_database, disturbance_condition_list) : null;
-			Get_Cost_Information cost_info = (cost_condition_list != null) ? new Get_Cost_Information(read_database, cost_condition_list) : null;
 			Get_Parameter_Information parameter_info = new Get_Parameter_Information(read_database);
-			
-			
-			
-			// Set up problem-------------------------------------------------			
-			List<List<String>> allLayers =  read_database.get_allLayers();	
-			List<String> layer1 = allLayers.get(0);
-			List<String> layer2 = allLayers.get(1);
-			List<String> layer3 = allLayers.get(2);
-			List<String> layer4 = allLayers.get(3);
-			List<String> layer5 = allLayers.get(4);
-			List<String> layer6 = allLayers.get(5);
-					
-			// Sort all lists
-			Collections.sort(layer1);
-			Collections.sort(layer2);
-			Collections.sort(layer3);
-			Collections.sort(layer4);
-			Collections.sort(layer5);
-			Collections.sort(layer6);
-			
-			
-			
-	
 
-			//Get the 2 parameter V(s1,s2,s3,s4,s5,s6) and A(s1,s2,s3,s4,s5,s6)
+			// Get the 2 parameter V(s1,s2,s3,s4,s5,s6) and A(s1,s2,s3,s4,s5,s6)
 			String[][] Input2_value = read.get_MO_Values();	
 			double[] strata_area = new double[model_strata.size()];
 			int[] starting_age = new int[model_strata.size()];			
-			
-			
 			
 			// Loop through all modeled_strata to find if the names matched and get the total area and age class
 			for (int id = 0; id < model_strata.size(); id++) {
@@ -2165,123 +1865,34 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 				}		
 			}						
 			
-	
 			
 			
-			// CREATE OBJECTIVE FUNCTION-------------------------------------------------
-			// CREATE OBJECTIVE FUNCTION-------------------------------------------------
-			// CREATE OBJECTIVE FUNCTION-------------------------------------------------									
-			int[] var_prescription = new int[vname.length];
-			int[] var_row_id = new int[vname.length];
-			
-			// This array stores cost information
-			double[] var_cost_value = new double[vname.length];
-			for (int i = 0; i < vname.length; i++) {
-				var_cost_value[i] = -9999;		// start with -9999
-			}
-						
-			// This array stores replacing disturbances information
-			int[] var_rd_condition_id = new int[vname.length];
-			for (int i = 0; i < vname.length; i++) {
-				var_rd_condition_id[i] = -9999;		// start with -9999   This is the priority id. example we have 4 conditions --> id from 0 to 3
-			}
-			
-			// This array is all zeroes of replacing disturbance info
-			int total_covertype = layer5.size();
-			double[][][] rd_percentage_zeroes = new double[total_replacing_disturbances][total_covertype][total_covertype];
-			for (int i = 0; i < total_covertype; i++) {
-				for (int j = 0; j < total_covertype; j++) {
-					for (int k = 0; k < total_replacing_disturbances; k++) {
-						rd_percentage_zeroes[k][i][j] = (double) 0;	// just an all zeroes array
-					}
-				}
-			}	
 			// CREATE CONSTRAINTS-------------------------------------------------
 			// CREATE CONSTRAINTS-------------------------------------------------
 			// CREATE CONSTRAINTS-------------------------------------------------
 			
-					
+			// Constraints 15	
+			double sum_all = 0;
 			
-			// Constraints 15-------------------------------------------------	
 			// Loop all variables that were trim by the static filter already: then add to sum_all
 			for (int var_index = 0; var_index < vname.length; var_index++) {
-				String var_name = vname[var_index];
-				int var_rotation_age = Get_Variable_Information.get_rotation_age(var_name, starting_age, model_strata); 
-				
-				int[] prescription_and_row = get_prescription_and_row(yield_tables_names_list, var_name, var_rotation_age);
-				var_prescription[var_index] = prescription_and_row[0];	// = table_id_to_find;
-				var_row_id[var_index] = prescription_and_row[1];		// = row_id_to_find;
-				int table_id_to_find = prescription_and_row[0];
-				int row_id_to_find = prescription_and_row[1];
-				
-				
-				if (parameters_indexes_list.contains("CostParameter") && cost_info != null) {	// this is different from Panel_SolveRun. Add this so we don't have to calculate if this is not a cost query
-					if (table_id_to_find != -9999 && row_id_to_find < yield_tables_values[table_id_to_find].length && row_id_to_find != -9999) {	
-						// The above if then is not necessary (because we already have it in the void call), it is here just to help not create unnecessary Cost object as below
-						// And because of this, it might save time
-						
-						// Replacing Disturbances -----------------------------------
-						// Replacing Disturbances -----------------------------------
-						if (disturbance_info != null) {	// in case there is condition --> calculate this one right away since they will be definitely used
-							var_rd_condition_id[var_index] = disturbance_info.get_rd_condition_id_for_this_var(var_name, var_prescription[var_index], var_row_id[var_index]);	// always return -9999 or a number
-						}
-						
-						// Cost ------------------------------------------------------
-						// Cost ------------------------------------------------------
-						if (cost_info != null) {	// in case there is condition --> calculate this one right away, it might be used, but just because this is supposed to be not a large array
-							int s5 = Collections.binarySearch(layer5, Get_Variable_Information.get_layer5(var_name));
-							int t = Get_Variable_Information.get_period(var_name);
-							int tR = Get_Variable_Information.get_rotation_period(var_name);
-							double discounted_value = 1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1));
-							
-							List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
-							List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
-							
-							String method = Get_Variable_Information.get_method(var_name);
-							if (var_rd_condition_id[var_index] != -9999 && !method.equals("MS") && !method.equals("BS") && t != tR) {		// Note: no replacing disturbance, or MS, or BS, or EA in the period = rotation period--> no conversion cost after replacing disturbance
-								double[][][] rd_percentage = disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]);
-								for (int s5R = 0; s5R < layer5.size(); s5R++) {
-									double total_percentage = 0;
-									for (int k = 0; k < total_replacing_disturbances; k++) {
-										total_percentage = total_percentage + rd_percentage[k][s5][s5R];
-									}
-									if (total_percentage / 100 > 0) {
-										coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(s5R) + " " + "disturbance");
-										coversion_cost_after_disturbance_value_list.add(total_percentage / 100);
-									}														
-								}
-							}
-							
-							var_cost_value[var_index] = cost_info.get_cost_value(
-											var_name, var_prescription[var_index], var_row_id[var_index],
-											cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);		// always return 0 or a number
-							var_cost_value[var_index] = var_cost_value[var_index] * discounted_value;	// Cost is discounted
-						} else {
-							var_cost_value[var_index] = 0;
-						}
-					} else {
-						var_cost_value[var_index] = 0;
-					}
-				} else {
-					var_cost_value[var_index] = 0;
-				}
-
-				
-				
+				int var_rotation_age = Get_Variable_Information.get_rotation_age(vname[var_index], starting_age, model_strata);
+				int[] prescription_and_row = get_prescription_and_row(yield_tables_names_list, vname[var_index], var_rotation_age);
+				int var_prescription = prescription_and_row[0];	
+				int var_row_id = prescription_and_row[1];
 				
 				// Add all relevant variables
 				String method = Get_Variable_Information.get_method(vname[var_index]);
 				if (method.equals("NG") || method.equals("PB") || method.equals("GS") || method.equals("EA") || method.equals("MS") || method.equals("BS")) {	
 					double para_value = parameter_info.get_total_value(
 							vname[var_index], 
-							var_prescription[var_index], 
-							var_row_id[var_index],
+							var_prescription, 
+							var_row_id,
 							parameters_indexes_list,
 							dynamic_dentifiers_column_indexes, 
 							dynamic_identifiers,
-							var_cost_value[var_index]);
+							vcost[var_index]);
 					para_value = para_value * multiplier;
-									
 					
 					// Add to sum_all
 					sum_all = sum_all + para_value * vvalue[var_index];

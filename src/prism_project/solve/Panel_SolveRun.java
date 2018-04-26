@@ -557,10 +557,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									// total_Periods + 1 because tR starts from 1 to total_Periods, ignore the 0			
 			
 					
-			// Declare arrays to keep Fire variables	//f(s1,s2,s3,s4,s5,s6)(t)
+			// Declare arrays to keep Fire variables	//f(s1,s2,s3,s4,s5,t,s5R)
 			int[][][][] fire = new int
-					[model_strata_without_sizeclass_and_covertype.size()]
-							[layer5.size()][total_periods + 1][layer5.size()];						
+					[model_strata_without_sizeclass_and_covertype.size()][layer5.size()][total_periods + 1][layer5.size()];						
 						
 			
 			// Get the 2 parameter V(s1,s2,s3,s4,s5,s6) and A(s1,s2,s3,s4,s5,s6)
@@ -1060,7 +1059,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			
 			
 			//-----------------------Fire variables
-			// Create decision variables fire(s1,s2,s3,s4,s5)(t,c)	
+			// Create decision variables fire(s1,s2,s3,s4,s5,t,s5R)	
 			for (String strata: model_strata_without_sizeclass_and_covertype) {
 				int strata_4layers_id = Collections.binarySearch(model_strata_without_sizeclass_and_covertype, strata);
 				int s1 = Collections.binarySearch(layer1, strata.substring(0, 1));
@@ -1069,12 +1068,12 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				int s4 = Collections.binarySearch(layer4, strata.substring(3, 4));
 				for (int s5 = 0; s5 < layer5.size(); s5++) {
 					for (int t = 1; t <= total_periods; t++) {
-						for (int c = 0; c < layer5.size(); c++) {
+						for (int s5R = 0; s5R < layer5.size(); s5R++) {
 							objlist.add((double) 0);			
-							vnamelist.add("fire_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + t + "," + layer5.get(c));										
+							vnamelist.add("fire_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + t + "," + layer5.get(s5R));										
 							vlblist.add((double) 0);
 							vublist.add(Double.MAX_VALUE);
-							fire[strata_4layers_id][s5][t][c] = nvars;
+							fire[strata_4layers_id][s5][t][s5R] = nvars;
 							nvars++;	
 						}
 					}
@@ -1155,8 +1154,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
 						List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
 						
-						String method = Get_Variable_Information.get_method(var_name);
-						if (var_rd_condition_id[var_index] != -9999 && !method.equals("MS") && !method.equals("BS") && t != tR) {		// Note: no replacing disturbance, or MS, or BS, or EA in the period = rotation period--> no conversion cost after replacing disturbance
+						if (var_rd_condition_id[var_index] != -9999 && t != tR) {		// Note: no replacing disturbance or EA in the period = rotation period--> no conversion cost after replacing disturbance
 							double[][][] rd_percentage = disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]);
 							for (int s5R = 0; s5R < layer5.size(); s5R++) {
 								double total_percentage = 0;
@@ -1194,13 +1192,14 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			// CREATE CONSTRAINTS-------------------------------------------------
 			
 			
-			// Constraints 2---------------------------------------------------
+			// Constraints 6-------------------------------------------------
 			List<List<Integer>> c2_indexlist = new ArrayList<List<Integer>>();	
 			List<List<Double>> c2_valuelist = new ArrayList<List<Double>>();
 			List<Double> c2_lblist = new ArrayList<Double>();	
 			List<Double> c2_ublist = new ArrayList<Double>();
 			int c2_num = 0;
 			
+			// 2a
 			for (int j = 0; j < total_softConstraints; j++) {
 				// Add constraint
 				c2_indexlist.add(new ArrayList<Integer>());
@@ -1217,6 +1216,26 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				// add bounds
 				c2_lblist.add(softConstraints_LB[j]);	// Lower bound of the soft constraint
 				c2_ublist.add(Double.MAX_VALUE);		// Upper bound set to infinite
+				c2_num++;
+			}			
+			
+			// 2b
+			for (int j = 0; j < total_softConstraints; j++) {
+				// Add constraint
+				c2_indexlist.add(new ArrayList<Integer>());
+				c2_valuelist.add(new ArrayList<Double>());
+
+				// Add y(j)
+				c2_indexlist.get(c2_num).add(y[j]);
+				c2_valuelist.get(c2_num).add((double) 1);
+				
+				// Add -u(j)
+				c2_indexlist.get(c2_num).add(u[j]);
+				c2_valuelist.get(c2_num).add((double) -1);
+
+				// add bounds
+				c2_lblist.add((double) 0);			// Lower bound set to 0	because y[j] >= u[j]
+				c2_ublist.add(softConstraints_UB[j]);		// Upper bound of the soft constraint
 				c2_num++;
 			}			
 			
@@ -1242,169 +1261,39 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			System.out.println("Total constraints as in PRISM model formulation eq. (2):   " + c2_num + "             " + dateFormat.format(new Date()));
 			
 	
-			// Constraints 3-------------------------------------------------
-			List<List<Integer>> c3_indexlist = new ArrayList<List<Integer>>();	
-			List<List<Double>> c3_valuelist = new ArrayList<List<Double>>();
-			List<Double> c3_lblist = new ArrayList<Double>();	
-			List<Double> c3_ublist = new ArrayList<Double>();
-			int c3_num = 0;
 			
-			for (int j = 0; j < total_softConstraints; j++) {
-				// Add constraint
-				c3_indexlist.add(new ArrayList<Integer>());
-				c3_valuelist.add(new ArrayList<Double>());
-
-				// Add y(j)
-				c3_indexlist.get(c3_num).add(y[j]);
-				c3_valuelist.get(c3_num).add((double) 1);
-				
-				// Add -u(j)
-				c3_indexlist.get(c3_num).add(u[j]);
-				c3_valuelist.get(c3_num).add((double) -1);
-
-				// add bounds
-				c3_lblist.add((double) 0);			// Lower bound set to 0	because y[j] >= u[j]
-				c3_ublist.add(softConstraints_UB[j]);		// Upper bound of the soft constraint
-				c3_num++;
-			}			
-			
-			double[] c3_lb = Stream.of(c3_lblist.toArray(new Double[c3_lblist.size()])).mapToDouble(Double::doubleValue).toArray();
-			double[] c3_ub = Stream.of(c3_ublist.toArray(new Double[c3_ublist.size()])).mapToDouble(Double::doubleValue).toArray();		
-			int[][] c3_index = new int[c3_num][];
-			double[][] c3_value = new double[c3_num][];
-		
-			for (int i = 0; i < c3_num; i++) {
-				c3_index[i] = new int[c3_indexlist.get(i).size()];
-				c3_value[i] = new double[c3_indexlist.get(i).size()];
-				for (int j = 0; j < c3_indexlist.get(i).size(); j++) {
-					c3_index[i][j] = c3_indexlist.get(i).get(j);
-					c3_value[i][j] = c3_valuelist.get(i).get(j);			
-				}
-			}	
-			
-			// Clear lists to save memory
-			c3_indexlist = null;	
-			c3_valuelist = null;
-			c3_lblist = null;	
-			c3_ublist = null;
-			System.out.println("Total constraints as in PRISM model formulation eq. (3):   " + c3_num + "             " + dateFormat.format(new Date()));
+			// Constraints 3 & 4-------------------------------------------------
+			// Constraints 3ab  (hard) and 4ab (free) are set as the bounds of variables
+			System.out.println("Total constraints as in PRISM model formulation eq. (3,4):   0             " + dateFormat.format(new Date()));
 			
 			
-			// Constraints 4ab  (hard) and 4cd (free)------------------------------
-			// are set as the bounds of variables
-			System.out.println("Total constraints as in PRISM model formulation eq. (4):   0             " + dateFormat.format(new Date()));
 			
-			
-			// Constraints 5 (flow)------------------------------------------------
-			List<List<Integer>> c5_indexlist = new ArrayList<List<Integer>>();
+			// Constraints 5-------------------------------------------------
+			List<List<Integer>> c5_indexlist = new ArrayList<List<Integer>>();	
 			List<List<Double>> c5_valuelist = new ArrayList<List<Double>>();
-			List<Double> c5_lblist = new ArrayList<Double>();
+			List<Double> c5_lblist = new ArrayList<Double>();	
 			List<Double> c5_ublist = new ArrayList<Double>();
 			int c5_num = 0;
-					
 			
-			List<Integer> bookkeeping_ID_list = new ArrayList<Integer>();	// This list contains all GUI - IDs of the Basic Constraints
-			List<Integer> bookkeeping_Var_list = new ArrayList<Integer>();			// This list contains all SOLVER Variables - IDs of the Basic Constraints
-			if (flow_set_list.size() > 0) {		// Add flow constraints if there is at least a flow set
-				int current_freeConstraint = 0;
-				int current_softConstraint = 0;
-				int current_hardConstraint = 0;	
-				int constraint_type_col = constraint_column_names_list.indexOf("bc_type");				
-				int constraint_id_col = constraint_column_names_list.indexOf("bc_id");
-				
-				for (int i = 1; i < total_freeConstraints + total_softConstraints + total_hardConstraints + 1; i++) {	// Loop from 1 because the first row of the Basic Constraints file is just title												
-					int ID = Integer.parseInt(bc_values[i][constraint_id_col]);
-					bookkeeping_ID_list.add(ID);		
-									
-					if (bc_values[i][constraint_type_col].equals("SOFT")) {
-						bookkeeping_Var_list.add(y[current_softConstraint]);
-						current_softConstraint++;
-					}
-					
-					if (bc_values[i][constraint_type_col].equals("HARD")) {
-						bookkeeping_Var_list.add(z[current_hardConstraint]);
-						current_hardConstraint++;
-					}
-					
-					if (bc_values[i][constraint_type_col].equals("FREE")) {
-						bookkeeping_Var_list.add(v[current_freeConstraint]);
-						current_freeConstraint++;
-					}	
+			for (String strata: model_strata) {
+				int strata_id = Collections.binarySearch(model_strata, strata);
+
+				// Add constraint
+				c5_indexlist.add(new ArrayList<Integer>());
+				c5_valuelist.add(new ArrayList<Double>());
+
+				for (int q = 0; q < total_methods; q++) {
+					// Add x(s1,s2,s3,s4,s5,s6)(q)
+					c5_indexlist.get(c5_num).add(x[strata_id][q]);
+					c5_valuelist.get(c5_num).add((double) 1);
 				}
-								
-				
-				// Add constraints for each flow set
-				for (int i = 0; i < flow_set_list.size(); i++) {		// loop each flow set (or each row of the flow_constraints_table)
-					if (flow_type_list.get(i).equals("HARD")) {		// ONly add constraint if flow type is HARD
-						int this_set_total_constraints = flow_set_list.get(i).size() - 1;
-						for (int j = 0; j < this_set_total_constraints; j++) {
-							
-							if (flow_lowerbound_percentage_list.get(i) != null) {	// add when lowerbound_percentage is not null
-								// Add constraint				Right term - lowerbound % * Left term >= 0
-								c5_indexlist.add(new ArrayList<Integer>());
-								c5_valuelist.add(new ArrayList<Double>());
-								
-								// Add Right term including all IDs in the (j+1) term
-								for (int ID : flow_set_list.get(i).get(j + 1)) {
-									if (bookkeeping_ID_list.contains(ID)) {		// Add book keeping variable
-										int gui_table_id = bookkeeping_ID_list.indexOf(ID);		
-										int var_id = bookkeeping_Var_list.get(gui_table_id);
-										c5_indexlist.get(c5_num).add(var_id);
-										c5_valuelist.get(c5_num).add((double) 1);
-									}
-								}
-								
-								// Add - % * Left term including all IDs in the (j) term
-								for (int ID : flow_set_list.get(i).get(j)) {
-									if (bookkeeping_ID_list.contains(ID)) {		// Add book keeping variable
-										int gui_table_id = bookkeeping_ID_list.indexOf(ID);		
-										int var_id = bookkeeping_Var_list.get(gui_table_id);
-										c5_indexlist.get(c5_num).add(var_id);
-										c5_valuelist.get(c5_num).add((double) -flow_lowerbound_percentage_list.get(i) / 100);		// -1 * lowerbound_percentage here
-									}
-								}
-								
-								// add bounds
-								c5_lblist.add((double) 0);			// Lower bound set to 0	
-								c5_ublist.add(Double.MAX_VALUE);		// Upper bound set to max
-								c5_num++;
-							}
-							
-							
-							if (flow_upperbound_percentage_list.get(i) != null) {	// add when upperbound_percentage is not null
-								// Add constraint				Right term - upperbound % * Left term <= 0
-								c5_indexlist.add(new ArrayList<Integer>());
-								c5_valuelist.add(new ArrayList<Double>());
-								
-								// Add Right term including all IDs in the (j+1) term
-								for (int ID : flow_set_list.get(i).get(j + 1)) {
-									if (bookkeeping_ID_list.contains(ID)) {		// Add book keeping variable
-										int gui_table_id = bookkeeping_ID_list.indexOf(ID);		
-										int var_id = bookkeeping_Var_list.get(gui_table_id);
-										c5_indexlist.get(c5_num).add(var_id);
-										c5_valuelist.get(c5_num).add((double) 1);
-									}
-								}
-								
-								// Add - % * Left term including all IDs in the (j) term
-								for (int ID : flow_set_list.get(i).get(j)) {
-									if (bookkeeping_ID_list.contains(ID)) {		// Add book keeping variable
-										int gui_table_id = bookkeeping_ID_list.indexOf(ID);		
-										int var_id = bookkeeping_Var_list.get(gui_table_id);
-										c5_indexlist.get(c5_num).add(var_id);
-										c5_valuelist.get(c5_num).add((double) -flow_upperbound_percentage_list.get(i) / 100);		// -1 * upperbound_percentage here
-									}
-								}
-								
-								// add bounds
-								c5_lblist.add(-Double.MAX_VALUE);	// lower bound set to min	
-								c5_ublist.add((double) 0);			// Upper bound set to 0
-								c5_num++;
-							}							
-						}
-					}
-				}
-			}
+
+				// Add bounds
+				c5_lblist.add(strata_area[strata_id]);
+				c5_ublist.add(strata_area[strata_id]);
+				c5_num++;															
+			}	
+			
 			
 			double[] c5_lb = Stream.of(c5_lblist.toArray(new Double[c5_lblist.size()])).mapToDouble(Double::doubleValue).toArray();
 			double[] c5_ub = Stream.of(c5_ublist.toArray(new Double[c5_ublist.size()])).mapToDouble(Double::doubleValue).toArray();		
@@ -1418,7 +1307,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					c5_index[i][j] = c5_indexlist.get(i).get(j);
 					c5_value[i][j] = c5_valuelist.get(i).get(j);			
 				}
-			}		
+			}
 			
 			// Clear lists to save memory
 			c5_indexlist = null;	
@@ -1428,6 +1317,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			System.out.println("Total constraints as in PRISM model formulation eq. (5):   " + c5_num + "             " + dateFormat.format(new Date()));
 			
 			
+			
 			// Constraints 6-------------------------------------------------
 			List<List<Integer>> c6_indexlist = new ArrayList<List<Integer>>();	
 			List<List<Double>> c6_valuelist = new ArrayList<List<Double>>();
@@ -1435,54 +1325,32 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			List<Double> c6_ublist = new ArrayList<Double>();
 			int c6_num = 0;
 			
-			
-			//6a
+			// 6a
 			for (String strata: model_strata) {
 				int strata_id = Collections.binarySearch(model_strata, strata);
 
 				// Add constraint
 				c6_indexlist.add(new ArrayList<Integer>());
 				c6_valuelist.add(new ArrayList<Double>());
-
-				for (int q = 0; q < total_methods; q++) {
-					// Add x(s1,s2,s3,s4,s5,s6)(q)
-					c6_indexlist.get(c6_num).add(x[strata_id][q]);
-					c6_valuelist.get(c6_num).add((double) 1);
-				}
-
-				// add bounds
-				c6_lblist.add(strata_area[strata_id]);
-				c6_ublist.add(strata_area[strata_id]);
-				c6_num++;															
-			}	
-					
-					
-			//6b
-			for (String strata: model_strata) {
-				int strata_id = Collections.binarySearch(model_strata, strata);
 				
-				// Add constraint
-				c6_indexlist.add(new ArrayList<Integer>());
-				c6_valuelist.add(new ArrayList<Double>());
-
-				// Add x(s1,s2,s3,s4,s5,s6)(4)
-				c6_indexlist.get(c6_num).add(x[strata_id][4]);
+				// Add x(s1,s2,s3,s4,s5,s6)[0]
+				c6_indexlist.get(c6_num).add(x[strata_id][0]);
 				c6_valuelist.get(c6_num).add((double) 1);
 				
-				//Add - sigma(i) xMS(s1,s2,s3,s4,s5,s6)[i][1]
-				for (int i = 0; i < total_MS_Prescriptions; i++) {
-					if(xMS[strata_id][i][1] > 0) {		// if variable is defined, this value would be > 0 
-						c6_indexlist.get(c6_num).add(xMS[strata_id][i][1]);
+				// Add - sigma(i) xNGe(s1,s2,s3,s4,s5,s6)[i][1]
+				for (int i = 0; i < total_NGe_Prescriptions; i++) {
+					if(xNGe[strata_id][i][1] > 0) {		// if variable is defined, this value would be > 0 
+						c6_indexlist.get(c6_num).add(xNGe[strata_id][i][1]);
 						c6_valuelist.get(c6_num).add((double) -1);
 					}
 				}
-
-				// add bounds
+		
+				// Add bounds
 				c6_lblist.add((double) 0);
 				c6_ublist.add((double) 0);
 				c6_num++;
 				
-				// Remove this constraint if total number of variables added is 1 (only x[s1][s2][s3][s4][s5][s6][4] is added)
+				// Remove this constraint if total number of variables added is 1 (only x[s1][s2][s3][s4][s5][s6][0] is added)
 				if (c6_indexlist.get(c6_num - 1).size() == 1) {
 					c6_indexlist.remove(c6_num - 1);
 					c6_valuelist.remove(c6_num - 1);
@@ -1490,110 +1358,49 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					c6_ublist.remove(c6_num - 1);
 					c6_num--;
 					
-					// Set x[s1][s2][s3][s4][s5][s6][4] to be zero if boost 2 is implemented but associated prescriptions does not exist
-					vlb[x[strata_id][4]] = 0;
-					vub[x[strata_id][4]] = 0;
-				}					
-			}	
+					// Set x[s1][s2][s3][s4][s5][s6][0] to be zero if boost 2 is implemented but associated prescriptions does not exist
+					vlb[x[strata_id][0]] = 0;
+					vub[x[strata_id][0]] = 0;
+				}
+			}														
 			
-			
-			//6c
+			// 6b
 			for (String strata: model_strata) {
 				int strata_id = Collections.binarySearch(model_strata, strata);
+				int s5 = Collections.binarySearch(layer5, strata.substring(4, 5));
 
-				for (int i = 0; i < total_MS_Prescriptions; i++) {
+				for (int i = 0; i < total_NGe_Prescriptions; i++) {
 					for (int t = 1; t <= total_periods - 1; t++) {
-						if(xMS[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 
+						if(xNGe[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 
 							// Add constraint
 							c6_indexlist.add(new ArrayList<Integer>());
 							c6_valuelist.add(new ArrayList<Double>());
 							
-							//Add xMS(s1,s2,s3,s4,s5,s6)[i][t]													
-							c6_indexlist.get(c6_num).add(xMS[strata_id][i][t]);
-							c6_valuelist.get(c6_num).add((double) 1);
+							// Add xNGe(s1,s2,s3,s4,s5,s6)[i][t]
+							int var_index = xNGe[strata_id][i][t];
+							double[][][] rd_percentage = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]) : rd_percentage_zeroes;
+							double total_percentage = 0;
+							for (int k = 0; k < total_replacing_disturbances; k++) {
+								for (int rd_s5R = 0; rd_s5R < layer5.size(); rd_s5R++) {
+									total_percentage = total_percentage + rd_percentage[k][s5][rd_s5R];
+								}
+							}
+							c6_indexlist.get(c6_num).add(xNGe[strata_id][i][t]);
+							c6_valuelist.get(c6_num).add((double) 1 - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
 							
-							//Add -xMS(s1,s2,s3,s4,s5,s6)[i][t+1]
-							c6_indexlist.get(c6_num).add(xMS[strata_id][i][t + 1]);
+							// Add -xNGe(s1,s2,s3,s4,s5,s6)[i][t+1]
+							c6_indexlist.get(c6_num).add(xNGe[strata_id][i][t + 1]);
 							c6_valuelist.get(c6_num).add((double) -1);
 							
-							//add bounds
+							// Add bounds
 							c6_lblist.add((double) 0);
 							c6_ublist.add((double) 0);
 							c6_num++;
 						}
 					}
 				}
-			}	
-														
-					
-			//6d
-			for (String strata: model_strata) {
-				int strata_id = Collections.binarySearch(model_strata, strata);
-
-				// Add constraint
-				c6_indexlist.add(new ArrayList<Integer>());
-				c6_valuelist.add(new ArrayList<Double>());
-
-				// Add x(s1,s2,s3,s4,s5,s6)(5)
-				c6_indexlist.get(c6_num).add(x[strata_id][5]);
-				c6_valuelist.get(c6_num).add((double) 1);
-				
-				//Add - sigma(i) xBS(s1,s2,s3,s4,s5,s6)[i][1]
-				for (int i = 0; i < total_BS_Prescriptions; i++) {
-					if(xBS[strata_id][i][1] > 0) {		// if variable is defined, this value would be > 0 
-						c6_indexlist.get(c6_num).add(xBS[strata_id][i][1]);
-						c6_valuelist.get(c6_num).add((double) -1);
-					}
-				}
-
-				// add bounds
-				c6_lblist.add((double) 0);
-				c6_ublist.add((double) 0);
-				c6_num++;
-				
-				// Remove this constraint if total number of variables added is 1 (only x[s1][s2][s3][s4][s5][s6][5] is added)
-				if (c6_indexlist.get(c6_num - 1).size() == 1) {
-					c6_indexlist.remove(c6_num - 1);
-					c6_valuelist.remove(c6_num - 1);
-					c6_lblist.remove(c6_num - 1);
-					c6_ublist.remove(c6_num - 1);
-					c6_num--;
-					
-					// Set x[s1][s2][s3][s4][s5][s6][5] to be zero if boost 2 is implemented but associated prescriptions does not exist
-					vlb[x[strata_id][5]] = 0;
-					vub[x[strata_id][5]] = 0;
-				}
-			}		
-			
-			
-			//6e
-			for (String strata: model_strata) {
-				int strata_id = Collections.binarySearch(model_strata, strata);
-
-				for (int i = 0; i < total_BS_Prescriptions; i++) {
-					for (int t = 1; t <= total_periods - 1; t++) {
-						if(xBS[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 
-							// Add constraint
-							c6_indexlist.add(new ArrayList<Integer>());
-							c6_valuelist.add(new ArrayList<Double>());
-							
-							//Add xBS(s1,s2,s3,s4,s5,s6)[i][t]													
-							c6_indexlist.get(c6_num).add(xBS[strata_id][i][t]);
-							c6_valuelist.get(c6_num).add((double) 1);
-							
-							//Add -xBS(s1,s2,s3,s4,s5,s6)[i][t+1]
-							c6_indexlist.get(c6_num).add(xBS[strata_id][i][t + 1]);
-							c6_valuelist.get(c6_num).add((double) -1);
-							
-							//add bounds
-							c6_lblist.add((double) 0);
-							c6_ublist.add((double) 0);
-							c6_num++;
-						}
-					}
-				}	
-			}		
-			
+			}																
+						
 			
 			double[] c6_lb = Stream.of(c6_lblist.toArray(new Double[c6_lblist.size()])).mapToDouble(Double::doubleValue).toArray();
 			double[] c6_ub = Stream.of(c6_ublist.toArray(new Double[c6_ublist.size()])).mapToDouble(Double::doubleValue).toArray();		
@@ -1607,7 +1414,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					c6_index[i][j] = c6_indexlist.get(i).get(j);
 					c6_value[i][j] = c6_valuelist.get(i).get(j);			
 				}
-			}
+			}	
 			
 			// Clear lists to save memory
 			c6_indexlist = null;	
@@ -1617,6 +1424,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			System.out.println("Total constraints as in PRISM model formulation eq. (6):   " + c6_num + "             " + dateFormat.format(new Date()));
 			
 			
+			
 			// Constraints 7-------------------------------------------------
 			List<List<Integer>> c7_indexlist = new ArrayList<List<Integer>>();	
 			List<List<Double>> c7_valuelist = new ArrayList<List<Double>>();
@@ -1624,33 +1432,32 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			List<Double> c7_ublist = new ArrayList<Double>();
 			int c7_num = 0;
 			
-			
-			//7a
+			// 7a
 			for (String strata: model_strata) {
 				int strata_id = Collections.binarySearch(model_strata, strata);
-
-				//Add constraint
+	
+				// Add constraint
 				c7_indexlist.add(new ArrayList<Integer>());
 				c7_valuelist.add(new ArrayList<Double>());
 				
-				//Add x(s1,s2,s3,s4,s5,s6)[0]
-				c7_indexlist.get(c7_num).add(x[strata_id][0]);
+				// Add x(s1,s2,s3,s4,s5,s6)[1]
+				c7_indexlist.get(c7_num).add(x[strata_id][1]);
 				c7_valuelist.get(c7_num).add((double) 1);
 				
-				//Add - sigma(i) xNGe(s1,s2,s3,s4,s5,s6)[i][1]
-				for (int i = 0; i < total_NGe_Prescriptions; i++) {
-					if(xNGe[strata_id][i][1] > 0) {		// if variable is defined, this value would be > 0 
-						c7_indexlist.get(c7_num).add(xNGe[strata_id][i][1]);
+				// Add - sigma(i) xPBe(s1,s2,s3,s4,s5,s6)[i][1]
+				for (int i = 0; i < total_PBe_Prescriptions; i++) {
+					if(xPBe[strata_id][i][1] > 0) {		// if variable is defined, this value would be > 0 
+						c7_indexlist.get(c7_num).add(xPBe[strata_id][i][1]);
 						c7_valuelist.get(c7_num).add((double) -1);
 					}
 				}
-		
-				//add bounds
+				
+				// Add bounds
 				c7_lblist.add((double) 0);
 				c7_ublist.add((double) 0);
 				c7_num++;
 				
-				// Remove this constraint if total number of variables added is 1 (only x[s1][s2][s3][s4][s5][s6][0] is added)
+				// Remove this constraint if total number of variables added is 1 (only x[s1][s2][s3][s4][s5][s6][1] is added)
 				if (c7_indexlist.get(c7_num - 1).size() == 1) {
 					c7_indexlist.remove(c7_num - 1);
 					c7_valuelist.remove(c7_num - 1);
@@ -1658,27 +1465,26 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					c7_ublist.remove(c7_num - 1);
 					c7_num--;
 					
-					// Set x[s1][s2][s3][s4][s5][s6][0] to be zero if boost 2 is implemented but associated prescriptions does not exist
-					vlb[x[strata_id][0]] = 0;
-					vub[x[strata_id][0]] = 0;
+					// Set x[s1][s2][s3][s4][s5][s6][1] to be zero if boost 2 is implemented but associated prescriptions does not exist
+					vlb[x[strata_id][1]] = 0;
+					vub[x[strata_id][1]] = 0;
 				}
-			}														
+			}													
 			
-			
-			//7b
+			// 7b
 			for (String strata: model_strata) {
 				int strata_id = Collections.binarySearch(model_strata, strata);
 				int s5 = Collections.binarySearch(layer5, strata.substring(4, 5));
 
-				for (int i = 0; i < total_NGe_Prescriptions; i++) {
+				for (int i = 0; i < total_PBe_Prescriptions; i++) {
 					for (int t = 1; t <= total_periods - 1; t++) {
-						if(xNGe[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 
-							//Add constraint
+						if(xPBe[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 
+							// Add constraint
 							c7_indexlist.add(new ArrayList<Integer>());
 							c7_valuelist.add(new ArrayList<Double>());
 							
-							//Add xNGe(s1,s2,s3,s4,s5,s6)[i][t]
-							int var_index = xNGe[strata_id][i][t];
+							// Add xPBe(s1,s2,s3,s4,s5,s6)[i][t]
+							int var_index = xPBe[strata_id][i][t];
 							double[][][] rd_percentage = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]) : rd_percentage_zeroes;
 							double total_percentage = 0;
 							for (int k = 0; k < total_replacing_disturbances; k++) {
@@ -1686,23 +1492,23 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									total_percentage = total_percentage + rd_percentage[k][s5][rd_s5R];
 								}
 							}
-							c7_indexlist.get(c7_num).add(xNGe[strata_id][i][t]);
+							c7_indexlist.get(c7_num).add(xPBe[strata_id][i][t]);
 							c7_valuelist.get(c7_num).add((double) 1 - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
 							
-							//Add -xNGe(s1,s2,s3,s4,s5,s6)[i][t+1]
-							c7_indexlist.get(c7_num).add(xNGe[strata_id][i][t + 1]);
+							// Add -xPBe(s1,s2,s3,s4,s5,s6)[i][t+1]
+							c7_indexlist.get(c7_num).add(xPBe[strata_id][i][t + 1]);
 							c7_valuelist.get(c7_num).add((double) -1);
 							
-							//add bounds
+							// Add bounds
 							c7_lblist.add((double) 0);
 							c7_ublist.add((double) 0);
 							c7_num++;
 						}
 					}
 				}
-			}																
-						
+			}														
 			
+					
 			double[] c7_lb = Stream.of(c7_lblist.toArray(new Double[c7_lblist.size()])).mapToDouble(Double::doubleValue).toArray();
 			double[] c7_ub = Stream.of(c7_ublist.toArray(new Double[c7_ublist.size()])).mapToDouble(Double::doubleValue).toArray();		
 			int[][] c7_index = new int[c7_num][];
@@ -1715,7 +1521,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					c7_index[i][j] = c7_indexlist.get(i).get(j);
 					c7_value[i][j] = c7_valuelist.get(i).get(j);			
 				}
-			}	
+			}		
 			
 			// Clear lists to save memory
 			c7_indexlist = null;	
@@ -1725,6 +1531,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			System.out.println("Total constraints as in PRISM model formulation eq. (7):   " + c7_num + "             " + dateFormat.format(new Date()));
 			
 			
+			
 			// Constraints 8-------------------------------------------------
 			List<List<Integer>> c8_indexlist = new ArrayList<List<Integer>>();	
 			List<List<Double>> c8_valuelist = new ArrayList<List<Double>>();
@@ -1732,33 +1539,32 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			List<Double> c8_ublist = new ArrayList<Double>();
 			int c8_num = 0;
 			
-			
-			//8a
+			// 8a
 			for (String strata: model_strata) {
 				int strata_id = Collections.binarySearch(model_strata, strata);
-	
-				//Add constraint
+
+				// Add constraint
 				c8_indexlist.add(new ArrayList<Integer>());
 				c8_valuelist.add(new ArrayList<Double>());
 				
-				//Add x(s1,s2,s3,s4,s5,s6)[1]
-				c8_indexlist.get(c8_num).add(x[strata_id][1]);
-				c8_valuelist.get(c8_num).add((double) 1);
+				// Add x(s1,s2,s3,s4,s5,s6)[2]
+				c8_indexlist.get(c8_num).add(x[strata_id][2]);
+				c8_valuelist.get(c8_num).add((double) 1);							
 				
-				//Add - sigma(i) xPBe(s1,s2,s3,s4,s5,s6)[i][1]
-				for (int i = 0; i < total_PBe_Prescriptions; i++) {
-					if(xPBe[strata_id][i][1] > 0) {		// if variable is defined, this value would be > 0 
-						c8_indexlist.get(c8_num).add(xPBe[strata_id][i][1]);
+				// Add -xGSe(s1,s2,s3,s4,s5,s6)[i][1]
+				for (int i = 0; i < total_GSe_Prescriptions; i++) {
+					if(xGSe[strata_id][i][1] > 0) {		// if variable is defined, this value would be > 0 
+						c8_indexlist.get(c8_num).add(xGSe[strata_id][i][1]);
 						c8_valuelist.get(c8_num).add((double) -1);
 					}
 				}
 				
-				//add bounds
+				// Add bounds
 				c8_lblist.add((double) 0);
 				c8_ublist.add((double) 0);
 				c8_num++;
 				
-				// Remove this constraint if total number of variables added is 1 (only x[s1][s2][s3][s4][s5][s6][1] is added)
+				// Remove this constraint if total number of variables added is 1 (only x[s1][s2][s3][s4][s5][s6][2] is added)
 				if (c8_indexlist.get(c8_num - 1).size() == 1) {
 					c8_indexlist.remove(c8_num - 1);
 					c8_valuelist.remove(c8_num - 1);
@@ -1766,27 +1572,26 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					c8_ublist.remove(c8_num - 1);
 					c8_num--;
 					
-					// Set x[s1][s2][s3][s4][s5][s6][1] to be zero if boost 2 is implemented but associated prescriptions does not exist
-					vlb[x[strata_id][1]] = 0;
-					vub[x[strata_id][1]] = 0;
+					// Set x[s1][s2][s3][s4][s5][s6][2] to be zero if boost 2 is implemented but associated prescriptions does not exist
+					vlb[x[strata_id][2]] = 0;
+					vub[x[strata_id][2]] = 0;
 				}
-			}													
-			
-			
-			//8b
+			}						
+
+			// 8b
 			for (String strata: model_strata) {
 				int strata_id = Collections.binarySearch(model_strata, strata);
 				int s5 = Collections.binarySearch(layer5, strata.substring(4, 5));
 
-				for (int i = 0; i < total_PBe_Prescriptions; i++) {
-					for (int t = 1; t <= total_periods - 1; t++) {
-						if(xPBe[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 
+				for (int i = 0; i < total_GSe_Prescriptions; i++) {
+					for (int t = 1; t <= total_periods-1; t++) {
+						if(xGSe[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 
 							//Add constraint
 							c8_indexlist.add(new ArrayList<Integer>());
 							c8_valuelist.add(new ArrayList<Double>());
 							
-							//Add xPBe(s1,s2,s3,s4,s5,s6)[i][t]
-							int var_index = xPBe[strata_id][i][t];
+							//Add xGSe(s1,s2,s3,s4,s5,s6)[i][t]
+							int var_index = xGSe[strata_id][i][t];
 							double[][][] rd_percentage = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]) : rd_percentage_zeroes;
 							double total_percentage = 0;
 							for (int k = 0; k < total_replacing_disturbances; k++) {
@@ -1794,12 +1599,12 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									total_percentage = total_percentage + rd_percentage[k][s5][rd_s5R];
 								}
 							}
-							c8_indexlist.get(c8_num).add(xPBe[strata_id][i][t]);
+							c8_indexlist.get(c8_num).add(xGSe[strata_id][i][t]);
 							c8_valuelist.get(c8_num).add((double) 1 - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
 							
-							//Add -xPBe(s1,s2,s3,s4,s5,s6)[i][t+1]
-							c8_indexlist.get(c8_num).add(xPBe[strata_id][i][t + 1]);
-							c8_valuelist.get(c8_num).add((double) -1);
+							//Add -xGSe(s1,s2,s3,s4,s5,s6)[i][t+1]
+							c8_indexlist.get(c8_num).add(xGSe[strata_id][i][t + 1]);
+							c8_valuelist.get(c8_num).add((double) -1);												
 							
 							//add bounds
 							c8_lblist.add((double) 0);
@@ -1810,7 +1615,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				}
 			}														
 			
-					
+			
 			double[] c8_lb = Stream.of(c8_lblist.toArray(new Double[c8_lblist.size()])).mapToDouble(Double::doubleValue).toArray();
 			double[] c8_ub = Stream.of(c8_ublist.toArray(new Double[c8_ublist.size()])).mapToDouble(Double::doubleValue).toArray();		
 			int[][] c8_index = new int[c8_num][];
@@ -1823,7 +1628,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					c8_index[i][j] = c8_indexlist.get(i).get(j);
 					c8_value[i][j] = c8_valuelist.get(i).get(j);			
 				}
-			}		
+			}	
 			
 			// Clear lists to save memory
 			c8_indexlist = null;	
@@ -1831,6 +1636,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			c8_lblist = null;	
 			c8_ublist = null;
 			System.out.println("Total constraints as in PRISM model formulation eq. (8):   " + c8_num + "             " + dateFormat.format(new Date()));
+
 			
 			
 			// Constraints 9-------------------------------------------------
@@ -1840,33 +1646,41 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			List<Double> c9_ublist = new ArrayList<Double>();
 			int c9_num = 0;
 			
-			
-			//9a
+			// 9a
 			for (String strata: model_strata) {
 				int strata_id = Collections.binarySearch(model_strata, strata);
-
-				//Add constraint
+				int s5 = Collections.binarySearch(layer5, strata.substring(4, 5));
+	
+				// Add constraint
 				c9_indexlist.add(new ArrayList<Integer>());
 				c9_valuelist.add(new ArrayList<Double>());
-				
-				//Add x(s1,s2,s3,s4,s5,s6)[2]
-				c9_indexlist.get(c9_num).add(x[strata_id][2]);
+
+				// Add x(s1,s2,s3,s4,s5,s6)[3]
+				c9_indexlist.get(c9_num).add(x[strata_id][3]);
 				c9_valuelist.get(c9_num).add((double) 1);							
 				
-				//Add -xGSe(s1,s2,s3,s4,s5,s6)[i][1]
-				for (int i = 0; i < total_GSe_Prescriptions; i++) {
-					if(xGSe[strata_id][i][1] > 0) {		// if variable is defined, this value would be > 0 
-						c9_indexlist.get(c9_num).add(xGSe[strata_id][i][1]);
-						c9_valuelist.get(c9_num).add((double) -1);
-					}
+				// Add - sigma(tR,s5R)(i) xEAe(s1,s2,s3,s4,s5,s6)[tR][s5R][i][1]	
+				for (int tR = 1; tR <= total_periods; tR++) {
+					for (int s5R = 0; s5R < layer5.size(); s5R++) {
+						for (int i = 0; i < total_EAe_Prescriptions; i++) {
+							int rotationAge = tR + starting_age[strata_id] - 1;
+							String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(s5R) + " " + rotationAge;						
+							if (covertype_conversions_and_existing_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
+								if(xEAe[strata_id][tR][s5R][i][1] > 0) {		// if variable is defined, this value would be > 0 
+									c9_indexlist.get(c9_num).add(xEAe[strata_id][tR][s5R][i][1]);
+									c9_valuelist.get(c9_num).add((double) -1);
+								}
+							}
+						}
+					}	
 				}
 				
-				// add bounds
+				// Add bounds
 				c9_lblist.add((double) 0);
 				c9_ublist.add((double) 0);
 				c9_num++;
 				
-				// Remove this constraint if total number of variables added is 1 (only x[s1][s2][s3][s4][s5][s6][2] is added)
+				// Remove this constraint if total number of variables added is 1 (only x[s1][s2][s3][s4][s5][s6][3] is added)
 				if (c9_indexlist.get(c9_num - 1).size() == 1) {
 					c9_indexlist.remove(c9_num - 1);
 					c9_valuelist.remove(c9_num - 1);
@@ -1874,50 +1688,57 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					c9_ublist.remove(c9_num - 1);
 					c9_num--;
 					
-					// Set x[s1][s2][s3][s4][s5][s6][2] to be zero if boost 2 is implemented but associated prescriptions does not exist
-					vlb[x[strata_id][2]] = 0;
-					vub[x[strata_id][2]] = 0;
+					// Set x[s1][s2][s3][s4][s5][s6][3] to be zero if boost 2 is implemented but associated prescriptions does not exist
+					vlb[x[strata_id][3]] = 0;
+					vub[x[strata_id][3]] = 0;
 				}
-			}						
-								
-
-			//9b
+			}	
+			
+			// 9b
 			for (String strata: model_strata) {
 				int strata_id = Collections.binarySearch(model_strata, strata);
 				int s5 = Collections.binarySearch(layer5, strata.substring(4, 5));
-
-				for (int i = 0; i < total_GSe_Prescriptions; i++) {
-					for (int t = 1; t <= total_periods-1; t++) {
-						if(xGSe[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 
-							//Add constraint
-							c9_indexlist.add(new ArrayList<Integer>());
-							c9_valuelist.add(new ArrayList<Double>());
-							
-							//Add xGSe(s1,s2,s3,s4,s5,s6)[i][t]
-							int var_index = xGSe[strata_id][i][t];
-							double[][][] rd_percentage = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]) : rd_percentage_zeroes;
-							double total_percentage = 0;
-							for (int k = 0; k < total_replacing_disturbances; k++) {
-								for (int rd_s5R = 0; rd_s5R < layer5.size(); rd_s5R++) {
-									total_percentage = total_percentage + rd_percentage[k][s5][rd_s5R];
+		
+				for (int tR = 1; tR <= total_periods; tR++) {										
+					for (int s5R = 0; s5R < layer5.size(); s5R++) {
+						int rotationAge = tR + starting_age[strata_id] - 1;
+						String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(s5R) + " " + rotationAge;					
+						if (covertype_conversions_and_existing_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
+							for (int i = 0; i < total_EAe_Prescriptions; i++) {
+								for (int t = 1; t <= tR-1; t++) {
+									if(xEAe[strata_id][tR][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0 
+										// Add constraint
+										c9_indexlist.add(new ArrayList<Integer>());
+										c9_valuelist.add(new ArrayList<Double>());
+										
+										// Add xEAe(s1,s2,s3,s4,s5,s6)[tR][s5R][i][t]
+										int var_index = xEAe[strata_id][tR][s5R][i][t];
+										double[][][] rd_percentage = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]) : rd_percentage_zeroes;
+										double total_percentage = 0;
+										for (int k = 0; k < total_replacing_disturbances; k++) {
+											for (int rd_s5R = 0; rd_s5R < layer5.size(); rd_s5R++) {
+												total_percentage = total_percentage + rd_percentage[k][s5][rd_s5R];
+											}
+										}
+										c9_indexlist.get(c9_num).add(xEAe[strata_id][tR][s5R][i][t]);
+										c9_valuelist.get(c9_num).add((double) 1 - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100																											
+										
+										// Add - xEAe(s1,s2,s3,s4,s5,s6)[tR][s5R][i][t+1]		
+										c9_indexlist.get(c9_num).add(xEAe[strata_id][tR][s5R][i][t + 1]);
+										c9_valuelist.get(c9_num).add((double) -1);																					
+										
+										// Add bounds
+										c9_lblist.add((double) 0);
+										c9_ublist.add((double) 0);
+										c9_num++;
+									}
 								}
 							}
-							c9_indexlist.get(c9_num).add(xGSe[strata_id][i][t]);
-							c9_valuelist.get(c9_num).add((double) 1 - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
-							
-							//Add -xGSe(s1,s2,s3,s4,s5,s6)[i][t+1]
-							c9_indexlist.get(c9_num).add(xGSe[strata_id][i][t + 1]);
-							c9_valuelist.get(c9_num).add((double) -1);												
-							
-							//add bounds
-							c9_lblist.add((double) 0);
-							c9_ublist.add((double) 0);
-							c9_num++;
 						}
 					}
 				}
-			}														
-			
+			}
+								
 			
 			double[] c9_lb = Stream.of(c9_lblist.toArray(new Double[c9_lblist.size()])).mapToDouble(Double::doubleValue).toArray();
 			double[] c9_ub = Stream.of(c9_ublist.toArray(new Double[c9_ublist.size()])).mapToDouble(Double::doubleValue).toArray();		
@@ -1939,6 +1760,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			c9_lblist = null;	
 			c9_ublist = null;
 			System.out.println("Total constraints as in PRISM model formulation eq. (9):   " + c9_num + "             " + dateFormat.format(new Date()));
+
 			
 			
 			// Constraints 10-------------------------------------------------
@@ -1947,41 +1769,33 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			List<Double> c10_lblist = new ArrayList<Double>();	
 			List<Double> c10_ublist = new ArrayList<Double>();
 			int c10_num = 0;
-			
+					
+			// 10a
 			for (String strata: model_strata) {
 				int strata_id = Collections.binarySearch(model_strata, strata);
-				int s5 = Collections.binarySearch(layer5, strata.substring(4, 5));
-	
-				//Add constraint
+				
+				// Add constraint
 				c10_indexlist.add(new ArrayList<Integer>());
 				c10_valuelist.add(new ArrayList<Double>());
 
-				//Add x(s1,s2,s3,s4,s5,s6)[3]
-				c10_indexlist.get(c10_num).add(x[strata_id][3]);
-				c10_valuelist.get(c10_num).add((double) 1);							
+				// Add x(s1,s2,s3,s4,s5,s6)(4)
+				c10_indexlist.get(c10_num).add(x[strata_id][4]);
+				c10_valuelist.get(c10_num).add((double) 1);
 				
-				//Add - sigma(tR,s5R)(i) xEAe(s1,s2,s3,s4,s5,s6)[tR][s5R][i][1]	
-				for (int tR = 1; tR <= total_periods; tR++) {
-					for (int s5R = 0; s5R < layer5.size(); s5R++) {
-						for (int i = 0; i < total_EAe_Prescriptions; i++) {
-							int rotationAge = tR + starting_age[strata_id] - 1;
-							String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(s5R) + " " + rotationAge;						
-							if (covertype_conversions_and_existing_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
-								if(xEAe[strata_id][tR][s5R][i][1] > 0) {		// if variable is defined, this value would be > 0 
-									c10_indexlist.get(c10_num).add(xEAe[strata_id][tR][s5R][i][1]);
-									c10_valuelist.get(c10_num).add((double) -1);
-								}
-							}
-						}
-					}	
+				// Add - sigma(i) xMS(s1,s2,s3,s4,s5,s6)[i][1]
+				for (int i = 0; i < total_MS_Prescriptions; i++) {
+					if(xMS[strata_id][i][1] > 0) {		// if variable is defined, this value would be > 0 
+						c10_indexlist.get(c10_num).add(xMS[strata_id][i][1]);
+						c10_valuelist.get(c10_num).add((double) -1);
+					}
 				}
-				
-				//add bounds
+
+				// Add bounds
 				c10_lblist.add((double) 0);
 				c10_ublist.add((double) 0);
 				c10_num++;
 				
-				// Remove this constraint if total number of variables added is 1 (only x[s1][s2][s3][s4][s5][s6][3] is added)
+				// Remove this constraint if total number of variables added is 1 (only x[s1][s2][s3][s4][s5][s6][4] is added)
 				if (c10_indexlist.get(c10_num - 1).size() == 1) {
 					c10_indexlist.remove(c10_num - 1);
 					c10_valuelist.remove(c10_num - 1);
@@ -1989,12 +1803,49 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					c10_ublist.remove(c10_num - 1);
 					c10_num--;
 					
-					// Set x[s1][s2][s3][s4][s5][s6][3] to be zero if boost 2 is implemented but associated prescriptions does not exist
-					vlb[x[strata_id][3]] = 0;
-					vub[x[strata_id][3]] = 0;
+					// Set x[s1][s2][s3][s4][s5][s6][4] to be zero if boost 2 is implemented but associated prescriptions does not exist
+					vlb[x[strata_id][4]] = 0;
+					vub[x[strata_id][4]] = 0;
+				}					
+			}	
+			
+			// 10b
+			for (String strata: model_strata) {
+				int strata_id = Collections.binarySearch(model_strata, strata);
+				int s5 = Collections.binarySearch(layer5, strata.substring(4, 5));
+
+				for (int i = 0; i < total_MS_Prescriptions; i++) {
+					for (int t = 1; t <= total_periods - 1; t++) {
+						if(xMS[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 
+							// Add constraint
+							c10_indexlist.add(new ArrayList<Integer>());
+							c10_valuelist.add(new ArrayList<Double>());
+							
+							// Add xMS(s1,s2,s3,s4,s5,s6)[i][t]
+							int var_index = xMS[strata_id][i][t] ;
+							double[][][] rd_percentage = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]) : rd_percentage_zeroes;
+							double total_percentage = 0;
+							for (int k = 0; k < total_replacing_disturbances; k++) {
+								for (int rd_s5R = 0; rd_s5R < layer5.size(); rd_s5R++) {
+									total_percentage = total_percentage + rd_percentage[k][s5][rd_s5R];
+								}
+							}
+							c10_indexlist.get(c10_num).add(xMS[strata_id][i][t]);
+							c10_valuelist.get(c10_num).add((double) 1 - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
+							
+							// Add -xMS(s1,s2,s3,s4,s5,s6)[i][t+1]
+							c10_indexlist.get(c10_num).add(xMS[strata_id][i][t + 1]);
+							c10_valuelist.get(c10_num).add((double) -1);
+							
+							// Add bounds
+							c10_lblist.add((double) 0);
+							c10_ublist.add((double) 0);
+							c10_num++;
+						}
+					}
 				}
-			}						
-								
+			}	
+			
 			
 			double[] c10_lb = Stream.of(c10_lblist.toArray(new Double[c10_lblist.size()])).mapToDouble(Double::doubleValue).toArray();
 			double[] c10_ub = Stream.of(c10_ublist.toArray(new Double[c10_ublist.size()])).mapToDouble(Double::doubleValue).toArray();		
@@ -2008,7 +1859,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					c10_index[i][j] = c10_indexlist.get(i).get(j);
 					c10_value[i][j] = c10_valuelist.get(i).get(j);			
 				}
-			}	
+			}
 			
 			// Clear lists to save memory
 			c10_indexlist = null;	
@@ -2016,59 +1867,91 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			c10_lblist = null;	
 			c10_ublist = null;
 			System.out.println("Total constraints as in PRISM model formulation eq. (10):   " + c10_num + "             " + dateFormat.format(new Date()));
-			
-			
+						
+						
+						
 			// Constraints 11-------------------------------------------------
 			List<List<Integer>> c11_indexlist = new ArrayList<List<Integer>>();	
 			List<List<Double>> c11_valuelist = new ArrayList<List<Double>>();
 			List<Double> c11_lblist = new ArrayList<Double>();	
 			List<Double> c11_ublist = new ArrayList<Double>();
-			int c11_num = 0;									
+			int c11_num = 0;
+					
+			// 11a
+			for (String strata: model_strata) {
+				int strata_id = Collections.binarySearch(model_strata, strata);
+
+				// Add constraint
+				c11_indexlist.add(new ArrayList<Integer>());
+				c11_valuelist.add(new ArrayList<Double>());
+
+				// Add x(s1,s2,s3,s4,s5,s6)(5)
+				c11_indexlist.get(c11_num).add(x[strata_id][5]);
+				c11_valuelist.get(c11_num).add((double) 1);
+				
+				// Add - sigma(i) xBS(s1,s2,s3,s4,s5,s6)[i][1]
+				for (int i = 0; i < total_BS_Prescriptions; i++) {
+					if(xBS[strata_id][i][1] > 0) {		// if variable is defined, this value would be > 0 
+						c11_indexlist.get(c11_num).add(xBS[strata_id][i][1]);
+						c11_valuelist.get(c11_num).add((double) -1);
+					}
+				}
+
+				// Add bounds
+				c11_lblist.add((double) 0);
+				c11_ublist.add((double) 0);
+				c11_num++;
+				
+				// Remove this constraint if total number of variables added is 1 (only x[s1][s2][s3][s4][s5][s6][5] is added)
+				if (c11_indexlist.get(c11_num - 1).size() == 1) {
+					c11_indexlist.remove(c11_num - 1);
+					c11_valuelist.remove(c11_num - 1);
+					c11_lblist.remove(c11_num - 1);
+					c11_ublist.remove(c11_num - 1);
+					c11_num--;
+					
+					// Set x[s1][s2][s3][s4][s5][s6][5] to be zero if boost 2 is implemented but associated prescriptions does not exist
+					vlb[x[strata_id][5]] = 0;
+					vub[x[strata_id][5]] = 0;
+				}
+			}		
 			
-			// 11
+			// 11b
 			for (String strata: model_strata) {
 				int strata_id = Collections.binarySearch(model_strata, strata);
 				int s5 = Collections.binarySearch(layer5, strata.substring(4, 5));
-		
-				for (int tR = 1; tR <= total_periods; tR++) {										
-					for (int s5R = 0; s5R < layer5.size(); s5R++) {
-						int rotationAge = tR + starting_age[strata_id] - 1;
-						String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(s5R) + " " + rotationAge;					
-						if (covertype_conversions_and_existing_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
-							for (int i = 0; i < total_EAe_Prescriptions; i++) {
-								for (int t = 1; t <= tR-1; t++) {
-									if(xEAe[strata_id][tR][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0 
-										//Add constraint
-										c11_indexlist.add(new ArrayList<Integer>());
-										c11_valuelist.add(new ArrayList<Double>());
-										
-										//Add xEAe(s1,s2,s3,s4,s5,s6)[tR][s5R][i][t]
-										int var_index = xEAe[strata_id][tR][s5R][i][t];
-										double[][][] rd_percentage = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]) : rd_percentage_zeroes;
-										double total_percentage = 0;
-										for (int k = 0; k < total_replacing_disturbances; k++) {
-											for (int rd_s5R = 0; rd_s5R < layer5.size(); rd_s5R++) {
-												total_percentage = total_percentage + rd_percentage[k][s5][rd_s5R];
-											}
-										}
-										c11_indexlist.get(c11_num).add(xEAe[strata_id][tR][s5R][i][t]);
-										c11_valuelist.get(c11_num).add((double) 1 - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100																											
-										
-										//Add - xEAe(s1,s2,s3,s4,s5,s6)[tR][s5R][i][t+1]		
-										c11_indexlist.get(c11_num).add(xEAe[strata_id][tR][s5R][i][t + 1]);
-										c11_valuelist.get(c11_num).add((double) -1);																					
-										
-										//add bounds
-										c11_lblist.add((double) 0);
-										c11_ublist.add((double) 0);
-										c11_num++;
-									}
+
+				for (int i = 0; i < total_BS_Prescriptions; i++) {
+					for (int t = 1; t <= total_periods - 1; t++) {
+						if(xBS[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 
+							// Add constraint
+							c11_indexlist.add(new ArrayList<Integer>());
+							c11_valuelist.add(new ArrayList<Double>());
+							
+							//Add xBS(s1,s2,s3,s4,s5,s6)[i][t]	
+							int var_index = xBS[strata_id][i][t] ;
+							double[][][] rd_percentage = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]) : rd_percentage_zeroes;
+							double total_percentage = 0;
+							for (int k = 0; k < total_replacing_disturbances; k++) {
+								for (int rd_s5R = 0; rd_s5R < layer5.size(); rd_s5R++) {
+									total_percentage = total_percentage + rd_percentage[k][s5][rd_s5R];
 								}
 							}
+							c11_indexlist.get(c11_num).add(xBS[strata_id][i][t]);
+							c11_valuelist.get(c11_num).add((double) 1 - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
+							
+							//Add -xBS(s1,s2,s3,s4,s5,s6)[i][t+1]
+							c11_indexlist.get(c11_num).add(xBS[strata_id][i][t + 1]);
+							c11_valuelist.get(c11_num).add((double) -1);
+							
+							//add bounds
+							c11_lblist.add((double) 0);
+							c11_ublist.add((double) 0);
+							c11_num++;
 						}
 					}
-				}
-			}														
+				}	
+			}		
 			
 			
 			double[] c11_lb = Stream.of(c11_lblist.toArray(new Double[c11_lblist.size()])).mapToDouble(Double::doubleValue).toArray();
@@ -2090,9 +1973,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			c11_valuelist = null;
 			c11_lblist = null;	
 			c11_ublist = null;
-			System.out.println("Total constraints as in PRISM model formulation eq. (11):   " + c11_num + "             " + dateFormat.format(new Date()));
+			System.out.println("Total constraints as in PRISM model formulation eq. (11):   " + c11_num + "             " + dateFormat.format(new Date()));			
 			System.out.println();
 			System.out.println("Processing area transition logic (take a while)...");
+			
+			
 			
 			// Constraints 12-------------------------------------------------
 			List<List<Integer>> c12_indexlist = new ArrayList<List<Integer>>();	
@@ -2101,22 +1986,66 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			List<Double> c12_ublist = new ArrayList<Double>();
 			int c12_num = 0;
 			
-			//12
+			// 12
 			for (String strata_4layers: model_strata_without_sizeclass_and_covertype) {
 				int strata_4layers_id = Collections.binarySearch(model_strata_without_sizeclass_and_covertype, strata_4layers);
 
 				for (int s5 = 0; s5 < layer5.size(); s5++) {
 					for (int t = 1; t <= total_periods; t++) {
 						for (int s5R = 0; s5R < layer5.size(); s5R++) {
-							//Add constraint
+							// Add constraint
 							c12_indexlist.add(new ArrayList<Integer>());
 							c12_valuelist.add(new ArrayList<Double>());
 							
-							//Add sigma(c)	fire[s1][s2][s3][s4][s5][t][s5R]
+							// Add	fire[s1][s2][s3][s4][s5][t][s5R]
 							c12_indexlist.get(c12_num).add(fire[strata_4layers_id][s5][t][s5R]);
 							c12_valuelist.get(c12_num).add((double) 1);	
 							
-							//Add - sigma(s6)(i)	xNGe[s1][s2][s3][s4][s5][s6][i][t]
+							// Add - sigma(s6)(i)	xMSe[s1][s2][s3][s4][s5][s6][i][t]
+							for (int s6 = 0; s6 < layer6.size(); s6++) {
+								for (int i = 0; i < total_MS_Prescriptions; i++) {
+									String strata_name = strata_4layers + layer5.get(s5) + layer6.get(s6);	
+									int strata_id = Collections.binarySearch(model_strata, strata_name);
+									if (strata_id >= 0) {		// == if model_strata.contains(strata_name)   --   strata_id = -1 means list does not contain the string
+										int var_index = xMS[strata_id][i][t];
+										if(var_index > 0 && var_rd_condition_id[var_index] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
+											double total_percentage = 0;
+											double[][][] rd_percentage = disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]);
+											for (int k = 0; k < total_replacing_disturbances; k++) {
+												total_percentage = total_percentage + rd_percentage[k][s5][s5R];
+											}
+											if (total_percentage > 0) {	// only add if parameter is non zero
+												c12_indexlist.get(c12_num).add(var_index);
+												c12_valuelist.get(c12_num).add((double) - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
+											}
+										}
+									}
+								}
+							}
+							
+							// Add - sigma(s6)(i)	xBSe[s1][s2][s3][s4][s5][s6][i][t]
+							for (int s6 = 0; s6 < layer6.size(); s6++) {
+								for (int i = 0; i < total_BS_Prescriptions; i++) {
+									String strata_name = strata_4layers + layer5.get(s5) + layer6.get(s6);	
+									int strata_id = Collections.binarySearch(model_strata, strata_name);
+									if (strata_id >= 0) {		// == if model_strata.contains(strata_name)   --   strata_id = -1 means list does not contain the string
+										int var_index = xBS[strata_id][i][t];
+										if(var_index > 0 && var_rd_condition_id[var_index] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
+											double total_percentage = 0;
+											double[][][] rd_percentage = disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]);
+											for (int k = 0; k < total_replacing_disturbances; k++) {
+												total_percentage = total_percentage + rd_percentage[k][s5][s5R];
+											}
+											if (total_percentage > 0) {	// only add if parameter is non zero
+												c12_indexlist.get(c12_num).add(var_index);
+												c12_valuelist.get(c12_num).add((double) - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
+											}
+										}
+									}
+								}
+							}
+							
+							// Add - sigma(s6)(i)	xNGe[s1][s2][s3][s4][s5][s6][i][t]
 							for (int s6 = 0; s6 < layer6.size(); s6++) {
 								for (int i = 0; i < total_NGe_Prescriptions; i++) {
 									String strata_name = strata_4layers + layer5.get(s5) + layer6.get(s6);	
@@ -2138,7 +2067,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								}
 							}
 							
-							//Add - sigma(s6)(i)	xPBe[s1][s2][s3][s4][s5][s6][i][t]
+							// Add - sigma(s6)(i)	xPBe[s1][s2][s3][s4][s5][s6][i][t]
 							for (int s6 = 0; s6 < layer6.size(); s6++) {
 								for (int i = 0; i < total_PBe_Prescriptions; i++) {
 									String strata_name = strata_4layers + layer5.get(s5) + layer6.get(s6);	
@@ -2160,7 +2089,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								}
 							}
 													
-							//Add - sigma(s6)(i)	xGSe[s1][s2][s3][s4][s5][s6][i][t]
+							// Add - sigma(s6)(i)	xGSe[s1][s2][s3][s4][s5][s6][i][t]
 							for (int s6 = 0; s6 < layer6.size(); s6++) {
 								for (int i = 0; i < total_GSe_Prescriptions; i++) {
 									String strata_name = strata_4layers + layer5.get(s5) + layer6.get(s6);					
@@ -2182,7 +2111,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								}
 							}
 
-							// Add - sigma(s6)(tR)(s5R)(i)   xEAe(s1,s2,s3,s4,s5,s6)(tR)(s5R)(i)(t)
+							// Add - sigma(s6)(tR)(s5R')(i)   xEAe(s1,s2,s3,s4,s5,s6)(tR)(s5R')(i)(t)
 							for (int s6 = 0; s6 < layer6.size(); s6++) {
 								String strata_name = strata_4layers + layer5.get(s5) + layer6.get(s6);					
 								int strata_id = Collections.binarySearch(model_strata, strata_name);
@@ -2212,7 +2141,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								}
 							}					
 							
-							//Add - sigma(i,a)	xNGr[s1][s2][s3][s4][s5][i][t][a]
+							// Add - sigma(i,a)	xNGr[s1][s2][s3][s4][s5][i][t][a]
 							if (t >= 2) {
 								for (int i = 0; i < total_NGr_Prescriptions; i++) {
 									for (int a = 1; a <= t - 1; a++) {
@@ -2232,7 +2161,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								}
 							}
 							
-							//Add - sigma(i,a)	xPBr[s1][s2][s3][s4][s5][i][t][a]
+							// Add - sigma(i,a)	xPBr[s1][s2][s3][s4][s5][i][t][a]
 							if (t >= 2) {
 								for (int i = 0; i < total_PBr_Prescriptions; i++) {
 									for (int a = 1; a <= t - 1; a++) {
@@ -2252,7 +2181,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								}
 							}
 							
-							//Add - sigma(i,a)	xGSr[s1][s2][s3][s4][s5][i][t][a]
+							// Add - sigma(i,a)	xGSr[s1][s2][s3][s4][s5][i][t][a]
 							if (t >= 2) {
 								for (int i = 0; i < total_GSr_Prescriptions; i++) {
 									for (int a = 1; a <= t - 1; a++) {
@@ -2272,7 +2201,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								}
 							}
 	
-							//Add - sigma(tR)(aR)(s5R)(i)	xEAr[s1][s2][s3][s4][s5][tR][aR][s5R][i][t]
+							// Add - sigma(tR)(aR)(s5R')(i)	xEAr[s1][s2][s3][s4][s5][tR][aR][s5R'][i][t]
 							if (t >= 2) {
 								for (int tR = t + 1; tR <= total_periods; tR++) { // tR
 									for (int aR = 1; aR <= tR - 1; aR++) {
@@ -2299,7 +2228,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								}
 							}															
 	
-							// add bounds
+							// Add bounds
 							c12_lblist.add((double) 0);
 							c12_ublist.add((double) 0);
 							c12_num++;
@@ -2331,6 +2260,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			System.out.println("Total constraints as in PRISM model formulation eq. (12):   " + c12_num + "             " + dateFormat.format(new Date()));
 			
 			
+			
 			// Constraints 13-------------------------------------------------
 			List<List<Integer>> c13_indexlist = new ArrayList<List<Integer>>();	
 			List<List<Double>> c13_valuelist = new ArrayList<List<Double>>();
@@ -2344,21 +2274,21 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				for (int t = 1; t <= total_periods - 1; t++) {										
 					for (int s5R = 0; s5R < layer5.size(); s5R++) {
 						
-						//Add constraint
+						// Add constraint
 						c13_indexlist.add(new ArrayList<Integer>());
 						c13_valuelist.add(new ArrayList<Double>());
 						
 						
-						//FIRE VARIABLES
-						//Add sigma(s5) fire(s1,s2,s3,s4,s5)[t][s5R]
+						// FIRE VARIABLES
+						// Add sigma(s5) fire(s1,s2,s3,s4,s5)[t][s5R]
 						for (int s5 = 0; s5 < layer5.size(); s5++) {
 							c13_indexlist.get(c13_num).add(fire[strata_4layers_id][s5][t][s5R]);
 							c13_valuelist.get(c13_num).add((double) 1);
 						}
 						
 
-						//NON-FIRE VARIABLES
-						//Add sigma(s5)(s6)(i) xEAe(s1,s2,s3,s4,s5,s6)[t][s5R][i][t]
+						// NON-FIRE VARIABLES
+						// Add sigma(s5)(s6)(i) xEAe(s1,s2,s3,s4,s5,s6)[t][s5R][i][t]
 						for (int s5 = 0; s5 < layer5.size(); s5++) {
 							for (int s6 = 0; s6 < layer6.size(); s6++) {
 								for (int i = 0; i < total_EAe_Prescriptions; i++) {
@@ -2380,7 +2310,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 							}
 						}
 						
-						//Add sigma(s5)(a)(i) xEAr(s1,s2,s3,s4,s5)[t][a][s5R][i][t] only if period t>=2
+						// Add sigma(s5)(a)(i) xEAr(s1,s2,s3,s4,s5)[t][a][s5R][i][t] only if period t>=2
 						if (t >= 2) {
 							for (int s5 = 0; s5 < layer5.size(); s5++) {
 								for (int a = 1; a <= t - 1; a++) {
@@ -2397,7 +2327,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 							}
 						}
 				
-						//Add - sigma(i) xNGr(s1,s2,s3,s4,s5R)[i][t+1][1]
+						// Add - sigma(i) xNGr(s1,s2,s3,s4,s5R)[i][t+1][1]
 						for (int i = 0; i < total_NGr_Prescriptions; i++) {
 							if(xNGr[strata_4layers_id][s5R][i][t + 1][1] > 0) {		// if variable is defined, this value would be > 0 
 								c13_indexlist.get(c13_num).add(xNGr[strata_4layers_id][s5R][i][t + 1][1]);
@@ -2405,7 +2335,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 							}
 						}
 						
-						//Add - sigma(i) xPBr(s1,s2,s3,s4,s5R)[i][t+1][1]
+						// Add - sigma(i) xPBr(s1,s2,s3,s4,s5R)[i][t+1][1]
 						for (int i = 0; i < total_PBr_Prescriptions; i++) {
 							if(xPBr[strata_4layers_id][s5R][i][t + 1][1] > 0) {		// if variable is defined, this value would be > 0 
 								c13_indexlist.get(c13_num).add(xPBr[strata_4layers_id][s5R][i][t + 1][1]);
@@ -2413,7 +2343,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 							}
 						}
 						
-						//Add - sigma(i) xGSr(s1,s2,s3,s4,s5R)[i][t+1][1]
+						// Add - sigma(i) xGSr(s1,s2,s3,s4,s5R)[i][t+1][1]
 						for (int i = 0; i < total_GSr_Prescriptions; i++) {
 							if(xGSr[strata_4layers_id][s5R][i][t + 1][1] > 0) {		// if variable is defined, this value would be > 0 
 								c13_indexlist.get(c13_num).add(xGSr[strata_4layers_id][s5R][i][t + 1][1]);
@@ -2421,7 +2351,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 							}
 						}
 															
-						//Add -sigma(t')(c')(i) xEAr(s1,s2,s3,s4,s5R)[tR][aR=tR-t][s5R'][i][t+1]
+						// Add -sigma(tR)(s5R')(i) xEAr(s1,s2,s3,s4,s5R)[tR][aR=tR-t][s5R'][i][t+1]
 						for (int tR = t + 1; tR <= total_periods; tR++) {
 							for (int s5RR = 0; s5RR < layer5.size(); s5RR++) {
 								for (int i = 0; i < total_EAr_Prescriptions; i++) {
@@ -2437,7 +2367,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 							}
 						}
 						
-						// add bounds
+						// Add bounds
 						c13_lblist.add((double) 0);
 						c13_ublist.add((double) 0);
 						c13_num++;
@@ -2467,6 +2397,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			System.out.println("Total constraints as in PRISM model formulation eq. (13):   " + c13_num + "             " + dateFormat.format(new Date()));
 
 			
+			
 			// Constraints 14-------------------------------------------------
 			List<List<Integer>> c14_indexlist = new ArrayList<List<Integer>>();	
 			List<List<Double>> c14_valuelist = new ArrayList<List<Double>>();
@@ -2474,7 +2405,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			List<Double> c14_ublist = new ArrayList<Double>();
 			int c14_num = 0;
 			
-			//14a
+			// 14a
 			for (String strata: model_strata_without_sizeclass_and_covertype) {
 				int strata_4layers_id = Collections.binarySearch(model_strata_without_sizeclass_and_covertype, strata);
 		
@@ -2483,11 +2414,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						for (int t = 2; t <= total_periods - 1; t++) {
 							for (int a = 1; a <= t-1; a++) {
 								if(xNGr[strata_4layers_id][s5][i][t][a] > 0) {		// if variable is defined, this value would be > 0 
-									//Add constraint
+									// Add constraint
 									c14_indexlist.add(new ArrayList<Integer>());
 									c14_valuelist.add(new ArrayList<Double>());
 									
-									//Add xNGr(s1,s2,s3,s4,s5)[i][t][a]
+									// Add xNGr(s1,s2,s3,s4,s5)[i][t][a]
 									int var_index = xNGr[strata_4layers_id][s5][i][t][a];
 									double[][][] rd_percentage = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]) : rd_percentage_zeroes;
 									double total_percentage = 0;
@@ -2499,11 +2430,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									c14_indexlist.get(c14_num).add(xNGr[strata_4layers_id][s5][i][t][a]);
 									c14_valuelist.get(c14_num).add((double) 1 - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
 									
-									//Add - xNGr(s1,s2,s3,s4,s5)[i][t+1][a+1]
+									// Add - xNGr(s1,s2,s3,s4,s5)[i][t+1][a+1]
 									c14_indexlist.get(c14_num).add(xNGr[strata_4layers_id][s5][i][t + 1][a + 1]);
 									c14_valuelist.get(c14_num).add((double) -1);										
 									
-									//add bounds
+									// Add bounds
 									c14_lblist.add((double) 0);
 									c14_ublist.add((double) 0);
 									c14_num++;
@@ -2514,7 +2445,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				}
 			}
 			
-			//14b
+			// 14b
 			for (String strata: model_strata_without_sizeclass_and_covertype) {
 				int strata_4layers_id = Collections.binarySearch(model_strata_without_sizeclass_and_covertype, strata);
 		
@@ -2523,11 +2454,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						for (int t = 2; t <= total_periods - 1; t++) {
 							for (int a = 1; a <= t-1; a++) {
 								if(xPBr[strata_4layers_id][s5][i][t][a] > 0) {		// if variable is defined, this value would be > 0 
-									//Add constraint
+									// Add constraint
 									c14_indexlist.add(new ArrayList<Integer>());
 									c14_valuelist.add(new ArrayList<Double>());
 									
-									//Add xPBr(s1,s2,s3,s4,s5)[i][t][a]
+									// Add xPBr(s1,s2,s3,s4,s5)[i][t][a]
 									int var_index = xPBr[strata_4layers_id][s5][i][t][a];
 									double[][][] rd_percentage = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]) : rd_percentage_zeroes;
 									double total_percentage = 0;
@@ -2539,11 +2470,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									c14_indexlist.get(c14_num).add(xPBr[strata_4layers_id][s5][i][t][a]);
 									c14_valuelist.get(c14_num).add((double) 1 - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
 									
-									//Add - xPBr(s1,s2,s3,s4,s5)[i][t+1][a+1]
+									// Add - xPBr(s1,s2,s3,s4,s5)[i][t+1][a+1]
 									c14_indexlist.get(c14_num).add(xPBr[strata_4layers_id][s5][i][t + 1][a + 1]);
 									c14_valuelist.get(c14_num).add((double) -1);										
 									
-									//add bounds
+									// Add bounds
 									c14_lblist.add((double) 0);
 									c14_ublist.add((double) 0);
 									c14_num++;
@@ -2554,7 +2485,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				}
 			}						
 			
-			//14c
+			// 14c
 			for (String strata: model_strata_without_sizeclass_and_covertype) {
 				int strata_4layers_id = Collections.binarySearch(model_strata_without_sizeclass_and_covertype, strata);
 	
@@ -2563,11 +2494,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						for (int t = 2; t <= total_periods - 1; t++) {
 							for (int a = 1; a <= t-1; a++) {
 								if(xGSr[strata_4layers_id][s5][i][t][a] > 0) {		// if variable is defined, this value would be > 0 
-									//Add constraint
+									// Add constraint
 									c14_indexlist.add(new ArrayList<Integer>());
 									c14_valuelist.add(new ArrayList<Double>());
 									
-									//Add xGSr(s1,s2,s3,s4,s5)[i][t][a]
+									// Add xGSr(s1,s2,s3,s4,s5)[i][t][a]
 									int var_index = xGSr[strata_4layers_id][s5][i][t][a];
 									double[][][] rd_percentage = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]) : rd_percentage_zeroes;
 									double total_percentage = 0;
@@ -2579,11 +2510,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									c14_indexlist.get(c14_num).add(xGSr[strata_4layers_id][s5][i][t][a]);
 									c14_valuelist.get(c14_num).add((double) 1 - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
 									
-									//Add - xGSr(s1,s2,s3,s4,s5)[i][t+1][a+1]
+									// Add - xGSr(s1,s2,s3,s4,s5)[i][t+1][a+1]
 									c14_indexlist.get(c14_num).add(xGSr[strata_4layers_id][s5][i][t + 1][a + 1]);
 									c14_valuelist.get(c14_num).add((double) -1);										
 									
-									//add bounds
+									// Add bounds
 									c14_lblist.add((double) 0);
 									c14_ublist.add((double) 0);
 									c14_num++;
@@ -2594,7 +2525,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				}
 			}						
 			
-			//14d
+			// 14d
 			for (String strata: model_strata_without_sizeclass_and_covertype) {
 				int strata_4layers_id = Collections.binarySearch(model_strata_without_sizeclass_and_covertype, strata);
 			
@@ -2607,11 +2538,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									if (covertype_conversions_and_regeneration_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
 										for (int t = tR - aR + 1; t <= tR - 1; t++) {
 											if(xEAr[strata_4layers_id][s5][tR][aR][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0 
-												//Add constraint
+												// Add constraint
 												c14_indexlist.add(new ArrayList<Integer>());
 												c14_valuelist.add(new ArrayList<Double>());
 												
-												//Add xEAr(s1,s2,s3,s4,s5)[tR][aR][s5R][i][t]
+												// Add xEAr(s1,s2,s3,s4,s5)[tR][aR][s5R][i][t]
 												int var_index = xEAr[strata_4layers_id][s5][tR][aR][s5R][i][t];
 												double[][][] rd_percentage = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]) : rd_percentage_zeroes;
 												double total_percentage = 0;
@@ -2623,11 +2554,11 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 												c14_indexlist.get(c14_num).add(xEAr[strata_4layers_id][s5][tR][aR][s5R][i][t]);
 												c14_valuelist.get(c14_num).add((double) 1 - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100													
 										
-												//Add - xEAr(s1,s2,s3,s4,s5,s6)[tR][aR][s5R][i][t+1]		
+												// Add - xEAr(s1,s2,s3,s4,s5,s6)[tR][aR][s5R][i][t+1]		
 												c14_indexlist.get(c14_num).add(xEAr[strata_4layers_id][s5][tR][aR][s5R][i][t + 1]);
 												c14_valuelist.get(c14_num).add((double) -1);																					
 												
-												//add bounds
+												// Add bounds
 												c14_lblist.add((double) 0);
 												c14_ublist.add((double) 0);
 												c14_num++;	
@@ -2664,6 +2595,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			System.out.println("Total constraints as in PRISM model formulation eq. (14):   " + c14_num + "             " + dateFormat.format(new Date()));
 			System.out.println();
 			System.out.println("Processing basic constraints...");
+			
+			
 			
 			// Constraints 15------------------------------------------------- for y(j) and z(k) and v(n)
 			List<List<Integer>> c15_indexlist = new ArrayList<List<Integer>>();
@@ -2738,7 +2671,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				common_trata_without_sizeclass_and_covertype.retainAll(static_strata_without_sizeclass_and_covertype);
 				
 				
-				//Add xNGe[s1][s2][s3][s4][s5][s6][i][t]			
+				// Add xNGe[s1][s2][s3][s4][s5][s6][i][t]			
 				if (static_methods.contains("NG_E")) {		
 					for (String strata: common_strata) {
 						int strata_id = Collections.binarySearch(model_strata, strata);
@@ -2777,7 +2710,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				}	
 				
 						
-				//Add xPBe[s1][s2][s3][s4][s5][s6][i][t]			
+				// Add xPBe[s1][s2][s3][s4][s5][s6][i][t]			
 				if (static_methods.contains("PB_E")) {		
 					for (String strata: common_strata) {
 						int strata_id = Collections.binarySearch(model_strata, strata);
@@ -2810,7 +2743,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				}	
 							
 				
-				//Add xGSe[s1][s2][s3][s4][s5][s6][i][t]			
+				// Add xGSe[s1][s2][s3][s4][s5][s6][i][t]			
 				if (static_methods.contains("GS_E")) {		
 					for (String strata: common_strata) {
 						int strata_id = Collections.binarySearch(model_strata, strata);
@@ -2843,7 +2776,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				}														
 	
 						
-				//Add xMS[s1][s2][s3][s4][s5][s6][i][t]			
+				// Add xMS[s1][s2][s3][s4][s5][s6][i][t]			
 				if (static_methods.contains("MS_E")) {		
 					for (String strata: common_strata) {
 						int strata_id = Collections.binarySearch(model_strata, strata);
@@ -2876,7 +2809,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				}																
 				
 				
-				//Add xBS[s1][s2][s3][s4][s5][s6][i][t]			
+				// Add xBS[s1][s2][s3][s4][s5][s6][i][t]			
 				if (static_methods.contains("BS_E")) {				
 					for (String strata: common_strata) {
 						int strata_id = Collections.binarySearch(model_strata, strata);
@@ -2951,7 +2884,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				}	
 				
 				
-				//Add xEAr[s1][s2][s3][s4][s5][tR][aR][s5R][i][t]		  note   tR >= 2   -->   tR >= t >= tR - aR + 1
+				// Add xEAr[s1][s2][s3][s4][s5][tR][aR][s5R][i][t]		  note   tR >= 2   -->   tR >= t >= tR - aR + 1
 				if (static_methods.contains("EA_R")) {	
 					for (String strata: common_trata_without_sizeclass_and_covertype) {
 						int strata_4layers_id = Collections.binarySearch(model_strata_without_sizeclass_and_covertype, strata);		
@@ -2996,7 +2929,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				}					
 				
 	
-				//Add xNGr
+				// Add xNGr
 				if (static_methods.contains("NG_R")) {		
 					for (String strata: common_trata_without_sizeclass_and_covertype) {
 						int strata_4layers_id = Collections.binarySearch(model_strata_without_sizeclass_and_covertype, strata);
@@ -3035,7 +2968,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				}							
 				
 
-				//Add xPBr
+				// Add xPBr
 				if (static_methods.contains("PB_R")) {		
 					for (String strata: common_trata_without_sizeclass_and_covertype) {
 						int strata_4layers_id = Collections.binarySearch(model_strata_without_sizeclass_and_covertype, strata);
@@ -3074,7 +3007,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				}						
 
 				
-				//Add xGSr
+				// Add xGSr
 				if (static_methods.contains("GS_R")) {		
 					for (String strata: common_trata_without_sizeclass_and_covertype) {
 						int strata_4layers_id = Collections.binarySearch(model_strata_without_sizeclass_and_covertype, strata);
@@ -3113,7 +3046,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				}					
 		
 				
-				//add bounds
+				// Add bounds
 				c15_lblist.add((double) 0);
 				c15_ublist.add((double) 0);
 				c15_num++;
@@ -3174,6 +3107,152 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			
 			
 			
+			// Constraints 16 (flow)------------------------------------------------
+			List<List<Integer>> c16_indexlist = new ArrayList<List<Integer>>();
+			List<List<Double>> c16_valuelist = new ArrayList<List<Double>>();
+			List<Double> c16_lblist = new ArrayList<Double>();
+			List<Double> c16_ublist = new ArrayList<Double>();
+			int c16_num = 0;
+					
+			
+			List<Integer> bookkeeping_ID_list = new ArrayList<Integer>();	// This list contains all GUI - IDs of the Basic Constraints
+			List<Integer> bookkeeping_Var_list = new ArrayList<Integer>();			// This list contains all SOLVER Variables - IDs of the Basic Constraints
+			if (flow_set_list.size() > 0) {		// Add flow constraints if there is at least a flow set
+				current_freeConstraint = 0;
+				current_softConstraint = 0;
+				current_hardConstraint = 0;	
+				int constraint_type_col = constraint_column_names_list.indexOf("bc_type");				
+				int constraint_id_col = constraint_column_names_list.indexOf("bc_id");
+				
+				for (int i = 1; i < total_freeConstraints + total_softConstraints + total_hardConstraints + 1; i++) {	// Loop from 1 because the first row of the Basic Constraints file is just title												
+					int ID = Integer.parseInt(bc_values[i][constraint_id_col]);
+					bookkeeping_ID_list.add(ID);		
+									
+					if (bc_values[i][constraint_type_col].equals("SOFT")) {
+						bookkeeping_Var_list.add(y[current_softConstraint]);
+						current_softConstraint++;
+					}
+					
+					if (bc_values[i][constraint_type_col].equals("HARD")) {
+						bookkeeping_Var_list.add(z[current_hardConstraint]);
+						current_hardConstraint++;
+					}
+					
+					if (bc_values[i][constraint_type_col].equals("FREE")) {
+						bookkeeping_Var_list.add(v[current_freeConstraint]);
+						current_freeConstraint++;
+					}	
+				}
+								
+				
+				// Add constraints for each flow set
+				for (int i = 0; i < flow_set_list.size(); i++) {		// loop each flow set (or each row of the flow_constraints_table)
+					if (flow_type_list.get(i).equals("HARD")) {		// ONly add constraint if flow type is HARD
+						int this_set_total_constraints = flow_set_list.get(i).size() - 1;
+						for (int j = 0; j < this_set_total_constraints; j++) {
+							
+							if (flow_lowerbound_percentage_list.get(i) != null) {	// add when lowerbound_percentage is not null
+								// Add constraint				Right term - lowerbound % * Left term >= 0
+								c16_indexlist.add(new ArrayList<Integer>());
+								c16_valuelist.add(new ArrayList<Double>());
+								
+								// Add Right term including all IDs in the (j+1) term
+								for (int ID : flow_set_list.get(i).get(j + 1)) {
+									if (bookkeeping_ID_list.contains(ID)) {		// Add book keeping variable
+										int gui_table_id = bookkeeping_ID_list.indexOf(ID);		
+										int var_id = bookkeeping_Var_list.get(gui_table_id);
+										c16_indexlist.get(c16_num).add(var_id);
+										c16_valuelist.get(c16_num).add((double) 1);
+									}
+								}
+								
+								// Add - % * Left term including all IDs in the (j) term
+								for (int ID : flow_set_list.get(i).get(j)) {
+									if (bookkeeping_ID_list.contains(ID)) {		// Add book keeping variable
+										int gui_table_id = bookkeeping_ID_list.indexOf(ID);		
+										int var_id = bookkeeping_Var_list.get(gui_table_id);
+										c16_indexlist.get(c16_num).add(var_id);
+										c16_valuelist.get(c16_num).add((double) -flow_lowerbound_percentage_list.get(i) / 100);		// -1 * lowerbound_percentage here
+									}
+								}
+								
+								// Add bounds
+								c16_lblist.add((double) 0);			// Lower bound set to 0	
+								c16_ublist.add(Double.MAX_VALUE);		// Upper bound set to max
+								c16_num++;
+							}
+							
+							
+							if (flow_upperbound_percentage_list.get(i) != null) {	// add when upperbound_percentage is not null
+								// Add constraint				Right term - upperbound % * Left term <= 0
+								c16_indexlist.add(new ArrayList<Integer>());
+								c16_valuelist.add(new ArrayList<Double>());
+								
+								// Add Right term including all IDs in the (j+1) term
+								for (int ID : flow_set_list.get(i).get(j + 1)) {
+									if (bookkeeping_ID_list.contains(ID)) {		// Add book keeping variable
+										int gui_table_id = bookkeeping_ID_list.indexOf(ID);		
+										int var_id = bookkeeping_Var_list.get(gui_table_id);
+										c16_indexlist.get(c16_num).add(var_id);
+										c16_valuelist.get(c16_num).add((double) 1);
+									}
+								}
+								
+								// Add - % * Left term including all IDs in the (j) term
+								for (int ID : flow_set_list.get(i).get(j)) {
+									if (bookkeeping_ID_list.contains(ID)) {		// Add book keeping variable
+										int gui_table_id = bookkeeping_ID_list.indexOf(ID);		
+										int var_id = bookkeeping_Var_list.get(gui_table_id);
+										c16_indexlist.get(c16_num).add(var_id);
+										c16_valuelist.get(c16_num).add((double) -flow_upperbound_percentage_list.get(i) / 100);		// -1 * upperbound_percentage here
+									}
+								}
+								
+								// Add bounds
+								c16_lblist.add(-Double.MAX_VALUE);	// lower bound set to min	
+								c16_ublist.add((double) 0);			// Upper bound set to 0
+								c16_num++;
+							}							
+						}
+					}
+				}
+			}
+			
+			
+			double[] c16_lb = Stream.of(c16_lblist.toArray(new Double[c16_lblist.size()])).mapToDouble(Double::doubleValue).toArray();
+			double[] c16_ub = Stream.of(c16_ublist.toArray(new Double[c16_ublist.size()])).mapToDouble(Double::doubleValue).toArray();		
+			int[][] c16_index = new int[c16_num][];
+			double[][] c16_value = new double[c16_num][];
+		
+			for (int i = 0; i < c16_num; i++) {
+				c16_index[i] = new int[c16_indexlist.get(i).size()];
+				c16_value[i] = new double[c16_indexlist.get(i).size()];
+				for (int j = 0; j < c16_indexlist.get(i).size(); j++) {
+					c16_index[i][j] = c16_indexlist.get(i).get(j);
+					c16_value[i][j] = c16_valuelist.get(i).get(j);			
+				}
+			}		
+			
+			// Clear lists to save memory
+			c16_indexlist = null;	
+			c16_valuelist = null;
+			c16_lblist = null;	
+			c16_ublist = null;
+			System.out.println("Total constraints as in PRISM model formulation eq. (16):   " + c16_num + "             " + dateFormat.format(new Date()));
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 			
 					
 			
@@ -3182,8 +3261,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			// Solve problem----------------------------------------------------------------------------------------------				
 //			// Set constraints set name: Notice THIS WILL EXTREMELY SLOW THE SOLVING PROCESS (recommend for debugging only)
 //			int indexOfC2 = c2_num;
-//			int indexOfC3 = indexOfC2 + c3_num;
-//			int indexOfC6 = indexOfC3 + c6_num;
+//			int indexOfC5 = indexOfC2 + c5_num;
+//			int indexOfC6 = indexOfC5 + c6_num;
 //			int indexOfC7 = indexOfC6 + c7_num;
 //			int indexOfC8 = indexOfC7 + c8_num;
 //			int indexOfC9 = indexOfC8 + c9_num;
@@ -3196,8 +3275,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 //			
 //			for (int i = 0; i<lp.getRanges().length; i++) {		
 //				if (0<=i && i<indexOfC2) lp.getRanges() [i].setName("EQ(2)_");
-//				if (indexOfC2<=i && i<indexOfC3) lp.getRanges() [i].setName("EQ(3)_");
-//				if (indexOfC3<=i && i<indexOfC6) lp.getRanges() [i].setName("EQ(6)_");
+//				if (indexOfC2<=i && i<indexOfC5) lp.getRanges() [i].setName("EQ(5)_");
+//				if (indexOfC5<=i && i<indexOfC6) lp.getRanges() [i].setName("EQ(6)_");
 //				if (indexOfC6<=i && i<indexOfC7) lp.getRanges() [i].setName("EQ(7)_");
 //				if (indexOfC7<=i && i<indexOfC8) lp.getRanges() [i].setName("EQ(8)_");
 //				if (indexOfC8<=i && i<indexOfC9) lp.getRanges() [i].setName("EQ(9)_");
@@ -3273,8 +3352,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				
 				// add constraints & Clear arrays to save memory
 				cplex_wrapper.addRows(c2_lb, c2_ub, c2_index, c2_value); 	c2_lb = null;  c2_ub = null;  c2_index = null;  c2_value = null;	// Constraints 2
-				cplex_wrapper.addRows(c3_lb, c3_ub, c3_index, c3_value); 	c3_lb = null;  c3_ub = null;  c3_index = null;  c3_value = null;	// Constraints 3
-				cplex_wrapper.addRows(c5_lb, c5_ub, c5_index, c5_value); 	c5_lb = null;  c5_ub = null;  c5_index = null;  c5_value = null;	// Constraints 5 (flow)
+				cplex_wrapper.addRows(c5_lb, c5_ub, c5_index, c5_value); 	c5_lb = null;  c5_ub = null;  c5_index = null;  c5_value = null;	// Constraints 5
 				cplex_wrapper.addRows(c6_lb, c6_ub, c6_index, c6_value); 	c6_lb = null;  c6_ub = null;  c6_index = null;  c6_value = null;	// Constraints 6
 				cplex_wrapper.addRows(c7_lb, c7_ub, c7_index, c7_value); 	c7_lb = null;  c7_ub = null;  c7_index = null;  c7_value = null;	// Constraints 7
 				cplex_wrapper.addRows(c8_lb, c8_ub, c8_index, c8_value); 	c8_lb = null;  c8_ub = null;  c8_index = null;  c8_value = null;	// Constraints 8
@@ -3284,7 +3362,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				cplex_wrapper.addRows(c12_lb, c12_ub, c12_index, c12_value); 	c12_lb = null;  c12_ub = null;  c12_index = null;  c12_value = null;	// Constraints 12
 				cplex_wrapper.addRows(c13_lb, c13_ub, c13_index, c13_value); 	c13_lb = null;  c13_ub = null;  c13_index = null;  c13_value = null;	// Constraints 13
 				cplex_wrapper.addRows(c14_lb, c14_ub, c14_index, c14_value); 	c14_lb = null;  c14_ub = null;  c14_index = null;  c14_value = null;	// Constraints 14
-				cplex_wrapper.addRows(c15_lb, c15_ub, c15_index, c15_value); 	c15_lb = null;  c15_ub = null;  c15_index = null;  c15_value = null;	// Constraints 15
+				cplex_wrapper.addRows(c15_lb, c15_ub, c15_index, c15_value); 	c15_lb = null;  c15_ub = null;  c15_index = null;  c15_value = null;	// Constraints 15 - Basic Constraints
+				cplex_wrapper.addRows(c16_lb, c16_ub, c16_index, c16_value); 	c16_lb = null;  c16_ub = null;  c16_index = null;  c16_value = null;	// Constraints 16 - Flow Constraints
 				
 				// set up cplex environments
 				cplex_wrapper.setup();
@@ -3707,11 +3786,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			
 			
 			if (solver_for_optimization.equals("LPSOLVE")) {				//Reference for all LPsolve classes here:		http://lpsolve.sourceforge.net/5.5/Java/docs/api/lpsolve/LpSolve.html
-				
-				//Add the LPsolve native library path dynamically at run time
+				// Add the LPsolve native library path dynamically at run time
 				try {
-//					LibraryHandle.addLibraryPath("C:/SpectrumLite_Documents/Setup/lp_solve_5.5_java/lib/win64");
-					
 					LibraryHandle.setLibraryPath(FilesHandle.get_temporaryFolder().getAbsolutePath().toString());
 					LibraryHandle.addLibraryPath(FilesHandle.get_temporaryFolder().getAbsolutePath().toString());
 					System.out.println("Successfully loaded LPSOLVE .dll files from " + FilesHandle.get_temporaryFolder().getAbsolutePath().toString());			
@@ -3719,10 +3795,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					System.err.println("Panel Solve Runs - LPsolve.addLibraryPath error - " + e.getClass().getName() + ": " + e.getMessage());
 				}
 				
-				
 				// Create a problem with nvars variables and 0 constraints
 				LpSolve solver = LpSolve.makeLp(0, nvars);
-				
 			    solver.setVerbose(LpSolve.NEUTRAL); //set verbose level
 		        solver.setMinim(); //set the problem to minimization
 		        
@@ -3753,16 +3827,15 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 //		        //---------------------------------------------------------------------------
 		        
 		        
-		        
 
 		        
-		        //Set objective function coefficients
+		        // Set objective function coefficients
 		        solver.setObjFn(pad1ZeroInfront(objvals));		      
 				
-//		        //Set scaling			//Note this make outputs change
+//		        // Set scaling			//Note this make outputs change
 //		        solver.setScaling(LpSolve.SCALE_NONE);				//reference here:	http://lpsolve.sourceforge.net/5.5/set_scaling.htm
 		        
-//		        //Set preSolve:		Eliminate linearly dependent rows = LpSolve.PRESOLVE_LINDEP  (value int = 4), option 1 can reduce iteration --> solve faster
+//		        // Set preSolve:		Eliminate linearly dependent rows = LpSolve.PRESOLVE_LINDEP  (value int = 4), option 1 can reduce iteration --> solve faster
 //		        solver.setPresolve(LpSolve.PRESOLVE_LINDEP, solver.getPresolveloops());		//reference here:	http://lpsolve.sourceforge.net/5.5/set_presolve.htm
 		        
 		        
@@ -3771,95 +3844,41 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					solver.setBounds(i + 1, vlb[i], vub[i]); // plus one is required by the lib
 				}
 		      	        
-//		        //lower bounds for the variables	      
+//		        // lower bounds for the variables	      
 //				for (int i = 0; i < nvars; ++i) {
 //					solver.setLowbo(i + 1, vlb[i]); // plus one is required by the lib
 //				}
 //		      		         
-//		        //upper bounds for the variables
+//		        // upper bounds for the variables
 //				for (int i = 0; i < nvars; ++i) {
 //					solver.setUpbo(i + 1, vub[i]); // plus one is required by the lib
 //				}
 		         
 		        
-		        //Allocate memory forin advance to add constraints & variables faster		Reference:	http://lpsolve.sourceforge.net/5.5/resize_lp.htm
-		        int totalConstraints = c2_lb.length + c3_lb.length + c6_lb.length + c7_lb.length + c8_lb.length 
-		        									+ c9_lb.length + c10_lb.length + c11_lb.length + c12_lb.length + c13_lb.length + c14_lb.length + c15_lb.length;
+		        // Allocate memory forin advance to add constraints & variables faster		Reference:	http://lpsolve.sourceforge.net/5.5/resize_lp.htm
+				int totalConstraints = c2_lb.length + c5_lb.length + c6_lb.length + c7_lb.length + c8_lb.length
+						+ c9_lb.length + c10_lb.length + c11_lb.length + c12_lb.length + c13_lb.length + c14_lb.length + c15_lb.length + c16_lb.length;
 		        solver.resizeLp(totalConstraints, solver.getNcolumns());
 		        
-				
-		        //Add constraints:			//	The sign of the constraint: LE (1) for <=, EQ (3) for =, GE (2) for >=
-											//	addConstraint(parameters, sign, RHS)
-				
-		        solver.setAddRowmode(true);	//perform much better addConstraintex -----------------------------------------------------------
-//		        // Constraints 2   
-//				for (int i = 0; i < c2_num; ++i) {
-//					if (c2_lb[i] != -Double.MAX_VALUE) {
-//						solver.addConstraint(pad1ZeroInfront(withoutZero_To_WithZero(nvars, c2_value[i], c2_index[i])), LpSolve.GE, c2_lb[i]);
-//					}	
-//				}	
-//				// Constraints 3   
-//				for (int i = 0; i < c3_num; ++i) {
-//					if (c3_ub[i] != Double.MAX_VALUE) {
-//						solver.addConstraint(pad1ZeroInfront(withoutZero_To_WithZero(nvars, c3_value[i], c3_index[i])), LpSolve.LE, c3_ub[i]);
-//					}			
-//				}	
-//				
-//				// Constraints 6   
-//				for (int i = 0; i < c6_num; ++i) {
-//					solver.addConstraint(pad1ZeroInfront(withoutZero_To_WithZero(nvars, c6_value[i], c6_index[i])), LpSolve.EQ, c6_lb[i]);
-//				}			
-//				// Constraints 7
-//				for (int i = 0; i < c7_num; ++i) {
-//					solver.addConstraint(pad1ZeroInfront(withoutZero_To_WithZero(nvars, c7_value[i], c7_index[i])), LpSolve.EQ, c7_lb[i]);
-//				}	
-//				// Constraints 8
-//				for (int i = 0; i < c8_num; ++i) {
-//					solver.addConstraint(pad1ZeroInfront(withoutZero_To_WithZero(nvars, c8_value[i], c8_index[i])), LpSolve.EQ, c8_lb[i]);
-//				}	
-//				// Constraints 9
-//				for (int i = 0; i < c9_num; ++i) {
-//					solver.addConstraint(pad1ZeroInfront(withoutZero_To_WithZero(nvars, c9_value[i], c9_index[i])), LpSolve.EQ, c9_lb[i]);
-//				}	
-//				// Constraints 10
-//				for (int i = 0; i < c10_num; ++i) {
-//					solver.addConstraint(pad1ZeroInfront(withoutZero_To_WithZero(nvars, c10_value[i], c10_index[i])), LpSolve.EQ, c10_lb[i]);
-//				}	
-//				// Constraints 11
-//				for (int i = 0; i < c11_num; ++i) {
-//					solver.addConstraint(pad1ZeroInfront(withoutZero_To_WithZero(nvars, c11_value[i], c11_index[i])), LpSolve.EQ, c11_lb[i]);
-//				}	
-//				// Constraints 12
-//				for (int i = 0; i < c12_num; ++i) {
-//					solver.addConstraint(pad1ZeroInfront(withoutZero_To_WithZero(nvars, c12_value[i], c12_index[i])), LpSolve.EQ, c12_lb[i]);
-//				}	
-//				// Constraints 13
-//				for (int i = 0; i < c13_num; ++i) {
-//					solver.addConstraint(pad1ZeroInfront(withoutZero_To_WithZero(nvars, c13_value[i], c13_index[i])), LpSolve.EQ, c13_lb[i]);
-//				}	
-//				// Constraints 14
-//				for (int i = 0; i < c14_num; ++i) {
-//					solver.addConstraint(pad1ZeroInfront(withoutZero_To_WithZero(nvars, c14_value[i], c14_index[i])), LpSolve.EQ, c14_lb[i]);
-//				}	
-//				// Constraints 15
-//				for (int i = 0; i < c15_num; ++i) {
-//					solver.addConstraint(pad1ZeroInfront(withoutZero_To_WithZero(nvars, c15_value[i], c15_index[i])), LpSolve.EQ, c15_lb[i]);
-//				}	
 		        
-		        //Add addConstraintex much more faster than addConstraint.		Reference:		http://lpsolve.sourceforge.net/5.5/add_constraint.htm
+				
+		        // Add constraints:			//	The sign of the constraint: LE (1) for <=, EQ (3) for =, GE (2) for >=
+											//	addConstraint(parameters, sign, RHS)
+		        // Use addConstraintex because it is much more faster than addConstraint.		Reference:		http://lpsolve.sourceforge.net/5.5/add_constraint.htm
+		        solver.setAddRowmode(true);
+		        
 		        // Constraints 2   
 				for (int i = 0; i < c2_num; ++i) {
 					if (c2_lb[i] != -Double.MAX_VALUE) {			
 						solver.addConstraintex(c2_value[i].length, c2_value[i], plus1toIndex(c2_index[i]), LpSolve.GE, c2_lb[i]);
 					}	
 				}	
-				// Constraints 3   
-				for (int i = 0; i < c3_num; ++i) {
-					if (c3_ub[i] != Double.MAX_VALUE) {
-						solver.addConstraintex(c3_value[i].length, c3_value[i], plus1toIndex(c3_index[i]), LpSolve.LE, c3_ub[i]);
+				// Constraints 5   
+				for (int i = 0; i < c5_num; ++i) {
+					if (c5_ub[i] != Double.MAX_VALUE) {
+						solver.addConstraintex(c5_value[i].length, c5_value[i], plus1toIndex(c5_index[i]), LpSolve.LE, c5_ub[i]);
 					}			
 				}	
-				
 				// Constraints 6   
 				for (int i = 0; i < c6_num; ++i) {
 					solver.addConstraintex(c6_value[i].length, c6_value[i], plus1toIndex(c6_index[i]), LpSolve.EQ, c6_lb[i]);
@@ -3900,6 +3919,10 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				for (int i = 0; i < c15_num; ++i) {
 					solver.addConstraintex(c15_value[i].length, c15_value[i], plus1toIndex(c15_index[i]), LpSolve.EQ, c15_lb[i]);
 				}	
+				// Constraints 16
+				for (int i = 0; i < c16_num; ++i) {
+					solver.addConstraintex(c16_value[i].length, c16_value[i], plus1toIndex(c16_index[i]), LpSolve.EQ, c16_lb[i]);
+				}	
 				solver.setAddRowmode(false);	//perform much better addConstraintex-----------------------------------------------------------
 				
 		        
@@ -3909,7 +3932,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				data[row][4] = "solving";
 				model.fireTableDataChanged();
 		        
-//		        //solve the problem
+//		        // solve the problem
 //		        int status = solver.solve();
 //		        if(isSolutionValid(status)==false) {
 //		            solver.setScaling(LpSolve.SCALE_NONE); //turn off automatic scaling
@@ -3919,21 +3942,22 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 //					}
 //				}	        
 		        
-		        //solve the problem
+		        // solve the problem
 //				solver.writeLp(problemFile[row].getAbsolutePath());
 				if (isSolutionValid(solver.solve()) == true) {
 //					solver.setOutputfile(solutionFile[row].getAbsolutePath());
 
 					
-					//Get output info to array
+					// Get output info to array
 					double[] value = solver.getPtrVariables();
 //					double[] reduceCost = cplex.getReducedCosts(lp);
 					double[] dual = solver.getPtrDualSolution();
 //					double[] slack = cplex.getSlacks(lp);
 
-					//Write Solution files
-
-					//General Info
+					
+					
+					// Write Solution files
+					// General Info
 					output_general_outputs_file[row].delete();
 					try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_general_outputs_file[row]))) {
 						// Write variables info
@@ -3970,7 +3994,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					output_general_outputs_file[row].createNewFile();
 
 					
-					//Variables if value <> 0
+					// Variables if value <> 0
 					output_variables_file[row].delete();
 					try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_variables_file[row]))) {
 						// Write variables info
