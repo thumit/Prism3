@@ -896,7 +896,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 							}									
 						}
 				}
-			}														
+			}													
 			
 			// Create decision variables xNGr(s1,s2,s3,s4,s5)(i)(t)(a)
 			for (String strata: model_strata_without_sizeclass_and_covertype) {
