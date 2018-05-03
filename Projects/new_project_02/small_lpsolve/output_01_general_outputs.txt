@@ -1,0 +1,13 @@
+description	value
+Optimization solver	LPSOLVE
+Solution status	0
+Solution algorithm	6
+Simplex iterations	16
+Prism version when problem solved	PRISM ALPHA 1.1.04
+Date & time problem solved	2018/05/02 - 22:50:03
+Time reading (minutes & seconds)	1.4s
+Time solving (minutes & seconds)	0.04s
+Time writing (minutes & seconds)	0.17s
+Total variables	957
+Total constraints	760
+Objective value	0.0

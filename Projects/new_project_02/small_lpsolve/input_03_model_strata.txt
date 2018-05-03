@@ -1,0 +1,3 @@
+strata_id	layer1	layer2	layer3	layer4	layer5	layer6	acres	ageclass	model_strata	
+ANCBDG	A	N	C	B	D	G	20.0	1	true	
+ANCBDI	A	N	C	B	D	I	191.0	3	true	

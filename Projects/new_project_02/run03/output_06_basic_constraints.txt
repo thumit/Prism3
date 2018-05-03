@@ -1,0 +1,7 @@
+bc_id	bc_description	bc_type	bc_multiplier	lowerbound	lowerbound_perunit_penalty	upperbound	upperbound_perunit_penalty	var_id	var_name	var_value	var_reduced_cost	total_penalty
+1	5k at least ..... rmcuft ..... No dynamic restriction ..... period 1	FREE	1.0	0.0	1.0	0.0	1.0	3	v_0	0.0	0.0	0.0
+2	5k at least ..... rmcuft ..... No dynamic restriction ..... period 2	FREE	1.0	5000.0	1.0	null	null	4	v_1	0.0	0.0	0.0
+3	5k at least ..... rmcuft ..... No dynamic restriction ..... period 3	FREE	1.0	5000.0	1.0	null	null	5	v_2	0.0	0.0	0.0
+4	5k at least ..... rmcuft ..... No dynamic restriction ..... period 4	FREE	1.0	5000.0	1.0	null	null	6	v_3	0.0	0.0	0.0
+5	5k at least ..... rmcuft ..... No dynamic restriction ..... period 5	FREE	1.0	5000.0	1.0	null	null	7	v_4	0.0	0.0	0.0
+6	rmcuft ..... No dynamic restriction ..... No static restriction	SOFT	1.0	null	null	10000.0	1.0	0	y_0	0.0	0.0	0.0

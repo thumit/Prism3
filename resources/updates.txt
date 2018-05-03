@@ -841,3 +841,6 @@ All the above associated with Prism Formulation 05.docx
 All changes in this block are associated with PrismAlpha1.1.03.jar, Prism Formulation 06.docx, Prism Database 03.docx	
 --------------------------------------------------------------------------	
 
+370. LPSolve now returns all outputs except output 03.
+All changes in this block are associated with PrismAlpha1.1.04.jar, Prism Formulation 06.docx, Prism Database 03.docx	
+--------------------------------------------------------------------------
