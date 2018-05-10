@@ -1847,7 +1847,7 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
         };						
 		
             
-		// Set DOuble precision for cells
+		// Set Double precision for cells
 		DefaultTableCellRenderer r2 = new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object
@@ -3555,9 +3555,9 @@ public class Panel_EditRun_Details extends JLayeredPane implements ActionListene
 					}
 					
 					if (String.valueOf(value).equals("CPLEX")) {
-						list.setToolTipText("active when users have CPLEX jar and dll files successfully set up. PRISM provides all outputs of the optimal solution");
+						list.setToolTipText("active when CPLEX jar and dll files are properly set up");
 					} else if (String.valueOf(value).equals("LPSOLVE")) {
-						list.setToolTipText("active. PRISM provides only first 4 outputs of the optimal solution");
+						list.setToolTipText("active");
 					} else {
 						list.setToolTipText("inactive. " + String.valueOf(value) + " will be integrated in future PRISM updates");
 					}

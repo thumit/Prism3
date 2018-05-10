@@ -145,9 +145,9 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 			String title_tooltip = layers_Title_ToolTip.get(i);
 			
 			layers_Title_Label.add(title);
-			if ((i == 4 || i == 5) && (option == 0 || option == 2)){
+			if (i == 5 && (option == 0 || option == 2)){
 				title.setForeground(Color.RED);
-				layers_Title_Label.get(i).setToolTipText(title_tooltip + " (as in prescription, apply to existing strata, does not apply to regenerated strata)");
+				layers_Title_Label.get(i).setToolTipText(title_tooltip + " (only apply to existing strata, i.e. methods with _E)");
 			} else {
 				layers_Title_Label.get(i).setToolTipText(title_tooltip);
 			}					
@@ -193,7 +193,7 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 				checkboxStaticIdentifiers.get(i).add(new JCheckBox(allLayers.get(i).get(j)));
 				checkboxStaticIdentifiers.get(i).get(j).setToolTipText(allLayers_ToolTips.get(i).get(j));
 				checkboxStaticIdentifiers.get(i).get(j).setSelected(true);
-				if ((i == 4 || i == 5) && (option == 0 || option == 2)){
+				if (i == 5 && (option == 0 || option == 2)){
 					checkboxStaticIdentifiers.get(i).get(j).setForeground(Color.RED);
 				}			
 				
@@ -213,8 +213,8 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 					}
 				});
 						
-				// Disable layer 5 - Cover Type & layer 6 - Size Class
-				if ((i == 4 || i == 5) && option == 2){
+				// Disable layer 6 - Size Class
+				if (i == 5 && option == 2) {
 //					checkboxStaticIdentifiers.get(i).get(j).setEnabled(false);
 				}
 			}

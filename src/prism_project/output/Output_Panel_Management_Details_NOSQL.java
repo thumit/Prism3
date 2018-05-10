@@ -1719,6 +1719,8 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 		if (Get_Variable_Information.get_forest_status(var_name).equals("E")) {
 			if (!static_identifiers.get(4).contains(Get_Variable_Information.get_layer5(var_name))) return false;	// layer5 cover type
 			if (!static_identifiers.get(5).contains(Get_Variable_Information.get_layer6(var_name))) return false;	// layer6: size class
+		} else if (Get_Variable_Information.get_forest_status(var_name).equals("R")) {
+			if (!static_identifiers.get(4).contains(Get_Variable_Information.get_layer5(var_name))) return false;	// layer5 cover type
 		}
 		if (!static_identifiers.get(6).contains(Get_Variable_Information.get_method(var_name) + "_" + Get_Variable_Information.get_forest_status(var_name))) return false;
 		if (!static_identifiers.get(7).contains(String.valueOf(Get_Variable_Information.get_period(var_name)))) return false;					

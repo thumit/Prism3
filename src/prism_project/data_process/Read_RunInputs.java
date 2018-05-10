@@ -95,8 +95,10 @@ public class Read_RunInputs {
 	private int sm_totalRows, sm_totalColumns;
 	private String[][] sm_value;
 	private List<String> sm_strata;	
+	private List<String> sm_strata_without_sizeclass;
 	private List<String> sm_strata_without_sizeclass_and_covertype;
 	private List<List<String>> sm_method_choice_for_strata;
+	private List<List<String>> sm_method_choice_for_strata_without_sizeclass;
 	private List<List<String>> sm_method_choice_for_strata_without_sizeclass_and_covertype;
 
 	public void read_silviculture_method(File file) {
@@ -173,8 +175,10 @@ public class Read_RunInputs {
 			
 	private void populate_sm_lists() {	
 		sm_strata = new ArrayList<String>();	
+		sm_strata_without_sizeclass = new ArrayList<String>();
 		sm_strata_without_sizeclass_and_covertype = new ArrayList<String>();
 		sm_method_choice_for_strata = new ArrayList<List<String>>();
+		sm_method_choice_for_strata_without_sizeclass = new ArrayList<List<String>>();
 		sm_method_choice_for_strata_without_sizeclass_and_covertype = new ArrayList<List<String>>();
 		
 		for (int row = 0; row < sm_totalRows; row++) {		
@@ -209,7 +213,35 @@ public class Read_RunInputs {
 						}					
 					}				
 				}	
-			}			
+			}	
+			
+			// regeneration 5 layers
+			for (String layer1 : sm_static_identifiers.get(0)) {
+				for (String layer2 : sm_static_identifiers.get(1)) {
+					for (String layer3 : sm_static_identifiers.get(2)) {
+						for (String layer4 : sm_static_identifiers.get(3)) {
+							for (String layer5 : sm_static_identifiers.get(4)) {
+									
+								String combined_name = layer1 + layer2 + layer3 + layer4 + layer5;
+								if (!sm_strata_without_sizeclass.contains(combined_name)) {
+									sm_strata_without_sizeclass.add(combined_name);
+									sm_method_choice_for_strata_without_sizeclass.add(new ArrayList<String>());
+								}
+								
+								int processing_id = sm_strata_without_sizeclass.indexOf(combined_name);									
+								for (String method : sm_method_choice.get(0)) {
+									for (String choice : sm_method_choice.get(1)) {
+										if (!sm_method_choice_for_strata_without_sizeclass.get(processing_id).contains(method + " " + choice)) {
+											sm_method_choice_for_strata_without_sizeclass.get(processing_id).add(method + " " + choice);
+										}
+									}
+								}
+									
+							}						
+						}					
+					}				
+				}	
+			}
 			
 			// regeneration 4 layers
 			for (String layer1 : sm_static_identifiers.get(0)) {
@@ -243,12 +275,20 @@ public class Read_RunInputs {
 		return sm_strata;
 	}
 	
+	public List<String> get_sm_strata_without_sizeclass() {
+		return sm_strata_without_sizeclass;
+	}
+	
 	public List<String> get_sm_strata_without_sizeclass_and_covertype() {
 		return sm_strata_without_sizeclass_and_covertype;
 	}
 	
 	public List<List<String>> get_sm_method_choice_for_strata() {
 		return sm_method_choice_for_strata;
+	}
+	
+	public List<List<String>> get_sm_method_choice_for_strata_without_sizeclass() {
+		return sm_method_choice_for_strata_without_sizeclass;
 	}
 
 	public List<List<String>> get_sm_method_choice_for_strata_without_sizeclass_and_covertype() {

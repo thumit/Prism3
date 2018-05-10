@@ -844,3 +844,20 @@ All changes in this block are associated with PrismAlpha1.1.03.jar, Prism Formul
 370. LPSolve now returns all outputs except output 03.
 All changes in this block are associated with PrismAlpha1.1.04.jar, Prism Formulation 06.docx, Prism Database 03.docx	
 --------------------------------------------------------------------------
+
+371. Activate layer5 for regenerated strata
+	- rewrite "are_all_static_identifiers_matched()" in:
+		- Output_Panel_Management_Details_NOSQL (for output_05)
+		- Get_Cost_Information (for cost)
+		- Get_Disturbance_Information (for replacing disturbances)
+	- For Basic Constraints & Silviculture Method
+			- sm now need 5 layers when read this input: sm_strata_without_sizeclass, sm_method_choice_for_strata_without_sizeclass, 
+			- activate "model_strata_without_sizeclass" (this is a special case not the one calculated from model_strata since all cover types could be regenerated)
+			- all regeneration variables and replacing variables reduce 1 dimension (layer5 --> merge into model_strata_without_sizeclass)
+			- use strata_5layers_id when defining regeneration variables and replacing variables (currently fire is used to indicate replacing variables)
+			- Rewrite equations: 12, 13, 14, 15
+	- Change color of the layer5 in the GUI: red --> black
+372. Rewrite eq (12) to use only 1 strata check for all existing variables --> same obj function optimal value but different details are expected. CGNF PA_21_15 speeds up 20 seconds (2mins --> 1min40)
+373. Remove the sort of each layer in Panel_SolveRun because we already sort it by the query in Read_strata_definition() in Read_Database
+All changes in this block are associated with PrismAlpha1.1.05.jar, Prism Formulation 07.docx, Prism Database 03.docx	
+--------------------------------------------------------------------------
