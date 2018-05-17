@@ -1712,18 +1712,22 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 	
 	// Get the following from each row-------------------------------------------------------------------------------------
 	private Boolean are_all_static_identifiers_matched(String var_name, List<List<String>> static_identifiers) {	
-		if (!static_identifiers.get(0).contains(Get_Variable_Information.get_layer1(var_name))) return false;
-		if (!static_identifiers.get(1).contains(Get_Variable_Information.get_layer2(var_name))) return false;
-		if (!static_identifiers.get(2).contains(Get_Variable_Information.get_layer3(var_name))) return false;
-		if (!static_identifiers.get(3).contains(Get_Variable_Information.get_layer4(var_name))) return false;
-		if (Get_Variable_Information.get_forest_status(var_name).equals("E")) {
-			if (!static_identifiers.get(4).contains(Get_Variable_Information.get_layer5(var_name))) return false;	// layer5 cover type
-			if (!static_identifiers.get(5).contains(Get_Variable_Information.get_layer6(var_name))) return false;	// layer6: size class
-		} else if (Get_Variable_Information.get_forest_status(var_name).equals("R")) {
-			if (!static_identifiers.get(4).contains(Get_Variable_Information.get_layer5(var_name))) return false;	// layer5 cover type
+		if (
+		Collections.binarySearch(static_identifiers.get(0), Get_Variable_Information.get_layer1(var_name)) < 0 ||
+		Collections.binarySearch(static_identifiers.get(1), Get_Variable_Information.get_layer2(var_name)) < 0 ||
+		Collections.binarySearch(static_identifiers.get(2), Get_Variable_Information.get_layer3(var_name)) < 0 ||
+		Collections.binarySearch(static_identifiers.get(3), Get_Variable_Information.get_layer4(var_name)) < 0 ||
+		(Get_Variable_Information.get_forest_status(var_name).equals("E") &&
+				(
+				Collections.binarySearch(static_identifiers.get(4), Get_Variable_Information.get_layer5(var_name)) < 0 ||
+				Collections.binarySearch(static_identifiers.get(5), Get_Variable_Information.get_layer6(var_name)) < 0
+				)) ||
+		(Get_Variable_Information.get_forest_status(var_name).equals("R") && Collections.binarySearch(static_identifiers.get(4), Get_Variable_Information.get_layer5(var_name)) < 0) ||
+		Collections.binarySearch(static_identifiers.get(6), Get_Variable_Information.get_method(var_name) + "_" + Get_Variable_Information.get_forest_status(var_name)) < 0 ||
+		Collections.binarySearch(static_identifiers.get(7), String.valueOf(Get_Variable_Information.get_period(var_name))) < 0) 
+		{
+			return false;
 		}
-		if (!static_identifiers.get(6).contains(Get_Variable_Information.get_method(var_name) + "_" + Get_Variable_Information.get_forest_status(var_name))) return false;
-		if (!static_identifiers.get(7).contains(String.valueOf(Get_Variable_Information.get_period(var_name)))) return false;					
 		return true;
 	}
 	
@@ -1744,6 +1748,8 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 				thisIdentifier.add(identifierElements[j].replaceAll("\\s+",""));		//Add element name, if name has spaces then remove all the spaces
 			}
 			
+			// sort for Binary search used in:     are_all_static_identifiers_matched()
+			Collections.sort(thisIdentifier);
 			static_identifiers.add(thisIdentifier);
 		}
 			

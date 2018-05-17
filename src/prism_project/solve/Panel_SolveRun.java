@@ -542,18 +542,25 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			int[][][] xNGe = new int[model_strata.size()][total_NGe_Prescriptions][total_periods + 1];		//xNGe(s1,s2,s3,s4,s5,s6)(i,t)	
 			int[][][] xPBe = new int[model_strata.size()][total_PBe_Prescriptions][total_periods + 1];		//xPBe(s1,s2,s3,s4,s5,s6)(i,t)
 			int[][][] xGSe = new int[model_strata.size()][total_GSe_Prescriptions][total_periods + 1];		//xGSe(s1,s2,s3,s4,s5,s6)(i,t)
-			int[][][][][] xEAe = new int[model_strata.size()][total_periods + 1][layer5.size()][total_EAe_Prescriptions][total_periods + 1];	//xEAe(s1,s2,s3,s4,s5,s6)(tR)(s5R)(i)(t)
+//			int[][][][][] xEAe = new int[model_strata.size()][total_periods + 1][layer5.size()][total_EAe_Prescriptions][total_periods + 1];	//xEAe(s1,s2,s3,s4,s5,s6)(tR)(s5R)(i)(t)
 									// total_Periods + 1 because tR starts from 1 to total_Periods, ignore the 0
 			int[][][] xMS = new int[model_strata.size()][total_MS_Prescriptions][total_periods + 1];		//xMS(s1,s2,s3,s4,s5,s6)(i,t)
 			int[][][] xBS = new int[model_strata.size()][total_BS_Prescriptions][total_periods + 1];		//xBS(s1,s2,s3,s4,s5,s6)(i,t)			
-			int[][][][] xNGr = new int[model_strata_without_sizeclass.size()][total_NGr_Prescriptions][total_periods + 1][total_AgeClasses + 1];		//xNGr(s1,s2,s3,s4,s5)(i)(t)(a)
-									// total_Periods + 1 because t starts from 1 to total_Periods, ignore the 0					
-			int[][][][] xPBr = new int[model_strata_without_sizeclass.size()][total_PBr_Prescriptions][total_periods + 1][total_AgeClasses + 1];		//xPBr(s1,s2,s3,s4,s5)(i)(t)(a)
-									// total_Periods + 1 because t starts from 1 to total_Periods, ignore the 0
-			int[][][][] xGSr = new int[model_strata_without_sizeclass.size()][total_GSr_Prescriptions][total_periods + 1][total_AgeClasses + 1];		//xGSr(s1,s2,s3,s4,s5)(i)(t)(a)
-									// total_Periods + 1 because t starts from 1 to total_Periods, ignore the 0
-			int[][][][][][] xEAr = new int[model_strata_without_sizeclass.size()][total_periods + 1][total_AgeClasses + 1][layer5.size()][total_EAr_Prescriptions][total_periods + 1];		//xEAr(s1,s2,s3,s4,s5)(tR)(a)(s5R)(i)(t)
-									// total_Periods + 1 because tR starts from 1 to total_Periods, ignore the 0			
+//			int[][][][] xNGr = new int[model_strata_without_sizeclass.size()][total_NGr_Prescriptions][total_periods + 1][total_AgeClasses + 1];		//xNGr(s1,s2,s3,s4,s5)(i)(t)(a)
+//									// total_Periods + 1 because t starts from 1 to total_Periods, ignore the 0					
+//			int[][][][] xPBr = new int[model_strata_without_sizeclass.size()][total_PBr_Prescriptions][total_periods + 1][total_AgeClasses + 1];		//xPBr(s1,s2,s3,s4,s5)(i)(t)(a)
+//									// total_Periods + 1 because t starts from 1 to total_Periods, ignore the 0
+//			int[][][][] xGSr = new int[model_strata_without_sizeclass.size()][total_GSr_Prescriptions][total_periods + 1][total_AgeClasses + 1];		//xGSr(s1,s2,s3,s4,s5)(i)(t)(a)
+//									// total_Periods + 1 because t starts from 1 to total_Periods, ignore the 0
+//			int[][][][][][] xEAr = new int[model_strata_without_sizeclass.size()][total_periods + 1][total_AgeClasses + 1][layer5.size()][total_EAr_Prescriptions][total_periods + 1];		//xEAr(s1,s2,s3,s4,s5)(tR)(a)(s5R)(i)(t)
+//									// total_Periods + 1 because tR starts from 1 to total_Periods, ignore the 0		
+			
+			// The below variables are optimized by using jagged-arrays
+			int[][][][] xNGr = null;
+			int[][][][] xPBr = null;	
+			int[][][][] xGSr = null;
+			int[][][][][] xEAe = null;
+			int[][][][][][] xEAr = null;
 			
 					
 			// Declare arrays to keep replacing-disturbance variables f(s1,s2,s3,s4,s5,t,s5R)
@@ -649,8 +656,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			}
 						
 			// Create decision variables x(s1,s2,s3,s4,s5,s6)(q)			
-			for (String strata: model_strata) {
-				int strata_id = Collections.binarySearch(model_strata, strata);
+			for (int strata_id = 0; strata_id < model_strata.size(); strata_id++) {
+				String strata = model_strata.get(strata_id);
 				int s1 = Collections.binarySearch(layer1, strata.substring(0, 1));
 				int s2 = Collections.binarySearch(layer2, strata.substring(1, 2));
 				int s3 = Collections.binarySearch(layer3, strata.substring(2, 3));
@@ -679,8 +686,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								
 			
 			// Create decision variables xNGe(s1,s2,s3,s4,s5,s6)(i,t)	
-			for (String strata: model_strata) {
-				int strata_id = Collections.binarySearch(model_strata, strata);
+			for (int strata_id = 0; strata_id < model_strata.size(); strata_id++) {
+				String strata = model_strata.get(strata_id);
 				int s1 = Collections.binarySearch(layer1, strata.substring(0, 1));
 				int s2 = Collections.binarySearch(layer2, strata.substring(1, 2));
 				int s3 = Collections.binarySearch(layer3, strata.substring(2, 3));
@@ -714,8 +721,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			}													
 			
 			// Create decision variables xPBe(s1,s2,s3,s4,s5,s6)(i,t)	
-			for (String strata: model_strata) {
-				int strata_id = Collections.binarySearch(model_strata, strata);
+			for (int strata_id = 0; strata_id < model_strata.size(); strata_id++) {
+				String strata = model_strata.get(strata_id);
 				int s1 = Collections.binarySearch(layer1, strata.substring(0, 1));
 				int s2 = Collections.binarySearch(layer2, strata.substring(1, 2));
 				int s3 = Collections.binarySearch(layer3, strata.substring(2, 3));
@@ -749,8 +756,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			}														
 			
 			// Create decision variables xGSe(s1,s2,s3,s4,s5,s6)(i,t)		
-			for (String strata: model_strata) {
-				int strata_id = Collections.binarySearch(model_strata, strata);
+			for (int strata_id = 0; strata_id < model_strata.size(); strata_id++) {
+				String strata = model_strata.get(strata_id);
 				int s1 = Collections.binarySearch(layer1, strata.substring(0, 1));
 				int s2 = Collections.binarySearch(layer2, strata.substring(1, 2));
 				int s3 = Collections.binarySearch(layer3, strata.substring(2, 3));
@@ -784,21 +791,28 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			}														
 			
 			// Create decision variables xEAe(s1,s2,s3,s4,s5,s6)(tR)(s5R)(i)(t)
-			for (String strata: model_strata) {
-				int strata_id = Collections.binarySearch(model_strata, strata);
+			xEAe = new int[model_strata.size()][][][][];
+			for (int strata_id = 0; strata_id < model_strata.size(); strata_id++) {
+				String strata = model_strata.get(strata_id);
 				int s1 = Collections.binarySearch(layer1, strata.substring(0, 1));
 				int s2 = Collections.binarySearch(layer2, strata.substring(1, 2));
 				int s3 = Collections.binarySearch(layer3, strata.substring(2, 3));
 				int s4 = Collections.binarySearch(layer4, strata.substring(3, 4));
 				int s5 = Collections.binarySearch(layer5, strata.substring(4, 5));
 				int s6 = Collections.binarySearch(layer6, strata.substring(5, 6));
+				
+				xEAe[strata_id] = new int[total_periods + 1][][][];
 				for (int tR = 1; tR <= total_periods; tR++) {
+					xEAe[strata_id][tR] = new int[layer5.size()][][];
 					for (int s5R = 0; s5R < layer5.size(); s5R++) {
 						int rotationAge = tR + starting_age[strata_id] - 1;
 						String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(s5R) + " " + rotationAge;						
 						if (covertype_conversions_and_existing_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
+							xEAe[strata_id][tR][s5R] = new int[total_EAe_Prescriptions][];
 							for (int i = 0; i < total_EAe_Prescriptions; i++) {
-								if (sm_strata == null || sm_strata.contains(strata) && sm_method_choice_for_strata.get(sm_strata.indexOf(strata)).contains("EA_E" + " " + i))	// Boost 1 (a.k.a. Silviculture Method)
+								if (sm_strata == null || sm_strata.contains(strata) && sm_method_choice_for_strata.get(sm_strata.indexOf(strata)).contains("EA_E" + " " + i)) {	// Boost 1 (a.k.a. Silviculture Method)
+									
+									xEAe[strata_id][tR][s5R][i] = new int[total_periods + 1];
 									for (int t = 1; t <= tR; t++) {
 										String var_name = "xEA_E_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + layer6.get(s6) + "," + tR + "," + layer5.get(s5R) + "," + i + "," + t;
 										int[] prescription_and_row = get_prescription_and_row(yield_tables_names_list, var_name, rotationAge);
@@ -820,6 +834,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 											nvars++;
 										}
 									}
+								}
 							}
 						}
 					}
@@ -827,8 +842,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			}
 	
 			// Create decision variables xMS(s1,s2,s3,s4,s5,s6)(i,t)		
-			for (String strata: model_strata) {
-				int strata_id = Collections.binarySearch(model_strata, strata);
+			for (int strata_id = 0; strata_id < model_strata.size(); strata_id++) {
+				String strata = model_strata.get(strata_id);
 				int s1 = Collections.binarySearch(layer1, strata.substring(0, 1));
 				int s2 = Collections.binarySearch(layer2, strata.substring(1, 2));
 				int s3 = Collections.binarySearch(layer3, strata.substring(2, 3));
@@ -862,8 +877,8 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			}														
 			
 			// Create decision variables xBS(s1,s2,s3,s4,s5,s6)(i,t)		
-			for (String strata: model_strata) {
-				int strata_id = Collections.binarySearch(model_strata, strata);
+			for (int strata_id = 0; strata_id < model_strata.size(); strata_id++) {
+				String strata = model_strata.get(strata_id);
 				int s1 = Collections.binarySearch(layer1, strata.substring(0, 1));
 				int s2 = Collections.binarySearch(layer2, strata.substring(1, 2));
 				int s3 = Collections.binarySearch(layer3, strata.substring(2, 3));
@@ -897,17 +912,23 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			}													
 			
 			// Create decision variables xNGr(s1,s2,s3,s4,s5)(i)(t)(a)
-			for (String strata: model_strata_without_sizeclass) {
-				int strata_5layers_id = Collections.binarySearch(model_strata_without_sizeclass, strata);
+			xNGr = new int[model_strata_without_sizeclass.size()][][][];
+			for (int strata_5layers_id = 0; strata_5layers_id < model_strata_without_sizeclass.size(); strata_5layers_id++) {
+				String strata = model_strata_without_sizeclass.get(strata_5layers_id);
 				int s1 = Collections.binarySearch(layer1, strata.substring(0, 1));
 				int s2 = Collections.binarySearch(layer2, strata.substring(1, 2));
 				int s3 = Collections.binarySearch(layer3, strata.substring(2, 3));
 				int s4 = Collections.binarySearch(layer4, strata.substring(3, 4));
 				int s5 = Collections.binarySearch(layer5, strata.substring(4, 5));
+				
+				xNGr[strata_5layers_id] = new int[total_NGr_Prescriptions][][];
 				for (int i = 0; i < total_NGr_Prescriptions; i++) {
 					if (sm_strata_without_sizeclass == null || sm_strata_without_sizeclass.contains(strata) && 
-							sm_method_choice_for_strata_without_sizeclass.get(sm_strata_without_sizeclass.indexOf(strata)).contains("NG_R" + " " + i))	// Boost 1 (a.k.a. Silviculture Method)
+							sm_method_choice_for_strata_without_sizeclass.get(sm_strata_without_sizeclass.indexOf(strata)).contains("NG_R" + " " + i)) {	// Boost 1 (a.k.a. Silviculture Method)
+						
+						xNGr[strata_5layers_id][i] = new int[total_periods + 1][];
 						for (int t = 2; t <= total_periods; t++) {
+							xNGr[strata_5layers_id][i][t] = new int[total_AgeClasses + 1];
 							for (int a = 1; a <= t - 1; a++) {
 								String var_name = "xNG_R_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + i + "," + t + "," + a;										
 								int[] prescription_and_row = get_prescription_and_row(yield_tables_names_list, var_name, -9999);
@@ -930,21 +951,28 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								}
 							}
 						}
+					}
 				}
 			}						
 			
 			// Create decision variables xPBr(s1,s2,s3,s4,s5)(i)(t)(a)
-			for (String strata: model_strata_without_sizeclass) {
-				int strata_5layers_id = Collections.binarySearch(model_strata_without_sizeclass, strata);
+			xPBr = new int[model_strata_without_sizeclass.size()][][][];
+			for (int strata_5layers_id = 0; strata_5layers_id < model_strata_without_sizeclass.size(); strata_5layers_id++) {
+				String strata = model_strata_without_sizeclass.get(strata_5layers_id);
 				int s1 = Collections.binarySearch(layer1, strata.substring(0, 1));
 				int s2 = Collections.binarySearch(layer2, strata.substring(1, 2));
 				int s3 = Collections.binarySearch(layer3, strata.substring(2, 3));
 				int s4 = Collections.binarySearch(layer4, strata.substring(3, 4));
 				int s5 = Collections.binarySearch(layer5, strata.substring(4, 5));
+				
+				xPBr[strata_5layers_id] = new int[total_PBr_Prescriptions][][];
 				for (int i = 0; i < total_PBr_Prescriptions; i++) {
 					if (sm_strata_without_sizeclass == null || sm_strata_without_sizeclass.contains(strata) && 
-							sm_method_choice_for_strata_without_sizeclass.get(sm_strata_without_sizeclass.indexOf(strata)).contains("PB_R" + " " + i))	// Boost 1 (a.k.a. Silviculture Method)
+							sm_method_choice_for_strata_without_sizeclass.get(sm_strata_without_sizeclass.indexOf(strata)).contains("PB_R" + " " + i)) {	// Boost 1 (a.k.a. Silviculture Method)
+						
+						xPBr[strata_5layers_id][i] = new int[total_periods + 1][];
 						for (int t = 2; t <= total_periods; t++) {
+							xPBr[strata_5layers_id][i][t] = new int[total_AgeClasses + 1];
 							for (int a = 1; a <= t - 1; a++) {
 								String var_name = "xPB_R_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + i + "," + t + "," + a;										
 								int[] prescription_and_row = get_prescription_and_row(yield_tables_names_list, var_name, -9999);
@@ -967,21 +995,28 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								}
 							}
 						}
+					}
 				}
 			}						
 			
 			// Create decision variables xGSr(s1,s2,s3,s4,s5)(i)(t)(a)
-			for (String strata: model_strata_without_sizeclass) {
-				int strata_5layers_id = Collections.binarySearch(model_strata_without_sizeclass, strata);
+			xGSr = new int[model_strata_without_sizeclass.size()][][][];
+			for (int strata_5layers_id = 0; strata_5layers_id < model_strata_without_sizeclass.size(); strata_5layers_id++) {
+				String strata = model_strata_without_sizeclass.get(strata_5layers_id);
 				int s1 = Collections.binarySearch(layer1, strata.substring(0, 1));
 				int s2 = Collections.binarySearch(layer2, strata.substring(1, 2));
 				int s3 = Collections.binarySearch(layer3, strata.substring(2, 3));
 				int s4 = Collections.binarySearch(layer4, strata.substring(3, 4));
 				int s5 = Collections.binarySearch(layer5, strata.substring(4, 5));
+				
+				xGSr[strata_5layers_id] = new int[total_GSr_Prescriptions][][];
 				for (int i = 0; i < total_GSr_Prescriptions; i++) {
 					if (sm_strata_without_sizeclass == null || sm_strata_without_sizeclass.contains(strata) && 
-							sm_method_choice_for_strata_without_sizeclass.get(sm_strata_without_sizeclass.indexOf(strata)).contains("GS_R" + " " + i))	// Boost 1 (a.k.a. Silviculture Method)
+							sm_method_choice_for_strata_without_sizeclass.get(sm_strata_without_sizeclass.indexOf(strata)).contains("GS_R" + " " + i)) {	// Boost 1 (a.k.a. Silviculture Method)
+						
+						xGSr[strata_5layers_id][i] = new int[total_periods + 1][];
 						for (int t = 2; t <= total_periods; t++) {
+							xGSr[strata_5layers_id][i][t] = new int[total_AgeClasses + 1];
 							for (int a = 1; a <= t - 1; a++) {
 								String var_name = "xGS_R_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + i + "," + t + "," + a;										
 								int[] prescription_and_row = get_prescription_and_row(yield_tables_names_list, var_name, -9999);
@@ -1004,25 +1039,34 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								}
 							}
 						}
+					}
 				}
 			}
 			
 			// Create decision variables xEAr(s1,s2,s3,s4,s5)(tR)(aR)(s5R)(i)(t)
-			for (String strata: model_strata_without_sizeclass) {
-				int strata_5layers_id = Collections.binarySearch(model_strata_without_sizeclass, strata);
+			xEAr = new int[model_strata_without_sizeclass.size()][][][][][];
+			for (int strata_5layers_id = 0; strata_5layers_id < model_strata_without_sizeclass.size(); strata_5layers_id++) {
+				String strata = model_strata_without_sizeclass.get(strata_5layers_id);
 				int s1 = Collections.binarySearch(layer1, strata.substring(0, 1));
 				int s2 = Collections.binarySearch(layer2, strata.substring(1, 2));
 				int s3 = Collections.binarySearch(layer3, strata.substring(2, 3));
 				int s4 = Collections.binarySearch(layer4, strata.substring(3, 4));
 				int s5 = Collections.binarySearch(layer5, strata.substring(4, 5));
+				
+				xEAr[strata_5layers_id] = new int[total_periods + 1][][][][];
 				for (int tR = 2; tR <= total_periods; tR++) {
+					xEAr[strata_5layers_id][tR] = new int[total_AgeClasses + 1][][][];
 					for (int aR = 1; aR <= tR - 1; aR++) {
+						xEAr[strata_5layers_id][tR][aR] = new int[layer5.size()][][];
 						for (int s5R = 0; s5R < layer5.size(); s5R++) {
 							String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(s5R) + " " + aR;						
 							if (covertype_conversions_and_regeneration_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
+								xEAr[strata_5layers_id][tR][aR][s5R] = new int[total_EAr_Prescriptions][];
 								for (int i = 0; i < total_EAr_Prescriptions; i++) {
 									if (sm_strata_without_sizeclass == null || sm_strata_without_sizeclass.contains(strata) && 
-											sm_method_choice_for_strata_without_sizeclass.get(sm_strata_without_sizeclass.indexOf(strata)).contains("EA_R" + " " + i))	// Boost 1 (a.k.a. Silviculture Method)
+											sm_method_choice_for_strata_without_sizeclass.get(sm_strata_without_sizeclass.indexOf(strata)).contains("EA_R" + " " + i)) {	// Boost 1 (a.k.a. Silviculture Method)
+										
+										xEAr[strata_5layers_id][tR][aR][s5R][i] = new int[total_periods + 1];
 										for (int t = tR - aR + 1; t <= tR; t++) {
 											String var_name = "xEA_R_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + tR + "," + aR + "," + layer5.get(s5R) + "," + i + "," + t;										
 											int[] prescription_and_row = get_prescription_and_row(yield_tables_names_list, var_name, aR);
@@ -1044,6 +1088,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 												nvars++;
 											}
 										}
+									}
 								}
 							}
 						}
@@ -1174,7 +1219,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					var_cost_value[var_index] = 0;
 				}
 				
-				if (var_index + 1 > 1 && ((var_index + 1) % 30000 == 0 || var_index + 1 == vname.length)) System.out.println("           - Established connections:           " + new DecimalFormat("###,###,###").format(var_index + 1));
+				if (var_index + 1 > 1 && ((var_index + 1) % 30000 == 0 || var_index + 1 == vname.length)) {
+					System.out.println("           - Established connections:           " + new DecimalFormat("###,###,###").format(var_index + 1) + "             " + dateFormat.format(new Date()));
+				}
 			}
 			System.out.println();
 			System.out.println("Total decision variables as in PRISM obj. function eq. (1):   " + nvars + "             " + dateFormat.format(new Date()));
@@ -1185,7 +1232,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			// CREATE CONSTRAINTS-------------------------------------------------
 			
 			
-			// Constraints 6-------------------------------------------------
+			// Constraints 2-------------------------------------------------
 			List<List<Integer>> c2_indexlist = new ArrayList<List<Integer>>();	
 			List<List<Double>> c2_valuelist = new ArrayList<List<Double>>();
 			List<Double> c2_lblist = new ArrayList<Double>();	
@@ -1640,10 +1687,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			int c9_num = 0;
 			
 			// 9a
-			for (String strata: model_strata) {
-				int strata_id = Collections.binarySearch(model_strata, strata);
-				int s5 = Collections.binarySearch(layer5, strata.substring(4, 5));
-	
+			for (int strata_id = 0; strata_id < model_strata.size(); strata_id++) {
 				// Add constraint
 				c9_indexlist.add(new ArrayList<Integer>());
 				c9_valuelist.add(new ArrayList<Double>());
@@ -1656,13 +1700,12 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				for (int tR = 1; tR <= total_periods; tR++) {
 					for (int s5R = 0; s5R < layer5.size(); s5R++) {
 						for (int i = 0; i < total_EAe_Prescriptions; i++) {
-							int rotationAge = tR + starting_age[strata_id] - 1;
-							String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(s5R) + " " + rotationAge;						
-							if (covertype_conversions_and_existing_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
-								if(xEAe[strata_id][tR][s5R][i][1] > 0) {		// if variable is defined, this value would be > 0 
-									c9_indexlist.get(c9_num).add(xEAe[strata_id][tR][s5R][i][1]);
-									c9_valuelist.get(c9_num).add((double) -1);
-								}
+							if (xEAe[strata_id][tR] != null 
+									&& xEAe[strata_id][tR][s5R] != null
+										&& xEAe[strata_id][tR][s5R][i] != null
+											&& xEAe[strata_id][tR][s5R][i][1] > 0) {		// if variable is defined, this value would be > 0 
+								c9_indexlist.get(c9_num).add(xEAe[strata_id][tR][s5R][i][1]);
+								c9_valuelist.get(c9_num).add((double) -1);
 							}
 						}
 					}	
@@ -1688,43 +1731,42 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			}	
 			
 			// 9b
-			for (String strata: model_strata) {
-				int strata_id = Collections.binarySearch(model_strata, strata);
+			for (int strata_id = 0; strata_id < model_strata.size(); strata_id++) {
+				String strata = model_strata.get(strata_id);
 				int s5 = Collections.binarySearch(layer5, strata.substring(4, 5));
 		
 				for (int tR = 1; tR <= total_periods; tR++) {										
 					for (int s5R = 0; s5R < layer5.size(); s5R++) {
-						int rotationAge = tR + starting_age[strata_id] - 1;
-						String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(s5R) + " " + rotationAge;					
-						if (covertype_conversions_and_existing_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
-							for (int i = 0; i < total_EAe_Prescriptions; i++) {
-								for (int t = 1; t <= tR-1; t++) {
-									if(xEAe[strata_id][tR][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0 
-										// Add constraint
-										c9_indexlist.add(new ArrayList<Integer>());
-										c9_valuelist.add(new ArrayList<Double>());
-										
-										// Add xEAe(s1,s2,s3,s4,s5,s6)[tR][s5R][i][t]
-										int var_index = xEAe[strata_id][tR][s5R][i][t];
-										double[][][] rd_percentage = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]) : rd_percentage_zeroes;
-										double total_percentage = 0;
-										for (int k = 0; k < total_replacing_disturbances; k++) {
-											for (int rd_s5R = 0; rd_s5R < layer5.size(); rd_s5R++) {
-												total_percentage = total_percentage + rd_percentage[k][s5][rd_s5R];
-											}
+						for (int i = 0; i < total_EAe_Prescriptions; i++) {
+							for (int t = 1; t <= tR-1; t++) {
+								if (xEAe[strata_id][tR] != null 
+										&& xEAe[strata_id][tR][s5R] != null
+											&& xEAe[strata_id][tR][s5R][i] != null
+												&& xEAe[strata_id][tR][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0
+									// Add constraint
+									c9_indexlist.add(new ArrayList<Integer>());
+									c9_valuelist.add(new ArrayList<Double>());
+									
+									// Add xEAe(s1,s2,s3,s4,s5,s6)[tR][s5R][i][t]
+									int var_index = xEAe[strata_id][tR][s5R][i][t];
+									double[][][] rd_percentage = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]) : rd_percentage_zeroes;
+									double total_percentage = 0;
+									for (int k = 0; k < total_replacing_disturbances; k++) {
+										for (int rd_s5R = 0; rd_s5R < layer5.size(); rd_s5R++) {
+											total_percentage = total_percentage + rd_percentage[k][s5][rd_s5R];
 										}
-										c9_indexlist.get(c9_num).add(xEAe[strata_id][tR][s5R][i][t]);
-										c9_valuelist.get(c9_num).add((double) 1 - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100																											
-										
-										// Add - xEAe(s1,s2,s3,s4,s5,s6)[tR][s5R][i][t+1]		
-										c9_indexlist.get(c9_num).add(xEAe[strata_id][tR][s5R][i][t + 1]);
-										c9_valuelist.get(c9_num).add((double) -1);																					
-										
-										// Add bounds
-										c9_lblist.add((double) 0);
-										c9_ublist.add((double) 0);
-										c9_num++;
 									}
+									c9_indexlist.get(c9_num).add(xEAe[strata_id][tR][s5R][i][t]);
+									c9_valuelist.get(c9_num).add((double) 1 - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100																											
+									
+									// Add - xEAe(s1,s2,s3,s4,s5,s6)[tR][s5R][i][t+1]		
+									c9_indexlist.get(c9_num).add(xEAe[strata_id][tR][s5R][i][t + 1]);
+									c9_valuelist.get(c9_num).add((double) -1);																					
+									
+									// Add bounds
+									c9_lblist.add((double) 0);
+									c9_ublist.add((double) 0);
+									c9_num++;
 								}
 							}
 						}
@@ -1979,9 +2021,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 			List<Double> c12_ublist = new ArrayList<Double>();
 			int c12_num = 0;
 			
-			// 12
-			for (String strata_5layers: model_strata_without_sizeclass) {
-				int strata_5layers_id = Collections.binarySearch(model_strata_without_sizeclass, strata_5layers);
+			// 12 --> Loop writing in this way will improve speed. This is also applied to eq. 15 to save running time. Other equations are fast so it is not needed to use this type of loop
+			for (int strata_5layers_id = 0; strata_5layers_id < model_strata_without_sizeclass.size(); strata_5layers_id++) {
+				String strata_5layers = model_strata_without_sizeclass.get(strata_5layers_id);
 				int s5 = Collections.binarySearch(layer5, strata_5layers.substring(4, 5));
 
 				for (int t = 1; t <= total_periods; t++) {
@@ -2051,26 +2093,27 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 								
 								// Add - sigma(s6)(tR)(s5R')(i)   xEAe(s1,s2,s3,s4,s5,s6)(tR)(s5R')(i)(t)
 								for (int tR = t + 1; tR <= total_periods; tR++) {		// tR
-									for (int s5RR = 0; s5RR < layer5.size(); s5RR++) {		// s5R'
-										for (int i = 0; i < total_EAe_Prescriptions; i++) {	// i
-											int rotationAge = tR + starting_age[strata_id] - 1;
-											String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(s5RR) + " " + rotationAge;								
-											if (covertype_conversions_and_existing_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
-												int var_index = xEAe[strata_id][tR][s5RR][i][t];
-												if(var_index > 0 && var_rd_condition_id[var_index] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
-													double total_percentage = 0;
-													double[][][] rd_percentage = disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]);
-													for (int k = 0; k < total_replacing_disturbances; k++) {
-														total_percentage = total_percentage + rd_percentage[k][s5][s5R];
-													}
-													if (total_percentage > 0) {	// only add if parameter is non zero
-														c12_indexlist.get(c12_num).add(var_index);
-														c12_valuelist.get(c12_num).add((double) - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
+									if (xEAe[strata_id][tR] != null) 
+										for (int s5RR = 0; s5RR < layer5.size(); s5RR++) {		// s5R'
+											if (xEAe[strata_id][tR][s5RR] != null)
+												for (int i = 0; i < total_EAe_Prescriptions; i++) {	// i
+													if (xEAe[strata_id][tR][s5RR][i] != null) {
+													
+														int var_index = xEAe[strata_id][tR][s5RR][i][t];
+														if(var_index > 0 && var_rd_condition_id[var_index] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
+															double total_percentage = 0;
+															double[][][] rd_percentage = disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]);
+															for (int k = 0; k < total_replacing_disturbances; k++) {
+																total_percentage = total_percentage + rd_percentage[k][s5][s5R];
+															}
+															if (total_percentage > 0) {	// only add if parameter is non zero
+																c12_indexlist.get(c12_num).add(var_index);
+																c12_valuelist.get(c12_num).add((double) - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
+															}
+														}
 													}
 												}
-											}
 										}
-									}
 								}
 								
 								// Add - sigma(s6)(i)	xMSe[s1][s2][s3][s4][s5][s6][i][t]
@@ -2113,81 +2156,93 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						if (t >= 2) {
 							// Add - sigma(i,a)	xNGr[s1][s2][s3][s4][s5][i][t][a]
 							for (int i = 0; i < total_NGr_Prescriptions; i++) {
-								for (int a = 1; a <= t - 1; a++) {
-									int var_index = xNGr[strata_5layers_id][i][t][a];
-									if(var_index > 0 && var_rd_condition_id[var_index] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
-										double total_percentage = 0;
-										double[][][] rd_percentage = disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]);
-										for (int k = 0; k < total_replacing_disturbances; k++) {
-											total_percentage = total_percentage + rd_percentage[k][s5][s5R];
+								if (xNGr[strata_5layers_id][i] != null) 
+									if (xNGr[strata_5layers_id][i][t] != null) 
+										for (int a = 1; a <= t - 1; a++) {
+											if(xNGr[strata_5layers_id][i][t][a] > 0 && var_rd_condition_id[xNGr[strata_5layers_id][i][t][a]] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
+												
+												int var_index = xNGr[strata_5layers_id][i][t][a];
+												double total_percentage = 0;
+												double[][][] rd_percentage = disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]);
+												for (int k = 0; k < total_replacing_disturbances; k++) {
+													total_percentage = total_percentage + rd_percentage[k][s5][s5R];
+												}
+												if (total_percentage > 0) {	// only add if parameter is non zero
+													c12_indexlist.get(c12_num).add(var_index);
+													c12_valuelist.get(c12_num).add((double) - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
+												}	
+											}
 										}
-										if (total_percentage > 0) {	// only add if parameter is non zero
-											c12_indexlist.get(c12_num).add(var_index);
-											c12_valuelist.get(c12_num).add((double) - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
-										}	
-									}
-								}
 							}
 						
 							// Add - sigma(i,a)	xPBr[s1][s2][s3][s4][s5][i][t][a]
 							for (int i = 0; i < total_PBr_Prescriptions; i++) {
-								for (int a = 1; a <= t - 1; a++) {
-									int var_index = xPBr[strata_5layers_id][i][t][a];
-									if(var_index > 0 && var_rd_condition_id[var_index] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
-										double total_percentage = 0;
-										double[][][] rd_percentage = disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]);
-										for (int k = 0; k < total_replacing_disturbances; k++) {
-											total_percentage = total_percentage + rd_percentage[k][s5][s5R];
+								if (xPBr[strata_5layers_id][i] != null) 
+									if (xPBr[strata_5layers_id][i][t] != null) 
+										for (int a = 1; a <= t - 1; a++) {
+											if(xPBr[strata_5layers_id][i][t][a] > 0 && var_rd_condition_id[xPBr[strata_5layers_id][i][t][a]] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
+												
+												int var_index = xPBr[strata_5layers_id][i][t][a];
+												double total_percentage = 0;
+												double[][][] rd_percentage = disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]);
+												for (int k = 0; k < total_replacing_disturbances; k++) {
+													total_percentage = total_percentage + rd_percentage[k][s5][s5R];
+												}
+												if (total_percentage > 0) {	// only add if parameter is non zero
+													c12_indexlist.get(c12_num).add(var_index);
+													c12_valuelist.get(c12_num).add((double) - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
+												}	
+											}
 										}
-										if (total_percentage > 0) {	// only add if parameter is non zero
-											c12_indexlist.get(c12_num).add(var_index);
-											c12_valuelist.get(c12_num).add((double) - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
-										}	
-									}
-								}
 							}
 						
 							// Add - sigma(i,a)	xGSr[s1][s2][s3][s4][s5][i][t][a]
 							for (int i = 0; i < total_GSr_Prescriptions; i++) {
-								for (int a = 1; a <= t - 1; a++) {
-									int var_index = xGSr[strata_5layers_id][i][t][a];
-									if(var_index > 0 && var_rd_condition_id[var_index] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
-										double total_percentage = 0;
-										double[][][] rd_percentage = disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]);
-										for (int k = 0; k < total_replacing_disturbances; k++) {
-											total_percentage = total_percentage + rd_percentage[k][s5][s5R];
+								if (xGSr[strata_5layers_id][i] != null) 
+									if (xGSr[strata_5layers_id][i][t] != null) 
+										for (int a = 1; a <= t - 1; a++) {
+											if(xGSr[strata_5layers_id][i][t][a] > 0 && var_rd_condition_id[xGSr[strata_5layers_id][i][t][a]] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
+												
+												int var_index = xGSr[strata_5layers_id][i][t][a];
+												double total_percentage = 0;
+												double[][][] rd_percentage = disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]);
+												for (int k = 0; k < total_replacing_disturbances; k++) {
+													total_percentage = total_percentage + rd_percentage[k][s5][s5R];
+												}
+												if (total_percentage > 0) {	// only add if parameter is non zero
+													c12_indexlist.get(c12_num).add(var_index);
+													c12_valuelist.get(c12_num).add((double) - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
+												}
+											}
 										}
-										if (total_percentage > 0) {	// only add if parameter is non zero
-											c12_indexlist.get(c12_num).add(var_index);
-											c12_valuelist.get(c12_num).add((double) - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
-										}
-									}
-								}
 							}
 
 							// Add - sigma(tR)(aR)(s5R')(i)	xEAr[s1][s2][s3][s4][s5][tR][aR][s5R'][i][t]
 							for (int tR = t + 1; tR <= total_periods; tR++) { // tR
-								for (int aR = 1; aR <= tR - 1; aR++) {
-									for (int s5RR = 0; s5RR < layer5.size(); s5RR++) {		// s5R'
-										for (int i = 0; i < total_EAr_Prescriptions; i++) {
-											String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(s5RR) + " " + aR;						
-											if (covertype_conversions_and_regeneration_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
-												int var_index = xEAr[strata_5layers_id][tR][aR][s5RR][i][t];
-												if(var_index > 0 && var_rd_condition_id[var_index] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
-													double total_percentage = 0;
-													double[][][] rd_percentage = disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]);
-													for (int k = 0; k < total_replacing_disturbances; k++) {
-														total_percentage = total_percentage + rd_percentage[k][s5][s5R];
+								if (xEAr[strata_5layers_id][tR] != null) 
+									for (int aR = 1; aR <= tR - 1; aR++) {
+										if (xEAr[strata_5layers_id][tR][aR] != null) 
+											for (int s5RR = 0; s5RR < layer5.size(); s5RR++) {		// s5R'
+												if (xEAr[strata_5layers_id][tR][aR][s5RR] != null)
+													for (int i = 0; i < total_EAr_Prescriptions; i++) {
+														if (xEAr[strata_5layers_id][tR][aR][s5RR][i] != null) {
+															
+															int var_index = xEAr[strata_5layers_id][tR][aR][s5RR][i][t];
+															if(var_index > 0 && var_rd_condition_id[var_index] != -9999) {		// if variable is defined, this value would be > 0 
+																double total_percentage = 0;
+																double[][][] rd_percentage = disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]);
+																for (int k = 0; k < total_replacing_disturbances; k++) {
+																	total_percentage = total_percentage + rd_percentage[k][s5][s5R];
+																}
+																if (total_percentage > 0) {	// only add if parameter is non zero
+																	c12_indexlist.get(c12_num).add(var_index);
+																	c12_valuelist.get(c12_num).add((double) - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
+																}
+															}
+														}
 													}
-													if (total_percentage > 0) {	// only add if parameter is non zero
-														c12_indexlist.get(c12_num).add(var_index);
-														c12_valuelist.get(c12_num).add((double) - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
-													}
-												}
 											}
-										}
 									}
-								}
 							}
 						}
 
@@ -2258,14 +2313,12 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 									int strata_id = Collections.binarySearch(model_strata, strata_name);
 									
 									if (strata_id >= 0) {
-										int rotationAge = t + starting_age[strata_id] - 1;
-										String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(s5R) + " " + rotationAge;						
-																// == if model_strata.contains(strata_name)   --   strata_id = -1 means list does not contain the string
-										if (covertype_conversions_and_existing_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
-											if(xEAe[strata_id][t][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0 
-												c13_indexlist.get(c13_num).add(xEAe[strata_id][t][s5R][i][t]);
-												c13_valuelist.get(c13_num).add((double) 1);
-											}
+										if (xEAe[strata_id][t] != null 
+												&& xEAe[strata_id][t][s5R] != null
+													&& xEAe[strata_id][t][s5R][i] != null
+														&& xEAe[strata_id][t][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0
+											c13_indexlist.get(c13_num).add(xEAe[strata_id][t][s5R][i][t]);
+											c13_valuelist.get(c13_num).add((double) 1);
 										}
 									}
 								}
@@ -2277,16 +2330,16 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 							for (int s5 = 0; s5 < layer5.size(); s5++) {
 								for (int a = 1; a <= t - 1; a++) {
 									for (int i = 0; i < total_EAr_Prescriptions; i++) {
-										
 										String strata_name = strata_4layers + layer5.get(s5);
 										int strata_5layers_id = Collections.binarySearch(model_strata_without_sizeclass, strata_name);
-										String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(s5R) + " " + a;	
 										
-										if (covertype_conversions_and_regeneration_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
-											if(xEAr[strata_5layers_id][t][a][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0 
-												c13_indexlist.get(c13_num).add(xEAr[strata_5layers_id][t][a][s5R][i][t]);
-												c13_valuelist.get(c13_num).add((double) 1);
-											}
+										if(xEAr[strata_5layers_id][t] != null
+												&& xEAr[strata_5layers_id][t][a] != null
+														&& xEAr[strata_5layers_id][t][a][s5R] != null
+																&& xEAr[strata_5layers_id][t][a][s5R][i] != null
+																	&& xEAr[strata_5layers_id][t][a][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0 
+											c13_indexlist.get(c13_num).add(xEAr[strata_5layers_id][t][a][s5R][i][t]);
+											c13_valuelist.get(c13_num).add((double) 1);
 										}
 									}
 								}
@@ -2299,7 +2352,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				
 						// Add - sigma(i) xNGr(s1,s2,s3,s4,s5R)[i][t+1][1]
 						for (int i = 0; i < total_NGr_Prescriptions; i++) {
-							if(xNGr[strata_5layers_id][i][t + 1][1] > 0) {		// if variable is defined, this value would be > 0 
+							if(xNGr[strata_5layers_id][i] != null
+									&& xNGr[strata_5layers_id][i][t + 1] != null
+											&& xNGr[strata_5layers_id][i][t + 1][1] > 0) {		// if variable is defined, this value would be > 0 
 								c13_indexlist.get(c13_num).add(xNGr[strata_5layers_id][i][t + 1][1]);
 								c13_valuelist.get(c13_num).add((double) -1);
 							}
@@ -2307,7 +2362,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						
 						// Add - sigma(i) xPBr(s1,s2,s3,s4,s5R)[i][t+1][1]
 						for (int i = 0; i < total_PBr_Prescriptions; i++) {
-							if(xPBr[strata_5layers_id][i][t + 1][1] > 0) {		// if variable is defined, this value would be > 0 
+							if(xPBr[strata_5layers_id][i] != null
+									&& xPBr[strata_5layers_id][i][t + 1] != null
+											&& xPBr[strata_5layers_id][i][t + 1][1] > 0) {		// if variable is defined, this value would be > 0 
 								c13_indexlist.get(c13_num).add(xPBr[strata_5layers_id][i][t + 1][1]);
 								c13_valuelist.get(c13_num).add((double) -1);
 							}
@@ -2315,23 +2372,25 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						
 						// Add - sigma(i) xGSr(s1,s2,s3,s4,s5R)[i][t+1][1]
 						for (int i = 0; i < total_GSr_Prescriptions; i++) {
-							if(xGSr[strata_5layers_id][i][t + 1][1] > 0) {		// if variable is defined, this value would be > 0 
+							if(xGSr[strata_5layers_id][i] != null
+									&& xGSr[strata_5layers_id][i][t + 1] != null
+											&& xGSr[strata_5layers_id][i][t + 1][1] > 0) {		// if variable is defined, this value would be > 0 
 								c13_indexlist.get(c13_num).add(xGSr[strata_5layers_id][i][t + 1][1]);
 								c13_valuelist.get(c13_num).add((double) -1);
 							}
 						}
-															
+										
 						// Add -sigma(tR)(s5R')(i) xEAr(s1,s2,s3,s4,s5R)[tR][aR=tR-t][s5R'][i][t+1]
 						for (int tR = t + 1; tR <= total_periods; tR++) {
 							for (int s5RR = 0; s5RR < layer5.size(); s5RR++) {
 								for (int i = 0; i < total_EAr_Prescriptions; i++) {
-									int rotationAge = tR - t;	
-									String thisCoverTypeconversion_and_RotationAge = layer5.get(s5R) + " " + layer5.get(s5RR) + " " + rotationAge;						
-									if (covertype_conversions_and_regeneration_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
-										if(xEAr[strata_5layers_id][tR][tR - t][s5RR][i][t + 1] > 0) {		// if variable is defined, this value would be > 0 
-											c13_indexlist.get(c13_num).add(xEAr[strata_5layers_id][tR][tR - t][s5RR][i][t + 1]);
-											c13_valuelist.get(c13_num).add((double) -1);
-										}
+									if(xEAr[strata_5layers_id][tR] != null
+											&& xEAr[strata_5layers_id][tR][tR - t] != null
+													&& xEAr[strata_5layers_id][tR][tR - t][s5RR] != null
+															&& xEAr[strata_5layers_id][tR][tR - t][s5RR][i] != null
+																&& xEAr[strata_5layers_id][tR][tR - t][s5RR][i][t + 1] > 0) {		// if variable is defined, this value would be > 0 
+										c13_indexlist.get(c13_num).add(xEAr[strata_5layers_id][tR][tR - t][s5RR][i][t + 1]);
+										c13_valuelist.get(c13_num).add((double) -1);
 									}
 								}
 							}
@@ -2383,7 +2442,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				for (int i = 0; i < total_NGr_Prescriptions; i++) {
 					for (int t = 2; t <= total_periods - 1; t++) {
 						for (int a = 1; a <= t-1; a++) {
-							if(xNGr[strata_5layers_id][i][t][a] > 0) {		// if variable is defined, this value would be > 0 
+							if(xNGr[strata_5layers_id][i] != null
+									&& xNGr[strata_5layers_id][i][t] != null
+											&& xNGr[strata_5layers_id][i][t][a] > 0) {		// if variable is defined, this value would be > 0 
 								// Add constraint
 								c14_indexlist.add(new ArrayList<Integer>());
 								c14_valuelist.add(new ArrayList<Double>());
@@ -2422,7 +2483,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				for (int i = 0; i < total_PBr_Prescriptions; i++) {
 					for (int t = 2; t <= total_periods - 1; t++) {
 						for (int a = 1; a <= t-1; a++) {
-							if(xPBr[strata_5layers_id][i][t][a] > 0) {		// if variable is defined, this value would be > 0 
+							if(xPBr[strata_5layers_id][i] != null
+									&& xPBr[strata_5layers_id][i][t] != null
+											&& xPBr[strata_5layers_id][i][t][a] > 0) {		// if variable is defined, this value would be > 0 
 								// Add constraint
 								c14_indexlist.add(new ArrayList<Integer>());
 								c14_valuelist.add(new ArrayList<Double>());
@@ -2461,7 +2524,9 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				for (int i = 0; i < total_GSr_Prescriptions; i++) {
 					for (int t = 2; t <= total_periods - 1; t++) {
 						for (int a = 1; a <= t-1; a++) {
-							if(xGSr[strata_5layers_id][i][t][a] > 0) {		// if variable is defined, this value would be > 0 
+							if(xGSr[strata_5layers_id][i] != null
+									&& xGSr[strata_5layers_id][i][t] != null
+											&& xGSr[strata_5layers_id][i][t][a] > 0) {		// if variable is defined, this value would be > 0 
 								// Add constraint
 								c14_indexlist.add(new ArrayList<Integer>());
 								c14_valuelist.add(new ArrayList<Double>());
@@ -2490,7 +2555,7 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 						}
 					}
 				}
-			}						
+			}					
 			
 			// 14d
 			for (String strata_5layers: model_strata_without_sizeclass) {
@@ -2501,35 +2566,36 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 					for (int aR = 1; aR <= tR-1; aR++) {									
 						for (int s5R = 0; s5R < layer5.size(); s5R++) {
 							for (int i = 0; i < total_EAr_Prescriptions; i++) {
-								String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(s5R) + " " + aR;						
-								if (covertype_conversions_and_regeneration_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
-									for (int t = tR - aR + 1; t <= tR - 1; t++) {
-										if(xEAr[strata_5layers_id][tR][aR][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0 
-											// Add constraint
-											c14_indexlist.add(new ArrayList<Integer>());
-											c14_valuelist.add(new ArrayList<Double>());
-											
-											// Add xEAr(s1,s2,s3,s4,s5)[tR][aR][s5R][i][t]
-											int var_index = xEAr[strata_5layers_id][tR][aR][s5R][i][t];
-											double[][][] rd_percentage = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]) : rd_percentage_zeroes;
-											double total_percentage = 0;
-											for (int k = 0; k < total_replacing_disturbances; k++) {
-												for (int rd_s5R = 0; rd_s5R < layer5.size(); rd_s5R++) {
-													total_percentage = total_percentage + rd_percentage[k][s5][rd_s5R];
-												}
+								for (int t = tR - aR + 1; t <= tR - 1; t++) {
+									if(xEAr[strata_5layers_id][tR] != null
+											 && xEAr[strata_5layers_id][tR][aR] != null
+													 && xEAr[strata_5layers_id][tR][aR][s5R] != null
+															 && xEAr[strata_5layers_id][tR][aR][s5R][i] != null
+																	 && xEAr[strata_5layers_id][tR][aR][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0 
+										// Add constraint
+										c14_indexlist.add(new ArrayList<Integer>());
+										c14_valuelist.add(new ArrayList<Double>());
+										
+										// Add xEAr(s1,s2,s3,s4,s5)[tR][aR][s5R][i][t]
+										int var_index = xEAr[strata_5layers_id][tR][aR][s5R][i][t];
+										double[][][] rd_percentage = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]) : rd_percentage_zeroes;
+										double total_percentage = 0;
+										for (int k = 0; k < total_replacing_disturbances; k++) {
+											for (int rd_s5R = 0; rd_s5R < layer5.size(); rd_s5R++) {
+												total_percentage = total_percentage + rd_percentage[k][s5][rd_s5R];
 											}
-											c14_indexlist.get(c14_num).add(xEAr[strata_5layers_id][tR][aR][s5R][i][t]);
-											c14_valuelist.get(c14_num).add((double) 1 - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100													
-									
-											// Add - xEAr(s1,s2,s3,s4,s5,s6)[tR][aR][s5R][i][t+1]		
-											c14_indexlist.get(c14_num).add(xEAr[strata_5layers_id][tR][aR][s5R][i][t + 1]);
-											c14_valuelist.get(c14_num).add((double) -1);																					
-											
-											// Add bounds
-											c14_lblist.add((double) 0);
-											c14_ublist.add((double) 0);
-											c14_num++;	
 										}
+										c14_indexlist.get(c14_num).add(xEAr[strata_5layers_id][tR][aR][s5R][i][t]);
+										c14_valuelist.get(c14_num).add((double) 1 - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100													
+								
+										// Add - xEAr(s1,s2,s3,s4,s5,s6)[tR][aR][s5R][i][t+1]		
+										c14_indexlist.get(c14_num).add(xEAr[strata_5layers_id][tR][aR][s5R][i][t + 1]);
+										c14_valuelist.get(c14_num).add((double) -1);																					
+										
+										// Add bounds
+										c14_lblist.add((double) 0);
+										c14_ublist.add((double) 0);
+										c14_num++;	
 									}
 								}
 							}
@@ -2632,199 +2698,70 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 				// Very important to keep the same elements of 2: model_strata_without_sizeclass_and_covertype vs static_strata_without_sizeclass_and_covertype
 				// These 4 lines help remove the IF THEN (to check static_identifiers) in all variables in equation 15 below.
 				List<String> common_strata = new ArrayList<String>(model_strata);
-				List<String> common_trata_without_sizeclass = new ArrayList<String>(model_strata_without_sizeclass);
+				List<String> common_strata_without_sizeclass = new ArrayList<String>(model_strata_without_sizeclass);
 				List<String> common_trata_without_sizeclass_and_covertype = new ArrayList<String>(model_strata_without_sizeclass_and_covertype);
 				common_strata.retainAll(static_strata);
-				common_trata_without_sizeclass.retainAll(static_strata_without_sizeclass);
+				common_strata_without_sizeclass.retainAll(static_strata_without_sizeclass);
 				common_trata_without_sizeclass_and_covertype.retainAll(static_strata_without_sizeclass_and_covertype);
+				
+				// These 2 arrays below are used to store the original id
+				int[] original_strata_id = new int[common_strata.size()];
+				for (int common_id = 0; common_id < common_strata.size(); common_id++) {
+					original_strata_id[common_id] = Collections.binarySearch(model_strata, common_strata.get(common_id));
+				}
+				int[] original_strata_without_sizeclass_id = new int[common_strata_without_sizeclass.size()];
+				for (int common_id = 0; common_id < common_strata_without_sizeclass.size(); common_id++) {
+					original_strata_without_sizeclass_id[common_id] = Collections.binarySearch(model_strata_without_sizeclass, common_strata_without_sizeclass.get(common_id));
+				}
+				
+				
 				
 				
 				// Add existing variables --------------------------------------------------------------
-				for (String strata: common_strata) {
-					int strata_id = Collections.binarySearch(model_strata, strata);
+				for (int common_id = 0; common_id < common_strata.size(); common_id++) {
+					int strata_id = original_strata_id[common_id];
 					// Note we need index from model_strata not common_trata
 					
-					if (static_methods.contains("NG_E")) {	
-						// Add xNGe[s1][s2][s3][s4][s5][s6][i][t]
-						for (int i = 0; i < total_NGe_Prescriptions; i++) {
-							for (int t : static_periods) {		//Loop all periods
-								if (t <= total_periods) {
-									int var_index = xNGe[strata_id][i][t];
-									if(var_index > 0) {		// if variable is defined, this value would be > 0 
-										//Find all parameter match the t and add them all to parameter
-										/*	Table Name = s5 + s6 convert then + method + timingChoice
-										 * Table column indexes for the parameters is identified by parameters_indexes_list
-										 * dynamic identifiers are identified by "dynamic_dentifiers_column_indexes" & "dynamic_dentifiers"
-										 * Table row index = t - 1  
-										 */	
-										double para_value = parameter_info.get_total_value(
-												vname[var_index], 
-												var_prescription[var_index], 
-												var_row_id[var_index],
-												parameters_indexes,
-												dynamic_dentifiers_column_indexes, 
-												dynamic_identifiers,
-												var_cost_value[var_index]);
-										para_value = para_value * multiplier;
-																																				
-										c15_indexlist.get(c15_num).add(var_index);
-										c15_valuelist.get(c15_num).add((double) para_value);
-									}
-								}
-							}
-						}
-					}
-					
-					// Add xPBe[s1][s2][s3][s4][s5][s6][i][t]			
-					if (static_methods.contains("PB_E")) {	
-						for (int i = 0; i < total_PBe_Prescriptions; i++) {
-							for (int t : static_periods) {		//Loop all periods
-								if (t <= total_periods) {
-									int var_index = xPBe[strata_id][i][t];
-									if(var_index > 0) {		// if variable is defined, this value would be > 0 
-										double para_value = parameter_info.get_total_value(
-												vname[var_index], 
-												var_prescription[var_index], 
-												var_row_id[var_index],
-												parameters_indexes,
-												dynamic_dentifiers_column_indexes, 
-												dynamic_identifiers,
-												var_cost_value[var_index]);
-										para_value = para_value * multiplier;
-																																				
-										c15_indexlist.get(c15_num).add(var_index);
-										c15_valuelist.get(c15_num).add((double) para_value);
-									}
-								}
-							}
-						}
-					}
-					
-					// Add xGSe[s1][s2][s3][s4][s5][s6][i][t]			
-					if (static_methods.contains("GS_E")) {		
-						for (int i = 0; i < total_GSe_Prescriptions; i++) {
-							for (int t : static_periods) {		//Loop all periods
-								if (t <= total_periods) {
-									int var_index = xGSe[strata_id][i][t];
-									if(var_index > 0) {		// if variable is defined, this value would be > 0 
-										double para_value = parameter_info.get_total_value(
-												vname[var_index], 
-												var_prescription[var_index], 
-												var_row_id[var_index],
-												parameters_indexes,
-												dynamic_dentifiers_column_indexes, 
-												dynamic_identifiers,
-												var_cost_value[var_index]);
-										para_value = para_value * multiplier;
-																																				
-										c15_indexlist.get(c15_num).add(var_index);
-										c15_valuelist.get(c15_num).add((double) para_value);
-									}
-								}
-							}
-						}
-					}
-					
-					// Add xEAe[s1][s2][s3][s4][s5][s6](tR)(s5R)(i)(t)
-					if (static_methods.contains("EA_E")) {	
-						int s5 = Collections.binarySearch(layer5, strata.substring(4, 5));
-						
-						for (int tR = 1; tR <= total_periods; tR++) {		//Loop from period tR to T
-							for (int s5R = 0; s5R < layer5.size(); s5R++) {	
-								int rotation_age = tR + starting_age[strata_id] - 1;
-								String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(s5R) + " " + rotation_age;	
-								if (covertype_conversions_and_existing_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {			// Check this one carefully
-									for (int i = 0; i < total_EAe_Prescriptions; i++) {
-										for (int t : static_periods) {		//Loop all periods, 	final cut at t but we need parameter at time tR
-											if (t <= tR) {
-												int var_index = xEAe[strata_id][tR][s5R][i][t];
-												if(var_index > 0) {		// if variable is defined, this value would be > 0 
-													double para_value = parameter_info.get_total_value(
-															vname[var_index], 
-															var_prescription[var_index], 
-															var_row_id[var_index],
-															parameters_indexes,
-															dynamic_dentifiers_column_indexes, 
-															dynamic_identifiers,
-															var_cost_value[var_index]);
-													para_value = para_value * multiplier;
-																																							
-													c15_indexlist.get(c15_num).add(var_index);
-													c15_valuelist.get(c15_num).add((double) para_value);
-												}
-											}
+					for (String method : static_methods) {
+						switch (method) {
+
+						case "NG_E":
+							// Add xNGe[s1][s2][s3][s4][s5][s6][i][t]
+							for (int i = 0; i < total_NGe_Prescriptions; i++) {
+								for (int t : static_periods) {		//Loop all periods
+									if (t <= total_periods) {
+										int var_index = xNGe[strata_id][i][t];
+										if(var_index > 0) {		// if variable is defined, this value would be > 0 
+											//Find all parameter match the t and add them all to parameter
+											/*	Table Name = s5 + s6 convert then + method + timingChoice
+											 * Table column indexes for the parameters is identified by parameters_indexes_list
+											 * dynamic identifiers are identified by "dynamic_dentifiers_column_indexes" & "dynamic_dentifiers"
+											 * Table row index = t - 1  
+											 */	
+											double para_value = parameter_info.get_total_value(
+													vname[var_index], 
+													var_prescription[var_index], 
+													var_row_id[var_index],
+													parameters_indexes,
+													dynamic_dentifiers_column_indexes, 
+													dynamic_identifiers,
+													var_cost_value[var_index]);
+											para_value = para_value * multiplier;
+																																					
+											c15_indexlist.get(c15_num).add(var_index);
+											c15_valuelist.get(c15_num).add((double) para_value);
 										}
 									}
 								}
 							}
-						}
-					}
-					
-					// Add xMS[s1][s2][s3][s4][s5][s6][i][t]			
-					if (static_methods.contains("MS_E")) {	
-						for (int i = 0; i < total_MS_Prescriptions; i++) {
-							for (int t : static_periods) {		//Loop all periods
-								if (t <= total_periods) {
-									int var_index = xMS[strata_id][i][t];
-									if(var_index > 0) {		// if variable is defined, this value would be > 0 
-										double para_value = parameter_info.get_total_value(
-												vname[var_index], 
-												var_prescription[var_index], 
-												var_row_id[var_index],
-												parameters_indexes,
-												dynamic_dentifiers_column_indexes, 
-												dynamic_identifiers,
-												var_cost_value[var_index]);
-										para_value = para_value * multiplier;
-																																				
-										c15_indexlist.get(c15_num).add(var_index);
-										c15_valuelist.get(c15_num).add((double) para_value);
-									}
-								}
-							}
-						}
-					}
-					
-					// Add xBS[s1][s2][s3][s4][s5][s6][i][t]			
-					if (static_methods.contains("BS_E")) {
-						for (int i = 0; i < total_BS_Prescriptions; i++) {
-							for (int t : static_periods) {		//Loop all periods
-								if (t <= total_periods) {
-									int var_index = xBS[strata_id][i][t];
-									if(var_index > 0) {		// if variable is defined, this value would be > 0 
-										double para_value = parameter_info.get_total_value(
-												vname[var_index], 
-												var_prescription[var_index], 
-												var_row_id[var_index],
-												parameters_indexes,
-												dynamic_dentifiers_column_indexes, 
-												dynamic_identifiers,
-												var_cost_value[var_index]);
-										para_value = para_value * multiplier;
-																																				
-										c15_indexlist.get(c15_num).add(var_index);
-										c15_valuelist.get(c15_num).add((double) para_value);	
-									}
-								}
-							}
-						}
-					}
-					
-				}	
-				
-						
-				// Add regenerated variables --------------------------------------------------------------
-				for (String strata: common_trata_without_sizeclass) {
-					int strata_5layers_id = Collections.binarySearch(model_strata_without_sizeclass, strata);	
-					// Note we need index from model_strata_without_sizeclass not common_trata_without_sizeclass
-
-					// Add xNGr
-					if (static_methods.contains("NG_R")) {		
-						for (int i = 0; i < total_NGr_Prescriptions; i++) {
-							for (int t : static_periods) {		//Loop all periods
-								if (t >= 2 && t <= total_periods) {	
-									for (int a = 1; a <= t - 1; a++) {
-										int var_index = xNGr[strata_5layers_id][i][t][a];
+							break;
+							
+						case "PB_E":
+							// Add xPBe[s1][s2][s3][s4][s5][s6][i][t]			
+							for (int i = 0; i < total_PBe_Prescriptions; i++) {
+								for (int t : static_periods) {		//Loop all periods
+									if (t <= total_periods) {
+										int var_index = xPBe[strata_id][i][t];
 										if(var_index > 0) {		// if variable is defined, this value would be > 0 
 											double para_value = parameter_info.get_total_value(
 													vname[var_index], 
@@ -2839,19 +2776,99 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 											c15_indexlist.get(c15_num).add(var_index);
 											c15_valuelist.get(c15_num).add((double) para_value);
 										}
-									}	
+									}
 								}
 							}
-						}
-					}
-					
-					// Add xPBr
-					if (static_methods.contains("PB_R")) {		
-						for (int i = 0; i < total_PBr_Prescriptions; i++) {
-							for (int t : static_periods) {		//Loop all periods
-								if (t >= 2 && t <= total_periods) {	
-									for (int a = 1; a <= t - 1; a++) {
-										int var_index = xPBr[strata_5layers_id][i][t][a];
+							break;
+
+						case "GS_E":
+							// Add xGSe[s1][s2][s3][s4][s5][s6][i][t]			
+							for (int i = 0; i < total_GSe_Prescriptions; i++) {
+								for (int t : static_periods) {		//Loop all periods
+									if (t <= total_periods) {
+										int var_index = xGSe[strata_id][i][t];
+										if(var_index > 0) {		// if variable is defined, this value would be > 0 
+											double para_value = parameter_info.get_total_value(
+													vname[var_index], 
+													var_prescription[var_index], 
+													var_row_id[var_index],
+													parameters_indexes,
+													dynamic_dentifiers_column_indexes, 
+													dynamic_identifiers,
+													var_cost_value[var_index]);
+											para_value = para_value * multiplier;
+																																					
+											c15_indexlist.get(c15_num).add(var_index);
+											c15_valuelist.get(c15_num).add((double) para_value);
+										}
+									}
+								}
+							}
+							break;
+							
+						case "EA_E":
+							// Add xEAe[s1][s2][s3][s4][s5][s6](tR)(s5R)(i)(t)
+							for (int tR = 1; tR <= total_periods; tR++) {		//Loop from period tR to T
+								if (xEAe[strata_id][tR] != null)
+									for (int s5R = 0; s5R < layer5.size(); s5R++) {	
+										if (xEAe[strata_id][tR][s5R] != null)
+											for (int i = 0; i < total_EAe_Prescriptions; i++) {
+												if (xEAe[strata_id][tR][s5R][i] != null)
+													for (int t : static_periods) {		//Loop all periods, 	final cut at t but we need parameter at time tR
+														if (t <= tR) {
+															if(xEAe[strata_id][tR][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0   (this also removes the need of checking conversion and rotation) 
+																int var_index = xEAe[strata_id][tR][s5R][i][t];
+																double para_value = parameter_info.get_total_value(
+																		vname[var_index], 
+																		var_prescription[var_index], 
+																		var_row_id[var_index],
+																		parameters_indexes,
+																		dynamic_dentifiers_column_indexes, 
+																		dynamic_identifiers,
+																		var_cost_value[var_index]);
+																para_value = para_value * multiplier;
+																																										
+																c15_indexlist.get(c15_num).add(var_index);
+																c15_valuelist.get(c15_num).add((double) para_value);
+															}
+														}
+													}
+											}
+									}
+							}
+							break;
+							
+						case "MS_E":
+							// Add xMS[s1][s2][s3][s4][s5][s6][i][t]			
+							for (int i = 0; i < total_MS_Prescriptions; i++) {
+								for (int t : static_periods) {		//Loop all periods
+									if (t <= total_periods) {
+										int var_index = xMS[strata_id][i][t];
+										if(var_index > 0) {		// if variable is defined, this value would be > 0 
+											double para_value = parameter_info.get_total_value(
+													vname[var_index], 
+													var_prescription[var_index], 
+													var_row_id[var_index],
+													parameters_indexes,
+													dynamic_dentifiers_column_indexes, 
+													dynamic_identifiers,
+													var_cost_value[var_index]);
+											para_value = para_value * multiplier;
+																																					
+											c15_indexlist.get(c15_num).add(var_index);
+											c15_valuelist.get(c15_num).add((double) para_value);
+										}
+									}
+								}
+							}
+							break;
+							
+						case "BS_E":
+							// Add xBS[s1][s2][s3][s4][s5][s6][i][t]			
+							for (int i = 0; i < total_BS_Prescriptions; i++) {
+								for (int t : static_periods) {		//Loop all periods
+									if (t <= total_periods) {
+										int var_index = xBS[strata_id][i][t];
 										if(var_index > 0) {		// if variable is defined, this value would be > 0 
 											double para_value = parameter_info.get_total_value(
 													vname[var_index], 
@@ -2866,53 +2883,34 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 											c15_indexlist.get(c15_num).add(var_index);
 											c15_valuelist.get(c15_num).add((double) para_value);	
 										}
-									}	
+									}
 								}
 							}
+							break;
 						}
 					}
-					
-					// Add xGSr
-					if (static_methods.contains("GS_R")) {		
-						for (int i = 0; i < total_GSr_Prescriptions; i++) {
-							for (int t : static_periods) {		//Loop all periods
-								if (t >= 2 && t <= total_periods) {	
-									for (int a = 1; a <= t - 1; a++) {
-										int var_index = xGSr[strata_5layers_id][i][t][a];
-										if(var_index > 0) {		// if variable is defined, this value would be > 0 
-											double para_value = parameter_info.get_total_value(
-													vname[var_index], 
-													var_prescription[var_index], 
-													var_row_id[var_index],
-													parameters_indexes,
-													dynamic_dentifiers_column_indexes, 
-													dynamic_identifiers,
-													var_cost_value[var_index]);
-											para_value = para_value * multiplier;
-																																					
-											c15_indexlist.get(c15_num).add(var_index);
-											c15_valuelist.get(c15_num).add((double) para_value);
-										}
-									}	
-								}
-							}
-						}
-					}
-					
-					// Add xEAr[s1][s2][s3][s4][s5][tR][aR][s5R][i][t]		  note   tR >= 2   -->   tR >= t >= tR - aR + 1
-					if (static_methods.contains("EA_R")) {	
-						int s5 = Collections.binarySearch(layer5, strata.substring(4, 5));
+				}	
+				
 						
-						for (int tR = 2; tR <= total_periods; tR++) {
-							for (int aR = 1; aR <= tR - 1; aR++) {
-								for (int s5R = 0; s5R < layer5.size(); s5R++) {
-									String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(s5R) + " " + aR;						
-									if (covertype_conversions_and_regeneration_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
-										for (int i = 0; i < total_EAr_Prescriptions; i++) {
-											for (int t : static_periods) {		//Loop all periods, 	final cut at tR but we need parameter at time t
-												if (t >= tR - aR + 1 && t <= tR) {
-													int var_index = xEAr[strata_5layers_id][tR][aR][s5R][i][t];
-													if(var_index > 0) {		// if variable is defined, this value would be > 0 
+				
+				// Add regenerated variables --------------------------------------------------------------
+				for (int common_id = 0; common_id < common_strata_without_sizeclass.size(); common_id++) {
+					int strata_5layers_id = original_strata_without_sizeclass_id[common_id];
+					// Note we need index from model_strata_without_sizeclass not common_trata_without_sizeclass
+
+					for (String method : static_methods) {
+						switch (method) {
+
+						case "NG_R":
+							// Add xNGr
+							for (int i = 0; i < total_NGr_Prescriptions; i++) {
+								if (xNGr[strata_5layers_id][i] != null)
+									for (int t : static_periods) {		//Loop all periods
+										if (t >= 2 && t <= total_periods) {
+											if (xNGr[strata_5layers_id][i][t] != null)
+												for (int a = 1; a <= t - 1; a++) {
+													if (xNGr[strata_5layers_id][i][t][a] > 0) {		// if variable is defined, this value would be > 0 
+														int var_index = xNGr[strata_5layers_id][i][t][a];
 														double para_value = parameter_info.get_total_value(
 																vname[var_index], 
 																var_prescription[var_index], 
@@ -2926,12 +2924,180 @@ public class Panel_SolveRun extends JLayeredPane implements ActionListener {
 														c15_indexlist.get(c15_num).add(var_index);
 														c15_valuelist.get(c15_num).add((double) para_value);
 													}
-												}
-											}
+												}	
 										}
 									}
-								}
 							}
+							break;
+							
+						case "PB_R":
+							// Add xPBr
+							for (int i = 0; i < total_PBr_Prescriptions; i++) {
+								if (xPBr[strata_5layers_id][i] != null)
+									for (int t : static_periods) {		//Loop all periods
+										if (t >= 2 && t <= total_periods) {
+											if (xPBr[strata_5layers_id][i][t] != null)
+												for (int a = 1; a <= t - 1; a++) {
+													if (xPBr[strata_5layers_id][i][t][a] > 0) {		// if variable is defined, this value would be > 0 
+														int var_index = xPBr[strata_5layers_id][i][t][a];
+														double para_value = parameter_info.get_total_value(
+																vname[var_index], 
+																var_prescription[var_index], 
+																var_row_id[var_index],
+																parameters_indexes,
+																dynamic_dentifiers_column_indexes, 
+																dynamic_identifiers,
+																var_cost_value[var_index]);
+														para_value = para_value * multiplier;
+																																								
+														c15_indexlist.get(c15_num).add(var_index);
+														c15_valuelist.get(c15_num).add((double) para_value);
+													}
+												}	
+										}
+									}
+							}
+							break;
+
+						case "GS_R":
+							// Add xGSr
+							for (int i = 0; i < total_GSr_Prescriptions; i++) {
+								if (xGSr[strata_5layers_id][i] != null)
+									for (int t : static_periods) {		//Loop all periods
+										if (t >= 2 && t <= total_periods) {
+											if (xGSr[strata_5layers_id][i][t] != null)
+												for (int a = 1; a <= t - 1; a++) {
+													if (xGSr[strata_5layers_id][i][t][a] > 0) {		// if variable is defined, this value would be > 0 
+														int var_index = xGSr[strata_5layers_id][i][t][a];
+														double para_value = parameter_info.get_total_value(
+																vname[var_index], 
+																var_prescription[var_index], 
+																var_row_id[var_index],
+																parameters_indexes,
+																dynamic_dentifiers_column_indexes, 
+																dynamic_identifiers,
+																var_cost_value[var_index]);
+														para_value = para_value * multiplier;
+																																								
+														c15_indexlist.get(c15_num).add(var_index);
+														c15_valuelist.get(c15_num).add((double) para_value);
+													}
+												}	
+										}
+									}
+							}
+							break;
+							
+						case "EA_R":
+//							// Add xEAr[s1][s2][s3][s4][s5][tR][aR][s5R][i][t]		  note   tR >= 2   -->   tR >= t >= tR - aR + 1
+//								String strata_5layers = common_strata_without_sizeclass.get(common_id);
+//								int s5 = Collections.binarySearch(layer5, strata_5layers.substring(4, 5));
+//								
+//								for (int tR = 2; tR <= total_periods; tR++) {
+//									for (int aR = 1; aR <= tR - 1; aR++) {
+//										for (int s5R = 0; s5R < layer5.size(); s5R++) {
+//											String thisCoverTypeconversion_and_RotationAge = layer5.get(s5) + " " + layer5.get(s5R) + " " + aR;						
+//											if (covertype_conversions_and_regeneration_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
+//												for (int i = 0; i < total_EAr_Prescriptions; i++) {
+//													for (int t : static_periods) {		//Loop all periods, 	final cut at tR but we need parameter at time t
+//														if (t >= tR - aR + 1 && t <= tR) {
+//															if(xEAr[strata_5layers_id][tR] != null
+//																	 && xEAr[strata_5layers_id][tR][aR] != null
+//																			 && xEAr[strata_5layers_id][tR][aR][s5R] != null
+//																					 && xEAr[strata_5layers_id][tR][aR][s5R][i] != null
+//																							 && xEAr[strata_5layers_id][tR][aR][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0 
+//																int var_index = xEAr[strata_5layers_id][tR][aR][s5R][i][t];
+//																double para_value = parameter_info.get_total_value(
+//																		vname[var_index], 
+//																		var_prescription[var_index], 
+//																		var_row_id[var_index],
+//																		parameters_indexes,
+//																		dynamic_dentifiers_column_indexes, 
+//																		dynamic_identifiers,
+//																		var_cost_value[var_index]);
+//																para_value = para_value * multiplier;
+//																																										
+//																c15_indexlist.get(c15_num).add(var_index);
+//																c15_valuelist.get(c15_num).add((double) para_value);
+//															}
+//														}
+//													}
+//												}
+//											}
+//										}
+//									}
+//							}
+							
+							// Add xEAr[s1][s2][s3][s4][s5][tR][aR][s5R][i][t]		  note   tR >= 2   -->   tR >= t >= tR - aR + 1			--> faster than above (Note: no need to check conversion and rotation --> faster (dealing with String is bad))
+							for (int tR = 2; tR <= total_periods; tR++) {
+								if (xEAr[strata_5layers_id][tR] != null) 
+									for (int aR = 1; aR <= tR - 1; aR++) {
+										if (xEAr[strata_5layers_id][tR][aR] != null)
+											for (int s5R = 0; s5R < layer5.size(); s5R++) {
+												if (xEAr[strata_5layers_id][tR][aR][s5R] != null)
+													for (int i = 0; i < total_EAr_Prescriptions; i++) {
+														if (xEAr[strata_5layers_id][tR][aR][s5R][i] != null)
+															for (int t : static_periods) {		//Loop all periods, 	final cut at tR but we need parameter at time t
+																if (t >= tR - aR + 1 && t <= tR) {
+																	if (xEAr[strata_5layers_id][tR][aR][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0   (this also removes the need of checking conversion and rotation)
+																		int var_index = xEAr[strata_5layers_id][tR][aR][s5R][i][t];
+																		double para_value = parameter_info.get_total_value(
+																				vname[var_index], 
+																				var_prescription[var_index], 
+																				var_row_id[var_index],
+																				parameters_indexes,
+																				dynamic_dentifiers_column_indexes, 
+																				dynamic_identifiers,
+																				var_cost_value[var_index]);
+																		para_value = para_value * multiplier;
+																																												
+																		c15_indexlist.get(c15_num).add(var_index);
+																		c15_valuelist.get(c15_num).add((double) para_value);
+																	}
+																}
+															}
+													}
+											}
+									}
+							}
+							
+//							// Add xEAr[s1][s2][s3][s4][s5][tR][aR][s5R][i][t]		  note   tR >= 2   -->   tR >= t >= tR - aR + 1			--> same performance as above
+//								String strata_5layers = common_strata_without_sizeclass.get(common_id);
+//								
+//								for (int tR = 2; tR <= total_periods && tR < xEAr[strata_5layers_id].length; tR++) {
+//									if (xEAr[strata_5layers_id][tR] != null) 
+//										for (int aR = 1; aR <= tR - 1 && aR < xEAr[strata_5layers_id][tR].length; aR++) {
+//											if (xEAr[strata_5layers_id][tR][aR] != null)
+//												for (int s5R = 0; s5R < layer5.size() && s5R < xEAr[strata_5layers_id][tR][aR].length; s5R++) {
+//													String thisCoverTypeconversion_and_RotationAge = strata_5layers.substring(4, 5) + " " + layer5.get(s5R) + " " + aR;						
+//													if (xEAr[strata_5layers_id][tR][aR][s5R] != null && covertype_conversions_and_regeneration_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
+//														for (int i = 0; i < total_EAr_Prescriptions && i < xEAr[strata_5layers_id][tR][aR][s5R].length; i++) {
+//															if (xEAr[strata_5layers_id][tR][aR][s5R][i] != null)
+//																for (int t : static_periods) {		//Loop all periods, 	final cut at tR but we need parameter at time t
+//																	if (t >= tR - aR + 1 && t <= tR) {
+//																		if (xEAr[strata_5layers_id][tR][aR][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0 
+//																			int var_index = xEAr[strata_5layers_id][tR][aR][s5R][i][t];
+//																			double para_value = parameter_info.get_total_value(
+//																					vname[var_index], 
+//																					var_prescription[var_index], 
+//																					var_row_id[var_index],
+//																					parameters_indexes,
+//																					dynamic_dentifiers_column_indexes, 
+//																					dynamic_identifiers,
+//																					var_cost_value[var_index]);
+//																			para_value = para_value * multiplier;
+//																																													
+//																			c15_indexlist.get(c15_num).add(var_index);
+//																			c15_valuelist.get(c15_num).add((double) para_value);
+//																		}
+//																	}
+//																}
+//														}
+//													}
+//												}
+//										}
+//							}
+							break;
 						}
 					}
 				}					

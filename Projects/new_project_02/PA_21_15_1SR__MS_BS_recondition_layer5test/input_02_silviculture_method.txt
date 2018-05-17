@@ -1,5 +1,0 @@
-sm_id	sm_description	sm_static_identifiers	sm_method_choice	sm_implementation	
-1	NG_MS_BS_everywhere	0 B A;1 N;2 1 2 3 4 5 6;3 L B W U G O;4 B C D E F G H I U;5 F G H I J K L M N O P Q R S Z	0 NG_E MS_E BS_E NG_R;1 0 1 2 3 4	true	
-2	PB_GS_Mag2-6	0 B A;1 N;2 2 3 4 5 6;3 L B W U G O;4 B C D E F G H I U;5 F G H I J K L M N O P Q R S Z	0 PB_E GS_E PB_R GS_R;1 0 1 2 3 4	true	
-3	EA_MAG5-6	0 B A;1 N;2 5 6;3 L B W U G O;4 B C D E F G H I;5 F G H I J K L M N O P Q R S Z	0 EA_E EA_R;1 0 1 2 3 4	true	
-4	method EA_E EA_R | choice 0 1 2 3 4 .....eligible to apply on..... layer3 5 6 | layer5 B C D E F G H I	0 A B;1 N;2 5 6;3 B G L O U W;4 U;5 F G H I J K L M N O P Q R S Z	0 EA_R;1 0 1 2 3 4	true	

@@ -23,7 +23,7 @@ public class Get_Parameter_Information {
 	private Object[][][] yield_tables_values;
 	
 	public Get_Parameter_Information(Read_Database read_database) {
-		// Some more set up
+		// Some set up
 		this.yield_tables_values = read_database.get_yield_tables_values();
 	}
 	
@@ -36,7 +36,7 @@ public class Get_Parameter_Information {
 		
 		if (dynamic_dentifiers_column_indexes.contains("NoIdentifier") && parameters_indexes.contains("NoParameter")) {	// This is the only case when we don't need to check yield table
 			value_to_return = 1;
-		} else {	// Check the yield table 				
+		} else {	// Check the prescription (a.k.a. yield table) 				
 			
 			if (table_id_to_find != -9999) {	// If prescription exists (not exist when table_id_to_find = -9999)						
 				if (row_id_to_find < yield_tables_values[table_id_to_find].length && row_id_to_find != -9999) { 	// If row in this prescription exists (not exists when row_id_to_find = -9999 or >= total rows in that prescription)
@@ -55,10 +55,10 @@ public class Get_Parameter_Information {
 						}						
 					}			
 					
-				} else {	//If this yield table does not have the row to find
+				} else {	// If prescription does not have the row to find
 //					System.out.println("Not found row id = " + row_index_to_find + " of the yield table "+ yield_table_name_to_find);
 				}	
-			} else { //If this yield table name does not exist
+			} else { // If prescription does not exist
 //				System.out.println("Not found table " + yield_table_name_to_find);
 			}
 			

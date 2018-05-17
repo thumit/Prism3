@@ -1,3 +1,0 @@
-strata_id	layer1	layer2	layer3	layer4	layer5	layer6	NG_E_acres	PB_E_acres	GS_E_acres	EA_E_acres	MS_E_acres	BS_E_acres
-ANCBDG	A	N	C	B	D	G	20.0	0.0	0.0	0.0	0.0	0.0
-ANCBDI	A	N	C	B	D	I	191.0	0.0	0.0	0.0	0.0	0.0

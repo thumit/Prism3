@@ -861,3 +861,12 @@ All changes in this block are associated with PrismAlpha1.1.04.jar, Prism Formul
 373. Remove the sort of each layer in Panel_SolveRun because we already sort it by the query in Read_strata_definition() in Read_Database
 All changes in this block are associated with PrismAlpha1.1.05.jar, Prism Formulation 07.docx, Prism Database 03.docx	
 --------------------------------------------------------------------------
+
+374. Some more optimization for speeding up constraints 12 nad 15 (loop using index not string for 12 & 15, 2 arrays to store original indexes for 15)
+375. Rewrite static identifiers boolean check in a different way, a little bit faster.
+376. Jagged array boost:
+	- Implemented for EA_E variables with changes made for variable-definitions and equations 9a, 9b, 12, 13, 15. Also remove rotation & conversion check to speed up run time
+	- Implemented for EA_R variables with changes made for variable-definitions and equations 12, 13, 14d, 15. Also remove rotation & conversion check to speed up run time
+	- Implemented for NG_R, PB_R, GS_R variables with changes made for variable-definitions and equations 12, 13, 14abc, 15
+All changes in this block are associated with PrismAlpha1.1.06.jar, Prism Formulation 07.docx, Prism Database 03.docx	
+--------------------------------------------------------------------------	
