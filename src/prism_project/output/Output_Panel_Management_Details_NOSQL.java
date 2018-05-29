@@ -856,7 +856,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 						
 						// Ask to confirm adding if there are more than 1000 constraints
 						int response2 = 0;	
-						if (total_constraints > 1000) {
+						if (total_constraints > 10000) {
 							String ExitOption2[] = {"Yes","No"};
 							String warningText = "You are going to add " + total_constraints + " constraints. It would take some time. Continue to add ?";
 							response2 = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warningText, "Confirm adding constraints",
@@ -1428,19 +1428,82 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 				}
 			});
 			
+			
+			
+			
+			
+			
+			
+			
+			
+			// Database Info
+			Object[] yield_tables_names = read_database.get_yield_tables_names();			
+			List<String> yield_tables_names_list = new ArrayList<String>() {{ for (Object i : yield_tables_names) add(i.toString());}};		// Convert Object array to String list
+						
+			// Read input files to retrieve values later
+			Read_RunInputs read = new Read_RunInputs();
+			read.read_model_strata(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_03_model_strata.txt"));
+
+			// Get info: input_03_modeled_strata
+			List<String> model_strata = read.get_model_strata();
+						
+			// Some more data process definitions
+			Get_Parameter_Information parameter_info = new Get_Parameter_Information(read_database);
+
+			// Get the 2 parameter V(s1,s2,s3,s4,s5,s6) and A(s1,s2,s3,s4,s5,s6)
+			String[][] Input2_value = read.get_MO_Values();	
+			double[] strata_area = new double[model_strata.size()];
+			int[] starting_age = new int[model_strata.size()];			
+			
+			// Loop through all modeled_strata to find if the names matched and get the total area and age class
+			for (int id = 0; id < model_strata.size(); id++) {
+				strata_area[id] = Double.parseDouble(Input2_value[id][7]);		// area in acres
+				if (Input2_value[id][read.get_MO_TotalColumns() - 2].toString().equals("null")) {
+					starting_age[id] = 1;		// assume age_class = 1 if not found any yield table for this existing strata
+				} else {
+					starting_age[id] = Integer.parseInt(Input2_value[id][read.get_MO_TotalColumns() - 2]);	// age_class
+				}		
+			}		
+			
+			// Process all the variables in output05
+			int name_col = table.getColumn("var_name").getModelIndex();
+			int value_col = table.getColumn("var_value").getModelIndex();
+			int cost_col = table.getColumn("var_unit_management_cost").getModelIndex();
+			List<Double> var_value_list = new ArrayList<Double>();	
+			List<Double> var_cost_list = new ArrayList<Double>();
+			List<Get_Variable_Information> var_info_list = new ArrayList<Get_Variable_Information>();
+			
+			for (int row = 0; row < data.length; row++) {	// row = var_index (each row is a variable)
+				String var_name = String.valueOf(data[row][name_col]);
+				double var_value = Double.valueOf(String.valueOf(data[row][value_col]));
+				double var_cost = Double.valueOf(String.valueOf(data[row][cost_col]));
+				
+				int start_age = -9999;
+				if (var_name.startsWith("xNG_E") || var_name.startsWith("xPB_E") || var_name.startsWith("xGS_E") || var_name.startsWith("xEA_E") || var_name.startsWith("xMS_E") || var_name.startsWith("xBS_E")) {
+					String strata = var_name.substring(6, 17).replaceAll(",", "");
+					int strata_id = Collections.binarySearch(model_strata, strata);
+					start_age = starting_age[strata_id];
+				} 
+				Get_Variable_Information var_info = new Get_Variable_Information(var_name, start_age, yield_tables_names_list);
+				
+				var_value_list.add(var_value);
+				var_cost_list.add(var_cost);
+				var_info_list.add(var_info);	
+			}	
+			
+			Querry_Optimal_Solution query_os = new Querry_Optimal_Solution(); 
+						
 								
 			// Get Result
 			btn_GetResult.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {		
-					executor.submit(() -> {
-						if (table9.isEditing()) {
-							table9.getCellEditor().cancelCellEditing();
-						}
+					for (int ii = 0; ii < data9.length; ii++) {	// Loop each row of the fly constraints table & get result for only the constraints with null value
+						int i = ii;
 						
-						for (int i = 0; i < data9.length; i++) {	// Loop each row of the fly constraints table & get result for only the constraints with null value
-							if (data9[i][12] == null) {	
-								btn_NewSingle.setVisible(false);		// Hide buttons only when there is at least 1 calculation
+						if (data9[i][12] == null) {	
+							executor.submit(() -> {
+								btn_NewSingle.setVisible(false);		// Hide buttons
 								btn_New_Multiple.setVisible(false);
 								btn_Import_basic_Constraints.setVisible(false);
 								btn_Edit.setVisible(false);
@@ -1450,6 +1513,9 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 								btn_GetResult.setVisible(false);
 								btn_Save.setVisible(false);
 								
+								if (table9.isEditing()) {
+									table9.getCellEditor().cancelCellEditing();
+								}
 								
 								double multiplier = (data9[i][3] != null) ?  (double) data9[i][3] : 0;	//if multiplier = null --> 0
 								String current_parameter_index = (String) data9[i][8];
@@ -1462,49 +1528,66 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 								List<String> parameters_indexes = new ArrayList<String>(get_parameters_indexes(current_parameter_index));
 														
 								// Process all the variables in output05 and use static_identifiers to trim to get the var_name_list & var_value_list
-								int name_col = table.getColumn("var_name").getModelIndex();
-								int value_col = table.getColumn("var_value").getModelIndex();
-								int cost_col = table.getColumn("var_unit_management_cost").getModelIndex();
-								List<String> var_name_list = new ArrayList<String>(); 
-								List<Double> var_value_list = new ArrayList<Double>();	
-								List<Double> var_cost_list = new ArrayList<Double>();
-								for (int row = 0; row < data.length; row++) {
-									String var_name = String.valueOf(data[row][name_col]);
-									double var_value = Double.valueOf(String.valueOf(data[row][value_col]));
-									double var_cost = Double.valueOf(String.valueOf(data[row][cost_col]));
-									if (are_all_static_identifiers_matched(var_name, static_identifiers)) {
-										var_name_list.add(var_name);
-										var_value_list.add(var_value);
-										var_cost_list.add(var_cost);
+								List<Double> var_value = new ArrayList<Double>();	
+								List<Double> var_cost = new ArrayList<Double>();
+								List<Get_Variable_Information> var_info = new ArrayList<Get_Variable_Information>();
+								
+								for (int row = 0; row < data.length; row++) {	// row = var_index (each row is a variable)
+									if (are_all_static_identifiers_matched(var_info_list.get(row), static_identifiers)) {
+										var_value.add(var_value_list.get(row));
+										var_cost.add(var_cost_list.get(row));
+										var_info.add(var_info_list.get(row));
 									}	
 								}	
 								
 								// Convert lists to 1-D arrays
-								String[] vname = var_name_list.toArray(new String[var_name_list.size()]);
-								double[] vvalue = Stream.of(var_value_list.toArray(new Double[var_value_list.size()])).mapToDouble(Double::doubleValue).toArray();
-								double[] vcost = Stream.of(var_cost_list.toArray(new Double[var_cost_list.size()])).mapToDouble(Double::doubleValue).toArray();
+								double[] vvalue = Stream.of(var_value.toArray(new Double[var_value.size()])).mapToDouble(Double::doubleValue).toArray();
+								double[] vcost = Stream.of(var_cost.toArray(new Double[var_cost.size()])).mapToDouble(Double::doubleValue).toArray();
+								Get_Variable_Information[] vinfo = new Get_Variable_Information[var_info.size()];	
+								for (int var_index = 0; var_index < var_info.size(); var_index++) {
+									vinfo[var_index] = var_info.get(var_index);
+								}	
+								
+								var_value = null;	// Clear the lists to save memory
+								var_cost = null;
+								var_info = null;
 										
 								// Get the sum result and update the GUI table
-								data9[i][12] = new Querry_Optimal_Solution().get_results(read_database, vname, vvalue, vcost, multiplier, parameters_indexes, dynamic_dentifiers_column_indexes, dynamic_identifiers);
+								data9[i][12] = query_os.get_results(read_database, vinfo, vvalue, vcost, multiplier, parameters_indexes, dynamic_dentifiers_column_indexes, dynamic_identifiers);
 								table9.scrollRectToVisible(new Rectangle(table9.getCellRect(table9.convertRowIndexToView(i), 0, true)));
 								
 								// Get everything show up nicely
 								table9.setRowSelectionInterval(i, i);
-							}
+								
+								
+								// To make UI refresh better
+								table9.revalidate();
+								table9.repaint();
+								parametersScrollPanel.revalidate();
+								parametersScrollPanel.repaint();
+								static_identifiersScrollPanel.revalidate();
+								static_identifiersScrollPanel.repaint();
+								dynamic_identifiersScrollPanel.revalidate();
+								dynamic_identifiersScrollPanel.repaint();
+							});
 						}
-
 						
-						create_file_input_05_fly_constraints();		// Save changes after update fly_value						
-						btn_NewSingle.setVisible(true);
-						btn_New_Multiple.setVisible(true);
-						btn_Import_basic_Constraints.setVisible(true);
-						btn_Edit.setVisible(true);
-						spin_move_rows.setVisible(true);
-						btn_Delete.setVisible(true);
-						btn_Sort.setVisible(true);
-						btn_GetResult.setVisible(true);
-						btn_Save.setVisible(true);
-					});					
+						if (i == data9.length - 1) {
+							executor.submit(() -> {
+								create_file_input_05_fly_constraints();		// Save changes after update fly_value						
+								btn_NewSingle.setVisible(true);
+								btn_New_Multiple.setVisible(true);
+								btn_Import_basic_Constraints.setVisible(true);
+								btn_Edit.setVisible(true);
+								spin_move_rows.setVisible(true);
+								btn_Delete.setVisible(true);
+								btn_Sort.setVisible(true);
+								btn_GetResult.setVisible(true);
+								btn_Save.setVisible(true);
+							});
+						}
+						
+					}
 				}
 			});		
 			
@@ -1711,20 +1794,20 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 	
 	
 	// Get the following from each row-------------------------------------------------------------------------------------
-	private Boolean are_all_static_identifiers_matched(String var_name, List<List<String>> static_identifiers) {	
+	private Boolean are_all_static_identifiers_matched(Get_Variable_Information var_info, List<List<String>> static_identifiers) {	
 		if (
-		Collections.binarySearch(static_identifiers.get(0), Get_Variable_Information.get_layer1(var_name)) < 0 ||
-		Collections.binarySearch(static_identifiers.get(1), Get_Variable_Information.get_layer2(var_name)) < 0 ||
-		Collections.binarySearch(static_identifiers.get(2), Get_Variable_Information.get_layer3(var_name)) < 0 ||
-		Collections.binarySearch(static_identifiers.get(3), Get_Variable_Information.get_layer4(var_name)) < 0 ||
-		(Get_Variable_Information.get_forest_status(var_name).equals("E") &&
+		Collections.binarySearch(static_identifiers.get(0), var_info.get_layer1()) < 0 ||
+		Collections.binarySearch(static_identifiers.get(1), var_info.get_layer2()) < 0 ||
+		Collections.binarySearch(static_identifiers.get(2), var_info.get_layer3()) < 0 ||
+		Collections.binarySearch(static_identifiers.get(3), var_info.get_layer4()) < 0 ||
+		(var_info.get_forest_status().equals("E") &&
 				(
-				Collections.binarySearch(static_identifiers.get(4), Get_Variable_Information.get_layer5(var_name)) < 0 ||
-				Collections.binarySearch(static_identifiers.get(5), Get_Variable_Information.get_layer6(var_name)) < 0
+				Collections.binarySearch(static_identifiers.get(4), var_info.get_layer5()) < 0 ||
+				Collections.binarySearch(static_identifiers.get(5), var_info.get_layer6()) < 0
 				)) ||
-		(Get_Variable_Information.get_forest_status(var_name).equals("R") && Collections.binarySearch(static_identifiers.get(4), Get_Variable_Information.get_layer5(var_name)) < 0) ||
-		Collections.binarySearch(static_identifiers.get(6), Get_Variable_Information.get_method(var_name) + "_" + Get_Variable_Information.get_forest_status(var_name)) < 0 ||
-		Collections.binarySearch(static_identifiers.get(7), String.valueOf(Get_Variable_Information.get_period(var_name))) < 0) 
+		(var_info.get_forest_status().equals("R") && Collections.binarySearch(static_identifiers.get(4), var_info.get_layer5()) < 0) ||
+		Collections.binarySearch(static_identifiers.get(6), var_info.get_method() + "_" + var_info.get_forest_status()) < 0 ||
+		Collections.binarySearch(static_identifiers.get(7), String.valueOf(var_info.get_period())) < 0) 
 		{
 			return false;
 		}
@@ -1816,86 +1899,31 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 	
 	
 	
-	private static int[] get_prescription_and_row(List<String> yield_tables_names_list, String var_name, int var_rotation_age) {
-    	int[] array = new int [2];	// first index is prescription, second index is row_id   	
-    	int table_id_to_find = -9999, row_id_to_find = -9999;
-    	
-		String yield_table_name_to_find = Get_Variable_Information.get_yield_table_name_to_find(var_name);	
-		if (yield_table_name_to_find.contains("rotation_age")) {
-			yield_table_name_to_find = yield_table_name_to_find.replace("rotation_age", String.valueOf(var_rotation_age));
-		}		
-	
-		int id_to_search = Collections.binarySearch(yield_tables_names_list, yield_table_name_to_find);				
-		if (id_to_search >= 0) {		// If yield table name exists						
-			table_id_to_find = id_to_search;
-			row_id_to_find = Get_Variable_Information.get_yield_table_row_index_to_find(var_name);
-		}		
-		
-		array[0] = table_id_to_find;
-		array[1] = row_id_to_find;
-		return array;
-	}			
-	
-	
 	private class Querry_Optimal_Solution {
+		
+		public Querry_Optimal_Solution() {
 
-		private double get_results(Read_Database read_database, String[] vname, double[] vvalue, double[] vcost, double multiplier,			// vname, vvalue, vcost are results after filtered by static_identifiers
+		}
+
+		
+		private double get_results(Read_Database read_database, Get_Variable_Information[] vinfo, double[] vvalue, double[] vcost, double multiplier,			// vname, vvalue, vcost are results after filtered by static_identifiers
 				 List<String> parameters_indexes_list, List<String> dynamic_dentifiers_column_indexes, List<List<String>> dynamic_identifiers) {		
+			// CREATE CONSTRAINTS-------------------------------------------------
+			// CREATE CONSTRAINTS-------------------------------------------------
+			// CREATE CONSTRAINTS-------------------------------------------------
 			
-			
-			
-			// Database Info
-			Object[] yield_tables_names = read_database.get_yield_tables_names();			
-			List<String> yield_tables_names_list = new ArrayList<String>() {{ for (Object i : yield_tables_names) add(i.toString());}};		// Convert Object array to String list
-						
-			// Read input files to retrieve values later
-			Read_RunInputs read = new Read_RunInputs();
-			read.read_model_strata(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_03_model_strata.txt"));
-
-			// Get info: input_03_modeled_strata
-			List<String> model_strata = read.get_model_strata();
-						
-			// Some more data process definitions
 			Get_Parameter_Information parameter_info = new Get_Parameter_Information(read_database);
-
-			// Get the 2 parameter V(s1,s2,s3,s4,s5,s6) and A(s1,s2,s3,s4,s5,s6)
-			String[][] Input2_value = read.get_MO_Values();	
-			double[] strata_area = new double[model_strata.size()];
-			int[] starting_age = new int[model_strata.size()];			
-			
-			// Loop through all modeled_strata to find if the names matched and get the total area and age class
-			for (int id = 0; id < model_strata.size(); id++) {
-				strata_area[id] = Double.parseDouble(Input2_value[id][7]);		// area in acres
-				if (Input2_value[id][read.get_MO_TotalColumns() - 2].toString().equals("null")) {
-					starting_age[id] = 1;		// assume age_class = 1 if not found any yield table for this existing strata
-				} else {
-					starting_age[id] = Integer.parseInt(Input2_value[id][read.get_MO_TotalColumns() - 2]);	// age_class
-				}		
-			}						
-			
-			
-			
-			// CREATE CONSTRAINTS-------------------------------------------------
-			// CREATE CONSTRAINTS-------------------------------------------------
-			// CREATE CONSTRAINTS-------------------------------------------------
-			
 			// Constraints 15	
 			double sum_all = 0;
 			
-			// Loop all variables that were trim by the static filter already: then add to sum_all
-			for (int var_index = 0; var_index < vname.length; var_index++) {
-				int var_rotation_age = Get_Variable_Information.get_rotation_age(vname[var_index], starting_age, model_strata);
-				int[] prescription_and_row = get_prescription_and_row(yield_tables_names_list, vname[var_index], var_rotation_age);
-				int var_prescription = prescription_and_row[0];	
-				int var_row_id = prescription_and_row[1];
+			for (int var_index = 0; var_index < vinfo.length; var_index++) {	// Loop all variables that were trim by the static filter already: then add to sum_all
 				
 				// Add all relevant variables
-				String method = Get_Variable_Information.get_method(vname[var_index]);
+				String method = vinfo[var_index].get_method();
 				if (method.equals("NG") || method.equals("PB") || method.equals("GS") || method.equals("EA") || method.equals("MS") || method.equals("BS")) {	
 					double para_value = parameter_info.get_total_value(
-							vname[var_index], 
-							var_prescription, 
-							var_row_id,
+							vinfo[var_index].get_prescription_id_and_row_id()[0],
+							vinfo[var_index].get_prescription_id_and_row_id()[1],
 							parameters_indexes_list,
 							dynamic_dentifiers_column_indexes, 
 							dynamic_identifiers,

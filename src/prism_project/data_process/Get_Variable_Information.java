@@ -21,12 +21,31 @@ import java.util.List;
 
 public class Get_Variable_Information {
 
-	private static String layer1, layer2, layer3, layer4, layer5, layer6, method, regenerated_covertype;	// regenerated_covertype = s5R = covertype_after, while layer5 = covertype_before
-	private static int period, age, timing_choice, rotation_period, rotation_age;
-	private static String yield_table_name_to_find, forest_status;
-	private static int yield_table_row_index_to_find;
+	private String layer1, layer2, layer3, layer4, layer5, layer6, method, regenerated_covertype, forest_status;	// regenerated_covertype = s5R = covertype_after, while layer5 = covertype_before
+	private int period, age, timing_choice, rotation_period, rotation_age;
+	private String yield_table_name_to_find;
+	private int yield_table_row_index_to_find;
+	private int[] prescription_id_and_row_id;
 	
-	public static void get_all_terms_from_name(String var_name) {
+	public Get_Variable_Information(String var_name, int starting_age, List<String> yield_tables_names_list) {
+		// Set up
+		layer1 = "";
+		layer2 = "";
+		layer3 = "";
+		layer4 = "";
+		layer5 = "";
+		layer6 = "";
+		method = "";
+		regenerated_covertype = "";
+		forest_status = "";
+		rotation_period = -9999;
+		rotation_age = -9999;
+		period = -9999;
+		age = -9999;
+		timing_choice = -9999;
+		yield_table_name_to_find = "";
+		yield_table_row_index_to_find = -9999;
+		
 		if (var_name.startsWith("xNG_E_")) {
 			var_name = var_name.replace("xNG_E_", "");
 			String[] term = var_name.split(",");
@@ -38,6 +57,7 @@ public class Get_Variable_Information {
 			layer6 = term[5];
 			timing_choice = Integer.parseInt(term[6]);
 			period = Integer.parseInt(term[7]);
+			age = starting_age + period - 1;		// calculate age for existing variable
 			
 			
 			method = "NG";
@@ -56,6 +76,7 @@ public class Get_Variable_Information {
 			layer6 = term[5];
 			timing_choice = Integer.parseInt(term[6]);
 			period = Integer.parseInt(term[7]);
+			age = starting_age + period - 1;		// calculate age for existing variable
 			
 			
 			method = "PB";
@@ -74,6 +95,7 @@ public class Get_Variable_Information {
 			layer6 = term[5];
 			timing_choice = Integer.parseInt(term[6]);
 			period = Integer.parseInt(term[7]);	
+			age = starting_age + period - 1;		// calculate age for existing variable
 			
 			
 			method = "GS";
@@ -92,6 +114,7 @@ public class Get_Variable_Information {
 			layer6 = term[5];
 			timing_choice = Integer.parseInt(term[6]);
 			period = Integer.parseInt(term[7]);	
+			age = starting_age + period - 1;		// calculate age for existing variable
 			
 			
 			method = "MS";
@@ -110,6 +133,7 @@ public class Get_Variable_Information {
 			layer6 = term[5];
 			timing_choice = Integer.parseInt(term[6]);
 			period = Integer.parseInt(term[7]);
+			age = starting_age + period - 1;		// calculate age for existing variable
 			
 			
 			method = "BS";
@@ -130,11 +154,13 @@ public class Get_Variable_Information {
 			regenerated_covertype = term[7];
 			timing_choice = Integer.parseInt(term[8]);
 			period = Integer.parseInt(term[9]);	
+			age = starting_age + period - 1;		// calculate age for existing variable
+			rotation_age = rotation_period + starting_age - 1;	// calculate rotation age for existing variable
 			
 			
 			method = "EA";
 			forest_status = "E";
-			yield_table_name_to_find = layer5 + "_" + layer6 + "_" + method + "_" + forest_status + "_" + "rotation_age" + "_" + timing_choice;
+			yield_table_name_to_find = layer5 + "_" + layer6 + "_" + method + "_" + forest_status + "_" + rotation_age + "_" + timing_choice;
 			yield_table_row_index_to_find = period - 1;
 		}	
 		else if (var_name.startsWith("xEA_R_")) {
@@ -151,6 +177,7 @@ public class Get_Variable_Information {
 			timing_choice = Integer.parseInt(term[8]);
 			period = Integer.parseInt(term[9]);
 			age = rotation_age + period - rotation_period; // a = aR + t - tR
+			
 			
 			method = "EA";
 			forest_status = "R";
@@ -211,116 +238,92 @@ public class Get_Variable_Information {
 			yield_table_name_to_find = layer5 + "_" + method + "_" + forest_status + "_" + timing_choice;
 			yield_table_row_index_to_find = age - 1;
 		}	
+		
+				
+				
+				
+		
+		// if prescription exists in the yield_tables database --> the 2 numbers will not be -9999
+		prescription_id_and_row_id = new int [2];	// first index is prescription, second index is row_id   	
+    	int prescription_id_to_find = -9999, row_id_to_find = -9999;
+		if (!method.equals("")) {
+    		int id_to_search = Collections.binarySearch(yield_tables_names_list, yield_table_name_to_find);				
+    		if (id_to_search >= 0) {		// If prescription (a.k.k yield table name) exists						
+    			prescription_id_to_find = id_to_search;
+    			row_id_to_find = yield_table_row_index_to_find;
+    		}
+    	}
+    	prescription_id_and_row_id[0] = prescription_id_to_find;
+    	prescription_id_and_row_id[1] = row_id_to_find;
+		yield_tables_names_list = null;		// clear object to save memory
 	}
 	
 	
-	public static String get_layer1(String var_name) {
-		layer1 = "";
-		get_all_terms_from_name(var_name);
+	public String get_layer1() {
 		return layer1;
 	}
 
-	public static String get_layer2(String var_name) {
-		layer2 = "";
-		get_all_terms_from_name(var_name);
+	public String get_layer2() {
 		return layer2;
 	}	
 	
-	public static String get_layer3(String var_name) {
-		layer3 = "";
-		get_all_terms_from_name(var_name);
+	public String get_layer3() {
 		return layer3;
 	}
 	
-	public static String get_layer4(String var_name) {
-		layer4 = "";
-		get_all_terms_from_name(var_name);
+	public String get_layer4() {
 		return layer4;
 	}
 	
-	public static String get_layer5(String var_name) {
-		layer5 = "";
-		get_all_terms_from_name(var_name);
+	public String get_layer5() {
 		return layer5;
 	}
 	
-	public static String get_layer6(String var_name) {
-		layer6 = "";
-		get_all_terms_from_name(var_name);
+	public String get_layer6() {
 		return layer6;
 	}
 	
-	public static String get_method(String var_name) {
-		method = "";
-		get_all_terms_from_name(var_name);
+	public String get_method() {
 		return method;
 	}
 	
-	public static String get_regenerated_covertype(String var_name) {
-		regenerated_covertype = "";
-		get_all_terms_from_name(var_name);
+	public String get_regenerated_covertype() {
 		return regenerated_covertype;
 	}	
 	
-	public static String get_forest_status(String var_name) {
-		forest_status = "";
-		get_all_terms_from_name(var_name);
+	public String get_forest_status() {
 		return forest_status;
 	}
 	
-	public static int get_rotation_period(String var_name) {
-		rotation_period = -9999;
-		get_all_terms_from_name(var_name);
+	public int get_rotation_period() {
 		return rotation_period;
 	}
 	
-	public static int get_rotation_age(String var_name, int[] starting_age, List<String> model_strata) {
-		rotation_age = -9999;
-		get_all_terms_from_name(var_name);
-		
-		// Recalculate age for existing variable
-		if (method.equals("EA") && forest_status.equals("E")) {	// EA_E variables
-			String strata = layer1 + layer2 + layer3 + layer4 + layer5 + layer6;
-			int strata_id = Collections.binarySearch(model_strata, strata);
-			rotation_age = rotation_period + starting_age[strata_id] - 1;
-		}
+	public int get_rotation_age() {
 		return rotation_age;
 	}
 	
-	public static int get_period(String var_name) {
-		period = -9999;
-		get_all_terms_from_name(var_name);
+	public int get_period() {
 		return period;
 	}
 	
-	public static int get_age(String var_name, int[] starting_age, List<String> model_strata) {
-		age = -9999;
-		get_all_terms_from_name(var_name);
-		
-		// Recalculate age for existing variable
-		if (forest_status.equals("E")) {	// existing variables
-			String strata = layer1 + layer2 + layer3 + layer4 + layer5 + layer6;
-			int strata_id = Collections.binarySearch(model_strata, strata);
-			age = starting_age[strata_id] + period - 1;
-		}
+	public int get_age() {
 		return age;
 	}
 	
-	public static int get_timing_choice(String var_name) {
-		timing_choice = -9999;
-		get_all_terms_from_name(var_name);
+	public int get_timing_choice() {
 		return timing_choice;
 	}
 	
-	public static String get_yield_table_name_to_find(String var_name) {
-		yield_table_name_to_find = "";
-		get_all_terms_from_name(var_name);
+	public String get_yield_table_name_to_find() {
 		return yield_table_name_to_find;
 	}
 	
-	public static int get_yield_table_row_index_to_find(String var_name) {
-		yield_table_row_index_to_find = -9999;
-		get_all_terms_from_name(var_name);
+	public int get_yield_table_row_index_to_find() {
 		return yield_table_row_index_to_find;
+	}
+	
+	public int[] get_prescription_id_and_row_id() {	// Return only when prescription exists in the database yield tables. Otherwise, the 2 numbers will be -9999
+		return prescription_id_and_row_id;
 	}
 }

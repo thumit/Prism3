@@ -61,14 +61,14 @@ public class Get_Disturbance_Information {
 	}
 			
 	
-	public int get_rd_condition_id_for_this_var(String var_name, int table_id_to_find, int row_id_to_find) {
+	public int get_rd_condition_id_for_this_var(Get_Variable_Information var_info, int table_id_to_find, int row_id_to_find) {
 		int id = -9999;
 		
 		if (table_id_to_find != -9999) {	// If prescription exists (not exist when table_id_to_find = -9999)						
 			if (row_id_to_find < yield_tables_values[table_id_to_find].length && row_id_to_find != -9999) { 	// If row in this prescription exists (not exists when row_id_to_find = -9999 or >= total rows in that prescription)
 				int priority = 0;
 				while (id == -9999 && priority < all_priority_condition_info.length) {		// loop all condition until found the one matched
-					if (are_all_static_identifiers_matched(var_name, all_priority_condition_static_identifiers[priority])
+					if (are_all_static_identifiers_matched(var_info, all_priority_condition_static_identifiers[priority])
 								&& are_all_dynamic_identifiers_matched(yield_tables_values, table_id_to_find, row_id_to_find, all_priority_condition_dynamic_dentifiers_column_indexes[priority], all_priority_condition_dynamic_identifiers[priority])) {
 						id = priority;
 					}
@@ -97,13 +97,13 @@ public class Get_Disturbance_Information {
 	
 	
 	
-	public double[][][] get_rd_percentage(String var_name, int table_id_to_find, int row_id_to_find) {
+	public double[][][] get_rd_percentage(Get_Variable_Information var_info, int table_id_to_find, int row_id_to_find) {
 		if (table_id_to_find != -9999) {	// If prescription exists (not exist when table_id_to_find = -9999)						
 			if (row_id_to_find < yield_tables_values[table_id_to_find].length && row_id_to_find != -9999) { 	// If row in this prescription exists (not exists when row_id_to_find = -9999 or >= total rows in that prescription)
 				if (all_priority_condition_info != null) {		// If there is at least one condition	
 					int priority = 0;
 					while (priority < all_priority_condition_info.length) {		// loop all condition until found the one matched
-						if (are_all_static_identifiers_matched(var_name, all_priority_condition_static_identifiers[priority])
+						if (are_all_static_identifiers_matched(var_info, all_priority_condition_static_identifiers[priority])
 									&& are_all_dynamic_identifiers_matched(yield_tables_values, table_id_to_find, row_id_to_find, all_priority_condition_dynamic_dentifiers_column_indexes[priority], all_priority_condition_dynamic_identifiers[priority])) {
 							return (double[][][]) all_condition_rd_percentage[priority];
 						}
@@ -177,21 +177,21 @@ public class Get_Disturbance_Information {
 	}
 	
 	
-	private Boolean are_all_static_identifiers_matched(String var_name, List<List<String>> static_identifiers) {	
+	private Boolean are_all_static_identifiers_matched(Get_Variable_Information var_info, List<List<String>> static_identifiers) {	
 		// All are the same but this way is the fastest
 		if (
-		Collections.binarySearch(static_identifiers.get(0), Get_Variable_Information.get_layer1(var_name)) < 0 ||
-		Collections.binarySearch(static_identifiers.get(1), Get_Variable_Information.get_layer2(var_name)) < 0 ||
-		Collections.binarySearch(static_identifiers.get(2), Get_Variable_Information.get_layer3(var_name)) < 0 ||
-		Collections.binarySearch(static_identifiers.get(3), Get_Variable_Information.get_layer4(var_name)) < 0 ||
-		(Get_Variable_Information.get_forest_status(var_name).equals("E") &&
+		Collections.binarySearch(static_identifiers.get(0), var_info.get_layer1()) < 0 ||
+		Collections.binarySearch(static_identifiers.get(1), var_info.get_layer2()) < 0 ||
+		Collections.binarySearch(static_identifiers.get(2), var_info.get_layer3()) < 0 ||
+		Collections.binarySearch(static_identifiers.get(3), var_info.get_layer4()) < 0 ||
+		(var_info.get_forest_status().equals("E") &&
 				(
-				Collections.binarySearch(static_identifiers.get(4), Get_Variable_Information.get_layer5(var_name)) < 0 ||
-				Collections.binarySearch(static_identifiers.get(5), Get_Variable_Information.get_layer6(var_name)) < 0
+				Collections.binarySearch(static_identifiers.get(4), var_info.get_layer5()) < 0 ||
+				Collections.binarySearch(static_identifiers.get(5), var_info.get_layer6()) < 0
 				)) ||
-		(Get_Variable_Information.get_forest_status(var_name).equals("R") && Collections.binarySearch(static_identifiers.get(4), Get_Variable_Information.get_layer5(var_name)) < 0) ||
-		Collections.binarySearch(static_identifiers.get(6), Get_Variable_Information.get_method(var_name) + "_" + Get_Variable_Information.get_forest_status(var_name)) < 0 ||
-		Collections.binarySearch(static_identifiers.get(7), String.valueOf(Get_Variable_Information.get_period(var_name))) < 0) 
+		(var_info.get_forest_status().equals("R") && Collections.binarySearch(static_identifiers.get(4), var_info.get_layer5()) < 0) ||
+		Collections.binarySearch(static_identifiers.get(6), var_info.get_method() + "_" + var_info.get_forest_status()) < 0 ||
+		Collections.binarySearch(static_identifiers.get(7), String.valueOf(var_info.get_period())) < 0) 
 		{
 			return false;
 		}

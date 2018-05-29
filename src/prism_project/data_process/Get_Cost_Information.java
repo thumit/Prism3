@@ -90,7 +90,7 @@ public class Get_Cost_Information {
 			
 	
 	public double get_cost_value(				
-			String var_name, int table_id_to_find, int row_id_to_find,
+			Get_Variable_Information var_info, int table_id_to_find, int row_id_to_find,
 			List<String> cost_condition_list,
 			List<String> conversion_cost_after_disturbance_name_list,		// i.e. P P disturbance		P D disturbance			This is already sorted because we already sorted all layers, including layer5
 			List<Double> conversion_cost_after_disturbance_value_list) {
@@ -105,7 +105,7 @@ public class Get_Cost_Information {
 				
 				// The following includes 1 list for the action_cost and 1 list for the conversion_cost
 				List<List<List<String>>> final_cost_list = get_final_action_cost_list_and_conversion_cost_list_for_this_variable(
-						cost_condition_list, var_name, var_action_type,
+						cost_condition_list, var_info, var_action_type,
 						table_id_to_find, row_id_to_find);
 				
 				
@@ -132,10 +132,8 @@ public class Get_Cost_Information {
 				for (int item = 0; item < final_cost_list.get(1).get(0).size(); item++) {	// loop list:  final_cost_list.get(1).get(0) which is final_conversion_cost_column_list
 					// add conversion cost for post management action (i.e clear cut) or post replacing disturbance (i.e. SRFire)
 					// note only one of them is true: for example if it is clear cut --> no replacing disturbance anymore, replacing disturbance can happen in areas where no clear cut implemented
-					if (Get_Variable_Information.get_rotation_period(var_name) == Get_Variable_Information.get_period(var_name)) {	// period is the rotation period (this if guarantees variable to be EA_E or EA_R)
-						String conversion_cost_to_apply = 
-								Get_Variable_Information.get_layer5(var_name) + " " +
-								Get_Variable_Information.get_regenerated_covertype(var_name) + " " + "action";
+					if (var_info.get_rotation_period() == var_info.get_period()) {	// period is the rotation period (this if guarantees variable to be EA_E or EA_R)
+						String conversion_cost_to_apply = var_info.get_layer5() + " " + var_info.get_regenerated_covertype() + " " + "action";
 						if (final_cost_list.get(1).get(0).get(item).equals(conversion_cost_to_apply)) {
 							value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(1).get(1).get(item));
 						} 
@@ -154,7 +152,7 @@ public class Get_Cost_Information {
 
 	
 	private List<List<List<String>>> get_final_action_cost_list_and_conversion_cost_list_for_this_variable(
-			List<String> cost_condition_list, String var_name, String var_action_type,
+			List<String> cost_condition_list, Get_Variable_Information var_info, String var_action_type,
 			int table_id_to_find, int row_id_to_find) {	
 		
 		List<String> final_action_cost_column_list = new ArrayList<String>();		// example: 	"acres", "...", "hca_allsx", ... -->see table 8a in the GUI of Cost Management
@@ -166,7 +164,7 @@ public class Get_Cost_Information {
 									
 		for (int priority = 0; priority < cost_condition_list.size(); priority++) {		// Looping from the highest priority cost condition to the lowest			
 			// If this condition is satisfied
-			if (are_all_static_identifiers_matched(var_name, all_priority_condition_static_identifiers[priority]) && 
+			if (are_all_static_identifiers_matched(var_info, all_priority_condition_static_identifiers[priority]) && 
 					are_all_dynamic_identifiers_matched(yield_tables_values, table_id_to_find, row_id_to_find, all_priority_condition_dynamic_dentifiers_column_indexes[priority], all_priority_condition_dynamic_identifiers[priority])) {
 				
 				// For action_cost
@@ -245,21 +243,21 @@ public class Get_Cost_Information {
 	}
 	
 	
-	private Boolean are_all_static_identifiers_matched(String var_name, List<List<String>> static_identifiers) {	
+	private Boolean are_all_static_identifiers_matched(Get_Variable_Information var_info, List<List<String>> static_identifiers) {	
 		// All are the same but this way is the fastest
 		if (
-		Collections.binarySearch(static_identifiers.get(0), Get_Variable_Information.get_layer1(var_name)) < 0 ||
-		Collections.binarySearch(static_identifiers.get(1), Get_Variable_Information.get_layer2(var_name)) < 0 ||
-		Collections.binarySearch(static_identifiers.get(2), Get_Variable_Information.get_layer3(var_name)) < 0 ||
-		Collections.binarySearch(static_identifiers.get(3), Get_Variable_Information.get_layer4(var_name)) < 0 ||
-		(Get_Variable_Information.get_forest_status(var_name).equals("E") &&
+		Collections.binarySearch(static_identifiers.get(0), var_info.get_layer1()) < 0 ||
+		Collections.binarySearch(static_identifiers.get(1), var_info.get_layer2()) < 0 ||
+		Collections.binarySearch(static_identifiers.get(2), var_info.get_layer3()) < 0 ||
+		Collections.binarySearch(static_identifiers.get(3), var_info.get_layer4()) < 0 ||
+		(var_info.get_forest_status().equals("E") &&
 				(
-				Collections.binarySearch(static_identifiers.get(4), Get_Variable_Information.get_layer5(var_name)) < 0 ||
-				Collections.binarySearch(static_identifiers.get(5), Get_Variable_Information.get_layer6(var_name)) < 0
+				Collections.binarySearch(static_identifiers.get(4), var_info.get_layer5()) < 0 ||
+				Collections.binarySearch(static_identifiers.get(5), var_info.get_layer6()) < 0
 				)) ||
-		(Get_Variable_Information.get_forest_status(var_name).equals("R") && Collections.binarySearch(static_identifiers.get(4), Get_Variable_Information.get_layer5(var_name)) < 0) ||
-		Collections.binarySearch(static_identifiers.get(6), Get_Variable_Information.get_method(var_name) + "_" + Get_Variable_Information.get_forest_status(var_name)) < 0 ||
-		Collections.binarySearch(static_identifiers.get(7), String.valueOf(Get_Variable_Information.get_period(var_name))) < 0) 
+		(var_info.get_forest_status().equals("R") && Collections.binarySearch(static_identifiers.get(4), var_info.get_layer5()) < 0) ||
+		Collections.binarySearch(static_identifiers.get(6), var_info.get_method() + "_" + var_info.get_forest_status()) < 0 ||
+		Collections.binarySearch(static_identifiers.get(7), String.valueOf(var_info.get_period())) < 0) 
 		{
 			return false;
 		}

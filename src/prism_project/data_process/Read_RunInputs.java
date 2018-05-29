@@ -23,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
@@ -194,16 +195,18 @@ public class Read_RunInputs {
 								for (String layer6 : sm_static_identifiers.get(5)) {				
 									
 									String combined_name = layer1 + layer2 + layer3 + layer4 + layer5 + layer6;
-									if (!sm_strata.contains(combined_name)) {
+									int strata_id = Collections.binarySearch(sm_strata, combined_name);
+									
+									if (strata_id < 0) {
 										sm_strata.add(combined_name);
 										sm_method_choice_for_strata.add(new ArrayList<String>());
+										strata_id = sm_strata.size() - 1;
 									}
 									
-									int processing_id = sm_strata.indexOf(combined_name);									
 									for (String method : sm_method_choice.get(0)) {
 										for (String choice : sm_method_choice.get(1)) {
-											if (!sm_method_choice_for_strata.get(processing_id).contains(method + " " + choice)) {
-												sm_method_choice_for_strata.get(processing_id).add(method + " " + choice);
+											if (!sm_method_choice_for_strata.get(strata_id).contains(method + " " + choice)) {
+												sm_method_choice_for_strata.get(strata_id).add(method + " " + choice);
 											}
 										}
 									}
@@ -223,16 +226,18 @@ public class Read_RunInputs {
 							for (String layer5 : sm_static_identifiers.get(4)) {
 									
 								String combined_name = layer1 + layer2 + layer3 + layer4 + layer5;
-								if (!sm_strata_without_sizeclass.contains(combined_name)) {
+								int strata_5layers_id = Collections.binarySearch(sm_strata_without_sizeclass, combined_name);
+								
+								if (strata_5layers_id < 0) {
 									sm_strata_without_sizeclass.add(combined_name);
 									sm_method_choice_for_strata_without_sizeclass.add(new ArrayList<String>());
+									strata_5layers_id = sm_strata_without_sizeclass.size() - 1;
 								}
 								
-								int processing_id = sm_strata_without_sizeclass.indexOf(combined_name);									
 								for (String method : sm_method_choice.get(0)) {
 									for (String choice : sm_method_choice.get(1)) {
-										if (!sm_method_choice_for_strata_without_sizeclass.get(processing_id).contains(method + " " + choice)) {
-											sm_method_choice_for_strata_without_sizeclass.get(processing_id).add(method + " " + choice);
+										if (!sm_method_choice_for_strata_without_sizeclass.get(strata_5layers_id).contains(method + " " + choice)) {
+											sm_method_choice_for_strata_without_sizeclass.get(strata_5layers_id).add(method + " " + choice);
 										}
 									}
 								}
@@ -250,16 +255,18 @@ public class Read_RunInputs {
 						for (String layer4 : sm_static_identifiers.get(3)) {		
 							
 							String combined_name = layer1 + layer2 + layer3 + layer4;
-							if (!sm_strata_without_sizeclass_and_covertype.contains(combined_name)) {
+							int strata_4layers_id = Collections.binarySearch(sm_strata_without_sizeclass_and_covertype, combined_name);
+							
+							if (strata_4layers_id < 0) {
 								sm_strata_without_sizeclass_and_covertype.add(combined_name);
 								sm_method_choice_for_strata_without_sizeclass_and_covertype.add(new ArrayList<String>());
+								strata_4layers_id = sm_strata_without_sizeclass_and_covertype.size() - 1;
 							}	
 							
-							int processing_id = sm_strata_without_sizeclass_and_covertype.indexOf(combined_name);									
 							for (String method : sm_method_choice.get(0)) {
 								for (String choice : sm_method_choice.get(1)) {
-									if (!sm_method_choice_for_strata_without_sizeclass_and_covertype.get(processing_id).contains(method + " " + choice)) {
-										sm_method_choice_for_strata_without_sizeclass_and_covertype.get(processing_id).add(method + " " + choice);
+									if (!sm_method_choice_for_strata_without_sizeclass_and_covertype.get(strata_4layers_id).contains(method + " " + choice)) {
+										sm_method_choice_for_strata_without_sizeclass_and_covertype.get(strata_4layers_id).add(method + " " + choice);
 									}
 								}
 							}

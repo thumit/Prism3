@@ -76,19 +76,19 @@ import prism_convenience_class.PrismTextAreaReadMe;
 import prism_convenience_class.ToolBarWithBgImage;
 import prism_project.data_process.LinkedList_Databases_Item;
 import prism_project.data_process.Read_Database;
-import prism_project.edit.Panel_EditRun;
+import prism_project.edit.Panel_Edit;
 import prism_project.output.Output_Panel_Flow_Constraints;
 import prism_project.output.Output_Panel_Management_Details_NOSQL;
 import prism_project.output.Output_Panel_Management_Details_SQL;
 import prism_project.output.Output_Panel_Management_Overview;
-import prism_project.solve.Panel_SolveRun;
+import prism_project.solve.Panel_Solve;
 import prism_root.OptionPane_Startup;
 import prism_root.PrismMain;
 @SuppressWarnings("serial")
 public class Panel_Project extends JLayeredPane {
 	private JSplitPane splitPanel;
-	private Panel_EditRun editPanel;		// This panel only visible when "Start Editing"
-	private Panel_SolveRun solvePanel;		// This panel only visible when "Start Solving"
+	private Panel_Edit editPanel;		// This panel only visible when "Start Editing"
+	private Panel_Solve solvePanel;		// This panel only visible when "Start Solving"
 	private JButton btnNewRun, btnDeleteRun;
 	private JButton btnEditRun;
 	private JButton btnRefresh;
@@ -1034,7 +1034,7 @@ public class Panel_Project extends JLayeredPane {
 				btnEditRun.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_back.png"));
 				btnEditRun.setForeground(Color.RED);
 				this.remove(splitPanel);
-				editPanel = new Panel_EditRun(listOfEditRuns, btnSave);		// This panel only visible when "Start Editing"	
+				editPanel = new Panel_Edit(listOfEditRuns, btnSave);		// This panel only visible when "Start Editing"	
 				this.add(editPanel);
 				this.setVisible(true); //----------------------------------------------
 			} 	
@@ -1127,7 +1127,7 @@ public class Panel_Project extends JLayeredPane {
 				this.remove(splitPanel);
 				
 				try {
-					solvePanel = new Panel_SolveRun(listOfEditRuns); // This panel only visible when "Start Solving"
+					solvePanel = new Panel_Solve(listOfEditRuns); // This panel only visible when "Start Solving"
 				} catch (Exception e) {
 				} finally {
 					if (solvePanel != null) {

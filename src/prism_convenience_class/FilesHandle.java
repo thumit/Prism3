@@ -32,7 +32,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import prism_project.edit.Panel_EditRun_Details;
+import prism_project.edit.Panel_Edit_Details;
 import prism_root.PrismMain;
 
 public class FilesHandle {
@@ -301,7 +301,7 @@ public class FilesHandle {
 				File file_StrataDefinition = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "strata_definition.csv");	
 				file_StrataDefinition.deleteOnExit();
 					
-				InputStream initialStream = Panel_EditRun_Details.class.getResourceAsStream("/strata_definition.csv");		//Default definition
+				InputStream initialStream = Panel_Edit_Details.class.getResourceAsStream("/strata_definition.csv");		//Default definition
 				byte[] buffer = new byte[initialStream.available()];
 				initialStream.read(buffer);
 

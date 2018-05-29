@@ -864,9 +864,30 @@ All changes in this block are associated with PrismAlpha1.1.05.jar, Prism Formul
 
 374. Some more optimization for speeding up constraints 12 nad 15 (loop using index not string for 12 & 15, 2 arrays to store original indexes for 15)
 375. Rewrite static identifiers boolean check in a different way, a little bit faster.
-376. Jagged array boost:
+376. Jagged array Memory Boost 7:
 	- Implemented for EA_E variables with changes made for variable-definitions and equations 9a, 9b, 12, 13, 15. Also remove rotation & conversion check to speed up run time
 	- Implemented for EA_R variables with changes made for variable-definitions and equations 12, 13, 14d, 15. Also remove rotation & conversion check to speed up run time
 	- Implemented for NG_R, PB_R, GS_R variables with changes made for variable-definitions and equations 12, 13, 14abc, 15
 All changes in this block are associated with PrismAlpha1.1.06.jar, Prism Formulation 07.docx, Prism Database 03.docx	
+--------------------------------------------------------------------------	
+
+377. RR Boost 7 completed: static --> non-static for Get_Variables_Information
+378. For all constraints, variables are added only when parameter is not zero (6b, 7b, 8b, 9b, 10b, 11b, 12, 14, 15). This is a memory boost
+379. Jagged array Memory Boost 7 - continue: 
+	- Implemented for NG_E, PB_E, GS_E, MS_E, BS_E variables with changes made for variable-definitions and equations 12, 15 and 6ab, 7ab, 8ab, 10ab, 11ab
+380. Remove many binary search when defining variables
+381. Modify output_05:
+	- Rewrite a number of places to make the output_05 compatible with the double boosts 7
+	- move executor services to submit inside the for loop of btn_GetResult, also add revalidate & repaint for some GUI components --> This would help fix bug in issue 79 in BitBucket.
+382. Permanently delete the second solving option (slow run time - large scale) since the fast option has a very good memory & speed management)
+383. Refactor:
+	- Panel_EditRun_Details --> Panel_Edit_Details
+	- Panel_EditRun --> Panel_Edit
+	- Panel_SolveRun --> Panel_Solve
+384. Change to add variables when parameters is not 0 ( not > or < 0) to allow errors show up (i.e. set up U conversion 200% --> infeasible). Changes were made for eq. 6b, 7b, 8b, 9b, 10b, 11b, 12, 14abcd
+385. Binary search is implemented for:
+	- RR Boost 3i: populate_sm_lists() in Read_RunInputs class --> Significantly reduce time for reading inputs
+	- RR Boost 3j: checking methods and choices when defining variables (sm_strata & sm_strata_without_sizeclass)
+	- Note: This boost requires to re-do the Silviculture Method for CGNF tests since the static identifiers in earlier versions were not sorted by the old UI --> Recommenrdation: rebuild new models from scratch, do not copy the too old models in the past to edit in Alpha1.1.07. The sorted Ui seems appreared from 1.1.01 (not sure)
+All changes in this block are associated with PrismAlpha1.1.07.jar, Prism Formulation 07.docx, Prism Database 03.docx	
 --------------------------------------------------------------------------	

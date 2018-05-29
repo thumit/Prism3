@@ -27,7 +27,7 @@ public class Get_Parameter_Information {
 		this.yield_tables_values = read_database.get_yield_tables_values();
 	}
 	
-	public double get_total_value(String var_name, int table_id_to_find, int row_id_to_find,
+	public double get_total_value(int table_id_to_find, int row_id_to_find,
 			List<String> parameters_indexes, List<String> dynamic_dentifiers_column_indexes, List<List<String>> dynamic_identifiers,
 			double cost_value) {
 		
