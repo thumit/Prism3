@@ -238,7 +238,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 				List<String> list;
 				list = Files.readAllLines(Paths.get(table_file.getAbsolutePath()), StandardCharsets.UTF_8);			
 				String[] a = list.toArray(new String[list.size()]);					
-												
+										
 				//Setup the table---------------------------------
 				input_columnNames = a[0].split(delimited);		//tab delimited		//Read the first row	
 				input_rowCount = a.length - 1;  // - 1st row which is the column name
