@@ -681,7 +681,7 @@ public class Panel_Project extends JLayeredPane {
 								thread.start();
 							}
 						});
-						popup.add(editMenuItem);
+						popup.add(editMenuItem);	
 					}
 									
 					
