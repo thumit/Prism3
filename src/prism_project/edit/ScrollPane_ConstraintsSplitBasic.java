@@ -43,7 +43,7 @@ import javax.swing.table.TableColumn;
 import prism_convenience_class.IconHandle;
 import prism_convenience_class.PrismTableModel;
 
-public class ScrollPane_ConstraintsSplitBasic  extends JScrollPane {
+public class ScrollPane_ConstraintsSplitBasic extends JScrollPane {
 
 	private List<JCheckBox> selected_staticCheckboxes;
 	private List<JCheckBox> selected_parametersCheckboxes;

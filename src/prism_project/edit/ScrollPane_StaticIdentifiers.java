@@ -47,8 +47,8 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 	public ScrollPane_StaticIdentifiers (Read_Database read_Database, int option, String panel_name) {
 		this.option = option;
 		
-		// option = 0 --> 6 layers		1 --> 4 layers       2 --> 6 layers + method_period      3 --> method_choice 
-		List<String> layers_Title = new ArrayList<>(read_Database.get_layers_Title());
+		// option = 0 --> 6 layers		1 --> 4 layers       2 --> 6 layers + method_period      3 --> method choice rotation_period rotation_age regen_layer5
+		List<String> layers_title = new ArrayList<>(read_Database.get_layers_Title());
 		List<String> layers_Title_ToolTip = new ArrayList<>(read_Database.get_layers_Title_ToolTip());
 		List<List<String>> allLayers = new ArrayList<>(read_Database.get_allLayers());
 		List<List<String>> allLayers_ToolTips = new ArrayList<>(read_Database.get_allLayers_ToolTips());
@@ -56,7 +56,7 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 		
 		if (option == 1) {
 			for (int count = 0; count <= 1; count++) {	// a loop to remove the last layer 2 times
-				layers_Title.remove(layers_Title.size() - 1);
+				layers_title.remove(layers_title.size() - 1);
 				layers_Title_ToolTip.remove(layers_Title_ToolTip.size() - 1);
 				allLayers.remove(allLayers.size() - 1);
 				allLayers_ToolTips.remove(allLayers_ToolTips.size() - 1);
@@ -69,7 +69,7 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 			List<String> method_period_layers_title = new ArrayList<>(read_Database.get_method_period_layers_title());
 			List<List<String>> method_period_layers = new ArrayList<>(read_Database.get_method_period_layers());
 
-			layers_Title.addAll(method_period_layers_title);
+			layers_title.addAll(method_period_layers_title);
 			layers_Title_ToolTip.addAll(method_period_layers_title);
 			allLayers.addAll(method_period_layers);
 			
@@ -92,7 +92,21 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 		
 		
 		if (option == 3) {
-			layers_Title.removeAll(layers_Title);
+			// Add 2 more into static identifiers
+			List<String> method_choice_rotationperiod_rotationage_regenlayer5_layers_title = new ArrayList<>(read_Database.get_method_choice_rotationperiod_rotationage_regenlayer5_layers_title());
+			List<List<String>> method_choice_rotationperiod_rotationage_regenlayer5_layers = new ArrayList<>(read_Database.get_method_choice_rotationperiod_rotationage_regenlayer5_layers());
+
+			layers_title.addAll(method_choice_rotationperiod_rotationage_regenlayer5_layers_title);
+			layers_Title_ToolTip.addAll(method_choice_rotationperiod_rotationage_regenlayer5_layers_title);
+			allLayers.addAll(method_choice_rotationperiod_rotationage_regenlayer5_layers);
+			
+			// Too tips
+			allLayers_ToolTips.addAll(method_choice_rotationperiod_rotationage_regenlayer5_layers);
+		}
+		
+		
+		if (option == 3) {
+			layers_title.removeAll(layers_title);
 			layers_Title_ToolTip.removeAll(layers_Title_ToolTip);
 			allLayers.removeAll(allLayers);
 			allLayers_ToolTips.removeAll(allLayers_ToolTips);			
@@ -102,7 +116,7 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 			List<String> method_choice_layers_title = new ArrayList<>(read_Database.get_method_choice_layers_title());
 			List<List<String>> method_choice_layers = new ArrayList<>(read_Database.get_method_choice_layers());
 
-			layers_Title.addAll(method_choice_layers_title);
+			layers_title.addAll(method_choice_layers_title);
 			layers_Title_ToolTip.addAll(method_choice_layers_title);
 			allLayers.addAll(method_choice_layers);
 			
@@ -124,6 +138,40 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 		}
 		
 		
+		if (option == 4) {		// This option is designed to use more attribute for silviculture method windows
+			// Add 2 more into static identifiers
+			List<String> method_choice_rotationperiod_rotationage_regenlayer5_layers_title = new ArrayList<>(read_Database.get_method_choice_rotationperiod_rotationage_regenlayer5_layers_title());
+			List<List<String>> method_choice_rotationperiod_rotationage_regenlayer5_layers = new ArrayList<>(read_Database.get_method_choice_rotationperiod_rotationage_regenlayer5_layers());
+
+			layers_title.addAll(method_choice_rotationperiod_rotationage_regenlayer5_layers_title);
+			layers_Title_ToolTip.addAll(method_choice_rotationperiod_rotationage_regenlayer5_layers_title);
+			allLayers.addAll(method_choice_rotationperiod_rotationage_regenlayer5_layers);
+			
+			// Tool tips
+			List<List<String>> tool_tip = new ArrayList<>(read_Database.get_method_choice_rotationperiod_rotationage_regenlayer5_layers());
+			allLayers_ToolTips.addAll(new ArrayList<>(tool_tip));
+			
+			for (int i = 0; i < allLayers_ToolTips.get(6).size(); i++) {	// 0 is method, 1 is period
+				if (allLayers_ToolTips.get(6).get(i).equals("NG_E")) 	allLayers_ToolTips.get(6).set(i, "Natural Growth existing: choices 0-4");
+				if (allLayers_ToolTips.get(6).get(i).equals("PB_E")) 	allLayers_ToolTips.get(6).set(i, "Prescribed Burn existing: choices 0-4");
+				if (allLayers_ToolTips.get(6).get(i).equals("GS_E")) 	allLayers_ToolTips.get(6).set(i, "Group Selection existing: choices 0-5");
+				if (allLayers_ToolTips.get(6).get(i).equals("EA_E")) 	allLayers_ToolTips.get(6).set(i, "Even Age existing: choices 0-5");
+				if (allLayers_ToolTips.get(6).get(i).equals("MS_E")) 	allLayers_ToolTips.get(6).set(i, "Mixed Severity Wildfire: choices 0-11");
+				if (allLayers_ToolTips.get(6).get(i).equals("BS_E")) 	allLayers_ToolTips.get(6).set(i, "Severe Bark Beetle: choices 0-4");
+				if (allLayers_ToolTips.get(6).get(i).equals("NG_R")) 	allLayers_ToolTips.get(6).set(i, "Natural Growth regeneration: choices 0-4");
+				if (allLayers_ToolTips.get(6).get(i).equals("PB_R")) 	allLayers_ToolTips.get(6).set(i, "Prescribed Burn regeneration: choices 0-4");
+				if (allLayers_ToolTips.get(6).get(i).equals("GS_R")) 	allLayers_ToolTips.get(6).set(i, "Group Selection regeneration: choices 0-5");
+				if (allLayers_ToolTips.get(6).get(i).equals("EA_R")) 	allLayers_ToolTips.get(6).set(i, "Even Age regeneration: choices 0-5");		
+			}	
+			
+//			// Remove the last 3 layers, might be used later in the future if we want to use more attributes
+//			for (int count = 0; count <= 2; count++) {	// a loop to remove the last layer 3 times = remove 3 layers
+//				layers_title.remove(layers_title.size() - 1);
+//				layers_Title_ToolTip.remove(layers_Title_ToolTip.size() - 1);
+//				allLayers.remove(allLayers.size() - 1);
+//				allLayers_ToolTips.remove(allLayers_ToolTips.size() - 1);
+//			}
+		}
 		
 		
 		int total_staticIdentifiers = allLayers.size();
@@ -141,13 +189,16 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 	    layers_Title_Label = new ArrayList<JLabel>();
 		for (int i = 0; i < total_staticIdentifiers; i++) {
 			
-			JLabel title = new JLabel(layers_Title.get(i));
+			JLabel title = new JLabel(layers_title.get(i));
 			String title_tooltip = layers_Title_ToolTip.get(i);
 			
 			layers_Title_Label.add(title);
-			if (i == 5 && (option == 0 || option == 2)){
+			if (layers_title.get(i).equals("layer6")) {
 				title.setForeground(Color.RED);
 				layers_Title_Label.get(i).setToolTipText(title_tooltip + " (only apply to existing strata, i.e. methods with _E)");
+			} else if (layers_title.get(i).equals("rotation_period") || layers_title.get(i).equals("rotation_age") || layers_title.get(i).equals("regen_layer5")) {
+				title.setForeground(Color.BLUE);
+				layers_Title_Label.get(i).setToolTipText(title_tooltip + " (only apply to even-age methods, i.e. EA_E and EA_R)");
 			} else {
 				layers_Title_Label.get(i).setToolTipText(title_tooltip);
 			}					
@@ -193,9 +244,14 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 				checkboxStaticIdentifiers.get(i).add(new JCheckBox(allLayers.get(i).get(j)));
 				checkboxStaticIdentifiers.get(i).get(j).setToolTipText(allLayers_ToolTips.get(i).get(j));
 				checkboxStaticIdentifiers.get(i).get(j).setSelected(true);
-				if (i == 5 && (option == 0 || option == 2)){
+				
+				if (layers_title.get(i).equals("layer6")) {
 					checkboxStaticIdentifiers.get(i).get(j).setForeground(Color.RED);
-				}			
+				} else if (layers_title.get(i).equals("rotation_period") || layers_title.get(i).equals("rotation_age") || layers_title.get(i).equals("regen_layer5")) {
+					checkboxStaticIdentifiers.get(i).get(j).setForeground(Color.BLUE);
+				} else {
+					
+				}
 				
 				c1.gridx = i;
 				c1.gridy = j + 1;

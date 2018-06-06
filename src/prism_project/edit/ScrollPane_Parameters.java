@@ -43,9 +43,8 @@ public class ScrollPane_Parameters extends JScrollPane {
 	private List<JCheckBox> checkboxParameter;
 	private JPanel parametersPanel;
 	
-	public ScrollPane_Parameters(Read_Database read_Database) {		
-		
-		String[] yieldTable_ColumnNames = read_Database.get_yield_tables_column_names();
+	public ScrollPane_Parameters(Read_Database read_database) {		
+		String[] yield_tables_column_names = read_database.get_yield_tables_column_names();
 		
 		parametersPanel = new JPanel();	
 		parametersPanel.setLayout(new GridBagLayout());
@@ -57,17 +56,26 @@ public class ScrollPane_Parameters extends JScrollPane {
 		setViewportView(parametersPanel);
 		setViewportBorder(null);
 	    		
-		if (yieldTable_ColumnNames != null && checkboxParameter == null) {				
+		if (yield_tables_column_names != null && checkboxParameter == null) {				
 			checkboxParameter = new ArrayList<JCheckBox>();
 			
-			for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
-				String YTcolumnName = yieldTable_ColumnNames[i];
+			for (int i = 0; i < yield_tables_column_names.length; i++) {
+				String YTcolumnName = yield_tables_column_names[i];
 
 				checkboxParameter.add(new JCheckBox(YTcolumnName));		//add checkbox
-				String tip = read_Database.get_ParameterToolTip(YTcolumnName) + " (Column index: " + i + ")";
+				String tip = read_database.get_ParameterToolTip(YTcolumnName) + " (Column index: " + i + ")";
 				checkboxParameter.get(i).setToolTipText(tip);		//add toolTip
-				if (!tip.contains("per Acre")) {	// Disable Parameter check box if unit is not per Acre
+				
+//				// Disable Parameter check box if unit is not per Acre
+//				if (!tip.contains("per Acre")) {
 //					checkboxParameter.get(i).setEnabled(false);
+//				}
+//				
+				// Disable Parameter check box if the minimum unique value is not a double 
+				try {
+					Double.parseDouble(read_database.get_col_unique_values_list(i).get(0));
+				} catch (NumberFormatException e) {
+					checkboxParameter.get(i).setEnabled(false);
 				}
 				
 				// add checkboxParameter to the Panel
@@ -113,7 +121,7 @@ public class ScrollPane_Parameters extends JScrollPane {
 				public void actionPerformed(ActionEvent actionEvent) {
 					if (checkboxNoParameter.isSelected()) {
 						checkboxCostParameter.setSelected(false);
-						for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
+						for (int i = 0; i < yield_tables_column_names.length; i++) {
 							checkboxParameter.get(i).setSelected(false);
 						} 
 					}
@@ -127,7 +135,7 @@ public class ScrollPane_Parameters extends JScrollPane {
 				public void actionPerformed(ActionEvent actionEvent) {
 					if (checkboxCostParameter.isSelected()) {
 						checkboxNoParameter.setSelected(false);
-						for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
+						for (int i = 0; i < yield_tables_column_names.length; i++) {
 							checkboxParameter.get(i).setSelected(false);
 						} 
 					}
@@ -136,8 +144,8 @@ public class ScrollPane_Parameters extends JScrollPane {
 			
 			
 			// Add listeners to checkBox so if then name has AllSx then other checkbox would be deselected 
-			for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
-				String currentCheckBoxName = yieldTable_ColumnNames[i];
+			for (int i = 0; i < yield_tables_column_names.length; i++) {
+				String currentCheckBoxName = yield_tables_column_names[i];
 				int currentCheckBoxIndex = i;
 				
 				checkboxParameter.get(i).addActionListener(new ActionListener() {	
@@ -170,7 +178,7 @@ public class ScrollPane_Parameters extends JScrollPane {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				checkboxNoParameter.setSelected(true);
-				for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
+				for (int i = 0; i < yield_tables_column_names.length; i++) {
 					checkboxParameter.get(i).setSelected(false);
 				} 
 				checkboxCostParameter.setSelected(false);

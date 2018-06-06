@@ -39,7 +39,7 @@ import javax.swing.border.TitledBorder;
 import prism_convenience_class.PrismTableModel;
 import prism_convenience_class.TableColumnsHandle;
 
-public class ScrollPane_ConstraintsSplitFly  extends JScrollPane {
+public class ScrollPane_ConstraintsSplitFly extends JScrollPane {
 
 	private List<JCheckBox> selected_staticCheckboxes;
 	private List<JCheckBox> selected_parametersCheckboxes;

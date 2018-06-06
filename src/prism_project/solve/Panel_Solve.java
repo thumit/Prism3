@@ -36,6 +36,9 @@ import java.io.PrintStream;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -400,14 +403,14 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			// Read input files to retrieve values later
 			Read_RunInputs read = new Read_RunInputs();
 			read.read_general_inputs(new File(runFolder.getAbsolutePath() + "/input_01_general_inputs.txt"));
-			read.read_silviculture_method(new File(runFolder.getAbsolutePath() + "/input_02_silviculture_method.txt"));
-			read.read_model_strata(new File(runFolder.getAbsolutePath() + "/input_03_model_strata.txt"));
-			read.read_covertype_conversion_clearcut(new File(runFolder.getAbsolutePath() + "/input_04_covertype_conversion_clearcut.txt"));
-			read.read_natural_disturbances_non_replacing(new File(runFolder.getAbsolutePath() + "/input_06_natural_disturbances_non_replacing.txt"));
-			read.read_natural_disturbances_replacing(new File(runFolder.getAbsolutePath() + "/input_07_natural_disturbances_replacing.txt"));
-			read.read_management_cost(new File(runFolder.getAbsolutePath() + "/input_08_management_cost.txt"));
-			read.read_basic_constraints(new File(runFolder.getAbsolutePath() + "/input_09_basic_constraints.txt"));
-			read.read_flow_constraints(new File(runFolder.getAbsolutePath() + "/input_10_flow_constraints.txt"));
+			read.read_model_strata(new File(runFolder.getAbsolutePath() + "/input_02_model_strata.txt"));
+			read.read_non_ea_management(new File(runFolder.getAbsolutePath() + "/input_03_non_ea_management.txt"));
+			read.read_ea_management(new File(runFolder.getAbsolutePath() + "/input_04_ea_management.txt"));
+			read.read_nonreplacing_disturbances(new File(runFolder.getAbsolutePath() + "/input_05_non_sr_disturbances.txt"));
+			read.read_replacing_disturbances(new File(runFolder.getAbsolutePath() + "/input_06_sr_disturbances.txt"));
+			read.read_management_cost(new File(runFolder.getAbsolutePath() + "/input_07_management_cost.txt"));
+			read.read_basic_constraints(new File(runFolder.getAbsolutePath() + "/input_08_basic_constraints.txt"));
+			read.read_flow_constraints(new File(runFolder.getAbsolutePath() + "/input_09_flow_constraints.txt"));
 			
 			// Get info: input_01_general_inputs
 			int total_periods = read.get_total_periods();
@@ -418,13 +421,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			boolean is_problem_exported = read.get_export_problem();
 			boolean is_solution_exported = read.get_export_solution();
 						
-			// Get info: input_02_silviculture_method
-			List<String> sm_strata = read.get_sm_strata();
-			List<String> sm_strata_without_sizeclass = read.get_sm_strata_without_sizeclass();
-			List<List<String>> sm_method_choice_for_strata = read.get_sm_method_choice_for_strata();
-			List<List<String>> sm_method_choice_for_strata_without_sizeclass = read.get_sm_method_choice_for_strata_without_sizeclass();
-			
-			// Get info: input_03_modeled_strata
+			// Get info: input_02_model_strata
 			List<String> model_strata = read.get_model_strata();
 			List<String> model_strata_without_sizeclass_and_covertype = read.get_model_strata_without_sizeclass_and_covertype(); 
 			List<String> model_strata_without_sizeclass = new ArrayList<String>();
@@ -434,22 +431,61 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 				}
 			}
 			
-						
-			// Get Info: input_04_covertype_conversion_clearcut
+			// Get info: input_03_non_ea_management
+			List<String> sm_strata = read.get_sm_strata();
+			List<String> sm_strata_without_sizeclass = read.get_sm_strata_without_sizeclass();
+			List<List<String>> sm_method_choice_for_strata = read.get_sm_method_choice_for_strata();
+			List<List<String>> sm_method_choice_for_strata_without_sizeclass = read.get_sm_method_choice_for_strata_without_sizeclass();
+			boolean is_sm_defined_with_some_rows = (sm_strata != null) ? true : false;
+			
+			// Trim the strata which is not in the model strata but in the sm_strata
+			List<String> sm_strata_new = new ArrayList<String>();
+			List<List<String>> sm_method_choice_for_strata_new = new ArrayList<List<String>>();
+			if (sm_strata != null) {
+				for (String strata : model_strata) {
+					int sm_strata_id = Collections.binarySearch(sm_strata, strata);
+					if (sm_strata_id >= 0) {
+						sm_strata_new.add(sm_strata.get(sm_strata_id));
+						sm_method_choice_for_strata_new.add(sm_method_choice_for_strata.get(sm_strata_id));
+					}
+					
+				}
+			}
+			
+			List<String> sm_strata_without_sizeclass_new = new ArrayList<String>();
+			List<List<String>> sm_method_choice_for_strata_without_sizeclass_new = new ArrayList<List<String>>();
+			if (sm_strata_without_sizeclass != null) {
+				for (String strata : model_strata_without_sizeclass) {
+					int sm_strata_id = Collections.binarySearch(sm_strata_without_sizeclass, strata);
+					if (sm_strata_id >= 0) {
+						sm_strata_without_sizeclass_new.add(sm_strata_without_sizeclass.get(sm_strata_id));
+						sm_method_choice_for_strata_without_sizeclass_new.add(sm_method_choice_for_strata_without_sizeclass.get(sm_strata_id));
+					}
+					
+				}
+			}
+			
+			sm_strata = null;
+			sm_method_choice_for_strata = sm_method_choice_for_strata_new;
+			sm_strata_without_sizeclass = null;
+			sm_method_choice_for_strata_without_sizeclass = sm_method_choice_for_strata_without_sizeclass_new;
+			
+			
+			// Get Info: input_04_ea_management
 			List<String> covertype_conversions_and_existing_rotation_ages = read.get_covertype_conversions_and_existing_rotation_ages();	
 			List<String> covertype_conversions_and_regeneration_rotation_ages = read.get_covertype_conversions_and_regeneration_rotation_ages();
 			
-			// Get info: input_06_natural_disturbances_non_replacing
+			// Get info: input_05_non_sr_disturbances
 			double[] msProportion = read.getMSFireProportion();
 			double[] bsProportion = read.getBSFireProportion();
 			
-			// Get Info: input_07_natural_disturbances_replacing
+			// Get Info: input_06_sr_disturbances
 			List<String> disturbance_condition_list = read.get_disturbance_condition_list(); 
 			
-			// Get info: input_08_management_cost
+			// Get info: input_07_management_cost
 			List<String> cost_condition_list = read.get_cost_condition_list(); 
 			
-			// Get info: input_09_basic_constraints
+			// Get info: input_08_basic_constraints
 			List<String> constraint_column_names_list = read.get_constraint_column_names_list();
 			String[][] bc_values = read.get_bc_values();		
 			int total_softConstraints = read.get_total_softConstraints();
@@ -462,7 +498,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			double[] hardConstraints_UB = read.get_hardConstraints_UB();	
 			int total_freeConstraints = read.get_total_freeConstraints();
 			
-			// Get info: input_10_flow_constraints	
+			// Get info: input_09_flow_constraints	
 			List<List<List<Integer>>> flow_set_list = read.get_flow_set_list();
 			List<Integer> flow_id_list = read.get_flow_id_list();
 			List<String> flow_description_list = read.get_flow_description_list();
@@ -690,9 +726,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 				
 				xNGe[strata_id] = new int[total_NGe_Prescriptions][];
 				for (int i = 0; i < total_NGe_Prescriptions; i++) {
-					int sm_strata_id = Collections.binarySearch(sm_strata, strata);
-					if (sm_strata == null || 
-							(sm_strata_id >= 0 && sm_method_choice_for_strata.get(sm_strata_id).contains("NG_E" + " " + i))) {	// Boost 1 (a.k.a. Silviculture Method)				
+					if (!is_sm_defined_with_some_rows || sm_method_choice_for_strata.get(strata_id).contains("NG_E" + " " + i)) {	// Boost 1 (a.k.a. Silviculture Method)				
 						
 						xNGe[strata_id][i] = new int[total_periods + 1];
 						for (int t = 1; t <= total_periods; t++) {
@@ -731,9 +765,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 				
 				xPBe[strata_id] = new int[total_PBe_Prescriptions][];
 				for (int i = 0; i < total_PBe_Prescriptions; i++) {
-					int sm_strata_id = Collections.binarySearch(sm_strata, strata);
-					if (sm_strata == null || 
-							(sm_strata_id >= 0 && sm_method_choice_for_strata.get(sm_strata_id).contains("PB_E" + " " + i))) {	// Boost 1 (a.k.a. Silviculture Method)	
+					if (!is_sm_defined_with_some_rows || sm_method_choice_for_strata.get(strata_id).contains("PB_E" + " " + i)) {	// Boost 1 (a.k.a. Silviculture Method)	
 						
 						xPBe[strata_id][i] = new int[total_periods + 1];
 						for (int t = 1; t <= total_periods; t++) {
@@ -772,9 +804,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 				
 				xGSe[strata_id] = new int[total_GSe_Prescriptions][];
 				for (int i = 0; i < total_GSe_Prescriptions; i++) {
-					int sm_strata_id = Collections.binarySearch(sm_strata, strata);
-					if (sm_strata == null || 
-							(sm_strata_id >= 0 && sm_method_choice_for_strata.get(sm_strata_id).contains("GS_E" + " " + i))) {	// Boost 1 (a.k.a. Silviculture Method)	
+					if (!is_sm_defined_with_some_rows || sm_method_choice_for_strata.get(strata_id).contains("GS_E" + " " + i)) {	// Boost 1 (a.k.a. Silviculture Method)		
 						
 						xGSe[strata_id][i] = new int[total_periods + 1];
 						for (int t = 1; t <= total_periods; t++) {
@@ -821,9 +851,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 						if (covertype_conversions_and_existing_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
 							xEAe[strata_id][tR][s5R] = new int[total_EAe_Prescriptions][];
 							for (int i = 0; i < total_EAe_Prescriptions; i++) {
-								int sm_strata_id = Collections.binarySearch(sm_strata, strata);
-								if (sm_strata == null || 
-										(sm_strata_id >= 0 && sm_method_choice_for_strata.get(sm_strata_id).contains("EA_E" + " " + i))) {	// Boost 1 (a.k.a. Silviculture Method)	
+								if (!is_sm_defined_with_some_rows || sm_method_choice_for_strata.get(strata_id).contains("EA_E" + " " + i)) {	// Boost 1 (a.k.a. Silviculture Method)	
 									
 									xEAe[strata_id][tR][s5R][i] = new int[total_periods + 1];
 									for (int t = 1; t <= tR; t++) {
@@ -865,9 +893,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 				
 				xMS[strata_id] = new int[total_MS_Prescriptions][];
 				for (int i = 0; i < total_MS_Prescriptions; i++) {
-					int sm_strata_id = Collections.binarySearch(sm_strata, strata);
-					if (sm_strata == null || 
-							(sm_strata_id >= 0 && sm_method_choice_for_strata.get(sm_strata_id).contains("MS_E" + " " + i))) {	// Boost 1 (a.k.a. Silviculture Method)	
+					if (!is_sm_defined_with_some_rows || sm_method_choice_for_strata.get(strata_id).contains("MS_E" + " " + i)) {	// Boost 1 (a.k.a. Silviculture Method)	
 						
 						xMS[strata_id][i] = new int[total_periods + 1];
 						for (int t = 1; t <= total_periods; t++) {
@@ -906,9 +932,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 				
 				xBS[strata_id] = new int[total_BS_Prescriptions][];
 				for (int i = 0; i < total_BS_Prescriptions; i++) {
-					int sm_strata_id = Collections.binarySearch(sm_strata, strata);
-					if (sm_strata == null || 
-							(sm_strata_id >= 0 && sm_method_choice_for_strata.get(sm_strata_id).contains("BS_E" + " " + i))) {	// Boost 1 (a.k.a. Silviculture Method)	
+					if (!is_sm_defined_with_some_rows || sm_method_choice_for_strata.get(strata_id).contains("BS_E" + " " + i)) {	// Boost 1 (a.k.a. Silviculture Method)	
 						
 						xBS[strata_id][i] = new int[total_periods + 1];
 						for (int t = 1; t <= total_periods; t++) {
@@ -947,9 +971,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 				
 				xNGr[strata_5layers_id] = new int[total_NGr_Prescriptions][][];
 				for (int i = 0; i < total_NGr_Prescriptions; i++) {
-					int sm_strata_5layers_id = Collections.binarySearch(sm_strata_without_sizeclass, strata);
-					if (sm_strata_without_sizeclass == null ||
-							(sm_strata_5layers_id >= 0 && sm_method_choice_for_strata_without_sizeclass.get(sm_strata_5layers_id).contains("NG_R" + " " + i))) {	// Boost 1 (a.k.a. Silviculture Method)
+					if (!is_sm_defined_with_some_rows || sm_method_choice_for_strata_without_sizeclass.get(strata_5layers_id).contains("NG_R" + " " + i)) {	// Boost 1 (a.k.a. Silviculture Method)
 						
 						xNGr[strata_5layers_id][i] = new int[total_periods + 1][];
 						for (int t = 2; t <= total_periods; t++) {
@@ -991,9 +1013,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 				
 				xPBr[strata_5layers_id] = new int[total_PBr_Prescriptions][][];
 				for (int i = 0; i < total_PBr_Prescriptions; i++) {
-					int sm_strata_5layers_id = Collections.binarySearch(sm_strata_without_sizeclass, strata);
-					if (sm_strata_without_sizeclass == null ||
-							(sm_strata_5layers_id >= 0 && sm_method_choice_for_strata_without_sizeclass.get(sm_strata_5layers_id).contains("PB_R" + " " + i))) {	// Boost 1 (a.k.a. Silviculture Method)
+					if (!is_sm_defined_with_some_rows || sm_method_choice_for_strata_without_sizeclass.get(strata_5layers_id).contains("PB_R" + " " + i)) {	// Boost 1 (a.k.a. Silviculture Method)
 						
 						xPBr[strata_5layers_id][i] = new int[total_periods + 1][];
 						for (int t = 2; t <= total_periods; t++) {
@@ -1035,9 +1055,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 				
 				xGSr[strata_5layers_id] = new int[total_GSr_Prescriptions][][];
 				for (int i = 0; i < total_GSr_Prescriptions; i++) {
-					int sm_strata_5layers_id = Collections.binarySearch(sm_strata_without_sizeclass, strata);
-					if (sm_strata_without_sizeclass == null ||
-							(sm_strata_5layers_id >= 0 && sm_method_choice_for_strata_without_sizeclass.get(sm_strata_5layers_id).contains("GS_R" + " " + i))) {	// Boost 1 (a.k.a. Silviculture Method)
+					if (!is_sm_defined_with_some_rows || sm_method_choice_for_strata_without_sizeclass.get(strata_5layers_id).contains("GS_R" + " " + i)) {	// Boost 1 (a.k.a. Silviculture Method)
 						
 						xGSr[strata_5layers_id][i] = new int[total_periods + 1][];
 						for (int t = 2; t <= total_periods; t++) {
@@ -1088,9 +1106,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 							if (covertype_conversions_and_regeneration_rotation_ages.contains(thisCoverTypeconversion_and_RotationAge)) {
 								xEAr[strata_5layers_id][tR][aR][s5R] = new int[total_EAr_Prescriptions][];
 								for (int i = 0; i < total_EAr_Prescriptions; i++) {
-									int sm_strata_5layers_id = Collections.binarySearch(sm_strata_without_sizeclass, strata);
-									if (sm_strata_without_sizeclass == null ||
-											(sm_strata_5layers_id >= 0 && sm_method_choice_for_strata_without_sizeclass.get(sm_strata_5layers_id).contains("EA_R" + " " + i))) {	// Boost 1 (a.k.a. Silviculture Method)
+									if (!is_sm_defined_with_some_rows || sm_method_choice_for_strata_without_sizeclass.get(strata_5layers_id).contains("EA_R" + " " + i)) {	// Boost 1 (a.k.a. Silviculture Method)
 										
 										xEAr[strata_5layers_id][tR][aR][s5R][i] = new int[total_periods + 1];
 										for (int t = tR - aR + 1; t <= tR; t++) {
@@ -2740,10 +2756,9 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 				
 				List<String> static_strata = read.get_static_strata(id);
 				List<String> static_strata_without_sizeclass = read.get_static_strata_without_sizeclass(id);
-				List<String> static_strata_without_sizeclass_and_covertype = read.get_static_strata_without_sizeclass_and_covertype(id);
 				
 				int multiplier_col = constraint_column_names_list.indexOf("bc_multiplier");
-				double multiplier = (!bc_values[id][multiplier_col].equals("null")) ?  Double.parseDouble(bc_values[id][multiplier_col]) : 0;	//if multiplier = null --> 0
+				double multiplier = (!bc_values[id][multiplier_col].equals("null")) ?  Double.parseDouble(bc_values[id][multiplier_col]) : 0;	// if multiplier = null --> 0
 				
 							
 				// Very important to keep the same elements of 1: model_strata vs static_strata
@@ -2751,10 +2766,8 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 				// These 4 lines help remove the IF THEN (to check static_identifiers) in all variables in equation 15 below.
 				List<String> common_strata = new ArrayList<String>(model_strata);
 				List<String> common_strata_without_sizeclass = new ArrayList<String>(model_strata_without_sizeclass);
-				List<String> common_trata_without_sizeclass_and_covertype = new ArrayList<String>(model_strata_without_sizeclass_and_covertype);
 				common_strata.retainAll(static_strata);
 				common_strata_without_sizeclass.retainAll(static_strata_without_sizeclass);
-				common_trata_without_sizeclass_and_covertype.retainAll(static_strata_without_sizeclass_and_covertype);
 				
 				// These 2 arrays below are used to store the original id
 				int[] original_strata_id = new int[common_strata.size()];
@@ -3681,8 +3694,8 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 					// create a table inside the database.db
 					import_file_as_table_into_database(output_management_details_file[row], file_database[row]);
 					
-					// fly_constraints --> don't need to create this file, just delete the old file
-					output_fly_constraints_file[row].delete();		
+					// fly_constraints --> don't need to create this file. Just clear query_value if this file exists
+					clear_query_value_for_fly_constraints(output_fly_constraints_file[row]);		
 					
 					
 					// output_06_basic_constraints
@@ -3749,6 +3762,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 						}
 						output_basic_constraints_file[row].createNewFile();					
 					}							
+					
 					
 					// output_07_flow_constraints 					
 					if (flow_set_list.size() > 0) {		// write flow constraints if there is at least a flow set
@@ -4249,8 +4263,8 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 					// create a table inside the database.db
 					import_file_as_table_into_database(output_management_details_file[row], file_database[row]);
 					
-					// fly_constraints --> don't need to create this file, just delete the old file
-					output_fly_constraints_file[row].delete();		
+					// fly_constraints --> don't need to create this file. Just clear query_value if this file exists
+					clear_query_value_for_fly_constraints(output_fly_constraints_file[row]);		
 					
 					
 					// output_06_basic_constraints
@@ -4317,6 +4331,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 						}
 						output_basic_constraints_file[row].createNewFile();					
 					}							
+					
 					
 					// output_07_flow_constraints 					
 					if (flow_set_list.size() > 0) {		// write flow constraints if there is at least a flow set
@@ -4445,10 +4460,16 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			data[row][4] = "fail";
 			model.fireTableDataChanged();
 			
-			output_variables_file[row].delete();
-			output_constraints_file[row].delete();	
+			problem_file[row].delete();
+			solution_file[row].delete();
 			output_general_outputs_file[row].delete();	
+			output_variables_file[row].delete();
+			output_constraints_file[row].delete();
 			output_management_overview_file[row].delete();
+			output_management_details_file[row].delete();	
+			clear_query_value_for_fly_constraints(output_fly_constraints_file[row]);	
+			output_basic_constraints_file[row].delete();
+			output_flow_constraints_file[row].delete();
 		} catch (LpSolveException e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Panel Solve Runs   -   LPSOLVE exception for " + listOfEditRuns[row].getName());
 			
@@ -4456,10 +4477,16 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			data[row][4] = "fail";
 			model.fireTableDataChanged();
 			
+			problem_file[row].delete();
+			solution_file[row].delete();
+			output_general_outputs_file[row].delete();	
 			output_variables_file[row].delete();
 			output_constraints_file[row].delete();
-			output_general_outputs_file[row].delete();
 			output_management_overview_file[row].delete();
+			output_management_details_file[row].delete();	
+			clear_query_value_for_fly_constraints(output_fly_constraints_file[row]);	
+			output_basic_constraints_file[row].delete();
+			output_flow_constraints_file[row].delete();
 		}		
 		catch (Exception e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Panel Solve Runs   -   Input files exception for " + listOfEditRuns[row].getName());
@@ -4468,10 +4495,16 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			data[row][4] = "fail";
 			model.fireTableDataChanged();
 			
+			problem_file[row].delete();
+			solution_file[row].delete();
+			output_general_outputs_file[row].delete();	
 			output_variables_file[row].delete();
 			output_constraints_file[row].delete();
-			output_general_outputs_file[row].delete();
 			output_management_overview_file[row].delete();
+			output_management_details_file[row].delete();	
+			clear_query_value_for_fly_constraints(output_fly_constraints_file[row]);	
+			output_basic_constraints_file[row].delete();
+			output_flow_constraints_file[row].delete();
 		} finally {
 			System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------------");
 		}
@@ -4572,4 +4605,39 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 	}
 	
 	
+	
+	private void clear_query_value_for_fly_constraints(File file) {
+		try {		
+			if (file.exists()) {
+				// All lines to be in array
+				List<String> list;
+				list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
+				String[] a = list.toArray(new String[list.size()]);
+									
+				int totalRows = a.length;
+				int totalColumns = a[0].split("\t").length;				
+			
+				try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(file))) {
+					fileOut.write(a[0]);	// the columns headers, 1st row
+					// read and write all values from all rows and columns except the query_value (last column) in the row >=1
+					for (int i = 1; i < totalRows; i++) {
+						fileOut.newLine();
+						
+						String[] rowValue = a[i].split("\t");
+						for (int j = 0; j < totalColumns; j++) {
+							if (j == totalColumns - 1) {	// this is the query_value column (last column)
+								rowValue[j] = null;
+							}
+							fileOut.write(rowValue[j] + "\t");
+						}
+					}
+					fileOut.close();
+				} catch (IOException e) {
+					System.err.println(e.getClass().getName() + ": " + e.getMessage());
+				} 
+			}
+		} catch (IOException e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+		}
+	}
 }

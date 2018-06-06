@@ -34,8 +34,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.LinkedList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import prism_convenience_class.FilesHandle;
 import prism_convenience_class.StringHandle;
@@ -44,6 +45,7 @@ public class Read_Database {
 	private Object[][][] yield_tables_values;
 	private Object[] yield_tables_names;
 	private String[] yield_tables_column_names;
+	private List<String>[] unique_values_list;
 	
 	private String[][] existing_strata_values;
 	private String[][] strata_definition_values;	
@@ -57,12 +59,12 @@ public class Read_Database {
 	private ResultSet rs = null;
 	private ResultSetMetaData rsmd = null;
 	
-	private File file_Database;
+	private File file_database;
 	
 	private LinkedList_Layers layers;
 	
-	public Read_Database(File file_Database) {
-		this.file_Database = file_Database;
+	public Read_Database(File file_database) {
+		this.file_database = file_database;
 		
 		
 		Read_strata_definition();
@@ -117,9 +119,9 @@ public class Read_Database {
 	
 	private void Read_yield_tables() {		
 		try {			
-			if (file_Database.exists()) {	
+			if (file_database.exists()) {	
 				Class.forName("org.sqlite.JDBC").newInstance();
-				conn = DriverManager.getConnection("jdbc:sqlite:" + file_Database);
+				conn = DriverManager.getConnection("jdbc:sqlite:" + file_database);
 				st = conn.createStatement();
 
 				
@@ -151,18 +153,44 @@ public class Read_Database {
 				yield_tables_column_names = new String[colCount];
 				for (int i = 1; i <= colCount; i++) {		// this start from 1
 					yield_tables_column_names[i-1] = rsmd.getColumnName(i);			// Note that tableColumnNames start from 0
-				}				
+				}		
 				
-				// get values for each table
+				// These are arrays, each is a Set of unique values of a column in the database yield_tables
+				Set<String>[] yield_tables_column_unique_values = new LinkedHashSet[colCount];
+				for (int col = 0; col < colCount; col++) {
+					yield_tables_column_unique_values[col] = new LinkedHashSet<>();
+				}
+				
+				// get values for each table & unique values for each column
 				for (int i = 0; i < yield_tables_values.length; i++) {
 					for (int row = 0; row < yield_tables_values[i].length; row++) {
 						rs.next();
 						yield_tables_values[i][row] = new Object[colCount];
 						for (int col = 0; col < colCount; col++) {
-							yield_tables_values[i][row][col] = rs.getString(col + 1);
+							String value = rs.getString(col + 1);
+							yield_tables_values[i][row][col] = value;
+							yield_tables_column_unique_values[col].add(value);
 						}
 					}
-				}							
+				}		
+				
+				// Convert sets to lists and sort the Lists  --- Important note: we always prefer SORTING DOUBLE
+				unique_values_list = new ArrayList[colCount];
+				for (int col = 0; col < colCount; col++) {
+					unique_values_list[col] = new ArrayList<String>(yield_tables_column_unique_values[col]);
+					// Sort the list	
+					try {
+						Collections.sort(unique_values_list[col], new Comparator<String>() {
+							@Override
+							public int compare(String o1, String o2) {
+								return Double.valueOf(o1).compareTo(Double.valueOf(o2));	// Sort Double
+							}
+						});
+					} catch (Exception e1) {
+						Collections.sort(unique_values_list[col]);	// Sort String
+					}
+				}
+				yield_tables_column_unique_values = null;	// clear to save memory
 			}
 		} catch (Exception e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Read_Database   -   Database connection error");
@@ -178,9 +206,9 @@ public class Read_Database {
 	
 	private void Read_existing_strata() {		
 		try {			
-			if (file_Database.exists()) {	
+			if (file_database.exists()) {	
 				Class.forName("org.sqlite.JDBC").newInstance();
-				conn = DriverManager.getConnection("jdbc:sqlite:" + file_Database);
+				conn = DriverManager.getConnection("jdbc:sqlite:" + file_database);
 				st = conn.createStatement();
 
 				
@@ -220,9 +248,9 @@ public class Read_Database {
 	
 	private void Read_strata_definition() {		
 		try {			
-			if (file_Database.exists()) {	
+			if (file_database.exists()) {	
 				Class.forName("org.sqlite.JDBC").newInstance();
-				conn = DriverManager.getConnection("jdbc:sqlite:" + file_Database);
+				conn = DriverManager.getConnection("jdbc:sqlite:" + file_database);
 				st = conn.createStatement();
 
 				
@@ -343,30 +371,54 @@ public class Read_Database {
 		return action_type;
 	}
 	
-	public List<String> get_col_unique_values_list(int columnIndex) {
-		List<String> unique_values_list = new ArrayList<String>();
+	public List<String> get_col_unique_values_list(int col) {
+//		// Using SQL query: Same performance as as Using Set
+//		List<String> unique_values_list = new ArrayList<String>();
+//		try {			
+//			if (file_database.exists()) {	
+//				Class.forName("org.sqlite.JDBC").newInstance();
+//				conn = DriverManager.getConnection("jdbc:sqlite:" + file_database);
+//				st = conn.createStatement();
+//				
+//				rs = st.executeQuery("SELECT DISTINCT " + yield_tables_column_names[columnIndex] + " FROM yield_tables;");
+//				while (rs.next()) {
+//					unique_values_list.add(rs.getString(1));	// column 1 is the only column form this query
+//				}									
+//			}
+//		} catch (Exception e) {
+//			System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Read_Database   -   Database connection error");
+//		} finally {
+//			// Close in case not closing properly, not need to print out because the exception only happens when there is null to close
+//		    try { rs.close(); } catch (Exception e) { /* ignored */}	
+//		    try { st.close(); } catch (Exception e) { /* ignored */}
+//		    try { conn.close(); } catch (Exception e) { /* ignored */}
+//		}	
 		
-		for (int tb = 0; tb < yield_tables_values.length; tb++) {
-			for (int rowIndex = 0; rowIndex < yield_tables_values[tb].length; rowIndex++) {
-				if (!unique_values_list.contains(yield_tables_values[tb][rowIndex][columnIndex].toString())) {	// only add to list if list does not contain the value
-					unique_values_list.add(yield_tables_values[tb][rowIndex][columnIndex].toString());
-				}
-			}
-		}
 		
-		// Sort the list	
-		try {	//Sort Double
-			Collections.sort(unique_values_list, new Comparator<String>() {
-				@Override
-			    public int compare(String o1, String o2) {
-			        return Double.valueOf(o1).compareTo(Double.valueOf(o2));
-			    }
-			});	
-		} catch (Exception e1) {
-			Collections.sort(unique_values_list);	//Sort String
-		}
+//		// Using Set: Same performance as as Using SQL query 
+//		Set<String> all_values_in_this_column = new LinkedHashSet<>();		// Set guarantees values added are unique
+//		for (int tb = 0; tb < yield_tables_values.length; tb++) {
+//			for (int rowIndex = 0; rowIndex < yield_tables_values[tb].length; rowIndex++) {
+//				all_values_in_this_column.add(yield_tables_values[tb][rowIndex][columnIndex].toString());
+//			}
+//		}
+//		List<String> unique_values_list = new ArrayList<String>(all_values_in_this_column);
+		
+		
+//		List<String> unique_values_list = new ArrayList<String>(yield_tables_column_unique_values[columnIndex]);
+//		// Sort the list	
+//		try {
+//			Collections.sort(unique_values_list, new Comparator<String>() {
+//				@Override
+//				public int compare(String o1, String o2) {
+//					return Double.valueOf(o1).compareTo(Double.valueOf(o2));	// Sort Double
+//				}
+//			});
+//		} catch (Exception e1) {
+//			Collections.sort(unique_values_list);	// Sort String
+//		}
 
-		return unique_values_list;
+		return unique_values_list[col];
 	}
 	
 	
@@ -442,9 +494,9 @@ public class Read_Database {
 	public ArrayList<String>[] get_rotation_ranges() {
 		ArrayList<String>[] rotation_ranges = null;		
 		try {			
-			if (file_Database.exists()) {	
+			if (file_database.exists()) {	
 				Class.forName("org.sqlite.JDBC").newInstance();
-				conn = DriverManager.getConnection("jdbc:sqlite:" + file_Database);
+				conn = DriverManager.getConnection("jdbc:sqlite:" + file_database);
 				st = conn.createStatement();
 
 				
@@ -545,35 +597,23 @@ public class Read_Database {
 	
 	public List<String> get_method_period_layers_title() {
 		// Layers title
-		List<String> method_period_layers_title = new ArrayList<String>();
-		method_period_layers_title.add("method");
-		method_period_layers_title.add("period");
+		List<String> method_period_layers_title = Arrays.asList(new String[] { "method", "period" });
 		return method_period_layers_title;
 	}
 
 	
 	public List<List<String>> get_method_period_layers() {
 		// Layers element name
-		List<String> layer1 = new ArrayList<String>();		// methods
-		layer1.add("NG_E");
-		layer1.add("PB_E");
-		layer1.add("GS_E");
-		layer1.add("EA_E");	
-		layer1.add("MS_E");
-		layer1.add("BS_E");
-		layer1.add("NG_R");
-		layer1.add("PB_R");
-		layer1.add("GS_R");
-		layer1.add("EA_R");
-		
-		List<String> layer2 = new ArrayList<String>();		// periods
-		for (int i = 1; i <= 99; i++) {
-			layer2.add(Integer.toString(i));
-		}		
+		List<String> method = Arrays.asList(new String[] { "NG_E", "PB_E", "GS_E", "EA_E", "MS_E", "BS_E", "NG_R", "PB_R", "GS_R", "EA_R" });	// method
+		List<String> period = new ArrayList<String>() {		// period
+			{
+				for (int i = 1; i <= 99; i++) {add(Integer.toString(i));}
+			}
+		};	
 			
 		List<List<String>> method_period_layers = new ArrayList<List<String>>();
-		method_period_layers.add(layer1);
-		method_period_layers.add(layer2);
+		method_period_layers.add(method);
+		method_period_layers.add(period);
 			
 		return method_period_layers;
 	}
@@ -581,37 +621,63 @@ public class Read_Database {
 	
 	public List<String> get_method_choice_layers_title() {
 		// Layers title
-		List<String> method_choice_layers_title = new ArrayList<String>();
-		method_choice_layers_title.add("method");
-		method_choice_layers_title.add("choice");
-		return method_choice_layers_title;
+		List<String> method_period_layers_title = Arrays.asList(new String[] { "method", "choice" });
+		return method_period_layers_title;
 	}
 
 	
 	public List<List<String>> get_method_choice_layers() {
 		// Layers element name
-		List<String> layer1 = new ArrayList<String>();		// methods
-		layer1.add("NG_E");
-		layer1.add("PB_E");
-		layer1.add("GS_E");
-		layer1.add("EA_E");	
-		layer1.add("MS_E");
-		layer1.add("BS_E");
-		layer1.add("NG_R");
-		layer1.add("PB_R");
-		layer1.add("GS_R");
-		layer1.add("EA_R");
-		
-		List<String> layer2 = new ArrayList<String>();		// timing choice
-		for (int i = 0; i <= 11; i++) {
-			layer2.add(Integer.toString(i));
-		}		
+		List<String> method = Arrays.asList(new String[] { "NG_E", "PB_E", "GS_E", "EA_E", "MS_E", "BS_E", "NG_R", "PB_R", "GS_R", "EA_R" });	// method
+		List<String> choice = new ArrayList<String>() {		// period
+			{
+				for (int i = 0; i <= 11; i++) {add(Integer.toString(i));}
+			}
+		};	
 			
 		List<List<String>> method_choice_layers = new ArrayList<List<String>>();
-		method_choice_layers.add(layer1);
-		method_choice_layers.add(layer2);
+		method_choice_layers.add(method);
+		method_choice_layers.add(choice);
 			
 		return method_choice_layers;
+	}
+	
+	
+	public List<String> get_method_choice_rotationperiod_rotationage_regenlayer5_layers_title() {
+		// Layers title
+		List<String> method_choice_layers_title = Arrays.asList(new String[] { "method", "choice", "rotation_period", "rotation_age", "regen_layer5" });
+		return method_choice_layers_title;
+	}
+
+	
+	public List<List<String>> get_method_choice_rotationperiod_rotationage_regenlayer5_layers() {
+		// Layers element name
+		List<String> method = Arrays.asList(new String[] { "NG_E", "PB_E", "GS_E", "EA_E", "MS_E", "BS_E", "NG_R", "PB_R", "GS_R", "EA_R" });	// method
+		List<String> choice = new ArrayList<String>() {		// choice
+			{
+				for (int i = 0; i <= 11; i++) {add(Integer.toString(i));}
+			}
+		};
+		List<String> rotation_period = new ArrayList<String>() {	// rotation_period
+			{
+				for (int i = 1; i <= 99; i++) {add(Integer.toString(i));}
+			}
+		};
+		List<String> rotation_age = new ArrayList<String>() {		// rotation_age
+			{
+				for (int i = 1; i <= 99; i++) {add(Integer.toString(i));}
+			}
+		};
+		List<String> regen_layer5 = new ArrayList<String>(allLayers.get(4));	// regen_layer5
+			
+		List<List<String>> method_choice_rotationperiod_rotationage_regenlayer5_layers = new ArrayList<List<String>>();
+		method_choice_rotationperiod_rotationage_regenlayer5_layers.add(method);
+		method_choice_rotationperiod_rotationage_regenlayer5_layers.add(choice);
+		method_choice_rotationperiod_rotationage_regenlayer5_layers.add(rotation_period);
+		method_choice_rotationperiod_rotationage_regenlayer5_layers.add(rotation_age);
+		method_choice_rotationperiod_rotationage_regenlayer5_layers.add(regen_layer5);
+			
+		return method_choice_rotationperiod_rotationage_regenlayer5_layers;
 	}
 
 	

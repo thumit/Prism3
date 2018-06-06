@@ -876,6 +876,7 @@ All changes in this block are associated with PrismAlpha1.1.06.jar, Prism Formul
 379. Jagged array Memory Boost 7 - continue: 
 	- Implemented for NG_E, PB_E, GS_E, MS_E, BS_E variables with changes made for variable-definitions and equations 12, 15 and 6ab, 7ab, 8ab, 10ab, 11ab
 380. Remove many binary search when defining variables
+381. New GUI for readme.txt to be edited without erasing the outputs
 381. Modify output_05:
 	- Rewrite a number of places to make the output_05 compatible with the double boosts 7
 	- move executor services to submit inside the for loop of btn_GetResult, also add revalidate & repaint for some GUI components --> This would help fix bug in issue 79 in BitBucket.
@@ -888,6 +889,31 @@ All changes in this block are associated with PrismAlpha1.1.06.jar, Prism Formul
 385. Binary search is implemented for:
 	- RR Boost 3i: populate_sm_lists() in Read_RunInputs class --> Significantly reduce time for reading inputs
 	- RR Boost 3j: checking methods and choices when defining variables (sm_strata & sm_strata_without_sizeclass)
-	- Note: This boost requires to re-do the Silviculture Method for CGNF tests since the static identifiers in earlier versions were not sorted by the old UI --> Recommenrdation: rebuild new models from scratch, do not copy the too old models in the past to edit in Alpha1.1.07. The sorted Ui seems appreared from 1.1.01 (not sure)
+	- Note: This boost requires to re-do the Silviculture Method for CGNF tests since the static identifiers in earlier versions were not sorted by the old UI --> Recommenrdation: rebuild new models from scratch, do not copy the too old models in the past to edit in Alpha1.1.07. The sorted UI seems appeared from 1.1.01 (not sure)
 All changes in this block are associated with PrismAlpha1.1.07.jar, Prism Formulation 07.docx, Prism Database 03.docx	
+--------------------------------------------------------------------------	
+
+386. Improve the speed of finding unique values in dynamic identifiers by using Set in "get_col_unique_values_list" in "Read_Database". E.g. 12k unique values of culmmai can be found in 2 secs instead of 4 secs.
+387. Disable yield_tables columns if not found any number when the columns are used in:
+	- Parameters (in many GUIs)
+	- Quick Edit in Management Cost (binocular button)
+388. output_05 NOSQL MODEL now only calculate results of the selected rows (issue 60 BitBucket)
+389. Panel_Edit --> temporarily use Executors.newFixedThreadPool(1) to avoid fail reloading multiple runs. The cause might probably be because of database connection limit --> prevent loading when too many databases are read at the same time in multiple threads
+390. Reselect the runs after editing or solving
+391. Readme can now be saved without erasing the outputs
+392. fly_constraints is now not deleted after saving edit, and will have query_value cleared whenever solving is completed (regardless of fail or successful solve)
+393. Intersect model_strata vs sm_strata to remove binary search for sm_method_choice_for_strata --> reduce runtime (reading time)
+394. Now delete all output files if solving fails (previously delete only 4 output files when solving fails).
+395. Radio buttons are redesigned. Following files in each model run are required to rename:
+	- input_02_silviculture_method.txt --> input_03_non_ea_management.txt
+	- input_03_model_strata.txt --> input_02_model_strata.txt
+	- input_04_covertype_conversion_clearcut.txt --> input_04_ea_management.txt
+	- input_06_natural_disturbances_non_replacing.txt --> input_05_non_sr_disturbances.txt
+	- input_07_natural_disturbances_replacing.txt --> input_06_sr_disturbances.txt
+	- input_08_management_cost.txt --> input_07_management_cost.txt
+	- input_09_basic_constraints.txt --> input_08_basic_constraints.txt
+	- input_10_flow_constraints.txt --> input_09_flow_constraints.txt
+396. Fix double scroll bars when Dynamic Identifiers height is resized to be too short
+397. Many places refactored and deleted
+All changes in this block are associated with PrismAlpha1.1.08.jar, Prism Formulation 07.docx, Prism Database 03.docx	
 --------------------------------------------------------------------------	

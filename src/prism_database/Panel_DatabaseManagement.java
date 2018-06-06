@@ -86,7 +86,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 	private String seperator = "/";
 	private JTree DatabaseTree;
 	private DefaultMutableTreeNode root, processingNode;
-	private JTextField dataDisplayTextField, queryTextField;
+	private JTextField display_text_field, query_text_field;
 	private JTable database_table;
 	private TableFilterHeader filterHeader;
 	private boolean is_filter_visible;
@@ -122,7 +122,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		JSplitPane splitPane = new JSplitPane();
 		//splitPane.setResizeWeight(0.15);
 		splitPane.setOneTouchExpandable(true);
-		splitPane.setDividerLocation(245);
+		splitPane.setDividerLocation(250);
 //		splitPane.setDividerSize(5);
 //		splitPane.getComponent(2).setCursor(new Cursor(Cursor.HAND_CURSOR));
 		
@@ -139,9 +139,9 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		DatabaseTree.addMouseListener(new MouseAdapter() { // Add listener to DatabaseTree
 			public void mousePressed(MouseEvent e) {
 				DatabaseTree.setEnabled(true);
-				queryTextField.setText("Type your query here");
-				queryTextField.setFocusable(false);
-				queryTextField.setFocusable(true);
+				query_text_field.setText("Type your query here");
+				query_text_field.setFocusable(false);
+				query_text_field.setFocusable(true);
 				doMousePressed(e);
 			}
 		});
@@ -209,8 +209,8 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		scrollPane_Right.addMouseListener(mouse_listener); 	// Add listener
 		
 		// TextField at South----------------------------------------------
-		dataDisplayTextField = new JTextField("", 0);
-		dataDisplayTextField.setEditable(false);
+		display_text_field = new JTextField("", 0);
+		display_text_field.setEditable(false);
 		
 		// databaseToolBar & queryTextField at North----------------------------------------------------
 		databaseToolBar = new ToolBarWithBgImage("Project Tools", JToolBar.HORIZONTAL, null);
@@ -269,30 +269,30 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		databaseToolBar.add(btnRefresh, c);	
 		
 		
-		queryTextField = new JTextField("Type your query here");		
-		queryTextField.addMouseListener(new MouseAdapter(){			//When user click on queryTextField
+		query_text_field = new JTextField("Type your query here");		
+		query_text_field.addMouseListener(new MouseAdapter(){			//When user click on queryTextField
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				DatabaseTree.setEnabled(false);		//disable the tree
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				if (queryTextField.getText().equals("Type your query here")) {	//clear the text
-					queryTextField.setText("");					
+				if (query_text_field.getText().equals("Type your query here")) {	//clear the text
+					query_text_field.setText("");					
 				}
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				if (queryTextField.getText().equals("") && DatabaseTree.isEnabled()) {
-					queryTextField.setText("Type your query here");					
+				if (query_text_field.getText().equals("") && DatabaseTree.isEnabled()) {
+					query_text_field.setText("Type your query here");					
 				}
 			}
 	     });//end addMouseListener
 		
-		queryTextField.addActionListener(new AbstractAction(){		//When user press Enter on Keyboard
+		query_text_field.addActionListener(new AbstractAction(){		//When user press Enter on Keyboard
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				currentSQLstatement = queryTextField.getText();	
+				currentSQLstatement = query_text_field.getText();	
 				doQuery(currentSQLstatement);
 			}
 	     });//end addActionListener
@@ -302,7 +302,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 	    c.weighty = 0;
 		c.gridwidth = 1;
 		c.gridheight = 1;
-		databaseToolBar.add(queryTextField, c);
+		databaseToolBar.add(query_text_field, c);
 			
 		
 		// Make this list to make all buttons in this windows not focus on the ugly blue border after click
@@ -326,7 +326,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 	
 		// Add all components to JInternalFrame-----------------------------		
 		super.add(databaseToolBar, BorderLayout.NORTH);
-		super.add(dataDisplayTextField, BorderLayout.SOUTH);
+		super.add(display_text_field, BorderLayout.SOUTH);
 		super.add(splitPane, BorderLayout.CENTER);
 		super.setOpaque(false);
 	} // end Panel_DatabaseManagement()	
@@ -343,7 +343,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
     			showNothing();	// show nothing (a table with 0 row and 0 column) if no node selected
     			return;
     		}
-    		if (path != null) dataDisplayTextField.setText(path.toString()); 	// display Full path
+    		if (path != null) display_text_field.setText(path.toString()); 	// display Full path
 //    		DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) path.getLastPathComponent();
 //    		dataDisplayTextField.setText(selectedNode.toString());		//display Only last node name
 
@@ -658,7 +658,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 					String query_statement = String.join(" ", (String[]) system_queries_list[1].get(current_i)).trim();
 					if (!query_statement.equals("")) {
 						doQuery(query_statement);
-						queryTextField.setText("System Library:   " + query_name);
+						query_text_field.setText("System Library:   " + query_name);
 					}
 				}
 			});
@@ -683,7 +683,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 					String query_statement = String.join(" ", (String[]) user_queries_list[1].get(current_i)).trim();
 					if (!query_statement.equals("")) {
 						doQuery(query_statement);
-						queryTextField.setText("User Library:   " + query_name);
+						query_text_field.setText("User Library:   " + query_name);
 					}
 				}
 			});
@@ -879,7 +879,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 			DatabaseTree.startEditingAtPath(path);
 			editingPath = path;	
 			try {
-			dataDisplayTextField.setText("Type your new database name");
+			display_text_field.setText("Type your new database name");
 			Database_Name_Edit_HasChanged = true;
 		} catch (Exception e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -889,7 +889,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 												
 		if (nodeName.equals("new_table")) {		//New Table									
 			try {
-			dataDisplayTextField.setText("This function is currently not supported");
+			display_text_field.setText("This function is currently not supported");
 			
 		} catch (Exception e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -918,7 +918,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		    	oldfile = new File(editingName);
 		    	// Then perform:	applyDatabase_Namechange
 				
-		    	dataDisplayTextField.setText("Type your new database name");
+		    	display_text_field.setText("Type your new database name");
 				renamingDatabase = true;
 			} catch (Exception e) {
 				System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -936,7 +936,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 			DatabaseTree.startEditingAtPath(path);
 			editingPath = path;
 			try {
-				dataDisplayTextField.setText("Type your new Table name");
+				display_text_field.setText("Type your new Table name");
 				renamingTable = true; // For "rename" option only
 			} catch (Exception e) {
 				System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -997,7 +997,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 			}
 		}
 		
-		dataDisplayTextField.setText(temptext);
+		display_text_field.setText(temptext);
 		DatabaseTree.setEditable(false);			// Disable editing
 		Database_Name_Edit_HasChanged = false;
 		renamingDatabase = false;
@@ -1046,7 +1046,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 			temptext = "Cannot rename the table";
 		}
 		
-		dataDisplayTextField.setText(temptext);
+		display_text_field.setText(temptext);
 		// Disable editing
 		DatabaseTree.setEditable(false);
 		renamingTable = false;			//For "rename Table" option only
@@ -1094,6 +1094,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 				DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();
 				TreeNode[] nodes = model.getPathToRoot(node);
 				TreePath path = new TreePath(nodes);
+				if (path != null) display_text_field.setText(path.toString()); 	// display Full path
 				DatabaseTree.scrollPathToVisible(path);
 				DatabaseTree.setSelectionPath(path);
 				editingPath = path;
@@ -1371,7 +1372,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 						editingPath = path;
 					}
 				}
-				dataDisplayTextField.setText(temptext);
+				display_text_field.setText(temptext);
 			} // end of For loop
 			
 					
@@ -2191,7 +2192,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public void showNothing () {
 		currentLevel = 0;
-		if (dataDisplayTextField != null) dataDisplayTextField.setText(null); // Show nothing on the TextField
+		if (display_text_field != null) display_text_field.setText(null); // Show nothing on the TextField
 		if (scrollPane_Right != null) scrollPane_Right.setViewportView(null);
 	}
 	

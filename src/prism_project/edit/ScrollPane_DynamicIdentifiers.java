@@ -29,8 +29,6 @@ import java.awt.event.HierarchyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.AbstractAction;
@@ -162,7 +160,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 				String YTcolumnName = allDynamicIdentifiers.get(i).getText();		
 				allDynamicIdentifiers_ScrollPane.add(new JScrollPane());			//Add ScrollPane
 				allDynamicIdentifiers_ScrollPane.get(i).setBorder(new TitledBorder(YTcolumnName));	//set Title
-				allDynamicIdentifiers_ScrollPane.get(i).setPreferredSize(new Dimension(200, 100));
+				allDynamicIdentifiers_ScrollPane.get(i).setPreferredSize(new Dimension(200, 0));
 //				allDynamicIdentifiers_ScrollPane.get(i).setToolTipText(read_Identifiers.get_ParameterToolTip(YTcolumnName) + " (Column index: " + i + ")");		//add toolTip										
 				allDynamicIdentifiers_ScrollPane.get(i).setVisible(false);		//Set invisible
 				
@@ -260,7 +258,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 							columnInfo_TArea.append("PRISM found " + unique_values_list.size() + 
 									" unique values for this identifier (across " + yieldTable_values.length + " prescriptions in your database)."  + "\n");
 							
-							if (unique_values_list.size()<=20) {
+							if (unique_values_list.size() <= 50) {
 								columnInfo_TArea.append("'DISCRETE IDENTIFIER' is recommended.");
 							} else {
 								columnInfo_TArea.append("'RANGE IDENTIFIER' is recommended.");
@@ -636,7 +634,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 		// ScrollPane contains the identifiers that are able to be selected
 		selectIdentifiersScrollPanel = new JScrollPane(select_Panel);
 		selectIdentifiersScrollPanel.setBorder(BorderFactory.createTitledBorder(null, "Dynamic Identifiers  -  use yield attributes to filter variables", TitledBorder.CENTER, 0));
-		selectIdentifiersScrollPanel.setPreferredSize(new Dimension(200, 100));
+		selectIdentifiersScrollPanel.setPreferredSize(new Dimension(200, 0));
 		
 		// add listeners to select NoIdentifier only
 		selectIdentifiersScrollPanel.addMouseListener(new MouseAdapter() {

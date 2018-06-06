@@ -49,7 +49,7 @@ public class Panel_Edit extends JLayeredPane implements ActionListener {
 	private Panel_Edit_Details[] combinePanel;
 	private JButton btnSave;
 	
-	private ExecutorService executor = Executors.newFixedThreadPool(4);
+	private ExecutorService executor = Executors.newFixedThreadPool(1);
 	
 	public Panel_Edit(File[] listOfEditRuns, JButton btnSave) {
 		super.setLayout(new BorderLayout(0, 0));
@@ -96,15 +96,14 @@ public class Panel_Edit extends JLayeredPane implements ActionListener {
 		combinePanel = new Panel_Edit_Details[listOfEditRuns.length];
 		for (int i = 0; i < listOfEditRuns.length; i++) {	
 			int processing_run = i;					
-			Runnable task = () -> {
+			executor.submit(() -> {
 				combinePanel[processing_run] = new Panel_Edit_Details(listOfEditRuns[processing_run]);
 				System.out.println("thread " + processing_run + " is working");
 				radioButton_Left[processing_run].setSelected(true);
 				scrollPane_Right.setViewportView(combinePanel[processing_run]);
 				radioButton_Left[processing_run].setEnabled(true);
 				btnSave.setToolTipText("Save " + listOfEditRuns[processing_run].getName());
-			};			
-			executor.submit(new Thread(task));
+			});			
 		}
 					
 		

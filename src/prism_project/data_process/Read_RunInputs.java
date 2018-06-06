@@ -24,7 +24,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -89,10 +88,84 @@ public class Read_RunInputs {
 	public boolean get_export_solution() {
 		return Boolean.parseBoolean(gi_value[6][1]);
 	}
+
+	//-------------------------------------------------------------------------------------------------------------------------------------------------	
+	//For input_02_model_strata: must be read before silviculture_method
+	private int MO_totalRows, MO_totalColumns;
+	private String[][] MO_value;
+		
+	public void read_model_strata(File file) {
+		String delimited = "\t";		// tab delimited
+				
+		try {		
+			// All lines to be in array
+			List<String> list;
+			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
+			list.remove(0);	// Remove the first row (Column names)
+			String[] a = list.toArray(new String[list.size()]);
+						
+			MO_totalRows = a.length;
+			MO_totalColumns = a[0].split(delimited).length;		// a[0].split(delimited) = String[] of the first row (this is the row below the column headers row which was removed already)				
+			MO_value = new String[MO_totalRows][MO_totalColumns];
+		
+			// read all values from all rows and columns
+			for (int i = 0; i < MO_totalRows; i++) {
+				String[] rowValue = a[i].split(delimited);
+				for (int j = 0; j < MO_totalColumns; j++) {
+					MO_value[i][j] = rowValue[j].replaceAll("\\s+", "");
+				}
+			}
+
+		} catch (IOException e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+		}
+	}
+
+	public String[][] get_MO_Values() {
+		return MO_value;
+	}
+
+	public int get_MO_TotalRows() {
+		return MO_totalRows;
+	}
 	
+	public int get_MO_TotalColumns() {
+		return MO_totalColumns;
+	}
+	
+	public List<String> get_model_strata() {
+		List<String> modeled_strata = new ArrayList<String>();
+		for (int i = 0; i < MO_totalRows; i++) {		
+			String combined_name = MO_value[i][1] + MO_value[i][2] + MO_value[i][3] + MO_value[i][4] + MO_value[i][5] + MO_value[i][6];
+			modeled_strata.add(combined_name);
+		}
+		return modeled_strata;
+	}
+	
+	public List<String> get_model_strata_without_sizeclass() {	// Note this is replaced in Panel_Solve because we need all the s5 --> use the below: get_model_strata_without_sizeclass_and_covertype + a loop add all s5
+		List<String> model_strata_without_sizeclass = new ArrayList<String>();
+		for (int i = 0; i < MO_totalRows; i++) {		
+			String combined_name = MO_value[i][1] + MO_value[i][2] + MO_value[i][3] + MO_value[i][4] + MO_value[i][5];
+			if (!model_strata_without_sizeclass.contains(combined_name)) {	// only add to list if list does not contain the value
+				model_strata_without_sizeclass.add(combined_name);
+			}
+		}
+		return model_strata_without_sizeclass;
+	}	
+	
+	public List<String> get_model_strata_without_sizeclass_and_covertype() {
+		List<String> model_strata_without_sizeclass_and_covertype = new ArrayList<String>();
+		for (int i = 0; i < MO_totalRows; i++) {		
+			String combined_name = MO_value[i][1] + MO_value[i][2] + MO_value[i][3] + MO_value[i][4];			
+			if (!model_strata_without_sizeclass_and_covertype.contains(combined_name)) {	// only add to list if list does not contain the value
+				model_strata_without_sizeclass_and_covertype.add(combined_name);
+			}	
+		}
+		return model_strata_without_sizeclass_and_covertype;
+	}
 	
 	//-------------------------------------------------------------------------------------------------------------------------------------------------	
-	//For input_02_silviculture_method
+	//For input_03_non_ea_management : must be read after model_strata
 	private int sm_totalRows, sm_totalColumns;
 	private String[][] sm_value;
 	private List<String> sm_strata;	
@@ -102,7 +175,7 @@ public class Read_RunInputs {
 	private List<List<String>> sm_method_choice_for_strata_without_sizeclass;
 	private List<List<String>> sm_method_choice_for_strata_without_sizeclass_and_covertype;
 
-	public void read_silviculture_method(File file) {
+	public void read_non_ea_management(File file) {
 		String delimited = "\t";		// tab delimited
 				
 		try {		
@@ -278,6 +351,10 @@ public class Read_RunInputs {
 		}	
 	}	
 	
+	public int get_sm_totalRows() {
+		return sm_totalRows;
+	}
+	
 	public List<String> get_sm_strata() {
 		return sm_strata;
 	}
@@ -301,89 +378,14 @@ public class Read_RunInputs {
 	public List<List<String>> get_sm_method_choice_for_strata_without_sizeclass_and_covertype() {
 		return sm_method_choice_for_strata_without_sizeclass_and_covertype;
 	}
-
-	//-------------------------------------------------------------------------------------------------------------------------------------------------	
-	//For input_03_modeled_strata
-	private int MO_totalRows, MO_totalColumns;
-	private String[][] MO_value;
-		
-	public void read_model_strata(File file) {
-		String delimited = "\t";		// tab delimited
-				
-		try {		
-			// All lines to be in array
-			List<String> list;
-			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
-			list.remove(0);	// Remove the first row (Column names)
-			String[] a = list.toArray(new String[list.size()]);
-						
-			MO_totalRows = a.length;
-			MO_totalColumns = a[0].split(delimited).length;		// a[0].split(delimited) = String[] of the first row (this is the row below the column headers row which was removed already)				
-			MO_value = new String[MO_totalRows][MO_totalColumns];
-		
-			// read all values from all rows and columns
-			for (int i = 0; i < MO_totalRows; i++) {
-				String[] rowValue = a[i].split(delimited);
-				for (int j = 0; j < MO_totalColumns; j++) {
-					MO_value[i][j] = rowValue[j].replaceAll("\\s+", "");
-				}
-			}
-
-		} catch (IOException e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage());
-		}
-	}
-
-	public String[][] get_MO_Values() {
-		return MO_value;
-	}
-
-	public int get_MO_TotalRows() {
-		return MO_totalRows;
-	}
-	
-	public int get_MO_TotalColumns() {
-		return MO_totalColumns;
-	}
-	
-	public List<String> get_model_strata() {
-		List<String> modeled_strata = new ArrayList<String>();
-		for (int i = 0; i < MO_totalRows; i++) {		
-			String combined_name = MO_value[i][1] + MO_value[i][2] + MO_value[i][3] + MO_value[i][4] + MO_value[i][5] + MO_value[i][6];
-			modeled_strata.add(combined_name);
-		}
-		return modeled_strata;
-	}
-	
-	public List<String> get_model_strata_without_sizeclass() {
-		List<String> model_strata_without_sizeclass = new ArrayList<String>();
-		for (int i = 0; i < MO_totalRows; i++) {		
-			String combined_name = MO_value[i][1] + MO_value[i][2] + MO_value[i][3] + MO_value[i][4] + MO_value[i][5];
-			if (!model_strata_without_sizeclass.contains(combined_name)) {	// only add to list if list does not contain the value
-				model_strata_without_sizeclass.add(combined_name);
-			}
-		}
-		return model_strata_without_sizeclass;
-	}	
-	
-	public List<String> get_model_strata_without_sizeclass_and_covertype() {
-		List<String> model_strata_without_sizeclass_and_covertype = new ArrayList<String>();
-		for (int i = 0; i < MO_totalRows; i++) {		
-			String combined_name = MO_value[i][1] + MO_value[i][2] + MO_value[i][3] + MO_value[i][4];			
-			if (!model_strata_without_sizeclass_and_covertype.contains(combined_name)) {	// only add to list if list does not contain the value
-				model_strata_without_sizeclass_and_covertype.add(combined_name);
-			}	
-		}
-		return model_strata_without_sizeclass_and_covertype;
-	}
 		
 	//-------------------------------------------------------------------------------------------------------------------------------------------------	
-	//For input_04_covertype_conversion_clearcut
+	//For input_04_ea_management
 	private List<String> covertype_conversions_and_existing_rotation_ages_list;	
 	private List<String> covertype_conversions_and_regeneration_rotation_ages_list;	
 	private List<String> covertype_conversions_list;	
 	
-	public void read_covertype_conversion_clearcut (File file) {
+	public void read_ea_management(File file) {
 		try {
 			// All lines except the 1st line to be in a list;		
 			List<String> list;	
@@ -460,10 +462,10 @@ public class Read_RunInputs {
 	}	
 	
 	//-------------------------------------------------------------------------------------------------------------------------------------------------	
-	//For input_06_natural_disturbances_non_replacing
+	//For input_05_non_sr_disturbances
 	private List<Double> msProportion_list, bsProportion_list;	
 	
-	public void read_natural_disturbances_non_replacing(File file) {
+	public void read_nonreplacing_disturbances(File file) {
 		try {
 			// All lines except the 1st line to be in a list;		
 			List<String> list;	
@@ -496,10 +498,10 @@ public class Read_RunInputs {
 	}
 	
 	//-------------------------------------------------------------------------------------------------------------------------------------------------	
-	//For input_07_natural_disturbances_replacing
+	//For input_06_sr_disturbances
 	private List<String> disturbance_condition_list;
 	
-	public void read_natural_disturbances_replacing (File file) {
+	public void read_replacing_disturbances(File file) {
 		try {
 			// All lines except the 1st line to be in a list;		
 			disturbance_condition_list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
@@ -515,7 +517,7 @@ public class Read_RunInputs {
 	}			
 				
 	//-------------------------------------------------------------------------------------------------------------------------------------------------	
-	//For input_08_management_cost
+	//For input_07_management_cost
 	private List<String> cost_condition_list;
 	
 	public void read_management_cost (File file) {
@@ -535,7 +537,7 @@ public class Read_RunInputs {
 			
 	
 	//-------------------------------------------------------------------------------------------------------------------------------------------------
-	//For input_09_basic_constraints
+	//For input_08_basic_constraints
 	private List<String> constraint_column_names_list;
 	private int bc_total_rows, bc_total_columns;
 	private String[][] bc_values;
@@ -868,7 +870,7 @@ public class Read_RunInputs {
 	}	
 	
 	//-------------------------------------------------------------------------------------------------------------------------------------------------
-	//For input_10_flow_constraints
+	//For input_09_flow_constraints
 	private List<String> flow_column_names_list;
 	private int flow_totalRows, flow_totalColumns;
 	private String[][] flow_value;

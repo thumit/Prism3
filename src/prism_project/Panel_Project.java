@@ -102,7 +102,7 @@ public class Panel_Project extends JLayeredPane {
 	private String seperator = "/";
 	private JTree projectTree;
 	private DefaultMutableTreeNode root, processingNode;
-	private JTextField displayTextField;
+	private JTextField display_text_field;
 
 	private String currentInputFile, currentProject, currentRun;
 	private int currentLevel;
@@ -142,9 +142,9 @@ public class Panel_Project extends JLayeredPane {
 		ToolTipManager.sharedInstance().setInitialDelay(0);		//Show toolTip immediately
 
 		splitPanel = new JSplitPane();
-		// splitPane.setResizeWeight(0.15);
+//		splitPane.setResizeWeight(0.15);
 		splitPanel.setOneTouchExpandable(true);
-		splitPanel.setDividerLocation(245);
+		splitPanel.setDividerLocation(250);
 //		splitPanel.setDividerSize(5);
 //		splitPanel.getComponent(2).setCursor(new Cursor(Cursor.HAND_CURSOR));
 
@@ -255,8 +255,8 @@ public class Panel_Project extends JLayeredPane {
 		splitPanel.setRightComponent(scrollPane_Right);
 		
 		// TextField at South----------------------------------------------
-		displayTextField = new JTextField("", 0);
-		displayTextField.setEditable(false);
+		display_text_field = new JTextField("", 0);
+		display_text_field.setEditable(false);
 
 		// projectToolBar at North-------------------------------------------------------------------------
 //		projectToolBar = new ToolBarWithBgImage("Project Tools", JToolBar.HORIZONTAL, IconHandle.get_scaledImageIcon(250, 25, "spectrumlite.png"));
@@ -359,7 +359,7 @@ public class Panel_Project extends JLayeredPane {
 		//------------------------------------------------------------------------------------------------
 		// Add all components to JInternalFrame------------------------------------------------------------
 		this.add(projectToolBar, BorderLayout.NORTH);
-		this.add(displayTextField, BorderLayout.SOUTH);
+		this.add(display_text_field, BorderLayout.SOUTH);
 		this.add(splitPanel, BorderLayout.CENTER);
 		this.setOpaque(false);
 	} // end Panel_Project()
@@ -374,7 +374,7 @@ public class Panel_Project extends JLayeredPane {
 			showNothing();	// show nothing if no node selected
 			return;
 		}
-		if (path != null) displayTextField.setText(path.toString()); 	// display Full path
+		if (path != null) display_text_field.setText(path.toString()); 	// display Full path
 //		DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) path.getLastPathComponent();
 //		dataDisplayTextField.setText(selectedNode.toString());		//display Only last node name
 
@@ -515,8 +515,7 @@ public class Panel_Project extends JLayeredPane {
 							scrollPane_Right.setViewportView(chart_panel);
 						} else if (currentInputFile.equals("readme.txt")) {		// show the file as text area
 				 			readme = new PrismTextAreaReadMe("icon_tree.png", 70, 70);
-//				 			readme.setBackground(ColorUtil.makeTransparent(Color.WHITE, 255));
-				 			readme.setEditable(false);
+//				 			readme.setEditable(false);
 							try {
 								FileReader reader = new FileReader(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/" + currentInputFile);
 								readme.read(reader, currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/" + currentInputFile);
@@ -524,7 +523,7 @@ public class Panel_Project extends JLayeredPane {
 							} catch (IOException e1) {
 								System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
 							}			
-							scrollPane_Right.setViewportView(readme);
+							scrollPane_Right.setViewportView(new Panel_Readme(file, readme));
 						} else {		// Show the file as table
 							scrollPane_Right.setViewportView(table); 
 						}				
@@ -716,6 +715,21 @@ public class Panel_Project extends JLayeredPane {
 					}
 					
 					
+					// Only nodes level 2 (Run) can be Deleted--------------------------
+					if (currentLevel == 2 && rootSelected == false) {					
+						final JMenuItem updateMenuItem = new JMenuItem("Update Runs from 1.1.07 to 1.1.08");
+						updateMenuItem.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_light_on.png"));
+						updateMenuItem.setMnemonic(KeyEvent.VK_U);
+						updateMenuItem.addActionListener(new ActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent actionEvent) {								
+								update_runs_to_new_prism_version();
+							}
+						});
+						popup.add(updateMenuItem);
+					}
+					
+					
 					// Show the JmenuItems on selected node when it is right clicked
 					popup.show(projectTree, e.getX(), e.getY());
 				}
@@ -793,7 +807,7 @@ public class Panel_Project extends JLayeredPane {
 		projectTree.startEditingAtPath(path);
 		editingPath = path;
 		try {
-			displayTextField.setText("Type your new Run name");
+			display_text_field.setText("Type your new Run name");
 			runName_Edit_HasChanged = true;
 		} catch (Exception e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -820,7 +834,7 @@ public class Panel_Project extends JLayeredPane {
 		    	oldfile = new File(editingName);
 		    	// Then perform:	applyDatabase_Namechange
 				
-		    	displayTextField.setText("Type your new Run name");
+		    	display_text_field.setText("Type your new Run name");
 				renamingRun = true;
 			} catch (Exception e) {
 				System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -884,7 +898,7 @@ public class Panel_Project extends JLayeredPane {
 			}
 		}
 
-		displayTextField.setText(temptext);
+		display_text_field.setText(temptext);
 		projectTree.setEditable(false);		// Disable editing
 		runName_Edit_HasChanged = false;
 		renamingRun = false;
@@ -932,6 +946,7 @@ public class Panel_Project extends JLayeredPane {
 				DefaultTreeModel model = (DefaultTreeModel) projectTree.getModel();
 				TreeNode[] nodes = model.getPathToRoot(node);
 				TreePath path = new TreePath(nodes);
+				if (path != null) display_text_field.setText(path.toString()); 	// display Full path
 				projectTree.scrollPathToVisible(path);
 				projectTree.setSelectionPath(path);
 				editingPath = path;
@@ -1027,7 +1042,7 @@ public class Panel_Project extends JLayeredPane {
 				this.setVisible(false); //----------------------------------------------
 				//Disable all other buttons, change name to "Stop Editing",  remove splitPanel and add editPanel
 				for (Component c : projectToolBar.getComponents()) c.setVisible(false);
-				displayTextField.setVisible(false);				
+				display_text_field.setVisible(false);				
 				btnSave.setVisible(true);
 				btnEditRun.setVisible(true); 
 				btnEditRun.setToolTipText("Stop Editing");
@@ -1044,14 +1059,14 @@ public class Panel_Project extends JLayeredPane {
 		
 		// For Stop Editing
 		else if (btnEditRun.getToolTipText() == "Stop Editing") {
-			String[] ExitOption = { "Save", "Don't Save", "Cancel"};
-			int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(),"Outputs from all runs will be deleted when click 'Save'. Save all runs?", "Stop Editing",
+			String[] ExitOption = { "Stop & save", "Stop & don't save", "Cancel"};
+			int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(),"Outputs from all runs listed on the left screen will be deleted when click 'Stop & save'\n Your option?", "Stop Editing",
 					JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
 			
 			if (response == 0 || response == 1) { // Yes or No			
 				// Enable all other buttons, change name to "Start Editing",  remove editPanel and add splitPanel 
 				for (Component c : projectToolBar.getComponents()) c.setVisible(true);
-				displayTextField.setVisible(true);
+				display_text_field.setVisible(true);
 				btnSave.setVisible(false);
 				btnEditRun.setToolTipText("Start Editing");
 				btnEditRun.setRolloverIcon(null);
@@ -1065,7 +1080,7 @@ public class Panel_Project extends JLayeredPane {
 						File[] contents = listOfEditRuns[i].listFiles();
 						if (contents != null) {
 							for (File f : contents) {
-								if (f.getName().contains("output") || f.getName().contains("problem") || f.getName().contains("solution")) {
+								if ((f.getName().contains("output") || f.getName().contains("problem") || f.getName().contains("solution")) && !f.getName().contains("fly_constraints")) {
 									f.delete();
 								}
 							}
@@ -1076,6 +1091,26 @@ public class Panel_Project extends JLayeredPane {
 				
 				// Refresh the tree regardless of Yes or No			
 				refreshProjectTree();
+				
+				// Make the runs appear on the TREE----------->YEAHHHHHHHHHHHHHHH	
+				for (File file : listOfEditRuns) {
+					String RunName = file.getName();
+					@SuppressWarnings("unchecked")
+					Enumeration<TreeNode> e = root.depthFirstEnumeration();
+					while (e.hasMoreElements()) { // Search for the name that match
+						DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.nextElement();
+						if (node.toString().equalsIgnoreCase(RunName) && root.isNodeChild(node)) {		// Name match, and node is child of root
+							DefaultTreeModel model = (DefaultTreeModel) projectTree.getModel();
+							TreeNode[] nodes = model.getPathToRoot(node);
+							TreePath path = new TreePath(nodes);
+							if (path != null) display_text_field.setText(path.toString()); 	// display Full path
+							projectTree.scrollPathToVisible(path);
+							projectTree.addSelectionPath(path);
+							editingPath = path;
+							selectionPaths = projectTree.getSelectionPaths();
+						}
+					}
+				}
 	        }
 		}  // End of stop editing
 	}
@@ -1118,7 +1153,7 @@ public class Panel_Project extends JLayeredPane {
 				
 				// Disable all other buttons, change name to "Stop Solving", remove splitPanel and add editPanel
 				for (Component c : projectToolBar.getComponents()) c.setVisible(false);
-				displayTextField.setVisible(false);
+				display_text_field.setVisible(false);
 				
 				btnSolveRun.setVisible(true);
 				btnSolveRun.setToolTipText("Stop Solving");
@@ -1161,7 +1196,7 @@ public class Panel_Project extends JLayeredPane {
 		else if (btnSolveRun.getToolTipText() == "Stop Solving") {
 			//Enable all other buttons and splitPanel and change name to "Start Solving"
 			for (Component c : projectToolBar.getComponents()) c.setVisible(true);
-			displayTextField.setVisible(true);
+			display_text_field.setVisible(true);
 			btnSave.setVisible(false);
 			btnSolveRun.setToolTipText("Start Solving");
 			btnSolveRun.setRolloverIcon(null);
@@ -1169,12 +1204,156 @@ public class Panel_Project extends JLayeredPane {
 			if (solvePanel != null) this.remove(solvePanel);
 			this.add(splitPanel);
 			refreshProjectTree(); //Refresh the tree
+			
+			// Make the runs appear on the TREE----------->YEAHHHHHHHHHHHHHHH	
+			for (File file : listOfEditRuns) {
+				String RunName = file.getName();
+				@SuppressWarnings("unchecked")
+				Enumeration<TreeNode> e = root.depthFirstEnumeration();
+				while (e.hasMoreElements()) { // Search for the name that match
+					DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.nextElement();
+					if (node.toString().equalsIgnoreCase(RunName) && root.isNodeChild(node)) {		// Name match, and node is child of root
+						DefaultTreeModel model = (DefaultTreeModel) projectTree.getModel();
+						TreeNode[] nodes = model.getPathToRoot(node);
+						TreePath path = new TreePath(nodes);
+						if (path != null) display_text_field.setText(path.toString()); 	// display Full path
+						projectTree.scrollPathToVisible(path);
+						projectTree.addSelectionPath(path);
+						editingPath = path;
+						selectionPaths = projectTree.getSelectionPaths();
+					}
+				}
+			}
+		}
+	}
+	
+	//--------------------------------------------------------------------------------------------------------------------------------
+	public void update_runs_to_new_prism_version() {
+		//Some set up ---------------------------------------------------------------	
+		if (selectionPaths != null) {
+			int node_Level;
+			for (TreePath selectionPath : selectionPaths) { //Loop through all selected nodes
+				node_Level = selectionPath.getPathCount();		
+				if (node_Level == 1 || node_Level == 3) {
+					projectTree.getSelectionModel().removeSelectionPath(selectionPath);		//Deselect all level 1 and level 3 nodes
+				}				
+			}
+			selectionPaths = projectTree.getSelectionPaths(); //This is very important to get the most recent selected paths
+		}
+		//End of set up---------------------------------------------------------------
+		
+				
+		if (selectionPaths != null) { //at least 1 run has to be selected 
+			// Create a files list that contains selected runs
+			listOfEditRuns = new File[selectionPaths.length];
+			int fileCount = 0;
+
+			for (TreePath selectionPath : selectionPaths) { //Loop through all level 2 nodes (Runs)
+				currentLevel = selectionPath.getPathCount();
+				DefaultMutableTreeNode processingNode = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
+				if (currentLevel == 2) { // Add to the list
+					currentRun = processingNode.getUserObject().toString();
+					File file = new File(currentProjectFolder + seperator + currentRun);
+					listOfEditRuns[fileCount] = file;
+					fileCount++;
+				}
+			}
+				
+			int file_renamed_count = 0;
+			for (int i = 0; i < listOfEditRuns.length; i++) {
+				File[] contents = listOfEditRuns[i].listFiles();
+				if (contents != null) {
+					for (File f : contents) {
+							File new_file = null;
+							switch (f.getName()) {
+							
+						case "input_02_silviculture_method.txt":
+							new_file = new File(f.getParentFile().getAbsolutePath() + "/" + "input_03_non_ea_management.txt");			
+							f.renameTo(new_file);
+							file_renamed_count++;
+							break;
+								
+						case "input_03_model_strata.txt":
+							new_file = new File(f.getParentFile().getAbsolutePath() + "/" + "input_02_model_strata.txt");			
+							f.renameTo(new_file);
+							file_renamed_count++;
+							break;
+							
+						case "input_04_covertype_conversion_clearcut.txt":
+							new_file = new File(f.getParentFile().getAbsolutePath() + "/" + "input_04_ea_management.txt");			
+							f.renameTo(new_file);
+							file_renamed_count++;
+							break;
+							
+						case "input_06_natural_disturbances_non_replacing.txt":
+							new_file = new File(f.getParentFile().getAbsolutePath() + "/" + "input_05_non_sr_disturbances.txt");			
+							f.renameTo(new_file);
+							file_renamed_count++;
+							break;
+							
+						case "input_07_natural_disturbances_replacing.txt":
+							new_file = new File(f.getParentFile().getAbsolutePath() + "/" + "input_06_sr_disturbances.txt");			
+							f.renameTo(new_file);
+							file_renamed_count++;
+							break;
+							
+						case "input_08_management_cost.txt":
+							new_file = new File(f.getParentFile().getAbsolutePath() + "/" + "input_07_management_cost.txt");			
+							f.renameTo(new_file);
+							file_renamed_count++;
+							break;
+							
+						case "input_09_basic_constraints.txt":
+							new_file = new File(f.getParentFile().getAbsolutePath() + "/" + "input_08_basic_constraints.txt");			
+							f.renameTo(new_file);
+							file_renamed_count++;
+							break;
+							
+						case "input_10_flow_constraints.txt":
+							new_file = new File(f.getParentFile().getAbsolutePath() + "/" + "input_09_flow_constraints.txt");			
+							f.renameTo(new_file);
+							file_renamed_count++;
+							break;
+						}
+					}
+				}
+			}
+				
+			// Refresh the tree		
+			refreshProjectTree();
+			
+			// Make the runs appear on the TREE----------->YEAHHHHHHHHHHHHHHH	
+			for (File file : listOfEditRuns) {
+				String RunName = file.getName();
+				@SuppressWarnings("unchecked")
+				Enumeration<TreeNode> e = root.depthFirstEnumeration();
+				while (e.hasMoreElements()) { // Search for the name that match
+					DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.nextElement();
+					if (node.toString().equalsIgnoreCase(RunName) && root.isNodeChild(node)) {		// Name match, and node is child of root
+						DefaultTreeModel model = (DefaultTreeModel) projectTree.getModel();
+						TreeNode[] nodes = model.getPathToRoot(node);
+						TreePath path = new TreePath(nodes);
+						if (path != null) display_text_field.setText(path.toString()); 	// display Full path
+						projectTree.scrollPathToVisible(path);
+						projectTree.addSelectionPath(path);
+						editingPath = path;
+						selectionPaths = projectTree.getSelectionPaths();
+					}
+				}
+			}
+			
+			String warningText = "";
+			if (file_renamed_count > 0) warningText = file_renamed_count + " files have been renamed to the newest format\n";
+			warningText = warningText + "The highlighted runs are now ready to be edited & solve by Prism Alpha 1.1.08";
+			String ExitOption[] = { "OK"};
+			int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warningText, "Runs update",
+					JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(32, 32, "icon_light_on.png"), ExitOption, ExitOption[0]);
 		}
 	}
 	
 	// --------------------------------------------------------------------------------------------------------------------------------		
 	public void showNothing() {
-		displayTextField.setText(null); // Show nothing on the TextField
+		display_text_field.setText(null); // Show nothing on the TextField
 		scrollPane_Right.setViewportView(null);
 	}
 }
