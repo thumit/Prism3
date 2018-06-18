@@ -130,7 +130,7 @@ public class PrismMain extends JFrame {
 			
 			cr = new ComponentResizer();	//Need resize since if "setDefaultLookAndFeelDecorated(true);" then the top corners cannot be resized (java famous bug?)
 			cr.registerComponent(main);
-			
+				
 
 //			PApplet.main("Processing_Prism");	// Start processing animation
 //			try {

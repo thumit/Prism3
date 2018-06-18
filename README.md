@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Copyright (C) 2016-2018 PRISM Development Team
 
 PRISM is free software: you can redistribute it and/or modify
@@ -60,3 +61,5 @@ PRISM also uses icons from different sources to build its GUI. Below are details
 	"Mobile Icons" designed by "WebIconSet.com" at http://www.webiconset.com, downloaded at https://www.iconfinder.com/iconsets/Mobile-Icons, license: Free for commercial use
 	"Human o2" designed by "Oliver Scholtz (and others)" at https://schollidesign.deviantart.com, downloaded at https://www.iconfinder.com/iconsets/humano2, license: Free for non commercial use
 	"Gloss set: Basic" designed by "Momenticons" at http://momentumdesignlab.com, downloaded at https://www.iconfinder.com/iconsets/momenticons-gloss-basic, license: Creative Commons (Attribution 3.0 Unported)
+=======
+>>>>>>> branch 'master' of https://Prism-Dev@bitbucket.org/Prism-Members/prism.git
