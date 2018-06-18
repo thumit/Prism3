@@ -175,21 +175,26 @@ public class Read_Database {
 				}		
 				
 				// Convert sets to lists and sort the Lists  --- Important note: we always prefer SORTING DOUBLE
+				Set<String> fail_comparison_attributes = new LinkedHashSet<String>();
 				unique_values_list = new ArrayList[colCount];
 				for (int col = 0; col < colCount; col++) {
+					int processing_col = col;
 					unique_values_list[col] = new ArrayList<String>(yield_tables_column_unique_values[col]);
-					// Sort the list	
-					try {
-						Collections.sort(unique_values_list[col], new Comparator<String>() {
-							@Override
-							public int compare(String o1, String o2) {
+					Collections.sort(unique_values_list[col], new Comparator<String>() {	// Sort the list
+						@Override
+						public int compare(String o1, String o2) {
+							try {
 								return Double.valueOf(o1).compareTo(Double.valueOf(o2));	// Sort Double
+							} catch (Exception e1) {
+								fail_comparison_attributes.add(yield_tables_column_names[processing_col]);
+								return o1.compareTo(o2);	// if fail --> Sort String
 							}
-						});
-					} catch (Exception e1) {
-						Collections.sort(unique_values_list[col]);	// Sort String
-					}
+						}
+					});
+					
 				}
+				System.out.println("non-numeric yield attributes (fail double comparison):");
+				for (String atb : fail_comparison_attributes) System.out.println("     - " + atb);
 				yield_tables_column_unique_values = null;	// clear to save memory
 			}
 		} catch (Exception e) {
@@ -477,7 +482,7 @@ public class Read_Database {
 	}
 	
 	
-	public List<List<String>> get_allLayers() {		
+	public List<List<String>> get_all_layers() {		
 		return allLayers;
 	}
 	
@@ -579,7 +584,7 @@ public class Read_Database {
 				}
 				
 				for (int i = 0; i < colCount; i++) {
-					System.out.println("Testing 5 lists of rotation_ranges");
+					System.out.println("Testing 5 lists (5 columns) of rotation age ranges as in system query 2.3");
 					System.out.println(rotation_ranges[i]);	// printing the 5 lists to test
 				}
 			}
@@ -631,7 +636,7 @@ public class Read_Database {
 		List<String> method = Arrays.asList(new String[] { "NG_E", "PB_E", "GS_E", "EA_E", "MS_E", "BS_E", "NG_R", "PB_R", "GS_R", "EA_R" });	// method
 		List<String> choice = new ArrayList<String>() {		// period
 			{
-				for (int i = 0; i <= 11; i++) {add(Integer.toString(i));}
+				for (int i = 0; i <= 14; i++) {add(Integer.toString(i));}
 			}
 		};	
 			
@@ -655,7 +660,7 @@ public class Read_Database {
 		List<String> method = Arrays.asList(new String[] { "NG_E", "PB_E", "GS_E", "EA_E", "MS_E", "BS_E", "NG_R", "PB_R", "GS_R", "EA_R" });	// method
 		List<String> choice = new ArrayList<String>() {		// choice
 			{
-				for (int i = 0; i <= 11; i++) {add(Integer.toString(i));}
+				for (int i = 0; i <= 14; i++) {add(Integer.toString(i));}
 			}
 		};
 		List<String> rotation_period = new ArrayList<String>() {	// rotation_period

@@ -87,7 +87,7 @@ import prism_project.data_process.Get_Parameter_Information;
 import prism_project.data_process.Get_Variable_Information;
 import prism_project.data_process.LinkedList_Databases_Item;
 import prism_project.data_process.Read_Database;
-import prism_project.data_process.Read_RunInputs;
+import prism_project.data_process.Read_Inputs;
 import prism_project.edit.ScrollPane_DynamicIdentifiers;
 import prism_project.edit.ScrollPane_Parameters;
 import prism_project.edit.ScrollPane_StaticIdentifiers;
@@ -109,7 +109,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 	private PrismTableModel input_model9;
 	private Object[][] input_data9;
 	
-	private Read_RunInputs read;
+	private Read_Inputs read;
 	private int total_Periods;
 	
 	private File file_database;
@@ -146,7 +146,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			}
 		}
 		
-		read = new Read_RunInputs();
+		read = new Read_Inputs();
 		read.read_general_inputs(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_01_general_inputs.txt"));
 		total_Periods = read.get_total_periods();		
 		// End of set up ---------------------------------------------------------------------------			
@@ -320,10 +320,6 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			@Override
 			public void setValueAt(Object value, int row, int col) {
 				data9[row][col] = value;
-				if (col == 2) {
-					fireTableDataChanged();		// When constraint type change then this would register the change and make the selection disappear
-					table9.setRowSelectionInterval(table9.convertRowIndexToView(row), table9.convertRowIndexToView(row));			// select the row again
-				}
 				if (col == 3) {
 					data9[row][12] = null;
 					fireTableDataChanged();		// When constraint multiplier change then this would register the change and make the selection disappear
@@ -1327,6 +1323,9 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 								table9.addRowSelectionInterval(i - 1, i - 1);
 							}
 						}
+						
+						// Scroll to the first row of the current selected rows (- 3 to see the 3 unselected rows above when moving up)
+						table9.scrollRectToVisible(new Rectangle(table9.getCellRect(table9.convertRowIndexToView(table9.getSelectedRow()) - 3, 0, true)));	
 					}
 										
 					if (up_or_down == -1) {	// move down						
@@ -1352,11 +1351,11 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 							for (int i: selectedRow) {
 								table9.addRowSelectionInterval(i + 1, i + 1);
 							}	
-						}						
+						}	
+						
+						// Scroll to the last row of the current selected rows (+ 3 to see the next 3 unselected rows below when moving down)
+						table9.scrollRectToVisible(new Rectangle(table9.getCellRect(table9.convertRowIndexToView(table9.getSelectedRows()[table9.getSelectedRows().length - 1]) + 3, 0, true)));	
 					}
-					
-					// Scroll to the first row of the current selected rows
-					table9.scrollRectToVisible(new Rectangle(table9.getCellRect(table9.convertRowIndexToView(table9.getSelectedRow()), 0, true)));	
 		        }
 		    });
 		    
@@ -1444,7 +1443,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			List<String> yield_tables_names_list = new ArrayList<String>() {{ for (Object i : yield_tables_names) add(i.toString());}};		// Convert Object array to String list
 						
 			// Read input files to retrieve values later
-			Read_RunInputs read = new Read_RunInputs();
+			Read_Inputs read = new Read_Inputs();
 			read.read_model_strata(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_02_model_strata.txt"));
 
 			// Get info: input_02_modeled_strata
@@ -1819,18 +1818,14 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 		Collections.binarySearch(static_identifiers.get(1), var_info.get_layer2()) < 0 ||
 		Collections.binarySearch(static_identifiers.get(2), var_info.get_layer3()) < 0 ||
 		Collections.binarySearch(static_identifiers.get(3), var_info.get_layer4()) < 0 ||
-		(var_info.get_forest_status().equals("E") &&
-				(
-				Collections.binarySearch(static_identifiers.get(4), var_info.get_layer5()) < 0 ||
-				Collections.binarySearch(static_identifiers.get(5), var_info.get_layer6()) < 0
-				)) ||
-		(var_info.get_forest_status().equals("R") && Collections.binarySearch(static_identifiers.get(4), var_info.get_layer5()) < 0) ||
+		Collections.binarySearch(static_identifiers.get(4), var_info.get_layer5()) < 0 ||
+		(var_info.get_forest_status().equals("E") && Collections.binarySearch(static_identifiers.get(5), var_info.get_layer6()) < 0) ||
 		Collections.binarySearch(static_identifiers.get(6), var_info.get_method() + "_" + var_info.get_forest_status()) < 0 ||
 		Collections.binarySearch(static_identifiers.get(7), String.valueOf(var_info.get_period())) < 0) 
 		{
 			return false;
 		}
-		return true;
+		return true;		
 	}
 	
 	

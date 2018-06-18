@@ -22,6 +22,7 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,14 +30,24 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 
 import prism_convenience_class.IconHandle;
+import prism_root.PrismMain;
 
 public class Panel_QuickEdit_EA extends JPanel {
-	public Panel_QuickEdit_EA(JTable table, Object[][] data, ArrayList<String>[] rotation_ranges) {
-		setPreferredSize(new Dimension(200, 0));
+	private JButton btn_default;
+	private JButton btn_apply_e_min;
+	private JButton btn_apply_e_max;
+	private JButton btn_apply_r_min;
+	private JButton btn_apply_r_max;
+	private JButton btnApplyImplement;
+	
+	public Panel_QuickEdit_EA(JTable table, Object[][] data, ArrayList<String>[] rotation_ranges, Object[][] default_data) {
+//		setPreferredSize(new Dimension(200, 0));
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 
@@ -70,6 +81,10 @@ public class Panel_QuickEdit_EA extends JPanel {
 		
 		
 		class Combo_e_minage extends JComboBox {
+			{
+				setPreferredSize(new Dimension(75, getPreferredSize().height));
+			}
+
 			public Combo_e_minage() {
 				for (int i = min_age_for_combo_e; i <= max_age_for_combo_e; i++) {
 					addItem(i);
@@ -79,6 +94,10 @@ public class Panel_QuickEdit_EA extends JPanel {
 		}
 		
 		class Combo_e_maxage extends JComboBox {
+			{
+				setPreferredSize(new Dimension(75, getPreferredSize().height));
+			}
+			
 			public Combo_e_maxage() {
 				for (int i = min_age_for_combo_e; i <= max_age_for_combo_e; i++) {
 					addItem(i);
@@ -88,6 +107,10 @@ public class Panel_QuickEdit_EA extends JPanel {
 		}
 		
 		class Combo_r_minage extends JComboBox {
+			{
+				setPreferredSize(new Dimension(75, getPreferredSize().height));
+			}
+			
 			public Combo_r_minage() {
 				for (int i = min_age_for_combo_r; i <= max_age_for_combo_r; i++) {
 					addItem(i);
@@ -97,6 +120,10 @@ public class Panel_QuickEdit_EA extends JPanel {
 		}
 		
 		class Combo_r_maxage extends JComboBox {
+			{
+				setPreferredSize(new Dimension(75, getPreferredSize().height));
+			}
+			
 			public Combo_r_maxage() {
 				for (int i = min_age_for_combo_r; i <= max_age_for_combo_r; i++) {
 					addItem(i);
@@ -107,14 +134,57 @@ public class Panel_QuickEdit_EA extends JPanel {
 		
 		
 		// Add Label-------------------------------------------------------------------------------------------------
-		c.gridx = 1;
-		c.gridy = 0;
+		c.gridx = 0;
+		c.gridy = 2;
 		c.weightx = 0;
 		c.weighty = 0;
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		c.fill = GridBagConstraints.CENTER;
-		add(new JLabel("min_age_cut_existing"), c);
+		add(new JLabel("Set to Default"), c);
+		
+		// Add button default
+		btn_default = new JButton();
+		btn_default.setVerticalTextPosition(SwingConstants.BOTTOM);
+		btn_default.setHorizontalTextPosition(SwingConstants.CENTER);
+		btn_default.setToolTipText("set all cells to default values");
+		btn_default.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_main.png"));
+		btn_default.setRolloverIcon(IconHandle.get_scaledImageIcon(35, 35, "icon_main.png"));
+		btn_default.setContentAreaFilled(false);
+		btn_default.addActionListener(e -> {
+			String ExitOption[] = {"Reset","Cancel"};
+			int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(),"Reset now?", "Reset all cells to default",
+					JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
+			if (response == 0) {	
+				for (int i = 0; i < default_data.length; i++) {
+					data[i] = Arrays.copyOf(default_data[i], default_data[i].length);
+				}
+				table.setRowSelectionInterval(table.convertRowIndexToView(0), table.convertRowIndexToView(data.length - 1));
+				table.clearSelection();
+			}
+			if (response == 1) {
+			}
+		});
+		c.gridx = 0;
+		c.gridy = 0;
+		c.weightx = 0;
+		c.weighty = 0;
+		c.gridwidth = 1;
+		c.gridheight = 2;
+		c.fill = GridBagConstraints.CENTER;
+		add(btn_default, c);
+		
+		
+		
+		// Add Label-------------------------------------------------------------------------------------------------
+		c.gridx = 1;
+		c.gridy = 2;
+		c.weightx = 0;
+		c.weighty = 0;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		c.fill = GridBagConstraints.CENTER;
+		add(new JLabel("EA_E_min_ra"), c);
 
 		
 		// Add comboBox
@@ -125,14 +195,18 @@ public class Panel_QuickEdit_EA extends JPanel {
 		c.weighty = 0;
 		c.gridwidth = 1;
 		c.gridheight = 1;
-		c.fill = GridBagConstraints.BOTH;
+		c.fill = GridBagConstraints.CENTER;
 		add(combo_e_min, c);
 		
 		
 		// Add button apply
-		JButton btn_apply_e_min = new JButton();
-		btn_apply_e_min.setToolTipText("make changes for all highlighted rows");
-		btn_apply_e_min.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_left.png"));
+		btn_apply_e_min = new JButton();
+		btn_apply_e_min.setVerticalTextPosition(SwingConstants.BOTTOM);
+		btn_apply_e_min.setHorizontalTextPosition(SwingConstants.CENTER);
+		btn_apply_e_min.setToolTipText("make changes for all highlighted cells in one column");
+		btn_apply_e_min.setIcon(IconHandle.get_scaledImageIcon(20, 20, "icon_split.png"));
+		btn_apply_e_min.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_split.png"));
+		btn_apply_e_min.setContentAreaFilled(false);
 		btn_apply_e_min.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
@@ -162,44 +236,48 @@ public class Panel_QuickEdit_EA extends JPanel {
 				}
 			}
 		});
-		c.gridx = 0;
-		c.gridy = 1;
+		c.gridx = 1;
+		c.gridy = 0;
 		c.weightx = 0;
 		c.weighty = 0;
 		c.gridwidth = 1;
 		c.gridheight = 1;
-		c.fill = GridBagConstraints.BOTH;
+		c.fill = GridBagConstraints.CENTER;
 		add(btn_apply_e_min, c);
 
 		
 	
 		// Add Label-------------------------------------------------------------------------------------------------
-		c.gridx = 1;
+		c.gridx = 2;
 		c.gridy = 2;
 		c.weightx = 0;
 		c.weighty = 0;
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		c.fill = GridBagConstraints.CENTER;
-		add(new JLabel("max_age_cut_existing"), c);
+		add(new JLabel("EA_E_max_ra"), c);
 		
 		
 		// Add comboBox
 		JComboBox combo_e_max = new Combo_e_maxage();
-		c.gridx = 1;
-		c.gridy = 3;
+		c.gridx = 2;
+		c.gridy = 1;
 		c.weightx = 1;
 		c.weighty = 0;
 		c.gridwidth = 1;
 		c.gridheight = 1;
-		c.fill = GridBagConstraints.BOTH;
+		c.fill = GridBagConstraints.CENTER;
 		add(combo_e_max, c);
 		
 
 		// Add button apply
-		JButton btn_apply_e_max = new JButton();
-		btn_apply_e_max.setToolTipText("make changes for all highlighted rows");
-		btn_apply_e_max.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_left.png"));
+		btn_apply_e_max = new JButton();
+		btn_apply_e_max.setVerticalTextPosition(SwingConstants.BOTTOM);
+		btn_apply_e_max.setHorizontalTextPosition(SwingConstants.CENTER);
+		btn_apply_e_max.setToolTipText("make changes for all highlighted cells in one column");
+		btn_apply_e_max.setIcon(IconHandle.get_scaledImageIcon(20, 20, "icon_split.png"));
+		btn_apply_e_max.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_split.png"));
+		btn_apply_e_max.setContentAreaFilled(false);
 		btn_apply_e_max.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
@@ -229,44 +307,48 @@ public class Panel_QuickEdit_EA extends JPanel {
 				}
 			}
 		});
-		c.gridx = 0;
-		c.gridy = 3;
-		c.weightx = 0;
-		c.weighty = 0;
-		c.gridwidth = 1;
-		c.gridheight = 1;
-		c.fill = GridBagConstraints.BOTH;
-		add(btn_apply_e_max, c);
-		
-	
-		
-		// Add Label-------------------------------------------------------------------------------------------------
-		c.gridx = 1;
-		c.gridy = 4;
+		c.gridx = 2;
+		c.gridy = 0;
 		c.weightx = 0;
 		c.weighty = 0;
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		c.fill = GridBagConstraints.CENTER;
-		add(new JLabel("min_age_cut_regeneration"), c);
+		add(btn_apply_e_max, c);
+		
+	
+		
+		// Add Label-------------------------------------------------------------------------------------------------
+		c.gridx = 3;
+		c.gridy = 2;
+		c.weightx = 0;
+		c.weighty = 0;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		c.fill = GridBagConstraints.CENTER;
+		add(new JLabel("EA_R_min_ra"), c);
 
 		
 		// Add comboBox
 		JComboBox combo_r_min = new Combo_r_minage();
-		c.gridx = 1;
-		c.gridy = 5;
+		c.gridx = 3;
+		c.gridy = 1;
 		c.weightx = 1;
 		c.weighty = 0;
 		c.gridwidth = 1;
 		c.gridheight = 1;
-		c.fill = GridBagConstraints.BOTH;
+		c.fill = GridBagConstraints.CENTER;
 		add(combo_r_min, c);
 		
 		
 		// Add button apply
-		JButton btn_apply_r_min = new JButton();
-		btn_apply_r_min.setToolTipText("make changes for all highlighted rows");
-		btn_apply_r_min.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_left.png"));
+		btn_apply_r_min = new JButton();
+		btn_apply_r_min.setVerticalTextPosition(SwingConstants.BOTTOM);
+		btn_apply_r_min.setHorizontalTextPosition(SwingConstants.CENTER);
+		btn_apply_r_min.setToolTipText("make changes for all highlighted cells in one column");
+		btn_apply_r_min.setIcon(IconHandle.get_scaledImageIcon(20, 20, "icon_split.png"));
+		btn_apply_r_min.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_split.png"));
+		btn_apply_r_min.setContentAreaFilled(false);
 		btn_apply_r_min.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
@@ -296,44 +378,48 @@ public class Panel_QuickEdit_EA extends JPanel {
 				}
 			}
 		});
-		c.gridx = 0;
-		c.gridy = 5;
-		c.weightx = 0;
-		c.weighty = 0;
-		c.gridwidth = 1;
-		c.gridheight = 1;
-		c.fill = GridBagConstraints.BOTH;
-		add(btn_apply_r_min, c);
-
-		
-	
-		// Add Label-------------------------------------------------------------------------------------------------
-		c.gridx = 1;
-		c.gridy = 6;
+		c.gridx = 3;
+		c.gridy = 0;
 		c.weightx = 0;
 		c.weighty = 0;
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		c.fill = GridBagConstraints.CENTER;
-		add(new JLabel("max_age_cut_regeneration"), c);
+		add(btn_apply_r_min, c);
+
+		
+	
+		// Add Label-------------------------------------------------------------------------------------------------
+		c.gridx = 4;
+		c.gridy = 2;
+		c.weightx = 0;
+		c.weighty = 0;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		c.fill = GridBagConstraints.CENTER;
+		add(new JLabel("EA_R_max_ra"), c);
 		
 		
 		// Add comboBox
 		JComboBox combo_r_max = new Combo_r_maxage();
-		c.gridx = 1;
-		c.gridy = 7;
+		c.gridx = 4;
+		c.gridy = 1;
 		c.weightx = 1;
 		c.weighty = 0;
 		c.gridwidth = 1;
 		c.gridheight = 1;
-		c.fill = GridBagConstraints.BOTH;
+		c.fill = GridBagConstraints.CENTER;
 		add(combo_r_max, c);
 		
 
 		// Add button apply
-		JButton btn_apply_r_max = new JButton();
-		btn_apply_r_max.setToolTipText("make changes for all highlighted rows");
-		btn_apply_r_max.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_left.png"));
+		btn_apply_r_max = new JButton();
+		btn_apply_r_max.setVerticalTextPosition(SwingConstants.BOTTOM);
+		btn_apply_r_max.setHorizontalTextPosition(SwingConstants.CENTER);
+		btn_apply_r_max.setToolTipText("make changes for all highlighted cells in one column");
+		btn_apply_r_max.setIcon(IconHandle.get_scaledImageIcon(20, 20, "icon_split.png"));
+		btn_apply_r_max.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_split.png"));
+		btn_apply_r_max.setContentAreaFilled(false);
 		btn_apply_r_max.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
@@ -363,13 +449,13 @@ public class Panel_QuickEdit_EA extends JPanel {
 				}
 			}
 		});
-		c.gridx = 0;
-		c.gridy = 7;
+		c.gridx = 4;
+		c.gridy = 0;
 		c.weightx = 0;
 		c.weighty = 0;
 		c.gridwidth = 1;
 		c.gridheight = 1;
-		c.fill = GridBagConstraints.BOTH;
+		c.fill = GridBagConstraints.CENTER;
 		add(btn_apply_r_max, c);
 		
 		
@@ -378,8 +464,8 @@ public class Panel_QuickEdit_EA extends JPanel {
 		
 		
 		// Add Label-------------------------------------------------------------------------------------------------
-		c.gridx = 1;
-		c.gridy = 8;
+		c.gridx = 5;
+		c.gridy = 2;
 		c.weightx = 0;
 		c.weighty = 0;
 		c.gridwidth = 1;
@@ -389,21 +475,26 @@ public class Panel_QuickEdit_EA extends JPanel {
 
 	
 		// Add checkBox
-		JCheckBox inplement_Check = new JCheckBox();
-		c.gridx = 1;
-		c.gridy = 9;
+		JCheckBox implement_Check = new JCheckBox();
+		implement_Check.setSelected(true);
+		c.gridx = 5;
+		c.gridy = 1;
 		c.weightx = 1;
 		c.weighty = 0;
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		c.fill = GridBagConstraints.CENTER;
-		add(inplement_Check, c);
+		add(implement_Check, c);
 
 		
 		// Add button apply
-		JButton btnApplyImplement = new JButton();
-		btnApplyImplement.setToolTipText("make changes for all highlighted rows");
-		btnApplyImplement.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_left.png"));
+		btnApplyImplement = new JButton();
+		btnApplyImplement.setVerticalTextPosition(SwingConstants.BOTTOM);
+		btnApplyImplement.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnApplyImplement.setToolTipText("make changes for all highlighted cells in one column");
+		btnApplyImplement.setIcon(IconHandle.get_scaledImageIcon(20, 20, "icon_split.png"));
+		btnApplyImplement.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_split.png"));
+		btnApplyImplement.setContentAreaFilled(false);
 		btnApplyImplement.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
@@ -415,7 +506,7 @@ public class Panel_QuickEdit_EA extends JPanel {
 				}
 				table.clearSelection(); // To help trigger the row refresh: clear then add back the rows
 				for (int i : selectedRow) {
-					if (inplement_Check.isSelected()) {
+					if (implement_Check.isSelected()) {
 						data[i][6] = true;
 					} else {
 						data[i][6] = false;
@@ -424,13 +515,32 @@ public class Panel_QuickEdit_EA extends JPanel {
 				}
 			}
 		});
-		c.gridx = 0;
-		c.gridy = 9;
+		c.gridx = 5;
+		c.gridy = 0;
 		c.weightx = 0;
 		c.weighty = 0;
 		c.gridwidth = 1;
 		c.gridheight = 1;
-		c.fill = GridBagConstraints.BOTH;
+		c.fill = GridBagConstraints.CENTER;
 		add(btnApplyImplement, c);
+	}
+	
+	
+	public void disable_all_apply_buttons() {
+		btn_default.setEnabled(false);
+		btn_apply_e_min.setEnabled(false);
+		btn_apply_e_max.setEnabled(false);
+		btn_apply_r_min.setEnabled(false);
+		btn_apply_r_max.setEnabled(false);
+		btnApplyImplement.setEnabled(false);
+	}
+	
+	public void enable_all_apply_buttons() {
+		btn_default.setEnabled(true);
+		btn_apply_e_min.setEnabled(true);
+		btn_apply_e_max.setEnabled(true);
+		btn_apply_r_min.setEnabled(true);
+		btn_apply_r_max.setEnabled(true);
+		btnApplyImplement.setEnabled(true);
 	}
 }

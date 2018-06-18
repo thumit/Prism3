@@ -917,3 +917,35 @@ All changes in this block are associated with PrismAlpha1.1.07.jar, Prism Formul
 397. Many places refactored and deleted
 All changes in this block are associated with PrismAlpha1.1.08.jar, Prism Formulation 07.docx, Prism Database 03.docx	
 --------------------------------------------------------------------------	
+
+398. Rewrite the Double sort (Read_Database --> Read_yield_tables) to show the sorted list correctly even if the yield attribute has both numeric and non-numeric cells (i.e. cumlmai)
+399. Disable table filter in output_07_flow_constraints
+400. Fix the bug where switch button does not show when single click then double click the output_05 (reason: the GUI process is not finished after the single click)
+	- rewrite codes when click on output_05 (move codes into the thread)
+	- add a boolean variable: "is_output_05_processing" so the executor does not shut down if the GUI is still processing
+401. Rename & add more intuitive information (tool tips, column headers, description, etc) for many tables in Prism GUI
+402. ScrollPane_SubTables_SR_Disturbances --> reload_this_condition_occurence_and_regeneration --> rewrite to trim unnecessary codes which make it really slow when reloading information (reason for slower is same as 403 with too many fireTableDataChanged when we add too many rows/cells to selection)
+403. Fix cell value not change when enter in many tables. See "setValueAt(Object value, int row, int col)" which is rewritten for each table. 2 cases:
+	- 1st case to re-select cell: tables fixed: 6a, 6b, 8a, 8b (also fix quick edit, see button apply)
+	- 2nd case to re-select row: tables fixed: 4a (not fix quick edit of this table because there are many buttons & the data is small anyway so the speed is still fast)
+404. Special desgin for moving basic constraints and fly constraints (output_05) to see 3-gap-rows at top or bottom while moving the constraints up or down
+405. Rewrite read input sm so we do not need to intersect strata later (see populate_sm_lists in Read_Inputs) --> alternative optimal solution
+406. Boost speed RR3k with Binary search:
+	- when matching method and choice (of input_03) when defining variables
+	- when matching covertype conversion & rotation age (of input_04) when defining variables
+407. Need to disable quick edit buttons when multiple rows in the following tables are selected (to avoid not being aware of making changes)
+	- Management Cost
+	- SR Disturbances
+	- EA Management
+408. Reqrite eq. 15 in Panel_Solve in a different way. Alternative optimal solution is accepted
+409. RRB9 Speed Boost is implemented in several place, not significant improvement
+	- Get_Disturbance_Information
+	- Get_Cost_Information
+	- Read_Inputs --> populate_nonea_lists
+410. Permanaetly remove the boolean colum in input_nonea_management
+411. GUI for EA Management window completed. Note:
+	- choices are limited to 0-5 for both EA_E and EA_R
+	- no row --> not model EA_E and EA_R
+412. Extent choices limit to 0-14 for NG, PB, GS, MS, BS methods. Note: no row --> not model Non-EA methods
+All changes in this block are associated with PrismAlpha1.2.01.jar, Prism Formulation 07.docx, Prism Database 03.docx	
+--------------------------------------------------------------------------	

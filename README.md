@@ -29,8 +29,8 @@ Development team:
 
 	Yu Wei, Project Investigator, Associate Professor at Colorado State university (USA), yweimailbox@gmail.com
 	Dung Nguyen, Key Developer, PostDoctoral Fellow at Colorado State University (USA), dzung.csu@gmail.com
-	Eric Henderson, Collaborator, Regional Planning Analyst at Forest Service - Northern Region (USA), ehenderson@fs.fed.us
-	David Anderson, Collaborator, Forest Planning Analyst at Forest Service - Helena Lewis and Clark National Forest (USA), davidanderson@fs.fed.us
+	Eric Henderson, Collaborator, Regional Planning Analyst at Forest Service - R1 Northern Region (USA), ehenderson@fs.fed.us
+	David Anderson, Collaborator, Regional Planning Analyst at Forest Service - R3 Southwestern Region (USA), davidanderson@fs.fed.us
 
 
 PRISM is licensed under the terms of the GNU General Public License version 3 or later. A copy of this license (license-GPL.txt) could be found in the distribution of PRISM.

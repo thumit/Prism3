@@ -47,6 +47,7 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -123,8 +124,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	
 	private boolean is_first_time_loaded = true;
 	
-	//6 panels for the selected Run
-	private General_Inputs_GUI paneL_General_Inputs_GUI;
+	// 9 panels for the selected Run
+	private General_Inputs_GUI panel_General_Inputs_GUI;
 	private Model_Strata_GUI panel_Model_Strata_GUI;
 	private Non_EA_Management_GUI panel_Non_EA_Management_GUI;
 	private EA_Management_GUI panel_EA_Management_GUI;
@@ -149,7 +150,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	private int total_replacing_disturbance;
 	
 	
-	//table Models OverView
+	// table model overView
 	private boolean is_table_overview_loaded = false;
 	private int rowCount_overview, colCount_overview;
 	private String[] columnNames_overview;
@@ -158,7 +159,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	private Object[][] data_overview;
 	private double modeledAcres, availableAcres;
 	
-	//table input_01_general_inputs.txt
+	// table input_01_general_inputs.txt
 	private boolean is_table1_loaded = false;
 	private int rowCount1, colCount1;
 	private String[] columnNames1;
@@ -166,7 +167,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	private PrismTableModel model1;
 	private Object[][] data1;
 	
-	//table input_02_model_strata.txt
+	// table input_02_model_strata.txt
 	private boolean is_table3_loaded = false;
 	private int rowCount3, colCount3;
 	private String[] columnNames3;
@@ -174,7 +175,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	private PrismTableModel model3;
 	private Object[][] data3;
 	
-	//table input_03_non_ea_management.txt
+	// table input_03_non_ea_management.txt
 	private boolean is_table2_loaded = false;
 	private int rowCount2, colCount2;
 	private String[] columnNames2;
@@ -182,15 +183,23 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	private PrismTableModel model2;
 	private Object[][] data2;
 	
-	//table input_04_ea_management.txt
+	// table input_04_ea_management.txt
 	private boolean is_table4_loaded = false;
 	private int rowCount4, colCount4;
 	private String[] columnNames4;
 	private JTable table4;
 	private PrismTableModel model4;
 	private Object[][] data4;
+	
+	// table input_04a
+	private boolean is_table4a_loaded = false;
+	private int rowCount4a, colCount4a;
+	private String[] columnNames4a;
+	private JTable table4a;
+	private PrismTableModel model4a;
+	private Object[][] data4a;
 
-	//table input_05_non_sr_disturbances.txt
+	// table input_05_non_sr_disturbances.txt
 	private boolean is_table5_loaded = false;
 	private int rowCount5, colCount5;
 	private String[] columnNames5;
@@ -198,7 +207,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	private PrismTableModel model5;
 	private Object[][] data5;
 	
-	//table input_06_sr_disturbances.txt
+	// table input_06_sr_disturbances.txt
 	private boolean is_table6_loaded = false;
 	private int rowCount6, colCount6;
 	private String[] columnNames6;
@@ -206,7 +215,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	private PrismTableModel model6;
 	private Object[][] data6;
 	
-	//table input_06a --> percentage
+	// table input_06a --> percentage
 	private boolean is_table6a_loaded = false;
 	private int rowCount6a, colCount6a;
 	private String[] columnNames6a;
@@ -214,7 +223,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	private PrismTableModel model6a;
 	private Object[][] data6a;
 	
-	//table input_06b --> conversion
+	// table input_06b --> conversion
 	private boolean is_table6b_loaded = false;
 	private int rowCount6b, colCount6b;
 	private String[] columnNames6b;
@@ -222,7 +231,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	private PrismTableModel model6b;
 	private Object[][] data6b;	
 	
-	//table input_07_management_cost.txt (changed to input_07 to make it continuous). make it input_08 would be consistent, but there might be other refactors in the future --> not necessary
+	// table input_07_management_cost.txt (changed to input_07 to make it continuous). make it input_08 would be consistent, but there might be other refactors in the future --> not necessary
 	private boolean is_table8_loaded = false;
 	private int rowCount8, colCount8;
 	private String[] columnNames8;
@@ -230,7 +239,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	private PrismTableModel model8;
 	private Object[][] data8;
 	
-	//table input_08a --> action_cost
+	// table input_08a --> action_cost
 	private boolean is_table8a_loaded = false;
 	private int rowCount8a, colCount8a;
 	private String[] columnNames8a;
@@ -238,7 +247,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	private PrismTableModel model8a;
 	private Object[][] data8a;
 	
-	//table input_08b --> conversion_cost
+	// table input_08b --> conversion_cost
 	private boolean is_table8b_loaded = false;
 	private int rowCount8b, colCount8b;
 	private String[] columnNames8b;
@@ -246,7 +255,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	private PrismTableModel model8b;
 	private Object[][] data8b;	
 	
-	//table input_08_basic_constraints.txt (changed to input_08 to make it continuous). make it input_09 would be consistent, but there might be other refactors in the future --> not necessary
+	// table input_08_basic_constraints.txt (changed to input_08 to make it continuous). make it input_09 would be consistent, but there might be other refactors in the future --> not necessary
 	private boolean is_table9_loaded = false;
 	private int rowCount9, colCount9;
 	private String[] columnNames9;
@@ -254,7 +263,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	private PrismTableModel model9;
 	private Object[][] data9;
 	
-	//table input_09_flow_constraints.txt (changed to input_09 to make it continuous). make it input_08 would be consistent, but there might be other refactors in the future --> not necessary
+	// table input_09_flow_constraints.txt (changed to input_09 to make it continuous). make it input_08 would be consistent, but there might be other refactors in the future --> not necessary
 	private boolean is_table10_loaded = false;
 	private int rowCount10, colCount10;
 	private String[] columnNames10;
@@ -262,7 +271,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	private PrismTableModel model10;
 	private Object[][] data10;	
 	
-	//readme
+	// readme
 	private PrismTextAreaReadMe readme = new PrismTextAreaReadMe("icon_tree.png", 70, 70);
 	
 	
@@ -271,12 +280,12 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	
 	public Panel_Edit_Details(File RunFolder) {
 		super.setLayout(new BorderLayout());	
-		currentRunFolder = RunFolder;		//Get information from the run
+		currentRunFolder = RunFolder;		// Get information from the run
 		reload_inputs_before_creating_GUI();
 		
 		
-		//Create the interface ---------------------------------------------------------------------------------------------------------------------
-		// Add 6 input options to radioPanel and add that panel to scrollPane_Right at combinePanel NORTH
+		// Create the interface ---------------------------------------------------------------------------------------------------------------------
+		// Add 9 input options to radioPanel and add that panel to scrollPane_Right at combinePanel NORTH
 		radioPanel_Right = new JPanel();
 		radioPanel_Right.setLayout(new FlowLayout());		
 		radioGroup_Right = new ButtonGroup();
@@ -302,32 +311,33 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		GUI_Text_splitPanel.setDividerSize(0);
 			
 	
-		// Create all new 6 panels for the selected Run--------------------------------------------------
-		paneL_General_Inputs_GUI = new General_Inputs_GUI();
+		// Create all new 9 panels for the selected Run--------------------------------------------------
+		panel_General_Inputs_GUI = new General_Inputs_GUI();
 //		panel_Model_Strata_GUI = new Model_Strata_GUI();
-//		panel_UnevenAge_Management_GUI = new UnevenAge_Management_GUI();
-//		panel_EvenAge_Management_GUI = new Covertype_Conversion_GUI();
-//		panel_Replacing_Disturbances_GUI = new Replacing_Disturbances_GUI();
+//		panel_Non_EA_Management_GUI = new Non_EA_Management_GUI();
+//		panel_EA_Management_GUI = new EA_Management_GUI();
+//		panel_Non_SR_Disturbances_GUI = new Non_SR_Disturbances_GUI();
+//		panel_SR_Disturbances_GUI = new SR_Disturbances_GUI();
 //		panel_Management_Cost_GUI = new Management_Cost_GUI();
 //		panel_Basic_Constraints_GUI = new Basic_Constraints_GUI();
 //		panel_Flow_Constraints_GUI = new Flow_Constraints_GUI();
 					
 		
 		// Show the 2 panelInput of the selected Run
-		GUI_Text_splitPanel.setLeftComponent(paneL_General_Inputs_GUI);
+		GUI_Text_splitPanel.setLeftComponent(panel_General_Inputs_GUI);
 		
 		
 		// Add all components to The Panel------------------------------------------------------------
 		super.add(radioPanel_Right, BorderLayout.NORTH);
 		super.add(GUI_Text_splitPanel, BorderLayout.CENTER);
 		super.setOpaque(false);
-		ToolTipManager.sharedInstance().setInitialDelay(0);		//Show toolTip immediately
+		ToolTipManager.sharedInstance().setInitialDelay(0);		// Show toolTip immediately
 		
 
 				
 		// Load database of the run if exist---------------------------------------------------------------------
 		File database_to_load = new File(currentRunFolder.getAbsolutePath() + "/database.db");
-		if (database_to_load.exists()) {	//Load if the file exists
+		if (database_to_load.exists()) {	// Load if the file exists
 			file_database = database_to_load;
 			
 			// Read the tables (strata_definition, existing_strata, yield_tables) of the database-------------------
@@ -340,7 +350,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			rotation_ranges = read_database.get_rotation_ranges();
 			layers_Title = read_database.get_layers_Title();
 			layers_Title_ToolTip = read_database.get_layers_Title_ToolTip();
-			allLayers = read_database.get_allLayers();
+			allLayers = read_database.get_all_layers();
 			allLayers_ToolTips = read_database.get_allLayers_ToolTips();
 			yieldTable_values = read_database.get_yield_tables_values();
 			yieldTable_ColumnNames = read_database.get_yield_tables_column_names();
@@ -377,7 +387,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		for (int j = 0; j < radioButton_Right.length; j++) {
 			if (radioButton_Right[j].isSelected()) {		
 				if (j == 0) {
-					GUI_Text_splitPanel.setLeftComponent(paneL_General_Inputs_GUI);
+					GUI_Text_splitPanel.setLeftComponent(panel_General_Inputs_GUI);
 					GUI_Text_splitPanel.setRightComponent(null);
 				} else if (j == 1) {
 					GUI_Text_splitPanel.setLeftComponent(panel_Model_Strata_GUI);
@@ -427,26 +437,13 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			tableLoader = new Reload_Table_Info(table_file);
 			rowCount1 = tableLoader.get_rowCount();
 			colCount1 = tableLoader.get_colCount();
-			data1 = tableLoader.get_input_data();
+			data1 = tableLoader.get_data();
 			columnNames1 = tableLoader.get_columnNames();
 			is_table1_loaded = true;
 		} else { // Create a fresh new if Load fail
 			System.err.println("File not exists: input_01_general_inputs.txt - New interface is created");
 		}
 		
-		
-		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_03_non_ea_management.txt");
-		if (table_file.exists()) {		//Load from input
-			tableLoader = new Reload_Table_Info(table_file);
-			rowCount2 = tableLoader.get_rowCount();
-			colCount2 = tableLoader.get_colCount();
-			data2 = tableLoader.get_input_data();
-			columnNames2 = tableLoader.get_columnNames();
-			is_table2_loaded = true;
-		} else { // Create a fresh new if Load fail
-			System.err.println("File not exists: input_03_non_ea_management.txt - New interface is created");
-		}
-			
 		
 //		if (file_ExistingStrata == null && is_this_the_first_load == true) {		//If there is no existing strata, still load the selected strata
 //			table_file = new File(currentRunFolder.getAbsolutePath() + "/input_02_model_strata.txt");
@@ -468,18 +465,31 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 //			}	
 //		}
 		
-															//Need to change later (not here , below) because I didn't write the whole file, just write the yes case
-//		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_04_ea_management.txt");
-//		if (table_file.exists()) { // Load from input
-//			tableLoader = new Reload_Table_Info(table_file);
-//			rowCount4 = tableLoader.get_rowCount();
-//			colCount4 = tableLoader.get_colCount();
-//			data4 = tableLoader.get_input_data();
-//			columnNames4 = tableLoader.get_columnNames();
-//			is_table4_loaded = true;
-//		} else { // Create a fresh new if Load fail
-//			System.err.println("File not exists: input_04_ea_management).txt - New interface is created");
-//		}
+		
+		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_03_non_ea_management.txt");
+		if (table_file.exists()) {		//Load from input
+			tableLoader = new Reload_Table_Info(table_file);
+			rowCount2 = tableLoader.get_rowCount();
+			colCount2 = tableLoader.get_colCount();
+			data2 = tableLoader.get_data();
+			columnNames2 = tableLoader.get_columnNames();
+			is_table2_loaded = true;
+		} else { // Create a fresh new if Load fail
+			System.err.println("File not exists: input_03_non_ea_management.txt - New interface is created");
+		}
+		
+		
+		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_04_ea_management.txt");
+		if (table_file.exists()) {		//Load from input
+			tableLoader = new Reload_Table_Info(table_file);
+			rowCount4 = tableLoader.get_rowCount();
+			colCount4 = tableLoader.get_colCount();
+			data4 = tableLoader.get_data();
+			columnNames4 = tableLoader.get_columnNames();
+			is_table4_loaded = true;
+		} else { // Create a fresh new if Load fail
+			System.err.println("File not exists: input_04_ea_management.txt - New interface is created");
+		}
 		
 
 		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_05_non_sr_disturbances.txt");
@@ -487,7 +497,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			tableLoader = new Reload_Table_Info(table_file);
 			rowCount5 = tableLoader.get_rowCount();
 			colCount5 = tableLoader.get_colCount();
-			data5 = tableLoader.get_input_data();
+			data5 = tableLoader.get_data();
 			columnNames5 = tableLoader.get_columnNames();
 			is_table5_loaded = true;
 		} else { // Create a fresh new if Load fail
@@ -500,7 +510,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			tableLoader = new Reload_Table_Info(table_file);
 			rowCount6 = tableLoader.get_rowCount();
 			colCount6 = tableLoader.get_colCount();
-			data6 = tableLoader.get_input_data();
+			data6 = tableLoader.get_data();
 			columnNames6 = tableLoader.get_columnNames();
 			is_table6_loaded = true;
 		} else { // Create a fresh new if Load fail
@@ -513,7 +523,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			tableLoader = new Reload_Table_Info(table_file);
 			rowCount8 = tableLoader.get_rowCount();
 			colCount8 = tableLoader.get_colCount();
-			data8 = tableLoader.get_input_data();
+			data8 = tableLoader.get_data();
 			columnNames8 = tableLoader.get_columnNames();
 			is_table8_loaded = true;
 		} else { // Create a fresh new if Load fail
@@ -525,7 +535,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			tableLoader = new Reload_Table_Info(table_file);
 			rowCount9 = tableLoader.get_rowCount();
 			colCount9 = tableLoader.get_colCount();
-			data9 = tableLoader.get_input_data();
+			data9 = tableLoader.get_data();
 			columnNames9 = tableLoader.get_columnNames();
 			is_table9_loaded = true;
 		} else { // Create a fresh new if Load fail
@@ -537,7 +547,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			tableLoader = new Reload_Table_Info(table_file);
 			rowCount10 = tableLoader.get_rowCount();
 			colCount10 = tableLoader.get_colCount();
-			data10 = tableLoader.get_input_data();
+			data10 = tableLoader.get_data();
 			columnNames10 = tableLoader.get_columnNames();
 			is_table10_loaded = true;
 		} else { // Create a fresh new if Load fail
@@ -561,12 +571,11 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				list = Files.readAllLines(Paths.get(table_file.getAbsolutePath()), StandardCharsets.UTF_8);			
 				String[] a = list.toArray(new String[list.size()]);					
 												
-				//Setup the table---------------------------------
+				// Setup the table---------------------------------
 				input_columnNames = a[0].split(delimited);		//tab delimited		//Read the first row	
 				input_rowCount = a.length - 1;  // - 1st row which is the column name
 				input_colCount = input_columnNames.length;
 				input_data = new Object[input_rowCount][input_colCount];
-			
 				
 				// Populate the input_data matrix-----------------
 				for (int row = 0; row < input_rowCount; row++) {
@@ -589,7 +598,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			return input_rowCount;
 		}
 		
-		private Object[][] get_input_data() {
+		private Object[][] get_data() {
 			return input_data;
 		}
 		
@@ -613,15 +622,13 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		// Find the data match to paste into Existing Strata		
 		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_02_model_strata.txt");
 		if (table_file.exists()) { // Load from input
-			// Uncheck all checkboxes in "model_strata"
+			// Uncheck all check-boxes in "model_strata"
 			for (int i = 0; i < data3.length; i++) {
 				data3[i][9] = false;
 			}
 			
-			
 			tableLoader = new Reload_Table_Info(table_file);
-			
-			Object[][] temp_data = tableLoader.get_input_data();
+			Object[][] temp_data = tableLoader.get_data();
 			for (int i = 0; i < temp_data.length; i++) {
 				for (int ii = 0; ii < data3.length; ii++) {
 					if (   String.valueOf(data3[ii][0]).equals(String.valueOf(temp_data[i][0]))   ) {		//Just need to compare Strata ID
@@ -637,120 +644,17 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			button_select_Strata.doClick();
 			
 			is_table3_loaded = true;		
-		} else { // Create a fresh new if Load fail
+		} else { // Create a fresh new if load fail
 			System.err.println("File not exists: input_02_model_strata.txt - New interface is created");
 		}	
 		
 
-		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_04_ea_management.txt");
-		if (table_file.exists()) { // Load from input
-			// Uncheck all checkboxes in "implementation" column when the input_04 exists
-			for (int i = 0; i < data4.length; i++) {
-				data4[i][6] = false;
-			}	
-			
-			 // Load from input
-			tableLoader = new Reload_Table_Info(table_file);
-			String twocolumnsGUI, twocolumnsInput;
-			
-			Object[][] temp_data = tableLoader.get_input_data();
-			for (int i = 0; i < temp_data.length; i++) {
-				twocolumnsInput = String.valueOf(temp_data[i][0]) + String.valueOf(temp_data[i][1]);
-				for (int ii = 0; ii < data4.length; ii++) {
-					twocolumnsGUI = String.valueOf(data4[ii][0]) + String.valueOf(data4[ii][1]);			
-					if (twocolumnsGUI.equals(twocolumnsInput)) {		//Just need to compare 2 columns: cover type & size class
-						// Apply temp_data row values to data4 row 
-						for (int jj = 0; jj < data4[ii].length; jj++) {
-							data4[ii][jj] = temp_data[i][jj];
-						}		
-					}	
-				}
-			}	
-			
-			is_table4_loaded = true;
-		} else { // Create a fresh new if Load fail
-			System.err.println("File not exists: input_04_ea_management.txt - New interface is created");
-		}
-				
 		
-		
-//		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_05_covertype_conversion_replacing.txt");
-//		if (table_file.exists()) { // Load from input
-//			 // Load from input
-//			tableLoader = new Reload_Table_Info(table_file);		
-//			Object[][] temp_data = tableLoader.get_input_data();
-//			for (int i = 0; i < temp_data.length; i++) {	
-//				// Apply temp_data row values to data5 row 
-//				for (int j = 0; j < data5[i].length; j++) {
-//					data5[i][j] = temp_data[i][j];
-//				}	
-//			}	
-//			is_table5_loaded = true;
-//		} else { // Create a fresh new if Load fail
-//			System.err.println("File not exists: input_05_covertype_conversion_replacing.txt - New interface is created");
-//		}
-		
-		
-		
-//		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_05_non_sr_disturbances.txt");
-//		if (table_file.exists()) { // Load from input
-//			 // Load from input
-//			tableLoader = new Reload_Table_Info(table_file);		
-//			Object[][] temp_data = tableLoader.get_input_data();
-//			for (int i = 0; i < temp_data.length; i++) {	
-//				// Apply temp_data row values to data6 row 
-//				for (int j = 0; j < data6[i].length; j++) {
-//					data6[i][j] = temp_data[i][j];
-//				}	
-//			}	
-//			is_table6_loaded = true;
-//		} else { // Create a fresh new if Load fail
-//			System.err.println("File not exists: input_05_non_sr_disturbances.txt - New interface is created");
-//		}
-			
-		
-		
-//		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_06_sr_disturbances.txt");
-//		if (table_file.exists()) { // Load from input
-//			// Load from input
-//			tableLoader = new Reload_Table_Info(table_file);		
-//			Object[][] temp_data = tableLoader.get_input_data();
-//			for (int i = 0; i < temp_data.length; i++) {	
-//				// Apply temp_data row values to data7 row 
-//				for (int j = 0; j < data7[i].length; j++) {
-//					data7[i][j] = temp_data[i][j];
-//				}	
-//			}	
-//			is_table7_loaded = true;
-//		} else { // Create a fresh new if Load fail
-//			System.err.println("File not exists: input_06_sr_disturbances.txt - New interface is created");
-//		}		
-				
-		
-		
-//		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_07_management_cost.txt");
-//		if (table_file.exists()) { // Load from input
-//			 // Load from input
-//			tableLoader = new Reload_Table_Info(table_file);		
-//			Object[][] temp_data = tableLoader.get_input_data();
-//			for (int i = 0; i < temp_data.length; i++) {	
-//				// Apply temp_data row values to data8 row 
-//				for (int j = 0; j < data8[i].length; j++) {
-//					data8[i][j] = temp_data[i][j];
-//				}	
-//			}	
-//			is_table8_loaded = true;
-//		} else { // Create a fresh new if Load fail
-//			System.err.println("File not exists: input_07_management_cost.txt - New interface is created");
-//		}
-				
-		
-				
 		// Matching data types after finishing reloads
 		model2.match_DataType();		//a smart way to retrieve the original data type :))))))
-		model3.match_DataType();		//a smart way to retrieve the original data type :))))))	
+		model3.match_DataType();		//a smart way to retrieve the original data type :))))))
 		model4.match_DataType();		//a smart way to retrieve the original data type :))))))
-//		model5.match_DataType();		//a smart way to retrieve the original data type :))))))
+		model4a.match_DataType();		//a smart way to retrieve the original data type :))))))
 		model5.match_DataType();		//a smart way to retrieve the original data type :))))))
 		model6.match_DataType();		//a smart way to retrieve the original data type :))))))
 		model6a.match_DataType();		//a smart way to retrieve the original data type :))))))
@@ -855,9 +759,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		//Setup the table------------------------------------------------------------	
 		if (is_table2_loaded == false) { // Create a fresh new if Load fail				
 			rowCount2 = 0;
-			colCount2 = 5;
+			colCount2 = 4;
 			data2 = new Object[rowCount2][colCount2];
-			columnNames2 = new String[] {"sm_id", "sm_description", "sm_static_identifiers", "sm_method_choice", "sm_implementation"};	
+			columnNames2 = new String[] {"condition_id", "condition_description", "static_identifiers", "method_choice"};	
 		}
 					
 		
@@ -866,13 +770,12 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			@Override
 			public Class getColumnClass(int c) {
 				if (c == 0) return Integer.class;	// column 0 accepts only Integer
-				else if (c == colCount2 - 1) return Boolean.class;	// last column accepts only Boolean
 				else return String.class;				
 			}
 			
 			@Override
 			public boolean isCellEditable(int row, int col) {
-				if (col == 1 || col == colCount2 - 1) { 	// Only the 2nd and the last column is editable
+				if (col == 1) { 	// Only the 2nd column is editable
 					return true;
 				} else {
 					return false;
@@ -897,12 +800,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 								} catch (NumberFormatException e) {
 									System.err.println(e.getClass().getName() + ": " + e.getMessage() + " Fail to convert String to Integer values in create_table2");
 								}	
-							} else if (col == colCount2 - 1) {		// lastColumn is Boolean
-								try {
-									data2[row][col] = Boolean.valueOf(String.valueOf(data2[row][col]));
-								} catch (NumberFormatException e) {
-									System.err.println(e.getClass().getName() + ": " + e.getMessage() + " Fail to convert String to Boolean values in create_table2");
-								}
 							} else {	//All other columns are String
 								data2[row][col] = String.valueOf(data2[row][col]);
 							}
@@ -943,7 +840,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				java.awt.Point p = e.getPoint();
 				int row = rowAtPoint(p);
 				int col = columnAtPoint(p);
-				if (table2.getColumnName(col).equals("sm_description")) {
+				if (table2.getColumnName(col).equals("condition_description")) {
 					try {
 						tip = getValueAt(row, col).toString();
 					} catch (RuntimeException e1) {
@@ -957,12 +854,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
     
 		// Hide columns
 		TableColumnsHandle table_handle = new TableColumnsHandle(table2);
-		table_handle.setColumnVisible("sm_static_identifiers", false);
-		table_handle.setColumnVisible("sm_method_choice", false);
-		table_handle.setColumnVisible("sm_implementation", false);
+		table_handle.setColumnVisible("static_identifiers", false);
+		table_handle.setColumnVisible("method_choice", false);
 
-        // Set up Type for the last column    
-		((JComponent) table2.getDefaultRenderer(Boolean.class)).setOpaque(true);	// It's a bug in the synth-installed renderer, quick hack is to force the rendering checkbox opacity to true
 		table2.setAutoResizeMode(0);		// 0 = JTable.AUTO_RESIZE_OFF
 		table2.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);  
 		table2.getTableHeader().setReorderingAllowed(false);		//Disable columns move
@@ -1121,56 +1015,36 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	
 	
 	//--------------------------------------------------------------------------------------------------------------------------
-	public void create_table4() {
-		int total_CoverType = allLayers.get(4).size();		// total number of elements - 1 in layer5 Cover Type (0 to...)
-	
+	public void create_table4() {		
 		//Setup the table------------------------------------------------------------	
 		if (is_table4_loaded == false) { // Create a fresh new if Load fail				
-			rowCount4 = total_CoverType * total_CoverType;
-			colCount4 = 7;
+			rowCount4 = 0;
+			colCount4 = 4;
 			data4 = new Object[rowCount4][colCount4];
-	        columnNames4 = new String[] {"layer5_before_cut", "layer5_after_cut", "EA_E_RAmin", "EA_E_RAmax", "EA_R_RAmin", "EA_R_RAmax", "implementation"};
-			
-			// Populate the data matrix
-	        int table_row = 0;
-			for (int i = 0; i < total_CoverType; i++) {
-				for (int j = 0; j < total_CoverType; j++) {
-					data4[table_row][0] = allLayers.get(4).get(i);
-					data4[table_row][1] = allLayers.get(4).get(j);	
-					
-					String covertype = allLayers.get(4).get(i);
-					int min_age_cut_existing = (rotation_ranges[0].indexOf(covertype) >= 0 && rotation_ranges[1].get(rotation_ranges[0].indexOf(covertype)) != null) ? Integer.valueOf(rotation_ranges[1].get(rotation_ranges[0].indexOf(covertype))) : -9999;
-				    int max_age_cut_existing = (rotation_ranges[0].indexOf(covertype) >= 0 && rotation_ranges[2].get(rotation_ranges[0].indexOf(covertype)) != null) ? Integer.valueOf(rotation_ranges[2].get(rotation_ranges[0].indexOf(covertype))) : -9999;
-				    int min_age_cut_regeneration = (rotation_ranges[0].indexOf(covertype) >= 0 && rotation_ranges[3].get(rotation_ranges[0].indexOf(covertype)) != null) ? Integer.valueOf(rotation_ranges[3].get(rotation_ranges[0].indexOf(covertype))) : -9999;
-				    int max_age_cut_regeneration = (rotation_ranges[0].indexOf(covertype) >= 0 && rotation_ranges[4].get(rotation_ranges[0].indexOf(covertype)) != null) ? Integer.valueOf(rotation_ranges[4].get(rotation_ranges[0].indexOf(covertype))) : -9999;
-					
-					data4[table_row][2] = min_age_cut_existing;
-					data4[table_row][3] = max_age_cut_existing;
-					data4[table_row][4] = min_age_cut_regeneration;
-					data4[table_row][5] = max_age_cut_regeneration;
-					if (i==j) data4[table_row][6] = true; 
-					table_row++;
-				}
-			}
+			columnNames4 = new String[] {"condition_id", "condition_description", "static_identifiers", "conversion_and_rotation"};	
 		}
-			
+					
 		
-		//Create a table-------------------------------------------------------------
-		model4 = new PrismTableModel(rowCount4, colCount4, data4, columnNames4) {			
+		//Create a table-------------------------------------------------------------		
+		model4 = new PrismTableModel(rowCount4, colCount4, data4, columnNames4) {
+			@Override
+			public Class getColumnClass(int c) {
+				if (c == 0) return Integer.class;	// column 0 accepts only Integer
+				else return String.class;				
+			}
+			
 			@Override
 			public boolean isCellEditable(int row, int col) {
-				if (col < 2) { // Only the last 5 columns are editable
-					return false;
-				} else {
+				if (col == 1) { 	// Only the 2nd column is editable
 					return true;
+				} else {
+					return false;
 				}
 			}
-
+			
 			@Override
 			public void setValueAt(Object value, int row, int col) {
 				data4[row][col] = value;
-//				fireTableDataChanged();		// No need this because it will clear the selection, 
-											// With button do task for multiple row we need fire the change outside of this class, so the change can show up in the GUI
 			}
 			
 			@Override
@@ -1180,18 +1054,12 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						if (String.valueOf(data4[row][col]).equals("null")) {
 							data4[row][col] = null;
 						} else {					
-							if (col >= 2 && col <= 5) {			//Column 2 to 5 are Integer
+							if (col == 0) {		// column 0 is Integer
 								try {
 									data4[row][col] = Integer.valueOf(String.valueOf(data4[row][col]));
 								} catch (NumberFormatException e) {
 									System.err.println(e.getClass().getName() + ": " + e.getMessage() + " Fail to convert String to Integer values in create_table4");
 								}	
-							} else if (col == 6) {			//column "implementation" accepts only Boolean
-								try {
-									data4[row][col] = Boolean.valueOf(String.valueOf(data4[row][col]));
-								} catch (NumberFormatException e) {
-									System.err.println(e.getClass().getName() + ": " + e.getMessage() + " Fail to convert String to Boolean values in create_table4");
-								}							
 							} else {	//All other columns are String
 								data4[row][col] = String.valueOf(data4[row][col]);
 							}
@@ -1204,6 +1072,191 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		
 		
 		table4 = new JTable(model4) {
+			@Override			//These override is to make the width of the cell fit all contents of the cell
+			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+				// For the cells in table								
+				Component component = super.prepareRenderer(renderer, row, column);
+				int rendererWidth = component.getPreferredSize().width;
+				TableColumn tableColumn = getColumnModel().getColumn(column);
+				int maxWidth = Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth());
+				
+				// For the column names
+				TableCellRenderer renderer2 = table4.getTableHeader().getDefaultRenderer();	
+				Component component2 = renderer2.getTableCellRendererComponent(table4,
+			            tableColumn.getHeaderValue(), false, false, -1, column);
+				maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
+				
+				if (column != 1) {
+					tableColumn.setPreferredWidth(maxWidth);
+				} else {
+					tableColumn.setMinWidth(300);
+				}
+				return component;
+			}	
+			
+			@Override	// Implement table cell tool tips           
+			public String getToolTipText(MouseEvent e) {
+				String tip = null;
+				java.awt.Point p = e.getPoint();
+				int row = rowAtPoint(p);
+				int col = columnAtPoint(p);
+				if (table4.getColumnName(col).equals("condition_description")) {
+					try {
+						tip = getValueAt(row, col).toString();
+					} catch (RuntimeException e1) {
+						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+					}
+				}
+				return tip;
+			}	
+		};
+
+    
+		// Hide columns
+		TableColumnsHandle table_handle = new TableColumnsHandle(table4);
+		table_handle.setColumnVisible("static_identifiers", false);
+		table_handle.setColumnVisible("conversion_and_rotation", false);
+
+		table4.setAutoResizeMode(0);		// 0 = JTable.AUTO_RESIZE_OFF
+		table4.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);  
+		table4.getTableHeader().setReorderingAllowed(false);		//Disable columns move
+		table4.setPreferredScrollableViewportSize(new Dimension(250, 20));
+	}	
+	
+	
+	//--------------------------------------------------------------------------------------------------------------------------
+	public void create_table4a() {
+		int total_CoverType = allLayers.get(4).size();		// total number of elements - 1 in layer5 Cover Type (0 to...)
+	
+		//Setup the table------------------------------------------------------------	
+		if (is_table4a_loaded == false) { // Create a fresh new if Load fail				
+			rowCount4a = total_CoverType * total_CoverType;
+			colCount4a = 7;
+			data4a = new Object[rowCount4a][colCount4a];
+	        columnNames4a = new String[] {"layer5", "layer5_regen", "EA_E_min_ra", "EA_E_max_ra", "EA_R_min_ra", "EA_R_max_ra", "implementation"};
+			
+			// Populate the data matrix
+	        int table_row = 0;
+			for (int i = 0; i < total_CoverType; i++) {
+				for (int j = 0; j < total_CoverType; j++) {
+					data4a[table_row][0] = allLayers.get(4).get(i);
+					data4a[table_row][1] = allLayers.get(4).get(j);	
+					
+					String covertype = allLayers.get(4).get(i);
+					int min_age_cut_existing = (rotation_ranges[0].indexOf(covertype) >= 0 && rotation_ranges[1].get(rotation_ranges[0].indexOf(covertype)) != null) ? Integer.valueOf(rotation_ranges[1].get(rotation_ranges[0].indexOf(covertype))) : -9999;
+				    int max_age_cut_existing = (rotation_ranges[0].indexOf(covertype) >= 0 && rotation_ranges[2].get(rotation_ranges[0].indexOf(covertype)) != null) ? Integer.valueOf(rotation_ranges[2].get(rotation_ranges[0].indexOf(covertype))) : -9999;
+				    int min_age_cut_regeneration = (rotation_ranges[0].indexOf(covertype) >= 0 && rotation_ranges[3].get(rotation_ranges[0].indexOf(covertype)) != null) ? Integer.valueOf(rotation_ranges[3].get(rotation_ranges[0].indexOf(covertype))) : -9999;
+				    int max_age_cut_regeneration = (rotation_ranges[0].indexOf(covertype) >= 0 && rotation_ranges[4].get(rotation_ranges[0].indexOf(covertype)) != null) ? Integer.valueOf(rotation_ranges[4].get(rotation_ranges[0].indexOf(covertype))) : -9999;
+					
+					data4a[table_row][2] = min_age_cut_existing;
+					data4a[table_row][3] = max_age_cut_existing;
+					data4a[table_row][4] = min_age_cut_regeneration;
+					data4a[table_row][5] = max_age_cut_regeneration;
+					data4a[table_row][6] = (i==j) ? true : false; 
+					table_row++;
+				}
+			}
+		}
+		
+		
+        // header tool-tip
+		String[] headerToolTips = new String[colCount4a];
+		headerToolTips[0] = "cover type (not dynamic) before clear-cut";
+        headerToolTips[1] = "cover type after clear-cut";
+        headerToolTips[2] = "minimum age class for clear-cutting existing forest";
+        headerToolTips[3] = "maximum age class for clear-cutting existing forest";
+        headerToolTips[4] = "minimum age class for clear-cutting regenerated forest";
+        headerToolTips[5] = "maximum age class for clear-cutting regenerated forest";
+        headerToolTips[6] = "unchecked options will be ignored";
+			
+		
+		//Create a table-------------------------------------------------------------
+		model4a = new PrismTableModel(rowCount4a, colCount4a, data4a, columnNames4a) {			
+			@Override
+			public boolean isCellEditable(int row, int col) {
+				if (col < 2) { // Only the last 5 columns are editable
+					return false;
+				} else {
+					return true;
+				}
+			}
+
+			@Override
+			public void setValueAt(Object value, int row, int col) {
+				data4a[row][col] = value;
+				// this is to address the case when the changes are made for only one cell. Without the if then, when we use quick edit to change multiple cells there would be many fireTableDataChanged() are called --> very slow
+				if (table4a.getSelectedRows().length == 1) {	// only fire the change when the table has only one row selected, need to store the current row and column before fire the change. Otherwise the re-selection would be fail
+					int currentRow = table4a.getSelectedRow();		        	
+					fireTableDataChanged();		// This will clear the selection 
+					table4a.setRowSelectionInterval(currentRow, currentRow);	// This will add the selection back
+				}
+			}
+			
+			@Override
+			public void match_DataType() {
+				for (int row = 0; row < rowCount4a; row++) {
+					for (int col = 0; col < colCount4a; col++) {
+						if (String.valueOf(data4a[row][col]).equals("null")) {
+							data4a[row][col] = null;
+						} else {					
+							if (col >= 2 && col <= 5) {			//Column 2 to 5 are Integer
+								try {
+									data4a[row][col] = Integer.valueOf(String.valueOf(data4a[row][col]));
+								} catch (NumberFormatException e) {
+									System.err.println(e.getClass().getName() + ": " + e.getMessage() + " Fail to convert String to Integer values in create_table4a");
+								}	
+							} else if (col == 6) {			//column "implementation" accepts only Boolean
+								try {
+									data4a[row][col] = Boolean.valueOf(String.valueOf(data4a[row][col]));
+								} catch (NumberFormatException e) {
+									System.err.println(e.getClass().getName() + ": " + e.getMessage() + " Fail to convert String to Boolean values in create_table4a");
+								}							
+							} else {	//All other columns are String
+								data4a[row][col] = String.valueOf(data4a[row][col]);
+							}
+						}	
+					}	
+				}	
+			}
+		};
+		
+		
+		
+		table4a = new JTable(model4a) {
+			@Override			//These override is to make the width of the cell fit all contents of the cell
+			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+				// For the cells in table								
+				Component component = super.prepareRenderer(renderer, row, column);
+				int rendererWidth = component.getPreferredSize().width;
+				TableColumn tableColumn = getColumnModel().getColumn(column);
+				int maxWidth = Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth());
+				
+				// For the column names
+				TableCellRenderer renderer2 = table4a.getTableHeader().getDefaultRenderer();	
+				Component component2 = renderer2.getTableCellRendererComponent(table4a,
+			            tableColumn.getHeaderValue(), false, false, -1, column);
+				maxWidth = Math.max(maxWidth, component2.getPreferredSize().width + 2);
+				
+				tableColumn.setPreferredWidth(maxWidth);
+				return component;
+			}	
+			
+			@Override		// implement table header tool tips
+            protected JTableHeader createDefaultTableHeader() {
+                return new JTableHeader(columnModel) {
+                    public String getToolTipText(MouseEvent e) {
+                        String tip = null;
+                        java.awt.Point p = e.getPoint();
+						if (columnModel.getColumnIndexAtX(p.x) >= 0) {
+                        	int index = columnModel.getColumnIndexAtX(p.x);
+                            int realIndex = columnModel.getColumn(index).getModelIndex();
+                            tip = headerToolTips[realIndex];
+                        }
+                        return tip;
+                    }
+                };
+            }
+			
 			// Implement table cell tool tips
 			public String getToolTipText(MouseEvent e) {
 				String tip = null;
@@ -1229,8 +1282,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		
 		
 		// Define a set of icon for some columns
-		ImageIcon[] imageIconArray = new ImageIcon[colCount4];
-		for (int i = 0; i < colCount4; i++) {
+		ImageIcon[] imageIconArray = new ImageIcon[colCount4a];
+		for (int i = 0; i < colCount4a; i++) {
 			if (i >= 2) {
 				imageIconArray[i] = IconHandle.get_scaledImageIcon(3, 3, "icon_main.png");
 			}
@@ -1238,7 +1291,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		
 		
 		// Define a set of background color for all rows
-		Color[] rowColor = new Color[rowCount4];
+		Color[] rowColor = new Color[rowCount4a];
 		Color color1 = new Color(160, 160, 160);
 		Color color2 = new Color(192, 192, 192);
 		Color currentColor = color2;
@@ -1280,8 +1333,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
         
         
         
-		for (int i = 0; i < columnNames4.length - 5; i++) {		//Except the last 5 column
-			table4.getColumnModel().getColumn(i).setCellRenderer(r);
+		for (int i = 0; i < columnNames4a.length - 5; i++) {		//Except the last 5 column
+			table4a.getColumnModel().getColumn(i).setCellRenderer(r);
 		}		
 		
 		
@@ -1296,10 +1349,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 //        
 //		TableCellRenderer r2 = new JComponentTableCellRenderer();
 //       
-//		for (int i = 0; i < columnNames4.length; i++) {			
+//		for (int i = 0; i < columnNames4a.length; i++) {			
 //			if (i == 2 || i == 3 || i == 4) {
-//				table4.getColumnModel().getColumn(i).setHeaderRenderer(r2);
-//				table4.getColumnModel().getColumn(i).setHeaderValue(new JLabel(columnNames4[i], icon_scale, JLabel.CENTER));
+//				table4a.getColumnModel().getColumn(i).setHeaderRenderer(r2);
+//				table4a.getColumnModel().getColumn(i).setHeaderValue(new JLabel(columnNames4a[i], icon_scale, JLabel.CENTER));
 //			} 
 //		}	
 		
@@ -1352,32 +1405,29 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			}
 		}
 		
-		table4.getColumnModel().getColumn(2).setCellEditor(new CustomComboBoxEditor());
-		table4.getColumnModel().getColumn(3).setCellEditor(new CustomComboBoxEditor());
-		table4.getColumnModel().getColumn(4).setCellEditor(new CustomComboBoxEditor());
-		table4.getColumnModel().getColumn(5).setCellEditor(new CustomComboBoxEditor());
-		((JComponent) table4.getDefaultRenderer(Boolean.class)).setOpaque(true);	// It's a bug in the synth-installed renderer, quick hack is to force the rendering checkbox opacity to true		
+		table4a.getColumnModel().getColumn(2).setCellEditor(new CustomComboBoxEditor());
+		table4a.getColumnModel().getColumn(3).setCellEditor(new CustomComboBoxEditor());
+		table4a.getColumnModel().getColumn(4).setCellEditor(new CustomComboBoxEditor());
+		table4a.getColumnModel().getColumn(5).setCellEditor(new CustomComboBoxEditor());
+		((JComponent) table4a.getDefaultRenderer(Boolean.class)).setOpaque(true);	// It's a bug in the synth-installed renderer, quick hack is to force the rendering checkbox opacity to true		
 		// End of Set up Types for each  Columns------------------------------------------------------------------------
 		
 
 		
 		
-//      table4.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		table4.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-		table4.getTableHeader().setReorderingAllowed(false);		//Disable columns move
-//      table4.getColumnModel().getColumn(0).setPreferredWidth(200);	//Set width of 1st Column bigger
-		
-//      table4.setTableHeader(null);
-        table4.setPreferredScrollableViewportSize(new Dimension(400, 100));
-//      table4.setFillsViewportHeight(true);
-        TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model4);	//Add sorter
-		for (int i = 1; i < colCount4; i++) {
+//		table4a.setAutoResizeMode(0);		// 0 = JTable.AUTO_RESIZE_OFF
+		table4a.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		table4a.getTableHeader().setReorderingAllowed(false);		//Disable columns move
+        table4a.setPreferredScrollableViewportSize(new Dimension(400, 100));
+//      table4a.setFillsViewportHeight(true);
+        TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model4a);	//Add sorter
+		for (int i = 1; i < colCount4a; i++) {
 			sorter.setSortable(i, false);
 			if (i == 0 || i == 1) {			//Only the first 2 columns can be sorted
 				sorter.setSortable(i, true);	
 			}
 		}
-		table4.setRowSorter(sorter);
+		table4a.setRowSorter(sorter);
         
 	}
 		
@@ -1438,7 +1488,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
     			} else {
     				data5[row][col] = value;
     			}
-    			fireTableDataChanged();		// any value change would be registered immediately
     		}
         	
         	@Override
@@ -1464,7 +1513,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
         };
         
         
-		table5 = new JTable(model5){
+		table5 = new JTable(model5) {
 			@Override				//Implement table cell tool tips 			          
 			public String getToolTipText(MouseEvent e) {
 				String tip = null;
@@ -1525,7 +1574,17 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				
 				tableColumn.setPreferredWidth(maxWidth);
 				return component;
-			}		
+			}	
+			
+//			@Override	// THis help the cell to be edited would have all the text inside the cell selected, only work with F2, does not work with double click
+//			public Component prepareEditor(TableCellEditor editor, int row, int col) {
+//				Component result = super.prepareEditor(editor, row, col);
+//				if (result instanceof JTextField) {
+//					((JTextField) result).selectAll();
+//					result.requestFocus();
+//				}
+//				return result;
+//			}
 		};
 		
 		
@@ -1742,8 +1801,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			colCount6a = 101;
 			data6a = new Object[rowCount6a][colCount6a];
 	        columnNames6a = new String[101];
-	        columnNames6a[0] = "covertype_before";
-	        columnNames6a[1] = "covertype_after";
+	        columnNames6a[0] = "layer5";
+	        columnNames6a[1] = "layer5_regen";
 	        for (int col = 2; col < colCount6a; col++) {
 	        	int disturbance_index = col - 1;
 	        	if (disturbance_index < 10) columnNames6a[col] = "probability_SR_0" + disturbance_index; else columnNames6a[col] = "probability_SR_" + disturbance_index;
@@ -1760,10 +1819,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		}
 		
 		
-        //Header ToolTIp
+        // header tool-tip
 		String[] headerToolTips = new String[colCount6a];
-		headerToolTips[0] = "cover type (layer5) before the occurence of replacing disturbance";
-        headerToolTips[1] = "cover type (layer5) after the occurence of replacing disturbance";
+		headerToolTips[0] = "cover type (not dynamic) before the occurence of stand replacing disturbance";
+        headerToolTips[1] = "cover type after the occurence of stand replacing disturbance";
         for (int col = 2; col < colCount6a; col++) {
         	String disturbance_name = columnNames6a[col].replaceAll("probability_", "");
 			headerToolTips[col] = "occurence probability of " + disturbance_name;
@@ -1783,11 +1842,18 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 
         	@Override
     		public void setValueAt(Object value, int row, int col) {
-    			if (value != null && col >= 2 && (((Number) value).doubleValue() < 0 || ((Number) value).doubleValue() > 100)) {		// allow null to be set
+    			if (/*value != null && */col >= 2 && (((Number) value).doubleValue() < 0 || ((Number) value).doubleValue() > 100)) {		// not allow null to be set
     				JOptionPane.showMessageDialog(PrismMain.get_Prism_DesktopPane(),
     						"Your input has not been accepted. Only double values in the range 0-100 (%) would be allowed.");
     			} else {
     				data6a[row][col] = value;
+    				// this is to address the case when the changes are made for only one cell. Without the if then, when we use quick edit to change multiple cells there would be many fireTableDataChanged() are called --> very slow
+    				if (table6a.getSelectedRows().length == 1) {	// only fire the change when the table has only one cell selected, need to store the current row and column before fire the change. Otherwise the re-selection would be fail
+    					int currentRow = table6a.getSelectedRow();		        	
+    					int currentCol = table6a.getSelectedColumn();	
+    					fireTableDataChanged();		// This will clear the selection 
+    					table6a.changeSelection(currentRow, currentCol, true, false);	// This will add the selection back (reselect previous cell)
+    				}
     			}
     			check_probability_columns();
     		}
@@ -1853,23 +1919,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
         
         
 		table6a = new JTable(model6a) {
-			@Override			// Implement table header tool tips. 
-            protected JTableHeader createDefaultTableHeader() {
-                return new JTableHeader(columnModel) {
-                    public String getToolTipText(MouseEvent e) {
-                        String tip = null;
-                        java.awt.Point p = e.getPoint();
-						if (columnModel.getColumnIndexAtX(p.x) >= 0) {
-                        	int index = columnModel.getColumnIndexAtX(p.x);
-                            int realIndex = columnModel.getColumn(index).getModelIndex();
-                            tip = headerToolTips[realIndex];
-                        }
-                        return tip;
-                    }
-                };
-            }					
-			
-			
 			@Override			// These override is to make the width of the cell fit all contents of the cell
 			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
 				// For the cells in table								
@@ -1888,13 +1937,29 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				return component;
 			}		
 			
-			@Override			// Implement table cell tool tips           
+			@Override		// implement table header tool tips
+            protected JTableHeader createDefaultTableHeader() {
+                return new JTableHeader(columnModel) {
+                    public String getToolTipText(MouseEvent e) {
+                        String tip = null;
+                        java.awt.Point p = e.getPoint();
+						if (columnModel.getColumnIndexAtX(p.x) >= 0) {
+                        	int index = columnModel.getColumnIndexAtX(p.x);
+                            int realIndex = columnModel.getColumn(index).getModelIndex();
+                            tip = headerToolTips[realIndex];
+                        }
+                        return tip;
+                    }
+                };
+            }
+			
+			@Override		// implement table header tool tips         
 			public String getToolTipText(MouseEvent e) {
 				String tip = null;
 				java.awt.Point p = e.getPoint();
 				int rowIndex = rowAtPoint(p);
 				int colIndex = columnAtPoint(p);
-				if (table6a.getColumnName(colIndex).equals("covertype_before") /*|| table6a.getColumnName(colIndex).equals("covertype_after")*/) {
+				if (table6a.getColumnName(colIndex).equals("layer5") || table6a.getColumnName(colIndex).equals("layer5_regen")) {
 					try {
 						tip = getValueAt(rowIndex, colIndex).toString();
 						for (int i = 0; i < total_CoverType; i++) {
@@ -1905,14 +1970,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					}
 				}
 				
-				if (!table6a.getColumnName(colIndex).equals("covertype_before") /*&& !table6a.getColumnName(colIndex).equals("covertype_after")*/) {
+				if (!table6a.getColumnName(colIndex).equals("layer5") && !table6a.getColumnName(colIndex).equals("layer5_regen")) {
 					try {
 						DecimalFormat formatter = new DecimalFormat("###,###.###");
 						formatter.setMinimumFractionDigits(0);
 						formatter.setMaximumFractionDigits(2);
 						String probability = formatter.format((Number) getValueAt(rowIndex, colIndex));
 						String disturbance_name = table6a.getColumnName(colIndex).replaceAll("probability_", "");
-						tip = probability + "% chance for "  + disturbance_name + " to occur in the area with cover type (layer5) = "+ getValueAt(rowIndex, 0).toString();
+						tip = probability + "% chance for "  + disturbance_name + " to occur in the area with cover type (not dynamic) = "+ getValueAt(rowIndex, 0).toString();
 					} catch (RuntimeException e1) {
 						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
 					}
@@ -2029,8 +2094,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			colCount6b = 101;
 			data6b = new Object[rowCount6b][colCount6b];
 	        columnNames6b = new String[101];
-	        columnNames6b[0] = "covertype_before";
-	        columnNames6b[1] = "covertype_after";
+	        columnNames6b[0] = "layer5";
+	        columnNames6b[1] = "layer5_regen";
 	        for (int col = 2; col < colCount6b; col++) {
 	        	int disturbance_index = col - 1;
 	        	if (disturbance_index < 10) columnNames6b[col] = "percentage_SR_0" + disturbance_index; else columnNames6b[col] = "percentage_SR_" + disturbance_index;
@@ -2051,10 +2116,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		}
 		
 		
-        //Header ToolTIp
+        // header tool-tip
 		String[] headerToolTips = new String[colCount6b];
-		headerToolTips[0] = "cover type (layer5) before the occurence of replacing disturbance";
-        headerToolTips[1] = "cover type (layer5) after the occurence of replacing disturbance";
+		headerToolTips[0] = "cover type (not dynamic) before the occurence of stand replacing disturbance";
+        headerToolTips[1] = "cover type after the occurence of stand replacing disturbance";
         for (int col = 2; col < colCount6b; col++) {
         	String disturbance_name = columnNames6b[col].replaceAll("percentage_", "");
 			headerToolTips[col] = "percentage of area to be destroyed and regenerated after the occurence of " + disturbance_name;
@@ -2079,6 +2144,13 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
     						"Your input has not been accepted. Only double values in the range 0-100 (%) would be allowed.");
     			} else {
     				data6b[row][col] = value;
+    				// this is to address the case when the changes are made for only one cell. Without the if then, when we use quick edit to change multiple cells there would be many fireTableDataChanged() are called --> very slow
+    				if (table6b.getSelectedRows().length == 1) {	// only fire the change when the table has only one cell selected, need to store the current row and column before fire the change. Otherwise the re-selection would be fail
+    					int currentRow = table6b.getSelectedRow();		        	
+    					int currentCol = table6b.getSelectedColumn();	
+    					fireTableDataChanged();		// This will clear the selection 
+    					table6b.changeSelection(currentRow, currentCol, true, false);	// This will add the selection back (reselect previous cell)
+    				}
     			}
     			check_percentage_columns();
     		}
@@ -2144,23 +2216,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
         
         
 		table6b = new JTable(model6b) {
-			@Override			// Implement table header tool tips. 
-            protected JTableHeader createDefaultTableHeader() {
-                return new JTableHeader(columnModel) {
-                    public String getToolTipText(MouseEvent e) {
-                        String tip = null;
-                        java.awt.Point p = e.getPoint();
-						if (columnModel.getColumnIndexAtX(p.x) >= 0) {
-                        	int index = columnModel.getColumnIndexAtX(p.x);
-                            int realIndex = columnModel.getColumn(index).getModelIndex();
-                            tip = headerToolTips[realIndex];
-                        }
-                        return tip;
-                    }
-                };
-            }					
-			
-			
 			@Override			// These override is to make the width of the cell fit all contents of the cell
 			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
 				// For the cells in table								
@@ -2179,13 +2234,29 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				return component;
 			}		
 			
-			@Override			// Implement table cell tool tips           
+			@Override		// make the width of the cell fit all contents of the cell	@Override
+            protected JTableHeader createDefaultTableHeader() {
+                return new JTableHeader(columnModel) {
+                    public String getToolTipText(MouseEvent e) {
+                        String tip = null;
+                        java.awt.Point p = e.getPoint();
+						if (columnModel.getColumnIndexAtX(p.x) >= 0) {
+                        	int index = columnModel.getColumnIndexAtX(p.x);
+                            int realIndex = columnModel.getColumn(index).getModelIndex();
+                            tip = headerToolTips[realIndex];
+                        }
+                        return tip;
+                    }
+                };
+            }	
+			
+			@Override		// implement table header tool tips         
 			public String getToolTipText(MouseEvent e) {
 				String tip = null;
 				java.awt.Point p = e.getPoint();
 				int rowIndex = rowAtPoint(p);
 				int colIndex = columnAtPoint(p);
-				if (table6b.getColumnName(colIndex).equals("covertype_before") || table6b.getColumnName(colIndex).equals("covertype_after")) {
+				if (table6b.getColumnName(colIndex).equals("layer5") || table6b.getColumnName(colIndex).equals("layer5_regen")) {
 					try {
 						tip = getValueAt(rowIndex, colIndex).toString();
 						for (int i = 0; i < total_CoverType; i++) {
@@ -2196,14 +2267,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					}
 				}
 				
-				if (!table6b.getColumnName(colIndex).equals("covertype_before") && !table6b.getColumnName(colIndex).equals("covertype_after")) {
+				if (!table6b.getColumnName(colIndex).equals("layer5") && !table6b.getColumnName(colIndex).equals("layer5_regen")) {
 					try {
 						DecimalFormat formatter = new DecimalFormat("###,###.###");
 						formatter.setMinimumFractionDigits(0);
 						formatter.setMaximumFractionDigits(2);
 						String percentage = formatter.format((Number) getValueAt(rowIndex, colIndex));
 						String disturbance_name = table6b.getColumnName(colIndex).replaceAll("percentage_", "");
-						tip = "When "  + disturbance_name + " occurs in the area with cover type (layer5) = " + getValueAt(rowIndex, 0).toString() + ", " + percentage + "% of this area will be destroyed & regenerated as cover type (layer5) = " + getValueAt(rowIndex, 1).toString();
+						tip = "When "  + disturbance_name + " occurs in the area with cover type (not dynamic) = " + getValueAt(rowIndex, 0).toString() + ", " + percentage + "% of this area will be destroyed & regenerated as cover type = " + getValueAt(rowIndex, 1).toString();
 					} catch (RuntimeException e1) {
 						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
 					}
@@ -2347,7 +2418,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		}		
 		
 		
-        //Header ToolTIp
+        // header tool-tip
 		String[] headerToolTips = new String[colCount8a];
 		headerToolTips[0] = "all unique actions found from  yield_tables in your selected database";
         headerToolTips[1] = "currency per acre where an action is implemented";
@@ -2383,6 +2454,13 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
     						"Your input has not been accepted. Cost cannot be negative.");
     			} else {
     				data8a[row][col] = value;
+    				// this is to address the case when the changes are made for only one cell. Without the if then, when we use quick edit to change multiple cells there would be many fireTableDataChanged() are called --> very slow
+    				if (table8a.getSelectedRows().length == 1) {	// only fire the change when the table has only one cell selected, need to store the current row and column before fire the change. Otherwise the re-selection would be fail
+    					int currentRow = table8a.getSelectedRow();		        	
+    					int currentCol = table8a.getSelectedColumn();	
+    					fireTableDataChanged();		// This will clear the selection 
+    					table8a.changeSelection(currentRow, currentCol, true, false);	// This will add the selection back (reselect previous cell)
+    				}
     			}
     		}
         	
@@ -2410,23 +2488,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
         
         
 		table8a = new JTable(model8a) {
-			@Override			//Implement table header tool tips. 
-            protected JTableHeader createDefaultTableHeader() {
-                return new JTableHeader(columnModel) {
-                    public String getToolTipText(MouseEvent e) {
-                        String tip = null;
-                        java.awt.Point p = e.getPoint();
-						if (columnModel.getColumnIndexAtX(p.x) > 0) {
-                        	int index = columnModel.getColumnIndexAtX(p.x);
-                            int realIndex = columnModel.getColumn(index).getModelIndex();
-                            tip = headerToolTips[realIndex];
-                        }
-                        return tip;
-                    }
-                };
-            }					
-			
-			@Override			//These override is to make the width of the cell fit all contents of the cell
+			@Override		// make the width of the cell fit all contents of the cell
 			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
 				// For the cells in table								
 				Component component = super.prepareRenderer(renderer, row, column);
@@ -2443,6 +2505,22 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				tableColumn.setPreferredWidth(maxWidth);
 				return component;
 			}		
+			
+			@Override		// implement table header tool tips
+            protected JTableHeader createDefaultTableHeader() {
+                return new JTableHeader(columnModel) {
+                    public String getToolTipText(MouseEvent e) {
+                        String tip = null;
+                        java.awt.Point p = e.getPoint();
+						if (columnModel.getColumnIndexAtX(p.x) > 0) {
+                        	int index = columnModel.getColumnIndexAtX(p.x);
+                            int realIndex = columnModel.getColumn(index).getModelIndex();
+                            tip = headerToolTips[realIndex];
+                        }
+                        return tip;
+                    }
+                };
+            }	
 		};				
 		
 
@@ -2543,7 +2621,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				rowCount8b = total_CoverType * total_CoverType;		
 				colCount8b = 4;
 				data8b = new Object[rowCount8b][colCount8b];
-				columnNames8b = new String[] {"covertype_before", "covertype_after", "action", "disturbance"};
+				columnNames8b = new String[] {"layer5", "layer5_regen", "action", "disturbance"};
 			}		
 			       			
 			// Populate the data matrix
@@ -2559,12 +2637,12 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		}
 		
 		
-        //Header ToolTIp
+        // header tool-tip
 		String[] headerToolTips = new String[colCount8b];
-		headerToolTips[0] = "cover type (layer5) in period (t) before the occurence of EA clear cut or replacing disturbance in the same period (t)";
-        headerToolTips[1] = "cover type (layer5) in the next period (t+1) after the occurence of EA clear cut or replacing disturbance in period (t)";
-        headerToolTips[2] = "currency per acre converted by management action";
-        headerToolTips[3] = "currency per acre converted by replacing disturbance";
+		headerToolTips[0] = "cover type (not dynamic) before the occurence of EA clear-cut or stand replacing disturbance";
+        headerToolTips[1] = "cover type after the occurence of EA clear-cut or stand replacing disturbance";
+        headerToolTips[2] = "currency per area unit of cover type conversion by EA cleat-cut";
+        headerToolTips[3] = "currency per area unit of cover type conversion by stand replacing disturbance";
 		
         
 		//Create a table-------------------------------------------------------------			
@@ -2590,7 +2668,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
     				JOptionPane.showMessageDialog(PrismMain.get_Prism_DesktopPane(),
     						"Your input has not been accepted. Cost cannot be negative.");
     			} else {
-    				data8b[row][col] = value;   				
+    				data8b[row][col] = value;   
+    				// this is to address the case when the changes are made for only one cell. Without the if then, when we use quick edit to change multiple cells there would be many fireTableDataChanged() are called --> very slow
+    				if (table8b.getSelectedRows().length == 1) {	// only fire the change when the table has only one cell selected, need to store the current row and column before fire the change. Otherwise the re-selection would be fail
+    					int currentRow = table8b.getSelectedRow();		        	
+    					int currentCol = table8b.getSelectedColumn();	
+    					fireTableDataChanged();		// This will clear the selection 
+    					table8b.changeSelection(currentRow, currentCol, true, false);	// This will add the selection back (reselect previous cell)
+    				}
     			}
     		}
         	
@@ -2618,23 +2703,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
         
         
 		table8b = new JTable(model8b) {
-			@Override			//Implement table header tool tips. 
-            protected JTableHeader createDefaultTableHeader() {
-                return new JTableHeader(columnModel) {
-                    public String getToolTipText(MouseEvent e) {
-                        String tip = null;
-                        java.awt.Point p = e.getPoint();
-						if (columnModel.getColumnIndexAtX(p.x) >= 0) {
-                        	int index = columnModel.getColumnIndexAtX(p.x);
-                            int realIndex = columnModel.getColumn(index).getModelIndex();
-                            tip = headerToolTips[realIndex];
-                        }
-                        return tip;
-                    }
-                };
-            }					
-			
-			@Override			//These override is to make the width of the cell fit all contents of the cell
+			@Override		// make the width of the cell fit all contents of the cell
 			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
 				// For the cells in table								
 				Component component = super.prepareRenderer(renderer, row, column);
@@ -2651,6 +2720,22 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				tableColumn.setPreferredWidth(maxWidth);
 				return component;
 			}		
+			
+			@Override		// implement table header tool tips
+            protected JTableHeader createDefaultTableHeader() {
+                return new JTableHeader(columnModel) {
+                    public String getToolTipText(MouseEvent e) {
+                        String tip = null;
+                        java.awt.Point p = e.getPoint();
+						if (columnModel.getColumnIndexAtX(p.x) >= 0) {
+                        	int index = columnModel.getColumnIndexAtX(p.x);
+                            int realIndex = columnModel.getColumn(index).getModelIndex();
+                            tip = headerToolTips[realIndex];
+                        }
+                        return tip;
+                    }
+                };
+            }
 		};
 		
 
@@ -2896,8 +2981,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			public void setValueAt(Object value, int row, int col) {
 				data9[row][col] = value;
 				if (col == 2) {
-					fireTableDataChanged();		// When constraint type change then this would register the change and make the selection disappear
-					table9.setRowSelectionInterval(table9.convertRowIndexToView(row), table9.convertRowIndexToView(row));			// select the row again
 					is_IDLE_basic_constraints_used_in_flow_constraints();
 				}
 			}
@@ -3077,10 +3160,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			@Override
 			public void setValueAt(Object value, int row, int col) {
 				data10[row][col] = value;
-				if (col == 3) {
-					fireTableDataChanged();		// When constraint type change then this would register the change and make the selection disappear
-					table10.setRowSelectionInterval(table10.convertRowIndexToView(row), table10.convertRowIndexToView(row));			// select the row again
-				}
 			}
 			
 			@Override
@@ -3529,7 +3608,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 							rotation_ranges = read_database.get_rotation_ranges();
 							layers_Title = read_database.get_layers_Title();
 							layers_Title_ToolTip = read_database.get_layers_Title_ToolTip();
-							allLayers =  read_database.get_allLayers();
+							allLayers =  read_database.get_all_layers();
 							allLayers_ToolTips = read_database.get_allLayers_ToolTips();
 							yieldTable_values = read_database.get_yield_tables_values();
 							yieldTable_ColumnNames = read_database.get_yield_tables_column_names();
@@ -3540,6 +3619,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 							is_table2_loaded = false;
 							is_table3_loaded = false;
 							is_table4_loaded = false;
+							is_table4a_loaded = false;
 							is_table5_loaded = false;
 							is_table6_loaded = false;
 							is_table8a_loaded = false;
@@ -3767,7 +3847,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	class Model_Strata_GUI extends JLayeredPane implements ItemListener {
 		List<List<JCheckBox>> checkboxStaticIdentifiers;
-		ScrollPane_StaticIdentifiers static_identifiersScrollPanel;
+		ScrollPane_StaticIdentifiers static_identifiers_scrollpane;
 		
 		Panel_QuickEdit_ModelStrata quick_edit;
 		JScrollPane scrollpane_QuickEdit;
@@ -3776,9 +3856,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			setLayout(new BorderLayout());
 			// 1st grid -----------------------------------------------------------------------
 			// 1st grid -----------------------------------------------------------------------	
-			String panel_name = "Strata Filter";
-			static_identifiersScrollPanel = new ScrollPane_StaticIdentifiers(read_database, 0, panel_name);
-			checkboxStaticIdentifiers = static_identifiersScrollPanel.get_CheckboxStaticIdentifiers();	
+			String panel_name = "Strata Attributes - Filter";
+			static_identifiers_scrollpane = new ScrollPane_StaticIdentifiers(read_database, 0, panel_name);
+			checkboxStaticIdentifiers = static_identifiers_scrollpane.get_CheckboxStaticIdentifiers();	
 			
 			for (int i = 0; i < checkboxStaticIdentifiers.size(); i++) {
 				for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {
@@ -3838,7 +3918,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			
 			// 2 buttons------------------------------------------------------------------------------
 			// 2 buttons------------------------------------------------------------------------------
-			//button 1
+			// button 1
 			JButton button_remove_Strata = new JButton();
 			button_remove_Strata.setText("uncheck");
 			button_remove_Strata.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -3859,10 +3939,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					table3.addRowSelectionInterval(table3.convertRowIndexToView(i),table3.convertRowIndexToView(i));
 				}						
 			});
-	
 			
-			
-			//button 2	
+			// button 2	
 			button_select_Strata = new JButton();
 			button_select_Strata.setText("check");
 			button_select_Strata.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -3911,7 +3989,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			helpToolBar.setRollover(true);	//to visually indicate tool bar buttons when the user passes over them with the cursor
 			helpToolBar.setBorderPainted(false);
 			
-			// button Strata Filter
+			// button Quick Edit
 			JToggleButton btnQuickEdit = new JToggleButton();
 			btnQuickEdit.setToolTipText("Show Quick Edit Tool");
 			btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
@@ -3987,7 +4065,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		    c.weighty = 1;
 			c.gridwidth = 1;
 			c.gridheight = 1;
-			upper_panel.add(static_identifiersScrollPanel, c);
+			upper_panel.add(static_identifiers_scrollpane, c);
 			
 			// Add the 2nd grid - overviewScrollPane to the main Grid	
 			c.gridx = 1;
@@ -4052,10 +4130,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	class Non_EA_Management_GUI extends JLayeredPane {
 		List<List<JCheckBox>> checkboxStaticIdentifiers;
-		ScrollPane_StaticIdentifiers static_identifiersScrollPanel;
+		ScrollPane_StaticIdentifiers static_identifiers_scrollpane;
 		
 		List<List<JCheckBox>> checkboxStaticIdentifiers_silviculture;
-		ScrollPane_StaticIdentifiers static_identifiersScrollPanel_silviculture;
+		ScrollPane_StaticIdentifiers static_identifiers_scrollpane_silviculture;
 		
 		JPanel button_table_Panel;	
 		Panel_QuickEdit_Non_EA quick_edit;
@@ -4065,9 +4143,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			setLayout(new BorderLayout());	
 			// 1st grid -----------------------------------------------------------------------
 			// 1st grid -----------------------------------------------------------------------	
-			String panel_name = "Strata Filter";
-			static_identifiersScrollPanel = new ScrollPane_StaticIdentifiers(read_database, 0, panel_name);
-			checkboxStaticIdentifiers = static_identifiersScrollPanel.get_CheckboxStaticIdentifiers();	
+			String panel_name = "Strata Attributes";
+			static_identifiers_scrollpane = new ScrollPane_StaticIdentifiers(read_database, 0, panel_name);
+			checkboxStaticIdentifiers = static_identifiers_scrollpane.get_CheckboxStaticIdentifiers();	
 			
 			for (int i = 0; i < checkboxStaticIdentifiers.size(); i++) {
 				for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {
@@ -4082,9 +4160,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			
 			// 2nd grid -----------------------------------------------------------------------
 			// 2nd grid -----------------------------------------------------------------------	
-			panel_name = "Silviculture Method & Choice to be implemented";
-			static_identifiersScrollPanel_silviculture = new ScrollPane_StaticIdentifiers(read_database, 3, panel_name);
-			checkboxStaticIdentifiers_silviculture = static_identifiersScrollPanel_silviculture.get_CheckboxStaticIdentifiers();	
+			panel_name = "Method & Choice to be implemented (choices limit = 0-14)";
+			static_identifiers_scrollpane_silviculture = new ScrollPane_StaticIdentifiers(read_database, 3, panel_name);
+			checkboxStaticIdentifiers_silviculture = static_identifiers_scrollpane_silviculture.get_CheckboxStaticIdentifiers();	
 			
 			for (int i = 0; i < checkboxStaticIdentifiers_silviculture.size(); i++) {
 				for (int j = 0; j < checkboxStaticIdentifiers_silviculture.get(i).size(); j++) {
@@ -4101,7 +4179,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			// 4th Grid -----------------------------------------------------------------------------
 			// Add all buttons to a Panel----------------------------------
 			button_table_Panel = new JPanel(new GridBagLayout());
-			TitledBorder border = new TitledBorder("Silviculture Method  -  implemented based on aggregation of all rows without priority (no row = no restriction)");
+			TitledBorder border = new TitledBorder("Agregation Conditions (no row = disable all unenven-aged methods)   -   Important: still apply to MS_E and BS_E");
 			border.setTitleJustification(TitledBorder.CENTER);
 			button_table_Panel.setBorder(border);
 			GridBagConstraints c2 = new GridBagConstraints();
@@ -4191,7 +4269,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			// Add table2				
 			create_table2();
 			JScrollPane table_ScrollPane = new JScrollPane(table2);	
-//			c2.insets = new Insets(1, 0, 0, 0);			// Activate to remove the ugly inaide border
+//			c2.insets = new Insets(1, 0, 0, 0);			// Activate to remove the ugly inside border
 //			Border tempBorder = BorderFactory.createMatteBorder(1, 1, 1, 1, ColorUtil.makeTransparent(Color.BLACK, 0));
 //			table_ScrollPane.setBorder(tempBorder);
 			c2.gridx = 1;
@@ -4217,8 +4295,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					if (selectedRow.length == 1) {		// Reload Constraint & Enable Edit	when: 1 row is selected and no cell is editing
 						int currentRow = selectedRow[0];
 						currentRow = table2.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
-						static_identifiersScrollPanel.reload_this_constraint_static_identifiers((String) data2[currentRow][2]);	// 2 is the static_identifiers which have some attributes selected				
-						static_identifiersScrollPanel_silviculture.reload_this_constraint_static_identifiers((String) data2[currentRow][3]);	// 3 is the method & choice
+						static_identifiers_scrollpane.reload_this_constraint_static_identifiers((String) data2[currentRow][2]);	// 2 is the static_identifiers which have some attributes selected				
+						static_identifiers_scrollpane_silviculture.reload_this_constraint_static_identifiers((String) data2[currentRow][3]);	// 3 is the method & choice
 						btn_Edit.setEnabled(true);
 					} else {		// Disable Edit
 						btn_Edit.setEnabled(false);
@@ -4244,8 +4322,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					if (selectedRow.length == 1) {		// Reload Constraint & Enable Edit	when: 1 row is selected and no cell is editing
 						int currentRow = selectedRow[0];
 						currentRow = table2.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
-						static_identifiersScrollPanel.reload_this_constraint_static_identifiers((String) data2[currentRow][2]);	// 2 is the static_identifiers which have some attributes selected				
-						static_identifiersScrollPanel_silviculture.reload_this_constraint_static_identifiers((String) data2[currentRow][3]);	// 3 is the method & choice
+						static_identifiers_scrollpane.reload_this_constraint_static_identifiers((String) data2[currentRow][2]);	// 2 is the static_identifiers which have some attributes selected				
+						static_identifiers_scrollpane_silviculture.reload_this_constraint_static_identifiers((String) data2[currentRow][3]);	// 3 is the method & choice
 						btn_Edit.setEnabled(true);
 					} else {		// Disable Edit
 						btn_Edit.setEnabled(false);
@@ -4283,11 +4361,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				}
 								
 				data2[rowCount2 - 1][1] = String.join(" .....eligible to apply on..... ",
-						static_identifiersScrollPanel_silviculture.get_static_description_from_GUI(),
-						static_identifiersScrollPanel.get_static_description_from_GUI());
-				data2[rowCount2 - 1][2] = static_identifiersScrollPanel.get_static_info_from_GUI();
-				data2[rowCount2 - 1][3] = static_identifiersScrollPanel_silviculture.get_static_info_from_GUI();
-				data2[rowCount2 - 1][colCount2 - 1] = true;
+						static_identifiers_scrollpane_silviculture.get_static_description_from_GUI(),
+						static_identifiers_scrollpane.get_static_description_from_GUI());
+				data2[rowCount2 - 1][2] = static_identifiers_scrollpane.get_static_info_from_GUI();
+				data2[rowCount2 - 1][3] = static_identifiers_scrollpane_silviculture.get_static_info_from_GUI();
 				model2.updateTableModelPrism(rowCount2, colCount2, data2, columnNames2);
 				update_id();
 				model2.fireTableDataChanged();
@@ -4312,16 +4389,16 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					selectedRow = table2.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems	
 	
 					// Apply change	
-					data2[selectedRow][2] = static_identifiersScrollPanel.get_static_info_from_GUI();
-					data2[selectedRow][3] = static_identifiersScrollPanel_silviculture.get_static_info_from_GUI();
+					data2[selectedRow][2] = static_identifiers_scrollpane.get_static_info_from_GUI();
+					data2[selectedRow][3] = static_identifiers_scrollpane_silviculture.get_static_info_from_GUI();
 					model2.fireTableDataChanged();	
 					
 					// Convert the edited Row to model view and then select it 
 					int editRow = table2.convertRowIndexToView(selectedRow);
 					table2.setRowSelectionInterval(editRow, editRow);
 					
-					static_identifiersScrollPanel.highlight();
-					static_identifiersScrollPanel_silviculture.highlight();
+					static_identifiers_scrollpane.highlight();
+					static_identifiers_scrollpane_silviculture.highlight();
 				} 
 			});
 			
@@ -4329,15 +4406,15 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			btn_Edit.addMouseListener(new MouseAdapter() { // Add listener
 				public void mouseEntered(java.awt.event.MouseEvent e) {
 					if (table2.getSelectedRows().length == 1) {
-						static_identifiersScrollPanel.highlight();
-						static_identifiersScrollPanel_silviculture.highlight();
+						static_identifiers_scrollpane.highlight();
+						static_identifiers_scrollpane_silviculture.highlight();
 					}
 				}
 
 				public void mouseExited(java.awt.event.MouseEvent e) {
 					if (table2.getSelectedRows().length == 1) {
-						static_identifiersScrollPanel.unhighlight();
-						static_identifiersScrollPanel_silviculture.unhighlight();
+						static_identifiers_scrollpane.unhighlight();
+						static_identifiers_scrollpane_silviculture.unhighlight();
 					}
 				}
 			});
@@ -4566,14 +4643,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			c.gridheight = 1;
 			upper_panel.add(helpToolBar, c);				
 			
-			// Add the 1st grid - static_identifiersScrollPanel to the main Grid 
+			// Add the 1st grid - static_identifiers_scrollpane to the main Grid 
 			c.gridx = 0;
 			c.gridy = 1;
 			c.weightx = 0.4;
 		    c.weighty = 1;
 			c.gridwidth = 1;
 			c.gridheight = 1;
-			upper_panel.add(static_identifiersScrollPanel, c);
+			upper_panel.add(static_identifiers_scrollpane, c);
 			
 			// Add the 2nd grid -  to the main Grid	
 			c.gridx = 1;
@@ -4582,7 +4659,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		    c.weighty = 1;
 			c.gridwidth = 1;
 			c.gridheight = 1;
-			upper_panel.add(static_identifiersScrollPanel_silviculture, c);
+			upper_panel.add(static_identifiers_scrollpane_silviculture, c);
 			
 			// Add the button_table_Panel & scrollpane_QuickEdit to a new Panel then add that panel to the main Grid
 			JPanel button_table_qedit_panel = new JPanel();
@@ -4629,25 +4706,447 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	class EA_Management_GUI extends JLayeredPane {
+		List<List<JCheckBox>> checkboxStaticIdentifiers;
+		ScrollPane_StaticIdentifiers static_identifiers_scrollpane;
+		ScrollPane_SubTable_EA_Management conversion_and_rotation_scrollpane;
+		
+		JPanel button_table_Panel;	
+		Panel_QuickEdit_EA quick_edit;
+		JScrollPane scrollpane_QuickEdit;
+		
 		public EA_Management_GUI() {
-			setLayout(new GridBagLayout());
-
+			// 1st grid -----------------------------------------------------------------------
+			// 1st grid -----------------------------------------------------------------------	
+			String panel_name = "Strata Attributes";
+			static_identifiers_scrollpane = new ScrollPane_StaticIdentifiers(read_database, 0, panel_name);
+			checkboxStaticIdentifiers = static_identifiers_scrollpane.get_CheckboxStaticIdentifiers();	
 			
-			// 1st grid -----------------------------------------------------------------------
-			// 1st grid -----------------------------------------------------------------------
-	        create_table4();
-			PrismTitleScrollPane CovertypeConversion_EA_ScrollPane = new PrismTitleScrollPane("Even Age clear-cuts  -   Define cover type conversion & rotation-age range (RAmin = minimum rotation age, RAmax = maximum rotation age)", "CENTER", table4);										    
+			for (int i = 0; i < checkboxStaticIdentifiers.size(); i++) {
+				for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {
+					checkboxStaticIdentifiers.get(i).get(j).setSelected(true);
+				}
+			}
+			// End of 1st grid -----------------------------------------------------------------------
+			// End of 1st grid -----------------------------------------------------------------------						
+			
+			
+			
+			
+			// 2nd grid -----------------------------------------------------------------------
+			// 2nd grid -----------------------------------------------------------------------	
+			create_table4a();
+			conversion_and_rotation_scrollpane = new ScrollPane_SubTable_EA_Management(table4a, data4a, model4a);
+//			conversion_and_rotation_scrollpane.show_table();
+			// End of 2nd grid -----------------------------------------------------------------------
+			// End of 2nd grid -----------------------------------------------------------------------			
+			
+			
+			
+			
+			// 4th Grid ------------------------------------------------------------------------------		// Buttons	
+			// 4th Grid -----------------------------------------------------------------------------
+			// Add all buttons to a Panel----------------------------------
+			button_table_Panel = new JPanel(new GridBagLayout());
+			TitledBorder border = new TitledBorder("Agregation Conditions (no row = disable all even-aged methods)");
+			border.setTitleJustification(TitledBorder.CENTER);
+			button_table_Panel.setBorder(border);
+			GridBagConstraints c2 = new GridBagConstraints();
+			c2.fill = GridBagConstraints.BOTH;
+			c2.insets = new Insets(0, 5, 10, 10); // padding top 0, left 5, bottom 10, right 10
+			
+			
+			JButton btn_NewSingle = new JButton();
+			btn_NewSingle.setFont(new Font(null, Font.BOLD, 14));
+//			btn_NewSingle.setText("NEW SINGLE");
+			btn_NewSingle.setToolTipText("New");
+			btn_NewSingle.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_add.png"));
+					
+			c2.gridx = 0;
+			c2.gridy = 0;
+			c2.weightx = 0;
+			c2.weighty = 0;
+			button_table_Panel.add(btn_NewSingle, c2);
+			
+			
+			JSpinner spin_move_rows = new JSpinner (new SpinnerNumberModel(1, 0, 2, 1));
+			spin_move_rows.setToolTipText("Move");
+			JFormattedTextField SpinnerText = ((DefaultEditor) spin_move_rows.getEditor()).getTextField();
+			SpinnerText.setHorizontalAlignment(JTextField.LEFT);
+			SpinnerText.setEditable(false);
+			SpinnerText.setFocusable(false);
+//			DefaultFormatter formatter = (DefaultFormatter) SpinnerText.getFormatter();
+//		    formatter.setCommitsOnValidEdit(true);
+		    spin_move_rows.setEnabled(false);
+		    c2.gridx = 0;
+			c2.gridy = 1;
+			c2.weightx = 0;
+			c2.weighty = 0;
+			button_table_Panel.add(spin_move_rows, c2);
+			
+			
+			JButton btn_Edit = new JButton();
+//			btn_Edit.setText("EDIT");
+			btn_Edit.setToolTipText("Modify");
+			btn_Edit.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_swap.png"));
+			btn_Edit.setEnabled(false);
+					
+			c2.gridx = 0;
+			c2.gridy = 2;
+			c2.weightx = 0;
+			c2.weighty = 0;
+			button_table_Panel.add(btn_Edit, c2);
+			
+			
+			JButton btn_Delete = new JButton();
+			btn_Delete.setFont(new Font(null, Font.BOLD, 14));
+//			btn_Delete.setText("DELETE");
+			btn_Delete.setToolTipText("Delete");
+			btn_Delete.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_erase.png"));
+			btn_Delete.setEnabled(false);
+					
+			c2.gridx = 0;
+			c2.gridy = 3;
+			c2.weightx = 0;
+			c2.weighty = 0;
+			button_table_Panel.add(btn_Delete, c2);
+			
+			
+			JToggleButton btn_Sort = new JToggleButton();
+			btn_Sort.setSelected(false);
+			btn_Sort.setFocusPainted(false);
+			btn_Sort.setFont(new Font(null, Font.BOLD, 12));
+			btn_Sort.setText("OFF");
+			btn_Sort.setToolTipText("Sorter mode: 'ON' click columns header to sort rows. 'OFF' retrieve original rows position");
+			btn_Sort.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_sort.png"));
+					
+			c2.gridx = 0;
+			c2.gridy = 4;
+			c2.weightx = 0;
+			c2.weighty = 0;
+			button_table_Panel.add(btn_Sort, c2);
+						
+			
+			c2.insets = new Insets(0, 0, 0, 0); // No padding
+			// Add Empty Label to make all buttons on top not middle
+			c2.gridx = 0;
+			c2.gridy = 5;
+			c2.weightx = 0;
+			c2.weighty = 1;
+			button_table_Panel.add(new JLabel(), c2);
+			
+			// Add table4				
+			create_table4();
+			JScrollPane table_ScrollPane = new JScrollPane(table4);	
+//			c2.insets = new Insets(1, 0, 0, 0);			// Activate to remove the ugly inside border
+//			Border tempBorder = BorderFactory.createMatteBorder(1, 1, 1, 1, ColorUtil.makeTransparent(Color.BLACK, 0));
+//			table_ScrollPane.setBorder(tempBorder);
+			c2.gridx = 1;
+			c2.gridy = 0;
+			c2.weightx = 1;
+			c2.weighty = 1;
+			c2.gridheight = 6;
+			button_table_Panel.add(table_ScrollPane, c2);
+			// End of 4th Grid -----------------------------------------------------------------------
+			// End of 4th Grid -----------------------------------------------------------------------	
+			
+			
+			
+			// Add Listeners for table4 & buttons----------------------------------------------------------
+			// Add Listeners for table4 & buttons----------------------------------------------------------
+			
+			
+			// table4
+			table4.addMouseListener(new MouseAdapter() { // Add listener
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					int[] selectedRow = table4.getSelectedRows();
+					if (selectedRow.length == 1) {		// Reload Constraint & Enable Edit	when: 1 row is selected and no cell is editing
+						int currentRow = selectedRow[0];
+						currentRow = table4.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
+						static_identifiers_scrollpane.reload_this_constraint_static_identifiers((String) data4[currentRow][2]);	// 2 is the static_identifiers which have some attributes selected				
+						conversion_and_rotation_scrollpane.reload_this_table((String) data4[currentRow][3]);	// 3 is the conversion_and_rotation
+						btn_Edit.setEnabled(true);
+						quick_edit.enable_all_apply_buttons();
+						conversion_and_rotation_scrollpane.show_table();
+					} else {		// Disable Edit
+						btn_Edit.setEnabled(false);
+						quick_edit.disable_all_apply_buttons();
+						conversion_and_rotation_scrollpane.hide_table();
+					}
+					
+					if (selectedRow.length >= 1 && table4.isEnabled()) {		// Enable Delete  when: >=1 row is selected, table is enable (often after Edit button finished its task)
+						btn_Delete.setEnabled(true);
+					} else {		// Disable Delete
+						btn_Delete.setEnabled(false);
+					}
+					
+					if (selectedRow.length >= 1 && btn_Sort.getText().equals("OFF")) {	// Enable Spinner when: >=1 row is selected and Sorter is off
+						spin_move_rows.setEnabled(true);
+					} else {		// Disable Spinner
+						spin_move_rows.setEnabled(false);
+					}
+				}
+			});
+			
+			table4.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+		        public void valueChanged(ListSelectionEvent event) {
+		        	int[] selectedRow = table4.getSelectedRows();
+					if (selectedRow.length == 1) {		// Reload Constraint & Enable Edit	when: 1 row is selected and no cell is editing
+						int currentRow = selectedRow[0];
+						currentRow = table4.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
+						static_identifiers_scrollpane.reload_this_constraint_static_identifiers((String) data4[currentRow][2]);	// 2 is the static_identifiers which have some attributes selected				
+						conversion_and_rotation_scrollpane.reload_this_table((String) data4[currentRow][3]);	// 3 is the conversion_and_rotation
+						btn_Edit.setEnabled(true);
+						quick_edit.enable_all_apply_buttons();
+						conversion_and_rotation_scrollpane.show_table();
+					} else {		// Disable Edit
+						btn_Edit.setEnabled(false);
+						quick_edit.disable_all_apply_buttons();
+						conversion_and_rotation_scrollpane.hide_table();
+					}
+					
+					if (selectedRow.length >= 1 && table4.isEnabled()) {		// Enable Delete  when: >=1 row is selected, table is enable (often after Edit button finished its task)
+						btn_Delete.setEnabled(true);
+					} else {		// Disable Delete
+						btn_Delete.setEnabled(false);
+					}
+					
+					if (selectedRow.length >= 1 && btn_Sort.getText().equals("OFF")) {	// Enable Spinner when: >=1 row is selected and Sorter is off
+						spin_move_rows.setEnabled(true);
+					} else {		// Disable Spinner
+						spin_move_rows.setEnabled(false);
+					}
+		        }
+		    });			
+			table4.setAutoResizeMode(0);		// 0 = JTable.AUTO_RESIZE_OFF
+
+			table4a.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+		        public void valueChanged(ListSelectionEvent event) {
+		        	if (table4.getSelectedRow() != -1) {	// only update the table4 if there is a row selected
+		        		int currentRow = table4.getSelectedRow();		        	
+						currentRow = table4.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
+						conversion_and_rotation_scrollpane.update_table_data(data4a);	// Update so we have the latest data of table 4a to retrieve and write to table4 below
+						data4[currentRow][3] = conversion_and_rotation_scrollpane.get_conversion_and_rotation_info_from_GUI();	
+						model4.fireTableCellUpdated(currentRow, 3);
+		        	}
+		        }
+		    });
+			
+			
+			// New single
+			btn_NewSingle.addActionListener(e -> {
+				if (table4.isEditing()) {
+					table4.getCellEditor().stopCellEditing();
+				}
+				
+				// Add 1 row
+				rowCount4++;
+				data4 = new Object[rowCount4][colCount4];
+				for (int ii = 0; ii < rowCount4 - 1; ii++) {
+					for (int jj = 0; jj < colCount4; jj++) {
+						data4[ii][jj] = model4.getValueAt(ii, jj);
+					}	
+				}
+								
+				data4[rowCount4 - 1][1] = static_identifiers_scrollpane.get_static_description_from_GUI();
+				data4[rowCount4 - 1][2] = static_identifiers_scrollpane.get_static_info_from_GUI();
+				data4[rowCount4 - 1][3] = conversion_and_rotation_scrollpane.get_conversion_and_rotation_info_from_GUI();
+				model4.updateTableModelPrism(rowCount4, colCount4, data4, columnNames4);
+				update_id();
+				model4.fireTableDataChanged();
+				
+				// Convert the new Row to model view and then select it 
+				int newRow = table4.convertRowIndexToView(rowCount4 - 1);
+				table4.setRowSelectionInterval(newRow, newRow);
+				table4.scrollRectToVisible(new Rectangle(table4.getCellRect(newRow, 0, true)));
+			});
+										
+			
+			// Edit
+			btn_Edit.addActionListener(e -> {
+				if (table4.isEditing()) {
+					table4.getCellEditor().stopCellEditing();
+				}
+				
+				if (table4.isEnabled()) {			
+					int selectedRow = table4.getSelectedRow();
+					selectedRow = table4.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems	
+	
+					// Apply change	
+					data4[selectedRow][2] = static_identifiers_scrollpane.get_static_info_from_GUI();
+					data4[rowCount4 - 1][3] = conversion_and_rotation_scrollpane.get_conversion_and_rotation_info_from_GUI();
+					model4.fireTableDataChanged();	
+					
+					// Convert the edited Row to model view and then select it 
+					int editRow = table4.convertRowIndexToView(selectedRow);
+					table4.setRowSelectionInterval(editRow, editRow);
+					
+					static_identifiers_scrollpane.highlight();
+				} 
+			});
+			
+			
+			btn_Edit.addMouseListener(new MouseAdapter() { // Add listener
+				public void mouseEntered(java.awt.event.MouseEvent e) {
+					if (table4.getSelectedRows().length == 1) {
+						static_identifiers_scrollpane.highlight();
+					}
+				}
+
+				public void mouseExited(java.awt.event.MouseEvent e) {
+					if (table4.getSelectedRows().length == 1) {
+						static_identifiers_scrollpane.unhighlight();
+					}
+				}
+			});
+			
+			
+			// Spinner
+		    spin_move_rows.addChangeListener(new ChangeListener() {
+		        @Override
+		        public void stateChanged(ChangeEvent e) {
+					int up_or_down = (int) spin_move_rows.getValue() - 1;										
+					spin_move_rows.setValue((int) 1);	// Reset spinner value to 1
+										
+					if (up_or_down == 1) {	// move up
+						// Cancel editing before moving conditions up or down
+						if (table4.isEditing()) {
+							table4.getCellEditor().cancelCellEditing();
+						}	
+						
+						// Get selected rows
+						int[] selectedRow = table4.getSelectedRows();		// No need to convert row index because we never allow Sort when moving rows
+						List<Integer> selectedRowList = new ArrayList<Integer>() {{ for (int i : selectedRow) add(i);}};	// Convert array to list
+						
+						if (selectedRowList.size() >=1 && selectedRowList.get(0) > 0) {	// If there is at least 1 row selected & the first row is not selected
+							for (int i = 0; i < rowCount4; i++) {
+								if (selectedRowList.contains(i)) {		
+									for (int j = 0; j < colCount4; j++) {
+										Object temp = data4[i - 1][j];
+										data4[i - 1][j] = data4[i][j];
+										data4[i][j] = temp;
+									}
+								}
+							}							
+							model4.fireTableDataChanged();	// Update the changes and select the currently selected conditions
+							for (int i: selectedRow) {
+								table4.addRowSelectionInterval(i - 1, i - 1);
+							}
+						}
+					}
+										
+					if (up_or_down == -1) {	// move down						
+						if (table4.isEditing()) {
+							table4.getCellEditor().cancelCellEditing();	// cancel editing before moving conditions up or down
+						}	
+						
+						// Get selected rows
+						int[] selectedRow = table4.getSelectedRows();		// No need to convert row index because we never allow Sort when moving rows
+						List<Integer> selectedRowList = new ArrayList<Integer>() {{ for (int i : selectedRow) add(i);}};	// Convert array to list
+						
+						if (selectedRowList.size() >=1 && selectedRowList.get(selectedRowList.size() - 1) < rowCount4 - 1) {	// If ...
+							for (int i = rowCount4 - 1; i >= 0; i--) {
+								if (selectedRowList.contains(i)) {		
+									for (int j = 0; j < colCount4; j++) {
+										Object temp = data4[i + 1][j];
+										data4[i + 1][j] = data4[i][j];
+										data4[i][j] = temp;
+									}
+								}
+							}						
+							model4.fireTableDataChanged();	// Update the changes and select the currently selected conditions
+							for (int i: selectedRow) {
+								table4.addRowSelectionInterval(i + 1, i + 1);
+							}	
+						}						
+					}
+					
+					// Scroll to the first row of the current selected rows
+					table4.scrollRectToVisible(new Rectangle(table4.getCellRect(table4.convertRowIndexToView(table4.getSelectedRow()), 0, true)));	
+		        }
+		    });
+		    
+				
+			// Delete
+			btn_Delete.addActionListener(e -> {
+				//Cancel editing before delete
+				if (table4.isEditing()) {
+					table4.getCellEditor().cancelCellEditing();
+				}				
+				
+				String ExitOption[] = {"Delete", "Cancel"};
+				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), "Delete now?", "Confirm Delete",
+						JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[1]);
+				if (response == 0) {
+					// Get selected rows
+					int[] selectedRow = table4.getSelectedRows();
+					for (int i = 0; i < selectedRow.length; i++) {
+						selectedRow[i] = table4.convertRowIndexToModel(selectedRow[i]);	///Convert row index because "Sort" causes problems
+					}
+					
+					// Create a list of selected row indexes
+					List<Integer> selected_Index = new ArrayList<Integer>();				
+					for (int i: selectedRow) {
+						selected_Index.add(i);
+					}	
+					
+					// Get values to the new data4
+					data4 = new Object[rowCount4 - selectedRow.length][colCount4];
+					int newRow =0;
+					for (int ii = 0; ii < rowCount4; ii++) {
+						if (!selected_Index.contains(ii)) {			//If row not in the list then add to data4 row
+							for (int jj = 0; jj < colCount4; jj++) {
+								data4[newRow][jj] = model4.getValueAt(ii, jj);
+							}
+							newRow++;
+						}
+					}
+					// Pass back the info to table model
+					rowCount4 = rowCount4 - selectedRow.length;
+					model4.updateTableModelPrism(rowCount4, colCount4, data4, columnNames4);
+					model4.fireTableDataChanged();	
+				}
+				
+			});
+					
+			
+			// Sort
+			btn_Sort.addActionListener(e -> {	
+				if (table4.isEditing()) {
+					table4.getCellEditor().stopCellEditing();
+				}
+				
+				if (btn_Sort.getText().equals("ON")) {
+					table4.setRowSorter(null);
+					btn_Sort.setText("OFF");
+					btn_Sort.repaint();
+				} else if (btn_Sort.getText().equals("OFF")) {
+					TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model4); // Add sorter
+					table4.setRowSorter(sorter);
+					btn_Sort.setText("ON");
+					btn_Sort.repaint();
+				}	
+			});
+			// End of Listeners for table9 & buttons -----------------------------------------------------------------------
+			// End of Listeners for table9 & buttons -----------------------------------------------------------------------			
+			
 	        
 
 			// scrollPane Quick Edit-----------------------------------------------------------------------
 			// scrollPane Quick Edit-----------------------------------------------------------------------		
-			JScrollPane scrollpane_QuickEdit = new JScrollPane(new Panel_QuickEdit_EA(table4, data4, rotation_ranges));
-			TitledBorder border = new TitledBorder("Quick Edit ");
+			Object[][] default_data = new Object[data4a.length][];
+			for (int i = 0; i < default_data.length; i++) {
+				default_data[i] = Arrays.copyOf(data4a[i], data4a[i].length);
+			}
+			quick_edit = new Panel_QuickEdit_EA(table4a, data4a, rotation_ranges, default_data);
+			quick_edit.disable_all_apply_buttons();
+			JScrollPane scrollpane_QuickEdit = new JScrollPane(quick_edit);
+			border = new TitledBorder("Quick Edit ");
 			border.setTitleJustification(TitledBorder.CENTER);
 			scrollpane_QuickEdit.setBorder(border);
 			scrollpane_QuickEdit.setVisible(false);
-			
-			
+ 			
+					
 			
 			// ToolBar Panel ----------------------------------------------------------------------------
 			// ToolBar Panel ----------------------------------------------------------------------------
@@ -4660,14 +5159,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			JToggleButton btnQuickEdit = new JToggleButton();
 			btnQuickEdit.setToolTipText("Show Quick Edit Tool");
 			btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
-			btnQuickEdit.addActionListener(e -> {	
+			btnQuickEdit.addActionListener(e -> {		
 				if (btnQuickEdit.getToolTipText().equals("Show Quick Edit Tool")) {
-					btnQuickEdit.setToolTipText("Hide Quick Edit Tool");
-					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
-					scrollpane_QuickEdit.setVisible(true);
-					// Get everything show up nicely
-					GUI_Text_splitPanel.setLeftComponent(panel_EA_Management_GUI);
-					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
+						btnQuickEdit.setToolTipText("Hide Quick Edit Tool");
+						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
+						scrollpane_QuickEdit.setVisible(true);
+						// Get everything show up nicely
+						GUI_Text_splitPanel.setLeftComponent(panel_EA_Management_GUI);
+						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				} else {
 					btnQuickEdit.setToolTipText("Show Quick Edit Tool");
 					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
@@ -4675,15 +5174,15 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					// Get everything show up nicely
 					GUI_Text_splitPanel.setLeftComponent(panel_EA_Management_GUI);
 					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
-				}
-			});			
+				}				
+			});
 			
 			// button Help
 			JButton btnHelp = new JButton();
 			btnHelp.setToolTipText("Help");
 			btnHelp.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_help.png"));
 			btnHelp.addActionListener(e -> {
-
+				
 			});
 			
 			// Add all buttons to flow_panel
@@ -4691,43 +5190,71 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			helpToolBar.add(btnQuickEdit);
 			helpToolBar.add(btnHelp);
 			// End of ToolBar Panel -----------------------------------------------------------------------
-			// End of ToolBar Panel -----------------------------------------------------------------------						
+			// End of ToolBar Panel -----------------------------------------------------------------------
 			
 			
-	        
+			
+			
 			// Add all Grids to the Main Grid-----------------------------------------------------------------------
 			// Add all Grids to the Main Grid-----------------------------------------------------------------------
+			JSplitPane split_pane = new JSplitPane();
+			split_pane.setPreferredSize(new Dimension(0, 0));		// important to make the weight work well
+			split_pane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+			split_pane.setDividerSize(3);
+			split_pane.setLeftComponent(static_identifiers_scrollpane);
+			split_pane.setRightComponent(button_table_Panel);
+			
+			
+			
+			JPanel combine_panel = new JPanel();
+			combine_panel.setPreferredSize(new Dimension(0, 0));	// important to make the weight work well
 			GridBagConstraints c = new GridBagConstraints();
-			c.fill = GridBagConstraints.BOTH;
-			c.weightx = 1;
-		    c.weighty = 1;
-
-		    // Add helpToolBar	
-			c.gridx = 0;
-			c.gridy = 0;
-			c.weightx = 0;
-		    c.weighty = 0;
-			c.gridwidth = 2;
-			c.gridheight = 1;
-			super.add(helpToolBar, c);			
-		    
-			// Add the 1st grid - CovertypeConversion_EA_ScrollPane to the main Grid	
-			c.gridx = 0;
-			c.gridy = 1;
-			c.weightx = 1;
-		    c.weighty = 1;
-			c.gridwidth = 1;
-			c.gridheight = 1;
-			super.add(CovertypeConversion_EA_ScrollPane, c);
+			// Add to combine_panel
+			combine_panel.setLayout(new GridBagLayout());			
+			// Add
+			combine_panel.add(conversion_and_rotation_scrollpane, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+					0, 0, 1, 1, 1, 1, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+					0, 0, 0, 0));		// insets top, left, bottom, right
+			// Add
+			combine_panel.add(scrollpane_QuickEdit, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+					0, 1, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+					0, 0, 0, 0));		// insets top, left, bottom, right
 			
-			// Add scrollpane_QuickEdit	
-			c.gridx = 1;
-			c.gridy = 1;
-			c.weightx = 0;
-		    c.weighty = 0;
-			c.gridwidth = 1;
-			c.gridheight = 1;
-			super.add(scrollpane_QuickEdit, c);			
+			
+			
+			// Add to main grid
+			super.setLayout(new GridBagLayout());
+			// Add
+			super.add(helpToolBar, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+ 					0, 0, 2, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+ 					0, 0, 0, 0));		// insets top, left, bottom, right	
+			// Add
+ 			super.add(split_pane, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+ 					0, 1, 1, 1, 0.4, 1, // gridx, gridy, gridwidth, gridheight, weightx, weighty
+ 					0, 0, 0, 0));		// insets top, left, bottom, right
+ 			// Add		
+ 			super.add(combine_panel, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+ 					1, 1, 1, 1, 0.5, 1, // gridx, gridy, gridwidth, gridheight, weightx, weighty
+ 					0, 0, 0, 0));		// insets top, left, bottom, right
+		}
+		
+	    // Update id column. id needs to be unique in order to use in flow constraints-----------------
+	    public void update_id() {  		
+			List<Integer> id_list = new ArrayList<Integer>();			
+			
+			for (int row = 0; row < rowCount4; row++) {
+				if (data4[row][0] != null) {
+					id_list.add((int) data4[row][0]);
+				}
+			}			
+			
+			for (int row = 0; row < rowCount4; row++) {
+				if (data4[row][0] == null) {
+					int new_id = (id_list.size() > 0) ? Collections.max(id_list) + 1 : 1;	//new id = (max id + 1) or = 1 if no row
+					data4[row][0] = new_id;
+					id_list.add(new_id);
+				}
+			}			
 		}
 	}
 
@@ -4744,7 +5271,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			// 1st grid -----------------------------------------------------------------------
 			create_table5();
 			PrismTitleScrollPane nonStandReplacing_ScrollPane = new PrismTitleScrollPane(
-					"Non-replacing Disturbances   -   Define proportion (%) of existing strata area subjected", "CENTER", table5);
+					"Proportion (%) of existing strata area subjected to non-stand-replacing disturbances   -   Important: need to add MS and BS in Non-EA Management", "CENTER", table5);
 	        
 
 			// scrollPane Quick Edit-----------------------------------------------------------------------
@@ -4845,10 +5372,11 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	class SR_Disturbances_GUI extends JLayeredPane implements ActionListener {
 		List<List<JCheckBox>> checkboxStaticIdentifiers;
-		ScrollPane_StaticIdentifiers static_identifiersScrollPanel;
+		ScrollPane_StaticIdentifiers static_identifiers_scrollpane;
 		ScrollPane_DynamicIdentifiers dynamic_identifiersScrollPanel;
 		ScrollPane_SubTables_SR_Disturbances sr_disturbances_tables_ScrollPane;
 		TableColumnsHandle table6a_handle, table6b_handle;
+		Panel_QuickEdit_SR quick_edit;
 
 		public SR_Disturbances_GUI() {
 			setLayout(new BorderLayout());		
@@ -4856,8 +5384,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			
 			// 1st grid ------------------------------------------------------------------------------		// Static identifiers	
 			String panel_name = "Static Identifiers  -  use strata attributes to filter variables";
-			static_identifiersScrollPanel = new ScrollPane_StaticIdentifiers(read_database, 2, panel_name);
-			checkboxStaticIdentifiers = static_identifiersScrollPanel.get_CheckboxStaticIdentifiers();
+			static_identifiers_scrollpane = new ScrollPane_StaticIdentifiers(read_database, 2, panel_name);
+			checkboxStaticIdentifiers = static_identifiers_scrollpane.get_CheckboxStaticIdentifiers();
 			// End of 1st grid -----------------------------------------------------------------------
 
 			
@@ -4879,7 +5407,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			// 4th Grid ------------------------------------------------------------------------------		// Buttons	
 			// 4th Grid -----------------------------------------------------------------------------
 			JPanel sr_disturbances_condition_panel = new JPanel(new GridBagLayout());
-			TitledBorder border = new TitledBorder("Replacing disturbance conditons (top row = highest priority)");
+			TitledBorder border = new TitledBorder("Priority Conditons (top row = top priority, no row = no disturbance)");
 			border.setTitleJustification(TitledBorder.CENTER);
 			sr_disturbances_condition_panel.setBorder(border);
 			GridBagConstraints c = new GridBagConstraints();
@@ -4979,14 +5507,16 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					if (selectedRow.length == 1) {		// Show the set's identifiers
 						int currentRow = selectedRow[0];
 						currentRow = table6.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
-						static_identifiersScrollPanel.reload_this_constraint_static_identifiers((String) data6[currentRow][4]);	// 4 is the static_identifiers which have some attributes selected				
+						static_identifiers_scrollpane.reload_this_constraint_static_identifiers((String) data6[currentRow][4]);	// 4 is the static_identifiers which have some attributes selected				
 						dynamic_identifiersScrollPanel.reload_this_constraint_dynamic_identifiers((String) data6[currentRow][5], (String) data6[currentRow][6]);	// 6 is the original_dynamic_identifiers column
 						sr_disturbances_tables_ScrollPane.reload_this_condition_occurence_and_regeneration((String) data6[currentRow][2], (String) data6[currentRow][3]);
 						
 						btn_Edit.setEnabled(true);
+						quick_edit.enable_all_apply_buttons();
 						sr_disturbances_tables_ScrollPane.show_2_tables();
 					} else {		// Disable Edit
 						btn_Edit.setEnabled(false);
+						quick_edit.disable_all_apply_buttons();
 						sr_disturbances_tables_ScrollPane.hide_2_tables();
 					}
 					
@@ -5019,13 +5549,15 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		        	if (selectedRow.length == 1) {		// Show the set's identifiers
 						int currentRow = selectedRow[0];
 						currentRow = table6.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
-						static_identifiersScrollPanel.reload_this_constraint_static_identifiers((String) data6[currentRow][4]);	// 4 is the static_identifiers which have some attributes selected				
+						static_identifiers_scrollpane.reload_this_constraint_static_identifiers((String) data6[currentRow][4]);	// 4 is the static_identifiers which have some attributes selected				
 						dynamic_identifiersScrollPanel.reload_this_constraint_dynamic_identifiers((String) data6[currentRow][5], (String) data6[currentRow][6]);	// 6 is the original_dynamic_identifiers column
 						sr_disturbances_tables_ScrollPane.reload_this_condition_occurence_and_regeneration((String) data6[currentRow][2], (String) data6[currentRow][3]);
 						btn_Edit.setEnabled(true);
+						quick_edit.enable_all_apply_buttons();
 						sr_disturbances_tables_ScrollPane.show_2_tables();
 					} else {		// Disable Edit
 						btn_Edit.setEnabled(false);
+						quick_edit.disable_all_apply_buttons();
 						sr_disturbances_tables_ScrollPane.hide_2_tables();
 					}
 		        	
@@ -5047,7 +5579,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		        public void valueChanged(ListSelectionEvent event) {
 		        	int currentRow = table6.getSelectedRow();		        	
 					currentRow = table6.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
-					sr_disturbances_tables_ScrollPane.update_2_tables_data(data6a, data6b);	// Update so we have the latest data of table 6a & 6b to retrieve and write to table7 below
+					sr_disturbances_tables_ScrollPane.update_2_tables_data(data6a, data6b);	// Update so we have the latest data of table 6a & 6b to retrieve and write to table6 below
 					data6[currentRow][2] = sr_disturbances_tables_ScrollPane.get_occurence_info_from_GUI();	
 					model6.fireTableCellUpdated(currentRow, 2);
 		        }
@@ -5057,7 +5589,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		        public void valueChanged(ListSelectionEvent event) {
 		        	int currentRow = table6.getSelectedRow();		        	
 					currentRow = table6.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
-					sr_disturbances_tables_ScrollPane.update_2_tables_data(data6a, data6b);	// Update so we have the latest data of table 6a & 6b to retrieve and write to table7 below
+					sr_disturbances_tables_ScrollPane.update_2_tables_data(data6a, data6b);	// Update so we have the latest data of table 6a & 6b to retrieve and write to table6 below
 					data6[currentRow][3] = sr_disturbances_tables_ScrollPane.get_regeneration_info_from_GUI();		
 					model6.fireTableCellUpdated(currentRow, 3);
 		        }
@@ -5081,10 +5613,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					
 				data6[rowCount6 - 1][1] = String.join(" ..... ",
 						dynamic_identifiersScrollPanel.get_dynamic_description_from_GUI(),
-						static_identifiersScrollPanel.get_static_description_from_GUI());
+						static_identifiers_scrollpane.get_static_description_from_GUI());
 				data6[rowCount6 - 1][2] = sr_disturbances_tables_ScrollPane.get_occurence_info_from_GUI();
 				data6[rowCount6 - 1][3] = sr_disturbances_tables_ScrollPane.get_regeneration_info_from_GUI();
-				data6[rowCount6 - 1][4] = static_identifiersScrollPanel.get_static_info_from_GUI();
+				data6[rowCount6 - 1][4] = static_identifiers_scrollpane.get_static_info_from_GUI();
 				data6[rowCount6 - 1][5] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();
 				data6[rowCount6 - 1][6] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
 								
@@ -5110,7 +5642,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					selectedRow = table6.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems	
 					
 					// Apply change
-					data6[selectedRow][4] = static_identifiersScrollPanel.get_static_info_from_GUI();
+					data6[selectedRow][4] = static_identifiers_scrollpane.get_static_info_from_GUI();
 					data6[selectedRow][5] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();
 					data6[selectedRow][6] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
 					model6.fireTableDataChanged();	
@@ -5119,7 +5651,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					int editRow = table6.convertRowIndexToView(selectedRow);
 					table6.setRowSelectionInterval(editRow, editRow);
 					
-					static_identifiersScrollPanel.highlight();
+					static_identifiers_scrollpane.highlight();
 					dynamic_identifiersScrollPanel.highlight();			
 				} 
 			});			
@@ -5128,14 +5660,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			btn_Edit.addMouseListener(new MouseAdapter() { // Add listener
 				public void mouseEntered(java.awt.event.MouseEvent e) {
 					if (table6.getSelectedRows().length == 1) {
-						static_identifiersScrollPanel.highlight();
+						static_identifiers_scrollpane.highlight();
 						dynamic_identifiersScrollPanel.highlight();
 					}
 				}
 
 				public void mouseExited(java.awt.event.MouseEvent e) {
 					if (table6.getSelectedRows().length == 1) {
-						static_identifiersScrollPanel.unhighlight();
+						static_identifiers_scrollpane.unhighlight();
 						dynamic_identifiersScrollPanel.unhighlight();
 					}
 				}
@@ -5254,11 +5786,13 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		    
 			
 			
-			
+
 			
 			// scrollPane Quick Edit ----------------------------------------------------------------------	
 			// scrollPane Quick Edit ----------------------------------------------------------------------	
-			JScrollPane scrollpane_QuickEdit = new JScrollPane(new Panel_QuickEdit_SR(table6a, data6a, table6b, data6b));			
+			quick_edit = new Panel_QuickEdit_SR(table6a, data6a, table6b, data6b);
+			quick_edit.disable_all_apply_buttons();
+			JScrollPane scrollpane_QuickEdit = new JScrollPane(quick_edit);			
 			border = new TitledBorder("Quick Edit ");
  			border.setTitleJustification(TitledBorder.CENTER);
  			scrollpane_QuickEdit.setBorder(border);
@@ -5363,14 +5897,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		    c.weighty = 0;
 		    upper_panel.add(helpToolBar, c);				
 			
-			// Add static_identifiersScrollPanel to the main Grid
+			// Add static_identifiers_scrollpane to the main Grid
 			c.gridx = 0;
 			c.gridy = 1;
 			c.gridwidth = 1;
 			c.gridheight = 1;
 			c.weightx = 0.4;
 		    c.weighty = 1;
-		    upper_panel.add(static_identifiersScrollPanel, c);				
+		    upper_panel.add(static_identifiers_scrollpane, c);				
 		    		
 			// Add dynamic_identifiersPanel to the main Grid
 			c.gridx = 1;
@@ -5463,10 +5997,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	class Management_Cost_GUI extends JLayeredPane implements ActionListener {
 		List<List<JCheckBox>> checkboxStaticIdentifiers;
-		ScrollPane_StaticIdentifiers static_identifiersScrollPanel;
+		ScrollPane_StaticIdentifiers static_identifiers_scrollpane;
 		ScrollPane_DynamicIdentifiers dynamic_identifiersScrollPanel;
 		ScrollPane_SubTables_ManagementCost cost_tables_ScrollPane;
-		
+		Panel_QuickEdit_ManagementCost quick_edit;
 
 		public Management_Cost_GUI() {
 			setLayout(new BorderLayout());		
@@ -5474,8 +6008,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			
 			// 1st grid ------------------------------------------------------------------------------		// Static identifiers	
 			String panel_name = "Static Identifiers  -  use strata attributes to filter variables";
-			static_identifiersScrollPanel = new ScrollPane_StaticIdentifiers(read_database, 2, panel_name);
-			checkboxStaticIdentifiers = static_identifiersScrollPanel.get_CheckboxStaticIdentifiers();
+			static_identifiers_scrollpane = new ScrollPane_StaticIdentifiers(read_database, 2, panel_name);
+			checkboxStaticIdentifiers = static_identifiers_scrollpane.get_CheckboxStaticIdentifiers();
 			// End of 1st grid -----------------------------------------------------------------------
 
 			
@@ -5497,7 +6031,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			// 4th Grid ------------------------------------------------------------------------------		// Buttons	
 			// 4th Grid -----------------------------------------------------------------------------
 			JPanel cost_condition_panel = new JPanel(new GridBagLayout());
-			TitledBorder border = new TitledBorder("Cost conditons (top row = highest priority)");
+			TitledBorder border = new TitledBorder("Priority conditons (top row = top priority, no row = no cost)");
 			border.setTitleJustification(TitledBorder.CENTER);
 			cost_condition_panel.setBorder(border);
 			GridBagConstraints c = new GridBagConstraints();
@@ -5597,15 +6131,17 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					if (selectedRow.length == 1) {		// Show the set's identifiers
 						int currentRow = selectedRow[0];
 						currentRow = table8.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
-						static_identifiersScrollPanel.reload_this_constraint_static_identifiers((String) data8[currentRow][4]);	// 4 is the static_identifiers which have some attributes selected				
+						static_identifiers_scrollpane.reload_this_constraint_static_identifiers((String) data8[currentRow][4]);	// 4 is the static_identifiers which have some attributes selected				
 						dynamic_identifiersScrollPanel.reload_this_constraint_dynamic_identifiers((String) data8[currentRow][5], (String) data8[currentRow][6]);	// 6 is the original_dynamic_identifiers column
 						cost_tables_ScrollPane.reload_this_condition_action_cost_and_conversion_cost((String) data8[currentRow][2], (String) data8[currentRow][3]);
 						cost_tables_ScrollPane.show_active_columns_after_reload();
 						
 						btn_Edit.setEnabled(true);
+						quick_edit.enable_all_apply_buttons();
 						cost_tables_ScrollPane.show_2_tables();
 					} else {		// Disable Edit
 						btn_Edit.setEnabled(false);
+						quick_edit.disable_all_apply_buttons();
 						cost_tables_ScrollPane.hide_2_tables();
 					}
 					
@@ -5638,14 +6174,16 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		        	if (selectedRow.length == 1) {		// Show the set's identifiers
 						int currentRow = selectedRow[0];
 						currentRow = table8.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
-						static_identifiersScrollPanel.reload_this_constraint_static_identifiers((String) data8[currentRow][4]);	// 4 is the static_identifiers which have some attributes selected				
+						static_identifiers_scrollpane.reload_this_constraint_static_identifiers((String) data8[currentRow][4]);	// 4 is the static_identifiers which have some attributes selected				
 						dynamic_identifiersScrollPanel.reload_this_constraint_dynamic_identifiers((String) data8[currentRow][5], (String) data8[currentRow][6]);	// 6 is the original_dynamic_identifiers column
 						cost_tables_ScrollPane.reload_this_condition_action_cost_and_conversion_cost((String) data8[currentRow][2], (String) data8[currentRow][3]);
 						cost_tables_ScrollPane.show_active_columns_after_reload();
 						btn_Edit.setEnabled(true);
+						quick_edit.enable_all_apply_buttons();
 						cost_tables_ScrollPane.show_2_tables();
 					} else {		// Disable Edit
 						btn_Edit.setEnabled(false);
+						quick_edit.disable_all_apply_buttons();
 						cost_tables_ScrollPane.hide_2_tables();
 					}
 		        	
@@ -5701,10 +6239,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					
 				data8[rowCount8 - 1][1] = String.join(" ..... ",
 						dynamic_identifiersScrollPanel.get_dynamic_description_from_GUI(),
-						static_identifiersScrollPanel.get_static_description_from_GUI());
+						static_identifiers_scrollpane.get_static_description_from_GUI());
 				data8[rowCount8 - 1][2] = cost_tables_ScrollPane.get_action_cost_info_from_GUI();
 				data8[rowCount8 - 1][3] = cost_tables_ScrollPane.get_conversion_cost_info_from_GUI();
-				data8[rowCount8 - 1][4] = static_identifiersScrollPanel.get_static_info_from_GUI();
+				data8[rowCount8 - 1][4] = static_identifiers_scrollpane.get_static_info_from_GUI();
 				data8[rowCount8 - 1][5] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();
 				data8[rowCount8 - 1][6] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
 								
@@ -5730,7 +6268,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					selectedRow = table8.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems	
 					
 					// Apply change
-					data8[selectedRow][4] = static_identifiersScrollPanel.get_static_info_from_GUI();
+					data8[selectedRow][4] = static_identifiers_scrollpane.get_static_info_from_GUI();
 					data8[selectedRow][5] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();
 					data8[selectedRow][6] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
 					model8.fireTableDataChanged();	
@@ -5739,7 +6277,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					int editRow = table8.convertRowIndexToView(selectedRow);
 					table8.setRowSelectionInterval(editRow, editRow);
 					
-					static_identifiersScrollPanel.highlight();
+					static_identifiers_scrollpane.highlight();
 					dynamic_identifiersScrollPanel.highlight();			
 				} 
 			});			
@@ -5748,14 +6286,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			btn_Edit.addMouseListener(new MouseAdapter() { // Add listener
 				public void mouseEntered(java.awt.event.MouseEvent e) {
 					if (table8.getSelectedRows().length == 1) {
-						static_identifiersScrollPanel.highlight();
+						static_identifiers_scrollpane.highlight();
 						dynamic_identifiersScrollPanel.highlight();
 					}
 				}
 
 				public void mouseExited(java.awt.event.MouseEvent e) {
 					if (table8.getSelectedRows().length == 1) {
-						static_identifiersScrollPanel.unhighlight();
+						static_identifiers_scrollpane.unhighlight();
 						dynamic_identifiersScrollPanel.unhighlight();
 					}
 				}
@@ -5878,7 +6416,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			
 			// scrollPane Quick Edit ----------------------------------------------------------------------	
 			// scrollPane Quick Edit ----------------------------------------------------------------------	
-			JScrollPane scrollpane_QuickEdit = new JScrollPane(new Panel_QuickEdit_ManagementCost(read_database, table8a, data8a, columnNames8a, table8b, data8b));			
+			quick_edit = new Panel_QuickEdit_ManagementCost(read_database, table8a, data8a, columnNames8a, table8b, data8b);
+			quick_edit.disable_all_apply_buttons();
+			JScrollPane scrollpane_QuickEdit = new JScrollPane(quick_edit);			
 			border = new TitledBorder("Quick Edit ");
  			border.setTitleJustification(TitledBorder.CENTER);
  			scrollpane_QuickEdit.setBorder(border);
@@ -5983,14 +6523,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		    c.weighty = 0;
 		    upper_panel.add(helpToolBar, c);				
 			
-			// Add static_identifiersScrollPanel to the main Grid
+			// Add static_identifiers_scrollpane to the main Grid
 			c.gridx = 0;
 			c.gridy = 1;
 			c.gridwidth = 1;
 			c.gridheight = 1;
 			c.weightx = 0.4;
 		    c.weighty = 1;
-		    upper_panel.add(static_identifiersScrollPanel, c);				
+		    upper_panel.add(static_identifiers_scrollpane, c);				
 		    		
 			// Add dynamic_identifiersPanel to the main Grid
 			c.gridx = 1;
@@ -6070,7 +6610,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		List<JCheckBox> checkboxParameters;
 		
 		ScrollPane_Parameters parametersScrollPanel;
-		ScrollPane_StaticIdentifiers static_identifiersScrollPanel;
+		ScrollPane_StaticIdentifiers static_identifiers_scrollpane;
 		ScrollPane_DynamicIdentifiers dynamic_identifiersScrollPanel;
 		JScrollPane table_scrollpane;	
 		JPanel button_table_Panel;
@@ -6084,8 +6624,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			
 			// 1st grid ------------------------------------------------------------------------------		// Static identifiers	
 			String panel_name = "Static Identifiers  -  use strata attributes to filter variables";
-			static_identifiersScrollPanel = new ScrollPane_StaticIdentifiers(read_database, 2, panel_name);
-			checkboxStaticIdentifiers = static_identifiersScrollPanel.get_CheckboxStaticIdentifiers();
+			static_identifiers_scrollpane = new ScrollPane_StaticIdentifiers(read_database, 2, panel_name);
+			checkboxStaticIdentifiers = static_identifiers_scrollpane.get_CheckboxStaticIdentifiers();
 			// End of 1st grid -----------------------------------------------------------------------
 
 			
@@ -6240,7 +6780,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					if (selectedRow.length == 1) {		// Reload Constraint & Enable Edit	when: 1 row is selected and no cell is editing
 						int currentRow = selectedRow[0];
 						currentRow = table9.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
-						static_identifiersScrollPanel.reload_this_constraint_static_identifiers((String) data9[currentRow][9]);	// 9 is the static_identifiers which have some attributes selected				
+						static_identifiers_scrollpane.reload_this_constraint_static_identifiers((String) data9[currentRow][9]);	// 9 is the static_identifiers which have some attributes selected				
 						dynamic_identifiersScrollPanel.reload_this_constraint_dynamic_identifiers((String) data9[currentRow][10], (String) data9[currentRow][11]);	// 11 is the original_dynamic_identifiers column
 						parametersScrollPanel.reload_this_constraint_parameters((String) data9[currentRow][8]);	// 8 is the selected parameters of this constraint
 						btn_Edit.setEnabled(true);
@@ -6268,7 +6808,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					if (selectedRow.length == 1) {		// Enable Edit	when: 1 row is selected and no cell is editing
 						int currentRow = selectedRow[0];
 						currentRow = table9.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
-						static_identifiersScrollPanel.reload_this_constraint_static_identifiers((String) data9[currentRow][9]);	// 9 is the static_identifiers which have some attributes selected				
+						static_identifiers_scrollpane.reload_this_constraint_static_identifiers((String) data9[currentRow][9]);	// 9 is the static_identifiers which have some attributes selected				
 						dynamic_identifiersScrollPanel.reload_this_constraint_dynamic_identifiers((String) data9[currentRow][10], (String) data9[currentRow][11]);	// 11 is the original_dynamic_identifiers column
 						parametersScrollPanel.reload_this_constraint_parameters((String) data9[currentRow][8]);	// 8 is the selected parameters of this constraint
 						btn_Edit.setEnabled(true);
@@ -6311,11 +6851,11 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				data9[rowCount9 - 1][1] = String.join(" ..... ",
 						parametersScrollPanel.get_parameters_description_from_GUI(),
 						dynamic_identifiersScrollPanel.get_dynamic_description_from_GUI(),
-						static_identifiersScrollPanel.get_static_description_from_GUI());
+						static_identifiers_scrollpane.get_static_description_from_GUI());
 				data9[rowCount9 - 1][2] = "FREE";
 				data9[rowCount9 - 1][3] = (double) 1;
 				data9[rowCount9 - 1][8] = parametersScrollPanel.get_parameters_info_from_GUI();
-				data9[rowCount9 - 1][9] = static_identifiersScrollPanel.get_static_info_from_GUI();
+				data9[rowCount9 - 1][9] = static_identifiers_scrollpane.get_static_info_from_GUI();
 				data9[rowCount9 - 1][10] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();
 				data9[rowCount9 - 1][11] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
 				
@@ -6344,7 +6884,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				}
 				
 				ScrollPane_ConstraintsSplitBasic constraint_split_ScrollPanel = new ScrollPane_ConstraintsSplitBasic(
-						static_identifiersScrollPanel.get_static_layer_title_as_checkboxes(),
+						static_identifiers_scrollpane.get_static_layer_title_as_checkboxes(),
 						parametersScrollPanel.get_checkboxParameters(),
 						dynamic_identifiersScrollPanel.get_allDynamicIdentifiers());
 
@@ -6609,7 +7149,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 								for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {
 									if (checkboxStaticIdentifiers.get(i).get(j).isSelected() && checkboxStaticIdentifiers.get(i).get(j).isVisible()) {	// If element of this static is checked		
 										List<String> temp = new ArrayList<String>(); 
-										temp.add(static_identifiersScrollPanel.get_static_layer_title_as_checkboxes().get(i).getText());
+										temp.add(static_identifiers_scrollpane.get_static_layer_title_as_checkboxes().get(i).getText());
 										temp.add(checkboxStaticIdentifiers.get(i).get(j).getText());	
 										joined_string_list.add(String.join(" ", temp));
 									}	
@@ -6630,7 +7170,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 								}
 								// Add to description only when the total of checked items < the total items
 								if (total_check_items < total_items) {
-									String static_info = static_identifiersScrollPanel.get_static_layer_title_as_checkboxes().get(i).getText();
+									String static_info = static_identifiers_scrollpane.get_static_layer_title_as_checkboxes().get(i).getText();
 									
 									for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {		//Loop all elements in each layer
 										String checkboxName = checkboxStaticIdentifiers.get(i).get(j).getText();				
@@ -6659,10 +7199,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						// Combine everything together to create the final lists
 						if (parameter_info_list.isEmpty()) parameter_info_list.add(parametersScrollPanel.get_parameters_info_from_GUI());
 						if (dynamic_info_list.isEmpty()) dynamic_info_list.add(dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI());
-						if (static_info_list.isEmpty()) static_info_list.add(static_identifiersScrollPanel.get_static_info_from_GUI());
+						if (static_info_list.isEmpty()) static_info_list.add(static_identifiers_scrollpane.get_static_info_from_GUI());
 						if (parameter_description_info_list.isEmpty()) parameter_description_info_list.add(parametersScrollPanel.get_parameters_description_from_GUI());
 						if (dynamic_description_info_list.isEmpty()) dynamic_description_info_list.add(dynamic_identifiersScrollPanel.get_dynamic_description_from_GUI());
-						if (static_description_info_list.isEmpty()) static_description_info_list.add(static_identifiersScrollPanel.get_static_description_from_GUI());
+						if (static_description_info_list.isEmpty()) static_description_info_list.add(static_identifiers_scrollpane.get_static_description_from_GUI());
 						
 						List<String> final_parameter_info_list = new ArrayList<String>();
 						List<String> final_dynamic_info_list = new ArrayList<String>();
@@ -6780,7 +7320,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					
 					// Apply change
 					data9[selectedRow][8] = parametersScrollPanel.get_parameters_info_from_GUI();
-					data9[selectedRow][9] = static_identifiersScrollPanel.get_static_info_from_GUI();
+					data9[selectedRow][9] = static_identifiers_scrollpane.get_static_info_from_GUI();
 					data9[selectedRow][10] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();	
 					data9[selectedRow][11] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
 					model9.fireTableDataChanged();	
@@ -6789,7 +7329,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					int editRow = table9.convertRowIndexToView(selectedRow);
 					table9.setRowSelectionInterval(editRow, editRow);
 					
-					static_identifiersScrollPanel.highlight();
+					static_identifiers_scrollpane.highlight();
 					dynamic_identifiersScrollPanel.highlight();
 					parametersScrollPanel.highlight();
 				}
@@ -6799,7 +7339,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			btn_Edit.addMouseListener(new MouseAdapter() { // Add listener
 				public void mouseEntered(java.awt.event.MouseEvent e) {
 					if (table9.getSelectedRows().length == 1) {
-						static_identifiersScrollPanel.highlight();
+						static_identifiers_scrollpane.highlight();
 						dynamic_identifiersScrollPanel.highlight();
 						parametersScrollPanel.highlight();
 					}
@@ -6807,7 +7347,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 
 				public void mouseExited(java.awt.event.MouseEvent e) {
 					if (table9.getSelectedRows().length == 1) {
-						static_identifiersScrollPanel.unhighlight();
+						static_identifiers_scrollpane.unhighlight();
 						dynamic_identifiersScrollPanel.unhighlight();
 						parametersScrollPanel.unhighlight();
 					}
@@ -6847,6 +7387,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 								table9.addRowSelectionInterval(i - 1, i - 1);
 							}
 						}
+						
+						// Scroll to the first row of the current selected rows (- 3 to see the 3 unselected rows above when moving up)
+						table9.scrollRectToVisible(new Rectangle(table9.getCellRect(table9.convertRowIndexToView(table9.getSelectedRow()) - 3, 0, true)));	
 					}
 										
 					if (up_or_down == -1) {	// move down						
@@ -6872,11 +7415,11 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 							for (int i: selectedRow) {
 								table9.addRowSelectionInterval(i + 1, i + 1);
 							}	
-						}						
+						}
+						
+						// Scroll to the last row of the current selected rows (+ 3 to see the next 3 unselected rows below when moving down)
+						table9.scrollRectToVisible(new Rectangle(table9.getCellRect(table9.convertRowIndexToView(table9.getSelectedRows()[table9.getSelectedRows().length - 1]) + 3, 0, true)));	
 					}
-					
-					// Scroll to the first row of the current selected rows
-					table9.scrollRectToVisible(new Rectangle(table9.getCellRect(table9.convertRowIndexToView(table9.getSelectedRow()), 0, true)));	
 		        }
 		    });
 		    
@@ -7122,14 +7665,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		    c.weighty = 0;
 		    upper_panel.add(helpToolBar, c);				
 			
-			// Add static_identifiersScrollPanel to the main Grid
+			// Add static_identifiers_scrollpane to the main Grid
 			c.gridx = 0;
 			c.gridy = 1;
 			c.gridwidth = 2;
 			c.gridheight = 1;
 			c.weightx = 0.4;
 		    c.weighty = 1;
-		    upper_panel.add(static_identifiersScrollPanel, c);				
+		    upper_panel.add(static_identifiers_scrollpane, c);				
 		    		
 			// Add dynamic_identifiersPanel to the main Grid
 			c.gridx = 2;
@@ -8241,13 +8784,13 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	
 	
 	private void create_file_input_03() {
-		File gsilvicultureMethodFile = new File(currentRunFolder.getAbsolutePath() + "/input_03_non_ea_management.txt");
-		if (gsilvicultureMethodFile.exists()) {
-			gsilvicultureMethodFile.delete();		// Delete the old file before writing new contents
+		File silvicultureMethodFile = new File(currentRunFolder.getAbsolutePath() + "/input_03_non_ea_management.txt");
+		if (silvicultureMethodFile.exists()) {
+			silvicultureMethodFile.delete();		// Delete the old file before writing new contents
 		}
 		
 		if (data2 != null && data2.length > 0) {
-			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(gsilvicultureMethodFile))) {
+			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(silvicultureMethodFile))) {
 				for (int j = 0; j < columnNames2.length; j++) {
 					fileOut.write(columnNames2[j] + "\t");
 				}
@@ -8268,30 +8811,27 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	
 	private void create_file_input_04() {
 		//Only print out if the last column Allowed Options <> null
-		File clearcutConversionFile = new File(currentRunFolder.getAbsolutePath() + "/input_04_ea_management.txt");
-		if (clearcutConversionFile.exists()) {
-			clearcutConversionFile.delete();		// Delete the old file before writing new contents
+		File eaManagementFile = new File(currentRunFolder.getAbsolutePath() + "/input_04_ea_management.txt");
+		if (eaManagementFile.exists()) {
+			eaManagementFile.delete();		// Delete the old file before writing new contents
 		}
 		
 		if (data4 != null && data4.length > 0) {
-			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(clearcutConversionFile))) {
+			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(eaManagementFile))) {
 				for (int j = 0; j < columnNames4.length; j++) {
 					fileOut.write(columnNames4[j] + "\t");
 				}
 
 				for (int i = 0; i < data4.length; i++) {
-					if (String.valueOf(data4[i][colCount4 - 1]).equals("true")) { //IF conversion is selected
-						fileOut.newLine();
-						for (int j = 0; j < colCount4; j++) {
-							fileOut.write(data4[i][j] + "\t");
-						}
+					fileOut.newLine();
+					for (int j = 0; j < colCount4; j++) {
+						fileOut.write(data4[i][j] + "\t");
 					}
 				}
-
 				fileOut.close();
 			} catch (IOException e) {
 				System.err.println(e.getClass().getName() + ": " + e.getMessage());
-			} 
+			}
 		}
 	}
 	

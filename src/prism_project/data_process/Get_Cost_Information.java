@@ -21,10 +21,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
-	
-
-// IMPORTANT:  DO NOT TOUCH THESE FREAKING COMPLICATED CODES BECAUSE EVEN I TAKE A LOT OF TIME TO UNDERSTAND WHAT THE ...^..&^*&..?#$.. I WROTE
-// MY APPOLOGY  ^^:
+// IMPORTANT:  THE LOGIC HERE IN SOMEWHAT COMPLEX. MY APPOLOGY!
 
 
 //This class is created only when there is at least 1 condition --> no need to check null condition
@@ -33,13 +30,16 @@ public class Get_Cost_Information {
 	private List<List<String>>[] all_priority_condition_dynamic_identifiers;
 	private List<String>[] all_priority_condition_dynamic_dentifiers_column_indexes;
 	private String[][] all_priority_condition_info;	
+	private List<List<String>> all_layers;
 	
 	private int action_type_col_id;
 	private Object[][][] yield_tables_values;
 	private List<String> yield_tables_original_col_names_list, yield_tables_sorted_col_names_list;
 	private int[] get_original_col_id_from_sorted_col_id;
 	
-	public Get_Cost_Information(Read_Database read_database, List<String> cost_condition_list) {
+	public Get_Cost_Information(Read_Database read_database, List<String> cost_condition_list, List<List<String>> all_layers) {
+		this.all_layers = all_layers;
+		
 		all_priority_condition_static_identifiers = new ArrayList[cost_condition_list.size()];
 		all_priority_condition_dynamic_identifiers = new ArrayList[cost_condition_list.size()];
 		all_priority_condition_dynamic_dentifiers_column_indexes = new ArrayList[cost_condition_list.size()];
@@ -104,9 +104,7 @@ public class Get_Cost_Information {
 				String var_action_type = yield_tables_values[table_id_to_find][row_id_to_find][action_type_col_id].toString();
 				
 				// The following includes 1 list for the action_cost and 1 list for the conversion_cost
-				List<List<List<String>>> final_cost_list = get_final_action_cost_list_and_conversion_cost_list_for_this_variable(
-						cost_condition_list, var_info, var_action_type,
-						table_id_to_find, row_id_to_find);
+				List<List<List<String>>> final_cost_list = get_final_action_cost_list_and_conversion_cost_list_for_this_variable(cost_condition_list, var_info, var_action_type, table_id_to_find, row_id_to_find);
 				
 				
 				// action_cost: include 2 lists for column name (i.e. hca_allsx) and value (i.e. 360)
@@ -138,9 +136,9 @@ public class Get_Cost_Information {
 							value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(1).get(1).get(item));
 						} 
 					} else {	// when period is not the rotation_period (variable can be anything except EA_E or EA_R in period = rotation period when clear cut happens). Here replacing disturbances can happen
-						int index = Collections.binarySearch(conversion_cost_after_disturbance_name_list, final_cost_list.get(1).get(0).get(item));
+						int index = Collections.binarySearch(conversion_cost_after_disturbance_name_list, final_cost_list.get(1).get(0).get(item));		// i.e.   { (P P disturbance), (P D disturbance)} would contain (P P disturbance)
 						if (index >= 0) {
-							value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(1).get(1).get(item)) * conversion_cost_after_disturbance_value[index];		
+							value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(1).get(1).get(item)) * conversion_cost_after_disturbance_value[index];		// value here is the percentage of SR loss
 						}
 					}	
 				}
@@ -171,7 +169,7 @@ public class Get_Cost_Information {
 				if (all_priority_condition_info[priority][2].length() > 0) {		// this guarantees the string is not ""
 					List<String[]> action_cost_list = get_condition_action_cost(all_priority_condition_info[priority][2], var_action_type);
 					for (String[] c: action_cost_list) {			// c example: clearcut acres 360		c example2: clearcut hca_allsx 0
-						if (!final_action_cost_column_list.contains(c[1])) {		// only null is escape, the GUI already guarantees the value >=0			
+						if (!final_action_cost_column_list.contains(c[1])) {		// the GUI already guarantees the value >=0		-->  this mean null (as seen in the GUI) will be escaped	
 							final_action_cost_column_list.add(c[1]);	// i.e. acres    hca_allsx
 							final_action_cost_value_list.add(c[2]);		// i.e. 360
 						}
@@ -182,7 +180,7 @@ public class Get_Cost_Information {
 				if (all_priority_condition_info[priority][3].length() > 0) {		// this guarantees the string is not ""
 					List<String[]> conversion_cost_list = get_condition_conversion_cost(all_priority_condition_info[priority][3]);
 					for (String[] c: conversion_cost_list) {			// c example:  P D action 240         	W L disturbance 120
-						if (!final_conversion_cost_column_list.contains(c[0] + " " + c[1] + " " + c[2])) {		// only null is escape, the GUI already guarantees the value >=0				
+						if (!final_conversion_cost_column_list.contains(c[0] + " " + c[1] + " " + c[2])) {		// the GUI already guarantees the value >=0		-->  this mean null (as seen in the GUI) will be escaped				
 							final_conversion_cost_column_list.add(c[0] + " " + c[1] + " " + c[2]);		// i.e. P D action		W L disturbance
 							final_conversion_cost_value_list.add(c[3]);		// i.e. 240		120
 						}	
@@ -244,18 +242,26 @@ public class Get_Cost_Information {
 	
 	
 	private Boolean are_all_static_identifiers_matched(Get_Variable_Information var_info, List<List<String>> static_identifiers) {	
-		// All are the same but this way is the fastest
+//		// The below check also implements Speed Boost RRB9
+//		if (static_identifiers.get(0).size() < all_layers.get(0).size() && Collections.binarySearch(static_identifiers.get(0), var_info.get_layer1()) < 0) return false;
+//		if (static_identifiers.get(1).size() < all_layers.get(1).size() && Collections.binarySearch(static_identifiers.get(1), var_info.get_layer2()) < 0) return false;
+//		if (static_identifiers.get(2).size() < all_layers.get(2).size() && Collections.binarySearch(static_identifiers.get(2), var_info.get_layer3()) < 0) return false;
+//		if (static_identifiers.get(3).size() < all_layers.get(3).size() && Collections.binarySearch(static_identifiers.get(3), var_info.get_layer4()) < 0) return false;
+//		if (static_identifiers.get(4).size() < all_layers.get(4).size() && Collections.binarySearch(static_identifiers.get(4), var_info.get_layer5()) < 0) return false;
+//		if (var_info.get_forest_status().equals("E") && static_identifiers.get(5).size() < all_layers.get(5).size() && Collections.binarySearch(static_identifiers.get(5), var_info.get_layer6()) < 0) return false;	// layer6: size class
+//		if (Collections.binarySearch(static_identifiers.get(6), var_info.get_method() + "_" + var_info.get_forest_status()) < 0) return false;
+//		if (Collections.binarySearch(static_identifiers.get(7), String.valueOf(var_info.get_period())) < 0) return false;
+//		return true;
+		
+		
+		// The below check also implements Speed Boost RRB9. Same as above but it is the faster this way 
 		if (
-		Collections.binarySearch(static_identifiers.get(0), var_info.get_layer1()) < 0 ||
-		Collections.binarySearch(static_identifiers.get(1), var_info.get_layer2()) < 0 ||
-		Collections.binarySearch(static_identifiers.get(2), var_info.get_layer3()) < 0 ||
-		Collections.binarySearch(static_identifiers.get(3), var_info.get_layer4()) < 0 ||
-		(var_info.get_forest_status().equals("E") &&
-				(
-				Collections.binarySearch(static_identifiers.get(4), var_info.get_layer5()) < 0 ||
-				Collections.binarySearch(static_identifiers.get(5), var_info.get_layer6()) < 0
-				)) ||
-		(var_info.get_forest_status().equals("R") && Collections.binarySearch(static_identifiers.get(4), var_info.get_layer5()) < 0) ||
+		(static_identifiers.get(0).size() < all_layers.get(0).size() && Collections.binarySearch(static_identifiers.get(0), var_info.get_layer1()) < 0) ||
+		(static_identifiers.get(1).size() < all_layers.get(1).size() && Collections.binarySearch(static_identifiers.get(1), var_info.get_layer2()) < 0) ||
+		(static_identifiers.get(2).size() < all_layers.get(2).size() && Collections.binarySearch(static_identifiers.get(2), var_info.get_layer3()) < 0) ||
+		(static_identifiers.get(3).size() < all_layers.get(3).size() && Collections.binarySearch(static_identifiers.get(3), var_info.get_layer4()) < 0) ||
+		(static_identifiers.get(4).size() < all_layers.get(4).size() && Collections.binarySearch(static_identifiers.get(4), var_info.get_layer5()) < 0) ||
+		(var_info.get_forest_status().equals("E") && static_identifiers.get(5).size() < all_layers.get(5).size() && Collections.binarySearch(static_identifiers.get(5), var_info.get_layer6()) < 0) ||
 		Collections.binarySearch(static_identifiers.get(6), var_info.get_method() + "_" + var_info.get_forest_status()) < 0 ||
 		Collections.binarySearch(static_identifiers.get(7), String.valueOf(var_info.get_period())) < 0) 
 		{
@@ -265,34 +271,32 @@ public class Get_Cost_Information {
 		
 		
 		
-//		if (Collections.binarySearch(static_identifiers.get(0), Get_Variable_Information.get_layer1(var_name)) < 0) return false;
-//		if (Collections.binarySearch(static_identifiers.get(1), Get_Variable_Information.get_layer2(var_name)) < 0) return false;
-//		if (Collections.binarySearch(static_identifiers.get(2), Get_Variable_Information.get_layer3(var_name)) < 0) return false;
-//		if (Collections.binarySearch(static_identifiers.get(3), Get_Variable_Information.get_layer4(var_name)) < 0) return false;
-//		if (Get_Variable_Information.get_forest_status(var_name).equals("E")) {
-//			if (Collections.binarySearch(static_identifiers.get(4), Get_Variable_Information.get_layer5(var_name)) < 0) return false;	// layer5 cover type
-//			if (Collections.binarySearch(static_identifiers.get(5), Get_Variable_Information.get_layer6(var_name)) < 0) return false;	// layer6: size class
-//		} else if (Get_Variable_Information.get_forest_status(var_name).equals("R")) {
-//			if (Collections.binarySearch(static_identifiers.get(4), Get_Variable_Information.get_layer5(var_name)) < 0) return false;	// layer5 cover type
+		
+//		// Without RRB9 --> no need all_layers
+//		if (
+//		Collections.binarySearch(static_identifiers.get(0), var_info.get_layer1()) < 0 ||
+//		Collections.binarySearch(static_identifiers.get(1), var_info.get_layer2()) < 0 ||
+//		Collections.binarySearch(static_identifiers.get(2), var_info.get_layer3()) < 0 ||
+//		Collections.binarySearch(static_identifiers.get(3), var_info.get_layer4()) < 0 ||
+//		Collections.binarySearch(static_identifiers.get(4), var_info.get_layer5()) < 0 ||
+//		(var_info.get_forest_status().equals("E") && Collections.binarySearch(static_identifiers.get(5), var_info.get_layer6()) < 0) ||
+//		Collections.binarySearch(static_identifiers.get(6), var_info.get_method() + "_" + var_info.get_forest_status()) < 0 ||
+//		Collections.binarySearch(static_identifiers.get(7), String.valueOf(var_info.get_period())) < 0) 
+//		{
+//			return false;
 //		}
-//		if (Collections.binarySearch(static_identifiers.get(6), Get_Variable_Information.get_method(var_name) + "_" + Get_Variable_Information.get_forest_status(var_name)) < 0) return false;
-//		if (Collections.binarySearch(static_identifiers.get(7), String.valueOf(Get_Variable_Information.get_period(var_name))) < 0) return false;
 //		return true;
-		
-		
-		
-//		if (!static_identifiers.get(0).contains(Get_Variable_Information.get_layer1(var_name))) return false;
-//		if (!static_identifiers.get(1).contains(Get_Variable_Information.get_layer2(var_name))) return false;
-//		if (!static_identifiers.get(2).contains(Get_Variable_Information.get_layer3(var_name))) return false;
-//		if (!static_identifiers.get(3).contains(Get_Variable_Information.get_layer4(var_name))) return false;
-//		if (Get_Variable_Information.get_forest_status(var_name).equals("E") && !Get_Variable_Information.get_method(var_name).equals("MS") && !Get_Variable_Information.get_method(var_name).equals("BS")) {
-//			if (!static_identifiers.get(4).contains(Get_Variable_Information.get_layer5(var_name))) return false;	// layer5 cover type
-//			if (!static_identifiers.get(5).contains(Get_Variable_Information.get_layer6(var_name))) return false;	// layer6: size class
-//		} else if (Get_Variable_Information.get_forest_status(var_name).equals("R")) {
-//			if (!static_identifiers.get(4).contains(Get_Variable_Information.get_layer5(var_name))) return false;	// layer5 cover type
-//		}
-//		if (!static_identifiers.get(6).contains(Get_Variable_Information.get_method(var_name) + "_" + Get_Variable_Information.get_forest_status(var_name))) return false;
-//		if (!static_identifiers.get(7).contains(String.valueOf(Get_Variable_Information.get_period(var_name)))) return false;					
+//		
+//		
+//		// Without RRB9 --> no need all_layers		
+//		if (Collections.binarySearch(static_identifiers.get(0), var_info.get_layer1()) < 0) return false;
+//		if (Collections.binarySearch(static_identifiers.get(1), var_info.get_layer2()) < 0) return false;
+//		if (Collections.binarySearch(static_identifiers.get(2), var_info.get_layer3()) < 0) return false;
+//		if (Collections.binarySearch(static_identifiers.get(3), var_info.get_layer4()) < 0) return false;
+//		if (Collections.binarySearch(static_identifiers.get(4), var_info.get_layer5()) < 0) return false;	// layer5 cover type
+//		if (var_info.get_forest_status().equals("E") && Collections.binarySearch(static_identifiers.get(5), var_info.get_layer6()) < 0) return false;	// layer6: size class
+//		if (Collections.binarySearch(static_identifiers.get(6), var_info.get_method() + "_" + var_info.get_forest_status()) < 0) return false;
+//		if (Collections.binarySearch(static_identifiers.get(7), String.valueOf(var_info.get_period())) < 0) return false;
 //		return true;
 	}			
 	

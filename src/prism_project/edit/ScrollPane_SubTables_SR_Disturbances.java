@@ -48,14 +48,14 @@ public class ScrollPane_SubTables_SR_Disturbances extends JScrollPane {
 		TitledBorder border = new TitledBorder("Probability of occurence (INACTIVE)");
 		border.setTitleJustification(TitledBorder.CENTER);
 		probability_scrollpane.setBorder(border);
-		probability_scrollpane.setPreferredSize(new Dimension(360, 80));
+		probability_scrollpane.setPreferredSize(new Dimension(333, 0));
 		
 		
 		regeneration_scrollpane = new JScrollPane(/*this.table6b*/);
 		border = new TitledBorder("Regeneration upon occurence");
 		border.setTitleJustification(TitledBorder.CENTER);
 		regeneration_scrollpane.setBorder(border);
-		regeneration_scrollpane.setPreferredSize(new Dimension(467, 80));
+		regeneration_scrollpane.setPreferredSize(new Dimension(433, 0));
 				
 				
 		JPanel combine_panel = new JPanel(new GridBagLayout());
@@ -111,13 +111,6 @@ public class ScrollPane_SubTables_SR_Disturbances extends JScrollPane {
 	
 	
 	public void reload_this_condition_occurence_and_regeneration(String probability_info, String regeneration_info) {	
-		// Reset data6a to null		
-		for (int row = 0; row < data6a.length; row++) {
-			for (int col = 2; col < data6a[row].length; col++) {
-				data6a[row][col] = null;
-			}
-		}
-		
 		// Reload table6a
 		if(probability_info.length() > 0) {		// this guarantees the string is not ""
 			String[] info_6a = probability_info.split(";");					
@@ -129,17 +122,6 @@ public class ScrollPane_SubTables_SR_Disturbances extends JScrollPane {
 					double probability = Double.valueOf(sub_info[col]);
 					data6a[i][col] = probability;
 				}
-			}
-			// Need this since only the view of data in selected rows will be updated, but we need to see updated view of data from all rows (including non-selected rows)
-			table6a.setValueAt(data6a[table6a.convertRowIndexToModel(0)][table6a.convertColumnIndexToModel(0)], 0, 0);		// Just to activate update_Percentage_column
-		}
-		
-		//---------------------------------------------------------------------------------------------------
-		
-		// Reset data6b to null		
-		for (int row = 0; row < data6b.length; row++) {
-			for (int col = 2; col < data6b[row].length; col++) {
-				data6b[row][col] = null;
 			}
 		}
 		
@@ -155,8 +137,6 @@ public class ScrollPane_SubTables_SR_Disturbances extends JScrollPane {
 					data6b[i][col] = percentage;
 				}
 			}
-			// Need this since only the view of data in selected rows will be updated, but we need to see updated view of data from all rows (including non-selected rows)
-			table6b.setValueAt(data6b[table6b.convertRowIndexToModel(0)][table6b.convertColumnIndexToModel(0)], 0, 0);		// Just to activate update_Percentage_column
 		}
 	}
 
@@ -164,7 +144,6 @@ public class ScrollPane_SubTables_SR_Disturbances extends JScrollPane {
 	public JScrollPane get_probability_scrollpane() {
 		return probability_scrollpane;
 	}
-
 
 	public JScrollPane get_regeneration_scrollpane() {
 		return regeneration_scrollpane;

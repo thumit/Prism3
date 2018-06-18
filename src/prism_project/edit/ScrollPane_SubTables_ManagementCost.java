@@ -60,14 +60,14 @@ public class ScrollPane_SubTables_ManagementCost extends JScrollPane {
 		TitledBorder border = new TitledBorder("Activity cost per unit of column header");
 		border.setTitleJustification(TitledBorder.CENTER);
 		action_base_adjust_scrollpane.setBorder(border);
-		action_base_adjust_scrollpane.setPreferredSize(new Dimension(400, 100));
+		action_base_adjust_scrollpane.setPreferredSize(new Dimension(333, 0));
 		
 		
 		conversion_base_adjust_scrollpane = new JScrollPane(/*this.table8b*/);
-		border = new TitledBorder("Conversion cost per converted area unit");
+		border = new TitledBorder("Conversion cost per area unit of conversion");
 		border.setTitleJustification(TitledBorder.CENTER);
 		conversion_base_adjust_scrollpane.setBorder(border);
-		conversion_base_adjust_scrollpane.setPreferredSize(new Dimension(400, 100));
+		conversion_base_adjust_scrollpane.setPreferredSize(new Dimension(433, 0));
 				
 				
 		JPanel combine_panel = new JPanel(new GridBagLayout());
@@ -124,7 +124,6 @@ public class ScrollPane_SubTables_ManagementCost extends JScrollPane {
 	
 	public void reload_this_condition_action_cost_and_conversion_cost(String action_cost_info, String conversion_cost_info) {	
 		active_columns_list = new ArrayList<String>();
-		
 		
 		// Reset data8a to null		
 		for (int row = 0; row < data8a.length; row++) {

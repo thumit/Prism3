@@ -47,10 +47,10 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 	public ScrollPane_StaticIdentifiers (Read_Database read_Database, int option, String panel_name) {
 		this.option = option;
 		
-		// option = 0 --> 6 layers		1 --> 4 layers       2 --> 6 layers + method_period      3 --> method choice rotation_period rotation_age regen_layer5
+		// option = 0 --> 6 layers		1 --> 4 layers       2 --> 6 layers + method_period		3 --> method choice     4 --> 6 layers +  method choice rotation_period rotation_age regen_layer5
 		List<String> layers_title = new ArrayList<>(read_Database.get_layers_Title());
 		List<String> layers_Title_ToolTip = new ArrayList<>(read_Database.get_layers_Title_ToolTip());
-		List<List<String>> allLayers = new ArrayList<>(read_Database.get_allLayers());
+		List<List<String>> allLayers = new ArrayList<>(read_Database.get_all_layers());
 		List<List<String>> allLayers_ToolTips = new ArrayList<>(read_Database.get_allLayers_ToolTips());
 
 		
@@ -76,32 +76,18 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 			// Full name of silviculture methods
 			List<List<String>> allmethods_ToolTips = read_Database.get_method_period_layers();
 			for (int i = 0; i < allmethods_ToolTips.get(0).size(); i++) {	// 0 is method, 1 is period
-				if (allmethods_ToolTips.get(0).get(i).equals("NG_E")) 	allmethods_ToolTips.get(0).set(i, "Natural Growth existing: choices 0-4");
-				if (allmethods_ToolTips.get(0).get(i).equals("PB_E")) 	allmethods_ToolTips.get(0).set(i, "Prescribed Burn existing: choices 0-4");
-				if (allmethods_ToolTips.get(0).get(i).equals("GS_E")) 	allmethods_ToolTips.get(0).set(i, "Group Selection existing: choices 0-5");
+				if (allmethods_ToolTips.get(0).get(i).equals("NG_E")) 	allmethods_ToolTips.get(0).set(i, "Natural Growth existing: choices 0-14");
+				if (allmethods_ToolTips.get(0).get(i).equals("PB_E")) 	allmethods_ToolTips.get(0).set(i, "Prescribed Burn existing: choices 0-14");
+				if (allmethods_ToolTips.get(0).get(i).equals("GS_E")) 	allmethods_ToolTips.get(0).set(i, "Group Selection existing: choices 0-14");
 				if (allmethods_ToolTips.get(0).get(i).equals("EA_E")) 	allmethods_ToolTips.get(0).set(i, "Even Age existing: choices 0-5");
-				if (allmethods_ToolTips.get(0).get(i).equals("MS_E")) 	allmethods_ToolTips.get(0).set(i, "Mixed Severity Wildfire: choices 0-11");
-				if (allmethods_ToolTips.get(0).get(i).equals("BS_E")) 	allmethods_ToolTips.get(0).set(i, "Severe Bark Beetle: choices 0-4");
-				if (allmethods_ToolTips.get(0).get(i).equals("NG_R")) 	allmethods_ToolTips.get(0).set(i, "Natural Growth regeneration: choices 0-4");
-				if (allmethods_ToolTips.get(0).get(i).equals("PB_R")) 	allmethods_ToolTips.get(0).set(i, "Prescribed Burn regeneration: choices 0-4");
-				if (allmethods_ToolTips.get(0).get(i).equals("GS_R")) 	allmethods_ToolTips.get(0).set(i, "Group Selection regeneration: choices 0-5");
+				if (allmethods_ToolTips.get(0).get(i).equals("MS_E")) 	allmethods_ToolTips.get(0).set(i, "Mixed Severity Wildfire: choices 0-14");
+				if (allmethods_ToolTips.get(0).get(i).equals("BS_E")) 	allmethods_ToolTips.get(0).set(i, "Severe Bark Beetle: choices 0-14");
+				if (allmethods_ToolTips.get(0).get(i).equals("NG_R")) 	allmethods_ToolTips.get(0).set(i, "Natural Growth regeneration: choices 0-14");
+				if (allmethods_ToolTips.get(0).get(i).equals("PB_R")) 	allmethods_ToolTips.get(0).set(i, "Prescribed Burn regeneration: choices 0-14");
+				if (allmethods_ToolTips.get(0).get(i).equals("GS_R")) 	allmethods_ToolTips.get(0).set(i, "Group Selection regeneration: choices 0-14");
 				if (allmethods_ToolTips.get(0).get(i).equals("EA_R")) 	allmethods_ToolTips.get(0).set(i, "Even Age regeneration: choices 0-5");		
 			}	
 			allLayers_ToolTips.addAll(allmethods_ToolTips);
-		}
-		
-		
-		if (option == 3) {
-			// Add 2 more into static identifiers
-			List<String> method_choice_rotationperiod_rotationage_regenlayer5_layers_title = new ArrayList<>(read_Database.get_method_choice_rotationperiod_rotationage_regenlayer5_layers_title());
-			List<List<String>> method_choice_rotationperiod_rotationage_regenlayer5_layers = new ArrayList<>(read_Database.get_method_choice_rotationperiod_rotationage_regenlayer5_layers());
-
-			layers_title.addAll(method_choice_rotationperiod_rotationage_regenlayer5_layers_title);
-			layers_Title_ToolTip.addAll(method_choice_rotationperiod_rotationage_regenlayer5_layers_title);
-			allLayers.addAll(method_choice_rotationperiod_rotationage_regenlayer5_layers);
-			
-			// Too tips
-			allLayers_ToolTips.addAll(method_choice_rotationperiod_rotationage_regenlayer5_layers);
 		}
 		
 		
@@ -123,15 +109,15 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 			// Full name of silviculture methods
 			List<List<String>> allmethods_ToolTips = read_Database.get_method_choice_layers();
 			for (int i = 0; i < allmethods_ToolTips.get(0).size(); i++) {	// 0 is method, 1 is choice
-				if (allmethods_ToolTips.get(0).get(i).equals("NG_E")) 	allmethods_ToolTips.get(0).set(i, "Natural Growth existing: choices 0-4");
-				if (allmethods_ToolTips.get(0).get(i).equals("PB_E")) 	allmethods_ToolTips.get(0).set(i, "Prescribed Burn existing: choices 0-4");
-				if (allmethods_ToolTips.get(0).get(i).equals("GS_E")) 	allmethods_ToolTips.get(0).set(i, "Group Selection existing: choices 0-5");
+				if (allmethods_ToolTips.get(0).get(i).equals("NG_E")) 	allmethods_ToolTips.get(0).set(i, "Natural Growth existing: choices 0-14");
+				if (allmethods_ToolTips.get(0).get(i).equals("PB_E")) 	allmethods_ToolTips.get(0).set(i, "Prescribed Burn existing: choices 0-14");
+				if (allmethods_ToolTips.get(0).get(i).equals("GS_E")) 	allmethods_ToolTips.get(0).set(i, "Group Selection existing: choices 0-14");
 				if (allmethods_ToolTips.get(0).get(i).equals("EA_E")) 	allmethods_ToolTips.get(0).set(i, "Even Age existing: choices 0-5");
-				if (allmethods_ToolTips.get(0).get(i).equals("MS_E")) 	allmethods_ToolTips.get(0).set(i, "Mixed Severity Wildfire: choices 0-11");
-				if (allmethods_ToolTips.get(0).get(i).equals("BS_E")) 	allmethods_ToolTips.get(0).set(i, "Severe Bark Beetle: choices 0-4");
-				if (allmethods_ToolTips.get(0).get(i).equals("NG_R")) 	allmethods_ToolTips.get(0).set(i, "Natural Growth regeneration: choices 0-4");
-				if (allmethods_ToolTips.get(0).get(i).equals("PB_R")) 	allmethods_ToolTips.get(0).set(i, "Prescribed Burn regeneration: choices 0-4");
-				if (allmethods_ToolTips.get(0).get(i).equals("GS_R")) 	allmethods_ToolTips.get(0).set(i, "Group Selection regeneration: choices 0-5");
+				if (allmethods_ToolTips.get(0).get(i).equals("MS_E")) 	allmethods_ToolTips.get(0).set(i, "Mixed Severity Wildfire: choices 0-14");
+				if (allmethods_ToolTips.get(0).get(i).equals("BS_E")) 	allmethods_ToolTips.get(0).set(i, "Severe Bark Beetle: choices 0-14");
+				if (allmethods_ToolTips.get(0).get(i).equals("NG_R")) 	allmethods_ToolTips.get(0).set(i, "Natural Growth regeneration: choices 0-14");
+				if (allmethods_ToolTips.get(0).get(i).equals("PB_R")) 	allmethods_ToolTips.get(0).set(i, "Prescribed Burn regeneration: choices 0-14");
+				if (allmethods_ToolTips.get(0).get(i).equals("GS_R")) 	allmethods_ToolTips.get(0).set(i, "Group Selection regeneration: choices 0-14");
 				if (allmethods_ToolTips.get(0).get(i).equals("EA_R")) 	allmethods_ToolTips.get(0).set(i, "Even Age regeneration: choices 0-5");		
 			}	
 			allLayers_ToolTips.addAll(allmethods_ToolTips);			
@@ -139,7 +125,7 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 		
 		
 		if (option == 4) {		// This option is designed to use more attribute for silviculture method windows
-			// Add 2 more into static identifiers
+			// Add many more into static identifiers
 			List<String> method_choice_rotationperiod_rotationage_regenlayer5_layers_title = new ArrayList<>(read_Database.get_method_choice_rotationperiod_rotationage_regenlayer5_layers_title());
 			List<List<String>> method_choice_rotationperiod_rotationage_regenlayer5_layers = new ArrayList<>(read_Database.get_method_choice_rotationperiod_rotationage_regenlayer5_layers());
 
@@ -152,15 +138,15 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 			allLayers_ToolTips.addAll(new ArrayList<>(tool_tip));
 			
 			for (int i = 0; i < allLayers_ToolTips.get(6).size(); i++) {	// 0 is method, 1 is period
-				if (allLayers_ToolTips.get(6).get(i).equals("NG_E")) 	allLayers_ToolTips.get(6).set(i, "Natural Growth existing: choices 0-4");
-				if (allLayers_ToolTips.get(6).get(i).equals("PB_E")) 	allLayers_ToolTips.get(6).set(i, "Prescribed Burn existing: choices 0-4");
-				if (allLayers_ToolTips.get(6).get(i).equals("GS_E")) 	allLayers_ToolTips.get(6).set(i, "Group Selection existing: choices 0-5");
+				if (allLayers_ToolTips.get(6).get(i).equals("NG_E")) 	allLayers_ToolTips.get(6).set(i, "Natural Growth existing: choices 0-14");
+				if (allLayers_ToolTips.get(6).get(i).equals("PB_E")) 	allLayers_ToolTips.get(6).set(i, "Prescribed Burn existing: choices 0-14");
+				if (allLayers_ToolTips.get(6).get(i).equals("GS_E")) 	allLayers_ToolTips.get(6).set(i, "Group Selection existing: choices 0-14");
 				if (allLayers_ToolTips.get(6).get(i).equals("EA_E")) 	allLayers_ToolTips.get(6).set(i, "Even Age existing: choices 0-5");
-				if (allLayers_ToolTips.get(6).get(i).equals("MS_E")) 	allLayers_ToolTips.get(6).set(i, "Mixed Severity Wildfire: choices 0-11");
-				if (allLayers_ToolTips.get(6).get(i).equals("BS_E")) 	allLayers_ToolTips.get(6).set(i, "Severe Bark Beetle: choices 0-4");
-				if (allLayers_ToolTips.get(6).get(i).equals("NG_R")) 	allLayers_ToolTips.get(6).set(i, "Natural Growth regeneration: choices 0-4");
-				if (allLayers_ToolTips.get(6).get(i).equals("PB_R")) 	allLayers_ToolTips.get(6).set(i, "Prescribed Burn regeneration: choices 0-4");
-				if (allLayers_ToolTips.get(6).get(i).equals("GS_R")) 	allLayers_ToolTips.get(6).set(i, "Group Selection regeneration: choices 0-5");
+				if (allLayers_ToolTips.get(6).get(i).equals("MS_E")) 	allLayers_ToolTips.get(6).set(i, "Mixed Severity Wildfire: choices 0-14");
+				if (allLayers_ToolTips.get(6).get(i).equals("BS_E")) 	allLayers_ToolTips.get(6).set(i, "Severe Bark Beetle: choices 0-14");
+				if (allLayers_ToolTips.get(6).get(i).equals("NG_R")) 	allLayers_ToolTips.get(6).set(i, "Natural Growth regeneration: choices 0-14");
+				if (allLayers_ToolTips.get(6).get(i).equals("PB_R")) 	allLayers_ToolTips.get(6).set(i, "Prescribed Burn regeneration: choices 0-14");
+				if (allLayers_ToolTips.get(6).get(i).equals("GS_R")) 	allLayers_ToolTips.get(6).set(i, "Group Selection regeneration: choices 0-14");
 				if (allLayers_ToolTips.get(6).get(i).equals("EA_R")) 	allLayers_ToolTips.get(6).set(i, "Even Age regeneration: choices 0-5");		
 			}	
 			
@@ -269,9 +255,13 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 					}
 				});
 						
-				// Disable layer 6 - Size Class
-				if (i == 5 && option == 2) {
-//					checkboxStaticIdentifiers.get(i).get(j).setEnabled(false);
+				// Disable method EA_E and EA_R in Non-EA Management window
+				if (i == 0 && option == 3) {	 // i=0 --> method (this option only has choice and method in the GUI)
+					for (JCheckBox cb : checkboxStaticIdentifiers.get(i)) {
+						if (cb.getText().equals("EA_E") || cb.getText().equals("EA_R")) {
+							cb.setEnabled(false);
+						}
+					}
 				}
 			}
 		}

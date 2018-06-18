@@ -40,6 +40,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -53,6 +54,8 @@ import prism_project.data_process.Read_Database;
 import prism_root.PrismMain;
 
 public class Panel_QuickEdit_SR extends JPanel {
+	private JButton btnApplyProbability;
+	private JButton btnApplyPercentage;
 	
 	public Panel_QuickEdit_SR(JTable table6a, Object[][] data6a, JTable table6b, Object[][] data6b) {
 		setLayout(new GridBagLayout());
@@ -112,19 +115,13 @@ public class Panel_QuickEdit_SR extends JPanel {
 		
 				
 		// Add button apply
-		JButton btnApplyProbability = new JButton();
+		btnApplyProbability = new JButton();
+		btnApplyProbability.setVerticalTextPosition(SwingConstants.BOTTOM);
+		btnApplyProbability.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnApplyProbability.setToolTipText("make changes for all highlighted cells, except cells in the first two columns");
+		btnApplyProbability.setIcon(IconHandle.get_scaledImageIcon(20, 20, "icon_split.png"));
+		btnApplyProbability.setRolloverIcon(IconHandle.get_scaledImageIcon(30, 30, "icon_split.png"));
 		btnApplyProbability.setContentAreaFilled(false);
-		btnApplyProbability.addMouseListener(new MouseAdapter() {
-		    public void mouseEntered(MouseEvent e) {
-		    	btnApplyProbability.setContentAreaFilled(true);
-		    }
-
-		    public void mouseExited(MouseEvent e) {
-		    	btnApplyProbability.setContentAreaFilled(false);
-		    }
-		});	
-		btnApplyProbability.setToolTipText("make changes to all highlighted cells, except cells in the first two columns");
-		btnApplyProbability.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_split.png"));
 		btnApplyProbability.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
@@ -149,11 +146,12 @@ public class Panel_QuickEdit_SR extends JPanel {
 					}
 				}
 				
-				table6a.setValueAt(data6a[table6a.convertRowIndexToModel(0)][table6a.convertColumnIndexToModel(0)], 0, 0);		// Just to activate firesTabelDatachanged() --> update_Percentage_column is auto triggered
-				// Reselect the current selected cells
-				table6a.clearSelection(); // To help trigger the row refresh: clear then add back the rows
-				for (int i : selectedRow) { table6a.addRowSelectionInterval(table6a.convertRowIndexToView(i), table6a.convertRowIndexToView(i)); }
-				for (int j : selectedCol) { table6a.addColumnSelectionInterval(table6a.convertColumnIndexToView(j), table6a.convertColumnIndexToView(j)); }
+				// just need to add 1 currently selected row (no need to add all because it would trigger a lot of "fireTableDataChanged" in "setValueAt" because of the ListSelectionListener of table6a)
+				// also need re-validate and repaint so all the new data would show up after the change is triggered by the "addRowSelectionInterval"
+				table6a.removeRowSelectionInterval(table6a.convertRowIndexToView(selectedRow[0]), table6a.convertRowIndexToView(selectedRow[0]));	// only trigger the data change once by remove then add 1 time
+				table6a.addRowSelectionInterval(table6a.convertRowIndexToView(selectedRow[0]), table6a.convertRowIndexToView(selectedRow[0]));
+				table6a.revalidate();
+				table6a.repaint();
 			}
 		});		
 		qd1.add(btnApplyProbability, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
@@ -215,20 +213,14 @@ public class Panel_QuickEdit_SR extends JPanel {
 		
 				
 		// Add button apply
-		JButton btnApplyWeight = new JButton();
-		btnApplyWeight.setContentAreaFilled(false);
-		btnApplyWeight.addMouseListener(new MouseAdapter() {
-		    public void mouseEntered(MouseEvent e) {
-		    	btnApplyWeight.setContentAreaFilled(true);
-		    }
-
-		    public void mouseExited(MouseEvent e) {
-		    	btnApplyWeight.setContentAreaFilled(false);
-		    }
-		});	
-		btnApplyWeight.setToolTipText("make changes to all highlighted cells, except cells in the first two columns");
-		btnApplyWeight.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_split.png"));
-		btnApplyWeight.addActionListener(new ActionListener() {
+		btnApplyPercentage = new JButton();
+		btnApplyPercentage.setVerticalTextPosition(SwingConstants.BOTTOM);
+		btnApplyPercentage.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnApplyPercentage.setToolTipText("make changes for all highlighted cells, except cells in the first two columns");
+		btnApplyPercentage.setIcon(IconHandle.get_scaledImageIcon(20, 20, "icon_split.png"));
+		btnApplyPercentage.setRolloverIcon(IconHandle.get_scaledImageIcon(30, 30, "icon_split.png"));
+		btnApplyPercentage.setContentAreaFilled(false);
+		btnApplyPercentage.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				// Get selected rows
@@ -252,14 +244,15 @@ public class Panel_QuickEdit_SR extends JPanel {
 					}
 				}
 				
-				table6b.setValueAt(data6b[table6b.convertRowIndexToModel(0)][table6b.convertColumnIndexToModel(0)], 0, 0);		// Just to activate firesTabelDatachanged() --> update_Percentage_column is auto triggered
-				// Reselect the current selected cells
-				table6b.clearSelection(); // To help trigger the row refresh: clear then add back the rows
-				for (int i : selectedRow) { table6b.addRowSelectionInterval(table6b.convertRowIndexToView(i), table6b.convertRowIndexToView(i)); }
-				for (int j : selectedCol) { table6b.addColumnSelectionInterval(table6b.convertColumnIndexToView(j), table6b.convertColumnIndexToView(j)); }
+				// just need to add 1 currently selected row (no need to add all because it would trigger a lot of "fireTableDataChanged" in "setValueAt" because of the ListSelectionListener of table6a)
+				// also need re-validate and repaint so all the new data would show up after the change is triggered by the "addRowSelectionInterval"
+				table6b.removeRowSelectionInterval(table6b.convertRowIndexToView(selectedRow[0]), table6b.convertRowIndexToView(selectedRow[0]));	// only trigger the data change once by remove then add 1 time
+				table6b.addRowSelectionInterval(table6b.convertRowIndexToView(selectedRow[0]), table6b.convertRowIndexToView(selectedRow[0]));
+				table6b.revalidate();
+				table6b.repaint();
 			}
 		});		
-		qd2.add(btnApplyWeight, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
+		qd2.add(btnApplyPercentage, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
 				3, 0, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
 				0, 0, 0, 0));		// insets top, left, bottom, right
 				
@@ -272,5 +265,16 @@ public class Panel_QuickEdit_SR extends JPanel {
 		add(qd2, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
 				1, 0, 1, 0, 1, 1, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
 				0, 0, 0, 0));		// insets top, left, bottom, right
+	}
+	
+	
+	public void disable_all_apply_buttons() {
+		btnApplyProbability.setEnabled(false);
+		btnApplyPercentage.setEnabled(false);
+	}
+	
+	public void enable_all_apply_buttons() {
+		btnApplyProbability.setEnabled(true);
+		btnApplyPercentage.setEnabled(true);
 	}
 }

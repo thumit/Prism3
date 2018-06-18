@@ -26,11 +26,14 @@ public class Get_Disturbance_Information {
 	private List<List<String>>[] all_priority_condition_dynamic_identifiers;
 	private List<String>[] all_priority_condition_dynamic_dentifiers_column_indexes;
 	private String[][] all_priority_condition_info;	
+	private List<List<String>> all_layers;
 	private Object[][][] yield_tables_values;
 	
 	private Object[] all_condition_rd_percentage;	// contains 3D array rd_percentage[][][] for all conditions
 	
-	public Get_Disturbance_Information(Read_Database read_database, List<String> disturbance_condition_list) {
+	public Get_Disturbance_Information(Read_Database read_database, List<String> disturbance_condition_list, List<List<String>> all_layers) {
+		this.all_layers = all_layers;
+		
 		all_priority_condition_static_identifiers = new ArrayList[disturbance_condition_list.size()];
 		all_priority_condition_dynamic_identifiers = new ArrayList[disturbance_condition_list.size()];
 		all_priority_condition_dynamic_dentifiers_column_indexes = new ArrayList[disturbance_condition_list.size()];
@@ -178,18 +181,26 @@ public class Get_Disturbance_Information {
 	
 	
 	private Boolean are_all_static_identifiers_matched(Get_Variable_Information var_info, List<List<String>> static_identifiers) {	
-		// All are the same but this way is the fastest
+//		// The below check also implements Speed Boost RRB9
+//		if (static_identifiers.get(0).size() < all_layers.get(0).size() && Collections.binarySearch(static_identifiers.get(0), var_info.get_layer1()) < 0) return false;
+//		if (static_identifiers.get(1).size() < all_layers.get(1).size() && Collections.binarySearch(static_identifiers.get(1), var_info.get_layer2()) < 0) return false;
+//		if (static_identifiers.get(2).size() < all_layers.get(2).size() && Collections.binarySearch(static_identifiers.get(2), var_info.get_layer3()) < 0) return false;
+//		if (static_identifiers.get(3).size() < all_layers.get(3).size() && Collections.binarySearch(static_identifiers.get(3), var_info.get_layer4()) < 0) return false;
+//		if (static_identifiers.get(4).size() < all_layers.get(4).size() && Collections.binarySearch(static_identifiers.get(4), var_info.get_layer5()) < 0) return false;
+//		if (var_info.get_forest_status().equals("E") && static_identifiers.get(5).size() < all_layers.get(5).size() && Collections.binarySearch(static_identifiers.get(5), var_info.get_layer6()) < 0) return false;	// layer6: size class
+//		if (Collections.binarySearch(static_identifiers.get(6), var_info.get_method() + "_" + var_info.get_forest_status()) < 0) return false;
+//		if (Collections.binarySearch(static_identifiers.get(7), String.valueOf(var_info.get_period())) < 0) return false;
+//		return true;
+		
+		
+		// The below check also implements Speed Boost RRB9. Same as above but it is the faster this way 
 		if (
-		Collections.binarySearch(static_identifiers.get(0), var_info.get_layer1()) < 0 ||
-		Collections.binarySearch(static_identifiers.get(1), var_info.get_layer2()) < 0 ||
-		Collections.binarySearch(static_identifiers.get(2), var_info.get_layer3()) < 0 ||
-		Collections.binarySearch(static_identifiers.get(3), var_info.get_layer4()) < 0 ||
-		(var_info.get_forest_status().equals("E") &&
-				(
-				Collections.binarySearch(static_identifiers.get(4), var_info.get_layer5()) < 0 ||
-				Collections.binarySearch(static_identifiers.get(5), var_info.get_layer6()) < 0
-				)) ||
-		(var_info.get_forest_status().equals("R") && Collections.binarySearch(static_identifiers.get(4), var_info.get_layer5()) < 0) ||
+		(static_identifiers.get(0).size() < all_layers.get(0).size() && Collections.binarySearch(static_identifiers.get(0), var_info.get_layer1()) < 0) ||
+		(static_identifiers.get(1).size() < all_layers.get(1).size() && Collections.binarySearch(static_identifiers.get(1), var_info.get_layer2()) < 0) ||
+		(static_identifiers.get(2).size() < all_layers.get(2).size() && Collections.binarySearch(static_identifiers.get(2), var_info.get_layer3()) < 0) ||
+		(static_identifiers.get(3).size() < all_layers.get(3).size() && Collections.binarySearch(static_identifiers.get(3), var_info.get_layer4()) < 0) ||
+		(static_identifiers.get(4).size() < all_layers.get(4).size() && Collections.binarySearch(static_identifiers.get(4), var_info.get_layer5()) < 0) ||
+		(var_info.get_forest_status().equals("E") && static_identifiers.get(5).size() < all_layers.get(5).size() && Collections.binarySearch(static_identifiers.get(5), var_info.get_layer6()) < 0) ||
 		Collections.binarySearch(static_identifiers.get(6), var_info.get_method() + "_" + var_info.get_forest_status()) < 0 ||
 		Collections.binarySearch(static_identifiers.get(7), String.valueOf(var_info.get_period())) < 0) 
 		{
@@ -199,34 +210,32 @@ public class Get_Disturbance_Information {
 		
 		
 		
-//		if (Collections.binarySearch(static_identifiers.get(0), Get_Variable_Information.get_layer1(var_name)) < 0) return false;
-//		if (Collections.binarySearch(static_identifiers.get(1), Get_Variable_Information.get_layer2(var_name)) < 0) return false;
-//		if (Collections.binarySearch(static_identifiers.get(2), Get_Variable_Information.get_layer3(var_name)) < 0) return false;
-//		if (Collections.binarySearch(static_identifiers.get(3), Get_Variable_Information.get_layer4(var_name)) < 0) return false;
-//		if (Get_Variable_Information.get_forest_status(var_name).equals("E")) {
-//			if (Collections.binarySearch(static_identifiers.get(4), Get_Variable_Information.get_layer5(var_name)) < 0) return false;	// layer5 cover type
-//			if (Collections.binarySearch(static_identifiers.get(5), Get_Variable_Information.get_layer6(var_name)) < 0) return false;	// layer6: size class
-//		} else if (Get_Variable_Information.get_forest_status(var_name).equals("R")) {
-//			if (Collections.binarySearch(static_identifiers.get(4), Get_Variable_Information.get_layer5(var_name)) < 0) return false;	// layer5 cover type
+		
+//		// Without RRB9 --> no need all_layers
+//		if (
+//		Collections.binarySearch(static_identifiers.get(0), var_info.get_layer1()) < 0 ||
+//		Collections.binarySearch(static_identifiers.get(1), var_info.get_layer2()) < 0 ||
+//		Collections.binarySearch(static_identifiers.get(2), var_info.get_layer3()) < 0 ||
+//		Collections.binarySearch(static_identifiers.get(3), var_info.get_layer4()) < 0 ||
+//		Collections.binarySearch(static_identifiers.get(4), var_info.get_layer5()) < 0 ||
+//		(var_info.get_forest_status().equals("E") && Collections.binarySearch(static_identifiers.get(5), var_info.get_layer6()) < 0) ||
+//		Collections.binarySearch(static_identifiers.get(6), var_info.get_method() + "_" + var_info.get_forest_status()) < 0 ||
+//		Collections.binarySearch(static_identifiers.get(7), String.valueOf(var_info.get_period())) < 0) 
+//		{
+//			return false;
 //		}
-//		if (Collections.binarySearch(static_identifiers.get(6), Get_Variable_Information.get_method(var_name) + "_" + Get_Variable_Information.get_forest_status(var_name)) < 0) return false;
-//		if (Collections.binarySearch(static_identifiers.get(7), String.valueOf(Get_Variable_Information.get_period(var_name))) < 0) return false;
 //		return true;
-		
-		
-		
-//		if (!static_identifiers.get(0).contains(Get_Variable_Information.get_layer1(var_name))) return false;
-//		if (!static_identifiers.get(1).contains(Get_Variable_Information.get_layer2(var_name))) return false;
-//		if (!static_identifiers.get(2).contains(Get_Variable_Information.get_layer3(var_name))) return false;
-//		if (!static_identifiers.get(3).contains(Get_Variable_Information.get_layer4(var_name))) return false;
-//		if (Get_Variable_Information.get_forest_status(var_name).equals("E") && !Get_Variable_Information.get_method(var_name).equals("MS") && !Get_Variable_Information.get_method(var_name).equals("BS")) {
-//			if (!static_identifiers.get(4).contains(Get_Variable_Information.get_layer5(var_name))) return false;	// layer5 cover type
-//			if (!static_identifiers.get(5).contains(Get_Variable_Information.get_layer6(var_name))) return false;	// layer6: size class
-//		} else if (Get_Variable_Information.get_forest_status(var_name).equals("R")) {
-//			if (!static_identifiers.get(4).contains(Get_Variable_Information.get_layer5(var_name))) return false;	// layer5 cover type
-//		}
-//		if (!static_identifiers.get(6).contains(Get_Variable_Information.get_method(var_name) + "_" + Get_Variable_Information.get_forest_status(var_name))) return false;
-//		if (!static_identifiers.get(7).contains(String.valueOf(Get_Variable_Information.get_period(var_name)))) return false;					
+//		
+//		
+//		// Without RRB9 --> no need all_layers		
+//		if (Collections.binarySearch(static_identifiers.get(0), var_info.get_layer1()) < 0) return false;
+//		if (Collections.binarySearch(static_identifiers.get(1), var_info.get_layer2()) < 0) return false;
+//		if (Collections.binarySearch(static_identifiers.get(2), var_info.get_layer3()) < 0) return false;
+//		if (Collections.binarySearch(static_identifiers.get(3), var_info.get_layer4()) < 0) return false;
+//		if (Collections.binarySearch(static_identifiers.get(4), var_info.get_layer5()) < 0) return false;	// layer5 cover type
+//		if (var_info.get_forest_status().equals("E") && Collections.binarySearch(static_identifiers.get(5), var_info.get_layer6()) < 0) return false;	// layer6: size class
+//		if (Collections.binarySearch(static_identifiers.get(6), var_info.get_method() + "_" + var_info.get_forest_status()) < 0) return false;
+//		if (Collections.binarySearch(static_identifiers.get(7), String.valueOf(var_info.get_period())) < 0) return false;
 //		return true;
 	}			
 		

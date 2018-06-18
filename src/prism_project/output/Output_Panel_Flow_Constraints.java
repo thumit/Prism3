@@ -83,7 +83,7 @@ import prism_convenience_class.IconHandle;
 import prism_convenience_class.PrismGridBagLayoutHandle;
 import prism_convenience_class.PrismTableModel;
 import prism_convenience_class.TableColumnsHandle;
-import prism_project.data_process.Read_RunInputs;
+import prism_project.data_process.Read_Inputs;
 
 // Panel_Flow_Constraints--------------------------------------------------------------------------------	
 public class Output_Panel_Flow_Constraints extends JLayeredPane {
@@ -93,7 +93,7 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 	String[][] bc_values;
 	
 	public Output_Panel_Flow_Constraints(File currentProjectFolder, String currentRun, JTable flow_table, Object[][] flow_data) {
-		Read_RunInputs read = new Read_RunInputs();
+		Read_Inputs read = new Read_Inputs();
 		read.read_basic_constraints(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_08_basic_constraints.txt"));
 		bc_values = read.get_bc_values();
 		//---------------------------------------------------------------

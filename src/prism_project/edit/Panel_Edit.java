@@ -59,7 +59,7 @@ public class Panel_Edit extends JLayeredPane implements ActionListener {
 		splitPanel = new JSplitPane();
 		// splitPanel.setResizeWeight(0.15);
 		splitPanel.setOneTouchExpandable(true);
-		splitPanel.setDividerLocation(245);
+		splitPanel.setDividerLocation(250);
 		// splitPanel.setDividerSize(5);
 		// splitPanel.getComponent(2).setCursor(new Cursor(Cursor.HAND_CURSOR));
 

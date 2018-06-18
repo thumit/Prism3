@@ -39,6 +39,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -52,6 +53,9 @@ import prism_project.data_process.Read_Database;
 import prism_root.PrismMain;
 
 public class Panel_QuickEdit_ManagementCost extends JPanel {
+	private JButton btnApplyActivityCost;
+	private JButton btnApplyConversionCost;
+	private Prism_ShowHideColumnsButtons btnApplyShowHide;
 	
 	public Panel_QuickEdit_ManagementCost(Read_Database read_database, JTable table8a, Object[][] data8a, String[] columnNames8a, JTable table8b, Object[][] data8b) {
 		setLayout(new GridBagLayout());
@@ -66,20 +70,17 @@ public class Panel_QuickEdit_ManagementCost extends JPanel {
 				
 		
 		// Add Button-------------------------------------------------------------------------------------------------
-		Prism_ShowHideColumnsButtons btnApply_showhide = new Prism_ShowHideColumnsButtons(read_database, table8a, data8a, columnNames8a);
-		btnApply_showhide.setContentAreaFilled(false);
-		btnApply_showhide.addMouseListener(new MouseAdapter() {
-		    public void mouseEntered(MouseEvent e) {
-		    	btnApply_showhide.setContentAreaFilled(true);
-		    }
-
-		    public void mouseExited(MouseEvent e) {
-		    	btnApply_showhide.setContentAreaFilled(false);
-		    }
-		});
-		qd1.add(btnApply_showhide, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
+		btnApplyShowHide = new Prism_ShowHideColumnsButtons(read_database, table8a, data8a, columnNames8a);
+		btnApplyShowHide.setVerticalTextPosition(SwingConstants.BOTTOM);
+		btnApplyShowHide.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnApplyShowHide.setToolTipText("show/hide yield tables columns");
+		btnApplyShowHide.setIcon(IconHandle.get_scaledImageIcon(30, 30, "icon_binoculars.png"));
+		btnApplyShowHide.setRolloverIcon(IconHandle.get_scaledImageIcon(40, 40, "icon_binoculars.png"));
+		btnApplyShowHide.setContentAreaFilled(false);
+		
+		qd1.add(btnApplyShowHide, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
 				0, 0, 1, 1, 0, 1, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
-				0, 0, 0, 50));		// insets top, left, bottom, right
+				0, 0, 0, 10));		// insets top, left, bottom, right
 		
 		
 		// Add Label-------------------------------------------------------------------------------------------------
@@ -128,20 +129,14 @@ public class Panel_QuickEdit_ManagementCost extends JPanel {
 				
 		
 		// Add button apply
-		JButton btnApplyActionBaseCost = new JButton();
-		btnApplyActionBaseCost.setContentAreaFilled(false);
-		btnApplyActionBaseCost.addMouseListener(new MouseAdapter() {
-		    public void mouseEntered(MouseEvent e) {
-		    	btnApplyActionBaseCost.setContentAreaFilled(true);
-		    }
-
-		    public void mouseExited(MouseEvent e) {
-		    	btnApplyActionBaseCost.setContentAreaFilled(false);
-		    }
-		});				
-		btnApplyActionBaseCost.setToolTipText("make changes to all highlighted cells, except cells in column action_list");
-		btnApplyActionBaseCost.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_split.png"));
-		btnApplyActionBaseCost.addActionListener(new ActionListener() {
+		btnApplyActivityCost = new JButton();
+		btnApplyActivityCost.setVerticalTextPosition(SwingConstants.BOTTOM);
+		btnApplyActivityCost.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnApplyActivityCost.setToolTipText("make changes for all highlighted cells, except cells in the first column");
+		btnApplyActivityCost.setIcon(IconHandle.get_scaledImageIcon(20, 20, "icon_split.png"));
+		btnApplyActivityCost.setRolloverIcon(IconHandle.get_scaledImageIcon(30, 30, "icon_split.png"));
+		btnApplyActivityCost.setContentAreaFilled(false);
+		btnApplyActivityCost.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				// Get selected rows
@@ -165,14 +160,15 @@ public class Panel_QuickEdit_ManagementCost extends JPanel {
 					}
 				}
 				
-				table8a.setValueAt(data8a[table8a.convertRowIndexToModel(0)][table8a.convertColumnIndexToModel(0)], 0, 0);		// Just to activate firesTabelDatachanged()
-				// Reselect the current selected cells
-				table8a.clearSelection(); // To help trigger the row refresh: clear then add back the rows
-				for (int i : selectedRow) { table8a.addRowSelectionInterval(table8a.convertRowIndexToView(i), table8a.convertRowIndexToView(i)); }
-				for (int j : selectedCol) { table8a.addColumnSelectionInterval(table8a.convertColumnIndexToView(j), table8a.convertColumnIndexToView(j)); }
+				// just need to add 1 currently selected row (no need to add all because it would trigger a lot of "fireTableDataChanged" in "setValueAt" because of the ListSelectionListener of table8a)
+				// also need re-validate and repaint so all the new data would show up after the change is triggered by the "addRowSelectionInterval"
+				table8a.removeRowSelectionInterval(table8a.convertRowIndexToView(selectedRow[0]), table8a.convertRowIndexToView(selectedRow[0]));	// only trigger the data change once by remove then add 1 time
+				table8a.addRowSelectionInterval(table8a.convertRowIndexToView(selectedRow[0]), table8a.convertRowIndexToView(selectedRow[0]));
+				table8a.revalidate();
+				table8a.repaint();
 			}
 		});
-		qd1.add(btnApplyActionBaseCost, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
+		qd1.add(btnApplyActivityCost, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
 				3, 0, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
 				0, 0, 0, 0));		// insets top, left, bottom, right
 				
@@ -237,20 +233,14 @@ public class Panel_QuickEdit_ManagementCost extends JPanel {
 		
 				
 		// Add button apply
-		JButton btnApplyConversionBaseCost = new JButton();
-		btnApplyConversionBaseCost.setContentAreaFilled(false);
-		btnApplyConversionBaseCost.addMouseListener(new MouseAdapter() {
-		    public void mouseEntered(MouseEvent e) {
-		    	btnApplyConversionBaseCost.setContentAreaFilled(true);
-		    }
-
-		    public void mouseExited(MouseEvent e) {
-		    	btnApplyConversionBaseCost.setContentAreaFilled(false);
-		    }
-		});	
-		btnApplyConversionBaseCost.setToolTipText("make changes to all highlighted cells, except cells in columns covertype_before & covertype_after");
-		btnApplyConversionBaseCost.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_split.png"));
-		btnApplyConversionBaseCost.addActionListener(new ActionListener() {
+		btnApplyConversionCost = new JButton();
+		btnApplyConversionCost.setVerticalTextPosition(SwingConstants.BOTTOM);
+		btnApplyConversionCost.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnApplyConversionCost.setToolTipText("make changes for all highlighted cells, except cells in the first two columns");
+		btnApplyConversionCost.setIcon(IconHandle.get_scaledImageIcon(20, 20, "icon_split.png"));
+		btnApplyConversionCost.setRolloverIcon(IconHandle.get_scaledImageIcon(30, 30, "icon_split.png"));
+		btnApplyConversionCost.setContentAreaFilled(false);
+		btnApplyConversionCost.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				// Get selected rows
@@ -274,14 +264,15 @@ public class Panel_QuickEdit_ManagementCost extends JPanel {
 					}
 				}
 				
-				table8b.setValueAt(data8b[table8b.convertRowIndexToModel(0)][table8b.convertColumnIndexToModel(0)], 0, 0);		// Just to activate firesTabelDatachanged()
-				// Reselect the current selected cells
-				table8b.clearSelection(); // To help trigger the row refresh: clear then add back the rows
-				for (int i : selectedRow) { table8b.addRowSelectionInterval(table8b.convertRowIndexToView(i), table8b.convertRowIndexToView(i)); }
-				for (int j : selectedCol) { table8b.addColumnSelectionInterval(table8b.convertColumnIndexToView(j), table8b.convertColumnIndexToView(j)); }
+				// just need to add 1 currently selected row (no need to add all because it would trigger a lot of "fireTableDataChanged" in "setValueAt" because of the ListSelectionListener of table8b)
+				// also need re-validate and repaint so all the new data would show up after the change is triggered by the "addRowSelectionInterval"
+				table8b.removeRowSelectionInterval(table8b.convertRowIndexToView(selectedRow[0]), table8b.convertRowIndexToView(selectedRow[0]));	// only trigger the data change once by remove then add 1 time
+				table8b.addRowSelectionInterval(table8b.convertRowIndexToView(selectedRow[0]), table8b.convertRowIndexToView(selectedRow[0]));
+				table8b.revalidate();
+				table8b.repaint();
 			}
 		});		
-		qd2.add(btnApplyConversionBaseCost, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
+		qd2.add(btnApplyConversionCost, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
 				3, 0, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
 				0, 0, 0, 0));		// insets top, left, bottom, right
 				
@@ -485,8 +476,6 @@ public class Panel_QuickEdit_ManagementCost extends JPanel {
 			} else {
 				setEnabled(false);
 			}
-			setToolTipText("show/hide yield tables columns");
-			setIcon(IconHandle.get_scaledImageIcon(30, 30, "icon_binoculars.png"));
 			addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {
@@ -502,5 +491,18 @@ public class Panel_QuickEdit_ManagementCost extends JPanel {
 				}
 			});
 		}
+	}
+	
+	
+	public void disable_all_apply_buttons() {
+		btnApplyActivityCost.setEnabled(false);
+		btnApplyConversionCost.setEnabled(false);
+		btnApplyShowHide.setEnabled(false);
+	}
+	
+	public void enable_all_apply_buttons() {
+		btnApplyActivityCost.setEnabled(true);
+		btnApplyConversionCost.setEnabled(true);
+		btnApplyShowHide.setEnabled(true);
 	}
 }

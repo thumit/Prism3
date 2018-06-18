@@ -113,10 +113,8 @@ public class Panel_Project extends JLayeredPane {
 	private Boolean renamingRun = false;
 
 	private ToolBarWithBgImage projectToolBar;
-	
 	private JScrollPane scrollPane_Left;
 	private JScrollPane scrollPane_Right;
-
 	
 	private int rowCount, colCount;
 	private String[] columnNames;
@@ -125,13 +123,12 @@ public class Panel_Project extends JLayeredPane {
 	private Object[][] data;	
 	private TableFilterHeader filterHeader = new TableFilterHeader();
 	
-	
 	private PrismTextAreaReadMe readme;
 	private Output_Panel_Management_Details_NOSQL management_details_NOSQL_panel;
 	private Output_Panel_Management_Details_SQL management_details_SQL_panel;
-	
+	private boolean is_output_05_processing = false;
 	private ExecutorService executor = Executors.newSingleThreadExecutor();
-	private Thread current_mouse_click_thread;
+	
 	
 	public Panel_Project(String currentProject) {
 		
@@ -205,7 +202,7 @@ public class Panel_Project extends JLayeredPane {
 				
 				
 				try {
-					executor.shutdownNow();
+					if (!is_output_05_processing) executor.shutdownNow();
 				} catch (Exception e1) {
 					System.err.println("Thread shut down fails - " + e1.getClass().getName() + ": " + e1.getMessage());
 				}
@@ -213,21 +210,6 @@ public class Panel_Project extends JLayeredPane {
 				executor.submit(() -> {
 					doMousePressed(e);
 				});
-				
-				
-				
-//				if (current_mouse_click_thread != null && current_mouse_click_thread.isAlive()) {
-//					current_mouse_click_thread.interrupt();		// stop the current running thread
-//					current_mouse_click_thread.stop();			// NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE : THIS IS DANGEROUS WAY TO STOP THREAD: DEPRICATED
-//				}
-//				
-//				current_mouse_click_thread = new Thread() {		// new thread
-//					public void run() {
-//						doMousePressed(e);
-//						this.interrupt();
-//					}
-//				};
-//				current_mouse_click_thread.start();
 			}
 		});
 		
@@ -468,31 +450,35 @@ public class Panel_Project extends JLayeredPane {
 						if (currentInputFile.equals("output_04_management_overview.txt")) {		//show a panel with 2 pie charts
 							Output_Panel_Management_Overview chart_panel = new Output_Panel_Management_Overview(table, data);
 							scrollPane_Right.setViewportView(chart_panel);
-						} else if (currentInputFile.equals("output_05_management_details.txt")) {							
-							// 2 links buttons (to clear bug 20). This is to remove all static definitions (static would make display fails when multiple projects are open)
-							JButton SQL_link_button = new JButton();
-							SQL_link_button.addActionListener(new ActionListener() {
-								@Override
-								public void actionPerformed(ActionEvent actionEvent) {	
-									scrollPane_Right.setViewportView(management_details_NOSQL_panel);
-								}
-							});	
-							JButton NoSQL_link_button = new JButton();
-							NoSQL_link_button.addActionListener(new ActionListener() {
-								@Override
-								public void actionPerformed(ActionEvent actionEvent) {	
-									scrollPane_Right.setViewportView(management_details_SQL_panel);
-								}
-							});	
-							
-							management_details_SQL_panel = null;
-							management_details_NOSQL_panel = null;
-							management_details_SQL_panel = new Output_Panel_Management_Details_SQL(file, columnNames, data, SQL_link_button);
-							scrollPane_Right.setViewportView(management_details_SQL_panel);
-							
-							management_details_SQL_panel.get_btnSwitch().setEnabled(false);
+						} 
+						
+						else if (currentInputFile.equals("output_05_management_details.txt")) {	
 						    Thread thread_management_details = new Thread() {			// Make a thread for output5
 								public void run() {
+									is_output_05_processing = true;
+									
+									// 2 links buttons (to clear bug 20). This is to remove all static definitions (static would make display fails when multiple projects are open)
+									JButton SQL_link_button = new JButton();
+									SQL_link_button.addActionListener(new ActionListener() {
+										@Override
+										public void actionPerformed(ActionEvent actionEvent) {	
+											scrollPane_Right.setViewportView(management_details_NOSQL_panel);
+										}
+									});	
+									JButton NoSQL_link_button = new JButton();
+									NoSQL_link_button.addActionListener(new ActionListener() {
+										@Override
+										public void actionPerformed(ActionEvent actionEvent) {	
+											scrollPane_Right.setViewportView(management_details_SQL_panel);
+										}
+									});	
+									
+									management_details_SQL_panel = null;
+									management_details_NOSQL_panel = null;
+									management_details_SQL_panel = new Output_Panel_Management_Details_SQL(file, columnNames, data, SQL_link_button);
+									management_details_SQL_panel.get_btnSwitch().setEnabled(false);
+									scrollPane_Right.setViewportView(management_details_SQL_panel);
+									
 									File file_database = new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/database.db");
 									Read_Database read_database = PrismMain.get_databases_linkedlist().return_read_database_if_exist(file_database);
 									if (read_database == null) {
@@ -505,15 +491,21 @@ public class Panel_Project extends JLayeredPane {
 									}
 									management_details_NOSQL_panel = new Output_Panel_Management_Details_NOSQL(executor, currentProjectFolder, currentRun, table, data, model, NoSQL_link_button);
 									management_details_SQL_panel.get_btnSwitch().setEnabled(true);
+									
+									is_output_05_processing = false;
 									this.interrupt();
 								}
 							};
 							thread_management_details.start();
-						} else if (currentInputFile.equals("output_07_flow_constraints.txt")) {		//show a panel with bar and line charts
+						} 
+						
+						else if (currentInputFile.equals("output_07_flow_constraints.txt")) {		//show a panel with bar and line charts
 							table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 							Output_Panel_Flow_Constraints chart_panel = new Output_Panel_Flow_Constraints(currentProjectFolder, currentRun, table, data);
 							scrollPane_Right.setViewportView(chart_panel);
-						} else if (currentInputFile.equals("readme.txt")) {		// show the file as text area
+						} 
+						
+						else if (currentInputFile.equals("readme.txt")) {		// show the file as text area
 				 			readme = new PrismTextAreaReadMe("icon_tree.png", 70, 70);
 //				 			readme.setEditable(false);
 							try {
@@ -524,7 +516,9 @@ public class Panel_Project extends JLayeredPane {
 								System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
 							}			
 							scrollPane_Right.setViewportView(new Panel_Readme(file, readme));
-						} else {		// Show the file as table
+						} 
+						
+						else {		// Show the file as table
 							scrollPane_Right.setViewportView(table); 
 						}				
 					} catch (IOException e1) {
@@ -538,7 +532,7 @@ public class Panel_Project extends JLayeredPane {
 				}
 			} else if (e.getClickCount() == 2) {
 				// Do something here
-				if (currentLevel == 3 && !currentInputFile.equals("output_05_management_details.txt")) {
+				if (currentLevel == 3 && !currentInputFile.equals("output_05_management_details.txt") && !currentInputFile.equals("output_07_flow_constraints.txt")) {
 					// show the filter only when double left click
 					filterHeader = new TableFilterHeader(table, AutoChoices.ENABLED);
 					filterHeader.setTable(table);
@@ -681,7 +675,7 @@ public class Panel_Project extends JLayeredPane {
 								thread.start();
 							}
 						});
-						popup.add(editMenuItem);	
+						popup.add(editMenuItem);
 					}
 									
 					
@@ -717,7 +711,7 @@ public class Panel_Project extends JLayeredPane {
 					
 					// Only nodes level 2 (Run) can be Deleted--------------------------
 					if (currentLevel == 2 && rootSelected == false) {					
-						final JMenuItem updateMenuItem = new JMenuItem("Update Runs from 1.1.07 to 1.1.08");
+						final JMenuItem updateMenuItem = new JMenuItem("Update Runs");
 						updateMenuItem.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_light_on.png"));
 						updateMenuItem.setMnemonic(KeyEvent.VK_U);
 						updateMenuItem.addActionListener(new ActionListener() {
@@ -727,6 +721,7 @@ public class Panel_Project extends JLayeredPane {
 							}
 						});
 						popup.add(updateMenuItem);
+						updateMenuItem.setEnabled(false);
 					}
 					
 					
@@ -1229,6 +1224,8 @@ public class Panel_Project extends JLayeredPane {
 	
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public void update_runs_to_new_prism_version() {
+		// The below is used to rename all input files in version 1.1.xx to the new names as required by version 1.1.08
+		
 		//Some set up ---------------------------------------------------------------	
 		if (selectionPaths != null) {
 			int node_Level;
