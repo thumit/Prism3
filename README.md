@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 Copyright (C) 2016-2018 PRISM Development Team
 
 PRISM is free software: you can redistribute it and/or modify
