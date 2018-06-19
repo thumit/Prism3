@@ -28,7 +28,7 @@ PRISM is currently in Alpha version of development. For more information on how 
 
 Development team:
 
-	Yu Wei, Project Investigator, Associate Professor at Colorado State university (USA), yweimailbox@gmail.com
+	Yu Wei, Project Investigator, Professor at Colorado State university (USA), yweimailbox@gmail.com
 	Dung Nguyen, Key Developer, PostDoctoral Fellow at Colorado State University (USA), dzung.csu@gmail.com
 	Eric Henderson, Collaborator, Regional Planning Analyst at Forest Service - R1 Northern Region (USA), ehenderson@fs.fed.us
 	David Anderson, Collaborator, Regional Planning Analyst at Forest Service - R3 Southwestern Region (USA), davidanderson@fs.fed.us
@@ -61,5 +61,3 @@ PRISM also uses icons from different sources to build its GUI. Below are details
 	"Mobile Icons" designed by "WebIconSet.com" at http://www.webiconset.com, downloaded at https://www.iconfinder.com/iconsets/Mobile-Icons, license: Free for commercial use
 	"Human o2" designed by "Oliver Scholtz (and others)" at https://schollidesign.deviantart.com, downloaded at https://www.iconfinder.com/iconsets/humano2, license: Free for non commercial use
 	"Gloss set: Basic" designed by "Momenticons" at http://momentumdesignlab.com, downloaded at https://www.iconfinder.com/iconsets/momenticons-gloss-basic, license: Creative Commons (Attribution 3.0 Unported)
-=======
->>>>>>> branch 'master' of https://Prism-Dev@bitbucket.org/Prism-Members/prism.git
