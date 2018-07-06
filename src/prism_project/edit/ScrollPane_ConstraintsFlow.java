@@ -247,7 +247,7 @@ public class ScrollPane_ConstraintsFlow extends JScrollPane {
 				
 				// Clear Menu--------------------------------- ------------------------------------------------------------
 				final JMenu clear_menu = new JMenu("Clear");
-				MenuScroller.setScrollerFor(clear_menu, 5, 125, 4, 1);
+				MenuScroller.setScrollerFor(clear_menu, 9, 100, 1, 0);
 				clear_menu.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_sweep.png"));
 				popup.add(clear_menu);		
 				
@@ -281,7 +281,7 @@ public class ScrollPane_ConstraintsFlow extends JScrollPane {
 				}
 				// Auto Menu--------------------------------- ------------------------------------------------------------
 				final JMenu auto_menu = new JMenu("Auto");
-				auto_menu.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_diagram.png"));
+				auto_menu.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_synchronize.png"));
 				popup.add(auto_menu);
 				
 				// IDs to Sigma - Forward

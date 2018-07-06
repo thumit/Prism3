@@ -749,7 +749,7 @@ public class Setting {
 			btn_Delete.addActionListener(e -> {
 				String ExitOption[] = {"Delete", "Cancel"};
 				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), "Delete now?", "Confirm Delete",
-						JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[1]);
+						JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
 				if (response == 0) {
 					if (table.isEditing()) {
 						table.getCellEditor().stopCellEditing();

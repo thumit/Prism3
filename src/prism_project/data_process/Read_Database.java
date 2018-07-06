@@ -17,11 +17,7 @@
 package prism_project.data_process;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -175,10 +171,8 @@ public class Read_Database {
 				}		
 				
 				// Convert sets to lists and sort the Lists  --- Important note: we always prefer SORTING DOUBLE
-				Set<String> fail_comparison_attributes = new LinkedHashSet<String>();
 				unique_values_list = new ArrayList[colCount];
 				for (int col = 0; col < colCount; col++) {
-					int processing_col = col;
 					unique_values_list[col] = new ArrayList<String>(yield_tables_column_unique_values[col]);
 					Collections.sort(unique_values_list[col], new Comparator<String>() {	// Sort the list
 						@Override
@@ -186,15 +180,21 @@ public class Read_Database {
 							try {
 								return Double.valueOf(o1).compareTo(Double.valueOf(o2));	// Sort Double
 							} catch (Exception e1) {
-								fail_comparison_attributes.add(yield_tables_column_names[processing_col]);
 								return o1.compareTo(o2);	// if fail --> Sort String
 							}
 						}
 					});
-					
 				}
-				System.out.println("non-numeric yield attributes (fail double comparison):");
-				for (String atb : fail_comparison_attributes) System.out.println("     - " + atb);
+				
+				System.out.println("The below yield-table attributes contain at least one non-numeric cell:");
+				for (int i = 0; i < unique_values_list.length; i++) {
+					try {
+						Double.parseDouble(unique_values_list[i].get(0));
+					} catch (NumberFormatException e) {		// if the minimum unique value is not a double, then this attribute is non-numeric
+						System.out.println("           - " + yield_tables_column_names[i]);
+					}
+				}
+				
 				yield_tables_column_unique_values = null;	// clear to save memory
 			}
 		} catch (Exception e) {
@@ -688,38 +688,13 @@ public class Read_Database {
 	
 	public String get_ParameterToolTip(String yt_columnName) {
 		String toolTip = "";
-
 		
-		// Read library from the system
-		File file_PrismLibrary = null;
-		
-		if (file_PrismLibrary == null) {		// This is to make it read the file only once, after that no need to repeat reading this file any more
-			try {
-				file_PrismLibrary = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "PrismLibrary.csv");
-				file_PrismLibrary.deleteOnExit();
-
-				InputStream initialStream = getClass().getResourceAsStream("/PrismLibrary.csv"); //Default definition
-				byte[] buffer = new byte[initialStream.available()];
-				initialStream.read(buffer);
-
-				OutputStream outStream = new FileOutputStream(file_PrismLibrary);
-				outStream.write(buffer);
-
-				initialStream.close();
-				outStream.close();
-			} catch (FileNotFoundException e1) {
-				System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
-			} catch (IOException e2) {
-				System.err.println(e2.getClass().getName() + ": " + e2.getMessage());
-			} 
-		}
-		
-		
+		File file_yield_dictionary = FilesHandle.get_file_yield_dictionary();
 		String delimited = ","; // 		","		comma delimited			"\\s+"		space delimited		"\t"	tab delimited	
 		try {
 			// All lines to be in array
 			List<String> list;
-			list = Files.readAllLines(Paths.get(file_PrismLibrary.getAbsolutePath()), StandardCharsets.UTF_8);
+			list = Files.readAllLines(Paths.get(file_yield_dictionary.getAbsolutePath()), StandardCharsets.UTF_8);
 			String[] a = list.toArray(new String[list.size()]);
 			int totalRows = a.length;
 			int totalCols = 2;
@@ -740,7 +715,6 @@ public class Read_Database {
 		} catch (IOException e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 		}
-			
 		return toolTip;
 	}	
 	

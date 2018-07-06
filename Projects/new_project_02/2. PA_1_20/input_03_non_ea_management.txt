@@ -1,3 +1,0 @@
-condition_id	condition_description	static_identifiers	method_choice	
-1	ng_ms_bs_everywhere	0 A B;1 N;2 C G l s;3 B G L O U W;4 B C D E F G H I U;5 F G H I J K L M N O P Q R S Z	0 NG_E EA_E MS_E BS_E NG_R EA_R;1 0 1 2 3 4	
-2	pb_gs_suited	0 A B;1 N;2 C G;3 B G L O U W;4 B C D E F G H I U;5 F G H I J K L M N O P Q R S Z	0 PB_E GS_E EA_E PB_R GS_R EA_R;1 0 1 2 3 4	

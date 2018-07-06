@@ -258,7 +258,7 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 				// Disable method EA_E and EA_R in Non-EA Management window
 				if (i == 0 && option == 3) {	 // i=0 --> method (this option only has choice and method in the GUI)
 					for (JCheckBox cb : checkboxStaticIdentifiers.get(i)) {
-						if (cb.getText().equals("EA_E") || cb.getText().equals("EA_R")) {
+						if (cb.getText().equals("EA_E") || cb.getText().equals("EA_R") || cb.getText().equals("MS_E") || cb.getText().equals("BS_E")) {
 							cb.setEnabled(false);
 						}
 					}
@@ -333,11 +333,10 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 			int total_check_items = 0;
 			int total_items = 0;
 			for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {		//Loop all elements in each layer
-				if ((checkboxStaticIdentifiers.get(i).get(j).isSelected() && (checkboxStaticIdentifiers.get(i).get(j).isVisible())
-						|| !checkboxStaticIdentifiers.get(i).get(j).isEnabled())) {
+				if (checkboxStaticIdentifiers.get(i).get(j).isSelected() && checkboxStaticIdentifiers.get(i).get(j).isVisible() && checkboxStaticIdentifiers.get(i).get(j).isEnabled()) {
 					total_check_items++;
 				}
-				if (checkboxStaticIdentifiers.get(i).get(j).isVisible()) {
+				if (checkboxStaticIdentifiers.get(i).get(j).isVisible() && checkboxStaticIdentifiers.get(i).get(j).isEnabled()) {
 					total_items++;
 				}	
 			}
@@ -348,10 +347,10 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 				
 				for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {		//Loop all elements in each layer
 					String checkboxName = checkboxStaticIdentifiers.get(i).get(j).getText();				
-					//Add checkBox if it is (selected & visible) or disable
-					if ((checkboxStaticIdentifiers.get(i).get(j).isSelected() && (checkboxStaticIdentifiers.get(i).get(j).isVisible())
-							|| !checkboxStaticIdentifiers.get(i).get(j).isEnabled()))	
+					//Add checkBox if it is (selected & visible & enable
+					if (checkboxStaticIdentifiers.get(i).get(j).isSelected() && checkboxStaticIdentifiers.get(i).get(j).isVisible() && checkboxStaticIdentifiers.get(i).get(j).isEnabled()) {	
 						static_info = String.join(" ", static_info, checkboxName);	
+					}
 				}
 				temp.add(static_info);
 			}
@@ -374,14 +373,14 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 	
 	public String get_static_info_from_GUI() {			
 		String static_info = "";
-		for (int ii = 0; ii < checkboxStaticIdentifiers.size(); ii++) {		//Loop all static identifiers
-			static_info = static_info + ii + " ";
-			for (int j = 0; j < checkboxStaticIdentifiers.get(ii).size(); j++) {		//Loop all elements in each layer
-				String checkboxName = checkboxStaticIdentifiers.get(ii).get(j).getText();				
-				//Add checkBox if it is (selected & visible) or disable
-				if ((checkboxStaticIdentifiers.get(ii).get(j).isSelected() && (checkboxStaticIdentifiers.get(ii).get(j).isVisible())
-						|| !checkboxStaticIdentifiers.get(ii).get(j).isEnabled()))	
+		for (int i = 0; i < checkboxStaticIdentifiers.size(); i++) {		//Loop all static identifiers
+			static_info = static_info + i + " ";
+			for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {		//Loop all elements in each layer
+				String checkboxName = checkboxStaticIdentifiers.get(i).get(j).getText();				
+				//Add checkBox if it is (selected & visible & enable
+				if (checkboxStaticIdentifiers.get(i).get(j).isSelected() && checkboxStaticIdentifiers.get(i).get(j).isVisible() && checkboxStaticIdentifiers.get(i).get(j).isEnabled()) {
 					static_info = static_info + checkboxName + " ";	
+				}
 			}
 						
 			if (!static_info.equals("")) {
@@ -418,7 +417,7 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 			for (int j = 1; j < identifier_elements.length; j++) {		//Ignore the first element which is the identifier id
 				String this_identifier_attribute = identifier_elements[j].replaceAll("\\s+","");		//Add element name, if name has spaces then remove all the spaces												
 				for (JCheckBox k: checkboxStaticIdentifiers.get(current_identifier_id)) {
-					if (k.getText().equalsIgnoreCase(this_identifier_attribute)) {
+					if (k.getText().equals(this_identifier_attribute)) {
 						k.setSelected(true);
 					}
 				}

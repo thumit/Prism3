@@ -183,6 +183,61 @@ public class FilesHandle {
 	}	
 	
 	
+	public static File chosenDefinition() {
+		File file = null;
+			
+		ImageIcon icon = new ImageIcon(PrismMain.get_main().getClass().getResource("/icon_question.png"));
+		Image scaleImage = icon.getImage().getScaledInstance(50, 50,Image.SCALE_SMOOTH);
+		String ExitOption[] = {"New definition","Default definition","Cancel"};
+		int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(),"Except General Inputs, everything will be reset. Your option ?", "Import Strata Definition",
+				JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, new ImageIcon(scaleImage), ExitOption, ExitOption[2]);
+		if (response == 0)
+		{
+			JFileChooser chooser = new JFileChooser();
+			chooser.setPreferredSize(new Dimension(800, 500));
+			chooser.setCurrentDirectory(new File(get_workingLocation()));
+			chooser.setDialogTitle("Select strata definition file");
+			chooser.setMultiSelectionEnabled(false);
+			
+			chooser.setApproveButtonText("Import");
+			chooser.setApproveButtonToolTipText("Import strata definition from the selected file");
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("Strata Definition File '.csv' '.txt'", "csv", "txt");
+			chooser.setFileFilter(filter);
+			chooser.setAcceptAllFileFilterUsed(false);
+			
+			int returnValue = chooser.showOpenDialog(PrismMain.get_main());
+			if (returnValue == JFileChooser.APPROVE_OPTION) {	//Return the new Definition as in the selected file
+				file = chooser.getSelectedFile();
+			}
+		}
+		if (response == 1)	
+		{
+			try {
+				File file_StrataDefinition = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "strata_definition.csv");	
+				file_StrataDefinition.deleteOnExit();
+					
+				InputStream initialStream = Panel_Edit_Details.class.getResourceAsStream("/strata_definition.csv");		//Default definition
+				byte[] buffer = new byte[initialStream.available()];
+				initialStream.read(buffer);
+
+				OutputStream outStream = new FileOutputStream(file_StrataDefinition);
+				outStream.write(buffer);
+
+				initialStream.close();
+				outStream.close();
+
+				file = file_StrataDefinition;
+			} catch (FileNotFoundException e1) {
+				System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+			} catch (IOException e2) {
+				System.err.println(e2.getClass().getName() + ": " + e2.getMessage());
+			}
+		}	
+		
+		return file;
+	}	
+	
+	
 	public static File chosenDatabase() {
 		JFileChooser chooser = new JFileChooser();
 		chooser.setPreferredSize(new Dimension(800, 500));
@@ -268,58 +323,101 @@ public class FilesHandle {
 	}
 	
 	
-	public static File chosenDefinition() {
-		File file = null;
-			
-		ImageIcon icon = new ImageIcon(PrismMain.get_main().getClass().getResource("/icon_question.png"));
-		Image scaleImage = icon.getImage().getScaledInstance(50, 50,Image.SCALE_SMOOTH);
-		String ExitOption[] = {"New definition","Default definition","Cancel"};
-		int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(),"Except General Inputs, everything will be reset. Your option ?", "Import Strata Definition",
-				JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, new ImageIcon(scaleImage), ExitOption, ExitOption[2]);
-		if (response == 0)
-		{
-			JFileChooser chooser = new JFileChooser();
-			chooser.setPreferredSize(new Dimension(800, 500));
-			chooser.setCurrentDirectory(new File(get_workingLocation()));
-			chooser.setDialogTitle("Select strata definition file");
-			chooser.setMultiSelectionEnabled(false);
-			
-			chooser.setApproveButtonText("Import");
-			chooser.setApproveButtonToolTipText("Import strata definition from the selected file");
-			FileNameExtensionFilter filter = new FileNameExtensionFilter("Strata Definition File '.csv' '.txt'", "csv", "txt");
-			chooser.setFileFilter(filter);
-			chooser.setAcceptAllFileFilterUsed(false);
-			
-			int returnValue = chooser.showOpenDialog(PrismMain.get_main());
-			if (returnValue == JFileChooser.APPROVE_OPTION) {	//Return the new Definition as in the selected file
-				file = chooser.getSelectedFile();
-			}
-		}
-		if (response == 1)	
-		{
-			try {
-				File file_StrataDefinition = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "strata_definition.csv");	
-				file_StrataDefinition.deleteOnExit();
-					
-				InputStream initialStream = Panel_Edit_Details.class.getResourceAsStream("/strata_definition.csv");		//Default definition
-				byte[] buffer = new byte[initialStream.available()];
-				initialStream.read(buffer);
+	public static File get_file_maequee() {
+		// Read maequee from the system
+		File file_maequee = null;
+		try {
+			file_maequee = new File(get_temporaryFolder().getAbsolutePath() + "/" + "maequee.txt");
+			file_maequee.deleteOnExit();
 
-				OutputStream outStream = new FileOutputStream(file_StrataDefinition);
-				outStream.write(buffer);
+			InputStream initialStream = PrismMain.get_main().getClass().getResourceAsStream("/maequee.txt");
+			byte[] buffer = new byte[initialStream.available()];
+			initialStream.read(buffer);
 
-				initialStream.close();
-				outStream.close();
+			OutputStream outStream = new FileOutputStream(file_maequee);
+			outStream.write(buffer);
 
-				file = file_StrataDefinition;
-			} catch (FileNotFoundException e1) {
-				System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
-			} catch (IOException e2) {
-				System.err.println(e2.getClass().getName() + ": " + e2.getMessage());
-			}
-		}	
-		
-		return file;
-	}	
+			initialStream.close();
+			outStream.close();
+		} catch (FileNotFoundException e1) {
+			System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+		} catch (IOException e2) {
+			System.err.println(e2.getClass().getName() + ": " + e2.getMessage());
+		} 
+		return file_maequee;
+	}
 	
+	
+	public static File get_file_yield_dictionary() {
+		// Read yield_dictionary from the system
+		File file_yield_dictionary = null;
+		try {
+			file_yield_dictionary = new File(get_temporaryFolder().getAbsolutePath() + "/" + "yield_dictionary.csv");
+			file_yield_dictionary.deleteOnExit();
+
+			InputStream initialStream = PrismMain.get_main().getClass().getResourceAsStream("/yield_dictionary.csv");
+			byte[] buffer = new byte[initialStream.available()];
+			initialStream.read(buffer);
+
+			OutputStream outStream = new FileOutputStream(file_yield_dictionary);
+			outStream.write(buffer);
+
+			initialStream.close();
+			outStream.close();
+		} catch (FileNotFoundException e1) {
+			System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+		} catch (IOException e2) {
+			System.err.println(e2.getClass().getName() + ": " + e2.getMessage());
+		} 
+		return file_yield_dictionary;
+	}
+	
+	
+	public static File get_file_input_05() {
+		// Read input_05 just for update runs from 1.2.01 to 1.2.02, we can delete this later
+		File file_input_05 = null;
+		try {
+			file_input_05 = new File(get_temporaryFolder().getAbsolutePath() + "/" + "input_05_non_sr_disturbances.txt");
+			file_input_05.deleteOnExit();
+
+			InputStream initialStream = PrismMain.get_main().getClass().getResourceAsStream("/input_05_non_sr_disturbances.txt");
+			byte[] buffer = new byte[initialStream.available()];
+			initialStream.read(buffer);
+
+			OutputStream outStream = new FileOutputStream(file_input_05);
+			outStream.write(buffer);
+
+			initialStream.close();
+			outStream.close();
+		} catch (FileNotFoundException e1) {
+			System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+		} catch (IOException e2) {
+			System.err.println(e2.getClass().getName() + ": " + e2.getMessage());
+		} 
+		return file_input_05;
+	}
+	
+	public static File get_file_input_05_alt() {
+		// Read input_05 just for update runs from 1.2.01 to 1.2.02, we can delete this later
+		File file_input_05 = null;
+		try {
+			file_input_05 = new File(get_temporaryFolder().getAbsolutePath() + "/" + "input_05_non_sr_disturbances_alt.txt");
+			file_input_05.deleteOnExit();
+
+			InputStream initialStream = PrismMain.get_main().getClass().getResourceAsStream("/input_05_non_sr_disturbances_alt.txt");
+			byte[] buffer = new byte[initialStream.available()];
+			initialStream.read(buffer);
+
+			OutputStream outStream = new FileOutputStream(file_input_05);
+			outStream.write(buffer);
+
+			initialStream.close();
+			outStream.close();
+		} catch (FileNotFoundException e1) {
+			System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+		} catch (IOException e2) {
+			System.err.println(e2.getClass().getName() + ": " + e2.getMessage());
+		} 
+		return file_input_05;
+	}
 }

@@ -1,8 +1,0 @@
-bc_id	bc_description	bc_type	bc_multiplier	lowerbound	lowerbound_perunit_penalty	upperbound	upperbound_perunit_penalty	var_id	var_name	var_value	var_reduced_cost	total_penalty
-1	Area (i.e. acres) ..... No dynamic restriction ..... No static restriction	HARD	1.0	null	null	null	null	6	z_0	9843569.999999993	0.0	0.0
-2	c	FREE	2.0	null	null	null	null	8	v_0	1.9687139999999985E7	0.0	0.0
-3	b	SOFT	1.0	null	null	null	null	0	y_0	9843569.999999993	0.0	0.0
-4	Area (i.e. acres) ..... No dynamic restriction ..... No static restriction	HARD	1.0	null	null	null	null	7	z_1	9843569.999999993	0.0	0.0
-5	1	FREE	1.0	null	null	null	null	9	v_1	9843569.999999993	0.0	0.0
-6	2	SOFT	1.0	null	null	null	null	1	y_1	9843569.999999993	0.0	0.0
-9	7	FREE	1.0	null	null	null	null	10	v_2	9843569.999999993	0.0	0.0

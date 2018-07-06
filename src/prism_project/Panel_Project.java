@@ -26,8 +26,10 @@ import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -42,6 +44,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JLayeredPane;
 import javax.swing.JMenuItem;
@@ -71,6 +74,7 @@ import net.coderazzi.filters.gui.TableFilterHeader;
 import prism_convenience_class.ColorUtil;
 import prism_convenience_class.FilesHandle;
 import prism_convenience_class.IconHandle;
+import prism_convenience_class.MarqueePanel;
 import prism_convenience_class.PrismTableModel;
 import prism_convenience_class.PrismTextAreaReadMe;
 import prism_convenience_class.ToolBarWithBgImage;
@@ -95,7 +99,9 @@ public class Panel_Project extends JLayeredPane {
 	private JButton btnSolveRun;
 	private JButton btnCollectMemory;
 	private JButton btnSave;
+	private JButton btnHint;
 	private List<JButton> buttons_list;
+	private MarqueePanel maequee_panel = new MarqueePanel();;
 	
 	private File[] listOfEditRuns;
 	private File currentProjectFolder, currentRunFolder;
@@ -315,6 +321,28 @@ public class Panel_Project extends JLayeredPane {
 		projectToolBar.add(btnSave);
 		
 		
+		btnHint = new JButton();
+		btnHint.setToolTipText("Hints & Facts");
+		btnHint.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_light_on.png"));	
+		btnHint.addActionListener(e -> {
+			if (maequee_panel.is_text_running() == true) {
+				maequee_panel.stop();
+				btnHint.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_light_off.png"));
+			} else {
+				maequee_panel.start();
+				btnHint.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_light_on.png"));
+			}
+		});
+		projectToolBar.add(btnHint);
+		
+		
+		projectToolBar.add(Box.createGlue());	//Add glue for alignment
+		projectToolBar.add(Box.createGlue());	//Add glue for alignment
+		projectToolBar.add(Box.createGlue());	//Add glue for alignment
+		projectToolBar.add(maequee_panel);
+		projectToolBar.add(Box.createGlue());	//Add glue for alignment
+		
+		
 		// Make this list to make all buttons in this windows not focus on the ugly blue border after click
 		buttons_list = new ArrayList<JButton>();
 		buttons_list.add(btnNewRun);
@@ -324,6 +352,7 @@ public class Panel_Project extends JLayeredPane {
 		buttons_list.add(btnSolveRun);
 		buttons_list.add(btnCollectMemory);
 		buttons_list.add(btnSave);
+		buttons_list.add(btnHint);
 		for (JButton i : buttons_list) {
 			i.setContentAreaFilled(false);
 			i.addMouseListener(new MouseAdapter() {
@@ -333,6 +362,10 @@ public class Panel_Project extends JLayeredPane {
 
 			    public void mouseExited(MouseEvent e) {
 			    	i.setContentAreaFilled(false);
+			    	if (ToolTipManager.sharedInstance().isEnabled()) {	// to avoid the case when tool-tip does not disappear immediately when gradually moving down from these buttons
+			    		ToolTipManager.sharedInstance().setEnabled(false);
+				    	ToolTipManager.sharedInstance().setEnabled(true);
+			    	}
 			    }
 			});	
 		}		
@@ -430,6 +463,15 @@ public class Panel_Project extends JLayeredPane {
 									tableColumn.setPreferredWidth(maxWidth);
 									return component;
 								}
+								
+								@Override	// Implement table cell tool tips, just for the output_07_flow_constraints          
+								public String getToolTipText(MouseEvent e) {
+									java.awt.Point p = e.getPoint();
+									int row = rowAtPoint(p);
+									int col = columnAtPoint(p);
+									String tip = (table.getColumnName(col).equals("flow_description") && row >= 0 && getValueAt(row, col) != null) ? getValueAt(row, col).toString() : null;
+									return tip;
+								}
 							};
 													
 							DefaultTableCellRenderer renderer = (DefaultTableCellRenderer) table.getDefaultRenderer(Object.class);
@@ -456,6 +498,10 @@ public class Panel_Project extends JLayeredPane {
 						    Thread thread_management_details = new Thread() {			// Make a thread for output5
 								public void run() {
 									is_output_05_processing = true;
+									
+									// stop running text to optimize speed
+									maequee_panel.stop();
+									btnHint.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_light_off.png"));
 									
 									// 2 links buttons (to clear bug 20). This is to remove all static definitions (static would make display fails when multiple projects are open)
 									JButton SQL_link_button = new JButton();
@@ -507,7 +553,8 @@ public class Panel_Project extends JLayeredPane {
 						
 						else if (currentInputFile.equals("readme.txt")) {		// show the file as text area
 				 			readme = new PrismTextAreaReadMe("icon_tree.png", 70, 70);
-//				 			readme.setEditable(false);
+				 			readme.activate_clicktosave_feature(file);
+				 			scrollPane_Right.setViewportView(readme);
 							try {
 								FileReader reader = new FileReader(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/" + currentInputFile);
 								readme.read(reader, currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/" + currentInputFile);
@@ -515,7 +562,8 @@ public class Panel_Project extends JLayeredPane {
 							} catch (IOException e1) {
 								System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
 							}			
-							scrollPane_Right.setViewportView(new Panel_Readme(file, readme));
+//							scrollPane_Right.setViewportView(new Panel_Readme(file, readme));
+							scrollPane_Right.setViewportView(readme);
 						} 
 						
 						else {		// Show the file as table
@@ -711,8 +759,8 @@ public class Panel_Project extends JLayeredPane {
 					
 					// Only nodes level 2 (Run) can be Deleted--------------------------
 					if (currentLevel == 2 && rootSelected == false) {					
-						final JMenuItem updateMenuItem = new JMenuItem("Update Runs");
-						updateMenuItem.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_light_on.png"));
+						final JMenuItem updateMenuItem = new JMenuItem("Update Runs from 1.2.01 to 1.2.02");
+						updateMenuItem.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_light_on_yellow.png"));
 						updateMenuItem.setMnemonic(KeyEvent.VK_U);
 						updateMenuItem.addActionListener(new ActionListener() {
 							@Override
@@ -721,7 +769,7 @@ public class Panel_Project extends JLayeredPane {
 							}
 						});
 						popup.add(updateMenuItem);
-						updateMenuItem.setEnabled(false);
+//						updateMenuItem.setEnabled(false);
 					}
 					
 					
@@ -970,7 +1018,7 @@ public class Panel_Project extends JLayeredPane {
 			//Ask to delete 
 			String ExitOption[] = {"Delete", "Cancel"};
 			int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), "Selected Runs will be deleted?", "Confirm Delete",
-					JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[1]);
+					JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
 			if (response == 0) {
 				DefaultTreeModel model = (DefaultTreeModel) projectTree.getModel();
 				for (TreePath selectionPath : selectionPaths) { //Loop through and delete all level 2 nodes (Runs)
@@ -1036,10 +1084,9 @@ public class Panel_Project extends JLayeredPane {
 				
 				this.setVisible(false); //----------------------------------------------
 				//Disable all other buttons, change name to "Stop Editing",  remove splitPanel and add editPanel
-				for (Component c : projectToolBar.getComponents()) c.setVisible(false);
+				for (Component c : buttons_list) if (c != btnHint && c != btnEditRun) c.setVisible(false);
 				display_text_field.setVisible(false);				
 				btnSave.setVisible(true);
-				btnEditRun.setVisible(true); 
 				btnEditRun.setToolTipText("Stop Editing");
 				btnEditRun.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_back.png"));
 				btnEditRun.setForeground(Color.RED);
@@ -1060,7 +1107,7 @@ public class Panel_Project extends JLayeredPane {
 			
 			if (response == 0 || response == 1) { // Yes or No			
 				// Enable all other buttons, change name to "Start Editing",  remove editPanel and add splitPanel 
-				for (Component c : projectToolBar.getComponents()) c.setVisible(true);
+				for (Component c : buttons_list) c.setVisible(true);
 				display_text_field.setVisible(true);
 				btnSave.setVisible(false);
 				btnEditRun.setToolTipText("Start Editing");
@@ -1126,13 +1173,17 @@ public class Panel_Project extends JLayeredPane {
 				}
 				selectionPaths = projectTree.getSelectionPaths(); //This is very important to get the most recent selected paths
 			}
+			
+			// stop running text to optimize speed
+			maequee_panel.stop();
+			btnHint.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_light_off.png"));
 			//End of set up---------------------------------------------------------------
 			
 					
 			if (selectionPaths != null) { //at least 1 run has to be selected 
 				// Create a files list that contains selected runs
 				listOfEditRuns = new File[selectionPaths.length];
-				int fileCount=0;
+				int fileCount = 0;
 				
 				for (TreePath selectionPath : selectionPaths) { //Loop through all level 2 nodes (Runs)
 					currentLevel = selectionPath.getPathCount();
@@ -1147,7 +1198,7 @@ public class Panel_Project extends JLayeredPane {
 				}
 				
 				// Disable all other buttons, change name to "Stop Solving", remove splitPanel and add editPanel
-				for (Component c : projectToolBar.getComponents()) c.setVisible(false);
+				for (Component c : buttons_list) if (c != btnHint) c.setVisible(false);
 				display_text_field.setVisible(false);
 				
 				btnSolveRun.setVisible(true);
@@ -1224,127 +1275,180 @@ public class Panel_Project extends JLayeredPane {
 	
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public void update_runs_to_new_prism_version() {
-		// The below is used to rename all input files in version 1.1.xx to the new names as required by version 1.1.08
+		// The below is used to rename all input files in version 1.2.01 to the new names as required by version 1.2.02
 		
-		//Some set up ---------------------------------------------------------------	
-		if (selectionPaths != null) {
-			int node_Level;
-			for (TreePath selectionPath : selectionPaths) { //Loop through all selected nodes
-				node_Level = selectionPath.getPathCount();		
-				if (node_Level == 1 || node_Level == 3) {
-					projectTree.getSelectionModel().removeSelectionPath(selectionPath);		//Deselect all level 1 and level 3 nodes
-				}				
-			}
-			selectionPaths = projectTree.getSelectionPaths(); //This is very important to get the most recent selected paths
-		}
-		//End of set up---------------------------------------------------------------
-		
-				
-		if (selectionPaths != null) { //at least 1 run has to be selected 
-			// Create a files list that contains selected runs
-			listOfEditRuns = new File[selectionPaths.length];
-			int fileCount = 0;
-
-			for (TreePath selectionPath : selectionPaths) { //Loop through all level 2 nodes (Runs)
-				currentLevel = selectionPath.getPathCount();
-				DefaultMutableTreeNode processingNode = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
-				if (currentLevel == 2) { // Add to the list
-					currentRun = processingNode.getUserObject().toString();
-					File file = new File(currentProjectFolder + seperator + currentRun);
-					listOfEditRuns[fileCount] = file;
-					fileCount++;
+		String ask_ExitOption[] = { "Update", "Cancel"};
+		int ask_response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), "Update will be instant.\nYou are recommended to make copies of the runs before updating, just in case", "Runs update",
+				JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(32, 32, "icon_light_on_yellow.png"), ask_ExitOption, ask_ExitOption[0]);
+		if (ask_response == 0) {
+			//Some set up ---------------------------------------------------------------	
+			if (selectionPaths != null) {
+				int node_Level;
+				for (TreePath selectionPath : selectionPaths) { //Loop through all selected nodes
+					node_Level = selectionPath.getPathCount();		
+					if (node_Level == 1 || node_Level == 3) {
+						projectTree.getSelectionModel().removeSelectionPath(selectionPath);		//Deselect all level 1 and level 3 nodes
+					}				
 				}
+				selectionPaths = projectTree.getSelectionPaths(); //This is very important to get the most recent selected paths
 			}
-				
-			int file_renamed_count = 0;
-			for (int i = 0; i < listOfEditRuns.length; i++) {
-				File[] contents = listOfEditRuns[i].listFiles();
-				if (contents != null) {
-					for (File f : contents) {
-							File new_file = null;
+			//End of set up---------------------------------------------------------------
+			
+					
+			if (selectionPaths != null) { //at least 1 run has to be selected 
+				// Create a files list that contains selected runs
+				listOfEditRuns = new File[selectionPaths.length];
+				int fileCount = 0;
+
+				for (TreePath selectionPath : selectionPaths) { //Loop through all level 2 nodes (Runs)
+					currentLevel = selectionPath.getPathCount();
+					DefaultMutableTreeNode processingNode = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
+					if (currentLevel == 2) { // Add to the list
+						currentRun = processingNode.getUserObject().toString();
+						File file = new File(currentProjectFolder + seperator + currentRun);
+						listOfEditRuns[fileCount] = file;
+						fileCount++;
+					}
+				}
+					
+				int file_changed_count = 0;
+				int file_deleted_count = 0;
+				for (int i = 0; i < listOfEditRuns.length; i++) {
+					File[] contents = listOfEditRuns[i].listFiles();
+					if (contents != null) {
+						for (File f : contents) {
 							switch (f.getName()) {
-							
-						case "input_02_silviculture_method.txt":
-							new_file = new File(f.getParentFile().getAbsolutePath() + "/" + "input_03_non_ea_management.txt");			
-							f.renameTo(new_file);
-							file_renamed_count++;
-							break;
+
+							case "input_05_non_sr_disturbances.txt":
+								try {
+									// Read sample file into data
+									File[] files = new File[] { FilesHandle.get_file_input_05(), FilesHandle.get_file_input_05_alt() };	
+									
+									for (File sample_file: files) {		// there are 2 sample files for HLC and CGNF to try
+										String delimited = "\t";		// tab delimited
+										List<String> list = Files.readAllLines(Paths.get(sample_file.getAbsolutePath()), StandardCharsets.UTF_8);			
+										String[] a = list.toArray(new String[list.size()]);		
+										
+										
+										columnNames = a[0].split(delimited);		//tab delimited		//Read the first row	
+										rowCount = a.length - 1;  // - 1st row which is the column name
+										colCount = columnNames.length;
+										data = new Object[rowCount][colCount];
 								
-						case "input_03_model_strata.txt":
-							new_file = new File(f.getParentFile().getAbsolutePath() + "/" + "input_02_model_strata.txt");			
-							f.renameTo(new_file);
-							file_renamed_count++;
-							break;
-							
-						case "input_04_covertype_conversion_clearcut.txt":
-							new_file = new File(f.getParentFile().getAbsolutePath() + "/" + "input_04_ea_management.txt");			
-							f.renameTo(new_file);
-							file_renamed_count++;
-							break;
-							
-						case "input_06_natural_disturbances_non_replacing.txt":
-							new_file = new File(f.getParentFile().getAbsolutePath() + "/" + "input_05_non_sr_disturbances.txt");			
-							f.renameTo(new_file);
-							file_renamed_count++;
-							break;
-							
-						case "input_07_natural_disturbances_replacing.txt":
-							new_file = new File(f.getParentFile().getAbsolutePath() + "/" + "input_06_sr_disturbances.txt");			
-							f.renameTo(new_file);
-							file_renamed_count++;
-							break;
-							
-						case "input_08_management_cost.txt":
-							new_file = new File(f.getParentFile().getAbsolutePath() + "/" + "input_07_management_cost.txt");			
-							f.renameTo(new_file);
-							file_renamed_count++;
-							break;
-							
-						case "input_09_basic_constraints.txt":
-							new_file = new File(f.getParentFile().getAbsolutePath() + "/" + "input_08_basic_constraints.txt");			
-							f.renameTo(new_file);
-							file_renamed_count++;
-							break;
-							
-						case "input_10_flow_constraints.txt":
-							new_file = new File(f.getParentFile().getAbsolutePath() + "/" + "input_09_flow_constraints.txt");			
-							f.renameTo(new_file);
-							file_renamed_count++;
-							break;
+										// populate the data matrix
+										for (int row = 0; row < rowCount; row++) {
+											data[row] = a[row + 1].split(delimited);	//tab delimited	
+										}
+										
+										
+										// Read old file into old_data
+										f = new File(f.getParentFile().getAbsolutePath() + "/" + "input_05_non_sr_disturbances.txt");		
+										delimited = "\t";		// tab delimited
+										list = Files.readAllLines(Paths.get(f.getAbsolutePath()), StandardCharsets.UTF_8);		
+										a = list.toArray(new String[list.size()]);		
+										
+										String[] old_columnNames = a[0].split(delimited);		//tab delimited		//Read the first row	
+										rowCount = a.length - 1;  // - 1st row which is the column name
+										colCount = old_columnNames.length;
+										Object[][] old_data = new Object[rowCount][colCount];
+								
+										// populate the data matrix
+										for (int row = 0; row < rowCount; row++) {
+											old_data[row] = a[row + 1].split(delimited);	//tab delimited	
+										}
+										
+										
+										if (old_columnNames.length == 4 && data.length == old_data.length) {	// This is the only case we would modify the old file, this file only has 4 columns and number of row in both file match
+											// paste from old_data to data
+											for (int row = 0; row < data.length; row++) {
+												for (int col = 0; col < data[row].length; col++) {
+													if (col == 3 || col == 4) data[row][col] = old_data[row][col - 1];
+												}
+											}
+
+											if (f.exists()) {
+												f.delete();		// Delete the old file before writing new contents to that old file
+											}
+											
+											if (data != null && data.length > 0) {
+												try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(f))) {
+													for (int j = 0; j < columnNames.length; j++) {
+														fileOut.write(columnNames[j] + "\t");
+													}
+
+													for (int row = 0; row < data.length; row++) {
+														fileOut.newLine();
+														for (int col = 0; col < data[row].length; col++) {
+															fileOut.write(data[row][col] + "\t");
+														}
+													}
+													fileOut.close();
+												} catch (IOException e) {
+													System.err.println(e.getClass().getName() + ": " + e.getMessage());
+												} 
+											}
+											file_changed_count++;
+										}
+									}
+									
+									
+									// Now the old file might be modified or not. If not modified yet --> delete
+									f = new File(f.getParentFile().getAbsolutePath() + "/" + "input_05_non_sr_disturbances.txt");		
+									String delimited = "\t";		// tab delimited
+									List<String> list = Files.readAllLines(Paths.get(f.getAbsolutePath()), StandardCharsets.UTF_8);		
+									String[] a = list.toArray(new String[list.size()]);		
+									String[] columnNames = a[0].split(delimited);		//tab delimited		//Read the first row	
+									
+									if (columnNames.length == 4) { // This is the case we would delete the old file
+										f.delete();
+										file_deleted_count++;
+									}
+									
+								} catch (IOException e) {
+									e.printStackTrace();
+								}
+								
+								break;
+							}
 						}
 					}
 				}
-			}
+					
+				// Refresh the tree		
+				refreshProjectTree();
 				
-			// Refresh the tree		
-			refreshProjectTree();
-			
-			// Make the runs appear on the TREE----------->YEAHHHHHHHHHHHHHHH	
-			for (File file : listOfEditRuns) {
-				String RunName = file.getName();
-				@SuppressWarnings("unchecked")
-				Enumeration<TreeNode> e = root.depthFirstEnumeration();
-				while (e.hasMoreElements()) { // Search for the name that match
-					DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.nextElement();
-					if (node.toString().equalsIgnoreCase(RunName) && root.isNodeChild(node)) {		// Name match, and node is child of root
-						DefaultTreeModel model = (DefaultTreeModel) projectTree.getModel();
-						TreeNode[] nodes = model.getPathToRoot(node);
-						TreePath path = new TreePath(nodes);
-						if (path != null) display_text_field.setText(path.toString()); 	// display Full path
-						projectTree.scrollPathToVisible(path);
-						projectTree.addSelectionPath(path);
-						editingPath = path;
-						selectionPaths = projectTree.getSelectionPaths();
+				// Make the runs appear on the TREE----------->YEAHHHHHHHHHHHHHHH	
+				for (File file : listOfEditRuns) {
+					String RunName = file.getName();
+					@SuppressWarnings("unchecked")
+					Enumeration<TreeNode> e = root.depthFirstEnumeration();
+					while (e.hasMoreElements()) { // Search for the name that match
+						DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.nextElement();
+						if (node.toString().equalsIgnoreCase(RunName) && root.isNodeChild(node)) {		// Name match, and node is child of root
+							DefaultTreeModel model = (DefaultTreeModel) projectTree.getModel();
+							TreeNode[] nodes = model.getPathToRoot(node);
+							TreePath path = new TreePath(nodes);
+							if (path != null) display_text_field.setText(path.toString()); 	// display Full path
+							projectTree.scrollPathToVisible(path);
+							projectTree.addSelectionPath(path);
+							editingPath = path;
+							selectionPaths = projectTree.getSelectionPaths();
+						}
 					}
 				}
+				
+				String warningText = "";
+				if (file_changed_count > 0) warningText = file_changed_count + " files have been modified.\n";
+				if (file_deleted_count > 0) warningText = file_deleted_count + " files have been deleted.\n";
+				if (file_deleted_count == 0 && file_changed_count == 0) warningText = "Prism found no need to modify anything.\n";
+				warningText = warningText + "\nHighlighted runs are updated to the lastest version 1.2.02.\n"; 
+				warningText = warningText + "\nNote 1: input_05 is modified when Prism found a solution to update your run.\n"; 
+				warningText = warningText + "Note 2: input_05 is deleted when Prism could not find a solution to update your run.\n";
+				warningText = warningText + "Note 3: Update result might not be correct in several cases. You are recommended to review input_05 after updating.";
+				String ExitOption[] = { "OK"};
+				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warningText, "Runs update",
+						JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(32, 32, "icon_light_on_yellow.png"), ExitOption, ExitOption[0]);
 			}
-			
-			String warningText = "";
-			if (file_renamed_count > 0) warningText = file_renamed_count + " files have been renamed to the newest format\n";
-			warningText = warningText + "The highlighted runs are now ready to be edited & solve by Prism Alpha 1.1.08";
-			String ExitOption[] = { "OK"};
-			int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warningText, "Runs update",
-					JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(32, 32, "icon_light_on.png"), ExitOption, ExitOption[0]);
 		}
 	}
 	

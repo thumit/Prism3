@@ -948,4 +948,28 @@ All changes in this block are associated with PrismAlpha1.1.08.jar, Prism Formul
 	- no row --> not model EA_E and EA_R
 412. Extent choices limit to 0-14 for NG, PB, GS, MS, BS methods. Note: no row --> not model Non-EA methods
 All changes in this block are associated with PrismAlpha1.2.01.jar, Prism Formulation 07.docx, Prism Database 03.docx	
---------------------------------------------------------------------------	
+--------------------------------------------------------------------------
+	
+413. Update eclipse build-path to the newest java JDK10
+414. Set null border to all split_pane in all EDIT GUI components to make components better aligned (Note: could see the bad alignment when setting LAF to windows)
+415. All the numbers in Basic constraints, Flow constraints, and Fly constraints (output_05) are not allowed to be negative, but are allowed to be null (change directly or by quick edit). This guarantees users would not be able to make the mistake as described in Note 1 of issue #18 in BitBucket
+416. Fix the flow constraint logic bug when the same bc_id is added (multiple times/duplicated) into the same Sigma box.
+417. Add tooltips for all tables in output_07_flow_constraints. Also, rewrite the tooltips in multiple tables in EDIT window to avoid returning null case of the table-cell
+418. Rewrite dynamic identifiers to avoid blinking during calculation in output_05 NOSQL Mode (avoid making invisible all then visible the ones needed because this might be likely the cause of bliking. Instead each time reloading dynamic identifiers, we keep the old scrollpanes visible if they are still going to be reloaded)
+419. Ctrl+3 can be used to hide/show tooltips for the entire software
+420. Right click to save readme (Model Description) without deleting outputs. This feature is applied everywhere (inside/outside of EDIT window). Button "save" is removed to simplify UI.
+421. Facts & Hints maequee feature
+422. Rename SpectrumLibrary.csv --> yield_dictionary.csv and also move the file reading to FilesHandle class
+423. Disable then enable tool-tips when mouse exited for buttons in the Toolbar of Panel_Project to avoid tool-tips keep staying & become annoying
+424. All the Rotator class is rewritten in a new way using executor.scheduleAtFixedRate: simpler, faster, no lag, memory efficient.
+425. Spectrum light feature:
+	- ContentPane (background) is tranparent as default
+	- MenuBar, Menus, and MenuItems show dark UI when spectrum light is showing
+	- Left click to stop and start, right click to change speed
+426. Many refactors: class rename, class trim, etc.
+427. Key stroke on release only (previously it is repeated if holding shortcut key --> very bad)
+428. Change behavior os static identifiers, dynamic identifiers to select checkboxes when they are selected, visible, and enabled
+429. Static identifiers completed for non-stand-replacing disturbances.
+430. Disable the control of MS_E and BS_E in Non-EA Management.
+All changes in this block are associated with PrismAlpha1.2.02.jar, Prism Formulation 07.docx, Prism Database 03.docx	
+--------------------------------------------------------------------------

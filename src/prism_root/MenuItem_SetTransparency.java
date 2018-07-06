@@ -42,18 +42,17 @@ public class MenuItem_SetTransparency extends JMenuItem {
 		setText("Change Transparency");
 		setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_glassy.png"));
 
-		setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_3, InputEvent.CTRL_DOWN_MASK));
+		setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_4, InputEvent.CTRL_DOWN_MASK, true));
 		addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 
 				// Create a slider
 				int currentOpacity = (int) (main.getOpacity() * 100);
 				final JSlider slider = new JSlider(JSlider.HORIZONTAL, 0, 100, currentOpacity);
-				slider.setSize(400, 20);
-				slider.setMajorTickSpacing(20);
-				slider.setMinorTickSpacing(4);
+				slider.setSize(400, 15);
+				slider.setMajorTickSpacing(10);
+				slider.setMinorTickSpacing(1);
 				slider.setPaintTicks(true);
-
 				
 				// Create a scrollBar & add listeners
 				final JScrollBar scrollBar = new JScrollBar();
@@ -71,25 +70,20 @@ public class MenuItem_SetTransparency extends JMenuItem {
 						main.setOpacity((float) sliderValue);
 					}
 				});
-
 				
 				// Add slider to sliderPanel
 				JPanel sliderPanel = new JPanel(new BorderLayout());
-				sliderPanel.setPreferredSize(new Dimension(300, 50));
+				sliderPanel.setPreferredSize(new Dimension(400, 30));
 				sliderPanel.add(slider);
-
 				
 				// Add sliderPanel to a Popup Panel
 				String ExitOption[] = { "Ok" };
 				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), sliderPanel,
-						"Drag the slider to change transparency", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
+						"Transparency", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
 						IconHandle.get_scaledImageIcon(40, 40, "icon_glassy.png"), ExitOption, ExitOption[0]);
-
 				if (response == 0) {
 
 				}
-
-				
 			}
 		});
 	}

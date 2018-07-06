@@ -22,8 +22,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -145,8 +143,10 @@ public class Panel_QuickEdit_FlyConstraints extends JPanel {
 							if (column_to_change == 3 && data[0].length == 13) {
 								data[i][12] = null;  // reset the "fc_value"
 							}
+						} else {
+							data[i][column_to_change] = null;
 						}
-						table.addRowSelectionInterval(table.convertRowIndexToView(i), table.convertRowIndexToView(i));
+						table.addRowSelectionInterval(table.convertRowIndexToView(i), table.convertRowIndexToView(i));	// allow null to bet set
 					}
 				}
 			});	

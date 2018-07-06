@@ -415,7 +415,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			read.read_model_strata(input_02_file);
 			read.read_non_ea_management(input_03_file);
 			read.read_ea_management(input_04_file);
-			read.read_nonreplacing_disturbances(input_05_file);
+			read.read_non_sr_disturbaces(input_05_file);
 			read.read_replacing_disturbances(input_06_file);
 			read.read_management_cost(input_07_file);
 			read.read_basic_constraints(input_08_file);
@@ -453,8 +453,10 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			boolean is_ea_defined_with_some_rows = (input_04_file.exists()) ? true : false;
 			
 			// Get info: input_05_non_sr_disturbances
-			double[] msProportion = read.getMSFireProportion();
-			double[] bsProportion = read.getBSFireProportion();
+			read.populate_non_sr_lists(model_strata, model_strata_without_sizeclass, all_layers);
+			double[] percentage_MS_E = read.get_percentage_MS_E_for_strata();
+			double[] percentage_BS_E = read.get_percentage_BS_E_for_strata();
+			boolean is_nonsr_defined_with_some_rows = (input_05_file.exists()) ? true : false;
 			
 			// Get Info: input_06_sr_disturbances
 			List<String> disturbance_condition_list = read.get_disturbance_condition_list(); 
@@ -577,22 +579,8 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 					starting_age[id] = Integer.parseInt(Input2_value[id][read.get_MO_TotalColumns() - 2]);	// age_class
 				}		
 			}						
-			
-								
-			
-			// Get the non-replacing disturbances %		
-			double[][] msPercent = new double[layer5.size()][layer6.size()];
-			double[][] bsPercent = new double[layer5.size()][layer6.size()];
-			int element_Count = 0;
-			for (int s5 = 0; s5 < layer5.size(); s5++) {
-				for (int s6 = 0; s6 < layer6.size(); s6++) {
-					msPercent[s5][s6] = msProportion[element_Count];
-					bsPercent[s5][s6] = bsProportion[element_Count];
-					element_Count++;	
-				}
-			}
-			
 
+			
 			
 			
 			// CREATE OBJECTIVE FUNCTION-------------------------------------------------
@@ -668,8 +656,6 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			// Create decision variables x(s1,s2,s3,s4,s5,s6)(q)			
 			for (int strata_id = 0; strata_id < model_strata.size(); strata_id++) {
 				String strata = model_strata.get(strata_id);
-				int s5 = Collections.binarySearch(layer5, strata.substring(4, 5));
-				int s6 = Collections.binarySearch(layer6, strata.substring(5, 6));
 				
 				for (int q = 0; q < total_existing_methods; q++) {
 					String layers_merged_name = strata.substring(0, 1) + "," + strata.substring(1, 2) + "," + strata.substring(2, 3) + "," + strata.substring(3, 4) + "," + strata.substring(4, 5) + "," + strata.substring(5, 6);
@@ -678,13 +664,13 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 					
 					objlist.add((double) 0);
 					vnamelist.add(var_name);
-					if (q == 4 && msPercent[s5][s6] != -9999) {	// Mixed Fire 		// -9999 indicate the bounds should be turned off
-						vlblist.add((double) msPercent[s5][s6] / 100 * strata_area[strata_id]);
-						vublist.add((double) msPercent[s5][s6] / 100 * strata_area[strata_id]);
+					if (q == 4 && percentage_MS_E[strata_id] != -9999) {	// Mixed Fire 		// -9999 indicate the bounds should be turned off
+						vlblist.add((double) percentage_MS_E[strata_id] / 100 * strata_area[strata_id]);
+						vublist.add((double) percentage_MS_E[strata_id] / 100 * strata_area[strata_id]);
 					} 
-					else if (q == 5 && bsPercent[s5][s6] != -9999) {	// Bark Beetle		// -9999 indicate the bounds should be turned off
-						vlblist.add((double) bsPercent[s5][s6] / 100 * strata_area[strata_id]);
-						vublist.add((double) bsPercent[s5][s6] / 100 * strata_area[strata_id]);
+					else if (q == 5 && percentage_BS_E[strata_id] != -9999) {	// Bark Beetle		// -9999 indicate the bounds should be turned off
+						vlblist.add((double) percentage_BS_E[strata_id] / 100 * strata_area[strata_id]);
+						vublist.add((double) percentage_BS_E[strata_id] / 100 * strata_area[strata_id]);
 					}
 					else {
 						vlblist.add((double) 0);
@@ -866,38 +852,40 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			// Create decision variables xMS(s1,s2,s3,s4,s5,s6)(i,t)	
 			xMS = new int[model_strata.size()][][];
 			for (int strata_id = 0; strata_id < model_strata.size(); strata_id++) {
-				String strata = model_strata.get(strata_id);
-				
-				xMS[strata_id] = new int[total_MS_E_prescription_choices][];
-				for (int i = 0; i < total_MS_E_prescription_choices; i++) {
-					if (is_nonea_defined_with_some_rows && Collections.binarySearch(nonea_method_choice_for_strata.get(strata_id), "MS_E" + " " + i) >= 0) {	// Boost 1 (a.k.a. Silviculture Method)	
-						
-						xMS[strata_id][i] = new int[total_periods + 1];
-						for (int t = 1; t <= total_periods; t++) {
-							String layers_merged_name = strata.substring(0, 1) + "," + strata.substring(1, 2) + "," + strata.substring(2, 3) + "," + strata.substring(3, 4) + "," + strata.substring(4, 5) + "," + strata.substring(5, 6);
-							String var_name = "xMS_E_" + layers_merged_name + "," + i + "," + t;										
-							Get_Variable_Information var_info = new Get_Variable_Information(var_name, starting_age[strata_id], yield_tables_names_list);
+				if (is_nonsr_defined_with_some_rows && percentage_MS_E[strata_id] != 0) {	// only define MS_E if input is created and the percentage is not zero
+					String strata = model_strata.get(strata_id);
+					
+					xMS[strata_id] = new int[total_MS_E_prescription_choices][];
+					for (int i = 0; i < total_MS_E_prescription_choices; i++) {
+//						if (is_nonea_defined_with_some_rows && Collections.binarySearch(nonea_method_choice_for_strata.get(strata_id), "MS_E" + " " + i) >= 0) {	// Boost 1 (a.k.a. Silviculture Method)	
 							
-							if (!allow_Non_Existing_Prescription) {		// Boost 2
-								if (var_info.get_prescription_id_and_row_id()[0] != -9999) {
+							xMS[strata_id][i] = new int[total_periods + 1];
+							for (int t = 1; t <= total_periods; t++) {
+								String layers_merged_name = strata.substring(0, 1) + "," + strata.substring(1, 2) + "," + strata.substring(2, 3) + "," + strata.substring(3, 4) + "," + strata.substring(4, 5) + "," + strata.substring(5, 6);
+								String var_name = "xMS_E_" + layers_merged_name + "," + i + "," + t;										
+								Get_Variable_Information var_info = new Get_Variable_Information(var_name, starting_age[strata_id], yield_tables_names_list);
+								
+								if (!allow_Non_Existing_Prescription) {		// Boost 2
+									if (var_info.get_prescription_id_and_row_id()[0] != -9999) {
+										var_info_list.add(var_info);
+										objlist.add((double) 0);
+										vnamelist.add(var_name);
+										vlblist.add((double) 0);
+										vublist.add(Double.MAX_VALUE);
+										xMS[strata_id][i][t] = nvars;
+										nvars++;	
+									}
+								} else {
 									var_info_list.add(var_info);
 									objlist.add((double) 0);
 									vnamelist.add(var_name);
 									vlblist.add((double) 0);
 									vublist.add(Double.MAX_VALUE);
 									xMS[strata_id][i][t] = nvars;
-									nvars++;	
+									nvars++;
 								}
-							} else {
-								var_info_list.add(var_info);
-								objlist.add((double) 0);
-								vnamelist.add(var_name);
-								vlblist.add((double) 0);
-								vublist.add(Double.MAX_VALUE);
-								xMS[strata_id][i][t] = nvars;
-								nvars++;
 							}
-						}
+//						}
 					}
 				}
 			}														
@@ -905,38 +893,40 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			// Create decision variables xBS(s1,s2,s3,s4,s5,s6)(i,t)
 			xBS = new int[model_strata.size()][][];
 			for (int strata_id = 0; strata_id < model_strata.size(); strata_id++) {
-				String strata = model_strata.get(strata_id);
-				
-				xBS[strata_id] = new int[total_BS_E_prescription_choices][];
-				for (int i = 0; i < total_BS_E_prescription_choices; i++) {
-					if (is_nonea_defined_with_some_rows && Collections.binarySearch(nonea_method_choice_for_strata.get(strata_id), "BS_E" + " " + i) >= 0) {	// Boost 1 (a.k.a. Silviculture Method)	
-						
-						xBS[strata_id][i] = new int[total_periods + 1];
-						for (int t = 1; t <= total_periods; t++) {
-							String layers_merged_name = strata.substring(0, 1) + "," + strata.substring(1, 2) + "," + strata.substring(2, 3) + "," + strata.substring(3, 4) + "," + strata.substring(4, 5) + "," + strata.substring(5, 6);
-							String var_name = "xBS_E_" + layers_merged_name + "," + i + "," + t;										
-							Get_Variable_Information var_info = new Get_Variable_Information(var_name, starting_age[strata_id], yield_tables_names_list);
+				if (is_nonsr_defined_with_some_rows && percentage_BS_E[strata_id] != 0) {	// only define BS_E if input is created and the percentage is not zero
+					String strata = model_strata.get(strata_id);
+					
+					xBS[strata_id] = new int[total_BS_E_prescription_choices][];
+					for (int i = 0; i < total_BS_E_prescription_choices; i++) {
+//						if (is_nonea_defined_with_some_rows && Collections.binarySearch(nonea_method_choice_for_strata.get(strata_id), "BS_E" + " " + i) >= 0) {	// Boost 1 (a.k.a. Silviculture Method)	
 							
-							if (!allow_Non_Existing_Prescription) {		// Boost 2
-								if (var_info.get_prescription_id_and_row_id()[0] != -9999) {
+							xBS[strata_id][i] = new int[total_periods + 1];
+							for (int t = 1; t <= total_periods; t++) {
+								String layers_merged_name = strata.substring(0, 1) + "," + strata.substring(1, 2) + "," + strata.substring(2, 3) + "," + strata.substring(3, 4) + "," + strata.substring(4, 5) + "," + strata.substring(5, 6);
+								String var_name = "xBS_E_" + layers_merged_name + "," + i + "," + t;										
+								Get_Variable_Information var_info = new Get_Variable_Information(var_name, starting_age[strata_id], yield_tables_names_list);
+								
+								if (!allow_Non_Existing_Prescription) {		// Boost 2
+									if (var_info.get_prescription_id_and_row_id()[0] != -9999) {
+										var_info_list.add(var_info);
+										objlist.add((double) 0);
+										vnamelist.add(var_name);
+										vlblist.add((double) 0);
+										vublist.add(Double.MAX_VALUE);
+										xBS[strata_id][i][t] = nvars;
+										nvars++;	
+									}
+								} else {
 									var_info_list.add(var_info);
 									objlist.add((double) 0);
 									vnamelist.add(var_name);
 									vlblist.add((double) 0);
 									vublist.add(Double.MAX_VALUE);
 									xBS[strata_id][i][t] = nvars;
-									nvars++;	
-								}
-							} else {
-								var_info_list.add(var_info);
-								objlist.add((double) 0);
-								vnamelist.add(var_name);
-								vlblist.add((double) 0);
-								vublist.add(Double.MAX_VALUE);
-								xBS[strata_id][i][t] = nvars;
-								nvars++;
-							}									
-						}
+									nvars++;
+								}									
+							}
+//						}
 					}
 				}
 			}													
@@ -1837,76 +1827,80 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 					
 			// 10a
 			for (int strata_id = 0; strata_id < model_strata.size(); strata_id++) {
-				// Add constraint
-				c10_indexlist.add(new ArrayList<Integer>());
-				c10_valuelist.add(new ArrayList<Double>());
+				if (xMS[strata_id] != null) {
+					// Add constraint
+					c10_indexlist.add(new ArrayList<Integer>());
+					c10_valuelist.add(new ArrayList<Double>());
 
-				// Add x(s1,s2,s3,s4,s5,s6)(4)
-				c10_indexlist.get(c10_num).add(x[strata_id][4]);
-				c10_valuelist.get(c10_num).add((double) 1);
-				
-				// Add - sigma(i) xMS(s1,s2,s3,s4,s5,s6)[i][1]
-				for (int i = 0; i < total_MS_E_prescription_choices; i++) {
-					if (xMS[strata_id][i] != null 
-							&& xMS[strata_id][i][1] > 0) {		// if variable is defined, this value would be > 0 
-						c10_indexlist.get(c10_num).add(xMS[strata_id][i][1]);
-						c10_valuelist.get(c10_num).add((double) -1);
-					}
-				}
-
-				// Add bounds
-				c10_lblist.add((double) 0);
-				c10_ublist.add((double) 0);
-				c10_num++;
-				
-				// Remove this constraint if total number of variables added is 1 (only x[s1][s2][s3][s4][s5][s6][4] is added)
-				if (c10_indexlist.get(c10_num - 1).size() == 1) {
-					c10_indexlist.remove(c10_num - 1);
-					c10_valuelist.remove(c10_num - 1);
-					c10_lblist.remove(c10_num - 1);
-					c10_ublist.remove(c10_num - 1);
-					c10_num--;
+					// Add x(s1,s2,s3,s4,s5,s6)(4)
+					c10_indexlist.get(c10_num).add(x[strata_id][4]);
+					c10_valuelist.get(c10_num).add((double) 1);
 					
-					// Set x[s1][s2][s3][s4][s5][s6][4] to be zero if boost 2 is implemented but associated prescriptions does not exist
-					vlb[x[strata_id][4]] = 0;
-					vub[x[strata_id][4]] = 0;
-				}					
+					// Add - sigma(i) xMS(s1,s2,s3,s4,s5,s6)[i][1]
+					for (int i = 0; i < total_MS_E_prescription_choices; i++) {
+						if (xMS[strata_id][i] != null 
+								&& xMS[strata_id][i][1] > 0) {		// if variable is defined, this value would be > 0 
+							c10_indexlist.get(c10_num).add(xMS[strata_id][i][1]);
+							c10_valuelist.get(c10_num).add((double) -1);
+						}
+					}
+
+					// Add bounds
+					c10_lblist.add((double) 0);
+					c10_ublist.add((double) 0);
+					c10_num++;
+					
+					// Remove this constraint if total number of variables added is 1 (only x[s1][s2][s3][s4][s5][s6][4] is added)
+					if (c10_indexlist.get(c10_num - 1).size() == 1) {
+						c10_indexlist.remove(c10_num - 1);
+						c10_valuelist.remove(c10_num - 1);
+						c10_lblist.remove(c10_num - 1);
+						c10_ublist.remove(c10_num - 1);
+						c10_num--;
+						
+						// Set x[s1][s2][s3][s4][s5][s6][4] to be zero if boost 2 is implemented but associated prescriptions does not exist
+						vlb[x[strata_id][4]] = 0;
+						vub[x[strata_id][4]] = 0;
+					}			
+				}
 			}	
 			
 			// 10b
 			for (int strata_id = 0; strata_id < model_strata.size(); strata_id++) {
-				int s5 = Collections.binarySearch(layer5, model_strata.get(strata_id).substring(4, 5));
+				if (xMS[strata_id] != null) {
+					int s5 = Collections.binarySearch(layer5, model_strata.get(strata_id).substring(4, 5));
 
-				for (int i = 0; i < total_MS_E_prescription_choices; i++) {
-					for (int t = 1; t <= total_periods - 1; t++) {
-						if (xMS[strata_id][i] != null
-								&& xMS[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 
-							// Add constraint
-							c10_indexlist.add(new ArrayList<Integer>());
-							c10_valuelist.add(new ArrayList<Double>());
-							
-							// Add xMS(s1,s2,s3,s4,s5,s6)[i][t]
-							int var_index = xMS[strata_id][i][t] ;
-							double[][][] rd_percentage = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]) : rd_percentage_zeroes;
-							double total_percentage = 0;
-							for (int k = 0; k < total_replacing_disturbances; k++) {
-								for (int rd_s5R = 0; rd_s5R < layer5.size(); rd_s5R++) {
-									total_percentage = total_percentage + rd_percentage[k][s5][rd_s5R];
+					for (int i = 0; i < total_MS_E_prescription_choices; i++) {
+						for (int t = 1; t <= total_periods - 1; t++) {
+							if (xMS[strata_id][i] != null
+									&& xMS[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 
+								// Add constraint
+								c10_indexlist.add(new ArrayList<Integer>());
+								c10_valuelist.add(new ArrayList<Double>());
+								
+								// Add xMS(s1,s2,s3,s4,s5,s6)[i][t]
+								int var_index = xMS[strata_id][i][t] ;
+								double[][][] rd_percentage = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]) : rd_percentage_zeroes;
+								double total_percentage = 0;
+								for (int k = 0; k < total_replacing_disturbances; k++) {
+									for (int rd_s5R = 0; rd_s5R < layer5.size(); rd_s5R++) {
+										total_percentage = total_percentage + rd_percentage[k][s5][rd_s5R];
+									}
 								}
+								if (total_percentage != 100) {	// only add if parameter is non zero
+									c10_indexlist.get(c10_num).add(xMS[strata_id][i][t]);
+									c10_valuelist.get(c10_num).add((double) 1 - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
+								}
+								
+								// Add -xMS(s1,s2,s3,s4,s5,s6)[i][t+1]
+								c10_indexlist.get(c10_num).add(xMS[strata_id][i][t + 1]);
+								c10_valuelist.get(c10_num).add((double) -1);
+								
+								// Add bounds
+								c10_lblist.add((double) 0);
+								c10_ublist.add((double) 0);
+								c10_num++;
 							}
-							if (total_percentage != 100) {	// only add if parameter is non zero
-								c10_indexlist.get(c10_num).add(xMS[strata_id][i][t]);
-								c10_valuelist.get(c10_num).add((double) 1 - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
-							}
-							
-							// Add -xMS(s1,s2,s3,s4,s5,s6)[i][t+1]
-							c10_indexlist.get(c10_num).add(xMS[strata_id][i][t + 1]);
-							c10_valuelist.get(c10_num).add((double) -1);
-							
-							// Add bounds
-							c10_lblist.add((double) 0);
-							c10_ublist.add((double) 0);
-							c10_num++;
 						}
 					}
 				}
@@ -1945,79 +1939,83 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 					
 			// 11a
 			for (int strata_id = 0; strata_id < model_strata.size(); strata_id++) {
-				// Add constraint
-				c11_indexlist.add(new ArrayList<Integer>());
-				c11_valuelist.add(new ArrayList<Double>());
+				if (xBS[strata_id] != null) {
+					// Add constraint
+					c11_indexlist.add(new ArrayList<Integer>());
+					c11_valuelist.add(new ArrayList<Double>());
 
-				// Add x(s1,s2,s3,s4,s5,s6)(5)
-				c11_indexlist.get(c11_num).add(x[strata_id][5]);
-				c11_valuelist.get(c11_num).add((double) 1);
-				
-				// Add - sigma(i) xBS(s1,s2,s3,s4,s5,s6)[i][1]
-				for (int i = 0; i < total_BS_E_prescription_choices; i++) {
-					if (xBS[strata_id][i] != null 
-							&& xBS[strata_id][i][1] > 0) {		// if variable is defined, this value would be > 0 
-						c11_indexlist.get(c11_num).add(xBS[strata_id][i][1]);
-						c11_valuelist.get(c11_num).add((double) -1);
-					}
-				}
-
-				// Add bounds
-				c11_lblist.add((double) 0);
-				c11_ublist.add((double) 0);
-				c11_num++;
-				
-				// Remove this constraint if total number of variables added is 1 (only x[s1][s2][s3][s4][s5][s6][5] is added)
-				if (c11_indexlist.get(c11_num - 1).size() == 1) {
-					c11_indexlist.remove(c11_num - 1);
-					c11_valuelist.remove(c11_num - 1);
-					c11_lblist.remove(c11_num - 1);
-					c11_ublist.remove(c11_num - 1);
-					c11_num--;
+					// Add x(s1,s2,s3,s4,s5,s6)(5)
+					c11_indexlist.get(c11_num).add(x[strata_id][5]);
+					c11_valuelist.get(c11_num).add((double) 1);
 					
-					// Set x[s1][s2][s3][s4][s5][s6][5] to be zero if boost 2 is implemented but associated prescriptions does not exist
-					vlb[x[strata_id][5]] = 0;
-					vub[x[strata_id][5]] = 0;
+					// Add - sigma(i) xBS(s1,s2,s3,s4,s5,s6)[i][1]
+					for (int i = 0; i < total_BS_E_prescription_choices; i++) {
+						if (xBS[strata_id][i] != null 
+								&& xBS[strata_id][i][1] > 0) {		// if variable is defined, this value would be > 0 
+							c11_indexlist.get(c11_num).add(xBS[strata_id][i][1]);
+							c11_valuelist.get(c11_num).add((double) -1);
+						}
+					}
+
+					// Add bounds
+					c11_lblist.add((double) 0);
+					c11_ublist.add((double) 0);
+					c11_num++;
+					
+					// Remove this constraint if total number of variables added is 1 (only x[s1][s2][s3][s4][s5][s6][5] is added)
+					if (c11_indexlist.get(c11_num - 1).size() == 1) {
+						c11_indexlist.remove(c11_num - 1);
+						c11_valuelist.remove(c11_num - 1);
+						c11_lblist.remove(c11_num - 1);
+						c11_ublist.remove(c11_num - 1);
+						c11_num--;
+						
+						// Set x[s1][s2][s3][s4][s5][s6][5] to be zero if boost 2 is implemented but associated prescriptions does not exist
+						vlb[x[strata_id][5]] = 0;
+						vub[x[strata_id][5]] = 0;
+					}
 				}
 			}		
 			
 			// 11b
 			for (int strata_id = 0; strata_id < model_strata.size(); strata_id++) {
-				int s5 = Collections.binarySearch(layer5, model_strata.get(strata_id).substring(4, 5));
+				if (xBS[strata_id] != null) {
+					int s5 = Collections.binarySearch(layer5, model_strata.get(strata_id).substring(4, 5));
 
-				for (int i = 0; i < total_BS_E_prescription_choices; i++) {
-					for (int t = 1; t <= total_periods - 1; t++) {
-						if (xBS[strata_id][i] != null
-								&& xBS[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 
-							// Add constraint
-							c11_indexlist.add(new ArrayList<Integer>());
-							c11_valuelist.add(new ArrayList<Double>());
-							
-							//Add xBS(s1,s2,s3,s4,s5,s6)[i][t]	
-							int var_index = xBS[strata_id][i][t] ;
-							double[][][] rd_percentage = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]) : rd_percentage_zeroes;
-							double total_percentage = 0;
-							for (int k = 0; k < total_replacing_disturbances; k++) {
-								for (int rd_s5R = 0; rd_s5R < layer5.size(); rd_s5R++) {
-									total_percentage = total_percentage + rd_percentage[k][s5][rd_s5R];
+					for (int i = 0; i < total_BS_E_prescription_choices; i++) {
+						for (int t = 1; t <= total_periods - 1; t++) {
+							if (xBS[strata_id][i] != null
+									&& xBS[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 
+								// Add constraint
+								c11_indexlist.add(new ArrayList<Integer>());
+								c11_valuelist.add(new ArrayList<Double>());
+								
+								//Add xBS(s1,s2,s3,s4,s5,s6)[i][t]	
+								int var_index = xBS[strata_id][i][t] ;
+								double[][][] rd_percentage = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]) : rd_percentage_zeroes;
+								double total_percentage = 0;
+								for (int k = 0; k < total_replacing_disturbances; k++) {
+									for (int rd_s5R = 0; rd_s5R < layer5.size(); rd_s5R++) {
+										total_percentage = total_percentage + rd_percentage[k][s5][rd_s5R];
+									}
 								}
+								if (total_percentage != 100) {	// only add if parameter is non zero
+									c11_indexlist.get(c11_num).add(xBS[strata_id][i][t]);
+									c11_valuelist.get(c11_num).add((double) 1 - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
+								}
+								
+								//Add -xBS(s1,s2,s3,s4,s5,s6)[i][t+1]
+								c11_indexlist.get(c11_num).add(xBS[strata_id][i][t + 1]);
+								c11_valuelist.get(c11_num).add((double) -1);
+								
+								//add bounds
+								c11_lblist.add((double) 0);
+								c11_ublist.add((double) 0);
+								c11_num++;
 							}
-							if (total_percentage != 100) {	// only add if parameter is non zero
-								c11_indexlist.get(c11_num).add(xBS[strata_id][i][t]);
-								c11_valuelist.get(c11_num).add((double) 1 - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
-							}
-							
-							//Add -xBS(s1,s2,s3,s4,s5,s6)[i][t+1]
-							c11_indexlist.get(c11_num).add(xBS[strata_id][i][t + 1]);
-							c11_valuelist.get(c11_num).add((double) -1);
-							
-							//add bounds
-							c11_lblist.add((double) 0);
-							c11_ublist.add((double) 0);
-							c11_num++;
 						}
-					}
-				}	
+					}	
+				}
 			}		
 			
 			
@@ -2155,36 +2153,40 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 								}
 								
 								// Add - sigma(s6)(i)	xMSe[s1][s2][s3][s4][s5][s6][i][t]
-								for (int i = 0; i < total_MS_E_prescription_choices; i++) {
-									if (xMS[strata_id][i] != null) {
-										int var_index = xMS[strata_id][i][t];
-										if(var_index > 0 && var_rd_condition_id[var_index] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
-											double total_percentage = 0;
-											double[][][] rd_percentage = disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]);
-											for (int k = 0; k < total_replacing_disturbances; k++) {
-												total_percentage = total_percentage + rd_percentage[k][s5][s5R];
-											}
-											if (total_percentage != 0) {	// only add if parameter is non zero
-												c12_indexlist.get(c12_num).add(var_index);
-												c12_valuelist.get(c12_num).add((double) - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
+								if (xMS[strata_id] != null) {
+									for (int i = 0; i < total_MS_E_prescription_choices; i++) {
+										if (xMS[strata_id][i] != null) {
+											int var_index = xMS[strata_id][i][t];
+											if(var_index > 0 && var_rd_condition_id[var_index] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
+												double total_percentage = 0;
+												double[][][] rd_percentage = disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]);
+												for (int k = 0; k < total_replacing_disturbances; k++) {
+													total_percentage = total_percentage + rd_percentage[k][s5][s5R];
+												}
+												if (total_percentage != 0) {	// only add if parameter is non zero
+													c12_indexlist.get(c12_num).add(var_index);
+													c12_valuelist.get(c12_num).add((double) - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
+												}
 											}
 										}
 									}
 								}
 								
 								// Add - sigma(s6)(i)	xBSe[s1][s2][s3][s4][s5][s6][i][t]
-								for (int i = 0; i < total_BS_E_prescription_choices; i++) {
-									if (xBS[strata_id][i] != null) {
-										int var_index = xBS[strata_id][i][t];
-										if(var_index > 0 && var_rd_condition_id[var_index] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
-											double total_percentage = 0;
-											double[][][] rd_percentage = disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]);
-											for (int k = 0; k < total_replacing_disturbances; k++) {
-												total_percentage = total_percentage + rd_percentage[k][s5][s5R];
-											}
-											if (total_percentage != 0) {	// only add if parameter is non zero
-												c12_indexlist.get(c12_num).add(var_index);
-												c12_valuelist.get(c12_num).add((double) - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
+								if (xBS[strata_id] != null) {
+									for (int i = 0; i < total_BS_E_prescription_choices; i++) {
+										if (xBS[strata_id][i] != null) {
+											int var_index = xBS[strata_id][i][t];
+											if(var_index > 0 && var_rd_condition_id[var_index] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
+												double total_percentage = 0;
+												double[][][] rd_percentage = disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]);
+												for (int k = 0; k < total_replacing_disturbances; k++) {
+													total_percentage = total_percentage + rd_percentage[k][s5][s5R];
+												}
+												if (total_percentage != 0) {	// only add if parameter is non zero
+													c12_indexlist.get(c12_num).add(var_index);
+													c12_valuelist.get(c12_num).add((double) - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
+												}
 											}
 										}
 									}
@@ -3129,7 +3131,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			}			
 			c15_indexlist = null;	// Clear lists to save memory
 			c15_valuelist = null;	// Clear lists to save memory						
-			System.out.println("Total constraints as in PRISM model formulation eq. (15):   " + c15_num + "             " + dateFormat.format(new Date()) + "\n");
+			System.out.println("Total constraints as in PRISM model formulation eq. (15):   " + c15_num + "             " + dateFormat.format(new Date()));
 			
 			
 			
@@ -3172,66 +3174,132 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 								
 				
 				// Add constraints for each flow set
+				/*	Example:
+				  Sigma 1 contains bc_id = [1], [1], [2]				// Left Sigma 		 Left term
+				  Sigma 2 contains bc_id = [1], [2], [3], [4]			// Right Sigma 		 Right term
+				  
+				  Assume Flow LB = 30%
+				  Assume Flow UB = 60%
+				  
+				  Then we would need to build 2 constraints to capture the flow between Sigma 1 and Sigma 2
+				  [1] + [2] + [3] + [4] - 30% * ([1] + [1] + [2]) >= 0			// if LB = null <--> LB = 0% --> no need to add this constraint
+				  [1] + [2] + [3] + [4] - 60% * ([1] + [1] + [2]) <= 0			// if UB = null <--> UB = +infinity --> no need to add this constraint
+				  
+				  Those above need to be modified into the following before enter the matrix
+				  40% * [1] + 70% * [2] + [3] + [4] >= 0
+				  -20% *[1] + 40% * [2] + [3] + [4] <= 0
+				  
+				  The below codes are used to create the above 2 modified constraints
+				*/
+				
 				for (int i = 0; i < flow_set_list.size(); i++) {		// loop each flow set (or each row of the flow_constraints_table)
 					if (flow_type_list.get(i).equals("HARD")) {		// ONly add constraint if flow type is HARD
 						int this_set_total_constraints = flow_set_list.get(i).size() - 1;
-						for (int j = 0; j < this_set_total_constraints; j++) {
+						for (int j = 0; j < this_set_total_constraints; j++) {	// j is the SigmaBox (j=0 --> Sigma1     j=1 --> Sigma2     etc)
+							// process each pair of 2 SigmaBoxes
+							// Left Sigma associated with j 
+							List<Integer> first_sigma_id_list = new ArrayList<Integer>();
+							List<Integer> first_sigma_parameter_list = new ArrayList<Integer>();
+							for (int ID : flow_set_list.get(i).get(j)) {
+								int gui_table_bc_id = bookkeeping_ID_list.indexOf(ID);	
+								if (!first_sigma_id_list.contains(gui_table_bc_id)) {	// if gui_table_bc_id is not in the list --> add and count the duplicated 
+									first_sigma_id_list.add(gui_table_bc_id);
+									first_sigma_parameter_list.add(Collections.frequency(flow_set_list.get(i).get(j), ID));		// count the duplicated and add to final parameter for this gui_table_bc_id
+								}
+							}
 							
+							
+							// Right Sigma associated with j + 1
+							List<Integer> second_sigma_id_list = new ArrayList<Integer>();
+							List<Integer> second_sigma_parameter_list = new ArrayList<Integer>();
+							for (int ID : flow_set_list.get(i).get(j + 1)) {
+								int gui_table_bc_id = bookkeeping_ID_list.indexOf(ID);	
+								if (!second_sigma_id_list.contains(gui_table_bc_id)) {	// if gui_table_bc_id is not in the list --> add and count the duplicated 
+									second_sigma_id_list.add(gui_table_bc_id);
+									second_sigma_parameter_list.add(Collections.frequency(flow_set_list.get(i).get(j + 1), ID));		// count the duplicated and add to final parameter for this gui_table_bc_id
+								}
+							}
+							
+							
+							// Each pair of Sigmas need 2 constraints: 
+							// Constraint 1: Final term = Right term - lowerbound % * Left term >= 0 
+							// Constraint 2: Final term = Right term - upperbound % * Left term <= 0
+							// Note: We also need to merge the duplicated
+							
+							// Define Final term
+							List<Integer> final_sigma_id_list = new ArrayList<Integer>();
+							List<Double> final_sigma_LB_parameter_list = new ArrayList<Double>();
+							List<Double> final_sigma_UB_parameter_list = new ArrayList<Double>();
+							// Add all Right term
+							for (int item2 = 0; item2 < second_sigma_id_list.size(); item2++) {	
+								final_sigma_id_list.add(second_sigma_id_list.get(item2));
+								final_sigma_LB_parameter_list.add((double) second_sigma_parameter_list.get(item2));
+								final_sigma_UB_parameter_list.add((double) second_sigma_parameter_list.get(item2));
+							}
+							// Merge parameter if found duplication in the Left term
+							for (int gui_table_bc_id : first_sigma_id_list) {
+								int item = first_sigma_id_list.indexOf(gui_table_bc_id);
+								
+								if (final_sigma_id_list.contains(gui_table_bc_id)) {	// duplicated gui_table_bc_id found
+									int item2 = final_sigma_id_list.indexOf(gui_table_bc_id) ;
+									
+									double flow_LB = (flow_lowerbound_percentage_list.get(i) == null) ? 0 : flow_lowerbound_percentage_list.get(i) / 100;
+									double flow_UB = (flow_upperbound_percentage_list.get(i) == null) ? Double.MAX_VALUE : flow_upperbound_percentage_list.get(i) / 100;
+										
+									double final_LB_parameter = final_sigma_LB_parameter_list.get(item2) - first_sigma_parameter_list.get(item) * flow_LB;		// - left term parameter * lowerbound_percentage here
+									double final_UB_parameter = final_sigma_LB_parameter_list.get(item2) - first_sigma_parameter_list.get(item) * flow_UB;		// - left term parameter * upperbound_percentage here
+									final_sigma_LB_parameter_list.set(item2, final_LB_parameter);
+									final_sigma_UB_parameter_list.set(item2, final_UB_parameter);
+								}
+							}
+							// Add parameter if found non-duplication in the Left term
+							for (int gui_table_bc_id : first_sigma_id_list) {
+								int item = first_sigma_id_list.indexOf(gui_table_bc_id);
+								
+								if (!final_sigma_id_list.contains(gui_table_bc_id)) {	// non-duplicated gui_table_bc_id
+									double flow_LB = (flow_lowerbound_percentage_list.get(i) == null) ? 0 : flow_lowerbound_percentage_list.get(i) / 100;
+									double flow_UB = (flow_upperbound_percentage_list.get(i) == null) ? Double.MAX_VALUE : flow_upperbound_percentage_list.get(i) / 100;
+									
+									final_sigma_id_list.add(first_sigma_id_list.get(item));
+									final_sigma_LB_parameter_list.add((double) - first_sigma_parameter_list.get(item) * flow_LB);		// - left term parameter * lowerbound_percentage here
+									final_sigma_UB_parameter_list.add((double) - first_sigma_parameter_list.get(item) * flow_UB);		// - left term parameter * upperbound_percentage here
+								}
+							}
+								
+							// Now build the 2 constraints using the Final term	
 							if (flow_lowerbound_percentage_list.get(i) != null) {	// add when lowerbound_percentage is not null
-								// Add constraint				Right term - lowerbound % * Left term >= 0
+								// Add constraint				Final term = Right term - LB% * Left term >= 0
 								c16_indexlist.add(new ArrayList<Integer>());
 								c16_valuelist.add(new ArrayList<Double>());
 								
-								// Add Right term including all IDs in the (j+1) term
-								for (int ID : flow_set_list.get(i).get(j + 1)) {
-									if (bookkeeping_ID_list.contains(ID)) {		// Add book keeping variable
-										int gui_table_id = bookkeeping_ID_list.indexOf(ID);		
-										int var_id = bookkeeping_Var_list.get(gui_table_id);
-										c16_indexlist.get(c16_num).add(var_id);
-										c16_valuelist.get(c16_num).add((double) 1);
-									}
-								}
-								
-								// Add - % * Left term including all IDs in the (j) term
-								for (int ID : flow_set_list.get(i).get(j)) {
-									if (bookkeeping_ID_list.contains(ID)) {		// Add book keeping variable
-										int gui_table_id = bookkeeping_ID_list.indexOf(ID);		
-										int var_id = bookkeeping_Var_list.get(gui_table_id);
-										c16_indexlist.get(c16_num).add(var_id);
-										c16_valuelist.get(c16_num).add((double) -flow_lowerbound_percentage_list.get(i) / 100);		// -1 * lowerbound_percentage here
-									}
+								// Add Final term
+								for (int item = 0; item < final_sigma_id_list.size(); item++) {
+									int gui_table_bc_id = final_sigma_id_list.get(item);
+									int var_id = bookkeeping_Var_list.get(gui_table_bc_id);
+									double var_value = final_sigma_LB_parameter_list.get(item);
+									c16_indexlist.get(c16_num).add(var_id);
+									c16_valuelist.get(c16_num).add((double) var_value);
 								}
 								
 								// Add bounds
 								c16_lblist.add((double) 0);			// Lower bound set to 0	
-								c16_ublist.add(Double.MAX_VALUE);		// Upper bound set to max
+								c16_ublist.add(Double.MAX_VALUE);	// Upper bound set to max
 								c16_num++;
 							}
 							
 							
 							if (flow_upperbound_percentage_list.get(i) != null) {	// add when upperbound_percentage is not null
-								// Add constraint				Right term - upperbound % * Left term <= 0
+								// Add constraint				Final term = Right term - UB% * Left term <= 0
 								c16_indexlist.add(new ArrayList<Integer>());
 								c16_valuelist.add(new ArrayList<Double>());
 								
-								// Add Right term including all IDs in the (j+1) term
-								for (int ID : flow_set_list.get(i).get(j + 1)) {
-									if (bookkeeping_ID_list.contains(ID)) {		// Add book keeping variable
-										int gui_table_id = bookkeeping_ID_list.indexOf(ID);		
-										int var_id = bookkeeping_Var_list.get(gui_table_id);
-										c16_indexlist.get(c16_num).add(var_id);
-										c16_valuelist.get(c16_num).add((double) 1);
-									}
-								}
-								
-								// Add - % * Left term including all IDs in the (j) term
-								for (int ID : flow_set_list.get(i).get(j)) {
-									if (bookkeeping_ID_list.contains(ID)) {		// Add book keeping variable
-										int gui_table_id = bookkeeping_ID_list.indexOf(ID);		
-										int var_id = bookkeeping_Var_list.get(gui_table_id);
-										c16_indexlist.get(c16_num).add(var_id);
-										c16_valuelist.get(c16_num).add((double) -flow_upperbound_percentage_list.get(i) / 100);		// -1 * upperbound_percentage here
-									}
+								// Add Final term
+								for (int item = 0; item < final_sigma_id_list.size(); item++) {
+									int gui_table_bc_id = final_sigma_id_list.get(item);
+									int var_id = bookkeeping_Var_list.get(gui_table_bc_id);
+									double var_value = final_sigma_UB_parameter_list.get(item);
+									c16_indexlist.get(c16_num).add(var_id);
+									c16_valuelist.get(c16_num).add((double) var_value);
 								}
 								
 								// Add bounds
@@ -3264,7 +3332,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			c16_valuelist = null;
 			c16_lblist = null;	
 			c16_ublist = null;
-			System.out.println("Total constraints as in PRISM model formulation eq. (16):   " + c16_num + "             " + dateFormat.format(new Date()));
+			System.out.println("Total constraints as in PRISM model formulation eq. (16):   " + c16_num + "             " + dateFormat.format(new Date()) + "\n");
 			
 			
 			

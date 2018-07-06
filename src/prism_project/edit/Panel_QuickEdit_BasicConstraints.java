@@ -336,6 +336,8 @@ public class Panel_QuickEdit_BasicConstraints extends JPanel {
 					for (int i : selectedRow) {
 						if (!formatedTextField.getText().isEmpty() && !formatedTextField.getText().equals(".")) {	// Only apply the changes to selected rows when the text is not empty
 							data[i][column_to_change] = Double.valueOf(formatedTextField.getText());
+						} else {
+							data[i][column_to_change] = null;	// allow null to bet set
 						}
 						table.addRowSelectionInterval(table.convertRowIndexToView(i), table.convertRowIndexToView(i));
 					}

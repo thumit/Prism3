@@ -22,10 +22,21 @@ import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Paint;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import javax.swing.ImageIcon;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.UIManager;
+import javax.swing.SwingUtilities;
 import javax.swing.text.DefaultCaret;
 
 public class PrismTextAreaReadMe extends JTextArea {
@@ -76,5 +87,39 @@ public class PrismTextAreaReadMe extends JTextArea {
 		// Paint the component content, i.e. the text
 		getUI().paint(g2d, this);
 		g2d.dispose();
+	}
+	
+	public void activate_clicktosave_feature(File readme_file) {
+		// Listener to save the text area
+		addMouseListener(new MouseAdapter() { // Add listener to projectTree
+			public void mousePressed(MouseEvent e) {
+				if (SwingUtilities.isRightMouseButton(e) && e.getClickCount() == 1) {
+					// A popup that holds all JmenuItems
+					JPopupMenu popup = new JPopupMenu();
+
+					// All nodes can be refreshed ------------------------------------------------------------
+					final JMenuItem refreshMenuItem = new JMenuItem("Save model description without deleting outputs");
+					refreshMenuItem.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_save.png"));
+					refreshMenuItem.setMnemonic(KeyEvent.VK_S);
+					refreshMenuItem.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent actionEvent) {
+							readme_file.delete();		// Delete the old file before writing new contents
+							FileWriter pw;
+							try {
+								pw = new FileWriter(readme_file.getAbsolutePath());
+								write(pw);
+								pw.close();
+							} catch (IOException e1) {
+								System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+							}	
+						}
+					});
+					popup.add(refreshMenuItem);	
+					int scrollpane_y = ((JScrollPane) getParent().getParent()).getVerticalScrollBar().getValue();	// Note: 		getParent() = ViewPort			getParent().getParent() = JScrollPane
+					popup.show(getParent(), e.getX(), e.getY() - scrollpane_y);
+				}
+			}
+		});
 	}
 }

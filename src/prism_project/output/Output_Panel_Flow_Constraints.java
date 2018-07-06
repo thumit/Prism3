@@ -24,8 +24,6 @@ import java.awt.GradientPaint;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.RadialGradientPaint;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
@@ -33,6 +31,9 @@ import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JComboBox;
@@ -47,7 +48,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
-import javax.swing.Timer;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -486,9 +486,7 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 			int count = -1;
 			for (int i = 0; i < flow_arrangement_info.length; i++) {
 				String[] flow_item = flow_arrangement_info[i].split(" ");
-				for (String bc_index: flow_item) {			
-					count++;
-				}
+				count = count + flow_item.length;
 				data[count][2] = formatter.format((Double) FV.get(i));
 				data[count][3] = (LB.size() == FV.size() && LB.get(i) != null) ? formatter.format((Double) LB.get(i)) : null;
 				data[count][4] = (UB.size() == FV.size() && UB.get(i) != null) ? formatter.format((Double) UB.get(i)) : null;
@@ -496,7 +494,16 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 			
 			// Create a table
 			PrismTableModel model = new PrismTableModel(rowCount, colCount, data, columnNames);
-	        legend_table = new JTable(model);
+	        legend_table = new JTable(model)  {
+				@Override	// Implement table cell tool tips           
+				public String getToolTipText(MouseEvent e) {
+					java.awt.Point p = e.getPoint();
+					int row = rowAtPoint(p);
+					int col = columnAtPoint(p);
+					String tip = (legend_table.getColumnName(col).equals("bc_description") && row >= 0 && getValueAt(row, col) != null) ? getValueAt(row, col).toString() : null;
+					return tip;
+				}	
+			};
 	        legend_table.setFillsViewportHeight(true);
 	        legend_table.getColumnModel().getColumn(0).setPreferredWidth(60);	// Set width of 1st Column smaller
 	        legend_table.getColumnModel().getColumn(1).setPreferredWidth(300);	// Set width of 2nd Column bigger
@@ -766,9 +773,7 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 			int count = -1;
 			for (int i = 0; i < flow_arrangement_info.length; i++) {
 				String[] flow_item = flow_arrangement_info[i].split(" ");
-				for (String bc_index: flow_item) {			
-					count++;
-				}
+				count = count + flow_item.length;
 				data[count][2] = formatter.format((Double) FV.get(i));
 				data[count][3] = (LB.size() == FV.size() && LB.get(i) != null) ? formatter.format((Double) LB.get(i)) : null;
 				data[count][4] = (UB.size() == FV.size() && UB.get(i) != null) ? formatter.format((Double) UB.get(i)) : null;
@@ -869,50 +874,85 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 		// ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		return chart;
 	}	
-	// ****************************************************************************
-	// * JFREECHART DEVELOPER GUIDE                                               *
-	// * The JFreeChart Developer Guide, written by David Gilbert, is available   *
-	// * to purchase from Object Refinery Limited:                                *
-	// *                                                                          *
-	// * http://www.object-refinery.com/jfreechart/guide.html                     *
-	// *                                                                          *
-	// * Sales are used to provide funding for the JFreeChart project - please    * 
-	// * support us so that we can continue developing free software.             *
-	// ****************************************************************************
-	// The rotator.
-	private class Rotator extends Timer implements ActionListener {
+	
+	// I am so smart to not use timer
+	private class Rotator {
+		private ScheduledExecutorService executor;
+		private Runnable task;
+		private double angle = 135;
 
-	    /** The plot. */
-	    private PiePlot3D plot;
+		Rotator(final PiePlot3D plot) {
+			task = new Runnable() {
+				public void run() {
+					plot.setStartAngle(angle);
+					angle = angle + (double) 0.05;
+					if (angle == 360) {
+						angle = 0;
+					}
 
-	    /** The angle. */
-	    private double angle = 135;
-
-	    /**
-	     * Constructor.
-	     *
-	     * @param plot  the plot.
-	     */
-	    Rotator(final PiePlot3D plot) {
-	        super(15, null);
-	        this.plot = plot;
-	        addActionListener(this);
+				}
+			};
 	    }
 
-	    /**
-	     * Modifies the starting angle.
-	     *
-	     * @param event  the action event.
-	     */
-	    public void actionPerformed(final ActionEvent event) {
-	        this.plot.setStartAngle(this.angle);
-	        this.angle = this.angle + (double) 0.1;
-	        if (this.angle == 360) {
-	            this.angle = 0;
-	        }
+	    public void stop() {
+	    	 executor.shutdown(); // shutdown will allow the final iteration to finish executing where shutdownNow() will kill it immediately
 	    }
-
-	}	
+	    
+	    public void start() {
+	    	int initialDelay = 0;
+		    int period = 5;	// change this number would make the text run slower or faster
+		    executor = Executors.newScheduledThreadPool(1);
+		    executor.scheduleAtFixedRate(task, initialDelay, period, TimeUnit.MILLISECONDS);
+	    }
+	}
+	
+	
+	
+	
+//	// ****************************************************************************
+//	// * JFREECHART DEVELOPER GUIDE                                               *
+//	// * The JFreeChart Developer Guide, written by David Gilbert, is available   *
+//	// * to purchase from Object Refinery Limited:                                *
+//	// *                                                                          *
+//	// * http://www.object-refinery.com/jfreechart/guide.html                     *
+//	// *                                                                          *
+//	// * Sales are used to provide funding for the JFreeChart project - please    * 
+//	// * support us so that we can continue developing free software.             *
+//	// ****************************************************************************
+//	// The rotator.
+//	private class Rotator extends Timer implements ActionListener {
+//
+//	    /** The plot. */
+//	    private PiePlot3D plot;
+//
+//	    /** The angle. */
+//	    private double angle = 135;
+//
+//	    /**
+//	     * Constructor.
+//	     *
+//	     * @param plot  the plot.
+//	     */
+//	    Rotator(final PiePlot3D plot) {
+//	        super(15, null);
+//	        this.plot = plot;
+//	        addActionListener(this);
+//	    }
+//
+//	    /**
+//	     * Modifies the starting angle.
+//	     *
+//	     * @param event  the action event.
+//	     */
+//	    public void actionPerformed(final ActionEvent event) {
+//	        this.plot.setStartAngle(this.angle);
+//	        this.angle = this.angle + (double) 0.1;
+//	        if (this.angle == 360) {
+//	            this.angle = 0;
+//	        }
+//	    }
+//
+//	}	
 	
 	
 	
@@ -1019,9 +1059,7 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 				int count = -1;
 				for (int i = 0; i < flow_arrangement_info.length; i++) {
 					String[] flow_item = flow_arrangement_info[i].split(" ");
-					for (String bc_index: flow_item) {			
-						count++;
-					}
+					count = count + flow_item.length;
 					data[count][0] = String.valueOf(i);
 					data[count][3] = formatter.format((Double) FV.get(i));
 					data[count][4] = (LB.size() == FV.size() && LB.get(i) != null) ? formatter.format((Double) LB.get(i)) : null;
@@ -1360,9 +1398,7 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 				int count = -1;
 				for (int i = 0; i < flow_arrangement_info.length; i++) {
 					String[] flow_item = flow_arrangement_info[i].split(" ");
-					for (String bc_index: flow_item) {			
-						count++;
-					}
+					count = count + flow_item.length;
 					data[count][0] = String.valueOf(i);
 					data[count][3] = formatter.format((Double) FV.get(i));
 					data[count][4] = (LB.size() == FV.size() && LB.get(i) != null) ? formatter.format((Double) LB.get(i)) : null;
@@ -1450,7 +1486,6 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 		chart.getTitle().setFont(new java.awt.Font("defaultFont", java.awt.Font.BOLD, 14));
 				
 		
-		
 		// Set color for each different bar
 		CategoryPlot plot = chart.getCategoryPlot();
         BarRenderer renderer = (BarRenderer) plot.getRenderer();
@@ -1468,8 +1503,7 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 		renderer.setPositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.CENTER, TextAnchor.CENTER, TextAnchor.CENTER, -Math.PI / 2));
 	    renderer.setBaseItemLabelsVisible(true);
 		renderer.setDrawBarOutline(false);	
-		GradientPaint gp = null;
-		
+
 		
 		GradientPaint[] gp_array = new GradientPaint[100];
 		gp_array[0] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(220,20,60), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,160,122), 255));
@@ -1587,9 +1621,7 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 				int count = -1;
 				for (int i = 0; i < flow_arrangement_info.length; i++) {
 					String[] flow_item = flow_arrangement_info[i].split(" ");
-					for (String bc_index: flow_item) {			
-						count++;
-					}
+					count = count + flow_item.length;
 					data[count][0] = String.valueOf(i);
 					data[count][3] = formatter.format((Double) FV.get(i));
 					data[count][4] = (LB.size() == FV.size() && LB.get(i) != null) ? formatter.format((Double) LB.get(i)) : null;
@@ -1695,7 +1727,6 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 		renderer.setPositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.CENTER, TextAnchor.CENTER, TextAnchor.CENTER, -Math.PI / 2));
 	    renderer.setBaseItemLabelsVisible(true);
 		renderer.setDrawBarOutline(false);	
-		GradientPaint gp = null;
 		
 		
 		GradientPaint[] gp_array = new GradientPaint[100];

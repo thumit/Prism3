@@ -62,6 +62,7 @@ import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
+import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -319,6 +320,10 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 
 				public void mouseExited(MouseEvent e) {
 					i.setContentAreaFilled(false);
+					if (ToolTipManager.sharedInstance().isEnabled()) {	// to avoid the case when tool-tip does not disappear immediately when gradually moving down from these buttons
+			    		ToolTipManager.sharedInstance().setEnabled(false);
+				    	ToolTipManager.sharedInstance().setEnabled(true);
+			    	}
 				}
 			});	
 		}	
@@ -643,7 +648,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		
 		// System Queries
 		final JMenu system_queries_menu = new JMenu("System Library");
-		MenuScroller.setScrollerFor(system_queries_menu, 25, 15, 0, 0);		// 1st number --> in the range, 2nd number --> milliseconds, 3rd number --> on top, 4th number --> at bottom
+		MenuScroller.setScrollerFor(system_queries_menu, 25, 100, 0, 0);		// 1st number --> in the range, 2nd number --> milliseconds, 3rd number --> on top, 4th number --> at bottom
 		system_queries_menu.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_database.png"));
 		popup.add(system_queries_menu);	
 		
@@ -668,7 +673,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		
 		// Users Queries
 		final JMenu user_queries_menu = new JMenu("User Library");
-		MenuScroller.setScrollerFor(user_queries_menu, 25, 15, 0, 0);		// 1st number --> in the range, 2nd number --> milliseconds, 3rd number --> on top, 4th number --> at bottom
+		MenuScroller.setScrollerFor(user_queries_menu, 25, 100, 0, 0);		// 1st number --> in the range, 2nd number --> milliseconds, 3rd number --> on top, 4th number --> at bottom
 		user_queries_menu.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_database.png"));
 		popup.add(user_queries_menu);
 		
@@ -1661,7 +1666,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 				//Ask to delete 
 				String ExitOption[] = {"Delete", "Cancel"};
 				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), "Delete highlighted tables & all tables in highlighted databases?", "Confirm Delete",
-						JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[1]);
+						JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
 				if (response == 0) {
 					DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();	
 						

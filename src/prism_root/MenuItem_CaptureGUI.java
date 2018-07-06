@@ -45,7 +45,7 @@ public class MenuItem_CaptureGUI extends JMenuItem {
 		
 		List<Component> comp_list = new ArrayList<Component>();
 
-		setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1, InputEvent.CTRL_DOWN_MASK));
+		setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1, InputEvent.CTRL_DOWN_MASK, true));
 		addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				if (getText().equals("5s Image Capture")) {			// This is to not create new thread when the old thread is still going

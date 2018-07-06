@@ -16,11 +16,13 @@
  ******************************************************************************/
 package prism_project.edit;
 
+import java.awt.Dimension;
+
 import javax.swing.JPanel;
 import javax.swing.JTable;
 
 public class Panel_QuickEdit_ModelStrata extends JPanel {
 	public Panel_QuickEdit_ModelStrata(JTable table, Object[][] data) {
-
+		setPreferredSize(new Dimension(200, 0));
 	}
 }

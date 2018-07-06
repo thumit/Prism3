@@ -118,7 +118,7 @@ public class Panel_QuickEdit_SR extends JPanel {
 		btnApplyProbability = new JButton();
 		btnApplyProbability.setVerticalTextPosition(SwingConstants.BOTTOM);
 		btnApplyProbability.setHorizontalTextPosition(SwingConstants.CENTER);
-		btnApplyProbability.setToolTipText("make changes for all highlighted cells, except cells in the first two columns");
+		btnApplyProbability.setToolTipText("make changes for all highlighted cells, except cells in the first column");
 		btnApplyProbability.setIcon(IconHandle.get_scaledImageIcon(20, 20, "icon_split.png"));
 		btnApplyProbability.setRolloverIcon(IconHandle.get_scaledImageIcon(30, 30, "icon_split.png"));
 		btnApplyProbability.setContentAreaFilled(false);

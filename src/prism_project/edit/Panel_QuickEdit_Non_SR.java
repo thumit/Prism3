@@ -47,7 +47,7 @@ public class Panel_QuickEdit_Non_SR extends JPanel {
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		c.fill = GridBagConstraints.CENTER;
-		add(new JLabel("mixedfire_percentage"), c);
+		add(new JLabel("MS_E_percentage"), c);
 
 		
 		// Add formatedTextfield
@@ -109,7 +109,7 @@ public class Panel_QuickEdit_Non_SR extends JPanel {
 				table.clearSelection(); // To help trigger the row refresh: clear then add back the rows
 				for (int i : selectedRow) {
 					if (!ms_FormatedTextfield.getText().equals(".")) {	// Only apply the changes to selected rows when the text is not empty
-						data[i][2] = (ms_FormatedTextfield.getText().isEmpty())? null : Double.valueOf(ms_FormatedTextfield.getText());
+						data[i][3] = (ms_FormatedTextfield.getText().isEmpty())? null : Double.valueOf(ms_FormatedTextfield.getText());
 					}
 					table.addRowSelectionInterval(table.convertRowIndexToView(i), table.convertRowIndexToView(i));
 				}
@@ -133,7 +133,7 @@ public class Panel_QuickEdit_Non_SR extends JPanel {
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		c.fill = GridBagConstraints.CENTER;
-		add(new JLabel("barkbeetle_percentage"), c);
+		add(new JLabel("BS_E_percentage"), c);
 
 		
 		// Add formatedTextfield
@@ -195,7 +195,7 @@ public class Panel_QuickEdit_Non_SR extends JPanel {
 				table.clearSelection(); // To help trigger the row refresh: clear then add back the rows
 				for (int i : selectedRow) {
 					if (!bs_FormatedTextfield.getText().equals(".")) {	// Only apply the changes to selected rows when the text is not empty
-						data[i][3] = (bs_FormatedTextfield.getText().isEmpty())? null : Double.valueOf(bs_FormatedTextfield.getText());
+						data[i][4] = (bs_FormatedTextfield.getText().isEmpty())? null : Double.valueOf(bs_FormatedTextfield.getText());
 					}
 					table.addRowSelectionInterval(table.convertRowIndexToView(i), table.convertRowIndexToView(i));
 				}
@@ -209,5 +209,16 @@ public class Panel_QuickEdit_Non_SR extends JPanel {
 		c.gridheight = 1;
 		c.fill = GridBagConstraints.BOTH;
 		add(btnApply_bs_Percentage, c);
+		
+		
+		// Add empty Label to push other component up top------------------------------------------------------------
+		c.gridx = 0;
+		c.gridy = 4;
+		c.weightx = 0;
+		c.weighty = 1;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		c.fill = GridBagConstraints.BOTH;
+		add(new JLabel(), c);
 	}
 }

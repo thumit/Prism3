@@ -67,7 +67,7 @@ public class MenuItem_SetFont extends JMenuItem {
 		setText("Change Font");
 		setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_font.png"));
 		
-		setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_4, InputEvent.CTRL_DOWN_MASK));
+		setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_5, InputEvent.CTRL_DOWN_MASK, true));
 		addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				String old_font_name = UIManager.getLookAndFeelDefaults().getFont("MenuBar.font").getFontName();

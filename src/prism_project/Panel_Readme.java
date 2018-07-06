@@ -88,7 +88,7 @@ public class Panel_Readme extends JLayeredPane {
 		helpToolBar.add(Box.createGlue());	//Add glue for Right alignment
 		helpToolBar.add(title);
 		helpToolBar.add(Box.createGlue());	//Add glue for Right alignment
-		helpToolBar.add(btnSave);
+//		helpToolBar.add(btnSave);
 //		helpToolBar.add(btnHelp);
 
 		

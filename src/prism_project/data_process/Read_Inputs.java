@@ -34,7 +34,7 @@ public class Read_Inputs {
 	private int gi_totalRows, gi_totalColumns;
 	private String[][] gi_value;
 
-	public void read_general_inputs (File file) {
+	public void read_general_inputs(File file) {
 		String delimited = "\t";		// tab delimited
 				
 		try {		
@@ -610,101 +610,131 @@ public class Read_Inputs {
 		return ea_conversion_and_rotation_for_strata_without_sizeclass;		// each regenerated stratum includes a list of "layer5 layer5_regen rotation_age"
 	}	
 	
-	
-	
-	
-//	//-------------------------------------------------------------------------------------------------------------------------------------------------	
-//	//For input_04_ea_management --> OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD OLD 
-//	private List<String> covertype_conversions_and_existing_rotation_ages_list;	
-//	private List<String> covertype_conversions_and_regeneration_rotation_ages_list;	
-//	private List<String> covertype_conversions_list;	
-//	
-//	public void read_ea_management(File file) {
-//		try {
-//			// All lines except the 1st line to be in a list;		
-//			List<String> list;	
-//			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
-//			list.remove(0);	//Remove the first row (Column names)
-//		
-//			covertype_conversions_and_existing_rotation_ages_list = new ArrayList<String>();
-//			covertype_conversions_and_regeneration_rotation_ages_list = new ArrayList<String>();
-//			covertype_conversions_list = new ArrayList<String>();
-//			
-//			for (int i = 0; i < list.size(); i++) {
-//				String[] values = list.get(i).split("\t");
-//				String listname = values[0] + " " + values[1];
-//				covertype_conversions_list.add(listname);
-//
-//				int e_RA_min = Integer.parseInt(values[2]);
-//				int e_RA_max = Integer.parseInt(values[3]);
-//				int r_RA_min = Integer.parseInt(values[4]);
-//				int r_RA_max = Integer.parseInt(values[5]);
-//
-//				for (int age = e_RA_min; age <= e_RA_max; age++) {
-//					String temp = values[0] + " " + values[1] + " " + age;
-//					covertype_conversions_and_existing_rotation_ages_list.add(temp);
-//				}
-//				
-//				for (int age = r_RA_min; age <= r_RA_max; age++) {
-//					String temp = values[0] + " " + values[1] + " " + age;
-//					covertype_conversions_and_regeneration_rotation_ages_list.add(temp);
-//				}
-//			}
-//			
-//		} catch (IOException e) {
-//			System.err.println(e.getClass().getName() + ": " + e.getMessage());
-//		}
-//	}
-//	
-//	public List<String> get_covertype_conversions_and_existing_rotation_ages() {
-//		Collections.sort(covertype_conversions_and_existing_rotation_ages_list);	// sort to use Binary Search when needed (in Panel_Solve)
-//		return covertype_conversions_and_existing_rotation_ages_list;
-//	}	
-//	
-//	public List<String> get_covertype_conversions_and_regeneration_rotation_ages() {
-//		Collections.sort(covertype_conversions_and_regeneration_rotation_ages_list);	// sort to use Binary Search when needed (in Panel_Solve)
-//		return covertype_conversions_and_regeneration_rotation_ages_list;
-//	}
-//	
-//	public List<String> get_covertype_conversions() {
-//		Collections.sort(covertype_conversions_list);	// sort to use Binary Search when needed (in Panel_Solve)
-//		return covertype_conversions_list;
-//	}
-	
 	//-------------------------------------------------------------------------------------------------------------------------------------------------	
-	//For input_05_non_sr_disturbances
-	private List<Double> msProportion_list, bsProportion_list;	
-	
-	public void read_nonreplacing_disturbances(File file) {
-		try {
-			// All lines except the 1st line to be in a list;		
-			List<String> list;	
+	//For input_05_non_sr_disturbances 
+	private int non_sr_totalRows, non_sr_totalColumns;
+	private String[][] non_sr_value;
+	private String[] percentage_MS_E_for_strata;
+	private String[] percentage_BS_E_for_strata;
+
+	public void read_non_sr_disturbaces(File file) {
+		String delimited = "\t";		// tab delimited
+				
+		try {		
+			// All lines to be in array
+			List<String> list;
 			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
-			list.remove(0);	//Remove the first row (Column names)
+			list.remove(0);	// Remove the first row (Column names)
+			String[] a = list.toArray(new String[list.size()]);
+								
+			non_sr_totalRows = a.length;
+			non_sr_totalColumns = a[0].split(delimited).length;		// a[0].split(delimited) = String[] of the first row (this is the row below the column headers row which was removed already)	
+			non_sr_value = new String[non_sr_totalRows][non_sr_totalColumns];
 		
-			msProportion_list = new ArrayList<Double>();
-			bsProportion_list = new ArrayList<Double>();
-			for (int i = 0; i < list.size(); i++) {
-				String[] values = list.get(i).split("\t");		
-				if (values[2].equals("null")) values[2] = "-9999";		// null --> -9999 indicate the bounds should be turned off
-				if (values[3].equals("null")) values[3] = "-9999";		// null --> -9999 indicate the bounds should be turned off
-				msProportion_list.add(Double.parseDouble(values[2]));
-				bsProportion_list.add(Double.parseDouble(values[3]));
+			// read all values from all rows and columns
+			for (int i = 0; i < non_sr_totalRows; i++) {		
+				String[] rowValue = a[i].split(delimited);		
+				for (int j = 0; j < non_sr_totalColumns; j++) {
+					non_sr_value[i][j] = rowValue[j];
+				}
 			}
-			
 		} catch (IOException e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 		}
-	}		
-							
-	public double[] getMSFireProportion () {		
-		double[] array = Stream.of(msProportion_list.toArray(new Double[msProportion_list.size()])).mapToDouble(Double::doubleValue).toArray();
-		return array;
+	}
+	
+	public List<List<String>> get_non_sr_static_identifiers_in_row(int row) {
+		List<List<String>> non_sr_static_identifiers = new ArrayList<List<String>>();
+		
+		//Read the whole cell into array
+		String[] staticLayer_Info = non_sr_value[row][2].split(";");
+		int total_staticIdentifiers = staticLayer_Info.length;
+		
+		//Get all static Identifiers to be in the list
+		for (int i = 0; i < total_staticIdentifiers; i++) {		//6 first identifiers is strata 6 layers (layer 0 to 5)		
+			List<String> thisIdentifier = new ArrayList<String>();
+			
+			String[] identifierElements = staticLayer_Info[i].split("\\s+");				//space delimited
+			for (int j = 1; j < identifierElements.length; j++) {		//Ignore the first element which is the identifier index, so we loop from 1 not 0
+				thisIdentifier.add(identifierElements[j].replaceAll("\\s+",""));		//Add element name, if name has spaces then remove all the spaces
+			}
+			
+			non_sr_static_identifiers.add(thisIdentifier);
+		}
+			
+		return non_sr_static_identifiers;
 	}	
 	
-	public double[] getBSFireProportion () {		
-		double[] array = Stream.of(bsProportion_list.toArray(new Double[bsProportion_list.size()])).mapToDouble(Double::doubleValue).toArray();
-		return array;
+	public String get_MS_E_percentage_in_row(int row) {
+		return non_sr_value[row][3];
+	}
+	
+	public String get_BS_E_percentage_in_row(int row) {
+		return non_sr_value[row][4];
+	}
+			
+	public void populate_non_sr_lists(List<String> model_strata, List<String> model_strata_without_sizeclass, List<List<String>> all_layers) {	
+		// Calculate this first to avoid calculating it in the below loops------------------- ------------------------------------
+		List<List<String>>[] non_sr_static_identifiers = new ArrayList[non_sr_totalRows]; 
+		for (int row = 0; row < non_sr_totalRows; row++) {	// load each row
+			non_sr_static_identifiers[row] = get_non_sr_static_identifiers_in_row(row);			
+		}
+		
+		
+		// existing 6 layers ------------------------------------ ------------------------------------ ------------------------------------
+		percentage_MS_E_for_strata = new String[model_strata.size()];
+		percentage_BS_E_for_strata = new String[model_strata.size()];
+		
+		
+		for (int strata_id = 0; strata_id < model_strata.size(); strata_id++) {
+			String strata = model_strata.get(strata_id);
+			String layer1 = strata.substring(0, 1);
+			String layer2 = strata.substring(1, 2);
+			String layer3 = strata.substring(2, 3);
+			String layer4 = strata.substring(3, 4);
+			String layer5 = strata.substring(4, 5);
+			String layer6 = strata.substring(5, 6);
+		
+			for (int row = 0; row < non_sr_totalRows; row++) {	// load each row (or each priority condition)
+				List<List<String>> static_identifiers = non_sr_static_identifiers[row];			
+				String ms_e_percentage = get_MS_E_percentage_in_row(row);	
+				String bs_e_percentage = get_BS_E_percentage_in_row(row);
+				
+				// The below check also implements Speed Boost RRB9
+				if (	(static_identifiers.get(0).size() == all_layers.get(0).size() || Collections.binarySearch(static_identifiers.get(0), layer1) >= 0) && 
+						(static_identifiers.get(1).size() == all_layers.get(1).size() || Collections.binarySearch(static_identifiers.get(1), layer2) >= 0) && 
+						(static_identifiers.get(2).size() == all_layers.get(2).size() || Collections.binarySearch(static_identifiers.get(2), layer3) >= 0) && 
+						(static_identifiers.get(3).size() == all_layers.get(3).size() || Collections.binarySearch(static_identifiers.get(3), layer4) >= 0) && 
+						(static_identifiers.get(4).size() == all_layers.get(4).size() || Collections.binarySearch(static_identifiers.get(4), layer5) >= 0) && 
+						(static_identifiers.get(5).size() == all_layers.get(5).size() || Collections.binarySearch(static_identifiers.get(5), layer6) >= 0)	)	
+				{
+					if (percentage_MS_E_for_strata[strata_id] == null || percentage_MS_E_for_strata[strata_id].equals("null")) percentage_MS_E_for_strata[strata_id] = ms_e_percentage;
+					if (percentage_BS_E_for_strata[strata_id] == null || percentage_BS_E_for_strata[strata_id].equals("null")) percentage_BS_E_for_strata[strata_id] = bs_e_percentage;
+				}
+			}
+			
+			// There might be the case this stratum is not captured in any conditions. In this case we make them the percentage to be zero
+			if (percentage_MS_E_for_strata[strata_id] == null) percentage_MS_E_for_strata[strata_id] = "0.0";		// no MS_E on this stratum
+			if (percentage_BS_E_for_strata[strata_id] == null) percentage_BS_E_for_strata[strata_id] = "0.0";		// no BS_E on this stratum
+		}
+	}	
+	
+	public double[] get_percentage_MS_E_for_strata() {
+		double[] percentage_MS_E = new double[percentage_MS_E_for_strata.length];
+		for (int i = 0; i < percentage_MS_E.length; i++) {
+			String value = percentage_MS_E_for_strata[i];
+			percentage_MS_E[i] = (!value.equals("null")) ? Double.parseDouble(value) : (double) -9999;	// null --> -9999 indicate the bounds for MS_E should be turned off
+		}
+		return percentage_MS_E;
+	}
+	
+	public double[]  get_percentage_BS_E_for_strata() {
+		double[] percentage_BS_E = new double[percentage_BS_E_for_strata.length];
+		for (int i = 0; i < percentage_BS_E.length; i++) {
+			String value = percentage_BS_E_for_strata[i];
+			percentage_BS_E[i] = (!value.equals("null")) ? Double.parseDouble(value) : (double) -9999;	// null --> -9999 indicate the bounds for BS_E should be turned off
+		}
+		return percentage_BS_E;
 	}
 	
 	//-------------------------------------------------------------------------------------------------------------------------------------------------	
@@ -730,7 +760,7 @@ public class Read_Inputs {
 	//For input_07_management_cost
 	private List<String> cost_condition_list;
 	
-	public void read_management_cost (File file) {
+	public void read_management_cost(File file) {
 		try {
 			// All lines except the 1st line to be in a list;		
 			cost_condition_list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
@@ -754,7 +784,7 @@ public class Read_Inputs {
 	private int constraint_id_col, constraint_description_col, constraint_type_col, constraint_multiplier_col, lowerbound_col, lowerbound_perunit_penalty_col,
 			upperbound_col, upperbound_perunit_penalty_col, parameter_index_col, static_identifiers_col, dynamic_identifiers_col;
 
-	public void read_basic_constraints (File file) {
+	public void read_basic_constraints(File file) {
 		String delimited = "\t";		// tab delimited
 				
 		try {		
@@ -808,29 +838,28 @@ public class Read_Inputs {
 	public List<String> get_constraint_column_names_list() {
 		return constraint_column_names_list;
 	}
-	
-	public String[][] get_bc_values () {
+
+	public String[][] get_bc_values() {
 		return bc_values;
 	}
 
-	public int get_UC_TotalRows () {
+	public int get_UC_TotalRows() {
 		return bc_total_rows;
 	}
-	
-	public int get_UC_TotalColumns () {
+
+	public int get_UC_TotalColumns() {
 		return bc_total_columns;
-	}	
+	}
 		
-	
-	public int get_total_hardConstraints () {
-		int total =0;	
+	public int get_total_hardConstraints() {
+		int total = 0;
 		for (int i = 1; i < bc_total_rows; i++) {		//From 2nd row			
 			if (bc_values[i][constraint_type_col].equals("HARD")) total++;
 		}	
 		return total;
 	}	
 
-	public double[] get_hardConstraints_LB () {	
+	public double[] get_hardConstraints_LB() {
 		List<Double> list = new ArrayList<Double>();
 		for (int i = 1; i < bc_total_rows; i++) {		//From 2nd row			
 			if (bc_values[i][constraint_type_col].equals("HARD") && !bc_values[i][lowerbound_col].equals("null")) list.add(Double.parseDouble(bc_values[i][lowerbound_col]));
@@ -840,7 +869,7 @@ public class Read_Inputs {
 		return array;
 	}
 
-	public double[] get_hardConstraints_UB () {	
+	public double[] get_hardConstraints_UB() {
 		List<Double> list = new ArrayList<Double>();
 		for (int i = 1; i < bc_total_rows; i++) {		//From 2nd row			
 			if (bc_values[i][constraint_type_col].equals("HARD")  && !bc_values[i][upperbound_col].equals("null")) list.add(Double.parseDouble(bc_values[i][upperbound_col]));
@@ -850,8 +879,8 @@ public class Read_Inputs {
 		return array;
 	}
 	
-	public int get_total_softConstraints () {
-		int total =0;	
+	public int get_total_softConstraints() {
+		int total = 0;	
 		for (int i = 1; i < bc_total_rows; i++) {		//From 2nd row			
 			if (bc_values[i][constraint_type_col].equals("SOFT")) total++;
 		}	
@@ -859,7 +888,7 @@ public class Read_Inputs {
 	}		
 				
 	
-	public double[] get_softConstraints_LB () {	
+	public double[] get_softConstraints_LB() {
 		List<Double> list = new ArrayList<Double>();
 		for (int i = 1; i < bc_total_rows; i++) {		//From 2nd row			
 			if (bc_values[i][constraint_type_col].equals("SOFT") && !bc_values[i][lowerbound_col].equals("null")) list.add(Double.parseDouble(bc_values[i][lowerbound_col]));
@@ -869,7 +898,7 @@ public class Read_Inputs {
 		return array;
 	}
 
-	public double[] get_softConstraints_UB () {	
+	public double[] get_softConstraints_UB() {	
 		List<Double> list = new ArrayList<Double>();
 		for (int i = 1; i < bc_total_rows; i++) {		//From 2nd row			
 			if (bc_values[i][constraint_type_col].equals("SOFT")  && !bc_values[i][upperbound_col].equals("null")) list.add(Double.parseDouble(bc_values[i][upperbound_col]));
@@ -879,7 +908,7 @@ public class Read_Inputs {
 		return array;
 	}	
 	
-	public double[] get_softConstraints_LB_Weight () {	
+	public double[] get_softConstraints_LB_Weight() {
 		List<Double> list = new ArrayList<Double>();
 		for (int i = 1; i < bc_total_rows; i++) {		//From 2nd row			
 			if (bc_values[i][constraint_type_col].equals("SOFT") && !bc_values[i][lowerbound_perunit_penalty_col].equals("null")) list.add(Double.parseDouble(bc_values[i][lowerbound_perunit_penalty_col]));
@@ -889,7 +918,7 @@ public class Read_Inputs {
 		return array;
 	}
 
-	public double[] get_softConstraints_UB_Weight () {	
+	public double[] get_softConstraints_UB_Weight() {	
 		List<Double> list = new ArrayList<Double>();
 		for (int i = 1; i < bc_total_rows; i++) {		//From 2nd row			
 			if (bc_values[i][constraint_type_col].equals("SOFT") && !bc_values[i][upperbound_perunit_penalty_col].equals("null")) list.add(Double.parseDouble(bc_values[i][upperbound_perunit_penalty_col]));
@@ -900,8 +929,8 @@ public class Read_Inputs {
 	}		
 
 	
-	public int get_total_freeConstraints () {
-		int total =0;	
+	public int get_total_freeConstraints() {
+		int total = 0;
 		for (int i = 1; i < bc_total_rows; i++) {		//From 2nd row		
 			if (bc_values[i][constraint_type_col].equals("FREE")) total++;
 		}	
@@ -909,7 +938,7 @@ public class Read_Inputs {
 	}	
 	
 	
-	public List<List<String>> get_static_identifiers_in_row (int row) {
+	public List<List<String>> get_static_identifiers_in_row(int row) {
 		List<List<String>> static_identifiers = new ArrayList<List<String>>();
 		
 		//Read the whole cell into array
@@ -932,7 +961,7 @@ public class Read_Inputs {
 	}	
 	
 	
-	public List<String> get_static_strata (int row) {
+	public List<String> get_static_strata(int row) {
 		List<String> static_strata = new ArrayList<String>();
 		List<List<String>> static_identifiers = get_static_identifiers_in_row(row);
 		
@@ -989,7 +1018,7 @@ public class Read_Inputs {
 	}
 	
 	
-	public List<String> get_static_strata_without_sizeclass_and_covertype (int row) {	
+	public List<String> get_static_strata_without_sizeclass_and_covertype(int row) {	
 		List<String> static_strata_without_sizeclass_and_covertype = new ArrayList<String>();
 		List<List<String>> static_identifiers = get_static_identifiers_in_row(row);
 		
@@ -1014,19 +1043,19 @@ public class Read_Inputs {
 	
 	
 	
-	public List<String> get_static_methods (int row) {	
+	public List<String> get_static_methods(int row) {
 		List<List<String>> static_identifiers = get_static_identifiers_in_row(row);
 		return static_identifiers.get(6);
 	}
 	
-	public List<String> get_static_periods (int row) {	
+	public List<String> get_static_periods(int row) {
 		List<List<String>> static_identifiers = get_static_identifiers_in_row(row);	
 		return static_identifiers.get(7);
 	}	
 
 	
 	
-	public List<List<String>> get_dynamic_identifiers_in_row (int row) {
+	public List<List<String>> get_dynamic_identifiers_in_row(int row) {
 		List<List<String>> dynamic_identifiers = new ArrayList<List<String>>();
 		
 		//Read the whole cell into array
@@ -1050,7 +1079,7 @@ public class Read_Inputs {
 	}	
 	
 	
-	public List<String> get_dynamic_identifiers_column_indexes_in_row (int row) {	//Column 8 in the GUI table "Dynamic identifiers". The whole is contained by UC_value[i][8]
+	public List<String> get_dynamic_identifiers_column_indexes_in_row(int row) {	//Column 8 in the GUI table "Dynamic identifiers". The whole is contained by UC_value[i][8]
 		List<String> dynamic_identifiers_column_indexes = new ArrayList<String>();
 			
 		//Read the whole cell into array
@@ -1068,7 +1097,7 @@ public class Read_Inputs {
 	}	
 	
 	
-	public List<String> get_parameters_indexes (int row) {	
+	public List<String> get_parameters_indexes(int row) {	
 		List<String> parameters_indexes_list = new ArrayList<String>();
 		
 		//Read the whole cell into array
@@ -1086,7 +1115,7 @@ public class Read_Inputs {
 	private String[][] flow_value;
 	private int flow_id_col, flow_description_col, flow_arrangement_col, flow_type_col, lowerbound_percentage_col, upperbound_percentage_col;		
 
-	public void read_flow_constraints (File file) {
+	public void read_flow_constraints(File file) {
 		String delimited = "\t";		// tab delimited
 				
 		try {		
@@ -1130,15 +1159,15 @@ public class Read_Inputs {
 		return flow_column_names_list;
 	}
 	
-	public String[][] get_flow_values () {
+	public String[][] get_flow_values() {
 		return flow_value;
 	}
 
-	public int get_flow_TotalRows () {
+	public int get_flow_TotalRows() {
 		return flow_totalRows;
 	}
-	
-	public int get_flow_TotalColumns () {
+
+	public int get_flow_TotalColumns() {
 		return flow_totalColumns;
 	}
 		
@@ -1198,7 +1227,7 @@ public class Read_Inputs {
 		return flow_upperbound_percentage_list;
 	}	
 	
-	public List<List<List<Integer>>> get_flow_set_list () {	
+	public List<List<List<Integer>>> get_flow_set_list() {
 		List<List<List<Integer>>> flow_set_list = new ArrayList<List<List<Integer>>>();	
 		for (int i = 1; i < flow_totalRows; i++) {		// from 2nd row			
 			List<List<Integer>> this_set = new ArrayList<List<Integer>>();				

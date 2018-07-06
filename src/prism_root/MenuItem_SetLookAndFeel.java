@@ -30,7 +30,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -53,7 +52,7 @@ public class MenuItem_SetLookAndFeel extends JMenuItem {
 		setText("Change Look and Feel");
 		setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_laf.png"));
 		
-		setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_5, InputEvent.CTRL_DOWN_MASK));
+		setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_6, InputEvent.CTRL_DOWN_MASK, true));
 		addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				JRadioButton[] radioButton = new JRadioButton[UIManager.getInstalledLookAndFeels().length];
@@ -72,6 +71,7 @@ public class MenuItem_SetLookAndFeel extends JMenuItem {
 				// Create a radioGroup buttons
 				ButtonGroup radioGroup = new ButtonGroup();
 				JPanel radioPanel = new JPanel();
+				radioPanel.setPreferredSize(new Dimension(400, 30));
 				radioPanel.setLayout(new BoxLayout(radioPanel, BoxLayout.X_AXIS));
 
 				for (int i = 0; i < radioButton.length; i++) {
@@ -127,7 +127,7 @@ public class MenuItem_SetLookAndFeel extends JMenuItem {
 				// Add lookfeelPanel to a Popup Panel
 				String ExitOption[] = { "Ok" };
 				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), radioPanel,
-						"Select a Look and Feel", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
+						"Look and Feel", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
 						IconHandle.get_scaledImageIcon(40, 40, "icon_laf.png"), ExitOption, ExitOption[0]);
 
 				if (response == 0) {

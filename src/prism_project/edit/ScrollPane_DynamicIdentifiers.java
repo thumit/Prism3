@@ -710,11 +710,11 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 			int total_items = 0;
 			if (allDynamicIdentifiers_ScrollPane.get(i).isVisible() && checkboxDynamicIdentifiers.get(i).size() > 0) {	// get the active identifiers (when identifier ScrollPane is visible and List size >0)
 				for (int j = 0; j < checkboxDynamicIdentifiers.get(i).size(); j++) { //Loop all checkBoxes in this active identifier
-					if ((checkboxDynamicIdentifiers.get(i).get(j).isSelected() && (checkboxDynamicIdentifiers.get(i).get(j).isVisible())
-							|| !checkboxDynamicIdentifiers.get(i).get(j).isEnabled())) {
+					// Add checkBox if it is selected & visible & enabled
+					if (checkboxDynamicIdentifiers.get(i).get(j).isSelected() && checkboxDynamicIdentifiers.get(i).get(j).isVisible() && checkboxDynamicIdentifiers.get(i).get(j).isEnabled()) {
 						total_check_items++;
 					}
-					if (checkboxDynamicIdentifiers.get(i).get(j).isVisible()) {
+					if (checkboxDynamicIdentifiers.get(i).get(j).isVisible() && checkboxDynamicIdentifiers.get(i).get(j).isEnabled()) {
 						total_items++;
 					}
 				}
@@ -726,10 +726,10 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 				
 				for (int j = 0; j < checkboxDynamicIdentifiers.get(i).size(); j++) { 	// Loop all checkBoxes in this active identifier
 					String checkboxName = checkboxDynamicIdentifiers.get(i).get(j).getText();									
-					//Add checkBox if it is (selected & visible) or disable
-					if ((checkboxDynamicIdentifiers.get(i).get(j).isSelected() && (checkboxDynamicIdentifiers.get(i).get(j).isVisible())
-							|| !checkboxDynamicIdentifiers.get(i).get(j).isEnabled()))	
+					// Add checkBox if it is selected & visible & enabled
+					if (checkboxDynamicIdentifiers.get(i).get(j).isSelected() && checkboxDynamicIdentifiers.get(i).get(j).isVisible() && checkboxDynamicIdentifiers.get(i).get(j).isEnabled()) {	
 						dynamic_info = String.join(" ", dynamic_info, checkboxName);	
+					}
 				}
 				temp.add(dynamic_info);
 			}
@@ -752,10 +752,10 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 				dynamic_info = dynamic_info + i + " ";
 				for (int j = 0; j < checkboxDynamicIdentifiers.get(i).size(); j++) { //Loop all checkBoxes in this active identifier
 					String checkboxName = checkboxDynamicIdentifiers.get(i).get(j).getText();									
-					//Add checkBox if it is (selected & visible) or disable
-					if ((checkboxDynamicIdentifiers.get(i).get(j).isSelected() && (checkboxDynamicIdentifiers.get(i).get(j).isVisible())
-							|| !checkboxDynamicIdentifiers.get(i).get(j).isEnabled()))
+					// Add checkBox if it is selected & visible & enabled
+					if (checkboxDynamicIdentifiers.get(i).get(j).isSelected() && checkboxDynamicIdentifiers.get(i).get(j).isVisible() && checkboxDynamicIdentifiers.get(i).get(j).isEnabled()) {
 						dynamic_info = dynamic_info + checkboxName + " ";
+					}
 				}
 				
 				if (!dynamic_info.equals("")) {
@@ -783,10 +783,10 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 				for (int j = 0; j < checkboxDynamicIdentifiers.get(i).size(); j++) { //Loop all checkBoxes in this active identifier
 					String checkboxName = checkboxDynamicIdentifiers.get(i).get(j).getText();	
 //					String checkboxToolTip = checkboxDynamicIdentifiers.get(i).get(j).getToolTipText();		// Add ToolTip later
-					//Add checkBox if it is (selected & visible) or disable
-					if (checkboxDynamicIdentifiers.get(i).get(j).isVisible()
-							|| !checkboxDynamicIdentifiers.get(i).get(j).isEnabled())
+					// Add checkBox if it is selected & visible & enabled
+					if (checkboxDynamicIdentifiers.get(i).get(j).isVisible() && checkboxDynamicIdentifiers.get(i).get(j).isEnabled()) {
 						original_dynamic_info = original_dynamic_info + checkboxName + " ";
+					}
 				}
 				
 				if (!original_dynamic_info.equals("")) {
@@ -807,19 +807,20 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 	
 	public void reload_this_constraint_dynamic_identifiers(String dynamic_identifiers_info, String original_dynamic_identifiers_info) {	
 		// Note: 
-		// dynamic_identifiers_info: contains all the selected dynamic identifiers
-		// original_dynamic_identifiers_info: contains all the original dynamic identifiers (regardless of being selected or not)
+		// 1. dynamic_identifiers_info: contains all the selected dynamic identifiers
+		// 2. original_dynamic_identifiers_info: contains all the original dynamic identifiers (regardless of being selected or not)
 		
 		checkboxNoIdentifier.setSelected(false);
-		for (JScrollPane i: allDynamicIdentifiers_ScrollPane) {	// Hide all dynamic identifier ScrollPanes
-			i.setVisible(false);
-		}
+		List<Integer> visible_scrollpane_id = new ArrayList<Integer>();	// instead of the below (invisible all then visible), use this list to setVisible later only when needed to avoid blinking when running NOSQL calculation on output_05
+//		for (JScrollPane i: allDynamicIdentifiers_ScrollPane) {	// Hide all dynamic identifier ScrollPanes
+//			i.setVisible(false);
+//		}
 		for (List<JCheckBox> i: checkboxDynamicIdentifiers) {	// Remove all checkBoxes
 			i.clear();
 		}
 		
 		
-		if (original_dynamic_identifiers_info.equalsIgnoreCase("NoIdentifier")) {
+		if (original_dynamic_identifiers_info.equals("NoIdentifier")) {
 			checkboxNoIdentifier.setSelected(true);
 			selectIdentifiersScrollPanel.setBorder(BorderFactory.createTitledBorder(null, "Dynamic Identifiers  -  use yield attributes to filter variables", TitledBorder.CENTER, 0));
 		} else {
@@ -833,6 +834,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 				String[] identifier_elements = info[i].split("\\s+");	// Space delimited
 				String[] original_identifier_elements = original_info[i].split("\\s+");	// Space delimited
 				int current_identifier_id = Integer.valueOf(original_identifier_elements[0]);		// Same for those above 2
+				visible_scrollpane_id.add(current_identifier_id);
 				
 				
 				// Create check box for each attribute of this identifier			
@@ -845,7 +847,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 				for (int j = 1; j < identifier_elements.length; j++) {		//Ignore the first element which is the identifier id
 					String this_identifier_attribute = identifier_elements[j].replaceAll("\\s+","");		//Add element name, if name has spaces then remove all the spaces				
 					for (JCheckBox k: checkboxDynamicIdentifiers.get(current_identifier_id)) {
-						if (k.getText().equalsIgnoreCase(this_identifier_attribute)) {
+						if (k.getText().equals(this_identifier_attribute)) {
 							k.setSelected(true);
 						}
 					}
@@ -867,11 +869,21 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 				
 				allDynamicIdentifiers_JPanel[current_identifier_id] = tempPanel;
 				allDynamicIdentifiers_ScrollPane.get(current_identifier_id).setViewportView(tempPanel);	// Set Scroll Pane view to the tempPanel
-				allDynamicIdentifiers_ScrollPane.get(current_identifier_id).setVisible(true);
+//				allDynamicIdentifiers_ScrollPane.get(current_identifier_id).setVisible(true);
 				selectIdentifiersScrollPanel.setBorder(BorderFactory.createTitledBorder(null, "Dynamic Identifiers", TitledBorder.CENTER, 0));
 			}	
 		}
-			
+		
+		
+		// Hide all dynamic identifier ScrollPanes, except the ones that are currently captured by the row
+		for (int i = 0; i < allDynamicIdentifiers_ScrollPane.size(); i++) {
+			if (visible_scrollpane_id.contains(i)) {
+				if (!allDynamicIdentifiers_ScrollPane.get(i).isVisible()) allDynamicIdentifiers_ScrollPane.get(i).setVisible(true);	// make visible only when needed
+			} else {
+				allDynamicIdentifiers_ScrollPane.get(i).setVisible(false);
+			}
+		}
+		
 		
 		// Reload the selection in the 'Select Identifiers" scroll pane
 		for (int i = 0; i < allDynamicIdentifiers.size(); i++) {
@@ -879,7 +891,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 			if (allDynamicIdentifiers_ScrollPane.get(i).isVisible()) {
 				allDynamicIdentifiers.get(i).setSelected(true);
 			}
-			//Do a resize to same size for JInteral Frame of the project to help repaint	
+			// Do a resize to same size for JInteral Frame of the project to help repaint	
 			revalidate();
 			repaint();
 			PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());	

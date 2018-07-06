@@ -319,12 +319,17 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			
 			@Override
 			public void setValueAt(Object value, int row, int col) {
-				data9[row][col] = value;
-				if (col == 3) {
-					data9[row][12] = null;
-					fireTableDataChanged();		// When constraint multiplier change then this would register the change and make the selection disappear
-					table9.setRowSelectionInterval(table9.convertRowIndexToView(row), table9.convertRowIndexToView(row));			// select the row again
-				}
+				if (value != null && (col >= 3 && col <= 7) && ((Number) value).doubleValue() < 0) {		// allow null to be set, and not allow negative numbers
+    				JOptionPane.showMessageDialog(PrismMain.get_Prism_DesktopPane(),
+    						"Your input has not been accepted. Only null or positive values are allowed");
+    			} else {
+    				data9[row][col] = value;
+    				if (col == 3) {
+    					data9[row][12] = null;
+    					fireTableDataChanged();		// When constraint multiplier change then this would register the change and make the selection disappear
+    					table9.setRowSelectionInterval(table9.convertRowIndexToView(row), table9.convertRowIndexToView(row));			// select the row again
+    				}
+    			}
 			}
 			
 			@Override
@@ -791,7 +796,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 					
 					String ExitOption[] = {"Add Queries","Cancel"};
 					int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), constraint_split_ScrollPanel, "Create multiple queries - checked items will be split",
-							JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, ExitOption, ExitOption[1]);
+							JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, ExitOption, ExitOption[0]);
 					if (response == 0) {	// Add Constraints
 						
 						
@@ -1366,7 +1371,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 				public void actionPerformed(ActionEvent actionEvent) {	
 					String ExitOption[] = {"Delete", "Cancel"};
 					int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), "Delete now?", "Confirm Delete",
-							JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[1]);
+							JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
 					if (response == 0) {
 						//Cancel editing before delete
 						if (table9.isEditing()) {
@@ -1710,6 +1715,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			// Add all Grids to the Main Grid-----------------------------------------------------------------------
 			// Add all Grids to the Main Grid-----------------------------------------------------------------------
 			JSplitPane split_pane = new JSplitPane();
+			split_pane.setBorder(null);
 			split_pane.setOrientation(JSplitPane.VERTICAL_SPLIT);
 			split_pane.setDividerSize(3);
 						
