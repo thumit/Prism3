@@ -71,11 +71,11 @@ import javax.swing.text.DefaultCaret;
 
 import lpsolve.LpSolve;
 import lpsolve.LpSolveException;
-import prism_convenience_class.FilesHandle;
-import prism_convenience_class.IconHandle;
-import prism_convenience_class.LibraryHandle;
-import prism_convenience_class.PrismGridBagLayoutHandle;
-import prism_convenience_class.PrismTableModel;
+import prism_convenience.FilesHandle;
+import prism_convenience.IconHandle;
+import prism_convenience.LibraryHandle;
+import prism_convenience.PrismGridBagLayoutHandle;
+import prism_convenience.PrismTableModel;
 import prism_database.SQLite;
 import prism_project.data_process.Get_Cost_Information;
 import prism_project.data_process.Get_Disturbance_Information;

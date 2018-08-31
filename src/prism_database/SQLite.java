@@ -23,7 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-import prism_convenience_class.StringHandle;
+import prism_convenience.StringHandle;
 
 public class SQLite {
 	

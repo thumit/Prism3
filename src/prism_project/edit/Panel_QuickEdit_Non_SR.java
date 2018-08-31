@@ -31,7 +31,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import prism_convenience_class.IconHandle;
+import prism_convenience.IconHandle;
 
 public class Panel_QuickEdit_Non_SR extends JPanel {
 	public Panel_QuickEdit_Non_SR(JTable table, Object[][] data) {

@@ -18,6 +18,8 @@ package prism_project.edit;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -28,6 +30,7 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -35,8 +38,8 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 
-import prism_convenience_class.ColorUtil;
-import prism_convenience_class.IconHandle;
+import prism_convenience.ColorUtil;
+import prism_convenience.IconHandle;
 import prism_root.PrismMain;
 
 public class Panel_Edit extends JLayeredPane implements ActionListener {
@@ -65,10 +68,6 @@ public class Panel_Edit extends JLayeredPane implements ActionListener {
 
 		
 		// Left split panel--------------------------------------------------------------------------------
-		scrollPane_Left = new JScrollPane();
-		scrollPane_Left.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, ColorUtil.makeTransparent(Color.BLACK, 70)));
-		splitPanel.setLeftComponent(scrollPane_Left);
-		
 		// Add all selected Runs to radioPanel and add that panel to scrollPane_Left
 		radioPanel_Left = new JPanel();
 		radioPanel_Left.setLayout(new BoxLayout(radioPanel_Left, BoxLayout.Y_AXIS));
@@ -83,15 +82,34 @@ public class Panel_Edit extends JLayeredPane implements ActionListener {
 			radioButton_Left[i].setEnabled(false);
 		}
 //		radioButton_Left[0].setSelected(true);
-		scrollPane_Left.setViewportView(radioPanel_Left);					
+		scrollPane_Left = new JScrollPane();
+		scrollPane_Left.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, ColorUtil.makeTransparent(Color.BLACK, 70)));
+		scrollPane_Left.setViewportView(radioPanel_Left);	
+		splitPanel.setLeftComponent(scrollPane_Left);
 		
 		
 		// Right split panel-------------------------------------------------------------------------------
+		JLabel animate_label = new JLabel("   LOADING...");
+		animate_label.setHorizontalTextPosition(JLabel.CENTER);
+		animate_label.setVerticalTextPosition(JLabel.BOTTOM);
+		animate_label.setFont(new Font(null, Font.BOLD, 15));
+		animate_label.setIcon(IconHandle.get_scaledImageIcon_replicate(128, 128, "main_animation.gif"));
+		JPanel animate_panel = new JPanel();
+		animate_panel.setLayout(new GridBagLayout());
+		animate_panel.add(animate_label);
 		scrollPane_Right = new JScrollPane();
+		File[] contents = listOfEditRuns[0].listFiles();
+		if (contents != null) {
+			for (File f : contents) {
+				if (f.getName().contains("database")) {
+					scrollPane_Right.setViewportView(animate_panel);	// only show animation when loading the first model which has database. Do not show animation if the run is empty because it is a blinking --> annoying
+				}
+			}
+		}
 		scrollPane_Right.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, ColorUtil.makeTransparent(Color.BLACK, 70)));
 		splitPanel.setRightComponent(scrollPane_Right);
-				
-	
+			
+		
 		// Add all Panel_EditRun_Details for all selected Runs, but only show the 1st selected Run details
 		combinePanel = new Panel_Edit_Details[listOfEditRuns.length];
 		for (int i = 0; i < listOfEditRuns.length; i++) {	
@@ -121,18 +139,7 @@ public class Panel_Edit extends JLayeredPane implements ActionListener {
 							JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
 					
 					if (response == 0) {		
-						// Delete all output files, problem file, and solution file of the edited Runs
-						for (int j = 0; j < listOfEditRuns.length; j++) {
-							File[] contents = listOfEditRuns[j].listFiles();
-							if (contents != null) {
-								for (File f : contents) {
-									if (f.getName().contains("output") || f.getName().contains("problem") || f.getName().contains("solution")) {
-										f.delete();
-									}
-								}
-							}
-						}	
-						combinePanel[i].create_inputFiles_for_thisRun();
+						combinePanel[i].save_inputs_and_delete_outputs_for_this_run();
 			        }
 
 				}
@@ -172,10 +179,10 @@ public class Panel_Edit extends JLayeredPane implements ActionListener {
 	// Get values to pass to other classes
     
     //Get all input Files from all edited runs
-	public void createInputFiles() {
+	public void save_inputs() {
 		int total_Runs = listOfEditRuns.length;
 		for (int i = 0; i < total_Runs; i++) {
-			combinePanel[i].create_inputFiles_for_thisRun();
+			combinePanel[i].save_inputs_and_delete_outputs_for_this_run();
 		}
 	}
     

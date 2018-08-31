@@ -34,8 +34,9 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
-import prism_convenience_class.PrismTableModel;
-import prism_convenience_class.TableColumnsHandle;
+
+import prism_convenience.PrismTableModel;
+import prism_convenience.TableColumnsHandle;
 
 public class ScrollPane_ConstraintsSplitFly extends JScrollPane {
 

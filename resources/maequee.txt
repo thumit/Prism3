@@ -1,3 +1,4 @@
+"Thank you for your trust in Prism! We really appreciate any of your feedbacks to make Prism more intelligent"
 Fact --- "Each time you get stuck you realize you need to learn more, but when you learn more you again get stuck" - Anonymous.
 Fact --- Months that begin on a Sunday will always have a Friday the 13th. "Fact & Hints" feature was released in July 2018.
 Fact --- Prism has its name given by Eric Henderson, a regional planning analyst at US Forest Service Region I.
@@ -11,6 +12,8 @@ Fact --- When the "light bulb" turns blue, Prism would show a new Hint or Fact e
 Fact --- Prism is a highly automated system. When the database is ready, a few clicks could complete building a simple model.
 Fact --- If you don't have input_08, you won't have output_06. If you don't have input_09, you won't have output_07. Doesn't this make sense?
 Fact --- On average, Prism has itself updated to a new version once per week.
+Fact --- Prism has around 30k lines of code written by a solo developer during the first 2.5 years. Prism prefers having as many LOC deleted as possible.
+Fact --- Prism is a forestry tool which could be used to measure basal area. You are using Prism for a different objective, aren't you?
 Hint --- For almost any window consisted of check boxes, clicking on the window's title could check/uncheck all the boxes.
 Hint --- Model description (readme) could be saved without deleting model outputs. Try "right click" on it.
 Hint --- "Alt+D" could quickly open/close "Database Management".

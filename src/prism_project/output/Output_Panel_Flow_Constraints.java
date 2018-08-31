@@ -78,11 +78,11 @@ import org.jfree.ui.RectangleEdge;
 import org.jfree.ui.TextAnchor;
 import org.jfree.util.Rotation;
 
-import prism_convenience_class.ColorUtil;
-import prism_convenience_class.IconHandle;
-import prism_convenience_class.PrismGridBagLayoutHandle;
-import prism_convenience_class.PrismTableModel;
-import prism_convenience_class.TableColumnsHandle;
+import prism_convenience.ColorUtil;
+import prism_convenience.IconHandle;
+import prism_convenience.PrismGridBagLayoutHandle;
+import prism_convenience.PrismTableModel;
+import prism_convenience.TableColumnsHandle;
 import prism_project.data_process.Read_Inputs;
 
 // Panel_Flow_Constraints--------------------------------------------------------------------------------	

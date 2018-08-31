@@ -71,13 +71,13 @@ import javax.swing.tree.TreePath;
 
 import net.coderazzi.filters.gui.AutoChoices;
 import net.coderazzi.filters.gui.TableFilterHeader;
-import prism_convenience_class.ColorUtil;
-import prism_convenience_class.FilesHandle;
-import prism_convenience_class.IconHandle;
-import prism_convenience_class.MarqueePanel;
-import prism_convenience_class.PrismTableModel;
-import prism_convenience_class.PrismTextAreaReadMe;
-import prism_convenience_class.ToolBarWithBgImage;
+import prism_convenience.ColorUtil;
+import prism_convenience.FilesHandle;
+import prism_convenience.IconHandle;
+import prism_convenience.MarqueePanel;
+import prism_convenience.PrismTableModel;
+import prism_convenience.PrismTextAreaReadMe;
+import prism_convenience.ToolBarWithBgImage;
 import prism_project.data_process.LinkedList_Databases_Item;
 import prism_project.data_process.Read_Database;
 import prism_project.edit.Panel_Edit;
@@ -759,7 +759,7 @@ public class Panel_Project extends JLayeredPane {
 					
 					// Only nodes level 2 (Run) can be Deleted--------------------------
 					if (currentLevel == 2 && rootSelected == false) {					
-						final JMenuItem updateMenuItem = new JMenuItem("Update Runs from 1.2.01 to 1.2.02");
+						final JMenuItem updateMenuItem = new JMenuItem("Update Runs");
 						updateMenuItem.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_light_on_yellow.png"));
 						updateMenuItem.setMnemonic(KeyEvent.VK_U);
 						updateMenuItem.addActionListener(new ActionListener() {
@@ -769,7 +769,7 @@ public class Panel_Project extends JLayeredPane {
 							}
 						});
 						popup.add(updateMenuItem);
-//						updateMenuItem.setEnabled(false);
+						updateMenuItem.setEnabled(false);
 					}
 					
 					
@@ -1117,18 +1117,7 @@ public class Panel_Project extends JLayeredPane {
 				this.add(splitPanel);
 				
 				if (response == 0) { // Yes option				
-					// Delete all output files, problem file, and solution file of the edited Runs
-					for (int i = 0; i < listOfEditRuns.length; i++) {
-						File[] contents = listOfEditRuns[i].listFiles();
-						if (contents != null) {
-							for (File f : contents) {
-								if ((f.getName().contains("output") || f.getName().contains("problem") || f.getName().contains("solution")) && !f.getName().contains("fly_constraints")) {
-									f.delete();
-								}
-							}
-						}
-					}										
-					editPanel.createInputFiles();	// Create new Input Files for the edited runs
+					editPanel.save_inputs();	// Save Input Files. Delete all output files, problem file, and solution file, but keep the fly_constraints file
 				}
 				
 				// Refresh the tree regardless of Yes or No			

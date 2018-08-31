@@ -54,11 +54,11 @@ import javax.swing.table.TableColumn;
 
 import net.coderazzi.filters.gui.AutoChoices;
 import net.coderazzi.filters.gui.TableFilterHeader;
-import prism_convenience_class.FilesHandle;
-import prism_convenience_class.IconHandle;
-import prism_convenience_class.MenuScroller;
-import prism_convenience_class.PrismTitleScrollPane;
-import prism_convenience_class.ToolBarWithBgImage;
+import prism_convenience.FilesHandle;
+import prism_convenience.IconHandle;
+import prism_convenience.MenuScroller;
+import prism_convenience.PrismTitleScrollPane;
+import prism_convenience.ToolBarWithBgImage;
 import prism_database.Setting;
 
 public class Output_Panel_Management_Details_SQL extends JLayeredPane {

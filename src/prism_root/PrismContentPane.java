@@ -53,7 +53,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import prism_convenience_class.IconHandle;
+import prism_convenience.IconHandle;
 
 
 public class PrismContentPane extends JPanel {

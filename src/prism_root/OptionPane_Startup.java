@@ -51,11 +51,11 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 
-import prism_convenience_class.FilesHandle;
-import prism_convenience_class.IconHandle;
-import prism_convenience_class.PrismGridBagLayoutHandle;
-import prism_convenience_class.PrismTextAreaReadMe;
-import prism_convenience_class.PrismTitleScrollPane;
+import prism_convenience.FilesHandle;
+import prism_convenience.IconHandle;
+import prism_convenience.PrismGridBagLayoutHandle;
+import prism_convenience.PrismTextAreaReadMe;
+import prism_convenience.PrismTitleScrollPane;
 
 public class OptionPane_Startup extends JOptionPane {
 

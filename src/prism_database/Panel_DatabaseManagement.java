@@ -74,10 +74,10 @@ import javax.swing.tree.TreePath;
 
 import net.coderazzi.filters.gui.AutoChoices;
 import net.coderazzi.filters.gui.TableFilterHeader;
-import prism_convenience_class.ColorUtil;
-import prism_convenience_class.FilesHandle;
-import prism_convenience_class.IconHandle;
-import prism_convenience_class.MenuScroller;
+import prism_convenience.ColorUtil;
+import prism_convenience.FilesHandle;
+import prism_convenience.IconHandle;
+import prism_convenience.MenuScroller;
 import prism_project.data_process.Read_Database;
 import prism_root.PrismMain;
 

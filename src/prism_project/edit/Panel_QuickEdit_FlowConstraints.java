@@ -22,7 +22,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
@@ -32,12 +31,14 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import prism_convenience_class.IconHandle;
-
+import prism_convenience.IconHandle;
 
 public class Panel_QuickEdit_FlowConstraints extends JPanel {
+	private JButton btnApply_type;
+	private Prism_ApplyButton apply_lb_percentage;
+	private Prism_ApplyButton apply_ub_percentage;
+	
 	public Panel_QuickEdit_FlowConstraints(JTable table, Object[][] data) {
-
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 
@@ -71,7 +72,7 @@ public class Panel_QuickEdit_FlowConstraints extends JPanel {
 		add(typeComBo, c);
 		
 		// Add button apply
-		JButton btnApply_type = new JButton();
+		btnApply_type = new JButton();
 		btnApply_type.setToolTipText("make changes for all highlighted rows");
 		btnApply_type.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_left.png"));
 		btnApply_type.addActionListener(new ActionListener() {
@@ -122,7 +123,7 @@ public class Panel_QuickEdit_FlowConstraints extends JPanel {
 		add(lb_percentage, c);
 		
 		// Add button apply
-		Prism_ApplyButton apply_lb_percentage = new Prism_ApplyButton(table, data, 4, lb_percentage);		// 4 is the column to change
+		apply_lb_percentage = new Prism_ApplyButton(table, data, 4, lb_percentage);		// 4 is the column to change
 		c.gridx = 0;
 		c.gridy = 3;
 		c.weightx = 0;
@@ -155,7 +156,7 @@ public class Panel_QuickEdit_FlowConstraints extends JPanel {
 		add(ub_percentage, c);
 		
 		// Add button apply
-		Prism_ApplyButton apply_ub_percentage = new Prism_ApplyButton(table, data, 5, ub_percentage);		// 5 is the column to change
+		apply_ub_percentage = new Prism_ApplyButton(table, data, 5, ub_percentage);		// 5 is the column to change
 		c.gridx = 0;
 		c.gridy = 5;
 		c.weightx = 0;
@@ -239,5 +240,19 @@ public class Panel_QuickEdit_FlowConstraints extends JPanel {
 				}
 			});	
 		}
+	}
+	
+	
+	public void disable_all_apply_buttons() {
+		btnApply_type.setEnabled(false);
+		apply_lb_percentage.setEnabled(false);
+		apply_ub_percentage.setEnabled(false);
+	}
+	
+	
+	public void enable_all_apply_buttons() {
+		btnApply_type.setEnabled(true);
+		apply_lb_percentage.setEnabled(true);
+		apply_ub_percentage.setEnabled(true);
 	}
 }

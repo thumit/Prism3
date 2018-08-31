@@ -14,7 +14,7 @@ Bundle-ClassPath: prism.jar,
   Setup/cplex_wrapper/prismcplex.jar,
   Setup/x64_win64(CPLEX 1280)/cplex.jar
 Export-Package: .,
- prism_convenience_class,
+ prism_convenience,
  prism_database,
  prism_project,
  prism_project.data_process,

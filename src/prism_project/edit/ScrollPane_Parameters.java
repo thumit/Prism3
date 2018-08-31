@@ -33,8 +33,8 @@ import javax.swing.JScrollPane;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 
-import prism_convenience_class.ColorUtil;
-import prism_convenience_class.IconHandle;
+import prism_convenience.ColorUtil;
+import prism_convenience.IconHandle;
 import prism_project.data_process.Read_Database;
 import prism_root.PrismMain;
 

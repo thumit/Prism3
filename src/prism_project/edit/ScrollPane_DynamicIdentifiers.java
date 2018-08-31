@@ -49,8 +49,8 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import prism_convenience_class.ColorUtil;
-import prism_convenience_class.IconHandle;
+import prism_convenience.ColorUtil;
+import prism_convenience.IconHandle;
 import prism_project.data_process.Read_Database;
 import prism_root.PrismMain;
 

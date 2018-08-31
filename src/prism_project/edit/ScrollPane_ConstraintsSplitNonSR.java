@@ -39,8 +39,8 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
-import prism_convenience_class.PrismTableModel;
-import prism_convenience_class.TableColumnsHandle;
+import prism_convenience.PrismTableModel;
+import prism_convenience.TableColumnsHandle;
 import prism_root.PrismMain;
 
 public class ScrollPane_ConstraintsSplitNonSR extends JScrollPane {

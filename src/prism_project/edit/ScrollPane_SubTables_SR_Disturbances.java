@@ -45,14 +45,14 @@ public class ScrollPane_SubTables_SR_Disturbances extends JScrollPane {
 		
 	
 		probability_scrollpane = new JScrollPane(/*this.table6a*/);
-		TitledBorder border = new TitledBorder("Probability of occurence (INACTIVE)");
+		TitledBorder border = new TitledBorder("Probability of occurrence (INACTIVE)");
 		border.setTitleJustification(TitledBorder.CENTER);
 		probability_scrollpane.setBorder(border);
 		probability_scrollpane.setPreferredSize(new Dimension(333, 0));
 		
 		
 		regeneration_scrollpane = new JScrollPane(/*this.table6b*/);
-		border = new TitledBorder("Regeneration upon occurence");
+		border = new TitledBorder("Regeneration upon occurrence");
 		border.setTitleJustification(TitledBorder.CENTER);
 		regeneration_scrollpane.setBorder(border);
 		regeneration_scrollpane.setPreferredSize(new Dimension(433, 0));
@@ -78,7 +78,7 @@ public class ScrollPane_SubTables_SR_Disturbances extends JScrollPane {
 	}	
 			
 	
-	public String get_occurence_info_from_GUI() {			
+	public String get_occurrence_info_from_GUI() {			
 		String probability_info = "";
 		for (int row = 0; row < data6a.length; row++) {
 			probability_info = probability_info + data6a[row][0] + " " + data6a[row][1];
@@ -110,7 +110,7 @@ public class ScrollPane_SubTables_SR_Disturbances extends JScrollPane {
 	}
 	
 	
-	public void reload_this_condition_occurence_and_regeneration(String probability_info, String regeneration_info) {	
+	public void reload_this_condition_occurrence_and_regeneration(String probability_info, String regeneration_info) {	
 		// Reload table6a
 		if(probability_info.length() > 0) {		// this guarantees the string is not ""
 			String[] info_6a = probability_info.split(";");					

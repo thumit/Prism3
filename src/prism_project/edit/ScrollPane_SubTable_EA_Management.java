@@ -24,7 +24,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.TitledBorder;
 
-import prism_convenience_class.PrismTableModel;
+import prism_convenience.PrismTableModel;
 
 public class ScrollPane_SubTable_EA_Management extends JScrollPane {		
 	private JTable table4a;

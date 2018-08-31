@@ -128,3 +128,6 @@ GROUP BY period
 2 cols
 Select var_name, var_unit_management_cost from output_05_management_details
 ----------
+all
+select * from output_05_management_details
+----------

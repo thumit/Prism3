@@ -48,11 +48,11 @@ import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import javax.swing.border.TitledBorder;
 
-import prism_convenience_class.ArrayListTransferHandler;
-import prism_convenience_class.ColorUtil;
-import prism_convenience_class.IconHandle;
-import prism_convenience_class.MenuScroller;
-import prism_convenience_class.PrismGridBagLayoutHandle;
+import prism_convenience.ArrayListTransferHandler;
+import prism_convenience.ColorUtil;
+import prism_convenience.IconHandle;
+import prism_convenience.MenuScroller;
+import prism_convenience.PrismGridBagLayoutHandle;
 
 
 

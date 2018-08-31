@@ -37,9 +37,9 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.plaf.FontUIResource;
 
-import prism_convenience_class.ComponentResizer;
-import prism_convenience_class.IconHandle;
-import prism_convenience_class.WindowAppearanceHandle;
+import prism_convenience.ComponentResizer;
+import prism_convenience.IconHandle;
+import prism_convenience.WindowAppearanceHandle;
 
 public class MenuItem_SetLookAndFeel extends JMenuItem {
 	private static boolean is_Nimbus_Without_titleBar = true;		//Set this to false if in the void main(String[] args), we do the following:

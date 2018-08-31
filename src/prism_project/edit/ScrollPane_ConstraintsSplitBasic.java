@@ -40,8 +40,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
-import prism_convenience_class.IconHandle;
-import prism_convenience_class.PrismTableModel;
+import prism_convenience.IconHandle;
+import prism_convenience.PrismTableModel;
 
 public class ScrollPane_ConstraintsSplitBasic extends JScrollPane {
 

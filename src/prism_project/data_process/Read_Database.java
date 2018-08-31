@@ -34,8 +34,12 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import prism_convenience_class.FilesHandle;
-import prism_convenience_class.StringHandle;
+import javax.swing.JOptionPane;
+
+import prism_convenience.FilesHandle;
+import prism_convenience.IconHandle;
+import prism_convenience.StringHandle;
+import prism_root.PrismMain;
 
 public class Read_Database {
 	private Object[][][] yield_tables_values;
@@ -198,7 +202,12 @@ public class Read_Database {
 				yield_tables_column_unique_values = null;	// clear to save memory
 			}
 		} catch (Exception e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Read_Database   -   Database connection error");
+			e.printStackTrace();
+			String warningText = "yield_tables does not meet Prism's data requirements\n";
+			warningText = warningText + e.getClass().getName() + ": " + e.getMessage();
+			String ExitOption[] = {"OK"};
+			int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warningText, "Database error",
+					JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption, ExitOption[0]);
 		} finally {
 			// Close in case not closing properly, not need to print out because the exception only happens when there is null to close
 		    try { rs.close(); } catch (Exception e) { /* ignored */}	
@@ -241,7 +250,12 @@ public class Read_Database {
 				}
 			}
 		} catch (Exception e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Read_Database   -   Database connection error");
+			e.printStackTrace();
+			String warningText = "existing_strata does not meet Prism's data requirements\n";
+			warningText = warningText + e.getClass().getName() + ": " + e.getMessage();
+			String ExitOption[] = {"OK"};
+			int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warningText, "Database error",
+					JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption, ExitOption[0]);
 		} finally {
 			// Close in case not closing properly, not need to print out because the exception only happens when there is null to close
 		    try { rs.close(); } catch (Exception e) { /* ignored */}	
@@ -337,7 +351,12 @@ public class Read_Database {
 //				}		
 			}
 		} catch (Exception e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Read_Database   -   Database connection error");
+			e.printStackTrace();
+			String warningText = "strata_definition does not meet Prism's data requirements\n";
+			warningText = warningText + e.getClass().getName() + ": " + e.getMessage();
+			String ExitOption[] = {"OK"};
+			int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warningText, "Database error",
+					JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption, ExitOption[0]);
 		} finally {
 			// Close in case not closing properly, not need to print out because the exception only happens when there is null to close
 		    try { rs.close(); } catch (Exception e) { /* ignored */}	
@@ -391,6 +410,7 @@ public class Read_Database {
 //				}									
 //			}
 //		} catch (Exception e) {
+//			e.printStackTrace();
 //			System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Read_Database   -   Database connection error");
 //		} finally {
 //			// Close in case not closing properly, not need to print out because the exception only happens when there is null to close
@@ -589,7 +609,12 @@ public class Read_Database {
 				}
 			}
 		} catch (Exception e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Read_Database   -   Database connection error");
+			e.printStackTrace();
+			String warningText = "Fail to get rotation ages information\n";
+			warningText = warningText + e.getClass().getName() + ": " + e.getMessage();
+			String ExitOption[] = {"OK"};
+			int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warningText, "Database error",
+					JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption, ExitOption[0]);
 		} finally {
 			// Close in case not closing properly, not need to print out because the exception only happens when there is null to close
 		    try { rs.close(); } catch (Exception e) { /* ignored */}	
@@ -713,6 +738,7 @@ public class Read_Database {
 				}
 			}	
 		} catch (IOException e) {
+			e.printStackTrace();
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 		}
 		return toolTip;

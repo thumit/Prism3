@@ -63,16 +63,16 @@ import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 import javax.swing.plaf.FontUIResource;
 
-import prism_convenience_class.ColorUtil;
-import prism_convenience_class.ComponentResizer;
-import prism_convenience_class.FilesHandle;
-import prism_convenience_class.IconHandle;
-import prism_convenience_class.MenuScroller;
-import prism_convenience_class.PrismMenu;
-import prism_convenience_class.Processing;
-import prism_convenience_class.RequestFocusListener;
-import prism_convenience_class.StringHandle;
-import prism_convenience_class.WindowAppearanceHandle;
+import prism_convenience.ColorUtil;
+import prism_convenience.ComponentResizer;
+import prism_convenience.FilesHandle;
+import prism_convenience.IconHandle;
+import prism_convenience.MenuScroller;
+import prism_convenience.PrismMenu;
+import prism_convenience.Processing;
+import prism_convenience.RequestFocusListener;
+import prism_convenience.StringHandle;
+import prism_convenience.WindowAppearanceHandle;
 import prism_database.Panel_DatabaseManagement;
 import prism_project.Panel_Project;
 import prism_project.data_process.LinkedList_Databases;
@@ -94,7 +94,7 @@ public class PrismMain extends JFrame {
 	private MenuItem_SetTransparency 	setTransparency;		// For menuWindow
 	private MenuItem_CaptureGUI 		captureGUI;				// For menuWindow
 		
-	private static String 				prism_version = "PRISM ALPHA 1.2.02";
+	private static String 				prism_version = "PRISM ALPHA 1.2.03";
 	private String 						currentProject;
 	private static PrismDesktopPane 	prism_DesktopPane;
 	private static PrismContentPane 	prism_ContentPane;
@@ -103,7 +103,7 @@ public class PrismMain extends JFrame {
 	
 	private static LinkedList_Databases databases_linkedlist = new LinkedList_Databases();
 	
-		
+	
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public static void main(String[] args) {
 		

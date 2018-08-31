@@ -36,9 +36,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 
-import prism_convenience_class.FilesHandle;
-import prism_convenience_class.PrismTitleScrollPane;
-import prism_convenience_class.PrismTextAreaReadMe;
+import prism_convenience.FilesHandle;
+import prism_convenience.PrismTextAreaReadMe;
+import prism_convenience.PrismTitleScrollPane;
 
 public class OptionPane_About extends JOptionPane {
 	

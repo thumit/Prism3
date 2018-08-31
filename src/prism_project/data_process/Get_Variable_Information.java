@@ -21,7 +21,7 @@ import java.util.List;
 
 public class Get_Variable_Information {
 
-	private String layer1, layer2, layer3, layer4, layer5, layer6, method, regenerated_covertype, forest_status;	// regenerated_covertype = s5R = covertype_after, while layer5 = covertype_before
+	private String layer1, layer2, layer3, layer4, layer5, layer6, method, layer5_regen, forest_status;	// layer5_regen = regenerated cover type = s5R (after clear-cut or SR occurrence), while layer5 = s5 (before clear-cut or SR occurrence)
 	private int period, age, timing_choice, rotation_period, rotation_age;
 	private String yield_table_name_to_find;
 	private int yield_table_row_index_to_find;
@@ -36,7 +36,7 @@ public class Get_Variable_Information {
 		layer5 = "";
 		layer6 = "";
 		method = "";
-		regenerated_covertype = "";
+		layer5_regen = "";
 		forest_status = "";
 		rotation_period = -9999;
 		rotation_age = -9999;
@@ -151,7 +151,7 @@ public class Get_Variable_Information {
 			layer5 = term[4];
 			layer6 = term[5];
 			rotation_period = Integer.parseInt(term[6]);
-			regenerated_covertype = term[7];
+			layer5_regen = term[7];
 			timing_choice = Integer.parseInt(term[8]);
 			period = Integer.parseInt(term[9]);	
 			age = starting_age + period - 1;		// calculate age for existing variable
@@ -173,7 +173,7 @@ public class Get_Variable_Information {
 			layer5 = term[4];
 			rotation_period = Integer.parseInt(term[5]);
 			rotation_age = Integer.parseInt(term[6]);
-			regenerated_covertype = term[7];
+			layer5_regen = term[7];
 			timing_choice = Integer.parseInt(term[8]);
 			period = Integer.parseInt(term[9]);
 			age = rotation_age + period - rotation_period; // a = aR + t - tR
@@ -288,7 +288,7 @@ public class Get_Variable_Information {
 	}
 	
 	public String get_regenerated_covertype() {
-		return regenerated_covertype;
+		return layer5_regen;
 	}	
 	
 	public String get_forest_status() {

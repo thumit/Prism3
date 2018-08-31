@@ -42,9 +42,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.border.Border;
 
-import prism_convenience_class.ColorUtil;
-import prism_convenience_class.IconHandle;
-import prism_convenience_class.PrismMenu;
+import prism_convenience.ColorUtil;
+import prism_convenience.IconHandle;
+import prism_convenience.PrismMenu;
 
 public class PrismMenuBar extends JMenuBar implements MouseListener, MouseMotionListener {
 	private Color background_color = ColorUtil.makeTransparent(Color.WHITE, 220);

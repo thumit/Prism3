@@ -21,7 +21,7 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import prism_convenience_class.FilesHandle;
+import prism_convenience.FilesHandle;
 import prism_root.PrismMain;
 
 public class FilesChooser {

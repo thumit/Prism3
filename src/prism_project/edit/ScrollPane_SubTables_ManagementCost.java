@@ -27,7 +27,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.TitledBorder;
 
-import prism_convenience_class.TableColumnsHandle;
+import prism_convenience.TableColumnsHandle;
 
 public class ScrollPane_SubTables_ManagementCost extends JScrollPane {		
 	private JTable table8a;

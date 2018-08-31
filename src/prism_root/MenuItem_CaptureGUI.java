@@ -33,8 +33,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
-import prism_convenience_class.IconHandle;
-import prism_convenience_class.ImageWhenClicked;
+import prism_convenience.IconHandle;
+import prism_convenience.ImageWhenClicked;
 
 public class MenuItem_CaptureGUI extends JMenuItem {
 

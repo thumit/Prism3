@@ -35,7 +35,7 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 
-import prism_convenience_class.IconHandle;
+import prism_convenience.IconHandle;
 import prism_root.PrismMain;
 
 public class Panel_QuickEdit_EA extends JPanel {

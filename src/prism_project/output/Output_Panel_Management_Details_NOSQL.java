@@ -78,11 +78,11 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
-import prism_convenience_class.IconHandle;
-import prism_convenience_class.MixedRangeCombinationIterable;
-import prism_convenience_class.PrismTableModel;
-import prism_convenience_class.TableColumnsHandle;
-import prism_convenience_class.ToolBarWithBgImage;
+import prism_convenience.IconHandle;
+import prism_convenience.MixedRangeCombinationIterable;
+import prism_convenience.PrismTableModel;
+import prism_convenience.TableColumnsHandle;
+import prism_convenience.ToolBarWithBgImage;
 import prism_project.data_process.Get_Parameter_Information;
 import prism_project.data_process.Get_Variable_Information;
 import prism_project.data_process.LinkedList_Databases_Item;

@@ -973,3 +973,10 @@ All changes in this block are associated with PrismAlpha1.2.01.jar, Prism Formul
 430. Disable the control of MS_E and BS_E in Non-EA Management.
 All changes in this block are associated with PrismAlpha1.2.02.jar, Prism Formulation 07.docx, Prism Database 03.docx	
 --------------------------------------------------------------------------
+
+431. Flow description is added using examine button. Support examining one flow at a time.
+432. Bug 16 fixed with a lot of code restructure. Support reverting data when database importation fails. Remember database only when database importation is successful.
+433. Add infeasibility check for Non-SR Disturbances, SR Disturbances, Hard Basic Constraints, Hard Flow Constraints (with icon & tooltip for description of infeasibility)
+434. Progess animation when loading models
+All changes in this block are associated with PrismAlpha1.2.03.jar, User Manual 1.0
+--------------------------------------------------------------------------

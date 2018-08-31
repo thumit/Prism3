@@ -33,7 +33,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.TitledBorder;
 
-import prism_convenience_class.ColorUtil;
+import prism_convenience.ColorUtil;
 import prism_project.data_process.Read_Database;
 
 

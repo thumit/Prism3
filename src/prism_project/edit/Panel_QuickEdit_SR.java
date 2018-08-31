@@ -47,9 +47,9 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import prism_convenience_class.IconHandle;
-import prism_convenience_class.PrismGridBagLayoutHandle;
-import prism_convenience_class.TableColumnsHandle;
+import prism_convenience.IconHandle;
+import prism_convenience.PrismGridBagLayoutHandle;
+import prism_convenience.TableColumnsHandle;
 import prism_project.data_process.Read_Database;
 import prism_root.PrismMain;
 

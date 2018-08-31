@@ -83,9 +83,9 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
-import prism_convenience_class.IconHandle;
-import prism_convenience_class.PrismTableModel;
-import prism_convenience_class.ToolBarWithBgImage;
+import prism_convenience.IconHandle;
+import prism_convenience.PrismTableModel;
+import prism_convenience.ToolBarWithBgImage;
 import prism_root.PrismMain;
 
 public class Setting {
