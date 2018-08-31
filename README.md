@@ -27,11 +27,11 @@ PRISM is currently in Alpha version of development. For more information on how 
 
 Development team:
 
-	Yu Wei, Project Investigator, Professor at Colorado State university (USA), yweimailbox@gmail.com
-	Dung Nguyen, Key Developer, PostDoctoral Fellow at Colorado State University (USA), dzung.csu@gmail.com
-	Eric Henderson, Collaborator, Regional Planning Analyst at Forest Service - R1 Northern Region (USA), ehenderson@fs.fed.us
-	David Anderson, Collaborator, Regional Planning Analyst at Forest Service - R3 Southwestern Region (USA), davidanderson@fs.fed.us
-
+	Yu Wei, Project Investigator - June 2016, Professor at Colorado State university (USA), yweimailbox@gmail.com
+	Dung Nguyen, Key Developer - June 2016, PostDoctoral Fellow at Colorado State University (USA), dzung.csu@gmail.com
+	Eric Henderson, Collaborator - June 2016, Regional Planning Analyst at Forest Service - R1 Northern Region (USA), ehenderson@fs.fed.us
+	David Anderson, Collaborator - June 2016, Regional Planning Analyst at Forest Service - R3 Southwestern Region (USA), davidanderson@fs.fed.us
+	Kira Deming, Developer - July 2018, MS Student at Colorado State University (USA), kira.deming@rams.colostate.edu
 
 PRISM is licensed under the terms of the GNU General Public License version 3 or later. A copy of this license (license-GPL.txt) could be found in the distribution of PRISM.
 
