@@ -28,8 +28,8 @@ PRISM is currently in Alpha version of development. For more information on how 
 
 
 Development team:
-	Yu Wei, Project Investigator - June 2016, Professor at Colorado State university (USA), yweimailbox@gmail.com
 	Dung Nguyen, Key Developer - June 2016, PostDoctoral Fellow at Colorado State University (USA), dzung.csu@gmail.com
+	Yu Wei, Principal Investigator - June 2016, Professor at Colorado State university (USA), yu.wei@colostate.edu
 	Eric Henderson, Collaborator - June 2016, Regional Planning Analyst at Forest Service - R1 Northern Region (USA), ehenderson@fs.fed.us
 	David Anderson, Collaborator - July 2018, Regional Planning Analyst at Forest Service - R3 Southwestern Region (USA), davidanderson@fs.fed.us
 	Kira Deming, Developer - July 2018, MS Student at Colorado State University (USA), kira.deming@rams.colostate.edu 
