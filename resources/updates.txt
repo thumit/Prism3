@@ -980,3 +980,6 @@ All changes in this block are associated with PrismAlpha1.2.02.jar, Prism Formul
 434. Progess animation when loading models
 All changes in this block are associated with PrismAlpha1.2.03.jar, User Manual 1.0
 --------------------------------------------------------------------------
+
+435. LPSOLVE is now working properly. Fix java paths loading, and add lpsolve55.dll which is associated with lpsolve55j.dll.
+All changes in this block are associated with PrismAlpha1.2.05.jar, User Manual 1.0

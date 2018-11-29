@@ -33,9 +33,6 @@ import java.io.InputStreamReader;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.PrintStream;
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -50,6 +47,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -3390,33 +3388,33 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			
 			if (solver_for_optimization.equals("CPLEX")) {
 				// Load jar file dynamically at run time   (this is just for solving by CPLEX while running PRISM in Eclipse IDE)   
-				// This first try-catch works in Java SE-8 but not works in Java SE-9 --> ClassLoader.getSystemClassLoader() sequences will no longer execute:              https://blog.codefx.org/java/java-9-migration-guide/#Casting-To-URL-Class-Loader
-				try {
-					File file = new File("C:\\Users\\Dung Nguyen\\Desktop\\Temporary\\cplex.jar");
-					URL url = file.toURI().toURL();
-					URLClassLoader classLoader = (URLClassLoader)ClassLoader.getSystemClassLoader();
-					Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
-					method.setAccessible(true);
-					method.invoke(classLoader, url);	
-					System.out.println("Successfully loaded cplex.jar from C:\\Users\\Dung Nguyen\\Desktop\\Temporary");	
-				} catch (Exception e) {
-					System.err.println("cplex error - " + e.getClass().getName() + ": " + e.getMessage());
-					
-					// If not successful then:
-					// Load jar file dynamically at run time   (this is just for solving by CPLEX while running PRISM outside of Eclipse IDE - running the PrismAlphax.x.x.jar)
-					//  ........currently not working, need to find a way
-					try {
-						File file = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "cplex.jar");
-						URL url = file.toURI().toURL();
-						URLClassLoader classLoader = (URLClassLoader)ClassLoader.getSystemClassLoader();
-						Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
-						method.setAccessible(true);
-						method.invoke(classLoader, url);	
-						System.out.println("Successfully loaded cplex.jar from " + FilesHandle.get_temporaryFolder().getAbsolutePath());
-					} catch (Exception e1) {
-						System.err.println("cplex error - " + e1.getClass().getName() + ": " + e1.getMessage());
-					}
-				}
+//				// This first try-catch works in Java SE-8 but not works in Java SE-9 --> ClassLoader.getSystemClassLoader() sequences will no longer execute:              https://blog.codefx.org/java/java-9-migration-guide/#Casting-To-URL-Class-Loader
+//				try {
+//					File file = new File("C:\\Users\\Dung Nguyen\\Desktop\\Temporary\\cplex.jar");
+//					URL url = file.toURI().toURL();
+//					URLClassLoader classLoader = (URLClassLoader)ClassLoader.getSystemClassLoader();
+//					Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
+//					method.setAccessible(true);
+//					method.invoke(classLoader, url);	
+//					System.out.println("Successfully loaded cplex.jar from C:\\Users\\Dung Nguyen\\Desktop\\Temporary");	
+//				} catch (Exception e) {
+//					System.err.println("cplex error - " + e.getClass().getName() + ": " + e.getMessage());
+//					
+//					// If not successful then:
+//					// Load jar file dynamically at run time   (this is just for solving by CPLEX while running PRISM outside of Eclipse IDE - running the PrismAlphax.x.x.jar)
+//					//  ........currently not working, need to find a way
+//					try {
+//						File file = new File(FilesHandle.get_temporaryFolder().getAbsolutePath() + "/" + "cplex.jar");
+//						URL url = file.toURI().toURL();
+//						URLClassLoader classLoader = (URLClassLoader)ClassLoader.getSystemClassLoader();
+//						Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
+//						method.setAccessible(true);
+//						method.invoke(classLoader, url);	
+//						System.out.println("Successfully loaded cplex.jar from " + FilesHandle.get_temporaryFolder().getAbsolutePath());
+//					} catch (Exception e1) {
+//						System.err.println("cplex error - " + e1.getClass().getName() + ": " + e1.getMessage());
+//					}
+//				}
 				
 				
 				
@@ -3424,17 +3422,24 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 				try {
 //					LibraryHandle.setLibraryPath("C:\\Users\\Dung Nguyen\\Desktop\\Temporary");
 					LibraryHandle.addLibraryPath("C:\\Users\\Dung Nguyen\\Desktop\\Temporary");
-					System.out.println("Successfully added all .dll files in C:\\Users\\Dung Nguyen\\Desktop\\Temporary");	
+					System.out.println("C:\\Users\\Dung Nguyen\\Desktop\\Temporary"  + " has been added to the java library paths");
 				} catch (Exception e) {
-					System.err.println("cplex error - " + e.getClass().getName() + ": " + e.getMessage());
+					System.err.println("cplex error - Developer's computer is not found. " + e.getClass().getName() + ": " + e.getMessage());
 
 				}
 				
 				// Add the CPLEX native library path dynamically at run time. When running PRISM outside of Eclipse IDE --> Temporary folder should have all .dll including cplex1261.dll
 				try {
-//					LibraryHandle.setLibraryPath(FilesHandle.get_temporaryFolder().getAbsolutePath().toString());
-					LibraryHandle.addLibraryPath(FilesHandle.get_temporaryFolder().getAbsolutePath().toString());
-					System.out.println("Successfully added all .dll files in " + FilesHandle.get_temporaryFolder().getAbsolutePath().toString());	
+//					LibraryHandle.setLibraryPath(FilesHandle.get_temporaryFolder().getAbsolutePath().toString());	// This will clear all other paths (many) and set path to the "temporary" folder
+					LibraryHandle.addLibraryPath(FilesHandle.get_temporaryFolder().getAbsolutePath().toString());	// This will NOT clear all other paths, and will add the "temporary" folder to the paths
+					System.out.println(FilesHandle.get_temporaryFolder().getAbsolutePath().toString() + " has been added to the java library paths");	
+					
+					System.out.println("Below is all the java library paths Prism found:");
+					String property = System.getProperty("java.library.path");
+					StringTokenizer parser = new StringTokenizer(property, ";");
+					while (parser.hasMoreTokens()) {
+						System.out.println("           - " + parser.nextToken());
+					}
 				} catch (Exception e) {
 					System.err.println("cplex error - " + e.getClass().getName() + ": " + e.getMessage());
 				}
@@ -3866,9 +3871,23 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			if (solver_for_optimization.equals("LPSOLVE")) {				//Reference for all LPsolve classes here:		http://lpsolve.sourceforge.net/5.5/Java/docs/api/lpsolve/LpSolve.html
 				// Add the LPsolve native library path dynamically at run time
 				try {
-					LibraryHandle.setLibraryPath(FilesHandle.get_temporaryFolder().getAbsolutePath().toString());
-					LibraryHandle.addLibraryPath(FilesHandle.get_temporaryFolder().getAbsolutePath().toString());
-					System.out.println("Successfully loaded all .dll files from " + FilesHandle.get_temporaryFolder().getAbsolutePath().toString());			
+//					LibraryHandle.setLibraryPath(FilesHandle.get_temporaryFolder().getAbsolutePath().toString());	// This will clear all other paths (many) and set path to the "temporary" folder
+					LibraryHandle.addLibraryPath(FilesHandle.get_temporaryFolder().getAbsolutePath().toString());	// This will NOT clear all other paths, and will add the "temporary" folder to the paths
+					System.out.println(FilesHandle.get_temporaryFolder().getAbsolutePath().toString() + " has been added to the java library paths");	
+					
+					System.out.println("Below is all the java library paths Prism found:");
+					String property = System.getProperty("java.library.path");
+					StringTokenizer parser = new StringTokenizer(property, ";");
+					while (parser.hasMoreTokens()) {
+						System.out.println("           - " + parser.nextToken());
+					}
+
+					try {	// add lpsolve55.dll, this is an important dependent associated with lpsolve55j.dll that will have to be loaded manually (only lpsolve55j.dll is auto loaded when set path to Temporary folder)
+						System.loadLibrary("lpsolve55");
+						System.out.println("lpsolve55.dll has been succesfully loaded");	
+					} catch (UnsatisfiedLinkError e) {
+						System.err.println("Native code library failed to load.\n" + e);
+					}
 				} catch (Exception e) {
 					System.err.println("Panel Solve Runs - addLibraryPath error - " + e.getClass().getName() + ": " + e.getMessage());
 				}
