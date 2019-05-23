@@ -1,3 +1,4 @@
+
 /*******************************************************************************
  * Copyright (C) 2016-2018 PRISM Development Team
  * 
@@ -46,202 +47,203 @@ public class Get_Variable_Information {
 		yield_table_name_to_find = "";
 		yield_table_row_index_to_find = -9999;
 		
-		if (var_name.startsWith("xNG_E_")) {
-			var_name = var_name.replace("xNG_E_", "");
-			String[] term = var_name.split(",");
-			layer1 = term[0];
-			layer2 = term[1];
-			layer3 = term[2];
-			layer4 = term[3];
-			layer5 = term[4];
-			layer6 = term[5];
-			timing_choice = Integer.parseInt(term[6]);
-			period = Integer.parseInt(term[7]);
-			age = starting_age + period - 1;		// calculate age for existing variable
-			
-			
-			method = "NG";
-			forest_status = "E";
-			yield_table_name_to_find = layer5 + "_" + layer6 + "_"+ method + "_" + forest_status + "_" + timing_choice;
-			yield_table_row_index_to_find = period - 1;
-		} 
-		else if (var_name.startsWith("xPB_E_")) {
-			var_name = var_name.replace("xPB_E_", "");
-			String[] term = var_name.toString().split(",");
-			layer1 = term[0];
-			layer2 = term[1];
-			layer3 = term[2];
-			layer4 = term[3];
-			layer5 = term[4];
-			layer6 = term[5];
-			timing_choice = Integer.parseInt(term[6]);
-			period = Integer.parseInt(term[7]);
-			age = starting_age + period - 1;		// calculate age for existing variable
-			
-			
-			method = "PB";
-			forest_status = "E";
-			yield_table_name_to_find = layer5 + "_" + layer6 + "_"+ method + "_" + forest_status + "_" + timing_choice;
-			yield_table_row_index_to_find = period - 1;
-		}
-		else if (var_name.startsWith("xGS_E_")) {
-			var_name = var_name.replace("xGS_E_", "");
-			String[] term = var_name.toString().split(",");
-			layer1 = term[0];
-			layer2 = term[1];
-			layer3 = term[2];
-			layer4 = term[3];
-			layer5 = term[4];
-			layer6 = term[5];
-			timing_choice = Integer.parseInt(term[6]);
-			period = Integer.parseInt(term[7]);	
-			age = starting_age + period - 1;		// calculate age for existing variable
-			
-			
-			method = "GS";
-			forest_status = "E";
-			yield_table_name_to_find = layer5 + "_" + layer6 + "_"+ method + "_" + forest_status + "_" + timing_choice;
-			yield_table_row_index_to_find = period - 1;
-		}
-		else if (var_name.startsWith("xMS_E_")) {
-			var_name = var_name.replace("xMS_E_", "");
-			String[] term = var_name.toString().split(",");
-			layer1 = term[0];
-			layer2 = term[1];
-			layer3 = term[2];
-			layer4 = term[3];
-			layer5 = term[4];
-			layer6 = term[5];
-			timing_choice = Integer.parseInt(term[6]);
-			period = Integer.parseInt(term[7]);	
-			age = starting_age + period - 1;		// calculate age for existing variable
-			
-			
-			method = "MS";
-			forest_status = "E";
-			yield_table_name_to_find = layer5 + "_" + layer6 + "_"+ method + "_" + forest_status + "_" + timing_choice;
-			yield_table_row_index_to_find = period - 1;
-		}
-		else if (var_name.startsWith("xBS_E_")) {
-			var_name = var_name.replace("xBS_E_", "");
-			String[] term = var_name.toString().split(",");
-			layer1 = term[0];
-			layer2 = term[1];
-			layer3 = term[2];
-			layer4 = term[3];
-			layer5 = term[4];
-			layer6 = term[5];
-			timing_choice = Integer.parseInt(term[6]);
-			period = Integer.parseInt(term[7]);
-			age = starting_age + period - 1;		// calculate age for existing variable
-			
-			
-			method = "BS";
-			forest_status = "E";
-			yield_table_name_to_find = layer5 + "_" + layer6 + "_" + method + "_" + forest_status + "_" + timing_choice;
-			yield_table_row_index_to_find = period - 1;
-		}
-		else if (var_name.startsWith("xEA_E_")) {				
-			var_name = var_name.replace("xEA_E_", "");
-			String[] term = var_name.toString().split(",");
-			layer1 = term[0];
-			layer2 = term[1];
-			layer3 = term[2];
-			layer4 = term[3];
-			layer5 = term[4];
-			layer6 = term[5];
-			rotation_period = Integer.parseInt(term[6]);
-			layer5_regen = term[7];
-			timing_choice = Integer.parseInt(term[8]);
-			period = Integer.parseInt(term[9]);	
-			age = starting_age + period - 1;		// calculate age for existing variable
-			rotation_age = rotation_period + starting_age - 1;	// calculate rotation age for existing variable
-			
-			
-			method = "EA";
-			forest_status = "E";
-			yield_table_name_to_find = layer5 + "_" + layer6 + "_" + method + "_" + forest_status + "_" + rotation_age + "_" + timing_choice;
-			yield_table_row_index_to_find = period - 1;
-		}	
-		else if (var_name.startsWith("xEA_R_")) {
-			var_name = var_name.replace("xEA_R_", "");
-			String[] term = var_name.toString().split(",");
-			layer1 = term[0];
-			layer2 = term[1];
-			layer3 = term[2];
-			layer4 = term[3];
-			layer5 = term[4];
-			rotation_period = Integer.parseInt(term[5]);
-			rotation_age = Integer.parseInt(term[6]);
-			layer5_regen = term[7];
-			timing_choice = Integer.parseInt(term[8]);
-			period = Integer.parseInt(term[9]);
-			age = rotation_age + period - rotation_period; // a = aR + t - tR
-			
-			
-			method = "EA";
-			forest_status = "R";
-			yield_table_name_to_find = layer5 + "_" + method + "_" + forest_status + "_" + rotation_age + "_" + timing_choice;
-			yield_table_row_index_to_find = rotation_age - 1 + period - rotation_period;
-		}
-		else if (var_name.startsWith("xNG_R_")) {
-			var_name = var_name.replace("xNG_R_", "");
-			String[] term = var_name.toString().split(",");
-			layer1 = term[0];
-			layer2 = term[1];
-			layer3 = term[2];
-			layer4 = term[3];
-			layer5 = term[4];
-			timing_choice = Integer.parseInt(term[5]);
-			period = Integer.parseInt(term[6]);
-			age = Integer.parseInt(term[7]);
-
-			
-			method = "NG";
-			forest_status = "R";
-			yield_table_name_to_find = layer5 + "_" + method + "_" + forest_status + "_" + timing_choice;
-			yield_table_row_index_to_find = age - 1;
-		}	
-		else if (var_name.startsWith("xPB_R_")) {
-			var_name = var_name.replace("xPB_R_", "");
-			String[] term = var_name.toString().split(",");
-			layer1 = term[0];
-			layer2 = term[1];
-			layer3 = term[2];
-			layer4 = term[3];
-			layer5 = term[4];
-			timing_choice = Integer.parseInt(term[5]);
-			period = Integer.parseInt(term[6]);
-			age = Integer.parseInt(term[7]);
-
-			
-			method = "PB";
-			forest_status = "R";
-			yield_table_name_to_find = layer5 + "_" + method + "_" + forest_status + "_" + timing_choice;
-			yield_table_row_index_to_find = age - 1;
-		}	
-		else if (var_name.startsWith("xGS_R_")) {
-			var_name = var_name.replace("xGS_R_", "");
-			String[] term = var_name.toString().split(",");
-			layer1 = term[0];
-			layer2 = term[1];
-			layer3 = term[2];
-			layer4 = term[3];
-			layer5 = term[4];
-			timing_choice = Integer.parseInt(term[5]);
-			period = Integer.parseInt(term[6]);
-			age = Integer.parseInt(term[7]);
-
-			
-			method = "GS";
-			forest_status = "R";
-			yield_table_name_to_find = layer5 + "_" + method + "_" + forest_status + "_" + timing_choice;
-			yield_table_row_index_to_find = age - 1;
-		}	
 		
+		try {
+			String first_six_letters_of_var_name = var_name.substring(0, 6);
+			String[] term;
+			
+			switch (first_six_letters_of_var_name) {
+			case "xNG_E_":
+				term = var_name.substring(6).split(",");	// remove first 6 letters and then split
+				layer1 = term[0];
+				layer2 = term[1];
+				layer3 = term[2];
+				layer4 = term[3];
+				layer5 = term[4];
+				layer6 = term[5];
+				timing_choice = Integer.parseInt(term[6]);
+				period = Integer.parseInt(term[7]);
+				age = starting_age + period - 1;		// calculate age for existing variable
 				
+				method = "NG";
+				forest_status = "E";
+				yield_table_name_to_find = layer5 + "_" + layer6 + "_"+ method + "_" + forest_status + "_" + timing_choice;
+				yield_table_row_index_to_find = period - 1;
+				break;
+			
+			case "xPB_E_":
+				term = var_name.substring(6).split(",");	// remove first 6 letters and then split
+				layer1 = term[0];
+				layer2 = term[1];
+				layer3 = term[2];
+				layer4 = term[3];
+				layer5 = term[4];
+				layer6 = term[5];
+				timing_choice = Integer.parseInt(term[6]);
+				period = Integer.parseInt(term[7]);
+				age = starting_age + period - 1;		// calculate age for existing variable
 				
+				method = "PB";
+				forest_status = "E";
+				yield_table_name_to_find = layer5 + "_" + layer6 + "_"+ method + "_" + forest_status + "_" + timing_choice;
+				yield_table_row_index_to_find = period - 1;
+				break;
+			
+			case "xGS_E_":
+				term = var_name.substring(6).split(",");	// remove first 6 letters and then split
+				layer1 = term[0];
+				layer2 = term[1];
+				layer3 = term[2];
+				layer4 = term[3];
+				layer5 = term[4];
+				layer6 = term[5];
+				timing_choice = Integer.parseInt(term[6]);
+				period = Integer.parseInt(term[7]);	
+				age = starting_age + period - 1;		// calculate age for existing variable
 				
+				method = "GS";
+				forest_status = "E";
+				yield_table_name_to_find = layer5 + "_" + layer6 + "_"+ method + "_" + forest_status + "_" + timing_choice;
+				yield_table_row_index_to_find = period - 1;
+				break;
+			
+			case "xMS_E_":
+				term = var_name.substring(6).split(",");	// remove first 6 letters and then split
+				layer1 = term[0];
+				layer2 = term[1];
+				layer3 = term[2];
+				layer4 = term[3];
+				layer5 = term[4];
+				layer6 = term[5];
+				timing_choice = Integer.parseInt(term[6]);
+				period = Integer.parseInt(term[7]);	
+				age = starting_age + period - 1;		// calculate age for existing variable
+				
+				method = "MS";
+				forest_status = "E";
+				yield_table_name_to_find = layer5 + "_" + layer6 + "_"+ method + "_" + forest_status + "_" + timing_choice;
+				yield_table_row_index_to_find = period - 1;
+				break;
+				
+			case "xBS_E_":
+				term = var_name.substring(6).split(",");	// remove first 6 letters and then split
+				layer1 = term[0];
+				layer2 = term[1];
+				layer3 = term[2];
+				layer4 = term[3];
+				layer5 = term[4];
+				layer6 = term[5];
+				timing_choice = Integer.parseInt(term[6]);
+				period = Integer.parseInt(term[7]);
+				age = starting_age + period - 1;		// calculate age for existing variable
+				
+				method = "BS";
+				forest_status = "E";
+				yield_table_name_to_find = layer5 + "_" + layer6 + "_" + method + "_" + forest_status + "_" + timing_choice;
+				yield_table_row_index_to_find = period - 1;
+				break;
+				
+			case "xEA_E_":
+				term = var_name.substring(6).split(",");	// remove first 6 letters and then split
+				layer1 = term[0];
+				layer2 = term[1];
+				layer3 = term[2];
+				layer4 = term[3];
+				layer5 = term[4];
+				layer6 = term[5];
+				rotation_period = Integer.parseInt(term[6]);
+				layer5_regen = term[7];
+				timing_choice = Integer.parseInt(term[8]);
+				period = Integer.parseInt(term[9]);	
+				age = starting_age + period - 1;		// calculate age for existing variable
+				rotation_age = rotation_period + starting_age - 1;	// calculate rotation age for existing variable
+				
+				method = "EA";
+				forest_status = "E";
+				yield_table_name_to_find = layer5 + "_" + layer6 + "_" + method + "_" + forest_status + "_" + rotation_age + "_" + timing_choice;
+				yield_table_row_index_to_find = period - 1;
+				break;
+				
+			case "xEA_R_":
+				term = var_name.substring(6).split(",");	// remove first 6 letters and then split
+				layer1 = term[0];
+				layer2 = term[1];
+				layer3 = term[2];
+				layer4 = term[3];
+				layer5 = term[4];
+				rotation_period = Integer.parseInt(term[5]);
+				rotation_age = Integer.parseInt(term[6]);
+				layer5_regen = term[7];
+				timing_choice = Integer.parseInt(term[8]);
+				period = Integer.parseInt(term[9]);
+				age = rotation_age + period - rotation_period; // a = aR + t - tR
+				
+				method = "EA";
+				forest_status = "R";
+				yield_table_name_to_find = layer5 + "_" + method + "_" + forest_status + "_" + rotation_age + "_" + timing_choice;
+				yield_table_row_index_to_find = rotation_age - 1 + period - rotation_period;
+				break;
+				
+			case "xNG_R_":
+				term = var_name.substring(6).split(",");	// remove first 6 letters and then split
+				layer1 = term[0];
+				layer2 = term[1];
+				layer3 = term[2];
+				layer4 = term[3];
+				layer5 = term[4];
+				timing_choice = Integer.parseInt(term[5]);
+				period = Integer.parseInt(term[6]);
+				age = Integer.parseInt(term[7]);
+				
+				method = "NG";
+				forest_status = "R";
+				yield_table_name_to_find = layer5 + "_" + method + "_" + forest_status + "_" + timing_choice;
+				yield_table_row_index_to_find = age - 1;
+				break;
+				
+			case "xPB_R_":
+				term = var_name.substring(6).split(",");	// remove first 6 letters and then split
+				layer1 = term[0];
+				layer2 = term[1];
+				layer3 = term[2];
+				layer4 = term[3];
+				layer5 = term[4];
+				timing_choice = Integer.parseInt(term[5]);
+				period = Integer.parseInt(term[6]);
+				age = Integer.parseInt(term[7]);
+
+				method = "PB";
+				forest_status = "R";
+				yield_table_name_to_find = layer5 + "_" + method + "_" + forest_status + "_" + timing_choice;
+				yield_table_row_index_to_find = age - 1;
+				break;
+				
+			case "xGS_R_":
+				term = var_name.substring(6).split(",");	// remove first 6 letters and then split
+				layer1 = term[0];
+				layer2 = term[1];
+				layer3 = term[2];
+				layer4 = term[3];
+				layer5 = term[4];
+				timing_choice = Integer.parseInt(term[5]);
+				period = Integer.parseInt(term[6]);
+				age = Integer.parseInt(term[7]);
+				
+				method = "GS";
+				forest_status = "R";
+				yield_table_name_to_find = layer5 + "_" + method + "_" + forest_status + "_" + timing_choice;
+				yield_table_row_index_to_find = age - 1;
+				break;
+				
+			default:
+				break;
+			}
+		} catch (Exception e) {
+			// No worry if catching error. Because variable without method jump into this --> no need warning here
+		}
+
+
+		
 		
 		// if prescription exists in the yield_tables database --> the 2 numbers will not be -9999
 		prescription_id_and_row_id = new int [2];	// first index is prescription, second index is row_id   	

@@ -117,10 +117,10 @@ import prism_project.data_process.Read_Database;
 import prism_root.PrismMain;
 
 public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
-	private JSplitPane GUI_Text_splitPanel ;
-	private JPanel radioPanel_Right; 
-	private ButtonGroup radioGroup_Right; 
-	private JRadioButton[] radioButton_Right; 
+	private JSplitPane GUI_Text_splitpane;
+	private JPanel radio_panel;
+	private ButtonGroup radio_buttongroup;
+	private JRadioButton[] radio_button;
 	
 	private File currentRunFolder;
 	private File file_database;
@@ -141,12 +141,12 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	
 	private Read_Database read_database;
 	private ArrayList<String>[] rotation_ranges;
-	private List<String> layers_Title;
-	private List<String> layers_Title_ToolTip;
+	private List<String> layers_title;
+	private List<String> layers_title_tooltip;
 	private List<List<String>> allLayers;
-	private List<List<String>> allLayers_ToolTips;
-	private Object[][][] yieldTable_values;
-	private String [] yieldTable_ColumnNames;
+	private List<List<String>> allLayers_tooltips;
+	private Object[][][] yield_tables_values;
+	private String [] yield_tables_column_names;
 	
 	
 	private int total_period;
@@ -284,29 +284,29 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		
 		// Create the interface ---------------------------------------------------------------------------------------------------------------------
 		// Add 9 input options to radioPanel and add that panel to scrollPane_Right at combinePanel NORTH
-		radioPanel_Right = new JPanel();
-		radioPanel_Right.setLayout(new FlowLayout());		
-		radioGroup_Right = new ButtonGroup();
+		radio_panel = new JPanel();
+		radio_panel.setLayout(new FlowLayout());		
+		radio_buttongroup = new ButtonGroup();
 		
-		radioButton_Right  = new JRadioButton[9];
-		radioButton_Right[0]= new JRadioButton("General Inputs");
-		radioButton_Right[1]= new JRadioButton("Model Strata");
-		radioButton_Right[2]= new JRadioButton("Non-EA Management");
-		radioButton_Right[3]= new JRadioButton("EA Management");
-		radioButton_Right[4]= new JRadioButton("Non-SR Disturbances");
-		radioButton_Right[5]= new JRadioButton("SR Disturbances");
-		radioButton_Right[6]= new JRadioButton("Management Cost");
-		radioButton_Right[7]= new JRadioButton("Basic Constraints");
-		radioButton_Right[8]= new JRadioButton("Flow Constraints");
-		radioButton_Right[0].setSelected(true);
-		for (int i = 0; i < radioButton_Right.length; i++) {
-				radioGroup_Right.add(radioButton_Right[i]);
-				radioPanel_Right.add(radioButton_Right[i]);
-				radioButton_Right[i].addActionListener(this);
+		radio_button  = new JRadioButton[9];
+		radio_button[0]= new JRadioButton("General Inputs");
+		radio_button[1]= new JRadioButton("Model Strata");
+		radio_button[2]= new JRadioButton("Non-EA Management");
+		radio_button[3]= new JRadioButton("EA Management");
+		radio_button[4]= new JRadioButton("Non-SR Disturbances");
+		radio_button[5]= new JRadioButton("SR Disturbances");
+		radio_button[6]= new JRadioButton("Management Cost");
+		radio_button[7]= new JRadioButton("Basic Constraints");
+		radio_button[8]= new JRadioButton("Flow Constraints");
+		radio_button[0].setSelected(true);
+		for (int i = 0; i < radio_button.length; i++) {
+				radio_buttongroup.add(radio_button[i]);
+				radio_panel.add(radio_button[i]);
+				radio_button[i].addActionListener(this);
 		}	
 		
-		GUI_Text_splitPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		GUI_Text_splitPanel.setDividerSize(0);
+		GUI_Text_splitpane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+		GUI_Text_splitpane.setDividerSize(0);
 			
 	
 		// Create all new 9 panels for the selected Run--------------------------------------------------
@@ -314,8 +314,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		
 		
 		// Add all components to The Panel------------------------------------------------------------
-		super.add(radioPanel_Right, BorderLayout.NORTH);
-		super.add(GUI_Text_splitPanel, BorderLayout.CENTER);
+		super.add(radio_panel, BorderLayout.NORTH);
+		super.add(GUI_Text_splitpane, BorderLayout.CENTER);
 		super.setOpaque(false);
 		ToolTipManager.sharedInstance().setInitialDelay(0);	// Show toolTip immediately
 	}
@@ -323,35 +323,35 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		
 	// Listener for radio buttons------------------------------------------------------------------------------------------------
     public void actionPerformed(ActionEvent e) {
-		for (int j = 0; j < radioButton_Right.length; j++) {
-			if (radioButton_Right[j].isSelected()) {		
+		for (int j = 0; j < radio_button.length; j++) {
+			if (radio_button[j].isSelected()) {		
 				if (j == 0) {
-					GUI_Text_splitPanel.setLeftComponent(panel_General_Inputs_GUI);
-					GUI_Text_splitPanel.setRightComponent(null);
+					GUI_Text_splitpane.setLeftComponent(panel_General_Inputs_GUI);
+					GUI_Text_splitpane.setRightComponent(null);
 				} else if (j == 1) {
-					GUI_Text_splitPanel.setLeftComponent(panel_Model_Strata_GUI);
-					GUI_Text_splitPanel.setRightComponent(null);
+					GUI_Text_splitpane.setLeftComponent(panel_Model_Strata_GUI);
+					GUI_Text_splitpane.setRightComponent(null);
 				} else if (j == 2) {
-					GUI_Text_splitPanel.setLeftComponent(panel_Non_EA_Management_GUI);
-					GUI_Text_splitPanel.setRightComponent(null);
+					GUI_Text_splitpane.setLeftComponent(panel_Non_EA_Management_GUI);
+					GUI_Text_splitpane.setRightComponent(null);
 				} else if (j == 3) {
-					GUI_Text_splitPanel.setLeftComponent(panel_EA_Management_GUI);
-					GUI_Text_splitPanel.setRightComponent(null);
+					GUI_Text_splitpane.setLeftComponent(panel_EA_Management_GUI);
+					GUI_Text_splitpane.setRightComponent(null);
 				} else if (j == 4) {
-					GUI_Text_splitPanel.setLeftComponent(panel_Non_SR_Disturbances_GUI);
-					GUI_Text_splitPanel.setRightComponent(null);
+					GUI_Text_splitpane.setLeftComponent(panel_Non_SR_Disturbances_GUI);
+					GUI_Text_splitpane.setRightComponent(null);
 				} else if (j == 5) {
-					GUI_Text_splitPanel.setLeftComponent(panel_SR_Disturbances_GUI);
-					GUI_Text_splitPanel.setRightComponent(null);
+					GUI_Text_splitpane.setLeftComponent(panel_SR_Disturbances_GUI);
+					GUI_Text_splitpane.setRightComponent(null);
 				} else if (j == 6) {
-					GUI_Text_splitPanel.setLeftComponent(panel_Management_Cost_GUI);
-					GUI_Text_splitPanel.setRightComponent(null);
+					GUI_Text_splitpane.setLeftComponent(panel_Management_Cost_GUI);
+					GUI_Text_splitpane.setRightComponent(null);
 				} else if (j == 7) {
-					GUI_Text_splitPanel.setLeftComponent(panel_Basic_Constraints_GUI);
-					GUI_Text_splitPanel.setRightComponent(null);
+					GUI_Text_splitpane.setLeftComponent(panel_Basic_Constraints_GUI);
+					GUI_Text_splitpane.setRightComponent(null);
 				} else if (j == 8) {
-					GUI_Text_splitPanel.setLeftComponent(panel_Flow_Constraints_GUI);
-					GUI_Text_splitPanel.setRightComponent(null);
+					GUI_Text_splitpane.setLeftComponent(panel_Flow_Constraints_GUI);
+					GUI_Text_splitpane.setRightComponent(null);
 				}
 				
 				// Get everything show up nicely
@@ -523,12 +523,12 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			}
 			
 			rotation_ranges = read_database.get_rotation_ranges();
-			layers_Title = read_database.get_layers_Title();
-			layers_Title_ToolTip = read_database.get_layers_Title_ToolTip();
+			layers_title = read_database.get_layers_title();
+			layers_title_tooltip = read_database.get_layers_title_tooltip();
 			allLayers = read_database.get_all_layers();
-			allLayers_ToolTips = read_database.get_allLayers_ToolTips();
-			yieldTable_values = read_database.get_yield_tables_values();
-			yieldTable_ColumnNames = read_database.get_yield_tables_column_names();
+			allLayers_tooltips = read_database.get_allLayers_tooltips();
+			yield_tables_values = read_database.get_yield_tables_values();
+			yield_tables_column_names = read_database.get_yield_tables_column_names();
 						
 			panel_General_Inputs_GUI.get_database_directory_textfield().setText(file_database.getAbsolutePath());
 			panel_Model_Strata_GUI = new Model_Strata_GUI();
@@ -556,18 +556,18 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			model10.match_DataType();		//a smart way to retrieve the original data type :))))))
 		}  else { 	// If file does not exist then use null database
 			file_database = null;
-			radioButton_Right[1].setEnabled(false);
-			radioButton_Right[2].setEnabled(false);
-			radioButton_Right[3].setEnabled(false);
-			radioButton_Right[4].setEnabled(false);
-			radioButton_Right[5].setEnabled(false);
-			radioButton_Right[6].setEnabled(false);
-			radioButton_Right[7].setEnabled(false);
-			radioButton_Right[8].setEnabled(false);
+			radio_button[1].setEnabled(false);
+			radio_button[2].setEnabled(false);
+			radio_button[3].setEnabled(false);
+			radio_button[4].setEnabled(false);
+			radio_button[5].setEnabled(false);
+			radio_button[6].setEnabled(false);
+			radio_button[7].setEnabled(false);
+			radio_button[8].setEnabled(false);
 			System.out.println("File not exists: database.db - New interface is created");					
 		}
 		
-		GUI_Text_splitPanel.setLeftComponent(panel_General_Inputs_GUI);	// Show the General_Inputs of the selected Run
+		GUI_Text_splitpane.setLeftComponent(panel_General_Inputs_GUI);	// Show the General_Inputs of the selected Run
 		PrismMain.get_Prism_DesktopPane().getSelectedFrame().revalidate();
 		PrismMain.get_Prism_DesktopPane().getSelectedFrame().repaint();
 		
@@ -823,11 +823,11 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		//Setup the table------------------------------------------------------------	
 		if (is_table3_loaded == false) { // create a fresh new if Load fail				
 			rowCount3 = 0;
-			colCount3 = layers_Title.size() + 4;
+			colCount3 = layers_title.size() + 4;
 			columnNames3 = new String[colCount3];
 			columnNames3[0] = "strata_id";		// add for the name of strata
-			for (int i = 0; i < layers_Title.size(); i++) {
-				columnNames3[i + 1] = layers_Title.get(i);	// add 6 layers to the column header name
+			for (int i = 0; i < layers_title.size(); i++) {
+				columnNames3[i + 1] = layers_title.get(i);	// add 6 layers to the column header name
 			}
 			columnNames3[colCount3 - 3] = "acres";	// add 3 more columns
 			columnNames3[colCount3 - 2] = "age_class";
@@ -924,7 +924,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 //				formatter.setMaximumFractionDigits(10);	// show value with max 2 digits after the dot if it is double value						        
 		        data_overview[0][1] = rowCount3 + "   --o--   " + formatter.format((Number) availableAcres);
 				data_overview[1][1] = modeledStrata + "   --o--   " + formatter.format((Number) modeledAcres);
-		        data_overview[3][1] = yieldTable_values.length;
+		        data_overview[3][1] = yield_tables_values.length;
 		        data_overview[4][1] = total_yieldtable;
 				model_overview.fireTableDataChanged();
 			}
@@ -1280,7 +1280,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					try {
 						tip = getValueAt(rowIndex, colIndex).toString();
 						for (int i = 0; i < total_CoverType; i++) {
-							if (tip.equals(allLayers.get(4).get(i)))	tip=allLayers_ToolTips.get(4).get(i);							
+							if (tip.equals(allLayers.get(4).get(i)))	tip=allLayers_tooltips.get(4).get(i);							
 						}
 					} catch (RuntimeException e1) {
 						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
@@ -1818,7 +1818,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					try {
 						tip = getValueAt(rowIndex, colIndex).toString();
 						for (int i = 0; i < total_CoverType; i++) {
-							if (tip.equals(allLayers.get(4).get(i)))	tip=allLayers_ToolTips.get(4).get(i);							
+							if (tip.equals(allLayers.get(4).get(i)))	tip=allLayers_tooltips.get(4).get(i);							
 						}
 					} catch (RuntimeException e1) {
 						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
@@ -2093,7 +2093,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					try {
 						tip = getValueAt(row, column).toString();
 						for (int i = 0; i < total_CoverType; i++) {
-							if (tip.equals(allLayers.get(4).get(i)))	tip = allLayers_ToolTips.get(4).get(i);							
+							if (tip.equals(allLayers.get(4).get(i)))	tip = allLayers_tooltips.get(4).get(i);							
 						}
 					} catch (RuntimeException e1) {
 						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
@@ -2234,19 +2234,19 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		if (is_table8a_loaded == false) { // Create a fresh new if Load fail	
 			// This all_actions List contains all actions loaded from yield tables------------------------------------------------------------
 			List<String> action_list = new ArrayList<String>();
-			if (yieldTable_ColumnNames != null) {	//create table with column include yield tables columns
+			if (yield_tables_column_names != null) {	//create table with column include yield tables columns
 				for (String action: read_database.get_action_type()) {
 					action_list.add(action);					
 				}	
 				
 				rowCount8a = action_list.size();			
-				colCount8a = 2 + yieldTable_ColumnNames.length;
+				colCount8a = 2 + yield_tables_column_names.length;
 				data8a = new Object[rowCount8a][colCount8a];
-				columnNames8a = new String[2 + yieldTable_ColumnNames.length];
+				columnNames8a = new String[2 + yield_tables_column_names.length];
 				columnNames8a[0] = "action_list";
 				columnNames8a[1] = "acres";
 				for (int i = 2; i < columnNames8a.length; i++) {
-					columnNames8a[i] = yieldTable_ColumnNames[i - 2];				
+					columnNames8a[i] = yield_tables_column_names[i - 2];				
 				}	
 			} else {
 				rowCount8a = action_list.size();			
@@ -2268,10 +2268,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		String[] headerToolTips = new String[colCount8a];
 		headerToolTips[0] = "all unique actions found from  yield_tables in your selected database";
         headerToolTips[1] = "currency per acre where an action is implemented";
-		if (yieldTable_ColumnNames != null) {      
+		if (yield_tables_column_names != null) {      
 	        for (int i = 2; i < colCount8a; i++) {
 	        	int yt_col = i - 2;
-	        	headerToolTips[i] = "currency per " + read_database.get_ParameterToolTip(yieldTable_ColumnNames[yt_col]) + " (Column index: " + yt_col + ")";	
+	        	headerToolTips[i] = "currency per " + read_database.get_ParameterToolTip(yield_tables_column_names[yt_col]) + " (Column index: " + yt_col + ")";	
 			}
 		}
 	
@@ -2438,7 +2438,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		}
 			
 		
-		if (yieldTable_ColumnNames != null) table8a.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		if (yield_tables_column_names != null) table8a.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		table8a.setCellSelectionEnabled(true);
         table8a.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         table8a.getTableHeader().setReorderingAllowed(false);		//Disable columns move
@@ -2463,7 +2463,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		
 		//Setup the table------------------------------------------------------------	
 		if (is_table8b_loaded == false) { // Create a fresh new if Load fail	
-			if (yieldTable_ColumnNames != null) {	//create table with column include yield tables columns
+			if (yield_tables_column_names != null) {	//create table with column include yield tables columns
 				rowCount8b = total_CoverType * total_CoverType;		
 				colCount8b = 4;
 				data8b = new Object[rowCount8b][colCount8b];
@@ -3180,10 +3180,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------	
 	class General_Inputs_GUI extends JLayeredPane {
-		private JLabel label1, label_rd, label2, label3, label4, label5, label6;
-		private JComboBox combo1, combo_rd, combo2, combo3;
-		private JSpinner spin4;
-		private JCheckBox check5, check6;
+		private JLabel totalPeriodsLabel, replacingDisturbancesLabel, discountRateLabel, solverLabel, solvingTimeLabel, exportProblemLabel, exportSolutionLabel;
+		private JComboBox totalPeriodsCombo, replacingDisturbancesCombo, discountRateCombo, solverCombo;
+		private JSpinner solvingTimeSpinner;
+		private JCheckBox exportProblemCheck, exportSolutionCheck;
 		private JTextField database_directory_textfield;
 		
 		public General_Inputs_GUI() {
@@ -3192,29 +3192,29 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			
 			
 			//-----------------------------------------------------
-			label1 = new JLabel("Total planning periods (decades)");
-			combo1 = new JComboBox();		
+			totalPeriodsLabel = new JLabel("Total planning periods (decades)");
+			totalPeriodsCombo = new JComboBox();		
 			for (int i = 1; i <= 99; i++) {
-				combo1.addItem(i);
+				totalPeriodsCombo.addItem(i);
 			}
-			combo1.setSelectedItem((int) 5);
+			totalPeriodsCombo.setSelectedItem((int) 5);
 			//-----------------------------------------------------
-			label_rd = new JLabel("Total replacing disturbances");
-			combo_rd = new JComboBox();		
+			replacingDisturbancesLabel = new JLabel("Total replacing disturbances");
+			replacingDisturbancesCombo = new JComboBox();		
 			for (int i = 1; i <= 99; i++) {
-				combo_rd.addItem(i);
+				replacingDisturbancesCombo.addItem(i);
 			}
-			combo_rd.setSelectedItem((int) 1);
+			replacingDisturbancesCombo.setSelectedItem((int) 1);
 			//-----------------------------------------------------
-			label2 = new JLabel("Annual discount rate (%)");
-			combo2 = new JComboBox();		
+			discountRateLabel = new JLabel("Annual discount rate (%)");
+			discountRateCombo = new JComboBox();		
 			for (int i = 0; i <= 99; i++) {
 				double value = (double) i / 10;
-				combo2.addItem(value);
+				discountRateCombo.addItem(value);
 			}
-			combo2.setSelectedItem((double) 0);
+			discountRateCombo.setSelectedItem((double) 0);
 			//-----------------------------------------------------						
-			label3 = new JLabel("Solver for optimization");
+			solverLabel = new JLabel("Solver for optimization");
 			class DisabledJComboBoxRenderer extends BasicComboBoxRenderer {	// I played a trick with this class by changing Enabled List to Disabled List, The reason is to show my desired color for items in the combo boxes.
 				private final ListSelectionModel disabledItems;
 
@@ -3259,7 +3259,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				}
 			}
 
-			combo3 = new JComboBox() {
+			solverCombo = new JComboBox() {
 				@Override
 				public void setSelectedIndex(int index) {
 					if (index <= 1) {
@@ -3267,32 +3267,32 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					}
 				}
 			};
-			combo3.addItem("CPLEX");
-			combo3.addItem("LPSOLVE");
-			combo3.addItem("CBC");
-			combo3.addItem("CLP");
-			combo3.addItem("GUROBI");
-			combo3.addItem("GLPK");
-			combo3.addItem("SPCIP");
-			combo3.addItem("SOPLEX");
-			combo3.addItem("XPRESS");	
+			solverCombo.addItem("CPLEX");
+			solverCombo.addItem("LPSOLVE");
+			solverCombo.addItem("CBC");
+			solverCombo.addItem("CLP");
+			solverCombo.addItem("GUROBI");
+			solverCombo.addItem("GLPK");
+			solverCombo.addItem("SPCIP");
+			solverCombo.addItem("SOPLEX");
+			solverCombo.addItem("XPRESS");	
 			DefaultListSelectionModel model = new DefaultListSelectionModel();
 			model.addSelectionInterval(2, 8);	// These are disabled items in the Combo Box
 			DisabledJComboBoxRenderer disableRenderer = new DisabledJComboBoxRenderer(model);
-			combo3.setRenderer(disableRenderer);	
+			solverCombo.setRenderer(disableRenderer);	
 			//-----------------------------------------------------
-			label4 = new JLabel("Maximum solving time (minutes)");
-			spin4 = new JSpinner (new SpinnerNumberModel(20, 1, 99, 1));
-			JFormattedTextField SpinnerText = ((DefaultEditor) spin4.getEditor()).getTextField();
+			solvingTimeLabel = new JLabel("Maximum solving time (minutes)");
+			solvingTimeSpinner = new JSpinner (new SpinnerNumberModel(20, 1, 99, 1));
+			JFormattedTextField SpinnerText = ((DefaultEditor) solvingTimeSpinner.getEditor()).getTextField();
 			SpinnerText.setHorizontalAlignment(JTextField.LEFT);
 			//-----------------------------------------------------
-			label5 = new JLabel("Export original problem file (.lp)");
-			check5 = new JCheckBox();
-			check5.setSelected(false);
+			exportProblemLabel = new JLabel("Export original problem file (.lp)");
+			exportProblemCheck = new JCheckBox();
+			exportProblemCheck.setSelected(false);
 			//-----------------------------------------------------
-			label6 = new JLabel("Export original solution file (.sol)");
-			check6 = new JCheckBox();
-			check6.setSelected(false);
+			exportSolutionLabel = new JLabel("Export original solution file (.sol)");
+			exportSolutionCheck = new JCheckBox();
+			exportSolutionCheck.setSelected(false);
 			//-----------------------------------------------------
 			// ToolBar Panel
 			ToolBarWithBgImage helpToolBar = new ToolBarWithBgImage("Project Tools", JToolBar.HORIZONTAL, null);
@@ -3316,17 +3316,17 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			
 			Action apply = new AbstractAction() {
 				public void actionPerformed(ActionEvent e) {
-					total_period = Integer.parseInt(combo1.getSelectedItem().toString());
-					total_replacing_disturbance = Integer.parseInt(combo_rd.getSelectedItem().toString());
+					total_period = Integer.parseInt(totalPeriodsCombo.getSelectedItem().toString());
+					total_replacing_disturbance = Integer.parseInt(replacingDisturbancesCombo.getSelectedItem().toString());
 					
 					// Apply any change in the GUI to the table
-					data1[0][1] = combo1.getSelectedItem().toString();	
-					data1[1][1] = combo_rd.getSelectedItem().toString();
-					data1[2][1] = combo2.getSelectedItem().toString();
-					data1[3][1] = combo3.getSelectedItem().toString();
-					data1[4][1] = (Integer)spin4.getValue();
-					data1[5][1] = (check5.isSelected()) ? "true" : "false";
-					data1[6][1] = (check6.isSelected()) ? "true" : "false";
+					data1[0][1] = totalPeriodsCombo.getSelectedItem().toString();	
+					data1[1][1] = replacingDisturbancesCombo.getSelectedItem().toString();
+					data1[2][1] = discountRateCombo.getSelectedItem().toString();
+					data1[3][1] = solverCombo.getSelectedItem().toString();
+					data1[4][1] = (Integer)solvingTimeSpinner.getValue();
+					data1[5][1] = (exportProblemCheck.isSelected()) ? "true" : "false";
+					data1[6][1] = (exportSolutionCheck.isSelected()) ? "true" : "false";
 					model1.fireTableDataChanged();
 
 				}
@@ -3336,51 +3336,51 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			//Load info from input to GUI
 			if (is_table1_loaded == true) {
 				if (!String.valueOf(data1[0][1]).equals("null")) {
-					combo1.setSelectedItem(Integer.valueOf((String) data1[0][1]));
+					totalPeriodsCombo.setSelectedItem(Integer.valueOf((String) data1[0][1]));
 					total_period = Integer.valueOf((String) data1[0][1]);
 				}		
 				if (!String.valueOf(data1[1][1]).equals("null")) {
-					combo_rd.setSelectedItem(Integer.valueOf((String) data1[1][1]));
+					replacingDisturbancesCombo.setSelectedItem(Integer.valueOf((String) data1[1][1]));
 					total_replacing_disturbance = Integer.valueOf((String) data1[1][1]);
 				}
-				if (! String.valueOf(data1[2][1]).equals("null")) combo2.setSelectedItem(Double.valueOf((String) data1[2][1]));
-				if (! String.valueOf(data1[3][1]).equals("null")) combo3.setSelectedItem(String.valueOf(data1[3][1]));
-				if (! String.valueOf(data1[4][1]).equals("null")) spin4.setValue(Integer.valueOf((String) data1[4][1]));					
-				if (! String.valueOf(data1[5][1]).equals("null")) check5.setSelected(Boolean.valueOf(String.valueOf(data1[5][1])));
-				if (! String.valueOf(data1[6][1]).equals("null")) check6.setSelected(Boolean.valueOf(String.valueOf(data1[6][1])));
+				if (! String.valueOf(data1[2][1]).equals("null")) discountRateCombo.setSelectedItem(Double.valueOf((String) data1[2][1]));
+				if (! String.valueOf(data1[3][1]).equals("null")) solverCombo.setSelectedItem(String.valueOf(data1[3][1]));
+				if (! String.valueOf(data1[4][1]).equals("null")) solvingTimeSpinner.setValue(Integer.valueOf((String) data1[4][1]));					
+				if (! String.valueOf(data1[5][1]).equals("null")) exportProblemCheck.setSelected(Boolean.valueOf(String.valueOf(data1[5][1])));
+				if (! String.valueOf(data1[6][1]).equals("null")) exportSolutionCheck.setSelected(Boolean.valueOf(String.valueOf(data1[6][1])));
 			}
 			
 			
-			combo1.addActionListener(apply);
-			combo_rd.addActionListener(apply);
-			combo2.addActionListener(apply);
-			combo3.addActionListener(apply);
-			check5.addActionListener(apply);
-			check6.addActionListener(apply);
+			totalPeriodsCombo.addActionListener(apply);
+			replacingDisturbancesCombo.addActionListener(apply);
+			discountRateCombo.addActionListener(apply);
+			solverCombo.addActionListener(apply);
+			exportProblemCheck.addActionListener(apply);
+			exportSolutionCheck.addActionListener(apply);
 			
 			
 			DefaultFormatter formatter = (DefaultFormatter) SpinnerText.getFormatter();
 		    formatter.setCommitsOnValidEdit(true);
-		    spin4.addChangeListener(new ChangeListener() {
+		    solvingTimeSpinner.addChangeListener(new ChangeListener() {
 		        @Override
 		        public void stateChanged(ChangeEvent e) {
-		        	spin4.setValue(spin4.getValue());
-		        	total_period = Integer.parseInt(combo1.getSelectedItem().toString());
-		        	total_replacing_disturbance = Integer.parseInt(combo_rd.getSelectedItem().toString());
+		        	solvingTimeSpinner.setValue(solvingTimeSpinner.getValue());
+		        	total_period = Integer.parseInt(totalPeriodsCombo.getSelectedItem().toString());
+		        	total_replacing_disturbance = Integer.parseInt(replacingDisturbancesCombo.getSelectedItem().toString());
 		        	
 		        	// Apply any change in the GUI to the table
-		        	data1[0][1] = combo1.getSelectedItem().toString();	
-					data1[1][1] = combo_rd.getSelectedItem().toString();
-					data1[2][1] = combo2.getSelectedItem().toString();
-					data1[3][1] = combo3.getSelectedItem().toString();
-					data1[4][1] = (Integer)spin4.getValue();
-					data1[5][1] = (check5.isSelected()) ? "true" : "false";
-					data1[6][1] = (check6.isSelected()) ? "true" : "false";
+		        	data1[0][1] = totalPeriodsCombo.getSelectedItem().toString();	
+					data1[1][1] = replacingDisturbancesCombo.getSelectedItem().toString();
+					data1[2][1] = discountRateCombo.getSelectedItem().toString();
+					data1[3][1] = solverCombo.getSelectedItem().toString();
+					data1[4][1] = (Integer)solvingTimeSpinner.getValue();
+					data1[5][1] = (exportProblemCheck.isSelected()) ? "true" : "false";
+					data1[6][1] = (exportSolutionCheck.isSelected()) ? "true" : "false";
 					model1.fireTableDataChanged();
 		        }
 		    });
 		    if (is_table1_loaded == false) {
-		    	spin4.setValue(15);		// Load GUI to table if there is no input to load	(15 <> 20 then the listener will be activate)
+		    	solvingTimeSpinner.setValue(15);		// Load GUI to table if there is no input to load	(15 <> 20 then the listener will be activate)
 		    }
 		    
 
@@ -3418,14 +3418,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 							
 							try {	
 								button_import_database.setEnabled(false);
-								radioButton_Right[1].setEnabled(false);
-								radioButton_Right[2].setEnabled(false);
-								radioButton_Right[3].setEnabled(false);
-								radioButton_Right[4].setEnabled(false);
-								radioButton_Right[5].setEnabled(false);
-								radioButton_Right[6].setEnabled(false);
-								radioButton_Right[7].setEnabled(false);
-								radioButton_Right[8].setEnabled(false);
+								radio_button[1].setEnabled(false);
+								radio_button[2].setEnabled(false);
+								radio_button[3].setEnabled(false);
+								radio_button[4].setEnabled(false);
+								radio_button[5].setEnabled(false);
+								radio_button[6].setEnabled(false);
+								radio_button[7].setEnabled(false);
+								radio_button[8].setEnabled(false);
 								
 								File new_database = FilesHandle.chosenDatabase();
 								if (new_database != null) {
@@ -3446,14 +3446,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 							} finally {
 								button_import_database.setEnabled(true);
 								if (file_database != null) {
-									radioButton_Right[1].setEnabled(true);
-									radioButton_Right[2].setEnabled(true);
-									radioButton_Right[3].setEnabled(true);
-									radioButton_Right[4].setEnabled(true);
-									radioButton_Right[5].setEnabled(true);
-									radioButton_Right[6].setEnabled(true);
-									radioButton_Right[7].setEnabled(true);
-									radioButton_Right[8].setEnabled(true);
+									radio_button[1].setEnabled(true);
+									radio_button[2].setEnabled(true);
+									radio_button[3].setEnabled(true);
+									radio_button[4].setEnabled(true);
+									radio_button[5].setEnabled(true);
+									radio_button[6].setEnabled(true);
+									radio_button[7].setEnabled(true);
+									radio_button[8].setEnabled(true);
 									database_directory_textfield.setText(file_database.getAbsolutePath());
 								}
 							}
@@ -3478,12 +3478,12 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					}
 					
 					rotation_ranges = read_database.get_rotation_ranges();
-					layers_Title = read_database.get_layers_Title();
-					layers_Title_ToolTip = read_database.get_layers_Title_ToolTip();
+					layers_title = read_database.get_layers_title();
+					layers_title_tooltip = read_database.get_layers_title_tooltip();
 					allLayers =  read_database.get_all_layers();
-					allLayers_ToolTips = read_database.get_allLayers_ToolTips();
-					yieldTable_values = read_database.get_yield_tables_values();
-					yieldTable_ColumnNames = read_database.get_yield_tables_column_names();
+					allLayers_tooltips = read_database.get_allLayers_tooltips();
+					yield_tables_values = read_database.get_yield_tables_values();
+					yield_tables_column_names = read_database.get_yield_tables_column_names();
 					
 					// Reset all panels except General Inputs----------------------------------------------------------------		
 					is_table_overview_loaded = false;
@@ -3568,72 +3568,72 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					0, 0, 0, 0));		// insets top, left, bottom, right
 		    		    
  			// Add 	
-			super.add(label1, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+			super.add(totalPeriodsLabel, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
  					0, 1, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
  					0, 12, 10, 30));		// insets top, left, bottom, right
  									
  			// Add	
- 			super.add(combo1, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+ 			super.add(totalPeriodsCombo, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
  					1, 1, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
  					0, 12, 10, 30));		// insets top, left, bottom, right		
  			
  			// Add 
- 			super.add(label_rd, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+ 			super.add(replacingDisturbancesLabel, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
  					0, 2, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
  					0, 12, 10, 30));		// insets top, left, bottom, right	
 
  			// Add 
- 			super.add(combo_rd, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+ 			super.add(replacingDisturbancesCombo, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
  					1, 2, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
  					0, 12, 10, 30));		// insets top, left, bottom, right	
 	
  			// Add 
- 			super.add(label2, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+ 			super.add(discountRateLabel, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
  					0, 3, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
  					0, 12, 10, 30));		// insets top, left, bottom, right	
  			
  			// Add 
- 			super.add(combo2, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+ 			super.add(discountRateCombo, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
  					1, 3, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
  					0, 12, 10, 30));		// insets top, left, bottom, right
  			
  			// Add 
- 			super.add(label3, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+ 			super.add(solverLabel, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
  					0, 4, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
  					0, 12, 10, 30));		// insets top, left, bottom, right	
 
  			// Add 
- 			super.add(combo3, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+ 			super.add(solverCombo, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
  					1, 4, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
  					0, 12, 10, 30));		// insets top, left, bottom, right
 		
  			// Add 
- 			super.add(label4, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+ 			super.add(solvingTimeLabel, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
  					0, 5, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
  					0, 12, 10, 30));		// insets top, left, bottom, right	
 
  			// Add 
- 			super.add(spin4, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+ 			super.add(solvingTimeSpinner, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
  					1, 5, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
  					0, 12, 10, 30));		// insets top, left, bottom, right			
  			
  			// Add 
- 			super.add(label5, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+ 			super.add(exportProblemLabel, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
  					2, 1, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
  					0, 12, 10, 30));		// insets top, left, bottom, right
  			
  			// Add 
- 			super.add(check5, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+ 			super.add(exportProblemCheck, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
  					3, 1, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
  					0, 12, 10, 30));		// insets top, left, bottom, right
  			
  			// Add 
- 			super.add(label6, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+ 			super.add(exportSolutionLabel, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
  					2, 2, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
  					0, 12, 10, 30));		// insets top, left, bottom, right
  			
  			// Add 
- 			super.add(check6, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+ 			super.add(exportSolutionCheck, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
  					3, 2, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
  					0, 12, 10, 30));		// insets top, left, bottom, right
 
@@ -3816,14 +3816,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
 						scrollpane_QuickEdit.setVisible(true);
 						// Get everything show up nicely
-						GUI_Text_splitPanel.setLeftComponent(panel_Model_Strata_GUI);
+						GUI_Text_splitpane.setLeftComponent(panel_Model_Strata_GUI);
 						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				} else {
 					btnQuickEdit.setToolTipText("Show Quick Edit Tool");
 					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
 					scrollpane_QuickEdit.setVisible(false);
 					// Get everything show up nicely
-					GUI_Text_splitPanel.setLeftComponent(panel_Model_Strata_GUI);
+					GUI_Text_splitpane.setLeftComponent(panel_Model_Strata_GUI);
 					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				}
 			});
@@ -4401,14 +4401,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
 						scrollpane_QuickEdit.setVisible(true);
 						// Get everything show up nicely
-						GUI_Text_splitPanel.setLeftComponent(panel_Non_EA_Management_GUI);
+						GUI_Text_splitpane.setLeftComponent(panel_Non_EA_Management_GUI);
 						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				} else {
 					btnQuickEdit.setToolTipText("Show Quick Edit Tool");
 					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
 					scrollpane_QuickEdit.setVisible(false);
 					// Get everything show up nicely
-					GUI_Text_splitPanel.setLeftComponent(panel_Non_EA_Management_GUI);
+					GUI_Text_splitpane.setLeftComponent(panel_Non_EA_Management_GUI);
 					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				}				
 			});
@@ -4984,14 +4984,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
 						scrollpane_QuickEdit.setVisible(true);
 						// Get everything show up nicely
-						GUI_Text_splitPanel.setLeftComponent(panel_EA_Management_GUI);
+						GUI_Text_splitpane.setLeftComponent(panel_EA_Management_GUI);
 						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				} else {
 					btnQuickEdit.setToolTipText("Show Quick Edit Tool");
 					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
 					scrollpane_QuickEdit.setVisible(false);
 					// Get everything show up nicely
-					GUI_Text_splitPanel.setLeftComponent(panel_EA_Management_GUI);
+					GUI_Text_splitpane.setLeftComponent(panel_EA_Management_GUI);
 					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				}				
 			});
@@ -5723,14 +5723,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
 						scrollpane_QuickEdit.setVisible(true);
 						// Get everything show up nicely
-						GUI_Text_splitPanel.setLeftComponent(panel_Non_SR_Disturbances_GUI);
+						GUI_Text_splitpane.setLeftComponent(panel_Non_SR_Disturbances_GUI);
 						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				} else {
 					btnQuickEdit.setToolTipText("Show Quick Edit Tool");
 					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
 					scrollpane_QuickEdit.setVisible(false);
 					// Get everything show up nicely
-					GUI_Text_splitPanel.setLeftComponent(panel_Non_SR_Disturbances_GUI);
+					GUI_Text_splitpane.setLeftComponent(panel_Non_SR_Disturbances_GUI);
 					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				}				
 			});
@@ -6292,14 +6292,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
 					scrollpane_QuickEdit.setVisible(true);
 					// Get everything show up nicely
-					GUI_Text_splitPanel.setLeftComponent(panel_SR_Disturbances_GUI);
+					GUI_Text_splitpane.setLeftComponent(panel_SR_Disturbances_GUI);
 					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				} else {
 					btnQuickEdit.setToolTipText("Show Quick Edit Tool");
 					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
 					scrollpane_QuickEdit.setVisible(false);
 					// Get everything show up nicely
-					GUI_Text_splitPanel.setLeftComponent(panel_SR_Disturbances_GUI);
+					GUI_Text_splitpane.setLeftComponent(panel_SR_Disturbances_GUI);
 					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				}
  			});				
@@ -6408,7 +6408,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			
 			
 			// when radioButton_Right[5] is selected, time period GUI will be updated
-			radioButton_Right[5].addActionListener(this);			
+			radio_button[5].addActionListener(this);			
 		}
 		
 		// Listener for this class----------------------------------------------------------------------
@@ -6424,7 +6424,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			}  	
 	    	
 	      	//Update Dynamic Identifier Panel
-	    	if (yieldTable_ColumnNames != null && dynamic_identifiersScrollPanel.get_allDynamicIdentifiers() == null) {
+	    	if (yield_tables_column_names != null && dynamic_identifiersScrollPanel.get_allDynamicIdentifiers() == null) {
 	    		dynamic_identifiersScrollPanel = new ScrollPane_DynamicIdentifiers(read_database);	// "Get identifiers from yield table columns"
 	    	}	
 	    	
@@ -6919,14 +6919,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
 					scrollpane_QuickEdit.setVisible(true);
 					// Get everything show up nicely
-					GUI_Text_splitPanel.setLeftComponent(panel_Management_Cost_GUI);
+					GUI_Text_splitpane.setLeftComponent(panel_Management_Cost_GUI);
 					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				} else {
 					btnQuickEdit.setToolTipText("Show Quick Edit Tool");
 					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
 					scrollpane_QuickEdit.setVisible(false);
 					// Get everything show up nicely
-					GUI_Text_splitPanel.setLeftComponent(panel_Management_Cost_GUI);
+					GUI_Text_splitpane.setLeftComponent(panel_Management_Cost_GUI);
 					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				}
  			});				
@@ -7035,7 +7035,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			
 			
 			// when radioButton_Right[6] is selected, time period GUI will be updated
-			radioButton_Right[6].addActionListener(this);			
+			radio_button[6].addActionListener(this);			
 		}
 		
 		// Listener for this class----------------------------------------------------------------------
@@ -7051,7 +7051,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			}  	
 	    	
 	      	//Update Dynamic Identifier Panel
-	    	if (yieldTable_ColumnNames != null && dynamic_identifiersScrollPanel.get_allDynamicIdentifiers() == null) {
+	    	if (yield_tables_column_names != null && dynamic_identifiersScrollPanel.get_allDynamicIdentifiers() == null) {
 	    		dynamic_identifiersScrollPanel = new ScrollPane_DynamicIdentifiers(read_database);	// "Get identifiers from yield table columns"
 	    	}	    	
 		}	
@@ -8085,14 +8085,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
 					scrollpane_QuickEdit.setVisible(true);
 					// Get everything show up nicely
-					GUI_Text_splitPanel.setLeftComponent(panel_Basic_Constraints_GUI);
+					GUI_Text_splitpane.setLeftComponent(panel_Basic_Constraints_GUI);
 					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				} else {
 					btnQuickEdit.setToolTipText("Show Quick Edit Tool");
 					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
 					scrollpane_QuickEdit.setVisible(false);
 					// Get everything show up nicely
-					GUI_Text_splitPanel.setLeftComponent(panel_Basic_Constraints_GUI);
+					GUI_Text_splitpane.setLeftComponent(panel_Basic_Constraints_GUI);
 					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				}
  			});				
@@ -8191,7 +8191,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			
 			
 			// when radioButton_Right[7] is selected, time period GUI will be updated
-			radioButton_Right[7].addActionListener(this);
+			radio_button[7].addActionListener(this);
 		}
 		
 		
@@ -8208,12 +8208,12 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			}  	
 	    	
 	       	// Update Parameter Panel
-	    	if (yieldTable_ColumnNames != null && parametersScrollPanel.get_checkboxParameters() == null) {
+	    	if (yield_tables_column_names != null && parametersScrollPanel.get_checkboxParameters() == null) {
 	    		parametersScrollPanel = new ScrollPane_Parameters(read_database);	//"Get parameters from YT columns"
 	    	}
 	    	
 	      	// Update Dynamic Identifier Panel
-	    	if (yieldTable_ColumnNames != null && dynamic_identifiersScrollPanel.get_allDynamicIdentifiers() == null) {
+	    	if (yield_tables_column_names != null && dynamic_identifiersScrollPanel.get_allDynamicIdentifiers() == null) {
 	    		dynamic_identifiersScrollPanel = new ScrollPane_DynamicIdentifiers(read_database);	// "Get identifiers from yield table columns"
 	    	}
 
@@ -9010,14 +9010,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
 					scrollpane_QuickEdit.setVisible(true);
 					// Get everything show up nicely
-					GUI_Text_splitPanel.setLeftComponent(panel_Flow_Constraints_GUI);
+					GUI_Text_splitpane.setLeftComponent(panel_Flow_Constraints_GUI);
 					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				} else {
 					btnQuickEdit.setToolTipText("Show Quick Edit Tool");
 					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
 					scrollpane_QuickEdit.setVisible(false);
 					// Get everything show up nicely
-					GUI_Text_splitPanel.setLeftComponent(panel_Flow_Constraints_GUI);
+					GUI_Text_splitpane.setLeftComponent(panel_Flow_Constraints_GUI);
 					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				}
  			});				
@@ -9139,7 +9139,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			
 			
 			// when radioButton_Right[8] is selected, Sources (basic constraints) will be updated
-			radioButton_Right[8].addActionListener(this);
+			radio_button[8].addActionListener(this);
 		}
 		
 		// Listener for this class----------------------------------------------------------------------

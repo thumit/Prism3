@@ -83,9 +83,9 @@ import prism_root.PrismMain;
 
 @SuppressWarnings("serial")
 public class Panel_DatabaseManagement extends JLayeredPane {
-	private File databasesFolder = FilesHandle.get_DatabasesFolder();
+	private File databasesFolder = FilesHandle.get_databasesFolder();
 	private String seperator = "/";
-	private JTree DatabaseTree;
+	private JTree databaseTree;
 	private DefaultMutableTreeNode root, processingNode;
 	private JTextField display_text_field, query_text_field;
 	private JTable database_table;
@@ -98,7 +98,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 	private TreePath editingPath;
 	private File oldfile;
 	private String fileDelimited;
-	private Boolean Database_Name_Edit_HasChanged = false;
+	private Boolean database_name_edit_has_changed = false;
 	private Boolean renamingDatabase = false;
 	private Boolean renamingTable = false;
 	private Boolean errorCAUGHT = false;
@@ -133,13 +133,13 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		scrollPane_Left.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, ColorUtil.makeTransparent(Color.BLACK, 70)));
 		splitPane.setLeftComponent(scrollPane_Left);
 		root = new DefaultMutableTreeNode("Databases");
-		DatabaseTree = new JTree(root);	//Add the root of DatabaseTree
+		databaseTree = new JTree(root);	//Add the root of DatabaseTree
 //		DatabaseTree.setEditable(true);
-		DatabaseTree.setInvokesStopCellEditing(true);	// Even when we leave the node by clicking mouse, the name editing will be kept 
+		databaseTree.setInvokesStopCellEditing(true);	// Even when we leave the node by clicking mouse, the name editing will be kept 
 		
-		DatabaseTree.addMouseListener(new MouseAdapter() { // Add listener to DatabaseTree
+		databaseTree.addMouseListener(new MouseAdapter() { // Add listener to DatabaseTree
 			public void mousePressed(MouseEvent e) {
-				DatabaseTree.setEnabled(true);
+				databaseTree.setEnabled(true);
 				query_text_field.setText("Type your query here");
 				query_text_field.setFocusable(false);
 				query_text_field.setFocusable(true);
@@ -153,12 +153,12 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 //			}
 //		});	
 	
-		DatabaseTree.addFocusListener(new FocusListener() {	//change name whenever node stopped editing
+		databaseTree.addFocusListener(new FocusListener() {	//change name whenever node stopped editing
 	         public void focusGained(FocusEvent e) {  
-	        	if ((Database_Name_Edit_HasChanged == true || renamingDatabase == true) && !DatabaseTree.isEditing()) {
+	        	if ((database_name_edit_has_changed == true || renamingDatabase == true) && !databaseTree.isEditing()) {
 					applyDatabase_Namechange();
 				}
-	        	if (renamingTable == true && !DatabaseTree.isEditing()) {
+	        	if (renamingTable == true && !databaseTree.isEditing()) {
 					applyTable_Namechange();
 				}
 	         }
@@ -166,7 +166,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 	         }
 		});	// end addFocusListener
 		refreshDatabaseTree(); // Refresh the tree
-		scrollPane_Left.setViewportView(DatabaseTree);
+		scrollPane_Left.setViewportView(databaseTree);
 					
 		
 		//Right split panel-----------------------------------
@@ -274,7 +274,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		query_text_field.addMouseListener(new MouseAdapter(){			//When user click on queryTextField
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				DatabaseTree.setEnabled(false);		//disable the tree
+				databaseTree.setEnabled(false);		//disable the tree
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -284,7 +284,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				if (query_text_field.getText().equals("") && DatabaseTree.isEnabled()) {
+				if (query_text_field.getText().equals("") && databaseTree.isEnabled()) {
 					query_text_field.setText("Type your query here");					
 				}
 			}
@@ -342,9 +342,9 @@ public class Panel_DatabaseManagement extends JLayeredPane {
     		filterHeader.setTable(null);		// Set null filter after each mouse click: this is important
     		is_filter_visible = false;
     		
-    		TreePath path = DatabaseTree.getPathForLocation(e.getX(), e.getY());
+    		TreePath path = databaseTree.getPathForLocation(e.getX(), e.getY());
     		if (path == null) {
-    			DatabaseTree.clearSelection();		//clear selection whenever mouse click is performed not on Jtree nodes	
+    			databaseTree.clearSelection();		//clear selection whenever mouse click is performed not on Jtree nodes	
     			showNothing();	// show nothing (a table with 0 row and 0 column) if no node selected
     			return;
     		}
@@ -353,7 +353,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 //    		dataDisplayTextField.setText(selectedNode.toString());		//display Only last node name
 
     		
-    		selectionPaths = DatabaseTree.getSelectionPaths();
+    		selectionPaths = databaseTree.getSelectionPaths();
     		// check if node was selected
     		boolean isSelected = false;
     		if (selectionPaths != null) {
@@ -365,7 +365,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
     		}
     		// if clicked node was not selected, select it
     		if (!isSelected) {
-    			DatabaseTree.setSelectionPath(path);
+    			databaseTree.setSelectionPath(path);
     		}
     	
     		
@@ -421,7 +421,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
     				
     				// Some set up when there is a right click---------------------------------------------------------------
     				Boolean rootSelected =false;			
-    				selectionPaths = DatabaseTree.getSelectionPaths();			// This is very important to get the most recent selected paths
+    				selectionPaths = databaseTree.getSelectionPaths();			// This is very important to get the most recent selected paths
     				int NodeCount=0;		// Count the number of nodes in selectionPaths
     				for (TreePath selectionPath : selectionPaths) {		// Loop through all selected nodes
     					processingNode = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
@@ -432,13 +432,13 @@ public class Panel_DatabaseManagement extends JLayeredPane {
     				// Deselect the root if this is a multiple Nodes selection and root is selected
     				TreePath rootpath = new TreePath(root);
     				if (NodeCount>1 && rootSelected==true) {
-    					DatabaseTree.getSelectionModel().removeSelectionPath(rootpath);
+    					databaseTree.getSelectionModel().removeSelectionPath(rootpath);
     					rootSelected =false;
     					NodeCount = NodeCount -1;
     				}
     				
     				// Reselect all nodes left
-    				selectionPaths = DatabaseTree.getSelectionPaths();
+    				selectionPaths = databaseTree.getSelectionPaths();
     				for (TreePath selectionPath : selectionPaths) { // Loop through all selected nodes	
     					currentLevel = selectionPath.getPathCount();
     					
@@ -628,7 +628,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
     				
     									
     					//Show the JmenuItems on selected node when it is right clicked
-    					popup.show(DatabaseTree, e.getX(), e.getY());
+    					popup.show(databaseTree, e.getX(), e.getY());
     				}
     			}
     		}
@@ -815,7 +815,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		filterHeader.setTable(null);		//set null filter after refresh: this is important
 		
 		// Remove all children nodes from the root of DatabaseTree, and reload the tree
-		DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();
+		DefaultTreeModel model = (DefaultTreeModel) databaseTree.getModel();
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
 		root.removeAllChildren();
 		model.reload(root);
@@ -858,7 +858,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 					}		
 				} // end of If
 			} // end of For loop		
-			DatabaseTree.expandPath(new TreePath(root.getPath()));	//Expand the root
+			databaseTree.expandPath(new TreePath(root.getPath()));	//Expand the root
 			if (scrollPane_Right != null) {
 				scrollPane_Right.setViewportView(null);
 			}
@@ -873,19 +873,19 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		if (currentLevel == 2) nodeName = "new_table";
 		
 		if (nodeName.equals("new_database")) {		//New Database
-			DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();	
+			DefaultTreeModel model = (DefaultTreeModel) databaseTree.getModel();	
 			DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(nodeName);
 			model.insertNodeInto(newNode, processingNode, processingNode.getChildCount());
 			TreeNode[] nodes = model.getPathToRoot(newNode);
 			TreePath path = new TreePath(nodes);
-			DatabaseTree.scrollPathToVisible(path);
-			DatabaseTree.setEditable(true);
-			DatabaseTree.setSelectionPath(path);
-			DatabaseTree.startEditingAtPath(path);
+			databaseTree.scrollPathToVisible(path);
+			databaseTree.setEditable(true);
+			databaseTree.setSelectionPath(path);
+			databaseTree.startEditingAtPath(path);
 			editingPath = path;	
 			try {
 			display_text_field.setText("Type your new database name");
-			Database_Name_Edit_HasChanged = true;
+			database_name_edit_has_changed = true;
 		} catch (Exception e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			}	
@@ -906,13 +906,13 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 	public void rename_Database_or_Table() {
 		
 		if (processingNode != null && currentLevel == 2) {		//rename Database
-			DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();	
+			DefaultTreeModel model = (DefaultTreeModel) databaseTree.getModel();	
 			TreeNode[] nodes = model.getPathToRoot(processingNode);
 			TreePath path = new TreePath(nodes);
-			DatabaseTree.scrollPathToVisible(path);
-			DatabaseTree.setEditable(true);
-			DatabaseTree.setSelectionPath(path);
-			DatabaseTree.startEditingAtPath(path);
+			databaseTree.scrollPathToVisible(path);
+			databaseTree.setEditable(true);
+			databaseTree.setSelectionPath(path);
+			databaseTree.startEditingAtPath(path);
 			editingPath = path;	
 			try {
 				// Get and save the old database name
@@ -932,13 +932,13 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 			
 		
 		if (processingNode != null && currentLevel == 3) {		//rename Table									
-			DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();
+			DefaultTreeModel model = (DefaultTreeModel) databaseTree.getModel();
 			TreeNode[] nodes = model.getPathToRoot(processingNode);
 			TreePath path = new TreePath(nodes);
-			DatabaseTree.scrollPathToVisible(path);
-			DatabaseTree.setEditable(true);
-			DatabaseTree.setSelectionPath(path);
-			DatabaseTree.startEditingAtPath(path);
+			databaseTree.scrollPathToVisible(path);
+			databaseTree.setEditable(true);
+			databaseTree.setSelectionPath(path);
+			databaseTree.startEditingAtPath(path);
 			editingPath = path;
 			try {
 				display_text_field.setText("Type your new Table name");
@@ -989,13 +989,13 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		while (e1.hasMoreElements()) { // Search for the name that match
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode) e1.nextElement();
 			if (node.toString().equalsIgnoreCase(DatabaseName) && root.isNodeChild(node)) {		//Name match, and node is child of root
-				DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();
+				DefaultTreeModel model = (DefaultTreeModel) databaseTree.getModel();
 				TreeNode[] nodes = model.getPathToRoot(node);
 				TreePath path = new TreePath(nodes);
-				DatabaseTree.scrollPathToVisible(path);
-				DatabaseTree.setSelectionPath(path);
+				databaseTree.scrollPathToVisible(path);
+				databaseTree.setSelectionPath(path);
 				editingPath = path;
-				selectionPaths = DatabaseTree.getSelectionPaths();
+				selectionPaths = databaseTree.getSelectionPaths();
 				processingNode = node;
 				currentDatabase = DatabaseName;
 				currentLevel = 2;
@@ -1003,8 +1003,8 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		}
 		
 		display_text_field.setText(temptext);
-		DatabaseTree.setEditable(false);			// Disable editing
-		Database_Name_Edit_HasChanged = false;
+		databaseTree.setEditable(false);			// Disable editing
+		database_name_edit_has_changed = false;
 		renamingDatabase = false;
 	}
 			
@@ -1030,13 +1030,13 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 					while (e2.hasMoreElements()) { // Search for the name that match
 						DefaultMutableTreeNode newNode = (DefaultMutableTreeNode) e2.nextElement();
 						if (newNode.toString().equalsIgnoreCase(nameWOext) && node.isNodeChild(newNode)) {		//Name match, and node is child of the database
-							DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();
+							DefaultTreeModel model = (DefaultTreeModel) databaseTree.getModel();
 							TreeNode[] nodes = model.getPathToRoot(newNode);
 							TreePath path = new TreePath(nodes);
-							DatabaseTree.scrollPathToVisible(path);
-							DatabaseTree.setSelectionPath(path);
+							databaseTree.scrollPathToVisible(path);
+							databaseTree.setSelectionPath(path);
 							editingPath = path;
-							selectionPaths = DatabaseTree.getSelectionPaths();
+							selectionPaths = databaseTree.getSelectionPaths();
 							processingNode = newNode;
 							currenTableName = nameWOext;
 							currentLevel = 3;
@@ -1053,14 +1053,14 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		
 		display_text_field.setText(temptext);
 		// Disable editing
-		DatabaseTree.setEditable(false);
+		databaseTree.setEditable(false);
 		renamingTable = false;			//For "rename Table" option only
 	}
 		
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public void copy_database() {
-		DefaultMutableTreeNode processingNode = (DefaultMutableTreeNode) DatabaseTree.getSelectionPath().getLastPathComponent();	// currentLevel = 2 & nodeCount =1 already
-		DatabaseTree.setSelectionPath(null);
+		DefaultMutableTreeNode processingNode = (DefaultMutableTreeNode) databaseTree.getSelectionPath().getLastPathComponent();	// currentLevel = 2 & nodeCount =1 already
+		databaseTree.setSelectionPath(null);
 		currentDatabase = processingNode.getUserObject().toString();
 				
 		File sourceFile = new File(databasesFolder + seperator + currentDatabase);
@@ -1096,14 +1096,14 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		while (e.hasMoreElements()) { // Search for the name that match
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.nextElement();
 			if (node.toString().equalsIgnoreCase(databaseName) && root.isNodeChild(node)) {		// Name match, and node is child of root
-				DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();
+				DefaultTreeModel model = (DefaultTreeModel) databaseTree.getModel();
 				TreeNode[] nodes = model.getPathToRoot(node);
 				TreePath path = new TreePath(nodes);
 				if (path != null) display_text_field.setText(path.toString()); 	// display Full path
-				DatabaseTree.scrollPathToVisible(path);
-				DatabaseTree.setSelectionPath(path);
+				databaseTree.scrollPathToVisible(path);
+				databaseTree.setSelectionPath(path);
 				editingPath = path;
-				selectionPaths = DatabaseTree.getSelectionPaths();
+				selectionPaths = databaseTree.getSelectionPaths();
 				processingNode = node;
 				currentDatabase = databaseName;
 				currentLevel = 2;
@@ -1121,15 +1121,15 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 				if (node_Level==2 && processingNode.getChildCount() >= 0) {		//If node is a database and has childs then deselect all of its childs				
 				for (Enumeration e = processingNode.children(); e.hasMoreElements();) {
 					TreeNode child = (TreeNode) e.nextElement();
-					DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();
+					DefaultTreeModel model = (DefaultTreeModel) databaseTree.getModel();
 					TreeNode[] nodes = model.getPathToRoot(child);
 					TreePath path = new TreePath(nodes);
-					DatabaseTree.getSelectionModel().removeSelectionPath(path); // Deselect childs
+					databaseTree.getSelectionModel().removeSelectionPath(path); // Deselect childs
 				}
-				DatabaseTree.collapsePath(new TreePath(processingNode.getPath()));	//Collapse the selected database	
+				databaseTree.collapsePath(new TreePath(processingNode.getPath()));	//Collapse the selected database	
 			}
 		}
-		selectionPaths = DatabaseTree.getSelectionPaths();			//This is very important to get the most recent selected paths
+		selectionPaths = databaseTree.getSelectionPaths();			//This is very important to get the most recent selected paths
 		// End of set up---------------------------------------------------------------
 				
 	
@@ -1303,26 +1303,26 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 					//Show tables			
 					if (errorCAUGHT.equals(false)) {
 						// Make the new table appear on the TREE----------->YEAHHHHHHHHHHHHHHH
-						DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();
+						DefaultTreeModel model = (DefaultTreeModel) databaseTree.getModel();
 						DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(copiedTables_names[i]);
 						model.insertNodeInto(newNode, destinationNode, destinationNode.getChildCount());
 						TreeNode[] nodes = model.getPathToRoot(newNode);
 						TreePath path = new TreePath(nodes);
-						DatabaseTree.scrollPathToVisible(path);
+						databaseTree.scrollPathToVisible(path);
 						// DatabaseTree.setEnabled(false);
 						// DatabaseTree.setEditable(true);
-						if (count ==0) DatabaseTree.setSelectionPath(path);			//this help deselect all original nodes
+						if (count ==0) databaseTree.setSelectionPath(path);			//this help deselect all original nodes
 						// DatabaseTree.startEditingAtPath(path);
 						editingPath = path;			
 						processingNode = newNode;
-						DatabaseTree.getSelectionModel().addSelectionPath(path); // add childs into selection but not show table
+						databaseTree.getSelectionModel().addSelectionPath(path); // add childs into selection but not show table
 						count ++;
 					}
 					errorCAUGHT = false;	
 					
 				}	//End of For loop
 			
-				selectionPaths = DatabaseTree.getSelectionPaths();
+				selectionPaths = databaseTree.getSelectionPaths();
 				currentDatabase = destinationFileName;
 				currentLevel = 2;
 			}	//End of if (selection != null)
@@ -1369,11 +1369,11 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 				while (e.hasMoreElements()) { // Search for the name that match
 					DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.nextElement();
 					if (node.toString().equalsIgnoreCase(DatabaseName) && root.isNodeChild(node)) {		//Name match, and node is child of root
-						DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();
+						DefaultTreeModel model = (DefaultTreeModel) databaseTree.getModel();
 						TreeNode[] nodes = model.getPathToRoot(node);
 						TreePath path = new TreePath(nodes);
-						DatabaseTree.scrollPathToVisible(path);
-						DatabaseTree.setSelectionPath(path);
+						databaseTree.scrollPathToVisible(path);
+						databaseTree.setSelectionPath(path);
 						editingPath = path;
 					}
 				}
@@ -1530,19 +1530,19 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 						if (tableName.contains("."))
 							tableName = tableName.substring(0, tableName.lastIndexOf('.'));
 						final String NodeName = tableName;
-						DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();
+						DefaultTreeModel model = (DefaultTreeModel) databaseTree.getModel();
 						DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(NodeName);
 						model.insertNodeInto(newNode, processingNode, processingNode.getChildCount());
 						TreeNode[] nodes = model.getPathToRoot(newNode);
 						TreePath path = new TreePath(nodes);
-						DatabaseTree.scrollPathToVisible(path);
+						databaseTree.scrollPathToVisible(path);
 						// DatabaseTree.setEnabled(false);
 						// DatabaseTree.setEditable(true);
 						if (count == 0)
-							DatabaseTree.setSelectionPath(path); // this help deselect all original nodes
+							databaseTree.setSelectionPath(path); // this help deselect all original nodes
 						// DatabaseTree.startEditingAtPath(path);
 						editingPath = path;
-						DatabaseTree.getSelectionModel().addSelectionPath(path); // add childs into selection but not show table
+						databaseTree.getSelectionModel().addSelectionPath(path); // add childs into selection but not show table
 						count++;
 					}
 					errorCAUGHT = false;
@@ -1561,20 +1561,20 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 			node_Level = selectionPath.getPathCount();
 			if (node_Level == 2) { // If node is a database then add to the list and deselect the database
 				selected_databases_list.add(processingNode.toString());
-				DatabaseTree.getSelectionModel().removeSelectionPath(selectionPath);	
+				databaseTree.getSelectionModel().removeSelectionPath(selectionPath);	
 			} else if ((node_Level == 3) && !selected_databases_list.contains(processingNode.getParent().toString())) { // If node is a table then add is parent (database) to the list if not added yet
 				selected_databases_list.add(processingNode.getParent().toString());
 			}
 		}
 		int total_databases = selected_databases_list.size();
-		selectionPaths = DatabaseTree.getSelectionPaths();			//This is very important to get the most recent selected paths
+		selectionPaths = databaseTree.getSelectionPaths();			//This is very important to get the most recent selected paths
 		// End of set up---------------------------------------------------------------		
 		
 		
 		// Combines tables only if total_databases = 1 and there are at least 2 selected tables
 		if (total_databases == 1 && selectionPaths.length >= 2) {
 			currentDatabase = selected_databases_list.get(0);
-			DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();
+			DefaultTreeModel model = (DefaultTreeModel) databaseTree.getModel();
 			String queryText = "CREATE TABLE combine_table AS";
 			for (TreePath selectionPath : selectionPaths) {		//Loop through all nodes	
 				processingNode = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
@@ -1598,11 +1598,11 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 						while (e2.hasMoreElements()) { // Search for the name that match
 							DefaultMutableTreeNode newNode = (DefaultMutableTreeNode) e2.nextElement();
 							if (newNode.toString().equalsIgnoreCase("combine_table") && node.isNodeChild(newNode)) {		//Name match, and node is child of the database
-								/*DefaultTreeModel */model = (DefaultTreeModel) DatabaseTree.getModel();
+								/*DefaultTreeModel */model = (DefaultTreeModel) databaseTree.getModel();
 								TreeNode[] nodes = model.getPathToRoot(newNode);
 								TreePath path = new TreePath(nodes);
-								DatabaseTree.scrollPathToVisible(path);
-								DatabaseTree.setSelectionPath(path);
+								databaseTree.scrollPathToVisible(path);
+								databaseTree.setSelectionPath(path);
 								editingPath = path;
 								
 								processingNode = newNode;
@@ -1647,15 +1647,15 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 				if (node_Level==2 && processingNode.getChildCount() >= 0) {		//If node is a database and has childs then deselect all of its childs				
 					for (Enumeration e = processingNode.children(); e.hasMoreElements();) {
 						TreeNode child = (TreeNode) e.nextElement();
-						DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();	
+						DefaultTreeModel model = (DefaultTreeModel) databaseTree.getModel();	
 						TreeNode[] nodes = model.getPathToRoot(child);
 						TreePath path = new TreePath(nodes);
-						DatabaseTree.getSelectionModel().removeSelectionPath(path); // Deselect childs
+						databaseTree.getSelectionModel().removeSelectionPath(path); // Deselect childs
 					}
-					DatabaseTree.collapsePath(new TreePath(processingNode.getPath()));	//Collapse the selected database				
+					databaseTree.collapsePath(new TreePath(processingNode.getPath()));	//Collapse the selected database				
 				}	
 			}
-			selectionPaths = DatabaseTree.getSelectionPaths();			//This is very important to get the most recent selected paths
+			selectionPaths = databaseTree.getSelectionPaths();			//This is very important to get the most recent selected paths
 		}
 		//End of set up---------------------------------------------------------------
 		
@@ -1668,7 +1668,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), "Delete highlighted tables & all tables in highlighted databases?", "Confirm Delete",
 						JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
 				if (response == 0) {
-					DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();	
+					DefaultTreeModel model = (DefaultTreeModel) databaseTree.getModel();	
 						
 					
 					for (TreePath selectionPath : selectionPaths) { // Loop through all again and delete all level 2 nodes (databases)
@@ -1684,7 +1684,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 					
 					
 					
-					selectionPaths = DatabaseTree.getSelectionPaths();			//This is very important to get the most recent selected paths
+					selectionPaths = databaseTree.getSelectionPaths();			//This is very important to get the most recent selected paths
 					if (selectionPaths != null) {		//at least 1 database or table has to be selected 
 						Class.forName("org.sqlite.JDBC").newInstance();
 						conn = DriverManager.getConnection("jdbc:sqlite:" + databasesFolder + seperator + currentDatabase);
@@ -1820,11 +1820,11 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 						while (e2.hasMoreElements()) { // Search for the name that match
 							DefaultMutableTreeNode newNode = (DefaultMutableTreeNode) e2.nextElement();
 							if (newNode.toString().equalsIgnoreCase("yield_tables_definition") && node.isNodeChild(newNode)) {		//Name match, and node is child of the database
-								DefaultTreeModel model = (DefaultTreeModel) DatabaseTree.getModel();
+								DefaultTreeModel model = (DefaultTreeModel) databaseTree.getModel();
 								TreeNode[] nodes = model.getPathToRoot(newNode);
 								TreePath path = new TreePath(nodes);
-								DatabaseTree.scrollPathToVisible(path);
-								DatabaseTree.setSelectionPath(path);
+								databaseTree.scrollPathToVisible(path);
+								databaseTree.setSelectionPath(path);
 								editingPath = path;
 								
 								processingNode = newNode;

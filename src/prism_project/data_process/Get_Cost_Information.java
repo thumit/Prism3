@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.stream.Stream;
 // IMPORTANT:  THE LOGIC HERE IN SOMEWHAT COMPLEX. MY APPOLOGY!
 
@@ -212,19 +213,17 @@ public class Get_Cost_Information {
 	private Boolean are_all_dynamic_identifiers_matched(Object[][][] yield_tables_values, int table_id_to_find, int row_id_to_find,
 			List<String> dynamic_identifiers_column_indexes, List<List<String>> dynamic_identifiers) {
 		
-		if (!dynamic_identifiers_column_indexes.contains("NoIdentifier")) {	//If there are dynamic identifiers
-			//Check if in the same row of this yield table we have all the dynamic identifiers match				
-			for (int dynamic_count = 0; dynamic_count < dynamic_identifiers_column_indexes.size(); dynamic_count++) {
-				int current_dynamic_column = Integer.parseInt(dynamic_identifiers_column_indexes.get(dynamic_count));		//This is the yield table column of the dynamic identifier
-				List<String> this_dynamic_identifier = dynamic_identifiers.get(dynamic_count);
-								
+		if (!dynamic_identifiers_column_indexes.get(0).equals("NoIdentifier")) {	//If there are dynamic identifiers, Check if in the same row of this yield table we have all the dynamic identifiers match	
+			int identifiers_count = 0;
+			for (List<String> this_dynamic_identifier : dynamic_identifiers) {	// loop all dynamic identifiers
+				int current_dynamic_column = Integer.parseInt(dynamic_identifiers_column_indexes.get(identifiers_count));		//This is the yield table column of the dynamic identifier
 				if (this_dynamic_identifier.get(0).contains(",")) {	//if this is a range identifier (the 1st element of this identifier contains ",")							
 					double yt_value = Double.parseDouble(yield_tables_values[table_id_to_find][row_id_to_find][current_dynamic_column].toString());
-															
-					for (int element = 0; element < this_dynamic_identifier.size(); element++) {	//Loop all elements (all ranges) of this range identifier
-						String[] min_and_max = this_dynamic_identifier.get(element).split(",");									
-						double min_value = Double.parseDouble(min_and_max[0].replace("[", ""));
-						double max_value = Double.parseDouble(min_and_max[1].replace(")", ""));																	
+					for (String range : this_dynamic_identifier) {	//Loop all ranges of this range identifier
+						StringTokenizer tok = new StringTokenizer(range, ",");	// split by ,
+						// will for sure have 2 items in the range --> do not need while check here
+						double min_value = Double.parseDouble(tok.nextToken().replace("[", ""));
+						double max_value = Double.parseDouble(tok.nextToken().replace(")", ""));	
 						if (!(min_value <= yt_value && yt_value < max_value)) {
 							return false;
 						}
@@ -235,6 +234,7 @@ public class Get_Cost_Information {
 						return false;			
 					}
 				}
+				identifiers_count++;
 			}
 		}	
 		return true;
@@ -302,83 +302,100 @@ public class Get_Cost_Information {
 	
 	
 	private List<String[]> get_condition_action_cost(String action_cost_info, String var_action_type) {	
-		//Read the whole cell into array
-		String[] action_cost_array = action_cost_info.split(";");
-		List<String[]> action_cost = new ArrayList<String[]>();		
-		for (String infor: action_cost_array) {
-			String[] info_array = infor.split("\\s+");		// info example: clearcut hca_allsx 360
+		// tokenizer is used instead of String.split because it is faster
+		// Read the whole cell which include a string with many ; 
+		List<String[]> action_cost = new ArrayList<String[]>();	
+		StringTokenizer t1 = new StringTokenizer(action_cost_info, ";");
+		while (t1.hasMoreTokens()) {			// loop through each element (separated by ;)
+			String infor = t1.nextToken();		// info example: clearcut hca_allsx 360
+			
+			String[] info_array = new String[3];
+			int count = 0;
+			StringTokenizer t2 = new StringTokenizer(infor, " ");	// info_array = the array storing all the elements split by " "
+			while (t2.hasMoreTokens()) {
+				info_array[count] = t2.nextToken();
+				count++;
+			}
+		    
 			if (info_array[0].equals(var_action_type)) {	// info_array[0] = clearcut			only get the info matched with the var_action_type
 				action_cost.add(info_array);
 			}
-		}		
+		}
+		
 		return action_cost;
 	}
 	
 		
 	private List<String[]> get_condition_conversion_cost(String conversion_cost_info) {	
-		//Read the whole cell into array
-		String[] conversion_cost_array = conversion_cost_info.split(";");
-		List<String[]> conversion_cost = new ArrayList<String[]>();		
-		for (String info: conversion_cost_array) {
-			String[] info_array = info.split("\\s+");		// info example: P D action 240         	W L disturbance 120
+		// tokenizer is used instead of String.split because it is faster
+		// Read the whole cell which include a string with many ; 
+		List<String[]> conversion_cost = new ArrayList<String[]>();	
+		StringTokenizer t1 = new StringTokenizer(conversion_cost_info, ";");
+		while (t1.hasMoreTokens()) {		// loop through each element (separated by ;)
+			String infor = t1.nextToken();	// info example: P D action 240         	W L disturbance 120
+			
+			String[] info_array = new String[4];
+			int count = 0;
+			StringTokenizer t2 = new StringTokenizer(infor, " ");	// info_array = the array storing all the elements split by " "
+			while (t2.hasMoreTokens()) {
+				info_array[count] = t2.nextToken();
+				count++;
+			}
+		    
 			conversion_cost.add(info_array);
-		}		
+		}
+		
 		return conversion_cost;
 	}
 		
 	
 	private List<List<String>> get_condition_static_identifiers(String static_identifiers_info) {
-		List<List<String>> cost_condition_static_identifiers = new ArrayList<List<String>>();		
-		//Read the whole cell into array
-		String[] static_layer_info = static_identifiers_info.split(";");
-		int total_static_identifiers = static_layer_info.length;
-		
-		//Get all static Identifiers to be in the list
-		for (int i = 0; i < total_static_identifiers; i++) {		// 6 first identifiers are strata's 6 layers (layer 0 to 5)	then method (6) then period	(7)
-			List<String> thisIdentifier = new ArrayList<String>();			
-			String[] identifierElements = static_layer_info[i].split("\\s+");				//space delimited
-			for (int j = 1; j < identifierElements.length; j++) {		//Ignore the first element which is the identifier index, so we loop from 1 not 0
-				thisIdentifier.add(identifierElements[j].replaceAll("\\s+",""));		//Add element name, if name has spaces then remove all the spaces
-			}		
+		// tokenizer is used instead of String.split because it is faster
+		// Read the whole cell which include a string with many ; 
+		List<List<String>> cost_condition_static_identifiers = new ArrayList<List<String>>();	
+		StringTokenizer t1 = new StringTokenizer(static_identifiers_info, ";");
+		while (t1.hasMoreTokens()) {		// loop through each element (separated by ;) --> loop each static identifier which has: 6 first identifiers are strata's 6 layers (layer 0 to 5)	then method (6) then period	(7)
+			String infor = t1.nextToken();
+			
+			List<String> thisIdentifier = new ArrayList<String>();
+			StringTokenizer t2 = new StringTokenizer(infor, " ");	// info_array = the array storing all the elements split by " "
+			if (t2.hasMoreTokens()) t2.nextToken();					// Ignore the first element which is the identifier index
+			while (t2.hasMoreTokens()) thisIdentifier.add(t2.nextToken().replaceAll("\\s+",""));	// Add element name, if name has spaces then remove all the spaces
 			cost_condition_static_identifiers.add(thisIdentifier);
 		}
-			
 		return cost_condition_static_identifiers;
 	}
 	
 		
 	private List<List<String>> get_condition_dynamic_identifiers(String dynamic_identifiers_info) {
-		List<List<String>> cost_condition_dynamic_identifiers = new ArrayList<List<String>>();		
-		//Read the whole cell into array
-		String[] info = dynamic_identifiers_info.split(";");
-		int total_dynamic_identifiers = info.length;
+		// tokenizer is used instead of String.split because it is faster
+		// Read the whole cell which include a string with many ; 
+		List<List<String>> cost_condition_dynamic_identifiers = new ArrayList<List<String>>();
+		StringTokenizer t1 = new StringTokenizer(dynamic_identifiers_info, ";");
+		while (t1.hasMoreTokens()) {		// loop through each element (separated by ;) --> loop each dynamic identifier
+			String infor = t1.nextToken();
 			
-		//Get all dynamic Identifiers to be in the list
-		for (int i = 0; i < total_dynamic_identifiers; i++) {	
-			List<String> thisIdentifier = new ArrayList<String>();			
-			String[] identifierElements = info[i].split("\\s+");				//space delimited
-			for (int j = 1; j < identifierElements.length; j++) {		// Ignore the first element which is the identifier column index, so we loop from 1 not 0
-				thisIdentifier.add(identifierElements[j].replaceAll("\\s+",""));		//Add element name, if name has spaces then remove all the spaces
-			}			
+			List<String> thisIdentifier = new ArrayList<String>();
+			StringTokenizer t2 = new StringTokenizer(infor, " ");	// info_array = the array storing all the elements split by " "
+			if (t2.hasMoreTokens()) t2.nextToken();					// Ignore the first element which is the identifier index
+			while (t2.hasMoreTokens()) thisIdentifier.add(t2.nextToken().replaceAll("\\s+",""));	// Add element name, if name has spaces then remove all the spaces
 			cost_condition_dynamic_identifiers.add(thisIdentifier);
-		}			
+		}
 		return cost_condition_dynamic_identifiers;
 	}
 	
 	
 	private List<String> get_condition_dynamic_dentifiers_column_indexes(String dynamic_identifiers_info) {
+		// tokenizer is used instead of String.split because it is faster
+		// Read the whole cell which include a string with many ; 
 		List<String> cost_condition_dynamic_dentifiers_column_indexes = new ArrayList<String>();
+		StringTokenizer t1 = new StringTokenizer(dynamic_identifiers_info, ";");
+		while (t1.hasMoreTokens()) {		// loop through each element (separated by ;) --> loop each dynamic identifier
+			String infor = t1.nextToken();
 			
-		//Read the whole cell into array
-		String[] info = dynamic_identifiers_info.split(";");
-		int total_dynamic_identifiers = info.length;
-
-		//Get all dynamic Identifiers to be in the list
-		for (int i = 0; i < total_dynamic_identifiers; i++) {	
-			String[] identifierElements = info[i].split("\\s+");				//space delimited
-			//add the first element which is the identifier column index
-			cost_condition_dynamic_dentifiers_column_indexes.add(identifierElements[0].replaceAll("\\s+",""));
-		}			
+			StringTokenizer t2 = new StringTokenizer(infor, " ");	// info_array = the array storing all the elements split by " "
+			if (t2.hasMoreTokens()) cost_condition_dynamic_dentifiers_column_indexes.add(t2.nextToken().replaceAll("\\s+",""));		// add the first element which is the identifier column index
+		}
 		return cost_condition_dynamic_dentifiers_column_indexes;
 	}
 }

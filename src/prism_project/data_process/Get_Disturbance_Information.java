@@ -19,6 +19,7 @@ package prism_project.data_process;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.StringTokenizer;
 	
 // This class is created only when there is at least 1 condition --> no need to check null condition
 public class Get_Disturbance_Information {
@@ -151,19 +152,17 @@ public class Get_Disturbance_Information {
 	private Boolean are_all_dynamic_identifiers_matched(Object[][][] yield_tables_values, int table_id_to_find, int row_id_to_find,
 			List<String> dynamic_identifiers_column_indexes, List<List<String>> dynamic_identifiers) {
 		
-		if (!dynamic_identifiers_column_indexes.contains("NoIdentifier")) {	//If there are dynamic identifiers
-			//Check if in the same row of this yield table we have all the dynamic identifiers match				
-			for (int dynamic_count = 0; dynamic_count < dynamic_identifiers_column_indexes.size(); dynamic_count++) {
-				int current_dynamic_column = Integer.parseInt(dynamic_identifiers_column_indexes.get(dynamic_count));		//This is the yield table column of the dynamic identifier
-				List<String> this_dynamic_identifier = dynamic_identifiers.get(dynamic_count);
-								
+		if (!dynamic_identifiers_column_indexes.get(0).equals("NoIdentifier")) {	//If there are dynamic identifiers, Check if in the same row of this yield table we have all the dynamic identifiers match	
+			int identifiers_count = 0;
+			for (List<String> this_dynamic_identifier : dynamic_identifiers) {	// loop all dynamic identifiers
+				int current_dynamic_column = Integer.parseInt(dynamic_identifiers_column_indexes.get(identifiers_count));		//This is the yield table column of the dynamic identifier
 				if (this_dynamic_identifier.get(0).contains(",")) {	//if this is a range identifier (the 1st element of this identifier contains ",")							
 					double yt_value = Double.parseDouble(yield_tables_values[table_id_to_find][row_id_to_find][current_dynamic_column].toString());
-															
-					for (int element = 0; element < this_dynamic_identifier.size(); element++) {	//Loop all elements (all ranges) of this range identifier
-						String[] min_and_max = this_dynamic_identifier.get(element).split(",");									
-						double min_value = Double.parseDouble(min_and_max[0].replace("[", ""));
-						double max_value = Double.parseDouble(min_and_max[1].replace(")", ""));																	
+					for (String range : this_dynamic_identifier) {	//Loop all ranges of this range identifier
+						StringTokenizer tok = new StringTokenizer(range, ",");	// split by ,
+						// will for sure have 2 items in the range --> do not need while check here
+						double min_value = Double.parseDouble(tok.nextToken().replace("[", ""));
+						double max_value = Double.parseDouble(tok.nextToken().replace(")", ""));	
 						if (!(min_value <= yt_value && yt_value < max_value)) {
 							return false;
 						}
@@ -174,6 +173,7 @@ public class Get_Disturbance_Information {
 						return false;			
 					}
 				}
+				identifiers_count++;
 			}
 		}	
 		return true;

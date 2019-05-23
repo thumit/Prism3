@@ -438,8 +438,9 @@ public class Panel_Project extends JLayeredPane {
 							for (int row = 0; row < rowCount; row++) {
 //								data[row] = a[row + 1].split(delimited);	//tab delimited	
 								String[] rowValue = a[row + 1].split(delimited);	//tab delimited	
+								int total_row_elements = rowValue.length;
 								for (int col = 0; col < colCount; col++) {
-									data[row][col] = (col < rowValue.length) ? rowValue[col] : "";
+									data[row][col] = (col < total_row_elements) ? rowValue[col] : "";		// if lacking data --> fill the data with empty string
 								}	
 							}	
 							

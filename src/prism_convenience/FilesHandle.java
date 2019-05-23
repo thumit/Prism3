@@ -143,7 +143,7 @@ public class FilesHandle {
 	} 
 	 
 
-	public static File get_DatabasesFolder() {		
+	public static File get_databasesFolder() {		
 		String workingLocation = get_workingLocation();
 		File databasesFolder = new File(workingLocation + "/Databases");
 		
@@ -241,7 +241,7 @@ public class FilesHandle {
 	public static File chosenDatabase() {
 		JFileChooser chooser = new JFileChooser();
 		chooser.setPreferredSize(new Dimension(800, 500));
-		chooser.setCurrentDirectory(get_DatabasesFolder());
+		chooser.setCurrentDirectory(get_databasesFolder());
 		chooser.setDialogTitle("Select database file");
 		chooser.setMultiSelectionEnabled(false);
 		

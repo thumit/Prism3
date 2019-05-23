@@ -44,14 +44,14 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 	private JPanel identifiersPanel;
 	private int option;
 
-	public ScrollPane_StaticIdentifiers (Read_Database read_Database, int option, String panel_name) {
+	public ScrollPane_StaticIdentifiers(Read_Database read_Database, int option, String panel_name) {
 		this.option = option;
 		
 		// option = 0 --> 6 layers		1 --> 4 layers       2 --> 6 layers + method_period		3 --> method choice     4 --> 6 layers +  method choice rotation_period rotation_age regen_layer5
-		List<String> layers_title = new ArrayList<>(read_Database.get_layers_Title());
-		List<String> layers_Title_ToolTip = new ArrayList<>(read_Database.get_layers_Title_ToolTip());
+		List<String> layers_title = new ArrayList<>(read_Database.get_layers_title());
+		List<String> layers_Title_ToolTip = new ArrayList<>(read_Database.get_layers_title_tooltip());
 		List<List<String>> allLayers = new ArrayList<>(read_Database.get_all_layers());
-		List<List<String>> allLayers_ToolTips = new ArrayList<>(read_Database.get_allLayers_ToolTips());
+		List<List<String>> allLayers_ToolTips = new ArrayList<>(read_Database.get_allLayers_tooltips());
 
 		
 		if (option == 1) {

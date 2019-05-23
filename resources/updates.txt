@@ -982,4 +982,40 @@ All changes in this block are associated with PrismAlpha1.2.03.jar, User Manual 
 --------------------------------------------------------------------------
 
 435. LPSOLVE is now working properly. Fix java paths loading, and add lpsolve55.dll which is associated with lpsolve55j.dll.
+436. Update eclipse build-path to the newest java JDK11
 All changes in this block are associated with PrismAlpha1.2.05.jar, User Manual 1.0
+--------------------------------------------------------------------------
+
+437. Update eclipse build-path to the newest java JDK12 (JDK12 has upgrades on G1 and also introduces Shenandoah GC, https://stackify.com/java-12-new-features-and-enhancements-developers-should-know/)
+438. Optimize the memory wasted by using:-XX:+UseG1GC -XX:+UseStringDeduplication (both in Eclipse Runtime & OptionPane_Startup, https://dzone.com/articles/easy-change-to-reduce-memory-by-20)
+439. Refactor in many places:
+	- rename variables in Panel_Edit_Details
+	- rename variables in Read_Database
+	- delete class: Cplex_Wrapper_Not_Use (in "solve" package)
+440. Panel_Solve: 
+	- using "Switch" instead of "if then" to add -y(j) or -z(k) or -v(n) --> this speeds up reading user constraints
+	- change for loop to not use ".size" in the loop --> this speeds up the loop (i.e. layer5.size() --> total_layer5)
+441. Get_Variable_Information: using "Switch" instead of "if then"
+442. Speed up in Read_Inputs --> (get_static_strata_without_sizeclass_and_covertype & get_static_strata_without_sizeclass & get_static_strata). This is a very significant speed improvements.
+	- use Set 
+	- use String builder
+	- remove contain method 
+	- use for each loop
+443. Rewrite the class "Get_Cost_Information" to improve the speed of splitting Strings significantly by using tokenizer (https://stackoverflow.com/questions/691184/scanner-vs-stringtokenizer-vs-string-split/691224#691224). Tokenizer is applied on:
+	- get_condition_action_cost
+	- get_condition_conversion_cost
+	- get_condition_static_identifiers
+	- get_condition_dynamic_identifiers
+	- get_condition_dynamic_dentifiers_column_indexes
+444. Remove contain method, use checking the first element of the list where possible. applied on (dynamic_identifiers_column_indexes & parameters_indexes) located at:
+	- Get_Cost_Information
+	- Get_Parameter_Information
+	- Get_Disturbance_Information
+445. Improve for loop:
+	- Put the .length out of the for loop in eq.15 in Panel_Solve (only appplied on xEA_E and xEA_R to make it easier for code maintainance)
+	- Put the .length out of the for loop in eq.15 in Panel_Solve appplied on model_strata & model_strata_without_sizeclass)
+	- Put the .size out of the for loop (are_all_dynamic_identifiers_matched in 3 different classes)
+	- Use for each loop in Get_Parameter_Information --> get_total_value
+Note for Updating SQLITE to version 3.27.2: There are some good functions, e.g. rename table column, but NOTE NOTE NOTE: query for rotation_age fail in Database management --> will not apply SQLITE update
+All changes in this block are associated with PrismAlpha1.2.06.jar, User Manual 1.03.21, will update later when the newer version is better)
+--------------------------------------------------------------------------

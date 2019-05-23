@@ -49,10 +49,10 @@ public class Read_Database {
 	
 	private String[][] existing_strata_values;
 	private String[][] strata_definition_values;	
-	private List<String> layers_Title;
-	private List<String> layers_Title_ToolTip;
-	private List<List<String>> allLayers;
-	private List<List<String>> allLayers_ToolTips;
+	private List<String> layers_title;
+	private List<String> layers_title_tooltip;
+	private List<List<String>> all_layers;
+	private List<List<String>> all_layers_tooltips;
 	
 	private Connection conn = null;
 	private Statement st = null;
@@ -309,26 +309,26 @@ public class Read_Database {
 //				});
 					
 
-				layers_Title = new ArrayList<String>();
-				layers_Title_ToolTip = new ArrayList<String>();
+				layers_title = new ArrayList<String>();
+				layers_title_tooltip = new ArrayList<String>();
 				
-				allLayers = new ArrayList<List<String>>();
-				allLayers_ToolTips = new ArrayList<List<String>>();				
+				all_layers = new ArrayList<List<String>>();
+				all_layers_tooltips = new ArrayList<List<String>>();				
 				
 				// Loop through all rows and add all layers information
 				for (int i = 0; i < rowCount3; i++) {
-					if (!layers_Title.contains(strata_definition_values[i][0])) {  // If found a new layer
+					if (!layers_title.contains(strata_definition_values[i][0])) {  // If found a new layer
 						// Add Layer title and toolTip    	
-			        	layers_Title.add(strata_definition_values[i][0]);
-			        	layers_Title_ToolTip.add(strata_definition_values[i][1]);
+			        	layers_title.add(strata_definition_values[i][0]);
+			        	layers_title_tooltip.add(strata_definition_values[i][1]);
 			        	
 			        	// Add 2 temporary Lists to the allLayers & allLayers_ToolTips
-			        	allLayers.add(new ArrayList<String>());
-			        	allLayers_ToolTips.add(new ArrayList<String>());
+			        	all_layers.add(new ArrayList<String>());
+			        	all_layers_tooltips.add(new ArrayList<String>());
 					}
 									
-					allLayers.get(allLayers.size() - 1).add(strata_definition_values[i][2]);		// Add layer's element to the last layer
-					allLayers_ToolTips.get(allLayers_ToolTips.size() - 1).add(strata_definition_values[i][3]);		// Add layer's element's ToolTip to the last layer ToolTip
+					all_layers.get(all_layers.size() - 1).add(strata_definition_values[i][2]);		// Add layer's element to the last layer
+					all_layers_tooltips.get(all_layers_tooltips.size() - 1).add(strata_definition_values[i][3]);		// Add layer's element's ToolTip to the last layer ToolTip
 				}	
 				
 				
@@ -492,22 +492,22 @@ public class Read_Database {
 	}	
 	
 	
-	public List<String> get_layers_Title() {   
-		return layers_Title;
+	public List<String> get_layers_title() {   
+		return layers_title;
 	}
 
 	
-	public List<String> get_layers_Title_ToolTip() {	
-		return layers_Title_ToolTip;
+	public List<String> get_layers_title_tooltip() {	
+		return layers_title_tooltip;
 	}
 	
 	
 	public List<List<String>> get_all_layers() {		
-		return allLayers;
+		return all_layers;
 	}
 	
-	public List<List<String>> get_allLayers_ToolTips() {
-		return allLayers_ToolTips;
+	public List<List<String>> get_allLayers_tooltips() {
+		return all_layers_tooltips;
 	}	
 	
 	
@@ -698,7 +698,7 @@ public class Read_Database {
 				for (int i = 1; i <= 99; i++) {add(Integer.toString(i));}
 			}
 		};
-		List<String> regen_layer5 = new ArrayList<String>(allLayers.get(4));	// regen_layer5
+		List<String> regen_layer5 = new ArrayList<String>(all_layers.get(4));	// regen_layer5
 			
 		List<List<String>> method_choice_rotationperiod_rotationage_regenlayer5_layers = new ArrayList<List<String>>();
 		method_choice_rotationperiod_rotationage_regenlayer5_layers.add(method);

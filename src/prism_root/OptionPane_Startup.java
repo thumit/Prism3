@@ -92,7 +92,7 @@ public class OptionPane_Startup extends JOptionPane {
 			try {			
 				// Always restart the 1st time running PRISM to activate G1, also set Max Heap to previously defined max memory (stored in prism_memory.txt) or 1G (in this case we are running the .jar out of eclipse)
 				Memory_File.create_memory_file(memory_file, previous_max_memory, previous_project_name);
-				String command_to_execute = "javaw -Xmx" + previous_max_memory + "G -XX:+UseG1GC -jar " + jar_file.getName();
+				String command_to_execute = "javaw -Xmx" + previous_max_memory + "G -XX:+UseG1GC -XX:+UseStringDeduplication -jar " + jar_file.getName();
 				Runtime.getRuntime().exec(command_to_execute, null, new File(FilesHandle.get_workingLocation()));
 			} catch (IOException e) {
 			} finally {
@@ -234,7 +234,7 @@ class ScrollPane_Popup extends JScrollPane {
 					try {
 						String new_max_heap = combo.getSelectedItem().toString();
 						Memory_File.create_memory_file(memory_file, Integer.valueOf(new_max_heap), "");
-						String command_to_execute = "javaw -Xmx" + new_max_heap + "G -XX:+UseG1GC -jar " + jar_file.getName();
+						String command_to_execute = "javaw -Xmx" + new_max_heap + "G -XX:+UseG1GC -XX:+UseStringDeduplication -jar " + jar_file.getName();
 						Runtime.getRuntime().exec(command_to_execute, null, new File(FilesHandle.get_workingLocation()));
 					} catch (IOException ex) {
 					} finally {

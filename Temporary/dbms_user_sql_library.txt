@@ -31,3 +31,6 @@ From yield_tables;
 check MS prescriptions with a few information
 select prescription, row_id, age_class, age, qmd, action_type from yield_tables where prescription Like '%_MS_E%'
 ----------
+rename column row_id to row
+ALTER TABLE yield_tables RENAME COLUMN row_id TO row
+----------

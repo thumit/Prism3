@@ -18,6 +18,7 @@ package prism_project.data_process;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.StringTokenizer;
 
 public class Get_Parameter_Information {
 	private Object[][][] yield_tables_values;
@@ -28,13 +29,13 @@ public class Get_Parameter_Information {
 	}
 	
 	public double get_total_value(int table_id_to_find, int row_id_to_find,
-			List<String> parameters_indexes, List<String> dynamic_dentifiers_column_indexes, List<List<String>> dynamic_identifiers,
-			double cost_value) {
+			List<String> parameters_indexes, List<String> dynamic_dentifiers_column_indexes, List<List<String>> dynamic_identifiers, double cost_value) {		// Note: already sort each of the dynamic_identifiers in Panel_Solve
 		
-		
+		String first_dynamic_identifier_index = dynamic_dentifiers_column_indexes.get(0);
+		String first_parameter_index = parameters_indexes.get(0);
 		double value_to_return = 0;						
 		
-		if (dynamic_dentifiers_column_indexes.contains("NoIdentifier") && parameters_indexes.contains("NoParameter")) {	// This is the only case when we don't need to check yield table
+		if (first_dynamic_identifier_index.equals("NoIdentifier") && first_parameter_index.equals("NoParameter")) {	// This is the only case when we don't need to check yield table
 			value_to_return = 1;
 		} else {	// Check the prescription (a.k.a. yield table) 				
 			
@@ -43,13 +44,13 @@ public class Get_Parameter_Information {
 					
 					boolean constraint_dynamicIdentifiers_matched = are_all_dynamic_identifiers_matched(yield_tables_values, table_id_to_find, row_id_to_find, dynamic_dentifiers_column_indexes, dynamic_identifiers);								
 					if (constraint_dynamicIdentifiers_matched) {					
-						if (parameters_indexes.contains("NoParameter")) {			// Return 1 if NoParameter & all dynamic identifiers match
+						if (first_parameter_index.equals("NoParameter")) {			// Return 1 if NoParameter & all dynamic identifiers match
 							value_to_return = 1;							
-						} else if (parameters_indexes.contains("CostParameter")) {			// If this is a cost constrain
+						} else if (first_parameter_index.equals("CostParameter")) {			// If this is a cost constraint
 							value_to_return = cost_value;			
 						} else {	// If this is a constraint with Parameters		
-							for (int j = 0; j < parameters_indexes.size(); j++) {		// Loop all parameters_indexes_list 	
-								int col = Integer.parseInt(parameters_indexes.get(j));						
+							for (String index : parameters_indexes) {		// Loop all parameters_indexes_list 	
+								int col = Integer.parseInt(index);						
 								value_to_return = value_to_return + Double.parseDouble(yield_tables_values[table_id_to_find][row_id_to_find][col].toString());		// then add to the total of all parameters found
 							}
 						}						
@@ -71,19 +72,17 @@ public class Get_Parameter_Information {
 	private Boolean are_all_dynamic_identifiers_matched(Object[][][] yield_tables_values, int table_id_to_find, int row_id_to_find,
 			List<String> dynamic_identifiers_column_indexes, List<List<String>> dynamic_identifiers) {
 		
-		if (!dynamic_identifiers_column_indexes.contains("NoIdentifier")) {	//If there are dynamic identifiers
-			//Check if in the same row of this yield table we have all the dynamic identifiers match				
-			for (int dynamic_count = 0; dynamic_count < dynamic_identifiers_column_indexes.size(); dynamic_count++) {
-				int current_dynamic_column = Integer.parseInt(dynamic_identifiers_column_indexes.get(dynamic_count));		//This is the yield table column of the dynamic identifier
-				List<String> this_dynamic_identifier = dynamic_identifiers.get(dynamic_count);
-								
+		if (!dynamic_identifiers_column_indexes.get(0).equals("NoIdentifier")) {	//If there are dynamic identifiers, Check if in the same row of this yield table we have all the dynamic identifiers match	
+			int identifiers_count = 0;
+			for (List<String> this_dynamic_identifier : dynamic_identifiers) {	// loop all dynamic identifiers
+				int current_dynamic_column = Integer.parseInt(dynamic_identifiers_column_indexes.get(identifiers_count));		//This is the yield table column of the dynamic identifier
 				if (this_dynamic_identifier.get(0).contains(",")) {	//if this is a range identifier (the 1st element of this identifier contains ",")							
 					double yt_value = Double.parseDouble(yield_tables_values[table_id_to_find][row_id_to_find][current_dynamic_column].toString());
-															
-					for (int element = 0; element < this_dynamic_identifier.size(); element++) {	//Loop all elements (all ranges) of this range identifier
-						String[] min_and_max = this_dynamic_identifier.get(element).split(",");									
-						double min_value = Double.parseDouble(min_and_max[0].replace("[", ""));
-						double max_value = Double.parseDouble(min_and_max[1].replace(")", ""));																	
+					for (String range : this_dynamic_identifier) {	//Loop all ranges of this range identifier
+						StringTokenizer tok = new StringTokenizer(range, ",");	// split by ,
+						// will for sure have 2 items in the range --> do not need while check here
+						double min_value = Double.parseDouble(tok.nextToken().replace("[", ""));
+						double max_value = Double.parseDouble(tok.nextToken().replace(")", ""));	
 						if (!(min_value <= yt_value && yt_value < max_value)) {
 							return false;
 						}
@@ -94,6 +93,7 @@ public class Get_Parameter_Information {
 						return false;			
 					}
 				}
+				identifiers_count++;
 			}
 		}	
 		return true;

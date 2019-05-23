@@ -24,7 +24,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 public class Read_Inputs {
@@ -961,26 +963,24 @@ public class Read_Inputs {
 	}	
 	
 	
-	public List<String> get_static_strata(int row) {
-		List<String> static_strata = new ArrayList<String>();
+	public Set<String> get_static_strata(int row) {
+		Set<String> static_strata = new HashSet<String>();
 		List<List<String>> static_identifiers = get_static_identifiers_in_row(row);
-		
-		List<String> layer1 = static_identifiers.get(0);
-		List<String> layer2 = static_identifiers.get(1);
-		List<String> layer3 = static_identifiers.get(2);
-		List<String> layer4 = static_identifiers.get(3);
-		List<String> layer5 = static_identifiers.get(4);
-		List<String> layer6 = static_identifiers.get(5);		
-		
 		// first 6 layers
-		for (int i1 = 0; i1 < layer1.size(); i1++) {
-			for (int i2 = 0; i2 < layer2.size(); i2++) {
-				for (int i3 = 0; i3 < layer3.size(); i3++) {
-					for (int i4 = 0; i4 < layer4.size(); i4++) {
-						for (int i5 = 0; i5 < layer5.size(); i5++) {
-							for (int i6 = 0; i6 < layer6.size(); i6++) {
-								String combined_name = layer1.get(i1) + layer2.get(i2) + layer3.get(i3) + layer4.get(i4) + layer5.get(i5) + layer6.get(i6);
-								static_strata.add(combined_name);
+		for (String layer1: static_identifiers.get(0)) {
+			for (String layer2: static_identifiers.get(1)) {
+				for (String layer3: static_identifiers.get(2)) {
+					for (String layer4: static_identifiers.get(3)) {
+						for (String layer5: static_identifiers.get(4)) {
+							for (String layer6: static_identifiers.get(5)) {
+								StringBuilder combined_name = new StringBuilder();
+								combined_name = combined_name.append(layer1);
+								combined_name = combined_name.append(layer2);
+								combined_name = combined_name.append(layer3);
+								combined_name = combined_name.append(layer4);
+								combined_name = combined_name.append(layer5);
+								combined_name = combined_name.append(layer6);
+								static_strata.add(combined_name.toString());
 							}							
 						}						
 					}					
@@ -991,24 +991,22 @@ public class Read_Inputs {
 	}	
 
 	
-	public List<String> get_static_strata_without_sizeclass(int row) {	
-		List<String> static_strata_without_sizeclass = new ArrayList<String>();
+	public Set<String> get_static_strata_without_sizeclass(int row) {	
+		Set<String> static_strata_without_sizeclass = new HashSet<String>();
 		List<List<String>> static_identifiers = get_static_identifiers_in_row(row);
-		
-		List<String> layer1 = static_identifiers.get(0);
-		List<String> layer2 = static_identifiers.get(1);
-		List<String> layer3 = static_identifiers.get(2);
-		List<String> layer4 = static_identifiers.get(3);
-		List<String> layer5 = static_identifiers.get(4);
-				
 		// first 5 layers
-		for (int i1 = 0; i1 < layer1.size(); i1++) {
-			for (int i2 = 0; i2 < layer2.size(); i2++) {
-				for (int i3 = 0; i3 < layer3.size(); i3++) {
-					for (int i4 = 0; i4 < layer4.size(); i4++) {
-						for (int i5 = 0; i5 < layer5.size(); i5++) {
-							String combined_name = layer1.get(i1) + layer2.get(i2) + layer3.get(i3) + layer4.get(i4) + layer5.get(i5);
-							if (!static_strata_without_sizeclass.contains(combined_name)) static_strata_without_sizeclass.add(combined_name);						
+		for (String layer1: static_identifiers.get(0)) {
+			for (String layer2: static_identifiers.get(1)) {
+				for (String layer3: static_identifiers.get(2)) {
+					for (String layer4: static_identifiers.get(3)) {
+						for (String layer5: static_identifiers.get(4)) {
+							StringBuilder combined_name = new StringBuilder();
+							combined_name = combined_name.append(layer1);
+							combined_name = combined_name.append(layer2);
+							combined_name = combined_name.append(layer3);
+							combined_name = combined_name.append(layer4);
+							combined_name = combined_name.append(layer5);
+							static_strata_without_sizeclass.add(combined_name.toString());
 						}					
 					}					
 				}				
@@ -1018,22 +1016,20 @@ public class Read_Inputs {
 	}
 	
 	
-	public List<String> get_static_strata_without_sizeclass_and_covertype(int row) {	
-		List<String> static_strata_without_sizeclass_and_covertype = new ArrayList<String>();
+	public Set<String> get_static_strata_without_sizeclass_and_covertype(int row) {	
+		Set<String> static_strata_without_sizeclass_and_covertype = new HashSet<String>();
 		List<List<String>> static_identifiers = get_static_identifiers_in_row(row);
-		
-		List<String> layer1 = static_identifiers.get(0);
-		List<String> layer2 = static_identifiers.get(1);
-		List<String> layer3 = static_identifiers.get(2);
-		List<String> layer4 = static_identifiers.get(3);
-				
 		// first 4 layers
-		for (int i1 = 0; i1 < layer1.size(); i1++) {
-			for (int i2 = 0; i2 < layer2.size(); i2++) {
-				for (int i3 = 0; i3 < layer3.size(); i3++) {
-					for (int i4 = 0; i4 < layer4.size(); i4++) {
-						String combined_name = layer1.get(i1) + layer2.get(i2) + layer3.get(i3) + layer4.get(i4);
-						if (!static_strata_without_sizeclass_and_covertype.contains(combined_name)) static_strata_without_sizeclass_and_covertype.add(combined_name);						
+		for (String layer1: static_identifiers.get(0)) {
+			for (String layer2: static_identifiers.get(1)) {
+				for (String layer3: static_identifiers.get(2)) {
+					for (String layer4: static_identifiers.get(3)) {
+						StringBuilder combined_name = new StringBuilder();
+						combined_name = combined_name.append(layer1);
+						combined_name = combined_name.append(layer2);
+						combined_name = combined_name.append(layer3);
+						combined_name = combined_name.append(layer4);
+						static_strata_without_sizeclass_and_covertype.add(combined_name.toString());
 					}					
 				}				
 			}	
