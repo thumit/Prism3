@@ -16,8 +16,7 @@
  ******************************************************************************/
 package prism_project.data_process;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -181,7 +180,26 @@ public class Read_Inputs {
 			List<String> list;
 			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
 			list.remove(0);	// Remove the first row (Column names)
+
+			for (int i = 0; i<list.size(); i++){
+				String item = list.get(i);
+				String[] items = item.split(delimited);
+				for (int j=0; j<items.length; j++ ){
+					String word = items[j];
+					if (word.toLowerCase().equals("false")){
+						list.remove(i);
+					}
+				}
+			}
+
 			String[] a = list.toArray(new String[list.size()]);
+
+
+/*			// All lines to be in array
+			List<String> list;
+			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
+			list.remove(0);	// Remove the first row (Column names)
+			String[] a = list.toArray(new String[list.size()]);*/
 								
 			nonea_totalRows = a.length;
 			nonea_totalColumns = a[0].split(delimited).length;		// a[0].split(delimited) = String[] of the first row (this is the row below the column headers row which was removed already)	
@@ -194,6 +212,7 @@ public class Read_Inputs {
 					nonea_value[i][j] = rowValue[j];
 				}
 			}
+			System.out.println(list);
 		} catch (IOException e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 		}

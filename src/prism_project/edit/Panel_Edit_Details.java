@@ -720,9 +720,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		//Setup the table------------------------------------------------------------	
 		if (is_table2_loaded == false) { // Create a fresh new if Load fail				
 			rowCount2 = 0;
-			colCount2 = 4;
+			colCount2 = 5;
 			data2 = new Object[rowCount2][colCount2];
-			columnNames2 = new String[] {"condition_id", "condition_description", "static_identifiers", "method_choice"};	
+			columnNames2 = new String[] {"condition_id", "condition_description", "static_identifiers", "method_choice",
+					"Include"};
 		}
 					
 		
@@ -736,7 +737,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			
 			@Override
 			public boolean isCellEditable(int row, int col) {
-				if (col == 1) { 	// Only the 2nd column is editable
+				if (col == 1 ) { 	// Only the 2nd column is editable
+					return true;
+				} else if (col == colCount2 -1) {
 					return true;
 				} else {
 					return false;
@@ -760,7 +763,13 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 									data2[row][col] = Integer.valueOf(String.valueOf(data2[row][col]));
 								} catch (NumberFormatException e) {
 									System.err.println(e.getClass().getName() + ": " + e.getMessage() + " Fail to convert String to Integer values in create_table2");
-								}	
+								}
+							} else if (col == colCount2 - 1) {			//last column "" accepts only Boolean
+								try {
+									data2[row][col] = Boolean.valueOf(String.valueOf(data2[row][col]));
+								} catch (NumberFormatException e) {
+									System.err.println(e.getClass().getName() + ": " + e.getMessage() + " Fail to convert String to Boolean values in create_table3");
+								}
 							} else {	//All other columns are String
 								data2[row][col] = String.valueOf(data2[row][col]);
 							}
@@ -805,7 +814,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			}	
 		};
 
-    
+//		((JComponent) table2.getDefaultRenderer(Boolean.class)).setOpaque(true);	// It's a bug in the synth-installed renderer, quick hack is to force the rendering checkbox opacity to true
+		((AbstractButton) table2.getDefaultRenderer(Boolean.class)).setSelectedIcon(IconHandle.get_scaledImageIcon(12, 12, "icon_check.png"));
+//		((AbstractButton) table3.getDefaultRenderer(Boolean.class)).setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_whitebox.png"));
+
 		// Hide columns
 		TableColumnsHandle table_handle = new TableColumnsHandle(table2);
 		table_handle.setColumnVisible("static_identifiers", false);
@@ -4368,22 +4380,73 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			});
 			// End of Listeners for table9 & buttons -----------------------------------------------------------------------
 			// End of Listeners for table9 & buttons -----------------------------------------------------------------------			
-			
-			
-			
-			
-	        // scrollPane Quick Edit ----------------------------------------------------------------------	
+
+
+			// 2 buttons------------------------------------------------------------------------------
+			// 2 buttons------------------------------------------------------------------------------
+			// button 1
+			JButton button_remove_nonEA_rules = new JButton();
+			button_remove_nonEA_rules.setText("uncheck");
+			button_remove_nonEA_rules.setVerticalTextPosition(SwingConstants.BOTTOM);
+			button_remove_nonEA_rules.setHorizontalTextPosition(SwingConstants.CENTER);
+			button_remove_nonEA_rules.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_uncheck.png"));
+			button_remove_nonEA_rules.setRolloverIcon(IconHandle.get_scaledImageIcon(35, 35, "icon_uncheck.png"));
+			button_remove_nonEA_rules.setContentAreaFilled(false);
+			button_remove_nonEA_rules.addActionListener(e -> {
+				int[] selectedRow = table2.getSelectedRows();
+				///Convert row index because "Sort" causes problems
+				for (int i = 0; i < selectedRow.length; i++) {
+					selectedRow[i] = table2.convertRowIndexToModel(selectedRow[i]);
+				}
+				table2.clearSelection();	//To help trigger the row refresh: clear then add back the rows
+				for (int i: selectedRow) {
+					data2[i][colCount2 - 1] = false;
+					model2.setValueAt(data2[i][colCount2 - 1], i, colCount2 - 1);	// this is just to trigger the update_model_overview
+					table2.addRowSelectionInterval(table2.convertRowIndexToView(i),table2.convertRowIndexToView(i));
+				}
+			});
+
+			// button 2
+			JButton button_select_nonEA_rules = new JButton();
+			button_select_nonEA_rules.setText("check");
+			button_select_nonEA_rules.setVerticalTextPosition(SwingConstants.BOTTOM);
+			button_select_nonEA_rules.setHorizontalTextPosition(SwingConstants.CENTER);
+			button_select_nonEA_rules.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_check.png"));
+			button_select_nonEA_rules.setRolloverIcon(IconHandle.get_scaledImageIcon(35, 35, "icon_check.png"));
+			button_select_nonEA_rules.setContentAreaFilled(false);
+			button_select_nonEA_rules.addActionListener(e -> {
+				int[] selectedRow = table2.getSelectedRows();
+				///Convert row index because "Sort" causes problems
+				for (int i = 0; i < selectedRow.length; i++) {
+					selectedRow[i] = table2.convertRowIndexToModel(selectedRow[i]);
+				}
+				table2.clearSelection();	//To help trigger the row refresh: clear then add back the rows
+				for (int i: selectedRow) {
+					data2[i][colCount2 - 1] = true;
+					model2.setValueAt(data2[i][colCount2 - 1], i, colCount2 - 1);	// this is just to trigger the update_model_overview
+					table2.addRowSelectionInterval(table2.convertRowIndexToView(i),table2.convertRowIndexToView(i));
+				}
+			});
+			// End of 2 buttons------------------------------------------------------------------------------
+			// End of 2 buttons------------------------------------------------------------------------------
+
+
+
+
+			// scrollPane Quick Edit ----------------------------------------------------------------------
 			// scrollPane Quick Edit ----------------------------------------------------------------------	
 			quick_edit = new Panel_QuickEdit_Non_EA(table2, data2);
  			scrollpane_QuickEdit = new JScrollPane(quick_edit);
+			quick_edit.add(button_select_nonEA_rules);
+			quick_edit.add(button_remove_nonEA_rules);
  			border = new TitledBorder("Quick Edit");
  			border.setTitleJustification(TitledBorder.CENTER);
  			scrollpane_QuickEdit.setBorder(border);
- 			scrollpane_QuickEdit.setVisible(false);	
- 			
-					
-		
-			
+ 			scrollpane_QuickEdit.setVisible(false);
+
+
+
+
 			// ToolBar Panel ----------------------------------------------------------------------------
 			// ToolBar Panel ----------------------------------------------------------------------------
 			ToolBarWithBgImage helpToolBar = new ToolBarWithBgImage("Project Tools", JToolBar.HORIZONTAL, null);
@@ -9377,14 +9440,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			}
 		}
 	}
-	
-	
+
+
 	private void create_file_input_03() {
 		File silvicultureMethodFile = new File(currentRunFolder.getAbsolutePath() + "/input_03_non_ea_management.txt");
 		if (silvicultureMethodFile.exists()) {
 			silvicultureMethodFile.delete();		// Delete the old file before writing new contents
 		}
-		
+
 		if (data2 != null && data2.length > 0) {
 			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(silvicultureMethodFile))) {
 				for (int j = 0; j < columnNames2.length; j++) {
