@@ -4421,7 +4421,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					rowCount2 = rowCount2 - selectedRow.length;
 					model2.updateTableModelPrism(rowCount2, colCount2, data2, columnNames2);
 					model2.fireTableDataChanged();	
-					quick_edit = new Panel_QuickEdit_Non_EA(table2, data2);	// 2 lines to update data for Quick Edit Panel
+					//quick_edit = new Panel_QuickEdit_Non_EA(table2, data2);	// 2 lines to update data for Quick Edit Panel
 		 			scrollpane_QuickEdit.setViewportView(quick_edit);
 				}
 				
