@@ -731,8 +731,15 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		model2 = new PrismTableModel(rowCount2, colCount2, data2, columnNames2) {
 			@Override
 			public Class getColumnClass(int c) {
-				if (c == 0) return Integer.class;	// column 0 accepts only Integer
-				else return String.class;				
+				if (c == 0){
+					return Integer.class; // column 0 accepts only Integer
+				}
+				if (c == 4){
+					return Boolean.class;
+				}
+				else{
+					return String.class;
+				}
 			}
 			
 			@Override
@@ -4009,7 +4016,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			// 4th Grid -----------------------------------------------------------------------------
 			// Add all buttons to a Panel----------------------------------
 			button_table_Panel = new JPanel(new GridBagLayout());
-			TitledBorder border = new TitledBorder("Agregation Conditions (no row = disable all unenven-aged methods)");
+			TitledBorder border = new TitledBorder("Aggregation Conditions (no row = disable all unenven-aged methods)");
 			border.setTitleJustification(TitledBorder.CENTER);
 			button_table_Panel.setBorder(border);
 			GridBagConstraints c2 = new GridBagConstraints();
@@ -4110,7 +4117,67 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			button_table_Panel.add(table_ScrollPane, c2);
 			// End of 4th Grid -----------------------------------------------------------------------
 			// End of 4th Grid -----------------------------------------------------------------------	
-			
+
+
+			// Quick Edit Mass Check Buttons------------------------------------------------------------------------------
+			// Quick Edit Mass Check Buttons------------------------------------------------------------------------------
+			// Uncheck Selected
+			JButton button_remove_nonEA_rules = new JButton();
+			button_remove_nonEA_rules.setText("uncheck");
+			button_remove_nonEA_rules.setVerticalTextPosition(SwingConstants.BOTTOM);
+			button_remove_nonEA_rules.setHorizontalTextPosition(SwingConstants.CENTER);
+			button_remove_nonEA_rules.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_uncheck.png"));
+			button_remove_nonEA_rules.setRolloverIcon(IconHandle.get_scaledImageIcon(35, 35, "icon_uncheck.png"));
+			button_remove_nonEA_rules.setContentAreaFilled(false);
+			button_remove_nonEA_rules.addActionListener(e -> {
+				int[] selectedRow = table2.getSelectedRows();
+				///Convert row index because "Sort" causes problems
+				for (int i = 0; i < selectedRow.length; i++) {
+					selectedRow[i] = table2.convertRowIndexToModel(selectedRow[i]);
+				}
+				table2.clearSelection();	//To help trigger the row refresh: clear then add back the rows
+				for (int i: selectedRow) {
+					data2[i][colCount2 - 1] = false;
+					model2.setValueAt(data2[i][colCount2 - 1], i, colCount2 - 1);	// this is just to trigger the update_model_overview
+					table2.addRowSelectionInterval(table2.convertRowIndexToView(i),table2.convertRowIndexToView(i));
+				}
+			});
+
+			// Check Selected
+			JButton button_select_nonEA_rules = new JButton();
+			button_select_nonEA_rules.setText("check");
+			button_select_nonEA_rules.setVerticalTextPosition(SwingConstants.BOTTOM);
+			button_select_nonEA_rules.setHorizontalTextPosition(SwingConstants.CENTER);
+			button_select_nonEA_rules.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_check.png"));
+			button_select_nonEA_rules.setRolloverIcon(IconHandle.get_scaledImageIcon(35, 35, "icon_check.png"));
+			button_select_nonEA_rules.setContentAreaFilled(false);
+			button_select_nonEA_rules.addActionListener(e -> {
+				int[] selectedRow = table2.getSelectedRows();
+				///Convert row index because "Sort" causes problems
+				for (int i = 0; i < selectedRow.length; i++) {
+					selectedRow[i] = table2.convertRowIndexToModel(selectedRow[i]);
+				}
+				table2.clearSelection();	//To help trigger the row refresh: clear then add back the rows
+				for (int i: selectedRow) {
+					data2[i][colCount2 - 1] = true;
+					model2.setValueAt(data2[i][colCount2 - 1], i, colCount2 - 1);	// this is just to trigger the update_model_overview
+					table2.addRowSelectionInterval(table2.convertRowIndexToView(i),table2.convertRowIndexToView(i));
+				}
+			});
+			// Quick Edit Mass Check Buttons------------------------------------------------------------------------------
+			// Quick Edit Mass Check Buttons------------------------------------------------------------------------------
+
+
+			// scrollPane Quick Edit ----------------------------------------------------------------------
+			// scrollPane Quick Edit ----------------------------------------------------------------------
+			quick_edit = new Panel_QuickEdit_Non_EA(table2, data2);
+			scrollpane_QuickEdit = new JScrollPane(quick_edit);
+			quick_edit.add(button_select_nonEA_rules);
+			quick_edit.add(button_remove_nonEA_rules);
+			border = new TitledBorder("Quick Edit");
+			border.setTitleJustification(TitledBorder.CENTER);
+			scrollpane_QuickEdit.setBorder(border);
+			scrollpane_QuickEdit.setVisible(false);
 			
 			
 			// Add Listeners for table2 & buttons----------------------------------------------------------
@@ -4198,7 +4265,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				model2.updateTableModelPrism(rowCount2, colCount2, data2, columnNames2);
 				update_id();
 				model2.fireTableDataChanged();
-				quick_edit = new Panel_QuickEdit_Non_EA(table2, data2);		// 2 lines to update data for Quick Edit Panel
+				//quick_edit = new Panel_QuickEdit_Non_EA(table2, data2);		// 2 lines to update data for Quick Edit Panel
 	 			scrollpane_QuickEdit.setViewportView(quick_edit);
 				
 				// Convert the new Row to model view and then select it 
@@ -4380,70 +4447,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			});
 			// End of Listeners for table9 & buttons -----------------------------------------------------------------------
 			// End of Listeners for table9 & buttons -----------------------------------------------------------------------			
-
-
-			// 2 buttons------------------------------------------------------------------------------
-			// 2 buttons------------------------------------------------------------------------------
-			// button 1
-			JButton button_remove_nonEA_rules = new JButton();
-			button_remove_nonEA_rules.setText("uncheck");
-			button_remove_nonEA_rules.setVerticalTextPosition(SwingConstants.BOTTOM);
-			button_remove_nonEA_rules.setHorizontalTextPosition(SwingConstants.CENTER);
-			button_remove_nonEA_rules.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_uncheck.png"));
-			button_remove_nonEA_rules.setRolloverIcon(IconHandle.get_scaledImageIcon(35, 35, "icon_uncheck.png"));
-			button_remove_nonEA_rules.setContentAreaFilled(false);
-			button_remove_nonEA_rules.addActionListener(e -> {
-				int[] selectedRow = table2.getSelectedRows();
-				///Convert row index because "Sort" causes problems
-				for (int i = 0; i < selectedRow.length; i++) {
-					selectedRow[i] = table2.convertRowIndexToModel(selectedRow[i]);
-				}
-				table2.clearSelection();	//To help trigger the row refresh: clear then add back the rows
-				for (int i: selectedRow) {
-					data2[i][colCount2 - 1] = false;
-					model2.setValueAt(data2[i][colCount2 - 1], i, colCount2 - 1);	// this is just to trigger the update_model_overview
-					table2.addRowSelectionInterval(table2.convertRowIndexToView(i),table2.convertRowIndexToView(i));
-				}
-			});
-
-			// button 2
-			JButton button_select_nonEA_rules = new JButton();
-			button_select_nonEA_rules.setText("check");
-			button_select_nonEA_rules.setVerticalTextPosition(SwingConstants.BOTTOM);
-			button_select_nonEA_rules.setHorizontalTextPosition(SwingConstants.CENTER);
-			button_select_nonEA_rules.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_check.png"));
-			button_select_nonEA_rules.setRolloverIcon(IconHandle.get_scaledImageIcon(35, 35, "icon_check.png"));
-			button_select_nonEA_rules.setContentAreaFilled(false);
-			button_select_nonEA_rules.addActionListener(e -> {
-				int[] selectedRow = table2.getSelectedRows();
-				///Convert row index because "Sort" causes problems
-				for (int i = 0; i < selectedRow.length; i++) {
-					selectedRow[i] = table2.convertRowIndexToModel(selectedRow[i]);
-				}
-				table2.clearSelection();	//To help trigger the row refresh: clear then add back the rows
-				for (int i: selectedRow) {
-					data2[i][colCount2 - 1] = true;
-					model2.setValueAt(data2[i][colCount2 - 1], i, colCount2 - 1);	// this is just to trigger the update_model_overview
-					table2.addRowSelectionInterval(table2.convertRowIndexToView(i),table2.convertRowIndexToView(i));
-				}
-			});
-			// End of 2 buttons------------------------------------------------------------------------------
-			// End of 2 buttons------------------------------------------------------------------------------
-
-
-
-
-			// scrollPane Quick Edit ----------------------------------------------------------------------
-			// scrollPane Quick Edit ----------------------------------------------------------------------	
-			quick_edit = new Panel_QuickEdit_Non_EA(table2, data2);
- 			scrollpane_QuickEdit = new JScrollPane(quick_edit);
-			quick_edit.add(button_select_nonEA_rules);
-			quick_edit.add(button_remove_nonEA_rules);
- 			border = new TitledBorder("Quick Edit");
- 			border.setTitleJustification(TitledBorder.CENTER);
- 			scrollpane_QuickEdit.setBorder(border);
- 			scrollpane_QuickEdit.setVisible(false);
-
 
 
 
