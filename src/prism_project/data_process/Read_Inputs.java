@@ -187,22 +187,10 @@ public class Read_Inputs {
 				if (items[4].equals("false")){
 					list.remove(i);
 				}
-//				for (int j=0; j<items.length; j++ ){
-//					String word = items[j];
-//					if (word.toLowerCase().equals("false")){
-//						list.remove(i);
-//					}
-//				}
 			}
 
 			String[] a = list.toArray(new String[list.size()]);
 
-
-/*			// All lines to be in array
-			List<String> list;
-			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
-			list.remove(0);	// Remove the first row (Column names)
-			String[] a = list.toArray(new String[list.size()]);*/
 								
 			nonea_totalRows = a.length;
 			nonea_totalColumns = a[0].split(delimited).length;		// a[0].split(delimited) = String[] of the first row (this is the row below the column headers row which was removed already)	
