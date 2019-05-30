@@ -184,12 +184,15 @@ public class Read_Inputs {
 			for (int i = 0; i<list.size(); i++){
 				String item = list.get(i);
 				String[] items = item.split(delimited);
-				for (int j=0; j<items.length; j++ ){
-					String word = items[j];
-					if (word.toLowerCase().equals("false")){
-						list.remove(i);
-					}
+				if (items[4].equals("false")){
+					list.remove(i);
 				}
+//				for (int j=0; j<items.length; j++ ){
+//					String word = items[j];
+//					if (word.toLowerCase().equals("false")){
+//						list.remove(i);
+//					}
+//				}
 			}
 
 			String[] a = list.toArray(new String[list.size()]);
