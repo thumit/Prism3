@@ -185,6 +185,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	private JTable table2;
 	private PrismTableModel model2;
 	private Object[][] data2;
+	private Boolean defaultVal = true;
 	
 	// table input_04_ea_management.txt
 	private boolean is_table4_loaded = false;
@@ -4254,7 +4255,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				for (int ii = 0; ii < rowCount2 - 1; ii++) {
 					for (int jj = 0; jj < colCount2; jj++) {
 						data2[ii][jj] = model2.getValueAt(ii, jj);
-					}	
+					}
 				}
 								
 				data2[rowCount2 - 1][1] = String.join(" .....eligible to apply on..... ",
@@ -4262,6 +4263,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						static_identifiers_scrollpane.get_static_description_from_GUI());
 				data2[rowCount2 - 1][2] = static_identifiers_scrollpane.get_static_info_from_GUI();
 				data2[rowCount2 - 1][3] = static_identifiers_scrollpane_silviculture.get_static_info_from_GUI();
+				data2[rowCount2-1][4] = true;
 				model2.updateTableModelPrism(rowCount2, colCount2, data2, columnNames2);
 				update_id();
 				model2.fireTableDataChanged();
