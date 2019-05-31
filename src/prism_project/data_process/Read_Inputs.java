@@ -180,12 +180,16 @@ public class Read_Inputs {
 			List<String> list;
 			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
 			list.remove(0);	// Remove the first row (Column names)
-
-			for (int i = 0; i<list.size(); i++){
-				String item = list.get(i);
-				String[] items = item.split(delimited);
-				if (items[4].equals("false")){
-					list.remove(i);
+			String first = list.get(0);
+			String[] firstItems = first.split(delimited);
+			int colNums = firstItems.length;
+			if (colNums == 5) {
+				for (int i = 0; i < list.size(); i++) {
+					String item = list.get(i);
+					String[] items = item.split(delimited);
+					if (items[4].equals("false")) {
+						list.remove(i);
+					}
 				}
 			}
 

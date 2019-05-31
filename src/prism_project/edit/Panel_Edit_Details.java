@@ -34,11 +34,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -185,6 +181,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	private JTable table2;
 	private PrismTableModel model2;
 	private Object[][] data2;
+	private Object[][] dataTemp2;
+	private String [] colNames;
 	private Boolean defaultVal = true;
 	
 	// table input_04_ea_management.txt
@@ -365,7 +363,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 
 
     // Reload inputs of the run------------------------------------------------------------------------------------------------ 
-	public void reload_inputs() {	
+	public void reload_inputs() {
 		// These are for reload current edit after fail importation of a new database using the "browse" button
 		is_the_first_time_loading_a_run = true;
 		is_table_overview_loaded = false;
@@ -384,14 +382,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		is_table9_loaded = false;
 		is_table10_loaded = false;
 
-		
+
 		// Load tables---------------------------------------------------------------------------------
 		File table_file;
 		Reload_Table_Info tableLoader;
-		
-		
+
+
 		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_01_general_inputs.txt");
-		if (table_file.exists()) {		//Load from input
+		if (table_file.exists()) {        //Load from input
 			tableLoader = new Reload_Table_Info(table_file);
 			rowCount1 = tableLoader.get_rowCount();
 			colCount1 = tableLoader.get_colCount();
@@ -401,10 +399,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		} else { // Create a fresh new if Load fail
 			System.err.println("File not exists: input_01_general_inputs.txt - New interface is created");
 		}
-		
-		
+
+
 		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_02_model_strata.txt");
-		if (table_file.exists()) {		//Load from input
+		if (table_file.exists()) {        //Load from input
 			tableLoader = new Reload_Table_Info(table_file);
 			rowCount3 = tableLoader.get_rowCount();
 			colCount3 = tableLoader.get_colCount();
@@ -414,21 +412,40 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		} else { // Create a fresh new if Load fail
 			System.err.println("File not exists: input_02_model_strata.txt - New interface is created");
 		}
-		
-		
+
+
 		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_03_non_ea_management.txt");
-		if (table_file.exists()) {		//Load from input
+		if (table_file.exists()) {        //Load from input
 			tableLoader = new Reload_Table_Info(table_file);
 			rowCount2 = tableLoader.get_rowCount();
 			colCount2 = tableLoader.get_colCount();
 			data2 = tableLoader.get_data();
 			columnNames2 = tableLoader.get_columnNames();
+
+			if (colCount2 != 5) {
+				colCount2 = 5;
+				dataTemp2 = new Object[rowCount2][colCount2];
+				columnNames2 = new String[] {"condition_id", "condition_description", "static_identifiers",
+						"method_choice", "Include"};
+
+				for (int ii = 0; ii < rowCount2; ii++) {
+					for (int jj = 0; jj < colCount2; jj++) {
+						if (jj == 4){
+							dataTemp2[ii][jj] = true;
+						} else{
+							dataTemp2[ii][jj] = data2[ii][jj];
+						}
+					}
+				}
+				data2 = dataTemp2;
+			}
 			is_table2_loaded = true;
-		} else { // Create a fresh new if Load fail
+		}
+		else { // Create a fresh new if Load fail
 			System.err.println("File not exists: input_03_non_ea_management.txt - New interface is created");
 		}
-		
-		
+
+
 		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_04_ea_management.txt");
 		if (table_file.exists()) {		//Load from input
 			tableLoader = new Reload_Table_Info(table_file);
@@ -718,7 +735,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	
 	//--------------------------------------------------------------------------------------------------------------------------
 	public void create_table2() {		
-		//Setup the table------------------------------------------------------------	
+		//Setup the table------------------------------------------------------------
 		if (is_table2_loaded == false) { // Create a fresh new if Load fail				
 			rowCount2 = 0;
 			colCount2 = 5;
