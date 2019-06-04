@@ -29,6 +29,24 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 public class Read_Inputs {
+
+	public List get_Included(List list, String delimited, int cols) {
+		int IncCol =  cols-1;
+		list.remove(0);	// Remove the first row (Column names)
+		String first = list.get(0).toString();
+		String[] firstItems = first.split(delimited);
+		int colNums = firstItems.length;
+		if (colNums == cols) {
+			for (int i = 0; i < list.size(); i++) {
+				String item = list.get(i).toString();
+				String[] items = item.split(delimited);
+				if (items[IncCol].equals("false")) {
+					list.remove(i);
+				}
+			}
+		}
+		return list;
+	}
 	
 	//-------------------------------------------------------------------------------------------------------------------------------------------------	
 	//For input_01_general_inputs.txt
@@ -179,20 +197,7 @@ public class Read_Inputs {
 			// All lines to be in array
 			List<String> list;
 			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
-			list.remove(0);	// Remove the first row (Column names)
-			String first = list.get(0);
-			String[] firstItems = first.split(delimited);
-			int colNums = firstItems.length;
-			if (colNums == 5) {
-				for (int i = 0; i < list.size(); i++) {
-					String item = list.get(i);
-					String[] items = item.split(delimited);
-					if (items[4].equals("false")) {
-						list.remove(i);
-					}
-				}
-			}
-
+			list = get_Included(list, delimited, 5);
 			String[] a = list.toArray(new String[list.size()]);
 
 								
@@ -412,7 +417,7 @@ public class Read_Inputs {
 			// All lines to be in array
 			List<String> list;
 			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
-			list.remove(0);	// Remove the first row (Column names)
+			list = get_Included(list, delimited, 5);
 			String[] a = list.toArray(new String[list.size()]);
 								
 			ea_totalRows = a.length;
