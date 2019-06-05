@@ -223,6 +223,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	private JTable table6a;
 	private PrismTableModel model6a;
 	private Object[][] data6a;
+	private Object[][] dataTemp6;
 	
 	// table input_06b --> conversion
 	private boolean is_table6b_loaded = false;
@@ -281,7 +282,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 
 		for (int ii = 0; ii < rowCount; ii++) {
 			for (int jj = 0; jj < colCount; jj++) {
-				if (jj == 4){
+				if (jj == colCount-1){
 					tempData[ii][jj] = true;
 				} else{
 					tempData[ii][jj] = origData[ii][jj];
@@ -442,18 +443,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				dataTemp2 = new Object[rowCount2][colCount2];
 				columnNames2 = new String[] {"condition_id", "condition_description", "static_identifiers",
 						"method_choice", "Include"};
-
 				data2 = handle_old_Files(colCount2, rowCount2, data2, dataTemp2);
-//				for (int ii = 0; ii < rowCount2; ii++) {
-//					for (int jj = 0; jj < colCount2; jj++) {
-//						if (jj == 4){
-//							dataTemp2[ii][jj] = true;
-//						} else{
-//							dataTemp2[ii][jj] = data2[ii][jj];
-//						}
-//					}
-//				}
-//				data2 = dataTemp2;
 			}
 			is_table2_loaded = true;
 		}
@@ -476,16 +466,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				columnNames4 = new String[] {"condition_id", "condition_description", "static_identifiers",
 						"conversion_and_rotation", "Include"};
 				data4 = handle_old_Files(colCount4, rowCount4, data4, dataTemp4);
-//				for (int ii = 0; ii < rowCount4; ii++) {
-//					for (int jj = 0; jj < colCount4; jj++) {
-//						if (jj == 4){
-//							dataTemp4[ii][jj] = true;
-//						} else{
-//							dataTemp4[ii][jj] = data4[ii][jj];
-//						}
-//					}
-//				}
-//				data4 = dataTemp4;
 			}
 			is_table4_loaded = true;
 		} else { // Create a fresh new if Load fail
@@ -513,6 +493,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			colCount6 = tableLoader.get_colCount();
 			data6 = tableLoader.get_data();
 			columnNames6 = tableLoader.get_columnNames();
+
+			if (colCount6 != 8) {
+				colCount6 = 8;
+				dataTemp6 = new Object[rowCount6][colCount6];
+				columnNames6 = new String[] {"condition_id", "condition_description", "probability_info",
+						"regeneration_info", "static_identifiers", "dynamic_identifiers", "original_dynamic_identifiers", "Include"};
+				data6 = handle_old_Files(colCount6, rowCount6, data6, dataTemp6);
+			}
 			is_table6_loaded = true;
 		} else { // Create a fresh new if Load fail
 			System.err.println("File not exists: input_06_sr_disturbances.txt - New interface is created");
@@ -3310,6 +3298,63 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		}
 	}
 
+	// Delete
+	private JButton create_delete_button(JPanel panel, GridBagConstraints c, int x, int y, int z, int v) {
+		JButton btn = new JButton();
+		btn.setFont(new Font(null, Font.BOLD, 14));
+		btn.setToolTipText("Delete");
+		btn.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_erase.png"));
+		btn.setEnabled(false);
+
+		c.gridx = x;
+		c.gridy = y;
+		c.weightx = z;
+		c.weighty = v;
+		panel.add(btn, c);
+
+		return btn;
+	}
+
+	private void delete_fn(PrismTableModel model, JTable table, Object[][] data, int rowCt, int colCt, String[] names){
+			//Cancel editing before delete
+			if (table.isEditing()) {
+				table.getCellEditor().cancelCellEditing();
+			}
+
+			String ExitOption[] = {"Delete", "Cancel"};
+			int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), "Delete now?", "Confirm Delete",
+					JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[1]);
+			if (response == 0) {
+				// Get selected rows
+				int[] selectedRow = table.getSelectedRows();
+				for (int i = 0; i < selectedRow.length; i++) {
+					selectedRow[i] = table.convertRowIndexToModel(selectedRow[i]);	///Convert row index because "Sort" causes problems
+				}
+
+				// Create a list of selected row indexes
+				List<Integer> selected_Index = new ArrayList<Integer>();
+				for (int i: selectedRow) {
+					selected_Index.add(i);
+				}
+
+				// Get values to the new data2
+				data = new Object[rowCt - selectedRow.length][colCt];
+				int newRow =0;
+				for (int ii = 0; ii < rowCt; ii++) {
+					if (!selected_Index.contains(ii)) {			//If row not in the list then add to data2 row
+						for (int jj = 0; jj < colCt; jj++) {
+							data[newRow][jj] = model.getValueAt(ii, jj);
+						}
+						newRow++;
+					}
+				}
+				// Pass back the info to table model
+				rowCt = rowCt - selectedRow.length;
+				model.updateTableModelPrism(rowCt, colCt, data, names);
+				model.fireTableDataChanged();
+			}
+	}
+
 	// Sort Button
 
 	private JToggleButton create_sort_button(JPanel panel, GridBagConstraints c, int x, int y, int z, int v){
@@ -3563,11 +3608,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		    if (is_table1_loaded == false) {
 		    	solvingTimeSpinner.setValue(15);		// Load GUI to table if there is no input to load	(15 <> 20 then the listener will be activate)
 		    }
-		    
 
-		    
-		    
-		    
 		    
 		    // Import Database Panel -----------------------------------------------------------------------
 		 	// Import Database Panel -----------------------------------------------------------------------
@@ -4205,19 +4246,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			c2.weighty = 0;
 			button_table_Panel.add(btn_Edit, c2);
 			
-			
-			JButton btn_Delete = new JButton();
-			btn_Delete.setFont(new Font(null, Font.BOLD, 14));
-//			btn_Delete.setText("DELETE");
-			btn_Delete.setToolTipText("Delete");
-			btn_Delete.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_erase.png"));
-			btn_Delete.setEnabled(false);
-					
-			c2.gridx = 0;
-			c2.gridy = 3;
-			c2.weightx = 0;
-			c2.weighty = 0;
-			button_table_Panel.add(btn_Delete, c2);
+
+			JButton del = create_delete_button(button_table_Panel, c2, 0, 3, 0, 0);
+			del.addActionListener(e-> delete_fn(model2, table2, data2, rowCount2, colCount2, columnNames2));
 
 			// Sort
 			JToggleButton sort = create_sort_button(button_table_Panel,c2, 0, 4, 0, 0);
@@ -4287,9 +4318,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					}
 					
 					if (selectedRow.length >= 1 && table2.isEnabled()) {		// Enable Delete  when: >=1 row is selected, table is enable (often after Edit button finished its task)
-						btn_Delete.setEnabled(true);
+						del.setEnabled(true);
 					} else {		// Disable Delete
-						btn_Delete.setEnabled(false);
+						del.setEnabled(false);
 					}
 					
 					if (selectedRow.length >= 1 && sort.getText().equals("OFF")) {	// Enable Spinner when: >=1 row is selected and Sorter is off
@@ -4314,9 +4345,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					}
 					
 					if (selectedRow.length >= 1 && table2.isEnabled()) {		// Enable Delete  when: >=1 row is selected, table is enable (often after Edit button finished its task)
-						btn_Delete.setEnabled(true);
+						del.setEnabled(true);
 					} else {		// Disable Delete
-						btn_Delete.setEnabled(false);
+						del.setEnabled(false);
 					}
 					
 					if (selectedRow.length >= 1 && sort.getText().equals("OFF")) {	// Enable Spinner when: >=1 row is selected and Sorter is off
@@ -4469,51 +4500,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					table2.scrollRectToVisible(new Rectangle(table2.getCellRect(table2.convertRowIndexToView(table2.getSelectedRow()), 0, true)));	
 		        }
 		    });
-		    
-				
-			// Delete
-			btn_Delete.addActionListener(e -> {
-				//Cancel editing before delete
-				if (table2.isEditing()) {
-					table2.getCellEditor().cancelCellEditing();
-				}				
-				
-				String ExitOption[] = {"Delete", "Cancel"};
-				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), "Delete now?", "Confirm Delete",
-						JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[1]);
-				if (response == 0) {
-					// Get selected rows
-					int[] selectedRow = table2.getSelectedRows();
-					for (int i = 0; i < selectedRow.length; i++) {
-						selectedRow[i] = table2.convertRowIndexToModel(selectedRow[i]);	///Convert row index because "Sort" causes problems
-					}
-					
-					// Create a list of selected row indexes
-					List<Integer> selected_Index = new ArrayList<Integer>();				
-					for (int i: selectedRow) {
-						selected_Index.add(i);
-					}	
-					
-					// Get values to the new data2
-					data2 = new Object[rowCount2 - selectedRow.length][colCount2];
-					int newRow =0;
-					for (int ii = 0; ii < rowCount2; ii++) {
-						if (!selected_Index.contains(ii)) {			//If row not in the list then add to data2 row
-							for (int jj = 0; jj < colCount2; jj++) {
-								data2[newRow][jj] = model2.getValueAt(ii, jj);
-							}
-							newRow++;
-						}
-					}
-					// Pass back the info to table model
-					rowCount2 = rowCount2 - selectedRow.length;
-					model2.updateTableModelPrism(rowCount2, colCount2, data2, columnNames2);
-					model2.fireTableDataChanged();	
-					//quick_edit = new Panel_QuickEdit_Non_EA(table2, data2);	// 2 lines to update data for Quick Edit Panel
-		 			scrollpane_QuickEdit.setViewportView(quick_edit);
-				}
-				
-			});
 
 			// End of Listeners for table9 & buttons -----------------------------------------------------------------------
 			// End of Listeners for table9 & buttons -----------------------------------------------------------------------			
@@ -4749,21 +4735,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			c2.weightx = 0;
 			c2.weighty = 0;
 			button_table_Panel.add(btn_Edit, c2);
-			
-			
-			JButton btn_Delete = new JButton();
-			btn_Delete.setFont(new Font(null, Font.BOLD, 14));
-//			btn_Delete.setText("DELETE");
-			btn_Delete.setToolTipText("Delete");
-			btn_Delete.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_erase.png"));
-			btn_Delete.setEnabled(false);
-					
-			c2.gridx = 0;
-			c2.gridy = 3;
-			c2.weightx = 0;
-			c2.weighty = 0;
-			button_table_Panel.add(btn_Delete, c2);
 
+			// Delete
+			JButton del = create_delete_button(button_table_Panel, c2, 0, 3, 0, 0);
+			del.addActionListener(e-> delete_fn(model4, table4, data4, rowCount4, colCount4, columnNames4));
 
 			JToggleButton sort = create_sort_button(button_table_Panel,c2, 0, 4, 0, 0);
 			sort.addActionListener(e-> sort_fn(sort, model4, table4));
@@ -4826,9 +4801,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					}
 					
 					if (selectedRow.length >= 1 && table4.isEnabled()) {		// Enable Delete  when: >=1 row is selected, table is enable (often after Edit button finished its task)
-						btn_Delete.setEnabled(true);
+						del.setEnabled(true);
 					} else {		// Disable Delete
-						btn_Delete.setEnabled(false);
+						del.setEnabled(false);
 					}
 					
 					if (selectedRow.length >= 1 && sort.getText().equals("OFF")) {	// Enable Spinner when: >=1 row is selected and Sorter is off
@@ -4857,9 +4832,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					}
 					
 					if (selectedRow.length >= 1 && table4.isEnabled()) {		// Enable Delete  when: >=1 row is selected, table is enable (often after Edit button finished its task)
-						btn_Delete.setEnabled(true);
+						del.setEnabled(true);
 					} else {		// Disable Delete
-						btn_Delete.setEnabled(false);
+						del.setEnabled(false);
 					}
 					
 					if (selectedRow.length >= 1 && sort.getText().equals("OFF")) {	// Enable Spinner when: >=1 row is selected and Sorter is off
@@ -5017,49 +4992,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					table4.scrollRectToVisible(new Rectangle(table4.getCellRect(table4.convertRowIndexToView(table4.getSelectedRow()), 0, true)));	
 		        }
 		    });
-		    
-				
-			// Delete
-			btn_Delete.addActionListener(e -> {
-				//Cancel editing before delete
-				if (table4.isEditing()) {
-					table4.getCellEditor().cancelCellEditing();
-				}				
-				
-				String ExitOption[] = {"Delete", "Cancel"};
-				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), "Delete now?", "Confirm Delete",
-						JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
-				if (response == 0) {
-					// Get selected rows
-					int[] selectedRow = table4.getSelectedRows();
-					for (int i = 0; i < selectedRow.length; i++) {
-						selectedRow[i] = table4.convertRowIndexToModel(selectedRow[i]);	///Convert row index because "Sort" causes problems
-					}
-					
-					// Create a list of selected row indexes
-					List<Integer> selected_Index = new ArrayList<Integer>();				
-					for (int i: selectedRow) {
-						selected_Index.add(i);
-					}	
-					
-					// Get values to the new data4
-					data4 = new Object[rowCount4 - selectedRow.length][colCount4];
-					int newRow =0;
-					for (int ii = 0; ii < rowCount4; ii++) {
-						if (!selected_Index.contains(ii)) {			//If row not in the list then add to data4 row
-							for (int jj = 0; jj < colCount4; jj++) {
-								data4[newRow][jj] = model4.getValueAt(ii, jj);
-							}
-							newRow++;
-						}
-					}
-					// Pass back the info to table model
-					rowCount4 = rowCount4 - selectedRow.length;
-					model4.updateTableModelPrism(rowCount4, colCount4, data4, columnNames4);
-					model4.fireTableDataChanged();	
-				}
-				
-			});
 
 			// End of Listeners for table4 & buttons -----------------------------------------------------------------------
 			// End of Listeners for table4 & buttons -----------------------------------------------------------------------
@@ -5308,23 +5240,16 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			c2.weightx = 0;
 			c2.weighty = 0;
 			button_table_Panel.add(btn_Edit, c2);
-			
-			
-			JButton btn_Delete = new JButton();
-			btn_Delete.setFont(new Font(null, Font.BOLD, 14));
-//			btn_Delete.setText("DELETE");
-			btn_Delete.setToolTipText("Delete");
-			btn_Delete.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_erase.png"));
-			btn_Delete.setEnabled(false);
-			c2.gridx = 0;
-			c2.gridy = 4;
-			c2.weightx = 0;
-			c2.weighty = 0;
-			button_table_Panel.add(btn_Delete, c2);
+
+			JButton del = create_delete_button(button_table_Panel, c2, 0, 4, 0, 0);
+			del.addActionListener(e-> delete_fn(model5, table5, data5, rowCount5, colCount5, columnNames5));
 
 			JToggleButton sort = create_sort_button(button_table_Panel,c2, 0, 5, 0, 0);
 			sort.addActionListener(e-> sort_fn(sort, model5, table5));
-			
+//					quick_edit = new Panel_QuickEdit_Non_SR(table5, data5);	// 2 lines to update data for Quick Edit Panel
+//		 			scrollpane_QuickEdit.setViewportView(quick_edit);
+
+
 			c2.insets = new Insets(0, 0, 0, 0); // No padding
 			// Add Empty Label to make all buttons on top not middle
 			c2.gridx = 0;
@@ -5369,9 +5294,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					}
 					
 					if (selectedRow.length >= 1 && table5.isEnabled()) {		// Enable Delete  when: >=1 row is selected, table is enable (often after Edit button finished its task)
-						btn_Delete.setEnabled(true);
+						del.setEnabled(true);
 					} else {		// Disable Delete
-						btn_Delete.setEnabled(false);
+						del.setEnabled(false);
 					}
 					
 					if (selectedRow.length >= 1 && sort.getText().equals("OFF")) {	// Enable Spinner when: >=1 row is selected and Sorter is off
@@ -5395,9 +5320,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					}
 					
 					if (selectedRow.length >= 1 && table5.isEnabled()) {		// Enable Delete  when: >=1 row is selected, table is enable (often after Edit button finished its task)
-						btn_Delete.setEnabled(true);
+						del.setEnabled(true);
 					} else {		// Disable Delete
-						btn_Delete.setEnabled(false);
+						del.setEnabled(false);
 					}
 					
 					if (selectedRow.length >= 1 && sort.getText().equals("OFF")) {	// Enable Spinner when: >=1 row is selected and Sorter is off
@@ -5725,54 +5650,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					table5.scrollRectToVisible(new Rectangle(table5.getCellRect(table5.convertRowIndexToView(table5.getSelectedRow()), 0, true)));	
 		        }
 		    });
-		    
-				
-			// Delete
-			btn_Delete.addActionListener(e -> {
-				//Cancel editing before delete
-				if (table5.isEditing()) {
-					table5.getCellEditor().cancelCellEditing();
-				}				
-				
-				String ExitOption[] = {"Delete", "Cancel"};
-				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), "Delete now?", "Confirm Delete",
-						JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[1]);
-				if (response == 0) {
-					// Get selected rows
-					int[] selectedRow = table5.getSelectedRows();
-					for (int i = 0; i < selectedRow.length; i++) {
-						selectedRow[i] = table5.convertRowIndexToModel(selectedRow[i]);	///Convert row index because "Sort" causes problems
-					}
-					
-					// Create a list of selected row indexes
-					List<Integer> selected_Index = new ArrayList<Integer>();				
-					for (int i: selectedRow) {
-						selected_Index.add(i);
-					}	
-					
-					// Get values to the new data5
-					data5 = new Object[rowCount5 - selectedRow.length][colCount5];
-					int newRow =0;
-					for (int ii = 0; ii < rowCount5; ii++) {
-						if (!selected_Index.contains(ii)) {			//If row not in the list then add to data5 row
-							for (int jj = 0; jj < colCount5; jj++) {
-								data5[newRow][jj] = model5.getValueAt(ii, jj);
-							}
-							newRow++;
-						}
-					}
-					// Pass back the info to table model
-					rowCount5 = rowCount5 - selectedRow.length;
-					model5.updateTableModelPrism(rowCount5, colCount5, data5, columnNames5);
-					model5.fireTableDataChanged();	
-					quick_edit = new Panel_QuickEdit_Non_SR(table5, data5);	// 2 lines to update data for Quick Edit Panel
-		 			scrollpane_QuickEdit.setViewportView(quick_edit);
-				}
-				
-			});
 
-			// End of Listeners for table9 & buttons -----------------------------------------------------------------------
-			// End of Listeners for table9 & buttons -----------------------------------------------------------------------			
+			// End of Listeners for table5 & buttons -----------------------------------------------------------------------
+			// End of Listeners for table5 & buttons -----------------------------------------------------------------------
 			
 			
 			
@@ -6013,19 +5893,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			c.weightx = 0;
 			c.weighty = 0;
 			sr_disturbances_condition_panel.add(btn_Edit, c);
-		    
 
-			JButton btn_Delete = new JButton();
-			btn_Delete.setFont(new Font(null, Font.BOLD, 14));
-//			btn_Delete.setText("DELETE");
-			btn_Delete.setToolTipText("Delete");
-			btn_Delete.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_erase.png"));
-			btn_Delete.setEnabled(false);
-			c.gridx = 0;
-			c.gridy = 3;
-			c.weightx = 0;
-			c.weighty = 0;
-			sr_disturbances_condition_panel.add(btn_Delete, c);
+			// Delete
+			JButton del = create_delete_button(sr_disturbances_condition_panel, c, 0, 3, 0, 0);
+			del.addActionListener(e-> delete_fn(model6, table6, data6, rowCount6, colCount6, columnNames6));
 
 			create_mass_check_button(sr_disturbances_condition_panel, c, 0, 4, 0,0).addActionListener(e ->
 					mass_check_fn(model6, table6, data6, 8)
@@ -6087,9 +5958,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					}
 					
 					if (selectedRow.length >= 1 && table6.isEnabled()) {	// Enable Delete  when: >=1 row is selected, table is enable (often after Edit button finished its task)
-						btn_Delete.setEnabled(true);
+						del.setEnabled(true);
 					} else {		// Disable Delete & Spinner
-						btn_Delete.setEnabled(false);
+						del.setEnabled(false);
 					}	
 					
 					if (selectedRow.length >= 1) {	// Enable Spinner when: >=1 row is selected
@@ -6128,9 +5999,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					}
 		        	
 					if (selectedRow.length >= 1 && table6.isEnabled()) {	// Enable Delete  when: >=1 row is selected, table is enable (often after Edit button finished its task)
-						btn_Delete.setEnabled(true);
+						del.setEnabled(true);
 					} else {		// Disable Delete & Spinner
-						btn_Delete.setEnabled(false);
+						del.setEnabled(false);
 					}	
 					
 					if (selectedRow.length >= 1) {	// Enable Spinner when: >=1 row is selected
@@ -6305,49 +6176,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					table6.scrollRectToVisible(new Rectangle(table6.getCellRect(table6.convertRowIndexToView(table6.getSelectedRow()), 0, true)));	
 		        }
 		    });
-		    
-			
-			// Delete
-			btn_Delete.addActionListener(e -> {
-				//Cancel editing before delete
-				if (table6.isEditing()) {
-					table6.getCellEditor().cancelCellEditing();
-				}				
-				
-				String ExitOption[] = {"Delete", "Cancel"};
-				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), "Delete now?", "Confirm Delete",
-						JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
-				if (response == 0) {
-					// Get selected rows
-					int[] selectedRow = table6.getSelectedRows();	
-					for (int i = 0; i < selectedRow.length; i++) {
-						selectedRow[i] = table6.convertRowIndexToModel(selectedRow[i]);	///Convert row index because "Sort" causes problems
-					}
-					
-					// Create a list of selected row indexes
-					List<Integer> selected_Index = new ArrayList<Integer>();				
-					for (int i: selectedRow) {
-						selected_Index.add(i);
-					}	
-					
-					// Get values to the new data7
-					data6 = new Object[rowCount6 - selectedRow.length][colCount6];
-					int newRow =0;
-					for (int ii = 0; ii < rowCount6; ii++) {
-						if (!selected_Index.contains(ii)) {			//If row not in the list then add to data7 row
-							for (int jj = 0; jj < colCount6; jj++) {
-								data6[newRow][jj] = model6.getValueAt(ii, jj);
-							}
-							newRow++;
-						}
-					}
-					// Pass back the info to table model
-					rowCount6 = rowCount6 - selectedRow.length;
-					model6.updateTableModelPrism(rowCount6, colCount6, data6, columnNames6);
-					
-					model6.fireTableDataChanged();	
-				}
-			});			
+
 			// End of Listeners for table9 & buttons -----------------------------------------------------------------------
 			// End of Listeners for table9 & buttons -----------------------------------------------------------------------		    
 		    
@@ -6646,20 +6475,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			c.weightx = 0;
 			c.weighty = 0;
 			cost_condition_panel.add(btn_Edit, c);
-		    
 
-			JButton btn_Delete = new JButton();
-			btn_Delete.setFont(new Font(null, Font.BOLD, 14));
-//			btn_Delete.setText("DELETE");
-			btn_Delete.setToolTipText("Delete");
-			btn_Delete.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_erase.png"));
-			btn_Delete.setEnabled(false);
-			c.gridx = 0;
-			c.gridy = 3;
-			c.weightx = 0;
-			c.weighty = 0;
-			cost_condition_panel.add(btn_Delete, c);
-			
+			// Delete
+			JButton del = create_delete_button(cost_condition_panel, c, 0, 3, 0, 0);
+			del.addActionListener(e-> delete_fn(model8, table8, data8, rowCount8, colCount8, columnNames8));
 			
 			// Add Empty Label to make all buttons on top not middle
 			c.insets = new Insets(0, 0, 0, 0); // No padding			
@@ -6714,9 +6533,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					}
 					
 					if (selectedRow.length >= 1 && table8.isEnabled()) {	// Enable Delete  when: >=1 row is selected, table is enable (often after Edit button finished its task)
-						btn_Delete.setEnabled(true);
+						del.setEnabled(true);
 					} else {		// Disable Delete & Spinner
-						btn_Delete.setEnabled(false);
+						del.setEnabled(false);
 					}	
 					
 					if (selectedRow.length >= 1) {	// Enable Spinner when: >=1 row is selected
@@ -6756,9 +6575,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					}
 		        	
 					if (selectedRow.length >= 1 && table8.isEnabled()) {	// Enable Delete  when: >=1 row is selected, table is enable (often after Edit button finished its task)
-						btn_Delete.setEnabled(true);
+						del.setEnabled(true);
 					} else {		// Disable Delete & Spinner
-						btn_Delete.setEnabled(false);
+						del.setEnabled(false);
 					}	
 					
 					if (selectedRow.length >= 1) {	// Enable Spinner when: >=1 row is selected
@@ -6932,49 +6751,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					table8.scrollRectToVisible(new Rectangle(table8.getCellRect(table8.convertRowIndexToView(table8.getSelectedRow()), 0, true)));	
 		        }
 		    });
-		    
-			
-			// Delete
-			btn_Delete.addActionListener(e -> {
-				//Cancel editing before delete
-				if (table8.isEditing()) {
-					table8.getCellEditor().cancelCellEditing();
-				}				
-				
-				String ExitOption[] = {"Delete", "Cancel"};
-				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), "Delete now?", "Confirm Delete",
-						JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
-				if (response == 0) {
-					// Get selected rows
-					int[] selectedRow = table8.getSelectedRows();	
-					for (int i = 0; i < selectedRow.length; i++) {
-						selectedRow[i] = table8.convertRowIndexToModel(selectedRow[i]);	///Convert row index because "Sort" causes problems
-					}
-					
-					// Create a list of selected row indexes
-					List<Integer> selected_Index = new ArrayList<Integer>();				
-					for (int i: selectedRow) {
-						selected_Index.add(i);
-					}	
-					
-					// Get values to the new data8
-					data8 = new Object[rowCount8 - selectedRow.length][colCount8];
-					int newRow =0;
-					for (int ii = 0; ii < rowCount8; ii++) {
-						if (!selected_Index.contains(ii)) {			//If row not in the list then add to data8 row
-							for (int jj = 0; jj < colCount8; jj++) {
-								data8[newRow][jj] = model8.getValueAt(ii, jj);
-							}
-							newRow++;
-						}
-					}
-					// Pass back the info to table model
-					rowCount8 = rowCount8 - selectedRow.length;
-					model8.updateTableModelPrism(rowCount8, colCount8, data8, columnNames8);
-					
-					model8.fireTableDataChanged();	
-				}
-			});			
+
 			// End of Listeners for table9 & buttons -----------------------------------------------------------------------
 			// End of Listeners for table9 & buttons -----------------------------------------------------------------------		    
 		    
@@ -7275,19 +7052,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			c2.weightx = 0;
 			c2.weighty = 0;
 			button_table_Panel.add(btn_Edit, c2);
-			
-			
-			JButton btn_Delete = new JButton();
-			btn_Delete.setFont(new Font(null, Font.BOLD, 14));
-//			btn_Delete.setText("DELETE");
-			btn_Delete.setToolTipText("Delete");
-			btn_Delete.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_erase.png"));
-			btn_Delete.setEnabled(false);					
-			c2.gridx = 0;
-			c2.gridy = 4;
-			c2.weightx = 0;
-			c2.weighty = 0;
-			button_table_Panel.add(btn_Delete, c2);
+
+			//Delete
+			JButton del = create_delete_button(button_table_Panel, c2, 0, 4, 0, 0);
 
 			//Sort
 			JToggleButton sort = create_sort_button(button_table_Panel,c2, 0, 5, 0, 0);
@@ -7347,9 +7114,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					}
 					
 					if (selectedRow.length >= 1 && table9.isEnabled()) {		// Enable Delete  when: >=1 row is selected, table is enable (often after Edit button finished its task)
-						btn_Delete.setEnabled(true);
+						del.setEnabled(true);
 					} else {		// Disable Delete
-						btn_Delete.setEnabled(false);
+						del.setEnabled(false);
 					}		
 					
 					if (selectedRow.length >= 1 && sort.getText().equals("OFF")) {	// Enable Spinner when: >=1 row is selected and Sorter is off
@@ -7375,9 +7142,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					}
 					
 					if (selectedRow.length >= 1 && table9.isEnabled()) {		// Enable Delete  when: >=1 row is selected,table is enable (often after Edit button finished its task)
-						btn_Delete.setEnabled(true);
+						del.setEnabled(true);
 					} else {		// Disable Delete
-						btn_Delete.setEnabled(false);
+						del.setEnabled(false);
 					}	
 					
 					if (selectedRow.length >= 1 && sort.getText().equals("OFF")) {	// Enable Spinner when: >=1 row is selected and Sorter is off
@@ -7983,7 +7750,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		    
 				
 			// Delete
-			btn_Delete.addActionListener(e -> {
+			del.addActionListener(e -> {
 				//Cancel editing before delete
 				if (table9.isEditing()) {
 					table9.getCellEditor().cancelCellEditing();
@@ -8492,18 +8259,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			c2.weightx = 0;
 			c2.weighty = 0;
 			button_table_Panel.add(btn_Edit, c2);
-			
-			
-			JButton btn_Delete = new JButton();
-			btn_Delete.setFont(new Font(null, Font.BOLD, 14));
-			btn_Delete.setToolTipText("Delete");
-			btn_Delete.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_erase.png"));
-			btn_Delete.setEnabled(false);				
-			c2.gridx = 0;
-			c2.gridy = 3;
-			c2.weightx = 0;
-			c2.weighty = 0;
-			button_table_Panel.add(btn_Delete, c2);
+
+			// Delete
+			JButton del = create_delete_button(button_table_Panel, c2, 0, 4, 0, 0);
+			del.addActionListener(e-> delete_fn(model10, table10, data10, rowCount10, colCount10, columnNames10));
 
 			//Sort
 			JToggleButton sort = create_sort_button(button_table_Panel,c2, 0, 4, 0, 0);
@@ -8565,9 +8324,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					}
 					
 					if (selectedRow.length >= 1 && table10.isEnabled()) {		// Enable Delete  when: >=1 row is selected, table is enable (often after Edit button finished its task)
-						btn_Delete.setEnabled(true);
+						del.setEnabled(true);
 					} else {		// Disable Delete
-						btn_Delete.setEnabled(false);
+						del.setEnabled(false);
 					}		
 					
 					if (selectedRow.length >= 1 && sort.getText().equals("OFF")) {	// Enable Spinner when: >=1 row is selected and Sorter is off
@@ -8594,9 +8353,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					}
 					
 					if (selectedRow.length >= 1 && table10.isEnabled()) {		// Enable Delete  when: >=1 row is selected,table is enable (often after Edit button finished its task)
-						btn_Delete.setEnabled(true);
+						del.setEnabled(true);
 					} else {		// Disable Delete
-						btn_Delete.setEnabled(false);
+						del.setEnabled(false);
 					}	
 					
 					if (selectedRow.length >= 1 && sort.getText().equals("OFF")) {	// Enable Spinner when: >=1 row is selected and Sorter is off
@@ -8841,50 +8600,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					flow_scrollPane.reload_flow_arrangement_for_one_flow(table10, data10, spin_sigma);
 		        }
 		    });
-		    
-				
-			// Delete
-			btn_Delete.addActionListener(e -> {	
-				//Cancel editing before delete
-				if (table10.isEditing()) {
-					table10.getCellEditor().cancelCellEditing();
-				}				
-				
-				String ExitOption[] = {"Delete", "Cancel"};
-				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), "Delete now?", "Confirm Delete",
-						JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
-				if (response == 0) {
-					// Get selected rows
-					int[] selectedRow = table10.getSelectedRows();	
-					for (int i = 0; i < selectedRow.length; i++) {
-						selectedRow[i] = table10.convertRowIndexToModel(selectedRow[i]);	///Convert row index because "Sort" causes problems
-					}
-					
-					// Create a list of selected row indexes
-					List<Integer> selected_Index = new ArrayList<Integer>();				
-					for (int i: selectedRow) {
-						selected_Index.add(i);
-					}	
-					
-					// Get values to the new data10
-					data10 = new Object[rowCount10 - selectedRow.length][colCount10];
-					int newRow =0;
-					for (int ii = 0; ii < rowCount10; ii++) {
-						if (!selected_Index.contains(ii)) {			//If row not in the list then add to data10 row
-							for (int jj = 0; jj < colCount10; jj++) {
-								data10[newRow][jj] = model10.getValueAt(ii, jj);
-							}
-							newRow++;
-						}
-					}
-					// Pass back the info to table model
-					rowCount10 = rowCount10 - selectedRow.length;
-					model10.updateTableModelPrism(rowCount10, colCount10, data10, columnNames10);
-					model10.fireTableDataChanged();	
-					quick_edit = new Panel_QuickEdit_FlowConstraints(table10, data10);		// 2 lines to update data for Quick Edit Panel
-		 			scrollpane_QuickEdit.setViewportView(quick_edit);
-				}
-			});
 
 			// Examine
 			btn_Examine.addActionListener(e -> {
@@ -8892,7 +8607,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					btn_NewSingle.setEnabled(false); 
 					spin_move_rows.setEnabled(false);
 					btn_Edit.setEnabled(false);
-					btn_Delete.setEnabled(false);
+					del.setEnabled(false);
 					sort.setEnabled(false);
 					quick_edit.disable_all_apply_buttons();
 					
@@ -8993,7 +8708,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					btn_NewSingle.setEnabled(true); 
 					spin_move_rows.setEnabled(true);
 					btn_Edit.setEnabled(true);
-					btn_Delete.setEnabled(true);
+					del.setEnabled(true);
 					sort.setEnabled(true);
 					quick_edit.enable_all_apply_buttons();
 				}
