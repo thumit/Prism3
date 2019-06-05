@@ -1661,9 +1661,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		//Setup the table------------------------------------------------------------	
 		if (is_table6_loaded == false) { // Create a fresh new if Load fail				
 			rowCount6 = 0;
-			colCount6 = 7;
+			colCount6 = 8;
 			data6 = new Object[rowCount6][colCount6];
-			columnNames6 = new String[] {"condition_id", "condition_description", "probability_info", "regeneration_info", "static_identifiers", "dynamic_identifiers", "original_dynamic_identifiers"};	         				
+			columnNames6 = new String[] {"condition_id", "condition_description", "probability_info",
+					"regeneration_info", "static_identifiers", "dynamic_identifiers", "original_dynamic_identifiers", "Include"};
 		}
 					
 		
@@ -1671,12 +1672,17 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		model6 = new PrismTableModel(rowCount6, colCount6, data6, columnNames6) {
 			@Override
 			public Class getColumnClass(int c) {
-				return String.class;				
+				if (c == 7) return Boolean.class;
+				else {
+					return String.class;
+				}
 			}
 			
 			@Override
 			public boolean isCellEditable(int row, int col) {
 				if (col == 1) { //  Only column "description" is editable
+					return true;
+				} else if (col == 7){
 					return true;
 				} else {
 					return false;
@@ -1694,7 +1700,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					for (int col = 0; col < colCount6; col++) {
 						if (String.valueOf(data6[row][col]).equals("null")) {
 							data6[row][col] = null;
-						} else {					
+						} else if (col == 7) {
+							data6[row][col] = Boolean.valueOf(String.valueOf(data6[row][col]));
+						} else {
 							data6[row][col] = String.valueOf(data6[row][col]);
 						}
 					}	
@@ -1751,6 +1759,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		table6.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);  
 		table6.getTableHeader().setReorderingAllowed(false);		//Disable columns move
 		table6.setPreferredScrollableViewportSize(new Dimension(150, 100));
+		((JComponent) table6.getDefaultRenderer(Boolean.class)).setOpaque(true);
+		((AbstractButton) table6.getDefaultRenderer(Boolean.class)).setSelectedIcon(IconHandle.get_scaledImageIcon(12, 12, "icon_check.png"));
+
 //		table7.setFillsViewportHeight(true);
 	}
 	
@@ -6015,12 +6026,19 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			c.weightx = 0;
 			c.weighty = 0;
 			sr_disturbances_condition_panel.add(btn_Delete, c);
+
+			create_mass_check_button(sr_disturbances_condition_panel, c, 0, 4, 0,0).addActionListener(e ->
+					mass_check_fn(model6, table6, data6, 8)
+			);
+			create_mass_uncheck_button(sr_disturbances_condition_panel, c, 0,5,0,0).addActionListener(e ->
+					mass_uncheck_fn(model6, table6, data6, 8)
+			);
 			
 			
 			// Add Empty Label to make all buttons on top not middle
-			c.insets = new Insets(0, 0, 0, 0); // No padding			
+			c.insets = new Insets(0, 0, 0, 0); // No padding
 			c.gridx = 0;
-			c.gridy = 4;
+			c.gridy = 6;
 			c.weightx = 0;
 			c.weighty = 1;
 			sr_disturbances_condition_panel.add(new JLabel(), c);
@@ -6032,7 +6050,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			c.gridy = 0;
 			c.weightx = 1;
 			c.weighty = 1;
-			c.gridheight = 6;
+			c.gridheight = 7;
 			sr_disturbances_condition_panel.add(table_ScrollPane, c);
 						
 			
@@ -6167,6 +6185,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				data6[rowCount6 - 1][4] = static_identifiers_scrollpane.get_static_info_from_GUI();
 				data6[rowCount6 - 1][5] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();
 				data6[rowCount6 - 1][6] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
+				data6[rowCount6 - 1][7] = true;
 								
 				model6.updateTableModelPrism(rowCount6, colCount6, data6, columnNames6);
 				model6.fireTableDataChanged();		
