@@ -215,6 +215,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	private JTable table6;
 	private PrismTableModel model6;
 	private Object[][] data6;
+	private Object[][] dataTemp6;
 	
 	// table input_06a --> percentage
 	private boolean is_table6a_loaded = false;
@@ -281,7 +282,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 
 		for (int ii = 0; ii < rowCount; ii++) {
 			for (int jj = 0; jj < colCount; jj++) {
-				if (jj == 4){
+				if (jj == colCount -1){
 					tempData[ii][jj] = true;
 				} else{
 					tempData[ii][jj] = origData[ii][jj];
@@ -442,18 +443,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				dataTemp2 = new Object[rowCount2][colCount2];
 				columnNames2 = new String[] {"condition_id", "condition_description", "static_identifiers",
 						"method_choice", "Include"};
-
 				data2 = handle_old_Files(colCount2, rowCount2, data2, dataTemp2);
-//				for (int ii = 0; ii < rowCount2; ii++) {
-//					for (int jj = 0; jj < colCount2; jj++) {
-//						if (jj == 4){
-//							dataTemp2[ii][jj] = true;
-//						} else{
-//							dataTemp2[ii][jj] = data2[ii][jj];
-//						}
-//					}
-//				}
-//				data2 = dataTemp2;
 			}
 			is_table2_loaded = true;
 		}
@@ -476,16 +466,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				columnNames4 = new String[] {"condition_id", "condition_description", "static_identifiers",
 						"conversion_and_rotation", "Include"};
 				data4 = handle_old_Files(colCount4, rowCount4, data4, dataTemp4);
-//				for (int ii = 0; ii < rowCount4; ii++) {
-//					for (int jj = 0; jj < colCount4; jj++) {
-//						if (jj == 4){
-//							dataTemp4[ii][jj] = true;
-//						} else{
-//							dataTemp4[ii][jj] = data4[ii][jj];
-//						}
-//					}
-//				}
-//				data4 = dataTemp4;
 			}
 			is_table4_loaded = true;
 		} else { // Create a fresh new if Load fail
@@ -513,6 +493,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			colCount6 = tableLoader.get_colCount();
 			data6 = tableLoader.get_data();
 			columnNames6 = tableLoader.get_columnNames();
+			if (colCount6 != 8){
+				colCount6 = 8;
+				dataTemp6 = new Object[rowCount6][colCount6];
+				columnNames6 = new String[] {"condition_id", "condition_description", "probability_info",
+						"regeneration_info", "static_identifiers", "dynamic_identifiers", "original_dynamic_identifiers", "Include"};
+				data6 = handle_old_Files(colCount6, rowCount6, data6, dataTemp6);
+
+			}
 			is_table6_loaded = true;
 		} else { // Create a fresh new if Load fail
 			System.err.println("File not exists: input_06_sr_disturbances.txt - New interface is created");
