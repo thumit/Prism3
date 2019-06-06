@@ -763,12 +763,10 @@ public class Read_Inputs {
 	private List<String> disturbance_condition_list;
 	
 	public void read_replacing_disturbances(File file) {
-		String delimited = "\t";
 		try {
 			// All lines except the 1st line to be in a list;		
 			disturbance_condition_list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
-			//disturbance_condition_list.remove(0);	// Remove the first row (Column names)
-			get_Included(disturbance_condition_list, delimited, 7);
+			disturbance_condition_list.remove(0);	// Remove the first row (Column names)
 
 		} catch (IOException e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
