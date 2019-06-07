@@ -207,6 +207,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	private JTable table5;
 	private PrismTableModel model5;
 	private Object[][] data5;
+	private Object[][] dataTemp5;
 	
 	// table input_06_sr_disturbances.txt
 	private boolean is_table6_loaded = false;
@@ -480,6 +481,13 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			colCount5 = tableLoader.get_colCount();
 			data5 = tableLoader.get_data();
 			columnNames5 = tableLoader.get_columnNames();
+			if (colCount5 != 6){
+				colCount5 = 6;
+				columnNames5 = new String[] {"condition_id", "condition_description", "static_identifiers",
+						"MS_E_percentage", "BS_E_percentage", "Include"};
+				dataTemp5 = new Object[rowCount5][colCount5];
+				data5 = handle_old_Files(colCount5, rowCount5, data5, dataTemp5);
+			}
 			is_table5_loaded = true;
 		} else { // Create a fresh new if Load fail
 			System.err.println("File not exists: input_05_non_sr_disturbances.txt - New interface is created");
@@ -1350,10 +1358,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			}
 		};
 		
-		
-		
-		
-		
 		// Define a set of icon for some columns
 		ImageIcon[] imageIconArray = new ImageIcon[colCount4a];
 		for (int i = 0; i < colCount4a; i++) {
@@ -1381,9 +1385,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				rCount++;
 			}
 		}
-		
-	
-		
+
 		//Set Color and Alignment for Cells
         DefaultTableCellRenderer r = new DefaultTableCellRenderer() {
             @Override
@@ -1404,14 +1406,11 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
             }
         };
         
-        
-        
+
 		for (int i = 0; i < columnNames4a.length - 5; i++) {		//Except the last 5 column
 			table4a.getColumnModel().getColumn(i).setCellRenderer(r);
 		}		
-		
-		
-		
+
 //		// Set up Icon for column headers
 //		class JComponentTableCellRenderer implements TableCellRenderer {
 //			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
@@ -1428,13 +1427,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 //				table4a.getColumnModel().getColumn(i).setHeaderValue(new JLabel(columnNames4a[i], icon_scale, JLabel.CENTER));
 //			} 
 //		}	
-		
-		
-		
-		
-		
-		
-		
+
 		// Set up Types for each  Columns-------------------------------------------------------------------------------
 		class CustomComboBoxEditor extends DefaultCellEditor {
 			private DefaultComboBoxModel model;
@@ -1484,10 +1477,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		table4a.getColumnModel().getColumn(5).setCellEditor(new CustomComboBoxEditor());
 		((JComponent) table4a.getDefaultRenderer(Boolean.class)).setOpaque(true);	// It's a bug in the synth-installed renderer, quick hack is to force the rendering checkbox opacity to true		
 		// End of Set up Types for each  Columns------------------------------------------------------------------------
-		
 
-		
-		
 //		table4a.setAutoResizeMode(0);		// 0 = JTable.AUTO_RESIZE_OFF
 		table4a.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		table4a.getTableHeader().setReorderingAllowed(false);		//Disable columns move
@@ -1510,9 +1500,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		//Setup the table------------------------------------------------------------	
 		if (is_table5_loaded == false) { // Create a fresh new if Load fail				
 			rowCount5 = 0;
-			colCount5 = 5;
+			colCount5 = 6;
 			data5 = new Object[rowCount5][colCount5];
-			columnNames5 = new String[] {"condition_id", "condition_description", "static_identifiers", "MS_E_percentage", "BS_E_percentage"};
+			columnNames5 = new String[] {"condition_id", "condition_description", "static_identifiers",
+					"MS_E_percentage", "BS_E_percentage", "Include"};
 		}
 					
 		
@@ -1521,7 +1512,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			@Override
 			public Class getColumnClass(int c) {
 				if (c == 0) return Integer.class;	// column 0 accepts only Integer
-				else if (c > 2) return Double.class;
+				else if (c == 5) return Boolean.class;
+				else if (c == 3) return Double.class;
+				else if (c == 4) return Double.class;
 				else return String.class;				
 			}
 			
@@ -1563,7 +1556,13 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 								} catch (NumberFormatException e) {
 									System.err.println(e.getClass().getName() + ": " + e.getMessage() + " Fail to convert String to Integer values in create_table5");
 								}	
-							} else if (col > 2) {	// Double
+							} else if (col == 5){
+								try {
+									data5[row][col] = Boolean.valueOf(String.valueOf(data5[row][col]));
+								} catch(NumberFormatException e){
+									System.err.println(e.getClass().getName() + ": " + e.getMessage() + " Fail to convert String to Boolean values in create_table5");
+								}
+							} else if (col == 3 || col == 4) {	// Double
 								try {
 									data5[row][col] = Double.valueOf(String.valueOf(data5[row][col]));
 								} catch (NumberFormatException e) {
@@ -1607,9 +1606,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				if (data5[row][4] != null) total_percentage = total_percentage + Double.parseDouble(data5[row][4].toString());
 				if (total_percentage > 100 && column >= 2) {		// check if the total_percentage > 100% --> problem icon for this cell
 					((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(14, 14, "icon_problem.png"));
-				} else {
-					((DefaultTableCellRenderer) component).setIcon(null);
 				}
+//				else {
+//					((DefaultTableCellRenderer) component).setIcon(null);
+//				}
 				
 				return component;
 			}	
@@ -1631,8 +1631,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				return tip;
 			}	
 		};
+		((JComponent) table5.getDefaultRenderer(Boolean.class)).setOpaque(true);	// It's a bug in the synth-installed renderer, quick hack is to force the rendering checkbox opacity to true
+		((AbstractButton) table5.getDefaultRenderer(Boolean.class)).setSelectedIcon(IconHandle.get_scaledImageIcon(12, 12, "icon_check.png"));
 
-    
 		// Hide columns
 		TableColumnsHandle table_handle = new TableColumnsHandle(table5);
 		table_handle.setColumnVisible("static_identifiers", false);
@@ -5312,11 +5313,16 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 
 			JToggleButton sort = create_sort_button(button_table_Panel,c2, 0, 5, 0, 0);
 			sort.addActionListener(e-> sort_fn(sort, model5, table5));
+
+			create_mass_check_button(button_table_Panel,c2, 0, 6,0,0).addActionListener(e->
+					mass_check_fn(model5, table5, data5,colCount5));
+			create_mass_uncheck_button(button_table_Panel,c2, 0, 7, 0, 0).addActionListener(e->
+					mass_uncheck_fn(model5, table5,data5, colCount5));
 			
 			c2.insets = new Insets(0, 0, 0, 0); // No padding
 			// Add Empty Label to make all buttons on top not middle
 			c2.gridx = 0;
-			c2.gridy = 6;
+			c2.gridy = 8;
 			c2.weightx = 0;
 			c2.weighty = 1;
 			button_table_Panel.add(new JLabel(), c2);
@@ -5331,7 +5337,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			c2.gridy = 0;
 			c2.weightx = 1;
 			c2.weighty = 1;
-			c2.gridheight = 7;
+			c2.gridheight = 9;
 			button_table_Panel.add(table_ScrollPane, c2);
 			// End of 4th Grid -----------------------------------------------------------------------
 			// End of 4th Grid -----------------------------------------------------------------------	
@@ -5415,11 +5421,12 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 								
 				data5[rowCount5 - 1][1] = static_identifiers_scrollpane.get_static_description_from_GUI();
 				data5[rowCount5 - 1][2] = static_identifiers_scrollpane.get_static_info_from_GUI();
+				data5[rowCount5 - 1][5] = true;
 				model5.updateTableModelPrism(rowCount5, colCount5, data5, columnNames5);
 				update_id();
 				model5.fireTableDataChanged();
-				quick_edit = new Panel_QuickEdit_Non_SR(table5, data5);		// 2 lines to update data for Quick Edit Panel
-	 			scrollpane_QuickEdit.setViewportView(quick_edit);
+				//quick_edit = new Panel_QuickEdit_Non_SR(table5, data5);		// 2 lines to update data for Quick Edit Panel
+	 			//scrollpane_QuickEdit.setViewportView(quick_edit);
 				
 				// Convert the new Row to model view and then select it 
 				int newRow = table5.convertRowIndexToView(rowCount5 - 1);
@@ -5570,7 +5577,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 									data5[i][j] = model5.getValueAt(i, j);
 								}	
 							}
-							
 							Object[][] temp_data = constraint_split_ScrollPanel.get_multiple_constraints_data();
 							JCheckBox autoDescription = constraint_split_ScrollPanel.get_autoDescription();
 							
@@ -5588,6 +5594,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 									data5[i][0] = temp_data[0][0];
 									data5[i][2] = static_info_list.get(i - rowCount5 + total_constraints);		// static splitter is active
 									data5[i][3] = temp_data[0][3];
+									data5[i][5] = true;
 									
 								}	
 							}	
