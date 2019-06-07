@@ -241,6 +241,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	private JTable table8;
 	private PrismTableModel model8;
 	private Object[][] data8;
+	private Object[][] dataTemp8;
 	
 	// table input_08a --> action_cost
 	private boolean is_table8a_loaded = false;
@@ -522,6 +523,13 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			colCount8 = tableLoader.get_colCount();
 			data8 = tableLoader.get_data();
 			columnNames8 = tableLoader.get_columnNames();
+			if (colCount8 != 8){
+				colCount8 = 8;
+				columnNames8 = new String[] {"condition_id", "condition_description", "action_cost", "conversion_cost",
+						"static_identifiers", "dynamic_identifiers", "original_dynamic_identifiers", "Include"};
+				dataTemp8 = new Object[rowCount8][colCount8];
+				data8 = handle_old_Files(colCount8, rowCount8, data8, dataTemp8);
+			}
 			is_table8_loaded = true;
 		} else { // Create a fresh new if Load fail
 			System.err.println("File not exists: input_07_management_cost.txt - New interface is created");
@@ -2753,9 +2761,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		//Setup the table------------------------------------------------------------	
 		if (is_table8_loaded == false) { // Create a fresh new if Load fail				
 			rowCount8 = 0;
-			colCount8 = 7;
+			colCount8 = 8;
 			data8 = new Object[rowCount8][colCount8];
-			columnNames8 = new String[] {"condition_id", "condition_description", "action_cost", "conversion_cost", "static_identifiers", "dynamic_identifiers", "original_dynamic_identifiers"};	         				
+			columnNames8 = new String[] {"condition_id", "condition_description", "action_cost", "conversion_cost",
+					"static_identifiers", "dynamic_identifiers", "original_dynamic_identifiers", "Include"};
 		}
 					
 		
@@ -2763,12 +2772,17 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		model8 = new PrismTableModel(rowCount8, colCount8, data8, columnNames8) {
 			@Override
 			public Class getColumnClass(int c) {
-				return String.class;				
+				if (c == 7) return Boolean.class;
+				else {
+					return String.class;
+				}
 			}
 			
 			@Override
 			public boolean isCellEditable(int row, int col) {
 				if (col >= 1 && col <= 2) { //  Only column 1 2 "description" is editable
+					return true;
+				} else if(col == 7){
 					return true;
 				} else {
 					return false;
@@ -2786,7 +2800,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					for (int col = 0; col < colCount8; col++) {
 						if (String.valueOf(data8[row][col]).equals("null")) {
 							data8[row][col] = null;
-						} else {					
+						} else if (col == 7){
+							data8[row][col] = Boolean.valueOf(String.valueOf(data8[row][col]));
+						} else {
 							data8[row][col] = String.valueOf(data8[row][col]);
 						}
 					}	
@@ -2828,10 +2844,12 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				return tip;
 			}		
 		};
-		
-		
-			
-		
+
+		((JComponent) table8.getDefaultRenderer(Boolean.class)).setOpaque(true);
+		((AbstractButton) table8.getDefaultRenderer(Boolean.class)).setSelectedIcon(IconHandle.get_scaledImageIcon(12, 12, "icon_check.png"));
+
+
+
 		// Hide columns
 		TableColumnsHandle table_handle = new TableColumnsHandle(table8);
 		table_handle.setColumnVisible("action_cost", false);
@@ -6654,12 +6672,29 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			c.weightx = 0;
 			c.weighty = 0;
 			cost_condition_panel.add(btn_Delete, c);
-			
+
+			JButton mass_check = new JButton();
+			mass_check.setIcon(IconHandle.get_scaledImageIcon(16,16, "icon_check.png"));
+			mass_check.addActionListener(e-> mass_check_fn(model8, table8, data8, colCount8));
+			c.gridx = 0;
+			c.gridy = 4;
+			c.weightx = 0;
+			c.weighty = 0;
+			cost_condition_panel.add(mass_check, c);
+
+			JButton mass_uncheck = new JButton();
+			mass_uncheck.setIcon(IconHandle.get_scaledImageIcon(16,16, "icon_uncheck.png"));
+			mass_uncheck.addActionListener(e-> mass_uncheck_fn(model8, table8, data8, colCount8));
+			c.gridx = 0;
+			c.gridy = 5;
+			c.weightx = 0;
+			c.weighty = 0;
+			cost_condition_panel.add(mass_uncheck, c);
 			
 			// Add Empty Label to make all buttons on top not middle
 			c.insets = new Insets(0, 0, 0, 0); // No padding			
 			c.gridx = 0;
-			c.gridy = 4;
+			c.gridy = 6;
 			c.weightx = 0;
 			c.weighty = 1;
 			cost_condition_panel.add(new JLabel(), c);
@@ -6671,7 +6706,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			c.gridy = 0;
 			c.weightx = 1;
 			c.weighty = 1;
-			c.gridheight = 6;
+			c.gridheight = 7;
 			cost_condition_panel.add(table_ScrollPane, c);
 						
 			
@@ -6808,6 +6843,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				data8[rowCount8 - 1][4] = static_identifiers_scrollpane.get_static_info_from_GUI();
 				data8[rowCount8 - 1][5] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();
 				data8[rowCount8 - 1][6] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
+				data8[rowCount8 - 1][7] = true;
 								
 				model8.updateTableModelPrism(rowCount8, colCount8, data8, columnNames8);
 				model8.fireTableDataChanged();		

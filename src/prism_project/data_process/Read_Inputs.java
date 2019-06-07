@@ -645,7 +645,7 @@ public class Read_Inputs {
 			// All lines to be in array
 			List<String> list;
 			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
-			list.remove(0);	// Remove the first row (Column names)
+			list = get_Included(list, delimited, 6);
 			String[] a = list.toArray(new String[list.size()]);
 								
 			non_sr_totalRows = a.length;
@@ -763,11 +763,12 @@ public class Read_Inputs {
 	private List<String> disturbance_condition_list;
 	
 	public void read_replacing_disturbances(File file) {
+		String delimited = "\t";
 		try {
 			// All lines except the 1st line to be in a list;		
 			disturbance_condition_list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
 			disturbance_condition_list.remove(0);	// Remove the first row (Column names)
-
+			disturbance_condition_list = get_Included(disturbance_condition_list, delimited, 8);
 		} catch (IOException e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 		}
@@ -782,9 +783,11 @@ public class Read_Inputs {
 	private List<String> cost_condition_list;
 	
 	public void read_management_cost(File file) {
+		String delimited = "\t";
 		try {
 			// All lines except the 1st line to be in a list;		
 			cost_condition_list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
+			cost_condition_list = get_Included(cost_condition_list, delimited, 8);
 			cost_condition_list.remove(0);	// Remove the first row (Column names)
 
 		} catch (IOException e) {
