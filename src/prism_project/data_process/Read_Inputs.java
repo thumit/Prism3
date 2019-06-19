@@ -16,8 +16,7 @@
  ******************************************************************************/
 package prism_project.data_process;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -30,6 +29,24 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 public class Read_Inputs {
+
+	public List get_Included(List list, String delimited, int cols) {
+		int IncCol =  cols-1;
+		list.remove(0);	// Remove the first row (Column names)
+		String first = list.get(0).toString();
+		String[] firstItems = first.split(delimited);
+		int colNums = firstItems.length;
+		if (colNums == cols) {
+			for (int i = 0; i < list.size(); i++) {
+				String item = list.get(i).toString();
+				String[] items = item.split(delimited);
+				if (items[IncCol].equals("false")) {
+					list.remove(i);
+				}
+			}
+		}
+		return list;
+	}
 	
 	//-------------------------------------------------------------------------------------------------------------------------------------------------	
 	//For input_01_general_inputs.txt
@@ -180,8 +197,9 @@ public class Read_Inputs {
 			// All lines to be in array
 			List<String> list;
 			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
-			list.remove(0);	// Remove the first row (Column names)
+			list = get_Included(list, delimited, 5);
 			String[] a = list.toArray(new String[list.size()]);
+
 								
 			nonea_totalRows = a.length;
 			nonea_totalColumns = a[0].split(delimited).length;		// a[0].split(delimited) = String[] of the first row (this is the row below the column headers row which was removed already)	
@@ -194,6 +212,7 @@ public class Read_Inputs {
 					nonea_value[i][j] = rowValue[j];
 				}
 			}
+			System.out.println(list);
 		} catch (IOException e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 		}
@@ -398,7 +417,7 @@ public class Read_Inputs {
 			// All lines to be in array
 			List<String> list;
 			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
-			list.remove(0);	// Remove the first row (Column names)
+			list = get_Included(list, delimited, 5);
 			String[] a = list.toArray(new String[list.size()]);
 								
 			ea_totalRows = a.length;
@@ -626,7 +645,7 @@ public class Read_Inputs {
 			// All lines to be in array
 			List<String> list;
 			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
-			list.remove(0);	// Remove the first row (Column names)
+			list = get_Included(list, delimited, 6);
 			String[] a = list.toArray(new String[list.size()]);
 								
 			non_sr_totalRows = a.length;
@@ -744,11 +763,12 @@ public class Read_Inputs {
 	private List<String> disturbance_condition_list;
 	
 	public void read_replacing_disturbances(File file) {
+		String delimited = "\t";
 		try {
 			// All lines except the 1st line to be in a list;		
 			disturbance_condition_list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
 			disturbance_condition_list.remove(0);	// Remove the first row (Column names)
-
+			disturbance_condition_list = get_Included(disturbance_condition_list, delimited, 8);
 		} catch (IOException e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 		}
@@ -763,9 +783,11 @@ public class Read_Inputs {
 	private List<String> cost_condition_list;
 	
 	public void read_management_cost(File file) {
+		String delimited = "\t";
 		try {
 			// All lines except the 1st line to be in a list;		
 			cost_condition_list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
+			cost_condition_list = get_Included(cost_condition_list, delimited, 8);
 			cost_condition_list.remove(0);	// Remove the first row (Column names)
 
 		} catch (IOException e) {
