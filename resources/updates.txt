@@ -1019,3 +1019,8 @@ All changes in this block are associated with PrismAlpha1.2.05.jar, User Manual 
 Note for Updating SQLITE to version 3.27.2: There are some good functions, e.g. rename table column, but NOTE NOTE NOTE: query for rotation_age fail in Database management --> will not apply SQLITE update
 All changes in this block are associated with PrismAlpha1.2.06.jar, User Manual 1.03.21, will update later when the newer version is better)
 --------------------------------------------------------------------------
+
+446. Use tokenizer to read the text file to show in the table view (Panel_Project)
+447. Rewrite the "create_import_table_statement" in SQLite class:
+	- use String.join()
+	- remove the "a" array, use list instead

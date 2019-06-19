@@ -1474,7 +1474,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 						
 						if (fileDelimited != null) {
 							// Get info from the file
-							SQLite.create_importTable_Stm(currentfile, fileDelimited);		//Read file into arrays
+							SQLite.create_import_table_statement(currentfile, fileDelimited);		//Read file into arrays
 							String[] statement = new String[SQLite.get_importTable_TotalLines()];		//this arrays hold all the statements
 							statement = SQLite.get_importTable_Stm();	
 

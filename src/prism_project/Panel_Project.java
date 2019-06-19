@@ -40,6 +40,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -423,25 +424,29 @@ public class Panel_Project extends JLayeredPane {
 					File file = new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/" + currentInputFile);	
 					
 					try {
-						String delimited = "\t";		// tab delimited
-						List<String> list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);			
-						String[] a = list.toArray(new String[list.size()]);					
-														
-						// Setup the table--------------------------------------------------------------------------------
+						List<String> lines_list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);			
 						try {
-							columnNames = a[0].split(delimited);		//tab delimited		//Read the first row	
-							rowCount = a.length - 1;  // - 1st row which is the column name
+							// Setup the table--------------------------------------------------------------------------------
+							String delimited = "\t";		// tab delimited
+							columnNames = lines_list.get(0).split(delimited);		// read the first row	
+							lines_list.remove(0); 	// remove the  first line which is the column name
+							rowCount = lines_list.size();
 							colCount = columnNames.length;
 							data = new Object[rowCount][colCount];
-					
+							
 							// populate the data matrix
-							for (int row = 0; row < rowCount; row++) {
-//								data[row] = a[row + 1].split(delimited);	//tab delimited	
-								String[] rowValue = a[row + 1].split(delimited);	//tab delimited	
-								int total_row_elements = rowValue.length;
-								for (int col = 0; col < colCount; col++) {
-									data[row][col] = (col < total_row_elements) ? rowValue[col] : "";		// if lacking data --> fill the data with empty string
-								}	
+							int row = 0;
+							for (String line : lines_list) {
+								StringTokenizer t = new StringTokenizer(line, delimited);
+								int col = 0;
+								while (t.hasMoreTokens()) {			// loop through each element of this line (separated by tab)
+									data[row][col] = t.nextToken();
+									col++;
+								}
+								for (int lack_col = col; lack_col < colCount; lack_col++) {
+									data[row][lack_col] = ""; 	// if lacking data (missing data in a row due to empty column) --> fill the data with empty string
+								}
+								row++;
 							}	
 							
 							// create a table
@@ -484,8 +489,7 @@ public class Panel_Project extends JLayeredPane {
 							System.out.println("Fail to create table data. Often this is only when Readme.txt has nothing");
 							table = new JTable();
 						} finally {
-							list = null;	// clear memory after reading file	
-							a = null;		// clear memory after reading file
+							lines_list = null;	// clear memory after reading file	
 						}
 			     		
 			     					     		
