@@ -40,7 +40,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.StringTokenizer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -433,21 +432,16 @@ public class Panel_Project extends JLayeredPane {
 							rowCount = lines_list.size();
 							colCount = columnNames.length;
 							data = new Object[rowCount][colCount];
+							String[] a = lines_list.toArray(new String[rowCount]);
 							
 							// populate the data matrix
-							int row = 0;
-							for (String line : lines_list) {
-								StringTokenizer t = new StringTokenizer(line, delimited);
-								int col = 0;
-								while (t.hasMoreTokens()) {			// loop through each element of this line (separated by tab)
-									data[row][col] = t.nextToken();
-									col++;
-								}
-								for (int lack_col = col; lack_col < colCount; lack_col++) {
-									data[row][lack_col] = ""; 	// if lacking data (missing data in a row due to empty column) --> fill the data with empty string
-								}
-								row++;
-							}	
+							for (int row = 0; row < rowCount; row++) {
+								String[] rowValue = a[row].split(delimited);	// tab delimited	
+								int total_row_elements = rowValue.length;
+								for (int col = 0; col < colCount; col++) {
+									data[row][col] = (col < total_row_elements) ? rowValue[col] : "";		// if lacking data --> fill the data with empty string
+								}	
+							}
 							
 							// create a table
 							model = new PrismTableModel(rowCount, colCount, data, columnNames);

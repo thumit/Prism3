@@ -16,7 +16,8 @@
  ******************************************************************************/
 package prism_project.data_process;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -30,21 +31,19 @@ import java.util.stream.Stream;
 
 public class Read_Inputs {
 
-	public List get_Included(List list, String delimited, int cols) {
-		int IncCol =  cols-1;
-		list.remove(0);	// Remove the first row (Column names)
-		String first = list.get(0).toString();
-		String[] firstItems = first.split(delimited);
-		int colNums = firstItems.length;
-		if (colNums == cols) {
-			for (int i = 0; i < list.size(); i++) {
-				String item = list.get(i).toString();
-				String[] items = item.split(delimited);
-				if (items[IncCol].equals("false")) {
-					list.remove(i);
+	private List<String> get_list_of_checked_conditions(List<String> list, String delimited, int include_col) {
+		String[] columnName = list.get(0).split(delimited);		// 1st line is column name
+		List<String> column_names_list = Arrays.asList(columnName);	
+		if (column_names_list.indexOf("model_condition") != -1) {	// check if the column "include" exists. This is indicator of the new input file format --> we do backward compatibility
+			List<String> remove_list = new ArrayList<String>();	// this list contains all lines which have include_col = false
+			for (String line : list) {
+				if (line.split(delimited)[include_col].equals("false")) {
+					remove_list.add(line);
 				}
 			}
+			list.removeAll(remove_list);	// remove include_col = false lines from the list
 		}
+		list.remove(0);					// remove the first row (Column names)
 		return list;
 	}
 	
@@ -194,13 +193,12 @@ public class Read_Inputs {
 		String delimited = "\t";		// tab delimited
 				
 		try {		
-			// All lines to be in array
+			// all lines to be in array
 			List<String> list;
 			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
-			list = get_Included(list, delimited, 5);
+			list = get_list_of_checked_conditions(list, delimited, 4);
 			String[] a = list.toArray(new String[list.size()]);
 
-								
 			nonea_totalRows = a.length;
 			nonea_totalColumns = a[0].split(delimited).length;		// a[0].split(delimited) = String[] of the first row (this is the row below the column headers row which was removed already)	
 			nonea_value = new String[nonea_totalRows][nonea_totalColumns];
@@ -212,7 +210,6 @@ public class Read_Inputs {
 					nonea_value[i][j] = rowValue[j];
 				}
 			}
-			System.out.println(list);
 		} catch (IOException e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 		}
@@ -417,7 +414,7 @@ public class Read_Inputs {
 			// All lines to be in array
 			List<String> list;
 			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
-			list = get_Included(list, delimited, 5);
+			list = get_list_of_checked_conditions(list, delimited, 4);
 			String[] a = list.toArray(new String[list.size()]);
 								
 			ea_totalRows = a.length;
@@ -645,7 +642,7 @@ public class Read_Inputs {
 			// All lines to be in array
 			List<String> list;
 			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
-			list = get_Included(list, delimited, 6);
+			list = get_list_of_checked_conditions(list, delimited, 5);
 			String[] a = list.toArray(new String[list.size()]);
 								
 			non_sr_totalRows = a.length;
@@ -767,8 +764,7 @@ public class Read_Inputs {
 		try {
 			// All lines except the 1st line to be in a list;		
 			disturbance_condition_list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
-			disturbance_condition_list.remove(0);	// Remove the first row (Column names)
-			disturbance_condition_list = get_Included(disturbance_condition_list, delimited, 8);
+			disturbance_condition_list = get_list_of_checked_conditions(disturbance_condition_list, delimited, 7);
 		} catch (IOException e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 		}
@@ -787,9 +783,7 @@ public class Read_Inputs {
 		try {
 			// All lines except the 1st line to be in a list;		
 			cost_condition_list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
-			cost_condition_list = get_Included(cost_condition_list, delimited, 8);
-			cost_condition_list.remove(0);	// Remove the first row (Column names)
-
+			cost_condition_list = get_list_of_checked_conditions(cost_condition_list, delimited, 7);
 		} catch (IOException e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 		}
