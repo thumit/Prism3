@@ -1044,3 +1044,5 @@ All changes in this block are associated with PrismAlpha1.2.06.jar, User Manual 
 450. Code clean up, refactor, restructure:
 	- Rewrite "reload_inputs" in "Panel_Edit_Details"
 	- Input_02_model_strata is now saved with both false and true strata (previously only save the true model_strata): fix create_table3 & create_file_input_02
+	- remove "is_the_first_time_loading_a_run"
+	- Read_Inputs: add code to remove the false model_strata from the list

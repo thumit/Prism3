@@ -125,7 +125,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	private File currentRunFolder;
 	private File file_database;
 	
-	private boolean is_the_first_time_loading_a_run = true;
 	
 	// 9 panels for the selected Run
 	private General_Inputs_GUI panel_General_Inputs_GUI;
@@ -372,7 +371,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
     // Reload inputs of the run------------------------------------------------------------------------------------------------ 
 	public void reload_inputs() {
 		// These are for reload current edit after fail importation of a new database using the "browse" button
-		is_the_first_time_loading_a_run = true;
 		is_table_overview_loaded = false;
 		is_table1_loaded = false;
 		is_table3_loaded = false;
@@ -576,8 +574,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		GUI_Text_splitpane.setLeftComponent(panel_General_Inputs_GUI);	// Show the General_Inputs of the selected Run
 		PrismMain.get_Prism_DesktopPane().getSelectedFrame().revalidate();
 		PrismMain.get_Prism_DesktopPane().getSelectedFrame().repaint();
-		
-		is_the_first_time_loading_a_run = false;
     }
     
 	

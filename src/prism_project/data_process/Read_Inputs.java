@@ -47,6 +47,19 @@ public class Read_Inputs {
 		return list;
 	}
 	
+	private List<String> get_list_of_checked_strata(List<String> list, String delimited, int model_strata_col) {
+		List<String> remove_list = new ArrayList<String>();	// this list contains all lines which have model_condition = false
+		for (String line : list) {
+			if (line.split(delimited)[model_strata_col].equals("false")) {
+				remove_list.add(line);
+			}
+		}
+		list.removeAll(remove_list);	// remove model_condition = false lines from the list
+		list.remove(0);		// remove the first row (Column names)
+		return list;
+	}
+	
+	
 	//-------------------------------------------------------------------------------------------------------------------------------------------------	
 	//For input_01_general_inputs.txt
 	private int gi_totalRows, gi_totalColumns;
@@ -119,7 +132,7 @@ public class Read_Inputs {
 			// All lines to be in array
 			List<String> list;
 			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
-			list.remove(0);	// Remove the first row (Column names)
+			list = get_list_of_checked_strata(list, delimited, 9);
 			String[] a = list.toArray(new String[list.size()]);
 						
 			MO_totalRows = a.length;
