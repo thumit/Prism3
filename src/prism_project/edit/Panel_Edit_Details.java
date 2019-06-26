@@ -404,7 +404,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			columnNames1 = tableLoader.get_columnNames();
 			is_table1_loaded = true;
 		} else { // Create a fresh new if Load fail
-			System.err.println("File not exists: input_01_general_inputs.txt - New interface is created");
+			System.err.println("File not exists: " + table_file.getName() + " - New interface is created");
 		}
 
 
@@ -417,7 +417,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			columnNames3 = tableLoader.get_columnNames();
 			is_table3_loaded = true;
 		} else { // Create a fresh new if Load fail
-			System.err.println("File not exists: input_02_model_strata.txt - New interface is created");
+			System.err.println("File not exists: " + table_file.getName() + " - New interface is created");
 		}
 
 
@@ -431,7 +431,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			is_table2_loaded = true;
 		}
 		else { // Create a fresh new if Load fail
-			System.err.println("File not exists: input_03_non_ea_management.txt - New interface is created");
+			System.err.println("File not exists: " + table_file.getName() + " - New interface is created");
 		}
 
 
@@ -444,7 +444,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			columnNames4 = tableLoader.get_columnNames();
 			is_table4_loaded = true;
 		} else { // Create a fresh new if Load fail
-			System.err.println("File not exists: input_04_ea_management.txt - New interface is created");
+			System.err.println("File not exists: " + table_file.getName() + " - New interface is created");
 		}
 		
 
@@ -457,7 +457,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			columnNames5 = tableLoader.get_columnNames();
 			is_table5_loaded = true;
 		} else { // Create a fresh new if Load fail
-			System.err.println("File not exists: input_05_non_sr_disturbances.txt - New interface is created");
+			System.err.println("File not exists: " + table_file.getName() + " - New interface is created");
 		}
 		
 		
@@ -470,7 +470,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			columnNames6 = tableLoader.get_columnNames();
 			is_table6_loaded = true;
 		} else { // Create a fresh new if Load fail
-			System.err.println("File not exists: input_06_sr_disturbances.txt - New interface is created");
+			System.err.println("File not exists: " + table_file.getName() + " - New interface is created");
 		}		
 
 		
@@ -483,7 +483,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			columnNames8 = tableLoader.get_columnNames();
 			is_table8_loaded = true;
 		} else { // Create a fresh new if Load fail
-			System.err.println("File not exists: input_07_management_cost.txt - New interface is created");
+			System.err.println("File not exists: " + table_file.getName() + " - New interface is created");
 		}		
 		
 		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_08_basic_constraints.txt");
@@ -495,7 +495,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			columnNames9 = tableLoader.get_columnNames();
 			is_table9_loaded = true;
 		} else { // Create a fresh new if Load fail
-			System.err.println("File not exists: input_08_basic_constraints.txt - New interface is created");
+			System.err.println("File not exists: " + table_file.getName() + " - New interface is created");
 		}     
 		
 		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_09_flow_constraints.txt");
@@ -507,7 +507,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			columnNames10 = tableLoader.get_columnNames();
 			is_table10_loaded = true;
 		} else { // Create a fresh new if Load fail
-			System.err.println("File not exists: input_09_flow_constraints.txt - New interface is created");
+			System.err.println("File not exists: " + table_file.getName() + " - New interface is created");
 		}  		
 		
 		
@@ -886,6 +886,31 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			columnNames3[colCount3 - 3] = "acres";	// add 3 more columns
 			columnNames3[colCount3 - 2] = "age_class";
 			columnNames3[colCount3 - 1] = "model_strata";	
+			
+			// get the raw existing_strata from the database------------------------------------------------------
+			String[][] existing_strata_values = read_database.get_existing_strata_values();
+			rowCount3 = existing_strata_values.length;	// refresh total rows based on existing strata, we don't need to refresh the total columns
+			int existing_strata_colCount = existing_strata_values[0].length;
+
+			data3 = new Object[rowCount3][colCount3];
+			for (int row = 0; row < rowCount3; row++) {
+				for (int column = 0; column < existing_strata_colCount; column++) {		// loop all existing strata columns (strata_id, layer 1 ... 6, acres). This do ntot have the last 2 columns as seen in the GUI (ageclass & model_strata)
+					data3[row][column] = existing_strata_values[row][column];
+				}
+			}					
+			
+			// update ""age_class" column
+			for (int row = 0; row < rowCount3; row++) {						
+				String s5 = data3[row][5].toString();
+				String s6 = data3[row][6].toString();
+				if (read_database.get_starting_ageclass(s5, s6, "NG", "0") != null) {
+					data3[row][colCount3 - 2] = Integer.valueOf(read_database.get_starting_ageclass(s5, s6, "A", "0"));	
+				}												
+			}
+
+			for (int row = 0; row < rowCount3; row++) {
+				data3[row][colCount3 - 1] = (data3[row][colCount3 - 2] != null) ? true : false;		// select all strata as model_strata if age class is  found
+			}
 		}		
 					
 		
@@ -1011,73 +1036,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		table3.getTableHeader().setReorderingAllowed(false);		//Disable columns move
 //		table3.createDefaultColumnsFromModel(); // Very important code to refresh the number of Columns	shown
         table3.getColumnModel().getColumn(colCount3 - 1).setPreferredWidth(100);	//Set width of Column "Strata in optimization model" bigger
-		
 		table3.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		table3.setFillsViewportHeight(true);
-
-		
-		
-		
-		
-		
-		
-		
-		if (file_database != null) {
-			// get the raw existing_strata from the database------------------------------------------------------
-			String[][] existing_strata_values = read_database.get_existing_strata_values();
-			rowCount3 = existing_strata_values.length;	// refresh total rows based on existing strata, we don't need to refresh the total columns
-			int existing_strata_colCount = existing_strata_values[0].length;
-
-			data3 = new Object[rowCount3][colCount3];
-			for (int row = 0; row < rowCount3; row++) {
-				for (int column = 0; column < existing_strata_colCount; column++) {		// loop all existing strata columns (strata_id, layer 1 ... 6, acres). This do ntot have the last 2 columns as seen in the GUI (ageclass & model_strata)
-					data3[row][column] = existing_strata_values[row][column];
-				}
-			}					
-			model3.match_DataType();	// must do this otherwise update age_class will make the model_strata fail to show the check (it will show the word)			
-					
-			
-			// update ""age_class" column
-			for (int row = 0; row < rowCount3; row++) {						
-				String s5 = data3[row][5].toString();
-				String s6 = data3[row][6].toString();
-				if (read_database.get_starting_ageclass(s5, s6, "NG", "0") != null) {
-					data3[row][colCount3 - 2] = Integer.valueOf(read_database.get_starting_ageclass(s5, s6, "A", "0"));	
-				}												
-			}
-
-			// 2 cases: 1st time load ---vs--- load by browsing a new database-----------------------------------
-			if (!is_the_first_time_loading_a_run) {
-				for (int row = 0; row < rowCount3; row++) {
-					data3[row][colCount3 - 1] = (data3[row][colCount3 - 2] != null) ? true : false;		// select all existing strata after loaded if found age class
-				}
-			} else {	
-				File table_file = new File(currentRunFolder.getAbsolutePath() + "/input_02_model_strata.txt");
-				if (table_file.exists()) { // Load from input
-					Reload_Table_Info tableLoader = new Reload_Table_Info(table_file);
-					Object[][] temp_data = tableLoader.get_data();
-					for (int i = 0; i < temp_data.length; i++) {
-						for (int ii = 0; ii < data3.length; ii++) {
-							if (String.valueOf(data3[ii][0]).equals(String.valueOf(temp_data[i][0]))) {		// find the data match to paste into existing strata: Just need to compare strata_id
-								for (int jj = 0; jj < data3[ii].length; jj++) {
-									data3[ii][jj] = temp_data[i][jj];	// apply temp_data row values to data row 
-								}		
-							}	
-						}
-					}			
-				} 
-			}
-			
-			
-			// some final data update after import successfully------------------------------------------------------
-			model3.match_DataType();
-			model3.updateTableModelPrism(rowCount3, colCount3, data3, columnNames3);		// very important to (pass table info back to table model) each time data is new Object
-			model3.fireTableDataChanged();
-			model3.update_model_overview();		
-			// only add sorter after having the data loaded
-			TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model3);
-			table3.setRowSorter(sorter);
-		}
+		TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model3);
+		table3.setRowSorter(sorter);
 	}	
 	
 	
@@ -3316,21 +3278,19 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	// Sort Button
 
 	private JToggleButton create_sort_button(JPanel panel, GridBagConstraints c, int x, int y, int z, int v){
-		JToggleButton btn = new JToggleButton();
-		btn.setSelected(false);
-		btn.setFocusPainted(false);
-		btn.setFont(new Font(null, Font.BOLD, 12));
-		btn.setText("OFF");
-		btn.setToolTipText("Sorter mode: 'ON' click columns header to sort rows. 'OFF' retrieve original rows position");
-		btn.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_sort.png"));
-
+		JToggleButton button_sort = new JToggleButton();
+		button_sort.setSelected(false);
+		button_sort.setFocusPainted(false);
+		button_sort.setFont(new Font(null, Font.BOLD, 12));
+		button_sort.setText("OFF");
+		button_sort.setToolTipText("Sorter mode: 'ON' click columns header to sort rows. 'OFF' retrieve original rows position");
+		button_sort.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_sort.png"));
 		c.gridx = x;
 		c.gridy = y;
 		c.weightx = z;
 		c.weighty = v;
-		panel.add(btn, c);
-
-		return btn;
+		panel.add(button_sort, c);
+		return button_sort;
 	};
 
 	private void sort_fn(JToggleButton btn, PrismTableModel model, JTable table) {
@@ -9376,22 +9336,16 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			selectedStrataFile.delete();		// Delete the old file before writing new contents
 		}
 		
-		if (data3 != null && modeledAcres > 0) {
-			//Only print out Strata with implemented methods <> null
+		if (data3 != null && data3.length > 0) {
 			try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(selectedStrataFile))) {
-				for (int j = 0; j < columnNames3.length; j++) { //Note: colCount = columnNames.length
+				for (int j = 0; j < columnNames3.length; j++) {
 					fileOut.write(columnNames3[j] + "\t");
 				}
-				
-//				String temp = String.join("\t", columnNames3);
-//				fileOut.write(temp);
 
-				for (int i = 0; i < data3.length; i++) {				//Note: String.ValueOf   is so important to get the String from Object
-					if (String.valueOf(data3[i][colCount3 - 1]).equals("true")) { //IF strata is in optimization model		
-						fileOut.newLine();
-						for (int j = 0; j < colCount3; j++) {
-							fileOut.write(data3[i][j] + "\t");
-						}
+				for (int i = 0; i < data3.length; i++) {
+					fileOut.newLine();
+					for (int j = 0; j < colCount3; j++) {
+						fileOut.write(data3[i][j] + "\t");
 					}
 				}
 				fileOut.close();

@@ -1038,3 +1038,9 @@ All changes in this block are associated with PrismAlpha1.2.06.jar, User Manual 
 	- Trim bad "backward compatibility" code in "reload_inputs", remove "handle_old_file" and instead use the new code added in "Reload_Table_Info" (code could be easily deleted in the future after having all models loaded and saved into new format)
 449. Revert tokenizer which lead to wrong data show up in the table and other potential problems (see issue 102 in BitBucket)
 	- Revert tokenizer in Panel_Projects (446)
+
+
+
+450. Code clean up, refactor, restructure:
+	- Rewrite "reload_inputs" in "Panel_Edit_Details"
+	- Input_02_model_strata is now saved with both false and true strata (previously only save the true model_strata): fix create_table3 & create_file_input_02

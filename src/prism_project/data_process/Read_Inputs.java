@@ -31,19 +31,19 @@ import java.util.stream.Stream;
 
 public class Read_Inputs {
 
-	private List<String> get_list_of_checked_conditions(List<String> list, String delimited, int include_col) {
+	private List<String> get_list_of_checked_conditions(List<String> list, String delimited, int model_condition_col) {
 		String[] columnName = list.get(0).split(delimited);		// 1st line is column name
 		List<String> column_names_list = Arrays.asList(columnName);	
-		if (column_names_list.indexOf("model_condition") != -1) {	// check if the column "include" exists. This is indicator of the new input file format --> we do backward compatibility
-			List<String> remove_list = new ArrayList<String>();	// this list contains all lines which have include_col = false
+		if (column_names_list.indexOf("model_condition") != -1) {	// check if the column "model_condition" exists. This is indicator of the new input file format --> we do backward compatibility
+			List<String> remove_list = new ArrayList<String>();	// this list contains all lines which have model_condition = false
 			for (String line : list) {
-				if (line.split(delimited)[include_col].equals("false")) {
+				if (line.split(delimited)[model_condition_col].equals("false")) {
 					remove_list.add(line);
 				}
 			}
-			list.removeAll(remove_list);	// remove include_col = false lines from the list
+			list.removeAll(remove_list);	// remove model_condition = false lines from the list
 		}
-		list.remove(0);					// remove the first row (Column names)
+		list.remove(0);		// remove the first row (Column names)
 		return list;
 	}
 	
