@@ -30,6 +30,35 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 public class Read_Inputs {
+
+	private List<String> get_list_of_checked_conditions(List<String> list, String delimited, int model_condition_col) {
+		String[] columnName = list.get(0).split(delimited);		// 1st line is column name
+		List<String> column_names_list = Arrays.asList(columnName);	
+		if (column_names_list.indexOf("model_condition") != -1) {	// check if the column "model_condition" exists. This is indicator of the new input file format --> we do backward compatibility
+			List<String> remove_list = new ArrayList<String>();	// this list contains all lines which have model_condition = false
+			for (String line : list) {
+				if (line.split(delimited)[model_condition_col].equals("false")) {
+					remove_list.add(line);
+				}
+			}
+			list.removeAll(remove_list);	// remove model_condition = false lines from the list
+		}
+		list.remove(0);		// remove the first row (Column names)
+		return list;
+	}
+	
+	private List<String> get_list_of_checked_strata(List<String> list, String delimited, int model_strata_col) {
+		List<String> remove_list = new ArrayList<String>();	// this list contains all lines which have model_condition = false
+		for (String line : list) {
+			if (line.split(delimited)[model_strata_col].equals("false")) {
+				remove_list.add(line);
+			}
+		}
+		list.removeAll(remove_list);	// remove model_condition = false lines from the list
+		list.remove(0);		// remove the first row (Column names)
+		return list;
+	}
+	
 	
 	//-------------------------------------------------------------------------------------------------------------------------------------------------	
 	//For input_01_general_inputs.txt
@@ -103,7 +132,7 @@ public class Read_Inputs {
 			// All lines to be in array
 			List<String> list;
 			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
-			list.remove(0);	// Remove the first row (Column names)
+			list = get_list_of_checked_strata(list, delimited, 9);
 			String[] a = list.toArray(new String[list.size()]);
 						
 			MO_totalRows = a.length;
@@ -177,12 +206,12 @@ public class Read_Inputs {
 		String delimited = "\t";		// tab delimited
 				
 		try {		
-			// All lines to be in array
+			// all lines to be in array
 			List<String> list;
 			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
-			list.remove(0);	// Remove the first row (Column names)
+			list = get_list_of_checked_conditions(list, delimited, 4);
 			String[] a = list.toArray(new String[list.size()]);
-								
+
 			nonea_totalRows = a.length;
 			nonea_totalColumns = a[0].split(delimited).length;		// a[0].split(delimited) = String[] of the first row (this is the row below the column headers row which was removed already)	
 			nonea_value = new String[nonea_totalRows][nonea_totalColumns];
@@ -398,7 +427,7 @@ public class Read_Inputs {
 			// All lines to be in array
 			List<String> list;
 			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
-			list.remove(0);	// Remove the first row (Column names)
+			list = get_list_of_checked_conditions(list, delimited, 4);
 			String[] a = list.toArray(new String[list.size()]);
 								
 			ea_totalRows = a.length;
@@ -626,7 +655,7 @@ public class Read_Inputs {
 			// All lines to be in array
 			List<String> list;
 			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
-			list.remove(0);	// Remove the first row (Column names)
+			list = get_list_of_checked_conditions(list, delimited, 5);
 			String[] a = list.toArray(new String[list.size()]);
 								
 			non_sr_totalRows = a.length;
@@ -744,11 +773,11 @@ public class Read_Inputs {
 	private List<String> disturbance_condition_list;
 	
 	public void read_replacing_disturbances(File file) {
+		String delimited = "\t";
 		try {
 			// All lines except the 1st line to be in a list;		
 			disturbance_condition_list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
-			disturbance_condition_list.remove(0);	// Remove the first row (Column names)
-
+			disturbance_condition_list = get_list_of_checked_conditions(disturbance_condition_list, delimited, 7);
 		} catch (IOException e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 		}
@@ -763,11 +792,11 @@ public class Read_Inputs {
 	private List<String> cost_condition_list;
 	
 	public void read_management_cost(File file) {
+		String delimited = "\t";
 		try {
 			// All lines except the 1st line to be in a list;		
 			cost_condition_list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
-			cost_condition_list.remove(0);	// Remove the first row (Column names)
-
+			cost_condition_list = get_list_of_checked_conditions(cost_condition_list, delimited, 7);
 		} catch (IOException e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 		}

@@ -1,6 +1,6 @@
 description	selection	
-Total planning periods (decades)	60	
-Total replacing disturbances	1	
+Total planning periods (decades)	15	
+Total replacing disturbances	2	
 Annual discount rate (%)	0.0	
 Solver for optimization	CPLEX	
 Maximum solving time (minutes)	15	

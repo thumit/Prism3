@@ -28,9 +28,9 @@ import prism_convenience.StringHandle;
 public class SQLite {
 	
 private static String[] statement;
-private static int totalLines;
+private static int lines_count;
 	
-	public static void create_importTable_Stm (File file, String delimited) {
+	public static void create_import_table_statement(File file, String delimited) {
 		// Read the whole file to array, create statement query to create table using the first line as column names
 	//	delimited = ",";		// comma delimited
 	//	delimited = "\\s+";		// space delimited
@@ -39,116 +39,97 @@ private static int totalLines;
 		if (delimited != null) {
 			try {		
 				// All lines to be in array
-				List<String> list;
-				//list = Files.readAllLines(Paths.get("C:/Testtable.csv"), StandardCharsets.UTF_8);
-				list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
-				String[] a = list.toArray(new String[list.size()]);
+				List<String> lines_list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
+				lines_count = lines_list.size();
 							
-				//Read the first line into array. This will be Column names
-				String[] columnName = a[0].split(delimited);
-				int itemCount = columnName.length;
+				// Read the first line into array. This will be Column names
+				String[] columnName = lines_list.get(0).split(delimited);
+				int colCount = columnName.length;
 				
-				//Find duplicated column names and add number to make them different
-				int[] numberadded = new int[itemCount];
-				Boolean[] checkDuplication = new Boolean[itemCount];
-				Boolean[] nameChecked = new Boolean[itemCount];
+				// Find duplicated column names and add number to make them different
+				int[] number_to_add = new int[colCount];
+				Boolean[] is_duplicated_column = new Boolean[colCount];
+				Boolean[] has_checked_duplication = new Boolean[colCount];
 			
-				for (int i = 0; i < itemCount; i++) {
-					numberadded[i] = 0;
-					checkDuplication[i] = false;
-					nameChecked[i] = false;
+				for (int i = 0; i < colCount; i++) {
+					number_to_add[i] = 0;
+					is_duplicated_column[i] = false;
+					has_checked_duplication[i] = false;
 				}
 								
-				//Calculated the number to add to duplication 
-				for (int i = 0; i < itemCount - 1; i++) {
-					int value =0;
-					for (int j = i + 1; j < itemCount; j++) {						
-						if (nameChecked[i] == false && nameChecked[j] == false) {
+				// Calculated the number to add to duplication 
+				for (int i = 0; i < colCount - 1; i++) {
+					int value = 0;
+					for (int j = i + 1; j < colCount; j++) {					
+						if (!has_checked_duplication[i] && !has_checked_duplication[j]) {
 							if (columnName[i].equalsIgnoreCase(columnName[j])) {			//This is IMPORTANT FOR COMPARISON STRINGS
 								value++;
-								numberadded[j] = value;
-	
-								checkDuplication[i] = true;
-								checkDuplication[j] = true;
-								nameChecked[j] = true;
+								number_to_add[j] = value;
+								is_duplicated_column[i] = true;
+								is_duplicated_column[j] = true;
+								has_checked_duplication[j] = true;
 							}
 						}
 					}
 				}											
 				
-				//If found duplication --> Add number to the column names
-				for (int i = 0; i < itemCount; i++) {
-					if (checkDuplication[i] == true) {
-						columnName[i] = columnName[i].toString() + Integer.toString(numberadded[i]);
+				// modified to be  -->  'column name'
+				for (int i = 0; i < colCount; i++) {
+					if (is_duplicated_column[i]) {		// If found duplication --> Add number to the column names
+						columnName[i] = columnName[i].toString() + Integer.toString(number_to_add[i]);
 					}
-				}																	
+//					columnName[i]  = "'" + columnName[i] + "'";		// add ' ' to the normalized column name --> modified to be    'column name'
+					columnName[i] = "'" + StringHandle.normalize(columnName[i]) + "'";	// TO NORMALIZE COLUMNS NAMES, and add ' ' to the normalized column name --> modified to be    'column name'
+				}																
 				
-				
-				// this is the type of each Column
-				String[] b = new String[itemCount];
-				for (int i = 0; i < itemCount; i++) {
+				// This is the type of each Column
+				String[] b = new String[colCount];
+				for (int i = 0; i < colCount; i++) {
 					b[i] = "TEXT";
 				}
-				//System.out.println(b[itemCount - 1]);		//The last member
 				
-				// make it to be:	'ColumnName' TEXT
-				String[] c = new String[itemCount];
-				for (int i = 0; i < itemCount; i++) {
-//					String str = ("'" + columnName[i] + "'");
-					String str = ("'" + StringHandle.normalize(columnName[i]) + "'");			// TO NORMALIZE COLUMNS NAMES
-					c[i] = str + " " + b[i];
+				// Make it to be:	'ColumnName' TEXT
+				String[] c = new String[colCount];
+				for (int i = 0; i < colCount; i++) {
+					c[i] = columnName[i] + " " + b[i];
 				}
 							
 				// make it to be:   'ColumnName' TEXT, 'ColumnName' TEXT, 'ColumnName' TEXT,....... 
-				String string1 = new String();
-				for (int i = 0; i < itemCount - 1; i++) {
-					string1 = string1+ c[i] + ",";
-				}
-				string1 = string1 + c[itemCount-1];	//For the last c[i] --> do not add ,
+				String col_name_and_type = String.join(",", c);
 				
 				//Get the table name without extension
 				String tableName = file.getName();
 				if(tableName.contains(".")) tableName= tableName.substring(0, tableName.lastIndexOf('.'));	
 				
+				//-----------------------------------------------------------------------------------------------------------------------
 				
-				// add statement to array
 				
+				// Finally, add all statements to array
+				statement = new String[lines_count];
 				
-				statement = new String[a.length];
-				totalLines = a.length;
-				
-				// Finally, The statement to add a new table with Column Names only:
-//				statement = "CREATE TABLE " + "\"" + tableName + "\"" + " (" + string1 + ");";		//Double quote surrounds tableName
-				statement[0] = "CREATE TABLE " + "[" + tableName + "]" + " (" + string1 + ");";		// [] surrounds tableName	
+				// Add a statement to create a new table with Column Names only:
+				statement[0] = "CREATE TABLE [" + tableName + "] (" + col_name_and_type + ");";		// [] surrounds tableName
+				int statement_count = 1;
 			
-				// And here are statement to import from the second record (or line) to the end of the file
-//				for (int i = 1; i < a.length; i++) {
-//					String[] currentRow = a[i].split(delimited);
+				// And statements to import from the second line to the end of the file
+				lines_list.remove(0); 	// remove the  first line which is the column name
 				
-				String[] currentRow = new String[a[0].split(delimited).length];
-				for (int i = 1; i < a.length; i++) {
-					String[] temp_currentRow = a[i].split(delimited);
-					for (int kk = 0; kk < currentRow.length; kk++) {
-						currentRow[kk] = (kk < temp_currentRow.length) ? temp_currentRow[kk] : "";
+				String[] currentRow = new String[colCount];
+				for (String line : lines_list) {
+					String[] line_data = line.split(delimited);		//NOTE NOTE NOTE NOTE: StringTokenizer fail hard core, do not use it here to replace .split (because String.join() will fail). StringTokenizer is not compatile (search it)
+					int line_data_count = line_data.length;
+					
+					for (int k = 0; k < colCount; k++) {
+						currentRow[k] = (k < line_data_count) ? line_data[k].replace("'", "''") : "";		// Escape the ' in the variable x_EAe' or x_EAr' by using "replace" function
+						currentRow[k]  = "'" + currentRow[k] + "'";			// Add ' ' to make it  --> 'rowValue'
 					}
+					String records_data = String.join(",", currentRow);			// make it to be: 'rowValue','rowValue','rowValue',...	
 					
-					
-					int rowCount = currentRow.length;
-					String string2 = "";
-					// make it to be: 'rowValue',
-					for (int j = 0; j < rowCount - 1; j++) {
-						currentRow[j] = currentRow[j].replace("'", "''");		//Escape the ' in the variable x_EAe' or x_EAr'
-						string2 = string2 + "'" + currentRow[j] + "'" + ",";
+					statement[statement_count] = "INSERT INTO [" + tableName + "] VALUES (" + records_data + ");";	// [] surrounds tableName
+					statement_count++;
 				}
-					currentRow[rowCount-1] = currentRow[rowCount-1].replace("'", "''");				//Escape the ' in the variable x_EAe' or x_EAr'
-					string2 = string2 + "'" + currentRow[rowCount-1] + "'";  //For the last item of the row we don't add ,		
-					
-					
-					
-//					statement = statement + "INSERT INTO " + "\"" + tableName + "\"" + " VALUES (" + string2 + ");";	//Double quote surrounds tableName
-					statement[i] = "INSERT INTO " + "[" + tableName + "]" + " VALUES (" + string2 + ");";	// [] surrounds tableName
-			}
-
+				
+				lines_list = null; // free memory
 			} catch (IOException e) {
 				System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			}
@@ -160,7 +141,7 @@ private static int totalLines;
 	}
 	
 	public static int get_importTable_TotalLines () {
-		return totalLines;
+		return lines_count;
 	}
 }
 

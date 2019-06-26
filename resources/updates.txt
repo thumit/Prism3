@@ -1019,3 +1019,30 @@ All changes in this block are associated with PrismAlpha1.2.05.jar, User Manual 
 Note for Updating SQLITE to version 3.27.2: There are some good functions, e.g. rename table column, but NOTE NOTE NOTE: query for rotation_age fail in Database management --> will not apply SQLITE update
 All changes in this block are associated with PrismAlpha1.2.06.jar, User Manual 1.03.21, will update later when the newer version is better)
 --------------------------------------------------------------------------
+
+446. Use tokenizer to read the text file to show in the table view (Panel_Project)
+447. Rewrite the "create_import_table_statement" in SQLite class:
+	- use String.join()
+	- remove the "a" array, use list instead
+448. Integrate Kira's update with check and uncheck buttons for several inputs
+	- Fix the bug unsolvable model due to removing the first line of the list twice (input_06_sr_disturbances & input_07_management_cost in Read_Inputs class)
+	- Fix the bug frozen table non_sr_disturbance --> fix the if then condition at setValueAt, fix the icon warning if then condition for columns 2 and 3 only and reactivate the code Kira disabled.
+	- Rename function "get_Include" --> "get_list_of_checked_conditions", and also rewrite the whole function to have better logic
+	- Rename "Include" --> "model_condition"
+	- For function of mass check and mass uncheck --> update table overview only when checking or unchecking implemented in table3
+	- Switch positions of check and uncheck buttons in Non-EA-Management window and EA-Management window so the UIs are consistent with other windows
+	- Remove border of check and uncheck button in all input windows, use the button effects as being used in Model Strata input
+	- Fix the wrong match_data_type for table6 and table8 (write true & false to wrong column)
+	- Fix the create_mass_check_button & create_mass_uncheck_button in Management_Cost_GUI class
+	- Fix writing the error incorrectly (i.e. in create_table2) and carelessly (i.e. create_table4) 
+	- Trim bad "backward compatibility" code in "reload_inputs", remove "handle_old_file" and instead use the new code added in "Reload_Table_Info" (code could be easily deleted in the future after having all models loaded and saved into new format)
+449. Revert tokenizer which lead to wrong data show up in the table and other potential problems (see issue 102 in BitBucket)
+	- Revert tokenizer in Panel_Projects (446)
+
+
+
+450. Code clean up, refactor, restructure:
+	- Rewrite "reload_inputs" in "Panel_Edit_Details"
+	- Input_02_model_strata is now saved with both false and true strata (previously only save the true model_strata): fix create_table3 & create_file_input_02
+	- remove "is_the_first_time_loading_a_run"
+	- Read_Inputs: add code to remove the false model_strata from the list

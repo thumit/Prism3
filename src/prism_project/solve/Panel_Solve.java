@@ -4572,7 +4572,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			PreparedStatement pst = null;
 			
 			// Get info from the file
-			SQLite.create_importTable_Stm(file_to_import, "\t");		// Read file into arrays
+			SQLite.create_import_table_statement(file_to_import, "\t");		// Read file into arrays
 			String[] statement = new String[SQLite.get_importTable_TotalLines()];		// this arrays hold all the statements
 			statement = SQLite.get_importTable_Stm();	
 
