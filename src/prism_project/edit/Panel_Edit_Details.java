@@ -879,7 +879,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			for (int i = 0; i < layers_title.size(); i++) {
 				columnNames3[i + 1] = layers_title.get(i);	// add 6 layers to the column header name
 			}
-			columnNames3[colCount3 - 3] = "acres";	// add 3 more columns
+			columnNames3[colCount3 - 3] = "area";	// add 3 more columns
 			columnNames3[colCount3 - 2] = "age_class";
 			columnNames3[colCount3 - 1] = "model_strata";	
 			
@@ -893,6 +893,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				for (int column = 0; column < existing_strata_colCount; column++) {		// loop all existing strata columns (strata_id, layer 1 ... 6, acres). This do ntot have the last 2 columns as seen in the GUI (ageclass & model_strata)
 					data3[row][column] = existing_strata_values[row][column];
 				}
+				data3[row][0] = String.join("_", 
+						existing_strata_values[row][1], existing_strata_values[row][2], existing_strata_values[row][3],
+						existing_strata_values[row][4], existing_strata_values[row][5], existing_strata_values[row][6]);	// ignore the strata_id column and re-create it
 			}					
 			
 			// update ""age_class" column
@@ -958,9 +961,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						}	
 					}	
 				}
-				if (data3 != null) {
-					model3.setValueAt(data3[0][0], 0, 0);	// this is just to trigger the update_model_overview
-				}
+				model3.update_model_overview();		// this is just to trigger the update_model_overview
 			}
 			
 			public void update_model_overview() {  
@@ -986,10 +987,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				}
 				
 				
-				int total_yieldtable = 0;
+				int total_strata_without_NG_E_0_prescription = 0;
 		        for (int row = 0; row < rowCount3; row++) {				        	
 		        	if (data3[row][colCount3 - 2] == null) {
-		        		total_yieldtable = total_yieldtable + 1;
+		        		total_strata_without_NG_E_0_prescription = total_strata_without_NG_E_0_prescription + 1;
 		        	}
 				}
 		        
@@ -1000,11 +1001,12 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		        data_overview[0][1] = rowCount3 + "   --o--   " + formatter.format((Number) availableAcres);
 				data_overview[1][1] = modeledStrata + "   --o--   " + formatter.format((Number) modeledAcres);
 		        data_overview[3][1] = yield_tables_values.length;
-		        data_overview[4][1] = total_yieldtable;
+		        data_overview[4][1] = total_strata_without_NG_E_0_prescription;
 				model_overview.fireTableDataChanged();
 			}
 		};
 
+		
 		table3 = new JTable(model3) {
 //			// Implement table cell tool tips
 //			public String getToolTipText(MouseEvent e) {
@@ -1123,7 +1125,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				if (column != 1) {
 					tableColumn.setPreferredWidth(maxWidth);
 				} else {
-					tableColumn.setMinWidth(300);
+					tableColumn.setMinWidth(200);
 				}
 				return component;
 			}	
@@ -3237,7 +3239,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			data[i][colCount - 1] = false;
 			table.addRowSelectionInterval(table.convertRowIndexToView(i), table.convertRowIndexToView(i));
 		}
-		if (table == table3) model3.update_model_overview();
+		if (table == table3) model3.update_model_overview();	// Do not remove this line because it would deselect strata without NG_E_0 prescription. This is important
 	}
 
 	//Mass Check model_condition Button
@@ -3268,7 +3270,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			data[i][colCount - 1] = true;
 			table.addRowSelectionInterval(table.convertRowIndexToView(i), table.convertRowIndexToView(i));
 		}
-		if (table == table3) model3.update_model_overview();
+		if (table == table3) model3.update_model_overview();	// Do not remove this line because it would deselect strata without NG_E_0 prescription. This is important
 	}
 
 	// Sort Button
@@ -3649,6 +3651,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					panel_Management_Cost_GUI = new Management_Cost_GUI();
 					panel_Basic_Constraints_GUI = new Basic_Constraints_GUI();
 					panel_Flow_Constraints_GUI = new Flow_Constraints_GUI();
+					
+					// We do not need match data type here. Note that  model3.match_DataType has the update view for table_overview --> we manually update the info of this tale by following line
+					model3.update_model_overview();		// this is just to trigger the update_model_overview
 					
 					// update readme.txt in General Inputs
 					DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd   -   HH:mm:ss");

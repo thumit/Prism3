@@ -76,12 +76,12 @@ import prism_convenience.LibraryHandle;
 import prism_convenience.PrismGridBagLayoutHandle;
 import prism_convenience.PrismTableModel;
 import prism_database.SQLite;
-import prism_project.data_process.Get_Cost_Information;
-import prism_project.data_process.Get_Disturbance_Information;
-import prism_project.data_process.Get_Parameter_Information;
-import prism_project.data_process.Get_Variable_Information;
+import prism_project.data_process.Information_Cost;
+import prism_project.data_process.Information_Disturbance;
+import prism_project.data_process.Information_Parameter;
+import prism_project.data_process.Information_Variable;
 import prism_project.data_process.Read_Database;
-import prism_project.data_process.Read_Inputs;
+import prism_project.data_process.Read_Input;
 import prism_root.PrismMain;
 
 public class Panel_Solve extends JLayeredPane implements ActionListener {
@@ -96,7 +96,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 	private PrismTableModel model;
 	private Object[][] data;
 	
-	private File[] listOfEditRuns ;
+	private File[] listOfEditRuns;
 	private JScrollPane scrollpane_table, scrollpane_textarea;
 	private int objective_option = 0;
 	
@@ -409,7 +409,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			File input_07_file = new File(runFolder.getAbsolutePath() + "/input_07_management_cost.txt");
 			File input_08_file = new File(runFolder.getAbsolutePath() + "/input_08_basic_constraints.txt");
 			File input_09_file = new File(runFolder.getAbsolutePath() + "/input_09_flow_constraints.txt");
-			Read_Inputs read = new Read_Inputs();
+			Read_Input read = new Read_Input();
 			read.read_general_inputs(input_01_file);
 			read.read_model_strata(input_02_file);
 			read.read_non_ea_management(input_03_file);
@@ -435,7 +435,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			List<String> model_strata_without_sizeclass = new ArrayList<String>();
 			for (String l1234: model_strata_without_sizeclass_and_covertype) {	// This is a special case, we need all covers not just the covers in model_strata, because any cover could be the regenerated cover
 				for (String l5: layer5) {
-					model_strata_without_sizeclass.add(l1234 + l5);
+					model_strata_without_sizeclass.add(l1234 + "_" + l5);
 				}
 			}
 			int	total_model_strata = model_strata.size();		
@@ -467,7 +467,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			
 			// Get info: input_08_basic_constraints
 			List<String> constraint_column_names_list = read.get_constraint_column_names_list();
-			String[][] bc_values = read.get_bc_values();		
+			String[][] bc_values = read.get_bc_data();		
 			int total_softConstraints = read.get_total_softConstraints();
 			double[] softConstraints_LB = read.get_softConstraints_LB();
 			double[] softConstraints_UB = read.get_softConstraints_UB();
@@ -488,10 +488,10 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			List<Double> flow_upperbound_percentage_list = read.get_flow_upperbound_percentage_list();			
 			
 			// Some more data process definitions
-			Get_Disturbance_Information disturbance_info = (disturbance_condition_list != null) ? new Get_Disturbance_Information(read_database, disturbance_condition_list, all_layers) : null;
-			Get_Cost_Information cost_info = (cost_condition_list != null) ? new Get_Cost_Information(read_database, cost_condition_list, all_layers) : null;
-			Get_Parameter_Information parameter_info = new Get_Parameter_Information(read_database);
-			List<Get_Variable_Information> var_info_list = new ArrayList<Get_Variable_Information>();
+			Information_Disturbance disturbance_info = (disturbance_condition_list != null) ? new Information_Disturbance(read_database, disturbance_condition_list, all_layers) : null;
+			Information_Cost cost_info = (cost_condition_list != null) ? new Information_Cost(read_database, cost_condition_list, all_layers) : null;
+			Information_Parameter parameter_info = new Information_Parameter(read_database);
+			List<Information_Variable> var_info_list = new ArrayList<Information_Variable>();
 			
 			System.out.println("Reading process finished for all inputs          " + dateFormat.format(new Date()));
 			System.out.println();
@@ -566,20 +566,12 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 						
 			
 			// Get the 2 parameter V(s1,s2,s3,s4,s5,s6) and A(s1,s2,s3,s4,s5,s6)
-			String[][] Input2_value = read.get_MO_Values();	
+			String[][] model_strata_data = read.get_ms_data();	
 			double[] strata_area = new double[total_model_strata];
-			int[] starting_age = new int[total_model_strata];			
-			
-						
-			// Loop through all modeled_strata to find if the names matched and get the total area and age class
-			for (int id = 0; id < total_model_strata; id++) {
-				strata_area[id] = Double.parseDouble(Input2_value[id][7]);		// area in acres
-				if (Input2_value[id][read.get_MO_TotalColumns() - 2].toString().equals("null")) {
-					starting_age[id] = 1;		// assume age_class = 1 if not found any yield table for this existing strata. 
-												// This assumption could not happen because we are currently not allowing the modeling of strata if not found age_class from NG_E_0 prescription
-				} else {
-					starting_age[id] = Integer.parseInt(Input2_value[id][read.get_MO_TotalColumns() - 2]);	// age_class
-				}		
+			int[] strata_starting_age = new int[total_model_strata];			
+				for (int id = 0; id < total_model_strata; id++) {
+				strata_area[id] = Double.parseDouble(model_strata_data[id][7]);		// area (acres)
+				strata_starting_age[id] = Integer.parseInt(model_strata_data[id][read.get_ms_total_columns() - 2]);	// age_class		
 			}						
 
 			
@@ -592,7 +584,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			// Create soft constraint decision variables y(j)			
 			for (int j = 0; j < total_softConstraints; j++) {
 				String var_name = "y_" + j;
-				var_info_list.add(new Get_Variable_Information(var_name, -9999, yield_tables_names_list));
+				var_info_list.add(new Information_Variable(var_name, -9999, yield_tables_names_list));
 
 				objlist.add((double) 0);
 				vnamelist.add(var_name);
@@ -605,7 +597,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			// Create soft constraint lower bound variables l(j)			
 			for (int j = 0; j < total_softConstraints; j++) {
 				String var_name = "l_" + j;
-				var_info_list.add(new Get_Variable_Information(var_name, -9999, yield_tables_names_list));
+				var_info_list.add(new Information_Variable(var_name, -9999, yield_tables_names_list));
 				
 				objlist.add(softConstraints_LB_Weight[j]);		//add LB weight W|[j]
 				vnamelist.add(var_name);
@@ -618,7 +610,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			// Create soft constraint upper bound variables u(j)			
 			for (int j = 0; j < total_softConstraints; j++) {
 				String var_name = "u_" + j;
-				var_info_list.add(new Get_Variable_Information(var_name, -9999, yield_tables_names_list));
+				var_info_list.add(new Information_Variable(var_name, -9999, yield_tables_names_list));
 				
 				objlist.add(softConstraints_UB_Weight[j]);		//add UB weight W||[j]
 				vnamelist.add(var_name);
@@ -631,7 +623,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			// Create hard constraint decision variables z(k)			
 			for (int k = 0; k < total_hardConstraints; k++) {
 				String var_name = "z_" + k;
-				var_info_list.add(new Get_Variable_Information(var_name, -9999, yield_tables_names_list));
+				var_info_list.add(new Information_Variable(var_name, -9999, yield_tables_names_list));
 				
 				objlist.add((double) 0);
 				vnamelist.add(var_name);
@@ -644,7 +636,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			// Create free constraint decision variables v(n)			
 			for (int n = 0; n < total_freeConstraints; n++) {
 				String var_name = "v_" + n;
-				var_info_list.add(new Get_Variable_Information(var_name, -9999, yield_tables_names_list));
+				var_info_list.add(new Information_Variable(var_name, -9999, yield_tables_names_list));
 				
 				objlist.add((double) 0);
 				vnamelist.add(var_name);
@@ -660,9 +652,8 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 				String strata = model_strata.get(strata_id);
 				
 				for (int q = 0; q < total_existing_methods; q++) {
-					String layers_merged_name = strata.substring(0, 1) + "," + strata.substring(1, 2) + "," + strata.substring(2, 3) + "," + strata.substring(3, 4) + "," + strata.substring(4, 5) + "," + strata.substring(5, 6);
-					String var_name = "x_" + layers_merged_name + "," + q;
-					var_info_list.add(new Get_Variable_Information(var_name, starting_age[strata_id], yield_tables_names_list));
+					String var_name = "x_" + strata + "_" + q;
+					var_info_list.add(new Information_Variable(var_name, strata_starting_age[strata_id], yield_tables_names_list));
 					
 					objlist.add((double) 0);
 					vnamelist.add(var_name);
@@ -695,9 +686,8 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 						
 						xNGe[strata_id][i] = new int[total_periods + 1];
 						for (int t = 1; t <= total_periods; t++) {
-							String layers_merged_name = strata.substring(0, 1) + "," + strata.substring(1, 2) + "," + strata.substring(2, 3) + "," + strata.substring(3, 4) + "," + strata.substring(4, 5) + "," + strata.substring(5, 6);
-							String var_name = "xNG_E_" + layers_merged_name + "," + i + "," + t;	
-							Get_Variable_Information var_info = new Get_Variable_Information(var_name, starting_age[strata_id], yield_tables_names_list);
+							String var_name = "xNG_E_" + strata + "_" + i + "_" + t;	
+							Information_Variable var_info = new Information_Variable(var_name, strata_starting_age[strata_id], yield_tables_names_list);
 							
 							if (!allow_Non_Existing_Prescription) {		// Boost 2
 								if (var_info.get_prescription_id_and_row_id()[0] != -9999) {
@@ -734,9 +724,8 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 						
 						xPBe[strata_id][i] = new int[total_periods + 1];
 						for (int t = 1; t <= total_periods; t++) {
-							String layers_merged_name = strata.substring(0, 1) + "," + strata.substring(1, 2) + "," + strata.substring(2, 3) + "," + strata.substring(3, 4) + "," + strata.substring(4, 5) + "," + strata.substring(5, 6);
-							String var_name = "xPB_E_" + layers_merged_name + "," + i + "," + t;										
-							Get_Variable_Information var_info = new Get_Variable_Information(var_name, starting_age[strata_id], yield_tables_names_list);
+							String var_name = "xPB_E_" + strata + "_" + i + "_" + t;										
+							Information_Variable var_info = new Information_Variable(var_name, strata_starting_age[strata_id], yield_tables_names_list);
 							
 							if (!allow_Non_Existing_Prescription) {		// Boost 2
 								if (var_info.get_prescription_id_and_row_id()[0] != -9999) {
@@ -773,9 +762,8 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 						
 						xGSe[strata_id][i] = new int[total_periods + 1];
 						for (int t = 1; t <= total_periods; t++) {
-							String layers_merged_name = strata.substring(0, 1) + "," + strata.substring(1, 2) + "," + strata.substring(2, 3) + "," + strata.substring(3, 4) + "," + strata.substring(4, 5) + "," + strata.substring(5, 6);
-							String var_name = "xGS_E_" + layers_merged_name + "," + i + "," + t;										
-							Get_Variable_Information var_info = new Get_Variable_Information(var_name, starting_age[strata_id], yield_tables_names_list);
+							String var_name = "xGS_E_" + strata + "_" + i + "_" + t;										
+							Information_Variable var_info = new Information_Variable(var_name, strata_starting_age[strata_id], yield_tables_names_list);
 							
 							if (!allow_Non_Existing_Prescription) {		// Boost 2
 								if (var_info.get_prescription_id_and_row_id()[0] != -9999) {
@@ -805,13 +793,13 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			xEAe = new int[total_model_strata][][][][];
 			for (int strata_id = 0; strata_id < total_model_strata; strata_id++) {
 				String strata = model_strata.get(strata_id);
-				int s5 = Collections.binarySearch(layer5, strata.substring(4, 5));
+				int s5 = Collections.binarySearch(layer5, strata.split("_")[4]);
 				
 				xEAe[strata_id] = new int[total_periods + 1][][][];
 				for (int tR = 1; tR <= total_periods; tR++) {
 					xEAe[strata_id][tR] = new int[total_layer5][][];
 					for (int s5R = 0; s5R < total_layer5; s5R++) {
-						int rotationAge = tR + starting_age[strata_id] - 1;
+						int rotationAge = tR + strata_starting_age[strata_id] - 1;
 						String this_covertype_conversion_and_rotation_age = layer5.get(s5) + " " + layer5.get(s5R) + " " + rotationAge;						
 						if (is_ea_defined_with_some_rows && Collections.binarySearch(ea_conversion_and_rotation_for_strata.get(strata_id), this_covertype_conversion_and_rotation_age) >= 0) {
 							xEAe[strata_id][tR][s5R] = new int[total_EA_E_prescription_choices][];
@@ -820,9 +808,8 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 									
 									xEAe[strata_id][tR][s5R][i] = new int[total_periods + 1];
 									for (int t = 1; t <= tR; t++) {
-										String layers_merged_name = strata.substring(0, 1) + "," + strata.substring(1, 2) + "," + strata.substring(2, 3) + "," + strata.substring(3, 4) + "," + strata.substring(4, 5) + "," + strata.substring(5, 6);
-										String var_name = "xEA_E_" + layers_merged_name + "," + tR + "," + layer5.get(s5R) + "," + i + "," + t;
-										Get_Variable_Information var_info = new Get_Variable_Information(var_name, starting_age[strata_id], yield_tables_names_list);
+										String var_name = "xEA_E_" + strata + "_" + tR + "_" + layer5.get(s5R) + "_" + i + "_" + t;
+										Information_Variable var_info = new Information_Variable(var_name, strata_starting_age[strata_id], yield_tables_names_list);
 										
 										if (!allow_Non_Existing_Prescription) {		// Boost 2
 											if (var_info.get_prescription_id_and_row_id()[0] != -9999) {
@@ -863,9 +850,8 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 							
 							xMS[strata_id][i] = new int[total_periods + 1];
 							for (int t = 1; t <= total_periods; t++) {
-								String layers_merged_name = strata.substring(0, 1) + "," + strata.substring(1, 2) + "," + strata.substring(2, 3) + "," + strata.substring(3, 4) + "," + strata.substring(4, 5) + "," + strata.substring(5, 6);
-								String var_name = "xMS_E_" + layers_merged_name + "," + i + "," + t;										
-								Get_Variable_Information var_info = new Get_Variable_Information(var_name, starting_age[strata_id], yield_tables_names_list);
+								String var_name = "xMS_E_" + strata + "_" + i + "_" + t;										
+								Information_Variable var_info = new Information_Variable(var_name, strata_starting_age[strata_id], yield_tables_names_list);
 								
 								if (!allow_Non_Existing_Prescription) {		// Boost 2
 									if (var_info.get_prescription_id_and_row_id()[0] != -9999) {
@@ -904,9 +890,8 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 							
 							xBS[strata_id][i] = new int[total_periods + 1];
 							for (int t = 1; t <= total_periods; t++) {
-								String layers_merged_name = strata.substring(0, 1) + "," + strata.substring(1, 2) + "," + strata.substring(2, 3) + "," + strata.substring(3, 4) + "," + strata.substring(4, 5) + "," + strata.substring(5, 6);
-								String var_name = "xBS_E_" + layers_merged_name + "," + i + "," + t;										
-								Get_Variable_Information var_info = new Get_Variable_Information(var_name, starting_age[strata_id], yield_tables_names_list);
+								String var_name = "xBS_E_" + strata + "_" + i + "_" + t;										
+								Information_Variable var_info = new Information_Variable(var_name, strata_starting_age[strata_id], yield_tables_names_list);
 								
 								if (!allow_Non_Existing_Prescription) {		// Boost 2
 									if (var_info.get_prescription_id_and_row_id()[0] != -9999) {
@@ -946,9 +931,8 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 						for (int t = 2; t <= total_periods; t++) {
 							xNGr[strata_5layers_id][i][t] = new int[total_AgeClasses + 1];
 							for (int a = 1; a <= t - 1; a++) {
-								String layers_merged_name = strata.substring(0, 1) + "," + strata.substring(1, 2) + "," + strata.substring(2, 3) + "," + strata.substring(3, 4) + "," + strata.substring(4, 5);
-								String var_name = "xNG_R_" + layers_merged_name + "," + i + "," + t + "," + a;										
-								Get_Variable_Information var_info = new Get_Variable_Information(var_name, -9999, yield_tables_names_list);
+								String var_name = "xNG_R_" + strata + "_" + i + "_" + t + "_" + a;										
+								Information_Variable var_info = new Information_Variable(var_name, -9999, yield_tables_names_list);
 								
 								if (!allow_Non_Existing_Prescription) {		// Boost 2
 									if (var_info.get_prescription_id_and_row_id()[0] != -9999) {
@@ -988,9 +972,8 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 						for (int t = 2; t <= total_periods; t++) {
 							xPBr[strata_5layers_id][i][t] = new int[total_AgeClasses + 1];
 							for (int a = 1; a <= t - 1; a++) {
-								String layers_merged_name = strata.substring(0, 1) + "," + strata.substring(1, 2) + "," + strata.substring(2, 3) + "," + strata.substring(3, 4) + "," + strata.substring(4, 5);
-								String var_name = "xPB_R_" + layers_merged_name + "," + i + "," + t + "," + a;										
-								Get_Variable_Information var_info = new Get_Variable_Information(var_name, -9999, yield_tables_names_list);
+								String var_name = "xPB_R_" + strata + "_" + i + "_" + t + "_" + a;										
+								Information_Variable var_info = new Information_Variable(var_name, -9999, yield_tables_names_list);
 								
 								if (!allow_Non_Existing_Prescription) {		// Boost 2
 									if (var_info.get_prescription_id_and_row_id()[0] != -9999) {
@@ -1030,9 +1013,8 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 						for (int t = 2; t <= total_periods; t++) {
 							xGSr[strata_5layers_id][i][t] = new int[total_AgeClasses + 1];
 							for (int a = 1; a <= t - 1; a++) {
-								String layers_merged_name = strata.substring(0, 1) + "," + strata.substring(1, 2) + "," + strata.substring(2, 3) + "," + strata.substring(3, 4) + "," + strata.substring(4, 5);
-								String var_name = "xGS_R_" + layers_merged_name + "," + i + "," + t + "," + a;										
-								Get_Variable_Information var_info = new Get_Variable_Information(var_name, -9999, yield_tables_names_list);
+								String var_name = "xGS_R_" + strata + "_" + i + "_" + t + "_" + a;										
+								Information_Variable var_info = new Information_Variable(var_name, -9999, yield_tables_names_list);
 								
 								if (!allow_Non_Existing_Prescription) {		// Boost 2
 									if (var_info.get_prescription_id_and_row_id()[0] != -9999) {
@@ -1063,7 +1045,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			xEAr = new int[total_model_strata_without_sizeclass][][][][][];
 			for (int strata_5layers_id = 0; strata_5layers_id < total_model_strata_without_sizeclass; strata_5layers_id++) {
 				String strata = model_strata_without_sizeclass.get(strata_5layers_id);
-				int s5 = Collections.binarySearch(layer5, strata.substring(4, 5));
+				int s5 = Collections.binarySearch(layer5, strata.split("_")[4]);
 				
 				xEAr[strata_5layers_id] = new int[total_periods + 1][][][][];
 				for (int tR = 2; tR <= total_periods; tR++) {
@@ -1079,9 +1061,8 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 										
 										xEAr[strata_5layers_id][tR][aR][s5R][i] = new int[total_periods + 1];
 										for (int t = tR - aR + 1; t <= tR; t++) {
-											String layers_merged_name = strata.substring(0, 1) + "," + strata.substring(1, 2) + "," + strata.substring(2, 3) + "," + strata.substring(3, 4) + "," + strata.substring(4, 5);
-											String var_name = "xEA_R_" + layers_merged_name + "," + tR + "," + aR + "," + layer5.get(s5R) + "," + i + "," + t;										
-											Get_Variable_Information var_info = new Get_Variable_Information(var_name, -9999, yield_tables_names_list);
+											String var_name = "xEA_R_" + strata + "_" + tR + "_" + aR + "_" + layer5.get(s5R) + "_" + i + "_" + t;										
+											Information_Variable var_info = new Information_Variable(var_name, -9999, yield_tables_names_list);
 											
 											if (!allow_Non_Existing_Prescription) {		// Boost 2
 												if (var_info.get_prescription_id_and_row_id()[0] != -9999) {
@@ -1121,16 +1102,18 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			//-----------------------replacing disturbance variables
 			// Create decision variables f(s1,s2,s3,s4,s5,t,s5R)	
 			for (String strata: model_strata_without_sizeclass) {
+				String[] strata_layer = strata.split("_");
+				
 				int strata_5layers_id = Collections.binarySearch(model_strata_without_sizeclass, strata);
-				int s1 = Collections.binarySearch(layer1, strata.substring(0, 1));
-				int s2 = Collections.binarySearch(layer2, strata.substring(1, 2));
-				int s3 = Collections.binarySearch(layer3, strata.substring(2, 3));
-				int s4 = Collections.binarySearch(layer4, strata.substring(3, 4));
-				int s5 = Collections.binarySearch(layer5, strata.substring(4, 5));
+				int s1 = Collections.binarySearch(layer1, strata_layer[0]);
+				int s2 = Collections.binarySearch(layer2, strata_layer[1]);
+				int s3 = Collections.binarySearch(layer3, strata_layer[2]);
+				int s4 = Collections.binarySearch(layer4, strata_layer[3]);
+				int s5 = Collections.binarySearch(layer5, strata_layer[4]);
 				for (int t = 1; t <= total_periods; t++) {
 					for (int s5R = 0; s5R < total_layer5; s5R++) {
-						String var_name = "f_" + layer1.get(s1) + "," + layer2.get(s2) + "," + layer3.get(s3) + "," + layer4.get(s4) + "," + layer5.get(s5) + "," + t + "," + layer5.get(s5R);
-						var_info_list.add(new Get_Variable_Information(var_name, -9999, yield_tables_names_list));
+						String var_name = "f_" + layer1.get(s1) + "_" + layer2.get(s2) + "_" + layer3.get(s3) + "_" + layer4.get(s4) + "_" + layer5.get(s5) + "_" + t + "_" + layer5.get(s5R);
+						var_info_list.add(new Information_Variable(var_name, -9999, yield_tables_names_list));
 						
 						objlist.add((double) 0);			
 						vnamelist.add(var_name);										
@@ -1152,7 +1135,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			vlblist = null;			// Clear the lists to save memory
 			double[] vub = Stream.of(vublist.toArray(new Double[vublist.size()])).mapToDouble(Double::doubleValue).toArray();
 			vublist = null;			// Clear the lists to save memory
-			Get_Variable_Information[] var_info_array = new Get_Variable_Information[vname.length];		// This array stores variable information
+			Information_Variable[] var_info_array = new Information_Variable[vname.length];		// This array stores variable information
 			for (int i = 0; i < vname.length; i++) {
 				var_info_array[i] = var_info_list.get(i);
 			}	
@@ -1184,7 +1167,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			
 			System.out.println("Connecting " + new DecimalFormat("###,###,###").format(nvars) + " variables to disturbance & cost logic...");
 			for (int var_index = 0; var_index < vname.length; var_index++) {
-				Get_Variable_Information var_info = var_info_array[var_index];
+				Information_Variable var_info = var_info_array[var_index];
 				int[] prescription_and_row = var_info.get_prescription_id_and_row_id();
 				int var_prescription_id = prescription_and_row[0];
 				int var_row_id = prescription_and_row[1];
@@ -1422,7 +1405,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			
 			// 6b
 			for (int strata_id = 0; strata_id < total_model_strata; strata_id++) {
-				int s5 = Collections.binarySearch(layer5, model_strata.get(strata_id).substring(4, 5));
+				int s5 = Collections.binarySearch(layer5, model_strata.get(strata_id).split("_")[4]);
 
 				for (int i = 0; i < total_NG_E_prescription_choices; i++) {
 					for (int t = 1; t <= total_periods - 1; t++) {
@@ -1530,7 +1513,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			
 			// 7b
 			for (int strata_id = 0; strata_id < total_model_strata; strata_id++) {
-				int s5 = Collections.binarySearch(layer5, model_strata.get(strata_id).substring(4, 5));
+				int s5 = Collections.binarySearch(layer5, model_strata.get(strata_id).split("_")[4]);
 
 				for (int i = 0; i < total_PB_E_prescription_choices; i++) {
 					for (int t = 1; t <= total_periods - 1; t++) {
@@ -1638,7 +1621,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 
 			// 8b
 			for (int strata_id = 0; strata_id < total_model_strata; strata_id++) {
-				int s5 = Collections.binarySearch(layer5, model_strata.get(strata_id).substring(4, 5));
+				int s5 = Collections.binarySearch(layer5, model_strata.get(strata_id).split("_")[4]);
 
 				for (int i = 0; i < total_GS_E_prescription_choices; i++) {
 					for (int t = 1; t <= total_periods-1; t++) {
@@ -1753,7 +1736,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			// 9b
 			for (int strata_id = 0; strata_id < total_model_strata; strata_id++) {
 				String strata = model_strata.get(strata_id);
-				int s5 = Collections.binarySearch(layer5, strata.substring(4, 5));
+				int s5 = Collections.binarySearch(layer5, strata.split("_")[4]);
 		
 				for (int tR = 1; tR <= total_periods; tR++) {										
 					for (int s5R = 0; s5R < total_layer5; s5R++) {
@@ -1870,7 +1853,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			// 10b
 			for (int strata_id = 0; strata_id < total_model_strata; strata_id++) {
 				if (xMS[strata_id] != null) {
-					int s5 = Collections.binarySearch(layer5, model_strata.get(strata_id).substring(4, 5));
+					int s5 = Collections.binarySearch(layer5, model_strata.get(strata_id).split("_")[4]);
 
 					for (int i = 0; i < total_MS_E_prescription_choices; i++) {
 						for (int t = 1; t <= total_periods - 1; t++) {
@@ -1982,7 +1965,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			// 11b
 			for (int strata_id = 0; strata_id < total_model_strata; strata_id++) {
 				if (xBS[strata_id] != null) {
-					int s5 = Collections.binarySearch(layer5, model_strata.get(strata_id).substring(4, 5));
+					int s5 = Collections.binarySearch(layer5, model_strata.get(strata_id).split("_")[4]);
 
 					for (int i = 0; i < total_BS_E_prescription_choices; i++) {
 						for (int t = 1; t <= total_periods - 1; t++) {
@@ -2056,7 +2039,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			// 12 --> Loop writing in this way will improve speed. This is also applied to eq. 15 to save running time. Other equations are fast so it is not needed to use this type of loop
 			for (int strata_5layers_id = 0; strata_5layers_id < total_model_strata_without_sizeclass; strata_5layers_id++) {
 				String strata_5layers = model_strata_without_sizeclass.get(strata_5layers_id);
-				int s5 = Collections.binarySearch(layer5, strata_5layers.substring(4, 5));
+				int s5 = Collections.binarySearch(layer5, strata_5layers.split("_")[4]);
 
 				for (int t = 1; t <= total_periods; t++) {
 					for (int s5R = 0; s5R < total_layer5; s5R++) {
@@ -2071,7 +2054,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 						
 						// Add existing variables ----------------------------------------------
 						for (int s6 = 0; s6 < total_layer6; s6++) {
-							String strata_name = strata_5layers + layer6.get(s6);	
+							String strata_name = strata_5layers + "_" + layer6.get(s6);	
 							int strata_id = Collections.binarySearch(model_strata, strata_name);
 							if (strata_id >= 0) {		// == if model_strata.contains(strata_name)   --   strata_id = -1 means list does not contain the string
 								
@@ -2343,7 +2326,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 						// FIRE VARIABLES
 						// Add sigma(s5) fire(s1,s2,s3,s4,s5)[t][s5R]
 						for (int s5 = 0; s5 < total_layer5; s5++) {
-							String strata_5layers = strata_4layers + layer5.get(s5);
+							String strata_5layers = strata_4layers + "_" + layer5.get(s5);
 							int strata_5layers_id = Collections.binarySearch(model_strata_without_sizeclass, strata_5layers);
 							c13_indexlist.get(c13_num).add(fire[strata_5layers_id][t][s5R]);
 							c13_valuelist.get(c13_num).add((double) 1);
@@ -2355,7 +2338,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 						for (int s5 = 0; s5 < total_layer5; s5++) {
 							for (int s6 = 0; s6 < total_layer6; s6++) {
 								for (int i = 0; i < total_EA_E_prescription_choices; i++) {
-									String strata_name = strata_4layers + layer5.get(s5) + layer6.get(s6);
+									String strata_name = strata_4layers + "_" + layer5.get(s5) + "_" + layer6.get(s6);
 									int strata_id = Collections.binarySearch(model_strata, strata_name);
 									
 									if (strata_id >= 0) {
@@ -2376,7 +2359,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 							for (int s5 = 0; s5 < total_layer5; s5++) {
 								for (int a = 1; a <= t - 1; a++) {
 									for (int i = 0; i < total_EA_R_prescription_choices; i++) {
-										String strata_name = strata_4layers + layer5.get(s5);
+										String strata_name = strata_4layers + "_" + layer5.get(s5);
 										int strata_5layers_id = Collections.binarySearch(model_strata_without_sizeclass, strata_name);
 										
 										if(xEAr[strata_5layers_id][t] != null
@@ -2393,7 +2376,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 						}
 						
 						
-						String strata_name = strata_4layers + layer5.get(s5R);		// = s1,s2,s3,s4,s5R
+						String strata_name = strata_4layers + "_" + layer5.get(s5R);		// = s1,s2,s3,s4,s5R
 						int strata_5layers_id = Collections.binarySearch(model_strata_without_sizeclass, strata_name);
 				
 						// Add - sigma(i) xNGr(s1,s2,s3,s4,s5R)[i][t+1][1]
@@ -2483,7 +2466,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			// 14a
 			for (int strata_5layers_id = 0; strata_5layers_id < total_model_strata_without_sizeclass; strata_5layers_id++) {
 				String strata_5layers = model_strata_without_sizeclass.get(strata_5layers_id);
-				int s5 = Collections.binarySearch(layer5, strata_5layers.substring(4, 5));
+				int s5 = Collections.binarySearch(layer5, strata_5layers.split("_")[4]);
 		
 				for (int i = 0; i < total_NG_R_prescription_choices; i++) {
 					for (int t = 2; t <= total_periods - 1; t++) {
@@ -2526,7 +2509,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			// 14b
 			for (int strata_5layers_id = 0; strata_5layers_id < total_model_strata_without_sizeclass; strata_5layers_id++) {
 				String strata_5layers = model_strata_without_sizeclass.get(strata_5layers_id);
-				int s5 = Collections.binarySearch(layer5, strata_5layers.substring(4, 5));
+				int s5 = Collections.binarySearch(layer5, strata_5layers.split("_")[4]);
 		
 				for (int i = 0; i < total_PB_R_prescription_choices; i++) {
 					for (int t = 2; t <= total_periods - 1; t++) {
@@ -2570,7 +2553,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			// 14c
 			for (int strata_5layers_id = 0; strata_5layers_id < total_model_strata_without_sizeclass; strata_5layers_id++) {
 				String strata_5layers = model_strata_without_sizeclass.get(strata_5layers_id);
-				int s5 = Collections.binarySearch(layer5, strata_5layers.substring(4, 5));
+				int s5 = Collections.binarySearch(layer5, strata_5layers.split("_")[4]);
 	
 				for (int i = 0; i < total_GS_R_prescription_choices; i++) {
 					for (int t = 2; t <= total_periods - 1; t++) {
@@ -2613,7 +2596,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			// 14d
 			for (int strata_5layers_id = 0; strata_5layers_id < total_model_strata_without_sizeclass; strata_5layers_id++) {
 				String strata_5layers = model_strata_without_sizeclass.get(strata_5layers_id);
-				int s5 = Collections.binarySearch(layer5, strata_5layers.substring(4, 5));
+				int s5 = Collections.binarySearch(layer5, strata_5layers.split("_")[4]);
 			
 				for (int tR = 2; tR <= total_periods; tR++) {
 					for (int aR = 1; aR <= tR-1; aR++) {									
@@ -3569,18 +3552,19 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 						fileOut.write(file_header);
 						
 						for (String strata: model_strata) {
+							String[] strata_layer = strata.split("_");
 							int strata_id = Collections.binarySearch(model_strata, strata);
-							int s1 = Collections.binarySearch(layer1, strata.substring(0, 1));
-							int s2 = Collections.binarySearch(layer2, strata.substring(1, 2));
-							int s3 = Collections.binarySearch(layer3, strata.substring(2, 3));
-							int s4 = Collections.binarySearch(layer4, strata.substring(3, 4));
-							int s5 = Collections.binarySearch(layer5, strata.substring(4, 5));
-							int s6 = Collections.binarySearch(layer6, strata.substring(5, 6));	
+							int s1 = Collections.binarySearch(layer1, strata_layer[0]);
+							int s2 = Collections.binarySearch(layer2, strata_layer[1]);
+							int s3 = Collections.binarySearch(layer3, strata_layer[2]);
+							int s4 = Collections.binarySearch(layer4, strata_layer[3]);
+							int s5 = Collections.binarySearch(layer5, strata_layer[4]);
+							int s6 = Collections.binarySearch(layer6, strata_layer[5]);	
 							// new line for each stratum
 							fileOut.newLine();
 							// write StrataID and 6 layers info
 							fileOut.write(strata + "\t" + layer1.get(s1) + "\t" + layer2.get(s2) + "\t" + layer3.get(s3) + "\t" + layer4.get(s4) + "\t" + layer5.get(s5) + "\t" + layer6.get(s6));
-							// write acres from each method
+							// write acres from each method 
 							for (int q = 0; q < total_existing_methods; q++) {
 								int this_var_index = x[strata_id][q];
 								fileOut.write("\t" + Double.valueOf(value[this_var_index]) /*Double.valueOf(twoDForm.format(value[this_var_index]))*/);
@@ -3615,7 +3599,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 						
 						
 						for (int i = 0; i < value.length; i++) {
-							if (value[i] != 0 && (vname[i].contains("NG") || vname[i].contains("PB") || vname[i].contains("GS") || vname[i].contains("MS") || vname[i].contains("BS") || vname[i].contains("EA"))) {
+							if (value[i] != 0 && (vname[i].contains("xNG_") || vname[i].contains("xPB_") || vname[i].contains("xGS_") || vname[i].contains("xMS_") || vname[i].contains("xBS_") || vname[i].contains("xEA_"))) {
 								String prescription_name_to_find = var_info_array[i].get_yield_table_name_to_find();
 								int[] prescription_and_row = var_info_array[i].get_prescription_id_and_row_id();
 								int var_prescription_id = prescription_and_row[0];
@@ -4152,13 +4136,14 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 						fileOut.write(file_header);
 						
 						for (String strata: model_strata) {
+							String[] strata_layer = strata.split("_");
 							int strata_id = Collections.binarySearch(model_strata, strata);
-							int s1 = Collections.binarySearch(layer1, strata.substring(0, 1));
-							int s2 = Collections.binarySearch(layer2, strata.substring(1, 2));
-							int s3 = Collections.binarySearch(layer3, strata.substring(2, 3));
-							int s4 = Collections.binarySearch(layer4, strata.substring(3, 4));
-							int s5 = Collections.binarySearch(layer5, strata.substring(4, 5));
-							int s6 = Collections.binarySearch(layer6, strata.substring(5, 6));	
+							int s1 = Collections.binarySearch(layer1, strata_layer[0]);
+							int s2 = Collections.binarySearch(layer2, strata_layer[1]);
+							int s3 = Collections.binarySearch(layer3, strata_layer[2]);
+							int s4 = Collections.binarySearch(layer4, strata_layer[3]);
+							int s5 = Collections.binarySearch(layer5, strata_layer[4]);
+							int s6 = Collections.binarySearch(layer6, strata_layer[5]);	
 							// new line for each stratum
 							fileOut.newLine();
 							// write StrataID and 6 layers info
@@ -4198,7 +4183,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 						
 						
 						for (int i = 0; i < value.length; i++) {
-							if (value[i] != 0 && (vname[i].contains("NG") || vname[i].contains("PB") || vname[i].contains("GS") || vname[i].contains("MS") || vname[i].contains("BS") || vname[i].contains("EA"))) {
+							if (value[i] != 0 && (vname[i].contains("xNG_") || vname[i].contains("xPB_") || vname[i].contains("xGS_") || vname[i].contains("xMS_") || vname[i].contains("xBS_") || vname[i].contains("xEA_"))) {
 								String prescription_name_to_find = var_info_array[i].get_yield_table_name_to_find();
 								int[] prescription_and_row = var_info_array[i].get_prescription_id_and_row_id();
 								int var_prescription_id = prescription_and_row[0];

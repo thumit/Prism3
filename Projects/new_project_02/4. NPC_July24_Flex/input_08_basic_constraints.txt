@@ -1,0 +1,2 @@
+bc_id	bc_description	bc_type	bc_multiplier	lowerbound	lowerbound_perunit_penalty	upperbound	upperbound_perunit_penalty	parameter_index	static_identifiers	dynamic_identifiers	original_dynamic_identifiers	
+1	Area (i.e. acres) ..... No dynamic restriction ..... method EA_E EA_R	SOFT	1.0	50000.0	1.0	null	null	NoParameter	0 C D M W;1 A B C;2 L N S;3 C D F H K L N S;4 1 A B C CDDF CDES CDLP CDMH CDSF CDWB CMDF CMES CMGF CMLP CMMH CMSF CMWB D E F G H I JK KL LM WMWL;5 LARGE MEDIUM NONE SEEDSAP SMALL TRANS VERYLARGE;6 PB_E EA_E PB_R EA_R;7 1 2 3 4 5	NoIdentifier	NoIdentifier	
