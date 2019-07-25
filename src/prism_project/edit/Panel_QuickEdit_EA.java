@@ -58,15 +58,10 @@ public class Panel_QuickEdit_EA extends JPanel {
 		List<Integer> regeneration_min_age_list = new ArrayList<Integer>();
 		List<Integer> regeneration_max_age_list = new ArrayList<Integer>();
 		
-		for (String s : rotation_ranges[1]) existing_min_age_list.add(Integer.valueOf(s));
-		for (String s : rotation_ranges[2]) existing_max_age_list.add(Integer.valueOf(s));
-		for (String s : rotation_ranges[3]) regeneration_min_age_list.add(Integer.valueOf(s));
-		for (String s : rotation_ranges[4]) regeneration_max_age_list.add(Integer.valueOf(s));
-		
-		if (existing_min_age_list.indexOf(-9999) >= 0) existing_min_age_list.remove(existing_min_age_list.indexOf((-9999)));
-		if (existing_max_age_list.indexOf(-9999) >= 0) existing_max_age_list.remove(existing_max_age_list.indexOf((-9999)));
-		if (regeneration_min_age_list.indexOf(-9999) >= 0) regeneration_min_age_list.remove(regeneration_min_age_list.indexOf((-9999)));
-		if (regeneration_max_age_list.indexOf(-9999) >= 0) regeneration_max_age_list.remove(regeneration_max_age_list.indexOf((-9999)));
+		for (String s : rotation_ranges[1]) if (Integer.valueOf(s) != -9999) existing_min_age_list.add(Integer.valueOf(s));
+		for (String s : rotation_ranges[2]) if (Integer.valueOf(s) != -9999) existing_max_age_list.add(Integer.valueOf(s));
+		for (String s : rotation_ranges[3]) if (Integer.valueOf(s) != -9999) regeneration_min_age_list.add(Integer.valueOf(s));
+		for (String s : rotation_ranges[4]) if (Integer.valueOf(s) != -9999) regeneration_max_age_list.add(Integer.valueOf(s));
 		
 		// this is the case when we remove -9999 but that is the only option we have across all cover types
 		if (existing_min_age_list.isEmpty()) existing_min_age_list.add((int) -9999);

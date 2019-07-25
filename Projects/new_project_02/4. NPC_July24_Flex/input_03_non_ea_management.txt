@@ -1,0 +1,2 @@
+condition_id	condition_description	static_identifiers	method_choice	model_condition	
+1	All methods and choices .....eligible to apply on..... all strata	0 C D M W;1 A B C;2 L N S;3 C D F H K L N S;4 1 A B C CDDF CDES CDLP CDMH CDSF CDWB CMDF CMES CMGF CMLP CMMH CMSF CMWB D E F G H I JK KL LM WMWL;5 LARGE MEDIUM NONE SEEDSAP SMALL TRANS VERYLARGE	0 NG_E PB_E GS_E NG_R PB_R GS_R;1 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14	true	

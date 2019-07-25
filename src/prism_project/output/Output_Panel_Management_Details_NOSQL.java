@@ -83,11 +83,11 @@ import prism_convenience.MixedRangeCombinationIterable;
 import prism_convenience.PrismTableModel;
 import prism_convenience.TableColumnsHandle;
 import prism_convenience.ToolBarWithBgImage;
-import prism_project.data_process.Get_Parameter_Information;
-import prism_project.data_process.Get_Variable_Information;
+import prism_project.data_process.Information_Parameter;
+import prism_project.data_process.Information_Variable;
 import prism_project.data_process.LinkedList_Databases_Item;
 import prism_project.data_process.Read_Database;
-import prism_project.data_process.Read_Inputs;
+import prism_project.data_process.Read_Input;
 import prism_project.edit.ScrollPane_DynamicIdentifiers;
 import prism_project.edit.ScrollPane_Parameters;
 import prism_project.edit.ScrollPane_StaticIdentifiers;
@@ -109,7 +109,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 	private PrismTableModel input_model9;
 	private Object[][] input_data9;
 	
-	private Read_Inputs read;
+	private Read_Input read;
 	private int total_Periods;
 	
 	private File file_database;
@@ -146,7 +146,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			}
 		}
 		
-		read = new Read_Inputs();
+		read = new Read_Input();
 		read.read_general_inputs(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_01_general_inputs.txt"));
 		total_Periods = read.get_total_periods();		
 		// End of set up ---------------------------------------------------------------------------			
@@ -1448,25 +1448,19 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			List<String> yield_tables_names_list = new ArrayList<String>() {{ for (Object i : yield_tables_names) add(i.toString());}};		// Convert Object array to String list
 						
 			// Read input files to retrieve values later
-			Read_Inputs read = new Read_Inputs();
+			Read_Input read = new Read_Input();
 			read.read_model_strata(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_02_model_strata.txt"));
 
 			// Get info: input_02_modeled_strata
 			List<String> model_strata = read.get_model_strata();
 						
 			// Get the 2 parameter V(s1,s2,s3,s4,s5,s6) and A(s1,s2,s3,s4,s5,s6)
-			String[][] Input2_value = read.get_MO_Values();	
+			String[][] model_strata_data = read.get_ms_data();	
 			double[] strata_area = new double[model_strata.size()];
-			int[] starting_age = new int[model_strata.size()];			
-			
-			// Loop through all modeled_strata to find if the names matched and get the total area and age class
+			int[] strata_starting_age = new int[model_strata.size()];			
 			for (int id = 0; id < model_strata.size(); id++) {
-				strata_area[id] = Double.parseDouble(Input2_value[id][7]);		// area in acres
-				if (Input2_value[id][read.get_MO_TotalColumns() - 2].toString().equals("null")) {
-					starting_age[id] = 1;		// assume age_class = 1 if not found any yield table for this existing strata
-				} else {
-					starting_age[id] = Integer.parseInt(Input2_value[id][read.get_MO_TotalColumns() - 2]);	// age_class
-				}		
+				strata_area[id] = Double.parseDouble(model_strata_data[id][7]);		// area (acres)
+				strata_starting_age[id] = Integer.parseInt(model_strata_data[id][read.get_ms_total_columns() - 2]);	// age_class		
 			}		
 			
 			// Process all the variables in output05
@@ -1475,7 +1469,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			int cost_col = table.getColumn("var_unit_management_cost").getModelIndex();
 			List<Double> var_value_list = new ArrayList<Double>();	
 			List<Double> var_cost_list = new ArrayList<Double>();
-			List<Get_Variable_Information> var_info_list = new ArrayList<Get_Variable_Information>();
+			List<Information_Variable> var_info_list = new ArrayList<Information_Variable>();
 			
 			for (int row = 0; row < data.length; row++) {	// row = var_index (each row is a variable)
 				String var_name = String.valueOf(data[row][name_col]);
@@ -1484,11 +1478,12 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 				
 				int start_age = -9999;
 				if (var_name.startsWith("xNG_E") || var_name.startsWith("xPB_E") || var_name.startsWith("xGS_E") || var_name.startsWith("xEA_E") || var_name.startsWith("xMS_E") || var_name.startsWith("xBS_E")) {
-					String strata = var_name.substring(6, 17).replaceAll(",", "");
+					String[] var_name_split= var_name.split("_");
+					String strata = String.join("_", var_name_split[2], var_name_split[3], var_name_split[4], var_name_split[5], var_name_split[6], var_name_split[7]);		// strata = merge 6 layers by _ 
 					int strata_id = Collections.binarySearch(model_strata, strata);
-					start_age = starting_age[strata_id];
+					start_age = strata_starting_age[strata_id];
 				} 
-				Get_Variable_Information var_info = new Get_Variable_Information(var_name, start_age, yield_tables_names_list);
+				Information_Variable var_info = new Information_Variable(var_name, start_age, yield_tables_names_list);
 				
 				var_value_list.add(var_value);
 				var_cost_list.add(var_cost);
@@ -1540,7 +1535,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 								// Process all the variables in output05 and use static_identifiers to trim to get the var_name_list & var_value_list
 								List<Double> var_value = new ArrayList<Double>();	
 								List<Double> var_cost = new ArrayList<Double>();
-								List<Get_Variable_Information> var_info = new ArrayList<Get_Variable_Information>();
+								List<Information_Variable> var_info = new ArrayList<Information_Variable>();
 								
 								for (int row = 0; row < data.length; row++) {	// row = var_index (each row is a variable)
 									if (are_all_static_identifiers_matched(var_info_list.get(row), static_identifiers)) {
@@ -1553,7 +1548,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 								// Convert lists to 1-D arrays
 								double[] vvalue = Stream.of(var_value.toArray(new Double[var_value.size()])).mapToDouble(Double::doubleValue).toArray();
 								double[] vcost = Stream.of(var_cost.toArray(new Double[var_cost.size()])).mapToDouble(Double::doubleValue).toArray();
-								Get_Variable_Information[] vinfo = new Get_Variable_Information[var_info.size()];	
+								Information_Variable[] vinfo = new Information_Variable[var_info.size()];	
 								for (int var_index = 0; var_index < var_info.size(); var_index++) {
 									vinfo[var_index] = var_info.get(var_index);
 								}	
@@ -1818,7 +1813,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 	
 	
 	// Get the following from each row-------------------------------------------------------------------------------------
-	private Boolean are_all_static_identifiers_matched(Get_Variable_Information var_info, List<List<String>> static_identifiers) {	
+	private Boolean are_all_static_identifiers_matched(Information_Variable var_info, List<List<String>> static_identifiers) {	
 		if (
 		Collections.binarySearch(static_identifiers.get(0), var_info.get_layer1()) < 0 ||
 		Collections.binarySearch(static_identifiers.get(1), var_info.get_layer2()) < 0 ||
@@ -1926,13 +1921,13 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 		}
 
 		
-		private double get_results(Read_Database read_database, Get_Variable_Information[] vinfo, double[] vvalue, double[] vcost, double multiplier,			// vname, vvalue, vcost are results after filtered by static_identifiers
+		private double get_results(Read_Database read_database, Information_Variable[] vinfo, double[] vvalue, double[] vcost, double multiplier,			// vname, vvalue, vcost are results after filtered by static_identifiers
 				 List<String> parameters_indexes_list, List<String> dynamic_dentifiers_column_indexes, List<List<String>> dynamic_identifiers) {		
 			// CREATE CONSTRAINTS-------------------------------------------------
 			// CREATE CONSTRAINTS-------------------------------------------------
 			// CREATE CONSTRAINTS-------------------------------------------------
 			
-			Get_Parameter_Information parameter_info = new Get_Parameter_Information(read_database);
+			Information_Parameter parameter_info = new Information_Parameter(read_database);
 			// Constraints 15	
 			double sum_all = 0;
 			

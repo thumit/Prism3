@@ -94,7 +94,7 @@ public class PrismMain extends JFrame {
 	private MenuItem_SetTransparency 	setTransparency;		// For menuWindow
 	private MenuItem_CaptureGUI 		captureGUI;				// For menuWindow
 		
-	private static String 				prism_version = "PRISM ALPHA 1.2.07";
+	private static String 				prism_version = "PRISM ALPHA 1.2.08";
 	private String 						currentProject;
 	private static PrismDesktopPane 	prism_DesktopPane;
 	private static PrismContentPane 	prism_ContentPane;
@@ -484,7 +484,7 @@ public class PrismMain extends JFrame {
 						if (!is_Database_Management_opened) {
 							JInternalFrame DatabaseManagement_Frame = new JInternalFrame("Database Management", true /*resizable*/, true, /*closable*/true/*maximizable*/, true/*iconifiable*/);								
 							prism_DesktopPane.add(DatabaseManagement_Frame, BorderLayout.CENTER); // attach internal frame
-							DatabaseManagement_Frame.setSize((int) (getWidth()/1.08),(int) (getHeight()/1.21));
+							DatabaseManagement_Frame.setSize((int) (getWidth()/1.08),(int) (getHeight()/1.17));
 							DatabaseManagement_Frame.setLocation((int) ((getWidth() - DatabaseManagement_Frame.getWidth())/2),
 																((int) ((getHeight() - DatabaseManagement_Frame.getHeight())/2.75)));	//Set the DatabaseManagement_Frame near the center of the Main frame
 							if (PrismMain.get_Prism_DesktopPane().getSelectedFrame() != null) {	//or Set the DatabaseManagement_Frame near the recently opened JInternalFrame
@@ -591,7 +591,7 @@ public class PrismMain extends JFrame {
 			ProjectInternalFrame.setDefaultCloseOperation(JInternalFrame.DO_NOTHING_ON_CLOSE);
 					
 			prism_DesktopPane.add(ProjectInternalFrame, BorderLayout.CENTER); // attach internal frame
-			ProjectInternalFrame.setSize((int) (getWidth()/1.08),(int) (getHeight()/1.21));		
+			ProjectInternalFrame.setSize((int) (getWidth()/1.08),(int) (getHeight()/1.17));		
 			ProjectInternalFrame.setLocation((int) ((getWidth() - ProjectInternalFrame.getWidth())/2),
 											((int) ((getHeight() - ProjectInternalFrame.getHeight())/2.75)));	//Set the ProjectInternalFrame near the center of the Main frame
 			if (PrismMain.get_Prism_DesktopPane().getSelectedFrame() != null) {	//or Set the ProjectInternalFrame near the recently opened JInternalFrame

@@ -228,13 +228,13 @@ public class Read_Database {
 				
 				// get total rows (strata count)
 				int rowCount2 = 0;				
-				rs = st.executeQuery("SELECT COUNT(DISTINCT strata_id) FROM existing_strata;");		// This only have 1 row and 1 column, the value is total number of unique strata
+				rs = st.executeQuery("SELECT COUNT (DISTINCT(layer1 || layer2 || layer3 || layer4 || layer5 || layer6)) FROM existing_strata;");		// This only have 1 row and 1 column, the value is total number of unique strata
 				while (rs.next()) {
 					rowCount2 = rs.getInt(1);	//column 1
 				}				
 				
 				// get total columns
-				rs = st.executeQuery("SELECT * FROM existing_strata ORDER BY strata_id ASC;");	// always sort by strata_id
+				rs = st.executeQuery("SELECT * FROM existing_strata ORDER BY (layer1 || layer2 || layer3 || layer4 || layer5 || layer6) ASC;");	// always sort by strata_id
 				rsmd = rs.getMetaData();
 				int colCount2 = rsmd.getColumnCount();
 				
@@ -452,7 +452,6 @@ public class Read_Database {
 		timing_choice ="0";
 		String forest_status = "E";
 		String tableName_toFind = cover_type + "_" + size_class + "_" + method + "_" + forest_status + "_" + timing_choice;
-		tableName_toFind = tableName_toFind.toUpperCase();
 		
 		String valueReturn = null;
 		try {
@@ -527,28 +526,29 @@ public class Read_Database {
 				
 				//-----------------------------------------------------------------------------------------------------------
 				// this will be used to generate combo box values in the "Cover type Conversion" windows
+				// this is the query 2.3 in "dbms_system_sql_library.txt" with modification in how to write escape: e.g. 		 '%\_EA\_E\_%' ESCAPE '\'  -->	'%\"_EA\"_E%' ESCAPE '\"'
 				rs = st.executeQuery("SELECT e_table.e_covertype, "
 						+ "e_table.e_min_rotation_age, "
 						+ "e_table.e_max_rotation_age, "
 						+ "r_table.r_min_rotation_age, "
 						+ "r_table.r_max_rotation_age FROM ( "
 						
-						+ "(SELECT SUBSTR(DISTINCT EA_E_prescription, 1, INSTR(DISTINCT EA_E_prescription, '_')-1) as e_covertype, "
+						+ "(SELECT SUBSTR(EA_E_prescription, 1, INSTR(EA_E_prescription, '_')-1) as e_covertype, "
 								+ "MIN(CAST(rotation_age as decimal)) AS e_min_rotation_age, "
 								+ "MAX(CAST(rotation_age as decimal)) AS e_max_rotation_age "
 								+ " FROM "
 								+ "(SELECT DISTINCT prescription AS EA_E_prescription, "
-								+ "action_type AS final_activity, CAST(age_class as decimal) AS rotation_age FROM yield_tables WHERE prescription LIKE '%\"_EA\"_E%' ESCAPE '\"' GROUP BY prescription) "
+								+ "action_type AS final_activity, CAST(age_class as decimal) AS rotation_age FROM yield_tables WHERE prescription LIKE '%\"_EA\"_E\"_%' ESCAPE '\"' GROUP BY prescription) "
 						+ "GROUP BY e_covertype) AS e_table "
 								
 						+ "LEFT JOIN"
 						
-						+ "(SELECT SUBSTR(DISTINCT EA_R_prescription, 1, INSTR(DISTINCT EA_R_prescription, '_')-1) as r_covertype, "
+						+ "(SELECT SUBSTR(EA_R_prescription, 1, INSTR(EA_R_prescription, '_')-1) as r_covertype, "
 							+ "MIN(CAST(rotation_age as decimal)) AS r_min_rotation_age, "
 							+ "MAX(CAST(rotation_age as decimal)) AS r_max_rotation_age "
 							+ "FROM "
 							+ "(SELECT DISTINCT prescription AS EA_R_prescription, "
-							+ "action_type AS final_activity, CAST(age_class as decimal) AS rotation_age FROM yield_tables WHERE prescription LIKE '%\"_EA\"_R%' ESCAPE '\"' GROUP BY prescription) "
+							+ "action_type AS final_activity, CAST(age_class as decimal) AS rotation_age FROM yield_tables WHERE prescription LIKE '%\"_EA\"_R\"_%' ESCAPE '\"' GROUP BY prescription) "
 						+ "GROUP BY r_covertype) AS r_table "
 						
 						+ "ON e_table.e_covertype = r_table.r_covertype)"
@@ -563,22 +563,22 @@ public class Read_Database {
 						+ "r_table.r_min_rotation_age, "
 						+ "r_table.r_max_rotation_age FROM ( "
 						
-						+ "(SELECT SUBSTR(DISTINCT EA_R_prescription, 1, INSTR(DISTINCT EA_R_prescription, '_')-1) as r_covertype, "
+						+ "(SELECT SUBSTR(EA_R_prescription, 1, INSTR(EA_R_prescription, '_')-1) as r_covertype, "
 							+ "MIN(CAST(rotation_age as decimal)) AS r_min_rotation_age, "
 							+ "MAX(CAST(rotation_age as decimal)) AS r_max_rotation_age "
 							+ "FROM "
 							+ "(SELECT DISTINCT prescription AS EA_R_prescription, "
-							+ "action_type AS final_activity, CAST(age_class as decimal) AS rotation_age FROM yield_tables WHERE prescription LIKE '%\"_EA\"_R%' ESCAPE '\"' GROUP BY prescription) "
+							+ "action_type AS final_activity, CAST(age_class as decimal) AS rotation_age FROM yield_tables WHERE prescription LIKE '%\"_EA\"_R\"_%' ESCAPE '\"' GROUP BY prescription) "
 						+ "GROUP BY r_covertype) AS r_table "
 						
 						+ "LEFT JOIN"
 						
-						+ "(SELECT SUBSTR(DISTINCT EA_E_prescription, 1, INSTR(DISTINCT EA_E_prescription, '_')-1) as e_covertype, "
+						+ "(SELECT SUBSTR(EA_E_prescription, 1, INSTR(EA_E_prescription, '_')-1) as e_covertype, "
 							+ "MIN(CAST(rotation_age as decimal)) AS e_min_rotation_age, "
 							+ "MAX(CAST(rotation_age as decimal)) AS e_max_rotation_age "
 							+ " FROM "
 							+ "(SELECT DISTINCT prescription AS EA_E_prescription, "
-							+ "action_type AS final_activity, CAST(age_class as decimal) AS rotation_age FROM yield_tables WHERE prescription LIKE '%\"_EA\"_E%' ESCAPE '\"' GROUP BY prescription) "
+							+ "action_type AS final_activity, CAST(age_class as decimal) AS rotation_age FROM yield_tables WHERE prescription LIKE '%\"_EA\"_E\"_%' ESCAPE '\"' GROUP BY prescription) "
 						+ "GROUP BY e_covertype) AS e_table "
 						
 						+ "ON e_table.e_covertype = r_table.r_covertype)"
@@ -597,7 +597,7 @@ public class Read_Database {
 					for (int i = 0; i < colCount; i++) {
 						if (rs.getString(i + 1) != null) {
 							rotation_ranges[i].add(rs.getString(i + 1));
-						} else{
+						} else {
 							rotation_ranges[i].add("-9999");
 						}
 					}

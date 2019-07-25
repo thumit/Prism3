@@ -34,3 +34,293 @@ select prescription, row_id, age_class, age, qmd, action_type from yield_tables 
 rename column row_id to row
 ALTER TABLE yield_tables RENAME COLUMN row_id TO row
 ----------
+test strata check 1 (future use in read_existig_strata)
+SELECT  
+COUNT (strata_id) as total_strata, 
+COUNT (DISTINCT strata_id) as total_unique_strata,
+CASE WHEN COUNT (strata_id) = COUNT (DISTINCT strata_id) THEN 'none - data is good' ELSE 'review duplicated strata' end AS recommendation
+FROM  
+(SELECT (layer1 || layer2 || layer3 || layer4 || layer5 || layer6) as strata_id FROM existing_strata)
+----------
+test strata check 2 (future use in : SQL library for dbms)
+SELECT 
+(layer1 || layer2 || layer3 || layer4 || layer5 || layer6) as strata_id, layer1, layer2, layer3, layer4, layer5, layer6, COUNT(*) as count
+FROM existing_strata
+GROUP BY strata_id HAVING COUNT(*) > 1
+----------
+test count existing_strata (simple, no use in read_existig_strata)
+SELECT  COUNT (DISTINCT strata_id) as total_unique_strata
+FROM  (SELECT (layer1 || layer2 || layer3 || layer4 || layer5 || layer6) as strata_id FROM existing_strata)
+----------
+test3 strata
+SELECT (layer1 || layer2 || layer3 || layer4 || layer5 || layer6) as strata_id, layer1, layer2, layer3, layer4, layer5, layer6, acres FROM  existing_strata ORDER BY (layer1 || layer2 || layer3 || layer4 || layer5 || layer6) ASC;
+----------
+test-read existing strata 1
+SELECT COUNT (DISTINCT strata_id) FROM (SELECT (layer1 || layer2 || layer3 || layer4 || layer5 || layer6) as strata_id FROM existing_strata);
+----------
+test-read existing strata 2
+SELECT * FROM existing_strata ORDER BY (layer1 || layer2 || layer3 || layer4 || layer5 || layer6) ASC;
+----------
+test substring
+SELECT
+SUBSTR(DISTINCT prescription, 1, INSTR(DISTINCT prescription, "_")-1) as CoverType,
+
+SUBSTR(LTRIM(DISTINCT prescription, SUBSTR(DISTINCT prescription, 1, INSTR(DISTINCT prescription, "_"))), 1, INSTR(LTRIM(DISTINCT prescription, SUBSTR(DISTINCT prescription, 1, INSTR(DISTINCT prescription, "_"))), "_")-1) as SizeClass,
+
+SUM(case when prescription LIKE '%\_NG\_E%' ESCAPE '\' then 1 else 0 end) NG_E,
+SUM(case when prescription LIKE '%\_PB\_E%' ESCAPE '\' then 1 else 0 end) PB_E,
+SUM(case when prescription LIKE '%\_GS\_E%' ESCAPE '\' then 1 else 0 end) GS_E,
+SUM(case when prescription LIKE '%\_EA\_E%' ESCAPE '\' then 1 else 0 end) EA_E,
+SUM(case when prescription LIKE '%\_MS\_E%' ESCAPE '\' then 1 else 0 end) MS_E,
+SUM(case when prescription LIKE '%\_BS\_E%' ESCAPE '\' then 1 else 0 end) BS_E,
+SUM(case when SUBSTR(DISTINCT prescription, 8, INSTR(DISTINCT prescription, "_")-1) LIKE 'E' then 1 else 0 end) Total_Prescriptions
+FROM 
+(SELECT DISTINCT prescription FROM yield_tables
+WHERE prescription LIKE '%\_NG\_E%' ESCAPE '\' 
+OR prescription LIKE '%\_PB\_E%' ESCAPE '\' 
+OR prescription LIKE '%\_GS\_E%' ESCAPE '\' 
+OR prescription LIKE '%\_EA\_E%' ESCAPE '\' 
+OR  prescription LIKE '%\_MS\_E%' ESCAPE '\' 
+OR prescription LIKE '%\_BS\_E%' ESCAPE '\' )
+GROUP BY CoverType, SizeClass
+----------
+test 3.1 using LTRIM
+SELECT
+SUBSTR(DISTINCT prescription, 1, INSTR(DISTINCT prescription, "_")-1) as CoverType,
+
+SUBSTR(
+LTRIM(LTRIM(DISTINCT prescription, SUBSTR(DISTINCT prescription, 1, INSTR(DISTINCT prescription, "_")-1)),'_')
+, 1, INSTR(
+LTRIM(LTRIM(DISTINCT prescription, SUBSTR(DISTINCT prescription, 1, INSTR(DISTINCT prescription, "_")-1)),'_')
+, "_")-1) as SizeClass,
+
+SUM(case when prescription LIKE '%\_NG\_E%' ESCAPE '\' then 1 else 0 end) NG_E,
+SUM(case when prescription LIKE '%\_PB\_E%' ESCAPE '\' then 1 else 0 end) PB_E,
+SUM(case when prescription LIKE '%\_GS\_E%' ESCAPE '\' then 1 else 0 end) GS_E,
+SUM(case when prescription LIKE '%\_EA\_E%' ESCAPE '\' then 1 else 0 end) EA_E,
+SUM(case when prescription LIKE '%\_MS\_E%' ESCAPE '\' then 1 else 0 end) MS_E,
+SUM(case when prescription LIKE '%\_BS\_E%' ESCAPE '\' then 1 else 0 end) BS_E,
+SUM(case when SUBSTR(DISTINCT prescription, LENGTH(DISTINCT prescription), 1) LIKE 'E' then 1 else 0 end) Total_Prescriptions
+FROM 
+(SELECT DISTINCT prescription FROM yield_tables
+WHERE prescription LIKE '%\_NG\_E%' ESCAPE '\' 
+OR prescription LIKE '%\_PB\_E%' ESCAPE '\' 
+OR prescription LIKE '%\_GS\_E%' ESCAPE '\' 
+OR prescription LIKE '%\_EA\_E%' ESCAPE '\' 
+OR  prescription LIKE '%\_MS\_E%' ESCAPE '\' 
+OR prescription LIKE '%\_BS\_E%' ESCAPE '\' )
+GROUP BY CoverType, SizeClass
+----------
+test 2.0 using LTRIM
+SELECT
+SUBSTR(DISTINCT EA_E_prescription, 1, INSTR(DISTINCT EA_E_prescription, "_")-1) as e_covertype,
+
+SUBSTR(
+LTRIM(LTRIM(DISTINCT EA_E_prescription, SUBSTR(DISTINCT EA_E_prescription, 1, INSTR(DISTINCT EA_E_prescription, "_")-1)),'_')
+, 1, INSTR(
+LTRIM(LTRIM(DISTINCT EA_E_prescription, SUBSTR(DISTINCT EA_E_prescription, 1, INSTR(DISTINCT EA_E_prescription, "_")-1)),'_')
+, "_")-1) as e_sizeclass,
+
+MIN(CAST(rotation_age as decimal)) AS e_min_rotation_age, 
+MAX(CAST(rotation_age as decimal)) AS e_max_rotation_age
+FROM 
+
+(SELECT DISTINCT prescription AS EA_E_prescription, 
+action_type AS final_activity, 
+CAST(age_class as decimal) AS rotation_age
+FROM yield_tables WHERE prescription LIKE '%\_EA\_E%' ESCAPE '\' GROUP BY prescription)
+
+GROUP BY e_covertype, e_sizeclass
+----------
+Split into 4 columns - method 1
+SELECT 
+Covertype,
+Sizeclass,
+SUBSTR(TheRest, 1, INSTR(TheRest, '_')-1) as Method,
+SUBSTR(TheRest, INSTR(TheRest, '_')+1, INSTR(SUBSTR(TheRest, INSTR(TheRest, '_')+1), '_')-1) as Status,
+SUBSTR(TheRest,INSTR(SUBSTR(TheRest, INSTR(TheRest, '_')+1), '_')+ INSTR(TheRest, '_')+1) as Leftover
+FROM
+
+(
+SELECT 
+SUBSTR(pres, 1, INSTR(pres, '_')-1) as Covertype,
+SUBSTR(pres, INSTR(pres, '_')+1, INSTR(SUBSTR(pres, INSTR(pres, '_')+1), '_')-1) as Sizeclass,
+SUBSTR(pres,INSTR(SUBSTR(pres, INSTR(pres, '_')+1), '_')+ INSTR(pres, '_')+1) as TheRest
+
+FROM
+
+(SELECT DISTINCT prescription  as pres FROM yield_tables
+WHERE prescription LIKE '%\_NG\_E%' ESCAPE '\' 
+OR prescription LIKE '%\_PB\_E%' ESCAPE '\' 
+OR prescription LIKE '%\_GS\_E%' ESCAPE '\' 
+OR prescription LIKE '%\_EA\_E%' ESCAPE '\' 
+OR  prescription LIKE '%\_MS\_E%' ESCAPE '\' 
+OR prescription LIKE '%\_BS\_E%' ESCAPE '\')
+)
+----------
+Split into 4 columns - method 2
+SELECT
+Covertype,
+Sizeclass,
+Method,
+SUBSTR(Leftover, 1, INSTR(Leftover, '_')-1) as Status,
+SUBSTR(Leftover, INSTR(Leftover, '_')+1) as Leftover
+FROM
+
+(
+SELECT
+Covertype,
+Sizeclass,
+SUBSTR(Leftover, 1, INSTR(Leftover, '_')-1) as Method,
+SUBSTR(Leftover, INSTR(Leftover, '_')+1) as Leftover
+FROM
+
+(
+SELECT
+Covertype,
+SUBSTR(Leftover, 1, INSTR(Leftover, '_')-1) as Sizeclass,
+SUBSTR(Leftover, INSTR(Leftover, '_')+1) as Leftover
+FROM
+
+(
+SELECT 
+SUBSTR(pres, 1, INSTR(pres, '_')-1) as Covertype,
+SUBSTR(pres, INSTR(pres, '_')+1) as Leftover
+FROM
+(SELECT DISTINCT prescription  as pres FROM yield_tables
+WHERE prescription LIKE '%\_NG\_E\_%' ESCAPE '\' 
+OR prescription LIKE '%\_PB\_E\_%' ESCAPE '\' 
+OR prescription LIKE '%\_GS\_E\_%' ESCAPE '\' 
+OR prescription LIKE '%\_EA\_E\_%' ESCAPE '\' 
+OR  prescription LIKE '%\_MS\_E\_%' ESCAPE '\' 
+OR prescription LIKE '%\_BS\_E\_%' ESCAPE '\')
+)
+)
+)
+----------
+3.1 Very good to use - split method 1
+SELECT
+Covertype,
+Sizeclass,
+SUM(case when Method = 'NG' AND Status = 'E' then 1 else 0 end) NG_E,
+SUM(case when Method = 'PB' AND Status = 'E' then 1 else 0 end) PB_E,
+SUM(case when Method = 'GS' AND Status = 'E' then 1 else 0 end) GS_E,
+SUM(case when Method = 'EA' AND Status = 'E' then 1 else 0 end) EA_E,
+SUM(case when Method = 'MS' AND Status = 'E' then 1 else 0 end) MS_E,
+SUM(case when Method = 'BS' AND Status = 'E' then 1 else 0 end) BS_E,
+SUM(case when Status = 'E' then 1 else 0 end) Total_Prescriptions
+
+
+FROM
+
+
+(
+SELECT 
+Covertype,
+Sizeclass,
+SUBSTR(TheRest, 1, INSTR(TheRest, '_')-1) as Method,
+SUBSTR(TheRest, INSTR(TheRest, '_')+1, INSTR(SUBSTR(TheRest, INSTR(TheRest, '_')+1), '_')-1) as Status,
+SUBSTR(TheRest, INSTR(SUBSTR(TheRest, INSTR(TheRest, '_')+1), '_')+ INSTR(TheRest, '_')+1) as Leftover
+FROM
+
+(
+SELECT 
+SUBSTR(pres, 1, INSTR(pres, '_')-1) as Covertype,
+SUBSTR(pres, INSTR(pres, '_')+1, INSTR(SUBSTR(pres, INSTR(pres, '_')+1), '_')-1) as Sizeclass,
+SUBSTR(pres, INSTR(SUBSTR(pres, INSTR(pres, '_')+1), '_')+ INSTR(pres, '_')+1) as TheRest
+
+FROM
+
+(SELECT DISTINCT prescription  as pres FROM yield_tables
+WHERE prescription LIKE '%\_NG\_E\_%' ESCAPE '\' 
+OR prescription LIKE '%\_PB\_E\_%' ESCAPE '\' 
+OR prescription LIKE '%\_GS\_E\_%' ESCAPE '\' 
+OR prescription LIKE '%\_EA\_E\_%' ESCAPE '\' 
+OR  prescription LIKE '%\_MS\_E\_%' ESCAPE '\' 
+OR prescription LIKE '%\_BS\_E\_%' ESCAPE '\')
+)
+)
+
+
+
+GROUP BY
+Covertype,
+Sizeclass
+----------
+3.1 Very good to use - split method 2 (better structure)
+SELECT
+Covertype,
+Sizeclass,
+SUM(case when Method = 'NG' AND Status = 'E' then 1 else 0 end) NG_E,
+SUM(case when Method = 'PB' AND Status = 'E' then 1 else 0 end) PB_E,
+SUM(case when Method = 'GS' AND Status = 'E' then 1 else 0 end) GS_E,
+SUM(case when Method = 'EA' AND Status = 'E' then 1 else 0 end) EA_E,
+SUM(case when Method = 'MS' AND Status = 'E' then 1 else 0 end) MS_E,
+SUM(case when Method = 'BS' AND Status = 'E' then 1 else 0 end) BS_E,
+SUM(case when Status = 'E' then 1 else 0 end) Total_Prescriptions
+FROM
+
+
+
+(
+SELECT
+Covertype,
+Sizeclass,
+Method,
+SUBSTR(Leftover, 1, INSTR(Leftover, '_')-1) as Status,
+SUBSTR(Leftover, INSTR(Leftover, '_')+1) as Leftover
+FROM
+
+(
+SELECT
+Covertype,
+Sizeclass,
+SUBSTR(Leftover, 1, INSTR(Leftover, '_')-1) as Method,
+SUBSTR(Leftover, INSTR(Leftover, '_')+1) as Leftover
+FROM
+
+(
+SELECT
+Covertype,
+SUBSTR(Leftover, 1, INSTR(Leftover, '_')-1) as Sizeclass,
+SUBSTR(Leftover, INSTR(Leftover, '_')+1) as Leftover
+FROM
+
+(
+SELECT 
+SUBSTR(pres, 1, INSTR(pres, '_')-1) as Covertype,
+SUBSTR(pres, INSTR(pres, '_')+1) as Leftover
+FROM
+(SELECT DISTINCT prescription  as pres FROM yield_tables
+WHERE prescription LIKE '%\_NG\_E\_%' ESCAPE '\' 
+OR prescription LIKE '%\_PB\_E\_%' ESCAPE '\' 
+OR prescription LIKE '%\_GS\_E\_%' ESCAPE '\' 
+OR prescription LIKE '%\_EA\_E\_%' ESCAPE '\' 
+OR  prescription LIKE '%\_MS\_E\_%' ESCAPE '\' 
+OR prescription LIKE '%\_BS\_E\_%' ESCAPE '\')
+)
+)
+)
+)
+
+
+
+GROUP BY
+Covertype,
+Sizeclass
+----------
+2.0 Very good to use - split method 1
+SELECT 
+SUBSTR(pres, 1, INSTR(pres, '_')-1) as e_covertype,
+SUBSTR(pres, INSTR(pres, '_')+1, INSTR(SUBSTR(pres, INSTR(pres, '_')+1), '_')-1) as e_sizeclass,
+MIN(CAST(rotation_age as decimal)) AS e_min_rotation_age, 
+MAX(CAST(rotation_age as decimal)) AS e_max_rotation_age
+FROM 
+
+(SELECT DISTINCT prescription AS pres, 
+action_type AS final_activity, 
+CAST(age_class as decimal) AS rotation_age
+FROM yield_tables WHERE prescription LIKE '%\_EA\_E\_%' ESCAPE '\' GROUP BY prescription)
+
+GROUP BY e_covertype, e_sizeclass
+----------

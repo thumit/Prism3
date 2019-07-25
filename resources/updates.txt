@@ -1038,11 +1038,55 @@ All changes in this block are associated with PrismAlpha1.2.06.jar, User Manual 
 	- Trim bad "backward compatibility" code in "reload_inputs", remove "handle_old_file" and instead use the new code added in "Reload_Table_Info" (code could be easily deleted in the future after having all models loaded and saved into new format)
 449. Revert tokenizer which lead to wrong data show up in the table and other potential problems (see issue 102 in BitBucket)
 	- Revert tokenizer in Panel_Projects (446)
-
-
-
 450. Code clean up, refactor, restructure:
 	- Rewrite "reload_inputs" in "Panel_Edit_Details"
 	- Input_02_model_strata is now saved with both false and true strata (previously only save the true model_strata): fix create_table3 & create_file_input_02
 	- remove "is_the_first_time_loading_a_run"
 	- Read_Inputs: add code to remove the false model_strata from the list
+All changes in this block are associated with PrismAlpha1.2.07.jar, User Manual 1.03.21, will update later when the newer version is better)
+--------------------------------------------------------------------------
+
+451. Flexible strata recognition update:
+	a. Modify string handling methods (join, split, merge, substring, contain, etc.)
+	- Read_Inputs --> get_model_strata: use String.join by "_"
+	- Read_Inputs --> get_model_strata_without_sizeclass: use String.join by "_"
+	- Read_Inputs --> get_model_strata_without_sizeclass_and_covertype: use String.join by "_"
+	- Read_Inputs --> populate_nonea_lists: use String.split to replace substring
+	- Read_Inputs --> populate_ea_lists: use String.split to replace substring
+	- Read_Inputs --> populate_non_sr_lists: use String.split to replace substring
+	- Read_Inputs --> get_static_strata: use String.join by "_"
+	- Read_Inputs --> get_static_strata_without_sizeclass: use String.join by "_"
+	- Read_Inputs --> get_static_strata_without_sizeclass_and_covertype: use String.join by "_"
+	- Panel_Solve --> input_02_model_strata: join 4 layers with layer 5 by "_"
+	- Panel_Solve --> Create decision variables: remove "layers_merged_name" and the substring, also join by "_" instead of ","
+	- Panel_Solve --> many equations: use strata.split("_") (NOTE NOTE NOTE this might slow down the reading process, if it is --> we need to change the code)
+	- Panel_Solve --> when writing output_05_management_details: padd x and underscore for the method so the string.contain could work correctly (e.g. NG --> xNG_, PB --> 		- Output_Panel_Management_Details_NOSQL --> Fly_Constraints_GUI -- When process all the variables in output05: substring with fixed position of var_name is replaced by var_name.split by "_"
+	- Get_Variable_Information: split by "_"
+	b. Modify existing strata requirements:
+	- Read_Database --> Read_existing_strata: modify the queries	
+	- Model Strata GUI (table3): "acres" --> area
+	- Model Strata GUI (table3): strata_id will be automatically generated regardless of user has data on it or not (ignore about strata_id column in existing_strata file)
+	c.Revise SQL queries:
+	- database SQL system library: revise all queries and replace the file "dbms_system_sql_library.txt". 
+	- Read_Database --> get_rotation_ranges: modify the query to get rotation information (the 2.3 in "dbms_system_sql_library.txt", different way to write escape)
+	d. .............on going: Update the Prism-UserManual-01 --> Prism-UserManual-02
+452. Refactor:
+	- Rename class:
+		- Read_inputs --> Read_Input
+		- Get_Cost_Information --> Information_Cost
+		- Get_Disturbance_Information --> Information_Disturbance
+		- Get_Parameter_Information --> Information_Parameter
+		- Get_Variable_Information --> Information_Variable
+	- Rename variables in "Read_input" class and "Panel_Solve" class
+	- Simplify method: Read_Input --> get_list_of_checked_conditions: remove the "model_condition_col" requirement from method call
+453. Modify UI components:
+	- Narrower condition_description column in EA_Management window (300 -->200)
+	- Taller Project and Database Management internal frames (to remove internal bar due to adding the mass check and mass uncheck buttons)
+454. Panel_Solve & Output_Panel_Management_Details_NOSQL: remove the assumption age_class = 1 if not found yield_table. This is because only strata where yield_table is found could be checked as model_strata
+455. Fix the table overview information update: when the data is loaded the first time, information on the table overview will now show up immediately
+456. Fix the bug in EA_Management screen where many combo boxes in the Quick Edit side window would show negative values. This is because of using the incorrect usage of list.remove in Panel_QuickEdit_EA
+457. Fix the bug: Using lower-case letters for layer5 and/or layer6 would cause an issue of Prism unable to find associated prescription (https://bitbucket.org/Prism-Members/prism/issues/103/using-lower-case-letters-for-layer5-and-or)
+....need to check more for upper case.......................
+All changes in this block are associated with PrismAlpha1.2.08.jar, Prism-Formulation-07.docx, Prism-UserManual-01.docx)
+--------------------------------------------------------------------------
+
