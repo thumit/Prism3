@@ -16,7 +16,6 @@
  ******************************************************************************/
 package prism_project.edit;
 
-import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,10 +60,10 @@ public class ScrollPane_SubTable_EA_Management extends JScrollPane {
 		for (int i = 0; i < info_4a.length; i++) {			
 			String[] row_info = info_4a[i].split(" ");
 			for (int j = 0; j < row_info.length; j++) {
-				data4a[i][j] = (Object) row_info[j];
+				data4a[i][j] = row_info[j];
 			}
-			model4a.match_DataType();
 		}		
+		model4a.match_DataType();
 	}
 
 	

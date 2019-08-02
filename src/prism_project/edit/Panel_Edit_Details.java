@@ -736,6 +736,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			data1[5][0] = "Export original problem file";
 			data1[6][0] = "Export original solution file";
 		}
+		
 			
 		//Create a table-------------------------------------------------------------
         model1 = new PrismTableModel(rowCount1, colCount1, data1, columnNames1);
@@ -1356,11 +1357,27 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
                 return this;
             }
         };
-        
-
-		for (int i = 0; i < columnNames4a.length - 5; i++) {		//Except the last 5 column
+		for (int i = 0; i < 2; i++) {	// first 2 columns only
 			table4a.getColumnModel().getColumn(i).setCellRenderer(r);
 		}		
+				
+		// Show cells will value of -9999 as blank cells  
+		DefaultTableCellRenderer shown_as_blank_render = new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object
+			value, boolean isSelected, boolean hasFocus, int row, int column) {
+				super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+				if (Double.valueOf(String.valueOf(value)) == -9999){
+		            super.setValue(null);        
+		        }
+                return this;
+            }
+        };
+        for (int i = 2; i < colCount4a - 1; i++) {	// except first 2 columns & last column
+			table4a.getColumnModel().getColumn(i).setCellRenderer(shown_as_blank_render);
+		}
+		
+		
 
 //		// Set up Icon for column headers
 //		class JComponentTableCellRenderer implements TableCellRenderer {
@@ -1396,24 +1413,21 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			    int min_age_cut_regeneration = (rotation_ranges[0].indexOf(covertype) >= 0 && rotation_ranges[3].get(rotation_ranges[0].indexOf(covertype)) != null) ? Integer.valueOf(rotation_ranges[3].get(rotation_ranges[0].indexOf(covertype))) : -9999;
 			    int max_age_cut_regeneration = (rotation_ranges[0].indexOf(covertype) >= 0 && rotation_ranges[4].get(rotation_ranges[0].indexOf(covertype)) != null) ? Integer.valueOf(rotation_ranges[4].get(rotation_ranges[0].indexOf(covertype))) : -9999;
 			    
+			    model.removeAllElements();
 				if (column == 2 || column == 3) {
 					if (rotation_ranges[0].contains(covertype)) {
-						model.removeAllElements();
 						for (int i = min_age_cut_existing; i <= max_age_cut_existing; i++) {		
 							model.addElement(i);
 						}
 					} else {
-						model.removeAllElements();
 						model.addElement((int) -9999);
 					}
 				} else if (column == 4 || column == 5) {
 					if (rotation_ranges[0].contains(covertype)) {
-						model.removeAllElements();
 						for (int i = min_age_cut_regeneration; i <= max_age_cut_regeneration; i++) {		
 							model.addElement(i);
 						}
 					} else {
-						model.removeAllElements();
 						model.addElement((int) -9999);
 					}
 				}
@@ -1421,6 +1435,17 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				return super.getTableCellEditorComponent(table, value, isSelected, row, column);
 			}
 		}
+		
+//		// Save to work on these code later which I want to show the -9999 value as blank in the combo box dropdown
+//		class ItemRenderer extends BasicComboBoxRenderer {
+//			public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+//				super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+//				if (Double.valueOf(String.valueOf(value)) == -9999) {
+//					setText(null);
+//				}
+//				return this;
+//			}
+//		}
 		
 		table4a.getColumnModel().getColumn(2).setCellEditor(new CustomComboBoxEditor());
 		table4a.getColumnModel().getColumn(3).setCellEditor(new CustomComboBoxEditor());
@@ -1718,9 +1743,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		//Setup the table------------------------------------------------------------	
 		if (is_table6a_loaded == false) { // Create a fresh new if Load fail				
 			rowCount6a = total_CoverType;
-			colCount6a = 101;
+			colCount6a = total_replacing_disturbance + 2;
 			data6a = new Object[rowCount6a][colCount6a];
-	        columnNames6a = new String[101];
+	        columnNames6a = new String[colCount6a];
 	        columnNames6a[0] = "layer5";
 	        columnNames6a[1] = "layer5_regen";
 	        for (int col = 2; col < colCount6a; col++) {
@@ -1973,9 +1998,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		//Setup the table------------------------------------------------------------	
 		if (is_table6b_loaded == false) { // Create a fresh new if Load fail				
 			rowCount6b = total_CoverType * total_CoverType;
-			colCount6b = 101;
+			colCount6b =  total_replacing_disturbance + 2;
 			data6b = new Object[rowCount6b][colCount6b];
-	        columnNames6b = new String[101];
+	        columnNames6b = new String[colCount6b];
 	        columnNames6b[0] = "layer5";
 	        columnNames6b[1] = "layer5_regen";
 	        for (int col = 2; col < colCount6b; col++) {
@@ -2076,12 +2101,12 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				
 				tableColumn.setPreferredWidth(maxWidth);
 				
-				// Set icon for cells: when total percentage of a given block which contains this cell would exceed 100%		NOTE: we do not need to use getValueAt because we do not allow changing row and column position
+				// Set icon for cells: when total percentage of a given block 		NOTE: we need to use getValueAt because of the compact view feature which makes mismatching between full data and displayed data
 				double total_percentage = 0;
-				for (int i = row - row % total_CoverType; i < row - row % total_CoverType + total_CoverType; i++) {	// loop all rows in a block which can be recognized in Prism interface. It includes number of rows = number of cover types
-					for (int j = 2; j < colCount6b; j++) {					
-						if (table6b.convertColumnIndexToView(j) != -1) {	// -1 means the column is invisible
-							total_percentage = total_percentage + Double.parseDouble(data6b[i][j].toString());
+				for (int i = 0; i < getRowCount(); i++) {	// loop all rows in a block && add to total percentage if the rows has the same covertype as the row at cursor
+					for (int j = 2; j < getColumnCount(); j++) {					
+						if (getValueAt(i, 0).toString().equals(getValueAt(row, 0).toString()) && table6b.convertColumnIndexToView(j) != -1) {	// -1 means the column is invisible
+							total_percentage = total_percentage + Double.parseDouble(getValueAt(i, j).toString());
 						}
 					}	
 				}
@@ -2136,12 +2161,12 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						String disturbance_name = table6b.getColumnName(column).replaceAll("percentage_", "");
 						tip = "When "  + disturbance_name + " occurs in the area with cover type (not dynamic) = " + getValueAt(row, 0).toString() + ", " + percentage + "% of this area will be destroyed & regenerated as cover type = " + getValueAt(row, 1).toString();
 					
-						// Show problem tip 		NOTE: we do not need to use getValueAt because we do not allow changing row and column position
+						// Show problem tip 		NOTE: we need to use getValueAt because of the compact view feature which makes mismatching between full data and displayed data
 						double total_percentage = 0;
-						for (int i = row - row % total_CoverType; i < row - row % total_CoverType + total_CoverType; i++) {	// loop all rows in a block which can be recognized in Prism interface. It includes number of rows = number of cover types
-							for (int j = 2; j < colCount6b; j++) {					
-								if (table6b.convertColumnIndexToView(j) != -1) {	// -1 means the column is invisible
-									total_percentage = total_percentage + Double.parseDouble(data6b[i][j].toString());
+						for (int i = 0; i < getRowCount(); i++) {	// loop all rows in a block && add to total percentage if the rows has the same covertype as the row at cursor
+							for (int j = 2; j < getColumnCount(); j++) {					
+								if (getValueAt(i, 0).toString().equals(getValueAt(row, 0).toString()) && table6b.convertColumnIndexToView(j) != -1) {	// -1 means the column is invisible
+									total_percentage = total_percentage + Double.parseDouble(getValueAt(i, j).toString());
 								}
 							}	
 						}
@@ -2243,7 +2268,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
         
 //      table6b.setTableHeader(null);
         table6b.setPreferredScrollableViewportSize(new Dimension(400, 100));
-        table6b.setFillsViewportHeight(true);
+//      table6b.setFillsViewportHeight(true);
         TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model6b);	//Add sorter
 		for (int i = 1; i < colCount6b; i++) {
 			sorter.setSortable(i, false);
@@ -3459,7 +3484,81 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			Action apply = new AbstractAction() {
 				public void actionPerformed(ActionEvent e) {
 					total_period = Integer.parseInt(totalPeriodsCombo.getSelectedItem().toString());
-					total_replacing_disturbance = Integer.parseInt(replacingDisturbancesCombo.getSelectedItem().toString());
+					// Renew the entire SR_Disturbances screen
+					replacingDisturbancesCombo.getUI().setPopupVisible(replacingDisturbancesCombo, false);	// This would close the drop down to avoid 1 click to close it
+					int total_replacing_disturbance_combo_value = Integer.parseInt(replacingDisturbancesCombo.getSelectedItem().toString());
+					if (total_replacing_disturbance_combo_value != total_replacing_disturbance) { 
+						String ExitOption[] = {"Apply", "Cancel"};
+						String message = (total_replacing_disturbance > total_replacing_disturbance_combo_value)
+								? "You are decreasing the total number of stand replacing disturbances.\n"
+										+ "Some data in the SR Disturbances screen will be removed and can not be reverted.\n"
+										+ "Apply change?"
+								: "You are increasing the total number of stand replacing disturbances.\n"
+										+ "The added disturbances are ready to be defined in the SR Disturbances screen.\n"
+										+ "Apply change?";
+										
+						int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), message, "Change the total number of stand replacing disturbances",
+								JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
+						if (response == 0) {
+							for (int i = 0; i < rowCount6; i++) {
+								String probability_info = (String) data6[i][2];
+								String regeneration_info = (String) data6[i][3];
+																
+								if(probability_info.length() > 0) {
+									String[] info_6a = probability_info.split(";");	
+									String[] info_6a_adjusted = new String[info_6a.length];
+									for (int row = 0; row < info_6a.length; row++) {			
+										String[] sub_info = info_6a[row].split(" ");
+										String[] sub_info_adjusted = new String[2 + total_replacing_disturbance_combo_value];
+										if (total_replacing_disturbance > total_replacing_disturbance_combo_value) {	// Case when decreasing the number of SRs --> Clear the unused data/column (keep the old data)
+											for (int col = 0; col < 2 + total_replacing_disturbance_combo_value; col++) {
+												sub_info_adjusted[col] = sub_info[col];
+											}
+										} else {	// Case when increasing the number of SRs --> Clear the unused data/column (keep the old data)
+											for (int col = 0; col < 2 + total_replacing_disturbance; col++) {
+												sub_info_adjusted[col] = sub_info[col];
+											}
+											for (int col = 2 + total_replacing_disturbance; col < 2 + total_replacing_disturbance_combo_value; col++) {
+												sub_info_adjusted[col] = "100";
+											}
+										}
+										info_6a_adjusted[row] = String.join(" ", sub_info_adjusted);		
+									} 
+									String probability_info_adjusted = String.join(";", info_6a_adjusted);
+									data6[i][2] = probability_info_adjusted;
+								}
+								
+								if(regeneration_info.length() > 0) {
+									String[] info_6b = regeneration_info.split(";");	
+									String[] info_6b_adjusted = new String[info_6b.length];
+									for (int row = 0; row < info_6b.length; row++) {			
+										String[] sub_info = info_6b[row].split(" ");
+										String[] sub_info_adjusted = new String[2 + total_replacing_disturbance_combo_value];
+										if (total_replacing_disturbance > total_replacing_disturbance_combo_value) {	// Case when decreasing the number of SRs --> Clear the unused data/column (keep the old data)
+											for (int col = 0; col < 2 + total_replacing_disturbance_combo_value; col++) {
+												sub_info_adjusted[col] = sub_info[col];
+											}
+										} else {	// Case when increasing the number of SRs --> Clear the unused data/column (keep the old data)
+											for (int col = 0; col < 2 + total_replacing_disturbance; col++) {
+												sub_info_adjusted[col] = sub_info[col];
+											}
+											for (int col = 2 + total_replacing_disturbance; col < 2 + total_replacing_disturbance_combo_value; col++) {
+												sub_info_adjusted[col] = "0";
+											}
+										}	
+										info_6b_adjusted[row] = String.join(" ", sub_info_adjusted);
+									} 
+									is_table6_loaded = true;	// to have the old data stay (create_table6 would not create new empty data)
+									String regeneration_info_adjusted = String.join(";", info_6b_adjusted);
+									data6[i][3] = regeneration_info_adjusted;
+								}
+							}
+							total_replacing_disturbance = total_replacing_disturbance_combo_value;
+				    		panel_SR_Disturbances_GUI = new SR_Disturbances_GUI();
+						} else {
+							replacingDisturbancesCombo.setSelectedItem((int) total_replacing_disturbance);
+						}
+					} 
 					
 					// Apply any change in the GUI to the table
 					data1[0][1] = totalPeriodsCombo.getSelectedItem().toString();	
@@ -3470,7 +3569,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					data1[5][1] = (exportProblemCheck.isSelected()) ? "true" : "false";
 					data1[6][1] = (exportSolutionCheck.isSelected()) ? "true" : "false";
 					model1.fireTableDataChanged();
-
 				}
 			};
 			
@@ -5185,7 +5283,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					+ "4. If percentage = null after processing all conditions, Prism would be free to assign any percentage value.\nWe often use the \"all null\" set up to control Non-SR disturbances through using basic constraints\n\n"
 					+ "5. MS_R and BS_R are absent. We might want to define zero loss for SR disturbances in MS_E and BS_E areas.\n\n"
 					+ "A side-note for Management Cost: For any particular cost type instance,\nif value = null after processing all conditions, Prism would assign the value of zero to that cost type instance";
-			PrismTextAreaReadMe warning_textarea = new PrismTextAreaReadMe("icon_script.png", 32, 32);
+			PrismTextAreaReadMe warning_textarea = new PrismTextAreaReadMe("icon_script.png", 1, 1 /*32, 32*/);
 			warning_textarea.append(message);
 			warning_textarea.setSelectionStart(0);	// scroll to top
 			warning_textarea.setSelectionEnd(0);
@@ -5915,7 +6013,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			create_table6b();
 			table6a_handle = new TableColumnsHandle(table6a);
 			table6b_handle = new TableColumnsHandle(table6b);
-			sr_disturbances_tables_ScrollPane = new ScrollPane_SubTables_SR_Disturbances(table6a, data6a, columnNames6a, table6b, data6b);
+			table6a_handle.setColumnVisible(columnNames6a[1], false);	// hide layer5_regen in probability screen
+			sr_disturbances_tables_ScrollPane = new ScrollPane_SubTables_SR_Disturbances(table6a, data6a, table6b, data6b, total_replacing_disturbance);
 			sr_disturbances_tables_ScrollPane.update_2_tables_data(data6a, data6b);
 			// End of 3rd grid -----------------------------------------------------------------------
 				    			
@@ -6457,7 +6556,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		
 		// Listener for this class----------------------------------------------------------------------
 		public void actionPerformed(ActionEvent e) {	    	
-	    	//Update GUI for time period 
+	    	// Update GUI for time period 
 	    	for (int j = 0; j < checkboxStaticIdentifiers.get(checkboxStaticIdentifiers.size() - 1).size(); j++) {			//The last element is Time period			
 				if (j < total_period) {
 					checkboxStaticIdentifiers.get(checkboxStaticIdentifiers.size() - 1).get(j).setVisible(true);		//Periods to be visible 			
@@ -6467,29 +6566,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				}
 			}  	
 	    	
-	      	//Update Dynamic Identifier Panel
+	      	// Update Dynamic Identifier Panel
 	    	if (yield_tables_column_names != null && dynamic_identifiersScrollPanel.get_allDynamicIdentifiers() == null) {
 	    		dynamic_identifiersScrollPanel = new ScrollPane_DynamicIdentifiers(read_database);	// "Get identifiers from yield table columns"
 	    	}	
-	    	
-	       	
-        	// update_replacing_disturbances_columns_view for table 6a
-    		for (int i = 0; i <  columnNames6a.length; i++) {
-    			if (i == 0 || (i >=2 && i < total_replacing_disturbance + 2)) {
-    				table6a_handle.setColumnVisible(columnNames6a[i], true);
-    			} else {
-    				table6a_handle.setColumnVisible(columnNames6a[i], false);
-    			}
-    		}
-    		
-    		// update_replacing_disturbances_columns_view for table 6b
-    		for (int i = 0; i <  columnNames6b.length; i++) {
-    			if (i < total_replacing_disturbance + 2) {
-    				table6b_handle.setColumnVisible(columnNames6b[i], true);
-    			} else {
-    				table6b_handle.setColumnVisible(columnNames6b[i], false);
-    			}
-    		}
 		}	
 		
 	    // Update set_id column. set_id needs to be unique-----------------

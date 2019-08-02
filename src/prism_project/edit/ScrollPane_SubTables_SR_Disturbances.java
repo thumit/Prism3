@@ -32,16 +32,18 @@ public class ScrollPane_SubTables_SR_Disturbances extends JScrollPane {
 	private JTable table6b;
 	private Object[][] data6b;
 	
+	private int total_replacing_disturbances;
+	
 	private JScrollPane probability_scrollpane;
 	private JScrollPane regeneration_scrollpane;
 	
 		
-	public ScrollPane_SubTables_SR_Disturbances(JTable table6a, Object[][] data6a, String[] columnNames6a, JTable table6b, Object[][] data6b) {	
+	public ScrollPane_SubTables_SR_Disturbances(JTable table6a, Object[][] data6a, JTable table6b, Object[][] data6b, int total_replacing_disturbances) {	
 		this.table6a = table6a;
-		this.data6a = data6a;
-		
 		this.table6b = table6b;
+		this.data6a = data6a;
 		this.data6b = data6b;
+		this.total_replacing_disturbances = total_replacing_disturbances;
 		
 	
 		probability_scrollpane = new JScrollPane(/*this.table6a*/);
@@ -78,11 +80,14 @@ public class ScrollPane_SubTables_SR_Disturbances extends JScrollPane {
 	}	
 			
 	
-	public String get_occurrence_info_from_GUI() {			
+	public String get_occurrence_info_from_GUI() {	
+		int total_rows = table6a.getRowCount();
+		int total_columns = table6a.getColumnCount() + 1;	// because we hide 1 column in table6a (This is the bad thing of TableColumnsHandle class)
+				
 		String probability_info = "";
-		for (int row = 0; row < data6a.length; row++) {
+		for (int row = 0; row < total_rows; row++) {
 			probability_info = probability_info + data6a[row][0] + " " + data6a[row][1];
-			for (int col = 2; col < data6a[row].length; col++) {
+			for (int col = 2; col < total_columns; col++) {
 				probability_info = probability_info + " " + data6a[row][col].toString();
 			}
 			probability_info = probability_info + ";";
@@ -94,11 +99,14 @@ public class ScrollPane_SubTables_SR_Disturbances extends JScrollPane {
 	}
 	
 	
-	public String get_regeneration_info_from_GUI() {			
+	public String get_regeneration_info_from_GUI() {	
+		int total_rows = table6b.getRowCount();
+		int total_columns = table6b.getColumnCount();
+		
 		String regeneration_info = "";
-		for (int row = 0; row < data6b.length; row++) {
+		for (int row = 0; row < total_rows; row++) {
 			regeneration_info = regeneration_info + data6b[row][0] + " " + data6b[row][1];
-			for (int col = 2; col < data6b[row].length; col++) {
+			for (int col = 2; col < total_columns; col++) {
 				regeneration_info = regeneration_info + " " + data6b[row][col].toString();
 			}
 			regeneration_info = regeneration_info + ";";
@@ -114,13 +122,11 @@ public class ScrollPane_SubTables_SR_Disturbances extends JScrollPane {
 		// Reload table6a
 		if(probability_info.length() > 0) {		// this guarantees the string is not ""
 			String[] info_6a = probability_info.split(";");					
-			for (int i = 0; i < info_6a.length; i++) {			
-				String[] sub_info = info_6a[i].split(" ");
-				String covertype_before = sub_info[0];
-				String covertype_after = sub_info[1];
-				for (int col = 2; col < sub_info.length; col++) {
+			for (int row = 0; row < info_6a.length; row++) {			
+				String[] sub_info = info_6a[row].split(" ");
+				for (int col = 2; col <  2 + total_replacing_disturbances; col++) {	// Just load up to the current number of SRs so old runs which have all 99 disturbances could be loaded)
 					double probability = Double.valueOf(sub_info[col]);
-					data6a[i][col] = probability;
+					data6a[row][col] = probability;
 				}
 			}
 		}
@@ -128,13 +134,11 @@ public class ScrollPane_SubTables_SR_Disturbances extends JScrollPane {
 		// Reload table6b
 		if(regeneration_info.length() > 0) {		// this guarantees the string is not ""
 			String[] info_6b = regeneration_info.split(";");					
-			for (int i = 0; i < info_6b.length; i++) {			
-				String[] sub_info = info_6b[i].split(" ");
-				String covertype_before = sub_info[0];
-				String covertype_after = sub_info[1];
-				for (int col = 2; col < sub_info.length; col++) {
+			for (int row = 0; row < info_6b.length; row++) {			
+				String[] sub_info = info_6b[row].split(" ");
+				for (int col = 2; col < 2 + total_replacing_disturbances; col++) {	// Just load up to the current number of SRs so old runs which have all 99 disturbances could be loaded)
 					double percentage = Double.valueOf(sub_info[col]);
-					data6b[i][col] = percentage;
+					data6b[row][col] = percentage;
 				}
 			}
 		}

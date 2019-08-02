@@ -17,6 +17,8 @@
 package prism_project.edit;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -39,25 +41,41 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.RowFilter.Entry;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableRowSorter;
 
 import prism_convenience.IconHandle;
 import prism_convenience.PrismGridBagLayoutHandle;
+import prism_convenience.PrismTableModel;
 import prism_convenience.TableColumnsHandle;
 import prism_project.data_process.Read_Database;
 import prism_root.PrismMain;
 
 public class Panel_QuickEdit_ManagementCost extends JPanel {
+	private JTable table8b;
+	private Object[][] data8b;
+	private DefaultTableCellRenderer render8b;
+	
+	private JButton btn_compact;
+	private JLabel view_label;
 	private JButton btnApplyActivityCost;
 	private JButton btnApplyConversionCost;
 	private Prism_ShowHideColumnsButtons btnApplyShowHide;
 	
 	public Panel_QuickEdit_ManagementCost(Read_Database read_database, JTable table8a, Object[][] data8a, String[] columnNames8a, JTable table8b, Object[][] data8b) {
+		this.table8b = table8b;
+		this.data8b = data8b;
+		this.render8b = (DefaultTableCellRenderer) table8b.getColumnModel().getColumn(0).getCellRenderer();
+		
+		
 		setLayout(new GridBagLayout());
 		
 		
@@ -74,19 +92,19 @@ public class Panel_QuickEdit_ManagementCost extends JPanel {
 		btnApplyShowHide.setVerticalTextPosition(SwingConstants.BOTTOM);
 		btnApplyShowHide.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnApplyShowHide.setToolTipText("show/hide yield tables columns");
-		btnApplyShowHide.setIcon(IconHandle.get_scaledImageIcon(30, 30, "icon_binoculars.png"));
-		btnApplyShowHide.setRolloverIcon(IconHandle.get_scaledImageIcon(40, 40, "icon_binoculars.png"));
+		btnApplyShowHide.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_binoculars.png"));
+		btnApplyShowHide.setRolloverIcon(IconHandle.get_scaledImageIcon(35, 35, "icon_binoculars.png"));
 		btnApplyShowHide.setContentAreaFilled(false);
 		
-		qd1.add(btnApplyShowHide, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
-				0, 0, 1, 1, 0, 1, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
-				0, 0, 0, 10));		// insets top, left, bottom, right
+		qd1.add(btnApplyShowHide, PrismGridBagLayoutHandle.get_c(c, "CENTER", 
+				0, 1, 1, 1, 0, 1, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				0, 0, 0, 0));		// insets top, left, bottom, right
 		
 		
 		// Add Label-------------------------------------------------------------------------------------------------
-		qd1.add(new JLabel("Activity cost"), PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
-				1, 0, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
-				0, 0, 0, 10));		// insets top, left, bottom, right
+		qd1.add(new JLabel("Activity cost"), PrismGridBagLayoutHandle.get_c(c, "CENTER", 
+				1, 2, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				0, 0, 0, 0));		// insets top, left, bottom, right
 				
 		
 		// Add formatedTextfield
@@ -123,8 +141,8 @@ public class Panel_QuickEdit_ManagementCost extends JPanel {
 
 			}
 		});
-		qd1.add(formatedTextfield, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
-				2, 0, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+		qd1.add(formatedTextfield, PrismGridBagLayoutHandle.get_c(c, "CENTER", 
+				1, 1, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
 				0, 0, 0, 0));		// insets top, left, bottom, right
 				
 		
@@ -168,14 +186,8 @@ public class Panel_QuickEdit_ManagementCost extends JPanel {
 				table8a.repaint();
 			}
 		});
-		qd1.add(btnApplyActivityCost, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
-				3, 0, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
-				0, 0, 0, 0));		// insets top, left, bottom, right
-				
-
-		// Add empty JLabel
-		qd1.add(new JLabel(), PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
-				4, 0, 1, 1, 1, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+		qd1.add(btnApplyActivityCost, PrismGridBagLayoutHandle.get_c(c, "CENTER", 
+				1, 0, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
 				0, 0, 0, 0));		// insets top, left, bottom, right
 		
 		
@@ -188,9 +200,9 @@ public class Panel_QuickEdit_ManagementCost extends JPanel {
 			
 		
 		// Add Label-------------------------------------------------------------------------------------------------
-		qd2.add(new JLabel("Conversion cost"), PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
-				1, 0, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
-				0, 0, 0, 10));		// insets top, left, bottom, right
+		qd2.add(new JLabel("Conversion cost"), PrismGridBagLayoutHandle.get_c(c, "CENTER", 
+				1, 2, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				0, 0, 0, 0));		// insets top, left, bottom, right
 
 		
 		// Add formatedTextfield
@@ -227,8 +239,8 @@ public class Panel_QuickEdit_ManagementCost extends JPanel {
 
 			}
 		});
-		qd2.add(formatedTextfield_2, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
-				2, 0, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+		qd2.add(formatedTextfield_2, PrismGridBagLayoutHandle.get_c(c, "CENTER", 
+				1, 1, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
 				0, 0, 0, 0));		// insets top, left, bottom, right
 		
 				
@@ -270,35 +282,51 @@ public class Panel_QuickEdit_ManagementCost extends JPanel {
 				table8b.addRowSelectionInterval(table8b.convertRowIndexToView(selectedRow[0]), table8b.convertRowIndexToView(selectedRow[0]));
 				table8b.revalidate();
 				table8b.repaint();
+				reset_view_without_changing_label();
 			}
 		});		
-		qd2.add(btnApplyConversionCost, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
-				3, 0, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+		qd2.add(btnApplyConversionCost, PrismGridBagLayoutHandle.get_c(c, "CENTER", 
+				1, 0, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
 				0, 0, 0, 0));		// insets top, left, bottom, right
 				
 
+		// Add Label-------------------------------------------------------------------------------------------------
+		view_label  = new JLabel("     full view     ");
+		qd2.add(view_label, PrismGridBagLayoutHandle.get_c(c, "CENTER", 
+				2, 2, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				0, 0, 0, 0));		// insets top, left, bottom, right
 		
+		// Add button compact view
+		btn_compact = new JButton();
+		btn_compact.setVerticalTextPosition(SwingConstants.BOTTOM);
+		btn_compact.setHorizontalTextPosition(SwingConstants.CENTER);
+		btn_compact.setToolTipText("show or hide the rows with all null values");
+		btn_compact.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_script.png"));
+		btn_compact.setRolloverIcon(IconHandle.get_scaledImageIcon(35, 35, "icon_script.png"));
+		btn_compact.setContentAreaFilled(false);
+		btn_compact.addActionListener(e -> {
+			switch (view_label.getText()) {
+			case "     full view     ":
+				view_label.setText("compact view");
+				break;
+			case "compact view":
+				view_label.setText("     full view     ");
+				break;
+			}
+			reset_view_without_changing_label();
+		});
+		qd2.add(btn_compact, PrismGridBagLayoutHandle.get_c(c, "CENTER", 
+				2, 1, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				0, 0, 0, 0));		// insets top, left, bottom, right		
 		
 		
 		// Add 2 panels to this big Panel
-		c = new GridBagConstraints();
-		c.fill = GridBagConstraints.HORIZONTAL;
-		
-		c.gridx = 0;
-		c.gridy = 0;
-		c.weightx = 1;
-		c.weighty = 0;
-		c.gridwidth = 1;
-		c.gridheight = 1;
-		add(qd1, c);
-		
-		c.gridx = 1;
-		c.gridy = 0;
-		c.weightx = 1;
-		c.weighty = 0;
-		c.gridwidth = 1;
-		c.gridheight = 1;
-		add(qd2, c);
+		add(qd1, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
+				0, 0, 1, 0, 1, 1, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				0, 0, 0, 0));		// insets top, left, bottom, right
+		add(qd2, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
+				1, 0, 1, 0, 1, 1, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				0, 0, 0, 0));		// insets top, left, bottom, right
 	}
 
 	
@@ -498,11 +526,61 @@ public class Panel_QuickEdit_ManagementCost extends JPanel {
 		btnApplyActivityCost.setEnabled(false);
 		btnApplyConversionCost.setEnabled(false);
 		btnApplyShowHide.setEnabled(false);
+		btn_compact.setEnabled(false);
 	}
 	
 	public void enable_all_apply_buttons() {
 		btnApplyActivityCost.setEnabled(true);
 		btnApplyConversionCost.setEnabled(true);
 		btnApplyShowHide.setEnabled(true);
+		btn_compact.setEnabled(true);
+		reset_view_without_changing_label();
+	}
+	
+	public void reset_view_without_changing_label() {
+		if (table8b.isEditing()) {
+			table8b.getCellEditor().cancelCellEditing();
+		}
+		
+		switch (view_label.getText()) {
+		case "compact view":
+			RowFilter<Object, Object> compact_filter = new RowFilter<Object, Object>() {
+				public boolean include(Entry entry) {
+					for (int col = 2; col < data8b[0].length; col++) {	// except the first 2 columns
+						if (entry.getValue(col) != null) {
+							return true;		// if 1 cell in this row is null then show the row
+						}
+					}
+					return false;	// hide the row when all cells have the value of zero
+				}
+			};
+			TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>((PrismTableModel) table8b.getModel());
+			sorter.setRowFilter(compact_filter);
+			table8b.setRowSorter(sorter);
+			
+			// Set Color and Alignment for Cells
+	        DefaultTableCellRenderer compact_r = new DefaultTableCellRenderer() {
+	            @Override
+	            public Component getTableCellRendererComponent(JTable table, Object
+				value, boolean isSelected, boolean hasFocus, int row, int column) {
+					super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+					setHorizontalAlignment(JLabel.LEFT);
+					setBackground(new Color(160, 160, 160));	// Set cell background color	
+					if (isSelected)	setBackground(table.getSelectionBackground());	// Set background color	for selected row
+	                return this;
+	            }
+	        };
+			for (int i = 0; i < 2; i++) {	// first 2 columns only
+				table8b.getColumnModel().getColumn(i).setCellRenderer(compact_r);
+			}
+			break;
+		case "     full view     ":
+			table8b.setRowSorter(null);
+			
+			for (int i = 0; i < 2; i++) {	// first 2 columns only
+				table8b.getColumnModel().getColumn(i).setCellRenderer(render8b);
+			}
+			break;
+		}
 	}
 }

@@ -16,6 +16,8 @@
  ******************************************************************************/
 package prism_project.edit;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -33,13 +35,23 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableRowSorter;
 
 import prism_convenience.IconHandle;
+import prism_convenience.PrismTableModel;
 import prism_root.PrismMain;
 
 public class Panel_QuickEdit_EA extends JPanel {
+	private JTable table;
+	private Object[][] data;
+	private DefaultTableCellRenderer render;
+	
 	private JButton btn_default;
+	private JButton btn_compact;
+	private JLabel view_label;
 	private JButton btn_apply_e_min;
 	private JButton btn_apply_e_max;
 	private JButton btn_apply_r_min;
@@ -47,7 +59,11 @@ public class Panel_QuickEdit_EA extends JPanel {
 	private JButton btnApplyImplement;
 	
 	public Panel_QuickEdit_EA(JTable table, Object[][] data, ArrayList<String>[] rotation_ranges, Object[][] default_data) {
-//		setPreferredSize(new Dimension(200, 0));
+		this.table = table;
+		this.data = data;
+		this.render = (DefaultTableCellRenderer) table.getColumnModel().getColumn(0).getCellRenderer();
+		
+		
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 
@@ -135,8 +151,8 @@ public class Panel_QuickEdit_EA extends JPanel {
 		c.weighty = 0;
 		c.gridwidth = 1;
 		c.gridheight = 1;
-		c.fill = GridBagConstraints.CENTER;
-		add(new JLabel("Set to Default"), c);
+		c.fill = GridBagConstraints.CENTER; 
+		add(new JLabel("reset"), c);
 		
 		// Add button default
 		btn_default = new JButton();
@@ -151,11 +167,18 @@ public class Panel_QuickEdit_EA extends JPanel {
 			int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(),"Reset now?", "Reset all cells to default",
 					JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
 			if (response == 0) {	
+				String previous_view = view_label.getText();
+				view_label.setText("     full view     ");
+				reset_view_without_changing_label();
+				//---------------------------------------the 3 lines above is needed to reset to full view 
 				for (int i = 0; i < default_data.length; i++) {
 					data[i] = Arrays.copyOf(default_data[i], default_data[i].length);
 				}
 				table.setRowSelectionInterval(table.convertRowIndexToView(0), table.convertRowIndexToView(data.length - 1));
 				table.clearSelection();
+				//---------------------------------------the 2 lines below retrive the previous view. Those 5 lines are not good at all, keep it temporarily to avoid loading incorrectly table4a 
+				view_label.setText(previous_view);
+				reset_view_without_changing_label();
 			}
 			if (response == 1) {
 			}
@@ -171,8 +194,50 @@ public class Panel_QuickEdit_EA extends JPanel {
 		
 		
 		
+		
 		// Add Label-------------------------------------------------------------------------------------------------
 		c.gridx = 1;
+		c.gridy = 2;
+		c.weightx = 0;
+		c.weighty = 0;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		c.fill = GridBagConstraints.CENTER;
+		view_label  = new JLabel("     full view     ");
+		add(view_label, c);
+		
+		// Add button compact view
+		btn_compact = new JButton();
+		btn_compact.setVerticalTextPosition(SwingConstants.BOTTOM);
+		btn_compact.setHorizontalTextPosition(SwingConstants.CENTER);
+		btn_compact.setToolTipText("show active options or all options");
+		btn_compact.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_script.png"));
+		btn_compact.setRolloverIcon(IconHandle.get_scaledImageIcon(35, 35, "icon_script.png"));
+		btn_compact.setContentAreaFilled(false);
+		btn_compact.addActionListener(e -> {
+			switch (view_label.getText()) {
+			case "     full view     ":
+				view_label.setText("compact view");
+				break;
+			case "compact view":
+				view_label.setText("     full view     ");
+				break;
+			}
+			reset_view_without_changing_label();
+		});
+		c.gridx = 1;
+		c.gridy = 0;
+		c.weightx = 0;
+		c.weighty = 0;
+		c.gridwidth = 1;
+		c.gridheight = 2;
+		c.fill = GridBagConstraints.CENTER;
+		add(btn_compact, c);
+				
+				
+		
+		// Add Label-------------------------------------------------------------------------------------------------
+		c.gridx = 2;
 		c.gridy = 2;
 		c.weightx = 0;
 		c.weighty = 0;
@@ -184,7 +249,7 @@ public class Panel_QuickEdit_EA extends JPanel {
 		
 		// Add comboBox
 		JComboBox combo_e_min = new Combo_e_minage();
-		c.gridx = 1;
+		c.gridx = 2;
 		c.gridy = 1;
 		c.weightx = 1;
 		c.weighty = 0;
@@ -231,7 +296,7 @@ public class Panel_QuickEdit_EA extends JPanel {
 				}
 			}
 		});
-		c.gridx = 1;
+		c.gridx = 2;
 		c.gridy = 0;
 		c.weightx = 0;
 		c.weighty = 0;
@@ -243,7 +308,7 @@ public class Panel_QuickEdit_EA extends JPanel {
 		
 	
 		// Add Label-------------------------------------------------------------------------------------------------
-		c.gridx = 2;
+		c.gridx = 3;
 		c.gridy = 2;
 		c.weightx = 0;
 		c.weighty = 0;
@@ -255,7 +320,7 @@ public class Panel_QuickEdit_EA extends JPanel {
 		
 		// Add comboBox
 		JComboBox combo_e_max = new Combo_e_maxage();
-		c.gridx = 2;
+		c.gridx = 3;
 		c.gridy = 1;
 		c.weightx = 1;
 		c.weighty = 0;
@@ -302,7 +367,7 @@ public class Panel_QuickEdit_EA extends JPanel {
 				}
 			}
 		});
-		c.gridx = 2;
+		c.gridx = 3;
 		c.gridy = 0;
 		c.weightx = 0;
 		c.weighty = 0;
@@ -314,7 +379,7 @@ public class Panel_QuickEdit_EA extends JPanel {
 	
 		
 		// Add Label-------------------------------------------------------------------------------------------------
-		c.gridx = 3;
+		c.gridx = 4;
 		c.gridy = 2;
 		c.weightx = 0;
 		c.weighty = 0;
@@ -326,7 +391,7 @@ public class Panel_QuickEdit_EA extends JPanel {
 		
 		// Add comboBox
 		JComboBox combo_r_min = new Combo_r_minage();
-		c.gridx = 3;
+		c.gridx = 4;
 		c.gridy = 1;
 		c.weightx = 1;
 		c.weighty = 0;
@@ -373,7 +438,7 @@ public class Panel_QuickEdit_EA extends JPanel {
 				}
 			}
 		});
-		c.gridx = 3;
+		c.gridx = 4;
 		c.gridy = 0;
 		c.weightx = 0;
 		c.weighty = 0;
@@ -385,7 +450,7 @@ public class Panel_QuickEdit_EA extends JPanel {
 		
 	
 		// Add Label-------------------------------------------------------------------------------------------------
-		c.gridx = 4;
+		c.gridx = 5;
 		c.gridy = 2;
 		c.weightx = 0;
 		c.weighty = 0;
@@ -397,7 +462,7 @@ public class Panel_QuickEdit_EA extends JPanel {
 		
 		// Add comboBox
 		JComboBox combo_r_max = new Combo_r_maxage();
-		c.gridx = 4;
+		c.gridx = 5;
 		c.gridy = 1;
 		c.weightx = 1;
 		c.weighty = 0;
@@ -444,7 +509,7 @@ public class Panel_QuickEdit_EA extends JPanel {
 				}
 			}
 		});
-		c.gridx = 4;
+		c.gridx = 5;
 		c.gridy = 0;
 		c.weightx = 0;
 		c.weighty = 0;
@@ -459,7 +524,7 @@ public class Panel_QuickEdit_EA extends JPanel {
 		
 		
 		// Add Label-------------------------------------------------------------------------------------------------
-		c.gridx = 5;
+		c.gridx = 6;
 		c.gridy = 2;
 		c.weightx = 0;
 		c.weighty = 0;
@@ -472,7 +537,7 @@ public class Panel_QuickEdit_EA extends JPanel {
 		// Add checkBox
 		JCheckBox implement_Check = new JCheckBox();
 		implement_Check.setSelected(true);
-		c.gridx = 5;
+		c.gridx = 6;
 		c.gridy = 1;
 		c.weightx = 1;
 		c.weighty = 0;
@@ -508,9 +573,10 @@ public class Panel_QuickEdit_EA extends JPanel {
 					}	
 					table.addRowSelectionInterval(table.convertRowIndexToView(i), table.convertRowIndexToView(i));
 				}
+				reset_view_without_changing_label();
 			}
 		});
-		c.gridx = 5;
+		c.gridx = 6;
 		c.gridy = 0;
 		c.weightx = 0;
 		c.weighty = 0;
@@ -523,6 +589,7 @@ public class Panel_QuickEdit_EA extends JPanel {
 	
 	public void disable_all_apply_buttons() {
 		btn_default.setEnabled(false);
+		btn_compact.setEnabled(false);
 		btn_apply_e_min.setEnabled(false);
 		btn_apply_e_max.setEnabled(false);
 		btn_apply_r_min.setEnabled(false);
@@ -532,10 +599,76 @@ public class Panel_QuickEdit_EA extends JPanel {
 	
 	public void enable_all_apply_buttons() {
 		btn_default.setEnabled(true);
+		btn_compact.setEnabled(true);
 		btn_apply_e_min.setEnabled(true);
 		btn_apply_e_max.setEnabled(true);
 		btn_apply_r_min.setEnabled(true);
 		btn_apply_r_max.setEnabled(true);
 		btnApplyImplement.setEnabled(true);
+		reset_view_without_changing_label();
+	}
+	
+	public void reset_view_without_changing_label() {
+		if (table.isEditing()) {
+			table.getCellEditor().cancelCellEditing();
+		}
+		
+		switch (view_label.getText()) {
+		case "compact view":
+			if (data != null) {		//Only allow sorter if the data is loaded
+//				// Old method:
+//				TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>((PrismTableModel) table.getModel());
+//				table.setRowSorter(sorter);
+//				List<RowFilter<PrismTableModel, Object>> filters, filters2;
+//				filters2 = new ArrayList<RowFilter<PrismTableModel, Object>>();
+//				for (int i = 0; i < data.length; i++) {
+//					RowFilter<PrismTableModel, Object> layer_filter = null;
+//					filters = new ArrayList<RowFilter<PrismTableModel, Object>>();
+//					if (data[i][6].toString() == "true") {
+//						filters.add(RowFilter.regexFilter(data[i][6].toString(), 6)); // i+1 is the table column containing the first layer	
+//					}
+//					layer_filter = RowFilter.orFilter(filters);
+//					filters2.add(layer_filter);
+//				}
+//				RowFilter<PrismTableModel, Object> combine_AllFilters = null;
+//				combine_AllFilters = RowFilter.orFilter(filters2);
+//				sorter.setRowFilter(combine_AllFilters);  
+				
+				// New method (might be better)
+				RowFilter<Object, Object> compact_filter = new RowFilter<Object, Object>() {
+					public boolean include(Entry entry) {
+						Boolean implementation = (boolean) entry.getValue(6);
+						return implementation == true;
+					}
+				};
+				TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>((PrismTableModel) table.getModel());
+				sorter.setRowFilter(compact_filter);
+				table.setRowSorter(sorter);
+				
+				// Set Color and Alignment for Cells
+		        DefaultTableCellRenderer compact_r = new DefaultTableCellRenderer() {
+		            @Override
+		            public Component getTableCellRendererComponent(JTable table, Object
+					value, boolean isSelected, boolean hasFocus, int row, int column) {
+						super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+						setHorizontalAlignment(JLabel.LEFT);
+						setBackground(new Color(160, 160, 160));	// Set cell background color	
+						if (isSelected)	setBackground(table.getSelectionBackground());	// Set background color	for selected row
+		                return this;
+		            }
+		        };
+				for (int i = 0; i < 2; i++) {	// first 2 columns only
+					table.getColumnModel().getColumn(i).setCellRenderer(compact_r);
+				}
+			}
+			break;
+		case "     full view     ":
+			table.setRowSorter(null);
+			
+			for (int i = 0; i < 2; i++) {	// first 2 columns only
+				table.getColumnModel().getColumn(i).setCellRenderer(render);
+			}
+			break;
+		}
 	}
 }

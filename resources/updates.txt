@@ -1090,3 +1090,27 @@ All changes in this block are associated with PrismAlpha1.2.07.jar, User Manual 
 All changes in this block are associated with PrismAlpha1.2.08.jar, Prism-Formulation-07.docx, Prism-UserManual-01.docx)
 --------------------------------------------------------------------------
 
+458. Total replacing disturbances update (confirmation, by a popup window, faster speed since data is now associated with only the SRs defined instead of with all 99 SRs previously):
+	- Fix reload_this_condition_occurrence_and_regeneration: load up to the current number of SRs so old runs which have full data of all 99 disturbances could be loaded
+	- get_occurrence_info_from_GUI & get_regeneration_info_from_GUI: edited with better code
+	- Listener of the SR_Disturbances_GUI: remove the unnecessary table handle show/hide since the new instance of SR_Disturbances_GUI is created
+	- Action apply in General_Input_GUI: add the popup window to allow confirmation of the change of the total SRs (new instance of SR_Disturbances_GUI would be created when apply)
+459. Add compact view functionality to EA Management screen:
+	- The functionality icon has 2 view modes: compact view (show only active/checked options that would be implemented) and full view (show all options that would be feasible for implementation)
+	- The view mode would also need to be updated when resetting data to default or doing a multiple/mass implementation checks in the Quickedit side window
+	- Sorting table is active on "compact view"
+	- ScrollPane_SubTable_EA_Management -- reload_this_table: The current method makes the processing really slow when clicking any row on table4. The speed enhancement is implemented by removing the usage of Object conversion and move the table4a.match_Datatype to outside of the for loop.
+	- Cells with value of -9999 would be displayed as blanlk cells
+460. Add compact view functionality to SR Disturbances screen:
+	- The functionality icon has 2 view modes: compact view (show only rows have at least one non-zero) and full view (show all rows)
+	- The view mode would also need to be updated when editting the data by using the Quickedit side window
+	- Sorting table is active on "compact view"
+	- Warning icons and tooltip message needs to be fixed to displayed the infeasibility correctly
+	- Rearrange items in the QuickEdit side window
+461. Add compact view functionality to SR Disturbances screen:
+	- The functionality icon has 2 view modes: compact view (show only rows have at least one non-null) and full view (show all rows)
+	- The view mode would also need to be updated when editting the data by using the Quickedit side window
+	- Sorting table is active on "compact view"
+	- Rearrange items in the QuickEdit side window
+All changes in this block are associated with PrismAlpha1.2.09.jar, Prism-Formulation-07.docx, Prism-UserManual-01.docx)
+--------------------------------------------------------------------------
