@@ -40,6 +40,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -1444,8 +1445,8 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			
 			
 			// Database Info
-			Object[] yield_tables_names = read_database.get_yield_tables_names();			
-			List<String> yield_tables_names_list = new ArrayList<String>() {{ for (Object i : yield_tables_names) add(i.toString());}};		// Convert Object array to String list
+			String[] yield_tables_names = read_database.get_yield_tables_names();			
+			List<String> yield_tables_names_list = Arrays.asList(yield_tables_names); 		// Convert array to list
 						
 			// Read input files to retrieve values later
 			Read_Input read = new Read_Input();

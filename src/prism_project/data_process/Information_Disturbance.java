@@ -28,7 +28,7 @@ public class Information_Disturbance {
 	private List<String>[] all_priority_condition_dynamic_dentifiers_column_indexes;
 	private String[][] all_priority_condition_info;	
 	private List<List<String>> all_layers;
-	private Object[][][] yield_tables_values;
+	private String[][][] yield_tables_values;
 	
 	private Object[] all_condition_rd_percentage;	// contains 3D array rd_percentage[][][] for all conditions
 	
@@ -149,7 +149,7 @@ public class Information_Disturbance {
 	}
 	
 	
-	private Boolean are_all_dynamic_identifiers_matched(Object[][][] yield_tables_values, int table_id_to_find, int row_id_to_find,
+	private Boolean are_all_dynamic_identifiers_matched(String[][][] yield_tables_values, int table_id_to_find, int row_id_to_find,
 			List<String> dynamic_identifiers_column_indexes, List<List<String>> dynamic_identifiers) {
 		
 		if (!dynamic_identifiers_column_indexes.get(0).equals("NoIdentifier")) {	//If there are dynamic identifiers, Check if in the same row of this yield table we have all the dynamic identifiers match	
@@ -157,7 +157,7 @@ public class Information_Disturbance {
 			for (List<String> this_dynamic_identifier : dynamic_identifiers) {	// loop all dynamic identifiers
 				int current_dynamic_column = Integer.parseInt(dynamic_identifiers_column_indexes.get(identifiers_count));		//This is the yield table column of the dynamic identifier
 				if (this_dynamic_identifier.get(0).contains(",")) {	//if this is a range identifier (the 1st element of this identifier contains ",")							
-					double yt_value = Double.parseDouble(yield_tables_values[table_id_to_find][row_id_to_find][current_dynamic_column].toString());
+					double yt_value = Double.parseDouble(yield_tables_values[table_id_to_find][row_id_to_find][current_dynamic_column]);
 					for (String range : this_dynamic_identifier) {	//Loop all ranges of this range identifier
 						StringTokenizer tok = new StringTokenizer(range, ",");	// split by ,
 						// will for sure have 2 items in the range --> do not need while check here
@@ -168,7 +168,7 @@ public class Information_Disturbance {
 						}
 					}										
 				} else { // if this is a discrete identifier
-					int index = Collections.binarySearch(this_dynamic_identifier, yield_tables_values[table_id_to_find][row_id_to_find][current_dynamic_column].toString());
+					int index = Collections.binarySearch(this_dynamic_identifier, yield_tables_values[table_id_to_find][row_id_to_find][current_dynamic_column]);
 					if (index < 0) 	{	// If all selected items in this list do not contain the value in the same column (This is String comparison, we may need to change to present data manually change by users, ex. ponderosa 221 vs 221.00) 
 						return false;			
 					}

@@ -324,3 +324,60 @@ FROM yield_tables WHERE prescription LIKE '%\_EA\_E\_%' ESCAPE '\' GROUP BY pres
 
 GROUP BY e_covertype, e_sizeclass
 ----------
+test percent rank (SQLITE 3.27 only)
+SELECT 
+prescription, row_id, tpa, action_type,
+
+printf('%.2f', PERCENT_RANK() OVER
+(ORDER BY CAST (tpa as decimal))) rank 
+ 
+FROM yield_tables 
+WHERE row_id = '1';
+----------
+test rank (SQLITE 3.27 only)
+SELECT 
+prescription, row_id, tpa, action_type,
+
+RANK() OVER
+(ORDER BY CAST (tpa as decimal)) rank 
+ 
+FROM yield_tables 
+WHERE row_id = '1';
+----------
+Show all coulmn name and type
+SELECT 
+ROW_NUMBER() OVER(ORDER BY name ASC) AS id, name AS attribute, type FROM PRAGMA_TABLE_INFO('yield_tables');
+----------
+Test recursive
+Select * FROM
+(          
+            
+WITH RECURSIVE variable(attribute) AS (SELECT name FROM PRAGMA_TABLE_INFO('yield_tables'))        
+SELECT attribute FROM variable  
+                              
+ )
+----------
+
+SELECT table1.prescription, table1.row_id, tpa, tpa_rank, age_class, age_class_rank FROM
+(
+
+(SELECT prescription, row_id, tpa, RANK() OVER (ORDER BY CAST (tpa as decimal)) tpa_rank FROM yield_tables) table1
+LEFT JOIN
+(SELECT prescription, row_id, age_class, RANK() OVER (ORDER BY CAST (age_class as decimal)) age_class_rank FROM yield_tables) table2
+ON table1.prescription = table2.prescription AND table1.row_id = table2.row_id
+
+
+)
+----------
+
+SELECT yield_tables.prescription, yield_tables.row_id, tpa, tpa_rank, age_class, age_class_rank FROM
+yield_tables
+
+LEFT JOIN 
+(SELECT prescription, row_id, RANK() OVER (ORDER BY CAST (tpa as decimal)) tpa_rank FROM yield_tables) table1
+ON yield_tables.prescription = table1.prescription AND yield_tables.row_id = table1.row_id
+
+LEFT JOIN 
+(SELECT prescription, row_id, RANK() OVER (ORDER BY CAST (age_class as decimal)) age_class_rank FROM yield_tables) table2
+ON yield_tables.prescription = table2.prescription AND yield_tables.row_id = table2.row_id
+----------

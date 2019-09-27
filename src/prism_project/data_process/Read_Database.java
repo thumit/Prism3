@@ -42,9 +42,10 @@ import prism_convenience.StringHandle;
 import prism_root.PrismMain;
 
 public class Read_Database {
-	private Object[][][] yield_tables_values;
-	private Object[] yield_tables_names;
+	private String[][][] yield_tables_values;
+	private String[] yield_tables_names;
 	private String[] yield_tables_column_names;
+	private String[] yield_tables_column_types;
 	private List<String>[] unique_values_list;
 	
 	private String[][] existing_strata_values;
@@ -67,9 +68,11 @@ public class Read_Database {
 		this.file_database = file_database;
 		
 		
-		Read_strata_definition();
-		Read_existing_strata();
-		Read_yield_tables();
+		if (file_database != null && file_database.exists()) {	
+			Read_strata_definition();
+			Read_existing_strata();
+			Read_yield_tables();
+		}
 		
 		
 //		Thread t = new Thread() {
@@ -117,90 +120,98 @@ public class Read_Database {
 	}
 
 	
+	public File get_file_database() {
+		return file_database;
+	}
+	
+	
 	private void Read_yield_tables() {		
 		try {			
-			if (file_database.exists()) {	
-				Class.forName("org.sqlite.JDBC").newInstance();
-				conn = DriverManager.getConnection("jdbc:sqlite:" + file_database);
-				st = conn.createStatement();
+			conn = DriverManager.getConnection("jdbc:sqlite:" + file_database);
+			st = conn.createStatement();
 
-				
-				//-----------------------------------------------------------------------------------------------------------
-				// get total yield tables
-				int total_prescriptions = 0;				
-				rs = st.executeQuery("SELECT COUNT(DISTINCT prescription) FROM yield_tables;");		//This only have 1 row and 1 column, the value is total number of unique prescription
-				while (rs.next()) {
-					total_prescriptions = rs.getInt(1);	//column 1
-				}									
-				yield_tables_names = new Object[total_prescriptions];
-				yield_tables_values = new Object[total_prescriptions][][];
-				
-				
-				//get the table name and put into array "nameOftable"
-				rs = st.executeQuery("SELECT DISTINCT prescription, COUNT(prescription) as total_rows FROM yield_tables GROUP BY prescription;");	// prescription is auto sorted because of the "GROUP BY"		
-				int prescription_count = 0;
-				while (rs.next()) {
-					yield_tables_names[prescription_count] = rs.getString(1);		// column 1 = prescription
-					yield_tables_values[prescription_count] = new Object[Integer.valueOf(rs.getString(2))][];		// column 2 = total_rows of that prescription					
-					prescription_count++;
-				}			
-				
-				
-				rs = st.executeQuery("SELECT * FROM yield_tables ORDER BY prescription, CAST(row_id as decimal) ASC;");				
-				// get total columns and "table_ColumnNames" for each yield table
-				rsmd = rs.getMetaData();
-				int colCount = rsmd.getColumnCount();
-				yield_tables_column_names = new String[colCount];
-				for (int i = 1; i <= colCount; i++) {		// this start from 1
-					yield_tables_column_names[i-1] = rsmd.getColumnName(i);			// Note that tableColumnNames start from 0
-				}		
-				
-				// These are arrays, each is a Set of unique values of a column in the database yield_tables
-				Set<String>[] yield_tables_column_unique_values = new LinkedHashSet[colCount];
-				for (int col = 0; col < colCount; col++) {
-					yield_tables_column_unique_values[col] = new LinkedHashSet<>();
-				}
-				
-				// get values for each table & unique values for each column
-				for (int i = 0; i < yield_tables_values.length; i++) {
-					for (int row = 0; row < yield_tables_values[i].length; row++) {
-						rs.next();
-						yield_tables_values[i][row] = new Object[colCount];
-						for (int col = 0; col < colCount; col++) {
-							String value = rs.getString(col + 1);
-							yield_tables_values[i][row][col] = value;
-							yield_tables_column_unique_values[col].add(value);
-						}
-					}
-				}		
-				
-				// Convert sets to lists and sort the Lists  --- Important note: we always prefer SORTING DOUBLE
-				unique_values_list = new ArrayList[colCount];
-				for (int col = 0; col < colCount; col++) {
-					unique_values_list[col] = new ArrayList<String>(yield_tables_column_unique_values[col]);
-					Collections.sort(unique_values_list[col], new Comparator<String>() {	// Sort the list
-						@Override
-						public int compare(String o1, String o2) {
-							try {
-								return Double.valueOf(o1).compareTo(Double.valueOf(o2));	// Sort Double
-							} catch (Exception e1) {
-								return o1.compareTo(o2);	// if fail --> Sort String
-							}
-						}
-					});
-				}
-				
-				System.out.println("The below yield-table attributes contain at least one non-numeric cell:");
-				for (int i = 0; i < unique_values_list.length; i++) {
-					try {
-						Double.parseDouble(unique_values_list[i].get(0));
-					} catch (NumberFormatException e) {		// if the minimum unique value is not a double, then this attribute is non-numeric
-						System.out.println("           - " + yield_tables_column_names[i]);
-					}
-				}
-				
-				yield_tables_column_unique_values = null;	// clear to save memory
+			
+			//-----------------------------------------------------------------------------------------------------------
+			// get total yield tables
+			int total_prescriptions = 0;				
+			rs = st.executeQuery("SELECT COUNT(DISTINCT prescription) FROM yield_tables;");		//This only have 1 row and 1 column, the value is total number of unique prescription
+			while (rs.next()) {
+				total_prescriptions = rs.getInt(1);	//column 1
+			}									
+			yield_tables_names = new String[total_prescriptions];
+			yield_tables_values = new String[total_prescriptions][][];
+			
+			
+			//get the table name and put into array "nameOftable"
+			rs = st.executeQuery("SELECT DISTINCT prescription, COUNT(prescription) as total_rows FROM yield_tables GROUP BY prescription;");	// prescription is auto sorted because of the "GROUP BY"		
+			int prescription_count = 0;
+			while (rs.next()) {
+				yield_tables_names[prescription_count] = rs.getString(1);		// column 1 = prescription
+				yield_tables_values[prescription_count] = new String[Integer.valueOf(rs.getString(2))][];		// column 2 = total_rows of that prescription					
+				prescription_count++;
+			}			
+			
+			
+			rs = st.executeQuery("SELECT * FROM yield_tables ORDER BY prescription, CAST(row_id as decimal) ASC;");				
+			// get total columns and "table_ColumnNames" for each yield table
+			rsmd = rs.getMetaData();
+			int colCount = rsmd.getColumnCount();
+			yield_tables_column_names = new String[colCount];
+			for (int i = 1; i <= colCount; i++) {		// this start from 1
+				yield_tables_column_names[i-1] = rsmd.getColumnName(i);			// Note that tableColumnNames start from 0
+			}		
+			
+			// These are arrays, each is a Set of unique values of a column in the database yield_tables
+			Set<String>[] yield_tables_column_unique_values = new LinkedHashSet[colCount];
+			for (int col = 0; col < colCount; col++) {
+				yield_tables_column_unique_values[col] = new LinkedHashSet<>();
 			}
+			
+			// get values for each table & unique values for each column
+			for (int i = 0; i < yield_tables_values.length; i++) {
+				for (int row = 0; row < yield_tables_values[i].length; row++) {
+					rs.next();
+					yield_tables_values[i][row] = new String[colCount];
+					for (int col = 0; col < colCount; col++) {
+						String value = rs.getString(col + 1);
+						yield_tables_values[i][row][col] = value;
+						yield_tables_column_unique_values[col].add(value);
+					}
+				}
+			}		
+			
+			// Convert sets to lists and sort the Lists  --- Important note: we always prefer SORTING DOUBLE
+			unique_values_list = new ArrayList[colCount];
+			for (int col = 0; col < colCount; col++) {
+				unique_values_list[col] = new ArrayList<String>(yield_tables_column_unique_values[col]);
+				Collections.sort(unique_values_list[col], new Comparator<String>() {	// Sort the list
+					@Override
+					public int compare(String o1, String o2) {
+						try {
+							return Double.valueOf(o1).compareTo(Double.valueOf(o2));	// Sort Double
+						} catch (Exception e1) {
+							return o1.compareTo(o2);	// if fail --> Sort String
+						}
+					}
+				});
+			}
+			
+			// Identify column type automatically based on Sorting double
+			yield_tables_column_types = new String[colCount];
+			for (int i = 0; i < unique_values_list.length; i++) {
+				yield_tables_column_types[i] = "NUMERIC";
+			}
+			System.out.println("The below yield-table attributes contain at least one non-numeric cell:");
+			for (int i = 0; i < unique_values_list.length; i++) {
+				try {
+					Double.parseDouble(unique_values_list[i].get(0));
+				} catch (NumberFormatException e) {		// if the minimum unique value is not a double, then this attribute is non-numeric
+					System.out.println("           - " + yield_tables_column_names[i]);
+					yield_tables_column_types[i] = "TEXT";
+				}
+			}
+			
+			yield_tables_column_unique_values = null;	// clear to save memory
 		} catch (Exception e) {
 			e.printStackTrace();
 			String warningText = "yield_tables does not meet Prism's data requirements\n";
@@ -220,33 +231,30 @@ public class Read_Database {
 	
 	private void Read_existing_strata() {		
 		try {			
-			if (file_database.exists()) {	
-				Class.forName("org.sqlite.JDBC").newInstance();
-				conn = DriverManager.getConnection("jdbc:sqlite:" + file_database);
-				st = conn.createStatement();
+			conn = DriverManager.getConnection("jdbc:sqlite:" + file_database);
+			st = conn.createStatement();
 
-				
-				// get total rows (strata count)
-				int rowCount2 = 0;				
-				rs = st.executeQuery("SELECT COUNT (DISTINCT(layer1 || layer2 || layer3 || layer4 || layer5 || layer6)) FROM existing_strata;");		// This only have 1 row and 1 column, the value is total number of unique strata
-				while (rs.next()) {
-					rowCount2 = rs.getInt(1);	//column 1
-				}				
-				
-				// get total columns
-				rs = st.executeQuery("SELECT * FROM existing_strata ORDER BY (layer1 || layer2 || layer3 || layer4 || layer5 || layer6) ASC;");	// always sort by strata_id
-				rsmd = rs.getMetaData();
-				int colCount2 = rsmd.getColumnCount();
-				
-				// Redefine size
-				existing_strata_values = new String[rowCount2][colCount2];
-				
-				// get values
-				for (int row = 0; row < rowCount2; row++) {
-					rs.next();
-					for (int col = 0; col < colCount2; col++) {
-						existing_strata_values[row][col] = rs.getString(col + 1);
-					}
+			
+			// get total rows (strata count)
+			int rowCount2 = 0;				
+			rs = st.executeQuery("SELECT COUNT (DISTINCT(layer1 || layer2 || layer3 || layer4 || layer5 || layer6)) FROM existing_strata;");		// This only have 1 row and 1 column, the value is total number of unique strata
+			while (rs.next()) {
+				rowCount2 = rs.getInt(1);	//column 1
+			}				
+			
+			// get total columns
+			rs = st.executeQuery("SELECT * FROM existing_strata ORDER BY (layer1 || layer2 || layer3 || layer4 || layer5 || layer6) ASC;");	// always sort by strata_id
+			rsmd = rs.getMetaData();
+			int colCount2 = rsmd.getColumnCount();
+			
+			// Redefine size
+			existing_strata_values = new String[rowCount2][colCount2];
+			
+			// get values
+			for (int row = 0; row < rowCount2; row++) {
+				rs.next();
+				for (int col = 0; col < colCount2; col++) {
+					existing_strata_values[row][col] = rs.getString(col + 1);
 				}
 			}
 		} catch (Exception e) {
@@ -267,89 +275,86 @@ public class Read_Database {
 	
 	private void Read_strata_definition() {		
 		try {			
-			if (file_database.exists()) {	
-				Class.forName("org.sqlite.JDBC").newInstance();
-				conn = DriverManager.getConnection("jdbc:sqlite:" + file_database);
-				st = conn.createStatement();
+			conn = DriverManager.getConnection("jdbc:sqlite:" + file_database);
+			st = conn.createStatement();
 
-				
-				// Get total rows
-				int rowCount3 = 0;				
-				rs = st.executeQuery("SELECT COUNT(layer_id) FROM strata_definition;");		// This only have 1 row and 1 column
-				while (rs.next()) {
-					rowCount3 = rs.getInt(1);	// column 1
-				}				
-				
-				// get total columns
-				rs = st.executeQuery("SELECT * FROM strata_definition ORDER BY layer_id, attribute_id ASC;");		// always sort by layer_id & attribute_id
-				rsmd = rs.getMetaData();
-				int colCount3 = rsmd.getColumnCount();
-				
-				// Redefine size
-				strata_definition_values = new String[rowCount3][colCount3];
-				
-				// get values
-				for (int row = 0; row < rowCount3; row++) {
-					rs.next();
-					for (int col = 0; col < colCount3; col++) {
-						strata_definition_values[row][col] = rs.getString(col + 1);
-					}
+			
+			// Get total rows
+			int rowCount3 = 0;				
+			rs = st.executeQuery("SELECT COUNT(layer_id) FROM strata_definition;");		// This only have 1 row and 1 column
+			while (rs.next()) {
+				rowCount3 = rs.getInt(1);	// column 1
+			}				
+			
+			// get total columns
+			rs = st.executeQuery("SELECT * FROM strata_definition ORDER BY layer_id, attribute_id ASC;");		// always sort by layer_id & attribute_id
+			rsmd = rs.getMetaData();
+			int colCount3 = rsmd.getColumnCount();
+			
+			// Redefine size
+			strata_definition_values = new String[rowCount3][colCount3];
+			
+			// get values
+			for (int row = 0; row < rowCount3; row++) {
+				rs.next();
+				for (int col = 0; col < colCount3; col++) {
+					strata_definition_values[row][col] = rs.getString(col + 1);
 				}
-				
-//				// This is saved for another way to sort strata definition by layer_id & attribute_id
-//				Arrays.sort(strata_definition_values, new Comparator<String[]>(){
-//					@Override
-//					public int compare(String[] first, String[] second) {
-//						int comparedTo = first[0].compareTo(second[0]);	// compare the first element (layer)
-//						if (comparedTo == 0)
-//							return first[2].compareTo(second[2]);	// if the first element (layer) is same (result is 0), compare the third element (attribute)
-//						else
-//							return comparedTo;
-//					}
-//				});
-					
-
-				layers_title = new ArrayList<String>();
-				layers_title_tooltip = new ArrayList<String>();
-				
-				all_layers = new ArrayList<List<String>>();
-				all_layers_tooltips = new ArrayList<List<String>>();				
-				
-				// Loop through all rows and add all layers information
-				for (int i = 0; i < rowCount3; i++) {
-					if (!layers_title.contains(strata_definition_values[i][0])) {  // If found a new layer
-						// Add Layer title and toolTip    	
-			        	layers_title.add(strata_definition_values[i][0]);
-			        	layers_title_tooltip.add(strata_definition_values[i][1]);
-			        	
-			        	// Add 2 temporary Lists to the allLayers & allLayers_ToolTips
-			        	all_layers.add(new ArrayList<String>());
-			        	all_layers_tooltips.add(new ArrayList<String>());
-					}
-									
-					all_layers.get(all_layers.size() - 1).add(strata_definition_values[i][2]);		// Add layer's element to the last layer
-					all_layers_tooltips.get(all_layers_tooltips.size() - 1).add(strata_definition_values[i][3]);		// Add layer's element's ToolTip to the last layer ToolTip
-				}	
-				
-				
-				
-//				// Testing Linked List
-//				layers = new LinkedList_Layers();
-//				for (int i = 0; i < rowCount3; i++) {				
-//					if (layers.isEmpty() || ! layers.get(layers.size() - 1).layer_id.equalsIgnoreCase(strata_definition_values[i][0])) {  // If found a new layer then add the layer
-//						Layer_Item new_layer = new Layer_Item(strata_definition_values[i][0], strata_definition_values[i][1], new LinkedList<Attribute_Item>());
-//						layers.add(new_layer);
-//					}									
-//					Attribute_Item new_attribute = new Attribute_Item(strata_definition_values[i][2], strata_definition_values[i][3]);	// add the attribute to the attributes of the last added layer		
-//					layers.get(layers.size() - 1).attributes.add(new_attribute);
-//				}	
-//															
-//				for (Layer_Item i : layers) {					
-//					for (Attribute_Item j : i.attributes) {
-//						System.out.println(i.layer_id + " " + i.layer_description + " " + j.attribute_id + " " + j.attribute_description);
-//					}
-//				}		
 			}
+			
+//			// This is saved for another way to sort strata definition by layer_id & attribute_id
+//			Arrays.sort(strata_definition_values, new Comparator<String[]>(){
+//				@Override
+//				public int compare(String[] first, String[] second) {
+//					int comparedTo = first[0].compareTo(second[0]);	// compare the first element (layer)
+//					if (comparedTo == 0)
+//						return first[2].compareTo(second[2]);	// if the first element (layer) is same (result is 0), compare the third element (attribute)
+//					else
+//						return comparedTo;
+//				}
+//			});
+				
+
+			layers_title = new ArrayList<String>();
+			layers_title_tooltip = new ArrayList<String>();
+			
+			all_layers = new ArrayList<List<String>>();
+			all_layers_tooltips = new ArrayList<List<String>>();				
+			
+			// Loop through all rows and add all layers information
+			for (int i = 0; i < rowCount3; i++) {
+				if (!layers_title.contains(strata_definition_values[i][0])) {  // If found a new layer
+					// Add Layer title and toolTip    	
+		        	layers_title.add(strata_definition_values[i][0]);
+		        	layers_title_tooltip.add(strata_definition_values[i][1]);
+		        	
+		        	// Add 2 temporary Lists to the allLayers & allLayers_ToolTips
+		        	all_layers.add(new ArrayList<String>());
+		        	all_layers_tooltips.add(new ArrayList<String>());
+				}
+								
+				all_layers.get(all_layers.size() - 1).add(strata_definition_values[i][2]);		// Add layer's element to the last layer
+				all_layers_tooltips.get(all_layers_tooltips.size() - 1).add(strata_definition_values[i][3]);		// Add layer's element's ToolTip to the last layer ToolTip
+			}	
+			
+			
+			
+//			// Testing Linked List
+//			layers = new LinkedList_Layers();
+//			for (int i = 0; i < rowCount3; i++) {				
+//				if (layers.isEmpty() || ! layers.get(layers.size() - 1).layer_id.equalsIgnoreCase(strata_definition_values[i][0])) {  // If found a new layer then add the layer
+//					Layer_Item new_layer = new Layer_Item(strata_definition_values[i][0], strata_definition_values[i][1], new LinkedList<Attribute_Item>());
+//					layers.add(new_layer);
+//				}									
+//				Attribute_Item new_attribute = new Attribute_Item(strata_definition_values[i][2], strata_definition_values[i][3]);	// add the attribute to the attributes of the last added layer		
+//				layers.get(layers.size() - 1).attributes.add(new_attribute);
+//			}	
+//														
+//			for (Layer_Item i : layers) {					
+//				for (Attribute_Item j : i.attributes) {
+//					System.out.println(i.layer_id + " " + i.layer_description + " " + j.attribute_id + " " + j.attribute_description);
+//				}
+//			}	
 		} catch (Exception e) {
 			e.printStackTrace();
 			String warningText = "strata_definition does not meet Prism's data requirements\n";
@@ -371,15 +376,19 @@ public class Read_Database {
 	// This block is For yield_tales ------------------------------------------------------------------------------------------------------
 	// This block is For yield_tales ------------------------------------------------------------------------------------------------------
 	// This block is For yield_tales ------------------------------------------------------------------------------------------------------
-	public Object[][][] get_yield_tables_values() {	
+	public String[][][] get_yield_tables_values() {	
 		return yield_tables_values;
 	}
 	
 	public String[] get_yield_tables_column_names() {
 		return yield_tables_column_names;
 	}
+	
+	public String[] get_yield_tables_column_types() {
+		return yield_tables_column_types;
+	}
 
-	public Object[] get_yield_tables_names() {
+	public String[] get_yield_tables_names() {
 		return yield_tables_names;
 	}
 	
@@ -400,7 +409,6 @@ public class Read_Database {
 //		List<String> unique_values_list = new ArrayList<String>();
 //		try {			
 //			if (file_database.exists()) {	
-//				Class.forName("org.sqlite.JDBC").newInstance();
 //				conn = DriverManager.getConnection("jdbc:sqlite:" + file_database);
 //				st = conn.createStatement();
 //				
@@ -461,7 +469,7 @@ public class Read_Database {
 			int age_class_index = yield_tables_column_names_list.indexOf("st_age_10");																// CNPZ case
 			if (yield_tables_column_names_list.contains("age_class")) age_class_index = yield_tables_column_names_list.indexOf("age_class");		// CGNF case
 			
-			valueReturn = yield_tables_values[index][0][age_class_index].toString();			// row 0 is the first period (1st row)
+			valueReturn = yield_tables_values[index][0][age_class_index];			// row 0 is the first period (1st row)
 		} catch (Exception e) {
 			valueReturn = null;
 			System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Not found age class from yield table: " + tableName_toFind);
@@ -505,7 +513,7 @@ public class Read_Database {
 		return all_layers;
 	}
 	
-	public List<List<String>> get_allLayers_tooltips() {
+	public List<List<String>> get_all_layers_tooltips() {
 		return all_layers_tooltips;
 	}	
 	
@@ -519,7 +527,6 @@ public class Read_Database {
 		ArrayList<String>[] rotation_ranges = null;		
 		try {			
 			if (file_database.exists()) {	
-				Class.forName("org.sqlite.JDBC").newInstance();
 				conn = DriverManager.getConnection("jdbc:sqlite:" + file_database);
 				st = conn.createStatement();
 
@@ -527,7 +534,7 @@ public class Read_Database {
 				//-----------------------------------------------------------------------------------------------------------
 				// this will be used to generate combo box values in the "Cover type Conversion" windows
 				// this is the query 2.3 in "dbms_system_sql_library.txt" with modification in how to write escape: e.g. 		 '%\_EA\_E\_%' ESCAPE '\'  -->	'%\"_EA\"_E%' ESCAPE '\"'
-				rs = st.executeQuery("SELECT e_table.e_covertype, "
+				rs = st.executeQuery("SELECT e_table.e_covertype AS covertype, "
 						+ "e_table.e_min_rotation_age, "
 						+ "e_table.e_max_rotation_age, "
 						+ "r_table.r_min_rotation_age, "
@@ -538,7 +545,7 @@ public class Read_Database {
 								+ "MAX(CAST(rotation_age as decimal)) AS e_max_rotation_age "
 								+ " FROM "
 								+ "(SELECT DISTINCT prescription AS EA_E_prescription, "
-								+ "action_type AS final_activity, CAST(age_class as decimal) AS rotation_age FROM yield_tables WHERE prescription LIKE '%\"_EA\"_E\"_%' ESCAPE '\"' GROUP BY prescription) "
+								+ "action_type AS final_activity, MAX(CAST(age_class as decimal)) AS rotation_age FROM yield_tables WHERE prescription LIKE '%\"_EA\"_E\"_%' ESCAPE '\"' GROUP BY prescription) "
 						+ "GROUP BY e_covertype) AS e_table "
 								
 						+ "LEFT JOIN"
@@ -548,7 +555,7 @@ public class Read_Database {
 							+ "MAX(CAST(rotation_age as decimal)) AS r_max_rotation_age "
 							+ "FROM "
 							+ "(SELECT DISTINCT prescription AS EA_R_prescription, "
-							+ "action_type AS final_activity, CAST(age_class as decimal) AS rotation_age FROM yield_tables WHERE prescription LIKE '%\"_EA\"_R\"_%' ESCAPE '\"' GROUP BY prescription) "
+							+ "action_type AS final_activity, MAX(CAST(age_class as decimal)) AS rotation_age FROM yield_tables WHERE prescription LIKE '%\"_EA\"_R\"_%' ESCAPE '\"' GROUP BY prescription) "
 						+ "GROUP BY r_covertype) AS r_table "
 						
 						+ "ON e_table.e_covertype = r_table.r_covertype)"
@@ -568,7 +575,7 @@ public class Read_Database {
 							+ "MAX(CAST(rotation_age as decimal)) AS r_max_rotation_age "
 							+ "FROM "
 							+ "(SELECT DISTINCT prescription AS EA_R_prescription, "
-							+ "action_type AS final_activity, CAST(age_class as decimal) AS rotation_age FROM yield_tables WHERE prescription LIKE '%\"_EA\"_R\"_%' ESCAPE '\"' GROUP BY prescription) "
+							+ "action_type AS final_activity, MAX(CAST(age_class as decimal)) AS rotation_age FROM yield_tables WHERE prescription LIKE '%\"_EA\"_R\"_%' ESCAPE '\"' GROUP BY prescription) "
 						+ "GROUP BY r_covertype) AS r_table "
 						
 						+ "LEFT JOIN"
@@ -578,7 +585,7 @@ public class Read_Database {
 							+ "MAX(CAST(rotation_age as decimal)) AS e_max_rotation_age "
 							+ " FROM "
 							+ "(SELECT DISTINCT prescription AS EA_E_prescription, "
-							+ "action_type AS final_activity, CAST(age_class as decimal) AS rotation_age FROM yield_tables WHERE prescription LIKE '%\"_EA\"_E\"_%' ESCAPE '\"' GROUP BY prescription) "
+							+ "action_type AS final_activity, MAX(CAST(age_class as decimal)) AS rotation_age FROM yield_tables WHERE prescription LIKE '%\"_EA\"_E\"_%' ESCAPE '\"' GROUP BY prescription) "
 						+ "GROUP BY e_covertype) AS e_table "
 						
 						+ "ON e_table.e_covertype = r_table.r_covertype)"

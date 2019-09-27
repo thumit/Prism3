@@ -885,7 +885,6 @@ public class Setting {
 				ResultSet rs = null;		
 				
 				try {
-					Class.forName("org.sqlite.JDBC").newInstance();
 					conn = DriverManager.getConnection(conn_path);
 					stmt = conn.createStatement();	
 					

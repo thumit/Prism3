@@ -25,8 +25,6 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +42,6 @@ import javax.swing.JTable;
 import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.RowFilter.Entry;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
@@ -60,9 +57,9 @@ import prism_project.data_process.Read_Database;
 import prism_root.PrismMain;
 
 public class Panel_QuickEdit_ManagementCost extends JPanel {
-	private JTable table8b;
-	private Object[][] data8b;
-	private DefaultTableCellRenderer render8b;
+	private JTable table7b;
+	private Object[][] data7b;
+	private DefaultTableCellRenderer render7b;
 	
 	private JButton btn_compact;
 	private JLabel view_label;
@@ -70,10 +67,10 @@ public class Panel_QuickEdit_ManagementCost extends JPanel {
 	private JButton btnApplyConversionCost;
 	private Prism_ShowHideColumnsButtons btnApplyShowHide;
 	
-	public Panel_QuickEdit_ManagementCost(Read_Database read_database, JTable table8a, Object[][] data8a, String[] columnNames8a, JTable table8b, Object[][] data8b) {
-		this.table8b = table8b;
-		this.data8b = data8b;
-		this.render8b = (DefaultTableCellRenderer) table8b.getColumnModel().getColumn(0).getCellRenderer();
+	public Panel_QuickEdit_ManagementCost(Read_Database read_database, JTable table7a, Object[][] data7a, String[] columnNames7a, JTable table7b, Object[][] data7b) {
+		this.table7b = table7b;
+		this.data7b = data7b;
+		this.render7b = (DefaultTableCellRenderer) table7b.getColumnModel().getColumn(0).getCellRenderer();
 		
 		
 		setLayout(new GridBagLayout());
@@ -88,7 +85,7 @@ public class Panel_QuickEdit_ManagementCost extends JPanel {
 				
 		
 		// Add Button-------------------------------------------------------------------------------------------------
-		btnApplyShowHide = new Prism_ShowHideColumnsButtons(read_database, table8a, data8a, columnNames8a);
+		btnApplyShowHide = new Prism_ShowHideColumnsButtons(read_database, table7a, data7a, columnNames7a);
 		btnApplyShowHide.setVerticalTextPosition(SwingConstants.BOTTOM);
 		btnApplyShowHide.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnApplyShowHide.setToolTipText("show/hide yield tables columns");
@@ -158,32 +155,32 @@ public class Panel_QuickEdit_ManagementCost extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				// Get selected rows
-				int[] selectedRow = table8a.getSelectedRows();
-				int[] selectedCol = table8a.getSelectedColumns();
+				int[] selectedRow = table7a.getSelectedRows();
+				int[] selectedCol = table7a.getSelectedColumns();
 							
 				// Convert row index because "Sort" causes problems
 				for (int i = 0; i < selectedRow.length; i++) {
-					selectedRow[i] = table8a.convertRowIndexToModel(selectedRow[i]);
+					selectedRow[i] = table7a.convertRowIndexToModel(selectedRow[i]);
 				}
 				// Convert col index because "Sort" causes problems
 				for (int j = 0; j < selectedCol.length; j++) {
-					selectedCol[j] = table8a.convertColumnIndexToModel(selectedCol[j]);
+					selectedCol[j] = table7a.convertColumnIndexToModel(selectedCol[j]);
 				}
 				
 				for (int i : selectedRow) {
 					for (int j : selectedCol) {
 						if (!formatedTextfield.getText().equals(".") && j != 0) {	// Only apply the changes to selected cells in columns > 0 (from 'acres' column)
-							data8a[i][j] = (formatedTextfield.getText().isEmpty())? null : Double.valueOf(formatedTextfield.getText());
+							data7a[i][j] = (formatedTextfield.getText().isEmpty())? null : Double.valueOf(formatedTextfield.getText());
 						}
 					}
 				}
 				
-				// just need to add 1 currently selected row (no need to add all because it would trigger a lot of "fireTableDataChanged" in "setValueAt" because of the ListSelectionListener of table8a)
+				// just need to add 1 currently selected row (no need to add all because it would trigger a lot of "fireTableDataChanged" in "setValueAt" because of the ListSelectionListener of table7a)
 				// also need re-validate and repaint so all the new data would show up after the change is triggered by the "addRowSelectionInterval"
-				table8a.removeRowSelectionInterval(table8a.convertRowIndexToView(selectedRow[0]), table8a.convertRowIndexToView(selectedRow[0]));	// only trigger the data change once by remove then add 1 time
-				table8a.addRowSelectionInterval(table8a.convertRowIndexToView(selectedRow[0]), table8a.convertRowIndexToView(selectedRow[0]));
-				table8a.revalidate();
-				table8a.repaint();
+				table7a.removeRowSelectionInterval(table7a.convertRowIndexToView(selectedRow[0]), table7a.convertRowIndexToView(selectedRow[0]));	// only trigger the data change once by remove then add 1 time
+				table7a.addRowSelectionInterval(table7a.convertRowIndexToView(selectedRow[0]), table7a.convertRowIndexToView(selectedRow[0]));
+				table7a.revalidate();
+				table7a.repaint();
 			}
 		});
 		qd1.add(btnApplyActivityCost, PrismGridBagLayoutHandle.get_c(c, "CENTER", 
@@ -256,32 +253,32 @@ public class Panel_QuickEdit_ManagementCost extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				// Get selected rows
-				int[] selectedRow = table8b.getSelectedRows();
-				int[] selectedCol = table8b.getSelectedColumns();
+				int[] selectedRow = table7b.getSelectedRows();
+				int[] selectedCol = table7b.getSelectedColumns();
 							
 				// Convert row index because "Sort" causes problems
 				for (int i = 0; i < selectedRow.length; i++) {
-					selectedRow[i] = table8b.convertRowIndexToModel(selectedRow[i]);
+					selectedRow[i] = table7b.convertRowIndexToModel(selectedRow[i]);
 				}
 				// Convert col index because "Sort" causes problems
 				for (int j = 0; j < selectedCol.length; j++) {
-					selectedCol[j] = table8b.convertColumnIndexToModel(selectedCol[j]);
+					selectedCol[j] = table7b.convertColumnIndexToModel(selectedCol[j]);
 				}
 				
 				for (int i : selectedRow) {
 					for (int j : selectedCol) {
 						if (!formatedTextfield_2.getText().equals(".") && j >= 2) {	// Only apply the changes to selected cells in columns > 2
-							data8b[i][j] = (formatedTextfield_2.getText().isEmpty())? null : Double.valueOf(formatedTextfield_2.getText());
+							data7b[i][j] = (formatedTextfield_2.getText().isEmpty())? null : Double.valueOf(formatedTextfield_2.getText());
 						}
 					}
 				}
 				
-				// just need to add 1 currently selected row (no need to add all because it would trigger a lot of "fireTableDataChanged" in "setValueAt" because of the ListSelectionListener of table8b)
+				// just need to add 1 currently selected row (no need to add all because it would trigger a lot of "fireTableDataChanged" in "setValueAt" because of the ListSelectionListener of table7b)
 				// also need re-validate and repaint so all the new data would show up after the change is triggered by the "addRowSelectionInterval"
-				table8b.removeRowSelectionInterval(table8b.convertRowIndexToView(selectedRow[0]), table8b.convertRowIndexToView(selectedRow[0]));	// only trigger the data change once by remove then add 1 time
-				table8b.addRowSelectionInterval(table8b.convertRowIndexToView(selectedRow[0]), table8b.convertRowIndexToView(selectedRow[0]));
-				table8b.revalidate();
-				table8b.repaint();
+				table7b.removeRowSelectionInterval(table7b.convertRowIndexToView(selectedRow[0]), table7b.convertRowIndexToView(selectedRow[0]));	// only trigger the data change once by remove then add 1 time
+				table7b.addRowSelectionInterval(table7b.convertRowIndexToView(selectedRow[0]), table7b.convertRowIndexToView(selectedRow[0]));
+				table7b.revalidate();
+				table7b.repaint();
 				reset_view_without_changing_label();
 			}
 		});		
@@ -291,7 +288,7 @@ public class Panel_QuickEdit_ManagementCost extends JPanel {
 				
 
 		// Add Label-------------------------------------------------------------------------------------------------
-		view_label  = new JLabel("     full view     ");
+		view_label  = new JLabel("switch view");
 		qd2.add(view_label, PrismGridBagLayoutHandle.get_c(c, "CENTER", 
 				2, 2, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
 				0, 0, 0, 0));		// insets top, left, bottom, right
@@ -300,17 +297,17 @@ public class Panel_QuickEdit_ManagementCost extends JPanel {
 		btn_compact = new JButton();
 		btn_compact.setVerticalTextPosition(SwingConstants.BOTTOM);
 		btn_compact.setHorizontalTextPosition(SwingConstants.CENTER);
-		btn_compact.setToolTipText("show or hide the rows with all null values");
+		btn_compact.setToolTipText("switch to compact view");
 		btn_compact.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_script.png"));
 		btn_compact.setRolloverIcon(IconHandle.get_scaledImageIcon(35, 35, "icon_script.png"));
 		btn_compact.setContentAreaFilled(false);
 		btn_compact.addActionListener(e -> {
-			switch (view_label.getText()) {
-			case "     full view     ":
-				view_label.setText("compact view");
+			switch (btn_compact.getToolTipText()) {
+			case "switch to compact view":
+				btn_compact.setToolTipText("switch to full view");
 				break;
-			case "compact view":
-				view_label.setText("     full view     ");
+			case "switch to full view":
+				btn_compact.setToolTipText("switch to compact view");
 				break;
 			}
 			reset_view_without_changing_label();
@@ -334,9 +331,9 @@ public class Panel_QuickEdit_ManagementCost extends JPanel {
 	private class Prism_ShowHideColumnsButtons extends JButton {
 		private JRadioButton[] radioButton;
 		
-		public Prism_ShowHideColumnsButtons(Read_Database read_database, JTable table8a,  Object[][] data8a, String[] columnNames8a) {
+		public Prism_ShowHideColumnsButtons(Read_Database read_database, JTable table7a,  Object[][] data7a, String[] columnNames7a) {
 			// Must set this show/hide column method when all columns are still visible------------------------------------------------------
-			TableColumnsHandle column_handle = new TableColumnsHandle(table8a);
+			TableColumnsHandle column_handle = new TableColumnsHandle(table7a);
 			
 						
 			// Create a radio buttons-----------------------------------------------------------------------------
@@ -361,9 +358,9 @@ public class Panel_QuickEdit_ManagementCost extends JPanel {
 						
 			// Create a list of JCheckBox-------------------------------------------------------------------------
 			List<JCheckBox> column_checkboxes = new ArrayList<JCheckBox>();		
-			for (int i = 0; i < table8a.getColumnModel().getColumnCount(); i++) {
+			for (int i = 0; i < table7a.getColumnModel().getColumnCount(); i++) {
 				if (i > 1) {	// ignore columns 0 and 1: action_list & acres
-					column_checkboxes.add(new JCheckBox(table8a.getColumnName(i)));
+					column_checkboxes.add(new JCheckBox(table7a.getColumnName(i)));
 					column_checkboxes.get(i - 2).setSelected(true);		// -2 because we ignore 2 columns
 									
 					String tip = read_database.get_ParameterToolTip(column_checkboxes.get(i - 2).getText()) + " (Column index: " + (int) (i - 2) + ")";
@@ -458,9 +455,9 @@ public class Panel_QuickEdit_ManagementCost extends JPanel {
 			radioButton[1].addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {																	
 					List<Integer> active_col_id = new ArrayList<Integer>();		// List of active columns: at least 1 cell <> null			
-					for (int i = 0; i < data8a.length; i++) {
-						for (int j = 0; j < data8a[i].length; j++) {
-							if (data8a[i][j] != null && !active_col_id.contains(j)) {
+					for (int i = 0; i < data7a.length; i++) {
+						for (int j = 0; j < data7a[i].length; j++) {
+							if (data7a[i][j] != null && !active_col_id.contains(j)) {
 								active_col_id.add(j);
 							}		
 						}	
@@ -468,13 +465,13 @@ public class Panel_QuickEdit_ManagementCost extends JPanel {
 					
 					// For only acres column (No check boxes so we have to set visible/invisible manually)
 					if (active_col_id.contains(1)) {	// if acres is active column
-						column_handle.setColumnVisible(columnNames8a[1], true);	// show column
+						column_handle.setColumnVisible(columnNames7a[1], true);	// show column
 					} else {
-						column_handle.setColumnVisible(columnNames8a[1], false);	// hide column
+						column_handle.setColumnVisible(columnNames7a[1], false);	// hide column
 					}
 						
 					// For columns > 1 (Have check boxes to we only have to check/uncheck)
-					for (int i = 0; i < columnNames8a.length; i++) {						
+					for (int i = 0; i < columnNames7a.length; i++) {						
 						if (i > 1) {	// ignore columns 0 and 1: action_list & acres	
 							column_checkboxes.get(i - 2).setSelected(false);		// -2 because we ignore 2 columns
 							if (active_col_id.contains(i)) {
@@ -538,15 +535,15 @@ public class Panel_QuickEdit_ManagementCost extends JPanel {
 	}
 	
 	public void reset_view_without_changing_label() {
-		if (table8b.isEditing()) {
-			table8b.getCellEditor().cancelCellEditing();
+		if (table7b.isEditing()) {
+			table7b.getCellEditor().cancelCellEditing();
 		}
 		
-		switch (view_label.getText()) {
-		case "compact view":
+		switch (btn_compact.getToolTipText()) {
+		case "switch to full view":
 			RowFilter<Object, Object> compact_filter = new RowFilter<Object, Object>() {
 				public boolean include(Entry entry) {
-					for (int col = 2; col < data8b[0].length; col++) {	// except the first 2 columns
+					for (int col = 2; col < data7b[0].length; col++) {	// except the first 2 columns
 						if (entry.getValue(col) != null) {
 							return true;		// if 1 cell in this row is null then show the row
 						}
@@ -554,9 +551,9 @@ public class Panel_QuickEdit_ManagementCost extends JPanel {
 					return false;	// hide the row when all cells have the value of zero
 				}
 			};
-			TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>((PrismTableModel) table8b.getModel());
+			TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>((PrismTableModel) table7b.getModel());
 			sorter.setRowFilter(compact_filter);
-			table8b.setRowSorter(sorter);
+			table7b.setRowSorter(sorter);
 			
 			// Set Color and Alignment for Cells
 	        DefaultTableCellRenderer compact_r = new DefaultTableCellRenderer() {
@@ -571,14 +568,13 @@ public class Panel_QuickEdit_ManagementCost extends JPanel {
 	            }
 	        };
 			for (int i = 0; i < 2; i++) {	// first 2 columns only
-				table8b.getColumnModel().getColumn(i).setCellRenderer(compact_r);
+				table7b.getColumnModel().getColumn(i).setCellRenderer(compact_r);
 			}
 			break;
-		case "     full view     ":
-			table8b.setRowSorter(null);
-			
+		case "switch to compact view":
+			table7b.setRowSorter(null);
 			for (int i = 0; i < 2; i++) {	// first 2 columns only
-				table8b.getColumnModel().getColumn(i).setCellRenderer(render8b);
+				table7b.getColumnModel().getColumn(i).setCellRenderer(render7b);
 			}
 			break;
 		}

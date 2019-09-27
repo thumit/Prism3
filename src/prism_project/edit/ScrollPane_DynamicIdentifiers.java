@@ -68,8 +68,8 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 	
 	public ScrollPane_DynamicIdentifiers(Read_Database read_Database) {	
 		
-		Object[][][] yieldTable_values = read_Database.get_yield_tables_values();
-		String[] yieldTable_ColumnNames = read_Database.get_yield_tables_column_names();	
+		String[][][] yield_tables_values = read_Database.get_yield_tables_values();
+		String[] yield_tables_column_names = read_Database.get_yield_tables_column_names();	
 		
 		// Define the Panel contains everything --------------------------
 		dynamic_identifiersPanel = new JPanel();
@@ -93,13 +93,13 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 		//------------------------------------------------------------------------------
 		
 		
-	    if (yieldTable_ColumnNames != null && allDynamicIdentifiers == null) {				
+	    if (yield_tables_column_names != null && allDynamicIdentifiers == null) {				
 			
 			checkboxDynamicIdentifiers = new ArrayList<List<JCheckBox>>();	
 			allDynamicIdentifiers = new ArrayList<JCheckBox>();
 			
-			for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
-				String YTcolumnName = yieldTable_ColumnNames[i];
+			for (int i = 0; i < yield_tables_column_names.length; i++) {
+				String YTcolumnName = yield_tables_column_names[i];
 
 				checkboxDynamicIdentifiers.add(new ArrayList<JCheckBox>());		//add empty List
 				allDynamicIdentifiers.add(new JCheckBox(YTcolumnName));		//add checkbox
@@ -133,7 +133,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {
 					if (checkboxNoIdentifier.isSelected()) {
-						for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
+						for (int i = 0; i < yield_tables_column_names.length; i++) {
 							allDynamicIdentifiers.get(i).setSelected(false);
 							allDynamicIdentifiers_ScrollPane.get(i).setVisible(false);		//Set invisible all scrollPanes of dynamic identifiers
 							selectIdentifiersScrollPanel.setBorder(BorderFactory.createTitledBorder(null, "Dynamic Identifiers  -  use yield attributes to filter variables", TitledBorder.CENTER, 0));
@@ -156,7 +156,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 			//Add all dynamic identifiers labels
 			allDynamicIdentifiers_ScrollPane = new ArrayList<JScrollPane>();
 			
-			for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
+			for (int i = 0; i < yield_tables_column_names.length; i++) {
 				String YTcolumnName = allDynamicIdentifiers.get(i).getText();		
 				allDynamicIdentifiers_ScrollPane.add(new JScrollPane());			//Add ScrollPane
 				allDynamicIdentifiers_ScrollPane.get(i).setBorder(new TitledBorder(YTcolumnName));	//set Title
@@ -168,7 +168,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 				c3.gridy = 0;
 				dynamic_identifiersPanel.add(allDynamicIdentifiers_ScrollPane.get(i), c3);
 			}		
-			allDynamicIdentifiers_JPanel = new JPanel[yieldTable_ColumnNames.length];
+			allDynamicIdentifiers_JPanel = new JPanel[yield_tables_column_names.length];
 						
 			
 			// add listeners to select all or de-select all
@@ -184,8 +184,8 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 			
 			
 			// Add listeners to checkBoxes
-			for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
-				String currentCheckBoxName = yieldTable_ColumnNames[i];
+			for (int i = 0; i < yield_tables_column_names.length; i++) {
+				String currentCheckBoxName = yield_tables_column_names[i];
 				int currentCheckBoxIndex = i;
 				
 				allDynamicIdentifiers.get(i).addActionListener(new ActionListener() {	
@@ -256,7 +256,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 							columnInfo_TArea.setLineWrap(true);
 							columnInfo_TArea.setWrapStyleWord(true);
 							columnInfo_TArea.append("PRISM found " + unique_values_list.size() + 
-									" unique values for this identifier (across " + yieldTable_values.length + " prescriptions in your database)."  + "\n");
+									" unique values for this identifier (across " + yield_tables_values.length + " prescriptions in your database)."  + "\n");
 							
 							if (unique_values_list.size() <= 50) {
 								columnInfo_TArea.append("'DISCRETE IDENTIFIER' is recommended.");
@@ -641,7 +641,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				checkboxNoIdentifier.setSelected(true);
-				for (int i = 0; i < yieldTable_ColumnNames.length; i++) {
+				for (int i = 0; i < yield_tables_column_names.length; i++) {
 					allDynamicIdentifiers.get(i).setSelected(false);
 					allDynamicIdentifiers_ScrollPane.get(i).setVisible(false);		// Set invisible all scrollPanes of dynamic identifiers
 					selectIdentifiersScrollPanel.setBorder(BorderFactory.createTitledBorder(null, "Dynamic Identifiers  -  use yield attributes to filter variables", TitledBorder.CENTER, 0));

@@ -51,7 +51,7 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 		List<String> layers_title = new ArrayList<>(read_Database.get_layers_title());
 		List<String> layers_Title_ToolTip = new ArrayList<>(read_Database.get_layers_title_tooltip());
 		List<List<String>> allLayers = new ArrayList<>(read_Database.get_all_layers());
-		List<List<String>> allLayers_ToolTips = new ArrayList<>(read_Database.get_allLayers_tooltips());
+		List<List<String>> allLayers_ToolTips = new ArrayList<>(read_Database.get_all_layers_tooltips());
 
 		
 		if (option == 1) {

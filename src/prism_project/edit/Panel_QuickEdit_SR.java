@@ -258,7 +258,7 @@ public class Panel_QuickEdit_SR extends JPanel {
 		
 		
 		// Add Label-------------------------------------------------------------------------------------------------
-		view_label  = new JLabel("     full view     ");
+		view_label  = new JLabel("switch view");
 		qd2.add(view_label, PrismGridBagLayoutHandle.get_c(c, "CENTER", 
 				2, 2, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
 				0, 0, 0, 0));		// insets top, left, bottom, right
@@ -267,17 +267,17 @@ public class Panel_QuickEdit_SR extends JPanel {
 		btn_compact = new JButton();
 		btn_compact.setVerticalTextPosition(SwingConstants.BOTTOM);
 		btn_compact.setHorizontalTextPosition(SwingConstants.CENTER);
-		btn_compact.setToolTipText("show or hide the rows with all zero values");
+		btn_compact.setToolTipText("switch to compact view");
 		btn_compact.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_script.png"));
 		btn_compact.setRolloverIcon(IconHandle.get_scaledImageIcon(35, 35, "icon_script.png"));
 		btn_compact.setContentAreaFilled(false);
 		btn_compact.addActionListener(e -> {
-			switch (view_label.getText()) {
-			case "     full view     ":
-				view_label.setText("compact view");
+			switch (btn_compact.getToolTipText()) {
+			case "switch to compact view":
+				btn_compact.setToolTipText("switch to full view");
 				break;
-			case "compact view":
-				view_label.setText("     full view     ");
+			case "switch to full view":
+				btn_compact.setToolTipText("switch to compact view");
 				break;
 			}
 			reset_view_without_changing_label();
@@ -315,8 +315,8 @@ public class Panel_QuickEdit_SR extends JPanel {
 			table6b.getCellEditor().cancelCellEditing();
 		}
 		
-		switch (view_label.getText()) {
-		case "compact view":
+		switch (btn_compact.getToolTipText()) {
+		case "switch to full view":
 			RowFilter<Object, Object> compact_filter = new RowFilter<Object, Object>() {
 				public boolean include(Entry entry) {
 					for (int col = 2; col < data6b[0].length; col++) {	// except the first 2 columns
@@ -347,9 +347,8 @@ public class Panel_QuickEdit_SR extends JPanel {
 				table6b.getColumnModel().getColumn(i).setCellRenderer(compact_r);
 			}
 			break;
-		case "     full view     ":
+		case "switch to compact view":
 			table6b.setRowSorter(null);
-			
 			for (int i = 0; i < 2; i++) {	// first 2 columns only
 				table6b.getColumnModel().getColumn(i).setCellRenderer(render6b);
 			}

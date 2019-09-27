@@ -21,9 +21,16 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import prism_convenience.StringHandle;
+import prism_root.PrismMain;
 
 public class SQLite {
 	
@@ -136,12 +143,41 @@ private static int lines_count;
 		}
 	}
 
+	
 	public static String[] get_importTable_Stm () {
 		return statement;
 	}
 	
-	public static int get_importTable_TotalLines () {
-		return lines_count;
+	
+	public static void import_file_as_table_into_database(File file_to_import, File database_file) {
+		try {
+			Connection conn = DriverManager.getConnection("jdbc:sqlite:" + database_file.getAbsolutePath());
+
+			conn.setAutoCommit(false);										
+			PreparedStatement pst = null;
+			
+			// Get info from the file
+			create_import_table_statement(file_to_import, "\t");		// Read file into arrays
+			String[] statement = get_importTable_Stm();		//this arrays hold all the statements	
+
+			// Prepared execution
+			String tableName = file_to_import.getName();
+			if (tableName.contains(".")) tableName = tableName.substring(0, tableName.lastIndexOf('.'));
+			pst = conn.prepareStatement("DROP TABLE IF EXISTS " + "[" + tableName + "]");
+			pst.executeUpdate();
+			
+			for (String st : statement) {
+				pst = conn.prepareStatement(st);
+				pst.executeUpdate();
+			}
+		
+			// Commit execution
+			pst.close();
+			conn.commit(); // commit all prepared execution, this is important
+			conn.close();
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(PrismMain.get_Prism_DesktopPane(), e, e.getMessage(), PrismMain.get_Prism_DesktopPane().getWidth(), null);
+		}
 	}
 }
 

@@ -1090,7 +1090,7 @@ All changes in this block are associated with PrismAlpha1.2.07.jar, User Manual 
 All changes in this block are associated with PrismAlpha1.2.08.jar, Prism-Formulation-07.docx, Prism-UserManual-01.docx)
 --------------------------------------------------------------------------
 
-458. Total replacing disturbances update (confirmation, by a popup window, faster speed since data is now associated with only the SRs defined instead of with all 99 SRs previously):
+458. Total replacing disturbances update (confirmation by a popup window, faster speed since data is now associated with only the SRs defined instead of with all 99 SRs previously):
 	- Fix reload_this_condition_occurrence_and_regeneration: load up to the current number of SRs so old runs which have full data of all 99 disturbances could be loaded
 	- get_occurrence_info_from_GUI & get_regeneration_info_from_GUI: edited with better code
 	- Listener of the SR_Disturbances_GUI: remove the unnecessary table handle show/hide since the new instance of SR_Disturbances_GUI is created
@@ -1107,10 +1107,33 @@ All changes in this block are associated with PrismAlpha1.2.08.jar, Prism-Formul
 	- Sorting table is active on "compact view"
 	- Warning icons and tooltip message needs to be fixed to displayed the infeasibility correctly
 	- Rearrange items in the QuickEdit side window
-461. Add compact view functionality to SR Disturbances screen:
+461. Add compact view functionality to Management Cost screen:
 	- The functionality icon has 2 view modes: compact view (show only rows have at least one non-null) and full view (show all rows)
 	- The view mode would also need to be updated when editting the data by using the Quickedit side window
 	- Sorting table is active on "compact view"
 	- Rearrange items in the QuickEdit side window
-All changes in this block are associated with PrismAlpha1.2.09.jar, Prism-Formulation-07.docx, Prism-UserManual-01.docx)
+All changes in this block are associated with PrismAlpha1.2.09.jar, Prism-Formulation-08.docx, Prism-UserManual-01.docx)
+--------------------------------------------------------------------------
+462. Read_Database: move the if then check for database file out of sub methods and add null check to clear the popup error
+463. Read_Database & Panel_DatabaseManagement & Setting: Remove the deprecated method call: Class.forName("org.sqlite.JDBC").newInstance();
+464. Panel_Edit_Details:
+	- Simplify functions code for buttons: mass check, mass uncheck, sort.
+	- Simplify code for create input files
+	- Remove Sort function for Non-SR Disturbances screen because Sort would cause misleading for priority condition
+	- Compact button is changed to switch view button with tooltip added and listener activated on tooltip name change
+	- radio_panel: setPreferredSize to avoid horizonal scroll due to too many radio buttons
+	- Create a class (Table_Interaction) to implement the same method used in mouse click_release and table selection change
+	- Remove private definitions of some variables obtained from read_database to avoid getting back data in multiple places
+	- Change some table definitions (indexes of row, col, data, model, name, etc.) to be incremental (changes are also made in many other classes within the edit package)
+	- create_table1: Rewrite create_table1 to have full inputs for data1 to load to interface. General_Inputs_GUI: rewrite the way to load data1 to interface
+465. Update SQLite from version 3.21 to version 3.27.2.1
+	- Replacing the SQLite jar file
+	- Modify queries 2.0, 2.1, 2.2, 2.3 in the DBMS System Library (dbms_system_sql_library.txt) to work with SQLite 3.27.2.1
+	- Modify  query 2.3 in Read_Database to work with SQLite 3.27.2.1
+466. Important changes to getting data from yield tables (changes made in many classes in Prism)
+	- yield_tables_values[][][]: Object is replaced by String
+	- yield_tables_names[]: Object is replaced by String
+467. Rolling horizon: area merging feature completed
+468. Java is updated to JDK 13
+All changes in this block are associated with PrismAlpha1.3.01.jar, Prism-Formulation-08.docx, Prism-UserManual-01.docx)
 --------------------------------------------------------------------------

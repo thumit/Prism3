@@ -203,24 +203,24 @@ public class Panel_QuickEdit_EA extends JPanel {
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		c.fill = GridBagConstraints.CENTER;
-		view_label  = new JLabel("     full view     ");
+		view_label  = new JLabel("switch view");
 		add(view_label, c);
 		
 		// Add button compact view
 		btn_compact = new JButton();
 		btn_compact.setVerticalTextPosition(SwingConstants.BOTTOM);
 		btn_compact.setHorizontalTextPosition(SwingConstants.CENTER);
-		btn_compact.setToolTipText("show active options or all options");
+		btn_compact.setToolTipText("switch to compact view");
 		btn_compact.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_script.png"));
 		btn_compact.setRolloverIcon(IconHandle.get_scaledImageIcon(35, 35, "icon_script.png"));
 		btn_compact.setContentAreaFilled(false);
 		btn_compact.addActionListener(e -> {
-			switch (view_label.getText()) {
-			case "     full view     ":
-				view_label.setText("compact view");
+			switch (btn_compact.getToolTipText()) {
+			case "switch to compact view":
+				btn_compact.setToolTipText("switch to full view");
 				break;
-			case "compact view":
-				view_label.setText("     full view     ");
+			case "switch to full view":
+				btn_compact.setToolTipText("switch to compact view");
 				break;
 			}
 			reset_view_without_changing_label();
@@ -613,28 +613,9 @@ public class Panel_QuickEdit_EA extends JPanel {
 			table.getCellEditor().cancelCellEditing();
 		}
 		
-		switch (view_label.getText()) {
-		case "compact view":
-			if (data != null) {		//Only allow sorter if the data is loaded
-//				// Old method:
-//				TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>((PrismTableModel) table.getModel());
-//				table.setRowSorter(sorter);
-//				List<RowFilter<PrismTableModel, Object>> filters, filters2;
-//				filters2 = new ArrayList<RowFilter<PrismTableModel, Object>>();
-//				for (int i = 0; i < data.length; i++) {
-//					RowFilter<PrismTableModel, Object> layer_filter = null;
-//					filters = new ArrayList<RowFilter<PrismTableModel, Object>>();
-//					if (data[i][6].toString() == "true") {
-//						filters.add(RowFilter.regexFilter(data[i][6].toString(), 6)); // i+1 is the table column containing the first layer	
-//					}
-//					layer_filter = RowFilter.orFilter(filters);
-//					filters2.add(layer_filter);
-//				}
-//				RowFilter<PrismTableModel, Object> combine_AllFilters = null;
-//				combine_AllFilters = RowFilter.orFilter(filters2);
-//				sorter.setRowFilter(combine_AllFilters);  
-				
-				// New method (might be better)
+		switch (btn_compact.getToolTipText()) {
+		case "switch to full view":
+			if (data != null) {
 				RowFilter<Object, Object> compact_filter = new RowFilter<Object, Object>() {
 					public boolean include(Entry entry) {
 						Boolean implementation = (boolean) entry.getValue(6);
@@ -662,9 +643,8 @@ public class Panel_QuickEdit_EA extends JPanel {
 				}
 			}
 			break;
-		case "     full view     ":
+		case "switch to compact view":
 			table.setRowSorter(null);
-			
 			for (int i = 0; i < 2; i++) {	// first 2 columns only
 				table.getColumnModel().getColumn(i).setCellRenderer(render);
 			}

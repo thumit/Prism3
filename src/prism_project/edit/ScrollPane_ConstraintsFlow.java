@@ -75,7 +75,7 @@ public class ScrollPane_ConstraintsFlow extends JScrollPane {
 		TitledBorder border = new TitledBorder("Flow Arrangement");
 		border.setTitleJustification(TitledBorder.CENTER);
 		list_scroll.setBorder(border);	
-//		list_scroll.setBorder(BorderFactory.createTitledBorder("Flow arrangement"));
+		setBorder(null);
 		create_flow_arrangement_UI(list_model);
 		
 				
@@ -350,13 +350,13 @@ public class ScrollPane_ConstraintsFlow extends JScrollPane {
 		// spin_sigma is always updated after   "create_flow_arrangement_UI"
 	}
 		
-	public void reload_flow_arrangement_for_one_flow(JTable table10, Object[][] data10, JSpinner spin_sigma) {	
-		int[] selectedRow = table10.getSelectedRows();
+	public void reload_flow_arrangement_for_one_flow(JTable table9, Object[][] data9, JSpinner spin_sigma) {	
+		int[] selectedRow = table9.getSelectedRows();
 		if (selectedRow.length == 1) {	
 			// Reload GUI				
 			int currentRow = selectedRow[0];
-			currentRow = table10.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems				
-			String[] flow_arrangement = data10[currentRow][2].toString().split(";");
+			currentRow = table9.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems				
+			String[] flow_arrangement = data9[currentRow][2].toString().split(";");
 			DefaultListModel[] list_model = new DefaultListModel[flow_arrangement.length];					
 			for (int i = 0; i < flow_arrangement.length; i++) {		
 				list_model[i] = new DefaultListModel();

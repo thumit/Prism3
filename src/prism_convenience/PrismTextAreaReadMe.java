@@ -116,8 +116,9 @@ public class PrismTextAreaReadMe extends JTextArea {
 						}
 					});
 					popup.add(refreshMenuItem);	
-					int scrollpane_y = ((JScrollPane) getParent().getParent()).getVerticalScrollBar().getValue();	// Note: 		getParent() = ViewPort			getParent().getParent() = JScrollPane
-					popup.show(getParent(), e.getX(), e.getY() - scrollpane_y);
+					setComponentPopupMenu(popup);
+//					int scrollpane_y = ((JScrollPane) getParent().getParent()).getVerticalScrollBar().getValue();	// Note: 		getParent() = ViewPort			getParent().getParent() = JScrollPane
+//					popup.show(getParent(), e.getX(), e.getY() - scrollpane_y);
 				}
 			}
 		});

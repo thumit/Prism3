@@ -754,7 +754,6 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 			
 			try {
 				filterHeader.setTable(null);	// Hide filter before update database table
-				Class.forName("org.sqlite.JDBC").newInstance();
 				conn = DriverManager.getConnection("jdbc:sqlite:" + databasesFolder + seperator + currentDatabase);
 				stmt = conn.createStatement();	
 				
@@ -839,7 +838,6 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 					// Read each database file and add all of its table as child nodes--------------------------------------				  
 					/*Connection*/ conn = null;
 					try {
-						Class.forName("org.sqlite.JDBC").newInstance();
 						conn = DriverManager.getConnection("jdbc:sqlite:" + databasesFolder + seperator + files);
 						DatabaseMetaData md = conn.getMetaData();
 						ResultSet rs = md.getTables(null, null, "%", null);
@@ -1446,13 +1444,10 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 			//Prepared statement multiple level
 			try {
 				//-------------------------------------------------
-				Class.forName("org.sqlite.JDBC").newInstance();
 				conn = DriverManager.getConnection("jdbc:sqlite:" + databasesFolder + seperator + currentDatabase);
-
 				conn.setAutoCommit(false);										
 				PreparedStatement pst = null;
 				//-------------------------------------------------
-		
 				// Loop through all saved extension to find the one match the current file, then return the delimited for that file 
 				for (int i = 0; i < files.length; i++) {
 					if (files[i].isFile()) {
@@ -1463,46 +1458,30 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 							extension = currentfile.getName().substring(jj + 1);
 						}
 		
-						// Find the delimited of this
-						// currentFile
+						// Find the delimited of this currentFile
 						for (int j = 0; j < extentionList.size(); j++) {
 							if (extentionList.get(j).equals(extension.toUpperCase())) {
 								fileDelimited = delimitedList.get(j); // This is the returned delimited
 							}
 						}
-		
 						
 						if (fileDelimited != null) {
 							// Get info from the file
 							SQLite.create_import_table_statement(currentfile, fileDelimited);		//Read file into arrays
-							String[] statement = new String[SQLite.get_importTable_TotalLines()];		//this arrays hold all the statements
-							statement = SQLite.get_importTable_Stm();	
-
-							// prepared execution
-							for (int line = 0; line < SQLite.get_importTable_TotalLines(); line++) {
-								pst = conn.prepareStatement(statement[line]);
+							String[] statement = SQLite.get_importTable_Stm();		//this arrays hold all the statements
+							// Prepared execution
+							for (String st : statement) {
+								pst = conn.prepareStatement(st);
 								pst.executeUpdate();
 							}
 						}
 					} // end of If
 				} // end of For loop
-			
-		
-			
 				//Commit execution-------------------------------------------------
 				pst.close();
 				conn.commit(); // commit all prepared execution, this is important
 				conn.close();
 
-			} catch (InstantiationException e) {
-				JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
-				errorCAUGHT = true;
-			} catch (IllegalAccessException e) {
-				JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
-				errorCAUGHT = true;
-			} catch (ClassNotFoundException e) {
-				JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
-				errorCAUGHT = true;
 			} catch (SQLException e) {
 				JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
 				errorCAUGHT = true;
@@ -1686,7 +1665,6 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 					
 					selectionPaths = databaseTree.getSelectionPaths();			//This is very important to get the most recent selected paths
 					if (selectionPaths != null) {		//at least 1 database or table has to be selected 
-						Class.forName("org.sqlite.JDBC").newInstance();
 						conn = DriverManager.getConnection("jdbc:sqlite:" + databasesFolder + seperator + currentDatabase);
 						conn.setAutoCommit(false);
 						PreparedStatement pst = null;
@@ -1735,15 +1713,6 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 				}
 			}
 
-		} catch (InstantiationException e) {
-			JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
-			errorCAUGHT = true;
-		} catch (IllegalAccessException e) {
-			JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
-			errorCAUGHT = true;
-		} catch (ClassNotFoundException e) {
-			JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
-			errorCAUGHT = true;
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
 			errorCAUGHT = true;
@@ -1797,6 +1766,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 				
 			} catch (Exception e) {
 				JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
+				e.printStackTrace();  // This will give line number
 			}
 			
 			

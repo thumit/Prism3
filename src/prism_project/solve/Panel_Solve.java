@@ -44,6 +44,7 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -385,10 +386,10 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			}
 			
 			// Database Info
-			Object[][][] yield_tables_values = read_database.get_yield_tables_values();
+			String[][][] yield_tables_values = read_database.get_yield_tables_values();
 			String[] yield_tables_column_names = read_database.get_yield_tables_column_names();
-			Object[] yield_tables_names = read_database.get_yield_tables_names();			
-			List<String> yield_tables_names_list = new ArrayList<String>() {{ for (Object i : yield_tables_names) add(i.toString());}};		// Convert Object array to String list
+			String[] yield_tables_names = read_database.get_yield_tables_names();			
+			List<String> yield_tables_names_list = Arrays.asList(yield_tables_names); 
 			
 			// Get info: layers from database (strata_definition)
 			List<List<String>> all_layers =  read_database.get_all_layers();		
@@ -2688,7 +2689,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 				// Get the dynamic identifiers indexes list
 				List<String> dynamic_dentifiers_column_indexes = read.get_dynamic_identifiers_column_indexes_in_row(id);
 				List<List<String>> dynamic_identifiers = read.get_dynamic_identifiers_in_row(id);
-				// Sort String so binary search could be used in "Get_PRAMETER_iNFORMATION - are_all_dynamic_identifiers_matched"
+				// Sort String so binary search could be used in "Information_Parameter - are_all_dynamic_identifiers_matched"
 				for (List<String> this_dynamic_identifier: dynamic_identifiers) {
 					Collections.sort(this_dynamic_identifier);
 				}
@@ -3643,7 +3644,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 										+ "\t" + data_connection + "\t" + prescription_name_to_find + "\t" + var_row_id);
 								for (int col = 2; col < yield_tables_column_names.length; col++) {		// do not write prescription & row_id in the yield_tables
 									if (data_connection.equals("good")) {
-										fileOut.write("\t" + yield_tables_values[var_prescription_id][var_row_id][col].toString());
+										fileOut.write("\t" + yield_tables_values[var_prescription_id][var_row_id][col]);
 									} else {
 										fileOut.write("\t" + "");
 									}
@@ -3661,7 +3662,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 					output_management_details_file[row].createNewFile();
 					
 					// create a table inside the database.db
-					import_file_as_table_into_database(output_management_details_file[row], file_database[row]);
+					SQLite.import_file_as_table_into_database(output_management_details_file[row], file_database[row]);
 					
 					// fly_constraints --> don't need to create this file. Just clear query_value if this file exists
 					clear_query_value_for_fly_constraints(output_fly_constraints_file[row]);		
@@ -4227,7 +4228,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 										+ "\t" + data_connection + "\t" + prescription_name_to_find + "\t" + var_row_id);
 								for (int col = 2; col < yield_tables_column_names.length; col++) {		// do not write prescription & row_id in the yield_tables
 									if (data_connection.equals("good")) {
-										fileOut.write("\t" + yield_tables_values[var_prescription_id][var_row_id][col].toString());
+										fileOut.write("\t" + yield_tables_values[var_prescription_id][var_row_id][col]);
 									} else {
 										fileOut.write("\t" + "");
 									}
@@ -4245,7 +4246,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 					output_management_details_file[row].createNewFile();
 					
 					// create a table inside the database.db
-					import_file_as_table_into_database(output_management_details_file[row], file_database[row]);
+					SQLite.import_file_as_table_into_database(output_management_details_file[row], file_database[row]);
 					
 					// fly_constraints --> don't need to create this file. Just clear query_value if this file exists
 					clear_query_value_for_fly_constraints(output_fly_constraints_file[row]);		
@@ -4545,48 +4546,6 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 		return (status == 0) || (status == 1) || (status == 11) || (status == 12);
 	}
 	// End of For LPSOLVE only ----------------------------------------------------------------------------------------
-	
-	
-	
-	private void import_file_as_table_into_database(File file_to_import, File database_file) {
-		try {
-			Class.forName("org.sqlite.JDBC").newInstance();
-			Connection conn = DriverManager.getConnection("jdbc:sqlite:" + database_file.getAbsolutePath());
-
-			conn.setAutoCommit(false);										
-			PreparedStatement pst = null;
-			
-			// Get info from the file
-			SQLite.create_import_table_statement(file_to_import, "\t");		// Read file into arrays
-			String[] statement = new String[SQLite.get_importTable_TotalLines()];		// this arrays hold all the statements
-			statement = SQLite.get_importTable_Stm();	
-
-			// Prepared execution
-			String tableName = file_to_import.getName();
-			if (tableName.contains(".")) tableName = tableName.substring(0, tableName.lastIndexOf('.'));
-			pst = conn.prepareStatement("DROP TABLE IF EXISTS " + "[" + tableName + "]");
-			pst.executeUpdate();
-			
-			for (int line = 0; line < SQLite.get_importTable_TotalLines(); line++) {
-				pst = conn.prepareStatement(statement[line]);
-				pst.executeUpdate();
-			}
-		
-			// Commit execution
-			pst.close();
-			conn.commit(); // commit all prepared execution, this is important
-			conn.close();
-
-		} catch (InstantiationException e) {
-			JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
-		} catch (IllegalAccessException e) {
-			JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
-		} catch (ClassNotFoundException e) {
-			JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
-		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(this, e, e.getMessage(), WIDTH, null);
-		}
-	}
 	
 	
 	
