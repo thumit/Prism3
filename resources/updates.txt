@@ -1137,3 +1137,7 @@ All changes in this block are associated with PrismAlpha1.2.09.jar, Prism-Formul
 468. Java is updated to JDK 13
 All changes in this block are associated with PrismAlpha1.3.01.jar, Prism-Formulation-08.docx, Prism-UserManual-01.docx)
 --------------------------------------------------------------------------
+469. Fix the bug: https://bitbucket.org/Prism-Members/prism/issues/110/incomplete-data-when-saving-and-loading
+470. Update codebase to implement the Prism-Formulation-09 (Panel_Solve)
+All changes in this block are associated with PrismAlpha1.3.02.jar, Prism-Formulation-09.docx, Prism-UserManual-01.docx)
+--------------------------------------------------------------------------

@@ -81,13 +81,10 @@ public class ScrollPane_SubTables_SR_Disturbances extends JScrollPane {
 			
 	
 	public String get_occurrence_info_from_GUI() {	
-		int total_rows = table6a.getRowCount();
-		int total_columns = table6a.getColumnCount() + 1;	// because we hide 1 column in table6a (This is the bad thing of TableColumnsHandle class)
-				
 		String probability_info = "";
-		for (int row = 0; row < total_rows; row++) {
+		for (int row = 0; row < data6a.length; row++) {
 			probability_info = probability_info + data6a[row][0] + " " + data6a[row][1];
-			for (int col = 2; col < total_columns; col++) {
+			for (int col = 2; col < data6a[row].length; col++) {
 				probability_info = probability_info + " " + data6a[row][col].toString();
 			}
 			probability_info = probability_info + ";";
@@ -100,13 +97,10 @@ public class ScrollPane_SubTables_SR_Disturbances extends JScrollPane {
 	
 	
 	public String get_regeneration_info_from_GUI() {	
-		int total_rows = table6b.getRowCount();
-		int total_columns = table6b.getColumnCount();
-		
 		String regeneration_info = "";
-		for (int row = 0; row < total_rows; row++) {
+		for (int row = 0; row < data6b.length; row++) {
 			regeneration_info = regeneration_info + data6b[row][0] + " " + data6b[row][1];
-			for (int col = 2; col < total_columns; col++) {
+			for (int col = 2; col < data6b[row].length; col++) {
 				regeneration_info = regeneration_info + " " + data6b[row][col].toString();
 			}
 			regeneration_info = regeneration_info + ";";

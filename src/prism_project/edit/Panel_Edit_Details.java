@@ -9481,7 +9481,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			merging_textarea.setSelectionEnd(0);
 			merging_textarea.setEditable(false);
 			
-			PrismTitleScrollPane merging_result_scrollpane = new PrismTitleScrollPane("Notes for non-stand-replacing disturbances", "CENTER", merging_textarea);
+			PrismTitleScrollPane merging_result_scrollpane = new PrismTitleScrollPane("General information", "CENTER", merging_textarea);
 			merging_result_scrollpane.setPreferredSize(new Dimension(0, 250));
 			merging_result_scrollpane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 			merging_result_scrollpane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);

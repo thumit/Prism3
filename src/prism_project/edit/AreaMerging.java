@@ -476,7 +476,7 @@ public class AreaMerging {
 		current_table = null;
 		filterHeader.setTable(current_table);
 		
-		TitledBorder border = new TitledBorder("Attributes ranking");
+		TitledBorder border = new TitledBorder("General information and attributes ranking");
 		border.setTitleJustification(TitledBorder.CENTER);
 		merging_result_scrollpane.setBorder(border);
 		merging_result_scrollpane.setViewportView(ranking_textarea);

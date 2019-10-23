@@ -41,7 +41,7 @@ PRISM integrates the following open-sources:
 	LPSOLVE 5.5.2.5, licensed under the terms of the GNU Lesser General Public License. A copy of this license (license-LGPL.txt) could be found in the distribution of PRISM.
 	JFREECHART 1.0.19, licensed under the terms of the GNU Lesser General Public License. A copy of this license (license-LGPL.txt) could be found in the distribution of PRISM.
 	JCOMMON 1.0.23, licensed under the terms of the GNU Lesser General Public License. A copy of this license (license-LGPL.txt) could be found in the distribution of PRISM.
-	SQLITE 3.21.0, licensed under the terms of the Apache License version 2.0. A copy of this license (license-AL.txt) could be found in the distribution of PRISM.
+	SQLITE 3.27.2.1, licensed under the terms of the Apache License version 2.0. A copy of this license (license-AL.txt) could be found in the distribution of PRISM.
 	TABLEFILTER 5.3.1, licensed under the terms of the MIT license. A copy of this license (license-MIT.txt) could be found in the distribution of PRISM.
 
 

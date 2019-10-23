@@ -94,7 +94,7 @@ public class PrismMain extends JFrame {
 	private MenuItem_SetTransparency 	setTransparency;		// For menuWindow
 	private MenuItem_CaptureGUI 		captureGUI;				// For menuWindow
 		
-	private static String 				prism_version = "PRISM ALPHA 1.3.01";
+	private static String 				prism_version = "PRISM ALPHA 1.3.02";
 	private String 						currentProject;
 	private static PrismDesktopPane 	prism_DesktopPane;
 	private static PrismContentPane 	prism_ContentPane;
@@ -113,7 +113,7 @@ public class PrismMain extends JFrame {
 //			setDefaultLookAndFeelDecorated(true);												// 1: activate this 1 with 2  --> then we can disable 2 lines in the middle
 			main = new PrismMain();
 		 	main.setUndecorated(true);		// to help make translucent windows
-			main.setOpacity(0.95f);
+			main.setOpacity(1f);
 //			main.setBackground(new Color(0, 0, 0, 0.0f)); // alpha <1 = transparent;			// 2: activate this 2 with 1  --> then we can disable 2 lines in the middle
 			
 		 	
