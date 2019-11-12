@@ -1142,7 +1142,7 @@ All changes in this block are associated with PrismAlpha1.3.01.jar, Prism-Formul
 All changes in this block are associated with PrismAlpha1.3.02.jar, Prism-Formulation-09.docx, Prism-UserManual-01.docx)
 --------------------------------------------------------------------------
 471. Remove original_id for strata and strata_5layers and use linkhashmaps to retrieve the original id
-472. Separate solving process to a new class and set to null after solving to save memory
-
+472. Separate solving process to a new class and set to null after solving to save memory. Add Solving_Iterations class
+473. When start solving, all output files will be deleted
 
 
