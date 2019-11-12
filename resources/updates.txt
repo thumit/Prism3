@@ -1141,3 +1141,8 @@ All changes in this block are associated with PrismAlpha1.3.01.jar, Prism-Formul
 470. Update codebase to implement the Prism-Formulation-09 (Panel_Solve)
 All changes in this block are associated with PrismAlpha1.3.02.jar, Prism-Formulation-09.docx, Prism-UserManual-01.docx)
 --------------------------------------------------------------------------
+471. Remove original_id for strata and strata_5layers and use linkhashmaps to retrieve the original id
+472. Separate solving process to a new class and set to null after solving to save memory
+
+
+
