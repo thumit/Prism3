@@ -62,6 +62,9 @@ public class AreaMerging {
 	private JTable current_table, merging_table, merging_table_with_all_attributes;
 	private TableFilterHeader filterHeader;
 	
+	private Object[][] data11;	// to pass back to save the state_id output
+	private String[] columnNames11;	// to pass back to save the state_id output
+	
 	public AreaMerging(JScrollPane merging_result_scrollpane) {
 		this.merging_result_scrollpane = merging_result_scrollpane;
 		
@@ -406,7 +409,17 @@ public class AreaMerging {
  		TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model);	// Add sorter
 		table.setRowSorter(sorter);
 		
+		data11 = data;
+		columnNames11 = columnNames;
 		merging_table = table;
+	}
+	
+	public Object[][] get_data11() {
+		return data11;	// to pass back to save the state_id output
+	}
+	
+	public String[] get_columnNames11() {
+		return columnNames11;	// to pass back to save the state_id output
 	}
 	
 	

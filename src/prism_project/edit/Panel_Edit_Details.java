@@ -270,6 +270,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	private JTable table10;
 	private PrismTableModel model10;
 	private Object[][] data10;
+	
+	// table input_11_state_id.txt		This is a special input that will not be loaded when we load the run. It will be generated and saved when we save the run
+	private String[] columnNames11;
+	private Object[][] data11;
 		
 	// others
 	private PrismTextAreaReadMe readme = new PrismTextAreaReadMe("icon_tree.png", 70, 70);
@@ -9357,6 +9361,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	class Area_Merging_GUI extends JLayeredPane {
+		JButton btn_GetResult;
+		
 		public Area_Merging_GUI() {
 			setLayout(new BorderLayout());
 			
@@ -9423,7 +9429,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					
 			
 			// GetResult
-			JButton btn_GetResult = new JButton() {
+			btn_GetResult = new JButton() {
 				public Point getToolTipLocation(MouseEvent event) {
 					return new Point(getWidth() - 10, 8);
 				}
@@ -9555,6 +9561,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			// Add Listeners for table10 & buttons----------------------------------------------------------
 			btn_GetResult.addActionListener(e -> {
 				merging_result.generate_merging_result(data10, read_database);
+				data11 = merging_result.get_data11();					// to pass back to save the state_id output
+				columnNames11 = merging_result.get_columnNames11();		// to pass back to save the state_id output
 			});
 			// End of Listeners for table8 & buttons -----------------------------------------------------------------------
 			// End of Listeners for table8 & buttons -----------------------------------------------------------------------
@@ -9657,6 +9665,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		File input_08_file = new File(currentRunFolder.getAbsolutePath() + "/input_08_basic_constraints.txt");
 		File input_09_file = new File(currentRunFolder.getAbsolutePath() + "/input_09_flow_constraints.txt");
 		File input_10_file = new File(currentRunFolder.getAbsolutePath() + "/input_10_area_merging.txt");
+		File input_11_file = new File(currentRunFolder.getAbsolutePath() + "/input_11_state_id.txt");
 		create_file_input(input_01_file, data1, columnNames1);
 		create_file_input(input_02_file, data3, columnNames3);	
 		create_file_input(input_03_file, data2, columnNames2);	// 3 and 2 are currently switched
@@ -9667,6 +9676,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		create_file_input(input_08_file, data8, columnNames8);
 		create_file_input(input_09_file, data9, columnNames9);
 		create_file_input(input_10_file, data10, columnNames10);
+		panel_Area_Merging_GUI.btn_GetResult.doClick();		// This would help get the data11 and columnNames11 for writing the output of state_id
+		create_file_input(input_11_file, data11, columnNames11);
 		create_file_database();
 		create_readmeFile();
 	}
