@@ -196,6 +196,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 				Thread thread2 = new Thread() {
 					public void run() {
 						try {
+							table.setEnabled(false);		// disable editing
 							//redirect console to JTextArea
 							PipedOutputStream pOut = new PipedOutputStream();
 							System.setOut(new PrintStream(pOut));
@@ -223,6 +224,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 							reader.close();
 							pIn.close();
 							pOut.close();
+							table.setEnabled(true);		// enable editing
 						} catch (IOException e) {
 							System.err.println("Panel Solve Runs - Thread 2 error - " + e.getClass().getName() + ": " + e.getMessage());
 						}
@@ -237,12 +239,8 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 											
 						for (int row = 0; row < rowCount; row++) {
 							button_solve.setText("Solving: " + runsList[row].getName());
-							int total_iterations = Integer.parseInt(data[row][1].toString());
-							
 							if (objective_option == 0) {
-								if (total_iterations == 0) solve = new Solve(runsList[row], model, data, row);
-								if (total_iterations > 0) solve_iterations = new Solve_Iterations(runsList[row], model, data, row);
-								solve = null;
+								solve_iterations = new Solve_Iterations(runsList[row], model, data, row);
 								solve_iterations = null;
 							} else {
 							}

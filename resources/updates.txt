@@ -1145,4 +1145,6 @@ All changes in this block are associated with PrismAlpha1.3.02.jar, Prism-Formul
 472. Separate solving process to a new class and set to null after solving to save memory. Add Solving_Iterations class
 473. When start solving, all output files will be deleted
 474. When click the Save buttons (Save Runs), input_11_state_id will be automatically created and saved.
-
+475. Apply rolling horizon for Formulation-09 based on 3a:
+	- For iteration iter, create variables in the range[1 + iter, T + iter]. Note that in the code total number of period and age need + 1 since we loop from period 1 and age 1
+	- Discount rate for t + iter is calculated for period t

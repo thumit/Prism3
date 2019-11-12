@@ -21,14 +21,15 @@ import java.util.Collections;
 import java.util.List;
 
 public class Information_Variable {
-	private String layer1, layer2, layer3, layer4, layer5, layer6, method, layer5_regen, forest_status;	// layer5_regen = regenerated cover type = s5R (after clear-cut or SR occurrence), while layer5 = s5 (before clear-cut or SR occurrence)
+	private String var_name, layer1, layer2, layer3, layer4, layer5, layer6, method, layer5_regen, forest_status;	// layer5_regen = regenerated cover type = s5R (after clear-cut or SR occurrence), while layer5 = s5 (before clear-cut or SR occurrence)
 	private int period, age, timing_choice, rotation_period, rotation_age;
 	private String yield_table_name_to_find;
 	private int yield_table_row_index_to_find;
 	private int[] prescription_id_and_row_id;
 	
-	public Information_Variable(String var_name, int starting_age, List<String> yield_tables_names_list) {
+	public Information_Variable(int iter, String var_name, int starting_age, List<String> yield_tables_names_list) {
 		// Set up
+		this.var_name = var_name;
 		layer1 = "";
 		layer2 = "";
 		layer3 = "";
@@ -68,6 +69,7 @@ public class Information_Variable {
 				forest_status = "E";
 				yield_table_name_to_find = layer5 + "_" + layer6 + "_"+ method + "_" + forest_status + "_" + timing_choice;
 				yield_table_row_index_to_find = period - 1;
+				period = period - iter;		// adjust period. Eg. period 1 + iter should be adjusted to be 1. This is to apply condition in cost, disturbance, other inputs...
 				break;
 			
 			case "xPB_E_":
@@ -86,6 +88,7 @@ public class Information_Variable {
 				forest_status = "E";
 				yield_table_name_to_find = layer5 + "_" + layer6 + "_"+ method + "_" + forest_status + "_" + timing_choice;
 				yield_table_row_index_to_find = period - 1;
+				period = period - iter;		// adjust period. Eg. period 1 + iter should be adjusted to be 1. This is to apply condition in cost, disturbance, other inputs...
 				break;
 			
 			case "xGS_E_":
@@ -104,6 +107,7 @@ public class Information_Variable {
 				forest_status = "E";
 				yield_table_name_to_find = layer5 + "_" + layer6 + "_"+ method + "_" + forest_status + "_" + timing_choice;
 				yield_table_row_index_to_find = period - 1;
+				period = period - iter;		// adjust period. Eg. period 1 + iter should be adjusted to be 1. This is to apply condition in cost, disturbance, other inputs...
 				break;
 			
 			case "xMS_E_":
@@ -122,6 +126,7 @@ public class Information_Variable {
 				forest_status = "E";
 				yield_table_name_to_find = layer5 + "_" + layer6 + "_"+ method + "_" + forest_status + "_" + timing_choice;
 				yield_table_row_index_to_find = period - 1;
+				period = period - iter;		// adjust period. Eg. period 1 + iter should be adjusted to be 1. This is to apply condition in cost, disturbance, other inputs...
 				break;
 				
 			case "xBS_E_":
@@ -140,6 +145,7 @@ public class Information_Variable {
 				forest_status = "E";
 				yield_table_name_to_find = layer5 + "_" + layer6 + "_" + method + "_" + forest_status + "_" + timing_choice;
 				yield_table_row_index_to_find = period - 1;
+				period = period - iter;		// adjust period. Eg. period 1 + iter should be adjusted to be 1. This is to apply condition in cost, disturbance, other inputs...
 				break;
 				
 			case "xEA_E_":
@@ -161,6 +167,8 @@ public class Information_Variable {
 				forest_status = "E";
 				yield_table_name_to_find = layer5 + "_" + layer6 + "_" + method + "_" + forest_status + "_" + rotation_age + "_" + timing_choice;
 				yield_table_row_index_to_find = period - 1;
+				period = period - iter;		// adjust period. Eg. period 1 + iter should be adjusted to be 1. This is to apply condition in cost, disturbance, other inputs...
+				rotation_period = rotation_period - iter;		// adjust period. Eg. period 1 + iter should be adjusted to be 1. This is to apply condition in cost, disturbance, other inputs...
 				break;
 				
 			case "xEA_R_":
@@ -181,6 +189,8 @@ public class Information_Variable {
 				forest_status = "R";
 				yield_table_name_to_find = layer5 + "_" + method + "_" + forest_status + "_" + rotation_age + "_" + timing_choice;
 				yield_table_row_index_to_find = rotation_age - 1 + period - rotation_period;
+				period = period - iter;		// adjust period. Eg. period 1 + iter should be adjusted to be 1. This is to apply condition in cost, disturbance, other inputs...
+				rotation_period = rotation_period - iter;		// adjust period. Eg. period 1 + iter should be adjusted to be 1. This is to apply condition in cost, disturbance, other inputs...
 				break;
 				
 			case "xNG_R_":
@@ -198,6 +208,7 @@ public class Information_Variable {
 				forest_status = "R";
 				yield_table_name_to_find = layer5 + "_" + method + "_" + forest_status + "_" + timing_choice;
 				yield_table_row_index_to_find = age - 1;
+				period = period - iter;		// adjust period. Eg. period 1 + iter should be adjusted to be 1. This is to apply condition in cost, disturbance, other inputs...
 				break;
 				
 			case "xPB_R_":
@@ -215,6 +226,7 @@ public class Information_Variable {
 				forest_status = "R";
 				yield_table_name_to_find = layer5 + "_" + method + "_" + forest_status + "_" + timing_choice;
 				yield_table_row_index_to_find = age - 1;
+				period = period - iter;		// adjust period. Eg. period 1 + iter should be adjusted to be 1. This is to apply condition in cost, disturbance, other inputs...
 				break;
 				
 			case "xGS_R_":
@@ -232,8 +244,20 @@ public class Information_Variable {
 				forest_status = "R";
 				yield_table_name_to_find = layer5 + "_" + method + "_" + forest_status + "_" + timing_choice;
 				yield_table_row_index_to_find = age - 1;
+				period = period - iter;		// adjust period. Eg. period 1 + iter should be adjusted to be 1. This is to apply condition in cost, disturbance, other inputs...
 				break;
 				
+			case "f_":
+				term = var_name.substring(2).split("_");	// remove first 2 letters and then split
+				layer1 = term[0];
+				layer2 = term[1];
+				layer3 = term[2];
+				layer4 = term[3];
+				layer5 = term[4];
+				period = Integer.parseInt(term[5]);
+				layer5_regen = term[6];
+				period = period - iter;		// adjust period. Eg. period 1 + iter should be adjusted to be 1. This is to apply condition in cost, disturbance, other inputs...
+				break;
 			default:
 				break;
 			}
@@ -257,6 +281,11 @@ public class Information_Variable {
     	prescription_id_and_row_id[0] = prescription_id_to_find;
     	prescription_id_and_row_id[1] = row_id_to_find;
 		yield_tables_names_list = null;		// clear object to save memory
+	}
+	
+	
+	public String get_var_name() {
+		return var_name;
 	}
 	
 	

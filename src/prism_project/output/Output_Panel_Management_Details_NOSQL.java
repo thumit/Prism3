@@ -1484,7 +1484,8 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 					int strata_id = Collections.binarySearch(model_strata, strata);
 					start_age = strata_starting_age[strata_id];
 				} 
-				Information_Variable var_info = new Information_Variable(var_name, start_age, yield_tables_names_list);
+				int iter = 0;
+				Information_Variable var_info = new Information_Variable(iter, var_name, start_age, yield_tables_names_list);
 				
 				var_value_list.add(var_value);
 				var_cost_list.add(var_cost);

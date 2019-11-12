@@ -1,0 +1,84 @@
+bc_id	bc_description	bc_type	bc_multiplier	lowerbound	lowerbound_perunit_penalty	upperbound	upperbound_perunit_penalty	var_id	var_name	var_value	var_reduced_cost	total_penalty
+1	bdft per 1	SOFT	1.0	9.99999999E8	1.0	null	null	0	y_0	0.0	0.0	9.99999999E8
+2	cuft harvest 1 - time period 1	FREE	1.0	null	null	null	null	63	v_0	0.0	0.0	0.0
+3	cuft harvest 2 - time period 2	FREE	1.0	null	null	null	null	64	v_1	0.0	0.0	0.0
+4	cuft harvest 3 - time period 3	FREE	1.0	null	null	null	null	65	v_2	0.0	0.0	0.0
+5	cuft harvest 4 - time period 4	FREE	1.0	null	null	null	null	66	v_3	0.0	0.0	0.0
+6	cuft harvest 5 - time period 5	FREE	1.0	null	null	null	null	67	v_4	0.0	0.0	0.0
+7	cuft harvest 6 - time period 6	FREE	1.0	null	null	null	null	68	v_5	0.0	0.0	0.0
+8	cuft harvest 7 - time period 7	FREE	1.0	null	null	null	null	69	v_6	0.0	0.0	0.0
+9	cuft harvest 8 - time period 8	FREE	1.0	null	null	null	null	70	v_7	0.0	0.0	0.0
+10	cuft harvest 9 - time period 9	FREE	1.0	null	null	null	null	71	v_8	0.0	0.0	0.0
+11	cuft harvest 10 - time period 10	FREE	1.0	null	null	null	null	72	v_9	0.0	0.0	0.0
+12	cuft harvest 11 - time period 11	FREE	1.0	null	null	null	null	73	v_10	0.0	0.0	0.0
+13	cuft harvest 12 - time period 12	FREE	1.0	null	null	null	null	74	v_11	0.0	0.0	0.0
+14	cuft harvest 13 - time period 13	FREE	1.0	null	null	null	null	75	v_12	0.0	0.0	0.0
+15	cuft harvest 14 - time period 14	FREE	1.0	null	null	null	null	76	v_13	0.0	0.0	0.0
+16	cuft harvest 15 - time period 15	FREE	1.0	null	null	null	null	77	v_14	0.0	0.0	0.0
+17	cuft harvest 16 - time period 16	FREE	1.0	null	null	null	null	78	v_15	0.0	0.0	0.0
+18	cuft harvest 17 - time period 17	FREE	1.0	null	null	null	null	79	v_16	0.0	0.0	0.0
+19	cuft harvest 18 - time period 18	FREE	1.0	null	null	null	null	80	v_17	0.0	0.0	0.0
+20	cuft harvest 19 - time period 19	FREE	1.0	null	null	null	null	81	v_18	0.0	0.0	0.0
+21	cuft harvest 20 - time period 20	FREE	1.0	null	null	null	null	82	v_19	0.0	0.0	0.0
+22	G BdftHarv 1 - time period 1	FREE	1.0	null	null	null	null	83	v_20	0.0	0.0	0.0
+23	G BdftHarv 2 - time period 2	FREE	1.0	null	null	null	null	84	v_21	0.0	0.0	0.0
+24	G BdftHarv 3 - time period 3	FREE	1.0	null	null	null	null	85	v_22	0.0	0.0	0.0
+25	G BdftHarv 4 - time period 4	FREE	1.0	null	null	null	null	86	v_23	0.0	0.0	0.0
+26	G BdftHarv 5 - time period 5	FREE	1.0	null	null	null	null	87	v_24	0.0	0.0	0.0
+27	G BdftHarv 6 - time period 6	FREE	1.0	null	null	null	null	88	v_25	0.0	0.0	0.0
+28	G BdftHarv 7 - time period 7	FREE	1.0	null	null	null	null	89	v_26	0.0	0.0	0.0
+29	G BdftHarv 8 - time period 8	FREE	1.0	null	null	null	null	90	v_27	0.0	0.0	0.0
+30	G BdftHarv 9 - time period 9	FREE	1.0	null	null	null	null	91	v_28	0.0	0.0	0.0
+31	G BdftHarv 10 - time period 10	FREE	1.0	null	null	null	null	92	v_29	0.0	0.0	0.0
+32	G BdftHarv 11 - time period 11	FREE	1.0	null	null	null	null	93	v_30	0.0	0.0	0.0
+33	G BdftHarv 12 - time period 12	FREE	1.0	null	null	null	null	94	v_31	0.0	0.0	0.0
+34	G BdftHarv 13 - time period 13	FREE	1.0	null	null	null	null	95	v_32	0.0	0.0	0.0
+35	G BdftHarv 14 - time period 14	FREE	1.0	null	null	null	null	96	v_33	0.0	0.0	0.0
+36	G BdftHarv 15 - time period 15	FREE	1.0	null	null	null	null	97	v_34	0.0	0.0	0.0
+37	G BdftHarv 16 - time period 16	FREE	1.0	null	null	null	null	98	v_35	0.0	0.0	0.0
+38	G BdftHarv 17 - time period 17	FREE	1.0	null	null	null	null	99	v_36	0.0	0.0	0.0
+39	G BdftHarv 18 - time period 18	FREE	1.0	null	null	null	null	100	v_37	0.0	0.0	0.0
+40	G BdftHarv 19 - time period 19	FREE	1.0	null	null	null	null	101	v_38	0.0	0.0	0.0
+41	G BdftHarv 20 - time period 20	FREE	1.0	null	null	null	null	102	v_39	0.0	0.0	0.0
+42	C BdftHarv 1 - time period 1	FREE	1.0	null	null	null	null	103	v_40	0.0	0.0	0.0
+43	C BdftHarv 2 - time period 2	FREE	1.0	null	null	null	null	104	v_41	0.0	0.0	0.0
+44	C BdftHarv 3 - time period 3	FREE	1.0	null	null	null	null	105	v_42	0.0	0.0	0.0
+45	C BdftHarv 4 - time period 4	FREE	1.0	null	null	null	null	106	v_43	0.0	0.0	0.0
+46	C BdftHarv 5 - time period 5	FREE	1.0	null	null	null	null	107	v_44	0.0	0.0	0.0
+47	C BdftHarv 6 - time period 6	FREE	1.0	null	null	null	null	108	v_45	0.0	0.0	0.0
+48	C BdftHarv 7 - time period 7	FREE	1.0	null	null	null	null	109	v_46	0.0	0.0	0.0
+49	C BdftHarv 8 - time period 8	FREE	1.0	null	null	null	null	110	v_47	0.0	0.0	0.0
+50	C BdftHarv 9 - time period 9	FREE	1.0	null	null	null	null	111	v_48	0.0	0.0	0.0
+51	C BdftHarv 10 - time period 10	FREE	1.0	null	null	null	null	112	v_49	0.0	0.0	0.0
+52	C BdftHarv 11 - time period 11	FREE	1.0	null	null	null	null	113	v_50	0.0	0.0	0.0
+53	C BdftHarv 12 - time period 12	FREE	1.0	null	null	null	null	114	v_51	0.0	0.0	0.0
+54	C BdftHarv 13 - time period 13	FREE	1.0	null	null	null	null	115	v_52	0.0	0.0	0.0
+55	C BdftHarv 14 - time period 14	FREE	1.0	null	null	null	null	116	v_53	0.0	0.0	0.0
+56	C BdftHarv 15 - time period 15	FREE	1.0	null	null	null	null	117	v_54	0.0	0.0	0.0
+57	C BdftHarv 16 - time period 16	FREE	1.0	null	null	null	null	118	v_55	0.0	0.0	0.0
+58	C BdftHarv 17 - time period 17	FREE	1.0	null	null	null	null	119	v_56	0.0	0.0	0.0
+59	C BdftHarv 18 - time period 18	FREE	1.0	null	null	null	null	120	v_57	0.0	0.0	0.0
+60	C BdftHarv 19 - time period 19	FREE	1.0	null	null	null	null	121	v_58	0.0	0.0	0.0
+61	C BdftHarv 20 - time period 20	FREE	1.0	null	null	null	null	122	v_59	0.0	0.0	0.0
+62	AvgInv SU cuft 10-19	FREE	0.1	null	null	null	null	123	v_60	0.0	0.0	0.0
+63	cuft SU Per 20	FREE	1.0	null	null	null	null	124	v_61	0.0	0.0	0.0
+64	msf 1 - time period 1	SOFT	1.0	45000.0	1.0	null	null	1	y_1	0.0	0.0	45000.0
+65	msf 2 - time period 2	SOFT	1.0	45000.0	1.0	null	null	2	y_2	0.0	0.0	45000.0
+66	msf 3 - time period 3	SOFT	1.0	45000.0	1.0	null	null	3	y_3	0.0	0.0	45000.0
+67	msf 4 - time period 4	SOFT	1.0	45000.0	1.0	null	null	4	y_4	0.0	0.0	45000.0
+68	msf 5 - time period 5	SOFT	1.0	45000.0	1.0	null	null	5	y_5	0.0	0.0	45000.0
+69	msf 6 - time period 6	SOFT	1.0	45000.0	1.0	null	null	6	y_6	0.0	0.0	45000.0
+70	msf 7 - time period 7	SOFT	1.0	45000.0	1.0	null	null	7	y_7	0.0	0.0	45000.0
+71	msf 8 - time period 8	SOFT	1.0	45000.0	1.0	null	null	8	y_8	0.0	0.0	45000.0
+72	msf 9 - time period 9	SOFT	1.0	45000.0	1.0	null	null	9	y_9	0.0	0.0	45000.0
+73	msf 10 - time period 10	SOFT	1.0	45000.0	1.0	null	null	10	y_10	0.0	0.0	45000.0
+74	msf 11 - time period 11	SOFT	1.0	45000.0	1.0	null	null	11	y_11	0.0	0.0	45000.0
+75	msf 12 - time period 12	SOFT	1.0	45000.0	1.0	null	null	12	y_12	0.0	0.0	45000.0
+76	msf 13 - time period 13	SOFT	1.0	45000.0	1.0	null	null	13	y_13	0.0	0.0	45000.0
+77	msf 14 - time period 14	SOFT	1.0	45000.0	1.0	null	null	14	y_14	0.0	0.0	45000.0
+78	msf 15 - time period 15	SOFT	1.0	45000.0	1.0	null	null	15	y_15	0.0	0.0	45000.0
+79	msf 16 - time period 16	SOFT	1.0	45000.0	1.0	null	null	16	y_16	0.0	0.0	45000.0
+80	msf 17 - time period 17	SOFT	1.0	45000.0	1.0	null	null	17	y_17	0.0	0.0	45000.0
+81	msf 18 - time period 18	SOFT	1.0	45000.0	1.0	null	null	18	y_18	0.0	0.0	45000.0
+82	msf 19 - time period 19	SOFT	1.0	45000.0	1.0	null	null	19	y_19	0.0	0.0	45000.0
+83	msf 20 - time period 20	SOFT	1.0	45000.0	1.0	null	null	20	y_20	0.0	0.0	45000.0
