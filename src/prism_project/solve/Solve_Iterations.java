@@ -1654,7 +1654,7 @@ public class Solve_Iterations {
 					for (int tR = 1 + iter; tR <= total_periods + iter; tR++) {
 						for (int s5R = 0; s5R < total_layer5; s5R++) {
 							for (int i = 0; i < total_EA_E_prescription_choices; i++) {
-								for (int t = 1; t <= tR-1; t++) {
+								for (int t = 1; t <= tR - 1; t++) {
 									if (xEAe[strata_id][tR] != null 
 											&& xEAe[strata_id][tR][s5R] != null
 												&& xEAe[strata_id][tR][s5R][i] != null
@@ -2017,12 +2017,12 @@ public class Solve_Iterations {
 								// Add - sigma(tR)(aR)(s5R')(i)	xEAr[s1][s2][s3][s4][s5][tR][aR][s5R'][i][t]
 								for (int tR = t + 1; tR <= total_periods + iter; tR++) { // tR
 									if (xEAr[strata_5layers_id][tR] != null) 
-										for (int aR = 1; aR <= tR - 1; aR++) {
+										for (int aR = 1; aR <= tR - 1; aR++) {		// Note that we lack the condition that (aR - tR + t > 0) as in Formulation-09. But we do not need it here since the null check here and the definition (line 769, 779) guarantee this condition
 											if (xEAr[strata_5layers_id][tR][aR] != null) 
 												for (int s5RR = 0; s5RR < total_layer5; s5RR++) {		// s5R'
 													if (xEAr[strata_5layers_id][tR][aR][s5RR] != null)
 														for (int i = 0; i < total_EA_R_prescription_choices; i++) {
-															if (xEAr[strata_5layers_id][tR][aR][s5RR][i] != null) {
+															if (xEAr[strata_5layers_id][tR][aR][s5RR][i] != null) { 
 																
 																int var_index = xEAr[strata_5layers_id][tR][aR][s5RR][i][t];
 																if(var_index > 0 && var_rd_condition_id[var_index] != -9999) {		// if variable is defined, this value would be > 0 
@@ -2239,7 +2239,7 @@ public class Solve_Iterations {
 					for (int i = 0; i < total_NG_R_prescription_choices; i++) {
 						int t_regen = (iter == 0) ? 2 : 1;	// this is because iteration 0 could not have regenerated forest in period 1, but iterations >= 1 do have regenerated forest strata
 						for (int t = t_regen + iter; t <= total_periods - 1 + iter; t++) {  
-							for (int a = 1; a <= t-1; a++) {
+							for (int a = 1; a <= t - 1; a++) {
 								if(xNGr[strata_5layers_id][i] != null
 										&& xNGr[strata_5layers_id][i][t] != null
 												&& xNGr[strata_5layers_id][i][t][a] > 0) {		// if variable is defined, this value would be > 0 
@@ -2371,7 +2371,7 @@ public class Solve_Iterations {
 					
 					int t_regen = (iter == 0) ? 2 : 1;	// this is because iteration 0 could not have regenerated forest in period 1, but iterations >= 1 do have regenerated forest strata
 					for (int tR = t_regen + iter; tR <= total_periods + iter; tR++) {
-						for (int aR = 1; aR <= tR-1; aR++) {									
+						for (int aR = 1; aR <= tR - 1; aR++) {									
 							for (int s5R = 0; s5R < total_layer5; s5R++) {
 								for (int i = 0; i < total_EA_R_prescription_choices; i++) {
 									for (int t = tR - aR + 1; t <= tR - 1; t++) {
