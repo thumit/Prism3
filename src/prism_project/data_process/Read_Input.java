@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -1235,5 +1236,45 @@ public class Read_Input {
 			flow_set_list.add(this_set);
 		}
 		return flow_set_list;
+	}	
+	
+	//-------------------------------------------------------------------------------------------------------------------------------------------------	
+	//For input_11_state_id.txt
+	private LinkedHashMap<String, String> map_prescription_and_row_id_to_state_id = new LinkedHashMap<String, String>();
+	public void read_state_id(File file) {
+		String delimited = "\t";		// tab delimited
+				
+		try {		
+			// All lines to be in array
+			List<String> list;
+			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
+			list.remove(0);	// Remove the first row (Column names)
+			String[] a = list.toArray(new String[list.size()]);
+								
+			int total_rows = a.length;
+			int total_columns = a[0].split(delimited).length;		// a[0].split(delimited) = String[] of the first row (this is the row below the column headers row which was removed already)					
+			String[][] data = new String[total_rows][total_columns];
+		
+			// read all values from all rows and columns
+			for (int i = 0; i < total_rows; i++) {
+				String[] row_value = a[i].split(delimited);
+				for (int j = 0; j < total_columns; j++) {
+					data[i][j] = row_value[j].replaceAll("\\s+", "");
+				}
+			}
+
+			// Map:	prescription + " " + row_id = key, state_id = var_value
+			for (int i = 0; i < total_rows; i++) {
+				String key = data[i][0] + " " + data[i][1];
+				String value = data[i][2];
+				map_prescription_and_row_id_to_state_id.put(key, value);
+			}
+		} catch (IOException e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+		}
+	}
+	
+	public LinkedHashMap<String, String> get_map_prescription_and_row_id_to_state_id() {
+		return map_prescription_and_row_id_to_state_id;
 	}	
 }

@@ -123,6 +123,7 @@ public class Solve_Iterations {
 			File input_07_file = new File(runFolder.getAbsolutePath() + "/input_07_management_cost.txt");
 			File input_08_file = new File(runFolder.getAbsolutePath() + "/input_08_basic_constraints.txt");
 			File input_09_file = new File(runFolder.getAbsolutePath() + "/input_09_flow_constraints.txt");
+			File input_11_file = new File(runFolder.getAbsolutePath() + "/input_11_state_id.txt");
 			Read_Input read = new Read_Input();
 			read.read_general_inputs(input_01_file);
 			read.read_model_strata(input_02_file);
@@ -133,6 +134,7 @@ public class Solve_Iterations {
 			read.read_management_cost(input_07_file);
 			read.read_basic_constraints(input_08_file);
 			read.read_flow_constraints(input_09_file);
+			read.read_state_id(input_11_file);
 			
 			// Get info: input_01_general_inputs
 			int total_periods = read.get_total_periods();
@@ -203,7 +205,10 @@ public class Solve_Iterations {
 			System.out.println("Reading process finished for all core inputs          " + dateFormat.format(new Date()));
 			System.out.println("Optimization models will be built based on Prism-Formulation-09");
 			
-
+			// Get info: input_11_state_id
+			LinkedHashMap<String, String> map_prescription_and_row_id_to_state_id = read.get_map_prescription_and_row_id_to_state_id();
+			
+			
 			
 			//--------------------------------------------------------------------------------------------------------------------------
 		    //--------------------------------------------------------------------------------------------------------------------------  
@@ -1022,7 +1027,7 @@ public class Solve_Iterations {
 				
 				// Constraints 5-------------------------------------------------
 				// Map previous iteration output_02
-				Map<String, Double> map_var_name_to_var_value = new LinkedHashMap<String, Double>();
+				LinkedHashMap<String, Double> map_var_name_to_var_value = new LinkedHashMap<String, Double>();
 				int previous_iter = iter -1;
 				File previous_output_variables_file = new File(runFolder.getAbsolutePath() + "/output_02_variables_" + previous_iter + ".txt");
 				String delimited = "\t";		// tab delimited
@@ -1037,9 +1042,9 @@ public class Solve_Iterations {
 				
 					// read all values from all rows and columns
 					for (int i = 0; i < file_total_rows; i++) {
-						String[] rowValue = a[i].split(delimited);
+						String[] row_value = a[i].split(delimited);
 						for (int j = 0; j < file_total_columns; j++) {
-							map_var_name_to_var_value.put(rowValue[1], Double.valueOf(rowValue[2]));		// var_name = key, id = var_value
+							map_var_name_to_var_value.put(row_value[1], Double.valueOf(row_value[2]));		// var_name = key, id = var_value
 						}
 					}
 				} catch (IOException e) {
@@ -1242,86 +1247,113 @@ public class Solve_Iterations {
 						}
 					}	
 				} else {	// iteration >= 1
-					// 5a
-					for (int strata_id = 0; strata_id < total_model_strata; strata_id++) {
-						// Add sigma(i) xNGe(s1,s2,s3,s4,s5,s6)[i][1 + iter]
-						for (int i = 0; i < total_NG_E_prescription_choices; i++) {
-							if (xNGe[strata_id][i] != null
-									&& xNGe[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
-								// Add constraint
-								c5_indexlist.add(new ArrayList<Integer>());
-								c5_valuelist.add(new ArrayList<Double>());
-								c5_indexlist.get(c5_num).add(xNGe[strata_id][i][1 + iter]);
-								c5_valuelist.get(c5_num).add((double) 1);
-								// Add bounds
-								int var_index = xNGe[strata_id][i][1 + iter];
-								double var_value = 0;
-								if (map_var_name_to_var_value.get(var_info_array[var_index].get_var_name()) != null) {
-									var_value = map_var_name_to_var_value.get(var_info_array[var_index].get_var_name());
+					String merging_option = "merge";
+					switch (merging_option) {
+					case "no_merge":
+						// 5a
+						for (int strata_id = 0; strata_id < total_model_strata; strata_id++) {
+							// Add sigma(i) xNGe(s1,s2,s3,s4,s5,s6)[i][1 + iter]
+							for (int i = 0; i < total_NG_E_prescription_choices; i++) {
+								if (xNGe[strata_id][i] != null
+										&& xNGe[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
+									// Add constraint
+									c5_indexlist.add(new ArrayList<Integer>());
+									c5_valuelist.add(new ArrayList<Double>());
+									c5_indexlist.get(c5_num).add(xNGe[strata_id][i][1 + iter]);
+									c5_valuelist.get(c5_num).add((double) 1);
+									// Add bounds
+									int var_index = xNGe[strata_id][i][1 + iter];
+									double var_value = 0;
+									if (map_var_name_to_var_value.get(var_info_array[var_index].get_var_name()) != null) {
+										var_value = map_var_name_to_var_value.get(var_info_array[var_index].get_var_name());
+									}
+									c5_lblist.add(var_value);
+									c5_ublist.add(var_value);
+									c5_num++;
 								}
-								c5_lblist.add(var_value);
-								c5_ublist.add(var_value);
-								c5_num++;
 							}
-						}
-				
-						// Add sigma(i) xPBe(s1,s2,s3,s4,s5,s6)[i][1 + iter]
-						for (int i = 0; i < total_PB_E_prescription_choices; i++) {
-							if (xPBe[strata_id][i] != null
-									&& xPBe[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
-								// Add constraint
-								c5_indexlist.add(new ArrayList<Integer>());
-								c5_valuelist.add(new ArrayList<Double>());
-								c5_indexlist.get(c5_num).add(xPBe[strata_id][i][1 + iter]);
-								c5_valuelist.get(c5_num).add((double) 1);
-								// Add bounds
-								int var_index = xPBe[strata_id][i][1 + iter];
-								double var_value = 0;
-								if (map_var_name_to_var_value.get(var_info_array[var_index].get_var_name()) != null) {
-									var_value = map_var_name_to_var_value.get(var_info_array[var_index].get_var_name());
+					
+							// Add sigma(i) xPBe(s1,s2,s3,s4,s5,s6)[i][1 + iter]
+							for (int i = 0; i < total_PB_E_prescription_choices; i++) {
+								if (xPBe[strata_id][i] != null
+										&& xPBe[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
+									// Add constraint
+									c5_indexlist.add(new ArrayList<Integer>());
+									c5_valuelist.add(new ArrayList<Double>());
+									c5_indexlist.get(c5_num).add(xPBe[strata_id][i][1 + iter]);
+									c5_valuelist.get(c5_num).add((double) 1);
+									// Add bounds
+									int var_index = xPBe[strata_id][i][1 + iter];
+									double var_value = 0;
+									if (map_var_name_to_var_value.get(var_info_array[var_index].get_var_name()) != null) {
+										var_value = map_var_name_to_var_value.get(var_info_array[var_index].get_var_name());
+									}
+									c5_lblist.add(var_value);
+									c5_ublist.add(var_value);
+									c5_num++;
 								}
-								c5_lblist.add(var_value);
-								c5_ublist.add(var_value);
-								c5_num++;
 							}
-						}
-						
-						// Add xGSe(s1,s2,s3,s4,s5,s6)[i][1 + iter]
-						for (int i = 0; i < total_GS_E_prescription_choices; i++) {
-							if (xGSe[strata_id][i] != null
-									&& xGSe[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
-								// Add constraint
-								c5_indexlist.add(new ArrayList<Integer>());
-								c5_valuelist.add(new ArrayList<Double>());
-								c5_indexlist.get(c5_num).add(xGSe[strata_id][i][1 + iter]);
-								c5_valuelist.get(c5_num).add((double) 1);
-								// Add bounds
-								int var_index = xGSe[strata_id][i][1 + iter];
-								double var_value = 0;
-								if (map_var_name_to_var_value.get(var_info_array[var_index].get_var_name()) != null) {
-									var_value = map_var_name_to_var_value.get(var_info_array[var_index].get_var_name());
+							
+							// Add xGSe(s1,s2,s3,s4,s5,s6)[i][1 + iter]
+							for (int i = 0; i < total_GS_E_prescription_choices; i++) {
+								if (xGSe[strata_id][i] != null
+										&& xGSe[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
+									// Add constraint
+									c5_indexlist.add(new ArrayList<Integer>());
+									c5_valuelist.add(new ArrayList<Double>());
+									c5_indexlist.get(c5_num).add(xGSe[strata_id][i][1 + iter]);
+									c5_valuelist.get(c5_num).add((double) 1);
+									// Add bounds
+									int var_index = xGSe[strata_id][i][1 + iter];
+									double var_value = 0;
+									if (map_var_name_to_var_value.get(var_info_array[var_index].get_var_name()) != null) {
+										var_value = map_var_name_to_var_value.get(var_info_array[var_index].get_var_name());
+									}
+									c5_lblist.add(var_value);
+									c5_ublist.add(var_value);
+									c5_num++;
 								}
-								c5_lblist.add(var_value);
-								c5_ublist.add(var_value);
-								c5_num++;
 							}
-						}
-						
-						// Add sigma(tR,s5R)(i) xEAe(s1,s2,s3,s4,s5,s6)[tR][s5R][i][1 + iter]	
-						for (int tR = 1 + iter; tR <= total_periods + iter; tR++) {
-							for (int s5R = 0; s5R < total_layer5; s5R++) {
-								for (int i = 0; i < total_EA_E_prescription_choices; i++) {
-									if (xEAe[strata_id][tR] != null 
-											&& xEAe[strata_id][tR][s5R] != null
-												&& xEAe[strata_id][tR][s5R][i] != null
-													&& xEAe[strata_id][tR][s5R][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
+							
+							// Add sigma(tR,s5R)(i) xEAe(s1,s2,s3,s4,s5,s6)[tR][s5R][i][1 + iter]	
+							for (int tR = 1 + iter; tR <= total_periods + iter; tR++) {
+								for (int s5R = 0; s5R < total_layer5; s5R++) {
+									for (int i = 0; i < total_EA_E_prescription_choices; i++) {
+										if (xEAe[strata_id][tR] != null 
+												&& xEAe[strata_id][tR][s5R] != null
+													&& xEAe[strata_id][tR][s5R][i] != null
+														&& xEAe[strata_id][tR][s5R][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
+											// Add constraint
+											c5_indexlist.add(new ArrayList<Integer>());
+											c5_valuelist.add(new ArrayList<Double>());
+											c5_indexlist.get(c5_num).add(xEAe[strata_id][tR][s5R][i][1 + iter]);
+											c5_valuelist.get(c5_num).add((double) 1);
+											// Add bounds
+											int var_index = xEAe[strata_id][tR][s5R][i][1 + iter];
+											double var_value = 0;
+											if (map_var_name_to_var_value.get(var_info_array[var_index].get_var_name()) != null) {
+												var_value = map_var_name_to_var_value.get(var_info_array[var_index].get_var_name());
+											}
+											c5_lblist.add(var_value);
+											c5_ublist.add(var_value);
+											c5_num++;
+										}
+									}
+								}	
+							}
+							
+							// Add sigma(i) xMS(s1,s2,s3,s4,s5,s6)[i][1 + iter]
+							if (xMS[strata_id] != null) {		// only MS_E and BS_E might have null at this point and we need to check
+								for (int i = 0; i < total_MS_E_prescription_choices; i++) {
+									if (xMS[strata_id][i] != null 
+											&& xMS[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
 										// Add constraint
 										c5_indexlist.add(new ArrayList<Integer>());
 										c5_valuelist.add(new ArrayList<Double>());
-										c5_indexlist.get(c5_num).add(xEAe[strata_id][tR][s5R][i][1 + iter]);
+										c5_indexlist.get(c5_num).add(xMS[strata_id][i][1 + iter]);
 										c5_valuelist.get(c5_num).add((double) 1);
 										// Add bounds
-										int var_index = xEAe[strata_id][tR][s5R][i][1 + iter];
+										int var_index = xMS[strata_id][i][1 + iter];
 										double var_value = 0;
 										if (map_var_name_to_var_value.get(var_info_array[var_index].get_var_name()) != null) {
 											var_value = map_var_name_to_var_value.get(var_info_array[var_index].get_var_name());
@@ -1331,172 +1363,328 @@ public class Solve_Iterations {
 										c5_num++;
 									}
 								}
-							}	
-						}
-						
-						// Add sigma(i) xMS(s1,s2,s3,s4,s5,s6)[i][1 + iter]
-						if (xMS[strata_id] != null) {		// only MS_E and BS_E might have null at this point and we need to check
-							for (int i = 0; i < total_MS_E_prescription_choices; i++) {
-								if (xMS[strata_id][i] != null 
-										&& xMS[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
-									// Add constraint
-									c5_indexlist.add(new ArrayList<Integer>());
-									c5_valuelist.add(new ArrayList<Double>());
-									c5_indexlist.get(c5_num).add(xMS[strata_id][i][1 + iter]);
-									c5_valuelist.get(c5_num).add((double) 1);
-									// Add bounds
-									int var_index = xMS[strata_id][i][1 + iter];
-									double var_value = 0;
-									if (map_var_name_to_var_value.get(var_info_array[var_index].get_var_name()) != null) {
-										var_value = map_var_name_to_var_value.get(var_info_array[var_index].get_var_name());
+							}
+							
+							// Add sigma(i) xBS(s1,s2,s3,s4,s5,s6)[i][1 + iter]
+							if (xBS[strata_id] != null) {		// only MS_E and BS_E might have null at this point and we need to check
+								for (int i = 0; i < total_BS_E_prescription_choices; i++) {
+									if (xBS[strata_id][i] != null 
+											&& xBS[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
+										// Add constraint
+										c5_indexlist.add(new ArrayList<Integer>());
+										c5_valuelist.add(new ArrayList<Double>());
+										c5_indexlist.get(c5_num).add(xBS[strata_id][i][1 + iter]);
+										c5_valuelist.get(c5_num).add((double) 1);
+										// Add bounds
+										int var_index = xBS[strata_id][i][1 + iter];
+										double var_value = 0;
+										if (map_var_name_to_var_value.get(var_info_array[var_index].get_var_name()) != null) {
+											var_value = map_var_name_to_var_value.get(var_info_array[var_index].get_var_name());
+										}
+										c5_lblist.add(var_value);
+										c5_ublist.add(var_value);
+										c5_num++;
 									}
-									c5_lblist.add(var_value);
-									c5_ublist.add(var_value);
-									c5_num++;
 								}
 							}
-						}
-						
-						// Add sigma(i) xBS(s1,s2,s3,s4,s5,s6)[i][1 + iter]
-						if (xBS[strata_id] != null) {		// only MS_E and BS_E might have null at this point and we need to check
-							for (int i = 0; i < total_BS_E_prescription_choices; i++) {
-								if (xBS[strata_id][i] != null 
-										&& xBS[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
-									// Add constraint
-									c5_indexlist.add(new ArrayList<Integer>());
-									c5_valuelist.add(new ArrayList<Double>());
-									c5_indexlist.get(c5_num).add(xBS[strata_id][i][1 + iter]);
-									c5_valuelist.get(c5_num).add((double) 1);
-									// Add bounds
-									int var_index = xBS[strata_id][i][1 + iter];
-									double var_value = 0;
-									if (map_var_name_to_var_value.get(var_info_array[var_index].get_var_name()) != null) {
-										var_value = map_var_name_to_var_value.get(var_info_array[var_index].get_var_name());
-									}
-									c5_lblist.add(var_value);
-									c5_ublist.add(var_value);
-									c5_num++;
-								}
-							}
-						}
-					}														
-						
-					// Add Regenerated variables
-					for (int strata_5layers_id = 0; strata_5layers_id < total_model_strata_without_sizeclass; strata_5layers_id++) {
-						String strata_5layers = model_strata_without_sizeclass.get(strata_5layers_id);
-						int s5 = Collections.binarySearch(layer5, strata_5layers.split("_")[4]);
-				
-						// xNGr
-						for (int i = 0; i < total_NG_R_prescription_choices; i++) {
-							int t = 1 + iter;
-							for (int a = 1; a <= t - 1; a++) {
-								if(xNGr[strata_5layers_id][i] != null
-										&& xNGr[strata_5layers_id][i][1 + iter] != null
-												&& xNGr[strata_5layers_id][i][1 + iter][a] > 0) {		// if variable is defined, this value would be > 0 
-									// Add constraint
-									c5_indexlist.add(new ArrayList<Integer>());
-									c5_valuelist.add(new ArrayList<Double>());
-									c5_indexlist.get(c5_num).add(xNGr[strata_5layers_id][i][1 + iter][a]);
-									c5_valuelist.get(c5_num).add((double) 1);
-									// Add bounds
-									int var_index = xNGr[strata_5layers_id][i][1 + iter][a];
-									double var_value = 0;
-									if (map_var_name_to_var_value.get(var_info_array[var_index].get_var_name()) != null) {
-										var_value = map_var_name_to_var_value.get(var_info_array[var_index].get_var_name());
-									}
-									c5_lblist.add(var_value);
-									c5_ublist.add(var_value);
-									c5_num++;
-								}
-							}
-						}
+						}														
+							
+						// Add Regenerated variables
+						for (int strata_5layers_id = 0; strata_5layers_id < total_model_strata_without_sizeclass; strata_5layers_id++) {
+							String strata_5layers = model_strata_without_sizeclass.get(strata_5layers_id);
+							int s5 = Collections.binarySearch(layer5, strata_5layers.split("_")[4]);
 					
-						// xPBr
-						for (int i = 0; i < total_PB_R_prescription_choices; i++) {
-							int t = 1 + iter;
-							for (int a = 1; a <= t - 1; a++) {
-								if(xPBr[strata_5layers_id][i] != null
-										&& xPBr[strata_5layers_id][i][1 + iter] != null
-												&& xPBr[strata_5layers_id][i][1 + iter][a] > 0) {		// if variable is defined, this value would be > 0 
-									// Add constraint
-									c5_indexlist.add(new ArrayList<Integer>());
-									c5_valuelist.add(new ArrayList<Double>());
-									c5_indexlist.get(c5_num).add(xPBr[strata_5layers_id][i][1 + iter][a]);
-									c5_valuelist.get(c5_num).add((double) 1);
-									// Add bounds
-									int var_index = xPBr[strata_5layers_id][i][1 + iter][a];
-									double var_value = 0;
-									if (map_var_name_to_var_value.get(var_info_array[var_index].get_var_name()) != null) {
-										var_value = map_var_name_to_var_value.get(var_info_array[var_index].get_var_name());
+							// xNGr
+							for (int i = 0; i < total_NG_R_prescription_choices; i++) {
+								int t = 1 + iter;
+								for (int a = 1; a <= t - 1; a++) {
+									if(xNGr[strata_5layers_id][i] != null
+											&& xNGr[strata_5layers_id][i][1 + iter] != null
+													&& xNGr[strata_5layers_id][i][1 + iter][a] > 0) {		// if variable is defined, this value would be > 0 
+										// Add constraint
+										c5_indexlist.add(new ArrayList<Integer>());
+										c5_valuelist.add(new ArrayList<Double>());
+										c5_indexlist.get(c5_num).add(xNGr[strata_5layers_id][i][1 + iter][a]);
+										c5_valuelist.get(c5_num).add((double) 1);
+										// Add bounds
+										int var_index = xNGr[strata_5layers_id][i][1 + iter][a];
+										double var_value = 0;
+										if (map_var_name_to_var_value.get(var_info_array[var_index].get_var_name()) != null) {
+											var_value = map_var_name_to_var_value.get(var_info_array[var_index].get_var_name());
+										}
+										c5_lblist.add(var_value);
+										c5_ublist.add(var_value);
+										c5_num++;
 									}
-									c5_lblist.add(var_value);
-									c5_ublist.add(var_value);
-									c5_num++;
 								}
 							}
-						}
 						
-						// xGSr
-						for (int i = 0; i < total_GS_R_prescription_choices; i++) {
-							int t = 1 + iter;
-							for (int a = 1; a <= t - 1; a++) {
-								if(xGSr[strata_5layers_id][i] != null
-										&& xGSr[strata_5layers_id][i][1 + iter] != null
-												&& xGSr[strata_5layers_id][i][1 + iter][a] > 0) {		// if variable is defined, this value would be > 0 
-									// Add constraint
-									c5_indexlist.add(new ArrayList<Integer>());
-									c5_valuelist.add(new ArrayList<Double>());
-									c5_indexlist.get(c5_num).add(xGSr[strata_5layers_id][i][1 + iter][a]);
-									c5_valuelist.get(c5_num).add((double) 1);
-									// Add bounds
-									int var_index = xGSr[strata_5layers_id][i][1 + iter][a];
-									double var_value = 0;
-									if (map_var_name_to_var_value.get(var_info_array[var_index].get_var_name()) != null) {
-										var_value = map_var_name_to_var_value.get(var_info_array[var_index].get_var_name());
+							// xPBr
+							for (int i = 0; i < total_PB_R_prescription_choices; i++) {
+								int t = 1 + iter;
+								for (int a = 1; a <= t - 1; a++) {
+									if(xPBr[strata_5layers_id][i] != null
+											&& xPBr[strata_5layers_id][i][1 + iter] != null
+													&& xPBr[strata_5layers_id][i][1 + iter][a] > 0) {		// if variable is defined, this value would be > 0 
+										// Add constraint
+										c5_indexlist.add(new ArrayList<Integer>());
+										c5_valuelist.add(new ArrayList<Double>());
+										c5_indexlist.get(c5_num).add(xPBr[strata_5layers_id][i][1 + iter][a]);
+										c5_valuelist.get(c5_num).add((double) 1);
+										// Add bounds
+										int var_index = xPBr[strata_5layers_id][i][1 + iter][a];
+										double var_value = 0;
+										if (map_var_name_to_var_value.get(var_info_array[var_index].get_var_name()) != null) {
+											var_value = map_var_name_to_var_value.get(var_info_array[var_index].get_var_name());
+										}
+										c5_lblist.add(var_value);
+										c5_ublist.add(var_value);
+										c5_num++;
 									}
-									c5_lblist.add(var_value);
-									c5_ublist.add(var_value);
-									c5_num++;
 								}
 							}
-						}
-						
-						// xEAr
-						int t_regen = (iter == 0) ? 2 : 1;	// this is because iteration 0 could not have regenerated forest in period 1, but iterations >= 1 do have regenerated forest strata
-						for (int tR = t_regen + iter; tR <= total_periods + iter; tR++) {
-							for (int aR = 1; aR <= tR-1; aR++) {									
-								for (int s5R = 0; s5R < total_layer5; s5R++) {
-									for (int i = 0; i < total_EA_R_prescription_choices; i++) {
-										if (1 + iter == tR - aR + 1) {	// t = tR - aR + 1
-											if(xEAr[strata_5layers_id][tR] != null
-													 && xEAr[strata_5layers_id][tR][aR] != null
-															 && xEAr[strata_5layers_id][tR][aR][s5R] != null
-																	 && xEAr[strata_5layers_id][tR][aR][s5R][i] != null
-																			 && xEAr[strata_5layers_id][tR][aR][s5R][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
-												// Add constraint
-												c5_indexlist.add(new ArrayList<Integer>());
-												c5_valuelist.add(new ArrayList<Double>());
-												c5_indexlist.get(c5_num).add(xEAr[strata_5layers_id][tR][aR][s5R][i][1 + iter]);
-												c5_valuelist.get(c5_num).add((double) 1);
-												// Add bounds
-												int var_index = xEAr[strata_5layers_id][tR][aR][s5R][i][1 + iter];
-												double var_value = 0;
-												if (map_var_name_to_var_value.get(var_info_array[var_index].get_var_name()) != null) {
-													var_value = map_var_name_to_var_value.get(var_info_array[var_index].get_var_name());
+							
+							// xGSr
+							for (int i = 0; i < total_GS_R_prescription_choices; i++) {
+								int t = 1 + iter;
+								for (int a = 1; a <= t - 1; a++) {
+									if(xGSr[strata_5layers_id][i] != null
+											&& xGSr[strata_5layers_id][i][1 + iter] != null
+													&& xGSr[strata_5layers_id][i][1 + iter][a] > 0) {		// if variable is defined, this value would be > 0 
+										// Add constraint
+										c5_indexlist.add(new ArrayList<Integer>());
+										c5_valuelist.add(new ArrayList<Double>());
+										c5_indexlist.get(c5_num).add(xGSr[strata_5layers_id][i][1 + iter][a]);
+										c5_valuelist.get(c5_num).add((double) 1);
+										// Add bounds
+										int var_index = xGSr[strata_5layers_id][i][1 + iter][a];
+										double var_value = 0;
+										if (map_var_name_to_var_value.get(var_info_array[var_index].get_var_name()) != null) {
+											var_value = map_var_name_to_var_value.get(var_info_array[var_index].get_var_name());
+										}
+										c5_lblist.add(var_value);
+										c5_ublist.add(var_value);
+										c5_num++;
+									}
+								}
+							}
+							
+							// xEAr
+							int t_regen = (iter == 0) ? 2 : 1;	// this is because iteration 0 could not have regenerated forest in period 1, but iterations >= 1 do have regenerated forest strata
+							for (int tR = t_regen + iter; tR <= total_periods + iter; tR++) {
+								for (int aR = 1; aR <= tR-1; aR++) {									
+									for (int s5R = 0; s5R < total_layer5; s5R++) {
+										for (int i = 0; i < total_EA_R_prescription_choices; i++) {
+											if (1 + iter == tR - aR + 1) {	// t = tR - aR + 1
+												if(xEAr[strata_5layers_id][tR] != null
+														 && xEAr[strata_5layers_id][tR][aR] != null
+																 && xEAr[strata_5layers_id][tR][aR][s5R] != null
+																		 && xEAr[strata_5layers_id][tR][aR][s5R][i] != null
+																				 && xEAr[strata_5layers_id][tR][aR][s5R][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
+													// Add constraint
+													c5_indexlist.add(new ArrayList<Integer>());
+													c5_valuelist.add(new ArrayList<Double>());
+													c5_indexlist.get(c5_num).add(xEAr[strata_5layers_id][tR][aR][s5R][i][1 + iter]);
+													c5_valuelist.get(c5_num).add((double) 1);
+													// Add bounds
+													int var_index = xEAr[strata_5layers_id][tR][aR][s5R][i][1 + iter];
+													double var_value = 0;
+													if (map_var_name_to_var_value.get(var_info_array[var_index].get_var_name()) != null) {
+														var_value = map_var_name_to_var_value.get(var_info_array[var_index].get_var_name());
+													}
+													c5_lblist.add(var_value);
+													c5_ublist.add(var_value);
+													c5_num++;
 												}
-												c5_lblist.add(var_value);
-												c5_ublist.add(var_value);
-												c5_num++;
 											}
 										}
 									}
 								}
 							}
 						}
-					}
+						break;
+					case "merge":
+						// 5a
+						for (int strata_id = 0; strata_id < total_model_strata; strata_id++) {
+							// use LinkedHashMap to add all relevant variables in iteration 1+M
+							LinkedHashMap<Integer, String> map_var_index_to_var_state_id = new LinkedHashMap<Integer, String>();
+							
+							// Add xNGe(s1,s2,s3,s4,s5,s6)[i][1 + iter]
+							for (int i = 0; i < total_NG_E_prescription_choices; i++) {
+								if (xNGe[strata_id][i] != null
+										&& xNGe[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
+									int var_index = xNGe[strata_id][i][1 + iter];
+									String prescription_and_row_id = var_info_array[var_index].get_yield_table_name_to_find() + " " + var_info_array[var_index].get_yield_table_row_index_to_find();
+									String state_id = map_prescription_and_row_id_to_state_id.get(prescription_and_row_id);
+									map_var_index_to_var_state_id.put(var_index, state_id);
+								}
+							}
 					
-					// 5b (NOTE: Formulation-09 does not reflex the bounds turn-off flexibility, we might need to revise the equation 5b)
-					// 5c (NOTE: Formulation-09 does not reflex the bounds turn-off flexibility, we might need to revise the equation 5c)
+							// Add sigma(i) xPBe(s1,s2,s3,s4,s5,s6)[i][1 + iter]
+							for (int i = 0; i < total_PB_E_prescription_choices; i++) {
+								if (xPBe[strata_id][i] != null
+										&& xPBe[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
+									int var_index = xPBe[strata_id][i][1 + iter];
+									String prescription_and_row_id = var_info_array[var_index].get_yield_table_name_to_find() + " " + var_info_array[var_index].get_yield_table_row_index_to_find();
+									String state_id = map_prescription_and_row_id_to_state_id.get(prescription_and_row_id);
+									map_var_index_to_var_state_id.put(var_index, state_id);
+								}
+							}
+							
+							// Add xGSe(s1,s2,s3,s4,s5,s6)[i][1 + iter]
+							for (int i = 0; i < total_GS_E_prescription_choices; i++) {
+								if (xGSe[strata_id][i] != null
+										&& xGSe[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
+									int var_index = xGSe[strata_id][i][1 + iter];
+									String prescription_and_row_id = var_info_array[var_index].get_yield_table_name_to_find() + " " + var_info_array[var_index].get_yield_table_row_index_to_find();
+									String state_id = map_prescription_and_row_id_to_state_id.get(prescription_and_row_id);
+									map_var_index_to_var_state_id.put(var_index, state_id);
+								}
+							}
+							
+							// Add sigma(tR,s5R)(i) xEAe(s1,s2,s3,s4,s5,s6)[tR][s5R][i][1 + iter]	
+							for (int tR = 1 + iter; tR <= total_periods + iter; tR++) {
+								for (int s5R = 0; s5R < total_layer5; s5R++) {
+									for (int i = 0; i < total_EA_E_prescription_choices; i++) {
+										if (xEAe[strata_id][tR] != null 
+												&& xEAe[strata_id][tR][s5R] != null
+													&& xEAe[strata_id][tR][s5R][i] != null
+														&& xEAe[strata_id][tR][s5R][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
+											int var_index = xEAe[strata_id][tR][s5R][i][1 + iter];
+											String prescription_and_row_id = var_info_array[var_index].get_yield_table_name_to_find() + " " + var_info_array[var_index].get_yield_table_row_index_to_find();
+											String state_id = map_prescription_and_row_id_to_state_id.get(prescription_and_row_id);
+											map_var_index_to_var_state_id.put(var_index, state_id);
+										}
+									}
+								}	
+							}
+							
+							// Add sigma(i) xMS(s1,s2,s3,s4,s5,s6)[i][1 + iter]
+							if (xMS[strata_id] != null) {		// only MS_E and BS_E might have null at this point and we need to check
+								for (int i = 0; i < total_MS_E_prescription_choices; i++) {
+									if (xMS[strata_id][i] != null 
+											&& xMS[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
+										int var_index = xMS[strata_id][i][1 + iter];
+										String prescription_and_row_id = var_info_array[var_index].get_yield_table_name_to_find() + " " + var_info_array[var_index].get_yield_table_row_index_to_find();
+										String state_id = map_prescription_and_row_id_to_state_id.get(prescription_and_row_id);
+										map_var_index_to_var_state_id.put(var_index, state_id);
+									}
+								}
+							}
+							
+							// Add sigma(i) xBS(s1,s2,s3,s4,s5,s6)[i][1 + iter]
+							if (xBS[strata_id] != null) {		// only MS_E and BS_E might have null at this point and we need to check
+								for (int i = 0; i < total_BS_E_prescription_choices; i++) {
+									if (xBS[strata_id][i] != null 
+											&& xBS[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
+										int var_index = xBS[strata_id][i][1 + iter];
+										String prescription_and_row_id = var_info_array[var_index].get_yield_table_name_to_find() + " " + var_info_array[var_index].get_yield_table_row_index_to_find();
+										String state_id = map_prescription_and_row_id_to_state_id.get(prescription_and_row_id);
+										map_var_index_to_var_state_id.put(var_index, state_id);
+									}
+								}
+							}
+
+							// sorted LinkedHashMap by values
+							LinkedHashMap<Integer, String> sorted_map_var_index_to_var_state_id = new LinkedHashMap<Integer, String>();
+							map_var_index_to_var_state_id.entrySet().stream().sorted(Map.Entry.comparingByValue()).forEach(entry -> {
+								sorted_map_var_index_to_var_state_id.put(entry.getKey(), entry.getValue());
+							});
+							map_var_index_to_var_state_id = null;	// delete the unsorted map
+							
+//							// test printing
+//							String current_state_id = "";
+//							for (int var_index : sorted_map_var_index_to_var_state_id.keySet()) {
+//								String state_id = sorted_map_var_index_to_var_state_id.get(var_index);
+//								if (!state_id.equals(current_state_id)) { // print each block of variables with the same state_id
+//									System.out.println(); // a blank line when reaching a new block
+//									current_state_id = state_id;
+//								};
+//								String var_name = var_info_array[var_index].get_var_name();
+//								System.out.println(var_index + "                 " + var_name + "                 state_id =                 " + state_id);
+//							};
+//							System.out.println("----------------------------------------------------------------------");
+//							// Example printing blocks with same state_id:
+//									143493                 xMS_E_A_N_C_B_D_F_0_2                 state_id =                 1_0_13_61_45_27_2_0
+//
+//									845                 xNG_E_A_N_C_B_D_F_0_2                 state_id =                 1_1_18_68_39_27_2_3
+//									65216                 xEA_E_A_N_C_B_D_F_12_D_1_2                 state_id =                 1_1_18_68_39_27_2_3
+//									65239                 xEA_E_A_N_C_B_D_F_13_D_1_2                 state_id =                 1_1_18_68_39_27_2_3
+//									65264                 xEA_E_A_N_C_B_D_F_14_D_1_2                 state_id =                 1_1_18_68_39_27_2_3
+//									65291                 xEA_E_A_N_C_B_D_F_15_D_1_2                 state_id =                 1_1_18_68_39_27_2_3
+//									65320                 xEA_E_A_N_C_B_D_F_16_D_1_2                 state_id =                 1_1_18_68_39_27_2_3
+//									143513                 xMS_E_A_N_C_B_D_F_1_2                 state_id =                 1_1_18_68_39_27_2_3
+//									143533                 xMS_E_A_N_C_B_D_F_2_2                 state_id =                 1_1_18_68_39_27_2_3
+//									143553                 xMS_E_A_N_C_B_D_F_3_2                 state_id =                 1_1_18_68_39_27_2_3
+//									143573                 xMS_E_A_N_C_B_D_F_4_2                 state_id =                 1_1_18_68_39_27_2_3
+//
+//									24925                 xPB_E_A_N_C_B_D_F_0_2                 state_id =                 1_1_18_68_40_27_2_3
+//									24945                 xPB_E_A_N_C_B_D_F_1_2                 state_id =                 1_1_18_68_40_27_2_3
+//									24965                 xPB_E_A_N_C_B_D_F_2_2                 state_id =                 1_1_18_68_40_27_2_3
+//									65205                 xEA_E_A_N_C_B_D_F_12_D_0_2                 state_id =                 1_1_18_68_40_27_2_3
+//									65227                 xEA_E_A_N_C_B_D_F_13_D_0_2                 state_id =                 1_1_18_68_40_27_2_3
+//									65251                 xEA_E_A_N_C_B_D_F_14_D_0_2                 state_id =                 1_1_18_68_40_27_2_3
+//									65277                 xEA_E_A_N_C_B_D_F_15_D_0_2                 state_id =                 1_1_18_68_40_27_2_3
+//									65305                 xEA_E_A_N_C_B_D_F_16_D_0_2                 state_id =                 1_1_18_68_40_27_2_3
+//
+//									55445                 xGS_E_A_N_C_B_D_F_0_2                 state_id =                 1_1_18_87_40_27_2_3
+//									----------------------------------------------------------------------
+//
+//									143593                 xMS_E_A_N_C_B_D_G_0_2                 state_id =                 1_0_13_61_45_27_2_0
+//
+//									55465                 xGS_E_A_N_C_B_D_G_0_2                 state_id =                 1_1_86_10_50_27_2_1
+//
+//									24985                 xPB_E_A_N_C_B_D_G_0_2                 state_id =                 1_1_95_42_60_27_2_1
+//									25005                 xPB_E_A_N_C_B_D_G_1_2                 state_id =                 1_1_95_42_60_27_2_1
+//									25025                 xPB_E_A_N_C_B_D_G_2_2                 state_id =                 1_1_95_42_60_27_2_1
+//
+//									65335                 xEA_E_A_N_C_B_D_G_12_D_0_2                 state_id =                 1_1_95_45_61_27_2_1
+//									65357                 xEA_E_A_N_C_B_D_G_13_D_0_2                 state_id =                 1_1_95_45_61_27_2_1
+//									65381                 xEA_E_A_N_C_B_D_G_14_D_0_2                 state_id =                 1_1_95_45_61_27_2_1
+//									65407                 xEA_E_A_N_C_B_D_G_15_D_0_2                 state_id =                 1_1_95_45_61_27_2_1
+//									65435                 xEA_E_A_N_C_B_D_G_16_D_0_2                 state_id =                 1_1_95_45_61_27_2_1
+//
+//									865                 xNG_E_A_N_C_B_D_G_0_2                 state_id =                 1_1_95_45_7_27_2_1
+//									65346                 xEA_E_A_N_C_B_D_G_12_D_1_2                 state_id =                 1_1_95_45_7_27_2_1
+//									65369                 xEA_E_A_N_C_B_D_G_13_D_1_2                 state_id =                 1_1_95_45_7_27_2_1
+//									65394                 xEA_E_A_N_C_B_D_G_14_D_1_2                 state_id =                 1_1_95_45_7_27_2_1
+//									65421                 xEA_E_A_N_C_B_D_G_15_D_1_2                 state_id =                 1_1_95_45_7_27_2_1
+//									65450                 xEA_E_A_N_C_B_D_G_16_D_1_2                 state_id =                 1_1_95_45_7_27_2_1
+//									143613                 xMS_E_A_N_C_B_D_G_1_2                 state_id =                 1_1_95_45_7_27_2_1
+//									143633                 xMS_E_A_N_C_B_D_G_2_2                 state_id =                 1_1_95_45_7_27_2_1
+//									143653                 xMS_E_A_N_C_B_D_G_3_2                 state_id =                 1_1_95_45_7_27_2_1
+//									143673                 xMS_E_A_N_C_B_D_G_4_2                 state_id =                 1_1_95_45_7_27_2_1
+							
+							// test printing
+							String current_state_id = "";
+							for (int var_index : sorted_map_var_index_to_var_state_id.keySet()) {
+								String state_id = sorted_map_var_index_to_var_state_id.get(var_index);
+								if (!state_id.equals(current_state_id)) { // new block of variables with the same state_id
+									System.out.println(); // a blank line when reaching a new block
+									current_state_id = state_id;
+								};
+								String var_name = var_info_array[var_index].get_var_name();
+								System.out.println(var_index + "                 " + var_name + "                 state_id =                 " + state_id);
+							};
+							System.out.println("----------------------------------------------------------------------");
+						}
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						// 5b (NOTE: Formulation-09 does not reflex the bounds turn-off flexibility, we might need to revise the equation 5b)
+						// 5c (NOTE: Formulation-09 does not reflex the bounds turn-off flexibility, we might need to revise the equation 5c)
+						break;
+					default:
+						break;
+					}
 				}
 				
 				double[] c5_lb = Stream.of(c5_lblist.toArray(new Double[c5_lblist.size()])).mapToDouble(Double::doubleValue).toArray();
@@ -2440,11 +2628,11 @@ public class Solve_Iterations {
 				
 				
 				// Constraints 15------------------------------------------------- for y(j) and z(k) and v(n)		This is equation (10) in Prism-Formulation-09
-				Map<String, Integer> map_strata_to_strata_id = new LinkedHashMap<String, Integer>();
+				LinkedHashMap<String, Integer> map_strata_to_strata_id = new LinkedHashMap<String, Integer>();
 				for (int strata_id = 0; strata_id < total_model_strata; strata_id++) {
 					map_strata_to_strata_id.put(model_strata.get(strata_id), strata_id);		// strata = key, strata_id = value		
 				}
-				Map<String, Integer> map_strata_without_sizeclass_to_id = new LinkedHashMap<String, Integer>();
+				LinkedHashMap<String, Integer> map_strata_without_sizeclass_to_id = new LinkedHashMap<String, Integer>();
 				for (int id = 0; id < total_model_strata_without_sizeclass; id++) {
 					map_strata_without_sizeclass_to_id.put(model_strata_without_sizeclass.get(id), id);		// strata_without_sizeclass = key, id = value		
 				}

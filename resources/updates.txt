@@ -1142,9 +1142,13 @@ All changes in this block are associated with PrismAlpha1.3.01.jar, Prism-Formul
 All changes in this block are associated with PrismAlpha1.3.02.jar, Prism-Formulation-09.docx, Prism-UserManual-01.docx)
 --------------------------------------------------------------------------
 471. Remove original_id for strata and strata_5layers and use linkhashmaps to retrieve the original id
-472. Separate solving process to a new class and set to null after solving to save memory. Add Solving_Iterations class
+472. Separate solving process to a new class (Solving_Iterations) and set to null after solving to save memory
 473. When start solving, all output files will be deleted
 474. When click the Save buttons (Save Runs), input_11_state_id will be automatically created and saved.
 475. Apply rolling horizon for Formulation-09 based on 3a:
-	- For iteration iter, create variables in the range[1 + iter, T + iter]. Note that in the code total number of period and age need + 1 since we loop from period 1 and age 1
+	- For iteration iter, create variables in the range[1 + iter, T + iter]. Note that in the code total number of period and age need +1 since we loop from period 1 and age 1
+	- Modify all equations to capture variables in relavant periods of the iteration that is currently processing
 	- Discount rate for t + iter is calculated for period t
+	- All input requirements for period t is translated as requirements for period t + iter (SR Disturbances, Management Cost, Basic Constraints)
+	- Build mechanism to create input_11_state_id and read it to linkhashmap when solving (map_prescription_and_row_id_to_state_id in Read_Input class)
+	- Build mapping mechanism for constraint (5) with the map_var_index_to_var_state_id LinkedHashMap
