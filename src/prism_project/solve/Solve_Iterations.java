@@ -1504,12 +1504,12 @@ public class Solve_Iterations {
 						}
 						break;
 					case "merge":
-						// 5a
+						// 5a For existing variables
 						for (int strata_id = 0; strata_id < total_model_strata; strata_id++) {
 							// use LinkedHashMap to add all relevant variables in iteration 1+M
 							LinkedHashMap<Integer, String> map_var_index_to_var_state_id = new LinkedHashMap<Integer, String>();
 							
-							// Add xNGe(s1,s2,s3,s4,s5,s6)[i][1 + iter]
+							// xNGe(s1,s2,s3,s4,s5,s6)[i][1 + iter]
 							for (int i = 0; i < total_NG_E_prescription_choices; i++) {
 								if (xNGe[strata_id][i] != null
 										&& xNGe[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
@@ -1520,7 +1520,7 @@ public class Solve_Iterations {
 								}
 							}
 					
-							// Add sigma(i) xPBe(s1,s2,s3,s4,s5,s6)[i][1 + iter]
+							// xPBe(s1,s2,s3,s4,s5,s6)[i][1 + iter]
 							for (int i = 0; i < total_PB_E_prescription_choices; i++) {
 								if (xPBe[strata_id][i] != null
 										&& xPBe[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
@@ -1531,7 +1531,7 @@ public class Solve_Iterations {
 								}
 							}
 							
-							// Add xGSe(s1,s2,s3,s4,s5,s6)[i][1 + iter]
+							// xGSe(s1,s2,s3,s4,s5,s6)[i][1 + iter]
 							for (int i = 0; i < total_GS_E_prescription_choices; i++) {
 								if (xGSe[strata_id][i] != null
 										&& xGSe[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
@@ -1542,7 +1542,7 @@ public class Solve_Iterations {
 								}
 							}
 							
-							// Add sigma(tR,s5R)(i) xEAe(s1,s2,s3,s4,s5,s6)[tR][s5R][i][1 + iter]	
+							// xEAe(s1,s2,s3,s4,s5,s6)[tR][s5R][i][1 + iter]	
 							for (int tR = 1 + iter; tR <= total_periods + iter; tR++) {
 								for (int s5R = 0; s5R < total_layer5; s5R++) {
 									for (int i = 0; i < total_EA_E_prescription_choices; i++) {
@@ -1559,7 +1559,7 @@ public class Solve_Iterations {
 								}	
 							}
 							
-							// Add sigma(i) xMS(s1,s2,s3,s4,s5,s6)[i][1 + iter]
+							// xMS(s1,s2,s3,s4,s5,s6)[i][1 + iter]
 							if (xMS[strata_id] != null) {		// only MS_E and BS_E might have null at this point and we need to check
 								for (int i = 0; i < total_MS_E_prescription_choices; i++) {
 									if (xMS[strata_id][i] != null 
@@ -1572,7 +1572,7 @@ public class Solve_Iterations {
 								}
 							}
 							
-							// Add sigma(i) xBS(s1,s2,s3,s4,s5,s6)[i][1 + iter]
+							// xBS(s1,s2,s3,s4,s5,s6)[i][1 + iter]
 							if (xBS[strata_id] != null) {		// only MS_E and BS_E might have null at this point and we need to check
 								for (int i = 0; i < total_BS_E_prescription_choices; i++) {
 									if (xBS[strata_id][i] != null 
@@ -1591,9 +1591,8 @@ public class Solve_Iterations {
 								sorted_map_var_index_to_var_state_id.put(entry.getKey(), entry.getValue());
 							});
 							map_var_index_to_var_state_id = null;	// delete the unsorted map
-							
 //							// test printing
-//							String current_state_id = "";
+//							String current_state_id = "state_id would never have a space";
 //							for (int var_index : sorted_map_var_index_to_var_state_id.keySet()) {
 //								String state_id = sorted_map_var_index_to_var_state_id.get(var_index);
 //								if (!state_id.equals(current_state_id)) { // print each block of variables with the same state_id
@@ -1655,32 +1654,295 @@ public class Solve_Iterations {
 //									143653                 xMS_E_A_N_C_B_D_G_3_2                 state_id =                 1_1_95_45_7_27_2_1
 //									143673                 xMS_E_A_N_C_B_D_G_4_2                 state_id =                 1_1_95_45_7_27_2_1
 							
-							// test printing
-							String current_state_id = "";
+							
+							// Note that because
+							// 1. var_index --> always found prescription + " " + row_id
+							// 2. prescription + " " + row_id  --> might not found state_id (i.e. state_id = null). This is because we still allow variables without row_id found to be defined
+							// --> Any variable with null state_id need to be hard-coded by no-merge (x = X)
+							
+							List<List<Integer>> all_blocks = new ArrayList<List<Integer>>();	// each block contains var_index of the variables that have the same state_id
+							List<Integer> this_block = null;
+							
+							
+							String current_state_id = "state_id would never have a space";
 							for (int var_index : sorted_map_var_index_to_var_state_id.keySet()) {
 								String state_id = sorted_map_var_index_to_var_state_id.get(var_index);
 								if (!state_id.equals(current_state_id)) { // new block of variables with the same state_id
-									System.out.println(); // a blank line when reaching a new block
+									if (this_block != null)	all_blocks.add(this_block);
+									this_block = new ArrayList<Integer>(); // a new list when reaching a new block
 									current_state_id = state_id;
 								};
-								String var_name = var_info_array[var_index].get_var_name();
-								System.out.println(var_index + "                 " + var_name + "                 state_id =                 " + state_id);
-							};
-							System.out.println("----------------------------------------------------------------------");
+								this_block.add(var_index);
+							}
+							all_blocks.add(this_block); // add the last block
+													
+//							// test printing: same result as above example
+//							for (List<Integer> block : all_blocks) {
+//								System.out.println(); // a blank line for a new block
+//								for (int var_index : block) {
+//									String var_name = var_info_array[var_index].get_var_name();
+//									String state_id = sorted_map_var_index_to_var_state_id.get(var_index);
+//									System.out.println(var_index + "                 " + var_name + "                 state_id =                 " + state_id);
+//								}
+//								System.out.println("----------------------------------------------------------------------");
+//							}
+							
+							for (List<Integer> block : all_blocks) {
+								if (sorted_map_var_index_to_var_state_id.get(block.get(0)) == null) { // this is the block that has all null state_id	--> no merge
+									for (int var_index : block) {
+										// Add constraint fro each var
+										c5_indexlist.add(new ArrayList<Integer>());
+										c5_valuelist.add(new ArrayList<Double>());
+										// add variable
+										c5_indexlist.get(c5_num).add(var_index);
+										c5_valuelist.get(c5_num).add((double) 1);
+										// calculate bounds
+										String var_name = var_info_array[var_index].get_var_name();
+										double var_value = 0;
+										if (map_var_name_to_var_value.get(var_name) != null) {
+											var_value = map_var_name_to_var_value.get(var_name);
+										}
+										// Add bounds
+										c5_lblist.add(var_value);
+										c5_ublist.add(var_value);
+										c5_num++;
+									}
+								} else {	// this is the regular block (every state_id is not null) --> merge
+									// Add constraint for each block
+									c5_indexlist.add(new ArrayList<Integer>());
+									c5_valuelist.add(new ArrayList<Double>());
+									
+									double total_var_value = 0;
+									for (int var_index : block) {
+										// add all variables in this block of the same state_id
+										c5_indexlist.get(c5_num).add(var_index);
+										c5_valuelist.get(c5_num).add((double) 1);
+										// calculate bounds
+										String var_name = var_info_array[var_index].get_var_name();
+										double var_value = 0;
+										if (map_var_name_to_var_value.get(var_name) != null) {
+											var_value = map_var_name_to_var_value.get(var_name);
+										}
+										total_var_value = total_var_value + var_value;
+									}
+									// Add bounds
+									c5_lblist.add(total_var_value);
+									c5_ublist.add(total_var_value);
+									c5_num++;
+								}
+							}
 						}
 						
+						// 5b and 5c
+						for (int strata_id = 0; strata_id < total_model_strata; strata_id++) {
+							// xMS(s1,s2,s3,s4,s5,s6)[i][1 + iter]
+							if (xMS[strata_id] != null) {		// only MS_E and BS_E might have null at this point and we need to check
+								for (int i = 0; i < total_MS_E_prescription_choices; i++) {
+									if (xMS[strata_id][i] != null 
+											&& xMS[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
+										// Add constraint
+										c5_indexlist.add(new ArrayList<Integer>());
+										c5_valuelist.add(new ArrayList<Double>());
+										c5_indexlist.get(c5_num).add(xMS[strata_id][i][1 + iter]);
+										c5_valuelist.get(c5_num).add((double) 1);
+										// Add bounds
+										int var_index = xMS[strata_id][i][1 + iter];
+										double var_value = 0;
+										if (map_var_name_to_var_value.get(var_info_array[var_index].get_var_name()) != null) {
+											var_value = map_var_name_to_var_value.get(var_info_array[var_index].get_var_name());
+										}
+										c5_lblist.add(var_value);
+										c5_ublist.add(var_value);
+										c5_num++;
+									}
+								}
+							}
+							
+							// xBS(s1,s2,s3,s4,s5,s6)[i][1 + iter]
+							if (xBS[strata_id] != null) {		// only MS_E and BS_E might have null at this point and we need to check
+								for (int i = 0; i < total_BS_E_prescription_choices; i++) {
+									if (xBS[strata_id][i] != null 
+											&& xBS[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
+										// Add constraint
+										c5_indexlist.add(new ArrayList<Integer>());
+										c5_valuelist.add(new ArrayList<Double>());
+										c5_indexlist.get(c5_num).add(xBS[strata_id][i][1 + iter]);
+										c5_valuelist.get(c5_num).add((double) 1);
+										// Add bounds
+										int var_index = xBS[strata_id][i][1 + iter];
+										double var_value = 0;
+										if (map_var_name_to_var_value.get(var_info_array[var_index].get_var_name()) != null) {
+											var_value = map_var_name_to_var_value.get(var_info_array[var_index].get_var_name());
+										}
+										c5_lblist.add(var_value);
+										c5_ublist.add(var_value);
+										c5_num++;
+									}
+								}
+							}
+						}														
+
+						// 5d For regenerated variables
+						for (int strata_5layers_id = 0; strata_5layers_id < total_model_strata_without_sizeclass; strata_5layers_id++) {
+							// use LinkedHashMap to add all relevant variables in iteration 1+M
+							LinkedHashMap<Integer, String> map_var_index_to_var_state_id = new LinkedHashMap<Integer, String>();
+							
+							String strata_5layers = model_strata_without_sizeclass.get(strata_5layers_id);
+							int s5 = Collections.binarySearch(layer5, strata_5layers.split("_")[4]);
+					
+							// xNGr
+							for (int i = 0; i < total_NG_R_prescription_choices; i++) {
+								int t = 1 + iter;
+								for (int a = 1; a <= t - 1; a++) {
+									if(xNGr[strata_5layers_id][i] != null
+											&& xNGr[strata_5layers_id][i][1 + iter] != null
+													&& xNGr[strata_5layers_id][i][1 + iter][a] > 0) {		// if variable is defined, this value would be > 0 
+										int var_index = xNGr[strata_5layers_id][i][1 + iter][a];
+										String prescription_and_row_id = var_info_array[var_index].get_yield_table_name_to_find() + " " + var_info_array[var_index].get_yield_table_row_index_to_find();
+										String state_id = map_prescription_and_row_id_to_state_id.get(prescription_and_row_id);
+										map_var_index_to_var_state_id.put(var_index, state_id);
+									}
+								}
+							}
 						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						// 5b (NOTE: Formulation-09 does not reflex the bounds turn-off flexibility, we might need to revise the equation 5b)
-						// 5c (NOTE: Formulation-09 does not reflex the bounds turn-off flexibility, we might need to revise the equation 5c)
+							// xPBr
+							for (int i = 0; i < total_PB_R_prescription_choices; i++) {
+								int t = 1 + iter;
+								for (int a = 1; a <= t - 1; a++) {
+									if(xPBr[strata_5layers_id][i] != null
+											&& xPBr[strata_5layers_id][i][1 + iter] != null
+													&& xPBr[strata_5layers_id][i][1 + iter][a] > 0) {		// if variable is defined, this value would be > 0 
+										int var_index = xPBr[strata_5layers_id][i][1 + iter][a];
+										String prescription_and_row_id = var_info_array[var_index].get_yield_table_name_to_find() + " " + var_info_array[var_index].get_yield_table_row_index_to_find();
+										String state_id = map_prescription_and_row_id_to_state_id.get(prescription_and_row_id);
+										map_var_index_to_var_state_id.put(var_index, state_id);
+									}
+								}
+							}
+							
+							// xGSr
+							for (int i = 0; i < total_GS_R_prescription_choices; i++) {
+								int t = 1 + iter;
+								for (int a = 1; a <= t - 1; a++) {
+									if(xGSr[strata_5layers_id][i] != null
+											&& xGSr[strata_5layers_id][i][1 + iter] != null
+													&& xGSr[strata_5layers_id][i][1 + iter][a] > 0) {		// if variable is defined, this value would be > 0 
+										int var_index = xGSr[strata_5layers_id][i][1 + iter][a];
+										String prescription_and_row_id = var_info_array[var_index].get_yield_table_name_to_find() + " " + var_info_array[var_index].get_yield_table_row_index_to_find();
+										String state_id = map_prescription_and_row_id_to_state_id.get(prescription_and_row_id);
+										map_var_index_to_var_state_id.put(var_index, state_id);
+									}
+								}
+							}
+							
+							// xEAr
+							int t_regen = (iter == 0) ? 2 : 1;	// this is because iteration 0 could not have regenerated forest in period 1, but iterations >= 1 do have regenerated forest strata
+							for (int tR = t_regen + iter; tR <= total_periods + iter; tR++) {
+								for (int aR = 1; aR <= tR-1; aR++) {									
+									for (int s5R = 0; s5R < total_layer5; s5R++) {
+										for (int i = 0; i < total_EA_R_prescription_choices; i++) {
+											if (1 + iter == tR - aR + 1) {	// t = tR - aR + 1
+												if(xEAr[strata_5layers_id][tR] != null
+														 && xEAr[strata_5layers_id][tR][aR] != null
+																 && xEAr[strata_5layers_id][tR][aR][s5R] != null
+																		 && xEAr[strata_5layers_id][tR][aR][s5R][i] != null
+																				 && xEAr[strata_5layers_id][tR][aR][s5R][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
+													int var_index = xEAr[strata_5layers_id][tR][aR][s5R][i][1 + iter];
+													String prescription_and_row_id = var_info_array[var_index].get_yield_table_name_to_find() + " " + var_info_array[var_index].get_yield_table_row_index_to_find();
+													String state_id = map_prescription_and_row_id_to_state_id.get(prescription_and_row_id);
+													map_var_index_to_var_state_id.put(var_index, state_id);
+												}
+											}
+										}
+									}
+								}
+							}
+							
+							// The below code for 5d is exactly the same as for 5a above
+							// sorted LinkedHashMap by values
+							LinkedHashMap<Integer, String> sorted_map_var_index_to_var_state_id = new LinkedHashMap<Integer, String>();
+							map_var_index_to_var_state_id.entrySet().stream().sorted(Map.Entry.comparingByValue()).forEach(entry -> {
+								sorted_map_var_index_to_var_state_id.put(entry.getKey(), entry.getValue());
+							});
+							map_var_index_to_var_state_id = null;	// delete the unsorted map
+							
+							
+							// Note that because
+							// 1. var_index --> always found prescription + " " + row_id
+							// 2. prescription + " " + row_id  --> might not found state_id (i.e. state_id = null). This is because we still allow variables without row_id found to be defined
+							// --> Any variable with null state_id need to be hard-coded by no-merge (x = X)
+							List<List<Integer>> all_blocks = new ArrayList<List<Integer>>();	// each block contains var_index of the variables that have the same state_id
+							List<Integer> this_block = null;
+							
+							
+							String current_state_id = "state_id would never have a space";
+							for (int var_index : sorted_map_var_index_to_var_state_id.keySet()) {
+								String state_id = sorted_map_var_index_to_var_state_id.get(var_index);
+								if (!state_id.equals(current_state_id)) { // new block of variables with the same state_id
+									if (this_block != null)	all_blocks.add(this_block);
+									this_block = new ArrayList<Integer>(); // a new list when reaching a new block
+									current_state_id = state_id;
+								};
+								this_block.add(var_index);
+							}
+							all_blocks.add(this_block); // add the last block
+													
+//							// test printing
+//							for (List<Integer> block : all_blocks) {
+//								System.out.println(); // a blank line for a new block
+//								for (int var_index : block) {
+//									String var_name = var_info_array[var_index].get_var_name();
+//									String state_id = sorted_map_var_index_to_var_state_id.get(var_index);
+//									System.out.println(var_index + "                 " + var_name + "                 state_id =                 " + state_id);
+//								}
+//								System.out.println("----------------------------------------------------------------------");
+//							}
+							
+							for (List<Integer> block : all_blocks) {
+								if (sorted_map_var_index_to_var_state_id.get(block.get(0)) == null) { // this is the block that has all null state_id	--> no merge
+									for (int var_index : block) {
+										// Add constraint fro each var
+										c5_indexlist.add(new ArrayList<Integer>());
+										c5_valuelist.add(new ArrayList<Double>());
+										// add variable
+										c5_indexlist.get(c5_num).add(var_index);
+										c5_valuelist.get(c5_num).add((double) 1);
+										// calculate bounds
+										String var_name = var_info_array[var_index].get_var_name();
+										double var_value = 0;
+										if (map_var_name_to_var_value.get(var_name) != null) {
+											var_value = map_var_name_to_var_value.get(var_name);
+										}
+										// Add bounds
+										c5_lblist.add(var_value);
+										c5_ublist.add(var_value);
+										c5_num++;
+									}
+								} else {	// this is the regular block (every state_id is not null) --> merge
+									// Add constraint for each block
+									c5_indexlist.add(new ArrayList<Integer>());
+									c5_valuelist.add(new ArrayList<Double>());
+									
+									double total_var_value = 0;
+									for (int var_index : block) {
+										// add all variables in this block of the same state_id
+										c5_indexlist.get(c5_num).add(var_index);
+										c5_valuelist.get(c5_num).add((double) 1);
+										// calculate bounds
+										String var_name = var_info_array[var_index].get_var_name();
+										double var_value = 0;
+										if (map_var_name_to_var_value.get(var_name) != null) {
+											var_value = map_var_name_to_var_value.get(var_name);
+										}
+										total_var_value = total_var_value + var_value;
+									}
+									// Add bounds
+									c5_lblist.add(total_var_value);
+									c5_ublist.add(total_var_value);
+									c5_num++;
+								}
+							}
+						}
 						break;
 					default:
 						break;

@@ -1,0 +1,84 @@
+bc_id	bc_description	bc_type	bc_multiplier	lowerbound	lowerbound_perunit_penalty	upperbound	upperbound_perunit_penalty	var_id	var_name	var_value	var_reduced_cost	total_penalty
+1	bdft per 1	SOFT	1.0	9.99999999E8	1.0	null	null	0	y_0	6.730602771680456E8	0.0	3.2693972183195436E8
+2	cuft harvest 1 - time period 1	FREE	1.0	null	null	null	null	23	v_0	1.3307472070374104E8	0.0	0.0
+3	cuft harvest 2 - time period 2	FREE	1.0	null	null	null	null	24	v_1	1.3307472070374104E8	0.0	0.0
+4	cuft harvest 3 - time period 3	FREE	1.0	null	null	null	null	25	v_2	1.3307472070374104E8	0.0	0.0
+5	cuft harvest 4 - time period 4	FREE	1.0	null	null	null	null	26	v_3	1.3307472070374104E8	0.0	0.0
+6	cuft harvest 5 - time period 5	FREE	1.0	null	null	null	null	27	v_4	1.3493728420385227E8	0.0	0.0
+7	cuft harvest 6 - time period 6	FREE	1.0	null	null	null	null	28	v_5	1.3969533520489496E8	0.0	0.0
+8	cuft harvest 7 - time period 7	FREE	1.0	null	null	null	null	29	v_6	1.3969533520489496E8	0.0	0.0
+9	cuft harvest 8 - time period 8	FREE	1.0	null	null	null	null	30	v_7	1.6870368908179355E8	0.0	0.0
+10	cuft harvest 9 - time period 9	FREE	1.0	null	null	null	null	31	v_8	1.6870368908179355E8	0.0	0.0
+11	cuft harvest 10 - time period 10	FREE	1.0	null	null	null	null	32	v_9	1.6870368908179355E8	0.0	0.0
+12	cuft harvest 11 - time period 11	FREE	1.0	null	null	null	null	33	v_10	1.6870368908179355E8	0.0	0.0
+13	cuft harvest 12 - time period 12	FREE	1.0	null	null	null	null	34	v_11	1.6870368908179355E8	0.0	0.0
+14	cuft harvest 13 - time period 13	FREE	1.0	null	null	null	null	35	v_12	1.6870368908179355E8	0.0	0.0
+15	cuft harvest 14 - time period 14	FREE	1.0	null	null	null	null	36	v_13	1.6870368908179355E8	0.0	0.0
+16	cuft harvest 15 - time period 15	FREE	1.0	null	null	null	null	37	v_14	1.6870368908179355E8	0.0	0.0
+17	cuft harvest 16 - time period 16	FREE	1.0	null	null	null	null	38	v_15	1.6870368908179355E8	0.0	0.0
+18	cuft harvest 17 - time period 17	FREE	1.0	null	null	null	null	39	v_16	1.6870368908179355E8	0.0	0.0
+19	cuft harvest 18 - time period 18	FREE	1.0	null	null	null	null	40	v_17	1.6870368908179355E8	0.0	0.0
+20	cuft harvest 19 - time period 19	FREE	1.0	null	null	null	null	41	v_18	1.7450184413896048E8	0.0	0.0
+21	cuft harvest 20 - time period 20	FREE	1.0	null	null	null	null	42	v_19	1.7450184413896048E8	0.0	0.0
+22	G BdftHarv 1 - time period 1	FREE	1.0	null	null	null	null	43	v_20	5.015178504848794E8	0.0	0.0
+23	G BdftHarv 2 - time period 2	FREE	1.0	null	null	null	null	44	v_21	5.049030845497689E8	0.0	0.0
+24	G BdftHarv 3 - time period 3	FREE	1.0	null	null	null	null	45	v_22	4.948050228587735E8	0.0	0.0
+25	G BdftHarv 4 - time period 4	FREE	1.0	null	null	null	null	46	v_23	4.849089224015981E8	0.0	0.0
+26	G BdftHarv 5 - time period 5	FREE	1.0	null	null	null	null	47	v_24	4.7521074395356613E8	0.0	0.0
+27	G BdftHarv 6 - time period 6	FREE	1.0	null	null	null	null	48	v_25	4.657065290744948E8	0.0	0.0
+28	G BdftHarv 7 - time period 7	FREE	1.0	null	null	null	null	49	v_26	4.563923984930049E8	0.0	0.0
+29	G BdftHarv 8 - time period 8	FREE	1.0	null	null	null	null	50	v_27	4.472645505231448E8	0.0	0.0
+30	G BdftHarv 9 - time period 9	FREE	1.0	null	null	null	null	51	v_28	4.383192595126819E8	0.0	0.0
+31	G BdftHarv 10 - time period 10	FREE	1.0	null	null	null	null	52	v_29	4.295528743224283E8	0.0	0.0
+32	G BdftHarv 11 - time period 11	FREE	1.0	null	null	null	null	53	v_30	4.209618168359797E8	0.0	0.0
+33	G BdftHarv 12 - time period 12	FREE	1.0	null	null	null	null	54	v_31	4.125425804992601E8	0.0	0.0
+34	G BdftHarv 13 - time period 13	FREE	1.0	null	null	null	null	55	v_32	4.042917288892749E8	0.0	0.0
+35	G BdftHarv 14 - time period 14	FREE	1.0	null	null	null	null	56	v_33	3.962058943114894E8	0.0	0.0
+36	G BdftHarv 15 - time period 15	FREE	1.0	null	null	null	null	57	v_34	3.882817764252596E8	0.0	0.0
+37	G BdftHarv 16 - time period 16	FREE	1.0	null	null	null	null	58	v_35	4.5032956454819673E8	0.0	0.0
+38	G BdftHarv 17 - time period 17	FREE	1.0	null	null	null	null	59	v_36	4.7822808566376114E8	0.0	0.0
+39	G BdftHarv 18 - time period 18	FREE	1.0	null	null	null	null	60	v_37	4.686635239504859E8	0.0	0.0
+40	G BdftHarv 19 - time period 19	FREE	1.0	null	null	null	null	61	v_38	4.5929025347147614E8	0.0	0.0
+41	G BdftHarv 20 - time period 20	FREE	1.0	null	null	null	null	62	v_39	4.501044484020466E8	0.0	0.0
+42	C BdftHarv 1 - time period 1	FREE	1.0	null	null	null	null	63	v_40	1.715424266831664E8	0.0	0.0
+43	C BdftHarv 2 - time period 2	FREE	1.0	null	null	null	null	64	v_41	1.77816850965383E8	0.0	0.0
+44	C BdftHarv 3 - time period 3	FREE	1.0	null	null	null	null	65	v_42	1.913015990193999E8	0.0	0.0
+45	C BdftHarv 4 - time period 4	FREE	1.0	null	null	null	null	66	v_43	2.0631850001544467E8	0.0	0.0
+46	C BdftHarv 5 - time period 5	FREE	1.0	null	null	null	null	67	v_44	2.0219213001513577E8	0.0	0.0
+47	C BdftHarv 6 - time period 6	FREE	1.0	null	null	null	null	68	v_45	1.9814828741483304E8	0.0	0.0
+48	C BdftHarv 7 - time period 7	FREE	1.0	null	null	null	null	69	v_46	2.0924028793479386E8	0.0	0.0
+49	C BdftHarv 8 - time period 8	FREE	1.0	null	null	null	null	70	v_47	4.1077472659099305E8	0.0	0.0
+50	C BdftHarv 9 - time period 9	FREE	1.0	null	null	null	null	71	v_48	4.1042795141445017E8	0.0	0.0
+51	C BdftHarv 10 - time period 10	FREE	1.0	null	null	null	null	72	v_49	4.0221939238616115E8	0.0	0.0
+52	C BdftHarv 11 - time period 11	FREE	1.0	null	null	null	null	73	v_50	3.941750045384379E8	0.0	0.0
+53	C BdftHarv 12 - time period 12	FREE	1.0	null	null	null	null	74	v_51	3.8629150444766915E8	0.0	0.0
+54	C BdftHarv 13 - time period 13	FREE	1.0	null	null	null	null	75	v_52	4.5479194477440846E8	0.0	0.0
+55	C BdftHarv 14 - time period 14	FREE	1.0	null	null	null	null	76	v_53	4.4569610587892026E8	0.0	0.0
+56	C BdftHarv 15 - time period 15	FREE	1.0	null	null	null	null	77	v_54	4.3678218376134187E8	0.0	0.0
+57	C BdftHarv 16 - time period 16	FREE	1.0	null	null	null	null	78	v_55	4.2804654008611506E8	0.0	0.0
+58	C BdftHarv 17 - time period 17	FREE	1.0	null	null	null	null	79	v_56	4.194856092843927E8	0.0	0.0
+59	C BdftHarv 18 - time period 18	FREE	1.0	null	null	null	null	80	v_57	4.110958970987049E8	0.0	0.0
+60	C BdftHarv 19 - time period 19	FREE	1.0	null	null	null	null	81	v_58	4.028739791567308E8	0.0	0.0
+61	C BdftHarv 20 - time period 20	FREE	1.0	null	null	null	null	82	v_59	3.948164995735961E8	0.0	0.0
+62	AvgInv SU cuft 10-19	FREE	0.1	null	null	null	null	83	v_60	4.080867589237197E10	0.0	0.0
+63	cuft SU Per 20	FREE	1.0	null	null	null	null	84	v_61	4.098317773651093E10	0.0	0.0
+64	msf 1 - time period 1	HARD	1.0	45000.0	null	null	null	3	z_0	45000.000000000015	0.0	0.0
+65	msf 2 - time period 2	HARD	1.0	45000.0	null	null	null	4	z_1	52971.64000000003	0.0	0.0
+66	msf 3 - time period 3	HARD	1.0	45000.0	null	null	null	5	z_2	45000.0	0.0	0.0
+67	msf 4 - time period 4	HARD	1.0	45000.0	null	null	null	6	z_3	45000.00000000001	0.0	0.0
+68	msf 5 - time period 5	HARD	1.0	45000.0	null	null	null	7	z_4	44999.999999999985	0.0	0.0
+69	msf 6 - time period 6	HARD	1.0	45000.0	null	null	null	8	z_5	45000.000000000015	0.0	0.0
+70	msf 7 - time period 7	HARD	1.0	45000.0	null	null	null	9	z_6	52971.64000000003	0.0	0.0
+71	msf 8 - time period 8	HARD	1.0	45000.0	null	null	null	10	z_7	45000.0	0.0	0.0
+72	msf 9 - time period 9	HARD	1.0	45000.0	null	null	null	11	z_8	45000.00000000001	0.0	0.0
+73	msf 10 - time period 10	HARD	1.0	45000.0	null	null	null	12	z_9	44999.999999999985	0.0	0.0
+74	msf 11 - time period 11	HARD	1.0	45000.0	null	null	null	13	z_10	45000.000000000015	0.0	0.0
+75	msf 12 - time period 12	HARD	1.0	45000.0	null	null	null	14	z_11	52971.64000000003	0.0	0.0
+76	msf 13 - time period 13	HARD	1.0	45000.0	null	null	null	15	z_12	45000.0	0.0	0.0
+77	msf 14 - time period 14	HARD	1.0	45000.0	null	null	null	16	z_13	45000.00000000001	0.0	0.0
+78	msf 15 - time period 15	HARD	1.0	45000.0	null	null	null	17	z_14	44999.999999999985	0.0	0.0
+79	msf 16 - time period 16	HARD	1.0	45000.0	null	null	null	18	z_15	45000.000000000015	0.0	0.0
+80	msf 17 - time period 17	HARD	1.0	45000.0	null	null	null	19	z_16	52971.64000000003	0.0	0.0
+81	msf 18 - time period 18	HARD	1.0	45000.0	null	null	null	20	z_17	45000.0	0.0	0.0
+82	msf 19 - time period 19	HARD	1.0	45000.0	null	null	null	21	z_18	45000.00000000001	0.0	0.0
+83	msf 20 - time period 20	HARD	1.0	45000.0	null	null	null	22	z_19	44999.999999999985	0.0	0.0
