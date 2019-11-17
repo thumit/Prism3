@@ -86,6 +86,7 @@ import prism_project.output.Output_Panel_Management_Details_NOSQL;
 import prism_project.output.Output_Panel_Management_Details_SQL;
 import prism_project.output.Output_Panel_Management_Overview;
 import prism_project.solve.Panel_Solve;
+import prism_project.solve.Summarize_Outputs;
 import prism_root.OptionPane_Startup;
 import prism_root.PrismMain;
 @SuppressWarnings("serial")
@@ -829,10 +830,11 @@ public class Panel_Project extends JLayeredPane {
 				} // end of If
 			} // end of For loop
 		}
-				projectTree.expandPath(new TreePath(root.getPath()));	//Expand the root	
-				if (scrollPane_Right != null) {
-					scrollPane_Right.setViewportView(null);
-				}
+		
+		projectTree.expandPath(new TreePath(root.getPath())); // Expand the root
+		if (scrollPane_Right != null) {
+			scrollPane_Right.setViewportView(null);
+		}
 	} // end of Refresh()
 		
 	// --------------------------------------------------------------------------------------------------------------------------------
@@ -1147,6 +1149,11 @@ public class Panel_Project extends JLayeredPane {
 
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public void solve_Runs() {
+		// Summarize output
+		File runFolder = new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun);
+		Summarize_Outputs sumarize_output = new Summarize_Outputs(runFolder, 4);
+		sumarize_output = null;
+		
 		
 		// For Start Solving
 		if (btnSolveRun.getToolTipText()=="Start Solving") {

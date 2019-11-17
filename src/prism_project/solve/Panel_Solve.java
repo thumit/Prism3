@@ -68,7 +68,6 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 	
 	private int objective_option = 0;
 	private boolean solvingstatus;
-	Solve solve;
 	Solve_Iterations solve_iterations;
 	
 	public Panel_Solve(File[] runsList) {
