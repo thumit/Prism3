@@ -3878,9 +3878,9 @@ public class Solve_Iterations {
 							fileOut.write("var_method" + "\t" + "var_forest_status" + "\t" + "var_layer1" + "\t" + "var_layer2" + "\t" + "var_layer3" + "\t" + "var_layer4" + "\t" + "var_layer5" + "\t" + "var_layer6" + "\t" 
 									+ "var_choice" + "\t" + "var_period" + "\t" + "var_age" + "\t" + "var_rotation_period" + "\t" + "var_rotation_age" + "\t" + "var_regen_covertype" + "\t"
 									+ "data_connection" + "\t" + "prescription" + "\t" + "row_id");
-							for (int col = 2; col < yield_tables_column_names.length; col++) {		// do not write prescription & row_id column header
-								fileOut.write("\t" + yield_tables_column_names[col]);
-							}
+//							for (int col = 2; col < yield_tables_column_names.length; col++) {		// do not write prescription & row_id column header
+//								fileOut.write("\t" + yield_tables_column_names[col]);
+//							}
 							
 							
 							
@@ -3927,13 +3927,13 @@ public class Solve_Iterations {
 											+ "\t" + String.valueOf(var_info_array[i].get_rotation_age()).replace("-9999",  "") 
 											+ "\t" + var_info_array[i].get_regenerated_covertype()
 											+ "\t" + data_connection + "\t" + prescription_name_to_find + "\t" + var_row_id);
-									for (int col = 2; col < yield_tables_column_names.length; col++) {		// do not write prescription & row_id in the yield_tables
-										if (data_connection.equals("good")) {
-											fileOut.write("\t" + yield_tables_values[var_prescription_id][var_row_id][col]);
-										} else {
-											fileOut.write("\t" + "");
-										}
-									}
+//									for (int col = 2; col < yield_tables_column_names.length; col++) {		// do not write prescription & row_id in the yield_tables
+//										if (data_connection.equals("good")) {
+//											fileOut.write("\t" + yield_tables_values[var_prescription_id][var_row_id][col]);
+//										} else {
+//											fileOut.write("\t" + "");
+//										}
+//									}
 								}
 							}
 							fileOut.close();
@@ -4512,9 +4512,9 @@ public class Solve_Iterations {
 							fileOut.write("var_method" + "\t" + "var_forest_status" + "\t" + "var_layer1" + "\t" + "var_layer2" + "\t" + "var_layer3" + "\t" + "var_layer4" + "\t" + "var_layer5" + "\t" + "var_layer6" + "\t" 
 									+ "var_choice" + "\t" + "var_period" + "\t" + "var_age" + "\t" + "var_rotation_period" + "\t" + "var_rotation_age" + "\t" + "var_regen_covertype" + "\t"
 									+ "data_connection" + "\t" + "prescription" + "\t" + "row_id");
-							for (int col = 2; col < yield_tables_column_names.length; col++) {		// do not write prescription & row_id column header
-								fileOut.write("\t" + yield_tables_column_names[col]);
-							}
+//							for (int col = 2; col < yield_tables_column_names.length; col++) {		// do not write prescription & row_id column header
+//								fileOut.write("\t" + yield_tables_column_names[col]);
+//							}
 							
 							
 							
@@ -4561,13 +4561,13 @@ public class Solve_Iterations {
 											+ "\t" + String.valueOf(var_info_array[i].get_rotation_age()).replace("-9999",  "") 
 											+ "\t" + var_info_array[i].get_regenerated_covertype()
 											+ "\t" + data_connection + "\t" + prescription_name_to_find + "\t" + var_row_id);
-									for (int col = 2; col < yield_tables_column_names.length; col++) {		// do not write prescription & row_id in the yield_tables
-										if (data_connection.equals("good")) {
-											fileOut.write("\t" + yield_tables_values[var_prescription_id][var_row_id][col]);
-										} else {
-											fileOut.write("\t" + "");
-										}
-									}
+//									for (int col = 2; col < yield_tables_column_names.length; col++) {		// do not write prescription & row_id in the yield_tables
+//										if (data_connection.equals("good")) {
+//											fileOut.write("\t" + yield_tables_values[var_prescription_id][var_row_id][col]);
+//										} else {
+//											fileOut.write("\t" + "");
+//										}
+//									}
 								}
 							}
 							fileOut.close();
@@ -4768,10 +4768,11 @@ public class Solve_Iterations {
 					}						
 					solver.deleteLp();
 				}
+				
+				// Summarize outputs
+				Summarize_Outputs sumamrize_output = new Summarize_Outputs(runFolder, iter);
+				sumamrize_output = null;
 			}
-			
-			
-			
 			
 			// These could be set to null only after all iterations are solved
 			read = null;     												// Clear the lists to save memory       

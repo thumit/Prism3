@@ -1153,3 +1153,4 @@ All changes in this block are associated with PrismAlpha1.3.02.jar, Prism-Formul
 	- Build mechanism to create input_11_state_id and read it to linkhashmap when solving (map_prescription_and_row_id_to_state_id in Read_Input class)
 	- Build mapping mechanism for constraint (5) with the map_var_index_to_var_state_id LinkedHashMap
 476. Simple summarize_output_01 and summarize_output_06
+477. Export just a general output_05 (not details with all yield_tables attributes) 

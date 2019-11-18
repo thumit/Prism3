@@ -1149,10 +1149,10 @@ public class Panel_Project extends JLayeredPane {
 
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public void solve_Runs() {
-		// Summarize output
-		File runFolder = new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun);
-		Summarize_Outputs sumarize_output = new Summarize_Outputs(runFolder, 4);
-		sumarize_output = null;
+//		// Summarize output
+//		File runFolder = new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun);
+//		Summarize_Outputs sumamrize_output = new Summarize_Outputs(runFolder, 3);
+//		sumamrize_output = null;
 		
 		
 		// For Start Solving

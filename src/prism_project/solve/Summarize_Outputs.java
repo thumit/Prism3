@@ -92,34 +92,30 @@ public class Summarize_Outputs {
 	
 	private void summarize_output_06() {
 		int total_row = get_data_from_output(output_basic_constraints_file[0]).length;
-		int total_col = total_iterations + 11;	 // bc_id ... var_name iter0 iter1 ... iterM        (total iterations = M)
+		int total_col = 2 * (total_iterations + 1) + 4;	 // bc_id ... var_name iter0 iter1 ... iterM        (total iterations = M)
 		String[] summarize_column_name = new String[total_col];
 		// column name
 		summarize_column_name[0] = "bc_id";
 		summarize_column_name[1] = "bc_description";
-		summarize_column_name[2] = "bc_type";
-		summarize_column_name[3] = "bc_multiplier";
-		summarize_column_name[4] = "lowerbound";
-		summarize_column_name[5] = "lowerbound_perunit_penalty";
-		summarize_column_name[6] = "upperbound";
-		summarize_column_name[7] = "upperbound_perunit_penalty";
-		summarize_column_name[8] = "var_id";
-		summarize_column_name[9] = "var_name";
+		summarize_column_name[2] = "var_id";
+		summarize_column_name[3] = "var_name";
 		for (int iter = 0; iter <= total_iterations; iter++) {	// Loop all iterations
-			summarize_column_name[iter + 10] = "var_value_iteration_" + iter;
+			summarize_column_name[iter + 4] = "var_value_iteration_" + iter;
+			summarize_column_name[iter + 4 + total_iterations + 1] = "penalty_iteration_" + iter;
 		}
 		// data
 		String[][] summarize_data = new String[total_row][total_col];
 		for (int iter = 0; iter <= total_iterations; iter++) {	// Loop all iterations
-			int col = iter + 10;
 			String[][] data = get_data_from_output(output_basic_constraints_file[iter]);
 			for (int row = 0; row < total_row; row++) {
 				if (iter == 0) {
-					for (int c = 0; c <= 9; c++) {
-						summarize_data[row][c] = data[row][c];
-					}
+					summarize_data[row][0] = data[row][0];
+					summarize_data[row][1] = data[row][1];
+					summarize_data[row][2] = data[row][8];
+					summarize_data[row][3] = data[row][9];
 				}
-				summarize_data[row][col] = data[row][10];
+				summarize_data[row][iter + 4] = data[row][10];
+				summarize_data[row][iter + 4 + total_iterations + 1] = data[row][12];
 			}
 		}
 		// file
