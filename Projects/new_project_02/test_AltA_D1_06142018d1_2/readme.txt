@@ -1,4 +1,4 @@
-Model is last edited by:     PRISM ALPHA 1.3.02     on     2019/11/18   -   15:18:31
+Model is last edited by:     PRISM ALPHA 2.0.01     on     2019/11/19   -   17:08:27
 Model is created by:     PRISM ALPHA 1.1.08     on     2018/06/12   -   09:12:47
 Model location:     C:\EProgramFiles\PRISM\Projects\CG_DEIS\AltA_D1_06112018a
 Model database:     C:\EProgramFiles\PRISM\Projects\CG_DEIS\AltA_D1_06112018a\database.db
@@ -7,7 +7,7 @@ Original database:     C:\EProgramFiles\PRISM\Projects\CG_DEIS\AltA_D1_06112018a
 ----------------------------------------------------- ADDITIONAL MODEL DESCRIPTION -----------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-Merging attributes: only dvegtype and dstructclass
+Merging attributes: only dvegtype and dstructclass, bdft, mcuft
 
 
 0611a run:

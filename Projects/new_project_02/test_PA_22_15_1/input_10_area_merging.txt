@@ -12,12 +12,12 @@ rx	TEXT	A-C-EXT-++++GO	B-B-REG-2344OG	97	exact	null	null	false
 timing	TEXT	T00	T24	20	exact	null	null	false	
 year	NUMERIC	2016	2256	25	exact	null	null	false	
 age	NUMERIC	10	340	34	exact	null	null	false	
-ba	NUMERIC	0	318	306	relaxed percentage (RP)	5.0	null	true	
+ba	NUMERIC	0	318	306	relaxed percentage (RP)	10.0	null	true	
 qmd	NUMERIC	0	31.5	245	exact	null	null	false	
-tpa	NUMERIC	0	2951	993	relaxed percentage (RP)	5.0	null	true	
+tpa	NUMERIC	0	2951	993	relaxed percentage (RP)	10.0	null	true	
 topht	NUMERIC	0	102	96	exact	null	null	false	
 culmmai	TEXT		584.4333333	12251	exact	null	null	false	
-bdft	NUMERIC	0	55307	10264	relaxed percentage (RP)	5.0	null	true	
+bdft	NUMERIC	0	55307	10264	relaxed percentage (RP)	10.0	null	true	
 mcuft	NUMERIC	0	10110	5398	exact	null	null	false	
 rbdft	NUMERIC	0	48317	2446	exact	null	null	false	
 rmcuft	NUMERIC	0	8680	1928	exact	null	null	false	

@@ -17,8 +17,8 @@ qmd	NUMERIC	0	30	236	exact	null	null	false
 tpa	NUMERIC	0	2951	987	exact	null	null	false	
 topht	NUMERIC	0	102	95	exact	null	null	false	
 culmmai	TEXT		584.4333333	11859	exact	null	null	false	
-bdft	NUMERIC	0	55307	9981	exact	null	null	false	
-mcuft	NUMERIC	0	10110	5327	exact	null	null	false	
+bdft	NUMERIC	0	55307	9981	relaxed percentage (RP)	10.0	null	true	
+mcuft	NUMERIC	0	10110	5327	relaxed percentage (RP)	10.0	null	true	
 rbdft	NUMERIC	0	48317	2448	exact	null	null	false	
 rmcuft	NUMERIC	0	8680	1939	exact	null	null	false	
 lpbtl	NUMERIC	0	3	4	exact	null	null	false	
