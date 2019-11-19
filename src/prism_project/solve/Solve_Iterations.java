@@ -19,6 +19,7 @@ package prism_project.solve;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -65,15 +66,27 @@ public class Solve_Iterations {
 		try {
 			//--------------------------------------------------------------------------------------------------------------------------
 		    //--------------------------------------------------------------------------------------------------------------------------  
-		    //--------------------------------------------------DELETE ALL OUTPUTS-------------------------------------------------
+		    //--------------------------------------------------DELETE SOME OUTPUTS-----------------------------------------------------
 		    //--------------------------------------------------------------------------------------------------------------------------
 		    //--------------------------------------------------------------------------------------------------------------------------
+			// Identify the last solved iteration
+			File[] list_files = runFolder.listFiles(new FilenameFilter() {
+				@Override
+				public boolean accept(File dir, String name) {
+					return name.startsWith("output_01_general_outputs");
+				}
+			});
+			
+			int last_solved_iter = -1;	// the case of "restart"
+			if (data[row][2].equals("continue")) last_solved_iter = list_files.length - 1;
+			// Delete some outputs
 			File[] contents = runFolder.listFiles();
 			if (contents != null) {
 				for (File f : contents) {
 					// Delete all output files, problem file, and solution file, but keep the fly_constraints file
-					if ((f.getName().contains("output") || f.getName().contains("problem") || f.getName().contains("solution")) && !f.getName().contains("fly_constraints")) {
-						f.delete();
+					if ((f.getName().startsWith("output") || f.getName().startsWith("problem") || f.getName().startsWith("solution")) && !f.getName().contains("fly_constraints")) {
+						String iter_name = f.getName().substring(f.getName().lastIndexOf("_") + 1, f.getName().lastIndexOf("."));
+						if (Integer.parseInt(iter_name) > last_solved_iter) f.delete();
 					}
 				}
 			}
@@ -216,8 +229,8 @@ public class Solve_Iterations {
 		    //--------------------------------------------------------------------------------------------------------------------------
 		    //--------------------------------------------------------------------------------------------------------------------------
 			int total_iterations = Integer.parseInt(data[row][1].toString());
-			for (int iter = 0; iter <= total_iterations; iter++) {	// Loop all iterations
-				data[row][2] = "solving iteration " + iter;
+			for (int iter = last_solved_iter + 1; iter <= total_iterations; iter++) {	// Loop all iterations
+				data[row][3] = "solving iteration " + iter;
 				model.fireTableDataChanged();
 				System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------------");
 				System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------------");
@@ -1516,6 +1529,7 @@ public class Solve_Iterations {
 									int var_index = xNGe[strata_id][i][1 + iter];
 									String prescription_and_row_id = var_info_array[var_index].get_yield_table_name_to_find() + " " + var_info_array[var_index].get_yield_table_row_index_to_find();
 									String state_id = map_prescription_and_row_id_to_state_id.get(prescription_and_row_id);
+									if (state_id == null) state_id = ""; // the case this var has prescription but missing row_id
 									map_var_index_to_var_state_id.put(var_index, state_id);
 								}
 							}
@@ -1527,6 +1541,7 @@ public class Solve_Iterations {
 									int var_index = xPBe[strata_id][i][1 + iter];
 									String prescription_and_row_id = var_info_array[var_index].get_yield_table_name_to_find() + " " + var_info_array[var_index].get_yield_table_row_index_to_find();
 									String state_id = map_prescription_and_row_id_to_state_id.get(prescription_and_row_id);
+									if (state_id == null) state_id = ""; // the case this var has prescription but missing row_id
 									map_var_index_to_var_state_id.put(var_index, state_id);
 								}
 							}
@@ -1538,6 +1553,7 @@ public class Solve_Iterations {
 									int var_index = xGSe[strata_id][i][1 + iter];
 									String prescription_and_row_id = var_info_array[var_index].get_yield_table_name_to_find() + " " + var_info_array[var_index].get_yield_table_row_index_to_find();
 									String state_id = map_prescription_and_row_id_to_state_id.get(prescription_and_row_id);
+									if (state_id == null) state_id = ""; // the case this var has prescription but missing row_id
 									map_var_index_to_var_state_id.put(var_index, state_id);
 								}
 							}
@@ -1553,6 +1569,7 @@ public class Solve_Iterations {
 											int var_index = xEAe[strata_id][tR][s5R][i][1 + iter];
 											String prescription_and_row_id = var_info_array[var_index].get_yield_table_name_to_find() + " " + var_info_array[var_index].get_yield_table_row_index_to_find();
 											String state_id = map_prescription_and_row_id_to_state_id.get(prescription_and_row_id);
+											if (state_id == null) state_id = ""; // the case this var has prescription but missing row_id
 											map_var_index_to_var_state_id.put(var_index, state_id);
 										}
 									}
@@ -1567,6 +1584,7 @@ public class Solve_Iterations {
 										int var_index = xMS[strata_id][i][1 + iter];
 										String prescription_and_row_id = var_info_array[var_index].get_yield_table_name_to_find() + " " + var_info_array[var_index].get_yield_table_row_index_to_find();
 										String state_id = map_prescription_and_row_id_to_state_id.get(prescription_and_row_id);
+										if (state_id == null) state_id = ""; // the case this var has prescription but missing row_id
 										map_var_index_to_var_state_id.put(var_index, state_id);
 									}
 								}
@@ -1580,6 +1598,7 @@ public class Solve_Iterations {
 										int var_index = xBS[strata_id][i][1 + iter];
 										String prescription_and_row_id = var_info_array[var_index].get_yield_table_name_to_find() + " " + var_info_array[var_index].get_yield_table_row_index_to_find();
 										String state_id = map_prescription_and_row_id_to_state_id.get(prescription_and_row_id);
+										if (state_id == null) state_id = ""; // the case this var has prescription but missing row_id
 										map_var_index_to_var_state_id.put(var_index, state_id);
 									}
 								}
@@ -1657,7 +1676,7 @@ public class Solve_Iterations {
 							
 							// Note that because
 							// 1. var_index --> always found prescription + " " + row_id
-							// 2. prescription + " " + row_id  --> might not found state_id (i.e. state_id = null). This is because we still allow variables without row_id found to be defined
+							// 2. prescription + " " + row_id  --> might not found state_id (i.e. state_id = ""). This is because we still allow variables without row_id found to be defined
 							// --> Any variable with null state_id need to be hard-coded by no-merge (x = X)
 							
 							List<List<Integer>> all_blocks = new ArrayList<List<Integer>>();	// each block contains var_index of the variables that have the same state_id
@@ -1688,9 +1707,9 @@ public class Solve_Iterations {
 //							}
 							
 							for (List<Integer> block : all_blocks) {
-								if (sorted_map_var_index_to_var_state_id.get(block.get(0)) == null) { // this is the block that has all null state_id	--> no merge
+								if (sorted_map_var_index_to_var_state_id.get(block.get(0)).equals("")) { // this is the block that has all "" state_id	--> no merge
 									for (int var_index : block) {
-										// Add constraint fro each var
+										// Add constraint for each var
 										c5_indexlist.add(new ArrayList<Integer>());
 										c5_valuelist.add(new ArrayList<Double>());
 										// add variable
@@ -1707,7 +1726,7 @@ public class Solve_Iterations {
 										c5_ublist.add(var_value);
 										c5_num++;
 									}
-								} else {	// this is the regular block (every state_id is not null) --> merge
+								} else {	// this is the regular block (every state_id is not "") --> merge
 									// Add constraint for each block
 									c5_indexlist.add(new ArrayList<Integer>());
 									c5_valuelist.add(new ArrayList<Double>());
@@ -1800,6 +1819,7 @@ public class Solve_Iterations {
 										int var_index = xNGr[strata_5layers_id][i][1 + iter][a];
 										String prescription_and_row_id = var_info_array[var_index].get_yield_table_name_to_find() + " " + var_info_array[var_index].get_yield_table_row_index_to_find();
 										String state_id = map_prescription_and_row_id_to_state_id.get(prescription_and_row_id);
+										if (state_id == null) state_id = ""; // the case this var has prescription but missing row_id
 										map_var_index_to_var_state_id.put(var_index, state_id);
 									}
 								}
@@ -1815,6 +1835,7 @@ public class Solve_Iterations {
 										int var_index = xPBr[strata_5layers_id][i][1 + iter][a];
 										String prescription_and_row_id = var_info_array[var_index].get_yield_table_name_to_find() + " " + var_info_array[var_index].get_yield_table_row_index_to_find();
 										String state_id = map_prescription_and_row_id_to_state_id.get(prescription_and_row_id);
+										if (state_id == null) state_id = ""; // the case this var has prescription but missing row_id
 										map_var_index_to_var_state_id.put(var_index, state_id);
 									}
 								}
@@ -1830,6 +1851,7 @@ public class Solve_Iterations {
 										int var_index = xGSr[strata_5layers_id][i][1 + iter][a];
 										String prescription_and_row_id = var_info_array[var_index].get_yield_table_name_to_find() + " " + var_info_array[var_index].get_yield_table_row_index_to_find();
 										String state_id = map_prescription_and_row_id_to_state_id.get(prescription_and_row_id);
+										if (state_id == null) state_id = ""; // the case this var has prescription but missing row_id
 										map_var_index_to_var_state_id.put(var_index, state_id);
 									}
 								}
@@ -1850,6 +1872,7 @@ public class Solve_Iterations {
 													int var_index = xEAr[strata_5layers_id][tR][aR][s5R][i][1 + iter];
 													String prescription_and_row_id = var_info_array[var_index].get_yield_table_name_to_find() + " " + var_info_array[var_index].get_yield_table_row_index_to_find();
 													String state_id = map_prescription_and_row_id_to_state_id.get(prescription_and_row_id);
+													if (state_id == null) state_id = ""; // the case this var has prescription but missing row_id
 													map_var_index_to_var_state_id.put(var_index, state_id);
 												}
 											}
@@ -1863,13 +1886,13 @@ public class Solve_Iterations {
 							LinkedHashMap<Integer, String> sorted_map_var_index_to_var_state_id = new LinkedHashMap<Integer, String>();
 							map_var_index_to_var_state_id.entrySet().stream().sorted(Map.Entry.comparingByValue()).forEach(entry -> {
 								sorted_map_var_index_to_var_state_id.put(entry.getKey(), entry.getValue());
-							});
+							}); 
 							map_var_index_to_var_state_id = null;	// delete the unsorted map
 							
 							
 							// Note that because
 							// 1. var_index --> always found prescription + " " + row_id
-							// 2. prescription + " " + row_id  --> might not found state_id (i.e. state_id = null). This is because we still allow variables without row_id found to be defined
+							// 2. prescription + " " + row_id  --> might not found state_id (i.e. state_id = ""). This is because we still allow variables without row_id found to be defined
 							// --> Any variable with null state_id need to be hard-coded by no-merge (x = X)
 							List<List<Integer>> all_blocks = new ArrayList<List<Integer>>();	// each block contains var_index of the variables that have the same state_id
 							List<Integer> this_block = null;
@@ -1899,9 +1922,9 @@ public class Solve_Iterations {
 //							}
 							
 							for (List<Integer> block : all_blocks) {
-								if (sorted_map_var_index_to_var_state_id.get(block.get(0)) == null) { // this is the block that has all null state_id	--> no merge
+								if (sorted_map_var_index_to_var_state_id.get(block.get(0)).equals("")) { // this is the block that has all "" state_id	--> no merge
 									for (int var_index : block) {
-										// Add constraint fro each var
+										// Add constraint for each var
 										c5_indexlist.add(new ArrayList<Integer>());
 										c5_valuelist.add(new ArrayList<Double>());
 										// add variable
@@ -1918,7 +1941,7 @@ public class Solve_Iterations {
 										c5_ublist.add(var_value);
 										c5_num++;
 									}
-								} else {	// this is the regular block (every state_id is not null) --> merge
+								} else {	// this is the regular block (every state_id is not "") --> merge
 									// Add constraint for each block
 									c5_indexlist.add(new ArrayList<Integer>());
 									c5_valuelist.add(new ArrayList<Double>());
@@ -4123,13 +4146,13 @@ public class Solve_Iterations {
 						
 						
 						// show successful or fail in the GUI
-						data[row][2] = "successful";
+						data[row][3] = "successful";
 						model.fireTableDataChanged();
 						value = null; reduceCost = null; dual = null; slack = null;		// clear arrays to save memory
 						vlb = null; vub = null; vname = null; objvals = null;			// clear arrays to save memory
 					} else {
 						if (is_problem_exported) cplex_wrapper.exportModel(problem_file.getAbsolutePath());
-						data[row][2] = "fail";
+						data[row][3] = "fail";
 						model.fireTableDataChanged();
 					}
 				}
@@ -4757,13 +4780,13 @@ public class Solve_Iterations {
 						
 						
 						// show successful or fail in the GUI
-						data[row][2] = "successful";
+						data[row][3] = "successful";
 						model.fireTableDataChanged();
 						value = null; /*reduceCost = null; dual = null; slack = null;*/		// clear arrays to save memory
 						vlb = null; vub = null; vname = null; objvals = null;			// clear arrays to save memory
 					} else {
 						if (is_problem_exported) solver.writeLp(problem_file.getAbsolutePath());
-						data[row][2] = "fail";
+						data[row][3] = "fail";
 						model.fireTableDataChanged();
 					}						
 					solver.deleteLp();
@@ -4785,7 +4808,7 @@ public class Solve_Iterations {
 		catch (IOException e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Panel Solve Runs   -   Create output files exception for "+ runFolder);		
 			e.printStackTrace();
-			data[row][2] = "fail, cannot create outputs";
+			data[row][3] = "fail, cannot create outputs";
 			model.fireTableDataChanged();
 			
 			problem_file.delete();
@@ -4801,7 +4824,7 @@ public class Solve_Iterations {
 		} catch (LpSolveException e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Panel Solve Runs   -   LPSOLVE exception for " + runFolder);
 			e.printStackTrace();
-			data[row][2] = "fail, lpsolve error";
+			data[row][3] = "fail, lpsolve error";
 			model.fireTableDataChanged();
 			
 			problem_file.delete();
@@ -4818,7 +4841,7 @@ public class Solve_Iterations {
 		catch (Exception e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Panel Solve Runs   -   Input files exception for " + runFolder);
 			e.printStackTrace();
-			data[row][2] = "fail, invalid inputs";
+			data[row][3] = "fail, invalid inputs";
 			model.fireTableDataChanged();
 			
 			problem_file.delete();

@@ -1154,3 +1154,5 @@ All changes in this block are associated with PrismAlpha1.3.02.jar, Prism-Formul
 	- Build mapping mechanism for constraint (5) with the map_var_index_to_var_state_id LinkedHashMap
 476. Simple summarize_output_01 and summarize_output_06
 477. Export just a general output_05 (not details with all yield_tables attributes) 
+478. Interface to allow restart solving from iteration 0 or continue solving from the last solved iteration.
+479. null state_id is replace by "" because null will make stream sort failed 

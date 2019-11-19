@@ -75,15 +75,16 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 		
 		// Set up a JScrollPane containing a table--------------------------------------------------------------------------------
 		rowCount = runsList.length;
-		colCount = 3;
+		colCount = 4;
 		data = new Object[rowCount][colCount];
-        columnNames= new String[] {"Model" , "Iterations", "Status"};
+        columnNames= new String[] {"Model" , "Max Iteration", "Method", "Status"};
 		
 		// Populate the data matrix
 		for (int row = 0; row < rowCount; row++) {
 			data[row][0] = runsList[row].getName();
 			data[row][1] = 0;
-			data[row][2] = "waiting";
+			data[row][2] = "continue";
+			data[row][3] = "waiting";
 		}			
 		
 		// Create a table
@@ -95,7 +96,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			
 			@Override
 			public boolean isCellEditable(int row, int col) {
-				return (col == 1) ? true : false;
+				return (col == 1 || col ==2) ? true : false;
 			}
 			
 			@Override
@@ -118,22 +119,26 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			            tableColumn.getHeaderValue(), false, false, -1, column);
 				maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
 				
-				if (column == 1) {
-					tableColumn.setPreferredWidth(maxWidth);
-				} else {
-					tableColumn.setPreferredWidth(150);
-				}
+				tableColumn.setPreferredWidth(maxWidth);
 				return component;
 			}
         };
         
-        class Combo_Iterations extends JComboBox {	
-			public Combo_Iterations() {
+        class Combo_Iteration extends JComboBox {	
+			public Combo_Iteration() {
 				for (int i = 0; i <= 99; i++) {addItem(i);}
 				setSelectedIndex(0);
 			}
 		}
-        table.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(new Combo_Iterations()));  
+        class Combo_Method extends JComboBox {	
+			public Combo_Method() {
+				addItem("restart");
+				addItem("continue");
+				setSelectedIndex(1);
+			}
+		}
+        table.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(new Combo_Iteration()));  
+        table.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new Combo_Method())); 
 //      DefaultTableCellRenderer renderer = (DefaultTableCellRenderer)table.getDefaultRenderer(Object.class);
 //      renderer.setHorizontalAlignment(SwingConstants.LEFT);		// Set alignment of values in the table to the left side
 //      table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -265,7 +270,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 				// Clear table info
 				for (int row = 0; row < rowCount; row++) {
 					for (int col = 0; col < colCount; col++) {
-						if (col > 1) {
+						if (col > 2) {
 							data[row][col] = null;
 							model.fireTableDataChanged();
 						}
