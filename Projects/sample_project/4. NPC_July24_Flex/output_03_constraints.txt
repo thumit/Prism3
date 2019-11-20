@@ -1,3 +1,0 @@
-cons_id	cons_slack	cons_dual
-0	-1.74399E7	-0.0
-1	-1.74899E7	-0.0

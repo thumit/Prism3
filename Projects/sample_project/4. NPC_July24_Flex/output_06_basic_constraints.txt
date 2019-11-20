@@ -1,2 +1,0 @@
-bc_id	bc_description	bc_type	bc_multiplier	lowerbound	lowerbound_perunit_penalty	upperbound	upperbound_perunit_penalty	var_id	var_name	var_value	var_reduced_cost	total_penalty
-1	Area (i.e. acres) ..... No dynamic restriction ..... method EA_E EA_R	SOFT	1.0	50000.0	1.0	null	null	0	y_0	1.74899E7	0.0	0.0
