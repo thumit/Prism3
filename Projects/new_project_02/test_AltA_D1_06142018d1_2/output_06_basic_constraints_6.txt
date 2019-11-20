@@ -1,0 +1,775 @@
+bc_id	bc_description	bc_type	bc_multiplier	lowerbound	lowerbound_perunit_penalty	upperbound	upperbound_perunit_penalty	var_id	var_name	var_value	var_reduced_cost	total_penalty
+1	BdFtVol Per1	FREE	1.0	6.0E7	2.0	null	null	1486	v_0	1.925486404836127E8	0.0	0.0
+2	CuFt Harv ..... rmcuft ..... No dynamic restriction ..... layer3 5 6 | period 1	FREE	1.0	1.2E7	null	null	null	1487	v_1	3.0088564426321823E7	0.0	0.0
+3	CuFt Harv ..... rmcuft ..... No dynamic restriction ..... layer3 5 6 | period 2	FREE	1.0	null	null	null	null	1488	v_2	3.0088564426321823E7	0.0	0.0
+4	CuFt Harv ..... rmcuft ..... No dynamic restriction ..... layer3 5 6 | period 3	FREE	1.0	null	null	null	null	1489	v_3	3.0088564426321823E7	0.0	0.0
+5	CuFt Harv ..... rmcuft ..... No dynamic restriction ..... layer3 5 6 | period 4	FREE	1.0	null	null	null	null	1490	v_4	3.0088564426321823E7	0.0	0.0
+6	CuFt Harv ..... rmcuft ..... No dynamic restriction ..... layer3 5 6 | period 5	FREE	1.0	null	null	null	null	1491	v_5	3.0088564426321823E7	0.0	0.0
+7	CuFt Harv ..... rmcuft ..... No dynamic restriction ..... layer3 5 6 | period 6	FREE	1.0	null	null	null	null	1492	v_6	3.0088564426321823E7	0.0	0.0
+8	CuFt Harv ..... rmcuft ..... No dynamic restriction ..... layer3 5 6 | period 7	FREE	1.0	null	null	null	null	1493	v_7	3.0088564426321823E7	0.0	0.0
+9	CuFt Harv ..... rmcuft ..... No dynamic restriction ..... layer3 5 6 | period 8	FREE	1.0	null	null	null	null	1494	v_8	3.0088564426321823E7	0.0	0.0
+10	CuFt Harv ..... rmcuft ..... No dynamic restriction ..... layer3 5 6 | period 9	FREE	1.0	null	null	null	null	1495	v_9	3.0088564426321823E7	0.0	0.0
+11	CuFt Harv ..... rmcuft ..... No dynamic restriction ..... layer3 5 6 | period 10	FREE	1.0	null	null	null	null	1496	v_10	3.0088564426321823E7	0.0	0.0
+12	CuFt Harv ..... rmcuft ..... No dynamic restriction ..... layer3 5 6 | period 11	FREE	1.0	null	null	null	null	1497	v_11	3.0088564426321823E7	0.0	0.0
+13	CuFt Harv ..... rmcuft ..... No dynamic restriction ..... layer3 5 6 | period 12	FREE	1.0	null	null	null	null	1498	v_12	3.0088564426321823E7	0.0	0.0
+14	CuFt Harv ..... rmcuft ..... No dynamic restriction ..... layer3 5 6 | period 13	FREE	1.0	null	null	null	null	1499	v_13	3.0088564426321823E7	0.0	0.0
+15	CuFt Harv ..... rmcuft ..... No dynamic restriction ..... layer3 5 6 | period 14	FREE	1.0	null	null	null	null	1500	v_14	3.0088564426321823E7	0.0	0.0
+16	CuFt Harv ..... rmcuft ..... No dynamic restriction ..... layer3 5 6 | period 15	FREE	1.0	null	null	null	null	1501	v_15	3.0088564426321823E7	0.0	0.0
+17	CuFt Inventory 5-14	FREE	0.1	null	null	null	null	1502	v_16	8.809830373782995E8	0.0	0.0
+18	CuFt Inventory period 15	FREE	1.0	null	null	null	null	1503	v_17	9.110716018046213E8	0.0	0.0
+19	msf ..... Area (i.e. acres) ..... action_type msf ..... period 1	HARD	1.0	75500.0	1.0	78000.0	null	1260	z_0	75500.0	0.0	0.0
+20	msf ..... Area (i.e. acres) ..... action_type msf ..... period 2	HARD	1.0	75500.0	1.0	78000.0	null	1261	z_1	75500.0	0.0	0.0
+21	msf ..... Area (i.e. acres) ..... action_type msf ..... period 3	HARD	1.0	75500.0	1.0	78000.0	null	1262	z_2	75500.0	0.0	0.0
+22	msf ..... Area (i.e. acres) ..... action_type msf ..... period 4	HARD	1.0	75500.0	1.0	78000.0	null	1263	z_3	75500.0	0.0	0.0
+23	msf ..... Area (i.e. acres) ..... action_type msf ..... period 5	HARD	1.0	75500.0	1.0	78000.0	null	1264	z_4	76162.24600000017	0.0	0.0
+24	msf ..... Area (i.e. acres) ..... action_type msf ..... period 6	HARD	1.0	75500.0	1.0	78000.0	null	1265	z_5	75500.0	0.0	0.0
+25	msf ..... Area (i.e. acres) ..... action_type msf ..... period 7	HARD	1.0	75500.0	1.0	78000.0	null	1266	z_6	75500.0	0.0	0.0
+26	msf ..... Area (i.e. acres) ..... action_type msf ..... period 8	HARD	1.0	75500.0	1.0	78000.0	null	1267	z_7	75500.0	0.0	0.0
+27	msf ..... Area (i.e. acres) ..... action_type msf ..... period 9	HARD	1.0	75500.0	1.0	78000.0	null	1268	z_8	75500.0	0.0	0.0
+28	msf ..... Area (i.e. acres) ..... action_type msf ..... period 10	HARD	1.0	75500.0	1.0	78000.0	null	1269	z_9	76162.24600000017	0.0	0.0
+29	msf ..... Area (i.e. acres) ..... action_type msf ..... period 11	HARD	1.0	75500.0	1.0	78000.0	null	1270	z_10	75500.0	0.0	0.0
+30	msf ..... Area (i.e. acres) ..... action_type msf ..... period 12	HARD	1.0	75500.0	1.0	78000.0	null	1271	z_11	75500.0	0.0	0.0
+31	msf ..... Area (i.e. acres) ..... action_type msf ..... period 13	HARD	1.0	75500.0	1.0	78000.0	null	1272	z_12	75500.0	0.0	0.0
+32	msf ..... Area (i.e. acres) ..... action_type msf ..... period 14	HARD	1.0	75500.0	1.0	78000.0	null	1273	z_13	75500.0	0.0	0.0
+33	msf ..... Area (i.e. acres) ..... action_type msf ..... period 15	HARD	1.0	75500.0	1.0	78000.0	null	1274	z_14	76162.24600000022	0.0	0.0
+34	Budget ..... Cost (i.e. dollars) ..... No dynamic restriction ..... period 1	FREE	1.0	null	null	4.6E7	1.0	1504	v_18	7.42726491964646E7	0.0	0.0
+35	Budget ..... Cost (i.e. dollars) ..... No dynamic restriction ..... period 2	FREE	1.0	null	null	4.6E7	1.0	1505	v_19	7.76763974064821E7	0.0	0.0
+36	Budget ..... Cost (i.e. dollars) ..... No dynamic restriction ..... period 3	FREE	1.0	null	null	4.6E7	1.0	1506	v_20	7.729164206555699E7	0.0	0.0
+37	Budget ..... Cost (i.e. dollars) ..... No dynamic restriction ..... period 4	FREE	1.0	null	null	4.6E7	1.0	1507	v_21	5.755228800942193E7	0.0	0.0
+38	Budget ..... Cost (i.e. dollars) ..... No dynamic restriction ..... period 5	FREE	1.0	null	null	4.6E7	1.0	1508	v_22	7.793472643197298E7	0.0	0.0
+39	Budget ..... Cost (i.e. dollars) ..... No dynamic restriction ..... period 6	FREE	1.0	null	null	4.6E7	0.5	1509	v_23	5.544623713370344E7	0.0	0.0
+40	Budget ..... Cost (i.e. dollars) ..... No dynamic restriction ..... period 7	FREE	1.0	null	null	4.6E7	0.5	1510	v_24	8.447624247635616E7	0.0	0.0
+41	Budget ..... Cost (i.e. dollars) ..... No dynamic restriction ..... period 8	FREE	1.0	null	null	4.6E7	0.5	1511	v_25	6.84853237233293E7	0.0	0.0
+42	Budget ..... Cost (i.e. dollars) ..... No dynamic restriction ..... period 9	FREE	1.0	null	null	4.6E7	0.5	1512	v_26	6.6147270433075644E7	0.0	0.0
+43	Budget ..... Cost (i.e. dollars) ..... No dynamic restriction ..... period 10	FREE	1.0	null	null	4.6E7	0.5	1513	v_27	7.590816338278247E7	0.0	0.0
+44	Budget ..... Cost (i.e. dollars) ..... No dynamic restriction ..... period 11	FREE	1.0	null	null	4.6E7	0.5	1514	v_28	5.832713500308004E7	0.0	0.0
+45	Budget ..... Cost (i.e. dollars) ..... No dynamic restriction ..... period 12	FREE	1.0	null	null	4.6E7	0.5	1515	v_29	6.6435191061920784E7	0.0	0.0
+46	Budget ..... Cost (i.e. dollars) ..... No dynamic restriction ..... period 13	FREE	1.0	null	null	4.6E7	0.5	1516	v_30	5.955651833327683E7	0.0	0.0
+47	Budget ..... Cost (i.e. dollars) ..... No dynamic restriction ..... period 14	FREE	1.0	null	null	4.6E7	0.5	1517	v_31	5.7550024242779806E7	0.0	0.0
+48	Budget ..... Cost (i.e. dollars) ..... No dynamic restriction ..... period 15	FREE	1.0	null	null	4.6E7	0.5	1518	v_32	6.689513601530266E7	0.0	0.0
+49	WUI Cost ..... Cost (i.e. dollars) ..... No dynamic restriction ..... layer3 3 5 | period 1	FREE	1.0	null	null	null	null	1519	v_33	3.0451786170550484E7	0.0	0.0
+50	WUI Cost ..... Cost (i.e. dollars) ..... No dynamic restriction ..... layer3 3 5 | period 2	FREE	1.0	null	null	null	null	1520	v_34	3.184732293665766E7	0.0	0.0
+51	WUI Cost ..... Cost (i.e. dollars) ..... No dynamic restriction ..... layer3 3 5 | period 3	FREE	1.0	null	null	null	null	1521	v_35	3.1689573246878363E7	0.0	0.0
+52	WUI Cost ..... Cost (i.e. dollars) ..... No dynamic restriction ..... layer3 3 5 | period 4	FREE	1.0	null	null	null	null	1522	v_36	2.359643808386299E7	0.0	0.0
+53	WUI Cost ..... Cost (i.e. dollars) ..... No dynamic restriction ..... layer3 3 5 | period 5	FREE	1.0	null	null	null	null	1523	v_37	3.195323783710892E7	0.0	0.0
+54	Non WUI Cost ..... Cost (i.e. dollars) ..... No dynamic restriction ..... layer3 4 6 | period 1	FREE	1.0	null	null	null	null	1524	v_38	2.700790769774739E7	0.0	0.0
+55	Non WUI Cost ..... Cost (i.e. dollars) ..... No dynamic restriction ..... layer3 4 6 | period 2	FREE	1.0	null	null	null	null	1525	v_39	2.8042283742712688E7	0.0	0.0
+56	Non WUI Cost ..... Cost (i.e. dollars) ..... No dynamic restriction ..... layer3 4 6 | period 3	FREE	1.0	null	null	null	null	1526	v_40	1.7818147693328854E7	0.0	0.0
+57	Non WUI Cost ..... Cost (i.e. dollars) ..... No dynamic restriction ..... layer3 4 6 | period 4	FREE	1.0	null	null	null	null	1527	v_41	2.3722065313257053E7	0.0	0.0
+58	Non WUI Cost ..... Cost (i.e. dollars) ..... No dynamic restriction ..... layer3 4 6 | period 5	FREE	1.0	null	null	null	null	1528	v_42	2.375832431746114E7	0.0	0.0
+59	No EA for B in MAG 1-4	HARD	1.0	null	null	0.0	null	1275	z_15	0.0	0.0	0.0
+60	all Rx Burn ..... Area (i.e. acres) ..... action_type bb cs-bb ct-bb ct-ub gp-ct-ub sc-bb ub ..... method PB_E GS_E EA_E PB_R GS_R EA_R | period 1	HARD	1.0	null	null	100000.0	null	1276	z_16	59660.61190357287	0.0	0.0
+61	all Rx Burn ..... Area (i.e. acres) ..... action_type bb cs-bb ct-bb ct-ub gp-ct-ub sc-bb ub ..... method PB_E GS_E EA_E PB_R GS_R EA_R | period 2	HARD	1.0	null	null	100000.0	null	1277	z_17	92596.517396274	0.0	0.0
+62	all Rx Burn ..... Area (i.e. acres) ..... action_type bb cs-bb ct-bb ct-ub gp-ct-ub sc-bb ub ..... method PB_E GS_E EA_E PB_R GS_R EA_R | period 3	HARD	1.0	null	null	100000.0	null	1278	z_18	91897.92994568333	0.0	0.0
+63	all Rx Burn ..... Area (i.e. acres) ..... action_type bb cs-bb ct-bb ct-ub gp-ct-ub sc-bb ub ..... method PB_E GS_E EA_E PB_R GS_R EA_R | period 4	HARD	1.0	null	null	100000.0	null	1279	z_19	41116.51329856785	0.0	0.0
+64	all Rx Burn ..... Area (i.e. acres) ..... action_type bb cs-bb ct-bb ct-ub gp-ct-ub sc-bb ub ..... method PB_E GS_E EA_E PB_R GS_R EA_R | period 5	HARD	1.0	null	null	100000.0	null	1280	z_20	59396.89069922551	0.0	0.0
+65	all Rx Burn ..... Area (i.e. acres) ..... action_type bb cs-bb ct-bb ct-ub gp-ct-ub sc-bb ub ..... method PB_E GS_E EA_E PB_R GS_R EA_R | period 6	HARD	1.0	null	null	100000.0	null	1281	z_21	26129.282051646926	0.0	0.0
+66	all Rx Burn ..... Area (i.e. acres) ..... action_type bb cs-bb ct-bb ct-ub gp-ct-ub sc-bb ub ..... method PB_E GS_E EA_E PB_R GS_R EA_R | period 7	HARD	1.0	null	null	100000.0	null	1282	z_22	100000.0	-3.345478600623123E-4	0.0
+67	all Rx Burn ..... Area (i.e. acres) ..... action_type bb cs-bb ct-bb ct-ub gp-ct-ub sc-bb ub ..... method PB_E GS_E EA_E PB_R GS_R EA_R | period 8	HARD	1.0	null	null	100000.0	null	1283	z_23	42941.86549625177	0.0	0.0
+68	all Rx Burn ..... Area (i.e. acres) ..... action_type bb cs-bb ct-bb ct-ub gp-ct-ub sc-bb ub ..... method PB_E GS_E EA_E PB_R GS_R EA_R | period 9	HARD	1.0	null	null	100000.0	null	1284	z_24	69133.84198025502	0.0	0.0
+69	all Rx Burn ..... Area (i.e. acres) ..... action_type bb cs-bb ct-bb ct-ub gp-ct-ub sc-bb ub ..... method PB_E GS_E EA_E PB_R GS_R EA_R | period 10	HARD	1.0	null	null	100000.0	null	1285	z_25	75897.59601241516	0.0	0.0
+70	all Rx Burn ..... Area (i.e. acres) ..... action_type bb cs-bb ct-bb ct-ub gp-ct-ub sc-bb ub ..... method PB_E GS_E EA_E PB_R GS_R EA_R | period 11	HARD	1.0	null	null	100000.0	null	1286	z_26	29722.227549162897	0.0	0.0
+71	all Rx Burn ..... Area (i.e. acres) ..... action_type bb cs-bb ct-bb ct-ub gp-ct-ub sc-bb ub ..... method PB_E GS_E EA_E PB_R GS_R EA_R | period 12	HARD	1.0	null	null	100000.0	null	1287	z_27	44052.246260027416	0.0	0.0
+72	all Rx Burn ..... Area (i.e. acres) ..... action_type bb cs-bb ct-bb ct-ub gp-ct-ub sc-bb ub ..... method PB_E GS_E EA_E PB_R GS_R EA_R | period 13	HARD	1.0	null	null	100000.0	null	1288	z_28	54537.140242376314	0.0	0.0
+73	all Rx Burn ..... Area (i.e. acres) ..... action_type bb cs-bb ct-bb ct-ub gp-ct-ub sc-bb ub ..... method PB_E GS_E EA_E PB_R GS_R EA_R | period 14	HARD	1.0	null	null	100000.0	null	1289	z_29	63873.14959389069	0.0	0.0
+74	all Rx Burn ..... Area (i.e. acres) ..... action_type bb cs-bb ct-bb ct-ub gp-ct-ub sc-bb ub ..... method PB_E GS_E EA_E PB_R GS_R EA_R | period 15	HARD	1.0	null	null	100000.0	null	1290	z_30	55609.8327967628	0.0	0.0
+75	MAG 2 Opening ..... openingpct ..... action_type bb cs-bb ct-bb ct-ub gp-ct-ub sc-bb ub ..... layer3 2 | period 1	HARD	1.0	null	null	140720.0	null	1291	z_31	80924.59504159275	0.0	0.0
+76	MAG 2 Opening ..... openingpct ..... action_type bb cs-bb ct-bb ct-ub gp-ct-ub sc-bb ub ..... layer3 2 | period 2	HARD	1.0	null	null	140720.0	null	1292	z_32	80017.20993112108	0.0	0.0
+77	MAG 2 Opening ..... openingpct ..... action_type bb cs-bb ct-bb ct-ub gp-ct-ub sc-bb ub ..... layer3 2 | period 3	HARD	1.0	null	null	140720.0	null	1293	z_33	97699.06885424152	0.0	0.0
+78	MAG 2 Opening ..... openingpct ..... action_type bb cs-bb ct-bb ct-ub gp-ct-ub sc-bb ub ..... layer3 2 | period 4	HARD	1.0	null	null	140720.0	null	1294	z_34	82202.83176964798	0.0	0.0
+79	MAG 2 Opening ..... openingpct ..... action_type bb cs-bb ct-bb ct-ub gp-ct-ub sc-bb ub ..... layer3 2 | period 5	HARD	1.0	null	null	140720.0	null	1295	z_35	93788.99520564443	0.0	0.0
+80	MAG 2 Opening ..... openingpct ..... action_type bb cs-bb ct-bb ct-ub gp-ct-ub sc-bb ub ..... layer3 2 | period 6	HARD	1.0	null	null	140720.0	null	1296	z_36	85014.27430557963	0.0	0.0
+81	MAG 2 Opening ..... openingpct ..... action_type bb cs-bb ct-bb ct-ub gp-ct-ub sc-bb ub ..... layer3 2 | period 7	HARD	1.0	null	null	140720.0	null	1297	z_37	89105.38806997468	0.0	0.0
+82	MAG 2 Opening ..... openingpct ..... action_type bb cs-bb ct-bb ct-ub gp-ct-ub sc-bb ub ..... layer3 2 | period 8	HARD	1.0	null	null	140720.0	null	1298	z_38	102157.90425472756	0.0	0.0
+83	MAG 2 Opening ..... openingpct ..... action_type bb cs-bb ct-bb ct-ub gp-ct-ub sc-bb ub ..... layer3 2 | period 9	HARD	1.0	null	null	140720.0	null	1299	z_39	86779.46263540965	0.0	0.0
+84	MAG 2 Opening ..... openingpct ..... action_type bb cs-bb ct-bb ct-ub gp-ct-ub sc-bb ub ..... layer3 2 | period 10	HARD	1.0	null	null	140720.0	null	1300	z_40	90576.11967523316	0.0	0.0
+85	MAG 2 Opening ..... openingpct ..... action_type bb cs-bb ct-bb ct-ub gp-ct-ub sc-bb ub ..... layer3 2 | period 11	HARD	1.0	null	null	140720.0	null	1301	z_41	85456.8274966592	0.0	0.0
+86	MAG 2 Opening ..... openingpct ..... action_type bb cs-bb ct-bb ct-ub gp-ct-ub sc-bb ub ..... layer3 2 | period 12	HARD	1.0	null	null	140720.0	null	1302	z_42	79330.57256579683	0.0	0.0
+87	MAG 2 Opening ..... openingpct ..... action_type bb cs-bb ct-bb ct-ub gp-ct-ub sc-bb ub ..... layer3 2 | period 13	HARD	1.0	null	null	140720.0	null	1303	z_43	83069.19934845965	0.0	0.0
+88	MAG 2 Opening ..... openingpct ..... action_type bb cs-bb ct-bb ct-ub gp-ct-ub sc-bb ub ..... layer3 2 | period 14	HARD	1.0	null	null	140720.0	null	1304	z_44	78328.25372681483	0.0	0.0
+89	MAG 2 Opening ..... openingpct ..... action_type bb cs-bb ct-bb ct-ub gp-ct-ub sc-bb ub ..... layer3 2 | period 15	HARD	1.0	null	null	140720.0	null	1305	z_45	84209.16213524622	0.0	0.0
+90	MAG 3 Opening ..... openingpct ..... No dynamic restriction ..... layer3 3 | period 1	HARD	1.0	null	null	9063.0	null	1306	z_46	5417.197070033472	0.0	0.0
+91	MAG 3 Opening ..... openingpct ..... No dynamic restriction ..... layer3 3 | period 2	HARD	1.0	null	null	9063.0	null	1307	z_47	5220.044251788609	0.0	0.0
+92	MAG 3 Opening ..... openingpct ..... No dynamic restriction ..... layer3 3 | period 3	HARD	1.0	null	null	9063.0	null	1308	z_48	5725.334355823155	0.0	0.0
+93	MAG 3 Opening ..... openingpct ..... No dynamic restriction ..... layer3 3 | period 4	HARD	1.0	null	null	9063.0	null	1309	z_49	5649.324275147927	0.0	0.0
+94	MAG 3 Opening ..... openingpct ..... No dynamic restriction ..... layer3 3 | period 5	HARD	1.0	null	null	9063.0	null	1310	z_50	6177.801350995196	0.0	0.0
+95	MAG 3 Opening ..... openingpct ..... No dynamic restriction ..... layer3 3 | period 6	HARD	1.0	null	null	9063.0	null	1311	z_51	5460.017418697067	0.0	0.0
+96	MAG 3 Opening ..... openingpct ..... No dynamic restriction ..... layer3 3 | period 7	HARD	1.0	null	null	9063.0	null	1312	z_52	5453.3280106760685	0.0	0.0
+97	MAG 3 Opening ..... openingpct ..... No dynamic restriction ..... layer3 3 | period 8	HARD	1.0	null	null	9063.0	null	1313	z_53	6590.429231571022	0.0	0.0
+98	MAG 3 Opening ..... openingpct ..... No dynamic restriction ..... layer3 3 | period 9	HARD	1.0	null	null	9063.0	null	1314	z_54	6340.121315356813	0.0	0.0
+99	MAG 3 Opening ..... openingpct ..... No dynamic restriction ..... layer3 3 | period 10	HARD	1.0	null	null	9063.0	null	1315	z_55	6451.772897143517	0.0	0.0
+100	MAG 3 Opening ..... openingpct ..... No dynamic restriction ..... layer3 3 | period 11	HARD	1.0	null	null	9063.0	null	1316	z_56	5598.626357451112	0.0	0.0
+101	MAG 3 Opening ..... openingpct ..... No dynamic restriction ..... layer3 3 | period 12	HARD	1.0	null	null	9063.0	null	1317	z_57	5016.226116864597	0.0	0.0
+102	MAG 3 Opening ..... openingpct ..... No dynamic restriction ..... layer3 3 | period 13	HARD	1.0	null	null	9063.0	null	1318	z_58	5033.3139206204805	0.0	0.0
+103	MAG 3 Opening ..... openingpct ..... No dynamic restriction ..... layer3 3 | period 14	HARD	1.0	null	null	9063.0	null	1319	z_59	5366.851874925431	0.0	0.0
+104	MAG 3 Opening ..... openingpct ..... No dynamic restriction ..... layer3 3 | period 15	HARD	1.0	null	null	9063.0	null	1320	z_60	5984.489098185027	0.0	0.0
+105	MAG 4 Opening ..... openingpct ..... No dynamic restriction ..... layer3 4 | period 1	HARD	1.0	null	null	6743.0	null	1321	z_61	3364.6871181692936	0.0	0.0
+106	MAG 4 Opening ..... openingpct ..... No dynamic restriction ..... layer3 4 | period 2	HARD	1.0	null	null	6743.0	null	1322	z_62	3335.673634348386	0.0	0.0
+107	MAG 4 Opening ..... openingpct ..... No dynamic restriction ..... layer3 4 | period 3	HARD	1.0	null	null	6743.0	null	1323	z_63	4374.325138082902	0.0	0.0
+108	MAG 4 Opening ..... openingpct ..... No dynamic restriction ..... layer3 4 | period 4	HARD	1.0	null	null	6743.0	null	1324	z_64	3983.5353727896077	0.0	0.0
+109	MAG 4 Opening ..... openingpct ..... No dynamic restriction ..... layer3 4 | period 5	HARD	1.0	null	null	6743.0	null	1325	z_65	3941.624971883146	0.0	0.0
+110	MAG 4 Opening ..... openingpct ..... No dynamic restriction ..... layer3 4 | period 6	HARD	1.0	null	null	6743.0	null	1326	z_66	3603.1753913644416	0.0	0.0
+111	MAG 4 Opening ..... openingpct ..... No dynamic restriction ..... layer3 4 | period 7	HARD	1.0	null	null	6743.0	null	1327	z_67	4054.8492606971454	0.0	0.0
+112	MAG 4 Opening ..... openingpct ..... No dynamic restriction ..... layer3 4 | period 8	HARD	1.0	null	null	6743.0	null	1328	z_68	4723.966040018297	0.0	0.0
+113	MAG 4 Opening ..... openingpct ..... No dynamic restriction ..... layer3 4 | period 9	HARD	1.0	null	null	6743.0	null	1329	z_69	4261.965637311401	0.0	0.0
+114	MAG 4 Opening ..... openingpct ..... No dynamic restriction ..... layer3 4 | period 10	HARD	1.0	null	null	6743.0	null	1330	z_70	4361.7666410272295	0.0	0.0
+115	MAG 4 Opening ..... openingpct ..... No dynamic restriction ..... layer3 4 | period 11	HARD	1.0	null	null	6743.0	null	1331	z_71	4004.042837655452	0.0	0.0
+116	MAG 4 Opening ..... openingpct ..... No dynamic restriction ..... layer3 4 | period 12	HARD	1.0	null	null	6743.0	null	1332	z_72	3562.4579878722866	0.0	0.0
+117	MAG 4 Opening ..... openingpct ..... No dynamic restriction ..... layer3 4 | period 13	HARD	1.0	null	null	6743.0	null	1333	z_73	3567.653597585733	0.0	0.0
+118	MAG 4 Opening ..... openingpct ..... No dynamic restriction ..... layer3 4 | period 14	HARD	1.0	null	null	6743.0	null	1334	z_74	3511.095219624016	0.0	0.0
+119	MAG 4 Opening ..... openingpct ..... No dynamic restriction ..... layer3 4 | period 15	HARD	1.0	null	null	6743.0	null	1335	z_75	3151.6150992834528	0.0	0.0
+120	MAG 5 Opening ..... openingpct ..... No dynamic restriction ..... layer3 5 | period 1	HARD	1.0	null	null	76604.0	null	1336	z_76	66497.31883754535	0.0	0.0
+121	MAG 5 Opening ..... openingpct ..... No dynamic restriction ..... layer3 5 | period 2	HARD	1.0	null	null	76604.0	null	1337	z_77	76604.0	-0.1090507198118536	0.0
+122	MAG 5 Opening ..... openingpct ..... No dynamic restriction ..... layer3 5 | period 3	HARD	1.0	null	null	76604.0	null	1338	z_78	71763.54414940094	0.0	0.0
+123	MAG 5 Opening ..... openingpct ..... No dynamic restriction ..... layer3 5 | period 4	HARD	1.0	null	null	76604.0	null	1339	z_79	70724.15192994183	0.0	0.0
+124	MAG 5 Opening ..... openingpct ..... No dynamic restriction ..... layer3 5 | period 5	HARD	1.0	null	null	76604.0	null	1340	z_80	70418.41866963224	0.0	0.0
+125	MAG 5 Opening ..... openingpct ..... No dynamic restriction ..... layer3 5 | period 6	HARD	1.0	null	null	76604.0	null	1341	z_81	63823.811479868564	0.0	0.0
+126	MAG 5 Opening ..... openingpct ..... No dynamic restriction ..... layer3 5 | period 7	HARD	1.0	null	null	76604.0	null	1342	z_82	65457.91012073735	0.0	0.0
+127	MAG 5 Opening ..... openingpct ..... No dynamic restriction ..... layer3 5 | period 8	HARD	1.0	null	null	76604.0	null	1343	z_83	64528.604814967286	0.0	0.0
+128	MAG 5 Opening ..... openingpct ..... No dynamic restriction ..... layer3 5 | period 9	HARD	1.0	null	null	76604.0	null	1344	z_84	71456.0223171973	0.0	0.0
+129	MAG 5 Opening ..... openingpct ..... No dynamic restriction ..... layer3 5 | period 10	HARD	1.0	null	null	76604.0	null	1345	z_85	71410.95807657836	0.0	0.0
+130	MAG 5 Opening ..... openingpct ..... No dynamic restriction ..... layer3 5 | period 11	HARD	1.0	null	null	76604.0	null	1346	z_86	63071.643985977214	0.0	0.0
+131	MAG 5 Opening ..... openingpct ..... No dynamic restriction ..... layer3 5 | period 12	HARD	1.0	null	null	76604.0	null	1347	z_87	62462.829642722005	0.0	0.0
+132	MAG 5 Opening ..... openingpct ..... No dynamic restriction ..... layer3 5 | period 13	HARD	1.0	null	null	76604.0	null	1348	z_88	55725.80377574822	0.0	0.0
+133	MAG 5 Opening ..... openingpct ..... No dynamic restriction ..... layer3 5 | period 14	HARD	1.0	null	null	76604.0	null	1349	z_89	69856.67179785538	0.0	0.0
+134	MAG 5 Opening ..... openingpct ..... No dynamic restriction ..... layer3 5 | period 15	HARD	1.0	null	null	76604.0	null	1350	z_90	72424.46967284719	0.0	0.0
+135	MAG 6 Opening ..... openingpct ..... No dynamic restriction ..... layer3 6 | period 1	HARD	1.0	null	null	122638.0	null	1351	z_91	107248.93773022373	0.0	0.0
+136	MAG 6 Opening ..... openingpct ..... No dynamic restriction ..... layer3 6 | period 2	HARD	1.0	null	null	122638.0	null	1352	z_92	104588.01828916467	0.0	0.0
+137	MAG 6 Opening ..... openingpct ..... No dynamic restriction ..... layer3 6 | period 3	HARD	1.0	null	null	122638.0	null	1353	z_93	104732.99519613115	0.0	0.0
+138	MAG 6 Opening ..... openingpct ..... No dynamic restriction ..... layer3 6 | period 4	HARD	1.0	null	null	122638.0	null	1354	z_94	112628.02951793156	0.0	0.0
+139	MAG 6 Opening ..... openingpct ..... No dynamic restriction ..... layer3 6 | period 5	HARD	1.0	null	null	122638.0	null	1355	z_95	112387.39126238885	0.0	0.0
+140	MAG 6 Opening ..... openingpct ..... No dynamic restriction ..... layer3 6 | period 6	HARD	1.0	null	null	122638.0	null	1356	z_96	109771.55059227183	0.0	0.0
+141	MAG 6 Opening ..... openingpct ..... No dynamic restriction ..... layer3 6 | period 7	HARD	1.0	null	null	122638.0	null	1357	z_97	95910.68704852615	0.0	0.0
+142	MAG 6 Opening ..... openingpct ..... No dynamic restriction ..... layer3 6 | period 8	HARD	1.0	null	null	122638.0	null	1358	z_98	95505.5140384316	0.0	0.0
+143	MAG 6 Opening ..... openingpct ..... No dynamic restriction ..... layer3 6 | period 9	HARD	1.0	null	null	122638.0	null	1359	z_99	115203.2407119875	0.0	0.0
+144	MAG 6 Opening ..... openingpct ..... No dynamic restriction ..... layer3 6 | period 10	HARD	1.0	null	null	122638.0	null	1360	z_100	109062.32311460479	0.0	0.0
+145	MAG 6 Opening ..... openingpct ..... No dynamic restriction ..... layer3 6 | period 11	HARD	1.0	null	null	122638.0	null	1361	z_101	104591.58029018015	0.0	0.0
+146	MAG 6 Opening ..... openingpct ..... No dynamic restriction ..... layer3 6 | period 12	HARD	1.0	null	null	122638.0	null	1362	z_102	93364.33383085125	0.0	0.0
+147	MAG 6 Opening ..... openingpct ..... No dynamic restriction ..... layer3 6 | period 13	HARD	1.0	null	null	122638.0	null	1363	z_103	85420.65414157491	0.0	0.0
+148	MAG 6 Opening ..... openingpct ..... No dynamic restriction ..... layer3 6 | period 14	HARD	1.0	null	null	122638.0	null	1364	z_104	97957.4620482771	0.0	0.0
+149	MAG 6 Opening ..... openingpct ..... No dynamic restriction ..... layer3 6 | period 15	HARD	1.0	null	null	122638.0	null	1365	z_105	93605.18786964504	0.0	0.0
+150	No PCT in CM Types ..... Area (i.e. acres) ..... dvegtype G H | action_type pct ..... layer4 B L U W | period 1	HARD	1.0	null	null	0.0	null	1366	z_106	0.0	-8.176682872715247	0.0
+151	No PCT in CM Types ..... Area (i.e. acres) ..... dvegtype G H | action_type pct ..... layer4 B L U W | period 2	HARD	1.0	null	null	0.0	null	1367	z_107	0.0	-7.8690921385128325	0.0
+152	No PCT in CM Types ..... Area (i.e. acres) ..... dvegtype G H | action_type pct ..... layer4 B L U W | period 3	HARD	1.0	null	null	0.0	null	1368	z_108	0.0	-7.394084559263089	0.0
+153	No PCT in CM Types ..... Area (i.e. acres) ..... dvegtype G H | action_type pct ..... layer4 B L U W | period 4	HARD	1.0	null	null	0.0	null	1369	z_109	0.0	-6.334639739965835	0.0
+154	No PCT in CM Types ..... Area (i.e. acres) ..... dvegtype G H | action_type pct ..... layer4 B L U W | period 5	HARD	1.0	null	null	0.0	null	1370	z_110	0.0	-5.268769302961613	0.0
+155	No PCT in CM Types ..... Area (i.e. acres) ..... dvegtype G H | action_type pct ..... layer4 B L U W | period 6	HARD	1.0	null	null	0.0	null	1371	z_111	0.0	-4.204112882547206	0.0
+156	No PCT in CM Types ..... Area (i.e. acres) ..... dvegtype G H | action_type pct ..... layer4 B L U W | period 7	HARD	1.0	null	null	0.0	null	1372	z_112	0.0	-3.7359804593018615	0.0
+157	No PCT in CM Types ..... Area (i.e. acres) ..... dvegtype G H | action_type pct ..... layer4 B L U W | period 8	HARD	1.0	null	null	0.0	null	1373	z_113	0.0	-3.2825582645511777	0.0
+158	No PCT in CM Types ..... Area (i.e. acres) ..... dvegtype G H | action_type pct ..... layer4 B L U W | period 9	HARD	1.0	null	null	0.0	null	1374	z_114	0.0	-2.8405021846589995	0.0
+159	No PCT in CM Types ..... Area (i.e. acres) ..... dvegtype G H | action_type pct ..... layer4 B L U W | period 10	HARD	1.0	null	null	0.0	null	1375	z_115	0.0	-1.946321152562198	0.0
+160	No PCT in CM Types ..... Area (i.e. acres) ..... dvegtype G H | action_type pct ..... layer4 B L U W | period 11	HARD	1.0	null	null	0.0	null	1376	z_116	0.0	-1.0046217837356957	0.0
+161	No PCT in CM Types ..... Area (i.e. acres) ..... dvegtype G H | action_type pct ..... layer4 B L U W | period 12	HARD	1.0	null	null	0.0	null	1377	z_117	0.0	-0.5143607541621985	0.0
+162	No PCT in CM Types ..... Area (i.e. acres) ..... dvegtype G H | action_type pct ..... layer4 B L U W | period 13	HARD	1.0	null	null	0.0	null	1378	z_118	0.0	-0.024360754162198295	0.0
+163	No PCT in CM Types ..... Area (i.e. acres) ..... dvegtype G H | action_type pct ..... layer4 B L U W | period 14	HARD	1.0	null	null	0.0	null	1379	z_119	0.0	-2.0816681711721685E-17	0.0
+164	No PCT in CM Types ..... Area (i.e. acres) ..... dvegtype G H | action_type pct ..... layer4 B L U W | period 15	HARD	1.0	null	null	0.0	null	1380	z_120	0.0	0.0	0.0
+165	No Trt Lynx MultiStory in Lynx Hab ..... Area (i.e. acres) ..... lynx_ms 1 | action_type bb cs-bb ct ct-bb ct-ub gp-ct-ub pct sc-bb ss ub ..... layer4 B L U W | period 1	HARD	1.0	null	null	0.0	null	1381	z_121	0.0	-5.748980672700933	0.0
+166	No Trt Lynx MultiStory in Lynx Hab ..... Area (i.e. acres) ..... lynx_ms 1 | action_type bb cs-bb ct ct-bb ct-ub gp-ct-ub pct sc-bb ss ub ..... layer4 B L U W | period 2	HARD	1.0	null	null	0.0	null	1382	z_122	0.0	0.0	0.0
+167	No Trt Lynx MultiStory in Lynx Hab ..... Area (i.e. acres) ..... lynx_ms 1 | action_type bb cs-bb ct ct-bb ct-ub gp-ct-ub pct sc-bb ss ub ..... layer4 B L U W | period 3	HARD	1.0	null	null	0.0	null	1383	z_123	0.0	0.0	0.0
+168	No Trt Lynx MultiStory in Lynx Hab ..... Area (i.e. acres) ..... lynx_ms 1 | action_type bb cs-bb ct ct-bb ct-ub gp-ct-ub pct sc-bb ss ub ..... layer4 B L U W | period 4	HARD	1.0	null	null	0.0	null	1384	z_124	0.0	0.0	0.0
+169	No Trt Lynx MultiStory in Lynx Hab ..... Area (i.e. acres) ..... lynx_ms 1 | action_type bb cs-bb ct ct-bb ct-ub gp-ct-ub pct sc-bb ss ub ..... layer4 B L U W | period 5	HARD	1.0	null	null	0.0	null	1385	z_125	0.0	-0.7818426143998445	0.0
+170	No Trt Lynx MultiStory in Lynx Hab ..... Area (i.e. acres) ..... lynx_ms 1 | action_type bb cs-bb ct ct-bb ct-ub gp-ct-ub pct sc-bb ss ub ..... layer4 B L U W | period 6	HARD	1.0	null	null	0.0	null	1386	z_126	0.0	-2.900177919753332	0.0
+171	No Trt Lynx MultiStory in Lynx Hab ..... Area (i.e. acres) ..... lynx_ms 1 | action_type bb cs-bb ct ct-bb ct-ub gp-ct-ub pct sc-bb ss ub ..... layer4 B L U W | period 7	HARD	1.0	null	null	0.0	null	1387	z_127	0.0	-3.5800899666578205	0.0
+172	No Trt Lynx MultiStory in Lynx Hab ..... Area (i.e. acres) ..... lynx_ms 1 | action_type bb cs-bb ct ct-bb ct-ub gp-ct-ub pct sc-bb ss ub ..... layer4 B L U W | period 8	HARD	1.0	null	null	0.0	null	1388	z_128	0.0	-4.853234956866057	0.0
+173	No Trt Lynx MultiStory in Lynx Hab ..... Area (i.e. acres) ..... lynx_ms 1 | action_type bb cs-bb ct ct-bb ct-ub gp-ct-ub pct sc-bb ss ub ..... layer4 B L U W | period 9	HARD	1.0	null	null	0.0	null	1389	z_129	0.0	-5.89323057286464	0.0
+174	No Trt Lynx MultiStory in Lynx Hab ..... Area (i.e. acres) ..... lynx_ms 1 | action_type bb cs-bb ct ct-bb ct-ub gp-ct-ub pct sc-bb ss ub ..... layer4 B L U W | period 10	HARD	1.0	null	null	0.0	null	1390	z_130	0.0	0.0	0.0
+175	No Trt Lynx MultiStory in Lynx Hab ..... Area (i.e. acres) ..... lynx_ms 1 | action_type bb cs-bb ct ct-bb ct-ub gp-ct-ub pct sc-bb ss ub ..... layer4 B L U W | period 11	HARD	1.0	null	null	0.0	null	1391	z_131	0.0	0.0	0.0
+176	No Trt Lynx MultiStory in Lynx Hab ..... Area (i.e. acres) ..... lynx_ms 1 | action_type bb cs-bb ct ct-bb ct-ub gp-ct-ub pct sc-bb ss ub ..... layer4 B L U W | period 12	HARD	1.0	null	null	0.0	null	1392	z_132	0.0	0.0	0.0
+177	No Trt Lynx MultiStory in Lynx Hab ..... Area (i.e. acres) ..... lynx_ms 1 | action_type bb cs-bb ct ct-bb ct-ub gp-ct-ub pct sc-bb ss ub ..... layer4 B L U W | period 13	HARD	1.0	null	null	0.0	null	1393	z_133	0.0	0.0	0.0
+178	No Trt Lynx MultiStory in Lynx Hab ..... Area (i.e. acres) ..... lynx_ms 1 | action_type bb cs-bb ct ct-bb ct-ub gp-ct-ub pct sc-bb ss ub ..... layer4 B L U W | period 14	HARD	1.0	null	null	0.0	null	1394	z_134	0.0	0.0	0.0
+179	No Trt Lynx MultiStory in Lynx Hab ..... Area (i.e. acres) ..... lynx_ms 1 | action_type bb cs-bb ct ct-bb ct-ub gp-ct-ub pct sc-bb ss ub ..... layer4 B L U W | period 15	HARD	1.0	null	null	0.0	null	1395	z_135	0.0	0.0	0.0
+180	Lynx Harv 15% MAG 2 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 2 | layer4 B L U W | period 1	HARD	1.0	null	null	44182.0	null	1396	z_136	2992.303378953574	0.0	0.0
+181	Lynx Harv 15% MAG 2 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 2 | layer4 B L U W | period 2	HARD	1.0	null	null	44182.0	null	1397	z_137	18319.065944843896	0.0	0.0
+182	Lynx Harv 15% MAG 2 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 2 | layer4 B L U W | period 3	HARD	1.0	null	null	44182.0	null	1398	z_138	5497.408756756479	0.0	0.0
+183	Lynx Harv 15% MAG 2 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 2 | layer4 B L U W | period 4	HARD	1.0	null	null	44182.0	null	1399	z_139	1505.7452789707872	0.0	0.0
+184	Lynx Harv 15% MAG 2 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 2 | layer4 B L U W | period 5	HARD	1.0	null	null	44182.0	null	1400	z_140	2071.062137157675	0.0	0.0
+185	Lynx Harv 15% MAG 2 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 2 | layer4 B L U W | period 6	HARD	1.0	null	null	44182.0	null	1401	z_141	1819.7338292335608	0.0	0.0
+186	Lynx Harv 15% MAG 2 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 2 | layer4 B L U W | period 7	HARD	1.0	null	null	44182.0	null	1402	z_142	19264.560211427626	0.0	0.0
+187	Lynx Harv 15% MAG 2 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 2 | layer4 B L U W | period 8	HARD	1.0	null	null	44182.0	null	1403	z_143	5440.637237292527	0.0	0.0
+188	Lynx Harv 15% MAG 2 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 2 | layer4 B L U W | period 9	HARD	1.0	null	null	44182.0	null	1404	z_144	6874.259239581053	0.0	0.0
+189	Lynx Harv 15% MAG 2 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 2 | layer4 B L U W | period 10	HARD	1.0	null	null	44182.0	null	1405	z_145	5905.94987813228	0.0	0.0
+190	Lynx Harv 15% MAG 2 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 2 | layer4 B L U W | period 11	HARD	1.0	null	null	44182.0	null	1406	z_146	1833.7722637345807	0.0	0.0
+191	Lynx Harv 15% MAG 2 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 2 | layer4 B L U W | period 12	HARD	1.0	null	null	44182.0	null	1407	z_147	4185.492460815312	0.0	0.0
+192	Lynx Harv 15% MAG 2 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 2 | layer4 B L U W | period 13	HARD	1.0	null	null	44182.0	null	1408	z_148	8116.429062060341	0.0	0.0
+193	Lynx Harv 15% MAG 2 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 2 | layer4 B L U W | period 14	HARD	1.0	null	null	44182.0	null	1409	z_149	9934.329894441496	0.0	0.0
+194	Lynx Harv 15% MAG 2 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 2 | layer4 B L U W | period 15	HARD	1.0	null	null	44182.0	null	1410	z_150	10494.399403946023	0.0	0.0
+195	Lynx Harv 15% MAG 3 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 3 | layer4 B L U W | period 1	HARD	1.0	null	null	1738.0	null	1411	z_151	183.71345185580282	0.0	0.0
+196	Lynx Harv 15% MAG 3 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 3 | layer4 B L U W | period 2	HARD	1.0	null	null	1738.0	null	1412	z_152	738.7971085614224	0.0	0.0
+197	Lynx Harv 15% MAG 3 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 3 | layer4 B L U W | period 3	HARD	1.0	null	null	1738.0	null	1413	z_153	146.6954008830774	0.0	0.0
+198	Lynx Harv 15% MAG 3 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 3 | layer4 B L U W | period 4	HARD	1.0	null	null	1738.0	null	1414	z_154	232.78624167852684	0.0	0.0
+199	Lynx Harv 15% MAG 3 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 3 | layer4 B L U W | period 5	HARD	1.0	null	null	1738.0	null	1415	z_155	116.85492629535366	0.0	0.0
+200	Lynx Harv 15% MAG 3 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 3 | layer4 B L U W | period 6	HARD	1.0	null	null	1738.0	null	1416	z_156	207.06480110271244	0.0	0.0
+201	Lynx Harv 15% MAG 3 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 3 | layer4 B L U W | period 7	HARD	1.0	null	null	1738.0	null	1417	z_157	737.4062561046244	0.0	0.0
+202	Lynx Harv 15% MAG 3 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 3 | layer4 B L U W | period 8	HARD	1.0	null	null	1738.0	null	1418	z_158	320.9499009918919	0.0	0.0
+203	Lynx Harv 15% MAG 3 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 3 | layer4 B L U W | period 9	HARD	1.0	null	null	1738.0	null	1419	z_159	421.87300973896396	0.0	0.0
+204	Lynx Harv 15% MAG 3 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 3 | layer4 B L U W | period 10	HARD	1.0	null	null	1738.0	null	1420	z_160	198.95933211007474	0.0	0.0
+205	Lynx Harv 15% MAG 3 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 3 | layer4 B L U W | period 11	HARD	1.0	null	null	1738.0	null	1421	z_161	266.49062929218394	0.0	0.0
+206	Lynx Harv 15% MAG 3 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 3 | layer4 B L U W | period 12	HARD	1.0	null	null	1738.0	null	1422	z_162	197.1534413947151	0.0	0.0
+207	Lynx Harv 15% MAG 3 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 3 | layer4 B L U W | period 13	HARD	1.0	null	null	1738.0	null	1423	z_163	199.95411819846103	0.0	0.0
+208	Lynx Harv 15% MAG 3 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 3 | layer4 B L U W | period 14	HARD	1.0	null	null	1738.0	null	1424	z_164	391.3390897718211	0.0	0.0
+209	Lynx Harv 15% MAG 3 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 3 | layer4 B L U W | period 15	HARD	1.0	null	null	1738.0	null	1425	z_165	437.91301335849414	0.0	0.0
+210	Lynx Harv 15% MAG 4 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 4 | layer4 B L U W | period 1	HARD	1.0	null	null	950.0	null	1426	z_166	71.0229990211227	0.0	0.0
+211	Lynx Harv 15% MAG 4 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 4 | layer4 B L U W | period 2	HARD	1.0	null	null	950.0	null	1427	z_167	64.6535875714264	0.0	0.0
+212	Lynx Harv 15% MAG 4 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 4 | layer4 B L U W | period 3	HARD	1.0	null	null	950.0	null	1428	z_168	176.04240061077851	0.0	0.0
+213	Lynx Harv 15% MAG 4 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 4 | layer4 B L U W | period 4	HARD	1.0	null	null	950.0	null	1429	z_169	108.20969479563496	0.0	0.0
+214	Lynx Harv 15% MAG 4 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 4 | layer4 B L U W | period 5	HARD	1.0	null	null	950.0	null	1430	z_170	54.000470670425166	0.0	0.0
+215	Lynx Harv 15% MAG 4 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 4 | layer4 B L U W | period 6	HARD	1.0	null	null	950.0	null	1431	z_171	49.88499419191468	0.0	0.0
+216	Lynx Harv 15% MAG 4 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 4 | layer4 B L U W | period 7	HARD	1.0	null	null	950.0	null	1432	z_172	97.85779318235966	0.0	0.0
+217	Lynx Harv 15% MAG 4 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 4 | layer4 B L U W | period 8	HARD	1.0	null	null	950.0	null	1433	z_173	123.82789037790053	0.0	0.0
+218	Lynx Harv 15% MAG 4 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 4 | layer4 B L U W | period 9	HARD	1.0	null	null	950.0	null	1434	z_174	257.8353314706805	0.0	0.0
+219	Lynx Harv 15% MAG 4 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 4 | layer4 B L U W | period 10	HARD	1.0	null	null	950.0	null	1435	z_175	89.81293482141753	0.0	0.0
+220	Lynx Harv 15% MAG 4 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 4 | layer4 B L U W | period 11	HARD	1.0	null	null	950.0	null	1436	z_176	51.47005884643536	0.0	0.0
+221	Lynx Harv 15% MAG 4 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 4 | layer4 B L U W | period 12	HARD	1.0	null	null	950.0	null	1437	z_177	43.98362609735278	0.0	0.0
+222	Lynx Harv 15% MAG 4 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 4 | layer4 B L U W | period 13	HARD	1.0	null	null	950.0	null	1438	z_178	87.17475678171431	0.0	0.0
+223	Lynx Harv 15% MAG 4 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 4 | layer4 B L U W | period 14	HARD	1.0	null	null	950.0	null	1439	z_179	169.46550773296542	0.0	0.0
+224	Lynx Harv 15% MAG 4 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 4 | layer4 B L U W | period 15	HARD	1.0	null	null	950.0	null	1440	z_180	39.95866096103734	0.0	0.0
+225	Lynx Harv 15% MAG 5 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 5 | layer4 B L U W | period 1	HARD	1.0	null	null	18386.0	null	1441	z_181	1652.0627543651108	0.0	0.0
+226	Lynx Harv 15% MAG 5 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 5 | layer4 B L U W | period 2	HARD	1.0	null	null	18386.0	null	1442	z_182	2309.5920490729877	0.0	0.0
+227	Lynx Harv 15% MAG 5 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 5 | layer4 B L U W | period 3	HARD	1.0	null	null	18386.0	null	1443	z_183	5380.268414486861	0.0	0.0
+228	Lynx Harv 15% MAG 5 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 5 | layer4 B L U W | period 4	HARD	1.0	null	null	18386.0	null	1444	z_184	7342.002068847281	0.0	0.0
+229	Lynx Harv 15% MAG 5 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 5 | layer4 B L U W | period 5	HARD	1.0	null	null	18386.0	null	1445	z_185	1083.1686552740869	0.0	0.0
+230	Lynx Harv 15% MAG 5 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 5 | layer4 B L U W | period 6	HARD	1.0	null	null	18386.0	null	1446	z_186	1079.500235020737	0.0	0.0
+231	Lynx Harv 15% MAG 5 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 5 | layer4 B L U W | period 7	HARD	1.0	null	null	18386.0	null	1447	z_187	405.09651696352813	0.0	0.0
+232	Lynx Harv 15% MAG 5 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 5 | layer4 B L U W | period 8	HARD	1.0	null	null	18386.0	null	1448	z_188	1058.5630149036115	0.0	0.0
+233	Lynx Harv 15% MAG 5 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 5 | layer4 B L U W | period 9	HARD	1.0	null	null	18386.0	null	1449	z_189	5457.9640329569875	0.0	0.0
+234	Lynx Harv 15% MAG 5 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 5 | layer4 B L U W | period 10	HARD	1.0	null	null	18386.0	null	1450	z_190	667.3970856842969	0.0	0.0
+235	Lynx Harv 15% MAG 5 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 5 | layer4 B L U W | period 11	HARD	1.0	null	null	18386.0	null	1451	z_191	2952.48234617565	0.0	0.0
+236	Lynx Harv 15% MAG 5 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 5 | layer4 B L U W | period 12	HARD	1.0	null	null	18386.0	null	1452	z_192	3676.0849434680067	0.0	0.0
+237	Lynx Harv 15% MAG 5 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 5 | layer4 B L U W | period 13	HARD	1.0	null	null	18386.0	null	1453	z_193	8970.560101543482	0.0	0.0
+238	Lynx Harv 15% MAG 5 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 5 | layer4 B L U W | period 14	HARD	1.0	null	null	18386.0	null	1454	z_194	1693.8557171563493	0.0	0.0
+239	Lynx Harv 15% MAG 5 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 5 | layer4 B L U W | period 15	HARD	1.0	null	null	18386.0	null	1455	z_195	2218.562824883763	0.0	0.0
+240	Lynx Harv 15% MAG 6 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 6 | layer4 B L U W | period 1	HARD	1.0	null	null	22190.0	null	1456	z_196	11027.959593594007	0.0	0.0
+241	Lynx Harv 15% MAG 6 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 6 | layer4 B L U W | period 2	HARD	1.0	null	null	22190.0	null	1457	z_197	12101.253931031106	0.0	0.0
+242	Lynx Harv 15% MAG 6 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 6 | layer4 B L U W | period 3	HARD	1.0	null	null	22190.0	null	1458	z_198	7742.243524871925	0.0	0.0
+243	Lynx Harv 15% MAG 6 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 6 | layer4 B L U W | period 4	HARD	1.0	null	null	22190.0	null	1459	z_199	8558.439854014738	0.0	0.0
+244	Lynx Harv 15% MAG 6 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 6 | layer4 B L U W | period 5	HARD	1.0	null	null	22190.0	null	1460	z_200	2385.151521205981	0.0	0.0
+245	Lynx Harv 15% MAG 6 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 6 | layer4 B L U W | period 6	HARD	1.0	null	null	22190.0	null	1461	z_201	1015.7842317759657	0.0	0.0
+246	Lynx Harv 15% MAG 6 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 6 | layer4 B L U W | period 7	HARD	1.0	null	null	22190.0	null	1462	z_202	2777.8683808176625	0.0	0.0
+247	Lynx Harv 15% MAG 6 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 6 | layer4 B L U W | period 8	HARD	1.0	null	null	22190.0	null	1463	z_203	3106.980204301033	0.0	0.0
+248	Lynx Harv 15% MAG 6 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 6 | layer4 B L U W | period 9	HARD	1.0	null	null	22190.0	null	1464	z_204	8473.699941743924	0.0	0.0
+249	Lynx Harv 15% MAG 6 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 6 | layer4 B L U W | period 10	HARD	1.0	null	null	22190.0	null	1465	z_205	698.5945506134469	0.0	0.0
+250	Lynx Harv 15% MAG 6 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 6 | layer4 B L U W | period 11	HARD	1.0	null	null	22190.0	null	1466	z_206	3253.8438167015943	0.0	0.0
+251	Lynx Harv 15% MAG 6 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 6 | layer4 B L U W | period 12	HARD	1.0	null	null	22190.0	null	1467	z_207	1040.0539451820644	0.0	0.0
+252	Lynx Harv 15% MAG 6 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 6 | layer4 B L U W | period 13	HARD	1.0	null	null	22190.0	null	1468	z_208	2688.129338180085	0.0	0.0
+253	Lynx Harv 15% MAG 6 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 6 | layer4 B L U W | period 14	HARD	1.0	null	null	22190.0	null	1469	z_209	1474.694389833601	0.0	0.0
+254	Lynx Harv 15% MAG 6 ..... Area (i.e. acres) ..... action_type bb cs-bb sc-bb ..... layer3 6 | layer4 B L U W | period 15	HARD	1.0	null	null	22190.0	null	1470	z_210	1452.9190529667947	0.0	0.0
+255	VegI Low Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass F H I L M P Q ..... period 1	SOFT	1.0	80700.0	1.0	254204.0	1.0	0	y_0	249220.1361249619	0.0	0.0
+256	VegI Low Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass F H I L M P Q ..... period 2	SOFT	1.0	80700.0	1.0	254204.0	1.0	1	y_1	235743.29851419973	0.0	0.0
+257	VegI Low Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass F H I L M P Q ..... period 3	SOFT	1.0	80700.0	1.0	254204.0	1.0	2	y_2	234343.13836038255	0.0	0.0
+258	VegI Low Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass F H I L M P Q ..... period 4	SOFT	1.0	80700.0	1.0	254204.0	1.0	3	y_3	232142.03720329635	0.0	0.0
+259	VegI Low Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass F H I L M P Q ..... period 5	SOFT	1.0	80700.0	1.0	254204.0	1.0	4	y_4	230120.41679816064	0.0	0.0
+260	VegI Low Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass F H I L M P Q ..... period 6	SOFT	1.0	80700.0	1.0	254204.0	1.0	5	y_5	228264.09931531732	0.0	0.0
+261	VegI Low Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass F H I L M P Q ..... period 7	SOFT	1.0	80700.0	0.5	254204.0	0.5	6	y_6	215579.29422269555	0.0	0.0
+262	VegI Low Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass F H I L M P Q ..... period 8	SOFT	1.0	80700.0	0.5	254204.0	0.5	7	y_7	214372.90867779142	0.0	0.0
+263	VegI Low Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass F H I L M P Q ..... period 9	SOFT	1.0	80700.0	0.5	254204.0	0.5	8	y_8	213758.48159401258	0.0	0.0
+264	VegI Low Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass F H I L M P Q ..... period 10	SOFT	1.0	80700.0	0.5	254204.0	0.5	9	y_9	213049.9985483555	0.0	0.0
+265	VegI Low Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass F H I L M P Q ..... period 11	SOFT	1.0	80700.0	0.5	254204.0	0.5	10	y_10	213403.55588614164	0.0	0.0
+266	VegI Low Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass F H I L M P Q ..... period 12	SOFT	1.0	80700.0	0.5	254204.0	0.5	11	y_11	213423.54209083403	0.0	0.0
+267	VegI Low Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass F H I L M P Q ..... period 13	SOFT	1.0	80700.0	0.5	254204.0	0.5	12	y_12	210440.9523518532	0.0	0.0
+268	VegI Low Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass F H I L M P Q ..... period 14	SOFT	1.0	80700.0	0.5	254204.0	0.5	13	y_13	210541.58286745453	0.0	0.0
+269	VegI Low Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass F H I L M P Q ..... period 15	SOFT	1.0	80700.0	0.5	254204.0	0.5	14	y_14	210468.43531794864	0.0	0.0
+270	FGH Low Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass F H I L M P Q ..... period 1	SOFT	1.0	70132.0	1.0	298059.0	1.0	15	y_15	324579.4512219572	0.0	26520.45122195722
+271	FGH Low Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass F H I L M P Q ..... period 2	SOFT	1.0	70132.0	1.0	298059.0	1.0	16	y_16	298059.0	0.0	0.0
+272	FGH Low Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass F H I L M P Q ..... period 3	SOFT	1.0	70132.0	1.0	298059.0	1.0	17	y_17	298059.0	0.0	0.0
+273	FGH Low Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass F H I L M P Q ..... period 4	SOFT	1.0	70132.0	1.0	298059.0	1.0	18	y_18	298059.0	0.0	0.0
+274	FGH Low Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass F H I L M P Q ..... period 5	SOFT	1.0	70132.0	1.0	298059.0	1.0	19	y_19	328409.67420134484	0.0	30350.67420134484
+275	FGH Low Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass F H I L M P Q ..... period 6	SOFT	1.0	70132.0	1.0	298059.0	1.0	20	y_20	303095.84367885394	0.0	5036.84367885394
+276	FGH Low Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass F H I L M P Q ..... period 7	SOFT	1.0	70132.0	0.5	298059.0	0.5	21	y_21	320209.1801674661	0.0	11075.090083733056
+277	FGH Low Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass F H I L M P Q ..... period 8	SOFT	1.0	70132.0	0.5	298059.0	0.5	22	y_22	325052.46282659186	0.0	13496.731413295929
+278	FGH Low Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass F H I L M P Q ..... period 9	SOFT	1.0	70132.0	0.5	298059.0	0.5	23	y_23	326329.41620272916	0.0	14135.20810136458
+279	FGH Low Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass F H I L M P Q ..... period 10	SOFT	1.0	70132.0	0.5	298059.0	0.5	24	y_24	324689.99508126325	0.0	13315.497540631623
+280	FGH Low Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass F H I L M P Q ..... period 11	SOFT	1.0	70132.0	0.5	298059.0	0.5	25	y_25	349341.98889047874	0.0	25641.49444523937
+281	FGH Low Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass F H I L M P Q ..... period 12	SOFT	1.0	70132.0	0.5	298059.0	0.5	26	y_26	344832.31046717864	0.0	23386.65523358932
+282	FGH Low Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass F H I L M P Q ..... period 13	SOFT	1.0	70132.0	0.5	298059.0	0.5	27	y_27	311713.68610320496	0.0	6827.343051602482
+283	FGH Low Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass F H I L M P Q ..... period 14	SOFT	1.0	70132.0	0.5	298059.0	0.5	28	y_28	298059.0	0.0	0.0
+284	FGH Low Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass F H I L M P Q ..... period 15	SOFT	1.0	70132.0	0.5	298059.0	0.5	29	y_29	297905.2295174977	0.0	0.0
+285	CDE Low Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass F H I L M P Q ..... period 1	SOFT	1.0	138347.0	1.0	272624.0	1.0	30	y_30	272566.4863653459	0.0	0.0
+286	CDE Low Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass F H I L M P Q ..... period 2	SOFT	1.0	138347.0	1.0	272624.0	1.0	31	y_31	272624.0	0.0	0.0
+287	CDE Low Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass F H I L M P Q ..... period 3	SOFT	1.0	138347.0	1.0	272624.0	1.0	32	y_32	267604.9976273722	0.0	0.0
+288	CDE Low Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass F H I L M P Q ..... period 4	SOFT	1.0	138347.0	1.0	272624.0	1.0	33	y_33	272624.0	0.0	0.0
+289	CDE Low Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass F H I L M P Q ..... period 5	SOFT	1.0	138347.0	1.0	272624.0	1.0	34	y_34	282243.7349128925	0.0	9619.734912892513
+290	CDE Low Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass F H I L M P Q ..... period 6	SOFT	1.0	138347.0	1.0	272624.0	1.0	35	y_35	290513.5090917697	0.0	17889.509091769694
+291	CDE Low Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass F H I L M P Q ..... period 7	SOFT	1.0	138347.0	0.5	272624.0	0.5	36	y_36	293973.376849706	0.0	10674.688424852997
+292	CDE Low Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass F H I L M P Q ..... period 8	SOFT	1.0	138347.0	0.5	272624.0	0.5	37	y_37	285840.514925003	0.0	6608.257462501497
+293	CDE Low Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass F H I L M P Q ..... period 9	SOFT	1.0	138347.0	0.5	272624.0	0.5	38	y_38	292001.4902075862	0.0	9688.745103793102
+294	CDE Low Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass F H I L M P Q ..... period 10	SOFT	1.0	138347.0	0.5	272624.0	0.5	39	y_39	293909.36417514354	0.0	10642.682087571768
+295	CDE Low Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass F H I L M P Q ..... period 11	SOFT	1.0	138347.0	0.5	272624.0	0.5	40	y_40	315341.8150837903	0.0	21358.90754189514
+296	CDE Low Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass F H I L M P Q ..... period 12	SOFT	1.0	138347.0	0.5	272624.0	0.5	41	y_41	316670.19852766756	0.0	22023.099263833778
+297	CDE Low Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass F H I L M P Q ..... period 13	SOFT	1.0	138347.0	0.5	272624.0	0.5	42	y_42	309543.30438486254	0.0	18459.65219243127
+298	CDE Low Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass F H I L M P Q ..... period 14	SOFT	1.0	138347.0	0.5	272624.0	0.5	43	y_43	307203.37072320835	0.0	17289.685361604177
+299	CDE Low Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass F H I L M P Q ..... period 15	SOFT	1.0	138347.0	0.5	272624.0	0.5	44	y_44	310515.4314824211	0.0	18945.71574121056
+300	B Low Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass F H I L M P Q ..... period 1	SOFT	1.0	173657.0	1.0	281837.0	1.0	45	y_45	252394.02319037903	0.0	0.0
+301	B Low Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass F H I L M P Q ..... period 2	SOFT	1.0	173657.0	1.0	281837.0	1.0	46	y_46	256736.30812288664	0.0	0.0
+302	B Low Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass F H I L M P Q ..... period 3	SOFT	1.0	173657.0	1.0	281837.0	1.0	47	y_47	268559.64670462447	0.0	0.0
+303	B Low Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass F H I L M P Q ..... period 4	SOFT	1.0	173657.0	1.0	281837.0	1.0	48	y_48	258958.00035725322	0.0	0.0
+304	B Low Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass F H I L M P Q ..... period 5	SOFT	1.0	173657.0	1.0	281837.0	1.0	49	y_49	264194.94418841077	0.0	0.0
+305	B Low Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass F H I L M P Q ..... period 6	SOFT	1.0	173657.0	1.0	281837.0	1.0	50	y_50	281837.0	0.0	0.0
+306	B Low Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass F H I L M P Q ..... period 7	SOFT	1.0	173657.0	0.5	281837.0	0.5	51	y_51	281837.0	0.0	0.0
+307	B Low Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass F H I L M P Q ..... period 8	SOFT	1.0	173657.0	0.5	281837.0	0.5	52	y_52	277356.48270624835	0.0	0.0
+308	B Low Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass F H I L M P Q ..... period 9	SOFT	1.0	173657.0	0.5	281837.0	0.5	53	y_53	281837.0	0.0	0.0
+309	B Low Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass F H I L M P Q ..... period 10	SOFT	1.0	173657.0	0.5	281837.0	0.5	54	y_54	281837.0	0.0	0.0
+310	B Low Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass F H I L M P Q ..... period 11	SOFT	1.0	173657.0	0.5	281837.0	0.5	55	y_55	276368.2065734314	0.0	0.0
+311	B Low Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass F H I L M P Q ..... period 12	SOFT	1.0	173657.0	0.5	281837.0	0.5	56	y_56	281837.0	0.0	0.0
+312	B Low Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass F H I L M P Q ..... period 13	SOFT	1.0	173657.0	0.5	281837.0	0.5	57	y_57	277554.3185762361	0.0	0.0
+313	B Low Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass F H I L M P Q ..... period 14	SOFT	1.0	173657.0	0.5	281837.0	0.5	58	y_58	281837.0	0.0	0.0
+314	B Low Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass F H I L M P Q ..... period 15	SOFT	1.0	173657.0	0.5	281837.0	0.5	59	y_59	266101.63038916787	0.0	0.0
+315	I Med Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass G J N R ..... period 1	SOFT	1.0	80700.0	1.0	221924.0	1.0	60	y_60	95313.6561863377	0.0	0.0
+316	I Med Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass G J N R ..... period 2	SOFT	1.0	80700.0	1.0	221924.0	1.0	61	y_61	113417.56054407297	0.0	0.0
+317	I Med Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass G J N R ..... period 3	SOFT	1.0	80700.0	1.0	221924.0	1.0	62	y_62	186861.31898281086	0.0	0.0
+318	I Med Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass G J N R ..... period 4	SOFT	1.0	80700.0	1.0	221924.0	1.0	63	y_63	189165.91764998858	0.0	0.0
+319	I Med Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass G J N R ..... period 5	SOFT	1.0	80700.0	1.0	221924.0	1.0	64	y_64	191284.9292121204	0.0	0.0
+320	I Med Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass G J N R ..... period 6	SOFT	1.0	80700.0	1.0	221924.0	1.0	65	y_65	194694.55311417047	0.0	0.0
+321	I Med Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass G J N R ..... period 7	SOFT	1.0	80700.0	0.5	221924.0	0.5	66	y_66	207379.35820679227	0.0	0.0
+322	I Med Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass G J N R ..... period 8	SOFT	1.0	80700.0	0.5	221924.0	0.5	67	y_67	208585.7437516962	0.0	0.0
+323	I Med Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass G J N R ..... period 9	SOFT	1.0	80700.0	0.5	221924.0	0.5	68	y_68	209200.17083547523	0.0	0.0
+324	I Med Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass G J N R ..... period 10	SOFT	1.0	80700.0	0.5	221924.0	0.5	69	y_69	209908.65388113188	0.0	0.0
+325	I Med Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass G J N R ..... period 11	SOFT	1.0	80700.0	0.5	221924.0	0.5	70	y_70	209555.09654334607	0.0	0.0
+326	I Med Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass G J N R ..... period 12	SOFT	1.0	80700.0	0.5	221924.0	0.5	71	y_71	209535.1103386537	0.0	0.0
+327	I Med Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass G J N R ..... period 13	SOFT	1.0	80700.0	0.5	221924.0	0.5	72	y_72	212517.7000776345	0.0	0.0
+328	I Med Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass G J N R ..... period 14	SOFT	1.0	80700.0	0.5	221924.0	0.5	73	y_73	212417.0695620331	0.0	0.0
+329	I Med Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass G J N R ..... period 15	SOFT	1.0	80700.0	0.5	221924.0	0.5	74	y_74	212490.21711153886	0.0	0.0
+330	FGH Med Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass G J N R ..... period 1	SOFT	1.0	219161.0	1.0	385723.0	1.0	75	y_75	450118.4902825889	0.0	64395.49028258887
+331	FGH Med Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass G J N R ..... period 2	SOFT	1.0	219161.0	1.0	385723.0	1.0	76	y_76	482526.09514310485	0.0	96803.09514310485
+332	FGH Med Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass G J N R ..... period 3	SOFT	1.0	219161.0	1.0	385723.0	1.0	77	y_77	485927.34379643406	0.0	100204.34379643406
+333	FGH Med Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass G J N R ..... period 4	SOFT	1.0	219161.0	1.0	385723.0	1.0	78	y_78	437442.0953657175	0.0	51719.09536571748
+334	FGH Med Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass G J N R ..... period 5	SOFT	1.0	219161.0	1.0	385723.0	1.0	79	y_79	385723.0	0.0	0.0
+335	FGH Med Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass G J N R ..... period 6	SOFT	1.0	219161.0	1.0	385723.0	1.0	80	y_80	385723.0	0.0	0.0
+336	FGH Med Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass G J N R ..... period 7	SOFT	1.0	219161.0	0.5	385723.0	0.5	81	y_81	385723.0	0.0	0.0
+337	FGH Med Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass G J N R ..... period 8	SOFT	1.0	219161.0	0.5	385723.0	0.5	82	y_82	439148.14761211677	0.0	26712.573806058383
+338	FGH Med Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass G J N R ..... period 9	SOFT	1.0	219161.0	0.5	385723.0	0.5	83	y_83	435904.4313084343	0.0	25090.715654217143
+339	FGH Med Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass G J N R ..... period 10	SOFT	1.0	219161.0	0.5	385723.0	0.5	84	y_84	401146.59853702626	0.0	7711.799268513132
+340	FGH Med Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass G J N R ..... period 11	SOFT	1.0	219161.0	0.5	385723.0	0.5	85	y_85	350956.90983759036	0.0	0.0
+341	FGH Med Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass G J N R ..... period 12	SOFT	1.0	219161.0	0.5	385723.0	0.5	86	y_86	356041.69250395335	0.0	0.0
+342	FGH Med Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass G J N R ..... period 13	SOFT	1.0	219161.0	0.5	385723.0	0.5	87	y_87	342457.33292786113	0.0	0.0
+343	FGH Med Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass G J N R ..... period 14	SOFT	1.0	219161.0	0.5	385723.0	0.5	88	y_88	356821.6875698348	0.0	0.0
+344	FGH Med Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass G J N R ..... period 15	SOFT	1.0	219161.0	0.5	385723.0	0.5	89	y_89	350673.7064068118	0.0	0.0
+345	CDE Med Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass G J N R ..... period 1	SOFT	1.0	109864.0	1.0	199382.0	1.0	90	y_90	89162.31730246526	0.0	20701.682697534736
+346	CDE Med Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass G J N R ..... period 2	SOFT	1.0	109864.0	1.0	199382.0	1.0	91	y_91	71886.78078485648	0.0	37977.219215143516
+347	CDE Med Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass G J N R ..... period 3	SOFT	1.0	109864.0	1.0	199382.0	1.0	92	y_92	77383.58874124874	0.0	32480.411258751265
+348	CDE Med Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass G J N R ..... period 4	SOFT	1.0	109864.0	1.0	199382.0	1.0	93	y_93	76974.27072271645	0.0	32889.72927728355
+349	CDE Med Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass G J N R ..... period 5	SOFT	1.0	109864.0	1.0	199382.0	1.0	94	y_94	70374.61851413385	0.0	39489.38148586615
+350	CDE Med Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass G J N R ..... period 6	SOFT	1.0	109864.0	1.0	199382.0	1.0	95	y_95	55511.39163956485	0.0	54352.60836043515
+351	CDE Med Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass G J N R ..... period 7	SOFT	1.0	109864.0	0.5	199382.0	0.5	96	y_96	50608.578775894	0.0	29627.710612053
+352	CDE Med Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass G J N R ..... period 8	SOFT	1.0	109864.0	0.5	199382.0	0.5	97	y_97	57322.36906616666	0.0	26270.81546691667
+353	CDE Med Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass G J N R ..... period 9	SOFT	1.0	109864.0	0.5	199382.0	0.5	98	y_98	53934.19916808151	0.0	27964.900415959244
+354	CDE Med Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass G J N R ..... period 10	SOFT	1.0	109864.0	0.5	199382.0	0.5	99	y_99	54310.49776353664	0.0	27776.75111823168
+355	CDE Med Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass G J N R ..... period 11	SOFT	1.0	109864.0	0.5	199382.0	0.5	100	y_100	41851.72624806487	0.0	34006.13687596757
+356	CDE Med Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass G J N R ..... period 12	SOFT	1.0	109864.0	0.5	199382.0	0.5	101	y_101	41394.0606569501	0.0	34234.969671524945
+357	CDE Med Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass G J N R ..... period 13	SOFT	1.0	109864.0	0.5	199382.0	0.5	102	y_102	48455.96412676263	0.0	30704.017936618686
+358	CDE Med Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass G J N R ..... period 14	SOFT	1.0	109864.0	0.5	199382.0	0.5	103	y_103	49655.62628281931	0.0	30104.186858590347
+359	CDE Med Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass G J N R ..... period 15	SOFT	1.0	109864.0	0.5	199382.0	0.5	104	y_104	47704.448301364006	0.0	31079.775849317997
+360	B Med Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass G J N R ..... period 1	SOFT	1.0	2847.0	1.0	51243.0	1.0	105	y_105	44058.634017744094	0.0	0.0
+361	B Med Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass G J N R ..... period 2	SOFT	1.0	2847.0	1.0	51243.0	1.0	106	y_106	49020.30241555835	0.0	0.0
+362	B Med Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass G J N R ..... period 3	SOFT	1.0	2847.0	1.0	51243.0	1.0	107	y_107	44022.162237896424	0.0	0.0
+363	B Med Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass G J N R ..... period 4	SOFT	1.0	2847.0	1.0	51243.0	1.0	108	y_108	39933.96275428762	0.0	0.0
+364	B Med Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass G J N R ..... period 5	SOFT	1.0	2847.0	1.0	51243.0	1.0	109	y_109	41519.993494053895	0.0	0.0
+365	B Med Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass G J N R ..... period 6	SOFT	1.0	2847.0	1.0	51243.0	1.0	110	y_110	21302.53971701619	0.0	0.0
+366	B Med Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass G J N R ..... period 7	SOFT	1.0	2847.0	0.5	51243.0	0.5	111	y_111	13534.024466650924	0.0	0.0
+367	B Med Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass G J N R ..... period 8	SOFT	1.0	2847.0	0.5	51243.0	0.5	112	y_112	20147.99562662004	0.0	0.0
+368	B Med Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass G J N R ..... period 9	SOFT	1.0	2847.0	0.5	51243.0	0.5	113	y_113	37505.92198344986	0.0	0.0
+369	B Med Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass G J N R ..... period 10	SOFT	1.0	2847.0	0.5	51243.0	0.5	114	y_114	36752.11356758611	0.0	0.0
+370	B Med Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass G J N R ..... period 11	SOFT	1.0	2847.0	0.5	51243.0	0.5	115	y_115	48675.45531974181	0.0	0.0
+371	B Med Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass G J N R ..... period 12	SOFT	1.0	2847.0	0.5	51243.0	0.5	116	y_116	46994.35630535879	0.0	0.0
+372	B Med Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass G J N R ..... period 13	SOFT	1.0	2847.0	0.5	51243.0	0.5	117	y_117	51243.0	0.0	0.0
+373	B Med Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass G J N R ..... period 14	SOFT	1.0	2847.0	0.5	51243.0	0.5	118	y_118	49762.51259075307	0.0	0.0
+374	B Med Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass G J N R ..... period 15	SOFT	1.0	2847.0	0.5	51243.0	0.5	119	y_119	51243.0	0.0	0.0
+375	I High Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass K O S ..... period 1	SOFT	1.0	56490.0	1.0	121049.0	1.0	120	y_120	78424.86011818837	0.0	0.0
+376	I High Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass K O S ..... period 2	SOFT	1.0	56490.0	1.0	121049.0	1.0	121	y_121	73797.79337121524	0.0	0.0
+377	I High Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass K O S ..... period 3	SOFT	1.0	56490.0	1.0	121049.0	1.0	122	y_122	1754.1950862942772	0.0	54735.804913705724
+378	I High Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass K O S ..... period 4	SOFT	1.0	56490.0	1.0	121049.0	1.0	123	y_123	1650.697576202915	0.0	54839.30242379708
+379	I High Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass K O S ..... period 5	SOFT	1.0	56490.0	1.0	121049.0	1.0	124	y_124	1553.3064192069428	0.0	54936.69358079306
+380	I High Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass K O S ..... period 6	SOFT	1.0	56490.0	1.0	121049.0	1.0	125	y_125	0.0	0.0	56490.0
+381	I High Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass K O S ..... period 7	SOFT	1.0	56490.0	0.5	121049.0	0.5	126	y_126	0.0	0.0	28245.0
+382	I High Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass K O S ..... period 8	SOFT	1.0	56490.0	0.5	121049.0	0.5	127	y_127	0.0	0.0	28245.0
+383	I High Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass K O S ..... period 9	SOFT	1.0	56490.0	0.5	121049.0	0.5	128	y_128	0.0	0.0	28245.0
+384	I High Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass K O S ..... period 10	SOFT	1.0	56490.0	0.5	121049.0	0.5	129	y_129	0.0	0.0	28245.0
+385	I High Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass K O S ..... period 11	SOFT	1.0	56490.0	0.5	121049.0	0.5	130	y_130	0.0	0.0	28245.0
+386	I High Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass K O S ..... period 12	SOFT	1.0	56490.0	0.5	121049.0	0.5	131	y_131	0.0	0.0	28245.0
+387	I High Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass K O S ..... period 13	SOFT	1.0	56490.0	0.5	121049.0	0.5	132	y_132	0.0	0.0	28245.0
+388	I High Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass K O S ..... period 14	SOFT	1.0	56490.0	0.5	121049.0	0.5	133	y_133	0.0	0.0	28245.0
+389	I High Den ..... Area (i.e. acres) ..... dvegtype I | dstructclass K O S ..... period 15	SOFT	1.0	56490.0	0.5	121049.0	0.5	134	y_134	0.0	0.0	28245.0
+390	FGH High Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass K O S ..... period 1	SOFT	1.0	262993.0	1.0	569819.0	1.0	135	y_135	101946.05849545337	0.0	161046.94150454662
+391	FGH High Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass K O S ..... period 2	SOFT	1.0	262993.0	1.0	569819.0	1.0	136	y_136	96058.90485689504	0.0	166934.09514310496
+392	FGH High Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass K O S ..... period 3	SOFT	1.0	262993.0	1.0	569819.0	1.0	137	y_137	92657.65620356554	0.0	170335.34379643446
+393	FGH High Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass K O S ..... period 4	SOFT	1.0	262993.0	1.0	569819.0	1.0	138	y_138	141142.90463428234	0.0	121850.09536571766
+394	FGH High Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass K O S ..... period 5	SOFT	1.0	262993.0	1.0	569819.0	1.0	139	y_139	162511.3257986552	0.0	100481.67420134481
+395	FGH High Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass K O S ..... period 6	SOFT	1.0	262993.0	1.0	569819.0	1.0	140	y_140	187825.15632114527	0.0	75167.84367885473
+396	FGH High Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass K O S ..... period 7	SOFT	1.0	262993.0	0.5	569819.0	0.5	141	y_141	170711.81983253337	0.0	46140.59008373332
+397	FGH High Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass K O S ..... period 8	SOFT	1.0	262993.0	0.5	569819.0	0.5	142	y_142	112443.38956129047	0.0	75274.80521935476
+398	FGH High Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass K O S ..... period 9	SOFT	1.0	262993.0	0.5	569819.0	0.5	143	y_143	114410.15248883673	0.0	74291.42375558164
+399	FGH High Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass K O S ..... period 10	SOFT	1.0	262993.0	0.5	569819.0	0.5	144	y_144	150807.40638171014	0.0	56092.79680914493
+400	FGH High Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass K O S ..... period 11	SOFT	1.0	262993.0	0.5	569819.0	0.5	145	y_145	176345.10127193018	0.0	43323.94936403491
+401	FGH High Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass K O S ..... period 12	SOFT	1.0	262993.0	0.5	569819.0	0.5	146	y_146	175769.99702886707	0.0	43611.50148556646
+402	FGH High Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass K O S ..... period 13	SOFT	1.0	262993.0	0.5	569819.0	0.5	147	y_147	222472.98096893317	0.0	20260.009515533413
+403	FGH High Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass K O S ..... period 14	SOFT	1.0	262993.0	0.5	569819.0	0.5	148	y_148	221763.31243016437	0.0	20614.843784917815
+404	FGH High Den ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass K O S ..... period 15	SOFT	1.0	262993.0	0.5	569819.0	0.5	149	y_149	228065.0640756907	0.0	17463.967962154653
+405	CDE High Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass K O S ..... period 1	SOFT	1.0	16276.0	1.0	81380.0	1.0	150	y_150	15464.074444854412	0.0	811.9255551455881
+406	CDE High Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass K O S ..... period 2	SOFT	1.0	16276.0	1.0	81380.0	1.0	151	y_151	32682.097327809246	0.0	0.0
+407	CDE High Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass K O S ..... period 3	SOFT	1.0	16276.0	1.0	81380.0	1.0	152	y_152	31123.289093310348	0.0	0.0
+408	CDE High Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass K O S ..... period 4	SOFT	1.0	16276.0	1.0	81380.0	1.0	153	y_153	26801.15144431044	0.0	0.0
+409	CDE High Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass K O S ..... period 5	SOFT	1.0	16276.0	1.0	81380.0	1.0	154	y_154	24574.52468563933	0.0	0.0
+410	CDE High Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass K O S ..... period 6	SOFT	1.0	16276.0	1.0	81380.0	1.0	155	y_155	30945.350748189354	0.0	0.0
+411	CDE High Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass K O S ..... period 7	SOFT	1.0	16276.0	0.5	81380.0	0.5	156	y_156	32417.682569498582	0.0	0.0
+412	CDE High Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass K O S ..... period 8	SOFT	1.0	16276.0	0.5	81380.0	0.5	157	y_157	33832.08989534478	0.0	0.0
+413	CDE High Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass K O S ..... period 9	SOFT	1.0	16276.0	0.5	81380.0	0.5	158	y_158	30896.43257068824	0.0	0.0
+414	CDE High Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass K O S ..... period 10	SOFT	1.0	16276.0	0.5	81380.0	0.5	159	y_159	28659.879821628416	0.0	0.0
+415	CDE High Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass K O S ..... period 11	SOFT	1.0	16276.0	0.5	81380.0	0.5	160	y_160	19727.534426964572	0.0	0.0
+416	CDE High Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass K O S ..... period 12	SOFT	1.0	16276.0	0.5	81380.0	0.5	161	y_161	18350.98111492191	0.0	0.0
+417	CDE High Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass K O S ..... period 13	SOFT	1.0	16276.0	0.5	81380.0	0.5	162	y_162	18533.611885573282	0.0	0.0
+418	CDE High Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass K O S ..... period 14	SOFT	1.0	16276.0	0.5	81380.0	0.5	163	y_163	19635.412077046494	0.0	0.0
+419	CDE High Den ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass K O S ..... period 15	SOFT	1.0	16276.0	0.5	81380.0	0.5	164	y_164	18199.737090073846	0.0	0.0
+420	B High Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass K O S ..... period 1	SOFT	1.0	2847.0	1.0	68324.0	1.0	165	y_165	5254.609796139756	0.0	0.0
+421	B High Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass K O S ..... period 2	SOFT	1.0	2847.0	1.0	68324.0	1.0	166	y_166	3856.883590366581	0.0	0.0
+422	B High Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass K O S ..... period 3	SOFT	1.0	2847.0	1.0	68324.0	1.0	167	y_167	2847.0	0.0	0.0
+423	B High Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass K O S ..... period 4	SOFT	1.0	2847.0	1.0	68324.0	1.0	168	y_168	11515.979568459456	0.0	0.0
+424	B High Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass K O S ..... period 5	SOFT	1.0	2847.0	1.0	68324.0	1.0	169	y_169	14829.00939535332	0.0	0.0
+425	B High Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass K O S ..... period 6	SOFT	1.0	2847.0	1.0	68324.0	1.0	170	y_170	16009.75927457282	0.0	0.0
+426	B High Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass K O S ..... period 7	SOFT	1.0	2847.0	0.5	68324.0	0.5	171	y_171	23721.996900588652	0.0	0.0
+427	B High Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass K O S ..... period 8	SOFT	1.0	2847.0	0.5	68324.0	0.5	172	y_172	20768.471356081824	0.0	0.0
+428	B High Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass K O S ..... period 9	SOFT	1.0	2847.0	0.5	68324.0	0.5	173	y_173	15701.324455472039	0.0	0.0
+429	B High Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass K O S ..... period 10	SOFT	1.0	2847.0	0.5	68324.0	0.5	174	y_174	12619.763714148225	0.0	0.0
+430	B High Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass K O S ..... period 11	SOFT	1.0	2847.0	0.5	68324.0	0.5	175	y_175	9768.095234843671	0.0	0.0
+431	B High Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass K O S ..... period 12	SOFT	1.0	2847.0	0.5	68324.0	0.5	176	y_176	6236.947203765099	0.0	0.0
+432	B High Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass K O S ..... period 13	SOFT	1.0	2847.0	0.5	68324.0	0.5	177	y_177	5023.927388549562	0.0	0.0
+433	B High Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass K O S ..... period 14	SOFT	1.0	2847.0	0.5	68324.0	0.5	178	y_178	2847.0	0.0	0.0
+434	B High Den ..... Area (i.e. acres) ..... dvegtype B | dstructclass K O S ..... period 15	SOFT	1.0	2847.0	0.5	68324.0	0.5	179	y_179	11356.0881163538	0.0	0.0
+435	VegI SeedSap ..... Area (i.e. acres) ..... dvegtype I | dstructclass F G ..... period 1	SOFT	1.0	8070.0	1.0	100875.0	1.0	180	y_180	51146.95624090903	0.0	0.0
+436	VegI SeedSap ..... Area (i.e. acres) ..... dvegtype I | dstructclass F G ..... period 2	SOFT	1.0	8070.0	1.0	100875.0	1.0	181	y_181	47983.20556306838	0.0	0.0
+437	VegI SeedSap ..... Area (i.e. acres) ..... dvegtype I | dstructclass F G ..... period 3	SOFT	1.0	8070.0	1.0	100875.0	1.0	182	y_182	47722.29899049912	0.0	0.0
+438	VegI SeedSap ..... Area (i.e. acres) ..... dvegtype I | dstructclass F G ..... period 4	SOFT	1.0	8070.0	1.0	100875.0	1.0	183	y_183	46429.175310860745	0.0	0.0
+439	VegI SeedSap ..... Area (i.e. acres) ..... dvegtype I | dstructclass F G ..... period 5	SOFT	1.0	8070.0	1.0	100875.0	1.0	184	y_184	44832.653615238785	0.0	0.0
+440	VegI SeedSap ..... Area (i.e. acres) ..... dvegtype I | dstructclass F G ..... period 6	SOFT	1.0	8070.0	1.0	100875.0	1.0	185	y_185	46728.09421320305	0.0	0.0
+441	VegI SeedSap ..... Area (i.e. acres) ..... dvegtype I | dstructclass F G ..... period 7	SOFT	1.0	8070.0	0.5	100875.0	0.5	186	y_186	45136.04852644884	0.0	0.0
+442	VegI SeedSap ..... Area (i.e. acres) ..... dvegtype I | dstructclass F G ..... period 8	SOFT	1.0	8070.0	0.5	100875.0	0.5	187	y_187	44959.62641086841	0.0	0.0
+443	VegI SeedSap ..... Area (i.e. acres) ..... dvegtype I | dstructclass F G ..... period 9	SOFT	1.0	8070.0	0.5	100875.0	0.5	188	y_188	45049.60622588634	0.0	0.0
+444	VegI SeedSap ..... Area (i.e. acres) ..... dvegtype I | dstructclass F G ..... period 10	SOFT	1.0	8070.0	0.5	100875.0	0.5	189	y_189	42221.7351804263	0.0	0.0
+445	VegI SeedSap ..... Area (i.e. acres) ..... dvegtype I | dstructclass F G ..... period 11	SOFT	1.0	8070.0	0.5	100875.0	0.5	190	y_190	42701.30819956236	0.0	0.0
+446	VegI SeedSap ..... Area (i.e. acres) ..... dvegtype I | dstructclass F G ..... period 12	SOFT	1.0	8070.0	0.5	100875.0	0.5	191	y_191	42089.63864539989	0.0	0.0
+447	VegI SeedSap ..... Area (i.e. acres) ..... dvegtype I | dstructclass F G ..... period 13	SOFT	1.0	8070.0	0.5	100875.0	0.5	192	y_192	44093.773410815054	0.0	0.0
+448	VegI SeedSap ..... Area (i.e. acres) ..... dvegtype I | dstructclass F G ..... period 14	SOFT	1.0	8070.0	0.5	100875.0	0.5	193	y_193	51444.461983002206	0.0	0.0
+449	VegI SeedSap ..... Area (i.e. acres) ..... dvegtype I | dstructclass F G ..... period 15	SOFT	1.0	8070.0	0.5	100875.0	0.5	194	y_194	55002.10294217235	0.0	0.0
+450	FGH SeedSap ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass F G ..... period 1	SOFT	1.0	52599.0	1.0	298059.0	1.0	195	y_195	226187.24333867038	0.0	0.0
+451	FGH SeedSap ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass F G ..... period 2	SOFT	1.0	52599.0	1.0	298059.0	1.0	196	y_196	239917.83973706333	0.0	0.0
+452	FGH SeedSap ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass F G ..... period 3	SOFT	1.0	52599.0	1.0	298059.0	1.0	197	y_197	197577.87213798126	0.0	0.0
+453	FGH SeedSap ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass F G ..... period 4	SOFT	1.0	52599.0	1.0	298059.0	1.0	198	y_198	156127.35544561714	0.0	0.0
+454	FGH SeedSap ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass F G ..... period 5	SOFT	1.0	52599.0	1.0	298059.0	1.0	199	y_199	181567.78811454197	0.0	0.0
+455	FGH SeedSap ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass F G ..... period 6	SOFT	1.0	52599.0	1.0	298059.0	1.0	200	y_200	162458.96074430854	0.0	0.0
+456	FGH SeedSap ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass F G ..... period 7	SOFT	1.0	52599.0	0.5	298059.0	0.5	201	y_201	178551.63833091166	0.0	0.0
+457	FGH SeedSap ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass F G ..... period 8	SOFT	1.0	52599.0	0.5	298059.0	0.5	202	y_202	195156.79681055906	0.0	0.0
+458	FGH SeedSap ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass F G ..... period 9	SOFT	1.0	52599.0	0.5	298059.0	0.5	203	y_203	199175.91861306122	0.0	0.0
+459	FGH SeedSap ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass F G ..... period 10	SOFT	1.0	52599.0	0.5	298059.0	0.5	204	y_204	199198.8538097461	0.0	0.0
+460	FGH SeedSap ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass F G ..... period 11	SOFT	1.0	52599.0	0.5	298059.0	0.5	205	y_205	232114.29845900778	0.0	0.0
+461	FGH SeedSap ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass F G ..... period 12	SOFT	1.0	52599.0	0.5	298059.0	0.5	206	y_206	229532.07927778928	0.0	0.0
+462	FGH SeedSap ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass F G ..... period 13	SOFT	1.0	52599.0	0.5	298059.0	0.5	207	y_207	196686.99052426123	0.0	0.0
+463	FGH SeedSap ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass F G ..... period 14	SOFT	1.0	52599.0	0.5	298059.0	0.5	208	y_208	199612.55649101362	0.0	0.0
+464	FGH SeedSap ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass F G ..... period 15	SOFT	1.0	52599.0	0.5	298059.0	0.5	209	y_209	200586.80524329035	0.0	0.0
+465	CDE SeedSap ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass F G ..... period 1	SOFT	1.0	40690.0	1.0	154623.0	1.0	210	y_210	55106.56591904602	0.0	0.0
+466	CDE SeedSap ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass F G ..... period 2	SOFT	1.0	40690.0	1.0	154623.0	1.0	211	y_211	58720.11276414259	0.0	0.0
+467	CDE SeedSap ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass F G ..... period 3	SOFT	1.0	40690.0	1.0	154623.0	1.0	212	y_212	51710.13801167526	0.0	0.0
+468	CDE SeedSap ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass F G ..... period 4	SOFT	1.0	40690.0	1.0	154623.0	1.0	213	y_213	47741.05716788781	0.0	0.0
+469	CDE SeedSap ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass F G ..... period 5	SOFT	1.0	40690.0	1.0	154623.0	1.0	214	y_214	40687.23627988894	0.0	2.7637201110628666
+470	CDE SeedSap ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass F G ..... period 6	SOFT	1.0	40690.0	1.0	154623.0	1.0	215	y_215	42115.36937606869	0.0	0.0
+471	CDE SeedSap ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass F G ..... period 7	SOFT	1.0	40690.0	0.5	154623.0	0.5	216	y_216	43759.395925274104	0.0	0.0
+472	CDE SeedSap ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass F G ..... period 8	SOFT	1.0	40690.0	0.5	154623.0	0.5	217	y_217	44440.95844507195	0.0	0.0
+473	CDE SeedSap ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass F G ..... period 9	SOFT	1.0	40690.0	0.5	154623.0	0.5	218	y_218	45162.41458871784	0.0	0.0
+474	CDE SeedSap ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass F G ..... period 10	SOFT	1.0	40690.0	0.5	154623.0	0.5	219	y_219	44026.44158843896	0.0	0.0
+475	CDE SeedSap ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass F G ..... period 11	SOFT	1.0	40690.0	0.5	154623.0	0.5	220	y_220	53043.44879102207	0.0	0.0
+476	CDE SeedSap ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass F G ..... period 12	SOFT	1.0	40690.0	0.5	154623.0	0.5	221	y_221	49796.76218219892	0.0	0.0
+477	CDE SeedSap ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass F G ..... period 13	SOFT	1.0	40690.0	0.5	154623.0	0.5	222	y_222	50222.62313132275	0.0	0.0
+478	CDE SeedSap ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass F G ..... period 14	SOFT	1.0	40690.0	0.5	154623.0	0.5	223	y_223	49817.31231049039	0.0	0.0
+479	CDE SeedSap ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass F G ..... period 15	SOFT	1.0	40690.0	0.5	154623.0	0.5	224	y_224	44003.89476069186	0.0	0.0
+480	B SeedSap ..... Area (i.e. acres) ..... dvegtype B | dstructclass F G ..... period 1	SOFT	1.0	5694.0	1.0	105333.0	1.0	225	y_225	29893.50017956894	0.0	0.0
+481	B SeedSap ..... Area (i.e. acres) ..... dvegtype B | dstructclass F G ..... period 2	SOFT	1.0	5694.0	1.0	105333.0	1.0	226	y_226	55103.99320407465	0.0	0.0
+482	B SeedSap ..... Area (i.e. acres) ..... dvegtype B | dstructclass F G ..... period 3	SOFT	1.0	5694.0	1.0	105333.0	1.0	227	y_227	59630.04097900654	0.0	0.0
+483	B SeedSap ..... Area (i.e. acres) ..... dvegtype B | dstructclass F G ..... period 4	SOFT	1.0	5694.0	1.0	105333.0	1.0	228	y_228	35504.85721875155	0.0	0.0
+484	B SeedSap ..... Area (i.e. acres) ..... dvegtype B | dstructclass F G ..... period 5	SOFT	1.0	5694.0	1.0	105333.0	1.0	229	y_229	43623.40761906429	0.0	0.0
+485	B SeedSap ..... Area (i.e. acres) ..... dvegtype B | dstructclass F G ..... period 6	SOFT	1.0	5694.0	1.0	105333.0	1.0	230	y_230	49569.44926623305	0.0	0.0
+486	B SeedSap ..... Area (i.e. acres) ..... dvegtype B | dstructclass F G ..... period 7	SOFT	1.0	5694.0	0.5	105333.0	0.5	231	y_231	40509.99775257378	0.0	0.0
+487	B SeedSap ..... Area (i.e. acres) ..... dvegtype B | dstructclass F G ..... period 8	SOFT	1.0	5694.0	0.5	105333.0	0.5	232	y_232	40145.16276764325	0.0	0.0
+488	B SeedSap ..... Area (i.e. acres) ..... dvegtype B | dstructclass F G ..... period 9	SOFT	1.0	5694.0	0.5	105333.0	0.5	233	y_233	57577.24813835999	0.0	0.0
+489	B SeedSap ..... Area (i.e. acres) ..... dvegtype B | dstructclass F G ..... period 10	SOFT	1.0	5694.0	0.5	105333.0	0.5	234	y_234	56095.1392085713	0.0	0.0
+490	B SeedSap ..... Area (i.e. acres) ..... dvegtype B | dstructclass F G ..... period 11	SOFT	1.0	5694.0	0.5	105333.0	0.5	235	y_235	42333.25625292641	0.0	0.0
+491	B SeedSap ..... Area (i.e. acres) ..... dvegtype B | dstructclass F G ..... period 12	SOFT	1.0	5694.0	0.5	105333.0	0.5	236	y_236	49358.38260623937	0.0	0.0
+492	B SeedSap ..... Area (i.e. acres) ..... dvegtype B | dstructclass F G ..... period 13	SOFT	1.0	5694.0	0.5	105333.0	0.5	237	y_237	49238.67838589101	0.0	0.0
+493	B SeedSap ..... Area (i.e. acres) ..... dvegtype B | dstructclass F G ..... period 14	SOFT	1.0	5694.0	0.5	105333.0	0.5	238	y_238	45976.016678012646	0.0	0.0
+494	B SeedSap ..... Area (i.e. acres) ..... dvegtype B | dstructclass F G ..... period 15	SOFT	1.0	5694.0	0.5	105333.0	0.5	239	y_239	36799.31743856022	0.0	0.0
+495	I Large ..... Area (i.e. acres) ..... dvegtype I | dstructclass P Q R S ..... period 1	SOFT	1.0	32280.0	1.0	84735.0	1.0	240	y_240	21100.08128843582	0.0	11179.91871156418
+496	I Large ..... Area (i.e. acres) ..... dvegtype I | dstructclass P Q R S ..... period 2	SOFT	1.0	32280.0	1.0	84735.0	1.0	241	y_241	35855.312334179354	0.0	0.0
+497	I Large ..... Area (i.e. acres) ..... dvegtype I | dstructclass P Q R S ..... period 3	SOFT	1.0	32280.0	1.0	84735.0	1.0	242	y_242	35223.1235900401	0.0	0.0
+498	I Large ..... Area (i.e. acres) ..... dvegtype I | dstructclass P Q R S ..... period 4	SOFT	1.0	32280.0	1.0	84735.0	1.0	243	y_243	29592.39161908688	0.0	2687.6083809131196
+499	I Large ..... Area (i.e. acres) ..... dvegtype I | dstructclass P Q R S ..... period 5	SOFT	1.0	32280.0	1.0	84735.0	1.0	244	y_244	25477.192440023486	0.0	6802.807559976514
+500	I Large ..... Area (i.e. acres) ..... dvegtype I | dstructclass P Q R S ..... period 6	SOFT	1.0	32280.0	1.0	84735.0	1.0	245	y_245	49444.54529480509	0.0	0.0
+501	I Large ..... Area (i.e. acres) ..... dvegtype I | dstructclass P Q R S ..... period 7	SOFT	1.0	32280.0	0.5	84735.0	0.5	246	y_246	99910.38488366286	0.0	7587.69244183143
+502	I Large ..... Area (i.e. acres) ..... dvegtype I | dstructclass P Q R S ..... period 8	SOFT	1.0	32280.0	0.5	84735.0	0.5	247	y_247	96161.39540123071	0.0	5713.197700615354
+503	I Large ..... Area (i.e. acres) ..... dvegtype I | dstructclass P Q R S ..... period 9	SOFT	1.0	32280.0	0.5	84735.0	0.5	248	y_248	92553.78259943938	0.0	3909.3912997196894
+504	I Large ..... Area (i.e. acres) ..... dvegtype I | dstructclass P Q R S ..... period 10	SOFT	1.0	32280.0	0.5	84735.0	0.5	249	y_249	89082.20020249725	0.0	2173.600101248623
+505	I Large ..... Area (i.e. acres) ..... dvegtype I | dstructclass P Q R S ..... period 11	SOFT	1.0	32280.0	0.5	84735.0	0.5	250	y_250	86185.30754600393	0.0	725.1537730019627
+506	I Large ..... Area (i.e. acres) ..... dvegtype I | dstructclass P Q R S ..... period 12	SOFT	1.0	32280.0	0.5	84735.0	0.5	251	y_251	105564.57466406893	0.0	10414.787332034466
+507	I Large ..... Area (i.e. acres) ..... dvegtype I | dstructclass P Q R S ..... period 13	SOFT	1.0	32280.0	0.5	84735.0	0.5	252	y_252	106332.28704119193	0.0	10798.643520595964
+508	I Large ..... Area (i.e. acres) ..... dvegtype I | dstructclass P Q R S ..... period 14	SOFT	1.0	32280.0	0.5	84735.0	0.5	253	y_253	108980.73307867344	0.0	12122.86653933672
+509	I Large ..... Area (i.e. acres) ..... dvegtype I | dstructclass P Q R S ..... period 15	SOFT	1.0	32280.0	0.5	84735.0	0.5	254	y_254	101772.71500828928	0.0	8518.857504144638
+510	FGH Large ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass P Q R S ..... period 1	SOFT	1.0	78898.0	1.0	227927.0	1.0	255	y_255	95590.84196096395	0.0	0.0
+511	FGH Large ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass P Q R S ..... period 2	SOFT	1.0	78898.0	1.0	227927.0	1.0	256	y_256	112317.05815020717	0.0	0.0
+512	FGH Large ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass P Q R S ..... period 3	SOFT	1.0	78898.0	1.0	227927.0	1.0	257	y_257	174314.37934676697	0.0	0.0
+513	FGH Large ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass P Q R S ..... period 4	SOFT	1.0	78898.0	1.0	227927.0	1.0	258	y_258	226780.11880053615	0.0	0.0
+514	FGH Large ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass P Q R S ..... period 5	SOFT	1.0	78898.0	1.0	227927.0	1.0	259	y_259	212288.6361933582	0.0	0.0
+515	FGH Large ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass P Q R S ..... period 6	SOFT	1.0	78898.0	1.0	227927.0	1.0	260	y_260	204779.0090281885	0.0	0.0
+516	FGH Large ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass P Q R S ..... period 7	SOFT	1.0	78898.0	0.5	227927.0	0.5	261	y_261	199444.31930360882	0.0	0.0
+517	FGH Large ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass P Q R S ..... period 8	SOFT	1.0	78898.0	0.5	227927.0	0.5	262	y_262	192540.58504627942	0.0	0.0
+518	FGH Large ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass P Q R S ..... period 9	SOFT	1.0	78898.0	0.5	227927.0	0.5	263	y_263	184882.611721416	0.0	0.0
+519	FGH Large ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass P Q R S ..... period 10	SOFT	1.0	78898.0	0.5	227927.0	0.5	264	y_264	179250.25814351154	0.0	0.0
+520	FGH Large ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass P Q R S ..... period 11	SOFT	1.0	78898.0	0.5	227927.0	0.5	265	y_265	174519.33420831957	0.0	0.0
+521	FGH Large ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass P Q R S ..... period 12	SOFT	1.0	78898.0	0.5	227927.0	0.5	266	y_266	167811.3479453004	0.0	0.0
+522	FGH Large ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass P Q R S ..... period 13	SOFT	1.0	78898.0	0.5	227927.0	0.5	267	y_267	162054.89533398728	0.0	0.0
+523	FGH Large ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass P Q R S ..... period 14	SOFT	1.0	78898.0	0.5	227927.0	0.5	268	y_268	171897.24094219762	0.0	0.0
+524	FGH Large ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass P Q R S ..... period 15	SOFT	1.0	78898.0	0.5	227927.0	0.5	269	y_269	174401.1142837118	0.0	0.0
+525	CDE Large ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass P Q R S ..... period 1	SOFT	1.0	118002.0	1.0	252279.0	1.0	270	y_270	131670.070056234	0.0	0.0
+526	CDE Large ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass P Q R S ..... period 2	SOFT	1.0	118002.0	1.0	252279.0	1.0	271	y_271	137940.87809300196	0.0	0.0
+527	CDE Large ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass P Q R S ..... period 3	SOFT	1.0	118002.0	1.0	252279.0	1.0	272	y_272	161000.68310413993	0.0	0.0
+528	CDE Large ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass P Q R S ..... period 4	SOFT	1.0	118002.0	1.0	252279.0	1.0	273	y_273	162707.42825431481	0.0	0.0
+529	CDE Large ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass P Q R S ..... period 5	SOFT	1.0	118002.0	1.0	252279.0	1.0	274	y_274	159962.9390138195	0.0	0.0
+530	CDE Large ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass P Q R S ..... period 6	SOFT	1.0	118002.0	1.0	252279.0	1.0	275	y_275	164097.85109925014	0.0	0.0
+531	CDE Large ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass P Q R S ..... period 7	SOFT	1.0	118002.0	0.5	252279.0	0.5	276	y_276	174031.39580077733	0.0	0.0
+532	CDE Large ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass P Q R S ..... period 8	SOFT	1.0	118002.0	0.5	252279.0	0.5	277	y_277	176907.65759154953	0.0	0.0
+533	CDE Large ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass P Q R S ..... period 9	SOFT	1.0	118002.0	0.5	252279.0	0.5	278	y_278	182970.7952400631	0.0	0.0
+534	CDE Large ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass P Q R S ..... period 10	SOFT	1.0	118002.0	0.5	252279.0	0.5	279	y_279	184445.31462812898	0.0	0.0
+535	CDE Large ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass P Q R S ..... period 11	SOFT	1.0	118002.0	0.5	252279.0	0.5	280	y_280	178919.84947960722	0.0	0.0
+536	CDE Large ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass P Q R S ..... period 12	SOFT	1.0	118002.0	0.5	252279.0	0.5	281	y_281	181028.2327884946	0.0	0.0
+537	CDE Large ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass P Q R S ..... period 13	SOFT	1.0	118002.0	0.5	252279.0	0.5	282	y_282	187281.166848771	0.0	0.0
+538	CDE Large ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass P Q R S ..... period 14	SOFT	1.0	118002.0	0.5	252279.0	0.5	283	y_283	190683.36035048787	0.0	0.0
+539	CDE Large ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass P Q R S ..... period 15	SOFT	1.0	118002.0	0.5	252279.0	0.5	284	y_284	194707.13811436883	0.0	0.0
+540	B Large ..... Area (i.e. acres) ..... dvegtype B | dstructclass P Q R S ..... period 1	SOFT	1.0	153729.0	1.0	264756.0	1.0	285	y_285	117924.06556749069	0.0	35804.93443250931
+541	B Large ..... Area (i.e. acres) ..... dvegtype B | dstructclass P Q R S ..... period 2	SOFT	1.0	153729.0	1.0	264756.0	1.0	286	y_286	118513.2600590695	0.0	35215.73994093051
+542	B Large ..... Area (i.e. acres) ..... dvegtype B | dstructclass P Q R S ..... period 3	SOFT	1.0	153729.0	1.0	264756.0	1.0	287	y_287	132843.04497820366	0.0	20885.95502179634
+543	B Large ..... Area (i.e. acres) ..... dvegtype B | dstructclass P Q R S ..... period 4	SOFT	1.0	153729.0	1.0	264756.0	1.0	288	y_288	141172.1239700226	0.0	12556.8760299774
+544	B Large ..... Area (i.e. acres) ..... dvegtype B | dstructclass P Q R S ..... period 5	SOFT	1.0	153729.0	1.0	264756.0	1.0	289	y_289	139613.11137933817	0.0	14115.888620661834
+545	B Large ..... Area (i.e. acres) ..... dvegtype B | dstructclass P Q R S ..... period 6	SOFT	1.0	153729.0	1.0	264756.0	1.0	290	y_290	149794.19962476802	0.0	3934.8003752319783
+546	B Large ..... Area (i.e. acres) ..... dvegtype B | dstructclass P Q R S ..... period 7	SOFT	1.0	153729.0	0.5	264756.0	0.5	291	y_291	152383.85054735484	0.0	672.5747263225785
+547	B Large ..... Area (i.e. acres) ..... dvegtype B | dstructclass P Q R S ..... period 8	SOFT	1.0	153729.0	0.5	264756.0	0.5	292	y_292	157333.92017565767	0.0	0.0
+548	B Large ..... Area (i.e. acres) ..... dvegtype B | dstructclass P Q R S ..... period 9	SOFT	1.0	153729.0	0.5	264756.0	0.5	293	y_293	155349.89531284917	0.0	0.0
+549	B Large ..... Area (i.e. acres) ..... dvegtype B | dstructclass P Q R S ..... period 10	SOFT	1.0	153729.0	0.5	264756.0	0.5	294	y_294	155738.910161399	0.0	0.0
+550	B Large ..... Area (i.e. acres) ..... dvegtype B | dstructclass P Q R S ..... period 11	SOFT	1.0	153729.0	0.5	264756.0	0.5	295	y_295	181160.00612619353	0.0	0.0
+551	B Large ..... Area (i.e. acres) ..... dvegtype B | dstructclass P Q R S ..... period 12	SOFT	1.0	153729.0	0.5	264756.0	0.5	296	y_296	172228.50902864058	0.0	0.0
+552	B Large ..... Area (i.e. acres) ..... dvegtype B | dstructclass P Q R S ..... period 13	SOFT	1.0	153729.0	0.5	264756.0	0.5	297	y_297	168965.82460358113	0.0	0.0
+553	B Large ..... Area (i.e. acres) ..... dvegtype B | dstructclass P Q R S ..... period 14	SOFT	1.0	153729.0	0.5	264756.0	0.5	298	y_298	168254.49642639048	0.0	0.0
+554	B Large ..... Area (i.e. acres) ..... dvegtype B | dstructclass P Q R S ..... period 15	SOFT	1.0	153729.0	0.5	264756.0	0.5	299	y_299	170865.0573826286	0.0	0.0
+555	I Small ..... Area (i.e. acres) ..... dvegtype I | dstructclass H I J K ..... period 1	SOFT	1.0	24210.0	1.0	96840.0	1.0	300	y_300	96840.0	0.0	0.0
+556	I Small ..... Area (i.e. acres) ..... dvegtype I | dstructclass H I J K ..... period 2	SOFT	1.0	24210.0	1.0	96840.0	1.0	301	y_301	86961.33132279314	0.0	0.0
+557	I Small ..... Area (i.e. acres) ..... dvegtype I | dstructclass H I J K ..... period 3	SOFT	1.0	24210.0	1.0	96840.0	1.0	302	y_302	94620.62088439359	0.0	0.0
+558	I Small ..... Area (i.e. acres) ..... dvegtype I | dstructclass H I J K ..... period 4	SOFT	1.0	24210.0	1.0	96840.0	1.0	303	y_303	103500.92129189808	0.0	6660.9212918980775
+559	I Small ..... Area (i.e. acres) ..... dvegtype I | dstructclass H I J K ..... period 5	SOFT	1.0	24210.0	1.0	96840.0	1.0	304	y_304	109154.19494198367	0.0	12314.194941983675
+560	I Small ..... Area (i.e. acres) ..... dvegtype I | dstructclass H I J K ..... period 6	SOFT	1.0	24210.0	1.0	96840.0	1.0	305	y_305	96840.0	0.0	0.0
+561	I Small ..... Area (i.e. acres) ..... dvegtype I | dstructclass H I J K ..... period 7	SOFT	1.0	24210.0	0.5	96840.0	0.5	306	y_306	102372.00445907513	0.0	2766.0022295375675
+562	I Small ..... Area (i.e. acres) ..... dvegtype I | dstructclass H I J K ..... period 8	SOFT	1.0	24210.0	0.5	96840.0	0.5	307	y_307	90401.99313443039	0.0	0.0
+563	I Small ..... Area (i.e. acres) ..... dvegtype I | dstructclass H I J K ..... period 9	SOFT	1.0	24210.0	0.5	96840.0	0.5	308	y_308	87761.05922466586	0.0	0.0
+564	I Small ..... Area (i.e. acres) ..... dvegtype I | dstructclass H I J K ..... period 10	SOFT	1.0	24210.0	0.5	96840.0	0.5	309	y_309	93940.71704656415	0.0	0.0
+565	I Small ..... Area (i.e. acres) ..... dvegtype I | dstructclass H I J K ..... period 11	SOFT	1.0	24210.0	0.5	96840.0	0.5	310	y_310	87246.38274027279	0.0	0.0
+566	I Small ..... Area (i.e. acres) ..... dvegtype I | dstructclass H I J K ..... period 12	SOFT	1.0	24210.0	0.5	96840.0	0.5	311	y_311	86853.47520562657	0.0	0.0
+567	I Small ..... Area (i.e. acres) ..... dvegtype I | dstructclass H I J K ..... period 13	SOFT	1.0	24210.0	0.5	96840.0	0.5	312	y_312	82666.86035346231	0.0	0.0
+568	I Small ..... Area (i.e. acres) ..... dvegtype I | dstructclass H I J K ..... period 14	SOFT	1.0	24210.0	0.5	96840.0	0.5	313	y_313	82036.48929776766	0.0	0.0
+569	I Small ..... Area (i.e. acres) ..... dvegtype I | dstructclass H I J K ..... period 15	SOFT	1.0	24210.0	0.5	96840.0	0.5	314	y_314	83871.66884911936	0.0	0.0
+570	FGH Small ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass H I J K ..... period 1	SOFT	1.0	43832.0	1.0	245460.0	1.0	315	y_315	260593.19370444125	0.0	15133.193704441248
+571	FGH Small ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass H I J K ..... period 2	SOFT	1.0	43832.0	1.0	245460.0	1.0	316	y_316	190029.77278998218	0.0	0.0
+572	FGH Small ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass H I J K ..... period 3	SOFT	1.0	43832.0	1.0	245460.0	1.0	317	y_317	249609.3544918662	0.0	4149.354491866194
+573	FGH Small ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass H I J K ..... period 4	SOFT	1.0	43832.0	1.0	245460.0	1.0	318	y_318	300246.5837728832	0.0	54786.58377288323
+574	FGH Small ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass H I J K ..... period 5	SOFT	1.0	43832.0	1.0	245460.0	1.0	319	y_319	334399.4928613734	0.0	88939.49286137341
+575	FGH Small ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass H I J K ..... period 6	SOFT	1.0	43832.0	1.0	245460.0	1.0	320	y_320	323506.70435880177	0.0	78046.70435880177
+576	FGH Small ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass H I J K ..... period 7	SOFT	1.0	43832.0	0.5	245460.0	0.5	321	y_321	276955.83072406537	0.0	15747.915362032683
+577	FGH Small ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass H I J K ..... period 8	SOFT	1.0	43832.0	0.5	245460.0	0.5	322	y_322	302504.05745764024	0.0	28522.02872882012
+578	FGH Small ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass H I J K ..... period 9	SOFT	1.0	43832.0	0.5	245460.0	0.5	323	y_323	305782.610325521	0.0	30161.305162760487
+579	FGH Small ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass H I J K ..... period 10	SOFT	1.0	43832.0	0.5	245460.0	0.5	324	y_324	320724.7717407074	0.0	37632.3858703537
+580	FGH Small ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass H I J K ..... period 11	SOFT	1.0	43832.0	0.5	245460.0	0.5	325	y_325	333298.4182250705	0.0	43919.20911253526
+581	FGH Small ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass H I J K ..... period 12	SOFT	1.0	43832.0	0.5	245460.0	0.5	326	y_326	325571.400035123	0.0	40055.700017561496
+582	FGH Small ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass H I J K ..... period 13	SOFT	1.0	43832.0	0.5	245460.0	0.5	327	y_327	365698.16932988755	0.0	60119.08466494377
+583	FGH Small ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass H I J K ..... period 14	SOFT	1.0	43832.0	0.5	245460.0	0.5	328	y_328	368993.3922075291	0.0	61766.69610376455
+584	FGH Small ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass H I J K ..... period 15	SOFT	1.0	43832.0	0.5	245460.0	0.5	329	y_329	366694.5905302334	0.0	60617.2952651167
+585	CDE Small ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass H I J K ..... period 1	SOFT	1.0	16276.0	1.0	61035.0	1.0	330	y_330	97209.47878126938	0.0	36174.47878126938
+586	CDE Small ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass H I J K ..... period 2	SOFT	1.0	16276.0	1.0	61035.0	1.0	331	y_331	80926.91820003641	0.0	19891.91820003641
+587	CDE Small ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass H I J K ..... period 3	SOFT	1.0	16276.0	1.0	61035.0	1.0	332	y_332	81594.9939623717	0.0	20559.993962371693
+588	CDE Small ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass H I J K ..... period 4	SOFT	1.0	16276.0	1.0	61035.0	1.0	333	y_333	86513.0634130522	0.0	25478.063413052194
+589	CDE Small ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass H I J K ..... period 5	SOFT	1.0	16276.0	1.0	61035.0	1.0	334	y_334	87381.61161256875	0.0	26346.611612568755
+590	CDE Small ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass H I J K ..... period 6	SOFT	1.0	16276.0	1.0	61035.0	1.0	335	y_335	81821.45479176834	0.0	20786.454791768338
+591	CDE Small ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass H I J K ..... period 7	SOFT	1.0	16276.0	0.5	61035.0	0.5	336	y_336	77527.6275353522	0.0	8246.313767676103
+592	CDE Small ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass H I J K ..... period 8	SOFT	1.0	16276.0	0.5	61035.0	0.5	337	y_337	75867.63651305724	0.0	7416.318256528619
+593	CDE Small ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass H I J K ..... period 9	SOFT	1.0	16276.0	0.5	61035.0	0.5	338	y_338	68396.91218644987	0.0	3680.956093224937
+594	CDE Small ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass H I J K ..... period 10	SOFT	1.0	16276.0	0.5	61035.0	0.5	339	y_339	62958.985543741044	0.0	961.9927718705221
+595	CDE Small ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass H I J K ..... period 11	SOFT	1.0	16276.0	0.5	61035.0	0.5	340	y_340	59508.7774881908	0.0	0.0
+596	CDE Small ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass H I J K ..... period 12	SOFT	1.0	16276.0	0.5	61035.0	0.5	341	y_341	61365.45235374158	0.0	165.22617687079037
+597	CDE Small ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass H I J K ..... period 13	SOFT	1.0	16276.0	0.5	61035.0	0.5	342	y_342	59134.204710548926	0.0	0.0
+598	CDE Small ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass H I J K ..... period 14	SOFT	1.0	16276.0	0.5	61035.0	0.5	343	y_343	57200.83777337394	0.0	0.0
+599	CDE Small ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass H I J K ..... period 15	SOFT	1.0	16276.0	0.5	61035.0	0.5	344	y_344	61035.0	0.0	0.0
+600	B Small ..... Area (i.e. acres) ..... dvegtype B | dstructclass H I J K ..... period 1	SOFT	1.0	2847.0	1.0	71171.0	1.0	345	y_345	69837.18520177336	0.0	0.0
+601	B Small ..... Area (i.e. acres) ..... dvegtype B | dstructclass H I J K ..... period 2	SOFT	1.0	2847.0	1.0	71171.0	1.0	346	y_346	67672.24086566729	0.0	0.0
+602	B Small ..... Area (i.e. acres) ..... dvegtype B | dstructclass H I J K ..... period 3	SOFT	1.0	2847.0	1.0	71171.0	1.0	347	y_347	59289.976120708576	0.0	0.0
+603	B Small ..... Area (i.e. acres) ..... dvegtype B | dstructclass H I J K ..... period 4	SOFT	1.0	2847.0	1.0	71171.0	1.0	348	y_348	65406.96149122607	0.0	0.0
+604	B Small ..... Area (i.e. acres) ..... dvegtype B | dstructclass H I J K ..... period 5	SOFT	1.0	2847.0	1.0	71171.0	1.0	349	y_349	71171.0	0.0	0.0
+605	B Small ..... Area (i.e. acres) ..... dvegtype B | dstructclass H I J K ..... period 6	SOFT	1.0	2847.0	1.0	71171.0	1.0	350	y_350	61909.44955852363	0.0	0.0
+606	B Small ..... Area (i.e. acres) ..... dvegtype B | dstructclass H I J K ..... period 7	SOFT	1.0	2847.0	0.5	71171.0	0.5	351	y_351	68649.30968051343	0.0	0.0
+607	B Small ..... Area (i.e. acres) ..... dvegtype B | dstructclass H I J K ..... period 8	SOFT	1.0	2847.0	0.5	71171.0	0.5	352	y_352	56247.41284125824	0.0	0.0
+608	B Small ..... Area (i.e. acres) ..... dvegtype B | dstructclass H I J K ..... period 9	SOFT	1.0	2847.0	0.5	71171.0	0.5	353	y_353	59603.048827061444	0.0	0.0
+609	B Small ..... Area (i.e. acres) ..... dvegtype B | dstructclass H I J K ..... period 10	SOFT	1.0	2847.0	0.5	71171.0	0.5	354	y_354	51050.82791176331	0.0	0.0
+610	B Small ..... Area (i.e. acres) ..... dvegtype B | dstructclass H I J K ..... period 11	SOFT	1.0	2847.0	0.5	71171.0	0.5	355	y_355	67547.79518150837	0.0	0.0
+611	B Small ..... Area (i.e. acres) ..... dvegtype B | dstructclass H I J K ..... period 12	SOFT	1.0	2847.0	0.5	71171.0	0.5	356	y_356	64236.31508157299	0.0	0.0
+612	B Small ..... Area (i.e. acres) ..... dvegtype B | dstructclass H I J K ..... period 13	SOFT	1.0	2847.0	0.5	71171.0	0.5	357	y_357	66675.76494292097	0.0	0.0
+613	B Small ..... Area (i.e. acres) ..... dvegtype B | dstructclass H I J K ..... period 14	SOFT	1.0	2847.0	0.5	71171.0	0.5	358	y_358	56807.53263987284	0.0	0.0
+614	B Small ..... Area (i.e. acres) ..... dvegtype B | dstructclass H I J K ..... period 15	SOFT	1.0	2847.0	0.5	71171.0	0.5	359	y_359	71171.0	0.0	0.0
+615	I Medium ..... Area (i.e. acres) ..... dvegtype I | dstructclass L M N O ..... period 1	SOFT	1.0	197714.0	1.0	290519.0	1.0	360	y_360	253871.614900143	0.0	0.0
+616	I Medium ..... Area (i.e. acres) ..... dvegtype I | dstructclass L M N O ..... period 2	SOFT	1.0	197714.0	1.0	290519.0	1.0	361	y_361	252158.80320944704	0.0	0.0
+617	I Medium ..... Area (i.e. acres) ..... dvegtype I | dstructclass L M N O ..... period 3	SOFT	1.0	197714.0	1.0	290519.0	1.0	362	y_362	245392.60896455502	0.0	0.0
+618	I Medium ..... Area (i.e. acres) ..... dvegtype I | dstructclass L M N O ..... period 4	SOFT	1.0	197714.0	1.0	290519.0	1.0	363	y_363	243436.1642076421	0.0	0.0
+619	I Medium ..... Area (i.e. acres) ..... dvegtype I | dstructclass L M N O ..... period 5	SOFT	1.0	197714.0	1.0	290519.0	1.0	364	y_364	243494.61143224197	0.0	0.0
+620	I Medium ..... Area (i.e. acres) ..... dvegtype I | dstructclass L M N O ..... period 6	SOFT	1.0	197714.0	1.0	290519.0	1.0	365	y_365	229946.01292147973	0.0	0.0
+621	I Medium ..... Area (i.e. acres) ..... dvegtype I | dstructclass L M N O ..... period 7	SOFT	1.0	197714.0	0.5	290519.0	0.5	366	y_366	175540.21456030087	0.0	11086.892719849566
+622	I Medium ..... Area (i.e. acres) ..... dvegtype I | dstructclass L M N O ..... period 8	SOFT	1.0	197714.0	0.5	290519.0	0.5	367	y_367	191435.63748295818	0.0	3139.181258520912
+623	I Medium ..... Area (i.e. acres) ..... dvegtype I | dstructclass L M N O ..... period 9	SOFT	1.0	197714.0	0.5	290519.0	0.5	368	y_368	197594.2043794962	0.0	59.89781025190314
+624	I Medium ..... Area (i.e. acres) ..... dvegtype I | dstructclass L M N O ..... period 10	SOFT	1.0	197714.0	0.5	290519.0	0.5	369	y_369	197714.0	0.0	0.0
+625	I Medium ..... Area (i.e. acres) ..... dvegtype I | dstructclass L M N O ..... period 11	SOFT	1.0	197714.0	0.5	290519.0	0.5	370	y_370	206825.65394364862	0.0	0.0
+626	I Medium ..... Area (i.e. acres) ..... dvegtype I | dstructclass L M N O ..... period 12	SOFT	1.0	197714.0	0.5	290519.0	0.5	371	y_371	188450.96391439228	0.0	4631.518042803858
+627	I Medium ..... Area (i.e. acres) ..... dvegtype I | dstructclass L M N O ..... period 13	SOFT	1.0	197714.0	0.5	290519.0	0.5	372	y_372	189865.73162401846	0.0	3924.1341879907704
+628	I Medium ..... Area (i.e. acres) ..... dvegtype I | dstructclass L M N O ..... period 14	SOFT	1.0	197714.0	0.5	290519.0	0.5	373	y_373	180496.9680700443	0.0	8608.51596497785
+629	I Medium ..... Area (i.e. acres) ..... dvegtype I | dstructclass L M N O ..... period 15	SOFT	1.0	197714.0	0.5	290519.0	0.5	374	y_374	182312.16562990652	0.0	7700.917185046739
+630	FGH Medium ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass L M N O ..... period 1	SOFT	1.0	298059.0	1.0	534753.0	1.0	375	y_375	294272.7209959245	0.0	3786.2790040755062
+631	FGH Medium ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass L M N O ..... period 2	SOFT	1.0	298059.0	1.0	534753.0	1.0	376	y_376	334379.32932274754	0.0	0.0
+632	FGH Medium ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass L M N O ..... period 3	SOFT	1.0	298059.0	1.0	534753.0	1.0	377	y_377	255142.39402338528	0.0	42916.60597661472
+633	FGH Medium ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass L M N O ..... period 4	SOFT	1.0	298059.0	1.0	534753.0	1.0	378	y_378	193489.94198096363	0.0	104569.05801903637
+634	FGH Medium ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass L M N O ..... period 5	SOFT	1.0	298059.0	1.0	534753.0	1.0	379	y_379	148388.08283072663	0.0	149670.91716927337
+635	FGH Medium ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass L M N O ..... period 6	SOFT	1.0	298059.0	1.0	534753.0	1.0	380	y_380	185899.32586870107	0.0	112159.67413129893
+636	FGH Medium ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass L M N O ..... period 7	SOFT	1.0	298059.0	0.5	534753.0	0.5	381	y_381	221692.21164141395	0.0	38183.39417929303
+637	FGH Medium ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass L M N O ..... period 8	SOFT	1.0	298059.0	0.5	534753.0	0.5	382	y_382	186442.56068552088	0.0	55808.21965723956
+638	FGH Medium ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass L M N O ..... period 9	SOFT	1.0	298059.0	0.5	534753.0	0.5	383	y_383	186802.85934000163	0.0	55628.07032999919
+639	FGH Medium ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass L M N O ..... period 10	SOFT	1.0	298059.0	0.5	534753.0	0.5	384	y_384	177470.11630603517	0.0	60294.441846982416
+640	FGH Medium ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass L M N O ..... period 11	SOFT	1.0	298059.0	0.5	534753.0	0.5	385	y_385	136711.9491076018	0.0	80673.5254461991
+641	FGH Medium ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass L M N O ..... period 12	SOFT	1.0	298059.0	0.5	534753.0	0.5	386	y_386	153729.17274178762	0.0	72164.91362910619
+642	FGH Medium ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass L M N O ..... period 13	SOFT	1.0	298059.0	0.5	534753.0	0.5	387	y_387	152203.94481186412	0.0	72927.52759406794
+643	FGH Medium ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass L M N O ..... period 14	SOFT	1.0	298059.0	0.5	534753.0	0.5	388	y_388	136140.8103592592	0.0	80959.0948203704
+644	FGH Medium ..... Area (i.e. acres) ..... dvegtype F G H | dstructclass L M N O ..... period 15	SOFT	1.0	298059.0	0.5	534753.0	0.5	389	y_389	134961.4899427638	0.0	81548.7550286181
+645	CDE Medium ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass L M N O ..... period 1	SOFT	1.0	85449.0	1.0	142416.0	1.0	390	y_390	93206.76335611628	0.0	0.0
+646	CDE Medium ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass L M N O ..... period 2	SOFT	1.0	85449.0	1.0	142416.0	1.0	391	y_391	99604.96905548505	0.0	0.0
+647	CDE Medium ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass L M N O ..... period 3	SOFT	1.0	85449.0	1.0	142416.0	1.0	392	y_392	81806.06038374452	0.0	3642.9396162554767
+648	CDE Medium ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass L M N O ..... period 4	SOFT	1.0	85449.0	1.0	142416.0	1.0	393	y_393	79437.87333177177	0.0	6011.126668228229
+649	CDE Medium ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass L M N O ..... period 5	SOFT	1.0	85449.0	1.0	142416.0	1.0	394	y_394	89161.09120638864	0.0	0.0
+650	CDE Medium ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass L M N O ..... period 6	SOFT	1.0	85449.0	1.0	142416.0	1.0	395	y_395	88935.57621243669	0.0	0.0
+651	CDE Medium ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass L M N O ..... period 7	SOFT	1.0	85449.0	0.5	142416.0	0.5	396	y_396	81681.21893369501	0.0	1883.8905331524948
+652	CDE Medium ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass L M N O ..... period 8	SOFT	1.0	85449.0	0.5	142416.0	0.5	397	y_397	79778.72133683588	0.0	2835.1393315820605
+653	CDE Medium ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass L M N O ..... period 9	SOFT	1.0	85449.0	0.5	142416.0	0.5	398	y_398	80301.99993112501	0.0	2573.500034437493
+654	CDE Medium ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass L M N O ..... period 10	SOFT	1.0	85449.0	0.5	142416.0	0.5	399	y_399	85449.0	0.0	0.0
+655	CDE Medium ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass L M N O ..... period 11	SOFT	1.0	85449.0	0.5	142416.0	0.5	400	y_400	85449.0	0.0	0.0
+656	CDE Medium ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass L M N O ..... period 12	SOFT	1.0	85449.0	0.5	142416.0	0.5	401	y_401	84224.7929751045	0.0	612.1035124477494
+657	CDE Medium ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass L M N O ..... period 13	SOFT	1.0	85449.0	0.5	142416.0	0.5	402	y_402	79894.88570655607	0.0	2777.0571467219634
+658	CDE Medium ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass L M N O ..... period 14	SOFT	1.0	85449.0	0.5	142416.0	0.5	403	y_403	78792.89864872239	0.0	3328.050675638806
+659	CDE Medium ..... Area (i.e. acres) ..... dvegtype C D E | dstructclass L M N O ..... period 15	SOFT	1.0	85449.0	0.5	142416.0	0.5	404	y_404	76673.5839987989	0.0	4387.708000600549
+660	B Medium ..... Area (i.e. acres) ..... dvegtype B | dstructclass L M N O ..... period 1	SOFT	1.0	2847.0	1.0	68324.0	1.0	405	y_405	84052.51605542975	0.0	15728.516055429747
+661	B Medium ..... Area (i.e. acres) ..... dvegtype B | dstructclass L M N O ..... period 2	SOFT	1.0	2847.0	1.0	68324.0	1.0	406	y_406	68324.0	0.0	0.0
+662	B Medium ..... Area (i.e. acres) ..... dvegtype B | dstructclass L M N O ..... period 3	SOFT	1.0	2847.0	1.0	68324.0	1.0	407	y_407	63665.74686460194	0.0	0.0
+663	B Medium ..... Area (i.e. acres) ..... dvegtype B | dstructclass L M N O ..... period 4	SOFT	1.0	2847.0	1.0	68324.0	1.0	408	y_408	68324.0	0.0	0.0
+664	B Medium ..... Area (i.e. acres) ..... dvegtype B | dstructclass L M N O ..... period 5	SOFT	1.0	2847.0	1.0	68324.0	1.0	409	y_409	66136.42807942866	0.0	0.0
+665	B Medium ..... Area (i.e. acres) ..... dvegtype B | dstructclass L M N O ..... period 6	SOFT	1.0	2847.0	1.0	68324.0	1.0	410	y_410	57876.20054206393	0.0	0.0
+666	B Medium ..... Area (i.e. acres) ..... dvegtype B | dstructclass L M N O ..... period 7	SOFT	1.0	2847.0	0.5	68324.0	0.5	411	y_411	57549.8633867902	0.0	0.0
+667	B Medium ..... Area (i.e. acres) ..... dvegtype B | dstructclass L M N O ..... period 8	SOFT	1.0	2847.0	0.5	68324.0	0.5	412	y_412	64546.45390439096	0.0	0.0
+668	B Medium ..... Area (i.e. acres) ..... dvegtype B | dstructclass L M N O ..... period 9	SOFT	1.0	2847.0	0.5	68324.0	0.5	413	y_413	62514.05416064104	0.0	0.0
+669	B Medium ..... Area (i.e. acres) ..... dvegtype B | dstructclass L M N O ..... period 10	SOFT	1.0	2847.0	0.5	68324.0	0.5	414	y_414	68324.0	0.0	0.0
+670	B Medium ..... Area (i.e. acres) ..... dvegtype B | dstructclass L M N O ..... period 11	SOFT	1.0	2847.0	0.5	68324.0	0.5	415	y_415	43770.6995673883	0.0	0.0
+671	B Medium ..... Area (i.e. acres) ..... dvegtype B | dstructclass L M N O ..... period 12	SOFT	1.0	2847.0	0.5	68324.0	0.5	416	y_416	49245.09679267072	0.0	0.0
+672	B Medium ..... Area (i.e. acres) ..... dvegtype B | dstructclass L M N O ..... period 13	SOFT	1.0	2847.0	0.5	68324.0	0.5	417	y_417	48940.978032392566	0.0	0.0
+673	B Medium ..... Area (i.e. acres) ..... dvegtype B | dstructclass L M N O ..... period 14	SOFT	1.0	2847.0	0.5	68324.0	0.5	418	y_418	63408.46684646561	0.0	0.0
+674	B Medium ..... Area (i.e. acres) ..... dvegtype B | dstructclass L M N O ..... period 15	SOFT	1.0	2847.0	0.5	68324.0	0.5	419	y_419	49865.34368433293	0.0	0.0
+690	rbdft MAG 5&6 period 1..... No dynamic restriction ..... layer3 5 6 | period 1	FREE	1.0	null	null	null	null	1529	v_43	1.6004992732652482E8	0.0	0.0
+691	min acres treated ..... Area (i.e. acres) ..... action_type bb cs-bb ct ct-bb ct-ub gp-ct-ub pct plant sc-bb ub ..... period 1	HARD	1.0	60000.0	1.0	null	null	1471	z_211	90507.50152738848	0.0	0.0
+692	min acres treated ..... Area (i.e. acres) ..... action_type bb cs-bb ct ct-bb ct-ub gp-ct-ub pct plant sc-bb ub ..... period 2	HARD	1.0	60000.0	1.0	null	null	1472	z_212	116451.12309846762	0.0	0.0
+693	min acres treated ..... Area (i.e. acres) ..... action_type bb cs-bb ct ct-bb ct-ub gp-ct-ub pct plant sc-bb ub ..... period 3	HARD	1.0	60000.0	1.0	null	null	1473	z_213	112454.3682092483	0.0	0.0
+694	min acres treated ..... Area (i.e. acres) ..... action_type bb cs-bb ct ct-bb ct-ub gp-ct-ub pct plant sc-bb ub ..... period 4	HARD	1.0	60000.0	1.0	null	null	1474	z_214	60000.0	0.0016514714988554037	0.0
+695	min acres treated ..... Area (i.e. acres) ..... action_type bb cs-bb ct ct-bb ct-ub gp-ct-ub pct plant sc-bb ub ..... period 5	HARD	1.0	60000.0	1.0	null	null	1475	z_215	119836.26258405068	0.0	0.0
+696	min acres treated ..... Area (i.e. acres) ..... action_type bb cs-bb ct ct-bb ct-ub gp-ct-ub pct plant sc-bb ub ..... period 6	HARD	1.0	60000.0	1.0	null	null	1476	z_216	60000.0	0.004412211837564014	0.0
+697	min acres treated ..... Area (i.e. acres) ..... action_type bb cs-bb ct ct-bb ct-ub gp-ct-ub pct plant sc-bb ub ..... period 7	HARD	1.0	60000.0	1.0	null	null	1477	z_217	140680.68183893946	0.0	0.0
+698	min acres treated ..... Area (i.e. acres) ..... action_type bb cs-bb ct ct-bb ct-ub gp-ct-ub pct plant sc-bb ub ..... period 8	HARD	1.0	60000.0	1.0	null	null	1478	z_218	86845.4957562229	0.0	0.0
+699	min acres treated ..... Area (i.e. acres) ..... action_type bb cs-bb ct ct-bb ct-ub gp-ct-ub pct plant sc-bb ub ..... period 9	HARD	1.0	60000.0	1.0	null	null	1479	z_219	92352.12916670763	0.0	0.0
+700	min acres treated ..... Area (i.e. acres) ..... action_type bb cs-bb ct ct-bb ct-ub gp-ct-ub pct plant sc-bb ub ..... period 10	HARD	1.0	60000.0	1.0	null	null	1480	z_220	98331.30287046597	0.0	0.0
+701	min acres treated ..... Area (i.e. acres) ..... action_type bb cs-bb ct ct-bb ct-ub gp-ct-ub pct plant sc-bb ub ..... period 11	HARD	1.0	60000.0	1.0	null	null	1481	z_221	60000.0	2.610295734969354E-4	0.0
+702	min acres treated ..... Area (i.e. acres) ..... action_type bb cs-bb ct ct-bb ct-ub gp-ct-ub pct plant sc-bb ub ..... period 12	HARD	1.0	60000.0	1.0	null	null	1482	z_222	81099.2296751797	0.0	0.0
+703	min acres treated ..... Area (i.e. acres) ..... action_type bb cs-bb ct ct-bb ct-ub gp-ct-ub pct plant sc-bb ub ..... period 13	HARD	1.0	60000.0	1.0	null	null	1483	z_223	68577.88152371185	0.0	0.0
+704	min acres treated ..... Area (i.e. acres) ..... action_type bb cs-bb ct ct-bb ct-ub gp-ct-ub pct plant sc-bb ub ..... period 14	HARD	1.0	60000.0	1.0	null	null	1484	z_224	72719.93647440418	0.0	0.0
+705	min acres treated ..... Area (i.e. acres) ..... action_type bb cs-bb ct ct-bb ct-ub gp-ct-ub pct plant sc-bb ub ..... period 15	HARD	1.0	60000.0	1.0	null	null	1485	z_225	90338.89663042035	0.0	0.0
+706	Veg B All Trt ac ..... Area (i.e. acres) ..... dvegtype B | action_type cs-bb ct ct-bb ct-ub gp-ct-ub sc-bb ..... period 1	FREE	1.0	null	null	null	null	1530	v_44	19884.672905087795	0.0	0.0
+707	Veg B All Trt ac ..... Area (i.e. acres) ..... dvegtype B | action_type cs-bb ct ct-bb ct-ub gp-ct-ub sc-bb ..... period 2	FREE	1.0	null	null	null	null	1531	v_45	15909.967068781492	0.0	0.0
+708	Veg B All Trt ac ..... Area (i.e. acres) ..... dvegtype B | action_type cs-bb ct ct-bb ct-ub gp-ct-ub sc-bb ..... period 3	FREE	1.0	null	null	null	null	1532	v_46	15668.412402857803	0.0	0.0
+709	Veg B All Trt ac ..... Area (i.e. acres) ..... dvegtype B | action_type cs-bb ct ct-bb ct-ub gp-ct-ub sc-bb ..... period 4	FREE	1.0	null	null	null	null	1533	v_47	9580.349334662293	0.0	0.0
+710	Veg B All Trt ac ..... Area (i.e. acres) ..... dvegtype B | action_type cs-bb ct ct-bb ct-ub gp-ct-ub sc-bb ..... period 5	FREE	1.0	null	null	null	null	1534	v_48	18912.834745827186	0.0	0.0
+711	WD Montane All Trt Ac ..... Area (i.e. acres) ..... dvegtype C D E | action_type cs-bb ct ct-bb ct-ub gp-ct-ub sc-bb ..... period 1	FREE	1.0	null	null	null	null	1535	v_49	5800.507114172403	0.0	0.0
+712	WD Montane All Trt Ac ..... Area (i.e. acres) ..... dvegtype C D E | action_type cs-bb ct ct-bb ct-ub gp-ct-ub sc-bb ..... period 2	FREE	1.0	null	null	null	null	1536	v_50	1116.8491037070642	0.0	0.0
+713	WD Montane All Trt Ac ..... Area (i.e. acres) ..... dvegtype C D E | action_type cs-bb ct ct-bb ct-ub gp-ct-ub sc-bb ..... period 3	FREE	1.0	null	null	null	null	1537	v_51	1694.6971161734098	0.0	0.0
+714	WD Montane All Trt Ac ..... Area (i.e. acres) ..... dvegtype C D E | action_type cs-bb ct ct-bb ct-ub gp-ct-ub sc-bb ..... period 4	FREE	1.0	null	null	null	null	1538	v_52	1029.6169729844548	0.0	0.0
+715	WD Montane All Trt Ac ..... Area (i.e. acres) ..... dvegtype C D E | action_type cs-bb ct ct-bb ct-ub gp-ct-ub sc-bb ..... period 5	FREE	1.0	null	null	null	null	1539	v_53	798.6070671957474	0.0	0.0
+716	CM/C NonLP AllTrt ..... Area (i.e. acres) ..... dvegtype F H I | action_type cs-bb ct ct-bb ct-ub gp-ct-ub sc-bb ..... period 1	FREE	1.0	null	null	null	null	1540	v_54	1035.093787030612	0.0	0.0
+717	CM/C NonLP AllTrt ..... Area (i.e. acres) ..... dvegtype F H I | action_type cs-bb ct ct-bb ct-ub gp-ct-ub sc-bb ..... period 2	FREE	1.0	null	null	null	null	1541	v_55	0.0	0.0	0.0
+718	CM/C NonLP AllTrt ..... Area (i.e. acres) ..... dvegtype F H I | action_type cs-bb ct ct-bb ct-ub gp-ct-ub sc-bb ..... period 3	FREE	1.0	null	null	null	null	1542	v_56	0.0	0.0	0.0
+719	CM/C NonLP AllTrt ..... Area (i.e. acres) ..... dvegtype F H I | action_type cs-bb ct ct-bb ct-ub gp-ct-ub sc-bb ..... period 4	FREE	1.0	null	null	null	null	1543	v_57	2234.7693905467154	0.0	0.0
+720	CM/C NonLP AllTrt ..... Area (i.e. acres) ..... dvegtype F H I | action_type cs-bb ct ct-bb ct-ub gp-ct-ub sc-bb ..... period 5	FREE	1.0	null	null	null	null	1544	v_58	3264.020474502613	0.0	0.0
+721	CM/C LP AllTrt ..... Area (i.e. acres) ..... dvegtype G | action_type cs-bb ct ct-bb ct-ub gp-ct-ub sc-bb ..... period 1	FREE	1.0	null	null	null	null	1545	v_59	1214.2965898336251	0.0	0.0
+722	CM/C LP AllTrt ..... Area (i.e. acres) ..... dvegtype G | action_type cs-bb ct ct-bb ct-ub gp-ct-ub sc-bb ..... period 2	FREE	1.0	null	null	null	null	1546	v_60	3159.0827487476276	0.0	0.0
+723	CM/C LP AllTrt ..... Area (i.e. acres) ..... dvegtype G | action_type cs-bb ct ct-bb ct-ub gp-ct-ub sc-bb ..... period 3	FREE	1.0	null	null	null	null	1547	v_61	2078.062427176047	0.0	0.0
+724	CM/C LP AllTrt ..... Area (i.e. acres) ..... dvegtype G | action_type cs-bb ct ct-bb ct-ub gp-ct-ub sc-bb ..... period 4	FREE	1.0	null	null	null	null	1548	v_62	3966.9520059730094	0.0	0.0
+725	CM/C LP AllTrt ..... Area (i.e. acres) ..... dvegtype G | action_type cs-bb ct ct-bb ct-ub gp-ct-ub sc-bb ..... period 5	FREE	1.0	null	null	null	null	1549	v_63	1130.020086734501	0.0	0.0
+726	Veg B CT ..... Area (i.e. acres) ..... dvegtype B | action_type ct ct-bb ct-ub ..... period 1	FREE	1.0	null	null	null	null	1550	v_64	0.0	0.0	0.0
+727	Veg B CT ..... Area (i.e. acres) ..... dvegtype B | action_type ct ct-bb ct-ub ..... period 2	FREE	1.0	null	null	null	null	1551	v_65	8479.516209023524	0.0	0.0
+728	Veg B CT ..... Area (i.e. acres) ..... dvegtype B | action_type ct ct-bb ct-ub ..... period 3	FREE	1.0	null	null	null	null	1552	v_66	10967.88868200046	0.0	0.0
+729	Veg B CT ..... Area (i.e. acres) ..... dvegtype B | action_type ct ct-bb ct-ub ..... period 4	FREE	1.0	null	null	null	null	1553	v_67	596.727312672721	0.0	0.0
+730	Veg B CT ..... Area (i.e. acres) ..... dvegtype B | action_type ct ct-bb ct-ub ..... period 5	FREE	1.0	null	null	null	null	1554	v_68	12254.49306749451	0.0	0.0
+731	WDMontane CT ..... Area (i.e. acres) ..... dvegtype C D E | action_type ct ct-bb ct-ub ..... period 1	FREE	1.0	null	null	null	null	1555	v_69	3770.3296242120623	0.0	0.0
+732	WDMontane CT ..... Area (i.e. acres) ..... dvegtype C D E | action_type ct ct-bb ct-ub ..... period 2	FREE	1.0	null	null	null	null	1556	v_70	725.9519174095917	0.0	0.0
+733	WDMontane CT ..... Area (i.e. acres) ..... dvegtype C D E | action_type ct ct-bb ct-ub ..... period 3	FREE	1.0	null	null	null	null	1557	v_71	0.0	0.0	0.0
+734	WDMontane CT ..... Area (i.e. acres) ..... dvegtype C D E | action_type ct ct-bb ct-ub ..... period 4	FREE	1.0	null	null	null	null	1558	v_72	0.0	0.0	0.0
+735	WDMontane CT ..... Area (i.e. acres) ..... dvegtype C D E | action_type ct ct-bb ct-ub ..... period 5	FREE	1.0	null	null	null	null	1559	v_73	0.0	0.0	0.0
+736	CM/C NonLP CT ..... Area (i.e. acres) ..... dvegtype F H I | action_type ct ct-bb ct-ub ..... period 1	FREE	1.0	null	null	null	null	1560	v_74	724.5656509214284	0.0	0.0
+737	CM/C NonLP CT ..... Area (i.e. acres) ..... dvegtype F H I | action_type ct ct-bb ct-ub ..... period 2	FREE	1.0	null	null	null	null	1561	v_75	0.0	0.0	0.0
+738	CM/C NonLP CT ..... Area (i.e. acres) ..... dvegtype F H I | action_type ct ct-bb ct-ub ..... period 3	FREE	1.0	null	null	null	null	1562	v_76	0.0	0.0	0.0
+739	CM/C NonLP CT ..... Area (i.e. acres) ..... dvegtype F H I | action_type ct ct-bb ct-ub ..... period 4	FREE	1.0	null	null	null	null	1563	v_77	0.0	0.0	0.0
+740	CM/C NonLP CT ..... Area (i.e. acres) ..... dvegtype F H I | action_type ct ct-bb ct-ub ..... period 5	FREE	1.0	null	null	null	null	1564	v_78	0.0	0.0	0.0
+741	CM/C LP CT ..... Area (i.e. acres) ..... dvegtype G | action_type ct ct-bb ct-ub ..... period 1	FREE	1.0	null	null	null	null	1565	v_79	303.5741474584063	0.0	0.0
+742	CM/C LP CT ..... Area (i.e. acres) ..... dvegtype G | action_type ct ct-bb ct-ub ..... period 2	FREE	1.0	null	null	null	null	1566	v_80	789.7706871869069	0.0	0.0
+743	CM/C LP CT ..... Area (i.e. acres) ..... dvegtype G | action_type ct ct-bb ct-ub ..... period 3	FREE	1.0	null	null	null	null	1567	v_81	0.0	0.0	0.0
+744	CM/C LP CT ..... Area (i.e. acres) ..... dvegtype G | action_type ct ct-bb ct-ub ..... period 4	FREE	1.0	null	null	null	null	1568	v_82	0.0	0.0	0.0
+745	CM/C LP CT ..... Area (i.e. acres) ..... dvegtype G | action_type ct ct-bb ct-ub ..... period 5	FREE	1.0	null	null	null	null	1569	v_83	0.0	0.0	0.0
+746	CusterVolByPeriod ..... rmcuft ..... No dynamic restriction ..... layer2 C s | period 1	FREE	1.0	null	null	null	null	1570	v_84	2.4378687804065306E7	0.0	0.0
+747	CusterVolByPeriod ..... rmcuft ..... No dynamic restriction ..... layer2 C s | period 2	FREE	1.0	null	null	null	null	1571	v_85	2.218995781088032E7	0.0	0.0
+748	CusterVolByPeriod ..... rmcuft ..... No dynamic restriction ..... layer2 C s | period 3	FREE	1.0	null	null	null	null	1572	v_86	1.5307138862210374E7	0.0	0.0
+749	CusterVolByPeriod ..... rmcuft ..... No dynamic restriction ..... layer2 C s | period 4	FREE	1.0	null	null	null	null	1573	v_87	1.609621899296764E7	0.0	0.0
+750	CusterVolByPeriod ..... rmcuft ..... No dynamic restriction ..... layer2 C s | period 5	FREE	1.0	null	null	null	null	1574	v_88	1.1869035827398837E7	0.0	0.0
+751	CusterVolByPeriod ..... rmcuft ..... No dynamic restriction ..... layer2 C s | period 6	FREE	1.0	null	null	null	null	1575	v_89	1.444398768306087E7	0.0	0.0
+752	CusterVolByPeriod ..... rmcuft ..... No dynamic restriction ..... layer2 C s | period 7	FREE	1.0	null	null	null	null	1576	v_90	9552999.616059916	0.0	0.0
+753	CusterVolByPeriod ..... rmcuft ..... No dynamic restriction ..... layer2 C s | period 8	FREE	1.0	null	null	null	null	1577	v_91	1.5502387784796314E7	0.0	0.0
+754	CusterVolByPeriod ..... rmcuft ..... No dynamic restriction ..... layer2 C s | period 9	FREE	1.0	null	null	null	null	1578	v_92	1.5008777852798613E7	0.0	0.0
+755	CusterVolByPeriod ..... rmcuft ..... No dynamic restriction ..... layer2 C s | period 10	FREE	1.0	null	null	null	null	1579	v_93	1.7938942722418085E7	0.0	0.0
+756	CusterVolByPeriod ..... rmcuft ..... No dynamic restriction ..... layer2 C s | period 11	FREE	1.0	null	null	null	null	1580	v_94	1.1622120413962752E7	0.0	0.0
+757	CusterVolByPeriod ..... rmcuft ..... No dynamic restriction ..... layer2 C s | period 12	FREE	1.0	null	null	null	null	1581	v_95	1.5533601901478061E7	0.0	0.0
+758	CusterVolByPeriod ..... rmcuft ..... No dynamic restriction ..... layer2 C s | period 13	FREE	1.0	null	null	null	null	1582	v_96	1.1301699085547455E7	0.0	0.0
+759	CusterVolByPeriod ..... rmcuft ..... No dynamic restriction ..... layer2 C s | period 14	FREE	1.0	null	null	null	null	1583	v_97	2.6769187901472557E7	0.0	0.0
+760	CusterVolByPeriod ..... rmcuft ..... No dynamic restriction ..... layer2 C s | period 15	FREE	1.0	null	null	null	null	1584	v_98	1.5162470909872118E7	0.0	0.0
+761	GallVolByPeriod ..... rmcuft ..... No dynamic restriction ..... layer2 G l | period 1	FREE	1.0	null	null	null	null	1585	v_99	1.2189343902032653E7	0.0	0.0
+762	GallVolByPeriod ..... rmcuft ..... No dynamic restriction ..... layer2 G l | period 2	FREE	1.0	null	null	null	null	1586	v_100	1.109497890544016E7	0.0	0.0
+763	GallVolByPeriod ..... rmcuft ..... No dynamic restriction ..... layer2 G l | period 3	FREE	1.0	null	null	null	null	1587	v_101	1.6675054915166594E7	0.0	0.0
+764	GallVolByPeriod ..... rmcuft ..... No dynamic restriction ..... layer2 G l | period 4	FREE	1.0	null	null	null	null	1588	v_102	1.5120588342157725E7	0.0	0.0
+765	GallVolByPeriod ..... rmcuft ..... No dynamic restriction ..... layer2 G l | period 5	FREE	1.0	null	null	null	null	1589	v_103	1.872924743713901E7	0.0	0.0
+766	GallVolByPeriod ..... rmcuft ..... No dynamic restriction ..... layer2 G l | period 6	FREE	1.0	null	null	null	null	1590	v_104	1.6740978090104766E7	0.0	0.0
+767	GallVolByPeriod ..... rmcuft ..... No dynamic restriction ..... layer2 G l | period 7	FREE	1.0	null	null	null	null	1591	v_105	2.211745147254059E7	0.0	0.0
+768	GallVolByPeriod ..... rmcuft ..... No dynamic restriction ..... layer2 G l | period 8	FREE	1.0	null	null	null	null	1592	v_106	1.5066066022148876E7	0.0	0.0
+769	GallVolByPeriod ..... rmcuft ..... No dynamic restriction ..... layer2 G l | period 9	FREE	1.0	null	null	null	null	1593	v_107	1.5250688436800208E7	0.0	0.0
+770	GallVolByPeriod ..... rmcuft ..... No dynamic restriction ..... layer2 G l | period 10	FREE	1.0	null	null	null	null	1594	v_108	1.2601258872353194E7	0.0	0.0
+771	GallVolByPeriod ..... rmcuft ..... No dynamic restriction ..... layer2 G l | period 11	FREE	1.0	null	null	null	null	1595	v_109	1.909301434050851E7	0.0	0.0
+772	GallVolByPeriod ..... rmcuft ..... No dynamic restriction ..... layer2 G l | period 12	FREE	1.0	null	null	null	null	1596	v_110	1.499636953442073E7	0.0	0.0
+773	GallVolByPeriod ..... rmcuft ..... No dynamic restriction ..... layer2 G l | period 13	FREE	1.0	null	null	null	null	1597	v_111	1.911077317930831E7	0.0	0.0
+774	GallVolByPeriod ..... rmcuft ..... No dynamic restriction ..... layer2 G l | period 14	FREE	1.0	null	null	null	null	1598	v_112	3641863.9621622143	0.0	0.0
+775	GallVolByPeriod ..... rmcuft ..... No dynamic restriction ..... layer2 G l | period 15	FREE	1.0	null	null	null	null	1599	v_113	1.5190504702917786E7	0.0	0.0
+776	BdFtHarv ..... rbdft ..... No dynamic restriction ..... period 2	FREE	1.0	5.0E7	null	null	null	1600	v_114	1.6142372042408422E8	0.0	0.0
+777	BdFtHarv ..... rbdft ..... No dynamic restriction ..... period 3	FREE	1.0	5.0E7	null	null	null	1601	v_115	1.5639166676630813E8	0.0	0.0
+778	BdFtHarv ..... rbdft ..... No dynamic restriction ..... period 4	FREE	1.0	5.0E7	null	null	null	1602	v_116	1.5330706882849824E8	0.0	0.0
+779	BdFtHarv ..... rbdft ..... No dynamic restriction ..... period 5	FREE	1.0	5.0E7	null	null	null	1603	v_117	1.496938769965974E8	0.0	0.0
+780	BdFtHarv ..... rbdft ..... No dynamic restriction ..... period 6	FREE	1.0	5.0E7	null	null	null	1604	v_118	1.6145751765600413E8	0.0	0.0
+781	BdFtHarv ..... rbdft ..... No dynamic restriction ..... period 7	FREE	1.0	5.0E7	null	null	null	1605	v_119	1.6387422161752954E8	0.0	0.0
+782	BdFtHarv ..... rbdft ..... No dynamic restriction ..... period 8	FREE	1.0	5.0E7	null	null	null	1606	v_120	1.5607959566104457E8	0.0	0.0
+783	BdFtHarv ..... rbdft ..... No dynamic restriction ..... period 9	FREE	1.0	5.0E7	null	null	null	1607	v_121	1.489979502374266E8	0.0	0.0
+784	BdFtHarv ..... rbdft ..... No dynamic restriction ..... period 10	FREE	1.0	5.0E7	null	null	null	1608	v_122	1.5819852743339506E8	0.0	0.0
+785	BdFtHarv ..... rbdft ..... No dynamic restriction ..... period 11	FREE	1.0	5.0E7	null	null	null	1609	v_123	1.6501822310162672E8	0.0	0.0
+786	BdFtHarv ..... rbdft ..... No dynamic restriction ..... period 12	FREE	1.0	5.0E7	null	null	null	1610	v_124	1.594056752918016E8	0.0	0.0
+787	BdFtHarv ..... rbdft ..... No dynamic restriction ..... period 13	FREE	1.0	5.0E7	null	null	null	1611	v_125	1.6183171705291948E8	0.0	0.0
+788	BdFtHarv ..... rbdft ..... No dynamic restriction ..... period 14	FREE	1.0	5.0E7	null	null	null	1612	v_126	1.5876783443001822E8	0.0	0.0
+789	BdFtHarv ..... rbdft ..... No dynamic restriction ..... period 15	FREE	1.0	5.0E7	null	null	null	1613	v_127	1.5502395630353922E8	0.0	0.0
