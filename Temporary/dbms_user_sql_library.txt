@@ -444,3 +444,28 @@ LEFT JOIN
 (SELECT description, value AS iteration_1 FROM summarize2_output_01_general_outputs WHERE iteration = 1)
 USING (description)
 ----------
+test area solution
+SELECT period,
+SUM(CASE WHEN t.method_status = 'NGE' THEN t.grouped_area END) AS NG_E_area,
+SUM(CASE WHEN t.method_status = 'PBE' THEN t.grouped_area END) AS PB_E_area,
+SUM(CASE WHEN t.method_status = 'GSE' THEN t.grouped_area END) AS GS_E_area,
+SUM(CASE WHEN t.method_status = 'EAE' THEN t.grouped_area END) AS EA_E_area,
+SUM(CASE WHEN t.method_status = 'MSE' THEN t.grouped_area END) AS MS_E_area,
+SUM(CASE WHEN t.method_status = 'BSE' THEN t.grouped_area END) AS BS_E_area,
+SUM(CASE WHEN t.method_status = 'NGR' THEN t.grouped_area END) AS NG_R_area,
+SUM(CASE WHEN t.method_status = 'PBR' THEN t.grouped_area END) AS PB_R_area,
+SUM(CASE WHEN t.method_status = 'GSR' THEN t.grouped_area END) AS GS_R_area,
+SUM(CASE WHEN t.method_status = 'EAR' THEN t.grouped_area END) AS EA_R_area
+FROM
+
+
+(SELECT 
+CAST(var_period AS DECIMAL) as period,
+(var_method || var_forest_status) AS method_status, ROUND(SUM(var_value), 1) as grouped_area
+FROM output_05_management_details_3
+GROUP BY (period || method_status)
+ORDER BY (period || method_status)) AS t
+
+
+GROUP BY period
+----------

@@ -795,11 +795,21 @@ public class Solve_Iterations {
 											
 											xEAr[strata_5layers_id][tR][aR][s5R][i] = new int[total_periods + 1 + iter];
 											for (int t = tR - aR + 1; t <= tR; t++) {
-												String var_name = "xEA_R_" + strata + "_" + tR + "_" + aR + "_" + layer5.get(s5R) + "_" + i + "_" + t;										
-												Information_Variable var_info = new Information_Variable(iter, var_name, -9999, yield_tables_names_list);
-												
-												if (!allow_Non_Existing_Prescription) {		// Boost 2
-													if (var_info.get_prescription_id_and_row_id()[0] != -9999) {
+												if (t >= t_regen + iter) {
+													String var_name = "xEA_R_" + strata + "_" + tR + "_" + aR + "_" + layer5.get(s5R) + "_" + i + "_" + t;										
+													Information_Variable var_info = new Information_Variable(iter, var_name, -9999, yield_tables_names_list);
+													
+													if (!allow_Non_Existing_Prescription) {		// Boost 2
+														if (var_info.get_prescription_id_and_row_id()[0] != -9999) {
+															var_info_list.add(var_info);
+															objlist.add((double) 0);
+															vnamelist.add(var_name);	
+															vlblist.add((double) 0);
+															vublist.add(Double.MAX_VALUE);
+															xEAr[strata_5layers_id][tR][aR][s5R][i][t] = nvars;
+															nvars++;
+														}
+													} else {
 														var_info_list.add(var_info);
 														objlist.add((double) 0);
 														vnamelist.add(var_name);	
@@ -808,14 +818,6 @@ public class Solve_Iterations {
 														xEAr[strata_5layers_id][tR][aR][s5R][i][t] = nvars;
 														nvars++;
 													}
-												} else {
-													var_info_list.add(var_info);
-													objlist.add((double) 0);
-													vnamelist.add(var_name);	
-													vlblist.add((double) 0);
-													vublist.add(Double.MAX_VALUE);
-													xEAr[strata_5layers_id][tR][aR][s5R][i][t] = nvars;
-													nvars++;
 												}
 											}
 //										}
@@ -1488,27 +1490,25 @@ public class Solve_Iterations {
 								for (int aR = 1; aR <= tR-1; aR++) {									
 									for (int s5R = 0; s5R < total_layer5; s5R++) {
 										for (int i = 0; i < total_EA_R_prescription_choices; i++) {
-											if (1 + iter == tR - aR + 1) {	// t = tR - aR + 1
-												if(xEAr[strata_5layers_id][tR] != null
-														 && xEAr[strata_5layers_id][tR][aR] != null
-																 && xEAr[strata_5layers_id][tR][aR][s5R] != null
-																		 && xEAr[strata_5layers_id][tR][aR][s5R][i] != null
-																				 && xEAr[strata_5layers_id][tR][aR][s5R][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
-													// Add constraint
-													c5_indexlist.add(new ArrayList<Integer>());
-													c5_valuelist.add(new ArrayList<Double>());
-													c5_indexlist.get(c5_num).add(xEAr[strata_5layers_id][tR][aR][s5R][i][1 + iter]);
-													c5_valuelist.get(c5_num).add((double) 1);
-													// Add bounds
-													int var_index = xEAr[strata_5layers_id][tR][aR][s5R][i][1 + iter];
-													double var_value = 0;
-													if (map_var_name_to_var_value.get(var_info_array[var_index].get_var_name()) != null) {
-														var_value = map_var_name_to_var_value.get(var_info_array[var_index].get_var_name());
-													}
-													c5_lblist.add(var_value);
-													c5_ublist.add(var_value);
-													c5_num++;
+											if(xEAr[strata_5layers_id][tR] != null
+													 && xEAr[strata_5layers_id][tR][aR] != null
+															 && xEAr[strata_5layers_id][tR][aR][s5R] != null
+																	 && xEAr[strata_5layers_id][tR][aR][s5R][i] != null
+																			 && xEAr[strata_5layers_id][tR][aR][s5R][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
+												// Add constraint
+												c5_indexlist.add(new ArrayList<Integer>());
+												c5_valuelist.add(new ArrayList<Double>());
+												c5_indexlist.get(c5_num).add(xEAr[strata_5layers_id][tR][aR][s5R][i][1 + iter]);
+												c5_valuelist.get(c5_num).add((double) 1);
+												// Add bounds
+												int var_index = xEAr[strata_5layers_id][tR][aR][s5R][i][1 + iter];
+												double var_value = 0;
+												if (map_var_name_to_var_value.get(var_info_array[var_index].get_var_name()) != null) {
+													var_value = map_var_name_to_var_value.get(var_info_array[var_index].get_var_name());
 												}
+												c5_lblist.add(var_value);
+												c5_ublist.add(var_value);
+												c5_num++;
 											}
 										}
 									}
@@ -1863,18 +1863,16 @@ public class Solve_Iterations {
 								for (int aR = 1; aR <= tR-1; aR++) {									
 									for (int s5R = 0; s5R < total_layer5; s5R++) {
 										for (int i = 0; i < total_EA_R_prescription_choices; i++) {
-											if (1 + iter == tR - aR + 1) {	// t = tR - aR + 1
-												if(xEAr[strata_5layers_id][tR] != null
-														 && xEAr[strata_5layers_id][tR][aR] != null
-																 && xEAr[strata_5layers_id][tR][aR][s5R] != null
-																		 && xEAr[strata_5layers_id][tR][aR][s5R][i] != null
-																				 && xEAr[strata_5layers_id][tR][aR][s5R][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
-													int var_index = xEAr[strata_5layers_id][tR][aR][s5R][i][1 + iter];
-													String prescription_and_row_id = var_info_array[var_index].get_yield_table_name_to_find() + " " + var_info_array[var_index].get_yield_table_row_index_to_find();
-													String state_id = map_prescription_and_row_id_to_state_id.get(prescription_and_row_id);
-													if (state_id == null) state_id = ""; // the case this var has prescription but missing row_id
-													map_var_index_to_var_state_id.put(var_index, state_id);
-												}
+											if(xEAr[strata_5layers_id][tR] != null
+													 && xEAr[strata_5layers_id][tR][aR] != null
+															 && xEAr[strata_5layers_id][tR][aR][s5R] != null
+																	 && xEAr[strata_5layers_id][tR][aR][s5R][i] != null
+																			 && xEAr[strata_5layers_id][tR][aR][s5R][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
+												int var_index = xEAr[strata_5layers_id][tR][aR][s5R][i][1 + iter];
+												String prescription_and_row_id = var_info_array[var_index].get_yield_table_name_to_find() + " " + var_info_array[var_index].get_yield_table_row_index_to_find();
+												String state_id = map_prescription_and_row_id_to_state_id.get(prescription_and_row_id);
+												if (state_id == null) state_id = ""; // the case this var has prescription but missing row_id
+												map_var_index_to_var_state_id.put(var_index, state_id);
 											}
 										}
 									}
@@ -2848,37 +2846,39 @@ public class Solve_Iterations {
 							for (int s5R = 0; s5R < total_layer5; s5R++) {
 								for (int i = 0; i < total_EA_R_prescription_choices; i++) {
 									for (int t = tR - aR + 1; t <= tR - 1; t++) {
-										if(xEAr[strata_5layers_id][tR] != null
-												 && xEAr[strata_5layers_id][tR][aR] != null
-														 && xEAr[strata_5layers_id][tR][aR][s5R] != null
-																 && xEAr[strata_5layers_id][tR][aR][s5R][i] != null
-																		 && xEAr[strata_5layers_id][tR][aR][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0 
-											// Add constraint
-											c14_indexlist.add(new ArrayList<Integer>());
-											c14_valuelist.add(new ArrayList<Double>());
-											
-											// Add xEAr(s1,s2,s3,s4,s5)[tR][aR][s5R][i][t]
-											int var_index = xEAr[strata_5layers_id][tR][aR][s5R][i][t];
-											double[][][] rd_percentage = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]) : rd_percentage_zeroes;
-											double total_percentage = 0;
-											for (int k = 0; k < total_replacing_disturbances; k++) {
-												for (int rd_s5R = 0; rd_s5R < total_layer5; rd_s5R++) {
-													total_percentage = total_percentage + rd_percentage[k][s5][rd_s5R];
+										if (t >= t_regen + iter) {
+											if(xEAr[strata_5layers_id][tR] != null
+													 && xEAr[strata_5layers_id][tR][aR] != null
+															 && xEAr[strata_5layers_id][tR][aR][s5R] != null
+																	 && xEAr[strata_5layers_id][tR][aR][s5R][i] != null
+																			 && xEAr[strata_5layers_id][tR][aR][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0 
+												// Add constraint
+												c14_indexlist.add(new ArrayList<Integer>());
+												c14_valuelist.add(new ArrayList<Double>());
+												
+												// Add xEAr(s1,s2,s3,s4,s5)[tR][aR][s5R][i][t]
+												int var_index = xEAr[strata_5layers_id][tR][aR][s5R][i][t];
+												double[][][] rd_percentage = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]) : rd_percentage_zeroes;
+												double total_percentage = 0;
+												for (int k = 0; k < total_replacing_disturbances; k++) {
+													for (int rd_s5R = 0; rd_s5R < total_layer5; rd_s5R++) {
+														total_percentage = total_percentage + rd_percentage[k][s5][rd_s5R];
+													}
 												}
+												if (total_percentage != 100) {	// only add if parameter is non zero
+													c14_indexlist.get(c14_num).add(xEAr[strata_5layers_id][tR][aR][s5R][i][t]);
+													c14_valuelist.get(c14_num).add((double) 1 - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
+												}
+										
+												// Add - xEAr(s1,s2,s3,s4,s5,s6)[tR][aR][s5R][i][t+1]		
+												c14_indexlist.get(c14_num).add(xEAr[strata_5layers_id][tR][aR][s5R][i][t + 1]);
+												c14_valuelist.get(c14_num).add((double) -1);																					
+												
+												// Add bounds
+												c14_lblist.add((double) 0);
+												c14_ublist.add((double) 0);
+												c14_num++;	
 											}
-											if (total_percentage != 100) {	// only add if parameter is non zero
-												c14_indexlist.get(c14_num).add(xEAr[strata_5layers_id][tR][aR][s5R][i][t]);
-												c14_valuelist.get(c14_num).add((double) 1 - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
-											}
-									
-											// Add - xEAr(s1,s2,s3,s4,s5,s6)[tR][aR][s5R][i][t+1]		
-											c14_indexlist.get(c14_num).add(xEAr[strata_5layers_id][tR][aR][s5R][i][t + 1]);
-											c14_valuelist.get(c14_num).add((double) -1);																					
-											
-											// Add bounds
-											c14_lblist.add((double) 0);
-											c14_ublist.add((double) 0);
-											c14_num++;	
 										}
 									}
 								}
@@ -3909,15 +3909,13 @@ public class Solve_Iterations {
 									for (int aR = 1; aR <= tR-1; aR++) {									
 										for (int s5R = 0; s5R < total_layer5; s5R++) {
 											for (int i = 0; i < total_EA_R_prescription_choices; i++) {
-												if (1 + iter == tR - aR + 1) {	// t = tR - aR + 1
-													if(xEAr[strata_5layers_id][tR] != null
-															 && xEAr[strata_5layers_id][tR][aR] != null
-																	 && xEAr[strata_5layers_id][tR][aR][s5R] != null
-																			 && xEAr[strata_5layers_id][tR][aR][s5R][i] != null
-																					 && xEAr[strata_5layers_id][tR][aR][s5R][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
-														int this_var_index = xEAr[strata_5layers_id][tR][aR][s5R][i][1 + iter];
-														EA_R_total_area = EA_R_total_area + Double.valueOf(value[this_var_index]);
-													}
+												if(xEAr[strata_5layers_id][tR] != null
+														 && xEAr[strata_5layers_id][tR][aR] != null
+																 && xEAr[strata_5layers_id][tR][aR][s5R] != null
+																		 && xEAr[strata_5layers_id][tR][aR][s5R][i] != null
+																				 && xEAr[strata_5layers_id][tR][aR][s5R][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
+													int this_var_index = xEAr[strata_5layers_id][tR][aR][s5R][i][1 + iter];
+													EA_R_total_area = EA_R_total_area + Double.valueOf(value[this_var_index]);
 												}
 											}
 										}

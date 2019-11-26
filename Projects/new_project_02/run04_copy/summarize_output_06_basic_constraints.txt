@@ -1,0 +1,2 @@
+bc_id	bc_description	var_id	var_name	var_value_iteration_0	var_value_iteration_1	var_value_iteration_2	var_value_iteration_3	var_value_iteration_4	var_value_iteration_5	penalty_iteration_0	penalty_iteration_1	penalty_iteration_2	penalty_iteration_3	penalty_iteration_4	penalty_iteration_5	
+1	rmcuft ..... No dynamic restriction ..... No static restriction	0	y_0	186435.23592275998	186435.23592275998	103777.02934433999	103777.02934433999	103777.02934433999	0.0	9.981356376407725E7	9.981356376407725E7	9.989622197065566E7	9.989622197065566E7	9.989622197065566E7	9.9999999E7	

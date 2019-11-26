@@ -1,0 +1,24 @@
+var_id	var_name	var_value	var_reduced_cost	percentage_SR_01	var_unit_management_cost	var_method	var_forest_status	var_layer1	var_layer2	var_layer3	var_layer4	var_layer5	var_layer6	var_choice	var_period	var_age	var_rotation_period	var_rotation_age	var_regen_covertype	data_connection	prescription	row_id
+89	xEA_E_A_N_C_B_D_S_5_D_0_3	37.2438	0.0	1.0	0.0	EA	E	A	N	C	B	D	S	0	1	12	3	14	D	good	D_S_EA_E_14_0	2
+90	xEA_E_A_N_C_B_D_S_5_D_0_4	36.871362	0.0	1.0	0.0	EA	E	A	N	C	B	D	S	0	2	13	3	14	D	good	D_S_EA_E_14_0	3
+91	xEA_E_A_N_C_B_D_S_5_D_0_5	36.50264838	138.19410000000016	1.0	0.0	EA	E	A	N	C	B	D	S	0	3	14	3	14	D	good	D_S_EA_E_14_0	4
+148	xNG_R_A_N_C_B_D_0_3_1	0.38	0.0	1.0	0.0	NG	R	A	N	C	B	D		0	1	1				good	D_NG_R_0	0
+149	xNG_R_A_N_C_B_D_0_3_2	0.3762	0.0	1.0	0.0	NG	R	A	N	C	B	D		0	1	2				good	D_NG_R_0	1
+150	xNG_R_A_N_C_B_D_0_4_1	0.38	0.0	1.0	0.0	NG	R	A	N	C	B	D		0	2	1				good	D_NG_R_0	0
+151	xNG_R_A_N_C_B_D_0_4_2	0.3762	0.0	1.0	0.0	NG	R	A	N	C	B	D		0	2	2				good	D_NG_R_0	1
+152	xNG_R_A_N_C_B_D_0_4_3	0.372438	0.0	1.0	0.0	NG	R	A	N	C	B	D		0	2	3				good	D_NG_R_0	2
+153	xNG_R_A_N_C_B_D_0_5_1	0.37999999999999995	0.0	1.0	0.0	NG	R	A	N	C	B	D		0	3	1				good	D_NG_R_0	0
+154	xNG_R_A_N_C_B_D_0_5_2	0.3762	0.0	1.0	0.0	NG	R	A	N	C	B	D		0	3	2				good	D_NG_R_0	1
+155	xNG_R_A_N_C_B_D_0_5_3	0.372438	0.0	1.0	0.0	NG	R	A	N	C	B	D		0	3	3				good	D_NG_R_0	2
+156	xNG_R_A_N_C_B_D_0_5_4	0.36871361999999996	0.0	1.0	0.0	NG	R	A	N	C	B	D		0	3	4				good	D_NG_R_0	3
+157	xNG_R_A_N_C_B_D_0_6_1	36.5176218962	0.0	1.0	0.0	NG	R	A	N	C	B	D		0	4	1				good	D_NG_R_0	0
+158	xNG_R_A_N_C_B_D_0_6_2	0.3761999999999999	0.0	1.0	0.0	NG	R	A	N	C	B	D		0	4	2				good	D_NG_R_0	1
+159	xNG_R_A_N_C_B_D_0_6_3	0.372438	0.0	1.0	0.0	NG	R	A	N	C	B	D		0	4	3				good	D_NG_R_0	2
+160	xNG_R_A_N_C_B_D_0_6_4	0.36871361999999996	0.0	1.0	0.0	NG	R	A	N	C	B	D		0	4	4				good	D_NG_R_0	3
+161	xNG_R_A_N_C_B_D_0_6_5	0.36502648379999997	0.0	1.0	0.0	NG	R	A	N	C	B	D		0	4	5				good	D_NG_R_0	4
+162	xNG_R_A_N_C_B_D_0_7_1	0.37999999999999995	0.0	1.0	0.0	NG	R	A	N	C	B	D		0	5	1				good	D_NG_R_0	0
+163	xNG_R_A_N_C_B_D_0_7_2	36.152445677238	0.0	1.0	0.0	NG	R	A	N	C	B	D		0	5	2				good	D_NG_R_0	1
+164	xNG_R_A_N_C_B_D_0_7_3	0.37243799999999994	0.0	1.0	0.0	NG	R	A	N	C	B	D		0	5	3				good	D_NG_R_0	2
+165	xNG_R_A_N_C_B_D_0_7_4	0.36871361999999996	0.0	1.0	0.0	NG	R	A	N	C	B	D		0	5	4				good	D_NG_R_0	3
+166	xNG_R_A_N_C_B_D_0_7_5	0.36502648379999997	0.0	1.0	0.0	NG	R	A	N	C	B	D		0	5	5				good	D_NG_R_0	4
+167	xNG_R_A_N_C_B_D_0_7_6	0.36137621896199995	0.0	1.0	0.0	NG	R	A	N	C	B	D		0	5	6				good	D_NG_R_0	5

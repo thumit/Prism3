@@ -1159,3 +1159,6 @@ All changes in this block are associated with PrismAlpha1.3.02.jar, Prism-Formul
 All changes in this block are associated with PrismAlpha2.0.01.jar, Prism-Formulation-09.docx, Rolling horizon-formulation-05.docx, Prism-UserManual-01.docx)
 --------------------------------------------------------------------------
 480. Method to summarize by union of all output files and its application on output_04_management_overview
+490. Bug fix
+	- Add if condition in xEA_R variable definition and equation 14d (note that we could not include 2 conditions into for loop with && because the loop will behave incorrectly)
+	- Remove if condition (if (1 + iter == tR - aR + 1)) in 5a no-merge, 5d merge, output_04
