@@ -381,3 +381,66 @@ LEFT JOIN
 (SELECT prescription, row_id, RANK() OVER (ORDER BY CAST (age_class as decimal)) age_class_rank FROM yield_tables) table2
 ON yield_tables.prescription = table2.prescription AND yield_tables.row_id = table2.row_id
 ----------
+test iterations summary
+SELECT period,
+SUM(CASE WHEN t.method_status = 'NGE' THEN t.grouped_area END) AS NG_E_area,
+SUM(CASE WHEN t.method_status = 'PBE' THEN t.grouped_area END) AS PB_E_area,
+SUM(CASE WHEN t.method_status = 'GSE' THEN t.grouped_area END) AS GS_E_area,
+SUM(CASE WHEN t.method_status = 'EAE' THEN t.grouped_area END) AS EA_E_area,
+SUM(CASE WHEN t.method_status = 'MSE' THEN t.grouped_area END) AS MS_E_area,
+SUM(CASE WHEN t.method_status = 'BSE' THEN t.grouped_area END) AS BS_E_area,
+SUM(CASE WHEN t.method_status = 'NGR' THEN t.grouped_area END) AS NG_R_area,
+SUM(CASE WHEN t.method_status = 'PBR' THEN t.grouped_area END) AS PB_R_area,
+SUM(CASE WHEN t.method_status = 'GSR' THEN t.grouped_area END) AS GS_R_area,
+SUM(CASE WHEN t.method_status = 'EAR' THEN t.grouped_area END) AS EA_R_area
+FROM
+
+
+(SELECT 
+CAST(var_period AS DECIMAL) as period,
+(var_method || var_forest_status) AS method_status, ROUND(SUM(var_value), 1) as grouped_area
+FROM output_05_management_details_0
+WHERE CAST(var_period AS DECIMAL) = 1
+GROUP BY (period || method_status)
+ORDER BY (period || method_status)) AS t
+
+UNION ALL
+
+SELECT period,
+SUM(CASE WHEN t.method_status = 'NGE' THEN t.grouped_area END) AS NG_E_area,
+SUM(CASE WHEN t.method_status = 'PBE' THEN t.grouped_area END) AS PB_E_area,
+SUM(CASE WHEN t.method_status = 'GSE' THEN t.grouped_area END) AS GS_E_area,
+SUM(CASE WHEN t.method_status = 'EAE' THEN t.grouped_area END) AS EA_E_area,
+SUM(CASE WHEN t.method_status = 'MSE' THEN t.grouped_area END) AS MS_E_area,
+SUM(CASE WHEN t.method_status = 'BSE' THEN t.grouped_area END) AS BS_E_area,
+SUM(CASE WHEN t.method_status = 'NGR' THEN t.grouped_area END) AS NG_R_area,
+SUM(CASE WHEN t.method_status = 'PBR' THEN t.grouped_area END) AS PB_R_area,
+SUM(CASE WHEN t.method_status = 'GSR' THEN t.grouped_area END) AS GS_R_area,
+SUM(CASE WHEN t.method_status = 'EAR' THEN t.grouped_area END) AS EA_R_area
+FROM
+
+
+(SELECT 
+CAST(var_period AS DECIMAL) as period,
+(var_method || var_forest_status) AS method_status, ROUND(SUM(var_value), 1) as grouped_area
+FROM output_05_management_details_1
+WHERE CAST(var_period AS DECIMAL) = 1
+GROUP BY (period || method_status)
+ORDER BY (period || method_status)) AS t
+----------
+test join output_01 from 2 iterations in 2 tables
+SELECT * FROM 
+
+(SELECT description, value AS iteration_0 FROM output_01_general_outputs_0)
+LEFT JOIN
+(SELECT description, value AS iteration_1 FROM output_01_general_outputs_1)
+USING (description)
+----------
+test 2 join output_01 from 2 iterations in 1 table
+SELECT * FROM 
+
+(SELECT description, value AS iteration_0 FROM summarize2_output_01_general_outputs WHERE iteration = 0)
+LEFT JOIN
+(SELECT description, value AS iteration_1 FROM summarize2_output_01_general_outputs WHERE iteration = 1)
+USING (description)
+----------

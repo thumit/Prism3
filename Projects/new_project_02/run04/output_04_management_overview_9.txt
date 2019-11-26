@@ -1,0 +1,2 @@
+iteration	NG_E_area	PB_E_area	GS_E_area	EA_E_area	MS_E_area	BS_E_area	NG_R_area	PB_R_area	GS_R_area	EA_R_area
+9	15427.0	0.0	0.0	5970.0	0.0	0.0	15102.0	0.0	0.0	0.0

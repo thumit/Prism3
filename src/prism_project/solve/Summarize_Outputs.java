@@ -26,7 +26,7 @@ import java.util.List;
 
 public class Summarize_Outputs {
 	File runFolder;
-	int total_iterations;
+	int current_iteration;
 	File[] output_general_outputs_file;
 	File[] output_variables_file;
 	File[] output_constraints_file;
@@ -36,53 +36,80 @@ public class Summarize_Outputs {
 	File[] output_basic_constraints_file;
 	File[] output_flow_constraints_file;
 	
-	public Summarize_Outputs(File runFolder, int total_iterations) {
+	public Summarize_Outputs(File runFolder, int current_iteration) {		// summarize when the current iteration is solved
 		this.runFolder = runFolder;
-		this.total_iterations = total_iterations;
+		this.current_iteration = current_iteration;
 		
-		output_general_outputs_file = new File[total_iterations + 1];
-		output_variables_file = new File[total_iterations + 1];
-		output_constraints_file = new File[total_iterations + 1];
-		output_management_overview_file = new File[total_iterations + 1];
-		output_management_details_file = new File[total_iterations + 1];
-		output_fly_constraints_file = new File[total_iterations + 1];
-		output_basic_constraints_file = new File[total_iterations + 1];
-		output_flow_constraints_file = new File[total_iterations + 1];
-		for (int iter = 0; iter <= total_iterations; iter++) {	// Loop all iterations
+		output_general_outputs_file = new File[current_iteration + 1];
+		output_variables_file = new File[current_iteration + 1];
+		output_constraints_file = new File[current_iteration + 1];
+		output_management_overview_file = new File[current_iteration + 1];
+		output_management_details_file = new File[current_iteration + 1];
+		output_fly_constraints_file = new File[current_iteration + 1];
+		output_basic_constraints_file = new File[current_iteration + 1];
+		output_flow_constraints_file = new File[current_iteration + 1];
+		for (int iter = 0; iter <= current_iteration; iter++) {	// Loop all iterations
 			// all outputs				
 			output_general_outputs_file[iter] = new File(runFolder.getAbsolutePath() + "/output_01_general_outputs_" + iter + ".txt");
 //			output_variables_file[iter] = new File(runFolder.getAbsolutePath() + "/output_02_variables_" + iter + ".txt");
 //			output_constraints_file[iter] = new File(runFolder.getAbsolutePath() + "/output_03_constraints_" + iter + ".txt");	
-//			output_management_overview_file[iter] = new File(runFolder.getAbsolutePath() + "/output_04_management_overview_" + iter + ".txt");
+			output_management_overview_file[iter] = new File(runFolder.getAbsolutePath() + "/output_04_management_overview_" + iter + ".txt");
 //			output_management_details_file[iter] = new File(runFolder.getAbsolutePath() + "/output_05_management_details_" + iter + ".txt");	
 //			output_fly_constraints_file[iter] = new File(runFolder.getAbsolutePath() + "/output_05_fly_constraints_" + iter + ".txt");	
 			output_basic_constraints_file[iter] = new File(runFolder.getAbsolutePath() + "/output_06_basic_constraints_" + iter + ".txt");
 //			output_flow_constraints_file[iter] = new File(runFolder.getAbsolutePath() + "/output_07_flow_constraints_" + iter + ".txt");
 		}
 		
-		summarize_output_01();
-		summarize_output_06();
+		summarize_output_01();	// this would export this output into a different format
+//		summarize_output_by_union(output_general_outputs_file, "summarize_output_01_general_outputs_v2.txt");
+		summarize_output_by_union(output_management_overview_file, "summarize_output_04_management_overview.txt");
+		summarize_output_06();	// this would export this output into a different format
+	}
+	
+	private void summarize_output_by_union(File[] output_files, String summary_file_name) {
+		// Delete the old file before writing new contents
+		File file = new File(runFolder.getAbsolutePath() + "/" + summary_file_name);
+		if (file.exists()) {
+			file.delete();
+		}
+		
+		try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(file))) {
+			for (int iter = 0; iter <= current_iteration; iter++) {	// Loop all iterations
+				List<String> list = Files.readAllLines(Paths.get(output_files[iter].getAbsolutePath()), StandardCharsets.UTF_8);
+				if (iter == 0) {	// write column name line only when this is the iteration 0
+					fileOut.write(list.get(0));
+				}
+				list.remove(0);	// remove column name
+				for (String s : list) {
+					fileOut.newLine();
+					fileOut.write(s);
+				}
+			}
+			fileOut.close();
+		} catch (IOException e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+		}
 	}
 	
 	private void summarize_output_01() {
 		int total_row = get_data_from_output(output_general_outputs_file[0]).length;
-		int total_col = total_iterations + 2;	 // description iter0 iter1 ... iterM        (total iterations = M)
+		int total_col = current_iteration + 2;	 // description iter0 iter1 ... iterM        (total iterations = M)
 		String[] summarize_column_name = new String[total_col];
 		// column name
 		summarize_column_name[0] = "description";
-		for (int iter = 0; iter <= total_iterations; iter++) {	// Loop all iterations
-			summarize_column_name[iter + 1] = "iteration " + iter;
+		for (int iter = 0; iter <= current_iteration; iter++) {	// Loop all iterations
+			summarize_column_name[iter + 1] = "iteration_" + iter;
 		}
 		// data
 		String[][] summarize_data = new String[total_row][total_col];
-		for (int iter = 0; iter <= total_iterations; iter++) {	// Loop all iterations
+		for (int iter = 0; iter <= current_iteration; iter++) {	// Loop all iterations
 			int col = iter + 1;
 			String[][] data = get_data_from_output(output_general_outputs_file[iter]);
 			for (int row = 0; row < total_row; row++) {
 				if (iter == 0) {
-					summarize_data[row][0] = data[row][0];
+					summarize_data[row][0] = data[row][1];
 				}
-				summarize_data[row][col] = data[row][1];
+				summarize_data[row][col] = data[row][2];
 			}
 		}
 		// file
@@ -92,20 +119,20 @@ public class Summarize_Outputs {
 	
 	private void summarize_output_06() {
 		int total_row = get_data_from_output(output_basic_constraints_file[0]).length;
-		int total_col = 2 * (total_iterations + 1) + 4;	 // bc_id ... var_name iter0 iter1 ... iterM        (total iterations = M)
+		int total_col = 2 * (current_iteration + 1) + 4;	 // bc_id ... var_name iter0 iter1 ... iterM        (total iterations = M)
 		String[] summarize_column_name = new String[total_col];
 		// column name
 		summarize_column_name[0] = "bc_id";
 		summarize_column_name[1] = "bc_description";
 		summarize_column_name[2] = "var_id";
 		summarize_column_name[3] = "var_name";
-		for (int iter = 0; iter <= total_iterations; iter++) {	// Loop all iterations
+		for (int iter = 0; iter <= current_iteration; iter++) {	// Loop all iterations
 			summarize_column_name[iter + 4] = "var_value_iteration_" + iter;
-			summarize_column_name[iter + 4 + total_iterations + 1] = "penalty_iteration_" + iter;
+			summarize_column_name[iter + 4 + current_iteration + 1] = "penalty_iteration_" + iter;
 		}
 		// data
 		String[][] summarize_data = new String[total_row][total_col];
-		for (int iter = 0; iter <= total_iterations; iter++) {	// Loop all iterations
+		for (int iter = 0; iter <= current_iteration; iter++) {	// Loop all iterations
 			String[][] data = get_data_from_output(output_basic_constraints_file[iter]);
 			for (int row = 0; row < total_row; row++) {
 				if (iter == 0) {
@@ -115,7 +142,7 @@ public class Summarize_Outputs {
 					summarize_data[row][3] = data[row][9];
 				}
 				summarize_data[row][iter + 4] = data[row][10];
-				summarize_data[row][iter + 4 + total_iterations + 1] = data[row][12];
+				summarize_data[row][iter + 4 + current_iteration + 1] = data[row][12];
 			}
 		}
 		// file

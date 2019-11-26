@@ -1158,3 +1158,4 @@ All changes in this block are associated with PrismAlpha1.3.02.jar, Prism-Formul
 479. null state_id is replace by "" because null will make stream sort failed
 All changes in this block are associated with PrismAlpha2.0.01.jar, Prism-Formulation-09.docx, Rolling horizon-formulation-05.docx, Prism-UserManual-01.docx)
 --------------------------------------------------------------------------
+480. Method to summarize by union of all output files and its application on output_04_management_overview

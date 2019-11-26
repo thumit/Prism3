@@ -1,0 +1,2 @@
+bc_id	bc_description	bc_type	bc_multiplier	lowerbound	lowerbound_perunit_penalty	upperbound	upperbound_perunit_penalty	parameter_index	static_identifiers	dynamic_identifiers	original_dynamic_identifiers	
+1	Area (i.e. acres) ..... No dynamic restriction ..... No static restriction	FREE	1.0	null	null	null	null	NoParameter	0 A B;1 N;2 C G l s;3 B G L O U W;4 B C D E F G H I U;5 F G H I J K L M N O P Q R S Z;6 NG_E PB_E GS_E EA_E MS_E BS_E NG_R PB_R GS_R EA_R;7 1 2 3 4 5	NoIdentifier	NoIdentifier	

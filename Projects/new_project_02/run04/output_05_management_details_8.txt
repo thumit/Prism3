@@ -1,0 +1,288 @@
+var_id	var_name	var_value	var_reduced_cost	percentage_SR_01	var_unit_management_cost	var_method	var_forest_status	var_layer1	var_layer2	var_layer3	var_layer4	var_layer5	var_layer6	var_choice	var_period	var_age	var_rotation_period	var_rotation_age	var_regen_covertype	data_connection	prescription	row_id
+1	xNG_E_A_N_C_B_D_F_0_9	484.0	0.0	0.0	0.0	NG	E	A	N	C	B	D	F	0	1	9				good	D_F_NG_E_0	8
+2	xNG_E_A_N_C_B_D_F_0_10	484.0	0.0	0.0	0.0	NG	E	A	N	C	B	D	F	0	2	10				good	D_F_NG_E_0	9
+3	xNG_E_A_N_C_B_D_F_0_11	484.0	0.0	0.0	0.0	NG	E	A	N	C	B	D	F	0	3	11				good	D_F_NG_E_0	10
+4	xNG_E_A_N_C_B_D_F_0_12	484.0	0.0	0.0	0.0	NG	E	A	N	C	B	D	F	0	4	12				good	D_F_NG_E_0	11
+5	xNG_E_A_N_C_B_D_F_0_13	484.0	0.0	0.0	0.0	NG	E	A	N	C	B	D	F	0	5	13				good	D_F_NG_E_0	12
+6	xNG_E_A_N_C_B_D_G_0_9	20.0	0.0	0.0	0.0	NG	E	A	N	C	B	D	G	0	1	9				good	D_G_NG_E_0	8
+7	xNG_E_A_N_C_B_D_G_0_10	20.0	0.0	0.0	0.0	NG	E	A	N	C	B	D	G	0	2	10				good	D_G_NG_E_0	9
+8	xNG_E_A_N_C_B_D_G_0_11	20.0	0.0	0.0	0.0	NG	E	A	N	C	B	D	G	0	3	11				good	D_G_NG_E_0	10
+9	xNG_E_A_N_C_B_D_G_0_12	20.0	0.0	0.0	0.0	NG	E	A	N	C	B	D	G	0	4	12				good	D_G_NG_E_0	11
+10	xNG_E_A_N_C_B_D_G_0_13	20.0	0.0	0.0	0.0	NG	E	A	N	C	B	D	G	0	5	13				good	D_G_NG_E_0	12
+11	xNG_E_A_N_C_B_D_I_0_9	191.0	0.0	0.0	0.0	NG	E	A	N	C	B	D	I	0	1	11				good	D_I_NG_E_0	8
+12	xNG_E_A_N_C_B_D_I_0_10	191.0	0.0	0.0	0.0	NG	E	A	N	C	B	D	I	0	2	12				good	D_I_NG_E_0	9
+13	xNG_E_A_N_C_B_D_I_0_11	191.0	0.0	0.0	0.0	NG	E	A	N	C	B	D	I	0	3	13				good	D_I_NG_E_0	10
+14	xNG_E_A_N_C_B_D_I_0_12	191.0	0.0	0.0	0.0	NG	E	A	N	C	B	D	I	0	4	14				good	D_I_NG_E_0	11
+15	xNG_E_A_N_C_B_D_I_0_13	191.0	0.0	0.0	0.0	NG	E	A	N	C	B	D	I	0	5	15				good	D_I_NG_E_0	12
+16	xNG_E_A_N_C_B_D_J_0_9	351.0	0.0	0.0	0.0	NG	E	A	N	C	B	D	J	0	1	11				good	D_J_NG_E_0	8
+17	xNG_E_A_N_C_B_D_J_0_10	351.0	0.0	0.0	0.0	NG	E	A	N	C	B	D	J	0	2	12				good	D_J_NG_E_0	9
+18	xNG_E_A_N_C_B_D_J_0_11	351.0	0.0	0.0	0.0	NG	E	A	N	C	B	D	J	0	3	13				good	D_J_NG_E_0	10
+19	xNG_E_A_N_C_B_D_J_0_12	351.0	0.0	0.0	0.0	NG	E	A	N	C	B	D	J	0	4	14				good	D_J_NG_E_0	11
+20	xNG_E_A_N_C_B_D_J_0_13	351.0	0.0	0.0	0.0	NG	E	A	N	C	B	D	J	0	5	15				good	D_J_NG_E_0	12
+21	xNG_E_A_N_C_B_D_K_0_9	898.0	0.0	0.0	0.0	NG	E	A	N	C	B	D	K	0	1	11				good	D_K_NG_E_0	8
+22	xNG_E_A_N_C_B_D_K_0_10	898.0	0.0	0.0	0.0	NG	E	A	N	C	B	D	K	0	2	12				good	D_K_NG_E_0	9
+23	xNG_E_A_N_C_B_D_K_0_11	898.0	0.0	0.0	0.0	NG	E	A	N	C	B	D	K	0	3	13				good	D_K_NG_E_0	10
+24	xNG_E_A_N_C_B_D_K_0_12	898.0	0.0	0.0	0.0	NG	E	A	N	C	B	D	K	0	4	14				good	D_K_NG_E_0	11
+25	xNG_E_A_N_C_B_D_K_0_13	898.0	0.0	0.0	0.0	NG	E	A	N	C	B	D	K	0	5	15				good	D_K_NG_E_0	12
+26	xNG_E_A_N_C_B_D_M_0_9	57.0	0.0	0.0	0.0	NG	E	A	N	C	B	D	M	0	1	14				good	D_M_NG_E_0	8
+27	xNG_E_A_N_C_B_D_M_0_10	57.0	0.0	0.0	0.0	NG	E	A	N	C	B	D	M	0	2	15				good	D_M_NG_E_0	9
+28	xNG_E_A_N_C_B_D_M_0_11	57.0	0.0	0.0	0.0	NG	E	A	N	C	B	D	M	0	3	16				good	D_M_NG_E_0	10
+29	xNG_E_A_N_C_B_D_M_0_12	57.0	0.0	0.0	0.0	NG	E	A	N	C	B	D	M	0	4	17				good	D_M_NG_E_0	11
+30	xNG_E_A_N_C_B_D_M_0_13	57.0	0.0	0.0	0.0	NG	E	A	N	C	B	D	M	0	5	18				good	D_M_NG_E_0	12
+46	xNG_E_A_N_C_B_E_G_0_9	131.0	0.0	0.0	0.0	NG	E	A	N	C	B	E	G	0	1	9				good	E_G_NG_E_0	8
+47	xNG_E_A_N_C_B_E_G_0_10	131.0	0.0	0.0	0.0	NG	E	A	N	C	B	E	G	0	2	10				good	E_G_NG_E_0	9
+48	xNG_E_A_N_C_B_E_G_0_11	131.0	0.0	0.0	0.0	NG	E	A	N	C	B	E	G	0	3	11				good	E_G_NG_E_0	10
+49	xNG_E_A_N_C_B_E_G_0_12	131.0	0.0	0.0	0.0	NG	E	A	N	C	B	E	G	0	4	12				good	E_G_NG_E_0	11
+50	xNG_E_A_N_C_B_E_G_0_13	131.0	0.0	0.0	0.0	NG	E	A	N	C	B	E	G	0	5	13				good	E_G_NG_E_0	12
+81	xNG_E_A_N_C_B_F_G_0_9	41.0	0.0	0.0	0.0	NG	E	A	N	C	B	F	G	0	1	9				good	F_G_NG_E_0	8
+82	xNG_E_A_N_C_B_F_G_0_10	41.0	0.0	0.0	0.0	NG	E	A	N	C	B	F	G	0	2	10				good	F_G_NG_E_0	9
+83	xNG_E_A_N_C_B_F_G_0_11	41.0	0.0	0.0	0.0	NG	E	A	N	C	B	F	G	0	3	11				good	F_G_NG_E_0	10
+84	xNG_E_A_N_C_B_F_G_0_12	41.0	0.0	0.0	0.0	NG	E	A	N	C	B	F	G	0	4	12				good	F_G_NG_E_0	11
+85	xNG_E_A_N_C_B_F_G_0_13	41.0	0.0	0.0	0.0	NG	E	A	N	C	B	F	G	0	5	13				good	F_G_NG_E_0	12
+86	xNG_E_A_N_C_B_F_I_0_9	189.0	0.0	0.0	0.0	NG	E	A	N	C	B	F	I	0	1	11				good	F_I_NG_E_0	8
+87	xNG_E_A_N_C_B_F_I_0_10	189.0	0.0	0.0	0.0	NG	E	A	N	C	B	F	I	0	2	12				good	F_I_NG_E_0	9
+88	xNG_E_A_N_C_B_F_I_0_11	189.0	0.0	0.0	0.0	NG	E	A	N	C	B	F	I	0	3	13				good	F_I_NG_E_0	10
+89	xNG_E_A_N_C_B_F_I_0_12	189.0	0.0	0.0	0.0	NG	E	A	N	C	B	F	I	0	4	14				good	F_I_NG_E_0	11
+90	xNG_E_A_N_C_B_F_I_0_13	189.0	0.0	0.0	0.0	NG	E	A	N	C	B	F	I	0	5	15				good	F_I_NG_E_0	12
+91	xNG_E_A_N_C_B_F_J_0_9	306.0	0.0	0.0	0.0	NG	E	A	N	C	B	F	J	0	1	11				good	F_J_NG_E_0	8
+92	xNG_E_A_N_C_B_F_J_0_10	306.0	0.0	0.0	0.0	NG	E	A	N	C	B	F	J	0	2	12				good	F_J_NG_E_0	9
+93	xNG_E_A_N_C_B_F_J_0_11	306.0	0.0	0.0	0.0	NG	E	A	N	C	B	F	J	0	3	13				good	F_J_NG_E_0	10
+94	xNG_E_A_N_C_B_F_J_0_12	306.0	0.0	0.0	0.0	NG	E	A	N	C	B	F	J	0	4	14				good	F_J_NG_E_0	11
+95	xNG_E_A_N_C_B_F_J_0_13	306.0	0.0	0.0	0.0	NG	E	A	N	C	B	F	J	0	5	15				good	F_J_NG_E_0	12
+96	xNG_E_A_N_C_B_F_K_0_9	445.0	0.0	0.0	0.0	NG	E	A	N	C	B	F	K	0	1	11				good	F_K_NG_E_0	8
+97	xNG_E_A_N_C_B_F_K_0_10	445.0	0.0	0.0	0.0	NG	E	A	N	C	B	F	K	0	2	12				good	F_K_NG_E_0	9
+98	xNG_E_A_N_C_B_F_K_0_11	445.0	0.0	0.0	0.0	NG	E	A	N	C	B	F	K	0	3	13				good	F_K_NG_E_0	10
+99	xNG_E_A_N_C_B_F_K_0_12	445.0	0.0	0.0	0.0	NG	E	A	N	C	B	F	K	0	4	14				good	F_K_NG_E_0	11
+100	xNG_E_A_N_C_B_F_K_0_13	445.0	0.0	0.0	0.0	NG	E	A	N	C	B	F	K	0	5	15				good	F_K_NG_E_0	12
+116	xNG_E_A_N_C_B_G_G_0_9	333.0	0.0	0.0	0.0	NG	E	A	N	C	B	G	G	0	1	9				good	G_G_NG_E_0	8
+117	xNG_E_A_N_C_B_G_G_0_10	333.0	0.0	0.0	0.0	NG	E	A	N	C	B	G	G	0	2	10				good	G_G_NG_E_0	9
+118	xNG_E_A_N_C_B_G_G_0_11	333.0	0.0	0.0	0.0	NG	E	A	N	C	B	G	G	0	3	11				good	G_G_NG_E_0	10
+119	xNG_E_A_N_C_B_G_G_0_12	333.0	0.0	0.0	0.0	NG	E	A	N	C	B	G	G	0	4	12				good	G_G_NG_E_0	11
+120	xNG_E_A_N_C_B_G_G_0_13	333.0	0.0	0.0	0.0	NG	E	A	N	C	B	G	G	0	5	13				good	G_G_NG_E_0	12
+121	xNG_E_A_N_C_B_G_I_0_9	160.0	0.0	0.0	0.0	NG	E	A	N	C	B	G	I	0	1	11				good	G_I_NG_E_0	8
+122	xNG_E_A_N_C_B_G_I_0_10	160.0	0.0	0.0	0.0	NG	E	A	N	C	B	G	I	0	2	12				good	G_I_NG_E_0	9
+123	xNG_E_A_N_C_B_G_I_0_11	160.0	0.0	0.0	0.0	NG	E	A	N	C	B	G	I	0	3	13				good	G_I_NG_E_0	10
+124	xNG_E_A_N_C_B_G_I_0_12	160.0	0.0	0.0	0.0	NG	E	A	N	C	B	G	I	0	4	14				good	G_I_NG_E_0	11
+125	xNG_E_A_N_C_B_G_I_0_13	160.0	0.0	0.0	0.0	NG	E	A	N	C	B	G	I	0	5	15				good	G_I_NG_E_0	12
+126	xNG_E_A_N_C_B_G_J_0_9	641.0	0.0	0.0	0.0	NG	E	A	N	C	B	G	J	0	1	11				good	G_J_NG_E_0	8
+127	xNG_E_A_N_C_B_G_J_0_10	641.0	0.0	0.0	0.0	NG	E	A	N	C	B	G	J	0	2	12				good	G_J_NG_E_0	9
+128	xNG_E_A_N_C_B_G_J_0_11	641.0	0.0	0.0	0.0	NG	E	A	N	C	B	G	J	0	3	13				good	G_J_NG_E_0	10
+129	xNG_E_A_N_C_B_G_J_0_12	641.0	0.0	0.0	0.0	NG	E	A	N	C	B	G	J	0	4	14				good	G_J_NG_E_0	11
+130	xNG_E_A_N_C_B_G_J_0_13	641.0	0.0	0.0	0.0	NG	E	A	N	C	B	G	J	0	5	15				good	G_J_NG_E_0	12
+131	xNG_E_A_N_C_B_G_K_0_9	4097.0	0.0	0.0	0.0	NG	E	A	N	C	B	G	K	0	1	11				good	G_K_NG_E_0	8
+132	xNG_E_A_N_C_B_G_K_0_10	4097.0	0.0	0.0	0.0	NG	E	A	N	C	B	G	K	0	2	12				good	G_K_NG_E_0	9
+133	xNG_E_A_N_C_B_G_K_0_11	4097.0	0.0	0.0	0.0	NG	E	A	N	C	B	G	K	0	3	13				good	G_K_NG_E_0	10
+134	xNG_E_A_N_C_B_G_K_0_12	4097.0	0.0	0.0	0.0	NG	E	A	N	C	B	G	K	0	4	14				good	G_K_NG_E_0	11
+135	xNG_E_A_N_C_B_G_K_0_13	4097.0	0.0	0.0	0.0	NG	E	A	N	C	B	G	K	0	5	15				good	G_K_NG_E_0	12
+136	xNG_E_A_N_C_B_G_M_0_9	27.0	0.0	0.0	0.0	NG	E	A	N	C	B	G	M	0	1	14				good	G_M_NG_E_0	8
+137	xNG_E_A_N_C_B_G_M_0_10	27.0	0.0	0.0	0.0	NG	E	A	N	C	B	G	M	0	2	15				good	G_M_NG_E_0	9
+138	xNG_E_A_N_C_B_G_M_0_11	27.0	0.0	0.0	0.0	NG	E	A	N	C	B	G	M	0	3	16				good	G_M_NG_E_0	10
+139	xNG_E_A_N_C_B_G_M_0_12	27.0	0.0	0.0	0.0	NG	E	A	N	C	B	G	M	0	4	17				good	G_M_NG_E_0	11
+140	xNG_E_A_N_C_B_G_M_0_13	27.0	0.0	0.0	0.0	NG	E	A	N	C	B	G	M	0	5	18				good	G_M_NG_E_0	12
+141	xNG_E_A_N_C_B_G_N_0_9	47.0	0.0	0.0	0.0	NG	E	A	N	C	B	G	N	0	1	14				good	G_N_NG_E_0	8
+142	xNG_E_A_N_C_B_G_N_0_10	47.0	0.0	0.0	0.0	NG	E	A	N	C	B	G	N	0	2	15				good	G_N_NG_E_0	9
+143	xNG_E_A_N_C_B_G_N_0_11	47.0	0.0	0.0	0.0	NG	E	A	N	C	B	G	N	0	3	16				good	G_N_NG_E_0	10
+144	xNG_E_A_N_C_B_G_N_0_12	47.0	0.0	0.0	0.0	NG	E	A	N	C	B	G	N	0	4	17				good	G_N_NG_E_0	11
+145	xNG_E_A_N_C_B_G_N_0_13	47.0	0.0	0.0	0.0	NG	E	A	N	C	B	G	N	0	5	18				good	G_N_NG_E_0	12
+146	xNG_E_A_N_C_B_G_O_0_9	583.0	0.0	0.0	0.0	NG	E	A	N	C	B	G	O	0	1	14				good	G_O_NG_E_0	8
+147	xNG_E_A_N_C_B_G_O_0_10	583.0	0.0	0.0	0.0	NG	E	A	N	C	B	G	O	0	2	15				good	G_O_NG_E_0	9
+148	xNG_E_A_N_C_B_G_O_0_11	583.0	0.0	0.0	0.0	NG	E	A	N	C	B	G	O	0	3	16				good	G_O_NG_E_0	10
+149	xNG_E_A_N_C_B_G_O_0_12	583.0	0.0	0.0	0.0	NG	E	A	N	C	B	G	O	0	4	17				good	G_O_NG_E_0	11
+150	xNG_E_A_N_C_B_G_O_0_13	583.0	0.0	0.0	0.0	NG	E	A	N	C	B	G	O	0	5	18				good	G_O_NG_E_0	12
+151	xNG_E_A_N_C_B_H_F_0_9	51.0	0.0	0.0	0.0	NG	E	A	N	C	B	H	F	0	1	9				good	H_F_NG_E_0	8
+152	xNG_E_A_N_C_B_H_F_0_10	51.0	0.0	0.0	0.0	NG	E	A	N	C	B	H	F	0	2	10				good	H_F_NG_E_0	9
+153	xNG_E_A_N_C_B_H_F_0_11	51.0	0.0	0.0	0.0	NG	E	A	N	C	B	H	F	0	3	11				good	H_F_NG_E_0	10
+154	xNG_E_A_N_C_B_H_F_0_12	51.0	0.0	0.0	0.0	NG	E	A	N	C	B	H	F	0	4	12				good	H_F_NG_E_0	11
+155	xNG_E_A_N_C_B_H_F_0_13	51.0	0.0	0.0	0.0	NG	E	A	N	C	B	H	F	0	5	13				good	H_F_NG_E_0	12
+156	xNG_E_A_N_C_B_I_I_0_9	23.0	0.0	0.0	0.0	NG	E	A	N	C	B	I	I	0	1	11				good	I_I_NG_E_0	8
+157	xNG_E_A_N_C_B_I_I_0_10	23.0	0.0	0.0	0.0	NG	E	A	N	C	B	I	I	0	2	12				good	I_I_NG_E_0	9
+158	xNG_E_A_N_C_B_I_I_0_11	23.0	0.0	0.0	0.0	NG	E	A	N	C	B	I	I	0	3	13				good	I_I_NG_E_0	10
+159	xNG_E_A_N_C_B_I_I_0_12	23.0	0.0	0.0	0.0	NG	E	A	N	C	B	I	I	0	4	14				good	I_I_NG_E_0	11
+160	xNG_E_A_N_C_B_I_I_0_13	23.0	0.0	0.0	0.0	NG	E	A	N	C	B	I	I	0	5	15				good	I_I_NG_E_0	12
+161	xNG_E_A_N_C_B_I_K_0_9	203.0	0.0	0.0	0.0	NG	E	A	N	C	B	I	K	0	1	11				good	I_K_NG_E_0	8
+162	xNG_E_A_N_C_B_I_K_0_10	203.0	0.0	0.0	0.0	NG	E	A	N	C	B	I	K	0	2	12				good	I_K_NG_E_0	9
+163	xNG_E_A_N_C_B_I_K_0_11	203.0	0.0	0.0	0.0	NG	E	A	N	C	B	I	K	0	3	13				good	I_K_NG_E_0	10
+164	xNG_E_A_N_C_B_I_K_0_12	203.0	0.0	0.0	0.0	NG	E	A	N	C	B	I	K	0	4	14				good	I_K_NG_E_0	11
+165	xNG_E_A_N_C_B_I_K_0_13	203.0	0.0	0.0	0.0	NG	E	A	N	C	B	I	K	0	5	15				good	I_K_NG_E_0	12
+176	xNG_E_A_N_C_G_C_F_0_9	47.0	0.0	0.0	0.0	NG	E	A	N	C	G	C	F	0	1	9				good	C_F_NG_E_0	8
+177	xNG_E_A_N_C_G_C_F_0_10	47.0	0.0	0.0	0.0	NG	E	A	N	C	G	C	F	0	2	10				good	C_F_NG_E_0	9
+178	xNG_E_A_N_C_G_C_F_0_11	47.0	0.0	0.0	0.0	NG	E	A	N	C	G	C	F	0	3	11				good	C_F_NG_E_0	10
+179	xNG_E_A_N_C_G_C_F_0_12	47.0	0.0	0.0	0.0	NG	E	A	N	C	G	C	F	0	4	12				good	C_F_NG_E_0	11
+180	xNG_E_A_N_C_G_C_F_0_13	47.0	0.0	0.0	0.0	NG	E	A	N	C	G	C	F	0	5	13				good	C_F_NG_E_0	12
+211	xNG_E_A_N_C_G_D_F_0_9	2853.0	0.0	0.0	0.0	NG	E	A	N	C	G	D	F	0	1	9				good	D_F_NG_E_0	8
+212	xNG_E_A_N_C_G_D_F_0_10	2853.0	0.0	0.0	0.0	NG	E	A	N	C	G	D	F	0	2	10				good	D_F_NG_E_0	9
+213	xNG_E_A_N_C_G_D_F_0_11	2853.0	0.0	0.0	0.0	NG	E	A	N	C	G	D	F	0	3	11				good	D_F_NG_E_0	10
+214	xNG_E_A_N_C_G_D_F_0_12	2853.0	0.0	0.0	0.0	NG	E	A	N	C	G	D	F	0	4	12				good	D_F_NG_E_0	11
+215	xNG_E_A_N_C_G_D_F_0_13	2853.0	0.0	0.0	0.0	NG	E	A	N	C	G	D	F	0	5	13				good	D_F_NG_E_0	12
+216	xNG_E_A_N_C_G_D_G_0_9	50.0	0.0	0.0	0.0	NG	E	A	N	C	G	D	G	0	1	9				good	D_G_NG_E_0	8
+217	xNG_E_A_N_C_G_D_G_0_10	50.0	0.0	0.0	0.0	NG	E	A	N	C	G	D	G	0	2	10				good	D_G_NG_E_0	9
+218	xNG_E_A_N_C_G_D_G_0_11	50.0	0.0	0.0	0.0	NG	E	A	N	C	G	D	G	0	3	11				good	D_G_NG_E_0	10
+219	xNG_E_A_N_C_G_D_G_0_12	50.0	0.0	0.0	0.0	NG	E	A	N	C	G	D	G	0	4	12				good	D_G_NG_E_0	11
+220	xNG_E_A_N_C_G_D_G_0_13	50.0	0.0	0.0	0.0	NG	E	A	N	C	G	D	G	0	5	13				good	D_G_NG_E_0	12
+221	xNG_E_A_N_C_G_D_I_0_9	411.0	0.0	0.0	0.0	NG	E	A	N	C	G	D	I	0	1	11				good	D_I_NG_E_0	8
+222	xNG_E_A_N_C_G_D_I_0_10	411.0	0.0	0.0	0.0	NG	E	A	N	C	G	D	I	0	2	12				good	D_I_NG_E_0	9
+223	xNG_E_A_N_C_G_D_I_0_11	411.0	0.0	0.0	0.0	NG	E	A	N	C	G	D	I	0	3	13				good	D_I_NG_E_0	10
+224	xNG_E_A_N_C_G_D_I_0_12	411.0	0.0	0.0	0.0	NG	E	A	N	C	G	D	I	0	4	14				good	D_I_NG_E_0	11
+225	xNG_E_A_N_C_G_D_I_0_13	411.0	0.0	0.0	0.0	NG	E	A	N	C	G	D	I	0	5	15				good	D_I_NG_E_0	12
+226	xNG_E_A_N_C_G_D_J_0_9	622.0	0.0	0.0	0.0	NG	E	A	N	C	G	D	J	0	1	11				good	D_J_NG_E_0	8
+227	xNG_E_A_N_C_G_D_J_0_10	622.0	0.0	0.0	0.0	NG	E	A	N	C	G	D	J	0	2	12				good	D_J_NG_E_0	9
+228	xNG_E_A_N_C_G_D_J_0_11	622.0	0.0	0.0	0.0	NG	E	A	N	C	G	D	J	0	3	13				good	D_J_NG_E_0	10
+229	xNG_E_A_N_C_G_D_J_0_12	622.0	0.0	0.0	0.0	NG	E	A	N	C	G	D	J	0	4	14				good	D_J_NG_E_0	11
+230	xNG_E_A_N_C_G_D_J_0_13	622.0	0.0	0.0	0.0	NG	E	A	N	C	G	D	J	0	5	15				good	D_J_NG_E_0	12
+231	xNG_E_A_N_C_G_D_K_0_9	994.0	0.0	0.0	0.0	NG	E	A	N	C	G	D	K	0	1	11				good	D_K_NG_E_0	8
+232	xNG_E_A_N_C_G_D_K_0_10	994.0	0.0	0.0	0.0	NG	E	A	N	C	G	D	K	0	2	12				good	D_K_NG_E_0	9
+233	xNG_E_A_N_C_G_D_K_0_11	994.0	0.0	0.0	0.0	NG	E	A	N	C	G	D	K	0	3	13				good	D_K_NG_E_0	10
+234	xNG_E_A_N_C_G_D_K_0_12	994.0	0.0	0.0	0.0	NG	E	A	N	C	G	D	K	0	4	14				good	D_K_NG_E_0	11
+235	xNG_E_A_N_C_G_D_K_0_13	994.0	0.0	0.0	0.0	NG	E	A	N	C	G	D	K	0	5	15				good	D_K_NG_E_0	12
+236	xNG_E_A_N_C_G_D_M_0_9	777.0	0.0	0.0	0.0	NG	E	A	N	C	G	D	M	0	1	14				good	D_M_NG_E_0	8
+237	xNG_E_A_N_C_G_D_M_0_10	777.0	0.0	0.0	0.0	NG	E	A	N	C	G	D	M	0	2	15				good	D_M_NG_E_0	9
+238	xNG_E_A_N_C_G_D_M_0_11	777.0	0.0	0.0	0.0	NG	E	A	N	C	G	D	M	0	3	16				good	D_M_NG_E_0	10
+239	xNG_E_A_N_C_G_D_M_0_12	777.0	0.0	0.0	0.0	NG	E	A	N	C	G	D	M	0	4	17				good	D_M_NG_E_0	11
+240	xNG_E_A_N_C_G_D_M_0_13	777.0	0.0	0.0	0.0	NG	E	A	N	C	G	D	M	0	5	18				good	D_M_NG_E_0	12
+256	xNG_E_A_N_C_G_E_F_0_9	23.0	0.0	0.0	0.0	NG	E	A	N	C	G	E	F	0	1	9				good	E_F_NG_E_0	8
+257	xNG_E_A_N_C_G_E_F_0_10	23.0	0.0	0.0	0.0	NG	E	A	N	C	G	E	F	0	2	10				good	E_F_NG_E_0	9
+258	xNG_E_A_N_C_G_E_F_0_11	23.0	0.0	0.0	0.0	NG	E	A	N	C	G	E	F	0	3	11				good	E_F_NG_E_0	10
+259	xNG_E_A_N_C_G_E_F_0_12	23.0	0.0	0.0	0.0	NG	E	A	N	C	G	E	F	0	4	12				good	E_F_NG_E_0	11
+260	xNG_E_A_N_C_G_E_F_0_13	23.0	0.0	0.0	0.0	NG	E	A	N	C	G	E	F	0	5	13				good	E_F_NG_E_0	12
+261	xNG_E_A_N_C_G_E_G_0_9	133.0	0.0	0.0	0.0	NG	E	A	N	C	G	E	G	0	1	9				good	E_G_NG_E_0	8
+262	xNG_E_A_N_C_G_E_G_0_10	133.0	0.0	0.0	0.0	NG	E	A	N	C	G	E	G	0	2	10				good	E_G_NG_E_0	9
+263	xNG_E_A_N_C_G_E_G_0_11	133.0	0.0	0.0	0.0	NG	E	A	N	C	G	E	G	0	3	11				good	E_G_NG_E_0	10
+264	xNG_E_A_N_C_G_E_G_0_12	133.0	0.0	0.0	0.0	NG	E	A	N	C	G	E	G	0	4	12				good	E_G_NG_E_0	11
+265	xNG_E_A_N_C_G_E_G_0_13	133.0	0.0	0.0	0.0	NG	E	A	N	C	G	E	G	0	5	13				good	E_G_NG_E_0	12
+296	xNG_E_A_N_C_G_F_I_0_9	65.0	0.0	0.0	0.0	NG	E	A	N	C	G	F	I	0	1	11				good	F_I_NG_E_0	8
+297	xNG_E_A_N_C_G_F_I_0_10	65.0	0.0	0.0	0.0	NG	E	A	N	C	G	F	I	0	2	12				good	F_I_NG_E_0	9
+298	xNG_E_A_N_C_G_F_I_0_11	65.0	0.0	0.0	0.0	NG	E	A	N	C	G	F	I	0	3	13				good	F_I_NG_E_0	10
+299	xNG_E_A_N_C_G_F_I_0_12	65.0	0.0	0.0	0.0	NG	E	A	N	C	G	F	I	0	4	14				good	F_I_NG_E_0	11
+300	xNG_E_A_N_C_G_F_I_0_13	65.0	0.0	0.0	0.0	NG	E	A	N	C	G	F	I	0	5	15				good	F_I_NG_E_0	12
+301	xNG_E_A_N_C_G_F_J_0_9	181.0	0.0	0.0	0.0	NG	E	A	N	C	G	F	J	0	1	11				good	F_J_NG_E_0	8
+302	xNG_E_A_N_C_G_F_J_0_10	181.0	0.0	0.0	0.0	NG	E	A	N	C	G	F	J	0	2	12				good	F_J_NG_E_0	9
+303	xNG_E_A_N_C_G_F_J_0_11	181.0	0.0	0.0	0.0	NG	E	A	N	C	G	F	J	0	3	13				good	F_J_NG_E_0	10
+304	xNG_E_A_N_C_G_F_J_0_12	181.0	0.0	0.0	0.0	NG	E	A	N	C	G	F	J	0	4	14				good	F_J_NG_E_0	11
+305	xNG_E_A_N_C_G_F_J_0_13	181.0	0.0	0.0	0.0	NG	E	A	N	C	G	F	J	0	5	15				good	F_J_NG_E_0	12
+306	xNG_E_A_N_C_G_F_K_0_9	230.0	0.0	0.0	0.0	NG	E	A	N	C	G	F	K	0	1	11				good	F_K_NG_E_0	8
+307	xNG_E_A_N_C_G_F_K_0_10	230.0	0.0	0.0	0.0	NG	E	A	N	C	G	F	K	0	2	12				good	F_K_NG_E_0	9
+308	xNG_E_A_N_C_G_F_K_0_11	230.0	0.0	0.0	0.0	NG	E	A	N	C	G	F	K	0	3	13				good	F_K_NG_E_0	10
+309	xNG_E_A_N_C_G_F_K_0_12	230.0	0.0	0.0	0.0	NG	E	A	N	C	G	F	K	0	4	14				good	F_K_NG_E_0	11
+310	xNG_E_A_N_C_G_F_K_0_13	230.0	0.0	0.0	0.0	NG	E	A	N	C	G	F	K	0	5	15				good	F_K_NG_E_0	12
+326	xNG_E_A_N_C_G_G_G_0_9	213.0	0.0	0.0	0.0	NG	E	A	N	C	G	G	G	0	1	9				good	G_G_NG_E_0	8
+327	xNG_E_A_N_C_G_G_G_0_10	213.0	0.0	0.0	0.0	NG	E	A	N	C	G	G	G	0	2	10				good	G_G_NG_E_0	9
+328	xNG_E_A_N_C_G_G_G_0_11	213.0	0.0	0.0	0.0	NG	E	A	N	C	G	G	G	0	3	11				good	G_G_NG_E_0	10
+329	xNG_E_A_N_C_G_G_G_0_12	213.0	0.0	0.0	0.0	NG	E	A	N	C	G	G	G	0	4	12				good	G_G_NG_E_0	11
+330	xNG_E_A_N_C_G_G_G_0_13	213.0	0.0	0.0	0.0	NG	E	A	N	C	G	G	G	0	5	13				good	G_G_NG_E_0	12
+331	xNG_E_A_N_C_G_G_I_0_9	103.0	0.0	0.0	0.0	NG	E	A	N	C	G	G	I	0	1	11				good	G_I_NG_E_0	8
+332	xNG_E_A_N_C_G_G_I_0_10	103.0	0.0	0.0	0.0	NG	E	A	N	C	G	G	I	0	2	12				good	G_I_NG_E_0	9
+333	xNG_E_A_N_C_G_G_I_0_11	103.0	0.0	0.0	0.0	NG	E	A	N	C	G	G	I	0	3	13				good	G_I_NG_E_0	10
+334	xNG_E_A_N_C_G_G_I_0_12	103.0	0.0	0.0	0.0	NG	E	A	N	C	G	G	I	0	4	14				good	G_I_NG_E_0	11
+335	xNG_E_A_N_C_G_G_I_0_13	103.0	0.0	0.0	0.0	NG	E	A	N	C	G	G	I	0	5	15				good	G_I_NG_E_0	12
+336	xNG_E_A_N_C_G_G_J_0_9	338.0	0.0	0.0	0.0	NG	E	A	N	C	G	G	J	0	1	11				good	G_J_NG_E_0	8
+337	xNG_E_A_N_C_G_G_J_0_10	338.0	0.0	0.0	0.0	NG	E	A	N	C	G	G	J	0	2	12				good	G_J_NG_E_0	9
+338	xNG_E_A_N_C_G_G_J_0_11	338.0	0.0	0.0	0.0	NG	E	A	N	C	G	G	J	0	3	13				good	G_J_NG_E_0	10
+339	xNG_E_A_N_C_G_G_J_0_12	338.0	0.0	0.0	0.0	NG	E	A	N	C	G	G	J	0	4	14				good	G_J_NG_E_0	11
+340	xNG_E_A_N_C_G_G_J_0_13	338.0	0.0	0.0	0.0	NG	E	A	N	C	G	G	J	0	5	15				good	G_J_NG_E_0	12
+341	xNG_E_A_N_C_G_G_K_0_9	2004.0	0.0	0.0	0.0	NG	E	A	N	C	G	G	K	0	1	11				good	G_K_NG_E_0	8
+342	xNG_E_A_N_C_G_G_K_0_10	2004.0	0.0	0.0	0.0	NG	E	A	N	C	G	G	K	0	2	12				good	G_K_NG_E_0	9
+343	xNG_E_A_N_C_G_G_K_0_11	2004.0	0.0	0.0	0.0	NG	E	A	N	C	G	G	K	0	3	13				good	G_K_NG_E_0	10
+344	xNG_E_A_N_C_G_G_K_0_12	2004.0	0.0	0.0	0.0	NG	E	A	N	C	G	G	K	0	4	14				good	G_K_NG_E_0	11
+345	xNG_E_A_N_C_G_G_K_0_13	2004.0	0.0	0.0	0.0	NG	E	A	N	C	G	G	K	0	5	15				good	G_K_NG_E_0	12
+346	xNG_E_A_N_C_G_G_N_0_9	195.0	0.0	0.0	0.0	NG	E	A	N	C	G	G	N	0	1	14				good	G_N_NG_E_0	8
+347	xNG_E_A_N_C_G_G_N_0_10	195.0	0.0	0.0	0.0	NG	E	A	N	C	G	G	N	0	2	15				good	G_N_NG_E_0	9
+348	xNG_E_A_N_C_G_G_N_0_11	195.0	0.0	0.0	0.0	NG	E	A	N	C	G	G	N	0	3	16				good	G_N_NG_E_0	10
+349	xNG_E_A_N_C_G_G_N_0_12	195.0	0.0	0.0	0.0	NG	E	A	N	C	G	G	N	0	4	17				good	G_N_NG_E_0	11
+350	xNG_E_A_N_C_G_G_N_0_13	195.0	0.0	0.0	0.0	NG	E	A	N	C	G	G	N	0	5	18				good	G_N_NG_E_0	12
+351	xNG_E_A_N_C_G_G_O_0_9	1139.0	0.0	0.0	0.0	NG	E	A	N	C	G	G	O	0	1	14				good	G_O_NG_E_0	8
+352	xNG_E_A_N_C_G_G_O_0_10	1139.0	0.0	0.0	0.0	NG	E	A	N	C	G	G	O	0	2	15				good	G_O_NG_E_0	9
+353	xNG_E_A_N_C_G_G_O_0_11	1139.0	0.0	0.0	0.0	NG	E	A	N	C	G	G	O	0	3	16				good	G_O_NG_E_0	10
+354	xNG_E_A_N_C_G_G_O_0_12	1139.0	0.0	0.0	0.0	NG	E	A	N	C	G	G	O	0	4	17				good	G_O_NG_E_0	11
+355	xNG_E_A_N_C_G_G_O_0_13	1139.0	0.0	0.0	0.0	NG	E	A	N	C	G	G	O	0	5	18				good	G_O_NG_E_0	12
+356	xNG_E_A_N_C_G_H_F_0_9	190.0	0.0	0.0	0.0	NG	E	A	N	C	G	H	F	0	1	9				good	H_F_NG_E_0	8
+357	xNG_E_A_N_C_G_H_F_0_10	190.0	0.0	0.0	0.0	NG	E	A	N	C	G	H	F	0	2	10				good	H_F_NG_E_0	9
+358	xNG_E_A_N_C_G_H_F_0_11	190.0	0.0	0.0	0.0	NG	E	A	N	C	G	H	F	0	3	11				good	H_F_NG_E_0	10
+359	xNG_E_A_N_C_G_H_F_0_12	190.0	0.0	0.0	0.0	NG	E	A	N	C	G	H	F	0	4	12				good	H_F_NG_E_0	11
+360	xNG_E_A_N_C_G_H_F_0_13	190.0	0.0	0.0	0.0	NG	E	A	N	C	G	H	F	0	5	13				good	H_F_NG_E_0	12
+361	xNG_E_A_N_C_G_H_I_0_9	40.0	0.0	0.0	0.0	NG	E	A	N	C	G	H	I	0	1	11				good	H_I_NG_E_0	8
+362	xNG_E_A_N_C_G_H_I_0_10	40.0	0.0	0.0	0.0	NG	E	A	N	C	G	H	I	0	2	12				good	H_I_NG_E_0	9
+363	xNG_E_A_N_C_G_H_I_0_11	40.0	0.0	0.0	0.0	NG	E	A	N	C	G	H	I	0	3	13				good	H_I_NG_E_0	10
+364	xNG_E_A_N_C_G_H_I_0_12	40.0	0.0	0.0	0.0	NG	E	A	N	C	G	H	I	0	4	14				good	H_I_NG_E_0	11
+365	xNG_E_A_N_C_G_H_I_0_13	40.0	0.0	0.0	0.0	NG	E	A	N	C	G	H	I	0	5	15				good	H_I_NG_E_0	12
+381	xNG_E_A_N_C_G_I_G_0_9	20.0	0.0	0.0	0.0	NG	E	A	N	C	G	I	G	0	1	9				good	I_G_NG_E_0	8
+382	xNG_E_A_N_C_G_I_G_0_10	20.0	0.0	0.0	0.0	NG	E	A	N	C	G	I	G	0	2	10				good	I_G_NG_E_0	9
+383	xNG_E_A_N_C_G_I_G_0_11	20.0	0.0	0.0	0.0	NG	E	A	N	C	G	I	G	0	3	11				good	I_G_NG_E_0	10
+384	xNG_E_A_N_C_G_I_G_0_12	20.0	0.0	0.0	0.0	NG	E	A	N	C	G	I	G	0	4	12				good	I_G_NG_E_0	11
+385	xNG_E_A_N_C_G_I_G_0_13	20.0	0.0	0.0	0.0	NG	E	A	N	C	G	I	G	0	5	13				good	I_G_NG_E_0	12
+386	xNG_E_A_N_C_G_I_J_0_9	42.0	0.0	0.0	0.0	NG	E	A	N	C	G	I	J	0	1	11				good	I_J_NG_E_0	8
+387	xNG_E_A_N_C_G_I_J_0_10	42.0	0.0	0.0	0.0	NG	E	A	N	C	G	I	J	0	2	12				good	I_J_NG_E_0	9
+388	xNG_E_A_N_C_G_I_J_0_11	42.0	0.0	0.0	0.0	NG	E	A	N	C	G	I	J	0	3	13				good	I_J_NG_E_0	10
+389	xNG_E_A_N_C_G_I_J_0_12	42.0	0.0	0.0	0.0	NG	E	A	N	C	G	I	J	0	4	14				good	I_J_NG_E_0	11
+390	xNG_E_A_N_C_G_I_J_0_13	42.0	0.0	0.0	0.0	NG	E	A	N	C	G	I	J	0	5	15				good	I_J_NG_E_0	12
+391	xNG_E_A_N_C_G_I_K_0_9	362.0	0.0	0.0	0.0	NG	E	A	N	C	G	I	K	0	1	11				good	I_K_NG_E_0	8
+392	xNG_E_A_N_C_G_I_K_0_10	362.0	0.0	0.0	0.0	NG	E	A	N	C	G	I	K	0	2	12				good	I_K_NG_E_0	9
+393	xNG_E_A_N_C_G_I_K_0_11	362.0	0.0	0.0	0.0	NG	E	A	N	C	G	I	K	0	3	13				good	I_K_NG_E_0	10
+394	xNG_E_A_N_C_G_I_K_0_12	362.0	0.0	0.0	0.0	NG	E	A	N	C	G	I	K	0	4	14				good	I_K_NG_E_0	11
+395	xNG_E_A_N_C_G_I_K_0_13	362.0	0.0	0.0	0.0	NG	E	A	N	C	G	I	K	0	5	15				good	I_K_NG_E_0	12
+406	xNG_E_A_N_C_L_D_F_0_9	517.0	0.0	0.0	0.0	NG	E	A	N	C	L	D	F	0	1	9				good	D_F_NG_E_0	8
+407	xNG_E_A_N_C_L_D_F_0_10	517.0	0.0	0.0	0.0	NG	E	A	N	C	L	D	F	0	2	10				good	D_F_NG_E_0	9
+408	xNG_E_A_N_C_L_D_F_0_11	517.0	0.0	0.0	0.0	NG	E	A	N	C	L	D	F	0	3	11				good	D_F_NG_E_0	10
+409	xNG_E_A_N_C_L_D_F_0_12	517.0	0.0	0.0	0.0	NG	E	A	N	C	L	D	F	0	4	12				good	D_F_NG_E_0	11
+410	xNG_E_A_N_C_L_D_F_0_13	517.0	0.0	0.0	0.0	NG	E	A	N	C	L	D	F	0	5	13				good	D_F_NG_E_0	12
+411	xNG_E_A_N_C_L_D_I_0_9	230.0	0.0	0.0	0.0	NG	E	A	N	C	L	D	I	0	1	11				good	D_I_NG_E_0	8
+412	xNG_E_A_N_C_L_D_I_0_10	230.0	0.0	0.0	0.0	NG	E	A	N	C	L	D	I	0	2	12				good	D_I_NG_E_0	9
+413	xNG_E_A_N_C_L_D_I_0_11	230.0	0.0	0.0	0.0	NG	E	A	N	C	L	D	I	0	3	13				good	D_I_NG_E_0	10
+414	xNG_E_A_N_C_L_D_I_0_12	230.0	0.0	0.0	0.0	NG	E	A	N	C	L	D	I	0	4	14				good	D_I_NG_E_0	11
+415	xNG_E_A_N_C_L_D_I_0_13	230.0	0.0	0.0	0.0	NG	E	A	N	C	L	D	I	0	5	15				good	D_I_NG_E_0	12
+416	xNG_E_A_N_C_L_D_J_0_9	340.0	0.0	0.0	0.0	NG	E	A	N	C	L	D	J	0	1	11				good	D_J_NG_E_0	8
+417	xNG_E_A_N_C_L_D_J_0_10	340.0	0.0	0.0	0.0	NG	E	A	N	C	L	D	J	0	2	12				good	D_J_NG_E_0	9
+418	xNG_E_A_N_C_L_D_J_0_11	340.0	0.0	0.0	0.0	NG	E	A	N	C	L	D	J	0	3	13				good	D_J_NG_E_0	10
+419	xNG_E_A_N_C_L_D_J_0_12	340.0	0.0	0.0	0.0	NG	E	A	N	C	L	D	J	0	4	14				good	D_J_NG_E_0	11
+420	xNG_E_A_N_C_L_D_J_0_13	340.0	0.0	0.0	0.0	NG	E	A	N	C	L	D	J	0	5	15				good	D_J_NG_E_0	12
+2903	xEA_E_A_N_C_B_I_N_9_I_4_9	21.0	0.0	0.0	0.0	EA	E	A	N	C	B	I	N	4	1	14	1	14	I	good	I_N_EA_E_14_4	8
+2978	xEA_E_A_N_C_B_I_O_9_I_4_9	57.0	0.0	0.0	0.0	EA	E	A	N	C	B	I	O	4	1	14	1	14	I	good	I_O_EA_E_14_4	8
+4013	xEA_E_A_N_C_G_I_N_9_I_4_9	33.0	0.0	0.0	0.0	EA	E	A	N	C	G	I	N	4	1	14	1	14	I	good	I_N_EA_E_14_4	8
+4088	xEA_E_A_N_C_G_I_O_9_I_4_9	232.0	0.0	0.0	0.0	EA	E	A	N	C	G	I	O	4	1	14	1	14	I	good	I_O_EA_E_14_4	8
+4391	xNG_R_A_N_C_B_D_0_9_3	1448.0	0.0	0.0	0.0	NG	R	A	N	C	B	D		0	1	3				good	D_NG_R_0	2
+4400	xNG_R_A_N_C_B_D_0_10_4	1448.0	0.0	0.0	0.0	NG	R	A	N	C	B	D		0	2	4				good	D_NG_R_0	3
+4410	xNG_R_A_N_C_B_D_0_11_5	1448.0	0.0	0.0	0.0	NG	R	A	N	C	B	D		0	3	5				good	D_NG_R_0	4
+4421	xNG_R_A_N_C_B_D_0_12_6	1448.0	0.0	0.0	0.0	NG	R	A	N	C	B	D		0	4	6				good	D_NG_R_0	5
+4433	xNG_R_A_N_C_B_D_0_13_7	1448.0	0.0	0.0	0.0	NG	R	A	N	C	B	D		0	5	7				good	D_NG_R_0	6
+4439	xNG_R_A_N_C_B_E_0_9_1	3443.0	0.0	0.0	0.0	NG	R	A	N	C	B	E		0	1	1				good	E_NG_R_0	0
+4448	xNG_R_A_N_C_B_E_0_10_2	3443.0	0.0	0.0	0.0	NG	R	A	N	C	B	E		0	2	2				good	E_NG_R_0	1
+4458	xNG_R_A_N_C_B_E_0_11_3	3443.0	0.0	0.0	0.0	NG	R	A	N	C	B	E		0	3	3				good	E_NG_R_0	2
+4469	xNG_R_A_N_C_B_E_0_12_4	3443.0	0.0	0.0	0.0	NG	R	A	N	C	B	E		0	4	4				good	E_NG_R_0	3
+4481	xNG_R_A_N_C_B_E_0_13_5	3443.0	0.0	0.0	0.0	NG	R	A	N	C	B	E		0	5	5				good	E_NG_R_0	4
+4489	xNG_R_A_N_C_B_F_0_9_1	384.0	0.0	0.0	0.0	NG	R	A	N	C	B	F		0	1	1				good	F_NG_R_0	0
+4498	xNG_R_A_N_C_B_F_0_10_2	384.0	0.0	0.0	0.0	NG	R	A	N	C	B	F		0	2	2				good	F_NG_R_0	1
+4508	xNG_R_A_N_C_B_F_0_11_3	384.0	0.0	0.0	0.0	NG	R	A	N	C	B	F		0	3	3				good	F_NG_R_0	2
+4519	xNG_R_A_N_C_B_F_0_12_4	384.0	0.0	0.0	0.0	NG	R	A	N	C	B	F		0	4	4				good	F_NG_R_0	3
+4531	xNG_R_A_N_C_B_F_0_13_5	384.0	0.0	0.0	0.0	NG	R	A	N	C	B	F		0	5	5				good	F_NG_R_0	4
+4647	xNG_R_A_N_C_B_I_0_10_1	78.0	0.0	0.0	0.0	NG	R	A	N	C	B	I		0	2	1				good	I_NG_R_0	0
+4657	xNG_R_A_N_C_B_I_0_11_2	78.0	0.0	0.0	0.0	NG	R	A	N	C	B	I		0	3	2				good	I_NG_R_0	1
+4668	xNG_R_A_N_C_B_I_0_12_3	78.0	0.0	0.0	0.0	NG	R	A	N	C	B	I		0	4	3				good	I_NG_R_0	2
+4680	xNG_R_A_N_C_B_I_0_13_4	78.0	0.0	0.0	0.0	NG	R	A	N	C	B	I		0	5	4				good	I_NG_R_0	3
+4789	xNG_R_A_N_C_G_C_0_9_1	360.0	0.0	0.0	0.0	NG	R	A	N	C	G	C		0	1	1				good	C_NG_R_0	0
+4798	xNG_R_A_N_C_G_C_0_10_2	360.0	0.0	0.0	0.0	NG	R	A	N	C	G	C		0	2	2				good	C_NG_R_0	1
+4808	xNG_R_A_N_C_G_C_0_11_3	360.0	0.0	0.0	0.0	NG	R	A	N	C	G	C		0	3	3				good	C_NG_R_0	2
+4819	xNG_R_A_N_C_G_C_0_12_4	360.0	0.0	0.0	0.0	NG	R	A	N	C	G	C		0	4	4				good	C_NG_R_0	3
+4831	xNG_R_A_N_C_G_C_0_13_5	360.0	0.0	0.0	0.0	NG	R	A	N	C	G	C		0	5	5				good	C_NG_R_0	4
+4841	xNG_R_A_N_C_G_D_0_9_3	4959.0	0.0	0.0	0.0	NG	R	A	N	C	G	D		0	1	3				good	D_NG_R_0	2
+4850	xNG_R_A_N_C_G_D_0_10_4	4959.0	0.0	0.0	0.0	NG	R	A	N	C	G	D		0	2	4				good	D_NG_R_0	3
+4860	xNG_R_A_N_C_G_D_0_11_5	4959.0	0.0	0.0	0.0	NG	R	A	N	C	G	D		0	3	5				good	D_NG_R_0	4
+4871	xNG_R_A_N_C_G_D_0_12_6	4959.0	0.0	0.0	0.0	NG	R	A	N	C	G	D		0	4	6				good	D_NG_R_0	5
+4883	xNG_R_A_N_C_G_D_0_13_7	4959.0	0.0	0.0	0.0	NG	R	A	N	C	G	D		0	5	7				good	D_NG_R_0	6
+4889	xNG_R_A_N_C_G_E_0_9_1	3382.0	0.0	0.0	0.0	NG	R	A	N	C	G	E		0	1	1				good	E_NG_R_0	0
+4898	xNG_R_A_N_C_G_E_0_10_2	3382.0	0.0	0.0	0.0	NG	R	A	N	C	G	E		0	2	2				good	E_NG_R_0	1
+4908	xNG_R_A_N_C_G_E_0_11_3	3382.0	0.0	0.0	0.0	NG	R	A	N	C	G	E		0	3	3				good	E_NG_R_0	2
+4919	xNG_R_A_N_C_G_E_0_12_4	3382.0	0.0	0.0	0.0	NG	R	A	N	C	G	E		0	4	4				good	E_NG_R_0	3
+4931	xNG_R_A_N_C_G_E_0_13_5	3382.0	0.0	0.0	0.0	NG	R	A	N	C	G	E		0	5	5				good	E_NG_R_0	4
+4939	xNG_R_A_N_C_G_F_0_9_1	512.0	0.0	0.0	0.0	NG	R	A	N	C	G	F		0	1	1				good	F_NG_R_0	0
+4948	xNG_R_A_N_C_G_F_0_10_2	512.0	0.0	0.0	0.0	NG	R	A	N	C	G	F		0	2	2				good	F_NG_R_0	1
+4958	xNG_R_A_N_C_G_F_0_11_3	512.0	0.0	0.0	0.0	NG	R	A	N	C	G	F		0	3	3				good	F_NG_R_0	2
+4969	xNG_R_A_N_C_G_F_0_12_4	512.0	0.0	0.0	0.0	NG	R	A	N	C	G	F		0	4	4				good	F_NG_R_0	3
+4981	xNG_R_A_N_C_G_F_0_13_5	512.0	0.0	0.0	0.0	NG	R	A	N	C	G	F		0	5	5				good	F_NG_R_0	4
+5039	xNG_R_A_N_C_G_H_0_9_1	271.0	0.0	0.0	0.0	NG	R	A	N	C	G	H		0	1	1				good	H_NG_R_0	0
+5048	xNG_R_A_N_C_G_H_0_10_2	271.0	0.0	0.0	0.0	NG	R	A	N	C	G	H		0	2	2				good	H_NG_R_0	1
+5058	xNG_R_A_N_C_G_H_0_11_3	271.0	0.0	0.0	0.0	NG	R	A	N	C	G	H		0	3	3				good	H_NG_R_0	2
+5069	xNG_R_A_N_C_G_H_0_12_4	271.0	0.0	0.0	0.0	NG	R	A	N	C	G	H		0	4	4				good	H_NG_R_0	3
+5081	xNG_R_A_N_C_G_H_0_13_5	271.0	0.0	0.0	0.0	NG	R	A	N	C	G	H		0	5	5				good	H_NG_R_0	4
+5097	xNG_R_A_N_C_G_I_0_10_1	265.0	0.0	0.0	0.0	NG	R	A	N	C	G	I		0	2	1				good	I_NG_R_0	0
+5107	xNG_R_A_N_C_G_I_0_11_2	265.0	0.0	0.0	0.0	NG	R	A	N	C	G	I		0	3	2				good	I_NG_R_0	1
+5118	xNG_R_A_N_C_G_I_0_12_3	265.0	0.0	0.0	0.0	NG	R	A	N	C	G	I		0	4	3				good	I_NG_R_0	2
+5130	xNG_R_A_N_C_G_I_0_13_4	265.0	0.0	0.0	0.0	NG	R	A	N	C	G	I		0	5	4				good	I_NG_R_0	3
