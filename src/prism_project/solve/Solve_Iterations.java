@@ -4112,12 +4112,12 @@ public class Solve_Iterations {
 						if (flow_set_list.size() > 0) {		// write flow constraints if there is at least a flow set
 							output_flow_constraints_file.delete();
 							try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_flow_constraints_file))) {
-								String file_header = String.join("\t", "flow_id", "flow_description", "flow_arrangement", "flow_type", "lowerbound_percentage", "upperbound_percentage", "flow_output_original");
+								String file_header = String.join("\t", "iteration", "flow_id", "flow_description", "flow_arrangement", "flow_type", "lowerbound_percentage", "upperbound_percentage", "flow_output_original");
 								fileOut.write(file_header);
 								
 								// add constraints for each flow set
 								for (int i = 0; i < flow_set_list.size(); i++) {		// loop each flow set (or each row of the flow_constraints_table)								
-									String temp = flow_id_list.get(i) + "\t" + flow_description_list.get(i) + "\t"
+									String temp = iter + "\t" + flow_id_list.get(i) + "\t" + flow_description_list.get(i) + "\t"
 											+ flow_arrangement_list.get(i) + "\t" + flow_type_list.get(i) + "\t"
 											+ flow_lowerbound_percentage_list.get(i) + "\t" + flow_upperbound_percentage_list.get(i) + "\t";
 											

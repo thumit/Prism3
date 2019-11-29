@@ -545,7 +545,7 @@ public class Panel_Project extends JLayeredPane {
 							thread_management_details.start();
 						} 
 						
-						else if (currentInputFile.startsWith("output_07_flow_constraints")) {		//show a panel with bar and line charts
+						else if (currentInputFile.startsWith("output_07_flow_constraints") || currentInputFile.startsWith("summarize_output_07_flow_constraints")) {		//show a panel with bar and line charts
 							table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 							Output_Panel_Flow_Constraints chart_panel = new Output_Panel_Flow_Constraints(currentProjectFolder, currentRun, table, data);
 							scrollPane_Right.setViewportView(chart_panel);

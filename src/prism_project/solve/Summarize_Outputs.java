@@ -57,12 +57,13 @@ public class Summarize_Outputs {
 //			output_management_details_file[iter] = new File(runFolder.getAbsolutePath() + "/output_05_management_details_" + iter + ".txt");	
 //			output_fly_constraints_file[iter] = new File(runFolder.getAbsolutePath() + "/output_05_fly_constraints_" + iter + ".txt");	
 			output_basic_constraints_file[iter] = new File(runFolder.getAbsolutePath() + "/output_06_basic_constraints_" + iter + ".txt");
-//			output_flow_constraints_file[iter] = new File(runFolder.getAbsolutePath() + "/output_07_flow_constraints_" + iter + ".txt");
+			output_flow_constraints_file[iter] = new File(runFolder.getAbsolutePath() + "/output_07_flow_constraints_" + iter + ".txt");
 		}
 		
 		summarize_output_01();	// this would export this output into a different format
 //		summarize_output_by_union(output_general_outputs_file, "summarize_output_01_general_outputs_v2.txt");
 		summarize_output_by_union(output_management_overview_file, "summarize_output_04_management_overview.txt");
+		summarize_output_by_union(output_flow_constraints_file, "summarize_output_07_flow_constraints.txt");
 		summarize_output_06();	// this would export this output into a different format
 	}
 	

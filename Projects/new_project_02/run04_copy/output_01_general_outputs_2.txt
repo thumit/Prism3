@@ -4,10 +4,10 @@ iteration	description	value
 2	Solution algorithm	2
 2	Simplex iterations	2
 2	Prism version when problem solved	PRISM ALPHA 2.0.01
-2	Date & time problem solved	2019/11/26 - 18:54:16
+2	Date & time problem solved	2019/11/29 - 07:18:42
 2	Time reading (minutes & seconds)	0.1s
-2	Time solving (minutes & seconds)	0.0s
+2	Time solving (minutes & seconds)	0.01s
 2	Time writing (minutes & seconds)	0.15s
-2	Total variables	1580
-2	Total constraints	1286
+2	Total variables	1578
+2	Total constraints	1284
 2	Objective value	9.989622197E7

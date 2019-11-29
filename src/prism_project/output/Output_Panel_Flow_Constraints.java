@@ -278,11 +278,14 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 			}
 		};	
 		flow_table.getColumn("flow_type").setCellRenderer(r);
-		flow_table.getColumn("flow_id").setPreferredWidth(80);					// Set width of 1st Column smaller
-		flow_table.getColumn("flow_description").setPreferredWidth(330);			// Set width of 2nd Column bigger
-		flow_table.getColumn("flow_type").setPreferredWidth(120);				// Set width of 3rd Column smaller
-		flow_table.getColumn("lowerbound_percentage").setPreferredWidth(120);	// Set width of 4th Column smaller
-		flow_table.getColumn("upperbound_percentage").setPreferredWidth(120);	// Set width of 5th Column smaller
+		flow_table.getColumn("iteration").setPreferredWidth(60);	
+		flow_table.getColumn("flow_id").setPreferredWidth(60);					
+		flow_table.getColumn("flow_description").setPreferredWidth(150);		
+		flow_table.getColumn("flow_type").setPreferredWidth(60);	
+		flow_table.getColumn("lowerbound_percentage").setPreferredWidth(50);
+		flow_table.getColumn("upperbound_percentage").setPreferredWidth(50);
+		flow_table.getColumn("lowerbound_percentage").setHeaderValue("LB%");	// change header name
+		flow_table.getColumn("upperbound_percentage").setHeaderValue("UB%");	// change header name
 		flow_table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 			
 	    // Add listener
@@ -403,10 +406,10 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 		
 		String chart_name = "Highlight a flow to view chart";
 		if (selectedRow >= 0) {
-			chart_name = this_data[selectedRow][1].toString() + " - " + this_data[selectedRow][3].toString();
+			chart_name = this_data[selectedRow][0].toString()  + "," + this_data[selectedRow][1].toString() + " - " + this_data[selectedRow][2].toString() + " - " + this_data[selectedRow][4].toString();
 			
 			// Read flow_arrangement
-			String[] flow_arrangement_info = this_data[selectedRow][2].toString().split(";");	// Read the whole cell 'flow_arrangement'
+			String[] flow_arrangement_info = this_data[selectedRow][3].toString().split(";");	// Read the whole cell 'flow_arrangement'
 			total_columns_of_the_chart = flow_arrangement_info.length;
 			List<String> flow_arrangement = new ArrayList<String>();
 			for (int i = 0; i < flow_arrangement_info.length; i++) {
@@ -414,7 +417,7 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 			}
 			
 			// Read flow_output_original
-			String[] flow_output_original_info = this_data[selectedRow][6].toString().split(";");	// Read the whole cell 'flow_output_original'
+			String[] flow_output_original_info = this_data[selectedRow][7].toString().split(";");	// Read the whole cell 'flow_output_original'
 			List<Double> flow_output_original = new ArrayList<Double>();
 			for (int i = 0; i < flow_output_original_info.length; i++) {
 				flow_output_original.add(Double.parseDouble(flow_output_original_info[i]));
@@ -426,17 +429,17 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 			List<Double> UB = new ArrayList<Double>();
 			for (int i = 0; i < flow_arrangement_info.length; i++) {
 				FV.add(flow_output_original.get(i));
-				if (!this_data[selectedRow][4].toString().equals("null") && this_data[selectedRow][3].toString().equals("HARD")) {
+				if (!this_data[selectedRow][5].toString().equals("null") && this_data[selectedRow][4].toString().equals("HARD")) {
 					if (i > 0) {
-						double lb_value = Double.parseDouble(this_data[selectedRow][4].toString()) * flow_output_original.get(i - 1) / 100;	
+						double lb_value = Double.parseDouble(this_data[selectedRow][5].toString()) * flow_output_original.get(i - 1) / 100;	
 						LB.add(lb_value);	
 					} else if (i == 0) {
 						LB.add(null);	
 					}
 				} 
-				if (!this_data[selectedRow][5].toString().equals("null") && this_data[selectedRow][3].toString().equals("HARD")) {
+				if (!this_data[selectedRow][6].toString().equals("null") && this_data[selectedRow][4].toString().equals("HARD")) {
 					if (i > 0) {
-						double ub_value = Double.parseDouble(this_data[selectedRow][5].toString()) * flow_output_original.get(i - 1) / 100;	
+						double ub_value = Double.parseDouble(this_data[selectedRow][6].toString()) * flow_output_original.get(i - 1) / 100;	
 						UB.add(ub_value);
 					} else if (i == 0) {
 						UB.add(null);
@@ -456,7 +459,6 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 					}
 				}
 			}
-//			Collections.sort(all_bc_id_in_the_selected_row);
 						
 			int rowCount = all_bc_id_in_the_selected_row.size();
 			int colCount = 5;
@@ -519,20 +521,20 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 			// Put all into dataset	----------------------------------------------------------------------------		
 			for (int i = 0; i < flow_arrangement_info.length; i++) {
 				dataset.addValue(flow_output_original.get(i), "FV", flow_arrangement.get(i).replaceAll("\\s+", "+"));
-				if (!this_data[selectedRow][4].toString().equals("null") && this_data[selectedRow][3].toString().equals("HARD")) {
+				if (!this_data[selectedRow][5].toString().equals("null") && this_data[selectedRow][4].toString().equals("HARD")) {
 					if (i > 0) {
-						double lb_value = Double.parseDouble(this_data[selectedRow][4].toString()) * flow_output_original.get(i - 1) / 100;	
-						dataset_LB.addValue(lb_value, "LB. " + this_data[selectedRow][4].toString() + "% of left-column FV", flow_arrangement.get(i).replaceAll("\\s+", "+"));	
+						double lb_value = Double.parseDouble(this_data[selectedRow][5].toString()) * flow_output_original.get(i - 1) / 100;	
+						dataset_LB.addValue(lb_value, "LB. " + this_data[selectedRow][5].toString() + "% of left-column FV", flow_arrangement.get(i).replaceAll("\\s+", "+"));	
 					} else if (i == 0) {
-						dataset_LB.addValue(null, "LB. " + this_data[selectedRow][4].toString() + "% of left-column FV", flow_arrangement.get(i).replaceAll("\\s+", "+"));	
+						dataset_LB.addValue(null, "LB. " + this_data[selectedRow][5].toString() + "% of left-column FV", flow_arrangement.get(i).replaceAll("\\s+", "+"));	
 					}
 				} 
-				if (!this_data[selectedRow][5].toString().equals("null") && this_data[selectedRow][3].toString().equals("HARD")) {
+				if (!this_data[selectedRow][6].toString().equals("null") && this_data[selectedRow][4].toString().equals("HARD")) {
 					if (i > 0) {
-						double ub_value = Double.parseDouble(this_data[selectedRow][5].toString()) * flow_output_original.get(i - 1) / 100;	
-						dataset_UB.addValue(ub_value, "UB. " + this_data[selectedRow][5].toString() + "% of left-column FV", flow_arrangement.get(i).replaceAll("\\s+", "+"));
+						double ub_value = Double.parseDouble(this_data[selectedRow][6].toString()) * flow_output_original.get(i - 1) / 100;	
+						dataset_UB.addValue(ub_value, "UB. " + this_data[selectedRow][6].toString() + "% of left-column FV", flow_arrangement.get(i).replaceAll("\\s+", "+"));
 					} else if (i == 0) {
-						dataset_UB.addValue(null, "UB. " + this_data[selectedRow][5].toString() + "% of left-column FV", flow_arrangement.get(i).replaceAll("\\s+", "+"));
+						dataset_UB.addValue(null, "UB. " + this_data[selectedRow][6].toString() + "% of left-column FV", flow_arrangement.get(i).replaceAll("\\s+", "+"));
 					}
 				} 
 			}
@@ -690,10 +692,10 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 		
 		String chart_name = "Highlight a flow to view chart";
 		if (selectedRow >= 0) {
-			chart_name = this_data[selectedRow][1].toString() + " - " + this_data[selectedRow][3].toString();
+			chart_name = this_data[selectedRow][0].toString()  + "," + this_data[selectedRow][1].toString() + " - " + this_data[selectedRow][2].toString() + " - " + this_data[selectedRow][4].toString();
 			
 			// Read flow_arrangement
-			String[] flow_arrangement_info = this_data[selectedRow][2].toString().split(";");	// Read the whole cell 'flow_arrangement'
+			String[] flow_arrangement_info = this_data[selectedRow][3].toString().split(";");	// Read the whole cell 'flow_arrangement'
 			total_columns_of_the_chart = flow_arrangement_info.length;
 			List<String> flow_arrangement = new ArrayList<String>();
 			for (int i = 0; i < flow_arrangement_info.length; i++) {
@@ -701,7 +703,7 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 			}
 			
 			// Read flow_output_original
-			String[] flow_output_original_info = this_data[selectedRow][6].toString().split(";");	// Read the whole cell 'flow_output_original'
+			String[] flow_output_original_info = this_data[selectedRow][7].toString().split(";");	// Read the whole cell 'flow_output_original'
 			List<Double> flow_output_original = new ArrayList<Double>();
 			for (int i = 0; i < flow_output_original_info.length; i++) {
 				flow_output_original.add(Double.parseDouble(flow_output_original_info[i]));
@@ -713,24 +715,24 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 			List<Double> UB = new ArrayList<Double>();
 			for (int i = 0; i < flow_arrangement_info.length; i++) {
 				FV.add(flow_output_original.get(i));
-				if (!this_data[selectedRow][4].toString().equals("null") && this_data[selectedRow][3].toString().equals("HARD")) {
+				if (!this_data[selectedRow][5].toString().equals("null") && this_data[selectedRow][4].toString().equals("HARD")) {
 					if (i > 0) {
-						double lb_value = Double.parseDouble(this_data[selectedRow][4].toString()) * flow_output_original.get(i - 1) / 100;	
+						double lb_value = Double.parseDouble(this_data[selectedRow][5].toString()) * flow_output_original.get(i - 1) / 100;	
 						LB.add(lb_value);	
 					} else if (i == 0) {
 						LB.add(null);	
 					}
 				} 
-				if (!this_data[selectedRow][5].toString().equals("null") && this_data[selectedRow][3].toString().equals("HARD")) {
+				if (!this_data[selectedRow][6].toString().equals("null") && this_data[selectedRow][4].toString().equals("HARD")) {
 					if (i > 0) {
-						double ub_value = Double.parseDouble(this_data[selectedRow][5].toString()) * flow_output_original.get(i - 1) / 100;	
+						double ub_value = Double.parseDouble(this_data[selectedRow][6].toString()) * flow_output_original.get(i - 1) / 100;	
 						UB.add(ub_value);
 					} else if (i == 0) {
 						UB.add(null);
 					}
 				} 
 			}
-						
+			
 			// Refresh the legend_table------------------------------------------------------------------------
 			List<String> all_bc_id_in_the_selected_row = new ArrayList<String>();
 			for (int i = 0; i < flow_arrangement_info.length; i++) {
@@ -743,7 +745,6 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 					}
 				}
 			}
-//			Collections.sort(all_bc_id_in_the_selected_row);
 						
 			int rowCount = all_bc_id_in_the_selected_row.size();
 			int colCount = 5;
@@ -974,12 +975,12 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 		String chart_name = "Highlight single or multiple flows to view chart";
 		if (selectedRows.length >= 1) {
 			List<JTable> table_list = new ArrayList<JTable>();
-			chart_name = "Comparison between following flow-id: ";
+			chart_name = "Comparison for selected rows in the Folow Data table: ";
 			for (int selectedRow: selectedRows) {
-				chart_name = chart_name  + " " + this_data[selectedRow][0].toString();
-				
+				chart_name = chart_name + "(" + this_data[selectedRow][0].toString() + "," + this_data[selectedRow][1].toString() + ") ";
+
 				// Read flow_arrangement
-				String[] flow_arrangement_info = this_data[selectedRow][2].toString().split(";");	// Read the whole cell 'flow_arrangement'
+				String[] flow_arrangement_info = this_data[selectedRow][3].toString().split(";");	// Read the whole cell 'flow_arrangement'
 				total_columns_of_the_chart = flow_arrangement_info.length;
 				List<String> flow_arrangement = new ArrayList<String>();
 				for (int i = 0; i < flow_arrangement_info.length; i++) {
@@ -987,7 +988,7 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 				}
 				
 				// Read flow_output_original
-				String[] flow_output_original_info = this_data[selectedRow][6].toString().split(";");	// Read the whole cell 'flow_output_original'
+				String[] flow_output_original_info = this_data[selectedRow][7].toString().split(";");	// Read the whole cell 'flow_output_original'
 				List<Double> flow_output_original = new ArrayList<Double>();
 				for (int i = 0; i < flow_output_original_info.length; i++) {
 					flow_output_original.add(Double.parseDouble(flow_output_original_info[i]));
@@ -999,17 +1000,17 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 				List<Double> UB = new ArrayList<Double>();
 				for (int i = 0; i < flow_arrangement_info.length; i++) {
 					FV.add(flow_output_original.get(i));
-					if (!this_data[selectedRow][4].toString().equals("null") && this_data[selectedRow][3].toString().equals("HARD")) {
+					if (!this_data[selectedRow][5].toString().equals("null") && this_data[selectedRow][4].toString().equals("HARD")) {
 						if (i > 0) {
-							double lb_value = Double.parseDouble(this_data[selectedRow][4].toString()) * flow_output_original.get(i - 1) / 100;	
+							double lb_value = Double.parseDouble(this_data[selectedRow][5].toString()) * flow_output_original.get(i - 1) / 100;	
 							LB.add(lb_value);	
 						} else if (i == 0) {
 							LB.add(null);	
 						}
 					} 
-					if (!this_data[selectedRow][5].toString().equals("null") && this_data[selectedRow][3].toString().equals("HARD")) {
+					if (!this_data[selectedRow][6].toString().equals("null") && this_data[selectedRow][4].toString().equals("HARD")) {
 						if (i > 0) {
-							double ub_value = Double.parseDouble(this_data[selectedRow][5].toString()) * flow_output_original.get(i - 1) / 100;	
+							double ub_value = Double.parseDouble(this_data[selectedRow][6].toString()) * flow_output_original.get(i - 1) / 100;	
 							UB.add(ub_value);
 						} else if (i == 0) {
 							UB.add(null);
@@ -1029,7 +1030,6 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 						}
 					}
 				}
-//				Collections.sort(all_bc_id_in_the_selected_row);
 							
 				int rowCount = all_bc_id_in_the_selected_row.size();
 				int colCount = 6;
@@ -1084,38 +1084,38 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 		        
 				// Put all into dataset	----------------------------------------------------------------------------
 				for (int i = 0; i < flow_arrangement_info.length; i++) {
-					dataset.addValue(flow_output_original.get(i), /*"flow_id = " +*/ this_data[selectedRow][0].toString() + ". " + this_data[selectedRow][1].toString() + ". FV", String.valueOf(i));
+					dataset.addValue(flow_output_original.get(i), this_data[selectedRow][0].toString() + "," + this_data[selectedRow][1].toString() + ".FV", String.valueOf(i));
 					
-					if (!this_data[selectedRow][4].toString().equals("null")) {
-						String LB_rename = /*"flow_id = " +*/ this_data[selectedRow][0].toString() + ". LB. " + this_data[selectedRow][4].toString() + "%";
+					if (!this_data[selectedRow][5].toString().equals("null")) {
+						String LB_rename = /*"flow_id = " +*/ this_data[selectedRow][0].toString() + "," + this_data[selectedRow][1].toString()+ ".LB " + this_data[selectedRow][5].toString() + "%";
 						if (i > 0) {
-							double lb_value = Double.parseDouble(this_data[selectedRow][4].toString()) * flow_output_original.get(i - 1) / 100;	
+							double lb_value = Double.parseDouble(this_data[selectedRow][5].toString()) * flow_output_original.get(i - 1) / 100;	
 							dataset_LB.addValue(lb_value, LB_rename, String.valueOf(i));	
 						} else {	// if this is the first column in the chart
 							dataset_LB.addValue(null, LB_rename , String.valueOf(i));	
 						}
 					} else {
-						String LB_rename = this_data[selectedRow][0].toString() + ". LB. n/a";
+						String LB_rename = this_data[selectedRow][0].toString() + "," + this_data[selectedRow][1].toString() + ".LB n/a";
 						dataset_LB.addValue(null, LB_rename, String.valueOf(i));
 					}
 					
-					if (!this_data[selectedRow][5].toString().equals("null")) {
-						String UB_rename = /*"flow_id = " +*/ this_data[selectedRow][0].toString() + ". UB. " + this_data[selectedRow][5].toString() + "%";
+					if (!this_data[selectedRow][6].toString().equals("null")) {
+						String UB_rename = this_data[selectedRow][0].toString() + "," + this_data[selectedRow][1].toString() + ".UB " + this_data[selectedRow][6].toString() + "%";
 						if (i > 0) {
-							double ub_value = Double.parseDouble(this_data[selectedRow][5].toString()) * flow_output_original.get(i - 1) / 100;	
+							double ub_value = Double.parseDouble(this_data[selectedRow][6].toString()) * flow_output_original.get(i - 1) / 100;	
 							dataset_UB.addValue(ub_value, UB_rename, String.valueOf(i));
 						} else {	// if this is the first column in the chart
 							dataset_UB.addValue(null, UB_rename, String.valueOf(i));
 						}
 					} else {
-						String UB_rename = this_data[selectedRow][0].toString() + ". UB. n/a";
+						String UB_rename = this_data[selectedRow][0].toString() + "," + this_data[selectedRow][1].toString() + ".UB n/a";
 						dataset_UB.addValue(null, UB_rename, String.valueOf(i));
 					}
 				}
 				// --------------------------------------------------------------------------------------------------
 			}
 			
-			// THe combo to show data from the only one table user wants to see
+			// The combo to show data from the only one table user wants to see
 			JScrollPane temporarytable_scroll = new JScrollPane();
 			JTextField temporary_textfield = new JTextField();
 			temporary_textfield.setBackground(Color.white);
@@ -1125,19 +1125,20 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 			JComboBox combo = new JComboBox();	
 			combo.setFocusable(false);
 			for (int selectedRow: selectedRows) {
-				combo.addItem("flow_id = " + this_data[selectedRow][0].toString());
+				combo.addItem("iteration,flow_id = " + this_data[selectedRow][0].toString() + "," + this_data[selectedRow][1].toString());
 			}
 			combo.addActionListener(e -> {
 				for (int i = 0; i < selectedRows.length; i++) {
-					if (("flow_id = " + this_data[selectedRows[i]][0].toString()).equals(combo.getSelectedItem().toString())) {
+					if (("iteration,flow_id = " + this_data[selectedRows[i]][0].toString() + "," + this_data[selectedRows[i]][1].toString())
+						.equals(combo.getSelectedItem().toString())) {
 						temporarytable_scroll.setViewportView(table_list.get(i));
-						temporary_textfield.setText(this_data[selectedRows[i]][1].toString());
+						temporary_textfield.setText(this_data[selectedRows[i]][2].toString());
 					}
 				}
 			});
 			// 3 lines for showing the first flow data
-			temporary_textfield.setText(this_data[selectedRows[0]][1].toString());
-			combo.setSelectedItem(this_data[selectedRows[0]][0].toString());
+			temporary_textfield.setText(this_data[selectedRows[0]][2].toString());
+			combo.setSelectedItem(this_data[selectedRows[0]][1].toString());
 			temporarytable_scroll.setViewportView(table_list.get(0));
 			
 			
@@ -1313,12 +1314,12 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 		String chart_name = "Highlight single or multiple flows to view chart";
 		if (selectedRows.length >= 1) {
 			List<JTable> table_list = new ArrayList<JTable>();
-			chart_name = "Stacked Comparison between following flow-id: ";
+			chart_name = "Stacked comparison for selected rows in the Folow Data table: ";
 			for (int selectedRow: selectedRows) {
-				chart_name = chart_name  + " " + this_data[selectedRow][0].toString();
-				
+				chart_name = chart_name + "(" + this_data[selectedRow][0].toString() + "," + this_data[selectedRow][1].toString() + ") ";
+
 				// Read flow_arrangement
-				String[] flow_arrangement_info = this_data[selectedRow][2].toString().split(";");	// Read the whole cell 'flow_arrangement'
+				String[] flow_arrangement_info = this_data[selectedRow][3].toString().split(";");	// Read the whole cell 'flow_arrangement'
 				total_columns_of_the_chart = flow_arrangement_info.length;
 				List<String> flow_arrangement = new ArrayList<String>();
 				for (int i = 0; i < flow_arrangement_info.length; i++) {
@@ -1326,7 +1327,7 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 				}
 				
 				// Read flow_output_original
-				String[] flow_output_original_info = this_data[selectedRow][6].toString().split(";");	// Read the whole cell 'flow_output_original'
+				String[] flow_output_original_info = this_data[selectedRow][7].toString().split(";");	// Read the whole cell 'flow_output_original'
 				List<Double> flow_output_original = new ArrayList<Double>();
 				for (int i = 0; i < flow_output_original_info.length; i++) {
 					flow_output_original.add(Double.parseDouble(flow_output_original_info[i]));
@@ -1338,17 +1339,17 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 				List<Double> UB = new ArrayList<Double>();
 				for (int i = 0; i < flow_arrangement_info.length; i++) {
 					FV.add(flow_output_original.get(i));
-					if (!this_data[selectedRow][4].toString().equals("null") && this_data[selectedRow][3].toString().equals("HARD")) {
+					if (!this_data[selectedRow][5].toString().equals("null") && this_data[selectedRow][4].toString().equals("HARD")) {
 						if (i > 0) {
-							double lb_value = Double.parseDouble(this_data[selectedRow][4].toString()) * flow_output_original.get(i - 1) / 100;	
+							double lb_value = Double.parseDouble(this_data[selectedRow][5].toString()) * flow_output_original.get(i - 1) / 100;	
 							LB.add(lb_value);	
 						} else if (i == 0) {
 							LB.add(null);	
 						}
 					} 
-					if (!this_data[selectedRow][5].toString().equals("null") && this_data[selectedRow][3].toString().equals("HARD")) {
+					if (!this_data[selectedRow][6].toString().equals("null") && this_data[selectedRow][4].toString().equals("HARD")) {
 						if (i > 0) {
-							double ub_value = Double.parseDouble(this_data[selectedRow][5].toString()) * flow_output_original.get(i - 1) / 100;	
+							double ub_value = Double.parseDouble(this_data[selectedRow][6].toString()) * flow_output_original.get(i - 1) / 100;	
 							UB.add(ub_value);
 						} else if (i == 0) {
 							UB.add(null);
@@ -1368,7 +1369,6 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 						}
 					}
 				}
-//				Collections.sort(all_bc_id_in_the_selected_row);
 							
 				int rowCount = all_bc_id_in_the_selected_row.size();
 				int colCount = 6;
@@ -1423,12 +1423,12 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 		        
 				// Put all into dataset	----------------------------------------------------------------------------
 				for (int i = 0; i < flow_arrangement_info.length; i++) {
-					dataset.addValue(flow_output_original.get(i), /*"flow_id = " + */ this_data[selectedRow][0].toString() + ". " + this_data[selectedRow][1].toString() + ". FV", String.valueOf(i));
+					dataset.addValue(flow_output_original.get(i), this_data[selectedRow][0].toString() + "," + this_data[selectedRow][1].toString()  + ".FV", String.valueOf(i));
 				}
 				// --------------------------------------------------------------------------------------------------
 			}
 			
-			// THe combo to show data from the only one table user wants to see
+			// The combo to show data from the only one table user wants to see
 			JScrollPane temporarytable_scroll = new JScrollPane();
 			JTextField temporary_textfield = new JTextField();
 			temporary_textfield.setBackground(Color.white);
@@ -1438,13 +1438,14 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 			JComboBox combo = new JComboBox();	
 			combo.setFocusable(false);
 			for (int selectedRow: selectedRows) {
-				combo.addItem("flow_id = " + this_data[selectedRow][0].toString());
+				combo.addItem("iteration,flow_id = " + this_data[selectedRow][0].toString() + "," + this_data[selectedRow][1].toString());
 			}
 			combo.addActionListener(e -> {
 				for (int i = 0; i < selectedRows.length; i++) {
-					if (("flow_id = " + this_data[selectedRows[i]][0].toString()).equals(combo.getSelectedItem().toString())) {
+					if (("iteration,flow_id = " + this_data[selectedRows[i]][0].toString() + "," + this_data[selectedRows[i]][1].toString())
+						.equals(combo.getSelectedItem().toString())) {
 						temporarytable_scroll.setViewportView(table_list.get(i));
-						temporary_textfield.setText(this_data[selectedRows[i]][1].toString());
+						temporary_textfield.setText(this_data[selectedRows[i]][2].toString());
 					}
 				}
 			});
@@ -1536,12 +1537,12 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 		String chart_name = "Highlight single or multiple flows to view chart";
 		if (selectedRows.length >= 1) {
 			List<JTable> table_list = new ArrayList<JTable>();
-			chart_name = "Stacked Comparison between following flow-id: ";
+			chart_name = "Stacked comparison for selected rows in the Folow Data table: ";
 			for (int selectedRow: selectedRows) {
-				chart_name = chart_name  + " " + this_data[selectedRow][0].toString();
-				
+				chart_name = chart_name + "(" + this_data[selectedRow][0].toString() + "," + this_data[selectedRow][1].toString() + ") ";
+
 				// Read flow_arrangement
-				String[] flow_arrangement_info = this_data[selectedRow][2].toString().split(";");	// Read the whole cell 'flow_arrangement'
+				String[] flow_arrangement_info = this_data[selectedRow][3].toString().split(";");	// Read the whole cell 'flow_arrangement'
 				total_columns_of_the_chart = flow_arrangement_info.length;
 				List<String> flow_arrangement = new ArrayList<String>();
 				for (int i = 0; i < flow_arrangement_info.length; i++) {
@@ -1549,7 +1550,7 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 				}
 				
 				// Read flow_output_original
-				String[] flow_output_original_info = this_data[selectedRow][6].toString().split(";");	// Read the whole cell 'flow_output_original'
+				String[] flow_output_original_info = this_data[selectedRow][7].toString().split(";");	// Read the whole cell 'flow_output_original'
 				List<Double> flow_output_original = new ArrayList<Double>();
 				for (int i = 0; i < flow_output_original_info.length; i++) {
 					flow_output_original.add(Double.parseDouble(flow_output_original_info[i]));
@@ -1561,17 +1562,17 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 				List<Double> UB = new ArrayList<Double>();
 				for (int i = 0; i < flow_arrangement_info.length; i++) {
 					FV.add(flow_output_original.get(i));
-					if (!this_data[selectedRow][4].toString().equals("null") && this_data[selectedRow][3].toString().equals("HARD")) {
+					if (!this_data[selectedRow][5].toString().equals("null") && this_data[selectedRow][4].toString().equals("HARD")) {
 						if (i > 0) {
-							double lb_value = Double.parseDouble(this_data[selectedRow][4].toString()) * flow_output_original.get(i - 1) / 100;	
+							double lb_value = Double.parseDouble(this_data[selectedRow][5].toString()) * flow_output_original.get(i - 1) / 100;	
 							LB.add(lb_value);	
 						} else if (i == 0) {
 							LB.add(null);	
 						}
 					} 
-					if (!this_data[selectedRow][5].toString().equals("null") && this_data[selectedRow][3].toString().equals("HARD")) {
+					if (!this_data[selectedRow][6].toString().equals("null") && this_data[selectedRow][4].toString().equals("HARD")) {
 						if (i > 0) {
-							double ub_value = Double.parseDouble(this_data[selectedRow][5].toString()) * flow_output_original.get(i - 1) / 100;	
+							double ub_value = Double.parseDouble(this_data[selectedRow][6].toString()) * flow_output_original.get(i - 1) / 100;	
 							UB.add(ub_value);
 						} else if (i == 0) {
 							UB.add(null);
@@ -1591,7 +1592,6 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 						}
 					}
 				}
-//				Collections.sort(all_bc_id_in_the_selected_row);
 							
 				int rowCount = all_bc_id_in_the_selected_row.size();
 				int colCount = 6;
@@ -1646,12 +1646,12 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 		        
 				// Put all into dataset	----------------------------------------------------------------------------
 				for (int i = 0; i < flow_arrangement_info.length; i++) {
-					dataset.addValue(flow_output_original.get(i), /*"col_id = " +*/ String.valueOf(i), /*"flow_id = " +*/  this_data[selectedRow][0].toString() + ". " + this_data[selectedRow][1].toString() + ". FV");
+					dataset.addValue(flow_output_original.get(i), /*"col_id = " +*/ String.valueOf(i), this_data[selectedRow][0].toString() + "," + this_data[selectedRow][1].toString() + ".FV");
 				}
 				// --------------------------------------------------------------------------------------------------
 			}
 			
-			// THe combo to show data from the only one table user wants to see
+			// The combo to show data from the only one table user wants to see
 			JScrollPane temporarytable_scroll = new JScrollPane();
 			JTextField temporary_textfield = new JTextField();
 			temporary_textfield.setBackground(Color.white);
@@ -1661,13 +1661,14 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 			JComboBox combo = new JComboBox();	
 			combo.setFocusable(false);
 			for (int selectedRow: selectedRows) {
-				combo.addItem("flow_id = " + this_data[selectedRow][0].toString());
+				combo.addItem("iteration,flow_id = " + this_data[selectedRow][0].toString() + "," + this_data[selectedRow][1].toString());
 			}
 			combo.addActionListener(e -> {
 				for (int i = 0; i < selectedRows.length; i++) {
-					if (("flow_id = " + this_data[selectedRows[i]][0].toString()).equals(combo.getSelectedItem().toString())) {
+					if (("iteration,flow_id = " + this_data[selectedRows[i]][0].toString() + "," + this_data[selectedRows[i]][1].toString())
+						.equals(combo.getSelectedItem().toString())) {
 						temporarytable_scroll.setViewportView(table_list.get(i));
-						temporary_textfield.setText(this_data[selectedRows[i]][1].toString());
+						temporary_textfield.setText(this_data[selectedRows[i]][2].toString());
 					}
 				}
 			});
