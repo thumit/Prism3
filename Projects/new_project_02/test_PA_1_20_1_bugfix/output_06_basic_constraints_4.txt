@@ -1,0 +1,324 @@
+bc_id	bc_description	bc_type	bc_multiplier	lowerbound	lowerbound_perunit_penalty	upperbound	upperbound_perunit_penalty	var_id	var_name	var_value	var_reduced_cost	total_penalty
+1	bdft per 1	SOFT	1.0	9.99999999E8	0.1	null	null	0	y_0	4.549619008388816E8	0.0	5.450380981611184E7
+2	cuft harvest 1 - time period 1	FREE	1.0	null	null	null	null	743	v_0	8.854671787032218E7	0.0	0.0
+3	cuft harvest 2 - time period 2	FREE	1.0	null	null	null	null	744	v_1	8.854671787032218E7	0.0	0.0
+4	cuft harvest 3 - time period 3	FREE	1.0	null	null	null	null	745	v_2	8.854671787032218E7	0.0	0.0
+5	cuft harvest 4 - time period 4	FREE	1.0	null	null	null	null	746	v_3	8.854671787032218E7	0.0	0.0
+6	cuft harvest 5 - time period 5	FREE	1.0	null	null	null	null	747	v_4	8.854671787032218E7	0.0	0.0
+7	cuft harvest 6 - time period 6	FREE	1.0	null	null	null	null	748	v_5	8.854671787032218E7	0.0	0.0
+8	cuft harvest 7 - time period 7	FREE	1.0	null	null	null	null	749	v_6	8.854671787032218E7	0.0	0.0
+9	cuft harvest 8 - time period 8	FREE	1.0	null	null	null	null	750	v_7	8.854671787032218E7	0.0	0.0
+10	cuft harvest 9 - time period 9	FREE	1.0	null	null	null	null	751	v_8	8.854671787032218E7	0.0	0.0
+11	cuft harvest 10 - time period 10	FREE	1.0	null	null	null	null	752	v_9	8.854671787032218E7	0.0	0.0
+12	cuft harvest 11 - time period 11	FREE	1.0	null	null	null	null	753	v_10	8.854671787032218E7	0.0	0.0
+13	cuft harvest 12 - time period 12	FREE	1.0	null	null	null	null	754	v_11	8.854671787032218E7	0.0	0.0
+14	cuft harvest 13 - time period 13	FREE	1.0	null	null	null	null	755	v_12	8.854671787032218E7	0.0	0.0
+15	cuft harvest 14 - time period 14	FREE	1.0	null	null	null	null	756	v_13	8.854671787032218E7	0.0	0.0
+16	cuft harvest 15 - time period 15	FREE	1.0	null	null	null	null	757	v_14	8.854671787032218E7	0.0	0.0
+17	cuft harvest 16 - time period 16	FREE	1.0	null	null	null	null	758	v_15	8.854671787032218E7	0.0	0.0
+18	cuft harvest 17 - time period 17	FREE	1.0	null	null	null	null	759	v_16	8.854671787032218E7	0.0	0.0
+19	cuft harvest 18 - time period 18	FREE	1.0	null	null	null	null	760	v_17	8.854671787032218E7	0.0	0.0
+20	cuft harvest 19 - time period 19	FREE	1.0	null	null	null	null	761	v_18	8.854671787032218E7	0.0	0.0
+21	cuft harvest 20 - time period 20	FREE	1.0	null	null	null	null	762	v_19	8.854671787032218E7	0.0	0.0
+22	G BdftHarv 1 - time period 1	FREE	1.0	null	null	null	null	763	v_20	3.0754737781972706E8	0.0	0.0
+23	G BdftHarv 2 - time period 2	FREE	1.0	null	null	null	null	764	v_21	2.88763286853838E8	0.0	0.0
+24	G BdftHarv 3 - time period 3	FREE	1.0	null	null	null	null	765	v_22	3.865415961040714E8	0.0	0.0
+25	G BdftHarv 4 - time period 4	FREE	1.0	null	null	null	null	766	v_23	4.1617262843721825E8	0.0	0.0
+26	G BdftHarv 5 - time period 5	FREE	1.0	null	null	null	null	767	v_24	3.113554672030345E8	0.0	0.0
+27	G BdftHarv 6 - time period 6	FREE	1.0	null	null	null	null	768	v_25	3.7915393559970564E8	0.0	0.0
+28	G BdftHarv 7 - time period 7	FREE	1.0	null	null	null	null	769	v_26	3.174514835567221E8	0.0	0.0
+29	G BdftHarv 8 - time period 8	FREE	1.0	null	null	null	null	770	v_27	1.3339532469256845E8	0.0	0.0
+30	G BdftHarv 9 - time period 9	FREE	1.0	null	null	null	null	771	v_28	2.1757057047265866E8	0.0	0.0
+31	G BdftHarv 10 - time period 10	FREE	1.0	null	null	null	null	772	v_29	2.971470898397792E8	0.0	0.0
+32	G BdftHarv 11 - time period 11	FREE	1.0	null	null	null	null	773	v_30	2.8367422196428436E8	0.0	0.0
+33	G BdftHarv 12 - time period 12	FREE	1.0	null	null	null	null	774	v_31	2.851973405094581E8	0.0	0.0
+34	G BdftHarv 13 - time period 13	FREE	1.0	null	null	null	null	775	v_32	3.021558174156654E8	0.0	0.0
+35	G BdftHarv 14 - time period 14	FREE	1.0	null	null	null	null	776	v_33	3.159247540983996E8	0.0	0.0
+36	G BdftHarv 15 - time period 15	FREE	1.0	null	null	null	null	777	v_34	2.935104024092438E8	0.0	0.0
+37	G BdftHarv 16 - time period 16	FREE	1.0	null	null	null	null	778	v_35	3.183607619812797E8	0.0	0.0
+38	G BdftHarv 17 - time period 17	FREE	1.0	null	null	null	null	779	v_36	2.9000261616762745E8	0.0	0.0
+39	G BdftHarv 18 - time period 18	FREE	1.0	null	null	null	null	780	v_37	2.3849902839453572E8	0.0	0.0
+40	G BdftHarv 19 - time period 19	FREE	1.0	null	null	null	null	781	v_38	2.0846489727027553E8	0.0	0.0
+41	G BdftHarv 20 - time period 20	FREE	1.0	null	null	null	null	782	v_39	2.0387795263318208E8	0.0	0.0
+42	C BdftHarv 1 - time period 1	FREE	1.0	null	null	null	null	783	v_40	1.4741452301915452E8	0.0	0.0
+43	C BdftHarv 2 - time period 2	FREE	1.0	null	null	null	null	784	v_41	1.640718451266349E8	0.0	0.0
+44	C BdftHarv 3 - time period 3	FREE	1.0	null	null	null	null	785	v_42	7.345292213804647E7	0.0	0.0
+45	C BdftHarv 4 - time period 4	FREE	1.0	null	null	null	null	786	v_43	4.284879194104378E7	0.0	0.0
+46	C BdftHarv 5 - time period 5	FREE	1.0	null	null	null	null	787	v_44	1.5013864330180222E8	0.0	0.0
+47	C BdftHarv 6 - time period 6	FREE	1.0	null	null	null	null	788	v_45	7.523997043688323E7	0.0	0.0
+48	C BdftHarv 7 - time period 7	FREE	1.0	null	null	null	null	789	v_46	1.2483540102845156E8	0.0	0.0
+49	C BdftHarv 8 - time period 8	FREE	1.0	null	null	null	null	790	v_47	3.152876536164984E8	0.0	0.0
+50	C BdftHarv 9 - time period 9	FREE	1.0	null	null	null	null	791	v_48	2.1943790174744758E8	0.0	0.0
+51	C BdftHarv 10 - time period 10	FREE	1.0	null	null	null	null	792	v_49	1.3609327290181813E8	0.0	0.0
+52	C BdftHarv 11 - time period 11	FREE	1.0	null	null	null	null	793	v_50	1.5552820130499265E8	0.0	0.0
+53	C BdftHarv 12 - time period 12	FREE	1.0	null	null	null	null	794	v_51	1.4656079569953793E8	0.0	0.0
+54	C BdftHarv 13 - time period 13	FREE	1.0	null	null	null	null	795	v_52	1.385844243851763E8	0.0	0.0
+55	C BdftHarv 14 - time period 14	FREE	1.0	null	null	null	null	796	v_53	1.148185089077067E8	0.0	0.0
+56	C BdftHarv 15 - time period 15	FREE	1.0	null	null	null	null	797	v_54	1.2373277464057226E8	0.0	0.0
+57	C BdftHarv 16 - time period 16	FREE	1.0	null	null	null	null	798	v_55	7.438209622970514E7	0.0	0.0
+58	C BdftHarv 17 - time period 17	FREE	1.0	null	null	null	null	799	v_56	1.0557904109668365E8	0.0	0.0
+59	C BdftHarv 18 - time period 18	FREE	1.0	null	null	null	null	800	v_57	1.863711083984549E8	0.0	0.0
+60	C BdftHarv 19 - time period 19	FREE	1.0	null	null	null	null	801	v_58	2.3333986252539966E8	0.0	0.0
+61	C BdftHarv 20 - time period 20	FREE	1.0	null	null	null	null	802	v_59	2.213741897700576E8	0.0	0.0
+62	AvgInv SU cuft 10-19	FREE	0.1	null	null	null	null	803	v_60	6.607978179189116E8	0.0	0.0
+63	cuft SU Per 20	FREE	1.0	null	null	null	null	804	v_61	7.164689122520078E8	0.0	0.0
+64	msf 1 - time period 1	HARD	1.0	54500.0	null	null	null	723	z_0	56063.4800000001	0.0	0.0
+65	msf 2 - time period 2	HARD	1.0	54500.0	null	null	null	724	z_1	54499.999999999956	0.0	0.0
+66	msf 3 - time period 3	HARD	1.0	54500.0	null	null	null	725	z_2	54499.99999999998	0.0	0.0
+67	msf 4 - time period 4	HARD	1.0	54500.0	null	null	null	726	z_3	54499.99999999999	0.0	0.0
+68	msf 5 - time period 5	HARD	1.0	54500.0	null	null	null	727	z_4	54499.99999999997	0.0	0.0
+69	msf 6 - time period 6	HARD	1.0	54500.0	null	null	null	728	z_5	56063.48000000016	0.0	0.0
+70	msf 7 - time period 7	HARD	1.0	54500.0	null	null	null	729	z_6	54499.999999999956	0.0	0.0
+71	msf 8 - time period 8	HARD	1.0	54500.0	null	null	null	730	z_7	54499.99999999998	0.0	0.0
+72	msf 9 - time period 9	HARD	1.0	54500.0	null	null	null	731	z_8	54499.99999999999	0.0	0.0
+73	msf 10 - time period 10	HARD	1.0	54500.0	null	null	null	732	z_9	54499.99999999997	0.0	0.0
+74	msf 11 - time period 11	HARD	1.0	54500.0	null	null	null	733	z_10	56063.48000000016	0.0	0.0
+75	msf 12 - time period 12	HARD	1.0	54500.0	null	null	null	734	z_11	54499.999999999956	0.0	0.0
+76	msf 13 - time period 13	HARD	1.0	54500.0	null	null	null	735	z_12	54499.99999999998	0.0	0.0
+77	msf 14 - time period 14	HARD	1.0	54500.0	null	null	null	736	z_13	54499.99999999999	0.0	0.0
+78	msf 15 - time period 15	HARD	1.0	54500.0	null	null	null	737	z_14	54499.99999999997	0.0	0.0
+79	msf 16 - time period 16	HARD	1.0	54500.0	null	null	null	738	z_15	56063.48000000016	0.0	0.0
+80	msf 17 - time period 17	HARD	1.0	54500.0	null	null	null	739	z_16	54499.999999999956	0.0	0.0
+81	msf 18 - time period 18	HARD	1.0	54500.0	null	null	null	740	z_17	54499.99999999998	0.0	0.0
+82	msf 19 - time period 19	HARD	1.0	54500.0	null	null	null	741	z_18	54499.99999999999	0.0	0.0
+83	msf 20 - time period 20	HARD	1.0	54500.0	null	null	null	742	z_19	54499.99999999997	0.0	0.0
+84	Cold Low Density 1 - time period 1	SOFT	1.0	222159.0	1.0	null	null	1	y_1	131080.38527457914	0.0	91078.61472542086
+85	Cold Low Density 2 - time period 2	SOFT	1.0	222159.0	1.0	null	null	2	y_2	136537.2975690875	0.0	85621.7024309125
+86	Cold Low Density 3 - time period 3	SOFT	1.0	222159.0	1.0	null	null	3	y_3	141885.07161770575	0.0	80273.92838229425
+87	Cold Low Density 4 - time period 4	SOFT	1.0	222159.0	1.0	null	null	4	y_4	121834.68485021101	0.0	100324.31514978899
+88	Cold Low Density 5 - time period 5	SOFT	1.0	222159.0	1.0	null	null	5	y_5	120772.11586552724	0.0	101386.88413447276
+89	Cold Low Density 6 - time period 6	SOFT	1.0	222159.0	1.0	null	null	6	y_6	123417.43076521375	0.0	98741.56923478625
+90	Cold Low Density 7 - time period 7	SOFT	1.0	222159.0	1.0	null	null	7	y_7	122323.20686222994	0.0	99835.79313777006
+91	Cold Low Density 8 - time period 8	SOFT	1.0	222159.0	1.0	null	null	8	y_8	121250.86743730582	0.0	100908.13256269418
+92	Cold Low Density 9 - time period 9	SOFT	1.0	222159.0	1.0	null	null	9	y_9	103928.84214557019	0.0	118230.15785442981
+93	Cold Low Density 10 - time period 10	SOFT	1.0	222159.0	1.0	null	null	10	y_10	105654.74685220573	0.0	116504.25314779427
+94	Cold Low Density 11 - time period 11	SOFT	1.0	222159.0	1.0	null	null	11	y_11	104915.77662748209	0.0	117243.22337251791
+95	Cold Low Density 12 - time period 12	SOFT	1.0	222159.0	1.0	null	null	12	y_12	104543.9718975071	0.0	117615.0281024929
+96	Cold Low Density 13 - time period 13	SOFT	1.0	222159.0	1.0	null	null	13	y_13	100626.7573628704	0.0	121532.2426371296
+97	Cold Low Density 14 - time period 14	SOFT	1.0	222159.0	1.0	null	null	14	y_14	100614.02154816702	0.0	121544.97845183298
+98	Cold Low Density 15 - time period 15	SOFT	1.0	222159.0	1.0	null	null	15	y_15	100381.23947466747	0.0	121777.76052533253
+99	Cold Low Density 16 - time period 16	SOFT	1.0	222159.0	1.0	null	null	16	y_16	100026.26823067317	0.0	122132.73176932683
+100	Cold Low Density 17 - time period 17	SOFT	1.0	222159.0	1.0	null	null	17	y_17	93469.26164444773	0.0	128689.73835555227
+101	Cold Low Density 18 - time period 18	SOFT	1.0	222159.0	1.0	null	null	18	y_18	86778.43859727892	0.0	135380.5614027211
+102	Cold Low Density 19 - time period 19	SOFT	1.0	222159.0	1.0	null	null	19	y_19	79951.0681409842	0.0	142207.93185901578
+103	Cold Low Density 20 - time period 20	SOFT	1.0	222159.0	1.0	null	null	20	y_20	76468.13273549758	0.0	145690.86726450242
+104	Cold Med Den 1 - time period 1	SOFT	1.0	80785.0	1.0	null	null	21	y_21	124236.350101248	0.0	0.0
+105	Cold Med Den 2 - time period 2	SOFT	1.0	80785.0	1.0	null	null	22	y_22	122690.79680709823	0.0	0.0
+106	Cold Med Den 3 - time period 3	SOFT	1.0	80785.0	1.0	null	null	23	y_23	152267.62401518913	0.0	0.0
+107	Cold Med Den 4 - time period 4	SOFT	1.0	80785.0	1.0	null	null	24	y_24	174513.47687002603	0.0	0.0
+108	Cold Med Den 5 - time period 5	SOFT	1.0	80785.0	1.0	null	null	25	y_25	280980.5589475061	0.0	0.0
+109	Cold Med Den 6 - time period 6	SOFT	1.0	80785.0	1.0	null	null	26	y_26	278378.7105515588	0.0	0.0
+110	Cold Med Den 7 - time period 7	SOFT	1.0	80785.0	1.0	null	null	27	y_27	279515.53162820725	0.0	0.0
+111	Cold Med Den 8 - time period 8	SOFT	1.0	80785.0	1.0	null	null	28	y_28	282675.132562694	0.0	0.0
+112	Cold Med Den 9 - time period 9	SOFT	1.0	80785.0	1.0	null	null	29	y_29	299997.15785442956	0.0	0.0
+113	Cold Med Den 10 - time period 10	SOFT	1.0	80785.0	1.0	null	null	30	y_30	298271.25314779405	0.0	0.0
+114	Cold Med Den 11 - time period 11	SOFT	1.0	80785.0	1.0	null	null	31	y_31	299010.22337251774	0.0	0.0
+115	Cold Med Den 12 - time period 12	SOFT	1.0	80785.0	1.0	null	null	32	y_32	299382.02810249274	0.0	0.0
+116	Cold Med Den 13 - time period 13	SOFT	1.0	80785.0	1.0	null	null	33	y_33	303299.24263712944	0.0	0.0
+117	Cold Med Den 14 - time period 14	SOFT	1.0	80785.0	1.0	null	null	34	y_34	303311.9784518328	0.0	0.0
+118	Cold Med Den 15 - time period 15	SOFT	1.0	80785.0	1.0	null	null	35	y_35	303544.7605253325	0.0	0.0
+119	Cold Med Den 16 - time period 16	SOFT	1.0	80785.0	1.0	null	null	36	y_36	303899.7317693266	0.0	0.0
+120	Cold Med Den 17 - time period 17	SOFT	1.0	80785.0	1.0	null	null	37	y_37	310456.7383555521	0.0	0.0
+121	Cold Med Den 18 - time period 18	SOFT	1.0	80785.0	1.0	null	null	38	y_38	317147.561402721	0.0	0.0
+122	Cold Med Den 19 - time period 19	SOFT	1.0	80785.0	1.0	null	null	39	y_39	323974.9318590157	0.0	0.0
+123	Cold Med Den 20 - time period 20	SOFT	1.0	80785.0	1.0	null	null	40	y_40	327457.8672645024	0.0	0.0
+124	Cold High Den 1 - time period 1	SOFT	1.0	0.0	0.0	40393.0	1.0	41	y_41	148609.26462417276	0.0	108216.26462417276
+125	Cold High Den 2 - time period 2	SOFT	1.0	0.0	0.0	40393.0	1.0	42	y_42	144697.90562381412	0.0	104304.90562381412
+126	Cold High Den 3 - time period 3	SOFT	1.0	0.0	0.0	40393.0	1.0	43	y_43	109773.30436710497	0.0	69380.30436710497
+127	Cold High Den 4 - time period 4	SOFT	1.0	0.0	0.0	40393.0	1.0	44	y_44	107577.83827976286	0.0	67184.83827976286
+128	Cold High Den 5 - time period 5	SOFT	1.0	0.0	0.0	40393.0	1.0	45	y_45	2173.3251869665255	0.0	0.0
+129	Cold High Den 6 - time period 6	SOFT	1.0	0.0	0.0	40393.0	1.0	46	y_46	2129.8586832271953	0.0	0.0
+130	Cold High Den 7 - time period 7	SOFT	1.0	0.0	0.0	40393.0	1.0	47	y_47	2087.2615095626516	0.0	0.0
+131	Cold High Den 8 - time period 8	SOFT	1.0	0.0	0.0	40393.0	1.0	48	y_48	0.0	0.0	0.0
+132	Cold High Den 9 - time period 9	SOFT	1.0	0.0	0.0	40393.0	1.0	49	y_49	0.0	0.0	0.0
+133	Cold High Den 10 - time period 10	SOFT	1.0	0.0	0.0	40393.0	1.0	50	y_50	0.0	0.0	0.0
+134	Cold High Den 11 - time period 11	SOFT	1.0	0.0	0.0	40393.0	1.0	51	y_51	0.0	0.0	0.0
+135	Cold High Den 12 - time period 12	SOFT	1.0	0.0	0.0	40393.0	1.0	52	y_52	0.0	0.0	0.0
+136	Cold High Den 13 - time period 13	SOFT	1.0	0.0	0.0	40393.0	1.0	53	y_53	0.0	0.0	0.0
+137	Cold High Den 14 - time period 14	SOFT	1.0	0.0	0.0	40393.0	1.0	54	y_54	0.0	0.0	0.0
+138	Cold High Den 15 - time period 15	SOFT	1.0	0.0	0.0	40393.0	1.0	55	y_55	0.0	0.0	0.0
+139	Cold High Den 16 - time period 16	SOFT	1.0	0.0	0.0	40393.0	1.0	56	y_56	0.0	0.0	0.0
+140	Cold High Den 17 - time period 17	SOFT	1.0	0.0	0.0	40393.0	1.0	57	y_57	0.0	0.0	0.0
+141	Cold High Den 18 - time period 18	SOFT	1.0	0.0	0.0	40393.0	1.0	58	y_58	0.0	0.0	0.0
+142	Cold High Den 19 - time period 19	SOFT	1.0	0.0	0.0	40393.0	1.0	59	y_59	0.0	0.0	0.0
+143	Cold High Den 20 - time period 20	SOFT	1.0	0.0	0.0	40393.0	1.0	60	y_60	0.0	0.0	0.0
+144	CM LowDen 1 - time period 1	SOFT	1.0	88136.0	1.0	null	null	61	y_61	253093.43298860744	0.0	0.0
+145	CM LowDen 2 - time period 2	SOFT	1.0	88136.0	1.0	null	null	62	y_62	246128.13674897514	0.0	0.0
+146	CM LowDen 3 - time period 3	SOFT	1.0	88136.0	1.0	null	null	63	y_63	208785.0138980541	0.0	0.0
+147	CM LowDen 4 - time period 4	SOFT	1.0	88136.0	1.0	null	null	64	y_64	210936.17478591768	0.0	0.0
+148	CM LowDen 5 - time period 5	SOFT	1.0	88136.0	1.0	null	null	65	y_65	222250.23509314362	0.0	0.0
+149	CM LowDen 6 - time period 6	SOFT	1.0	88136.0	1.0	null	null	66	y_66	223864.1474691595	0.0	0.0
+150	CM LowDen 7 - time period 7	SOFT	1.0	88136.0	1.0	null	null	67	y_67	222514.38287916244	0.0	0.0
+151	CM LowDen 8 - time period 8	SOFT	1.0	88136.0	1.0	null	null	68	y_68	220872.16229943623	0.0	0.0
+152	CM LowDen 9 - time period 9	SOFT	1.0	88136.0	1.0	null	null	69	y_69	207860.69145118367	0.0	0.0
+153	CM LowDen 10 - time period 10	SOFT	1.0	88136.0	1.0	null	null	70	y_70	189247.4680800005	0.0	0.0
+154	CM LowDen 11 - time period 11	SOFT	1.0	88136.0	1.0	null	null	71	y_71	176066.65038888768	0.0	0.0
+155	CM LowDen 12 - time period 12	SOFT	1.0	88136.0	1.0	null	null	72	y_72	176486.96509273598	0.0	0.0
+156	CM LowDen 13 - time period 13	SOFT	1.0	88136.0	1.0	null	null	73	y_73	182711.6484823665	0.0	0.0
+157	CM LowDen 14 - time period 14	SOFT	1.0	88136.0	1.0	null	null	74	y_74	197113.97607332727	0.0	0.0
+158	CM LowDen 15 - time period 15	SOFT	1.0	88136.0	1.0	null	null	75	y_75	177847.51343318037	0.0	0.0
+159	CM LowDen 16 - time period 16	SOFT	1.0	88136.0	1.0	null	null	76	y_76	183796.24661205418	0.0	0.0
+160	CM LowDen 17 - time period 17	SOFT	1.0	88136.0	1.0	null	null	77	y_77	181544.84407978854	0.0	0.0
+161	CM LowDen 18 - time period 18	SOFT	1.0	88136.0	1.0	null	null	78	y_78	184125.91713106804	0.0	0.0
+162	CM LowDen 19 - time period 19	SOFT	1.0	88136.0	1.0	null	null	79	y_79	184711.23001922123	0.0	0.0
+163	CM LowDen 20 - time period 20	SOFT	1.0	88136.0	1.0	null	null	80	y_80	196469.1784442327	0.0	0.0
+164	CM Med Den 1 - time period 1	SOFT	1.0	32543.0	1.0	null	null	81	y_81	441720.8610502914	0.0	0.0
+165	CM Med Den 2 - time period 2	SOFT	1.0	32543.0	1.0	null	null	82	y_82	551941.9332590338	0.0	0.0
+166	CM Med Den 3 - time period 3	SOFT	1.0	32543.0	1.0	null	null	83	y_83	587635.0660864451	0.0	0.0
+167	CM Med Den 4 - time period 4	SOFT	1.0	32543.0	1.0	null	null	84	y_84	548895.2851508276	0.0	0.0
+168	CM Med Den 5 - time period 5	SOFT	1.0	32543.0	1.0	null	null	85	y_85	532509.3290576357	0.0	0.0
+169	CM Med Den 6 - time period 6	SOFT	1.0	32543.0	1.0	null	null	86	y_86	510543.1446193516	0.0	0.0
+170	CM Med Den 7 - time period 7	SOFT	1.0	32543.0	1.0	null	null	87	y_87	516282.3013130147	0.0	0.0
+171	CM Med Den 8 - time period 8	SOFT	1.0	32543.0	1.0	null	null	88	y_88	480222.89640208613	0.0	0.0
+172	CM Med Den 9 - time period 9	SOFT	1.0	32543.0	1.0	null	null	89	y_89	489955.5867923695	0.0	0.0
+173	CM Med Den 10 - time period 10	SOFT	1.0	32543.0	1.0	null	null	90	y_90	544190.9830694962	0.0	0.0
+174	CM Med Den 11 - time period 11	SOFT	1.0	32543.0	1.0	null	null	91	y_91	546880.8633974171	0.0	0.0
+175	CM Med Den 12 - time period 12	SOFT	1.0	32543.0	1.0	null	null	92	y_92	467830.15383157786	0.0	0.0
+176	CM Med Den 13 - time period 13	SOFT	1.0	32543.0	1.0	null	null	93	y_93	439800.03091816086	0.0	0.0
+177	CM Med Den 14 - time period 14	SOFT	1.0	32543.0	1.0	null	null	94	y_94	421122.8482251484	0.0	0.0
+178	CM Med Den 15 - time period 15	SOFT	1.0	32543.0	1.0	null	null	95	y_95	383495.62235391757	0.0	0.0
+179	CM Med Den 16 - time period 16	SOFT	1.0	32543.0	1.0	null	null	96	y_96	379361.67215375113	0.0	0.0
+180	CM Med Den 17 - time period 17	SOFT	1.0	32543.0	1.0	null	null	97	y_97	374288.8999163693	0.0	0.0
+181	CM Med Den 18 - time period 18	SOFT	1.0	32543.0	1.0	null	null	98	y_98	362263.0162783914	0.0	0.0
+182	CM Med Den 19 - time period 19	SOFT	1.0	32543.0	1.0	null	null	99	y_99	352841.6214176125	0.0	0.0
+183	CM Med Den 20 - time period 20	SOFT	1.0	32543.0	1.0	null	null	100	y_100	318421.0936574955	0.0	0.0
+184	CM  High Den 1 - time period 1	SOFT	1.0	132204.0	1.0	null	null	101	y_101	186543.70596110087	0.0	0.0
+185	CM  High Den 2 - time period 2	SOFT	1.0	132204.0	1.0	null	null	102	y_102	83287.92999199103	0.0	48916.070008008974
+186	CM  High Den 3 - time period 3	SOFT	1.0	132204.0	1.0	null	null	103	y_103	84937.92001550124	0.0	47266.07998449876
+187	CM  High Den 4 - time period 4	SOFT	1.0	132204.0	1.0	null	null	104	y_104	121526.54006325487	0.0	10677.45993674513
+188	CM  High Den 5 - time period 5	SOFT	1.0	132204.0	1.0	null	null	105	y_105	126598.43584922113	0.0	5605.564150778868
+189	CM  High Den 6 - time period 6	SOFT	1.0	132204.0	1.0	null	null	106	y_106	146950.7079114888	0.0	0.0
+190	CM  High Den 7 - time period 7	SOFT	1.0	132204.0	1.0	null	null	107	y_107	142561.3158078228	0.0	0.0
+191	CM  High Den 8 - time period 8	SOFT	1.0	132204.0	1.0	null	null	108	y_108	180262.94129847753	0.0	0.0
+192	CM  High Den 9 - time period 9	SOFT	1.0	132204.0	1.0	null	null	109	y_109	183541.72175644664	0.0	0.0
+193	CM  High Den 10 - time period 10	SOFT	1.0	132204.0	1.0	null	null	110	y_110	147919.54885050358	0.0	0.0
+194	CM  High Den 11 - time period 11	SOFT	1.0	132204.0	1.0	null	null	111	y_111	158410.48621369505	0.0	0.0
+195	CM  High Den 12 - time period 12	SOFT	1.0	132204.0	1.0	null	null	112	y_112	237040.88107568584	0.0	0.0
+196	CM  High Den 13 - time period 13	SOFT	1.0	132204.0	1.0	null	null	113	y_113	258846.32059947218	0.0	0.0
+197	CM  High Den 14 - time period 14	SOFT	1.0	132204.0	1.0	null	null	114	y_114	263121.17570152425	0.0	0.0
+198	CM  High Den 15 - time period 15	SOFT	1.0	132204.0	1.0	null	null	115	y_115	320014.8642129021	0.0	0.0
+199	CM  High Den 16 - time period 16	SOFT	1.0	132204.0	1.0	null	null	116	y_116	318200.08123419463	0.0	0.0
+200	CM  High Den 17 - time period 17	SOFT	1.0	132204.0	1.0	null	null	117	y_117	325524.25600384246	0.0	0.0
+201	CM  High Den 18 - time period 18	SOFT	1.0	132204.0	1.0	null	null	118	y_118	334969.066590541	0.0	0.0
+202	CM  High Den 19 - time period 19	SOFT	1.0	132204.0	1.0	null	null	119	y_119	343805.14856316656	0.0	0.0
+203	CM  High Den 20 - time period 20	SOFT	1.0	132204.0	1.0	null	null	120	y_120	366467.72789827175	0.0	0.0
+204	WDM Low Den 1 - time period 1	SOFT	1.0	99907.0	1.0	null	null	121	y_121	208762.05740184264	0.0	0.0
+205	WDM Low Den 2 - time period 2	SOFT	1.0	99907.0	1.0	null	null	122	y_122	203228.43904494838	0.0	0.0
+206	WDM Low Den 3 - time period 3	SOFT	1.0	99907.0	1.0	null	null	123	y_123	211453.47613305258	0.0	0.0
+207	WDM Low Den 4 - time period 4	SOFT	1.0	99907.0	1.0	null	null	124	y_124	219203.5864657056	0.0	0.0
+208	WDM Low Den 5 - time period 5	SOFT	1.0	99907.0	1.0	null	null	125	y_125	211597.40130632836	0.0	0.0
+209	WDM Low Den 6 - time period 6	SOFT	1.0	99907.0	1.0	null	null	126	y_126	211795.62949221028	0.0	0.0
+210	WDM Low Den 7 - time period 7	SOFT	1.0	99907.0	1.0	null	null	127	y_127	217541.68516911846	0.0	0.0
+211	WDM Low Den 8 - time period 8	SOFT	1.0	99907.0	1.0	null	null	128	y_128	215361.47648638595	0.0	0.0
+212	WDM Low Den 9 - time period 9	SOFT	1.0	99907.0	1.0	null	null	129	y_129	207388.26748045356	0.0	0.0
+213	WDM Low Den 10 - time period 10	SOFT	1.0	99907.0	1.0	null	null	130	y_130	192339.68352480393	0.0	0.0
+214	WDM Low Den 11 - time period 11	SOFT	1.0	99907.0	1.0	null	null	131	y_131	196910.75274277243	0.0	0.0
+215	WDM Low Den 12 - time period 12	SOFT	1.0	99907.0	1.0	null	null	132	y_132	207932.65101883715	0.0	0.0
+216	WDM Low Den 13 - time period 13	SOFT	1.0	99907.0	1.0	null	null	133	y_133	216946.95523941156	0.0	0.0
+217	WDM Low Den 14 - time period 14	SOFT	1.0	99907.0	1.0	null	null	134	y_134	210430.62360171598	0.0	0.0
+218	WDM Low Den 15 - time period 15	SOFT	1.0	99907.0	1.0	null	null	135	y_135	204460.29083010575	0.0	0.0
+219	WDM Low Den 16 - time period 16	SOFT	1.0	99907.0	1.0	null	null	136	y_136	200980.75581709866	0.0	0.0
+220	WDM Low Den 17 - time period 17	SOFT	1.0	99907.0	1.0	null	null	137	y_137	195202.78543388515	0.0	0.0
+221	WDM Low Den 18 - time period 18	SOFT	1.0	99907.0	1.0	null	null	138	y_138	186439.66054312867	0.0	0.0
+222	WDM Low Den 19 - time period 19	SOFT	1.0	99907.0	1.0	null	null	139	y_139	168804.83344011568	0.0	0.0
+223	WDM Low Den 20 - time period 20	SOFT	1.0	99907.0	1.0	null	null	140	y_140	148317.1824889257	0.0	0.0
+224	WDM Med Den 1 - time period 1	SOFT	1.0	139869.0	1.0	null	null	141	y_141	105244.32049786096	0.0	34624.67950213904
+225	WDM Med Den 2 - time period 2	SOFT	1.0	139869.0	1.0	null	null	142	y_142	115928.83261480468	0.0	23940.167385195324
+226	WDM Med Den 3 - time period 3	SOFT	1.0	139869.0	1.0	null	null	143	y_143	115701.9550239927	0.0	24167.044976007295
+227	WDM Med Den 4 - time period 4	SOFT	1.0	139869.0	1.0	null	null	144	y_144	108846.68100317198	0.0	31022.31899682802
+228	WDM Med Den 5 - time period 5	SOFT	1.0	139869.0	1.0	null	null	145	y_145	104900.1397678712	0.0	34968.860232128805
+229	WDM Med Den 6 - time period 6	SOFT	1.0	139869.0	1.0	null	null	146	y_146	104399.61464314682	0.0	35469.38535685318
+230	WDM Med Den 7 - time period 7	SOFT	1.0	139869.0	1.0	null	null	147	y_147	101742.057191607	0.0	38126.942808392996
+231	WDM Med Den 8 - time period 8	SOFT	1.0	139869.0	1.0	null	null	148	y_148	100587.35025562627	0.0	39281.64974437373
+232	WDM Med Den 9 - time period 9	SOFT	1.0	139869.0	1.0	null	null	149	y_149	105082.23296034244	0.0	34786.767039657556
+233	WDM Med Den 10 - time period 10	SOFT	1.0	139869.0	1.0	null	null	150	y_150	126666.79055684755	0.0	13202.209443152446
+234	WDM Med Den 11 - time period 11	SOFT	1.0	139869.0	1.0	null	null	151	y_151	114984.90271123864	0.0	24884.09728876136
+235	WDM Med Den 12 - time period 12	SOFT	1.0	139869.0	1.0	null	null	152	y_152	99353.49964264514	0.0	40515.50035735486
+236	WDM Med Den 13 - time period 13	SOFT	1.0	139869.0	1.0	null	null	153	y_153	93910.87882084127	0.0	45958.12117915873
+237	WDM Med Den 14 - time period 14	SOFT	1.0	139869.0	1.0	null	null	154	y_154	97020.39618978422	0.0	42848.603810215776
+238	WDM Med Den 15 - time period 15	SOFT	1.0	139869.0	1.0	null	null	155	y_155	106225.77686454084	0.0	33643.223135459164
+239	WDM Med Den 16 - time period 16	SOFT	1.0	139869.0	1.0	null	null	156	y_156	105731.73594570345	0.0	34137.26405429655
+240	WDM Med Den 17 - time period 17	SOFT	1.0	139869.0	1.0	null	null	157	y_157	92562.04376926713	0.0	47306.956230732874
+241	WDM Med Den 18 - time period 18	SOFT	1.0	139869.0	1.0	null	null	158	y_158	88905.10362856247	0.0	50963.89637143753
+242	WDM Med Den 19 - time period 19	SOFT	1.0	139869.0	1.0	null	null	159	y_159	91147.19545114296	0.0	48721.804548857035
+243	WDM Med Den 20 - time period 20	SOFT	1.0	139869.0	1.0	null	null	160	y_160	97802.81217298972	0.0	42066.187827010275
+244	WDM High Den 1 - time period 1	SOFT	1.0	null	null	79925.0	1.0	161	y_161	85619.62210029618	0.0	5694.622100296183
+245	WDM High Den 2 - time period 2	SOFT	1.0	null	null	79925.0	1.0	162	y_162	80468.72834024676	0.0	543.7283402467583
+246	WDM High Den 3 - time period 3	SOFT	1.0	null	null	79925.0	1.0	163	y_163	72470.56884295444	0.0	0.0
+247	WDM High Den 4 - time period 4	SOFT	1.0	null	null	79925.0	1.0	164	y_164	71575.73253112237	0.0	0.0
+248	WDM High Den 5 - time period 5	SOFT	1.0	null	null	79925.0	1.0	165	y_165	83128.45892580037	0.0	3203.458925800369
+249	WDM High Den 6 - time period 6	SOFT	1.0	null	null	79925.0	1.0	166	y_166	83430.75586464281	0.0	3505.755864642808
+250	WDM High Den 7 - time period 7	SOFT	1.0	null	null	79925.0	1.0	167	y_167	80342.25763927444	0.0	417.2576392744377
+251	WDM High Den 8 - time period 8	SOFT	1.0	null	null	79925.0	1.0	168	y_168	83677.17325798764	0.0	3752.1732579876407
+252	WDM High Den 9 - time period 9	SOFT	1.0	null	null	79925.0	1.0	169	y_169	87155.49955920388	0.0	7230.499559203876
+253	WDM High Den 10 - time period 10	SOFT	1.0	null	null	79925.0	1.0	170	y_170	80619.52591834828	0.0	694.5259183482849
+254	WDM High Den 11 - time period 11	SOFT	1.0	null	null	79925.0	1.0	171	y_171	87730.34454598877	0.0	7805.3445459887735
+255	WDM High Den 12 - time period 12	SOFT	1.0	null	null	79925.0	1.0	172	y_172	92339.84933851747	0.0	12414.849338517466
+256	WDM High Den 13 - time period 13	SOFT	1.0	null	null	79925.0	1.0	173	y_173	88768.16593974696	0.0	8843.165939746963
+257	WDM High Den 14 - time period 14	SOFT	1.0	null	null	79925.0	1.0	174	y_174	92174.98020849981	0.0	12249.980208499808
+258	WDM High Den 15 - time period 15	SOFT	1.0	null	null	79925.0	1.0	175	y_175	88939.93230535334	0.0	9014.932305353344
+259	WDM High Den 16 - time period 16	SOFT	1.0	null	null	79925.0	1.0	176	y_176	92913.50823719778	0.0	12988.508237197777
+260	WDM High Den 17 - time period 17	SOFT	1.0	null	null	79925.0	1.0	177	y_177	111861.1707968477	0.0	31936.1707968477
+261	WDM High Den 18 - time period 18	SOFT	1.0	null	null	79925.0	1.0	178	y_178	124281.23582830883	0.0	44356.235828308825
+262	WDM High Den 19 - time period 19	SOFT	1.0	null	null	79925.0	1.0	179	y_179	139673.9711087415	0.0	59748.971108741505
+263	WDM High Den 20 - time period 20	SOFT	1.0	null	null	79925.0	1.0	180	y_180	153506.00533808488	0.0	73581.00533808488
+264	WDP Low Den 1 - time period 1	SOFT	1.0	170588.0	1.0	null	null	181	y_181	203312.2811914406	0.0	0.0
+265	WDP Low Den 2 - time period 2	SOFT	1.0	170588.0	1.0	null	null	182	y_182	171971.10042523066	0.0	0.0
+266	WDP Low Den 3 - time period 3	SOFT	1.0	170588.0	1.0	null	null	183	y_183	176198.78143976064	0.0	0.0
+267	WDP Low Den 4 - time period 4	SOFT	1.0	170588.0	1.0	null	null	184	y_184	200113.28085379073	0.0	0.0
+268	WDP Low Den 5 - time period 5	SOFT	1.0	170588.0	1.0	null	null	185	y_185	212850.06827015456	0.0	0.0
+269	WDP Low Den 6 - time period 6	SOFT	1.0	170588.0	1.0	null	null	186	y_186	217747.6087488629	0.0	0.0
+270	WDP Low Den 7 - time period 7	SOFT	1.0	170588.0	1.0	null	null	187	y_187	223655.37353776384	0.0	0.0
+271	WDP Low Den 8 - time period 8	SOFT	1.0	170588.0	1.0	null	null	188	y_188	214920.751245069	0.0	0.0
+272	WDP Low Den 9 - time period 9	SOFT	1.0	170588.0	1.0	null	null	189	y_189	220795.635787808	0.0	0.0
+273	WDP Low Den 10 - time period 10	SOFT	1.0	170588.0	1.0	null	null	190	y_190	228549.0304109853	0.0	0.0
+274	WDP Low Den 11 - time period 11	SOFT	1.0	170588.0	1.0	null	null	191	y_191	235480.0425318395	0.0	0.0
+275	WDP Low Den 12 - time period 12	SOFT	1.0	170588.0	1.0	null	null	192	y_192	238807.36589178757	0.0	0.0
+276	WDP Low Den 13 - time period 13	SOFT	1.0	170588.0	1.0	null	null	193	y_193	241404.96399132122	0.0	0.0
+277	WDP Low Den 14 - time period 14	SOFT	1.0	170588.0	1.0	null	null	194	y_194	237038.1310695127	0.0	0.0
+278	WDP Low Den 15 - time period 15	SOFT	1.0	170588.0	1.0	null	null	195	y_195	228575.29774623137	0.0	0.0
+279	WDP Low Den 16 - time period 16	SOFT	1.0	170588.0	1.0	null	null	196	y_196	224168.49509324395	0.0	0.0
+280	WDP Low Den 17 - time period 17	SOFT	1.0	170588.0	1.0	null	null	197	y_197	225394.4916027621	0.0	0.0
+281	WDP Low Den 18 - time period 18	SOFT	1.0	170588.0	1.0	null	null	198	y_198	211484.34040607896	0.0	0.0
+282	WDP Low Den 19 - time period 19	SOFT	1.0	170588.0	1.0	null	null	199	y_199	199157.9357444277	0.0	0.0
+283	WDP Low Den 20 - time period 20	SOFT	1.0	170588.0	1.0	null	null	200	y_200	203722.81695615145	0.0	0.0
+284	WDP Med Den 1 - time period 1	SOFT	1.0	null	null	56863.0	1.0	201	y_201	69118.1742433612	0.0	12255.174243361194
+285	WDP Med Den 2 - time period 2	SOFT	1.0	null	null	56863.0	1.0	202	y_202	69112.44550731419	0.0	12249.445507314187
+286	WDP Med Den 3 - time period 3	SOFT	1.0	null	null	56863.0	1.0	203	y_203	58769.19834943606	0.0	1906.198349436061
+287	WDP Med Den 4 - time period 4	SOFT	1.0	null	null	56863.0	1.0	204	y_204	29067.61439107626	0.0	0.0
+288	WDP Med Den 5 - time period 5	SOFT	1.0	null	null	56863.0	1.0	205	y_205	17489.446033119424	0.0	0.0
+289	WDP Med Den 6 - time period 6	SOFT	1.0	null	null	56863.0	1.0	206	y_206	10092.318812034071	0.0	0.0
+290	WDP Med Den 7 - time period 7	SOFT	1.0	null	null	56863.0	1.0	207	y_207	9065.195278201661	0.0	0.0
+291	WDP Med Den 8 - time period 8	SOFT	1.0	null	null	56863.0	1.0	208	y_208	21916.14500164202	0.0	0.0
+292	WDP Med Den 9 - time period 9	SOFT	1.0	null	null	56863.0	1.0	209	y_209	30074.069218505043	0.0	0.0
+293	WDP Med Den 10 - time period 10	SOFT	1.0	null	null	56863.0	1.0	210	y_210	23271.623820698536	0.0	0.0
+294	WDP Med Den 11 - time period 11	SOFT	1.0	null	null	56863.0	1.0	211	y_211	20243.37955484057	0.0	0.0
+295	WDP Med Den 12 - time period 12	SOFT	1.0	null	null	56863.0	1.0	212	y_212	20443.59204538956	0.0	0.0
+296	WDP Med Den 13 - time period 13	SOFT	1.0	null	null	56863.0	1.0	213	y_213	20524.615584579835	0.0	0.0
+297	WDP Med Den 14 - time period 14	SOFT	1.0	null	null	56863.0	1.0	214	y_214	20517.069634101364	0.0	0.0
+298	WDP Med Den 15 - time period 15	SOFT	1.0	null	null	56863.0	1.0	215	y_215	24689.419301711852	0.0	0.0
+299	WDP Med Den 16 - time period 16	SOFT	1.0	null	null	56863.0	1.0	216	y_216	24910.646434121372	0.0	0.0
+300	WDP Med Den 17 - time period 17	SOFT	1.0	null	null	56863.0	1.0	217	y_217	25710.64230865218	0.0	0.0
+301	WDP Med Den 18 - time period 18	SOFT	1.0	null	null	56863.0	1.0	218	y_218	36983.858206608325	0.0	0.0
+302	WDP Med Den 19 - time period 19	SOFT	1.0	null	null	56863.0	1.0	219	y_219	47462.97740174819	0.0	0.0
+303	WDP Med Den 20 - time period 20	SOFT	1.0	null	null	56863.0	1.0	220	y_220	39746.20042524929	0.0	0.0
+304	WDP High Den 1 - time period 1	SOFT	1.0	null	null	71708.0	1.0	221	y_221	911.5709378304	0.0	0.0
+305	WDP High Den 2 - time period 2	SOFT	1.0	null	null	71708.0	1.0	222	y_222	31217.085277999107	0.0	0.0
+306	WDP High Den 3 - time period 3	SOFT	1.0	null	null	71708.0	1.0	223	y_223	35926.29129187453	0.0	0.0
+307	WDP High Den 4 - time period 4	SOFT	1.0	null	null	71708.0	1.0	224	y_224	39952.089675460425	0.0	0.0
+308	WDP High Den 5 - time period 5	SOFT	1.0	null	null	71708.0	1.0	225	y_225	44032.92626105526	0.0	0.0
+309	WDP High Den 6 - time period 6	SOFT	1.0	null	null	71708.0	1.0	226	y_226	46498.64669477254	0.0	0.0
+310	WDP High Den 7 - time period 7	SOFT	1.0	null	null	71708.0	1.0	227	y_227	41509.07076438431	0.0	0.0
+311	WDP High Den 8 - time period 8	SOFT	1.0	null	null	71708.0	1.0	228	y_228	37232.08543071795	0.0	0.0
+312	WDP High Den 9 - time period 9	SOFT	1.0	null	null	71708.0	1.0	229	y_229	23481.584490209876	0.0	0.0
+313	WDP High Den 10 - time period 10	SOFT	1.0	null	null	71708.0	1.0	230	y_230	22164.701990991667	0.0	0.0
+314	WDP High Den 11 - time period 11	SOFT	1.0	null	null	71708.0	1.0	231	y_231	18300.55689368444	0.0	0.0
+315	WDP High Den 12 - time period 12	SOFT	1.0	null	null	71708.0	1.0	232	y_232	14794.852402697954	0.0	0.0
+316	WDP High Den 13 - time period 13	SOFT	1.0	null	null	71708.0	1.0	233	y_233	12105.817785209621	0.0	0.0
+317	WDP High Den 14 - time period 14	SOFT	1.0	null	null	71708.0	1.0	234	y_234	12200.320742978378	0.0	0.0
+318	WDP High Den 15 - time period 15	SOFT	1.0	null	null	71708.0	1.0	235	y_235	12390.107489214586	0.0	0.0
+319	WDP High Den 16 - time period 16	SOFT	1.0	null	null	71708.0	1.0	236	y_236	12575.518366236358	0.0	0.0
+320	WDP High Den 17 - time period 17	SOFT	1.0	null	null	71708.0	1.0	237	y_237	14826.878723601838	0.0	0.0
+321	WDP High Den 18 - time period 18	SOFT	1.0	null	null	71708.0	1.0	238	y_238	17463.81402232886	0.0	0.0
+322	WDP High Den 19 - time period 19	SOFT	1.0	null	null	71708.0	1.0	239	y_239	19311.099488840242	0.0	0.0
+323	WDP High Den 20 - time period 20	SOFT	1.0	null	null	71708.0	1.0	240	y_240	22462.995253615383	0.0	0.0
