@@ -73,7 +73,7 @@ public class Solve_Iterations {
 			File[] list_files = runFolder.listFiles(new FilenameFilter() {
 				@Override
 				public boolean accept(File dir, String name) {
-					return name.startsWith("output_01_general_outputs");
+					return name.startsWith("output_01_general_outputs_");
 				}
 			});
 			
@@ -86,7 +86,12 @@ public class Solve_Iterations {
 					// Delete all output files, problem file, and solution file, but keep the fly_constraints file
 					if ((f.getName().startsWith("output") || f.getName().startsWith("problem") || f.getName().startsWith("solution")) && !f.getName().contains("fly_constraints")) {
 						String iter_name = f.getName().substring(f.getName().lastIndexOf("_") + 1, f.getName().lastIndexOf("."));
-						if (Integer.parseInt(iter_name) > last_solved_iter) f.delete();
+						try {
+							if (Integer.parseInt(iter_name) > last_solved_iter) f.delete();
+						} catch (Exception e) {
+							e.printStackTrace();
+							f.delete();		// i.e. output_01_general_outputs.txt (1.xx.xx version output) would need to be deleted so users could run old model even without set up state_id input_11
+						}
 					}
 				}
 			}
