@@ -173,14 +173,20 @@ public class Panel_Project extends JLayeredPane {
 				if (nodeObj.toString().startsWith("output") && node.getLevel() == 2) {
 					setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_new1.png"));
 				} 
-				if (nodeObj.toString().startsWith("output_04") && node.getLevel() == 2) {
-					setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_pie.png"));
-				}
-				if (nodeObj.toString().startsWith("output_07") && node.getLevel() == 2) {
-					setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_flow.png"));
-				}
 				if (nodeObj.toString().startsWith("readme") && node.getLevel() == 2) {
 					setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_new1.png"));
+				}
+				if (nodeObj.toString().startsWith("summarize") && node.getLevel() == 2) {
+					setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_new1.png"));
+				}
+				if (nodeObj.toString().contains("output_04") && node.getLevel() == 2) {
+					setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_pie.png"));
+				}
+				if (nodeObj.toString().startsWith("summarize_output_06") && node.getLevel() == 2) {
+					setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_flow2.png"));
+				}
+				if (nodeObj.toString().contains("output_07") && node.getLevel() == 2) {
+					setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_flow.png"));
 				}
 				return this;
 			}
