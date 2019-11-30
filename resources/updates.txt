@@ -1162,4 +1162,6 @@ All changes in this block are associated with PrismAlpha2.0.01.jar, Prism-Formul
 481. Bug fix
 	- Add if condition in xEA_R variable definition and equation 14d (note that we could not include 2 conditions into for loop with && because the loop will behave incorrectly)
 	- Remove if condition (if (1 + iter == tR - aR + 1)) in 5a no-merge, 5d merge, output_04
-482. Method to summarize applies on output_07 and the graphs are now working for both the summary and the independent iteration's output_07
+482. Method to summarize applies on output_07 and the graphs are now working for both the summary and the independent iteration's output_07_flow_constraint
+483. Graphs are now available for the summarize_output_06_basic_constraints
+484. Modify the legend display for all charts of the output_07_flow_constraint

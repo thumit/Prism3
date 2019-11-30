@@ -81,12 +81,12 @@ import prism_convenience.ToolBarWithBgImage;
 import prism_project.data_process.LinkedList_Databases_Item;
 import prism_project.data_process.Read_Database;
 import prism_project.edit.Panel_Edit;
+import prism_project.output.Output_Panel_Basic_Constraints;
 import prism_project.output.Output_Panel_Flow_Constraints;
 import prism_project.output.Output_Panel_Management_Details_NOSQL;
 import prism_project.output.Output_Panel_Management_Details_SQL;
 import prism_project.output.Output_Panel_Management_Overview;
 import prism_project.solve.Panel_Solve;
-import prism_project.solve.Summarize_Outputs;
 import prism_root.OptionPane_Startup;
 import prism_root.PrismMain;
 @SuppressWarnings("serial")
@@ -543,6 +543,12 @@ public class Panel_Project extends JLayeredPane {
 								}
 							};
 							thread_management_details.start();
+						} 
+						
+						else if (currentInputFile.startsWith("summarize_output_06_basic_constraints")) {		//show a panel with bar and line charts
+							table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+							Output_Panel_Basic_Constraints chart_panel = new Output_Panel_Basic_Constraints(table, data);
+							scrollPane_Right.setViewportView(chart_panel);
 						} 
 						
 						else if (currentInputFile.startsWith("output_07_flow_constraints") || currentInputFile.startsWith("summarize_output_07_flow_constraints")) {		//show a panel with bar and line charts
