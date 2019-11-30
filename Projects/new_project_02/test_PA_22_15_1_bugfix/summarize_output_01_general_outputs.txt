@@ -4,10 +4,10 @@ Solution status	Optimal
 Solution algorithm	1	
 Simplex iterations	45	
 Prism version when problem solved	PRISM ALPHA 2.0.01	
-Date & time problem solved	2019/11/30 - 01:13:30	
-Time reading (minutes & seconds)	1m7.23s	
-Time solving (minutes & seconds)	18.49s	
-Time writing (minutes & seconds)	6.36s	
+Date & time problem solved	2019/11/30 - 18:49:24	
+Time reading (minutes & seconds)	1m10.45s	
+Time solving (minutes & seconds)	20.08s	
+Time writing (minutes & seconds)	6.33s	
 Total variables	532434	
 Total constraints	492124	
 Objective value	9.2475675009E8	

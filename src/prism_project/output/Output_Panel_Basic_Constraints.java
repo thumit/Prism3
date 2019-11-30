@@ -27,8 +27,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -327,14 +325,9 @@ public class Output_Panel_Basic_Constraints extends JLayeredPane {
 		String chart_name = "Highlight a basic constraint to view chart";
 		if (selectedRow >= 0) {
 			chart_name = bc_data[selectedRow][0].toString()  + ". " + bc_data[selectedRow][1].toString();
-			// Calculate value
-			List<Double> FV = new ArrayList<Double>();
-			for (int i = 0; i < total_iteration; i++) {
-				FV.add(Double.valueOf(bc_data[selectedRow][i + 4].toString()));
-			}
 			// Put all into dataset		
 			for (int i = 0; i < total_iteration; i++) {
-				dataset.addValue(Double.valueOf(bc_data[selectedRow][i + 4].toString()), "Value", "" + i);
+				dataset.addValue(Double.valueOf(bc_data[selectedRow][i + 4].toString()), "value", String.valueOf(i));
 			}
 		}
 		
@@ -391,15 +384,11 @@ public class Output_Panel_Basic_Constraints extends JLayeredPane {
 		String chart_name = "Highlight a basic constraint to view chart";
 		if (selectedRow >= 0) {
 			chart_name = bc_data[selectedRow][0].toString()  + ". " + bc_data[selectedRow][1].toString();
-			// Calculate value
-			List<Double> FV = new ArrayList<Double>();
-			for (int i = 0; i < total_iteration; i++) {
-				FV.add(Double.valueOf(bc_data[selectedRow][i + 4].toString()));
-			}
 			// Put all into dataset		
 			for (int i = 0; i < total_iteration; i++) {
-				dataset.setValue("iteration " + i, Double.valueOf(bc_data[selectedRow][i + 4].toString()));
+				dataset.setValue("iteration " + String.valueOf(i), Double.valueOf(bc_data[selectedRow][i + 4].toString()));
 			}
+			if (total_iteration == 1) dataset.setValue("others", 0);	// this is to prevent frozen when the pie chart only has 1 dataset (1 iteration)	
 		}
 		
 		// Create 3D pie chart-----------------------------------
@@ -515,14 +504,9 @@ public class Output_Panel_Basic_Constraints extends JLayeredPane {
 		if (selectedRows.length >= 1) {
 			chart_name = "Comparison for highlighted basic constraints";
 			for (int selectedRow: selectedRows) {
-				// Calculate value
-				List<Double> FV = new ArrayList<Double>();
-				for (int i = 0; i < total_iteration; i++) {
-					FV.add(Double.valueOf(bc_data[selectedRow][i + 4].toString()));
-				}
 				// Put all into dataset		
 				for (int i = 0; i < total_iteration; i++) {
-					dataset.addValue(Double.valueOf(bc_data[selectedRow][i + 4].toString()), bc_data[selectedRow][0].toString()  + ". " + bc_data[selectedRow][1].toString(), "" + i);
+					dataset.addValue(Double.valueOf(bc_data[selectedRow][i + 4].toString()), bc_data[selectedRow][0].toString()  + ". " + bc_data[selectedRow][1].toString(), String.valueOf(i));
 				}
 			}
 		}
@@ -585,22 +569,17 @@ public class Output_Panel_Basic_Constraints extends JLayeredPane {
 		
 		String chart_name = "Highlight single or multiple basic constraints to view chart";
 		if (selectedRows.length >= 1) {
-			chart_name = "Comparison for highlighted basic constraints (stacked by basic constraints)";
+			chart_name = "Comparison for highlighted basic constraints";
 			for (int selectedRow: selectedRows) {
-				// Calculate value
-				List<Double> FV = new ArrayList<Double>();
-				for (int i = 0; i < total_iteration; i++) {
-					FV.add(Double.valueOf(bc_data[selectedRow][i + 4].toString()));
-				}
 				// Put all into dataset		
 				for (int i = 0; i < total_iteration; i++) {
-					dataset.addValue(Double.valueOf(bc_data[selectedRow][i + 4].toString()), bc_data[selectedRow][0].toString()  + ". " + bc_data[selectedRow][1].toString(), "" + i);
+					dataset.addValue(Double.valueOf(bc_data[selectedRow][i + 4].toString()), bc_data[selectedRow][0].toString()  + ". " + bc_data[selectedRow][1].toString(), String.valueOf(i));
 				}
 			}
 		}
 		
 		// Create 3D bar chart--------------------------------------------------------------------------------------------------
-		JFreeChart chart = ChartFactory.createStackedBarChart(chart_name, "iteration", "value",
+		JFreeChart chart = ChartFactory.createStackedBarChart(chart_name, "iteration (stacked by basic constraints)", "value",
 				dataset, PlotOrientation.VERTICAL, true, true, false);		
 		chart.setBorderVisible(true);
 		chart.setBackgroundPaint(Color.LIGHT_GRAY);
@@ -657,22 +636,17 @@ public class Output_Panel_Basic_Constraints extends JLayeredPane {
 		
 		String chart_name = "Highlight single or multiple basic constraints to view chart";
 		if (selectedRows.length >= 1) {
-			chart_name = "Comparison for highlighted basic constraints (stacked by iterations)";
+			chart_name = "Comparison for highlighted basic constraints";
 			for (int selectedRow: selectedRows) {
-				// Calculate value
-				List<Double> FV = new ArrayList<Double>();
-				for (int i = 0; i < total_iteration; i++) {
-					FV.add(Double.valueOf(bc_data[selectedRow][i + 4].toString()));
-				}
 				// Put all into dataset		
-				for (int i = 0; i < total_iteration; i++) {
-					dataset.addValue(Double.valueOf(bc_data[selectedRow][i + 4].toString()), "iteration " + i, bc_data[selectedRow][0].toString()  + ". " + bc_data[selectedRow][1].toString());
+				for (int i = 0; i < total_iteration; i++) { 
+					dataset.addValue(Double.valueOf(bc_data[selectedRow][i + 4].toString()), "iteration " + String.valueOf(i), bc_data[selectedRow][0].toString()  + ". " + bc_data[selectedRow][1].toString());
 				}
 			}
 		}
 		
 		// Create 3D bar chart--------------------------------------------------------------------------------------------------
-		JFreeChart chart = ChartFactory.createStackedBarChart(chart_name, "basic constraint", "value",
+		JFreeChart chart = ChartFactory.createStackedBarChart(chart_name, "basic constraint (stacked by iterations)", "value",
 				dataset, PlotOrientation.VERTICAL, true, true, false);		
 		chart.setBorderVisible(true);
 		chart.setBackgroundPaint(Color.LIGHT_GRAY);

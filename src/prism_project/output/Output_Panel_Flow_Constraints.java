@@ -1276,7 +1276,7 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 		String chart_name = "Highlight single or multiple flows to view chart";
 		if (selectedRows.length >= 1) {
 			List<JTable> table_list = new ArrayList<JTable>();
-			chart_name = "Comparison for highlighted flows of the Folow Data (stacked by flows)\n";
+			chart_name = "Comparison for highlighted flows of the Folow Data\n";
 			for (int selectedRow: selectedRows) {
 				chart_name = String.join("   ", chart_name, flow_data[selectedRow][0].toString() + "," + flow_data[selectedRow][1].toString());
 
@@ -1439,7 +1439,7 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 		
 		
 		// Create 3D bar chart--------------------------------------------------------------------------------------------------
-		JFreeChart chart = ChartFactory.createStackedBarChart(chart_name, "col_id", "Flow Value: FV",
+		JFreeChart chart = ChartFactory.createStackedBarChart(chart_name, "col_id (stacked by flows)", "Flow Value: FV",
 				dataset, PlotOrientation.VERTICAL, true, true, false);		
 		chart.setBorderVisible(true);
 		chart.setBackgroundPaint(Color.LIGHT_GRAY);
@@ -1499,7 +1499,7 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 		String chart_name = "Highlight single or multiple flows to view chart";
 		if (selectedRows.length >= 1) {
 			List<JTable> table_list = new ArrayList<JTable>();
-			chart_name = "Comparison for highlighted flows of the Folow Data (stacked by col_id)\n";
+			chart_name = "Comparison for highlighted flows of the Folow Data\n";
 			for (int selectedRow: selectedRows) {
 				chart_name = String.join("   ", chart_name, flow_data[selectedRow][0].toString() + "," + flow_data[selectedRow][1].toString());
 
@@ -1662,7 +1662,7 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 		
 		
 		// Create 3D bar chart--------------------------------------------------------------------------------------------------
-		JFreeChart chart = ChartFactory.createStackedBarChart(chart_name, "flow", "Flow Value: FV",
+		JFreeChart chart = ChartFactory.createStackedBarChart(chart_name, "flow (stacked by col_id)", "Flow Value: FV",
 				dataset, PlotOrientation.VERTICAL, true, true, false);		
 		chart.setBorderVisible(true);
 		chart.setBackgroundPaint(Color.LIGHT_GRAY);
