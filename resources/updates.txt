@@ -1167,3 +1167,4 @@ All changes in this block are associated with PrismAlpha2.0.01.jar, Prism-Formul
 484. Modify the legend display for all charts of the output_07_flow_constraint
 485. Add the i index of the loop as String.valueOf(i) for dataset, chart name, etcin summary_output_06_flow_constraint
 486. Fix frozen chart in summary_output_06_flow_constraint when the data has only 1 dataset (1 iteration). This happens when users solve only iteration zero
+487. UIs for charts of output_06 and output_07 display and behave the same way

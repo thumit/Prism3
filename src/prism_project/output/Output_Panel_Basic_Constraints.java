@@ -83,9 +83,9 @@ public class Output_Panel_Basic_Constraints extends JLayeredPane {
 		TitledBorder border = new TitledBorder("Basic Constraints Data");
 		border.setTitleJustification(TitledBorder.CENTER);
 		split_pane_data.setBorder(border);
-		split_pane_data.setOrientation(JSplitPane.VERTICAL_SPLIT);
+		split_pane_data.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
 		split_pane_data.setDividerSize(3);
-		split_pane_data.setResizeWeight(0.33);
+		split_pane_data.setResizeWeight(0.55);
 		split_pane_data.setLeftComponent(table_scroll_pane);
 		split_pane_data.setRightComponent(null);
 		//---------------------------------------------------------------
@@ -189,6 +189,7 @@ public class Output_Panel_Basic_Constraints extends JLayeredPane {
 		border.setTitleJustification(TitledBorder.CENTER);
 		split_pane_chart.setBorder(border);
 		split_pane_chart.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+		split_pane_chart.setOneTouchExpandable(true);
 		split_pane_chart.setDividerSize(3);
 		split_pane_chart.setResizeWeight(0.55);
 		split_pane_chart.setLeftComponent(scroll_bar_chart);
@@ -209,7 +210,7 @@ public class Output_Panel_Basic_Constraints extends JLayeredPane {
 //		table_handle.setColumnVisible("var_id", false);
 //		table_handle.setColumnVisible("var_name", false);
 		
-		// Set icon for column "flow_type"
+		// Set icon for column "bc_type"
 		DefaultTableCellRenderer r = new DefaultTableCellRenderer() {
 			@Override
 			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -221,11 +222,11 @@ public class Output_Panel_Basic_Constraints extends JLayeredPane {
 				return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 			}
 		};	
-//		flow_table.getColumn("flow_type").setCellRenderer(r);
-		bc_table.getColumn("bc_description").setPreferredWidth(150);		
-//		flow_table.getColumn("lowerbound_percentage").setHeaderValue("LB%");	// change header name
-//		flow_table.getColumn("upperbound_percentage").setHeaderValue("UB%");	// change header name
-		bc_table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+//		bc_table.getColumn("bc_type").setCellRenderer(r);
+		bc_table.getColumn("bc_description").setPreferredWidth(200);		
+//		bc_table.getColumn("lowerbound_percentage").setHeaderValue("LB%");	// change header name
+//		bc_table.getColumn("upperbound_percentage").setHeaderValue("UB%");	// change header name
+		bc_table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 			
 	    // Add listener
         bc_table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){

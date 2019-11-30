@@ -98,7 +98,6 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 		bc_values = read.get_bc_data();
 		//---------------------------------------------------------------
 		
-			
 		JScrollPane table_scroll_pane = new JScrollPane(flow_table);
 		table_scroll_pane.setPreferredSize(new Dimension(100, 100));
 		flow_table.setFillsViewportHeight(true);
@@ -112,14 +111,13 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 		TitledBorder border = new TitledBorder("Flow Data");
 		border.setTitleJustification(TitledBorder.CENTER);
 		split_pane_data.setBorder(border);
-		split_pane_data.setOrientation(JSplitPane.VERTICAL_SPLIT);
+		split_pane_data.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
 		split_pane_data.setDividerSize(3);
-		split_pane_data.setResizeWeight(0.33);
+		split_pane_data.setResizeWeight(0.55);
 		split_pane_data.setLeftComponent(table_scroll_pane);
 		split_pane_data.setRightComponent(legend_scroll_pane);
 		//------------------------------------------------------------------------------------------------------------------------------
 
-		
 		JPanel radio_panel = new JPanel();
 		radio_panel.setLayout(new GridBagLayout());
 		radio_panel.setPreferredSize(new Dimension(100, 100));
@@ -202,7 +200,6 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 		radio_group.add(radio_button[2]);
 		radio_group.add(radio_button[3]);
 		radio_group.add(radio_button[4]);
-		
 		radio_panel.add(radio_button[0], PrismGridBagLayoutHandle.get_c(c, "BOTH", 
 				0, 0, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
 				0, 10, 0, 10));	// insets top, left, bottom, right
@@ -232,33 +229,22 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 		border = new TitledBorder("Flow Chart");
 		border.setTitleJustification(TitledBorder.CENTER);
 		split_pane_chart.setBorder(border);
-		split_pane_chart.setOrientation(JSplitPane.VERTICAL_SPLIT);
+		split_pane_chart.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+		split_pane_chart.setOneTouchExpandable(true);
 		split_pane_chart.setDividerSize(3);
-		split_pane_chart.setResizeWeight(0.33);
-		split_pane_chart.setLeftComponent(radio_panel);
-		split_pane_chart.setRightComponent(scroll_bar_chart);
+		split_pane_chart.setResizeWeight(0.55);
+		split_pane_chart.setLeftComponent(scroll_bar_chart);
+		split_pane_chart.setRightComponent(radio_panel);
 		//------------------------------------------------------------------------------------------------------------------------------
-		
-		
 		JSplitPane split_pane = new JSplitPane();
 		split_pane.setBorder(null);
-		split_pane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+		split_pane.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		split_pane.setOneTouchExpandable(true);
 		split_pane.setDividerSize(3);
-		split_pane.setResizeWeight(0.44);
-		split_pane.setLeftComponent(split_pane_data);
-		split_pane.setRightComponent(split_pane_chart);
+		split_pane.setResizeWeight(0.66);
+		split_pane.setLeftComponent(split_pane_chart);
+		split_pane.setRightComponent(split_pane_data);
 		//------------------------------------------------------------------------------------------------------------------------------
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
         
     	// Hide columns
 		TableColumnsHandle table_handle = new TableColumnsHandle(flow_table);
@@ -278,10 +264,10 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 			}
 		};	
 		flow_table.getColumn("flow_type").setCellRenderer(r);
-		flow_table.getColumn("iteration").setPreferredWidth(60);	
-		flow_table.getColumn("flow_id").setPreferredWidth(60);					
-		flow_table.getColumn("flow_description").setPreferredWidth(150);		
-		flow_table.getColumn("flow_type").setPreferredWidth(60);	
+		flow_table.getColumn("iteration").setPreferredWidth(50);	
+		flow_table.getColumn("flow_id").setPreferredWidth(50);					
+		flow_table.getColumn("flow_description").setPreferredWidth(200);		
+		flow_table.getColumn("flow_type").setPreferredWidth(50);	
 		flow_table.getColumn("lowerbound_percentage").setPreferredWidth(50);
 		flow_table.getColumn("upperbound_percentage").setPreferredWidth(50);
 		flow_table.getColumn("lowerbound_percentage").setHeaderValue("LB%");	// change header name
@@ -368,36 +354,17 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 		legend_scroll_pane.setBorder(table_scroll_pane.getBorder());
         //-------------------------------------------------------------------------------------------------
         
-        
-        
         setLayout(new GridBagLayout());
 		c = new GridBagConstraints();
         super.add(split_pane, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
 				0, 0, 1, 1, 1, 1, // gridx, gridy, gridwidth, gridheight, weightx, weighty
 				10, 5, 0, 5));		// insets top, left, bottom, right
 	}
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	
 
+	
 	@SuppressWarnings("deprecation")
 	private JFreeChart create_single_bar_chart(JTable flow_table, Object[][] flow_data, int selectedRow) {			
 		final DefaultCategoryDataset dataset = new DefaultCategoryDataset( );
