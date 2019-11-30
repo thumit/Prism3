@@ -225,6 +225,9 @@ public class Solve_Iterations {
 			
 			// Get info: input_11_state_id
 			LinkedHashMap<String, String> map_prescription_and_row_id_to_state_id = read.get_map_prescription_and_row_id_to_state_id();
+			String merging_option = (map_prescription_and_row_id_to_state_id == null) ? "no_merge" : "merge";
+			System.out.println("Iterations are connected by '" + merging_option + "' option");
+			
 			
 			
 			
@@ -1267,7 +1270,6 @@ public class Solve_Iterations {
 						}
 					}	
 				} else {	// iteration >= 1
-					String merging_option = "merge";
 					switch (merging_option) {
 					case "no_merge":
 						// 5a

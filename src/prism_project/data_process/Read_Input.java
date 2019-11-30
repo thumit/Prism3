@@ -1259,7 +1259,7 @@ public class Read_Input {
 			for (int i = 0; i < total_rows; i++) {
 				String[] row_value = a[i].split(delimited);
 				for (int j = 0; j < total_columns; j++) {
-					data[i][j] = row_value[j].replaceAll("\\s+", "");
+					data[i][j] = row_value[j];
 				}
 			}
 
@@ -1269,8 +1269,10 @@ public class Read_Input {
 				String value = data[i][2];
 				map_prescription_and_row_id_to_state_id.put(key, value);
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			// this error occurs when user did not define the state_id --> it would save as null value for all rows except the head which consequently make the read_state_id failed 
+			map_prescription_and_row_id_to_state_id = null;
 		}
 	}
 	
