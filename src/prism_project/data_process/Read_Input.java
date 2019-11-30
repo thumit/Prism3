@@ -1271,7 +1271,8 @@ public class Read_Input {
 			}
 		} catch (Exception e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
-			// this error occurs when user did not define the state_id --> it would save as null value for all rows except the head which consequently make the read_state_id failed 
+			// this error occurs when user did not define the state_id --> it would save as blank cell value for all rows in the state_id column which consequently make the read_state_id failed 
+			// BLANK is not NULL: the fail is at line 1269. Note that the blank cell in state_id column is not the null value. This is due to the way I create the state_id in AreaMerging class. 
 			map_prescription_and_row_id_to_state_id = null;
 		}
 	}

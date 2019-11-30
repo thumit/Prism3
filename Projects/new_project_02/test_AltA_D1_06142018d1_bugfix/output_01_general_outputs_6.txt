@@ -1,0 +1,13 @@
+iteration	description	value
+6	Optimization solver	CPLEX
+6	Solution status	Optimal
+6	Solution algorithm	1
+6	Simplex iterations	34
+6	Prism version when problem solved	PRISM ALPHA 2.0.01
+6	Date & time problem solved	2019/12/01 - 01:37:50
+6	Time reading (minutes & seconds)	3m9.74s
+6	Time solving (minutes & seconds)	17.29s
+6	Time writing (minutes & seconds)	10.13s
+6	Total variables	1120151
+6	Total constraints	1068376
+6	Objective value	5232800.44
