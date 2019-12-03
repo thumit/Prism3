@@ -379,103 +379,8 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 			for (int i = 0; i < flow_output_original_info.length; i++) {
 				flow_output_original.add(Double.parseDouble(flow_output_original_info[i]));
 			}				
-												
-			// Calculate FV, LB, UB	-------------------------------------------------------------------------
-			List<Double> FV = new ArrayList<Double>();
-			List<Double> LB = new ArrayList<Double>();
-			List<Double> UB = new ArrayList<Double>();
-			for (int i = 0; i < flow_arrangement_info.length; i++) {
-				FV.add(flow_output_original.get(i));
-				if (!flow_data[selectedRow][5].toString().equals("null") && flow_data[selectedRow][4].toString().equals("HARD")) {
-					if (i > 0) {
-						double lb_value = Double.parseDouble(flow_data[selectedRow][5].toString()) * flow_output_original.get(i - 1) / 100;	
-						LB.add(lb_value);	
-					} else if (i == 0) {
-						LB.add(null);	
-					}
-				} 
-				if (!flow_data[selectedRow][6].toString().equals("null") && flow_data[selectedRow][4].toString().equals("HARD")) {
-					if (i > 0) {
-						double ub_value = Double.parseDouble(flow_data[selectedRow][6].toString()) * flow_output_original.get(i - 1) / 100;	
-						UB.add(ub_value);
-					} else if (i == 0) {
-						UB.add(null);
-					}
-				} 
-			}
-						
-			// Refresh the legend_table------------------------------------------------------------------------
-			List<String> all_bc_id_in_the_selected_row = new ArrayList<String>();
-			for (int i = 0; i < flow_arrangement_info.length; i++) {
-				String[] flow_item = flow_arrangement_info[i].split(" ");
-				for (int id = 0; id < flow_item.length; id++) {
-					if (id == 0) {
-						all_bc_id_in_the_selected_row.add(flow_item[id]);
-					} else {
-						all_bc_id_in_the_selected_row.add("+" + flow_item[id]);
-					}
-				}
-			}
-						
-			int rowCount = all_bc_id_in_the_selected_row.size();
-			int colCount = 5;
-			Object[][] data = new Object[rowCount][colCount];
-			String[] columnNames = new String[] { "bc_id", "bc_description", "FV", "LB", "UB" };
-			
-			// Populate the data matrix
-			DecimalFormat formatter = new DecimalFormat("###,###.###");
-			formatter.setMinimumFractionDigits(0);
-			formatter.setMaximumFractionDigits(0);
-			for (int i = 0; i < rowCount; i++) {
-				for (int row = 0; row < bc_values.length; row++) {
-					if (!all_bc_id_in_the_selected_row.get(i).startsWith("+")) {
-						if (all_bc_id_in_the_selected_row.get(i).equals(bc_values[row][0])) {
-							data[i][0] = bc_values[row][0];
-							data[i][1] = bc_values[row][1];
-						}
-					} else {	
-						if (all_bc_id_in_the_selected_row.get(i).replace("+", "").equals(bc_values[row][0])) {
-							data[i][0] = "+" + bc_values[row][0];
-							data[i][1] = bc_values[row][1];
-						}
-					}
-				}
-			}					
-			// This is because some sigma can have more than 1 term, we only write out for the last term (i.e. sigma includes 17 + 620 -->write the FV, UB, LB for both in the line of 620)
-			int count = -1;
-			for (int i = 0; i < flow_arrangement_info.length; i++) {
-				String[] flow_item = flow_arrangement_info[i].split(" ");
-				count = count + flow_item.length;
-				data[count][2] = formatter.format((Double) FV.get(i));
-				data[count][3] = (LB.size() == FV.size() && LB.get(i) != null) ? formatter.format((Double) LB.get(i)) : null;
-				data[count][4] = (UB.size() == FV.size() && UB.get(i) != null) ? formatter.format((Double) UB.get(i)) : null;
-			}
-			
-			// Create a table
-			PrismTableModel model = new PrismTableModel(rowCount, colCount, data, columnNames);
-	        legend_table = new JTable(model)  {
-				@Override	// Implement table cell tool tips           
-				public String getToolTipText(MouseEvent e) {
-					java.awt.Point p = e.getPoint();
-					int row = rowAtPoint(p);
-					int col = columnAtPoint(p);
-					String tip = (legend_table.getColumnName(col).equals("bc_description") && row >= 0 && getValueAt(row, col) != null) ? getValueAt(row, col).toString() : null;
-					return tip;
-				}	
-			};
-	        legend_table.setFillsViewportHeight(true);
-	        legend_table.getColumnModel().getColumn(0).setPreferredWidth(60);	// Set width of 1st Column smaller
-	        legend_table.getColumnModel().getColumn(1).setPreferredWidth(300);	// Set width of 2nd Column bigger
-	        legend_table.getColumnModel().getColumn(2).setPreferredWidth(120);	// Set width of 3rd Column smaller
-	        legend_table.getColumnModel().getColumn(3).setPreferredWidth(120);	// Set width of 4th Column smaller
-	        legend_table.getColumnModel().getColumn(4).setPreferredWidth(120);	// Set width of 5th Column smaller
-	        legend_scroll_pane.setViewportView(legend_table);
-	        // --------------------------------------------------------------------------------------------------
-	        
-	        
-	        
-	        
-			// Put all into dataset	----------------------------------------------------------------------------		
+				
+			// Put all into dataset		
 			for (int i = 0; i < flow_arrangement_info.length; i++) {
 				dataset.addValue(flow_output_original.get(i), "FV", flow_arrangement.get(i).replaceAll("\\s+", "+"));
 				if (!flow_data[selectedRow][5].toString().equals("null") && flow_data[selectedRow][4].toString().equals("HARD")) {
@@ -495,7 +400,9 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 					}
 				} 
 			}
-			// --------------------------------------------------------------------------------------------------
+			
+			// Refresh legend table
+			refresh_legend_table_for_single_chart(flow_data[selectedRow]);
 		}
 
 					
@@ -638,8 +545,6 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 	@SuppressWarnings("deprecation")
 	private JFreeChart create_single_pie_chart(JTable flow_table, Object[][] flow_data, int selectedRow) {			
 		final DefaultPieDataset dataset = new DefaultPieDataset( );
-		final DefaultCategoryDataset dataset_LB = new DefaultCategoryDataset( );
-		final DefaultCategoryDataset dataset_UB = new DefaultCategoryDataset( );
 		
 		String chart_name = "Highlight a flow to view chart";
 		if (selectedRow >= 0) {
@@ -659,95 +564,15 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 			for (int i = 0; i < flow_output_original_info.length; i++) {
 				flow_output_original.add(Double.parseDouble(flow_output_original_info[i]));
 			}				
-												
-			// Calculate FV, LB, UB	-------------------------------------------------------------------------
-			List<Double> FV = new ArrayList<Double>();
-			List<Double> LB = new ArrayList<Double>();
-			List<Double> UB = new ArrayList<Double>();
-			for (int i = 0; i < flow_arrangement_info.length; i++) {
-				FV.add(flow_output_original.get(i));
-				if (!flow_data[selectedRow][5].toString().equals("null") && flow_data[selectedRow][4].toString().equals("HARD")) {
-					if (i > 0) {
-						double lb_value = Double.parseDouble(flow_data[selectedRow][5].toString()) * flow_output_original.get(i - 1) / 100;	
-						LB.add(lb_value);	
-					} else if (i == 0) {
-						LB.add(null);	
-					}
-				} 
-				if (!flow_data[selectedRow][6].toString().equals("null") && flow_data[selectedRow][4].toString().equals("HARD")) {
-					if (i > 0) {
-						double ub_value = Double.parseDouble(flow_data[selectedRow][6].toString()) * flow_output_original.get(i - 1) / 100;	
-						UB.add(ub_value);
-					} else if (i == 0) {
-						UB.add(null);
-					}
-				} 
-			}
 			
-			// Refresh the legend_table------------------------------------------------------------------------
-			List<String> all_bc_id_in_the_selected_row = new ArrayList<String>();
-			for (int i = 0; i < flow_arrangement_info.length; i++) {
-				String[] flow_item = flow_arrangement_info[i].split(" ");
-				for (int id = 0; id < flow_item.length; id++) {
-					if (id == 0) {
-						all_bc_id_in_the_selected_row.add(flow_item[id]);
-					} else {
-						all_bc_id_in_the_selected_row.add("+" + flow_item[id]);
-					}
-				}
-			}
-						
-			int rowCount = all_bc_id_in_the_selected_row.size();
-			int colCount = 5;
-			Object[][] data = new Object[rowCount][colCount];
-			String[] columnNames = new String[] { "bc_id", "bc_description", "FV", "LB", "UB" };
-			
-			// Populate the data matrix
-			DecimalFormat formatter = new DecimalFormat("###,###.###");
-			formatter.setMinimumFractionDigits(0);
-			formatter.setMaximumFractionDigits(0);
-			for (int i = 0; i < rowCount; i++) {
-				for (int row = 0; row < bc_values.length; row++) {
-					if (!all_bc_id_in_the_selected_row.get(i).startsWith("+")) {
-						if (all_bc_id_in_the_selected_row.get(i).equals(bc_values[row][0])) {
-							data[i][0] = bc_values[row][0];
-							data[i][1] = bc_values[row][1];
-						}
-					} else {	
-						if (all_bc_id_in_the_selected_row.get(i).replace("+", "").equals(bc_values[row][0])) {
-							data[i][0] = "+" + bc_values[row][0];
-							data[i][1] = bc_values[row][1];
-						}
-					}
-				}
-			}					
-			// This is because some sigma can have more than 1 term, we only write out for the last term (i.e. sigma includes 17 + 620 -->write the FV, UB, LB for both in the line of 620)
-			int count = -1;
-			for (int i = 0; i < flow_arrangement_info.length; i++) {
-				String[] flow_item = flow_arrangement_info[i].split(" ");
-				count = count + flow_item.length;
-				data[count][2] = formatter.format((Double) FV.get(i));
-				data[count][3] = (LB.size() == FV.size() && LB.get(i) != null) ? formatter.format((Double) LB.get(i)) : null;
-				data[count][4] = (UB.size() == FV.size() && UB.get(i) != null) ? formatter.format((Double) UB.get(i)) : null;
-			}
-			
-			// Create a table
-			PrismTableModel model = new PrismTableModel(rowCount, colCount, data, columnNames);
-	        legend_table = new JTable(model);
-	        legend_table.setFillsViewportHeight(true);
-	        legend_table.getColumnModel().getColumn(0).setPreferredWidth(60);	// Set width of 1st Column smaller
-	        legend_table.getColumnModel().getColumn(1).setPreferredWidth(300);	// Set width of 2nd Column bigger
-	        legend_table.getColumnModel().getColumn(2).setPreferredWidth(120);	// Set width of 3rd Column smaller
-	        legend_table.getColumnModel().getColumn(3).setPreferredWidth(120);	// Set width of 4th Column smaller
-	        legend_table.getColumnModel().getColumn(4).setPreferredWidth(120);	// Set width of 5th Column smaller
-	        legend_scroll_pane.setViewportView(legend_table);
-	        // --------------------------------------------------------------------------------------------------
-			// Put all into dataset	----------------------------------------------------------------------------		
+			// Put all into dataset		
 			for (int i = 0; i < flow_arrangement_info.length; i++) {
 				dataset.setValue(flow_arrangement.get(i).replaceAll("\\s+", "+"), flow_output_original.get(i));
 			}
+			
+			// Refresh legend table
+			refresh_legend_table_for_single_chart(flow_data[selectedRow]);
 		}
-
 					
 		Chart charts = new Chart();
 		return charts.create_single_pie_chart(chart_name, "list of bc_id", dataset);
@@ -765,7 +590,6 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 		
 		String chart_name = "Highlight single or multiple flows to view chart";
 		if (selectedRows.length >= 1) {
-			List<JTable> table_list = new ArrayList<JTable>();
 			chart_name = "Comparison for highlighted flows of the Folow Data\n";
 			for (int selectedRow: selectedRows) {
 				chart_name = String.join("   ", chart_name, flow_data[selectedRow][0].toString() + "," + flow_data[selectedRow][1].toString());
@@ -784,96 +608,8 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 				for (int i = 0; i < flow_output_original_info.length; i++) {
 					flow_output_original.add(Double.parseDouble(flow_output_original_info[i]));
 				}				
-													
-				// Calculate FV, LB, UB	-------------------------------------------------------------------------
-				List<Double> FV = new ArrayList<Double>();
-				List<Double> LB = new ArrayList<Double>();
-				List<Double> UB = new ArrayList<Double>();
-				for (int i = 0; i < flow_arrangement_info.length; i++) {
-					FV.add(flow_output_original.get(i));
-					if (!flow_data[selectedRow][5].toString().equals("null") && flow_data[selectedRow][4].toString().equals("HARD")) {
-						if (i > 0) {
-							double lb_value = Double.parseDouble(flow_data[selectedRow][5].toString()) * flow_output_original.get(i - 1) / 100;	
-							LB.add(lb_value);	
-						} else if (i == 0) {
-							LB.add(null);	
-						}
-					} 
-					if (!flow_data[selectedRow][6].toString().equals("null") && flow_data[selectedRow][4].toString().equals("HARD")) {
-						if (i > 0) {
-							double ub_value = Double.parseDouble(flow_data[selectedRow][6].toString()) * flow_output_original.get(i - 1) / 100;	
-							UB.add(ub_value);
-						} else if (i == 0) {
-							UB.add(null);
-						}
-					} 
-				}
-							
-				// Refresh the legend_table------------------------------------------------------------------------
-				List<String> all_bc_id_in_the_selected_row = new ArrayList<String>();
-				for (int i = 0; i < flow_arrangement_info.length; i++) {
-					String[] flow_item = flow_arrangement_info[i].split(" ");
-					for (int id = 0; id < flow_item.length; id++) {
-						if (id == 0) {
-							all_bc_id_in_the_selected_row.add(flow_item[id]);
-						} else {
-							all_bc_id_in_the_selected_row.add("+" + flow_item[id]);
-						}
-					}
-				}
-							
-				int rowCount = all_bc_id_in_the_selected_row.size();
-				int colCount = 6;
-				Object[][] data = new Object[rowCount][colCount];
-				String[] columnNames = new String[] { "col_id" , "bc_id", "bc_description", "FV", "LB", "UB" };
-				
-				// Populate the data matrix
-				DecimalFormat formatter = new DecimalFormat("###,###.###");
-				formatter.setMinimumFractionDigits(0);
-				formatter.setMaximumFractionDigits(0);
-				for (int i = 0; i < rowCount; i++) {
-					for (int row = 0; row < bc_values.length; row++) {
-						if (!all_bc_id_in_the_selected_row.get(i).startsWith("+")) {
-							if (all_bc_id_in_the_selected_row.get(i).equals(bc_values[row][0])) {
-								data[i][1] = bc_values[row][0];
-								data[i][2] = bc_values[row][1];
-							}
-						} else {	
-							if (all_bc_id_in_the_selected_row.get(i).replace("+", "").equals(bc_values[row][0])) {
-								data[i][1] = "+" + bc_values[row][0];
-								data[i][2] = bc_values[row][1];
-							}
-						}
-					}
-				}					
-				// This is because some sigma can have more than 1 term, we only write out for the last term (i.e. sigma includes 17 + 620 -->write the FV, UB, LB for both in the line of 620)
-				int count = -1;
-				for (int i = 0; i < flow_arrangement_info.length; i++) {
-					String[] flow_item = flow_arrangement_info[i].split(" ");
-					count = count + flow_item.length;
-					data[count][0] = String.valueOf(i);
-					data[count][3] = formatter.format((Double) FV.get(i));
-					data[count][4] = (LB.size() == FV.size() && LB.get(i) != null) ? formatter.format((Double) LB.get(i)) : null;
-					data[count][5] = (UB.size() == FV.size() && UB.get(i) != null) ? formatter.format((Double) UB.get(i)) : null;
-				}
-				
-				// Create a table
-				PrismTableModel model = new PrismTableModel(rowCount, colCount, data, columnNames);
-		        legend_table = new JTable(model);
-		        legend_table.setFillsViewportHeight(true);
-		        legend_table.getColumnModel().getColumn(0).setPreferredWidth(80);	// Set width of 1st Column smaller
-		        legend_table.getColumnModel().getColumn(1).setPreferredWidth(80);	// Set width of 1st Column smaller
-		        legend_table.getColumnModel().getColumn(2).setPreferredWidth(300);	// Set width of 2nd Column bigger
-		        legend_table.getColumnModel().getColumn(3).setPreferredWidth(120);	// Set width of 3rd Column smaller
-		        legend_table.getColumnModel().getColumn(4).setPreferredWidth(120);	// Set width of 4th Column smaller
-		        legend_table.getColumnModel().getColumn(5).setPreferredWidth(120);	// Set width of 5th Column smaller
-		        table_list.add(legend_table);
-		        // --------------------------------------------------------------------------------------------------
 		        
-		        
-		        
-		        
-				// Put all into dataset	----------------------------------------------------------------------------
+				// Put all into dataset
 				for (int i = 0; i < flow_arrangement_info.length; i++) {
 					dataset.addValue(flow_output_original.get(i), flow_data[selectedRow][0].toString() + "," + flow_data[selectedRow][1].toString() + ". " + flow_data[selectedRow][2].toString(), String.valueOf(i));
 					
@@ -903,51 +639,8 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 						dataset_UB.addValue(null, UB_rename, String.valueOf(i));
 					}
 				}
-				// --------------------------------------------------------------------------------------------------
 			}
-			
-			// The combo to show data from the only one table user wants to see
-			JScrollPane temporarytable_scroll = new JScrollPane();
-			JTextField temporary_textfield = new JTextField();
-			temporary_textfield.setBackground(Color.white);
-			temporary_textfield.setEditable(false);
-			temporary_textfield.setFocusable(false);
-			
-			JComboBox combo = new JComboBox();	
-			combo.setFocusable(false);
-			for (int selectedRow: selectedRows) {
-				combo.addItem("iteration,flow_id = " + flow_data[selectedRow][0].toString() + "," + flow_data[selectedRow][1].toString());
-			}
-			combo.addActionListener(e -> {
-				for (int i = 0; i < selectedRows.length; i++) {
-					if (("iteration,flow_id = " + flow_data[selectedRows[i]][0].toString() + "," + flow_data[selectedRows[i]][1].toString())
-						.equals(combo.getSelectedItem().toString())) {
-						temporarytable_scroll.setViewportView(table_list.get(i));
-						temporary_textfield.setText(flow_data[selectedRows[i]][2].toString());
-					}
-				}
-			});
-			// 3 lines for showing the first flow data
-			temporary_textfield.setText(flow_data[selectedRows[0]][2].toString());
-			combo.setSelectedItem(flow_data[selectedRows[0]][1].toString());
-			temporarytable_scroll.setViewportView(table_list.get(0));
-			
-			
-			JPanel all_table_panel = new JPanel(new GridBagLayout());
-			GridBagConstraints c = new GridBagConstraints();
-			all_table_panel.add(combo, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
-					0, 0, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
-					7, 0, 0, 0));	// insets top, left, bottom, right
-			all_table_panel.add(temporary_textfield, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
-					1, 0, 1, 1, 1, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
-					7, 0, 0, 0));	// insets top, left, bottom, right
-			all_table_panel.add(temporarytable_scroll, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
-					0, 1, 2, 1, 1, 1, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
-					0, 0, 0, 0));	// insets top, left, bottom, right
-			
-			all_table_panel.setPreferredSize(new Dimension(0, 0));
-			legend_scroll_pane.setBorder(null);
-	        legend_scroll_pane.setViewportView(all_table_panel);
+			refresh_legend_table_for_multiple_chart(flow_data, selectedRows);
 		}
 
 					
@@ -1064,7 +757,6 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 		
 		String chart_name = "Highlight single or multiple flows to view chart";
 		if (selectedRows.length >= 1) {
-			List<JTable> table_list = new ArrayList<JTable>();
 			chart_name = "Comparison for highlighted flows of the Folow Data\n";
 			for (int selectedRow: selectedRows) {
 				chart_name = String.join("   ", chart_name, flow_data[selectedRow][0].toString() + "," + flow_data[selectedRow][1].toString());
@@ -1084,145 +776,13 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 					flow_output_original.add(Double.parseDouble(flow_output_original_info[i]));
 				}				
 													
-				// Calculate FV, LB, UB	-------------------------------------------------------------------------
-				List<Double> FV = new ArrayList<Double>();
-				List<Double> LB = new ArrayList<Double>();
-				List<Double> UB = new ArrayList<Double>();
-				for (int i = 0; i < flow_arrangement_info.length; i++) {
-					FV.add(flow_output_original.get(i));
-					if (!flow_data[selectedRow][5].toString().equals("null") && flow_data[selectedRow][4].toString().equals("HARD")) {
-						if (i > 0) {
-							double lb_value = Double.parseDouble(flow_data[selectedRow][5].toString()) * flow_output_original.get(i - 1) / 100;	
-							LB.add(lb_value);	
-						} else if (i == 0) {
-							LB.add(null);	
-						}
-					} 
-					if (!flow_data[selectedRow][6].toString().equals("null") && flow_data[selectedRow][4].toString().equals("HARD")) {
-						if (i > 0) {
-							double ub_value = Double.parseDouble(flow_data[selectedRow][6].toString()) * flow_output_original.get(i - 1) / 100;	
-							UB.add(ub_value);
-						} else if (i == 0) {
-							UB.add(null);
-						}
-					} 
-				}
-							
-				// Refresh the legend_table------------------------------------------------------------------------
-				List<String> all_bc_id_in_the_selected_row = new ArrayList<String>();
-				for (int i = 0; i < flow_arrangement_info.length; i++) {
-					String[] flow_item = flow_arrangement_info[i].split(" ");
-					for (int id = 0; id < flow_item.length; id++) {
-						if (id == 0) {
-							all_bc_id_in_the_selected_row.add(flow_item[id]);
-						} else {
-							all_bc_id_in_the_selected_row.add("+" + flow_item[id]);
-						}
-					}
-				}
-							
-				int rowCount = all_bc_id_in_the_selected_row.size();
-				int colCount = 6;
-				Object[][] data = new Object[rowCount][colCount];
-				String[] columnNames = new String[] { "col_id" , "bc_id", "bc_description", "FV", "LB", "UB" };
-				
-				// Populate the data matrix
-				DecimalFormat formatter = new DecimalFormat("###,###.###");
-				formatter.setMinimumFractionDigits(0);
-				formatter.setMaximumFractionDigits(0);
-				for (int i = 0; i < rowCount; i++) {
-					for (int row = 0; row < bc_values.length; row++) {
-						if (!all_bc_id_in_the_selected_row.get(i).startsWith("+")) {
-							if (all_bc_id_in_the_selected_row.get(i).equals(bc_values[row][0])) {
-								data[i][1] = bc_values[row][0];
-								data[i][2] = bc_values[row][1];
-							}
-						} else {	
-							if (all_bc_id_in_the_selected_row.get(i).replace("+", "").equals(bc_values[row][0])) {
-								data[i][1] = "+" + bc_values[row][0];
-								data[i][2] = bc_values[row][1];
-							}
-						}
-					}
-				}					
-				// This is because some sigma can have more than 1 term, we only write out for the last term (i.e. sigma includes 17 + 620 -->write the FV, UB, LB for both in the line of 620)
-				int count = -1;
-				for (int i = 0; i < flow_arrangement_info.length; i++) {
-					String[] flow_item = flow_arrangement_info[i].split(" ");
-					count = count + flow_item.length;
-					data[count][0] = String.valueOf(i);
-					data[count][3] = formatter.format((Double) FV.get(i));
-					data[count][4] = (LB.size() == FV.size() && LB.get(i) != null) ? formatter.format((Double) LB.get(i)) : null;
-					data[count][5] = (UB.size() == FV.size() && UB.get(i) != null) ? formatter.format((Double) UB.get(i)) : null;
-				}
-				
-				// Create a table
-				PrismTableModel model = new PrismTableModel(rowCount, colCount, data, columnNames);
-		        legend_table = new JTable(model);
-		        legend_table.setFillsViewportHeight(true);
-		        legend_table.getColumnModel().getColumn(0).setPreferredWidth(80);	// Set width of 1st Column smaller
-		        legend_table.getColumnModel().getColumn(1).setPreferredWidth(80);	// Set width of 1st Column smaller
-		        legend_table.getColumnModel().getColumn(2).setPreferredWidth(300);	// Set width of 2nd Column bigger
-		        legend_table.getColumnModel().getColumn(3).setPreferredWidth(120);	// Set width of 3rd Column smaller
-		        legend_table.getColumnModel().getColumn(4).setPreferredWidth(120);	// Set width of 4th Column smaller
-		        legend_table.getColumnModel().getColumn(5).setPreferredWidth(120);	// Set width of 5th Column smaller
-		        table_list.add(legend_table);
-		        // --------------------------------------------------------------------------------------------------
-		        
-		        
-		        
-		        
-				// Put all into dataset	----------------------------------------------------------------------------
+				// Put all into dataset
 				for (int i = 0; i < flow_arrangement_info.length; i++) {
 					dataset.addValue(flow_output_original.get(i), flow_data[selectedRow][0].toString() + "," + flow_data[selectedRow][1].toString()  + ". " + flow_data[selectedRow][2].toString(), String.valueOf(i));
 				}
-				// --------------------------------------------------------------------------------------------------
 			}
-			
-			// The combo to show data from the only one table user wants to see
-			JScrollPane temporarytable_scroll = new JScrollPane();
-			JTextField temporary_textfield = new JTextField();
-			temporary_textfield.setBackground(Color.white);
-			temporary_textfield.setEditable(false);
-			temporary_textfield.setFocusable(false);
-			
-			JComboBox combo = new JComboBox();	
-			combo.setFocusable(false);
-			for (int selectedRow: selectedRows) {
-				combo.addItem("iteration,flow_id = " + flow_data[selectedRow][0].toString() + "," + flow_data[selectedRow][1].toString());
-			}
-			combo.addActionListener(e -> {
-				for (int i = 0; i < selectedRows.length; i++) {
-					if (("iteration,flow_id = " + flow_data[selectedRows[i]][0].toString() + "," + flow_data[selectedRows[i]][1].toString())
-						.equals(combo.getSelectedItem().toString())) {
-						temporarytable_scroll.setViewportView(table_list.get(i));
-						temporary_textfield.setText(flow_data[selectedRows[i]][2].toString());
-					}
-				}
-			});
-			// 3 lines for showing the first flow data
-			temporary_textfield.setText(flow_data[selectedRows[0]][1].toString());
-			combo.setSelectedItem(flow_data[selectedRows[0]][0].toString());
-			temporarytable_scroll.setViewportView(table_list.get(0));
-			
-			
-			JPanel all_table_panel = new JPanel(new GridBagLayout());
-			GridBagConstraints c = new GridBagConstraints();
-			all_table_panel.add(combo, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
-					0, 0, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
-					7, 0, 0, 0));	// insets top, left, bottom, right
-			all_table_panel.add(temporary_textfield, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
-					1, 0, 1, 1, 1, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
-					7, 0, 0, 0));	// insets top, left, bottom, right
-			all_table_panel.add(temporarytable_scroll, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
-					0, 1, 2, 1, 1, 1, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
-					0, 0, 0, 0));	// insets top, left, bottom, right
-			
-			all_table_panel.setPreferredSize(new Dimension(0, 0));
-			legend_scroll_pane.setBorder(null);
-	        legend_scroll_pane.setViewportView(all_table_panel);
+			refresh_legend_table_for_multiple_chart(flow_data, selectedRows);
 		}
-
 
 		Chart charts = new Chart();
 		return charts.create_multiple_stacked_bar1_chart(chart_name, "col_id (stacked by flows)", "Flow Value: FV", dataset);
@@ -1238,7 +798,6 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 		
 		String chart_name = "Highlight single or multiple flows to view chart";
 		if (selectedRows.length >= 1) {
-			List<JTable> table_list = new ArrayList<JTable>();
 			chart_name = "Comparison for highlighted flows of the Folow Data\n";
 			for (int selectedRow: selectedRows) {
 				chart_name = String.join("   ", chart_name, flow_data[selectedRow][0].toString() + "," + flow_data[selectedRow][1].toString());
@@ -1257,149 +816,276 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 				for (int i = 0; i < flow_output_original_info.length; i++) {
 					flow_output_original.add(Double.parseDouble(flow_output_original_info[i]));
 				}				
-													
-				// Calculate FV, LB, UB	-------------------------------------------------------------------------
-				List<Double> FV = new ArrayList<Double>();
-				List<Double> LB = new ArrayList<Double>();
-				List<Double> UB = new ArrayList<Double>();
-				for (int i = 0; i < flow_arrangement_info.length; i++) {
-					FV.add(flow_output_original.get(i));
-					if (!flow_data[selectedRow][5].toString().equals("null") && flow_data[selectedRow][4].toString().equals("HARD")) {
-						if (i > 0) {
-							double lb_value = Double.parseDouble(flow_data[selectedRow][5].toString()) * flow_output_original.get(i - 1) / 100;	
-							LB.add(lb_value);	
-						} else if (i == 0) {
-							LB.add(null);	
-						}
-					} 
-					if (!flow_data[selectedRow][6].toString().equals("null") && flow_data[selectedRow][4].toString().equals("HARD")) {
-						if (i > 0) {
-							double ub_value = Double.parseDouble(flow_data[selectedRow][6].toString()) * flow_output_original.get(i - 1) / 100;	
-							UB.add(ub_value);
-						} else if (i == 0) {
-							UB.add(null);
-						}
-					} 
-				}
-							
-				// Refresh the legend_table------------------------------------------------------------------------
-				List<String> all_bc_id_in_the_selected_row = new ArrayList<String>();
-				for (int i = 0; i < flow_arrangement_info.length; i++) {
-					String[] flow_item = flow_arrangement_info[i].split(" ");
-					for (int id = 0; id < flow_item.length; id++) {
-						if (id == 0) {
-							all_bc_id_in_the_selected_row.add(flow_item[id]);
-						} else {
-							all_bc_id_in_the_selected_row.add("+" + flow_item[id]);
-						}
-					}
-				}
-							
-				int rowCount = all_bc_id_in_the_selected_row.size();
-				int colCount = 6;
-				Object[][] data = new Object[rowCount][colCount];
-				String[] columnNames = new String[] { "col_id" , "bc_id", "bc_description", "FV", "LB", "UB" };
-				
-				// Populate the data matrix
-				DecimalFormat formatter = new DecimalFormat("###,###.###");
-				formatter.setMinimumFractionDigits(0);
-				formatter.setMaximumFractionDigits(0);
-				for (int i = 0; i < rowCount; i++) {
-					for (int row = 0; row < bc_values.length; row++) {
-						if (!all_bc_id_in_the_selected_row.get(i).startsWith("+")) {
-							if (all_bc_id_in_the_selected_row.get(i).equals(bc_values[row][0])) {
-								data[i][1] = bc_values[row][0];
-								data[i][2] = bc_values[row][1];
-							}
-						} else {	
-							if (all_bc_id_in_the_selected_row.get(i).replace("+", "").equals(bc_values[row][0])) {
-								data[i][1] = "+" + bc_values[row][0];
-								data[i][2] = bc_values[row][1];
-							}
-						}
-					}
-				}					
-				// This is because some sigma can have more than 1 term, we only write out for the last term (i.e. sigma includes 17 + 620 -->write the FV, UB, LB for both in the line of 620)
-				int count = -1;
-				for (int i = 0; i < flow_arrangement_info.length; i++) {
-					String[] flow_item = flow_arrangement_info[i].split(" ");
-					count = count + flow_item.length;
-					data[count][0] = String.valueOf(i);
-					data[count][3] = formatter.format((Double) FV.get(i));
-					data[count][4] = (LB.size() == FV.size() && LB.get(i) != null) ? formatter.format((Double) LB.get(i)) : null;
-					data[count][5] = (UB.size() == FV.size() && UB.get(i) != null) ? formatter.format((Double) UB.get(i)) : null;
-				}
-				
-				// Create a table
-				PrismTableModel model = new PrismTableModel(rowCount, colCount, data, columnNames);
-		        legend_table = new JTable(model);
-		        legend_table.setFillsViewportHeight(true);
-		        legend_table.getColumnModel().getColumn(0).setPreferredWidth(80);	// Set width of 1st Column smaller
-		        legend_table.getColumnModel().getColumn(1).setPreferredWidth(80);	// Set width of 1st Column smaller
-		        legend_table.getColumnModel().getColumn(2).setPreferredWidth(300);	// Set width of 2nd Column bigger
-		        legend_table.getColumnModel().getColumn(3).setPreferredWidth(120);	// Set width of 3rd Column smaller
-		        legend_table.getColumnModel().getColumn(4).setPreferredWidth(120);	// Set width of 4th Column smaller
-		        legend_table.getColumnModel().getColumn(5).setPreferredWidth(120);	// Set width of 5th Column smaller
-		        table_list.add(legend_table);
-		        // --------------------------------------------------------------------------------------------------
 		        
-		        
-		        
-		        
-				// Put all into dataset	----------------------------------------------------------------------------
+				// Put all into dataset
 				for (int i = 0; i < flow_arrangement_info.length; i++) {
 					dataset.addValue(flow_output_original.get(i), /*"col_id = " +*/ String.valueOf(i), flow_data[selectedRow][0].toString() + "," + flow_data[selectedRow][1].toString());
 				}
-				// --------------------------------------------------------------------------------------------------
 			}
-			
-			// The combo to show data from the only one table user wants to see
-			JScrollPane temporarytable_scroll = new JScrollPane();
-			JTextField temporary_textfield = new JTextField();
-			temporary_textfield.setBackground(Color.white);
-			temporary_textfield.setEditable(false);
-			temporary_textfield.setFocusable(false);
-			
-			JComboBox combo = new JComboBox();	
-			combo.setFocusable(false);
-			for (int selectedRow: selectedRows) {
-				combo.addItem("iteration,flow_id = " + flow_data[selectedRow][0].toString() + "," + flow_data[selectedRow][1].toString());
-			}
-			combo.addActionListener(e -> {
-				for (int i = 0; i < selectedRows.length; i++) {
-					if (("iteration,flow_id = " + flow_data[selectedRows[i]][0].toString() + "," + flow_data[selectedRows[i]][1].toString())
-						.equals(combo.getSelectedItem().toString())) {
-						temporarytable_scroll.setViewportView(table_list.get(i));
-						temporary_textfield.setText(flow_data[selectedRows[i]][2].toString());
-					}
-				}
-			});
-			// 3 lines for showing the first flow data
-			temporary_textfield.setText(flow_data[selectedRows[0]][1].toString());
-			combo.setSelectedItem(flow_data[selectedRows[0]][0].toString());
-			temporarytable_scroll.setViewportView(table_list.get(0));
-			
-			
-			JPanel all_table_panel = new JPanel(new GridBagLayout());
-			GridBagConstraints c = new GridBagConstraints();
-			all_table_panel.add(combo, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
-					0, 0, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
-					7, 0, 0, 0));	// insets top, left, bottom, right
-			all_table_panel.add(temporary_textfield, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
-					1, 0, 1, 1, 1, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
-					7, 0, 0, 0));	// insets top, left, bottom, right
-			all_table_panel.add(temporarytable_scroll, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
-					0, 1, 2, 1, 1, 1, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
-					0, 0, 0, 0));	// insets top, left, bottom, right
-			
-			all_table_panel.setPreferredSize(new Dimension(0, 0));
-			legend_scroll_pane.setBorder(null);
-	        legend_scroll_pane.setViewportView(all_table_panel);
+			refresh_legend_table_for_multiple_chart(flow_data, selectedRows);
 		}
-
 		
 		Chart charts = new Chart();
 		return charts.create_multiple_stacked_bar2_chart(chart_name, "flow (stacked by col_id)", "Flow Value: FV", dataset);
 	}	
+	
+	
+	
+	private void refresh_legend_table_for_single_chart(Object[] flow_data_in_selected_row) {
+		// Read flow_arrangement
+		String[] flow_arrangement_info = flow_data_in_selected_row[3].toString().split(";");	// Read the whole cell 'flow_arrangement'
+		total_columns_of_the_chart = flow_arrangement_info.length;
+		List<String> flow_arrangement = new ArrayList<String>();
+		for (int i = 0; i < flow_arrangement_info.length; i++) {
+			flow_arrangement.add(flow_arrangement_info[i]);
+		}
+		
+		// Read flow_output_original
+		String[] flow_output_original_info = flow_data_in_selected_row[7].toString().split(";");	// Read the whole cell 'flow_output_original'
+		List<Double> flow_output_original = new ArrayList<Double>();
+		for (int i = 0; i < flow_output_original_info.length; i++) {
+			flow_output_original.add(Double.parseDouble(flow_output_original_info[i]));
+		}				
+											
+		// Calculate FV, LB, UB	-------------------------------------------------------------------------
+		List<Double> FV = new ArrayList<Double>();
+		List<Double> LB = new ArrayList<Double>();
+		List<Double> UB = new ArrayList<Double>();
+		for (int i = 0; i < flow_arrangement_info.length; i++) {
+			FV.add(flow_output_original.get(i));
+			if (!flow_data_in_selected_row[5].toString().equals("null") && flow_data_in_selected_row[4].toString().equals("HARD")) {
+				if (i > 0) {
+					double lb_value = Double.parseDouble(flow_data_in_selected_row[5].toString()) * flow_output_original.get(i - 1) / 100;	
+					LB.add(lb_value);	
+				} else if (i == 0) {
+					LB.add(null);	
+				}
+			} 
+			if (!flow_data_in_selected_row[6].toString().equals("null") && flow_data_in_selected_row[4].toString().equals("HARD")) {
+				if (i > 0) {
+					double ub_value = Double.parseDouble(flow_data_in_selected_row[6].toString()) * flow_output_original.get(i - 1) / 100;	
+					UB.add(ub_value);
+				} else if (i == 0) {
+					UB.add(null);
+				}
+			} 
+		}
+					
+		// Refresh the legend_table------------------------------------------------------------------------
+		List<String> all_bc_id_in_the_selected_row = new ArrayList<String>();
+		for (int i = 0; i < flow_arrangement_info.length; i++) {
+			String[] flow_item = flow_arrangement_info[i].split(" ");
+			for (int id = 0; id < flow_item.length; id++) {
+				if (id == 0) {
+					all_bc_id_in_the_selected_row.add(flow_item[id]);
+				} else {
+					all_bc_id_in_the_selected_row.add("+" + flow_item[id]);
+				}
+			}
+		}
+					
+		int rowCount = all_bc_id_in_the_selected_row.size();
+		int colCount = 5;
+		Object[][] data = new Object[rowCount][colCount];
+		String[] columnNames = new String[] { "bc_id", "bc_description", "FV", "LB", "UB" };
+		
+		// Populate the data matrix
+		DecimalFormat formatter = new DecimalFormat("###,###.###");
+		formatter.setMinimumFractionDigits(0);
+		formatter.setMaximumFractionDigits(0);
+		for (int i = 0; i < rowCount; i++) {
+			for (int row = 0; row < bc_values.length; row++) {
+				if (!all_bc_id_in_the_selected_row.get(i).startsWith("+")) {
+					if (all_bc_id_in_the_selected_row.get(i).equals(bc_values[row][0])) {
+						data[i][0] = bc_values[row][0];
+						data[i][1] = bc_values[row][1];
+					}
+				} else {	
+					if (all_bc_id_in_the_selected_row.get(i).replace("+", "").equals(bc_values[row][0])) {
+						data[i][0] = "+" + bc_values[row][0];
+						data[i][1] = bc_values[row][1];
+					}
+				}
+			}
+		}					
+		// This is because some sigma can have more than 1 term, we only write out for the last term (i.e. sigma includes 17 + 620 -->write the FV, UB, LB for both in the line of 620)
+		int count = -1;
+		for (int i = 0; i < flow_arrangement_info.length; i++) {
+			String[] flow_item = flow_arrangement_info[i].split(" ");
+			count = count + flow_item.length;
+			data[count][2] = formatter.format((Double) FV.get(i));
+			data[count][3] = (LB.size() == FV.size() && LB.get(i) != null) ? formatter.format((Double) LB.get(i)) : null;
+			data[count][4] = (UB.size() == FV.size() && UB.get(i) != null) ? formatter.format((Double) UB.get(i)) : null;
+		}
+		
+		// Create a table
+		PrismTableModel model = new PrismTableModel(rowCount, colCount, data, columnNames);
+        legend_table = new JTable(model)  {
+			@Override	// Implement table cell tool tips           
+			public String getToolTipText(MouseEvent e) {
+				java.awt.Point p = e.getPoint();
+				int row = rowAtPoint(p);
+				int col = columnAtPoint(p);
+				String tip = (legend_table.getColumnName(col).equals("bc_description") && row >= 0 && getValueAt(row, col) != null) ? getValueAt(row, col).toString() : null;
+				return tip;
+			}	
+		};
+        legend_table.setFillsViewportHeight(true);
+        legend_table.getColumnModel().getColumn(0).setPreferredWidth(60);	// Set width of 1st Column smaller
+        legend_table.getColumnModel().getColumn(1).setPreferredWidth(300);	// Set width of 2nd Column bigger
+        legend_table.getColumnModel().getColumn(2).setPreferredWidth(120);	// Set width of 3rd Column smaller
+        legend_table.getColumnModel().getColumn(3).setPreferredWidth(120);	// Set width of 4th Column smaller
+        legend_table.getColumnModel().getColumn(4).setPreferredWidth(120);	// Set width of 5th Column smaller
+        legend_scroll_pane.setViewportView(legend_table);
+	}
+	
+	private void refresh_legend_table_for_multiple_chart(Object[][] flow_data, int[] selectedRows) {
+		List<JTable> table_list = new ArrayList<JTable>();
+		for (int selectedRow: selectedRows) {
+			// Read flow_arrangement
+			String[] flow_arrangement_info = flow_data[selectedRow][3].toString().split(";");	// Read the whole cell 'flow_arrangement'
+			total_columns_of_the_chart = flow_arrangement_info.length;
+			List<String> flow_arrangement = new ArrayList<String>();
+			for (int i = 0; i < flow_arrangement_info.length; i++) {
+				flow_arrangement.add(flow_arrangement_info[i]);
+			}
+			
+			// Read flow_output_original
+			String[] flow_output_original_info = flow_data[selectedRow][7].toString().split(";");	// Read the whole cell 'flow_output_original'
+			List<Double> flow_output_original = new ArrayList<Double>();
+			for (int i = 0; i < flow_output_original_info.length; i++) {
+				flow_output_original.add(Double.parseDouble(flow_output_original_info[i]));
+			}				
+												
+			// Calculate FV, LB, UB	-------------------------------------------------------------------------
+			List<Double> FV = new ArrayList<Double>();
+			List<Double> LB = new ArrayList<Double>();
+			List<Double> UB = new ArrayList<Double>();
+			for (int i = 0; i < flow_arrangement_info.length; i++) {
+				FV.add(flow_output_original.get(i));
+				if (!flow_data[selectedRow][5].toString().equals("null") && flow_data[selectedRow][4].toString().equals("HARD")) {
+					if (i > 0) {
+						double lb_value = Double.parseDouble(flow_data[selectedRow][5].toString()) * flow_output_original.get(i - 1) / 100;	
+						LB.add(lb_value);	
+					} else if (i == 0) {
+						LB.add(null);	
+					}
+				} 
+				if (!flow_data[selectedRow][6].toString().equals("null") && flow_data[selectedRow][4].toString().equals("HARD")) {
+					if (i > 0) {
+						double ub_value = Double.parseDouble(flow_data[selectedRow][6].toString()) * flow_output_original.get(i - 1) / 100;	
+						UB.add(ub_value);
+					} else if (i == 0) {
+						UB.add(null);
+					}
+				} 
+			}
+						
+			// Refresh the legend_table------------------------------------------------------------------------
+			List<String> all_bc_id_in_the_selected_row = new ArrayList<String>();
+			for (int i = 0; i < flow_arrangement_info.length; i++) {
+				String[] flow_item = flow_arrangement_info[i].split(" ");
+				for (int id = 0; id < flow_item.length; id++) {
+					if (id == 0) {
+						all_bc_id_in_the_selected_row.add(flow_item[id]);
+					} else {
+						all_bc_id_in_the_selected_row.add("+" + flow_item[id]);
+					}
+				}
+			}
+						
+			int rowCount = all_bc_id_in_the_selected_row.size();
+			int colCount = 6;
+			Object[][] data = new Object[rowCount][colCount];
+			String[] columnNames = new String[] { "col_id" , "bc_id", "bc_description", "FV", "LB", "UB" };
+			
+			// Populate the data matrix
+			DecimalFormat formatter = new DecimalFormat("###,###.###");
+			formatter.setMinimumFractionDigits(0);
+			formatter.setMaximumFractionDigits(0);
+			for (int i = 0; i < rowCount; i++) {
+				for (int row = 0; row < bc_values.length; row++) {
+					if (!all_bc_id_in_the_selected_row.get(i).startsWith("+")) {
+						if (all_bc_id_in_the_selected_row.get(i).equals(bc_values[row][0])) {
+							data[i][1] = bc_values[row][0];
+							data[i][2] = bc_values[row][1];
+						}
+					} else {	
+						if (all_bc_id_in_the_selected_row.get(i).replace("+", "").equals(bc_values[row][0])) {
+							data[i][1] = "+" + bc_values[row][0];
+							data[i][2] = bc_values[row][1];
+						}
+					}
+				}
+			}					
+			// This is because some sigma can have more than 1 term, we only write out for the last term (i.e. sigma includes 17 + 620 -->write the FV, UB, LB for both in the line of 620)
+			int count = -1;
+			for (int i = 0; i < flow_arrangement_info.length; i++) {
+				String[] flow_item = flow_arrangement_info[i].split(" ");
+				count = count + flow_item.length;
+				data[count][0] = String.valueOf(i);
+				data[count][3] = formatter.format((Double) FV.get(i));
+				data[count][4] = (LB.size() == FV.size() && LB.get(i) != null) ? formatter.format((Double) LB.get(i)) : null;
+				data[count][5] = (UB.size() == FV.size() && UB.get(i) != null) ? formatter.format((Double) UB.get(i)) : null;
+			}
+			
+			// Create a table
+			PrismTableModel model = new PrismTableModel(rowCount, colCount, data, columnNames);
+	        legend_table = new JTable(model);
+	        legend_table.setFillsViewportHeight(true);
+	        legend_table.getColumnModel().getColumn(0).setPreferredWidth(80);	// Set width of 1st Column smaller
+	        legend_table.getColumnModel().getColumn(1).setPreferredWidth(80);	// Set width of 1st Column smaller
+	        legend_table.getColumnModel().getColumn(2).setPreferredWidth(300);	// Set width of 2nd Column bigger
+	        legend_table.getColumnModel().getColumn(3).setPreferredWidth(120);	// Set width of 3rd Column smaller
+	        legend_table.getColumnModel().getColumn(4).setPreferredWidth(120);	// Set width of 4th Column smaller
+	        legend_table.getColumnModel().getColumn(5).setPreferredWidth(120);	// Set width of 5th Column smaller
+	        table_list.add(legend_table);
+		}
+        
+
+		
+		// The combo to show data from the only one table user wants to see
+		JScrollPane temporarytable_scroll = new JScrollPane();
+		JTextField temporary_textfield = new JTextField();
+		temporary_textfield.setBackground(Color.white);
+		temporary_textfield.setEditable(false);
+		temporary_textfield.setFocusable(false);
+		
+		JComboBox combo = new JComboBox();	
+		combo.setFocusable(false);
+		for (int selectedRow: selectedRows) {
+			combo.addItem("iteration,flow_id = " + flow_data[selectedRow][0].toString() + "," + flow_data[selectedRow][1].toString());
+		}
+		combo.addActionListener(e -> {
+			for (int i = 0; i < selectedRows.length; i++) {
+				if (("iteration,flow_id = " + flow_data[selectedRows[i]][0].toString() + "," + flow_data[selectedRows[i]][1].toString())
+					.equals(combo.getSelectedItem().toString())) {
+					temporarytable_scroll.setViewportView(table_list.get(i));
+					temporary_textfield.setText(flow_data[selectedRows[i]][2].toString());
+				}
+			}
+		});
+		// 3 lines for showing the first flow data
+		temporary_textfield.setText(flow_data[selectedRows[0]][2].toString());
+		combo.setSelectedItem(flow_data[selectedRows[0]][1].toString());
+		temporarytable_scroll.setViewportView(table_list.get(0));
+		
+		
+		JPanel all_table_panel = new JPanel(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		all_table_panel.add(combo, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
+				0, 0, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				7, 0, 0, 0));	// insets top, left, bottom, right
+		all_table_panel.add(temporary_textfield, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
+				1, 0, 1, 1, 1, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				7, 0, 0, 0));	// insets top, left, bottom, right
+		all_table_panel.add(temporarytable_scroll, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+				0, 1, 2, 1, 1, 1, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				0, 0, 0, 0));	// insets top, left, bottom, right
+		
+		all_table_panel.setPreferredSize(new Dimension(0, 0));
+		legend_scroll_pane.setBorder(null);
+        legend_scroll_pane.setViewportView(all_table_panel);
+	}
 }	
 

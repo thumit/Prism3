@@ -1170,6 +1170,7 @@ All changes in this block are associated with PrismAlpha2.0.01.jar, Prism-Formul
 487. UIs for charts of output_06 and output_07 display and behave the same way
 488. icon changes for the JTree nodes to notify whether the output could be represented by graph-charts or not
 489. Fix counting the last_soved_iteration from output_01, and fix deleting the output without iteration index (in Solve_Iterations)
-490. Activate the no-merge option when either: 1) input_10 and input_11 do not exist 2) input_10 and input_11 do exist but all the state_id is blank (note that BLANK is not NUll, Read_Input - read_state_id). Read_Input - read_state_id is customized to make map_prescription_and_row_id_to_state_id null when the read is failed. null map would consequently apply the no-merge option . Otherwise (not null map) merge option would be applied.
+490. Activate the no-merge option when either 1) input_10 and input_11 do not exist 2) input_10 and input_11 do exist but all the state_id is blank (note that BLANK is not NUll, Read_Input - read_state_id). Read_Input - read_state_id is customized to make map_prescription_and_row_id_to_state_id null when the read is failed. null map would consequently apply the no-merge option. Otherwise (not null map) merge option would be applied.
 491. Summarize output_06 and output_07 only when the outputs exist
-492. New classes: Chart and Char_Rotator to simplify the summarize_output_06 and summarize_output_07 codes and create potential future usage. 
+492. New classes - Chart and Char_Rotator to simplify the summarize_output_06 and summarize_output_07 codes and create potential future usage. 
+493. Output_Panel_Flow_Constraints - Separate the refresh of legend table when clicking on either single or multiple charts. This help trim code significantly.
