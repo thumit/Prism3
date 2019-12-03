@@ -23,17 +23,12 @@ import java.awt.Dimension;
 import java.awt.GradientPaint;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.RadialGradientPaint;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Point2D;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JComboBox;
@@ -59,24 +54,19 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.block.BlockBorder;
 import org.jfree.chart.labels.ItemLabelAnchor;
 import org.jfree.chart.labels.ItemLabelPosition;
-import org.jfree.chart.labels.PieSectionLabelGenerator;
 import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
-import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.DatasetRenderingOrder;
-import org.jfree.chart.plot.PieLabelLinkStyle;
 import org.jfree.chart.plot.PiePlot3D;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.chart.renderer.category.LevelRenderer;
-import org.jfree.chart.title.TextTitle;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.category.SlidingCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.ui.RectangleEdge;
 import org.jfree.ui.TextAnchor;
-import org.jfree.util.Rotation;
 
 import prism_convenience.ColorUtil;
 import prism_convenience.IconHandle;
@@ -325,7 +315,7 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 				
 		    	// Rotation effect
 				if (radio_button[1].isSelected()) {	// Single Flow
-			        final Rotator rotator = new Rotator((PiePlot3D) chart.getPlot());
+			        final Chart_Rotator rotator = new Chart_Rotator((PiePlot3D) chart.getPlot());
 			        rotator.start();           
 			        chart_panel.addMouseListener(new MouseAdapter() { // Add listener to projectTree
 						boolean is_rotating = true;
@@ -645,12 +635,6 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 	
 	
 	
-	
-	
-	
-	
-	
-	
 	@SuppressWarnings("deprecation")
 	private JFreeChart create_single_pie_chart(JTable flow_table, Object[][] flow_data, int selectedRow) {			
 		final DefaultPieDataset dataset = new DefaultPieDataset( );
@@ -765,162 +749,9 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 		}
 
 					
-		
-		
-		// Create 3D pie chart--------------------------------------------------------------------------------------------------
-		JFreeChart chart = ChartFactory.createPieChart3D(chart_name, // chart title
-				dataset, // dataset
-				true, // include legend
-				true, false);		
-		
-		// 3 lines to create another legend
-		TextTitle legendText = new TextTitle("list of bc_id");
-		legendText.setPosition(RectangleEdge.BOTTOM);
-		chart.addSubtitle(legendText);
-		
-		chart.setBorderVisible(true);
-		chart.setBackgroundPaint(Color.LIGHT_GRAY);
-		chart.getLegend().setBackgroundPaint(null);
-		chart.getLegend().setPosition(RectangleEdge.BOTTOM);
-		chart.getLegend().setItemFont(new java.awt.Font("defaultFont", java.awt.Font.PLAIN, 13));
-		chart.getTitle().setFont(new java.awt.Font("defaultFont", java.awt.Font.BOLD, 14));
-
-		PiePlot3D plot = (PiePlot3D) chart.getPlot();
-		plot.setOutlinePaint(null);
-		plot.setStartAngle(135);
-        plot.setDirection(Rotation.CLOCKWISE);
-        plot.setForegroundAlpha(0.6f);
-        plot.setBackgroundPaint(null);
-//		plot.setNoDataMessage("Highlight single or multiple existing strata to view chart");
-		plot.setExplodePercent(1, 0.1);
-		
-		PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(
-	            "{0}: {1} ({2})", new DecimalFormat("###,###"), new DecimalFormat("##.#%"));			// "{0}: {1} ({2})"
-	    plot.setLabelGenerator(gen);	    
-	    plot.setLabelBackgroundPaint(null);
-	    plot.setLabelShadowPaint(null);
-	    plot.setLabelOutlinePaint(null);
-	    plot.setLabelLinkStyle(PieLabelLinkStyle.QUAD_CURVE);
-	    
-	    // Customize colors
-//	    plot.setSectionPaint("Natural Growth", new Color(0, 255, 0));
-//		plot.setSectionPaint("Prescribed Burn", new Color(255, 255, 0));
-//		plot.setSectionPaint("Group Selection", new Color(240, 248, 255));
-//	    plot.setSectionPaint("Even Age", new Color(51, 255, 255));
-//	    plot.setSectionPaint("Mixed Severity Wildfire", new Color(255, 140, 0));
-//	    plot.setSectionPaint("Severe Bark Beetle", new Color(255, 51, 0));
-		
-	    
-	    GradientPaint[] gp_array = new GradientPaint[100];
-		gp_array[0] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(220,20,60), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,160,122), 255));
-		gp_array[1] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(22,30,60), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(25,200,122), 255));
-		gp_array[2] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,105,0), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(210,215,30), 255));
-		gp_array[3] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(50,100,50), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(0,255,0), 255));
-		gp_array[4] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(199,105,60), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,255,255), 255));
-		gp_array[5] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(0,128,209), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(32,206,170), 255));
-		gp_array[6] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(186,85,211), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(248,255,255), 255));
-		gp_array[7] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(2,85,211), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(248,255,255), 255));
-		gp_array[8] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,160,153), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,255,120), 255));
-		gp_array[9] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(119,136,153), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,255,255), 255));
-	    for (int i = 0; i < dataset.getItemCount(); i++){
-	    	if (i % 100 <= 9) {
-		    	Point2D center = new Point2D.Float(0, 0);
-				float radius = 500;
-				float[] dist = { 0.0f, 0.4f, 0.6f, 1.0f };
-				Color[] colors = { gp_array[i % 100].getColor1(), gp_array[i % 100].getColor1(), gp_array[i % 100].getColor2(), gp_array[i % 100].getColor1() };
-				RadialGradientPaint p = new RadialGradientPaint(center, radius, dist, colors);
-				plot.setSectionPaint(dataset.getKey(i), p);
-	    	}
-	    }		
-		// ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-		return chart;
+		Chart charts = new Chart();
+		return charts.create_single_pie_chart(chart_name, "list of bc_id", dataset);
 	}	
-	
-	// I am so smart to not use timer
-	private class Rotator {
-		private ScheduledExecutorService executor;
-		private Runnable task;
-		private double angle = 135;
-
-		Rotator(final PiePlot3D plot) {
-			task = new Runnable() {
-				public void run() {
-					plot.setStartAngle(angle);
-					angle = angle + (double) 0.05;
-					if (angle == 360) {
-						angle = 0;
-					}
-
-				}
-			};
-	    }
-
-	    public void stop() {
-	    	 executor.shutdown(); // shutdown will allow the final iteration to finish executing where shutdownNow() will kill it immediately
-	    }
-	    
-	    public void start() {
-	    	int initialDelay = 0;
-		    int period = 5;	// change this number would make the text run slower or faster
-		    executor = Executors.newScheduledThreadPool(1);
-		    executor.scheduleAtFixedRate(task, initialDelay, period, TimeUnit.MILLISECONDS);
-	    }
-	}
-	
-	
-	
-	
-//	// ****************************************************************************
-//	// * JFREECHART DEVELOPER GUIDE                                               *
-//	// * The JFreeChart Developer Guide, written by David Gilbert, is available   *
-//	// * to purchase from Object Refinery Limited:                                *
-//	// *                                                                          *
-//	// * http://www.object-refinery.com/jfreechart/guide.html                     *
-//	// *                                                                          *
-//	// * Sales are used to provide funding for the JFreeChart project - please    * 
-//	// * support us so that we can continue developing free software.             *
-//	// ****************************************************************************
-//	// The rotator.
-//	private class Rotator extends Timer implements ActionListener {
-//
-//	    /** The plot. */
-//	    private PiePlot3D plot;
-//
-//	    /** The angle. */
-//	    private double angle = 135;
-//
-//	    /**
-//	     * Constructor.
-//	     *
-//	     * @param plot  the plot.
-//	     */
-//	    Rotator(final PiePlot3D plot) {
-//	        super(15, null);
-//	        this.plot = plot;
-//	        addActionListener(this);
-//	    }
-//
-//	    /**
-//	     * Modifies the starting angle.
-//	     *
-//	     * @param event  the action event.
-//	     */
-//	    public void actionPerformed(final ActionEvent event) {
-//	        this.plot.setStartAngle(this.angle);
-//	        this.angle = this.angle + (double) 0.1;
-//	        if (this.angle == 360) {
-//	            this.angle = 0;
-//	        }
-//	    }
-//
-//	}	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	
@@ -1227,15 +1058,6 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	@SuppressWarnings("deprecation")
 	private JFreeChart create_multiple_stacked_bar1_chart(JTable this_table, Object[][] flow_data, int[] selectedRows) {			
 		final DefaultCategoryDataset dataset = new DefaultCategoryDataset( );
@@ -1402,58 +1224,9 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 		}
 
 
-		
-		
-		
-		// Create 3D bar chart--------------------------------------------------------------------------------------------------
-		JFreeChart chart = ChartFactory.createStackedBarChart(chart_name, "col_id (stacked by flows)", "Flow Value: FV",
-				dataset, PlotOrientation.VERTICAL, true, true, false);		
-		chart.setBorderVisible(true);
-		chart.setBackgroundPaint(Color.LIGHT_GRAY);
-		chart.getLegend().setBackgroundPaint(null);
-		chart.getLegend().setPosition(RectangleEdge.BOTTOM);
-//		chart.getLegend().setItemFont(new java.awt.Font("defaultFont", java.awt.Font.PLAIN, 13));
-		chart.getTitle().setFont(new java.awt.Font("defaultFont", java.awt.Font.BOLD, 14));
-				
-		
-		// Set color for each different bar
-		CategoryPlot plot = chart.getCategoryPlot();
-        BarRenderer renderer = (BarRenderer) plot.getRenderer();
-	    renderer.setItemMargin(0.05);	
-	    renderer.setMaximumBarWidth(.15); // set maximum width to 15% of chart	    
-	    // show value in the middle of column---------
-	    renderer.setItemLabelGenerator(
-				new StandardCategoryItemLabelGenerator("{2}", new DecimalFormat("###,###")));
-	    try {
-			renderer.setItemLabelFont(new java.awt.Font("defaultFont", java.awt.Font.PLAIN, 10));
-			renderer.setItemLabelFont(new java.awt.Font("Sitka Small", java.awt.Font.PLAIN, 10));
-		} catch (Exception e) {
-		}
-	    renderer.setItemLabelsVisible(true);
-		renderer.setPositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.CENTER, TextAnchor.CENTER, TextAnchor.CENTER, -Math.PI / 2));
-	    renderer.setBaseItemLabelsVisible(true);
-		renderer.setDrawBarOutline(false);	
-
-		
-		GradientPaint[] gp_array = new GradientPaint[100];
-		gp_array[0] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(220,20,60), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,160,122), 255));
-		gp_array[1] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(22,30,60), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(25,200,122), 255));
-		gp_array[2] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,105,0), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(210,215,30), 255));
-		gp_array[3] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(50,100,50), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(0,255,0), 255));
-		gp_array[4] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(199,105,60), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,255,255), 255));
-		gp_array[5] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(0,128,209), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(32,206,170), 255));
-		gp_array[6] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(186,85,211), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(248,255,255), 255));
-		gp_array[7] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(2,85,211), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(248,255,255), 255));
-		gp_array[8] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,160,153), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,255,120), 255));
-		gp_array[9] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(119,136,153), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,255,255), 255));
-		for (int i = 0; i < dataset.getRowCount(); i++){
-			renderer.setSeriesPaint(i, gp_array[i % 100]);		// use gradient for better color: only assign some, the rest is auto
-		}	
-		// ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-		plot.setOutlineVisible(false);
-		return chart;
+		Chart charts = new Chart();
+		return charts.create_multiple_stacked_bar1_chart(chart_name, "col_id (stacked by flows)", "Flow Value: FV", dataset);
 	}	
-	
 	
 	
 	
@@ -1624,58 +1397,9 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 	        legend_scroll_pane.setViewportView(all_table_panel);
 		}
 
-
 		
-		
-		
-		// Create 3D bar chart--------------------------------------------------------------------------------------------------
-		JFreeChart chart = ChartFactory.createStackedBarChart(chart_name, "flow (stacked by col_id)", "Flow Value: FV",
-				dataset, PlotOrientation.VERTICAL, true, true, false);		
-		chart.setBorderVisible(true);
-		chart.setBackgroundPaint(Color.LIGHT_GRAY);
-		chart.getLegend().setBackgroundPaint(null);
-		chart.getLegend().setPosition(RectangleEdge.BOTTOM);
-//		chart.getLegend().setItemFont(new java.awt.Font("defaultFont", java.awt.Font.PLAIN, 13));
-		chart.getTitle().setFont(new java.awt.Font("defaultFont", java.awt.Font.BOLD, 14));
-				
-		
-		
-		// Set color for each different bar
-		CategoryPlot plot = chart.getCategoryPlot();
-        BarRenderer renderer = (BarRenderer) plot.getRenderer();
-	    renderer.setItemMargin(0.05);	
-	    renderer.setMaximumBarWidth(.15); // set maximum width to 15% of chart	    
-	    // show value in the middle of column---------
-	    renderer.setItemLabelGenerator(
-				new StandardCategoryItemLabelGenerator("{2}", new DecimalFormat("###,###")));
-	    try {
-			renderer.setItemLabelFont(new java.awt.Font("defaultFont", java.awt.Font.PLAIN, 10));
-			renderer.setItemLabelFont(new java.awt.Font("Sitka Small", java.awt.Font.PLAIN, 10));
-		} catch (Exception e) {
-		}
-	    renderer.setItemLabelsVisible(true);
-		renderer.setPositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.CENTER, TextAnchor.CENTER, TextAnchor.CENTER, -Math.PI / 2));
-	    renderer.setBaseItemLabelsVisible(true);
-		renderer.setDrawBarOutline(false);	
-		
-		
-		GradientPaint[] gp_array = new GradientPaint[100];
-		gp_array[0] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(220,20,60), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,160,122), 255));
-		gp_array[1] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(22,30,60), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(25,200,122), 255));
-		gp_array[2] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,105,0), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(210,215,30), 255));
-		gp_array[3] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(50,100,50), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(0,255,0), 255));
-		gp_array[4] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(199,105,60), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,255,255), 255));
-		gp_array[5] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(0,128,209), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(32,206,170), 255));
-		gp_array[6] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(186,85,211), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(248,255,255), 255));
-		gp_array[7] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(2,85,211), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(248,255,255), 255));
-		gp_array[8] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,160,153), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,255,120), 255));
-		gp_array[9] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(119,136,153), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,255,255), 255));
-		for (int i = 0; i < dataset.getRowCount(); i++){
-			renderer.setSeriesPaint(i, gp_array[i % 100]);		// use gradient for better color: only assign some, the rest is auto
-		}	
-		// ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-		plot.setOutlineVisible(false);
-		return chart;
+		Chart charts = new Chart();
+		return charts.create_multiple_stacked_bar2_chart(chart_name, "flow (stacked by col_id)", "Flow Value: FV", dataset);
 	}	
 }	
 

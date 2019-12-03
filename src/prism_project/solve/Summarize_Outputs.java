@@ -63,8 +63,8 @@ public class Summarize_Outputs {
 		summarize_output_01();	// this would export this output into a different format
 //		summarize_output_by_union(output_general_outputs_file, "summarize_output_01_general_outputs_v2.txt");
 		summarize_output_by_union(output_management_overview_file, "summarize_output_04_management_overview.txt");
-		summarize_output_by_union(output_flow_constraints_file, "summarize_output_07_flow_constraints.txt");
-		summarize_output_06();	// this would export this output into a different format
+		if (output_flow_constraints_file[current_iteration].exists()) summarize_output_by_union(output_flow_constraints_file, "summarize_output_07_flow_constraints.txt");
+		if (output_basic_constraints_file[current_iteration].exists()) summarize_output_06();	// this would export this output into a different format
 	}
 	
 	private void summarize_output_by_union(File[] output_files, String summary_file_name) {

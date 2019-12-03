@@ -1,2 +1,2 @@
 bc_id	bc_description	bc_type	bc_multiplier	lowerbound	lowerbound_perunit_penalty	upperbound	upperbound_perunit_penalty	var_id	var_name	var_value	var_reduced_cost	total_penalty
-1	rmcuft ..... No dynamic restriction ..... No static restriction	SOFT	1.0	9.9999999E7	1.0	null	null	0	y_0	186435.23592275998	0.0	9.981356376407725E7
+1	rmcuft ..... No dynamic restriction ..... No static restriction	SOFT	1.0	9.9999999E7	1.0	null	null	0	y_0	164996.0	0.0	9.9835003E7

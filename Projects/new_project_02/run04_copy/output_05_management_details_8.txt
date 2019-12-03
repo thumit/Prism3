@@ -1,0 +1,21 @@
+var_id	var_name	var_value	var_reduced_cost	percentage_SR_01	var_unit_management_cost	var_method	var_forest_status	var_layer1	var_layer2	var_layer3	var_layer4	var_layer5	var_layer6	var_choice	var_period	var_age	var_rotation_period	var_rotation_age	var_regen_covertype	data_connection	prescription	row_id
+283	xGS_E_A_N_C_B_D_S_7_9	38.0	0.0	0.0	0.0	GS	E	A	N	C	B	D	S	7	1	18				good	D_S_GS_E_7	8
+284	xGS_E_A_N_C_B_D_S_7_10	38.0	0.0	0.0	0.0	GS	E	A	N	C	B	D	S	7	2	19				good	D_S_GS_E_7	9
+285	xGS_E_A_N_C_B_D_S_7_11	38.0	0.0	0.0	0.0	GS	E	A	N	C	B	D	S	7	3	20				good	D_S_GS_E_7	10
+286	xGS_E_A_N_C_B_D_S_7_12	38.0	0.0	0.0	0.0	GS	E	A	N	C	B	D	S	7	4	21				good	D_S_GS_E_7	11
+287	xGS_E_A_N_C_B_D_S_7_13	38.0	0.0	0.0	0.0	GS	E	A	N	C	B	D	S	7	5	22				good	D_S_GS_E_7	12
+288	xGS_E_A_N_C_B_D_S_7_14	38.0	0.0	0.0	0.0	GS	E	A	N	C	B	D	S	7	6	23				good	D_S_GS_E_7	13
+289	xGS_E_A_N_C_B_D_S_7_15	38.0	0.0	0.0	0.0	GS	E	A	N	C	B	D	S	7	7	24				good	D_S_GS_E_7	14
+290	xGS_E_A_N_C_B_D_S_7_16	38.0	0.0	0.0	0.0	GS	E	A	N	C	B	D	S	7	8	25				good	D_S_GS_E_7	15
+291	xGS_E_A_N_C_B_D_S_7_17	38.0	0.0	0.0	0.0	GS	E	A	N	C	B	D	S	7	9	26				good	D_S_GS_E_7	16
+292	xGS_E_A_N_C_B_D_S_7_18	38.0	0.0	0.0	0.0	GS	E	A	N	C	B	D	S	7	10	27				good	D_S_GS_E_7	17
+293	xGS_E_A_N_C_B_D_S_7_19	38.0	0.0	0.0	0.0	GS	E	A	N	C	B	D	S	7	11	28				good	D_S_GS_E_7	18
+294	xGS_E_A_N_C_B_D_S_7_20	38.0	0.0	0.0	0.0	GS	E	A	N	C	B	D	S	7	12	29				good	D_S_GS_E_7	19
+295	xGS_E_A_N_C_B_D_S_7_21	38.0	0.0	0.0	0.0	GS	E	A	N	C	B	D	S	7	13	30				good	D_S_GS_E_7	20
+296	xGS_E_A_N_C_B_D_S_7_22	38.0	0.0	0.0	0.0	GS	E	A	N	C	B	D	S	7	14	31				good	D_S_GS_E_7	21
+297	xGS_E_A_N_C_B_D_S_7_23	38.0	0.0	0.0	0.0	GS	E	A	N	C	B	D	S	7	15	32				good	D_S_GS_E_7	22
+298	xGS_E_A_N_C_B_D_S_7_24	38.0	0.0	0.0	0.0	GS	E	A	N	C	B	D	S	7	16	33				good	D_S_GS_E_7	23
+299	xGS_E_A_N_C_B_D_S_7_25	38.0	0.0	0.0	0.0	GS	E	A	N	C	B	D	S	7	17	34				good	D_S_GS_E_7	24
+300	xGS_E_A_N_C_B_D_S_7_26	38.0	0.0	0.0	0.0	GS	E	A	N	C	B	D	S	7	18	35				missing row id = 25	D_S_GS_E_7	25
+301	xGS_E_A_N_C_B_D_S_7_27	38.0	0.0	0.0	0.0	GS	E	A	N	C	B	D	S	7	19	36				missing row id = 26	D_S_GS_E_7	26
+302	xGS_E_A_N_C_B_D_S_7_28	38.0	0.0	0.0	0.0	GS	E	A	N	C	B	D	S	7	20	37				missing row id = 27	D_S_GS_E_7	27

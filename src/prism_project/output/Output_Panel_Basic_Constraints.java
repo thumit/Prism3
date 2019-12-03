@@ -16,20 +16,12 @@
  ******************************************************************************/
 package prism_project.output;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.GradientPaint;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.RadialGradientPaint;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Point2D;
-import java.text.DecimalFormat;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JLayeredPane;
@@ -45,28 +37,13 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.block.BlockBorder;
-import org.jfree.chart.labels.ItemLabelAnchor;
-import org.jfree.chart.labels.ItemLabelPosition;
-import org.jfree.chart.labels.PieSectionLabelGenerator;
-import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
-import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
-import org.jfree.chart.plot.CategoryPlot;
-import org.jfree.chart.plot.PieLabelLinkStyle;
 import org.jfree.chart.plot.PiePlot3D;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.renderer.category.BarRenderer;
-import org.jfree.chart.title.TextTitle;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
-import org.jfree.ui.RectangleEdge;
-import org.jfree.ui.TextAnchor;
-import org.jfree.util.Rotation;
 
-import prism_convenience.ColorUtil;
 import prism_convenience.IconHandle;
 import prism_convenience.PrismGridBagLayoutHandle;
 import prism_convenience.TableColumnsHandle;
@@ -279,8 +256,8 @@ public class Output_Panel_Basic_Constraints extends JLayeredPane {
 				}
 				
 		    	// Rotation effect
-				if (radio_button[1].isSelected()) {	// Single Flow
-			        final Rotator rotator = new Rotator((PiePlot3D) chart.getPlot());
+				if (radio_button[1].isSelected()) {	// Single Constraint
+			        final Chart_Rotator rotator = new Chart_Rotator((PiePlot3D) chart.getPlot());
 			        rotator.start();           
 			        chart_panel.addMouseListener(new MouseAdapter() { // Add listener to projectTree
 						boolean is_rotating = true;
@@ -322,7 +299,6 @@ public class Output_Panel_Basic_Constraints extends JLayeredPane {
 	private JFreeChart create_single_bar_chart(JTable bc_table, Object[][] bc_data, int selectedRow) {	
 		int total_iteration = (bc_data[0].length - 4) / 2;
 		final DefaultCategoryDataset dataset = new DefaultCategoryDataset( );
-		
 		String chart_name = "Highlight a basic constraint to view chart";
 		if (selectedRow >= 0) {
 			chart_name = bc_data[selectedRow][0].toString()  + ". " + bc_data[selectedRow][1].toString();
@@ -332,49 +308,9 @@ public class Output_Panel_Basic_Constraints extends JLayeredPane {
 			}
 		}
 		
-		// Create 3D bar chart------------------------
-		JFreeChart chart = ChartFactory.createBarChart(chart_name, "iteration", "value",
-				dataset, PlotOrientation.VERTICAL, true, true, false);		
-		chart.setBorderVisible(true);
-		chart.setBackgroundPaint(Color.LIGHT_GRAY);
-		chart.getLegend().setBackgroundPaint(null);
-		chart.getLegend().setPosition(RectangleEdge.BOTTOM);
-//		chart.getLegend().setItemFont(new java.awt.Font("defaultFont", java.awt.Font.PLAIN, 13));
-		chart.getLegend().setVisible(false);	// don't show the legend
-		chart.getTitle().setFont(new java.awt.Font("defaultFont", java.awt.Font.BOLD, 14));
-				
-		// Set color for each different bar
-		CategoryPlot plot = chart.getCategoryPlot();
-        BarRenderer renderer = (BarRenderer) plot.getRenderer();
-	    renderer.setItemMargin(0.5);	
-	    renderer.setMaximumBarWidth(.15); // set maximum width to 15% of chart	    
-	    // show value in the middle of column---------
-	    renderer.setItemLabelGenerator(
-				new StandardCategoryItemLabelGenerator("{2}", new DecimalFormat("###,###")));
-	    try {
-			renderer.setItemLabelFont(new java.awt.Font("defaultFont", java.awt.Font.PLAIN, 10));
-			renderer.setItemLabelFont(new java.awt.Font("Sitka Small", java.awt.Font.PLAIN, 10));
-		} catch (Exception e) {
-		}
-	    renderer.setItemLabelsVisible(true);
-		renderer.setPositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.CENTER, TextAnchor.CENTER, TextAnchor.CENTER, -Math.PI / 2));
-	    renderer.setBaseItemLabelsVisible(true);
-	    //--------------------------------------------    
-		renderer.setDrawBarOutline(false);	
-		GradientPaint gp = null;
-		for (int i = 0; i < dataset.getRowCount(); i++){
-		    switch (i) {
-		    case 0:
-		    	gp = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(220,20,60), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,160,122), 255));	        
-		    }
-		    renderer.setSeriesPaint(i, gp);		// use gradient and 2D is better than color and 3D	
-		}	
-		plot.setOutlineVisible(false);
-		return chart;
+		Chart charts = new Chart();
+		return charts.create_single_bar_chart(chart_name, "iteration", "value", dataset);
 	}	
-	
-	
-	
 	
 	
 	@SuppressWarnings("deprecation")
@@ -392,115 +328,15 @@ public class Output_Panel_Basic_Constraints extends JLayeredPane {
 			if (total_iteration == 1) dataset.setValue("others", 0);	// this is to prevent frozen when the pie chart only has 1 dataset (1 iteration)	
 		}
 		
-		// Create 3D pie chart-----------------------------------
-		JFreeChart chart = ChartFactory.createPieChart3D(chart_name, // chart title
-				dataset, // dataset
-				true, // include legend
-				true, false);		
-		
-		// 3 lines to create another legend
-		TextTitle legendText = new TextTitle("list of iterations");
-		legendText.setPosition(RectangleEdge.BOTTOM);
-		chart.addSubtitle(legendText);
-		
-		chart.setBorderVisible(true);
-		chart.setBackgroundPaint(Color.LIGHT_GRAY);
-		chart.getLegend().setBackgroundPaint(null);
-		chart.getLegend().setPosition(RectangleEdge.BOTTOM);
-		chart.getLegend().setItemFont(new java.awt.Font("defaultFont", java.awt.Font.PLAIN, 13));
-		chart.getTitle().setFont(new java.awt.Font("defaultFont", java.awt.Font.BOLD, 14));
-
-		PiePlot3D plot = (PiePlot3D) chart.getPlot();
-		plot.setOutlinePaint(null);
-		plot.setStartAngle(135);
-        plot.setDirection(Rotation.CLOCKWISE);
-        plot.setForegroundAlpha(0.6f);
-        plot.setBackgroundPaint(null);
-//		plot.setNoDataMessage("Highlight single or multiple existing strata to view chart");
-		plot.setExplodePercent(1, 0.1);
-		
-		PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(
-	            "{0}: {1} ({2})", new DecimalFormat("###,###"), new DecimalFormat("##.#%"));			// "{0}: {1} ({2})"
-	    plot.setLabelGenerator(gen);	    
-	    plot.setLabelBackgroundPaint(null);
-	    plot.setLabelShadowPaint(null);
-	    plot.setLabelOutlinePaint(null);
-	    plot.setLabelLinkStyle(PieLabelLinkStyle.QUAD_CURVE);
-	    
-	    // Customize colors
-//	    plot.setSectionPaint("Natural Growth", new Color(0, 255, 0));
-//		plot.setSectionPaint("Prescribed Burn", new Color(255, 255, 0));
-//		plot.setSectionPaint("Group Selection", new Color(240, 248, 255));
-//	    plot.setSectionPaint("Even Age", new Color(51, 255, 255));
-//	    plot.setSectionPaint("Mixed Severity Wildfire", new Color(255, 140, 0));
-//	    plot.setSectionPaint("Severe Bark Beetle", new Color(255, 51, 0));
-		
-	    
-	    GradientPaint[] gp_array = new GradientPaint[100];
-		gp_array[0] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(220,20,60), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,160,122), 255));
-		gp_array[1] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(22,30,60), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(25,200,122), 255));
-		gp_array[2] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,105,0), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(210,215,30), 255));
-		gp_array[3] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(50,100,50), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(0,255,0), 255));
-		gp_array[4] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(199,105,60), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,255,255), 255));
-		gp_array[5] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(0,128,209), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(32,206,170), 255));
-		gp_array[6] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(186,85,211), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(248,255,255), 255));
-		gp_array[7] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(2,85,211), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(248,255,255), 255));
-		gp_array[8] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,160,153), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,255,120), 255));
-		gp_array[9] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(119,136,153), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,255,255), 255));
-	    for (int i = 0; i < dataset.getItemCount(); i++){
-	    	if (i % 100 <= 9) {
-		    	Point2D center = new Point2D.Float(0, 0);
-				float radius = 500;
-				float[] dist = { 0.0f, 0.4f, 0.6f, 1.0f };
-				Color[] colors = { gp_array[i % 100].getColor1(), gp_array[i % 100].getColor1(), gp_array[i % 100].getColor2(), gp_array[i % 100].getColor1() };
-				RadialGradientPaint p = new RadialGradientPaint(center, radius, dist, colors);
-				plot.setSectionPaint(dataset.getKey(i), p);
-	    	}
-	    }		
-		// ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-		return chart;
+		Chart charts = new Chart();
+		return charts.create_single_pie_chart(chart_name, "list of iterations", dataset);
 	}	
-	
-	// I am so smart to not use timer
-	private class Rotator {
-		private ScheduledExecutorService executor;
-		private Runnable task;
-		private double angle = 135;
-
-		Rotator(final PiePlot3D plot) {
-			task = new Runnable() {
-				public void run() {
-					plot.setStartAngle(angle);
-					angle = angle + (double) 0.05;
-					if (angle == 360) {
-						angle = 0;
-					}
-
-				}
-			};
-	    }
-
-	    public void stop() {
-	    	 executor.shutdown(); // shutdown will allow the final iteration to finish executing where shutdownNow() will kill it immediately
-	    }
-	    
-	    public void start() {
-	    	int initialDelay = 0;
-		    int period = 5;	// change this number would make the text run slower or faster
-		    executor = Executors.newScheduledThreadPool(1);
-		    executor.scheduleAtFixedRate(task, initialDelay, period, TimeUnit.MILLISECONDS);
-	    }
-	}
-	
-	
-	
 	
 	
 	@SuppressWarnings("deprecation")
 	private JFreeChart create_multiple_bar_chart(JTable bc_table, Object[][] bc_data, int[] selectedRows) {		
 		int total_iteration = (bc_data[0].length - 4) / 2;
 		final DefaultCategoryDataset dataset = new DefaultCategoryDataset( );
-		
 		String chart_name = "Highlight single or multiple basic constraints to view chart";
 		if (selectedRows.length >= 1) {
 			chart_name = "Comparison for highlighted basic constraints";
@@ -512,62 +348,15 @@ public class Output_Panel_Basic_Constraints extends JLayeredPane {
 			}
 		}
 		
-		// Create 3D bar chart--------------------------------------------------------------------------------------------------
-		JFreeChart chart = ChartFactory.createBarChart(chart_name, "iteration", "value",
-				dataset, PlotOrientation.VERTICAL, true, true, false);		
-		chart.setBorderVisible(true);
-		chart.setBackgroundPaint(Color.LIGHT_GRAY);
-		chart.getLegend().setBackgroundPaint(null);
-		chart.getLegend().setPosition(RectangleEdge.BOTTOM);
-//		chart.getLegend().setItemFont(new java.awt.Font("defaultFont", java.awt.Font.PLAIN, 13));
-		chart.getTitle().setFont(new java.awt.Font("defaultFont", java.awt.Font.BOLD, 14));
-		
-		// Set color for each different bar
-		CategoryPlot plot = chart.getCategoryPlot();
-        BarRenderer renderer = (BarRenderer) plot.getRenderer();
-	    renderer.setItemMargin(0.05);	
-	    renderer.setMaximumBarWidth(.15); // set maximum width to 15% of chart	    
-	    // show value in the middle of column---------
-	    renderer.setItemLabelGenerator(
-				new StandardCategoryItemLabelGenerator("{2}", new DecimalFormat("###,###")));
-	    try {
-			renderer.setItemLabelFont(new java.awt.Font("defaultFont", java.awt.Font.PLAIN, 10));
-			renderer.setItemLabelFont(new java.awt.Font("Sitka Small", java.awt.Font.PLAIN, 10));
-		} catch (Exception e) {
-		}
-	    renderer.setItemLabelsVisible(true);
-		renderer.setPositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.CENTER, TextAnchor.CENTER, TextAnchor.CENTER, -Math.PI / 2));
-	    renderer.setBaseItemLabelsVisible(true);
-		renderer.setDrawBarOutline(false);	
-		
-		GradientPaint[] gp_array = new GradientPaint[100];
-		gp_array[0] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(220,20,60), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,160,122), 255));
-		gp_array[1] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(22,30,60), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(25,200,122), 255));
-		gp_array[2] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,105,0), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(210,215,30), 255));
-		gp_array[3] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(50,100,50), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(0,255,0), 255));
-		gp_array[4] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(199,105,60), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,255,255), 255));
-		gp_array[5] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(0,128,209), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(32,206,170), 255));
-		gp_array[6] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(186,85,211), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(248,255,255), 255));
-		gp_array[7] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(2,85,211), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(248,255,255), 255));
-		gp_array[8] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,160,153), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,255,120), 255));
-		gp_array[9] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(119,136,153), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,255,255), 255));
-		for (int i = 0; i < dataset.getRowCount(); i++){
-			renderer.setSeriesPaint(i, gp_array[i % 100]);		// use gradient for better color: only assign some, the rest is auto
-		}	
-		// ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-		plot.setOutlineVisible(false);
-		return chart;
+		Chart charts = new Chart();
+		return charts.create_multiple_bar_chart(chart_name, "iteration", "value", dataset);
 	}	
-	
-	
-	
-	
+
 	
 	@SuppressWarnings("deprecation")
 	private JFreeChart create_multiple_stacked_bar1_chart(JTable bc_table, Object[][] bc_data, int[] selectedRows) {			
 		int total_iteration = (bc_data[0].length - 4) / 2;
 		final DefaultCategoryDataset dataset = new DefaultCategoryDataset( );
-		
 		String chart_name = "Highlight single or multiple basic constraints to view chart";
 		if (selectedRows.length >= 1) {
 			chart_name = "Comparison for highlighted basic constraints";
@@ -579,62 +368,15 @@ public class Output_Panel_Basic_Constraints extends JLayeredPane {
 			}
 		}
 		
-		// Create 3D bar chart--------------------------------------------------------------------------------------------------
-		JFreeChart chart = ChartFactory.createStackedBarChart(chart_name, "iteration (stacked by basic constraints)", "value",
-				dataset, PlotOrientation.VERTICAL, true, true, false);		
-		chart.setBorderVisible(true);
-		chart.setBackgroundPaint(Color.LIGHT_GRAY);
-		chart.getLegend().setBackgroundPaint(null);
-		chart.getLegend().setPosition(RectangleEdge.BOTTOM);
-//		chart.getLegend().setItemFont(new java.awt.Font("defaultFont", java.awt.Font.PLAIN, 13));
-		chart.getTitle().setFont(new java.awt.Font("defaultFont", java.awt.Font.BOLD, 14));
-		
-		// Set color for each different bar
-		CategoryPlot plot = chart.getCategoryPlot();
-        BarRenderer renderer = (BarRenderer) plot.getRenderer();
-	    renderer.setItemMargin(0.05);	
-	    renderer.setMaximumBarWidth(.15); // set maximum width to 15% of chart	    
-	    // show value in the middle of column---------
-	    renderer.setItemLabelGenerator(
-				new StandardCategoryItemLabelGenerator("{2}", new DecimalFormat("###,###")));
-	    try {
-			renderer.setItemLabelFont(new java.awt.Font("defaultFont", java.awt.Font.PLAIN, 10));
-			renderer.setItemLabelFont(new java.awt.Font("Sitka Small", java.awt.Font.PLAIN, 10));
-		} catch (Exception e) {
-		}
-	    renderer.setItemLabelsVisible(true);
-		renderer.setPositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.CENTER, TextAnchor.CENTER, TextAnchor.CENTER, -Math.PI / 2));
-	    renderer.setBaseItemLabelsVisible(true);
-		renderer.setDrawBarOutline(false);	
-		
-		GradientPaint[] gp_array = new GradientPaint[100];
-		gp_array[0] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(220,20,60), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,160,122), 255));
-		gp_array[1] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(22,30,60), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(25,200,122), 255));
-		gp_array[2] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,105,0), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(210,215,30), 255));
-		gp_array[3] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(50,100,50), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(0,255,0), 255));
-		gp_array[4] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(199,105,60), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,255,255), 255));
-		gp_array[5] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(0,128,209), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(32,206,170), 255));
-		gp_array[6] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(186,85,211), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(248,255,255), 255));
-		gp_array[7] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(2,85,211), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(248,255,255), 255));
-		gp_array[8] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,160,153), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,255,120), 255));
-		gp_array[9] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(119,136,153), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,255,255), 255));
-		for (int i = 0; i < dataset.getRowCount(); i++){
-			renderer.setSeriesPaint(i, gp_array[i % 100]);		// use gradient for better color: only assign some, the rest is auto
-		}	
-		// ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-		plot.setOutlineVisible(false);
-		return chart;
+		Chart charts = new Chart();
+		return charts.create_multiple_stacked_bar1_chart(chart_name, "iteration (stacked by basic constraints)", "value", dataset);
 	}	
-	
-	
-	
 	
 	
 	@SuppressWarnings("deprecation")
 	private JFreeChart create_multiple_stacked_bar2_chart(JTable bc_table, Object[][] bc_data, int[] selectedRows) {			
 		int total_iteration = (bc_data[0].length - 4) / 2;
 		final DefaultCategoryDataset dataset = new DefaultCategoryDataset( );
-		
 		String chart_name = "Highlight single or multiple basic constraints to view chart";
 		if (selectedRows.length >= 1) {
 			chart_name = "Comparison for highlighted basic constraints";
@@ -646,51 +388,8 @@ public class Output_Panel_Basic_Constraints extends JLayeredPane {
 			}
 		}
 		
-		// Create 3D bar chart--------------------------------------------------------------------------------------------------
-		JFreeChart chart = ChartFactory.createStackedBarChart(chart_name, "basic constraint (stacked by iterations)", "value",
-				dataset, PlotOrientation.VERTICAL, true, true, false);		
-		chart.setBorderVisible(true);
-		chart.setBackgroundPaint(Color.LIGHT_GRAY);
-		chart.getLegend().setBackgroundPaint(null);
-		chart.getLegend().setPosition(RectangleEdge.BOTTOM);
-//		chart.getLegend().setItemFont(new java.awt.Font("defaultFont", java.awt.Font.PLAIN, 13));
-		chart.getTitle().setFont(new java.awt.Font("defaultFont", java.awt.Font.BOLD, 14));
-		
-		// Set color for each different bar
-		CategoryPlot plot = chart.getCategoryPlot();
-        BarRenderer renderer = (BarRenderer) plot.getRenderer();
-	    renderer.setItemMargin(0.05);	
-	    renderer.setMaximumBarWidth(.15); // set maximum width to 15% of chart	    
-	    // show value in the middle of column---------
-	    renderer.setItemLabelGenerator(
-				new StandardCategoryItemLabelGenerator("{2}", new DecimalFormat("###,###")));
-	    try {
-			renderer.setItemLabelFont(new java.awt.Font("defaultFont", java.awt.Font.PLAIN, 10));
-			renderer.setItemLabelFont(new java.awt.Font("Sitka Small", java.awt.Font.PLAIN, 10));
-		} catch (Exception e) {
-		}
-	    renderer.setItemLabelsVisible(true);
-		renderer.setPositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.CENTER, TextAnchor.CENTER, TextAnchor.CENTER, -Math.PI / 2));
-	    renderer.setBaseItemLabelsVisible(true);
-		renderer.setDrawBarOutline(false);	
-		
-		GradientPaint[] gp_array = new GradientPaint[100];
-		gp_array[0] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(220,20,60), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,160,122), 255));
-		gp_array[1] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(22,30,60), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(25,200,122), 255));
-		gp_array[2] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,105,0), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(210,215,30), 255));
-		gp_array[3] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(50,100,50), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(0,255,0), 255));
-		gp_array[4] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(199,105,60), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,255,255), 255));
-		gp_array[5] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(0,128,209), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(32,206,170), 255));
-		gp_array[6] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(186,85,211), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(248,255,255), 255));
-		gp_array[7] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(2,85,211), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(248,255,255), 255));
-		gp_array[8] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,160,153), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,255,120), 255));
-		gp_array[9] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(119,136,153), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,255,255), 255));
-		for (int i = 0; i < dataset.getRowCount(); i++){
-			renderer.setSeriesPaint(i, gp_array[i % 100]);		// use gradient for better color: only assign some, the rest is auto
-		}	
-		// ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-		plot.setOutlineVisible(false);
-		return chart;
+		Chart charts = new Chart();
+		return charts.create_multiple_stacked_bar2_chart(chart_name, "basic constraint (stacked by iterations)", "value", dataset);
 	}	
 }	
 

@@ -23,9 +23,6 @@ import java.awt.GridBagLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.DecimalFormat;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -81,7 +78,7 @@ public class Output_Panel_Management_Overview extends JLayeredPane {
         chartPanel.setPreferredSize(new Dimension(600, 350));
         
     	// Rotation effect
-        final Rotator rotator = new Rotator((PiePlot3D) chart.getPlot());
+        final Chart_Rotator rotator = new Chart_Rotator((PiePlot3D) chart.getPlot());
         rotator.start();           
         chartPanel.addMouseListener(new MouseAdapter() { // Add listener to projectTree
 			boolean is_rotating = true;
@@ -128,7 +125,7 @@ public class Output_Panel_Management_Overview extends JLayeredPane {
 	 	        chartPanel2.setPreferredSize(new Dimension(600, 350));
 	 	        
 	 	        // Rotation effect 
-	 	        final Rotator rotator = new Rotator((PiePlot3D) chart2.getPlot()); 	 	     
+	 	        final Chart_Rotator rotator = new Chart_Rotator((PiePlot3D) chart2.getPlot()); 	 	     
 	 	        if (dataset2 != null) {
 			        chartPanel2.addMouseListener(new MouseAdapter() { // Add listener to projectTree
 						boolean is_rotating = false;
@@ -306,92 +303,5 @@ public class Output_Panel_Management_Overview extends JLayeredPane {
 //		plot.setSimpleLabels(true);
 		return chart;
 	}	
-	
-	
-	// I am so smart to not use timer
-	private class Rotator {
-		private ScheduledExecutorService executor;
-		private Runnable task;
-		private double angle = 135;
-
-		Rotator(final PiePlot3D plot) {
-			task = new Runnable() {
-				public void run() {
-					plot.setStartAngle(angle);
-					angle = angle + (double) 0.05;
-					if (angle == 360) {
-						angle = 0;
-					}
-
-				}
-			};
-	    }
-
-	    public void stop() {
-	    	 executor.shutdown(); // shutdown will allow the final iteration to finish executing where shutdownNow() will kill it immediately
-	    }
-	    
-	    public void start() {
-	    	int initialDelay = 0;
-		    int period = 5;	// change this number would make the text run slower or faster
-		    executor = Executors.newScheduledThreadPool(1);
-		    executor.scheduleAtFixedRate(task, initialDelay, period, TimeUnit.MILLISECONDS);
-	    }
-	}	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-//	// ****************************************************************************
-//	// * JFREECHART DEVELOPER GUIDE                                               *
-//	// * The JFreeChart Developer Guide, written by David Gilbert, is available   *
-//	// * to purchase from Object Refinery Limited:                                *
-//	// *                                                                          *
-//	// * http://www.object-refinery.com/jfreechart/guide.html                     *
-//	// *                                                                          *
-//	// * Sales are used to provide funding for the JFreeChart project - please    * 
-//	// * support us so that we can continue developing free software.             *
-//	// ****************************************************************************
-//	// The rotator.
-//
-//	private class Rotator extends Timer implements ActionListener {
-//
-//	    /** The plot. */
-//	    private PiePlot3D plot;
-//
-//	    /** The angle. */
-//	    private double angle = 135;
-//
-//	    /**
-//	     * Constructor.
-//	     *
-//	     * @param plot  the plot.
-//	     */
-//	    Rotator(final PiePlot3D plot) {
-//	        super(15, null);
-//	        this.plot = plot;
-//	        addActionListener(this);
-//	    }
-//
-//	    /**
-//	     * Modifies the starting angle.
-//	     *
-//	     * @param event  the action event.
-//	     */
-//	    public void actionPerformed(final ActionEvent event) {
-//	        this.plot.setStartAngle(this.angle);
-//	        this.angle = this.angle + (double) 0.1;
-//	        if (this.angle == 360) {
-//	            this.angle = 0;
-//	        }
-//	    }
-//
-//	}
 }	
 

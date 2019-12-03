@@ -42,9 +42,9 @@ wb_tpa_l	NUMERIC	0	14	111	exact	null	null	false
 wl_tpa_l	NUMERIC	0	0	1	exact	null	null	false	
 carbon	NUMERIC	0	204.2	1035	exact	null	null	false	
 debris_d	NUMERIC	0	181.6	336	exact	null	null	false	
-domgrp6040	TEXT	ABLA	TMIX	32	exact	null	null	true	
-dvegtype	TEXT	B	U	10	exact	null	null	true	
-dstructclass	TEXT	F	Z	15	exact	null	null	true	
+domgrp6040	TEXT	ABLA	TMIX	32	exact	null	null	false	
+dvegtype	TEXT	B	U	10	exact	null	null	false	
+dstructclass	TEXT	F	Z	15	exact	null	null	false	
 broadpvt	TEXT	CM	WD	4	exact	null	null	false	
 lynx_ms	NUMERIC	0	1	2	exact	null	null	false	
 lynx_si	NUMERIC	0	1	2	exact	null	null	false	
