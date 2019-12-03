@@ -1174,3 +1174,5 @@ All changes in this block are associated with PrismAlpha2.0.01.jar, Prism-Formul
 491. Summarize output_06 and output_07 only when the outputs exist
 492. New classes - Chart and Char_Rotator to simplify the summarize_output_06 and summarize_output_07 codes and create potential future usage. 
 493. Output_Panel_Flow_Constraints - Separate the refresh of legend table when clicking on either single or multiple charts. This help trim code significantly.
+494. Graphs are now available for the summarize_output_04_management_overview
+495. Customized colors fro pie chart of the summarize_output_04_management_overview

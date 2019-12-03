@@ -142,6 +142,18 @@ public class Chart extends JLayeredPane {
 		gp_array[7] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(2,85,211), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(248,255,255), 255));
 		gp_array[8] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,160,153), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,255,120), 255));
 		gp_array[9] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(119,136,153), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,255,255), 255));
+		if (legend_text.equals("list of silviculture methods")) {
+			gp_array[0] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(0,255,0), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(0,255,0), 255));
+			gp_array[1] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,255,0), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255,255,0), 255));
+			gp_array[2] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(240, 248, 255), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(240, 248, 255), 255));
+			gp_array[3] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(51, 255, 255), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(51, 255, 255), 255));
+			gp_array[4] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255, 140, 0), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255, 140, 0), 255));
+			gp_array[5] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255, 51, 0), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(255, 51, 0), 255));
+			gp_array[6] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(22,60,60), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(25,210,100), 255));
+			gp_array[7] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(155,155,0), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(210,215,30), 255));
+			gp_array[8] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(119,136,153), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(240, 248, 255), 255));
+			gp_array[9] = new GradientPaint(0.0f, 0.0f, ColorUtil.makeTransparent(new Color(0,128,209), 255), 0.0f, 0.0f, ColorUtil.makeTransparent(new Color(32,206,170), 255));
+		}
 	    for (int i = 0; i < dataset.getItemCount(); i++){
 	    	if (i % 100 <= 9) {
 		    	Point2D center = new Point2D.Float(0, 0);

@@ -3786,8 +3786,7 @@ public class Solve_Iterations {
 						// output_04_management_overview
 						output_management_overview_file.delete();
 						try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_management_overview_file))) {
-							String file_header = String.join("\t", "iteration", "NG_E_area", "PB_E_area", "GS_E_area", "EA_E_area", "MS_E_area", "BS_E_area", 
-									"NG_R_area", "PB_R_area", "GS_R_area", "EA_R_area");
+							String file_header = String.join("\t", "iteration", "NG_E", "PB_E", "GS_E", "EA_E", "MS_E",	"BS_E", "NG_R", "PB_R", "GS_R", "EA_R");
 							fileOut.write(file_header);
 							
 							double NG_E_total_area = 0;

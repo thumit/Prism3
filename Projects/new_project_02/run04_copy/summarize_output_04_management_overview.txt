@@ -1,4 +1,4 @@
-iteration	NG_E_area	PB_E_area	GS_E_area	EA_E_area	MS_E_area	BS_E_area	NG_R_area	PB_R_area	GS_R_area	EA_R_area
+iteration	NG_E	PB_E	GS_E	EA_E	MS_E	BS_E	NG_R	PB_R	GS_R	EA_R
 0	0.0	0.0	38.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0
 1	0.0	0.0	38.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0
 2	0.0	0.0	38.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0
@@ -6,6 +6,3 @@ iteration	NG_E_area	PB_E_area	GS_E_area	EA_E_area	MS_E_area	BS_E_area	NG_R_area	
 4	0.0	0.0	38.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0
 5	0.0	0.0	38.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0
 6	0.0	0.0	38.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0
-7	0.0	0.0	38.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0
-8	0.0	0.0	38.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0
-9	0.0	0.0	38.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0

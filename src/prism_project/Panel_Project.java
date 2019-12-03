@@ -495,7 +495,8 @@ public class Panel_Project extends JLayeredPane {
 			     		
 			     					     		
 						// Show table on the scroll panel
-						if (currentInputFile.equals("output_04_management_overview.txt")) {		//show a panel with 2 pie charts
+						if (currentInputFile.startsWith("output_04_management_overview") || currentInputFile.startsWith("summarize_output_04_management_overview")) {
+							table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 							Output_Panel_Management_Overview chart_panel = new Output_Panel_Management_Overview(table, data);
 							scrollPane_Right.setViewportView(chart_panel);
 						} 

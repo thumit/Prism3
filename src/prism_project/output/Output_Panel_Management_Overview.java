@@ -16,119 +16,218 @@
  ******************************************************************************/
 package prism_project.output;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.text.DecimalFormat;
 
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
+import javax.swing.ButtonGroup;
 import javax.swing.JLayeredPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.block.BlockBorder;
-import org.jfree.chart.labels.PieSectionLabelGenerator;
-import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
-import org.jfree.chart.plot.PieLabelLinkStyle;
 import org.jfree.chart.plot.PiePlot3D;
+import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
-import org.jfree.data.general.PieDataset;
-import org.jfree.ui.RectangleEdge;
-import org.jfree.util.Rotation;
-	
-public class Output_Panel_Management_Overview extends JLayeredPane {
-	private int rowCount;
-	private JTable table;
-	private Object[][] data;	
-	
-	public Output_Panel_Management_Overview(JTable table, Object[][] data) {
-		this.table = table;
-		this.data = data;
-		this.rowCount = table.getRowCount();
-		
-		
-		setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
-		c.fill = GridBagConstraints.NONE;
-		c.weightx = 1;
-	    c.weighty = 1;
-	    
-	    //---------------------------------------------------------------
-	    //Create a chart
-	    PieDataset dataset = create_all_strata_dataset();
-        JFreeChart chart = createChart(dataset, "Management decisions at the start of planning horizon for " + rowCount + " existing strata");
-        chart.getLegend().setFrame(BlockBorder.NONE);	//Remove the ugly border surrounded Legend	        
 
-        // add the chart to a panel...
-        ChartPanel chartPanel = new ChartPanel(chart);        
-        TitledBorder border = new TitledBorder("");
+import prism_convenience.PrismGridBagLayoutHandle;
+
+// Panel_Flow_Constraints--------------------------------------------------------------------------------	
+public class Output_Panel_Management_Overview extends JLayeredPane {
+	
+	public Output_Panel_Management_Overview(JTable overview_table, Object[][] overview_data) {
+		JScrollPane table_scroll_pane = new JScrollPane(overview_table);
+		table_scroll_pane.setPreferredSize(new Dimension(100, 100));
+		overview_table.setFillsViewportHeight(true);
+	    //---------------------------------------------------------------
+        JSplitPane split_pane_data = new JSplitPane();
+		TitledBorder border = new TitledBorder("Management Overview Data");
 		border.setTitleJustification(TitledBorder.CENTER);
-		chartPanel.setBorder(border);
-        chartPanel.setPreferredSize(new Dimension(600, 350));
-        
-    	// Rotation effect
-        final Chart_Rotator rotator = new Chart_Rotator((PiePlot3D) chart.getPlot());
-        rotator.start();           
-        chartPanel.addMouseListener(new MouseAdapter() { // Add listener to projectTree
-			boolean is_rotating = true;
-			public void mousePressed(MouseEvent e) {
-				if (SwingUtilities.isLeftMouseButton(e)) {
-					if (is_rotating) {
-						rotator.stop();
-						is_rotating = false;
-					} else {
-						rotator.start();
-						is_rotating = true;
-					}
+		split_pane_data.setBorder(border);
+		split_pane_data.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+		split_pane_data.setDividerSize(3);
+		split_pane_data.setResizeWeight(0.55);
+		split_pane_data.setLeftComponent(table_scroll_pane);
+		split_pane_data.setRightComponent(null);
+		//---------------------------------------------------------------
+		
+		JPanel radio_panel = new JPanel();
+		radio_panel.setLayout(new GridBagLayout());
+		radio_panel.setPreferredSize(new Dimension(100, 100));
+		GridBagConstraints c = new GridBagConstraints();
+
+		ButtonGroup radio_group= new ButtonGroup();
+		JRadioButton[] radio_button = new JRadioButton[5];
+		radio_button[0] = new JRadioButton("Single - Bar");
+		radio_button[1] = new JRadioButton("Single - Pie");
+		radio_button[2] = new JRadioButton("Multiple - Bar");
+		radio_button[3] = new JRadioButton("Multiple - Bar Stacked 1");
+		radio_button[4] = new JRadioButton("Multiple - Bar Stacked 2");
+		radio_button[0].addActionListener(e -> {
+			int selectedRow = overview_table.getSelectedRow();
+			overview_table.setRowSelectionInterval(0, 0);	// no need to clear selection because the below line would auto do it. This is to show the empty graph with the default chart name
+			overview_table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			if (selectedRow != -1) {
+				selectedRow = overview_table.convertRowIndexToModel(selectedRow);
+				overview_table.addRowSelectionInterval(selectedRow, selectedRow);
+			}
+		});
+		radio_button[1].addActionListener(e -> {
+			int selectedRow = overview_table.getSelectedRow();
+			overview_table.setRowSelectionInterval(0, 0);	// no need to clear selection because the below line would auto do it. This is to show the empty graph with the default chart name
+			overview_table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			if (selectedRow != -1) {
+				selectedRow = overview_table.convertRowIndexToModel(selectedRow);
+				overview_table.addRowSelectionInterval(selectedRow, selectedRow);
+			}
+		});
+		radio_button[2].addActionListener(e -> {
+			int[] selectedRows = overview_table.getSelectedRows();
+			overview_table.setRowSelectionInterval(0, 0);	// no need to clear selection because the below line would auto do it. This is to show the empty graph with the default chart name
+			overview_table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+			if (selectedRows.length > 0) {
+				for (int i : selectedRows) {
+					i = overview_table.convertRowIndexToModel(i);	// Convert row index because "Sort" causes problems
+					overview_table.addRowSelectionInterval(i, i);
 				}
 			}
 		});
-    
-        // Add panel to scroll panel
-        JScrollPane scroll_chart1 = new JScrollPane();
-        scroll_chart1.setBorder(null);	      
-		scroll_chart1.setViewportView(chartPanel);
-					
+		radio_button[3].addActionListener(e -> {
+			int[] selectedRows = overview_table.getSelectedRows();
+			overview_table.setRowSelectionInterval(0, 0);	// no need to clear selection because the below line would auto do it. This is to show the empty graph with the default chart name
+			overview_table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+			if (selectedRows.length > 0) {
+				for (int i : selectedRows) {
+					i = overview_table.convertRowIndexToModel(i);	// Convert row index because "Sort" causes problems
+					overview_table.addRowSelectionInterval(i, i);
+				}
+			}
+		});
+		radio_button[4].addActionListener(e -> {
+			int[] selectedRows = overview_table.getSelectedRows();
+			overview_table.setRowSelectionInterval(0, 0);	// no need to clear selection because the below line would auto do it. This is to show the empty graph with the default chart name
+			overview_table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+			if (selectedRows.length > 0) {
+				for (int i : selectedRows) {
+					i = overview_table.convertRowIndexToModel(i);	// Convert row index because "Sort" causes problems
+					overview_table.addRowSelectionInterval(i, i);
+				}
+			}
+		});
+		
+		radio_group.add(radio_button[0]);
+		radio_group.add(radio_button[1]);
+		radio_group.add(radio_button[2]);
+		radio_group.add(radio_button[3]);
+		radio_group.add(radio_button[4]);
+		radio_panel.add(radio_button[0], PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+				0, 0, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				0, 10, 0, 10));	// insets top, left, bottom, right
+		radio_panel.add(radio_button[1], PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+				1, 0, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				0, 10, 0, 10));	// insets top, left, bottom, right
+		radio_panel.add(radio_button[2], PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+				0, 1, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				10, 10, 10, 10));	// insets top, left, bottom, right
+		radio_panel.add(radio_button[3], PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+				1, 1, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				10, 10, 10, 10));	// insets top, left, bottom, right
+		radio_panel.add(radio_button[4], PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+				2, 1, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				10, 10, 10, 10));	// insets top, left, bottom, right
         //---------------------------------------------------------------
-        JScrollPane scroll_chart2 = new JScrollPane();
-        scroll_chart2.setBorder(null);
-        
-        table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
-	        public void valueChanged(ListSelectionEvent event) {
-	        	String strataName = "";
-	 	        if (table.getSelectedRow() >= 0) 	strataName = data[table.getSelectedRow()][0].toString();
+        JScrollPane scroll_bar_chart = new JScrollPane();
+        scroll_bar_chart.setPreferredSize(new Dimension(100, 100));
+        scroll_bar_chart.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scroll_bar_chart.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+        scroll_bar_chart.setBorder(null);
+//      scroll_bar_chart.setBorder(BorderFactory.createMatteBorder(0, 0, 5, 0, ColorUtil.makeTransparent(Color.BLACK, 0)));  // only draw the bottom border, so only bottom border can be resized 
+//      ComponentResizer cr = new ComponentResizer();
+//		cr.registerComponent(scroll_bar_chart);
+        //---------------------------------------------------------------
+		JSplitPane split_pane_chart = new JSplitPane();
+		border = new TitledBorder("Management Overview Chart");
+		border.setTitleJustification(TitledBorder.CENTER);
+		split_pane_chart.setBorder(border);
+		split_pane_chart.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+		split_pane_chart.setOneTouchExpandable(true);
+		split_pane_chart.setDividerSize(3);
+		split_pane_chart.setResizeWeight(0.55);
+		split_pane_chart.setLeftComponent(scroll_bar_chart);
+		split_pane_chart.setRightComponent(radio_panel);
+		//------------------------------------------------------------------------------------------------------------------------------
+		JSplitPane split_pane = new JSplitPane();
+		split_pane.setBorder(null);
+		split_pane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+		split_pane.setOneTouchExpandable(true);
+		split_pane.setDividerSize(3);
+		split_pane.setResizeWeight(0.66);
+		split_pane.setLeftComponent(split_pane_chart);
+		split_pane.setRightComponent(split_pane_data);
+		//------------------------------------------------------------------------------------------------------------------------------
+		overview_table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+			
+	    // Add listener
+        overview_table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+			public void valueChanged(ListSelectionEvent event) {
+				// Create a chart	
+				JFreeChart chart = null;
+				if (radio_button[0].isSelected()) {	// Single Flow
+					int selectedRow = overview_table.getSelectedRow();
+					selectedRow = overview_table.convertRowIndexToModel(selectedRow);	// Convert row index because "Sort" causes problems
+					chart = create_single_bar_chart(overview_table, overview_data, selectedRow);	 
+				} else if (radio_button[1].isSelected()) {	// Single Flow
+					int selectedRow = overview_table.getSelectedRow();
+					selectedRow = overview_table.convertRowIndexToModel(selectedRow);	// Convert row index because "Sort" causes problems
+					chart = create_single_pie_chart(overview_table, overview_data, selectedRow);	  
+				} else if (radio_button[2].isSelected()) {	// Multiple Flows
+					int[] selectedRows = overview_table.getSelectedRows();
+					for (int i : selectedRows) {
+						i = overview_table.convertRowIndexToModel(i);	// Convert row index because "Sort" causes problems
+					}
+					chart = create_multiple_bar_chart(overview_table, overview_data, selectedRows);	 
+				} else if (radio_button[3].isSelected()) {	// Multiple Flows - Stacked
+					int[] selectedRows = overview_table.getSelectedRows();
+					for (int i : selectedRows) {
+						i = overview_table.convertRowIndexToModel(i);	// Convert row index because "Sort" causes problems
+					}
+					chart = create_multiple_stacked_bar1_chart(overview_table, overview_data, selectedRows);	 
+				} else if (radio_button[4].isSelected()) {	// Multiple Flows - Stacked
+					int[] selectedRows = overview_table.getSelectedRows();
+					for (int i : selectedRows) {
+						i = overview_table.convertRowIndexToModel(i);	// Convert row index because "Sort" causes problems
+					}
+					chart = create_multiple_stacked_bar2_chart(overview_table, overview_data, selectedRows);	 
+				}
 	 	        
-	 	        //Create a chart
-	 		    PieDataset dataset2 = create_selected_strata_dataset();
-	 	        JFreeChart chart2 = createChart(dataset2, "Management decisions at the start of planning horizon for '" + strataName + "' ");
-	 	        if (table.getSelectedRows().length > 1) {	//Change chart title if multiple strata are selected
-	 				chart2.setTitle("Management decisions at the start of planning horizon for "  + table.getSelectedRows().length + " existing strata");
-	 			}	
-
-	 	        // add the chart to a panel...
-	         	ChartPanel chartPanel2 = new ChartPanel(chart2);
-	 	        chart2.getLegend().setFrame(BlockBorder.NONE);	//Remove the ugly border surrounded Legend
-	 	        TitledBorder border2 = new TitledBorder("");
-	 			border2.setTitleJustification(TitledBorder.CENTER);
-	 			chartPanel2.setBorder(border2);
-	 	        chartPanel2.setPreferredSize(new Dimension(600, 350));
-	 	        
-	 	        // Rotation effect 
-	 	        final Chart_Rotator rotator = new Chart_Rotator((PiePlot3D) chart2.getPlot()); 	 	     
-	 	        if (dataset2 != null) {
-			        chartPanel2.addMouseListener(new MouseAdapter() { // Add listener to projectTree
-						boolean is_rotating = false;
+				// add the chart to a panel
+				ChartPanel chart_panel = new ChartPanel(chart);
+	         	if (chart != null) chart.getLegend().setFrame(BlockBorder.NONE);	//Remove the ugly border surrounded Legend
+	 	        TitledBorder border = new TitledBorder("");
+	 			border.setTitleJustification(TitledBorder.CENTER);
+	 			chart_panel.setBorder(border);
+	 			chart_panel.setPreferredSize(new Dimension(100, 100));
+				scroll_bar_chart.setViewportView(chart_panel);	// Add panel to scroll panel
+				split_pane_chart.setPreferredSize(new Dimension(100, 100));
+				
+		    	// Rotation effect
+				if (radio_button[1].isSelected()) {	// Single Constraint
+			        final Chart_Rotator rotator = new Chart_Rotator((PiePlot3D) chart.getPlot());
+			        rotator.start();           
+			        chart_panel.addMouseListener(new MouseAdapter() { // Add listener to projectTree
+						boolean is_rotating = true;
 						public void mousePressed(MouseEvent e) {
 							if (SwingUtilities.isLeftMouseButton(e)) {
 								if (is_rotating) {
@@ -141,167 +240,116 @@ public class Output_Panel_Management_Overview extends JLayeredPane {
 							}
 						}
 					});
-	 	        }
-
-	 	        // Add panel to scroll panel
-				scroll_chart2.setViewportView(chartPanel2);
-	        }
+				}
+				revalidate();
+				repaint();
+        	}       
         });
         
-        // Trigger the value changed listener of the table
-        table.setRowSelectionInterval(0, 0);
-        table.clearSelection();
-        //---------------------------------------------------------------
+        radio_button[0].setSelected(true);
+    	overview_table.setRowSelectionInterval(0, 0);
+		overview_table.clearSelection();
+        //-------------------------------------------------------------------------------------------------
         
-        
-	    // Add the 1st grid - chartPanel for all Strata
-		c.gridx = 0;
-		c.gridy = 0;
-		c.gridwidth = 1;
-		c.weightx = 0;
-	    c.weighty = 0;
-		super.add(scroll_chart1, c);
-		
-	    // Add the 2nd grid - chartPanel for the selected Strata
-		c.gridx = 1;
-		c.gridy = 0;
-		c.gridwidth = 1;
-		c.weightx = 0;
-		c.weighty = 0;
-		super.add(scroll_chart2, c);
-		
-		// Add empty label
-		c.fill = GridBagConstraints.BOTH;
-		c.gridx = 2;
-		c.gridy = 0;
-		c.gridwidth = 1;
-		c.weightx = 1;
-		c.weighty = 0;
-		super.add(new JLabel(), c);		
-		
-		// Add the 3rd grid - table
-		c.gridx = 0;
-		c.gridy = 1;
-		c.gridwidth =3;
-		c.weightx = 1;
-	    c.weighty = 1;			
-		table.setPreferredScrollableViewportSize(new Dimension(0, 0));		// 1216	
-		JScrollPane table_scroll_panel = new JScrollPane(table);
-		table_scroll_panel.setBorder(BorderFactory.createEmptyBorder());	//Hide the border line surrounded scrollPane
-		table_scroll_panel.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		super.add(table_scroll_panel, c);
+        setLayout(new GridBagLayout());
+		c = new GridBagConstraints();
+        super.add(split_pane, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+				0, 0, 1, 1, 1, 1, // gridx, gridy, gridwidth, gridheight, weightx, weighty
+				10, 5, 0, 5));		// insets top, left, bottom, right
 	}
 
-			
-	private PieDataset create_all_strata_dataset() {
-		DefaultPieDataset dataset = new DefaultPieDataset();
-
-		double total_NG = 0;
-		double total_PB = 0;
-		double total_GS = 0;
-		double total_EA = 0;
-		double total_MS = 0;
-		double total_BS = 0;
-		for (int i = 0; i < data.length; i++) { // Loop table rows
-			total_NG = total_NG + Double.parseDouble(data[i][7].toString());
-			total_PB = total_PB + Double.parseDouble(data[i][8].toString());
-			total_GS = total_GS + Double.parseDouble(data[i][9].toString());
-			total_EA = total_EA + Double.parseDouble(data[i][10].toString());
-			total_MS = total_MS + Double.parseDouble(data[i][11].toString());
-			total_BS = total_BS + Double.parseDouble(data[i][12].toString());
-		}
 	
-		dataset.setValue("Natural Growth", total_NG);
-		dataset.setValue("Prescribed Burn", total_PB);
-		dataset.setValue("Group Selection", total_GS);
-		dataset.setValue("Even Age", total_EA);
-		dataset.setValue("Mixed Severity Wildfire", total_MS);
-		dataset.setValue("Severe Bark Beetle", total_BS);
-		
-		return dataset;
-	}
-
-	private PieDataset create_selected_strata_dataset() {
-		DefaultPieDataset dataset = new DefaultPieDataset();
-
-		if (table.getSelectedRow() >= 0) {
-			double total_NG = 0;
-			double total_PB = 0;
-			double total_GS = 0;
-			double total_EA = 0;
-			double total_MS = 0;
-			double total_BS = 0;
-				
-			int[] selectedRow = table.getSelectedRows();	
-			for (int i = 0; i < selectedRow.length; i++) {
-				selectedRow[i] = table.convertRowIndexToModel(selectedRow[i]);	///Convert row index because "Sort" causes problems
-			}
-			
-			for (int i: selectedRow) {
-				total_NG = total_NG + Double.parseDouble(data[i][7].toString());
-				total_PB = total_PB + Double.parseDouble(data[i][8].toString());
-				total_GS = total_GS + Double.parseDouble(data[i][9].toString());
-				total_EA = total_EA + Double.parseDouble(data[i][10].toString());
-				total_MS = total_MS + Double.parseDouble(data[i][11].toString());
-				total_BS = total_BS + Double.parseDouble(data[i][12].toString());
-			}					
-		
-			dataset.setValue("Natural Growth", total_NG);
-			dataset.setValue("Prescribed Burn", total_PB);
-			dataset.setValue("Group Selection", total_GS);
-			dataset.setValue("Even Age", total_EA);
-			dataset.setValue("Mixed Severity Wildfire", total_MS);
-			dataset.setValue("Severe Bark Beetle", total_BS);
-		} else {
-			dataset = null;
-		}
-
-		return dataset;
-	}		
+	
 	
 	
 	@SuppressWarnings("deprecation")
-	private JFreeChart createChart(PieDataset dataset, String chartName) {
-		JFreeChart chart = ChartFactory.createPieChart3D(chartName, // chart title
-				dataset, // dataset
-				true, // include legend
-				true, false);		
-		chart.setBorderVisible(true);
-		chart.setBackgroundPaint(Color.LIGHT_GRAY);
-		chart.getLegend().setBackgroundPaint(null);
-		chart.getLegend().setPosition(RectangleEdge.BOTTOM);
-		chart.getLegend().setItemFont(new java.awt.Font("defaultFont", java.awt.Font.PLAIN, 13));
-		chart.getTitle().setFont(new java.awt.Font("defaultFont", java.awt.Font.BOLD, 14));
-
-		PiePlot3D plot = (PiePlot3D) chart.getPlot();
-		plot.setOutlinePaint(null);
-		plot.setStartAngle(135);
-        plot.setDirection(Rotation.CLOCKWISE);
-        plot.setForegroundAlpha(0.6f);
-        plot.setBackgroundPaint(null);
-		plot.setNoDataMessage("Highlight single or multiple existing strata to view chart");
-		plot.setExplodePercent(1, 0.1);
+	private JFreeChart create_single_bar_chart(JTable table, Object[][] data, int selectedRow) {	
+		final DefaultCategoryDataset dataset = new DefaultCategoryDataset( );
+		String chart_name = "Highlight an iteration to view chart";
+		if (selectedRow >= 0) {
+			chart_name = "iteration " + data[selectedRow][0].toString() + " - " + "first period management area";
+			// Put all into dataset		
+			for (int i = 1; i < data[0].length; i++) {
+				dataset.addValue(Double.valueOf(data[selectedRow][i].toString()), "area", table.getColumnName(i));
+			}
+		}
 		
-		PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(
-	            "{0}: {1} ({2})", new DecimalFormat("###,### acres"), new DecimalFormat("#.#%"));			// "{0}: {1} ({2})"
-	    plot.setLabelGenerator(gen);	    
-	    plot.setLabelBackgroundPaint(null);
-	    plot.setLabelShadowPaint(null);
-	    plot.setLabelOutlinePaint(null);
-	    plot.setLabelLinkStyle(PieLabelLinkStyle.QUAD_CURVE);
-	    
-	    // Customize colors
-	    plot.setSectionPaint("Natural Growth", new Color(0, 255, 0));
-		plot.setSectionPaint("Prescribed Burn", new Color(255, 255, 0));
-		plot.setSectionPaint("Group Selection", new Color(240, 248, 255));
-	    plot.setSectionPaint("Even Age", new Color(51, 255, 255));
-	    plot.setSectionPaint("Mixed Severity Wildfire", new Color(255, 140, 0));
-	    plot.setSectionPaint("Severe Bark Beetle", new Color(255, 51, 0));
-	    		    
-//	    plot.setLabelLinksVisible(false);
-//		plot.setLabelGenerator(null);
-//		plot.setSimpleLabels(true);
-		return chart;
+		Chart charts = new Chart();
+		return charts.create_single_bar_chart(chart_name, "silviculture method", "area", dataset);
+	}	
+	
+	
+	@SuppressWarnings("deprecation")
+	private JFreeChart create_single_pie_chart(JTable table, Object[][] data, int selectedRow) {			
+		final DefaultPieDataset dataset = new DefaultPieDataset( );
+		String chart_name = "Highlight an iteration to view chart";
+		if (selectedRow >= 0) {
+			chart_name = "iteration " + data[selectedRow][0].toString() + " - " + "first period management area";
+			// Put all into dataset		
+			for (int i = 1; i < data[0].length; i++) {
+				dataset.setValue(table.getColumnName(i), Double.valueOf(data[selectedRow][i].toString()));
+			}
+		}
+		
+		Chart charts = new Chart();
+		return charts.create_single_pie_chart(chart_name, "list of silviculture methods", dataset);
+	}	
+	
+	
+	@SuppressWarnings("deprecation")
+	private JFreeChart create_multiple_bar_chart(JTable table, Object[][] data, int[] selectedRows) {		
+		final DefaultCategoryDataset dataset = new DefaultCategoryDataset( );
+		String chart_name = "Highlight single or multiple iterations to view chart";
+		if (selectedRows.length >= 1) {
+			chart_name = "Comparison for highlighted iterations";
+			for (int selectedRow: selectedRows) {
+				// Put all into dataset		
+				for (int i = 1; i < data[0].length; i++) {
+					dataset.addValue(Double.valueOf(data[selectedRow][i].toString()), "iteration " + data[selectedRow][0].toString(), table.getColumnName(i));
+				}
+			}
+		}
+		
+		Chart charts = new Chart();
+		return charts.create_multiple_bar_chart(chart_name, "silviculture method", "area", dataset);
+	}	
+
+	
+	@SuppressWarnings("deprecation")
+	private JFreeChart create_multiple_stacked_bar1_chart(JTable table, Object[][] data, int[] selectedRows) {			
+		final DefaultCategoryDataset dataset = new DefaultCategoryDataset( );
+		String chart_name = "Highlight single or multiple iterations to view chart";
+		if (selectedRows.length >= 1) {
+			chart_name = "Comparison for highlighted iterations";
+			for (int selectedRow: selectedRows) {
+				// Put all into dataset		
+				for (int i = 1; i < data[0].length; i++) {
+					dataset.addValue(Double.valueOf(data[selectedRow][i].toString()), table.getColumnName(i), "iteration " + data[selectedRow][0].toString());
+				}
+			}
+		}
+		
+		Chart charts = new Chart();
+		return charts.create_multiple_stacked_bar1_chart(chart_name, "iteration (stacked by silviculture methods)", "area", dataset);
+	}	
+	
+	
+	@SuppressWarnings("deprecation")
+	private JFreeChart create_multiple_stacked_bar2_chart(JTable table, Object[][] data, int[] selectedRows) {			
+		final DefaultCategoryDataset dataset = new DefaultCategoryDataset( );
+		String chart_name = "Highlight single or multiple iterations to view chart";
+		if (selectedRows.length >= 1) {
+			chart_name = "Comparison for highlighted iterations";
+			for (int selectedRow: selectedRows) {
+				// Put all into dataset		
+				for (int i = 1; i < data[0].length; i++) {
+					dataset.addValue(Double.valueOf(data[selectedRow][i].toString()), "iteration " + data[selectedRow][0].toString(), table.getColumnName(i));
+				}
+			}
+		}
+		
+		Chart charts = new Chart();
+		return charts.create_multiple_stacked_bar2_chart(chart_name, "silviculture method (stacked by iterations)", "area", dataset);
 	}	
 }	
 
