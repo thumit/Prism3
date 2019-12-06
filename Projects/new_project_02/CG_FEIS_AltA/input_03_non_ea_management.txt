@@ -1,4 +1,0 @@
-condition_id	condition_description	static_identifiers	method_choice	model_condition	
-1	NG Everywhere	0 AB AS BG MG PR SX;1 C G l s;2 1 2 3 4 5 6;3 B G L O U W;4 B C D E F G H I U;5 F G H I J K L M N O P Q R S Z	0 NG_E NG_R;1 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14	true	
-2	PB MAG 2-6	0 AB AS BG MG PR SX;1 C G l s;2 2 3 4 5 6;3 B G L O U W;4 B C D E F G H I U;5 F G H I J K L M N O P Q R S Z	0 PB_E PB_R;1 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14	true	
-3	GS MAG 3-6	0 AB AS BG MG PR SX;1 C G l s;2 3 4 5 6;3 B G L O U W;4 B C D E F G H I U;5 F G H I J K L M N O P Q R S Z	0 GS_E GS_R;1 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14	true	
