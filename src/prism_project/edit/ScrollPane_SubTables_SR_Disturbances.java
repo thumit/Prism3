@@ -51,6 +51,7 @@ public class ScrollPane_SubTables_SR_Disturbances extends JScrollPane {
 		border.setTitleJustification(TitledBorder.CENTER);
 		probability_scrollpane.setBorder(border);
 		probability_scrollpane.setPreferredSize(new Dimension(333, 0));
+		probability_scrollpane.setVisible(false);
 		
 		
 		regeneration_scrollpane = new JScrollPane(/*this.table6b*/);

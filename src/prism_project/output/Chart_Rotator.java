@@ -29,7 +29,7 @@ public class Chart_Rotator extends JLayeredPane {		// I am so smart to not use t
 	private Runnable task;
 	private double angle = 135;
 
-	Chart_Rotator(final PiePlot3D plot) {
+	public Chart_Rotator(final PiePlot3D plot) {
 		task = new Runnable() {
 			public void run() {
 				plot.setStartAngle(angle);

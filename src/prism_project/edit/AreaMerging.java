@@ -346,8 +346,13 @@ public class AreaMerging {
 				+ "state_id should be defined by using attributes which represent the forest condition at the very beginning of a planning period (i.e. do not select rmcuft or action_type for implementation) \n"
 				+ "state_id will be generated and saved after clicking the calculator button\n"
 				+ "After generating state_id, the entire bottom area could be right clicked for more functionality\n"
-				+ "For rolling horizon, forest areas would be qualified for merging if they: 1) have the same state_id; 2) are at the same planning period, and 3) have the same forest status (Existing or Regenerated)\n"
-				+ "----------------------------------------------------------------------------------------------------------------------------------------------\n";
+				+ "For rolling horizon, forest areas would be qualified for merging if they:\n"
+				+ "          1. have the same state_id\n"
+				+ "          2. are at the same planning period\n"
+				+ "          3. have the same forest status (Existing or Regenerated)\n"
+				+ "          4. have the same 6 layers (existing strata) or have the same 5 layers (regenerated strata)\n"
+				+ "          5. are neither Mixes Severity strata areas nor Bark Beetle strata areas (exclusion is for methods, not for the exact events)\n"
+				+ "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n";
 		ranking_textarea = new PrismTextAreaReadMe("icon_script.png", 1, 1 /*32, 32*/);
 		ranking_textarea.append(message);
 		ranking_textarea.setSelectionStart(0);	// scroll to top

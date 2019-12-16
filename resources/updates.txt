@@ -1179,3 +1179,10 @@ All changes in this block are associated with PrismAlpha2.0.01.jar, Prism-Formul
 All changes in this block are associated with PrismAlpha2.0.02.jar, Prism-Formulation-09.docx, Rolling horizon-formulation-05.docx, Prism-UserManual-01.docx
 --------------------------------------------------------------------------
 496. gitignore files are added to prevent tracking (i.e. add to index) files in Databases, Projects folders and also the bfg-1.13.0.jar in prism folder
+497. Modify the description of area merging to describe exactly what is currently applying
+498. Hide button Examine in the basic constraints GUI since it has no function
+499. Stochastic disturbances update
+	- Add scenario_id and scenario_probability columns
+	- Hide occurence_probability column
+	- Extend the length of condition_descriotion column
+	- New UI including table and chart to help define probability for scenarios
