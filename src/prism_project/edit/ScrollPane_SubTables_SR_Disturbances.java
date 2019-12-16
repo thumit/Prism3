@@ -26,39 +26,50 @@ import javax.swing.JTable;
 import javax.swing.border.TitledBorder;
 
 public class ScrollPane_SubTables_SR_Disturbances extends JScrollPane {		
-	private JTable table6a;
-	private Object[][] data6a;
-	
-	private JTable table6b;
-	private Object[][] data6b;
-	
+	private JTable table6a, table6b, table6c, table6d;
+	private Object[][] data6a, data6b, data6c, data6d;
 	private int total_replacing_disturbances;
-	
-	private JScrollPane probability_scrollpane;
-	private JScrollPane regeneration_scrollpane;
-	
+	private JScrollPane loss_probability_mean_scrollpane, loss_probability_std_scrollpane, conversion_rate_mean_scrollpane, conversion_rate_std_scrollpane;
 		
-	public ScrollPane_SubTables_SR_Disturbances(JTable table6a, Object[][] data6a, JTable table6b, Object[][] data6b, int total_replacing_disturbances) {	
+	public ScrollPane_SubTables_SR_Disturbances(JTable table6a, Object[][] data6a, JTable table6b, Object[][] data6b, JTable table6c, Object[][] data6c, JTable table6d, Object[][] data6d, int total_replacing_disturbances) {	
 		this.table6a = table6a;
 		this.table6b = table6b;
+		this.table6c = table6c;
+		this.table6d = table6d;
 		this.data6a = data6a;
 		this.data6b = data6b;
+		this.data6c = data6c;
+		this.data6d = data6d;
 		this.total_replacing_disturbances = total_replacing_disturbances;
 		
 	
-		probability_scrollpane = new JScrollPane(/*this.table6a*/);
-		TitledBorder border = new TitledBorder("Probability of occurrence (INACTIVE)");
+		loss_probability_mean_scrollpane = new JScrollPane(/*this.table6a*/);
+		TitledBorder border = new TitledBorder("Loss probability mean");
 		border.setTitleJustification(TitledBorder.CENTER);
-		probability_scrollpane.setBorder(border);
-		probability_scrollpane.setPreferredSize(new Dimension(333, 0));
+		loss_probability_mean_scrollpane.setBorder(border);
+		loss_probability_mean_scrollpane.setPreferredSize(new Dimension(333, 0));
 		
 		
-		regeneration_scrollpane = new JScrollPane(/*this.table6b*/);
-		border = new TitledBorder("Regeneration upon occurrence");
+		loss_probability_std_scrollpane = new JScrollPane(/*this.table6b*/);
+		border = new TitledBorder("Loss probability standard deviation");
 		border.setTitleJustification(TitledBorder.CENTER);
-		regeneration_scrollpane.setBorder(border);
-		regeneration_scrollpane.setPreferredSize(new Dimension(433, 0));
-				
+		loss_probability_std_scrollpane.setBorder(border);
+		loss_probability_std_scrollpane.setPreferredSize(new Dimension(333, 0));
+		
+		
+		conversion_rate_mean_scrollpane = new JScrollPane(/*this.table6c*/);
+		border = new TitledBorder("Conversion rate mean");
+		border.setTitleJustification(TitledBorder.CENTER);
+		conversion_rate_mean_scrollpane.setBorder(border);
+		conversion_rate_mean_scrollpane.setPreferredSize(new Dimension(433, 0));
+			
+		
+		conversion_rate_std_scrollpane = new JScrollPane(/*this.table6d*/);
+		border = new TitledBorder("Conversion rate standard deviation");
+		border.setTitleJustification(TitledBorder.CENTER);
+		conversion_rate_std_scrollpane.setBorder(border);
+		conversion_rate_std_scrollpane.setPreferredSize(new Dimension(433, 0));
+		
 				
 		JPanel combine_panel = new JPanel(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
@@ -67,55 +78,98 @@ public class ScrollPane_SubTables_SR_Disturbances extends JScrollPane {
 		c.gridy = 0;
 		c.weightx = 1;
 	    c.weighty = 1;
-	    combine_panel.add(probability_scrollpane, c);
+	    combine_panel.add(loss_probability_mean_scrollpane, c);
 		c.gridx = 1;
 		c.gridy = 0;
 		c.weightx = 1;
 	    c.weighty = 1;
-	    combine_panel.add(regeneration_scrollpane, c);
-
+	    combine_panel.add(conversion_rate_mean_scrollpane, c);
+	    c.fill = GridBagConstraints.BOTH;
+		c.gridx = 0;
+		c.gridy = 1;
+		c.weightx = 1;
+	    c.weighty = 1;
+	    combine_panel.add(loss_probability_std_scrollpane, c);
+		c.gridx = 1;
+		c.gridy = 1;
+		c.weightx = 1;
+	    c.weighty = 1;
+	    combine_panel.add(conversion_rate_std_scrollpane, c);
+	  
 		
 		setViewportView(combine_panel);
 		setBorder(null);
 	}	
 			
 	
-	public String get_occurrence_info_from_GUI() {	
-		String probability_info = "";
+	public String get_lpr_mean_from_GUI() {	
+		String lpr_mean = "";
 		for (int row = 0; row < data6a.length; row++) {
-			probability_info = probability_info + data6a[row][0] + " " + data6a[row][1];
+			lpr_mean = lpr_mean + data6a[row][0] + " " + data6a[row][1];
 			for (int col = 2; col < data6a[row].length; col++) {
-				probability_info = probability_info + " " + data6a[row][col].toString();
+				lpr_mean = lpr_mean + " " + data6a[row][col].toString();
 			}
-			probability_info = probability_info + ";";
+			lpr_mean = lpr_mean + ";";
 		}			
-		if (!probability_info.equals("")) {
-			probability_info = probability_info.substring(0, probability_info.length() - 1);		// remove the last ;
+		if (!lpr_mean.equals("")) {
+			lpr_mean = lpr_mean.substring(0, lpr_mean.length() - 1);		// remove the last ;
 		}
-		return probability_info;
+		return lpr_mean;
 	}
 	
 	
-	public String get_regeneration_info_from_GUI() {	
-		String regeneration_info = "";
+	public String get_lpr_std_from_GUI() {	
+		String lpr_std = "";
 		for (int row = 0; row < data6b.length; row++) {
-			regeneration_info = regeneration_info + data6b[row][0] + " " + data6b[row][1];
+			lpr_std = lpr_std + data6b[row][0] + " " + data6b[row][1];
 			for (int col = 2; col < data6b[row].length; col++) {
-				regeneration_info = regeneration_info + " " + data6b[row][col].toString();
+				lpr_std = lpr_std + " " + data6b[row][col].toString();
 			}
-			regeneration_info = regeneration_info + ";";
+			lpr_std = lpr_std + ";";
 		}			
-		if (!regeneration_info.equals("")) {
-			regeneration_info = regeneration_info.substring(0, regeneration_info.length() - 1);		// remove the last ;
+		if (!lpr_std.equals("")) {
+			lpr_std = lpr_std.substring(0, lpr_std.length() - 1);		// remove the last ;
 		}
-		return regeneration_info;
+		return lpr_std;
 	}
 	
 	
-	public void reload_this_condition_occurrence_and_regeneration(String probability_info, String regeneration_info) {	
+	public String get_cr_mean_from_GUI() {	
+		String cr_mean = "";
+		for (int row = 0; row < data6c.length; row++) {
+			cr_mean = cr_mean + data6c[row][0] + " " + data6c[row][1];
+			for (int col = 2; col < data6c[row].length; col++) {
+				cr_mean = cr_mean + " " + data6c[row][col].toString();
+			}
+			cr_mean = cr_mean + ";";
+		}			
+		if (!cr_mean.equals("")) {
+			cr_mean = cr_mean.substring(0, cr_mean.length() - 1);		// remove the last ;
+		}
+		return cr_mean;
+	}
+	
+	
+	public String get_cr_std_from_GUI() {	
+		String cr_std = "";
+		for (int row = 0; row < data6d.length; row++) {
+			cr_std = cr_std + data6d[row][0] + " " + data6d[row][1];
+			for (int col = 2; col < data6d[row].length; col++) {
+				cr_std = cr_std + " " + data6d[row][col].toString();
+			}
+			cr_std = cr_std + ";";
+		}			
+		if (!cr_std.equals("")) {
+			cr_std = cr_std.substring(0, cr_std.length() - 1);		// remove the last ;
+		}
+		return cr_std;
+	}
+	
+	
+	public void reload_this_condition_occurrence_and_regeneration(String lpr_mean, String lpr_std, String cr_mean, String cr_std) {	
 		// Reload table6a
-		if(probability_info.length() > 0) {		// this guarantees the string is not ""
-			String[] info_6a = probability_info.split(";");					
+		if(lpr_mean.length() > 0) {		// this guarantees the string is not ""
+			String[] info_6a = lpr_mean.split(";");					
 			for (int row = 0; row < info_6a.length; row++) {			
 				String[] sub_info = info_6a[row].split(" ");
 				for (int col = 2; col <  2 + total_replacing_disturbances; col++) {	// Just load up to the current number of SRs so old runs which have all 99 disturbances could be loaded)
@@ -126,13 +180,37 @@ public class ScrollPane_SubTables_SR_Disturbances extends JScrollPane {
 		}
 		
 		// Reload table6b
-		if(regeneration_info.length() > 0) {		// this guarantees the string is not ""
-			String[] info_6b = regeneration_info.split(";");					
+		if(lpr_std.length() > 0) {		// this guarantees the string is not ""
+			String[] info_6b = lpr_std.split(";");					
 			for (int row = 0; row < info_6b.length; row++) {			
 				String[] sub_info = info_6b[row].split(" ");
+				for (int col = 2; col <  2 + total_replacing_disturbances; col++) {	// Just load up to the current number of SRs so old runs which have all 99 disturbances could be loaded)
+					double probability = Double.valueOf(sub_info[col]);
+					data6b[row][col] = probability;
+				}
+			}
+		}
+		
+		// Reload table6c
+		if(cr_mean.length() > 0) {		// this guarantees the string is not ""
+			String[] info_6c = cr_mean.split(";");					
+			for (int row = 0; row < info_6c.length; row++) {			
+				String[] sub_info = info_6c[row].split(" ");
 				for (int col = 2; col < 2 + total_replacing_disturbances; col++) {	// Just load up to the current number of SRs so old runs which have all 99 disturbances could be loaded)
 					double percentage = Double.valueOf(sub_info[col]);
-					data6b[row][col] = percentage;
+					data6c[row][col] = percentage;
+				}
+			}
+		}
+		
+		// Reload table6d
+		if(cr_std.length() > 0) {		// this guarantees the string is not ""
+			String[] info_6d = cr_std.split(";");					
+			for (int row = 0; row < info_6d.length; row++) {			
+				String[] sub_info = info_6d[row].split(" ");
+				for (int col = 2; col < 2 + total_replacing_disturbances; col++) {	// Just load up to the current number of SRs so old runs which have all 99 disturbances could be loaded)
+					double percentage = Double.valueOf(sub_info[col]);
+					data6d[row][col] = percentage;
 				}
 			}
 		}
@@ -140,25 +218,31 @@ public class ScrollPane_SubTables_SR_Disturbances extends JScrollPane {
 
 
 	public JScrollPane get_probability_scrollpane() {
-		return probability_scrollpane;
+		return loss_probability_mean_scrollpane;
 	}
 
 	public JScrollPane get_regeneration_scrollpane() {
-		return regeneration_scrollpane;
+		return conversion_rate_mean_scrollpane;
 	}
 	
-	public void show_2_tables() {			
-		probability_scrollpane.setViewportView(table6a);
-		regeneration_scrollpane.setViewportView(table6b);
+	public void show_4_tables() {			
+		loss_probability_mean_scrollpane.setViewportView(table6a);
+		loss_probability_std_scrollpane.setViewportView(table6b);
+		conversion_rate_mean_scrollpane.setViewportView(table6c);
+		conversion_rate_std_scrollpane.setViewportView(table6d);
 	}
 	
-	public void hide_2_tables() {			
-		probability_scrollpane.setViewportView(null);
-		regeneration_scrollpane.setViewportView(null);
+	public void hide_4_tables() {			
+		loss_probability_mean_scrollpane.setViewportView(null);
+		loss_probability_std_scrollpane.setViewportView(null);
+		conversion_rate_mean_scrollpane.setViewportView(null);
+		conversion_rate_std_scrollpane.setViewportView(null);
 	}
 	
-	public void update_2_tables_data(Object[][] data6a, Object[][] data6b) {			
+	public void update_4_tables_data(Object[][] data6a, Object[][] data6b, Object[][] data6c, Object[][] data6d) {			
 		this.data6a = data6a;
 		this.data6b = data6b;
+		this.data6c = data6c;
+		this.data6d = data6d;
 	}
 }

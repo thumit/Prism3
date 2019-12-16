@@ -1186,4 +1186,6 @@ All changes in this block are associated with PrismAlpha2.0.02.jar, Prism-Formul
 	- Hide occurence_probability column
 	- Extend the length of condition_descriotion column
 	- New UI including table and chart to help define probability for scenarios
-500. Revert to previous interface and setup for SR Disturbance
+500. Revert to previous interface and setup for SR Disturbance (commit to stochastic_disturbances_02 and switch to stochastic_disturbances_03)
+501. Stochastic disturbances new update:
+	- Initially establish 4 tables for SR Disturbances: lpr_mean, lpr_std, cr_mean, cr_std
