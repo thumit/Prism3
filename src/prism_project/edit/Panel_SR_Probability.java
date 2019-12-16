@@ -27,6 +27,7 @@ import java.util.List;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -51,6 +52,7 @@ import prism_convenience.PrismGridBagLayoutHandle;
 import prism_convenience.PrismTableModel;
 import prism_project.output.Chart;
 import prism_project.output.Chart_Rotator;
+import prism_root.PrismMain;
 
 public class Panel_SR_Probability extends JLayeredPane {
 	
@@ -86,6 +88,15 @@ public class Panel_SR_Probability extends JLayeredPane {
 			public boolean isCellEditable(int row, int col) {
 				return (col == 1) ? true : false;
 			}
+			
+			@Override
+    		public void setValueAt(Object value, int row, int col) {
+    			if (col == 1 && (((Number) value).doubleValue() < 0 || ((Number) value).doubleValue() > 100)) {		// not allow null to be set
+    				JOptionPane.showMessageDialog(PrismMain.get_Prism_DesktopPane(), "Your input has not been accepted. Only double values in the range 0-100 (%) would be allowed.");
+    			} else {
+    				data[row][col] = value;
+    			}
+    		}
 		};
         JTable table = new JTable(model) {
         	@Override			//These override is to make the width of the cell fit all contents of the cell

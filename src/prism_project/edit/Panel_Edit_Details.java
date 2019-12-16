@@ -9545,6 +9545,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					+ "          3. have the same forest status (Existing or Regenerated)\n"
 					+ "          4. have the same 6 layers (existing strata) or have the same 5 layers (regenerated strata)\n"
 					+ "          5. are neither Mixes Severity strata areas nor Bark Beetle strata areas (exclusion is for methods, not for the exact events)\n"
+					+ "If none of the attribute is selected for implementation, Prism would apply No-Merging\n"
 					+ "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n";
 			PrismTextAreaReadMe merging_textarea = new PrismTextAreaReadMe("icon_script.png", 1, 1 /*32, 32*/);
 			merging_textarea.append(message);
