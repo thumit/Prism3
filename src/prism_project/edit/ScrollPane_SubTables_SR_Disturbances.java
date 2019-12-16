@@ -21,6 +21,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.TitledBorder;
@@ -70,7 +71,17 @@ public class ScrollPane_SubTables_SR_Disturbances extends JScrollPane {
 		conversion_rate_std_scrollpane.setBorder(border);
 		conversion_rate_std_scrollpane.setPreferredSize(new Dimension(433, 0));
 		
-				
+		
+		loss_probability_mean_scrollpane.getVerticalScrollBar().setModel(loss_probability_std_scrollpane.getVerticalScrollBar().getModel());	 //<--------------synchronize
+		loss_probability_mean_scrollpane.getHorizontalScrollBar().setModel(loss_probability_std_scrollpane.getHorizontalScrollBar().getModel());	 //<--------------synchronize
+		table6b.setSelectionModel(table6a.getSelectionModel());	 //<--------------synchronize
+		table6b.setColumnModel(table6a.getColumnModel());	 //<--------------synchronize
+		conversion_rate_mean_scrollpane.getVerticalScrollBar().setModel(conversion_rate_std_scrollpane.getVerticalScrollBar().getModel());	 //<--------------synchronize
+		conversion_rate_mean_scrollpane.getHorizontalScrollBar().setModel(conversion_rate_std_scrollpane.getHorizontalScrollBar().getModel());	 //<--------------synchronize
+		table6d.setSelectionModel(table6c.getSelectionModel());	 //<--------------synchronize
+		table6d.setColumnModel(table6c.getColumnModel());	 //<--------------synchronize
+		
+		
 		JPanel combine_panel = new JPanel(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.BOTH;
