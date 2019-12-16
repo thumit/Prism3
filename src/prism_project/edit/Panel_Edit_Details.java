@@ -650,38 +650,38 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						input_data = input_data_temp;
 					}
 				}
-				// The below code is for adding column "scenario_id" and "scenario_probability" as the first 2 columns of the old runs so the old runs have new format ("input_06_sr_disturbances.txt")
-				// -----------------------------------------------------------------------------
-				// -----------------------------------------------------------------------------
-				if (table_file.getName().equals("input_06_sr_disturbances.txt") && !input_columnNames[0].equals("scenario_id")) {
-					// Modify old input by adding 2 columns
-					int input_rowCount_temp = input_rowCount;
-					int input_colCount_temp = input_colCount + 2;
-					
-					String[] input_columnNames_temp = new String[input_colCount_temp];
-					for (int col = 0; col < input_colCount_temp - 2; col++) {
-						input_columnNames_temp[col + 2] = input_columnNames[col];
-					}
-					input_columnNames_temp[0] = "scenario_id";
-					input_columnNames_temp[1] = "scenario_probability";
-					
-					Object[][] input_data_temp = new Object[input_rowCount_temp][input_colCount_temp];
-					for (int row = 0; row < input_rowCount_temp; row++) {
-						for (int col = 0; col < input_colCount_temp - 2; col++) {
-							input_data_temp[row][col + 2] = input_data[row][col];
-						}
-						input_data_temp[row][0] = "Main";
-						input_data_temp[row][1] = 0;
-					}
-					
-					// apply the modification
-					input_rowCount = input_rowCount_temp;
-					input_colCount = input_colCount_temp;
-					input_columnNames = new String[input_colCount];
-					input_columnNames = input_columnNames_temp;
-					input_data = new Object[input_rowCount][input_colCount];
-					input_data = input_data_temp;
-				}
+//				// The below code is for adding column "scenario_id" and "scenario_probability" as the first 2 columns of the old runs so the old runs have new format ("input_06_sr_disturbances.txt")
+//				// -----------------------------------------------------------------------------
+//				// -----------------------------------------------------------------------------
+//				if (table_file.getName().equals("input_06_sr_disturbances.txt") && !input_columnNames[0].equals("scenario_id")) {
+//					// Modify old input by adding 2 columns
+//					int input_rowCount_temp = input_rowCount;
+//					int input_colCount_temp = input_colCount + 2;
+//					
+//					String[] input_columnNames_temp = new String[input_colCount_temp];
+//					for (int col = 0; col < input_colCount_temp - 2; col++) {
+//						input_columnNames_temp[col + 2] = input_columnNames[col];
+//					}
+//					input_columnNames_temp[0] = "scenario_id";
+//					input_columnNames_temp[1] = "scenario_probability";
+//					
+//					Object[][] input_data_temp = new Object[input_rowCount_temp][input_colCount_temp];
+//					for (int row = 0; row < input_rowCount_temp; row++) {
+//						for (int col = 0; col < input_colCount_temp - 2; col++) {
+//							input_data_temp[row][col + 2] = input_data[row][col];
+//						}
+//						input_data_temp[row][0] = "Main";
+//						input_data_temp[row][1] = 0;
+//					}
+//					
+//					// apply the modification
+//					input_rowCount = input_rowCount_temp;
+//					input_colCount = input_colCount_temp;
+//					input_columnNames = new String[input_colCount];
+//					input_columnNames = input_columnNames_temp;
+//					input_data = new Object[input_rowCount][input_colCount];
+//					input_data = input_data_temp;
+//				}
 				// -----------------------------------------------------------------------------
 				// -----------------------------------------------------------------------------
 			} catch (IOException e1) {
@@ -1669,9 +1669,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		//Setup the table------------------------------------------------------------	
 		if (is_table6_loaded == false) { // Create a fresh new if Load fail				
 			rowCount6 = 0;
-			colCount6 = 10;
+			colCount6 = 8;
 			data6 = new Object[rowCount6][colCount6];
-			columnNames6 = new String[] {"scenario_id", "scenario_probability", "condition_id", "condition_description", "probability_info", "regeneration_info", "static_identifiers", "dynamic_identifiers", "original_dynamic_identifiers", "model_condition"};
+			columnNames6 = new String[] {"condition_id", "condition_description", "probability_info", "regeneration_info", "static_identifiers", "dynamic_identifiers", "original_dynamic_identifiers", "model_condition"};
 		}
 					
 		
@@ -1679,14 +1679,13 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		model6 = new PrismTableModel(rowCount6, colCount6, data6, columnNames6) {
 			@Override
 			public Class getColumnClass(int c) {
-				if (c == 9) return Boolean.class;
-				else if (c == 1) return Double.class;
+				if (c == 7) return Boolean.class;
 				else return String.class;
 			}
 			
 			@Override
 			public boolean isCellEditable(int row, int col) {
-				if (col == 0 || col == 1 || col == 3 || col == 9) { //  columns "scenario_id", "scenario_probability", "condition_description" and "model_condition" are editable
+				if (col == 1 || col == 7) { //  columns "description" and "model_condition" are editable
 					return true;
 				} else {
 					return false;
@@ -1705,17 +1704,11 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						if (String.valueOf(data6[row][col]).equals("null")) {
 							data6[row][col] = null;
 						} else {	
-							if (col == 9) {
+							if (col == 7) {
 								try {
 									data6[row][col] = Boolean.valueOf(String.valueOf(data6[row][col]));
 								} catch (NumberFormatException e) {
 									System.err.println(e.getClass().getName() + ": " + e.getMessage() + " Fail to convert String to Boolean values in create_table6");
-								}
-							} else if (col == 1) {			// scenario_probability
-								try {
-									data6[row][col] = Double.valueOf(String.valueOf(data6[row][col]));
-								} catch (NumberFormatException e) {
-									System.err.println(e.getClass().getName() + ": " + e.getMessage() + " Fail to convert String to Double values in create_table6");
 								}
 							} else {
 								data6[row][col] = String.valueOf(data6[row][col]);
@@ -1743,10 +1736,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			            tableColumn.getHeaderValue(), false, false, -1, column);
 				maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
 				
-				if (column != 2) {		// note that this number is for visible columns only
+				if (column != 1) {
 					tableColumn.setPreferredWidth(maxWidth);
 				} else {
-					tableColumn.setMinWidth(350);
+					tableColumn.setMinWidth(200);
 				}
 				return component;
 			}
@@ -1767,7 +1760,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		
 		// Hide columns
 		TableColumnsHandle table_handle = new TableColumnsHandle(table6);
-		table_handle.setColumnVisible("scenario_probability", false);
 		table_handle.setColumnVisible("probability_info", false);
 		table_handle.setColumnVisible("regeneration_info", false);
 		table_handle.setColumnVisible("static_identifiers", false);
@@ -6144,19 +6136,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		Panel_QuickEdit_SR quick_edit;
 
 		public SR_Disturbances_GUI() {
-			setLayout(new BorderLayout());	
-			JSplitPane split_pane = new JSplitPane();
-			split_pane.setBorder(null);
-			split_pane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-			split_pane.setDividerSize(3);
-						
-			JPanel upper_panel = new JPanel();
-			upper_panel.setBorder(null);
-			upper_panel.setLayout(new GridBagLayout());			
-			
-			JPanel lower_panel = new JPanel();
-			lower_panel.setBorder(null);
-			lower_panel.setLayout(new GridBagLayout());
+			setLayout(new BorderLayout());		
 			
 			
 			// 1st grid ------------------------------------------------------------------------------		// Static identifiers	
@@ -6192,6 +6172,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			c.fill = GridBagConstraints.BOTH;
 			c.insets = new Insets(0, 5, 10, 10); // padding top 0, left 5, bottom 10, right 10
 			
+			
 			JButton btn_New = new JButton();
 			btn_New.setFont(new Font(null, Font.BOLD, 14));
 //			btn_New.setText("NEW SET");
@@ -6202,6 +6183,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			c.weightx = 0;
 			c.weighty = 0;
 			sr_disturbances_condition_panel.add(btn_New, c);		
+			
 
 			// Add Spinner to move priority up or down
 			JSpinner spin_priority = new JSpinner (new SpinnerNumberModel(1, 0, 2, 1));
@@ -6219,6 +6201,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			c.weighty = 0;
 			sr_disturbances_condition_panel.add(spin_priority, c);
 			
+			
 			JButton btn_Edit = new JButton();
 //			btn_Edit.setText("EDIT");
 			btn_Edit.setToolTipText("Modify");
@@ -6229,6 +6212,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			c.weightx = 0;
 			c.weighty = 0;
 			sr_disturbances_condition_panel.add(btn_Edit, c);
+		    
 
 			JButton btn_Delete = new JButton();
 			btn_Delete.setFont(new Font(null, Font.BOLD, 14));
@@ -6245,43 +6229,29 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			create_mass_check_button(sr_disturbances_condition_panel, c, 0, 4, 0, 0).addActionListener(e -> apply_mass_check_or_uncheck("mass_check", model6, table6, data6, colCount6));
 			create_mass_uncheck_button(sr_disturbances_condition_panel, c, 0, 5, 0, 0).addActionListener(e -> apply_mass_check_or_uncheck("mass_uncheck", model6, table6, data6, colCount6));
 			
-			JButton btn_probability = new JButton();
-			btn_probability.setText("prob.");
-			btn_probability.setVerticalTextPosition(SwingConstants.BOTTOM);
-			btn_probability.setHorizontalTextPosition(SwingConstants.CENTER);
-//			btn_probability.setToolTipText("probability");
-			btn_probability.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_flow3.png"));
-			btn_probability.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_flow3.png"));
-			btn_probability.setContentAreaFilled(false);
-			c.insets = new Insets(0, 5, 0, 10); // padding top 0, left 5, bottom 0, right 10
-			c.gridx = 0;
-			c.gridy = 6;
-			c.weightx = 0;
-			c.weighty = 0;
-			sr_disturbances_condition_panel.add(btn_probability, c);
 			
 			// Add Empty Label to make all buttons on top not middle
 			c.insets = new Insets(0, 0, 0, 0); // No padding
 			c.gridx = 0;
-			c.gridy = 7;
+			c.gridy = 6;
 			c.weightx = 0;
 			c.weighty = 1;
 			sr_disturbances_condition_panel.add(new JLabel(), c);
 			
-			// Add table6		
+			// Add table7		
 			create_table6();
 			JScrollPane table_ScrollPane = new JScrollPane(table6);
 			c.gridx = 1;
 			c.gridy = 0;
 			c.weightx = 1;
 			c.weighty = 1;
-			c.gridheight = 8;
+			c.gridheight = 7;
 			sr_disturbances_condition_panel.add(table_ScrollPane, c);
 						
 			
 			// Add Listeners for buttons----------------------------------------------------------
 			// Add Listeners for buttons----------------------------------------------------------							
-			// table6
+			// table7
 			class Table_Interaction {
 				void refresh() {
 					// Cancel editing before moving conditions up or down
@@ -6297,9 +6267,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					if (selectedRow.length == 1) {		// Show the set's identifiers
 						int currentRow = selectedRow[0];
 						currentRow = table6.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
-						static_identifiers_scrollpane.reload_this_constraint_static_identifiers((String) data6[currentRow][6]);	// 6 is the static_identifiers which have some attributes selected				
-						dynamic_identifiersScrollPanel.reload_this_constraint_dynamic_identifiers((String) data6[currentRow][7], (String) data6[currentRow][8]);	// 8 is the original_dynamic_identifiers column
-						sr_disturbances_tables_ScrollPane.reload_this_condition_occurrence_and_regeneration((String) data6[currentRow][4], (String) data6[currentRow][5]);
+						static_identifiers_scrollpane.reload_this_constraint_static_identifiers((String) data6[currentRow][4]);	// 4 is the static_identifiers which have some attributes selected				
+						dynamic_identifiersScrollPanel.reload_this_constraint_dynamic_identifiers((String) data6[currentRow][5], (String) data6[currentRow][6]);	// 6 is the original_dynamic_identifiers column
+						sr_disturbances_tables_ScrollPane.reload_this_condition_occurrence_and_regeneration((String) data6[currentRow][2], (String) data6[currentRow][3]);
 						
 						btn_Edit.setEnabled(true);
 						quick_edit.enable_all_apply_buttons();
@@ -6342,8 +6312,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		        	int currentRow = table6.getSelectedRow();		        	
 					currentRow = table6.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
 					sr_disturbances_tables_ScrollPane.update_2_tables_data(data6a, data6b);	// Update so we have the latest data of table 6a & 6b to retrieve and write to table6 below
-					data6[currentRow][4] = sr_disturbances_tables_ScrollPane.get_occurrence_info_from_GUI();	
-					model6.fireTableCellUpdated(currentRow, 4);
+					data6[currentRow][2] = sr_disturbances_tables_ScrollPane.get_occurrence_info_from_GUI();	
+					model6.fireTableCellUpdated(currentRow, 2);
 		        }
 		    });
 			
@@ -6352,8 +6322,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		        	int currentRow = table6.getSelectedRow();		        	
 					currentRow = table6.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
 					sr_disturbances_tables_ScrollPane.update_2_tables_data(data6a, data6b);	// Update so we have the latest data of table 6a & 6b to retrieve and write to table6 below
-					data6[currentRow][5] = sr_disturbances_tables_ScrollPane.get_regeneration_info_from_GUI();		
-					model6.fireTableCellUpdated(currentRow, 5);
+					data6[currentRow][3] = sr_disturbances_tables_ScrollPane.get_regeneration_info_from_GUI();		
+					model6.fireTableCellUpdated(currentRow, 3);
 		        }
 		    });
 			
@@ -6373,16 +6343,15 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					}	
 				}
 					
-				data6[rowCount6 - 1][1] = (double) 0;
-				data6[rowCount6 - 1][3] = String.join(" ..... ",
+				data6[rowCount6 - 1][1] = String.join(" ..... ",
 						dynamic_identifiersScrollPanel.get_dynamic_description_from_GUI(),
 						static_identifiers_scrollpane.get_static_description_from_GUI());
-				data6[rowCount6 - 1][4] = sr_disturbances_tables_ScrollPane.get_occurrence_info_from_GUI();
-				data6[rowCount6 - 1][5] = sr_disturbances_tables_ScrollPane.get_regeneration_info_from_GUI();
-				data6[rowCount6 - 1][6] = static_identifiers_scrollpane.get_static_info_from_GUI();
-				data6[rowCount6 - 1][7] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();
-				data6[rowCount6 - 1][8] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
-				data6[rowCount6 - 1][9] = true;
+				data6[rowCount6 - 1][2] = sr_disturbances_tables_ScrollPane.get_occurrence_info_from_GUI();
+				data6[rowCount6 - 1][3] = sr_disturbances_tables_ScrollPane.get_regeneration_info_from_GUI();
+				data6[rowCount6 - 1][4] = static_identifiers_scrollpane.get_static_info_from_GUI();
+				data6[rowCount6 - 1][5] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();
+				data6[rowCount6 - 1][6] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
+				data6[rowCount6 - 1][7] = true;
 								
 				model6.updateTableModelPrism(rowCount6, colCount6, data6, columnNames6);
 				model6.fireTableDataChanged();		
@@ -6406,9 +6375,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					selectedRow = table6.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems	
 					
 					// Apply change
-					data6[selectedRow][6] = static_identifiers_scrollpane.get_static_info_from_GUI();
-					data6[selectedRow][7] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();
-					data6[selectedRow][8] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
+					data6[selectedRow][4] = static_identifiers_scrollpane.get_static_info_from_GUI();
+					data6[selectedRow][5] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();
+					data6[selectedRow][6] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
 					model6.fireTableDataChanged();	
 					
 					// Convert the edited Row to model view and then select it 
@@ -6544,19 +6513,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					
 					model6.fireTableDataChanged();	
 				}
-			});		
-			
-			
-			// Delete
-			btn_probability.addActionListener(e -> {
-				// Cancel editing
-				if (table6.isEditing()) {
-					table6.getCellEditor().cancelCellEditing();
-				}				
-				split_pane.setRightComponent(new Panel_SR_Probability(data6, split_pane, lower_panel));
-			});	
-			// End of Listeners for table6 & buttons -----------------------------------------------------------------------
-			// End of Listeners for table6 & buttons -----------------------------------------------------------------------		    
+			});			
+			// End of Listeners for table8 & buttons -----------------------------------------------------------------------
+			// End of Listeners for table8 & buttons -----------------------------------------------------------------------		    
 		    
 			
 			
@@ -6646,6 +6605,20 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			    			    
 			// Add all Grids to the Main Grid-----------------------------------------------------------------------
 			// Add all Grids to the Main Grid-----------------------------------------------------------------------
+			JSplitPane split_pane = new JSplitPane();
+			split_pane.setBorder(null);
+			split_pane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+			split_pane.setDividerSize(3);
+						
+			JPanel upper_panel = new JPanel();
+			upper_panel.setBorder(null);
+			upper_panel.setLayout(new GridBagLayout());			
+			
+			JPanel lower_panel = new JPanel();
+			lower_panel.setBorder(null);
+			lower_panel.setLayout(new GridBagLayout());
+			
+			
 			c = new GridBagConstraints();
 			c.fill = GridBagConstraints.BOTH;
 
@@ -6718,15 +6691,15 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			List<Integer> id_list = new ArrayList<Integer>();			
 		
 			for (int row = 0; row < rowCount6; row++) {
-				if (data6[row][2] != null) {
-					id_list.add(Integer.valueOf((String) data6[row][2].toString()));
+				if (data6[row][0] != null) {
+					id_list.add(Integer.valueOf((String) data6[row][0].toString()/*.replace("Set ", "")*/));
 				}
 			}			
 			
 			for (int row = 0; row < rowCount6; row++) {
-				if (data6[row][2] == null) {
+				if (data6[row][0] == null) {
 					int new_id = (id_list.size() > 0) ? Collections.max(id_list) + 1 : 1;	//new id = (max id + 1) or = 1 if no row
-					data6[row][2] = new_id;
+					data6[row][0] = /*"Set " + */new_id;
 					id_list.add(new_id);
 				}
 			}			
