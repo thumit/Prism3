@@ -1186,3 +1186,4 @@ All changes in this block are associated with PrismAlpha2.0.02.jar, Prism-Formul
 	- Hide occurence_probability column
 	- Extend the length of condition_descriotion column
 	- New UI including table and chart to help define probability for scenarios
+500. Revert to previous interface and setup for SR Disturbance
