@@ -1800,17 +1800,17 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		List<List<String>> all_layers_tooltips = read_database.get_all_layers_tooltips();
 		int total_CoverType = all_layers.get(4).size();	
 		
-		//Setup the table------------------------------------------------------------	
+		// Setup the table------------------------------------------------------------	
 		if (is_table6a_loaded == false) { // Create a fresh new if Load fail				
 			rowCount6a = total_CoverType;
 			colCount6a = total_replacing_disturbance + 2;
 			data6a = new Object[rowCount6a][colCount6a];
 	        columnNames6a = new String[colCount6a];
 	        columnNames6a[0] = "layer5";
-	        columnNames6a[1] = "layer5_regen";
+	        columnNames6a[1] = "layer5R";
 	        for (int col = 2; col < colCount6a; col++) {
 	        	int disturbance_index = col - 1;
-	        	if (disturbance_index < 10) columnNames6a[col] = "probability_SR_0" + disturbance_index; else columnNames6a[col] = "probability_SR_" + disturbance_index;
+	        	if (disturbance_index < 10) columnNames6a[col] = "SR_0" + disturbance_index; else columnNames6a[col] = "SR_" + disturbance_index;
 	        }
 	        
 			// Populate the data matrix
@@ -1824,17 +1824,17 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		}
 		
 		
-        // header tool-tip
+        // Header tool-tip
 		String[] headerToolTips = new String[colCount6a];
-		headerToolTips[0] = "cover type (not dynamic) before the occurrence of stand replacing disturbance";
-        headerToolTips[1] = "cover type after the occurrence of stand replacing disturbance";
+		headerToolTips[0] = "layer5 (not dynamic) before the occurrence of stand replacing disturbances";
+        headerToolTips[1] = "layer5 regenerated after the occurrence of stand replacing disturbances";
         for (int col = 2; col < colCount6a; col++) {
         	String disturbance_name = columnNames6a[col].replaceAll("probability_", "");
-			headerToolTips[col] = "occurence probability of " + disturbance_name;
+			headerToolTips[col] = "loss rate mean of " + disturbance_name;
         }
         
 		
-		//Create a table-------------------------------------------------------------		
+		// Create a table-------------------------------------------------------------		
         model6a = new PrismTableModel(rowCount6a, colCount6a, data6a, columnNames6a) {
         	@Override
     		public boolean isCellEditable(int row, int col) {
@@ -1925,7 +1925,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				java.awt.Point p = e.getPoint();
 				int rowIndex = rowAtPoint(p);
 				int colIndex = columnAtPoint(p);
-				if (table6a.getColumnName(colIndex).equals("layer5") || table6a.getColumnName(colIndex).equals("layer5_regen")) {
+				if (table6a.getColumnName(colIndex).equals("layer5") || table6a.getColumnName(colIndex).equals("layer5R")) {
 					try {
 						tip = getValueAt(rowIndex, colIndex).toString();
 						for (int i = 0; i < total_CoverType; i++) {
@@ -1935,20 +1935,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
 					}
 				}
-				
-				if (!table6a.getColumnName(colIndex).equals("layer5") && !table6a.getColumnName(colIndex).equals("layer5_regen")) {
-					try {
-						DecimalFormat formatter = new DecimalFormat("###,###.###");
-						formatter.setMinimumFractionDigits(0);
-						formatter.setMaximumFractionDigits(2);
-						String probability = formatter.format((Number) getValueAt(rowIndex, colIndex));
-						String disturbance_name = table6a.getColumnName(colIndex).replaceAll("probability_", "");
-						tip = probability + "% chance for "  + disturbance_name + " to occur in the area with cover type (not dynamic) = "+ getValueAt(rowIndex, 0).toString();
-					} catch (RuntimeException e1) {
-						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
-					}
-				}	
-				
 				return tip;
 			}
 		};			
@@ -2033,20 +2019,17 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		table6a.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		table6a.setCellSelectionEnabled(true);
         table6a.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        table6a.getTableHeader().setReorderingAllowed(false);		//Disable columns move
-//      table6a.getColumnModel().getColumn(0).setPreferredWidth(200);	//Set width of 1st Column bigger
-        
-//      table6a.setTableHeader(null);
+        table6a.getTableHeader().setReorderingAllowed(false);		// Disable columns move
         table6a.setPreferredScrollableViewportSize(new Dimension(400, 100));
 //      table6a.setFillsViewportHeight(true);
-        TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model6a);	//Add sorter
-		for (int i = 1; i < colCount6a; i++) {
-			sorter.setSortable(i, false);
-			if (i == 0) {			//Only the first column can be sorted
-				sorter.setSortable(i, true);	
-			}
-		}
-		table6a.setRowSorter(sorter);
+//      TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model6a);	//Add sorter
+//		for (int i = 1; i < colCount6a; i++) {
+//			sorter.setSortable(i, false);
+//			if (i == 0) {			// Only the first column can be sorted
+//				sorter.setSortable(i, true);	
+//			}
+//		}
+//		table6a.setRowSorter(sorter);
 	}	
 
 	
@@ -2056,17 +2039,17 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		List<List<String>> all_layers_tooltips = read_database.get_all_layers_tooltips();
 		int total_CoverType = all_layers.get(4).size();	
 		
-		//Setup the table------------------------------------------------------------	
+		// Setup the table------------------------------------------------------------	
 		if (is_table6b_loaded == false) { // Create a fresh new if Load fail				
 			rowCount6b = total_CoverType;
 			colCount6b = total_replacing_disturbance + 2;
 			data6b = new Object[rowCount6b][colCount6b];
 	        columnNames6b = new String[colCount6b];
 	        columnNames6b[0] = "layer5";
-	        columnNames6b[1] = "layer5_regen";
+	        columnNames6b[1] = "layer5R";
 	        for (int col = 2; col < colCount6b; col++) {
 	        	int disturbance_index = col - 1;
-	        	if (disturbance_index < 10) columnNames6b[col] = "probability_SR_0" + disturbance_index; else columnNames6b[col] = "probability_SR_" + disturbance_index;
+	        	if (disturbance_index < 10) columnNames6b[col] = "SR_0" + disturbance_index; else columnNames6b[col] = "SR_" + disturbance_index;
 	        }
 	        
 			// Populate the data matrix
@@ -2080,17 +2063,17 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		}
 		
 		
-        // header tool-tip
+        // Header tool-tip
 		String[] headerToolTips = new String[colCount6b];
-		headerToolTips[0] = "cover type (not dynamic) before the occurrence of stand replacing disturbance";
-        headerToolTips[1] = "cover type after the occurrence of stand replacing disturbance";
+		headerToolTips[0] = "layer5 (not dynamic) before the occurrence of stand replacing disturbances";
+        headerToolTips[1] = "layer5 regenerated after the occurrence of stand replacing disturbances";
         for (int col = 2; col < colCount6b; col++) {
         	String disturbance_name = columnNames6b[col].replaceAll("probability_", "");
-			headerToolTips[col] = "occurence probability of " + disturbance_name;
+			headerToolTips[col] = "loss rate standard deviation of " + disturbance_name;
         }
         
 		
-		//Create a table-------------------------------------------------------------		
+		// Create a table-------------------------------------------------------------		
         model6b = new PrismTableModel(rowCount6b, colCount6b, data6b, columnNames6b) {
         	@Override
     		public boolean isCellEditable(int row, int col) {
@@ -2181,7 +2164,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				java.awt.Point p = e.getPoint();
 				int rowIndex = rowAtPoint(p);
 				int colIndex = columnAtPoint(p);
-				if (table6b.getColumnName(colIndex).equals("layer5") || table6b.getColumnName(colIndex).equals("layer5_regen")) {
+				if (table6b.getColumnName(colIndex).equals("layer5") || table6b.getColumnName(colIndex).equals("layer5R")) {
 					try {
 						tip = getValueAt(rowIndex, colIndex).toString();
 						for (int i = 0; i < total_CoverType; i++) {
@@ -2191,20 +2174,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
 					}
 				}
-				
-				if (!table6b.getColumnName(colIndex).equals("layer5") && !table6b.getColumnName(colIndex).equals("layer5_regen")) {
-					try {
-						DecimalFormat formatter = new DecimalFormat("###,###.###");
-						formatter.setMinimumFractionDigits(0);
-						formatter.setMaximumFractionDigits(2);
-						String probability = formatter.format((Number) getValueAt(rowIndex, colIndex));
-						String disturbance_name = table6b.getColumnName(colIndex).replaceAll("probability_", "");
-						tip = probability + "% chance for "  + disturbance_name + " to occur in the area with cover type (not dynamic) = "+ getValueAt(rowIndex, 0).toString();
-					} catch (RuntimeException e1) {
-						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
-					}
-				}	
-				
 				return tip;
 			}
 		};			
@@ -2289,21 +2258,18 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		table6b.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		table6b.setCellSelectionEnabled(true);
         table6b.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        table6b.getTableHeader().setReorderingAllowed(false);		//Disable columns move
-//      table6b.getColumnModel().getColumn(0).setPreferredWidth(200);	//Set width of 1st Column bigger
-        
-//      table6b.setTableHeader(null);
+        table6b.getTableHeader().setReorderingAllowed(false);		// Disable columns move
         table6b.setPreferredScrollableViewportSize(new Dimension(400, 100));
 //      table6b.setFillsViewportHeight(true);
-        TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model6b);	//Add sorter
-		for (int i = 1; i < colCount6b; i++) {
-			sorter.setSortable(i, false);
-			if (i == 0) {			//Only the first column can be sorted
-				sorter.setSortable(i, true);	
-			}
-		}
-		table6b.setRowSorter(sorter);
-	}	
+//      TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model6b);	//Add sorter
+//		for (int i = 1; i < colCount6b; i++) {
+//			sorter.setSortable(i, false);
+//			if (i == 0) {			// Only the first column can be sorted
+//				sorter.setSortable(i, true);	
+//			}
+//		}
+//		table6b.setRowSorter(sorter);
+	}		
 	
 	
 	//--------------------------------------------------------------------------------------------------------------------------
@@ -2312,17 +2278,17 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		List<List<String>> all_layers_tooltips = read_database.get_all_layers_tooltips();
 		int total_CoverType = all_layers.get(4).size();	
 		
-		//Setup the table------------------------------------------------------------	
+		// Setup the table------------------------------------------------------------	
 		if (is_table6c_loaded == false) { // Create a fresh new if Load fail				
 			rowCount6c = total_CoverType * total_CoverType;
 			colCount6c =  total_replacing_disturbance + 2;
 			data6c = new Object[rowCount6c][colCount6c];
 	        columnNames6c = new String[colCount6c];
 	        columnNames6c[0] = "layer5";
-	        columnNames6c[1] = "layer5_regen";
+	        columnNames6c[1] = "layer5R";
 	        for (int col = 2; col < colCount6c; col++) {
 	        	int disturbance_index = col - 1;
-	        	if (disturbance_index < 10) columnNames6c[col] = "percentage_SR_0" + disturbance_index; else columnNames6c[col] = "percentage_SR_" + disturbance_index;
+	        	if (disturbance_index < 10) columnNames6c[col] = "SR_0" + disturbance_index; else columnNames6c[col] = "SR_" + disturbance_index;
 	        }
 	        
 			// Populate the data matrix
@@ -2340,17 +2306,17 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		}
 		
 		
-        // header tool-tip
+        // Header tool-tip
 		String[] headerToolTips = new String[colCount6c];
-		headerToolTips[0] = "cover type (not dynamic) before the occurence of stand replacing disturbance";
-        headerToolTips[1] = "cover type after the occurence of stand replacing disturbance";
+		headerToolTips[0] = "layer5 (not dynamic) before the occurrence of stand replacing disturbances";
+        headerToolTips[1] = "layer5 regenerated after the occurrence of stand replacing disturbances";
         for (int col = 2; col < colCount6c; col++) {
         	String disturbance_name = columnNames6c[col].replaceAll("percentage_", "");
-			headerToolTips[col] = "percentage of area to be destroyed and regenerated after the occurence of " + disturbance_name;
+			headerToolTips[col] = "conversion rate mean of " + disturbance_name;
         }
         
 		
-		//Create a table-------------------------------------------------------------		
+		// Create a table-------------------------------------------------------------		
         model6c = new PrismTableModel(rowCount6c, colCount6c, data6c, columnNames6c) {
         	@Override
     		public boolean isCellEditable(int row, int col) {
@@ -2457,7 +2423,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				java.awt.Point p = e.getPoint();
 				int row = rowAtPoint(p);
 				int column = columnAtPoint(p);
-				if (table6c.getColumnName(column).equals("layer5") || table6c.getColumnName(column).equals("layer5_regen")) {
+				if (table6c.getColumnName(column).equals("layer5") || table6c.getColumnName(column).equals("layer5R")) {
 					try {
 						tip = getValueAt(row, column).toString();
 						for (int i = 0; i < total_CoverType; i++) {
@@ -2468,14 +2434,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					}
 				}
 				
-				if (!table6c.getColumnName(column).equals("layer5") && !table6c.getColumnName(column).equals("layer5_regen")) {
+				if (!table6c.getColumnName(column).equals("layer5") && !table6c.getColumnName(column).equals("layer5R")) {
 					try {
 						DecimalFormat formatter = new DecimalFormat("###,###.###");
 						formatter.setMinimumFractionDigits(0);
 						formatter.setMaximumFractionDigits(2);
 						String percentage = formatter.format((Number) getValueAt(row, column));
 						String disturbance_name = table6c.getColumnName(column).replaceAll("percentage_", "");
-						tip = "When "  + disturbance_name + " occurs in the area with cover type (not dynamic) = " + getValueAt(row, 0).toString() + ", " + percentage + "% of this area will be destroyed & regenerated as cover type = " + getValueAt(row, 1).toString();
+						tip = "For the total area with cover type = " + getValueAt(row, 0).toString() + " destroyed by "  + disturbance_name + ", " + percentage + "% of this area will be regenerated as cover type = " + getValueAt(row, 1).toString();
 					
 						// Show problem tip 		NOTE: we need to use getValueAt because of the compact view feature which makes mismatching between full data and displayed data
 						double total_percentage = 0;
@@ -2580,19 +2546,16 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		table6c.setCellSelectionEnabled(true);
         table6c.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         table6c.getTableHeader().setReorderingAllowed(false);		//Disable columns move
-//      table6c.getColumnModel().getColumn(0).setPreferredWidth(200);	//Set width of 1st Column bigger
-        
-//      table6c.setTableHeader(null);
         table6c.setPreferredScrollableViewportSize(new Dimension(400, 100));
 //      table6c.setFillsViewportHeight(true);
-        TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model6c);	//Add sorter
-		for (int i = 1; i < colCount6c; i++) {
-			sorter.setSortable(i, false);
-			if (i == 0) {			//Only the first column can be sorted
-				sorter.setSortable(i, true);	
-			}
-		}
-		table6c.setRowSorter(sorter);
+//      TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model6c);	//Add sorter
+//		for (int i = 1; i < colCount6c; i++) {
+//			sorter.setSortable(i, false);
+//			if (i == 0) {			//Only the first column can be sorted
+//				sorter.setSortable(i, true);	
+//			}
+//		}
+//		table6c.setRowSorter(sorter);
 	}		
 	
 	
@@ -2602,17 +2565,17 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		List<List<String>> all_layers_tooltips = read_database.get_all_layers_tooltips();
 		int total_CoverType = all_layers.get(4).size();	
 		
-		//Setup the table------------------------------------------------------------	
+		// Setup the table------------------------------------------------------------	
 		if (is_table6d_loaded == false) { // Create a fresh new if Load fail				
 			rowCount6d = total_CoverType * total_CoverType;
 			colCount6d =  total_replacing_disturbance + 2;
 			data6d = new Object[rowCount6d][colCount6d];
 	        columnNames6d = new String[colCount6d];
 	        columnNames6d[0] = "layer5";
-	        columnNames6d[1] = "layer5_regen";
+	        columnNames6d[1] = "layer5R";
 	        for (int col = 2; col < colCount6d; col++) {
 	        	int disturbance_index = col - 1;
-	        	if (disturbance_index < 10) columnNames6d[col] = "percentage_SR_0" + disturbance_index; else columnNames6d[col] = "percentage_SR_" + disturbance_index;
+	        	if (disturbance_index < 10) columnNames6d[col] = "SR_0" + disturbance_index; else columnNames6d[col] = "SR_" + disturbance_index;
 	        }
 	        
 			// Populate the data matrix
@@ -2630,17 +2593,17 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		}
 		
 		
-        // header tool-tip
+        // Header tool-tip
 		String[] headerToolTips = new String[colCount6d];
-		headerToolTips[0] = "cover type (not dynamic) before the occurence of stand replacing disturbance";
-        headerToolTips[1] = "cover type after the occurence of stand replacing disturbance";
+		headerToolTips[0] = "layer5 (not dynamic) before the occurrence of stand replacing disturbances";
+        headerToolTips[1] = "layer5 regenerated after the occurrence of stand replacing disturbances";
         for (int col = 2; col < colCount6d; col++) {
         	String disturbance_name = columnNames6d[col].replaceAll("percentage_", "");
-			headerToolTips[col] = "percentage of area to be destroyed and regenerated after the occurence of " + disturbance_name;
+			headerToolTips[col] = "conversion rate standard deviation of " + disturbance_name;
         }
         
 		
-		//Create a table-------------------------------------------------------------		
+		// Create a table-------------------------------------------------------------		
         model6d = new PrismTableModel(rowCount6d, colCount6d, data6d, columnNames6d) {
         	@Override
     		public boolean isCellEditable(int row, int col) {
@@ -2747,7 +2710,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				java.awt.Point p = e.getPoint();
 				int row = rowAtPoint(p);
 				int column = columnAtPoint(p);
-				if (table6d.getColumnName(column).equals("layer5") || table6d.getColumnName(column).equals("layer5_regen")) {
+				if (table6d.getColumnName(column).equals("layer5") || table6d.getColumnName(column).equals("layer5R")) {
 					try {
 						tip = getValueAt(row, column).toString();
 						for (int i = 0; i < total_CoverType; i++) {
@@ -2758,14 +2721,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					}
 				}
 				
-				if (!table6d.getColumnName(column).equals("layer5") && !table6d.getColumnName(column).equals("layer5_regen")) {
+				if (!table6d.getColumnName(column).equals("layer5") && !table6d.getColumnName(column).equals("layer5R")) {
 					try {
 						DecimalFormat formatter = new DecimalFormat("###,###.###");
 						formatter.setMinimumFractionDigits(0);
 						formatter.setMaximumFractionDigits(2);
 						String percentage = formatter.format((Number) getValueAt(row, column));
 						String disturbance_name = table6d.getColumnName(column).replaceAll("percentage_", "");
-						tip = "When "  + disturbance_name + " occurs in the area with cover type (not dynamic) = " + getValueAt(row, 0).toString() + ", " + percentage + "% of this area will be destroyed & regenerated as cover type = " + getValueAt(row, 1).toString();
+						tip = "For the total area with cover type = " + getValueAt(row, 0).toString() + " destroyed by "  + disturbance_name + ", " + percentage + "% of this area will be regenerated as cover type = " + getValueAt(row, 1).toString();
 					
 						// Show problem tip 		NOTE: we need to use getValueAt because of the compact view feature which makes mismatching between full data and displayed data
 						double total_percentage = 0;
@@ -2870,20 +2833,17 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		table6d.setCellSelectionEnabled(true);
         table6d.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         table6d.getTableHeader().setReorderingAllowed(false);		//Disable columns move
-//      table6d.getColumnModel().getColumn(0).setPreferredWidth(200);	//Set width of 1st Column bigger
-        
-//      table6d.setTableHeader(null);
         table6d.setPreferredScrollableViewportSize(new Dimension(400, 100));
 //      table6d.setFillsViewportHeight(true);
-        TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model6d);	//Add sorter
-		for (int i = 1; i < colCount6d; i++) {
-			sorter.setSortable(i, false);
-			if (i == 0) {			//Only the first column can be sorted
-				sorter.setSortable(i, true);	
-			}
-		}
-		table6d.setRowSorter(sorter);
-	}	
+//      TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model6d);	//Add sorter
+//		for (int i = 1; i < colCount6d; i++) {
+//			sorter.setSortable(i, false);
+//			if (i == 0) {			//Only the first column can be sorted
+//				sorter.setSortable(i, true);	
+//			}
+//		}
+//		table6d.setRowSorter(sorter);
+	}
 	
 	
 	//--------------------------------------------------------------------------------------------------------------------------

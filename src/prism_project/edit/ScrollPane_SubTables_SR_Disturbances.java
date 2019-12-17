@@ -45,7 +45,7 @@ public class ScrollPane_SubTables_SR_Disturbances extends JScrollPane {
 		
 	
 		loss_rate_mean_scrollpane = new JScrollPane(/*this.table6a*/);
-		TitledBorder border = new TitledBorder("Loss rate mean");
+		TitledBorder border = new TitledBorder("Loss rate mean (%)");
 		border.setTitleJustification(TitledBorder.CENTER);
 		loss_rate_mean_scrollpane.setBorder(border);
 		loss_rate_mean_scrollpane.setPreferredSize(new Dimension(333, 0));
@@ -59,7 +59,7 @@ public class ScrollPane_SubTables_SR_Disturbances extends JScrollPane {
 		
 		
 		conversion_rate_mean_scrollpane = new JScrollPane(/*this.table6c*/);
-		border = new TitledBorder("Conversion rate mean");
+		border = new TitledBorder("Conversion rate mean (%)");
 		border.setTitleJustification(TitledBorder.CENTER);
 		conversion_rate_mean_scrollpane.setBorder(border);
 		conversion_rate_mean_scrollpane.setPreferredSize(new Dimension(433, 0));
