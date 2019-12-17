@@ -6837,7 +6837,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						currentRow = table6.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
 						static_identifiers_scrollpane.reload_this_constraint_static_identifiers((String) data6[currentRow][6]);	// 6 is the static_identifiers which have some attributes selected				
 						dynamic_identifiersScrollPanel.reload_this_constraint_dynamic_identifiers((String) data6[currentRow][7], (String) data6[currentRow][8]);	// 6 is the original_dynamic_identifiers column
-						sr_disturbances_tables_ScrollPane.reload_this_condition_occurrence_and_regeneration((String) data6[currentRow][2], (String) data6[currentRow][3], (String) data6[currentRow][4], (String) data6[currentRow][5]);
+						sr_disturbances_tables_ScrollPane.reload_this_condition((String) data6[currentRow][2], (String) data6[currentRow][3], (String) data6[currentRow][4], (String) data6[currentRow][5]);
 						
 						btn_Edit.setEnabled(true);
 						quick_edit.enable_all_apply_buttons();
@@ -6880,7 +6880,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		        	int currentRow = table6.getSelectedRow();		        	
 					currentRow = table6.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
 					sr_disturbances_tables_ScrollPane.update_4_tables_data(data6a, data6b, data6c, data6d);	// Update so we have the latest data of table 6a & 6c to retrieve and write to table6 below
-					data6[currentRow][2] = sr_disturbances_tables_ScrollPane.get_lpr_mean_from_GUI();	
+					data6[currentRow][2] = sr_disturbances_tables_ScrollPane.get_lr_mean_from_GUI();	
 					model6.fireTableCellUpdated(currentRow, 2);
 		        }
 		    });
@@ -6890,7 +6890,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		        	int currentRow = table6.getSelectedRow();		        	
 					currentRow = table6.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
 					sr_disturbances_tables_ScrollPane.update_4_tables_data(data6a, data6b, data6c, data6d);	// Update so we have the latest data of table 6a & 6c to retrieve and write to table6 below
-					data6[currentRow][3] = sr_disturbances_tables_ScrollPane.get_lpr_std_from_GUI();	
+					data6[currentRow][3] = sr_disturbances_tables_ScrollPane.get_lr_std_from_GUI();	
 					model6.fireTableCellUpdated(currentRow, 3);
 		        }
 		    });
@@ -6934,8 +6934,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				data6[rowCount6 - 1][1] = String.join(" ..... ",
 						dynamic_identifiersScrollPanel.get_dynamic_description_from_GUI(),
 						static_identifiers_scrollpane.get_static_description_from_GUI());
-				data6[rowCount6 - 1][2] = sr_disturbances_tables_ScrollPane.get_lpr_mean_from_GUI();
-				data6[rowCount6 - 1][3] = sr_disturbances_tables_ScrollPane.get_lpr_std_from_GUI();
+				data6[rowCount6 - 1][2] = sr_disturbances_tables_ScrollPane.get_lr_mean_from_GUI();
+				data6[rowCount6 - 1][3] = sr_disturbances_tables_ScrollPane.get_lr_std_from_GUI();
 				data6[rowCount6 - 1][4] = sr_disturbances_tables_ScrollPane.get_cr_mean_from_GUI();
 				data6[rowCount6 - 1][5] = sr_disturbances_tables_ScrollPane.get_cr_std_from_GUI();
 				data6[rowCount6 - 1][6] = static_identifiers_scrollpane.get_static_info_from_GUI();
