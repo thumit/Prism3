@@ -4265,7 +4265,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			Action apply = new AbstractAction() {
 				public void actionPerformed(ActionEvent e) {
 					total_period = Integer.parseInt(totalPeriodsCombo.getSelectedItem().toString());
-					// Renew the entire SR_Disturbances screen
 					replacingDisturbancesCombo.getUI().setPopupVisible(replacingDisturbancesCombo, false);	// This would close the drop down to avoid 1 click to close it
 					int total_replacing_disturbance_combo_value = Integer.parseInt(replacingDisturbancesCombo.getSelectedItem().toString());
 					if (total_replacing_disturbance_combo_value != total_replacing_disturbance) { 
@@ -4277,65 +4276,18 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 								: "You are increasing the total number of stand replacing disturbances.\n"
 										+ "The added disturbances are ready to be defined in the SR Disturbances screen.\n"
 										+ "Apply change?";
-										
 						int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), message, "Change the total number of stand replacing disturbances",
 								JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
 						if (response == 0) {
 							for (int i = 0; i < rowCount6; i++) {
-								String probability_info = (String) data6[i][2];
-								String regeneration_info = (String) data6[i][3];
-																
-								if (probability_info.length() > 0) {
-									String[] info_6a = probability_info.split(";");	
-									String[] info_6a_adjusted = new String[info_6a.length];
-									for (int row = 0; row < info_6a.length; row++) {			
-										String[] sub_info = info_6a[row].split(" ");
-										String[] sub_info_adjusted = new String[2 + total_replacing_disturbance_combo_value];
-										if (total_replacing_disturbance > total_replacing_disturbance_combo_value) {	// Case when decreasing the number of SRs --> Clear the unused data/column (keep the old data)
-											for (int col = 0; col < 2 + total_replacing_disturbance_combo_value; col++) {
-												sub_info_adjusted[col] = sub_info[col];
-											}
-										} else {	// Case when increasing the number of SRs --> Clear the unused data/column (keep the old data)
-											for (int col = 0; col < 2 + total_replacing_disturbance; col++) {
-												sub_info_adjusted[col] = sub_info[col];
-											}
-											for (int col = 2 + total_replacing_disturbance; col < 2 + total_replacing_disturbance_combo_value; col++) {
-												sub_info_adjusted[col] = "100";
-											}
-										}
-										info_6a_adjusted[row] = String.join(" ", sub_info_adjusted);		
-									} 
-									String probability_info_adjusted = String.join(";", info_6a_adjusted);
-									data6[i][2] = probability_info_adjusted;
-								}
-								
-								if (regeneration_info.length() > 0) {
-									String[] info_6c = regeneration_info.split(";");	
-									String[] info_6c_adjusted = new String[info_6c.length];
-									for (int row = 0; row < info_6c.length; row++) {			
-										String[] sub_info = info_6c[row].split(" ");
-										String[] sub_info_adjusted = new String[2 + total_replacing_disturbance_combo_value];
-										if (total_replacing_disturbance > total_replacing_disturbance_combo_value) {	// Case when decreasing the number of SRs --> Clear the unused data/column (keep the old data)
-											for (int col = 0; col < 2 + total_replacing_disturbance_combo_value; col++) {
-												sub_info_adjusted[col] = sub_info[col];
-											}
-										} else {	// Case when increasing the number of SRs --> Clear the unused data/column (keep the old data)
-											for (int col = 0; col < 2 + total_replacing_disturbance; col++) {
-												sub_info_adjusted[col] = sub_info[col];
-											}
-											for (int col = 2 + total_replacing_disturbance; col < 2 + total_replacing_disturbance_combo_value; col++) {
-												sub_info_adjusted[col] = "0";
-											}
-										}	
-										info_6c_adjusted[row] = String.join(" ", sub_info_adjusted);
-									} 
-									is_table6_loaded = true;	// to have the old data stay (create_table6 would not create new empty data)
-									String regeneration_info_adjusted = String.join(";", info_6c_adjusted);
-									data6[i][3] = regeneration_info_adjusted;
-								}
+								data6[i][2] = get_adjusted_replacing_disturbances_infor(total_replacing_disturbance_combo_value, data6[i][2], "0");	// loss rate mean
+								data6[i][3] = get_adjusted_replacing_disturbances_infor(total_replacing_disturbance_combo_value, data6[i][3], "0");	// loss rate std
+								data6[i][4] = get_adjusted_replacing_disturbances_infor(total_replacing_disturbance_combo_value, data6[i][4], "0");	// conversion rate mean
+								data6[i][5] = get_adjusted_replacing_disturbances_infor(total_replacing_disturbance_combo_value, data6[i][5], "0");	// conversion rate std
 							}
-							total_replacing_disturbance = total_replacing_disturbance_combo_value;
-				    		panel_SR_Disturbances_GUI = new SR_Disturbances_GUI();
+				    		total_replacing_disturbance = total_replacing_disturbance_combo_value;
+				    		is_table6_loaded = true;	// to have the old data stay (create_table6 would not create new empty data)
+				    		panel_SR_Disturbances_GUI = new SR_Disturbances_GUI();	// Renew the entire SR_Disturbances screen
 						} else {
 							replacingDisturbancesCombo.setSelectedItem((int) total_replacing_disturbance);
 						}
@@ -4350,6 +4302,34 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					data1[5][1] = (exportProblemCheck.isSelected()) ? "true" : "false";
 					data1[6][1] = (exportSolutionCheck.isSelected()) ? "true" : "false";
 					model1.fireTableDataChanged();
+				}
+				
+				public Object get_adjusted_replacing_disturbances_infor(int total_replacing_disturbance_combo_value, Object data6_cell, String new_value) {
+					String cell_info = (String) data6_cell;
+					if (cell_info.length() > 0) {
+						String[] info_array = cell_info.split(";");	
+						String[] info_array_adjusted = new String[info_array.length];
+						for (int row = 0; row < info_array.length; row++) {			
+							String[] sub_info = info_array[row].split(" ");
+							String[] sub_info_adjusted = new String[2 + total_replacing_disturbance_combo_value];
+							if (total_replacing_disturbance > total_replacing_disturbance_combo_value) {	// Case when decreasing the number of SRs --> Clear the unused data/column (keep the old data)
+								for (int col = 0; col < 2 + total_replacing_disturbance_combo_value; col++) {
+									sub_info_adjusted[col] = sub_info[col];
+								}
+							} else {	// Case when increasing the number of SRs --> Clear the unused data/column (keep the old data)
+								for (int col = 0; col < 2 + total_replacing_disturbance; col++) {
+									sub_info_adjusted[col] = sub_info[col];
+								}
+								for (int col = 2 + total_replacing_disturbance; col < 2 + total_replacing_disturbance_combo_value; col++) {
+									sub_info_adjusted[col] = new_value;
+								}
+							}
+							info_array_adjusted[row] = String.join(" ", sub_info_adjusted);		
+						} 
+						String cell_info_adjusted = String.join(";", info_array_adjusted);
+						return cell_info_adjusted;
+					}
+					return cell_info;
 				}
 			};
 			totalPeriodsCombo.addActionListener(apply);
