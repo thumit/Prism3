@@ -666,24 +666,24 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						input_data = input_data_temp;
 					}
 				}
-				// The below code is for adding column "lpr_std" and "cr_std" as the first 2 columns of the old runs so the old runs have new format ("input_06_sr_disturbances.txt")
+				// The below code is for adding column "lr_std" and "cr_std" as the first 2 columns of the old runs so the old runs have new format ("input_06_sr_disturbances.txt")
 				// -----------------------------------------------------------------------------
 				// -----------------------------------------------------------------------------
-				if (table_file.getName().equals("input_06_sr_disturbances.txt") && !input_columnNames[2].equals("lpr_mean")) {
+				if (table_file.getName().equals("input_06_sr_disturbances.txt") && !input_columnNames[2].equals("lr_mean")) {
 					// Modify old input by adding 2 columns
 					int input_rowCount_temp = input_rowCount;
 					int input_colCount_temp = input_colCount + 2;
 					
 					// old:  columnNames6 = new String[] {"condition_id", "condition_description", "probability_info", "regeneration_info", "static_identifiers", "dynamic_identifiers", "original_dynamic_identifiers", "model_condition"};
 					// new:  probability_info = loss_pr_mean	regeneration_info = cr_mean
-					String[] input_columnNames_temp = new String[] {"condition_id", "condition_description", "lpr_mean", "lpr_std", "cr_mean", "cr_std", "static_identifiers", "dynamic_identifiers", "original_dynamic_identifiers", "model_condition"};
+					String[] input_columnNames_temp = new String[] {"condition_id", "condition_description", "lr_mean", "lr_std", "cr_mean", "cr_std", "static_identifiers", "dynamic_identifiers", "original_dynamic_identifiers", "model_condition"};
 										
 					Object[][] input_data_temp = new Object[input_rowCount_temp][input_colCount_temp];
 					for (int row = 0; row < input_rowCount_temp; row++) {
 						for (int col = 0; col <= 2; col++) {
 							input_data_temp[row][col] = input_data[row][col];
 						}
-						input_data_temp[row][3] = input_data_temp[row][2];	// set lpr_std = lpr_mean
+						input_data_temp[row][3] = input_data_temp[row][2];	// set lr_std = lr_mean
 						input_data_temp[row][4] = input_data[row][3];		// cr_mean
 						input_data_temp[row][5] = input_data_temp[row][4];	// set cr_mean = cr_std
 						for (int col = 6; col <= 9; col++) {
@@ -1688,7 +1688,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			rowCount6 = 0;
 			colCount6 = 10;
 			data6 = new Object[rowCount6][colCount6];
-			columnNames6 = new String[] {"condition_id", "condition_description", "lpr_mean", "lpr_std", "cr_mean", "cr_std", "static_identifiers", "dynamic_identifiers", "original_dynamic_identifiers", "model_condition"};
+			columnNames6 = new String[] {"condition_id", "condition_description", "lr_mean", "lr_std", "cr_mean", "cr_std", "static_identifiers", "dynamic_identifiers", "original_dynamic_identifiers", "model_condition"};
 		}
 					
 		
@@ -1777,8 +1777,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		
 		// Hide columns
 		TableColumnsHandle table_handle = new TableColumnsHandle(table6);
-		table_handle.setColumnVisible("lpr_mean", false);
-		table_handle.setColumnVisible("lpr_std", false);
+		table_handle.setColumnVisible("lr_mean", false);
+		table_handle.setColumnVisible("lr_std", false);
 		table_handle.setColumnVisible("cr_mean", false);
 		table_handle.setColumnVisible("cr_std", false);
 		table_handle.setColumnVisible("static_identifiers", false);

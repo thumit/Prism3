@@ -1191,5 +1191,5 @@ All changes in this block are associated with PrismAlpha2.0.02.jar, Prism-Formul
 	- Initially establish 4 tables for SR Disturbances: lpr_mean, lpr_std, cr_mean, cr_std (commit to stochastic_disturbances_03 and switch to stochastic_disturbances_04)
 	- synchronize both view and selection for 2 pairs of tables: (lpr_mean, lpr_std) and (cr_mean, cr_std)
 	- rename loss probability to loss rate and apply in the UI
-	- make the 4 tables updated correctly when changing (increasing or decreasing) the total number of replacing disturbances in the General Inputs screen
+	- make the 4 tables updated correctly when changing (increasing or decreasing) the total number of replacing disturbances in the General Inputs screen (commit to stochastic_disturbances_04 and switch to stochastic_disturbances_05)
 	-
