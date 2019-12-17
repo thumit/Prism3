@@ -1807,7 +1807,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			data6a = new Object[rowCount6a][colCount6a];
 	        columnNames6a = new String[colCount6a];
 	        columnNames6a[0] = "layer5";
-	        columnNames6a[1] = "layer5R";
+	        columnNames6a[1] = "layer5_regen";
 	        for (int col = 2; col < colCount6a; col++) {
 	        	int disturbance_index = col - 1;
 	        	if (disturbance_index < 10) columnNames6a[col] = "SR_0" + disturbance_index; else columnNames6a[col] = "SR_" + disturbance_index;
@@ -1925,7 +1925,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				java.awt.Point p = e.getPoint();
 				int rowIndex = rowAtPoint(p);
 				int colIndex = columnAtPoint(p);
-				if (table6a.getColumnName(colIndex).equals("layer5") || table6a.getColumnName(colIndex).equals("layer5R")) {
+				if (table6a.getColumnName(colIndex).equals("layer5") || table6a.getColumnName(colIndex).equals("layer5_regen")) {
 					try {
 						tip = getValueAt(rowIndex, colIndex).toString();
 						for (int i = 0; i < total_CoverType; i++) {
@@ -2046,7 +2046,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			data6b = new Object[rowCount6b][colCount6b];
 	        columnNames6b = new String[colCount6b];
 	        columnNames6b[0] = "layer5";
-	        columnNames6b[1] = "layer5R";
+	        columnNames6b[1] = "layer5_regen";
 	        for (int col = 2; col < colCount6b; col++) {
 	        	int disturbance_index = col - 1;
 	        	if (disturbance_index < 10) columnNames6b[col] = "SR_0" + disturbance_index; else columnNames6b[col] = "SR_" + disturbance_index;
@@ -2164,7 +2164,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				java.awt.Point p = e.getPoint();
 				int rowIndex = rowAtPoint(p);
 				int colIndex = columnAtPoint(p);
-				if (table6b.getColumnName(colIndex).equals("layer5") || table6b.getColumnName(colIndex).equals("layer5R")) {
+				if (table6b.getColumnName(colIndex).equals("layer5") || table6b.getColumnName(colIndex).equals("layer5_regen")) {
 					try {
 						tip = getValueAt(rowIndex, colIndex).toString();
 						for (int i = 0; i < total_CoverType; i++) {
@@ -2285,7 +2285,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			data6c = new Object[rowCount6c][colCount6c];
 	        columnNames6c = new String[colCount6c];
 	        columnNames6c[0] = "layer5";
-	        columnNames6c[1] = "layer5R";
+	        columnNames6c[1] = "layer5_regen";
 	        for (int col = 2; col < colCount6c; col++) {
 	        	int disturbance_index = col - 1;
 	        	if (disturbance_index < 10) columnNames6c[col] = "SR_0" + disturbance_index; else columnNames6c[col] = "SR_" + disturbance_index;
@@ -2423,7 +2423,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				java.awt.Point p = e.getPoint();
 				int row = rowAtPoint(p);
 				int column = columnAtPoint(p);
-				if (table6c.getColumnName(column).equals("layer5") || table6c.getColumnName(column).equals("layer5R")) {
+				if (table6c.getColumnName(column).equals("layer5") || table6c.getColumnName(column).equals("layer5_regen")) {
 					try {
 						tip = getValueAt(row, column).toString();
 						for (int i = 0; i < total_CoverType; i++) {
@@ -2434,7 +2434,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					}
 				}
 				
-				if (!table6c.getColumnName(column).equals("layer5") && !table6c.getColumnName(column).equals("layer5R")) {
+				if (!table6c.getColumnName(column).equals("layer5") && !table6c.getColumnName(column).equals("layer5_regen")) {
 					try {
 						DecimalFormat formatter = new DecimalFormat("###,###.###");
 						formatter.setMinimumFractionDigits(0);
@@ -2572,7 +2572,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			data6d = new Object[rowCount6d][colCount6d];
 	        columnNames6d = new String[colCount6d];
 	        columnNames6d[0] = "layer5";
-	        columnNames6d[1] = "layer5R";
+	        columnNames6d[1] = "layer5_regen";
 	        for (int col = 2; col < colCount6d; col++) {
 	        	int disturbance_index = col - 1;
 	        	if (disturbance_index < 10) columnNames6d[col] = "SR_0" + disturbance_index; else columnNames6d[col] = "SR_" + disturbance_index;
@@ -2710,7 +2710,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				java.awt.Point p = e.getPoint();
 				int row = rowAtPoint(p);
 				int column = columnAtPoint(p);
-				if (table6d.getColumnName(column).equals("layer5") || table6d.getColumnName(column).equals("layer5R")) {
+				if (table6d.getColumnName(column).equals("layer5") || table6d.getColumnName(column).equals("layer5_regen")) {
 					try {
 						tip = getValueAt(row, column).toString();
 						for (int i = 0; i < total_CoverType; i++) {
@@ -2721,7 +2721,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					}
 				}
 				
-				if (!table6d.getColumnName(column).equals("layer5") && !table6d.getColumnName(column).equals("layer5R")) {
+				if (!table6d.getColumnName(column).equals("layer5") && !table6d.getColumnName(column).equals("layer5_regen")) {
 					try {
 						DecimalFormat formatter = new DecimalFormat("###,###.###");
 						formatter.setMinimumFractionDigits(0);

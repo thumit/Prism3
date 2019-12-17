@@ -48,28 +48,28 @@ public class ScrollPane_SubTables_SR_Disturbances extends JScrollPane {
 		TitledBorder border = new TitledBorder("Loss rate mean (%)");
 		border.setTitleJustification(TitledBorder.CENTER);
 		loss_rate_mean_scrollpane.setBorder(border);
-		loss_rate_mean_scrollpane.setPreferredSize(new Dimension(333, 0));
+		loss_rate_mean_scrollpane.setPreferredSize(new Dimension(270, 0));
 		
 		
 		loss_rate_std_scrollpane = new JScrollPane(/*this.table6b*/);
 		border = new TitledBorder("Loss rate standard deviation");
 		border.setTitleJustification(TitledBorder.CENTER);
 		loss_rate_std_scrollpane.setBorder(border);
-		loss_rate_std_scrollpane.setPreferredSize(new Dimension(333, 0));
+		loss_rate_std_scrollpane.setPreferredSize(new Dimension(270, 0));
 		
 		
 		conversion_rate_mean_scrollpane = new JScrollPane(/*this.table6c*/);
 		border = new TitledBorder("Conversion rate mean (%)");
 		border.setTitleJustification(TitledBorder.CENTER);
 		conversion_rate_mean_scrollpane.setBorder(border);
-		conversion_rate_mean_scrollpane.setPreferredSize(new Dimension(433, 0));
+		conversion_rate_mean_scrollpane.setPreferredSize(new Dimension(350, 0));
 			
 		
 		conversion_rate_std_scrollpane = new JScrollPane(/*this.table6d*/);
 		border = new TitledBorder("Conversion rate standard deviation");
 		border.setTitleJustification(TitledBorder.CENTER);
 		conversion_rate_std_scrollpane.setBorder(border);
-		conversion_rate_std_scrollpane.setPreferredSize(new Dimension(433, 0));
+		conversion_rate_std_scrollpane.setPreferredSize(new Dimension(350, 0));
 		
 		
 		loss_rate_mean_scrollpane.getVerticalScrollBar().setModel(loss_rate_std_scrollpane.getVerticalScrollBar().getModel());	 //<--------------synchronize
