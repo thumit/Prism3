@@ -1194,3 +1194,4 @@ All changes in this block are associated with PrismAlpha2.0.02.jar, Prism-Formul
 	- make the 4 tables updated correctly when changing (increasing or decreasing) the total number of replacing disturbances in the General Inputs screen (commit to stochastic_disturbances_04 and switch to stochastic_disturbances_05)
 	- modify the UI (header, tooltip, etc.) for 4 tables
 	- modify size for 6 sub tables in SR Disturbances and Management Cost screens
+	- all 4 tables have the default mean and standard deviation of zero

@@ -1818,7 +1818,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				data6a[row][0] = all_layers.get(4).get(row);
 				data6a[row][1] = "All";	
 				for (int col = 2; col < colCount6a; col++) {
-					data6a[row][col] = (double) 100;
+					data6a[row][col] = (double) 0;
 				}
 			}			
 		}
@@ -2057,7 +2057,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				data6b[row][0] = all_layers.get(4).get(row);
 				data6b[row][1] = "All";	
 				for (int col = 2; col < colCount6b; col++) {
-					data6b[row][col] = (double) 100;
+					data6b[row][col] = (double) 0;
 				}
 			}			
 		}
