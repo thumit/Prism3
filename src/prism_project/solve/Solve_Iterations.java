@@ -1047,33 +1047,6 @@ public class Solve_Iterations {
 				
 				
 				// Constraints 5-------------------------------------------------
-				// Map previous iteration output_02
-				LinkedHashMap<String, Double> map_var_name_to_var_value = new LinkedHashMap<String, Double>();
-				int previous_iter = iter -1;
-				File previous_output_variables_file = new File(runFolder.getAbsolutePath() + "/output_02_variables_" + previous_iter + ".txt");
-				String delimited = "\t";		// tab delimited
-				try {		
-					// All lines to be in array
-					List<String> list;
-					list = Files.readAllLines(Paths.get(previous_output_variables_file.getAbsolutePath()), StandardCharsets.UTF_8);
-					list.remove(0);	// Remove the first row (Column names)
-					String[] a = list.toArray(new String[list.size()]);
-					int file_total_rows = a.length;
-					int file_total_columns = a[0].split(delimited).length;
-				
-					// read all values from all rows and columns
-					for (int i = 0; i < file_total_rows; i++) {
-						String[] row_value = a[i].split(delimited);
-						for (int j = 0; j < file_total_columns; j++) {
-							map_var_name_to_var_value.put(row_value[1], Double.valueOf(row_value[2]));		// var_name = key, id = var_value
-						}
-					}
-				} catch (IOException e) {
-					System.err.println(e.getClass().getName() + ": " + e.getMessage());
-				}
-				// Testing no merge// Testing no merge// Testing no merge// Testing no merge// Testing no merge
-				// Testing no merge// Testing no merge// Testing no merge// Testing no merge// Testing no merge
-				// Testing no merge// Testing no merge// Testing no merge// Testing no merge// Testing no merge
 				List<List<Integer>> c5_indexlist = new ArrayList<List<Integer>>();	
 				List<List<Double>> c5_valuelist = new ArrayList<List<Double>>();
 				List<Double> c5_lblist = new ArrayList<Double>();	
@@ -1268,6 +1241,33 @@ public class Solve_Iterations {
 						}
 					}	
 				} else {	// iteration >= 1
+					// Map previous iteration output_02
+					LinkedHashMap<String, Double> map_var_name_to_var_value = new LinkedHashMap<String, Double>();
+					int previous_iter = iter -1;
+					File previous_output_variables_file = new File(runFolder.getAbsolutePath() + "/output_02_variables_" + previous_iter + ".txt");
+					String delimited = "\t";		// tab delimited
+					try {		
+						// All lines to be in array
+						List<String> list;
+						list = Files.readAllLines(Paths.get(previous_output_variables_file.getAbsolutePath()), StandardCharsets.UTF_8);
+						list.remove(0);	// Remove the first row (Column names)
+						String[] a = list.toArray(new String[list.size()]);
+						int file_total_rows = a.length;
+						int file_total_columns = a[0].split(delimited).length;
+					
+						// read all values from all rows and columns
+						for (int i = 0; i < file_total_rows; i++) {
+							String[] row_value = a[i].split(delimited);
+							for (int j = 0; j < file_total_columns; j++) {
+								map_var_name_to_var_value.put(row_value[1], Double.valueOf(row_value[2]));		// var_name = key, id = var_value
+							}
+						}
+					} catch (IOException e) {
+						System.err.println(e.getClass().getName() + ": " + e.getMessage());
+					}
+					// ---------------------------------------No-Merge & Merge options-------------------------------------------------
+					// ---------------------------------------No-Merge & Merge options-------------------------------------------------
+					// ---------------------------------------No-Merge & Merge options-------------------------------------------------
 					switch (merging_option) {
 					case "no_merge":
 						// 5a
