@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.stream.Stream;
-// IMPORTANT:  THE LOGIC HERE IN SOMEWHAT COMPLEX. MY APPOLOGY!
+// IMPORTANT:  THE LOGIC HERE IS COMPLEX. MY APPOLOGY!
 
 
 //This class is created only when there is at least 1 condition --> no need to check null condition
@@ -93,8 +93,8 @@ public class Information_Cost {
 	public double get_cost_value(				
 			Information_Variable var_info, int table_id_to_find, int row_id_to_find,
 			List<String> cost_condition_list,
-			List<String> conversion_cost_after_disturbance_name_list,		// i.e. P P disturbance		P D disturbance			This is already sorted because we already sorted all layers, including layer5
-			List<Double> conversion_cost_after_disturbance_value_list) {
+			List<String> conversion_after_disturbances_classification_list,		// i.e. P P disturbance		P D disturbance			This is already sorted because we already sorted all layers, including layer5
+			List<Double> conversion_after_disturbances_total_loss_rate_list) {
 		
 
 		double value_to_return = 0;
@@ -124,7 +124,7 @@ public class Information_Cost {
 				
 				
 				// convert list to 1-D array since it is faster to get item from array than get item from list?????? --> should I remove this?
-				double[] conversion_cost_after_disturbance_value = Stream.of(conversion_cost_after_disturbance_value_list.toArray(new Double[conversion_cost_after_disturbance_value_list.size()])).mapToDouble(Double::doubleValue).toArray();
+				double[] conversion_after_disturbances_total_loss_rate = Stream.of(conversion_after_disturbances_total_loss_rate_list.toArray(new Double[conversion_after_disturbances_total_loss_rate_list.size()])).mapToDouble(Double::doubleValue).toArray();
 				
 				
 				// conversion_cost: include 2 lists for column name (i.e. P D action) and value (i.e. 240)
@@ -137,9 +137,9 @@ public class Information_Cost {
 							value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(1).get(1).get(item));
 						} 
 					} else {	// when period is not the rotation_period (variable can be anything except EA_E or EA_R in period = rotation period when clear cut happens). Here replacing disturbances can happen
-						int index = Collections.binarySearch(conversion_cost_after_disturbance_name_list, final_cost_list.get(1).get(0).get(item));		// i.e.   { (P P disturbance), (P D disturbance)} would contain (P P disturbance)
+						int index = Collections.binarySearch(conversion_after_disturbances_classification_list, final_cost_list.get(1).get(0).get(item));		// i.e.   { (P P disturbance), (P D disturbance)} would contain (P P disturbance)
 						if (index >= 0) {
-							value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(1).get(1).get(item)) * conversion_cost_after_disturbance_value[index];		// value here is the percentage of SR loss
+							value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(1).get(1).get(item)) * conversion_after_disturbances_total_loss_rate[index];		// total_loss_rate is from all SRs for this conversion classification
 						}
 					}	
 				}

@@ -893,13 +893,10 @@ public class Solve_Iterations {
 				}
 				
 				// This array is all zeroes of replacing disturbance info
-				int total_covertype = total_layer5;
-				double[][][] rd_percentage_zeroes = new double[total_replacing_disturbances][total_covertype][total_covertype];
-				for (int i = 0; i < total_covertype; i++) {
-					for (int j = 0; j < total_covertype; j++) {
-						for (int k = 0; k < total_replacing_disturbances; k++) {
-							rd_percentage_zeroes[k][i][j] = (double) 0;	// just an all zeroes array
-						}
+				double[][] loss_rate_mean_zeroes = new double[total_replacing_disturbances][total_layer5];
+				for (int i = 0; i < total_layer5; i++) {
+					for (int k = 0; k < total_replacing_disturbances; k++) {
+						loss_rate_mean_zeroes[k][i] = (double) 0;	// just an all zeroes array
 					}
 				}
 				
@@ -929,19 +926,20 @@ public class Solve_Iterations {
 							int tR = var_info.get_rotation_period();
 							double discounted_value = 1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1));
 							
-							List<String> coversion_cost_after_disturbance_name_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
-							List<Double> coversion_cost_after_disturbance_value_list = new ArrayList<Double>();	// i.e. 0.25				0.75
+							List<String> conversion_after_disturbances_classification_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
+							List<Double> conversion_after_disturbances_total_loss_rate_list = new ArrayList<Double>();	// i.e. 0.25				0.75
 							
 							if (var_rd_condition_id[var_index] != -9999 && t != tR) {		// Note: no replacing disturbance or EA in the period = rotation period--> no conversion cost after replacing disturbance
-								double[][][] rd_percentage = disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]);
+								double[][] loss_rate_mean = disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
+								double[][][] conversion_rate_mean = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
 								for (int s5R = 0; s5R < total_layer5; s5R++) {
-									double total_percentage = 0;
+									double total_loss_rate_for_this_conversion = 0;
 									for (int k = 0; k < total_replacing_disturbances; k++) {
-										total_percentage = total_percentage + rd_percentage[k][s5][s5R];
+										total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (loss_rate_mean[k][s5] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
 									}
-									if (total_percentage / 100 > 0) {
-										coversion_cost_after_disturbance_name_list.add(layer5.get(s5) + " " + layer5.get(s5R) + " " + "disturbance");
-										coversion_cost_after_disturbance_value_list.add(total_percentage / 100);
+									if (total_loss_rate_for_this_conversion > 0) {
+										conversion_after_disturbances_classification_list.add(layer5.get(s5) + " " + layer5.get(s5R) + " " + "disturbance");
+										conversion_after_disturbances_total_loss_rate_list.add(total_loss_rate_for_this_conversion);
 									}														
 								}
 							} else {
@@ -950,7 +948,7 @@ public class Solve_Iterations {
 							
 							var_cost_value[var_index] = cost_info.get_cost_value(
 											var_info, var_prescription_id, var_row_id,
-											cost_condition_list, coversion_cost_after_disturbance_name_list, coversion_cost_after_disturbance_value_list);		// always return 0 or a number
+											cost_condition_list, conversion_after_disturbances_classification_list, conversion_after_disturbances_total_loss_rate_list);		// always return 0 or a number
 							var_cost_value[var_index] = var_cost_value[var_index] * discounted_value;	// Cost is discounted
 						} else {
 							var_cost_value[var_index] = 0;
@@ -2021,16 +2019,14 @@ public class Solve_Iterations {
 								
 								// Add xNGe(s1,s2,s3,s4,s5,s6)[i][t]
 								int var_index = xNGe[strata_id][i][t];
-								double[][][] rd_percentage = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]) : rd_percentage_zeroes;
-								double total_percentage = 0;
+								double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : loss_rate_mean_zeroes;
+								double total_loss_rate = 0;
 								for (int k = 0; k < total_replacing_disturbances; k++) {
-									for (int rd_s5R = 0; rd_s5R < total_layer5; rd_s5R++) {
-										total_percentage = total_percentage + rd_percentage[k][s5][rd_s5R];
-									}
+									total_loss_rate = total_loss_rate + loss_rate_mean[k][s5] / 100;
 								}
-								if (total_percentage != 100) {	// only add if parameter is non zero
+								if (total_loss_rate != 1) {	// only add if parameter is non zero
 									c6_indexlist.get(c6_num).add(xNGe[strata_id][i][t]);
-									c6_valuelist.get(c6_num).add((double) 1 - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
+									c6_valuelist.get(c6_num).add((double) 1 - total_loss_rate);		// SR Fire loss Rate = P(-->x)
 								}
 								
 								// Add -xNGe(s1,s2,s3,s4,s5,s6)[i][t+1]
@@ -2060,16 +2056,14 @@ public class Solve_Iterations {
 								
 								// Add xPBe(s1,s2,s3,s4,s5,s6)[i][t]
 								int var_index = xPBe[strata_id][i][t];
-								double[][][] rd_percentage = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]) : rd_percentage_zeroes;
-								double total_percentage = 0;
+								double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : loss_rate_mean_zeroes;
+								double total_loss_rate = 0;
 								for (int k = 0; k < total_replacing_disturbances; k++) {
-									for (int rd_s5R = 0; rd_s5R < total_layer5; rd_s5R++) {
-										total_percentage = total_percentage + rd_percentage[k][s5][rd_s5R];
-									}
+									total_loss_rate = total_loss_rate + loss_rate_mean[k][s5] / 100;
 								}
-								if (total_percentage != 100) {	// only add if parameter is non zero
+								if (total_loss_rate != 1) {	// only add if parameter is non zero
 									c6_indexlist.get(c6_num).add(xPBe[strata_id][i][t]);
-									c6_valuelist.get(c6_num).add((double) 1 - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
+									c6_valuelist.get(c6_num).add((double) 1 - total_loss_rate);		// SR Fire loss Rate = P(-->x)
 								}
 								
 								// Add -xPBe(s1,s2,s3,s4,s5,s6)[i][t+1]
@@ -2099,16 +2093,14 @@ public class Solve_Iterations {
 								
 								//Add xGSe(s1,s2,s3,s4,s5,s6)[i][t]
 								int var_index = xGSe[strata_id][i][t];
-								double[][][] rd_percentage = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]) : rd_percentage_zeroes;
-								double total_percentage = 0;
+								double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : loss_rate_mean_zeroes;
+								double total_loss_rate = 0;
 								for (int k = 0; k < total_replacing_disturbances; k++) {
-									for (int rd_s5R = 0; rd_s5R < total_layer5; rd_s5R++) {
-										total_percentage = total_percentage + rd_percentage[k][s5][rd_s5R];
-									}
+									total_loss_rate = total_loss_rate + loss_rate_mean[k][s5] / 100;
 								}
-								if (total_percentage != 100) {	// only add if parameter is non zero
+								if (total_loss_rate != 1) {	// only add if parameter is non zero
 									c6_indexlist.get(c6_num).add(xGSe[strata_id][i][t]);
-									c6_valuelist.get(c6_num).add((double) 1 - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
+									c6_valuelist.get(c6_num).add((double) 1 - total_loss_rate);		// SR Fire loss Rate = P(-->x)
 								}
 								
 								//Add -xGSe(s1,s2,s3,s4,s5,s6)[i][t+1]
@@ -2143,16 +2135,14 @@ public class Solve_Iterations {
 										
 										// Add xEAe(s1,s2,s3,s4,s5,s6)[tR][s5R][i][t]
 										int var_index = xEAe[strata_id][tR][s5R][i][t];
-										double[][][] rd_percentage = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]) : rd_percentage_zeroes;
-										double total_percentage = 0;
+										double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : loss_rate_mean_zeroes;
+										double total_loss_rate = 0;
 										for (int k = 0; k < total_replacing_disturbances; k++) {
-											for (int rd_s5R = 0; rd_s5R < total_layer5; rd_s5R++) {
-												total_percentage = total_percentage + rd_percentage[k][s5][rd_s5R];
-											}
+											total_loss_rate = total_loss_rate + loss_rate_mean[k][s5] / 100;
 										}
-										if (total_percentage != 100) {	// only add if parameter is non zero
+										if (total_loss_rate != 1) {	// only add if parameter is non zero
 											c6_indexlist.get(c6_num).add(xEAe[strata_id][tR][s5R][i][t]);
-											c6_valuelist.get(c6_num).add((double) 1 - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
+											c6_valuelist.get(c6_num).add((double) 1 - total_loss_rate);		// SR Fire loss Rate = P(-->x)
 										}
 										
 										// Add - xEAe(s1,s2,s3,s4,s5,s6)[tR][s5R][i][t+1]		
@@ -2185,16 +2175,14 @@ public class Solve_Iterations {
 									
 									// Add xMS(s1,s2,s3,s4,s5,s6)[i][t]
 									int var_index = xMS[strata_id][i][t] ;
-									double[][][] rd_percentage = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]) : rd_percentage_zeroes;
-									double total_percentage = 0;
+									double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : loss_rate_mean_zeroes;
+									double total_loss_rate = 0;
 									for (int k = 0; k < total_replacing_disturbances; k++) {
-										for (int rd_s5R = 0; rd_s5R < total_layer5; rd_s5R++) {
-											total_percentage = total_percentage + rd_percentage[k][s5][rd_s5R];
-										}
+										total_loss_rate = total_loss_rate + loss_rate_mean[k][s5] / 100;
 									}
-									if (total_percentage != 100) {	// only add if parameter is non zero
+									if (total_loss_rate != 1) {	// only add if parameter is non zero
 										c6_indexlist.get(c6_num).add(xMS[strata_id][i][t]);
-										c6_valuelist.get(c6_num).add((double) 1 - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
+										c6_valuelist.get(c6_num).add((double) 1 - total_loss_rate);		// SR Fire loss Rate = P(-->x)
 									}
 									
 									// Add -xMS(s1,s2,s3,s4,s5,s6)[i][t+1]
@@ -2226,16 +2214,14 @@ public class Solve_Iterations {
 									
 									//Add xBS(s1,s2,s3,s4,s5,s6)[i][t]	
 									int var_index = xBS[strata_id][i][t] ;
-									double[][][] rd_percentage = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]) : rd_percentage_zeroes;
-									double total_percentage = 0;
+									double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : loss_rate_mean_zeroes;
+									double total_loss_rate = 0;
 									for (int k = 0; k < total_replacing_disturbances; k++) {
-										for (int rd_s5R = 0; rd_s5R < total_layer5; rd_s5R++) {
-											total_percentage = total_percentage + rd_percentage[k][s5][rd_s5R];
-										}
+										total_loss_rate = total_loss_rate + loss_rate_mean[k][s5] / 100;
 									}
-									if (total_percentage != 100) {	// only add if parameter is non zero
+									if (total_loss_rate != 1) {	// only add if parameter is non zero
 										c6_indexlist.get(c6_num).add(xBS[strata_id][i][t]);
-										c6_valuelist.get(c6_num).add((double) 1 - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
+										c6_valuelist.get(c6_num).add((double) 1 - total_loss_rate);		// SR Fire loss Rate = P(-->x)
 									}
 									
 									//Add -xBS(s1,s2,s3,s4,s5,s6)[i][t+1]
@@ -2309,14 +2295,15 @@ public class Solve_Iterations {
 										if (xNGe[strata_id][i] != null) {
 											int var_index = xNGe[strata_id][i][t];
 											if(var_index > 0 && var_rd_condition_id[var_index] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
-												double total_percentage = 0;
-												double[][][] rd_percentage = disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]);
+												double[][] loss_rate_mean = disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
+												double[][][] conversion_rate_mean = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
+												double total_loss_rate_for_this_conversion = 0;
 												for (int k = 0; k < total_replacing_disturbances; k++) {
-													total_percentage = total_percentage + rd_percentage[k][s5][s5R];
+													total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (loss_rate_mean[k][s5] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
 												}
-												if (total_percentage != 0) {	// only add if parameter is non zero
+												if (total_loss_rate_for_this_conversion != 0) {	// only add if parameter is non zero
 													c12_indexlist.get(c12_num).add(var_index);
-													c12_valuelist.get(c12_num).add((double) - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
+													c12_valuelist.get(c12_num).add((double) - total_loss_rate_for_this_conversion);		// SR Fire loss Rate = P(s5, s5R --> x)
 												}
 											}
 										}
@@ -2327,14 +2314,15 @@ public class Solve_Iterations {
 										if (xPBe[strata_id][i] != null) {
 											int var_index = xPBe[strata_id][i][t];
 											if(var_index > 0 && var_rd_condition_id[var_index] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
-												double total_percentage = 0;
-												double[][][] rd_percentage = disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]);
+												double[][] loss_rate_mean = disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
+												double[][][] conversion_rate_mean = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
+												double total_loss_rate_for_this_conversion = 0;
 												for (int k = 0; k < total_replacing_disturbances; k++) {
-													total_percentage = total_percentage + rd_percentage[k][s5][s5R];
+													total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (loss_rate_mean[k][s5] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
 												}
-												if (total_percentage != 0) {	// only add if parameter is non zero
+												if (total_loss_rate_for_this_conversion != 0) {	// only add if parameter is non zero
 													c12_indexlist.get(c12_num).add(var_index);
-													c12_valuelist.get(c12_num).add((double) - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
+													c12_valuelist.get(c12_num).add((double) - total_loss_rate_for_this_conversion);		// SR Fire loss Rate = P(s5, s5R --> x)
 												}	
 											}
 										}
@@ -2345,14 +2333,15 @@ public class Solve_Iterations {
 										if (xGSe[strata_id][i] != null) {
 											int var_index = xGSe[strata_id][i][t];
 											if(var_index > 0 && var_rd_condition_id[var_index] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
-												double total_percentage = 0;
-												double[][][] rd_percentage = disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]);
+												double[][] loss_rate_mean = disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
+												double[][][] conversion_rate_mean = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
+												double total_loss_rate_for_this_conversion = 0;
 												for (int k = 0; k < total_replacing_disturbances; k++) {
-													total_percentage = total_percentage + rd_percentage[k][s5][s5R];
+													total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (loss_rate_mean[k][s5] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
 												}
-												if (total_percentage != 0) {	// only add if parameter is non zero
+												if (total_loss_rate_for_this_conversion != 0) {	// only add if parameter is non zero
 													c12_indexlist.get(c12_num).add(var_index);
-													c12_valuelist.get(c12_num).add((double) - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
+													c12_valuelist.get(c12_num).add((double) - total_loss_rate_for_this_conversion);		// SR Fire loss Rate = P(s5, s5R --> x)
 												}
 											}
 										}
@@ -2368,14 +2357,15 @@ public class Solve_Iterations {
 														
 															int var_index = xEAe[strata_id][tR][s5RR][i][t];
 															if(var_index > 0 && var_rd_condition_id[var_index] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
-																double total_percentage = 0;
-																double[][][] rd_percentage = disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]);
+																double[][] loss_rate_mean = disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
+																double[][][] conversion_rate_mean = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
+																double total_loss_rate_for_this_conversion = 0;
 																for (int k = 0; k < total_replacing_disturbances; k++) {
-																	total_percentage = total_percentage + rd_percentage[k][s5][s5R];
+																	total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (loss_rate_mean[k][s5] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
 																}
-																if (total_percentage != 0) {	// only add if parameter is non zero
+																if (total_loss_rate_for_this_conversion != 0) {	// only add if parameter is non zero
 																	c12_indexlist.get(c12_num).add(var_index);
-																	c12_valuelist.get(c12_num).add((double) - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
+																	c12_valuelist.get(c12_num).add((double) - total_loss_rate_for_this_conversion);		// SR Fire loss Rate = P(s5, s5R --> x)
 																}
 															}
 														}
@@ -2389,14 +2379,15 @@ public class Solve_Iterations {
 											if (xMS[strata_id][i] != null) {
 												int var_index = xMS[strata_id][i][t];
 												if(var_index > 0 && var_rd_condition_id[var_index] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
-													double total_percentage = 0;
-													double[][][] rd_percentage = disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]);
+													double[][] loss_rate_mean = disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
+													double[][][] conversion_rate_mean = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
+													double total_loss_rate_for_this_conversion = 0;
 													for (int k = 0; k < total_replacing_disturbances; k++) {
-														total_percentage = total_percentage + rd_percentage[k][s5][s5R];
+														total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (loss_rate_mean[k][s5] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
 													}
-													if (total_percentage != 0) {	// only add if parameter is non zero
+													if (total_loss_rate_for_this_conversion != 0) {	// only add if parameter is non zero
 														c12_indexlist.get(c12_num).add(var_index);
-														c12_valuelist.get(c12_num).add((double) - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
+														c12_valuelist.get(c12_num).add((double) - total_loss_rate_for_this_conversion);		// SR Fire loss Rate = P(s5, s5R --> x)
 													}
 												}
 											}
@@ -2409,14 +2400,15 @@ public class Solve_Iterations {
 											if (xBS[strata_id][i] != null) {
 												int var_index = xBS[strata_id][i][t];
 												if(var_index > 0 && var_rd_condition_id[var_index] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
-													double total_percentage = 0;
-													double[][][] rd_percentage = disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]);
+													double[][] loss_rate_mean = disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
+													double[][][] conversion_rate_mean = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
+													double total_loss_rate_for_this_conversion = 0;
 													for (int k = 0; k < total_replacing_disturbances; k++) {
-														total_percentage = total_percentage + rd_percentage[k][s5][s5R];
+														total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (loss_rate_mean[k][s5] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
 													}
-													if (total_percentage != 0) {	// only add if parameter is non zero
+													if (total_loss_rate_for_this_conversion != 0) {	// only add if parameter is non zero
 														c12_indexlist.get(c12_num).add(var_index);
-														c12_valuelist.get(c12_num).add((double) - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
+														c12_valuelist.get(c12_num).add((double) - total_loss_rate_for_this_conversion);		// SR Fire loss Rate = P(s5, s5R --> x)
 													}
 												}
 											}
@@ -2437,14 +2429,15 @@ public class Solve_Iterations {
 												if(xNGr[strata_5layers_id][i][t][a] > 0 && var_rd_condition_id[xNGr[strata_5layers_id][i][t][a]] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
 													
 													int var_index = xNGr[strata_5layers_id][i][t][a];
-													double total_percentage = 0;
-													double[][][] rd_percentage = disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]);
+													double[][] loss_rate_mean = disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
+													double[][][] conversion_rate_mean = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
+													double total_loss_rate_for_this_conversion = 0;
 													for (int k = 0; k < total_replacing_disturbances; k++) {
-														total_percentage = total_percentage + rd_percentage[k][s5][s5R];
+														total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (loss_rate_mean[k][s5] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
 													}
-													if (total_percentage != 0) {	// only add if parameter is non zero
+													if (total_loss_rate_for_this_conversion != 0) {	// only add if parameter is non zero
 														c12_indexlist.get(c12_num).add(var_index);
-														c12_valuelist.get(c12_num).add((double) - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
+														c12_valuelist.get(c12_num).add((double) - total_loss_rate_for_this_conversion);		// SR Fire loss Rate = P(s5, s5R --> x)
 													}	
 												}
 											}
@@ -2458,14 +2451,15 @@ public class Solve_Iterations {
 												if(xPBr[strata_5layers_id][i][t][a] > 0 && var_rd_condition_id[xPBr[strata_5layers_id][i][t][a]] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
 													
 													int var_index = xPBr[strata_5layers_id][i][t][a];
-													double total_percentage = 0;
-													double[][][] rd_percentage = disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]);
+													double[][] loss_rate_mean = disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
+													double[][][] conversion_rate_mean = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
+													double total_loss_rate_for_this_conversion = 0;
 													for (int k = 0; k < total_replacing_disturbances; k++) {
-														total_percentage = total_percentage + rd_percentage[k][s5][s5R];
+														total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (loss_rate_mean[k][s5] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
 													}
-													if (total_percentage != 0) {	// only add if parameter is non zero
+													if (total_loss_rate_for_this_conversion != 0) {	// only add if parameter is non zero
 														c12_indexlist.get(c12_num).add(var_index);
-														c12_valuelist.get(c12_num).add((double) - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
+														c12_valuelist.get(c12_num).add((double) - total_loss_rate_for_this_conversion);		// SR Fire loss Rate = P(s5, s5R --> x)
 													}	
 												}
 											}
@@ -2479,14 +2473,15 @@ public class Solve_Iterations {
 												if(xGSr[strata_5layers_id][i][t][a] > 0 && var_rd_condition_id[xGSr[strata_5layers_id][i][t][a]] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
 													
 													int var_index = xGSr[strata_5layers_id][i][t][a];
-													double total_percentage = 0;
-													double[][][] rd_percentage = disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]);
+													double[][] loss_rate_mean = disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
+													double[][][] conversion_rate_mean = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
+													double total_loss_rate_for_this_conversion = 0;
 													for (int k = 0; k < total_replacing_disturbances; k++) {
-														total_percentage = total_percentage + rd_percentage[k][s5][s5R];
+														total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (loss_rate_mean[k][s5] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
 													}
-													if (total_percentage != 0) {	// only add if parameter is non zero
+													if (total_loss_rate_for_this_conversion != 0) {	// only add if parameter is non zero
 														c12_indexlist.get(c12_num).add(var_index);
-														c12_valuelist.get(c12_num).add((double) - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
+														c12_valuelist.get(c12_num).add((double) - total_loss_rate_for_this_conversion);		// SR Fire loss Rate = P(s5, s5R --> x)
 													}
 												}
 											}
@@ -2504,14 +2499,15 @@ public class Solve_Iterations {
 																
 																int var_index = xEAr[strata_5layers_id][tR][aR][s5RR][i][t];
 																if(var_index > 0 && var_rd_condition_id[var_index] != -9999) {		// if variable is defined, this value would be > 0 
-																	double total_percentage = 0;
-																	double[][][] rd_percentage = disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]);
+																	double[][] loss_rate_mean = disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
+																	double[][][] conversion_rate_mean = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
+																	double total_loss_rate_for_this_conversion = 0;
 																	for (int k = 0; k < total_replacing_disturbances; k++) {
-																		total_percentage = total_percentage + rd_percentage[k][s5][s5R];
+																		total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (loss_rate_mean[k][s5] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
 																	}
-																	if (total_percentage != 0) {	// only add if parameter is non zero
+																	if (total_loss_rate_for_this_conversion != 0) {	// only add if parameter is non zero
 																		c12_indexlist.get(c12_num).add(var_index);
-																		c12_valuelist.get(c12_num).add((double) - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
+																		c12_valuelist.get(c12_num).add((double) - total_loss_rate_for_this_conversion);		// SR Fire loss Rate = P(s5, s5R --> x)
 																	}
 																}
 															}
@@ -2727,16 +2723,14 @@ public class Solve_Iterations {
 									
 									// Add xNGr(s1,s2,s3,s4,s5)[i][t][a]
 									int var_index = xNGr[strata_5layers_id][i][t][a];
-									double[][][] rd_percentage = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]) : rd_percentage_zeroes;
-									double total_percentage = 0;
+									double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : loss_rate_mean_zeroes;
+									double total_loss_rate = 0;
 									for (int k = 0; k < total_replacing_disturbances; k++) {
-										for (int s5R = 0; s5R < total_layer5; s5R++) {
-											total_percentage = total_percentage + rd_percentage[k][s5][s5R];
-										}
+										total_loss_rate = total_loss_rate + loss_rate_mean[k][s5] / 100;
 									}
-									if (total_percentage != 100) {	// only add if parameter is non zero
+									if (total_loss_rate != 1) {	// only add if parameter is non zero
 										c14_indexlist.get(c14_num).add(xNGr[strata_5layers_id][i][t][a]);
-										c14_valuelist.get(c14_num).add((double) 1 - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
+										c14_valuelist.get(c14_num).add((double) 1 - total_loss_rate);		// SR Fire loss Rate = P(-->x)
 									}
 									
 									// Add - xNGr(s1,s2,s3,s4,s5)[i][t+1][a+1]
@@ -2771,16 +2765,14 @@ public class Solve_Iterations {
 									
 									// Add xPBr(s1,s2,s3,s4,s5)[i][t][a]
 									int var_index = xPBr[strata_5layers_id][i][t][a];
-									double[][][] rd_percentage = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]) : rd_percentage_zeroes;
-									double total_percentage = 0;
+									double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : loss_rate_mean_zeroes;
+									double total_loss_rate = 0;
 									for (int k = 0; k < total_replacing_disturbances; k++) {
-										for (int s5R = 0; s5R < total_layer5; s5R++) {
-											total_percentage = total_percentage + rd_percentage[k][s5][s5R];
-										}
+										total_loss_rate = total_loss_rate + loss_rate_mean[k][s5] / 100;
 									}
-									if (total_percentage != 100) {	// only add if parameter is non zero
+									if (total_loss_rate != 1) {	// only add if parameter is non zero
 										c14_indexlist.get(c14_num).add(xPBr[strata_5layers_id][i][t][a]);
-										c14_valuelist.get(c14_num).add((double) 1 - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
+										c14_valuelist.get(c14_num).add((double) 1 - total_loss_rate);		// SR Fire loss Rate = P(-->x)
 
 									}
 									
@@ -2816,16 +2808,14 @@ public class Solve_Iterations {
 									
 									// Add xGSr(s1,s2,s3,s4,s5)[i][t][a]
 									int var_index = xGSr[strata_5layers_id][i][t][a];
-									double[][][] rd_percentage = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]) : rd_percentage_zeroes;
-									double total_percentage = 0;
+									double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : loss_rate_mean_zeroes;
+									double total_loss_rate = 0;
 									for (int k = 0; k < total_replacing_disturbances; k++) {
-										for (int s5R = 0; s5R < total_layer5; s5R++) {
-											total_percentage = total_percentage + rd_percentage[k][s5][s5R];
-										}
+										total_loss_rate = total_loss_rate + loss_rate_mean[k][s5] / 100;
 									}
-									if (total_percentage != 100) {	// only add if parameter is non zero
+									if (total_loss_rate != 1) {	// only add if parameter is non zero
 										c14_indexlist.get(c14_num).add(xGSr[strata_5layers_id][i][t][a]);
-										c14_valuelist.get(c14_num).add((double) 1 - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
+										c14_valuelist.get(c14_num).add((double) 1 - total_loss_rate);		// SR Fire loss Rate = P(-->x)
 									}
 									
 									// Add - xGSr(s1,s2,s3,s4,s5)[i][t+1][a+1]
@@ -2865,16 +2855,14 @@ public class Solve_Iterations {
 												
 												// Add xEAr(s1,s2,s3,s4,s5)[tR][aR][s5R][i][t]
 												int var_index = xEAr[strata_5layers_id][tR][aR][s5R][i][t];
-												double[][][] rd_percentage = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[var_index]) : rd_percentage_zeroes;
-												double total_percentage = 0;
+												double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : loss_rate_mean_zeroes;
+												double total_loss_rate = 0;
 												for (int k = 0; k < total_replacing_disturbances; k++) {
-													for (int rd_s5R = 0; rd_s5R < total_layer5; rd_s5R++) {
-														total_percentage = total_percentage + rd_percentage[k][s5][rd_s5R];
-													}
+													total_loss_rate = total_loss_rate + loss_rate_mean[k][s5] / 100;
 												}
-												if (total_percentage != 100) {	// only add if parameter is non zero
+												if (total_loss_rate != 1) {	// only add if parameter is non zero
 													c14_indexlist.get(c14_num).add(xEAr[strata_5layers_id][tR][aR][s5R][i][t]);
-													c14_valuelist.get(c14_num).add((double) 1 - total_percentage / 100);		//SR Fire loss Rate = P(s5,a)/100
+													c14_valuelist.get(c14_num).add((double) 1 - total_loss_rate);		// SR Fire loss Rate = P(-->x)
 												}
 										
 												// Add - xEAr(s1,s2,s3,s4,s5,s6)[tR][aR][s5R][i][t+1]		
@@ -4002,13 +3990,9 @@ public class Solve_Iterations {
 											+ "\t" + Double.valueOf(reduceCost[i + 1])); /*Double.valueOf(twoDForm.format(reduceCost[i]))*/ 	// because index starts from 1 not 0:    http://lpsolve.sourceforge.net/5.0/get_sensitivity_rhs.htm
 									
 									int s5 = layer5.indexOf(var_info_array[i].get_layer5());
-									double[][][] rd_percentage = (var_rd_condition_id[i] != -9999) ? disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[i]) : rd_percentage_zeroes;
+									double[][] loss_rate_mean = (var_rd_condition_id[i] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[i]) : loss_rate_mean_zeroes;
 									for (int k = 0; k < total_replacing_disturbances; k++) {
-										double total_percentage = 0;
-										for (int rd_s5R = 0; rd_s5R < total_layer5; rd_s5R++) {
-											total_percentage = total_percentage + rd_percentage[k][s5][rd_s5R];		// Sum over the regenerated cover
-										}
-										fileOut.write("\t" + Double.valueOf(total_percentage));
+										fileOut.write("\t" + Double.valueOf(loss_rate_mean[k][s5]));
 									}
 									fileOut.write("\t" + Double.valueOf(var_cost_value[i]));
 									
@@ -4636,13 +4620,9 @@ public class Solve_Iterations {
 											+ "\t" + Double.valueOf(reduceCost[i + 1])); /*Double.valueOf(twoDForm.format(reduceCost[i]))*/ 	// because index starts from 1 not 0:    http://lpsolve.sourceforge.net/5.0/get_sensitivity_rhs.htm
 									
 									int s5 = layer5.indexOf(var_info_array[i].get_layer5());
-									double[][][] rd_percentage = (var_rd_condition_id[i] != -9999) ? disturbance_info.get_rd_percentage_from_condition_id(var_rd_condition_id[i]) : rd_percentage_zeroes;
+									double[][] loss_rate_mean = (var_rd_condition_id[i] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[i]) : loss_rate_mean_zeroes;
 									for (int k = 0; k < total_replacing_disturbances; k++) {
-										double total_percentage = 0;
-										for (int rd_s5R = 0; rd_s5R < total_layer5; rd_s5R++) {
-											total_percentage = total_percentage + rd_percentage[k][s5][rd_s5R];		// Sum over the regenerated cover
-										}
-										fileOut.write("\t" + Double.valueOf(total_percentage));
+										fileOut.write("\t" + Double.valueOf(loss_rate_mean[k][s5]));
 									}
 									fileOut.write("\t" + Double.valueOf(var_cost_value[i]));
 									

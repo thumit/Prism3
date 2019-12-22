@@ -1195,3 +1195,6 @@ All changes in this block are associated with PrismAlpha2.0.02.jar, Prism-Formul
 	- modify the UI (header, tooltip, etc.) for 4 tables
 	- modify size for 6 sub tables in SR Disturbances and Management Cost screens
 	- all 4 tables have the default mean and standard deviation of zero
+
+	- Information_disturbance class would now read all the 4 information (lpr_mean, lpr_std, cr_mean, cr_std)
+	- Panel_Solve_Iterations: logic is modified to integrate lpr_mean and cr_mean into solving process

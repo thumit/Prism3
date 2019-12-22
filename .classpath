@@ -9,7 +9,11 @@
 	<classpathentry kind="lib" path="C:/prism documents/Setup/jfreechart-1.0.19/lib/jcommon-1.0.23.jar"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="lib" path="C:/prism documents/Setup/cplex_wraper/prismcplex.jar"/>
-	<classpathentry kind="lib" path="C:/prism documents/Setup/x64_win64(CPLEX 1280)/cplex.jar"/>
+	<classpathentry kind="lib" path="C:/prism documents/Setup/x64_win64(CPLEX 1280)/cplex.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="C:/Users/Dung Nguyen/Desktop/Temporary"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="C:/prism documents/Setup/sqlite-jdbc-3.27.2.1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk-13">
 		<attributes>
