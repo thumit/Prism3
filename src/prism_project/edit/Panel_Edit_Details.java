@@ -635,6 +635,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				
 				// The below code is for adding column "model_condition" at the ending column of the old runs so the old runs have new format (we could and should delete all the below in the future)
 				// -----------------------------------------------------------------------------
+				// -------------------Begin of where we could delete----------------------------
 				// -----------------------------------------------------------------------------
 				List<String> list_of_modified_tables = Arrays.asList("input_03_non_ea_management.txt", "input_04_ea_management.txt", "input_05_non_sr_disturbances.txt", "input_06_sr_disturbances.txt", "input_07_management_cost.txt");
 				if (list_of_modified_tables.contains(table_file.getName())) {
@@ -685,7 +686,94 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						}
 						input_data_temp[row][3] = input_data_temp[row][2];	// set lr_std = lr_mean
 						input_data_temp[row][4] = input_data[row][3];		// cr_mean
-						input_data_temp[row][5] = input_data_temp[row][4];	// set cr_mean = cr_std
+						input_data_temp[row][5] = input_data_temp[row][4];	// set cr_std = cr_mean
+						
+						
+						// read regeneration_info
+						String[] array = input_data[row][3].toString().split(";");		// example 2 disturbance types:       B B 0.0 0.0;B C 0.0 0.0
+						int total_SRs = array[0].split("\\s+").length - 2;
+						int total_covertype = (int) Math.sqrt(array.length);
+						double[][][] regeneration_info = new double[total_SRs][total_covertype][total_covertype];
+						for (int i = 0; i < total_covertype; i++) {
+							for (int j = 0; j < total_covertype; j++) {
+								int current_array_position = total_covertype * i + j;
+								String[] info = array[current_array_position].split("\\s+");    // example:       B B 0.0 0.0
+								for (int k = 2; k < info.length; k++) {
+									regeneration_info[k - 2][i][j] = Double.parseDouble(info[k]);
+								}
+							}
+						}
+						
+						// make it lr_mean
+						String[] lr_mean_array = new String[total_covertype];
+						array = input_data_temp[row][2].toString().split(";");		// example 2 disturbance types:       B All 0.0 0.0;C All 0.0 0.0
+						for (int i = 0; i < total_covertype; i++) {
+							String[] info = array[i].split("\\s+");    // example:       B All 0.0 0.0
+							for (int k = 2; k < info.length; k++) {
+								double total_percentage = 0;
+								for (int j = 0; j < total_covertype; j++) {
+									total_percentage = total_percentage + regeneration_info[k - 2][i][j];
+								}
+								info[k] = String.valueOf(total_percentage);
+							}
+							lr_mean_array[i] = String.join(" ", info);
+						}
+						input_data_temp[row][2] = String.join(";", lr_mean_array);
+						
+						// make lr_std = 20% lr_mean
+						String[] lr_std_array = new String[total_covertype];
+						array = input_data_temp[row][2].toString().split(";");		// example 2 disturbance types:       B All 0.0 0.0;C All 0.0 0.0
+						for (int i = 0; i < total_covertype; i++) {
+							String[] info = array[i].split("\\s+");    // example:       B All 0.0 0.0
+							for (int k = 2; k < info.length; k++) {
+								double total_percentage = 0;
+								for (int j = 0; j < total_covertype; j++) {
+									total_percentage = total_percentage + regeneration_info[k - 2][i][j];
+								}
+								info[k] = String.valueOf(total_percentage * 20 / 100);
+							}
+							lr_std_array[i] = String.join(" ", info);
+						}
+						input_data_temp[row][3] = String.join(";", lr_std_array);
+						
+						// adjust cr_mean
+						int square_total_covertype = total_covertype * total_covertype;
+						String[] cr_mean_array = new String[square_total_covertype];
+						array = input_data_temp[row][4].toString().split(";");		// example 2 disturbance types:       B B 0.0 0.0;B C 0.0 0.0
+						for (int i = 0; i < square_total_covertype; i++) {
+							String[] info = array[i].split("\\s+");    // example:       B All 0.0 0.0
+							for (int k = 2; k < info.length; k++) {
+								double total_percentage = 0;
+								for (int j = 0; j < total_covertype; j++) {
+									total_percentage = total_percentage + regeneration_info[k - 2][(int) i / total_covertype][j];
+								}
+								double new_rate = 0;
+								if (Double.valueOf(info[k]) != 0) new_rate = Double.valueOf(info[k]) / total_percentage * 100;
+								info[k] = String.valueOf(new_rate);
+							}
+							cr_mean_array[i] = String.join(" ", info);
+						}
+						input_data_temp[row][4] = String.join(";", cr_mean_array);
+						
+						// let cr_std = 20% cr_mean
+						String[] cr_std_array = new String[square_total_covertype];
+						array = input_data_temp[row][5].toString().split(";");		// example 2 disturbance types:       B B 0.0 0.0;B C 0.0 0.0
+						for (int i = 0; i < square_total_covertype; i++) {
+							String[] info = array[i].split("\\s+");    // example:       B All 0.0 0.0
+							for (int k = 2; k < info.length; k++) {
+								double total_percentage = 0;
+								for (int j = 0; j < total_covertype; j++) {
+									total_percentage = total_percentage + regeneration_info[k - 2][(int) i / total_covertype][j];
+								}
+								double new_rate = 0;
+								if (Double.valueOf(info[k]) != 0) new_rate = Double.valueOf(info[k]) / total_percentage * 100 * 20 / 100;
+								info[k] = String.valueOf(new_rate);
+							}
+							cr_std_array[i] = String.join(" ", info);
+						}
+						input_data_temp[row][5] = String.join(";", cr_std_array);
+
+						
 						for (int col = 6; col <= 9; col++) {
 							input_data_temp[row][col] = input_data[row][col - 2];
 						}
@@ -700,6 +788,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					input_data = input_data_temp;
 				}
 				// -----------------------------------------------------------------------------
+				// -------------------End of where we could delete----------------------------
 				// -----------------------------------------------------------------------------
 			} catch (IOException e1) {
 				System.err.println(e1.getClass().getName() + ": " + e1.getMessage() + " - Cannot load. New interface is created");
