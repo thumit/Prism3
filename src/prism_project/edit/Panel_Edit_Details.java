@@ -666,7 +666,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						input_data = input_data_temp;
 					}
 				}
-				// The below code is for adding column "lr_std" and "cr_std" as the first 2 columns of the old runs so the old runs have new format ("input_06_sr_disturbances.txt")
+				// The below code is for adding column "lr_std" and "cr_std" as the first 2 columns of the old runs so the old runs have new format ("input_06_sr_disturbances.txt") (we could and should delete all the below in the future)
 				// -----------------------------------------------------------------------------
 				// -----------------------------------------------------------------------------
 				if (table_file.getName().equals("input_06_sr_disturbances.txt") && !input_columnNames[2].equals("lr_mean")) {
