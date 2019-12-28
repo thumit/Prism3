@@ -1199,4 +1199,5 @@ All changes in this block are associated with PrismAlpha2.0.02.jar, Prism-Formul
 	- Information_disturbance class would now read all the 4 information (lpr_mean, lpr_std, cr_mean, cr_std)
 	- Panel_Solve_Iterations: logic is modified to integrate lpr_mean and cr_mean into solving process
 	- Read the output_02_variables_ only when iteration >= 1 to avoid error report (occurs when reading the previous iteartion file when current iteration is 0) (commit to stochastic_disturbances_05 and switch to stochastic_disturbances_06)
-502. Auto convert SR Disturbances input from old model (2.0.02 and before) to new model (2.0.03) (convert to get lr_mean, cr_mean and make lr_std and cr_std to be 20% of the associated mean)
+502. Auto convert SR Disturbances input from old model (2.0.02 and before) to new model (2.0.03) (convert to get lr_mean, cr_mean and make lr_std and cr_std to be 20% of the associated mean) (commit to stochastic_disturbances_06 and switch to stochastic_disturbances_07)
+503. Fix equation 6d in the code to loop t from 1 + iter instead of from 1 (optimal results should be exactly the same)

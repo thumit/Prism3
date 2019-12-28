@@ -2124,7 +2124,7 @@ public class Solve_Iterations {
 					for (int tR = 1 + iter; tR <= total_periods + iter; tR++) {
 						for (int s5R = 0; s5R < total_layer5; s5R++) {
 							for (int i = 0; i < total_EA_E_prescription_choices; i++) {
-								for (int t = 1; t <= tR - 1; t++) {
+								for (int t = 1 + iter; t <= tR - 1; t++) {
 									if (xEAe[strata_id][tR] != null 
 											&& xEAe[strata_id][tR][s5R] != null
 												&& xEAe[strata_id][tR][s5R][i] != null
