@@ -1201,3 +1201,9 @@ All changes in this block are associated with PrismAlpha2.0.02.jar, Prism-Formul
 	- Read the output_02_variables_ only when iteration >= 1 to avoid error report (occurs when reading the previous iteartion file when current iteration is 0) (commit to stochastic_disturbances_05 and switch to stochastic_disturbances_06)
 502. Auto convert SR Disturbances input from old model (2.0.02 and before) to new model (2.0.03) (convert to get lr_mean, cr_mean and make lr_std and cr_std to be 20% of the associated mean) (commit to stochastic_disturbances_06 and switch to stochastic_disturbances_07)
 503. Fix equation 6d in the code to loop t from 1 + iter instead of from 1 (optimal results should be exactly the same)
+504. Stochastic disturbances update 2:
+	- Fix No_Merge: eq 5a to 5j
+	- Fix Merge: eq 5a to 5d
+	- Add 7a (7 is now 7b)
+	- Add 8a (8 is now 8b)
+	- output_02 now writes the total_loss_rate_mean (sum all the loss means) and var_rd_condition_id (to look for each SR information) null value is write out as -9999
