@@ -2414,7 +2414,7 @@ public class Solve_Iterations {
 									// Add - sigma(tR)(aR)(s5R')(i)	xEAr[s1][s2][s3][s4][s5][tR][aR][s5R'][i][t] 	--> : X~
 									for (int tR = t + 1; tR <= total_periods + iter; tR++) { // tR
 										if (xEAr[strata_5layers_id][tR] != null) 
-											for (int aR = 1; aR <= tR - 1; aR++) {		// Note that we lack the condition that (aR - tR + t > 0) as in Formulation-09. But we do not need it here since the null check here and the definition (line 769, 779) guarantee this condition
+											for (int aR = 1; aR <= tR - 1; aR++) {		// Note that we lack the condition that (aR - tR + t > 0) as in Formulation-10. But we do not need it here since the null check here and the definition (line 769, 779) guarantee this condition
 												if (xEAr[strata_5layers_id][tR][aR] != null) 
 													for (int s5RR = 0; s5RR < total_layer5; s5RR++) {		// s5R'
 														if (xEAr[strata_5layers_id][tR][aR][s5RR] != null)
@@ -2769,9 +2769,14 @@ public class Solve_Iterations {
 									for (int s6 = 0; s6 < total_layer6; s6++) {
 										for (int i = 0; i < total_EA_E_prescription_choices; i++) {
 											String strata_name = strata_4layers + "_" + layer5.get(s5) + "_" + layer6.get(s6);
-											String var_name = "xEA_E_" + strata_name + "_" + t + "_" + layer5.get(s5R) + "_" + i + "_" + t;
-											if (map_var_name_to_var_value.get(var_name) != null) {
-												value_of_RHS = value_of_RHS + map_var_name_to_var_value.get(var_name);
+											int strata_id = Collections.binarySearch(model_strata, strata_name);
+											
+											if (strata_id >= 0) {
+												strata_name = strata_4layers + "_" + layer5.get(s5) + "_" + layer6.get(s6);
+												String var_name = "xEA_E_" + strata_name + "_" + t + "_" + layer5.get(s5R) + "_" + i + "_" + t;
+												if (map_var_name_to_var_value.get(var_name) != null) {
+													value_of_RHS = value_of_RHS + map_var_name_to_var_value.get(var_name);
+												}
 											}
 										}
 									}
@@ -4037,20 +4042,20 @@ public class Solve_Iterations {
 									fileOut.write(i + "\t" + vname[i] 
 											+ "\t" + Double.valueOf(value[i]) /*Double.valueOf(twoDForm.format(value[i]))*/ 
 											+ "\t" + Double.valueOf(reduceCost[i])) /*Double.valueOf(twoDForm.format(reduceCost[i])))*/;
-								}
-								
-								if (value[i] != 0 && (vname[i].contains("xNG_") || vname[i].contains("xPB_") || vname[i].contains("xGS_") || vname[i].contains("xMS_") || vname[i].contains("xBS_") || vname[i].contains("xEA_"))) {
-									double total_loss_rate_mean = 0;
-									int s5 = layer5.indexOf(var_info_array[i].get_layer5());
-									double[][] loss_rate_mean = (var_rd_condition_id[i] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[i]) : all_zeroes_2D_array;
-									for (int k = 0; k < total_replacing_disturbances; k++) {
-										total_loss_rate_mean = total_loss_rate_mean + Double.valueOf(loss_rate_mean[k][s5]);
+									
+									if (vname[i].contains("xNG_") || vname[i].contains("xPB_") || vname[i].contains("xGS_") || vname[i].contains("xMS_") || vname[i].contains("xBS_") || vname[i].contains("xEA_")) {
+										double total_loss_rate_mean = 0;
+										int s5 = layer5.indexOf(var_info_array[i].get_layer5());
+										double[][] loss_rate_mean = (var_rd_condition_id[i] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[i]) : all_zeroes_2D_array;
+										for (int k = 0; k < total_replacing_disturbances; k++) {
+											total_loss_rate_mean = total_loss_rate_mean + Double.valueOf(loss_rate_mean[k][s5]);
+										}
+										fileOut.write("\t" + total_loss_rate_mean); 
+										fileOut.write("\t" + var_rd_condition_id[i]); 
+									} else {
+										fileOut.write("\t" + "-9999"); 
+										fileOut.write("\t" + "-9999"); 
 									}
-									fileOut.write("\t" + total_loss_rate_mean); 
-									fileOut.write("\t" + var_rd_condition_id[i]); 
-								} else {
-									fileOut.write("\t" + "-9999"); 
-									fileOut.write("\t" + "-9999"); 
 								}
 							}
 							fileOut.close();
@@ -4746,20 +4751,20 @@ public class Solve_Iterations {
 									fileOut.write(i + "\t" + vname[i] 
 											+ "\t" + Double.valueOf(value[i]) /*Double.valueOf(twoDForm.format(value[i]))*/ 
 											+ "\t" + Double.valueOf(reduceCost[i + 1])) /*Double.valueOf(twoDForm.format(reduceCost[i])))*/;			// because index starts from 1 not 0:    http://lpsolve.sourceforge.net/5.0/get_sensitivity_rhs.htm
-								}
-								
-								if (value[i] != 0 && (vname[i].contains("xNG_") || vname[i].contains("xPB_") || vname[i].contains("xGS_") || vname[i].contains("xMS_") || vname[i].contains("xBS_") || vname[i].contains("xEA_"))) {
-									double total_loss_rate_mean = 0;
-									int s5 = layer5.indexOf(var_info_array[i].get_layer5());
-									double[][] loss_rate_mean = (var_rd_condition_id[i] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[i]) : all_zeroes_2D_array;
-									for (int k = 0; k < total_replacing_disturbances; k++) {
-										total_loss_rate_mean = total_loss_rate_mean + Double.valueOf(loss_rate_mean[k][s5]);
+									
+									if (vname[i].contains("xNG_") || vname[i].contains("xPB_") || vname[i].contains("xGS_") || vname[i].contains("xMS_") || vname[i].contains("xBS_") || vname[i].contains("xEA_")) {
+										double total_loss_rate_mean = 0;
+										int s5 = layer5.indexOf(var_info_array[i].get_layer5());
+										double[][] loss_rate_mean = (var_rd_condition_id[i] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[i]) : all_zeroes_2D_array;
+										for (int k = 0; k < total_replacing_disturbances; k++) {
+											total_loss_rate_mean = total_loss_rate_mean + Double.valueOf(loss_rate_mean[k][s5]);
+										}
+										fileOut.write("\t" + total_loss_rate_mean); 
+										fileOut.write("\t" + var_rd_condition_id[i]); 
+									} else {
+										fileOut.write("\t" + "-9999"); 
+										fileOut.write("\t" + "-9999"); 
 									}
-									fileOut.write("\t" + total_loss_rate_mean); 
-									fileOut.write("\t" + var_rd_condition_id[i]); 
-								} else {
-									fileOut.write("\t" + "-9999"); 
-									fileOut.write("\t" + "-9999");  
 								}
 							}
 							fileOut.close();
