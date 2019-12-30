@@ -1207,3 +1207,4 @@ All changes in this block are associated with PrismAlpha2.0.02.jar, Prism-Formul
 	- Add 7a (7 is now 7b)
 	- Add 8a (8 is now 8b)
 	- output_02 now writes the total_loss_rate_mean (sum all the loss means) and var_rd_condition_id (to look for each SR information) null value is write out as -9999
+	- use map var_name to var_value for F~ instead of map var_index to var_value (bug still exists but the result looks much better)

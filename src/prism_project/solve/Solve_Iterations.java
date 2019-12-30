@@ -2222,7 +2222,7 @@ public class Solve_Iterations {
 				
 				// Constraints 12a-------------------------------------------------This is equation (7a) in Prism-Formulation-10
 				// Note: only store for the F~ parameters associated the simulation of stochastic disturbances on the first period solution in previous iteration (iter = M)
-				LinkedHashMap<Integer, Double> map_F_index_to_stochastic_F_value = new LinkedHashMap<Integer, Double>();
+				LinkedHashMap<String, Double> map_F_name_to_stochastic_F_value = new LinkedHashMap<String, Double>();
 				if (iter >= 1) {
 					// 12 --> Loop writing in this way will improve speed. This is also applied to eq. 15 to save running time. Other equations are fast so it is not needed to use this type of loop
 					for (int strata_5layers_id = 0; strata_5layers_id < total_model_strata_without_sizeclass; strata_5layers_id++) {
@@ -2439,7 +2439,8 @@ public class Solve_Iterations {
 									} 
 								}
 								// Map	fire[s1][s2][s3][s4][s5][t][s5R]
-								map_F_index_to_stochastic_F_value.put(fire[strata_5layers_id][t][s5R], total_value_for_this_F);
+								String var_name = "f_" + strata_5layers + "_" + t + "_" + layer5.get(s5R);
+								map_F_name_to_stochastic_F_value.put(var_name, total_value_for_this_F);
 							}
 						}											
 					}
@@ -2758,8 +2759,8 @@ public class Solve_Iterations {
 								double value_of_RHS = 0;
 								for (int s5 = 0; s5 < total_layer5; s5++) {
 									String strata_5layers = strata_4layers + "_" + layer5.get(s5);
-									int strata_5layers_id = Collections.binarySearch(model_strata_without_sizeclass, strata_5layers);
-									value_of_RHS = value_of_RHS + map_F_index_to_stochastic_F_value.get(fire[strata_5layers_id][t][s5R]);
+									String var_name = "f_" + strata_5layers + "_" + t + "_" + layer5.get(s5R);
+									value_of_RHS = value_of_RHS + map_F_name_to_stochastic_F_value.get(var_name);
 								}
 								
 
