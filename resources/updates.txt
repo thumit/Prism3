@@ -1208,4 +1208,7 @@ All changes in this block are associated with PrismAlpha2.0.02.jar, Prism-Formul
 	- Add 8a (8 is now 8b)
 	- output_02 now writes the total_loss_rate_mean (sum all the loss means) and var_rd_condition_id (to look for each SR information) null value is write out as -9999
 	- use map var_name to var_value for F~ instead of map var_index to var_value (bug still exists but the result looks much better)
-	- fix the wrong var_name for xEA_E and xEA_R in eq (7a). s5RR should be used. Bug seems to be fixed with no sign of area growing. 
+	- fix the wrong var_name for xEA_E and xEA_R in eq (7a). s5RR should be used. Bug seems to be fixed with no sign of area growing but still not 100% matching results.
+	- (commit to stochastic_disturbances_07 and switch to stochastic_disturbances_08)
+	- instead of using total_loss_rate_mean in output_02, var_rd_condition_id would be used. This fix all the issues and make the results 100% matched.
+	- (commit to stochastic_disturbances_08, push to Bitbucket, and switch to stochastic_disturbances_09)
