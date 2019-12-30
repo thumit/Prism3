@@ -2297,7 +2297,7 @@ public class Solve_Iterations {
 													if (xEAe[strata_id][tR][s5RR] != null)
 														for (int i = 0; i < total_EA_E_prescription_choices; i++) {	// i
 															if (xEAe[strata_id][tR][s5RR][i] != null) {
-																String var_name = "xEA_E_" + strata_name + "_" + tR + "_" + layer5.get(s5R) + "_" + i + "_" + t;
+																String var_name = "xEA_E_" + strata_name + "_" + tR + "_" + layer5.get(s5RR) + "_" + i + "_" + t;
 																if(map_var_name_to_var_rd_condition_id.get(var_name) != null && map_var_name_to_var_rd_condition_id.get(var_name) != -9999) {
 																	int rd_id = map_var_name_to_var_rd_condition_id.get(var_name);
 																	double[][] loss_rate_mean = disturbance_info.get_loss_rate_mean_from_rd_condition_id(rd_id);
@@ -2421,7 +2421,7 @@ public class Solve_Iterations {
 															for (int i = 0; i < total_EA_R_prescription_choices; i++) {
 																if (xEAr[strata_5layers_id][tR][aR][s5RR][i] != null) { 
 																	
-																	String var_name = "xEA_R_" + strata_5layers + "_" + tR + "_" + aR + "_" + layer5.get(s5R) + "_" + i + "_" + t;
+																	String var_name = "xEA_R_" + strata_5layers + "_" + tR + "_" + aR + "_" + layer5.get(s5RR) + "_" + i + "_" + t;
 																	if(map_var_name_to_var_rd_condition_id.get(var_name) != null && map_var_name_to_var_rd_condition_id.get(var_name) != -9999) {
 																		int rd_id = map_var_name_to_var_rd_condition_id.get(var_name);
 																		double[][] loss_rate_mean = disturbance_info.get_loss_rate_mean_from_rd_condition_id(rd_id);
