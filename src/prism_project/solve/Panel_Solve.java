@@ -25,6 +25,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -119,9 +120,25 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 			            tableColumn.getHeaderValue(), false, false, -1, column);
 				maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
 				
-				tableColumn.setPreferredWidth(maxWidth);
+				// Apply
+				if (column == 0) {
+					tableColumn.setPreferredWidth(80);
+				} else if (column == 1 || column == 2) {
+					tableColumn.setMaxWidth(maxWidth);
+				} else {
+					tableColumn.setMinWidth(80);
+				}
 				return component;
 			}
+        	
+        	@Override	// Implement table cell tool tips           
+			public String getToolTipText(MouseEvent e) {
+				java.awt.Point p = e.getPoint();
+				int row = rowAtPoint(p);
+				int column = columnAtPoint(p);
+				String tip = (table.getColumnName(column).equals("Model") && row >= 0 && getValueAt(row, column) != null) ? getValueAt(row, column).toString() : null;
+				return tip;
+			}	
         };
         
         class Combo_Iteration extends JComboBox {	

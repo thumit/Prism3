@@ -1210,5 +1210,6 @@ All changes in this block are associated with PrismAlpha2.0.02.jar, Prism-Formul
 	- use map var_name to var_value for F~ instead of map var_index to var_value (bug still exists but the result looks much better)
 	- fix the wrong var_name for xEA_E and xEA_R in eq (7a). s5RR should be used. Bug seems to be fixed with no sign of area growing but still not 100% matching results.
 	- (commit to stochastic_disturbances_07 and switch to stochastic_disturbances_08)
-	- instead of using total_loss_rate_mean in output_02, var_rd_condition_id would be used. This fix all the issues and make the results 100% matched.
+	- instead of using total_loss_rate_mean in output_02, var_rd_condition_id would be used. This fix all the issues and make the results almost 100% matched.
 	- (commit to stochastic_disturbances_08, push to Bitbucket, and switch to stochastic_disturbances_09)
+505. Adjust column width and add tooltip for the table when solving to improve its UI
