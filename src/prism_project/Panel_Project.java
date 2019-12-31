@@ -300,7 +300,7 @@ public class Panel_Project extends JLayeredPane {
 		
 		
 		btn_compact = new JButton();
-		btn_compact.setToolTipText("Show fewer outputs");
+		btn_compact.setToolTipText("Show fewer outputs (only outputs summary)");
 		btn_compact.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_script_gray.png"));
 		btn_compact.setFocusable(false);
 		btn_compact.addActionListener(e -> {
@@ -310,7 +310,7 @@ public class Panel_Project extends JLayeredPane {
 				btn_compact.setToolTipText("Show all outputs");
 			} else {
 				btn_compact.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_script_gray.png"));
-				btn_compact.setToolTipText("Show fewer outputs");
+				btn_compact.setToolTipText("Show fewer outputs (only outputs summary)");
 			}
 			refreshProjectTree();
 		});
