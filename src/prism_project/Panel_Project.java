@@ -94,14 +94,9 @@ public class Panel_Project extends JLayeredPane {
 	private JSplitPane splitPanel;
 	private Panel_Edit editPanel;		// This panel only visible when "Start Editing"
 	private Panel_Solve solvePanel;		// This panel only visible when "Start Solving"
-	private JButton btnNewRun, btnDeleteRun;
-	private JButton btnEditRun;
-	private JButton btnRefresh;
-	private JButton btnSolveRun;
-	private JButton btnCollectMemory;
-	private JButton btnSave;
-	private JButton btnHint;
+	private JButton btnNewRun, btnDeleteRun, btnEditRun, btnRefresh, btn_compact, btnSolveRun, btnCollectMemory, btnSave, btnHint;
 	private List<JButton> buttons_list;
+	private Boolean is_compact_view = false;
 	private MarqueePanel maequee_panel = new MarqueePanel();;
 	
 	private File[] listOfEditRuns;
@@ -291,9 +286,35 @@ public class Panel_Project extends JLayeredPane {
 		btnRefresh.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_refresh.png"));
 		btnRefresh.setFocusable(false);
 		btnRefresh.addActionListener(e -> {
+//			is_compact_view = (is_compact_view) ? false : true;
+//			if (is_compact_view) { 
+//				btnRefresh.setToolTipText("Refresh");
+//				btnRefresh.setIcon(IconHandle.get_rotated_scaledImageIcon(25, 25, "icon_refresh.png"));
+//			} else {
+//				btnRefresh.setToolTipText("Refresh and display only summary outputs");
+//				btnRefresh.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_refresh.png"));
+//			}
 			refreshProjectTree();
 		});
 		projectToolBar.add(btnRefresh);
+		
+		
+		btn_compact = new JButton();
+		btn_compact.setToolTipText("Show fewer outputs");
+		btn_compact.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_script_gray.png"));
+		btn_compact.setFocusable(false);
+		btn_compact.addActionListener(e -> {
+			is_compact_view = (is_compact_view) ? false : true;
+			if (is_compact_view) {
+				btn_compact.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_script.png"));
+				btn_compact.setToolTipText("Show all outputs");
+			} else {
+				btn_compact.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_script_gray.png"));
+				btn_compact.setToolTipText("Show fewer outputs");
+			}
+			refreshProjectTree();
+		});
+		projectToolBar.add(btn_compact);
 		
 		
 		btnEditRun = new JButton();
@@ -367,6 +388,7 @@ public class Panel_Project extends JLayeredPane {
 		buttons_list.add(btnDeleteRun);
 		buttons_list.add(btnEditRun);
 		buttons_list.add(btnRefresh);
+		buttons_list.add(btn_compact);
 		buttons_list.add(btnSolveRun);
 		buttons_list.add(btnCollectMemory);
 		buttons_list.add(btnSave);
@@ -839,7 +861,10 @@ public class Panel_Project extends JLayeredPane {
 					File[] listOfFiles2 = listOfFiles[i].listFiles(new FilenameFilter() {
 						@Override
 						public boolean accept(File dir, String name) {
-							return (name.endsWith(".txt") && !name.startsWith("output_05_fly_constraints")) || name.endsWith(".lp") || name.endsWith(".sol");
+							if (!is_compact_view) 
+								return (name.endsWith(".txt") && !name.startsWith("output_05_fly_constraints")) || name.endsWith(".lp") || name.endsWith(".sol");
+							else
+								return (name.endsWith(".txt") && !name.startsWith("output_05_fly_constraints") && !name.startsWith("output_")) || name.endsWith(".lp") || name.endsWith(".sol");
 						}
 					});
 					
