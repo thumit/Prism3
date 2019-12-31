@@ -1213,3 +1213,4 @@ All changes in this block are associated with PrismAlpha2.0.02.jar, Prism-Formul
 	- instead of using total_loss_rate_mean in output_02, var_rd_condition_id would be used. This fix all the issues and make the results almost 100% matched.
 	- (commit to stochastic_disturbances_08, push to Bitbucket, and switch to stochastic_disturbances_09)
 505. Adjust column width and add tooltip for the table when solving to improve its UI
+506. Add import database functional icon to Database Management task bar

@@ -78,6 +78,7 @@ import prism_convenience.ColorUtil;
 import prism_convenience.FilesHandle;
 import prism_convenience.IconHandle;
 import prism_convenience.MenuScroller;
+import prism_convenience.PrismGridBagLayoutHandle;
 import prism_project.data_process.Read_Database;
 import prism_root.PrismMain;
 
@@ -105,7 +106,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 
 	private ToolBarWithBgImage databaseToolBar;
 	private JScrollPane scrollPane_Left, scrollPane_Right;
-	private JButton btnNewDatabase, btnDelete, btnRefresh;
+	private JButton btnImportDatabase, btnNewDatabase, btnDelete, btnRefresh;
 	private List<JButton> buttons_list;
 
 	public Panel_DatabaseManagement() {
@@ -219,7 +220,8 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		databaseToolBar.setFloatable(false);	//to make a tool bar immovable
 		databaseToolBar.setRollover(true);	//to visually indicate tool bar buttons when the user passes over them with the cursor						
 
-	    		
+		
+		GridBagConstraints c = new GridBagConstraints();
 		btnNewDatabase = new JButton();
 		btnNewDatabase.setToolTipText("New Database");
 		btnNewDatabase.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_new.png"));
@@ -229,15 +231,9 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 			currentLevel = 1;
 			new_Database_or_Table();
 		});
-		GridBagConstraints c = new GridBagConstraints();
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 0;
-		c.gridy = 0;
-		c.weightx = 0;
-	    c.weighty = 0;
-		c.gridwidth = 1;
-		c.gridheight = 1;
-		databaseToolBar.add(btnNewDatabase, c);
+		databaseToolBar.add(btnNewDatabase, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
+				0, 0, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				0, 0, 0, 0));		// insets top, left, bottom, right
 		
 		
 		btnDelete = new JButton();
@@ -246,13 +242,9 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		btnDelete.addActionListener(e -> {
 			delete_Databases_or_Tables();
 		});
-		c.gridx = 1;
-		c.gridy = 0;
-		c.weightx = 0;
-	    c.weighty = 0;
-		c.gridwidth = 1;
-		c.gridheight = 1;
-		databaseToolBar.add(btnDelete, c);
+		databaseToolBar.add(btnDelete, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
+				1, 0, 1, 1, 0, 0,  	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				0, 0, 0, 0));		// insets top, left, bottom, right
 		
 		
 		btnRefresh = new JButton();
@@ -261,15 +253,25 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		btnRefresh.addActionListener(e -> {
 			refreshDatabaseTree();
 		});
-		c.gridx = 2;
-		c.gridy = 0;
-		c.weightx = 0;
-	    c.weighty = 0;
-		c.gridwidth = 1;
-		c.gridheight = 1;
-		databaseToolBar.add(btnRefresh, c);	
+		databaseToolBar.add(btnRefresh, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
+				2, 0, 1, 1, 0, 0,  	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				0, 0, 0, 0));		// insets top, left, bottom, right
 		
 		
+		btnImportDatabase = new JButton();
+		btnImportDatabase.setToolTipText("Import Database");
+		btnImportDatabase.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_new3.png"));
+		btnImportDatabase.addActionListener(e -> {
+			refreshDatabaseTree();
+			processingNode = root;
+			currentLevel = 1;
+			importDatabases();
+		});
+		databaseToolBar.add(btnImportDatabase, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
+				3, 0, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				0, 0, 0, 0));		// insets top, left, bottom, right
+		
+				
 		query_text_field = new JTextField("Type your query here");		
 		query_text_field.addMouseListener(new MouseAdapter(){			//When user click on queryTextField
 			@Override
@@ -297,13 +299,9 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 				doQuery(currentSQLstatement);
 			}
 	     });//end addActionListener
-		c.gridx = 3;
-		c.gridy = 0;
-		c.weightx = 1;
-	    c.weighty = 0;
-		c.gridwidth = 1;
-		c.gridheight = 1;
-		databaseToolBar.add(query_text_field, c);
+		databaseToolBar.add(query_text_field, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
+				4, 0, 1, 1, 1, 0,  	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				0, 0, 0, 0));		// insets top, left, bottom, right
 			
 		
 		// Make this list to make all buttons in this windows not focus on the ugly blue border after click
@@ -500,7 +498,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
     					// and this menuItem only shows up when 1 node is selected	
     					if (currentLevel == 1 && NodeCount==1) {
     						final JMenuItem importDBMenuItem = new JMenuItem("Import databases");
-    						importDBMenuItem.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_add.png"));
+    						importDBMenuItem.setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_new3.png"));
     						importDBMenuItem.addActionListener(new ActionListener() {
     							@Override
     							public void actionPerformed(ActionEvent actionEvent) {								

@@ -155,6 +155,8 @@ public class Panel_Project extends JLayeredPane {
 		// Left split panel--------------------------------------------------------------------------------
 		scrollPane_Left = new JScrollPane();
 		scrollPane_Left.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, ColorUtil.makeTransparent(Color.BLACK, 70)));
+//		scrollPane_Left.getVerticalScrollBar().setPreferredSize(new Dimension(12, 0));
+//		scrollPane_Left.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 12));
 		splitPanel.setLeftComponent(scrollPane_Left);
 		root = new DefaultMutableTreeNode("Runs");
 		projectTree = new JTree(root); // Add the root of projectTree
@@ -247,6 +249,8 @@ public class Panel_Project extends JLayeredPane {
 		// Right split panel-------------------------------------------------------------------------------
 		scrollPane_Right = new JScrollPane();
 		scrollPane_Right.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, ColorUtil.makeTransparent(Color.BLACK, 70)));
+//		scrollPane_Right.getVerticalScrollBar().setPreferredSize(new Dimension(12, 0));
+//		scrollPane_Right.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 12));
 		splitPanel.setRightComponent(scrollPane_Right);
 		
 		// TextField at South----------------------------------------------
