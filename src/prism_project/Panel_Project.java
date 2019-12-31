@@ -268,6 +268,7 @@ public class Panel_Project extends JLayeredPane {
 		btnNewRun = new JButton();
 		btnNewRun.setToolTipText("New Run");
 		btnNewRun.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_new.png"));
+		btnNewRun.setFocusable(false);
 		btnNewRun.addActionListener(e -> {
 			refreshProjectTree();
 			processingNode=root;
@@ -278,6 +279,7 @@ public class Panel_Project extends JLayeredPane {
 		btnDeleteRun = new JButton();
 		btnDeleteRun.setToolTipText("Delete Runs");
 		btnDeleteRun.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_delete.png"));
+		btnDeleteRun.setFocusable(false);
 		btnDeleteRun.addActionListener(e -> {
 			delete_Runs();
 		});
@@ -287,6 +289,7 @@ public class Panel_Project extends JLayeredPane {
 		btnRefresh = new JButton();
 		btnRefresh.setToolTipText("Refresh");
 		btnRefresh.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_refresh.png"));
+		btnRefresh.setFocusable(false);
 		btnRefresh.addActionListener(e -> {
 			refreshProjectTree();
 		});
@@ -296,6 +299,7 @@ public class Panel_Project extends JLayeredPane {
 		btnEditRun = new JButton();
 		btnEditRun.setToolTipText("Start Editing");
 		btnEditRun.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_edit.png"));
+		btnEditRun.setFocusable(false);
 		btnEditRun.addActionListener(e -> {
 			edit_Runs();
 		});
@@ -305,6 +309,7 @@ public class Panel_Project extends JLayeredPane {
 		btnSolveRun = new JButton();
 		btnSolveRun.setToolTipText("Start Solving");
 		btnSolveRun.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_solve.png"));
+		btnSolveRun.setFocusable(false);
 		btnSolveRun.addActionListener(e -> {
 			solve_Runs();
 		});
@@ -314,6 +319,7 @@ public class Panel_Project extends JLayeredPane {
 		btnCollectMemory = new JButton();
 		btnCollectMemory.setToolTipText("Collect Memory (memory in use: " + OptionPane_Startup.memory_in_use() + ", memory left: " + OptionPane_Startup.memory_left());
 		btnCollectMemory.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_ram.png"));
+		btnCollectMemory.setFocusable(false);
 		btnCollectMemory.addActionListener(e -> {
 			OptionPane_Startup.Restart_Project(currentProject);
 		});
@@ -334,6 +340,7 @@ public class Panel_Project extends JLayeredPane {
 		
 		btnHint = new JButton();
 		btnHint.setToolTipText("Hints & Facts");
+		btnHint.setFocusable(false);
 		btnHint.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_light_on.png"));	
 		btnHint.addActionListener(e -> {
 			if (maequee_panel.is_text_running() == true) {

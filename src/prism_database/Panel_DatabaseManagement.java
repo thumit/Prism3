@@ -225,6 +225,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		btnNewDatabase = new JButton();
 		btnNewDatabase.setToolTipText("New Database");
 		btnNewDatabase.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_new.png"));
+		btnNewDatabase.setFocusable(false);
 		btnNewDatabase.addActionListener(e -> {
 			refreshDatabaseTree();
 			processingNode = root;
@@ -239,6 +240,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		btnDelete = new JButton();
 		btnDelete.setToolTipText("Delete");
 		btnDelete.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_delete.png"));
+		btnDelete.setFocusable(false);
 		btnDelete.addActionListener(e -> {
 			delete_Databases_or_Tables();
 		});
@@ -250,6 +252,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		btnRefresh = new JButton();
 		btnRefresh.setToolTipText("Refresh");
 		btnRefresh.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_refresh.png"));
+		btnRefresh.setFocusable(false);
 		btnRefresh.addActionListener(e -> {
 			refreshDatabaseTree();
 		});
@@ -261,6 +264,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 		btnImportDatabase = new JButton();
 		btnImportDatabase.setToolTipText("Import Database");
 		btnImportDatabase.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_new3.png"));
+		btnImportDatabase.setFocusable(false);
 		btnImportDatabase.addActionListener(e -> {
 			refreshDatabaseTree();
 			processingNode = root;
