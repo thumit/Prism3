@@ -10045,8 +10045,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			btn_compact.setVerticalTextPosition(SwingConstants.BOTTOM);
 			btn_compact.setHorizontalTextPosition(SwingConstants.CENTER);
 			btn_compact.setToolTipText("switch to compact view");
-			btn_compact.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_script.png"));
-			btn_compact.setRolloverIcon(IconHandle.get_scaledImageIcon(35, 35, "icon_script.png"));
+			btn_compact.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_script_gray.png"));
+			btn_compact.setRolloverIcon(IconHandle.get_scaledImageIcon(35, 35, "icon_script_gray.png"));
 			btn_compact.setContentAreaFilled(false);
 			btn_compact.addActionListener(e -> {
 				if (table10.isEditing()) {
@@ -10066,10 +10066,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						table10.setRowSorter(sorter);
 					}
 					btn_compact.setToolTipText("switch to full view");
+					btn_compact.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_script.png"));
+					btn_compact.setRolloverIcon(IconHandle.get_scaledImageIcon(35, 35, "icon_script.png"));
 					break;
 				case "switch to full view":
 					table10.setRowSorter(null);
 					btn_compact.setToolTipText("switch to compact view");
+					btn_compact.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_script_gray.png"));
+					btn_compact.setRolloverIcon(IconHandle.get_scaledImageIcon(35, 35, "icon_script_gray.png"));
 					break;
 				}
 			});

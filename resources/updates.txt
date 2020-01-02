@@ -1216,3 +1216,4 @@ All changes in this block are associated with PrismAlpha2.0.02.jar, Prism-Formul
 506. Add import database button to Database Management task bar
 507. make all buttons in Projects and Databases task bars to be unfocusable to avoid ugly border occasinally showing up when doing tasks.
 508. Add compact button to Project task bar. This would help displaying all or fewer outputs (specific outputs from iterations would be hidden)
+509. All compact view buttons is now having the color changing effect (EA Management, SR Disturbances, Management Cost, Area Merging)

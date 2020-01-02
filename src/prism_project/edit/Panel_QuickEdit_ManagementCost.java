@@ -298,16 +298,20 @@ public class Panel_QuickEdit_ManagementCost extends JPanel {
 		btn_compact.setVerticalTextPosition(SwingConstants.BOTTOM);
 		btn_compact.setHorizontalTextPosition(SwingConstants.CENTER);
 		btn_compact.setToolTipText("switch to compact view");
-		btn_compact.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_script.png"));
-		btn_compact.setRolloverIcon(IconHandle.get_scaledImageIcon(35, 35, "icon_script.png"));
+		btn_compact.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_script_gray.png"));
+		btn_compact.setRolloverIcon(IconHandle.get_scaledImageIcon(35, 35, "icon_script_gray.png"));
 		btn_compact.setContentAreaFilled(false);
 		btn_compact.addActionListener(e -> {
 			switch (btn_compact.getToolTipText()) {
 			case "switch to compact view":
 				btn_compact.setToolTipText("switch to full view");
+				btn_compact.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_script.png"));
+				btn_compact.setRolloverIcon(IconHandle.get_scaledImageIcon(35, 35, "icon_script.png"));
 				break;
 			case "switch to full view":
 				btn_compact.setToolTipText("switch to compact view");
+				btn_compact.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_script_gray.png"));
+				btn_compact.setRolloverIcon(IconHandle.get_scaledImageIcon(35, 35, "icon_script_gray.png"));
 				break;
 			}
 			reset_view_without_changing_label();
