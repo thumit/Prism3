@@ -1165,7 +1165,7 @@ All changes in this block are associated with PrismAlpha2.0.01.jar, Prism-Formul
 482. Method to summarize applies on output_07 and the graphs are now working for both the summary and the independent iteration's output_07_flow_constraint
 483. Graphs are now available for the summarize_output_06_basic_constraints
 484. Modify the legend display for all charts of the output_07_flow_constraint
-485. Add the i index of the loop as String.valueOf(i) for dataset, chart name, etcin summary_output_06_flow_constraint
+485. Add the i index of the loop as String.valueOf(i) for dataset, chart name, etc in summary_output_06_flow_constraint
 486. Fix frozen chart in summary_output_06_flow_constraint when the data has only 1 dataset (1 iteration). This happens when users solve only iteration zero
 487. UIs for charts of output_06 and output_07 display and behave the same way
 488. icon changes for the JTree nodes to notify whether the output could be represented by graph-charts or not
@@ -1175,7 +1175,7 @@ All changes in this block are associated with PrismAlpha2.0.01.jar, Prism-Formul
 492. New classes - Chart and Char_Rotator to simplify the summarize_output_06 and summarize_output_07 codes and create potential future usage. 
 493. Output_Panel_Flow_Constraints - Separate the refresh of legend table when clicking on either single or multiple charts. This help trim code significantly.
 494. Graphs are now available for the summarize_output_04_management_overview
-495. Customized colors fro pie chart of the summarize_output_04_management_overview
+495. Customized colors for pie chart of the summarize_output_04_management_overview
 All changes in this block are associated with PrismAlpha2.0.02.jar, Prism-Formulation-09.docx, Rolling horizon-formulation-05.docx, Prism-UserManual-01.docx
 --------------------------------------------------------------------------
 496. gitignore files are added to prevent tracking (i.e. add to index) files in Databases, Projects folders and also the bfg-1.13.0.jar in prism folder
@@ -1195,7 +1195,6 @@ All changes in this block are associated with PrismAlpha2.0.02.jar, Prism-Formul
 	- modify the UI (header, tooltip, etc.) for 4 tables
 	- modify size for 6 sub tables in SR Disturbances and Management Cost screens
 	- all 4 tables have the default mean and standard deviation of zero
-
 	- Information_disturbance class would now read all the 4 information (lpr_mean, lpr_std, cr_mean, cr_std)
 	- Panel_Solve_Iterations: logic is modified to integrate lpr_mean and cr_mean into solving process
 	- Read the output_02_variables_ only when iteration >= 1 to avoid error report (occurs when reading the previous iteartion file when current iteration is 0) (commit to stochastic_disturbances_05 and switch to stochastic_disturbances_06)
@@ -1217,3 +1216,5 @@ All changes in this block are associated with PrismAlpha2.0.02.jar, Prism-Formul
 507. make all buttons in Projects and Databases task bars to be unfocusable to avoid ugly border occasinally showing up when doing tasks.
 508. Add compact button to Project task bar. This would help displaying all or fewer outputs (specific outputs from iterations would be hidden)
 509. All compact view buttons is now having the color changing effect (EA Management, SR Disturbances, Management Cost, Area Merging)
+510. Implement random drawn for loss rate only under the assumption of normal distribution (conversion rate is still deterministic, not stochastic). Drawing is implemented in order from the first (SR_01) to the last (SR_...) disturbances (commit to stochastic_disturbances_09, push to Bitbucket, and switch to stochastic_disturbances_10)
+511. Fix bug 113 covertype conversion & rotation age information is unexpectedly rewritten

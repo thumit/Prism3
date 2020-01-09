@@ -5725,7 +5725,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	
 					// Apply change	
 					data4[selectedRow][2] = static_identifiers_scrollpane.get_static_info_from_GUI();
-					data4[rowCount4 - 1][3] = conversion_and_rotation_scrollpane.get_conversion_and_rotation_info_from_GUI();
 					model4.fireTableDataChanged();	
 					
 					// Convert the edited Row to model view and then select it 
