@@ -1983,12 +1983,25 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				int maxWidth = Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth());
 				
 				// For the column names
-				TableCellRenderer renderer2 = table7b.getTableHeader().getDefaultRenderer();	
-				Component component2 = renderer2.getTableCellRendererComponent(table7b,
+				TableCellRenderer renderer2 = table6a.getTableHeader().getDefaultRenderer();	
+				Component component2 = renderer2.getTableCellRendererComponent(table6a,
 			            tableColumn.getHeaderValue(), false, false, -1, column);
 				maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
-				
 				tableColumn.setPreferredWidth(maxWidth);
+				
+				// Set icon for cells: when total percentage of a given block 		NOTE: we need to use getValueAt because of the compact view feature which makes mismatching between full data and displayed data
+				double total_percentage = 0;
+				// loop all columns & add to total percentage
+				for (int j = 1; j < getColumnCount(); j++) {					
+					total_percentage = total_percentage + Double.parseDouble(getValueAt(row, j).toString());
+				} 
+					
+				if (total_percentage > 100 && column >= 1) {		// check if the total_percentage > 100% --> problem icon for this cell because it is in the set of cells which make total_percentage > 100%
+					((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(14, 14, "icon_problem.png"));
+				} else {
+					((DefaultTableCellRenderer) component).setIcon(null);
+				}
+				
 				return component;
 			}		
 			
@@ -2012,11 +2025,11 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			public String getToolTipText(MouseEvent e) {
 				String tip = null;
 				java.awt.Point p = e.getPoint();
-				int rowIndex = rowAtPoint(p);
-				int colIndex = columnAtPoint(p);
-				if (table6a.getColumnName(colIndex).equals("layer5") || table6a.getColumnName(colIndex).equals("layer5_regen")) {
+				int row = rowAtPoint(p);
+				int column = columnAtPoint(p);
+				if (table6a.getColumnName(column).equals("layer5") || table6a.getColumnName(column).equals("layer5_regen")) {
 					try {
-						tip = getValueAt(rowIndex, colIndex).toString();
+						tip = getValueAt(row, column).toString();
 						for (int i = 0; i < total_CoverType; i++) {
 							if (tip.equals(all_layers.get(4).get(i))) tip = all_layers_tooltips.get(4).get(i);							
 						}
@@ -2024,6 +2037,29 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
 					}
 				}
+				
+				if (!table6a.getColumnName(column).equals("layer5") && !table6a.getColumnName(column).equals("layer5_regen")) {
+					try {
+						DecimalFormat formatter = new DecimalFormat("###,###.###");
+						formatter.setMinimumFractionDigits(0);
+						formatter.setMaximumFractionDigits(2);
+						String percentage = formatter.format((Number) getValueAt(row, column));
+						String disturbance_name = table6a.getColumnName(column);
+						tip = percentage + "% of the area with cover type = " + getValueAt(row, 0).toString() + " would be destroyed by "  + disturbance_name;
+					
+						// Show problem tip 		NOTE: we need to use getValueAt because of the compact view feature which makes mismatching between full data and displayed data
+						double total_percentage = 0;
+						for (int j = 1; j < getColumnCount(); j++) {					
+							total_percentage = total_percentage + Double.parseDouble(getValueAt(row, j).toString());
+						}
+						if (total_percentage > 100 && column >= 2) {		// check if the total_percentage > 100% 
+							tip = "INFEASIBLE - The sum of all cells with the same layer5 = " + getValueAt(row, 0).toString() + " must not exceed 100";
+						}
+					} catch (RuntimeException e1) {
+						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+					}
+				}	
+				
 				return tip;
 			}
 		};			
@@ -2222,8 +2258,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				int maxWidth = Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth());
 				
 				// For the column names
-				TableCellRenderer renderer2 = table7b.getTableHeader().getDefaultRenderer();	
-				Component component2 = renderer2.getTableCellRendererComponent(table7b,
+				TableCellRenderer renderer2 = table6b.getTableHeader().getDefaultRenderer();	
+				Component component2 = renderer2.getTableCellRendererComponent(table6b,
 			            tableColumn.getHeaderValue(), false, false, -1, column);
 				maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
 				
@@ -2481,7 +2517,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						}
 					}	
 				}
-				if (total_percentage > 100 && column >= 2) {		// check if the total_percentage > 100% --> problem icon for this cell because it is in the set of cells which make total_percentage > 100%
+				if (total_percentage != 100 && column >= 2) {		// check if the total_percentage <> 100% --> problem icon for this cell because it is in the set of cells which make total_percentage <> 100%
 					((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(14, 14, "icon_problem.png"));
 				} else {
 					((DefaultTableCellRenderer) component).setIcon(null);
@@ -2541,8 +2577,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 								}
 							}	
 						}
-						if (total_percentage > 100 && column >= 2) {		// check if the total_percentage > 100% 
-							tip = "INFEASIBLE - The sum of all cells with the same layer5 = " + getValueAt(row, 0).toString() + " must not exceed 100";
+						if (total_percentage != 100 && column >= 2) {		// check if the total_percentage <> 100% 
+							tip = "INFEASIBLE - The sum of all cells with the same layer5 = " + getValueAt(row, 0).toString() + " must be exactly 100";
 						}
 					} catch (RuntimeException e1) {
 						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
