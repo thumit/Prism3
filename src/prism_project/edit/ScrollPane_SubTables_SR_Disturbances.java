@@ -94,18 +94,20 @@ public class ScrollPane_SubTables_SR_Disturbances extends JScrollPane {
 		c.gridy = 0;
 		c.weightx = 1;
 	    c.weighty = 1;
+	    c.gridheight = 2;	//  delete this line to allow conversion rate std (activate line 110)
 	    combine_panel.add(conversion_rate_mean_scrollpane, c);
 	    c.fill = GridBagConstraints.BOTH;
 		c.gridx = 0;
 		c.gridy = 1;
 		c.weightx = 1;
 	    c.weighty = 1;
+	    c.gridheight = 1;	//  delete this line to allow conversion rate std (activate line 110)
 	    combine_panel.add(loss_rate_std_scrollpane, c);
 		c.gridx = 1;
 		c.gridy = 1;
 		c.weightx = 1;
 	    c.weighty = 1;
-	    combine_panel.add(conversion_rate_std_scrollpane, c);
+//	    combine_panel.add(conversion_rate_std_scrollpane, c);
 	  
 		
 		setViewportView(combine_panel);
