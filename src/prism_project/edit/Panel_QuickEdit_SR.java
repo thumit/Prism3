@@ -22,6 +22,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
@@ -41,19 +43,25 @@ import prism_convenience.PrismGridBagLayoutHandle;
 import prism_convenience.PrismTableModel;
 
 public class Panel_QuickEdit_SR extends JPanel {
-	private JTable table6b;
-	private Object[][] data6b;
-	private DefaultTableCellRenderer render6b;
+	private JTable table6a, table6b, table6c;
+	private Object[][] data6a, data6b, data6c;
+	private DefaultTableCellRenderer render6a, render6b, render6c;
 	
 	private JButton btn_compact;
 	private JLabel view_label;
-	private JButton btnApplyProbability;
+	private JButton btnApplyLrmean, btnApplyLrstd;
 	private JButton btnApplyPercentage;
 	
-	public Panel_QuickEdit_SR(JTable table6a, Object[][] data6a, JTable table6b, Object[][] data6b) {
+	public Panel_QuickEdit_SR(JTable table6a, Object[][] data6a, JTable table6b, Object[][] data6b, JTable table6c, Object[][] data6c, JTable table6d, Object[][] data6d) {
+		this.table6a = table6a;
+		this.data6a = data6a;
+		this.render6a = (DefaultTableCellRenderer) table6a.getColumnModel().getColumn(0).getCellRenderer();
 		this.table6b = table6b;
 		this.data6b = data6b;
 		this.render6b = (DefaultTableCellRenderer) table6b.getColumnModel().getColumn(0).getCellRenderer();
+		this.table6c = table6c;
+		this.data6c = data6c;
+		this.render6c = (DefaultTableCellRenderer) table6c.getColumnModel().getColumn(0).getCellRenderer();
 		
 		
 		setLayout(new GridBagLayout());
@@ -61,35 +69,37 @@ public class Panel_QuickEdit_SR extends JPanel {
 		
 		
 		
-		
+		// -------------------------------------------------------------------------------------------------
+		// -------------------------------------------------------------------------------------------------
+		// -------------------------------------------------------------------------------------------------
 		JPanel qd1 = new JPanel();
 		qd1.setLayout(new GridBagLayout());
 		c = new GridBagConstraints();
 		
 
 		// Add Label-------------------------------------------------------------------------------------------------
-		qd1.add(new JLabel("probability"), PrismGridBagLayoutHandle.get_c(c, "CENTER", 
-				1, 2, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+		qd1.add(new JLabel("Lr mean (%)"), PrismGridBagLayoutHandle.get_c(c, "CENTER", 
+				0, 2, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
 				0, 0, 0, 0));		// insets top, left, bottom, right
 
 		
 		// Add formatedTextfield
-		JFormattedTextField formatedTextfield = new JFormattedTextField();
-		formatedTextfield.setColumns(8);
-		formatedTextfield.setToolTipText("0-100 percent");
-		formatedTextfield.getDocument().addDocumentListener(new DocumentListener() {
+		JFormattedTextField lr_mean_textfield = new JFormattedTextField();
+		lr_mean_textfield.setColumns(8);
+		lr_mean_textfield.setToolTipText("0-100 percent");
+		lr_mean_textfield.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
 			public void insertUpdate(DocumentEvent e) {
 				Runnable format = new Runnable() {
 					@Override
 					public void run() {
-						String text = formatedTextfield.getText();
+						String text = lr_mean_textfield.getText();
 //						if (!text.matches("\\d*(\\.\\d{0,2})?")) {		//	used regex: \\d*(\\.\\d{0,2})? because two decimal places is enough
 						if (!text.matches("\\d*(\\.\\d{0,})?")) {		//	no restriction on number of digits after the dot
-							formatedTextfield.setText(text.substring(0, text.length() - 1));
+							lr_mean_textfield.setText(text.substring(0, text.length() - 1));
 						} else {
 							if (!text.isEmpty() && !text.equals(".") && (Double.valueOf(text) < (double) 0 || Double.valueOf(text) > (double) 100)) {		// If the added String make value <0 or >100 then delete that String
-								formatedTextfield.setText(text.substring(0, text.length() - 1));
+								lr_mean_textfield.setText(text.substring(0, text.length() - 1));
 							}
 						}	
 					}
@@ -107,20 +117,20 @@ public class Panel_QuickEdit_SR extends JPanel {
 
 			}
 		});
-		qd1.add(formatedTextfield, PrismGridBagLayoutHandle.get_c(c, "CENTER", 
-				1, 1, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+		qd1.add(lr_mean_textfield, PrismGridBagLayoutHandle.get_c(c, "CENTER", 
+				0, 1, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
 				0, 0, 0, 0));		// insets top, left, bottom, right
 		
 				
 		// Add button apply
-		btnApplyProbability = new JButton();
-		btnApplyProbability.setVerticalTextPosition(SwingConstants.BOTTOM);
-		btnApplyProbability.setHorizontalTextPosition(SwingConstants.CENTER);
-		btnApplyProbability.setToolTipText("make changes for all highlighted cells, except cells in the first column");
-		btnApplyProbability.setIcon(IconHandle.get_scaledImageIcon(20, 20, "icon_split.png"));
-		btnApplyProbability.setRolloverIcon(IconHandle.get_scaledImageIcon(30, 30, "icon_split.png"));
-		btnApplyProbability.setContentAreaFilled(false);
-		btnApplyProbability.addActionListener(new ActionListener() {
+		btnApplyLrmean = new JButton();
+		btnApplyLrmean.setVerticalTextPosition(SwingConstants.BOTTOM);
+		btnApplyLrmean.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnApplyLrmean.setToolTipText("make changes for all highlighted cells, except cells in the first column");
+		btnApplyLrmean.setIcon(IconHandle.get_scaledImageIcon(20, 20, "icon_split.png"));
+		btnApplyLrmean.setRolloverIcon(IconHandle.get_scaledImageIcon(30, 30, "icon_split.png"));
+		btnApplyLrmean.setContentAreaFilled(false);
+		btnApplyLrmean.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				// Get selected rows
@@ -138,8 +148,8 @@ public class Panel_QuickEdit_SR extends JPanel {
 				
 				for (int i : selectedRow) {
 					for (int j : selectedCol) {
-						if (!formatedTextfield.getText().equals(".") && j >= 2) {	// Only apply the changes to selected cells in columns >= 2 (fall the percentage columns)
-							if (!formatedTextfield.getText().isEmpty()) data6a[i][j] = Double.valueOf(formatedTextfield.getText());	// Only apply the changes to selected cells in column 2 "weight", do not allow null
+						if (!lr_mean_textfield.getText().equals(".") && j >= 2) {	// Only apply the changes to selected cells in columns >= 2 (fall the percentage columns)
+							if (!lr_mean_textfield.getText().isEmpty()) data6a[i][j] = Double.valueOf(lr_mean_textfield.getText());	// Only apply the changes to selected cells in column 2 "weight", do not allow null
 						}
 					}
 				}
@@ -152,21 +162,121 @@ public class Panel_QuickEdit_SR extends JPanel {
 				table6a.repaint();
 			}
 		});		
-		qd1.add(btnApplyProbability, PrismGridBagLayoutHandle.get_c(c, "CENTER", 
-				1, 0, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+		qd1.add(btnApplyLrmean, PrismGridBagLayoutHandle.get_c(c, "CENTER", 
+				0, 0, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
 				0, 0, 0, 0));		// insets top, left, bottom, right
 		
 		
 		
 		
+		// Add Label-------------------------------------------------------------------------------------------------
+		qd1.add(new JLabel("Lr std"), PrismGridBagLayoutHandle.get_c(c, "CENTER", 
+				1, 2, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				0, 0, 0, 0));		// insets top, left, bottom, right
+
 		
+		// Add lr_std_textfield
+		JFormattedTextField lr_std_textfield = new JFormattedTextField();
+		lr_std_textfield.setColumns(8);
+//		lr_std_textfield.setToolTipText("0-100 percent");
+		lr_std_textfield.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				Runnable format = new Runnable() {
+					@Override
+					public void run() {
+						String text = lr_std_textfield.getText();
+//						if (!text.matches("\\d*(\\.\\d{0,2})?")) {		//	used regex: \\d*(\\.\\d{0,2})? because two decimal places is enough
+						if (!text.matches("\\d*(\\.\\d{0,})?")) {		//	no restriction on number of digits after the dot
+							lr_std_textfield.setText(text.substring(0, text.length() - 1));
+						} else {
+//							if (!text.isEmpty() && !text.equals(".") && (Double.valueOf(text) < (double) 0 || Double.valueOf(text) > (double) 100)) {		// If the added String make value <0 or >100 then delete that String
+//								lr_std_textfield.setText(text.substring(0, text.length() - 1));
+//							}
+						}	
+					}
+				};
+				SwingUtilities.invokeLater(format);
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+
+			}
+		});
+		qd1.add(lr_std_textfield, PrismGridBagLayoutHandle.get_c(c, "CENTER", 
+				1, 1, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				0, 0, 0, 0));		// insets top, left, bottom, right
+		
+				
+		// Add button apply
+		btnApplyLrstd = new JButton();
+		btnApplyLrstd.setVerticalTextPosition(SwingConstants.BOTTOM);
+		btnApplyLrstd.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnApplyLrstd.setToolTipText("make changes for all highlighted cells, except cells in the first column");
+		btnApplyLrstd.setIcon(IconHandle.get_scaledImageIcon(20, 20, "icon_split.png"));
+		btnApplyLrstd.setRolloverIcon(IconHandle.get_scaledImageIcon(30, 30, "icon_split.png"));
+		btnApplyLrstd.setContentAreaFilled(false);
+		btnApplyLrstd.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				// Get selected rows
+				int[] selectedRow = table6b.getSelectedRows();
+				int[] selectedCol = table6b.getSelectedColumns();
+							
+				// Convert row index because "Sort" causes problems
+				for (int i = 0; i < selectedRow.length; i++) {
+					selectedRow[i] = table6b.convertRowIndexToModel(selectedRow[i]);
+				}
+				// Convert col index because "Sort" causes problems
+				for (int j = 0; j < selectedCol.length; j++) {
+					selectedCol[j] = table6b.convertColumnIndexToModel(selectedCol[j]);
+				}
+				
+				for (int i : selectedRow) {
+					for (int j : selectedCol) {
+						if (!lr_std_textfield.getText().equals(".") && j >= 2) {	// Only apply the changes to selected cells in columns >= 2 (fall the percentage columns)
+							if (!lr_std_textfield.getText().isEmpty()) data6b[i][j] = Double.valueOf(lr_std_textfield.getText());	// Only apply the changes to selected cells in column 2 "weight", do not allow null
+						}
+					}
+				}
+				
+				// just need to add 1 currently selected row (no need to add all because it would trigger a lot of "fireTableDataChanged" in "setValueAt" because of the ListSelectionListener of table6b)
+				// also need re-validate and repaint so all the new data would show up after the change is triggered by the "addRowSelectionInterval"
+				table6b.removeRowSelectionInterval(table6b.convertRowIndexToView(selectedRow[0]), table6b.convertRowIndexToView(selectedRow[0]));	// only trigger the data change once by remove then add 1 time
+				table6b.addRowSelectionInterval(table6b.convertRowIndexToView(selectedRow[0]), table6b.convertRowIndexToView(selectedRow[0]));
+				table6b.revalidate();
+				table6b.repaint();
+			}
+		});		
+		qd1.add(btnApplyLrstd, PrismGridBagLayoutHandle.get_c(c, "CENTER", 
+				1, 0, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				0, 0, 0, 0));		// insets top, left, bottom, right
+		// -------------------------------------------------------------------------------------------------
+		// -------------------------------------------------------------------------------------------------
+		// -------------------------------------------------------------------------------------------------
+		
+		
+		
+		
+		
+		
+		
+		// -------------------------------------------------------------------------------------------------
+		// -------------------------------------------------------------------------------------------------
+		// -------------------------------------------------------------------------------------------------
 		JPanel qd2 = new JPanel();
 		qd2.setLayout(new GridBagLayout());
 		c = new GridBagConstraints();
 		
 
 		// Add Label-------------------------------------------------------------------------------------------------
-		qd2.add(new JLabel("percentage"), PrismGridBagLayoutHandle.get_c(c, "CENTER", 
+		qd2.add(new JLabel("Cr mean (%)"), PrismGridBagLayoutHandle.get_c(c, "CENTER", 
 				1, 2, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
 				0, 0, 0, 0));		// insets top, left, bottom, right
 
@@ -222,32 +332,32 @@ public class Panel_QuickEdit_SR extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				// Get selected rows
-				int[] selectedRow = table6b.getSelectedRows();
-				int[] selectedCol = table6b.getSelectedColumns();
+				int[] selectedRow = table6c.getSelectedRows();
+				int[] selectedCol = table6c.getSelectedColumns();
 							
 				// Convert row index because "Sort" causes problems
 				for (int i = 0; i < selectedRow.length; i++) {
-					selectedRow[i] = table6b.convertRowIndexToModel(selectedRow[i]);
+					selectedRow[i] = table6c.convertRowIndexToModel(selectedRow[i]);
 				}
 				// Convert col index because "Sort" causes problems
 				for (int j = 0; j < selectedCol.length; j++) {
-					selectedCol[j] = table6b.convertColumnIndexToModel(selectedCol[j]);
+					selectedCol[j] = table6c.convertColumnIndexToModel(selectedCol[j]);
 				}
 				
 				for (int i : selectedRow) {
 					for (int j : selectedCol) {
 						if (!formatedTextfield_2.getText().equals(".") && j >= 2) {	// Only apply the changes to selected cells in columns >= 2 (all the percentage columns)
-							if (!formatedTextfield_2.getText().isEmpty()) data6b[i][j] = Double.valueOf(formatedTextfield_2.getText());	// Only apply the changes to selected cells in column 2 "weight", do not allow null
+							if (!formatedTextfield_2.getText().isEmpty()) data6c[i][j] = Double.valueOf(formatedTextfield_2.getText());	// Only apply the changes to selected cells in column 2 "weight", do not allow null
 						}
 					}
 				}
 				
 				// just need to add 1 currently selected row (no need to add all because it would trigger a lot of "fireTableDataChanged" in "setValueAt" because of the ListSelectionListener of table6a)
 				// also need re-validate and repaint so all the new data would show up after the change is triggered by the "addRowSelectionInterval"
-				table6b.removeRowSelectionInterval(table6b.convertRowIndexToView(selectedRow[0]), table6b.convertRowIndexToView(selectedRow[0]));	// only trigger the data change once by remove then add 1 time
-				table6b.addRowSelectionInterval(table6b.convertRowIndexToView(selectedRow[0]), table6b.convertRowIndexToView(selectedRow[0]));
-				table6b.revalidate();
-				table6b.repaint();
+				table6c.removeRowSelectionInterval(table6c.convertRowIndexToView(selectedRow[0]), table6c.convertRowIndexToView(selectedRow[0]));	// only trigger the data change once by remove then add 1 time
+				table6c.addRowSelectionInterval(table6c.convertRowIndexToView(selectedRow[0]), table6c.convertRowIndexToView(selectedRow[0]));
+				table6c.revalidate();
+				table6c.repaint();
 				reset_view_without_changing_label();
 			}
 		});		
@@ -289,7 +399,12 @@ public class Panel_QuickEdit_SR extends JPanel {
 		qd2.add(btn_compact, PrismGridBagLayoutHandle.get_c(c, "CENTER", 
 				2, 1, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
 				0, 0, 0, 0));		// insets top, left, bottom, right
-				
+		// -------------------------------------------------------------------------------------------------
+		// -------------------------------------------------------------------------------------------------
+		// -------------------------------------------------------------------------------------------------
+		
+		
+		
 				
 		// Add 2 panels to this big Panel
 		add(qd1, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
@@ -302,26 +417,39 @@ public class Panel_QuickEdit_SR extends JPanel {
 	
 	
 	public void disable_all_apply_buttons() {
-		btnApplyProbability.setEnabled(false);
+		btnApplyLrmean.setEnabled(false);
 		btnApplyPercentage.setEnabled(false);
 		btn_compact.setEnabled(false);
 	}
 	
 	public void enable_all_apply_buttons() {
-		btnApplyProbability.setEnabled(true);
+		btnApplyLrmean.setEnabled(true);
 		btnApplyPercentage.setEnabled(true);
 		btn_compact.setEnabled(true);
 		reset_view_without_changing_label();
 	}
 	
 	public void reset_view_without_changing_label() {
-		if (table6b.isEditing()) {
-			table6b.getCellEditor().cancelCellEditing();
-		}
+		if (table6a.isEditing()) table6a.getCellEditor().cancelCellEditing();
+		if (table6b.isEditing()) table6b.getCellEditor().cancelCellEditing();
+		if (table6c.isEditing()) table6c.getCellEditor().cancelCellEditing();
+		
 		
 		switch (btn_compact.getToolTipText()) {
 		case "switch to full view":
-			RowFilter<Object, Object> compact_filter = new RowFilter<Object, Object>() {
+			// for table 6a and 6b: loss rate mean and std
+			List<RowFilter<Object, Object>> filters = new ArrayList<RowFilter<Object, Object>>();
+			RowFilter<Object, Object> compact_filter_a = new RowFilter<Object, Object>() {
+				public boolean include(Entry entry) {
+					for (int col = 2; col < data6a[0].length; col++) {	// except the first 2 columns
+						if ((double) entry.getValue(col) != 0) {
+							return true;		// if 1 cell in this row has value different from zero then show the row
+						}
+					}
+					return false;	// hide the row when all cells have the value of zero
+				}
+			};
+			RowFilter<Object, Object> compact_filter_b = new RowFilter<Object, Object>() {
 				public boolean include(Entry entry) {
 					for (int col = 2; col < data6b[0].length; col++) {	// except the first 2 columns
 						if ((double) entry.getValue(col) != 0) {
@@ -331,9 +459,33 @@ public class Panel_QuickEdit_SR extends JPanel {
 					return false;	// hide the row when all cells have the value of zero
 				}
 			};
-			TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>((PrismTableModel) table6b.getModel());
+			filters.add(compact_filter_a);
+			filters.add(compact_filter_b);
+			RowFilter<Object, Object> compact_filter_ab = RowFilter.orFilter(filters);
+			TableRowSorter<PrismTableModel> sorter_a = new TableRowSorter<PrismTableModel>((PrismTableModel) table6a.getModel());
+			sorter_a.setRowFilter(compact_filter_a);
+			table6a.setRowSorter(sorter_a);
+			TableRowSorter<PrismTableModel> sorter_b = new TableRowSorter<PrismTableModel>((PrismTableModel) table6b.getModel());
+			sorter_b.setRowFilter(compact_filter_b);
+			table6b.setRowSorter(sorter_b);
+			
+			
+			
+			
+			// for table 6c: conversion rate mean
+			RowFilter<Object, Object> compact_filter = new RowFilter<Object, Object>() {
+				public boolean include(Entry entry) {
+					for (int col = 2; col < data6c[0].length; col++) {	// except the first 2 columns
+						if ((double) entry.getValue(col) != 0) {
+							return true;		// if 1 cell in this row has value different from zero then show the row
+						}
+					}
+					return false;	// hide the row when all cells have the value of zero
+				}
+			};
+			TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>((PrismTableModel) table6c.getModel());
 			sorter.setRowFilter(compact_filter);
-			table6b.setRowSorter(sorter);
+			table6c.setRowSorter(sorter);
 			
 			// Set Color and Alignment for Cells
 	        DefaultTableCellRenderer compact_r = new DefaultTableCellRenderer() {
@@ -348,13 +500,15 @@ public class Panel_QuickEdit_SR extends JPanel {
 	            }
 	        };
 			for (int i = 0; i < 2; i++) {	// first 2 columns only
-				table6b.getColumnModel().getColumn(i).setCellRenderer(compact_r);
+				table6c.getColumnModel().getColumn(i).setCellRenderer(compact_r);
 			}
 			break;
 		case "switch to compact view":
+			table6a.setRowSorter(null);
 			table6b.setRowSorter(null);
+			table6c.setRowSorter(null);
 			for (int i = 0; i < 2; i++) {	// first 2 columns only
-				table6b.getColumnModel().getColumn(i).setCellRenderer(render6b);
+				table6c.getColumnModel().getColumn(i).setCellRenderer(render6c);
 			}
 			break;
 		}
