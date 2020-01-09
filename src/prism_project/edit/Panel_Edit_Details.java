@@ -1987,6 +1987,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				Component component2 = renderer2.getTableCellRendererComponent(table6a,
 			            tableColumn.getHeaderValue(), false, false, -1, column);
 				maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
+				
 				tableColumn.setPreferredWidth(maxWidth);
 				
 				// Set icon for cells: when total percentage of a given block 		NOTE: we need to use getValueAt because of the compact view feature which makes mismatching between full data and displayed data
@@ -2052,7 +2053,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						for (int j = 1; j < getColumnCount(); j++) {					
 							total_percentage = total_percentage + Double.parseDouble(getValueAt(row, j).toString());
 						}
-						if (total_percentage > 100 && column >= 2) {		// check if the total_percentage > 100% 
+						if (total_percentage > 100 && column >= 1) {		// check if the total_percentage > 100% 
 							tip = "INFEASIBLE - The sum of all cells with the same layer5 = " + getValueAt(row, 0).toString() + " must not exceed 100";
 						}
 					} catch (RuntimeException e1) {
@@ -2264,6 +2265,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
 				
 				tableColumn.setPreferredWidth(maxWidth);
+				
+				((DefaultTableCellRenderer) component).setIcon(null);
 				return component;
 			}		
 			

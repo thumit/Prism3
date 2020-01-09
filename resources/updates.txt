@@ -1222,4 +1222,4 @@ All changes in this block are associated with PrismAlpha2.0.02.jar, Prism-Formul
 512. Hide conversion rate std table (in ScrollPane_SubTables_SR_Disturbances) since we do not allow random drawn for conversion rate
 513. Add full quick edit functionality for LR mean, LR std, CR mean
 514. Add filter for LR mean and LR std. Note that the synchronize might be incorrect due to different views from the 2 tables under compact view mode
-515. Fix tooltip and warning icons for tables 6a, 6b, 6c (LR mean, LR std, CR mean). Note that still fail on LR std when LR mean has warning icons show up
+515. Fix tooltip and warning icons for tables 6a, 6b, 6c (LR mean, LR std, CR mean).
