@@ -2512,19 +2512,35 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				tableColumn.setPreferredWidth(maxWidth);
 				
 				// Set icon for cells: when total percentage of a given block 		NOTE: we need to use getValueAt because of the compact view feature which makes mismatching between full data and displayed data
-				double total_percentage = 0;
-				for (int i = 0; i < getRowCount(); i++) {	// loop all rows in a block && add to total percentage if the rows has the same covertype as the row at cursor
-					for (int j = 2; j < getColumnCount(); j++) {					
-						if (getValueAt(i, 0).toString().equals(getValueAt(row, 0).toString()) && table6c.convertColumnIndexToView(j) != -1) {	// -1 means the column is invisible
-							total_percentage = total_percentage + Double.parseDouble(getValueAt(i, j).toString());
+				boolean has_at_least_one_positive_loss_rate = false;
+				for (int i = 0; i < data6a.length; i++) {
+					if (!has_at_least_one_positive_loss_rate && data6a[i][0].toString().equals(getValueAt(row, 0).toString())) {
+						for (int j = 2; j < data6a[0].length; j++) {
+							if (!has_at_least_one_positive_loss_rate && 
+									(Double.valueOf(data6a[i][j].toString()) != 0 || Double.valueOf(data6b[i][j].toString()) != 0)) {
+								has_at_least_one_positive_loss_rate = true;
+							}
 						}
 					}	
 				}
-				if (total_percentage != 100 && column >= 2) {		// check if the total_percentage <> 100% --> problem icon for this cell because it is in the set of cells which make total_percentage <> 100%
-					((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(14, 14, "icon_problem.png"));
-				} else {
-					((DefaultTableCellRenderer) component).setIcon(null);
-				}
+
+				((DefaultTableCellRenderer) component).setIcon(null);
+				if (has_at_least_one_positive_loss_rate) {
+					double total_percentage = 0;
+					for (int i = 0; i < getRowCount(); i++) {	// loop all rows in a block && add to total percentage if the rows has the same covertype as the row at cursor
+						for (int j = 2; j < getColumnCount(); j++) {					
+							if (getValueAt(i, 0).toString().equals(getValueAt(row, 0).toString()) && table6c.convertColumnIndexToView(j) != -1) {	// -1 means the column is invisible
+								total_percentage = total_percentage + Double.parseDouble(getValueAt(i, j).toString());
+							}
+						}	
+					}
+					
+					if (total_percentage != 100 && column >= 2) {		// check if the total_percentage <> 100% --> problem icon for this cell because it is in the set of cells which make total_percentage <> 100%
+						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(14, 14, "icon_problem.png"));
+					}
+				};
+				table6c.revalidate();
+				table6c.repaint();
 				
 				return component;
 			}		
@@ -2572,17 +2588,32 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						tip = "For the total area with cover type = " + getValueAt(row, 0).toString() + " destroyed by "  + disturbance_name + ", " + percentage + "% of this area will be regenerated as cover type = " + getValueAt(row, 1).toString();
 					
 						// Show problem tip 		NOTE: we need to use getValueAt because of the compact view feature which makes mismatching between full data and displayed data
-						double total_percentage = 0;
-						for (int i = 0; i < getRowCount(); i++) {	// loop all rows in a block && add to total percentage if the rows has the same covertype as the row at cursor
-							for (int j = 2; j < getColumnCount(); j++) {					
-								if (getValueAt(i, 0).toString().equals(getValueAt(row, 0).toString()) && table6c.convertColumnIndexToView(j) != -1) {	// -1 means the column is invisible
-									total_percentage = total_percentage + Double.parseDouble(getValueAt(i, j).toString());
+						boolean has_at_least_one_positive_loss_rate = false;
+						for (int i = 0; i < data6a.length; i++) {
+							if (!has_at_least_one_positive_loss_rate && data6a[i][0].toString().equals(getValueAt(row, 0).toString())) {
+								for (int j = 2; j < data6a[0].length; j++) {
+									if (!has_at_least_one_positive_loss_rate && 
+											(Double.valueOf(data6a[i][j].toString()) != 0 || Double.valueOf(data6b[i][j].toString()) != 0)) {
+										has_at_least_one_positive_loss_rate = true;
+									}
 								}
 							}	
 						}
-						if (total_percentage != 100 && column >= 2) {		// check if the total_percentage <> 100% 
-							tip = "INFEASIBLE - The sum of all cells with the same layer5 = " + getValueAt(row, 0).toString() + " must be exactly 100";
-						}
+
+						if (has_at_least_one_positive_loss_rate) {
+							double total_percentage = 0;
+							for (int i = 0; i < getRowCount(); i++) {	// loop all rows in a block && add to total percentage if the rows has the same covertype as the row at cursor
+								for (int j = 2; j < getColumnCount(); j++) {					
+									if (getValueAt(i, 0).toString().equals(getValueAt(row, 0).toString()) && table6c.convertColumnIndexToView(j) != -1) {	// -1 means the column is invisible
+										total_percentage = total_percentage + Double.parseDouble(getValueAt(i, j).toString());
+									}
+								}	
+							}
+							
+							if (total_percentage != 100 && column >= 2) {		// check if the total_percentage <> 100%
+								tip = "INFEASIBLE - The sum of all cells with the same layer5 = " + getValueAt(row, 0).toString() + " must be exactly 100";
+							}
+						};
 					} catch (RuntimeException e1) {
 						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
 					}
