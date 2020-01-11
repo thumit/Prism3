@@ -7264,30 +7264,27 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			// End of ToolBar Panel -----------------------------------------------------------------------
 			// End of ToolBar Panel ----------------------------------------------------------------------- 
 	
-			
-			
 						
 			
 			// Add 3 tables into the same panel
 			JPanel combine_panel = new JPanel(new GridBagLayout());
 			c = new GridBagConstraints();
-			
-			// Add the cost_condition_panel	
-			combine_panel.add(sr_disturbances_condition_panel, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
-					0, 0, 1, 2, 1, 1, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
-					0, 0, 0, 0));		// insets top, left, bottom, right
-				
 			// Add the sr_disturbances_tables_ScrollPane to the main Grid	
 			combine_panel.add(sr_disturbances_tables_ScrollPane, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
-					1, 0, 1, 1, 0, 1, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+					0, 0, 1, 1, 0.5, 1, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
 					0, 0, 0, 0));		// insets top, left, bottom, right
 	
 			// Add scrollpane_QuickEdit	
 			combine_panel.add(scrollpane_QuickEdit, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
-					1, 1, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+					0, 1, 1, 1, 0.5, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
 					0, 0, 0, 0));		// insets top, left, bottom, right
-			
-
+			JSplitPane split_pane_lower = new JSplitPane();
+			split_pane_lower.setBorder(null);
+			split_pane_lower.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+			split_pane_lower.setDividerSize(3);
+			sr_disturbances_condition_panel.setPreferredSize(new Dimension(535, 0));
+			split_pane_lower.setLeftComponent(sr_disturbances_condition_panel);
+			split_pane_lower.setRightComponent(combine_panel);
 						
 			
 			    			    
@@ -7344,7 +7341,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			c.gridheight = 1;
 			c.weightx = 1;
 		    c.weighty = 1;
-		    lower_panel.add(combine_panel, c);	
+		    lower_panel.add(split_pane_lower, c);	
 			
 			
 			split_pane.setLeftComponent(upper_panel);
@@ -7844,33 +7841,29 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			helpToolBar.add(btnHelp);
 			// End of ToolBar Panel -----------------------------------------------------------------------
 			// End of ToolBar Panel ----------------------------------------------------------------------- 
-	
-			
 			
 						
 			
 			// Add 3 tables into the same panel
 			JPanel combine_panel = new JPanel(new GridBagLayout());
 			c = new GridBagConstraints();
-			
-			// Add the cost_condition_panel	
-			combine_panel.add(cost_condition_panel, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
-					0, 0, 1, 2, 1, 1, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
-					0, 0, 0, 0));		// insets top, left, bottom, right
-				
 			// Add the cost_tables_ScrollPane to the main Grid	
 			combine_panel.add(cost_tables_ScrollPane, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
-					1, 0, 1, 1, 0, 1, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+					0, 0, 1, 1, 0.5, 1, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
 					0, 0, 0, 0));		// insets top, left, bottom, right
-	
 			// Add scrollpane_QuickEdit	
 			combine_panel.add(scrollpane_QuickEdit, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
-					1, 1, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+					0, 1, 1, 1, 0.5, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
 					0, 0, 0, 0));		// insets top, left, bottom, right
-			
+			JSplitPane split_pane_lower = new JSplitPane();
+			split_pane_lower.setBorder(null);
+			split_pane_lower.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+			split_pane_lower.setDividerSize(3);
+			cost_condition_panel.setPreferredSize(new Dimension(535, 0));
+			split_pane_lower.setLeftComponent(cost_condition_panel);	// Add the cost_condition_panel	
+			split_pane_lower.setRightComponent(combine_panel);
 
 						
-			
 			    			    
 			// Add all Grids to the Main Grid-----------------------------------------------------------------------
 			// Add all Grids to the Main Grid-----------------------------------------------------------------------
@@ -7925,7 +7918,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			c.gridheight = 1;
 			c.weightx = 1;
 		    c.weighty = 1;
-		    lower_panel.add(combine_panel, c);	
+		    lower_panel.add(split_pane_lower, c);	
 			
 			
 			split_pane.setLeftComponent(upper_panel);

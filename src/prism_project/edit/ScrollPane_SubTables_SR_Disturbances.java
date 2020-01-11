@@ -48,28 +48,28 @@ public class ScrollPane_SubTables_SR_Disturbances extends JScrollPane {
 		TitledBorder border = new TitledBorder("Loss rate mean (%)");
 		border.setTitleJustification(TitledBorder.CENTER);
 		loss_rate_mean_scrollpane.setBorder(border);
-		loss_rate_mean_scrollpane.setPreferredSize(new Dimension(270, 0));
+		loss_rate_mean_scrollpane.setPreferredSize(new Dimension(0, 0));
 		
 		
 		loss_rate_std_scrollpane = new JScrollPane(/*this.table6b*/);
 		border = new TitledBorder("Loss rate standard deviation");
 		border.setTitleJustification(TitledBorder.CENTER);
 		loss_rate_std_scrollpane.setBorder(border);
-		loss_rate_std_scrollpane.setPreferredSize(new Dimension(270, 0));
+		loss_rate_std_scrollpane.setPreferredSize(new Dimension(0, 0));
 		
 		
 		conversion_rate_mean_scrollpane = new JScrollPane(/*this.table6c*/);
 		border = new TitledBorder("Conversion rate mean (%)");
 		border.setTitleJustification(TitledBorder.CENTER);
 		conversion_rate_mean_scrollpane.setBorder(border);
-		conversion_rate_mean_scrollpane.setPreferredSize(new Dimension(350, 0));
+		conversion_rate_mean_scrollpane.setPreferredSize(new Dimension(0, 0));
 			
 		
 		conversion_rate_std_scrollpane = new JScrollPane(/*this.table6d*/);
 		border = new TitledBorder("Conversion rate standard deviation");
 		border.setTitleJustification(TitledBorder.CENTER);
 		conversion_rate_std_scrollpane.setBorder(border);
-		conversion_rate_std_scrollpane.setPreferredSize(new Dimension(350, 0));
+		conversion_rate_std_scrollpane.setPreferredSize(new Dimension(0, 0));
 		
 		
 		loss_rate_mean_scrollpane.getVerticalScrollBar().setModel(loss_rate_std_scrollpane.getVerticalScrollBar().getModel());	 //<--------------synchronize
@@ -92,7 +92,7 @@ public class ScrollPane_SubTables_SR_Disturbances extends JScrollPane {
 	    combine_panel.add(loss_rate_mean_scrollpane, c);
 		c.gridx = 1;
 		c.gridy = 0;
-		c.weightx = 1;
+		c.weightx = 1.4;
 	    c.weighty = 1;
 	    c.gridheight = 2;	//  delete this line to allow conversion rate std (activate line 110)
 	    combine_panel.add(conversion_rate_mean_scrollpane, c);
