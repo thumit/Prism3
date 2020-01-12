@@ -5337,16 +5337,22 @@ public class Solve_Iterations {
 			double[][] loss_rate_mean = (period_one_rd_id != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(period_one_rd_id) : all_zeroes_2D_array;
 			double[][] loss_rate_std = (period_one_rd_id != -9999) ? disturbance_info.get_loss_rate_std_from_rd_condition_id(period_one_rd_id) : all_zeroes_2D_array;
 			
-			double pecentage_left = 100;
+			double total_pecentage = 0;
 			for (int k = 0; k < total_replacing_disturbances; k++) {
 				// For each disturbance, we draw the stochastic loss rate based on the mean and std based on normal distribution
 				double mean = loss_rate_mean[k][s5];
 				double std = loss_rate_std[k][s5];
 				Random ran = new Random();
 				stochastic_loss_rates_for_period_one_variable[k] = mean + std * ran.nextGaussian();
-				if (stochastic_loss_rates_for_period_one_variable[k] < 0) stochastic_loss_rates_for_period_one_variable[k] = 0;
-				if (stochastic_loss_rates_for_period_one_variable[k] > pecentage_left) stochastic_loss_rates_for_period_one_variable[k] = pecentage_left;
-				pecentage_left = pecentage_left - stochastic_loss_rates_for_period_one_variable[k];
+				if (stochastic_loss_rates_for_period_one_variable[k] < 0) stochastic_loss_rates_for_period_one_variable[k] = 0;		// = 0 if random drawn result < 0
+				total_pecentage = total_pecentage + stochastic_loss_rates_for_period_one_variable[k];
+			}
+			
+			// proportional adjustment when needed
+			if (total_pecentage > 100) {
+				for (int k = 0; k < total_replacing_disturbances; k++) {
+					stochastic_loss_rates_for_period_one_variable[k] = stochastic_loss_rates_for_period_one_variable[k] * 100 / total_pecentage;
+				}
 			}
 		} else {
 			for (int k = 0; k < total_replacing_disturbances; k++) {

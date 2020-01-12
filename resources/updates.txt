@@ -1224,3 +1224,4 @@ All changes in this block are associated with PrismAlpha2.0.02.jar, Prism-Formul
 514. Add filter for LR mean and LR std. Note that the synchronize might be incorrect due to different views from the 2 tables under compact view mode
 515. Revise all tooltip and warning icons for tables 6a, 6b, 6c (LR mean, LR std, CR mean). Specially, Warning icon on tale 6c will show up only when at least 1 SR has lat least 1 loss rate mean or loss rate std more than zero
 516. Add split pane to allow adjustable size of the tables in SR Diturbances screen and Management Cost screen
+517. The random drawing results for stochastic losses are proportionally adjusted
