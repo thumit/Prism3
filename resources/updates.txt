@@ -1227,4 +1227,4 @@ All changes in this block are associated with PrismAlpha2.0.02.jar, Prism-Formul
 518: Allow 2 options for solving any single iteration: 1) use the mean value of loss rate only or 2) use the random drawn loss rate
 	- Solve_Iterations class: add map_var_index_to_user_chosen_loss_rate with user_chosen_loss_rate of 0 or 1 for deterministic or stochastic SR loss within a single iteration
 	- Solve_Iterations class: use the map_var_index_to_user_chosen_loss_rate by modifying at cost alculation, 6a, 6b, 6c, 6d, 6e, 6f, 7b, 9, printing output_02 and output_05
-	- Add LRWI column in the solving table to allow the aboe 2 options
+	- Add LRWI column in the solving table to allow the aboe 2 options (commit to stochastic_disturbances_11 and switch to stochastic_disturbances_12)
