@@ -239,7 +239,7 @@ public class Solve_Iterations {
 		    //--------------------------------------------------------------------------------------------------------------------------
 			int max_iteration = Integer.parseInt(data[row][1].toString());
 			for (int iter = last_solved_iter + 1; iter <= max_iteration; iter++) {	// Loop all iterations
-				data[row][3] = "solving iteration " + iter;
+				data[row][4] = "solving iteration " + iter;
 				model.fireTableDataChanged();
 				System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------------");
 				System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------------");
@@ -888,6 +888,8 @@ public class Solve_Iterations {
 				}
 							
 				// This array stores replacing disturbances information
+				String user_chosen_loss_rate = data[row][3].toString();
+				LinkedHashMap<Integer, double[][]> map_var_index_to_user_chosen_loss_rate = new LinkedHashMap<Integer, double[][]>();	// this map var_index to the stochastic SR array[k][s5]
 				int[] var_rd_condition_id = new int[vname.length];
 				for (int i = 0; i < vname.length; i++) {
 					var_rd_condition_id[i] = -9999;		// start with -9999   This is the priority id. example we have 4 conditions --> id from 0 to 3
@@ -932,11 +934,13 @@ public class Solve_Iterations {
 							
 							if (var_rd_condition_id[var_index] != -9999 && t != tR) {		// Note: no replacing disturbance or EA in the period = rotation period--> no conversion cost after replacing disturbance
 								double[][] loss_rate_mean = disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
+								double[][] loss_rate_std = disturbance_info.get_loss_rate_std_from_rd_condition_id(var_rd_condition_id[var_index]);
+								double[][] user_loss_rate = get_stochastic_loss_rate_from_loss_rate_mean_and_loss_rate_std(user_chosen_loss_rate, loss_rate_mean, loss_rate_std, var_index, map_var_index_to_user_chosen_loss_rate);
 								double[][][] conversion_rate_mean = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
 								for (int s5R = 0; s5R < total_layer5; s5R++) {
 									double total_loss_rate_for_this_conversion = 0;
 									for (int k = 0; k < total_replacing_disturbances; k++) {
-										total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (loss_rate_mean[k][s5] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
+										total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (user_loss_rate[k][s5] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
 									}
 									if (total_loss_rate_for_this_conversion > 0) {
 										conversion_after_disturbances_classification_list.add(layer5.get(s5) + " " + layer5.get(s5R) + " " + "disturbance");
@@ -1982,9 +1986,11 @@ public class Solve_Iterations {
 								// Add xNGe(s1,s2,s3,s4,s5,s6)[i][t]
 								int var_index = xNGe[strata_id][i][t];
 								double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+								double[][] loss_rate_std = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_std_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+								double[][] user_loss_rate = get_stochastic_loss_rate_from_loss_rate_mean_and_loss_rate_std(user_chosen_loss_rate, loss_rate_mean, loss_rate_std, var_index, map_var_index_to_user_chosen_loss_rate);
 								double total_loss_rate = 0;
 								for (int k = 0; k < total_replacing_disturbances; k++) {
-									total_loss_rate = total_loss_rate + loss_rate_mean[k][s5] / 100;
+									total_loss_rate = total_loss_rate + user_loss_rate[k][s5] / 100;
 								}
 								if (total_loss_rate != 1) {	// only add if parameter is non zero
 									c6_indexlist.get(c6_num).add(xNGe[strata_id][i][t]);
@@ -2019,9 +2025,11 @@ public class Solve_Iterations {
 								// Add xPBe(s1,s2,s3,s4,s5,s6)[i][t]
 								int var_index = xPBe[strata_id][i][t];
 								double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+								double[][] loss_rate_std = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_std_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+								double[][] user_loss_rate = get_stochastic_loss_rate_from_loss_rate_mean_and_loss_rate_std(user_chosen_loss_rate, loss_rate_mean, loss_rate_std, var_index, map_var_index_to_user_chosen_loss_rate);
 								double total_loss_rate = 0;
 								for (int k = 0; k < total_replacing_disturbances; k++) {
-									total_loss_rate = total_loss_rate + loss_rate_mean[k][s5] / 100;
+									total_loss_rate = total_loss_rate + user_loss_rate[k][s5] / 100;
 								}
 								if (total_loss_rate != 1) {	// only add if parameter is non zero
 									c6_indexlist.get(c6_num).add(xPBe[strata_id][i][t]);
@@ -2056,9 +2064,11 @@ public class Solve_Iterations {
 								//Add xGSe(s1,s2,s3,s4,s5,s6)[i][t]
 								int var_index = xGSe[strata_id][i][t];
 								double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+								double[][] loss_rate_std = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_std_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+								double[][] user_loss_rate = get_stochastic_loss_rate_from_loss_rate_mean_and_loss_rate_std(user_chosen_loss_rate, loss_rate_mean, loss_rate_std, var_index, map_var_index_to_user_chosen_loss_rate);
 								double total_loss_rate = 0;
 								for (int k = 0; k < total_replacing_disturbances; k++) {
-									total_loss_rate = total_loss_rate + loss_rate_mean[k][s5] / 100;
+									total_loss_rate = total_loss_rate + user_loss_rate[k][s5] / 100;
 								}
 								if (total_loss_rate != 1) {	// only add if parameter is non zero
 									c6_indexlist.get(c6_num).add(xGSe[strata_id][i][t]);
@@ -2098,9 +2108,11 @@ public class Solve_Iterations {
 										// Add xEAe(s1,s2,s3,s4,s5,s6)[tR][s5R][i][t]
 										int var_index = xEAe[strata_id][tR][s5R][i][t];
 										double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+										double[][] loss_rate_std = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_std_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+										double[][] user_loss_rate = get_stochastic_loss_rate_from_loss_rate_mean_and_loss_rate_std(user_chosen_loss_rate, loss_rate_mean, loss_rate_std, var_index, map_var_index_to_user_chosen_loss_rate);
 										double total_loss_rate = 0;
 										for (int k = 0; k < total_replacing_disturbances; k++) {
-											total_loss_rate = total_loss_rate + loss_rate_mean[k][s5] / 100;
+											total_loss_rate = total_loss_rate + user_loss_rate[k][s5] / 100;
 										}
 										if (total_loss_rate != 1) {	// only add if parameter is non zero
 											c6_indexlist.get(c6_num).add(xEAe[strata_id][tR][s5R][i][t]);
@@ -2138,9 +2150,11 @@ public class Solve_Iterations {
 									// Add xMS(s1,s2,s3,s4,s5,s6)[i][t]
 									int var_index = xMS[strata_id][i][t] ;
 									double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+									double[][] loss_rate_std = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_std_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+									double[][] user_loss_rate = get_stochastic_loss_rate_from_loss_rate_mean_and_loss_rate_std(user_chosen_loss_rate, loss_rate_mean, loss_rate_std, var_index, map_var_index_to_user_chosen_loss_rate);
 									double total_loss_rate = 0;
 									for (int k = 0; k < total_replacing_disturbances; k++) {
-										total_loss_rate = total_loss_rate + loss_rate_mean[k][s5] / 100;
+										total_loss_rate = total_loss_rate + user_loss_rate[k][s5] / 100;
 									}
 									if (total_loss_rate != 1) {	// only add if parameter is non zero
 										c6_indexlist.get(c6_num).add(xMS[strata_id][i][t]);
@@ -2177,9 +2191,11 @@ public class Solve_Iterations {
 									//Add xBS(s1,s2,s3,s4,s5,s6)[i][t]	
 									int var_index = xBS[strata_id][i][t] ;
 									double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+									double[][] loss_rate_std = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_std_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+									double[][] user_loss_rate = get_stochastic_loss_rate_from_loss_rate_mean_and_loss_rate_std(user_chosen_loss_rate, loss_rate_mean, loss_rate_std, var_index, map_var_index_to_user_chosen_loss_rate);
 									double total_loss_rate = 0;
 									for (int k = 0; k < total_replacing_disturbances; k++) {
-										total_loss_rate = total_loss_rate + loss_rate_mean[k][s5] / 100;
+										total_loss_rate = total_loss_rate + user_loss_rate[k][s5] / 100;
 									}
 									if (total_loss_rate != 1) {	// only add if parameter is non zero
 										c6_indexlist.get(c6_num).add(xBS[strata_id][i][t]);
@@ -2495,11 +2511,13 @@ public class Solve_Iterations {
 										if (xNGe[strata_id][i] != null) {
 											int var_index = xNGe[strata_id][i][t];
 											if(var_index > 0 && var_rd_condition_id[var_index] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
-												double[][] loss_rate_mean = disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
+												double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+												double[][] loss_rate_std = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_std_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+												double[][] user_loss_rate = get_stochastic_loss_rate_from_loss_rate_mean_and_loss_rate_std(user_chosen_loss_rate, loss_rate_mean, loss_rate_std, var_index, map_var_index_to_user_chosen_loss_rate);
 												double[][][] conversion_rate_mean = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
 												double total_loss_rate_for_this_conversion = 0;
 												for (int k = 0; k < total_replacing_disturbances; k++) {
-													total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (loss_rate_mean[k][s5] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
+													total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (user_loss_rate[k][s5] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
 												}
 												if (total_loss_rate_for_this_conversion != 0) {	// only add if parameter is non zero
 													c12_indexlist.get(c12_num).add(var_index);
@@ -2514,11 +2532,13 @@ public class Solve_Iterations {
 										if (xPBe[strata_id][i] != null) {
 											int var_index = xPBe[strata_id][i][t];
 											if(var_index > 0 && var_rd_condition_id[var_index] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
-												double[][] loss_rate_mean = disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
+												double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+												double[][] loss_rate_std = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_std_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+												double[][] user_loss_rate = get_stochastic_loss_rate_from_loss_rate_mean_and_loss_rate_std(user_chosen_loss_rate, loss_rate_mean, loss_rate_std, var_index, map_var_index_to_user_chosen_loss_rate);
 												double[][][] conversion_rate_mean = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
 												double total_loss_rate_for_this_conversion = 0;
 												for (int k = 0; k < total_replacing_disturbances; k++) {
-													total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (loss_rate_mean[k][s5] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
+													total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (user_loss_rate[k][s5] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
 												}
 												if (total_loss_rate_for_this_conversion != 0) {	// only add if parameter is non zero
 													c12_indexlist.get(c12_num).add(var_index);
@@ -2533,11 +2553,13 @@ public class Solve_Iterations {
 										if (xGSe[strata_id][i] != null) {
 											int var_index = xGSe[strata_id][i][t];
 											if(var_index > 0 && var_rd_condition_id[var_index] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
-												double[][] loss_rate_mean = disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
+												double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+												double[][] loss_rate_std = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_std_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+												double[][] user_loss_rate = get_stochastic_loss_rate_from_loss_rate_mean_and_loss_rate_std(user_chosen_loss_rate, loss_rate_mean, loss_rate_std, var_index, map_var_index_to_user_chosen_loss_rate);
 												double[][][] conversion_rate_mean = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
 												double total_loss_rate_for_this_conversion = 0;
 												for (int k = 0; k < total_replacing_disturbances; k++) {
-													total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (loss_rate_mean[k][s5] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
+													total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (user_loss_rate[k][s5] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
 												}
 												if (total_loss_rate_for_this_conversion != 0) {	// only add if parameter is non zero
 													c12_indexlist.get(c12_num).add(var_index);
@@ -2557,11 +2579,13 @@ public class Solve_Iterations {
 														
 															int var_index = xEAe[strata_id][tR][s5RR][i][t];
 															if(var_index > 0 && var_rd_condition_id[var_index] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
-																double[][] loss_rate_mean = disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
+																double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+																double[][] loss_rate_std = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_std_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+																double[][] user_loss_rate = get_stochastic_loss_rate_from_loss_rate_mean_and_loss_rate_std(user_chosen_loss_rate, loss_rate_mean, loss_rate_std, var_index, map_var_index_to_user_chosen_loss_rate);
 																double[][][] conversion_rate_mean = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
 																double total_loss_rate_for_this_conversion = 0;
 																for (int k = 0; k < total_replacing_disturbances; k++) {
-																	total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (loss_rate_mean[k][s5] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
+																	total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (user_loss_rate[k][s5] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
 																}
 																if (total_loss_rate_for_this_conversion != 0) {	// only add if parameter is non zero
 																	c12_indexlist.get(c12_num).add(var_index);
@@ -2579,11 +2603,13 @@ public class Solve_Iterations {
 											if (xMS[strata_id][i] != null) {
 												int var_index = xMS[strata_id][i][t];
 												if(var_index > 0 && var_rd_condition_id[var_index] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
-													double[][] loss_rate_mean = disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
+													double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+													double[][] loss_rate_std = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_std_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+													double[][] user_loss_rate = get_stochastic_loss_rate_from_loss_rate_mean_and_loss_rate_std(user_chosen_loss_rate, loss_rate_mean, loss_rate_std, var_index, map_var_index_to_user_chosen_loss_rate);
 													double[][][] conversion_rate_mean = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
 													double total_loss_rate_for_this_conversion = 0;
 													for (int k = 0; k < total_replacing_disturbances; k++) {
-														total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (loss_rate_mean[k][s5] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
+														total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (user_loss_rate[k][s5] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
 													}
 													if (total_loss_rate_for_this_conversion != 0) {	// only add if parameter is non zero
 														c12_indexlist.get(c12_num).add(var_index);
@@ -2600,11 +2626,13 @@ public class Solve_Iterations {
 											if (xBS[strata_id][i] != null) {
 												int var_index = xBS[strata_id][i][t];
 												if(var_index > 0 && var_rd_condition_id[var_index] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
-													double[][] loss_rate_mean = disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
+													double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+													double[][] loss_rate_std = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_std_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+													double[][] user_loss_rate = get_stochastic_loss_rate_from_loss_rate_mean_and_loss_rate_std(user_chosen_loss_rate, loss_rate_mean, loss_rate_std, var_index, map_var_index_to_user_chosen_loss_rate);
 													double[][][] conversion_rate_mean = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
 													double total_loss_rate_for_this_conversion = 0;
 													for (int k = 0; k < total_replacing_disturbances; k++) {
-														total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (loss_rate_mean[k][s5] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
+														total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (user_loss_rate[k][s5] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
 													}
 													if (total_loss_rate_for_this_conversion != 0) {	// only add if parameter is non zero
 														c12_indexlist.get(c12_num).add(var_index);
@@ -2629,11 +2657,13 @@ public class Solve_Iterations {
 												if(xNGr[strata_5layers_id][i][t][a] > 0 && var_rd_condition_id[xNGr[strata_5layers_id][i][t][a]] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
 													
 													int var_index = xNGr[strata_5layers_id][i][t][a];
-													double[][] loss_rate_mean = disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
+													double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+													double[][] loss_rate_std = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_std_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+													double[][] user_loss_rate = get_stochastic_loss_rate_from_loss_rate_mean_and_loss_rate_std(user_chosen_loss_rate, loss_rate_mean, loss_rate_std, var_index, map_var_index_to_user_chosen_loss_rate);
 													double[][][] conversion_rate_mean = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
 													double total_loss_rate_for_this_conversion = 0;
 													for (int k = 0; k < total_replacing_disturbances; k++) {
-														total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (loss_rate_mean[k][s5] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
+														total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (user_loss_rate[k][s5] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
 													}
 													if (total_loss_rate_for_this_conversion != 0) {	// only add if parameter is non zero
 														c12_indexlist.get(c12_num).add(var_index);
@@ -2651,11 +2681,13 @@ public class Solve_Iterations {
 												if(xPBr[strata_5layers_id][i][t][a] > 0 && var_rd_condition_id[xPBr[strata_5layers_id][i][t][a]] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
 													
 													int var_index = xPBr[strata_5layers_id][i][t][a];
-													double[][] loss_rate_mean = disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
+													double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+													double[][] loss_rate_std = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_std_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+													double[][] user_loss_rate = get_stochastic_loss_rate_from_loss_rate_mean_and_loss_rate_std(user_chosen_loss_rate, loss_rate_mean, loss_rate_std, var_index, map_var_index_to_user_chosen_loss_rate);
 													double[][][] conversion_rate_mean = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
 													double total_loss_rate_for_this_conversion = 0;
 													for (int k = 0; k < total_replacing_disturbances; k++) {
-														total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (loss_rate_mean[k][s5] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
+														total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (user_loss_rate[k][s5] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
 													}
 													if (total_loss_rate_for_this_conversion != 0) {	// only add if parameter is non zero
 														c12_indexlist.get(c12_num).add(var_index);
@@ -2673,11 +2705,13 @@ public class Solve_Iterations {
 												if(xGSr[strata_5layers_id][i][t][a] > 0 && var_rd_condition_id[xGSr[strata_5layers_id][i][t][a]] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
 													
 													int var_index = xGSr[strata_5layers_id][i][t][a];
-													double[][] loss_rate_mean = disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
+													double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+													double[][] loss_rate_std = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_std_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+													double[][] user_loss_rate = get_stochastic_loss_rate_from_loss_rate_mean_and_loss_rate_std(user_chosen_loss_rate, loss_rate_mean, loss_rate_std, var_index, map_var_index_to_user_chosen_loss_rate);
 													double[][][] conversion_rate_mean = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
 													double total_loss_rate_for_this_conversion = 0;
 													for (int k = 0; k < total_replacing_disturbances; k++) {
-														total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (loss_rate_mean[k][s5] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
+														total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (user_loss_rate[k][s5] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
 													}
 													if (total_loss_rate_for_this_conversion != 0) {	// only add if parameter is non zero
 														c12_indexlist.get(c12_num).add(var_index);
@@ -2699,11 +2733,13 @@ public class Solve_Iterations {
 																
 																int var_index = xEAr[strata_5layers_id][tR][aR][s5RR][i][t];
 																if(var_index > 0 && var_rd_condition_id[var_index] != -9999) {		// if variable is defined, this value would be > 0 
-																	double[][] loss_rate_mean = disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
+																	double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+																	double[][] loss_rate_std = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_std_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+																	double[][] user_loss_rate = get_stochastic_loss_rate_from_loss_rate_mean_and_loss_rate_std(user_chosen_loss_rate, loss_rate_mean, loss_rate_std, var_index, map_var_index_to_user_chosen_loss_rate);
 																	double[][][] conversion_rate_mean = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
 																	double total_loss_rate_for_this_conversion = 0;
 																	for (int k = 0; k < total_replacing_disturbances; k++) {
-																		total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (loss_rate_mean[k][s5] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
+																		total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (user_loss_rate[k][s5] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
 																	}
 																	if (total_loss_rate_for_this_conversion != 0) {	// only add if parameter is non zero
 																		c12_indexlist.get(c12_num).add(var_index);
@@ -3039,9 +3075,11 @@ public class Solve_Iterations {
 									// Add xNGr(s1,s2,s3,s4,s5)[i][t][a]
 									int var_index = xNGr[strata_5layers_id][i][t][a];
 									double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+									double[][] loss_rate_std = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_std_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+									double[][] user_loss_rate = get_stochastic_loss_rate_from_loss_rate_mean_and_loss_rate_std(user_chosen_loss_rate, loss_rate_mean, loss_rate_std, var_index, map_var_index_to_user_chosen_loss_rate);
 									double total_loss_rate = 0;
 									for (int k = 0; k < total_replacing_disturbances; k++) {
-										total_loss_rate = total_loss_rate + loss_rate_mean[k][s5] / 100;
+										total_loss_rate = total_loss_rate + user_loss_rate[k][s5] / 100;
 									}
 									if (total_loss_rate != 1) {	// only add if parameter is non zero
 										c14_indexlist.get(c14_num).add(xNGr[strata_5layers_id][i][t][a]);
@@ -3081,9 +3119,11 @@ public class Solve_Iterations {
 									// Add xPBr(s1,s2,s3,s4,s5)[i][t][a]
 									int var_index = xPBr[strata_5layers_id][i][t][a];
 									double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+									double[][] loss_rate_std = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_std_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+									double[][] user_loss_rate = get_stochastic_loss_rate_from_loss_rate_mean_and_loss_rate_std(user_chosen_loss_rate, loss_rate_mean, loss_rate_std, var_index, map_var_index_to_user_chosen_loss_rate);
 									double total_loss_rate = 0;
 									for (int k = 0; k < total_replacing_disturbances; k++) {
-										total_loss_rate = total_loss_rate + loss_rate_mean[k][s5] / 100;
+										total_loss_rate = total_loss_rate + user_loss_rate[k][s5] / 100;
 									}
 									if (total_loss_rate != 1) {	// only add if parameter is non zero
 										c14_indexlist.get(c14_num).add(xPBr[strata_5layers_id][i][t][a]);
@@ -3124,9 +3164,11 @@ public class Solve_Iterations {
 									// Add xGSr(s1,s2,s3,s4,s5)[i][t][a]
 									int var_index = xGSr[strata_5layers_id][i][t][a];
 									double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+									double[][] loss_rate_std = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_std_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+									double[][] user_loss_rate = get_stochastic_loss_rate_from_loss_rate_mean_and_loss_rate_std(user_chosen_loss_rate, loss_rate_mean, loss_rate_std, var_index, map_var_index_to_user_chosen_loss_rate);
 									double total_loss_rate = 0;
 									for (int k = 0; k < total_replacing_disturbances; k++) {
-										total_loss_rate = total_loss_rate + loss_rate_mean[k][s5] / 100;
+										total_loss_rate = total_loss_rate + user_loss_rate[k][s5] / 100;
 									}
 									if (total_loss_rate != 1) {	// only add if parameter is non zero
 										c14_indexlist.get(c14_num).add(xGSr[strata_5layers_id][i][t][a]);
@@ -3171,9 +3213,11 @@ public class Solve_Iterations {
 												// Add xEAr(s1,s2,s3,s4,s5)[tR][aR][s5R][i][t]
 												int var_index = xEAr[strata_5layers_id][tR][aR][s5R][i][t];
 												double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+												double[][] loss_rate_std = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_std_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+												double[][] user_loss_rate = get_stochastic_loss_rate_from_loss_rate_mean_and_loss_rate_std(user_chosen_loss_rate, loss_rate_mean, loss_rate_std, var_index, map_var_index_to_user_chosen_loss_rate);
 												double total_loss_rate = 0;
 												for (int k = 0; k < total_replacing_disturbances; k++) {
-													total_loss_rate = total_loss_rate + loss_rate_mean[k][s5] / 100;
+													total_loss_rate = total_loss_rate + user_loss_rate[k][s5] / 100;
 												}
 												if (total_loss_rate != 1) {	// only add if parameter is non zero
 													c14_indexlist.get(c14_num).add(xEAr[strata_5layers_id][tR][aR][s5R][i][t]);
@@ -4060,9 +4104,12 @@ public class Solve_Iterations {
 									if (vname[i].contains("xNG_") || vname[i].contains("xPB_") || vname[i].contains("xGS_") || vname[i].contains("xMS_") || vname[i].contains("xBS_") || vname[i].contains("xEA_")) {
 										double total_loss_rate_mean = 0;
 										int s5 = layer5.indexOf(var_info_array[i].get_layer5());
-										double[][] loss_rate_mean = (var_rd_condition_id[i] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[i]) : all_zeroes_2D_array;
+										int var_index = i;
+										double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+										double[][] loss_rate_std = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_std_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+										double[][] user_loss_rate = get_stochastic_loss_rate_from_loss_rate_mean_and_loss_rate_std(user_chosen_loss_rate, loss_rate_mean, loss_rate_std, var_index, map_var_index_to_user_chosen_loss_rate);
 										for (int k = 0; k < total_replacing_disturbances; k++) {
-											total_loss_rate_mean = total_loss_rate_mean + Double.valueOf(loss_rate_mean[k][s5]);
+											total_loss_rate_mean = total_loss_rate_mean + Double.valueOf(user_loss_rate[k][s5]);
 										}
 										fileOut.write("\t" + total_loss_rate_mean); 
 										fileOut.write("\t" + var_rd_condition_id[i]); 
@@ -4319,9 +4366,12 @@ public class Solve_Iterations {
 											+ "\t" + Double.valueOf(reduceCost[i + 1])); /*Double.valueOf(twoDForm.format(reduceCost[i]))*/ 	// because index starts from 1 not 0:    http://lpsolve.sourceforge.net/5.0/get_sensitivity_rhs.htm
 									
 									int s5 = layer5.indexOf(var_info_array[i].get_layer5());
-									double[][] loss_rate_mean = (var_rd_condition_id[i] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[i]) : all_zeroes_2D_array;
+									int var_index = i;
+									double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+									double[][] loss_rate_std = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_std_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+									double[][] user_loss_rate = get_stochastic_loss_rate_from_loss_rate_mean_and_loss_rate_std(user_chosen_loss_rate, loss_rate_mean, loss_rate_std, var_index, map_var_index_to_user_chosen_loss_rate);
 									for (int k = 0; k < total_replacing_disturbances; k++) {
-										fileOut.write("\t" + Double.valueOf(loss_rate_mean[k][s5]));
+										fileOut.write("\t" + Double.valueOf(user_loss_rate[k][s5]));
 									}
 									fileOut.write("\t" + Double.valueOf(var_cost_value[i]));
 									
@@ -4531,13 +4581,13 @@ public class Solve_Iterations {
 						
 						
 						// show successful or fail in the GUI
-						data[row][3] = "successful";
+						data[row][4] = "successful";
 						model.fireTableDataChanged();
 						value = null; reduceCost = null; dual = null; slack = null;		// clear arrays to save memory
 						vlb = null; vub = null; vname = null; objvals = null;			// clear arrays to save memory
 					} else {
 						if (is_problem_exported) cplex_wrapper.exportModel(problem_file.getAbsolutePath());
-						data[row][3] = "fail";
+						data[row][4] = "fail";
 						model.fireTableDataChanged();
 					}
 				}
@@ -4769,9 +4819,12 @@ public class Solve_Iterations {
 									if (vname[i].contains("xNG_") || vname[i].contains("xPB_") || vname[i].contains("xGS_") || vname[i].contains("xMS_") || vname[i].contains("xBS_") || vname[i].contains("xEA_")) {
 										double total_loss_rate_mean = 0;
 										int s5 = layer5.indexOf(var_info_array[i].get_layer5());
-										double[][] loss_rate_mean = (var_rd_condition_id[i] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[i]) : all_zeroes_2D_array;
+										int var_index = i;
+										double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+										double[][] loss_rate_std = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_std_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+										double[][] user_loss_rate = get_stochastic_loss_rate_from_loss_rate_mean_and_loss_rate_std(user_chosen_loss_rate, loss_rate_mean, loss_rate_std, var_index, map_var_index_to_user_chosen_loss_rate);
 										for (int k = 0; k < total_replacing_disturbances; k++) {
-											total_loss_rate_mean = total_loss_rate_mean + Double.valueOf(loss_rate_mean[k][s5]);
+											total_loss_rate_mean = total_loss_rate_mean + Double.valueOf(user_loss_rate[k][s5]);
 										}
 										fileOut.write("\t" + total_loss_rate_mean); 
 										fileOut.write("\t" + var_rd_condition_id[i]); 
@@ -4963,9 +5016,12 @@ public class Solve_Iterations {
 											+ "\t" + Double.valueOf(reduceCost[i + 1])); /*Double.valueOf(twoDForm.format(reduceCost[i]))*/ 	// because index starts from 1 not 0:    http://lpsolve.sourceforge.net/5.0/get_sensitivity_rhs.htm
 									
 									int s5 = layer5.indexOf(var_info_array[i].get_layer5());
-									double[][] loss_rate_mean = (var_rd_condition_id[i] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[i]) : all_zeroes_2D_array;
+									int var_index = i;
+									double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+									double[][] loss_rate_std = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_std_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
+									double[][] user_loss_rate = get_stochastic_loss_rate_from_loss_rate_mean_and_loss_rate_std(user_chosen_loss_rate, loss_rate_mean, loss_rate_std, var_index, map_var_index_to_user_chosen_loss_rate);
 									for (int k = 0; k < total_replacing_disturbances; k++) {
-										fileOut.write("\t" + Double.valueOf(loss_rate_mean[k][s5]));
+										fileOut.write("\t" + Double.valueOf(user_loss_rate[k][s5]));
 									}
 									fileOut.write("\t" + Double.valueOf(var_cost_value[i]));
 									
@@ -5175,13 +5231,13 @@ public class Solve_Iterations {
 						
 						
 						// show successful or fail in the GUI
-						data[row][3] = "successful";
+						data[row][4] = "successful";
 						model.fireTableDataChanged();
 						value = null; /*reduceCost = null; dual = null; slack = null;*/		// clear arrays to save memory
 						vlb = null; vub = null; vname = null; objvals = null;			// clear arrays to save memory
 					} else {
 						if (is_problem_exported) solver.writeLp(problem_file.getAbsolutePath());
-						data[row][3] = "fail";
+						data[row][4] = "fail";
 						model.fireTableDataChanged();
 					}						
 					solver.deleteLp();
@@ -5208,7 +5264,7 @@ public class Solve_Iterations {
 		catch (IOException e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Panel Solve Runs   -   Create output files exception for "+ runFolder);		
 			e.printStackTrace();
-			data[row][3] = "fail, cannot create outputs";
+			data[row][4] = "fail, cannot create outputs";
 			model.fireTableDataChanged();
 			
 			problem_file.delete();
@@ -5224,7 +5280,7 @@ public class Solve_Iterations {
 		} catch (LpSolveException e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Panel Solve Runs   -   LPSOLVE exception for " + runFolder);
 			e.printStackTrace();
-			data[row][3] = "fail, lpsolve error";
+			data[row][4] = "fail, lpsolve error";
 			model.fireTableDataChanged();
 			
 			problem_file.delete();
@@ -5241,7 +5297,7 @@ public class Solve_Iterations {
 		catch (Exception e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Panel Solve Runs   -   Input files exception for " + runFolder);
 			e.printStackTrace();
-			data[row][3] = "fail, invalid inputs";
+			data[row][4] = "fail, invalid inputs";
 			model.fireTableDataChanged();
 			
 			problem_file.delete();
@@ -5258,6 +5314,50 @@ public class Solve_Iterations {
 			System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------------");
 		}
 	}
+	
+	
+	
+	
+	// apply to eq (5)
+	private double[][] get_stochastic_loss_rate_from_loss_rate_mean_and_loss_rate_std(String user_chosen_loss_rate,
+			double[][] loss_rate_mean, double[][] loss_rate_std, int var_index, LinkedHashMap<Integer, double[][]> map_var_index_to_user_chosen_loss_rate) {
+		if (user_chosen_loss_rate.equals("mean")) return loss_rate_mean;
+		// in case stochastic loss rate (chosen = 1), return if already have the stochastic
+		if (map_var_index_to_user_chosen_loss_rate.get(var_index) != null) return map_var_index_to_user_chosen_loss_rate.get(var_index);
+		
+		//if not having the stochastic yet, create it	
+		int total_replacing_disturbances = loss_rate_mean.length;
+		int total_covertypes = loss_rate_mean[0].length;
+		double[][] stochastic_loss_rate = new double[total_replacing_disturbances][];
+		for (int k = 0; k < total_replacing_disturbances; k++) {
+			stochastic_loss_rate[k] = new double[total_covertypes];
+		}
+		
+		for (int s5 = 0; s5 < total_covertypes; s5++) {
+			double total_pecentage = 0;
+			for (int k = 0; k < total_replacing_disturbances; k++) {
+				// For each disturbance, we draw the stochastic loss rate based on the mean and std based on normal distribution
+				double mean = loss_rate_mean[k][s5];
+				double std = loss_rate_std[k][s5];
+				Random ran = new Random();
+				stochastic_loss_rate[k][s5] = mean + std * ran.nextGaussian();
+				if (stochastic_loss_rate[k][s5] < 0) stochastic_loss_rate[k][s5] = 0;		// = 0 if random drawn result < 0
+				total_pecentage = total_pecentage + stochastic_loss_rate[k][s5];
+			}
+			
+			// proportional adjustment when needed
+			if (total_pecentage > 100) {
+				for (int k = 0; k < total_replacing_disturbances; k++) {
+					stochastic_loss_rate[k][s5] = stochastic_loss_rate[k][s5] * 100 / total_pecentage;
+				}
+			}
+		}
+		
+		map_var_index_to_user_chosen_loss_rate.put(var_index, stochastic_loss_rate);
+		return stochastic_loss_rate;
+	}
+	
+	
 	
 	
 	
