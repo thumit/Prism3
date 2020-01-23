@@ -1228,3 +1228,7 @@ All changes in this block are associated with PrismAlpha2.0.02.jar, Prism-Formul
 	- Solve_Iterations class: add map_var_index_to_user_chosen_loss_rate with user_chosen_loss_rate of 0 or 1 for deterministic or stochastic SR loss within a single iteration
 	- Solve_Iterations class: use the map_var_index_to_user_chosen_loss_rate by modifying at cost alculation, 6a, 6b, 6c, 6d, 6e, 6f, 7b, 9, printing output_02 and output_05
 	- Add LRWI column in the solving table to allow the aboe 2 options (commit to stochastic_disturbances_11 and switch to stochastic_disturbances_12)
+519. Dynamically load the Temporary folder by adding -Djava.library.path into the OptionPane_Startup class. At the same time, the addLibrary in  Solve_Iterations class is removed due to deprecated. These help clear the bugs 109 and 115 listed in BitBucket. Note that from now:
+	- cplex.jar could be in the same directory as other jar files
+	- prismplex_lib folder could now be removed from the package
+	- all .dll files of cplex nad lpsolve could be in Temporary folder of the Prism jar package (or C:\Users\Dung Nguyen\Desktop\Temporary if running Prism using Eclipse IDE) 
