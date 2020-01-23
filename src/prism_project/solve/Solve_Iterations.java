@@ -4489,7 +4489,7 @@ public class Solve_Iterations {
 						time_writing = (double) (time_end - time_start) / 1000;
 						
 						
-						// output_01_general input (write at the end since we need writing time)
+						// output_01_general_outputs (write at the end since we need writing time)
 						output_general_outputs_file.delete();
 						try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_general_outputs_file))) {
 							// Write variables info
@@ -4506,6 +4506,12 @@ public class Solve_Iterations {
 
 							fileOut.newLine();
 							fileOut.write(iter + "\t" + "Simplex iterations" + "\t" + cplex_iteration);
+							
+							fileOut.newLine();
+							fileOut.write(iter + "\t" + "Rolling horizon - iterating method" + "\t" + data[row][2].toString());
+							
+							fileOut.newLine();
+							fileOut.write(iter + "\t" + "Rolling horizon - loss rate within iteration" + "\t" + data[row][3].toString());
 							
 							fileOut.newLine();
 							fileOut.write(iter + "\t" + "Prism version when problem solved" + "\t" + PrismMain.get_prism_version());
@@ -5181,7 +5187,7 @@ public class Solve_Iterations {
 						time_writing = (double) (time_end - time_start) / 1000;
 						
 						
-						// output_01_general input (write at the end since we need writing time)
+						// output_01_general_outputs (write at the end since we need writing time)
 						output_general_outputs_file.delete();
 						try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_general_outputs_file))) {
 							// Write variables info
@@ -5198,6 +5204,12 @@ public class Solve_Iterations {
 
 							fileOut.newLine();
 							fileOut.write(iter + "\t" + "Simplex iterations" + "\t" + lpsolve_iteration);
+							
+							fileOut.newLine();
+							fileOut.write(iter + "\t" + "Rolling horizon - iterating method" + "\t" + data[row][2].toString());
+							
+							fileOut.newLine();
+							fileOut.write(iter + "\t" + "Rolling horizon - loss rate within iteration" + "\t" + data[row][3].toString());
 							
 							fileOut.newLine();
 							fileOut.write(iter + "\t" + "Prism version when problem solved" + "\t" + PrismMain.get_prism_version());

@@ -1233,3 +1233,6 @@ All changes in this block are associated with PrismAlpha2.0.02.jar, Prism-Formul
 	- prismplex_lib folder could now be removed from the package
 	- all .dll files of cplex nad lpsolve could be in Temporary folder of the Prism jar package (or C:\Users\Dung Nguyen\Desktop\Temporary if running Prism using Eclipse IDE) 
 520. Fix exporting outputs for LPSOLVE
+521. Add 2 more information into output_01_general_output:
+	- Rolling horizon - iterating method
+	- Rolling horizon - loss rate within iteration
