@@ -1232,3 +1232,4 @@ All changes in this block are associated with PrismAlpha2.0.02.jar, Prism-Formul
 	- cplex.jar could be in the same directory as other jar files
 	- prismplex_lib folder could now be removed from the package
 	- all .dll files of cplex nad lpsolve could be in Temporary folder of the Prism jar package (or C:\Users\Dung Nguyen\Desktop\Temporary if running Prism using Eclipse IDE) 
+520. Fix exporting outputs for LPSOLVE

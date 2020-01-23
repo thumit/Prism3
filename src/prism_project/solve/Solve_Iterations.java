@@ -42,8 +42,6 @@ import java.util.stream.Stream;
 
 import lpsolve.LpSolve;
 import lpsolve.LpSolveException;
-import prism_convenience.FilesHandle;
-import prism_convenience.LibraryHandle;
 import prism_convenience.PrismTableModel;
 import prism_database.SQLite;
 import prism_project.data_process.Information_Cost;
@@ -4814,107 +4812,172 @@ public class Solve_Iterations {
 						// output_04_management_overview
 						output_management_overview_file.delete();
 						try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_management_overview_file))) {
-							String file_header = String.join("\t", "strata_id", "layer1", "layer2", "layer3", "layer4", "layer5", "layer6", "NG_E_acres", "PB_E_acres", "GS_E_acres", "EA_E_acres", "MS_E_acres", "BS_E_acres");
+							String file_header = String.join("\t", "iteration", "NG_E", "PB_E", "GS_E", "EA_E", "MS_E",	"BS_E", "NG_R", "PB_R", "GS_R", "EA_R");
 							fileOut.write(file_header);
 							
-							for (String strata: model_strata) {
-								String[] strata_layer = strata.split("_");
-								int strata_id = Collections.binarySearch(model_strata, strata);
-								int s1 = Collections.binarySearch(layer1, strata_layer[0]);
-								int s2 = Collections.binarySearch(layer2, strata_layer[1]);
-								int s3 = Collections.binarySearch(layer3, strata_layer[2]);
-								int s4 = Collections.binarySearch(layer4, strata_layer[3]);
-								int s5 = Collections.binarySearch(layer5, strata_layer[4]);
-								int s6 = Collections.binarySearch(layer6, strata_layer[5]);	
-								// new line for each stratum
-								fileOut.newLine();
-								// write StrataID and 6 layers info
-								fileOut.write(strata + "\t" + layer1.get(s1) + "\t" + layer2.get(s2) + "\t" + layer3.get(s3) + "\t" + layer4.get(s4) + "\t" + layer5.get(s5) + "\t" + layer6.get(s6));
-								// write acres from each method
-
-								// Add sigma(i) xNGe(s1,s2,s3,s4,s5,s6)[i][1]
-								double NG_E_total_area = 0;
+							double NG_E_total_area = 0;
+							double PB_E_total_area = 0;
+							double GS_E_total_area = 0;
+							double EA_E_total_area = 0;
+							double MS_E_total_area = 0;
+							double BS_E_total_area = 0;
+							double NG_R_total_area = 0;
+							double PB_R_total_area = 0;
+							double GS_R_total_area = 0;
+							double EA_R_total_area = 0;
+							for (int strata_id = 0; strata_id < total_model_strata; strata_id++) {
+								// Add sigma(i) xNGe(s1,s2,s3,s4,s5,s6)[i][1 + iter]
 								for (int i = 0; i < total_NG_E_prescription_choices; i++) {
 									if (xNGe[strata_id][i] != null
-											&& xNGe[strata_id][i][1] > 0) {		// if variable is defined, this value would be > 0 
-										int this_var_index = xNGe[strata_id][i][1];
+											&& xNGe[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
+										int this_var_index = xNGe[strata_id][i][1 + iter];
 										NG_E_total_area = NG_E_total_area + Double.valueOf(value[this_var_index]);
 									}
 								}
-								fileOut.write("\t" + NG_E_total_area /*Double.valueOf(twoDForm.format(NG_E_total_area))*/);
-								
-								// Add sigma(i) xPBe(s1,s2,s3,s4,s5,s6)[i][1]
-								double PB_E_total_area = 0;
+						
+								// Add sigma(i) xPBe(s1,s2,s3,s4,s5,s6)[i][1 + iter]
 								for (int i = 0; i < total_PB_E_prescription_choices; i++) {
 									if (xPBe[strata_id][i] != null
-											&& xPBe[strata_id][i][1] > 0) {		// if variable is defined, this value would be > 0 
-										int this_var_index = xPBe[strata_id][i][1];
+											&& xPBe[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
+										int this_var_index = xPBe[strata_id][i][1 + iter];
 										PB_E_total_area = PB_E_total_area + Double.valueOf(value[this_var_index]);
 									}
 								}
-								fileOut.write("\t" + PB_E_total_area /*Double.valueOf(twoDForm.format(PB_E_total_area))*/);
 								
-								// Add sigma(i) xGSe(s1,s2,s3,s4,s5,s6)[i][1]
-								double GS_E_total_area = 0;
+								// Add xGSe(s1,s2,s3,s4,s5,s6)[i][1 + iter]
 								for (int i = 0; i < total_GS_E_prescription_choices; i++) {
 									if (xGSe[strata_id][i] != null
-											&& xGSe[strata_id][i][1] > 0) {		// if variable is defined, this value would be > 0 
-										int this_var_index = xGSe[strata_id][i][1];
+											&& xGSe[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
+										int this_var_index = xGSe[strata_id][i][1 + iter];
 										GS_E_total_area = GS_E_total_area + Double.valueOf(value[this_var_index]);
 									}
 								}
-								fileOut.write("\t" + GS_E_total_area /*Double.valueOf(twoDForm.format(GS_E_total_area))*/);
 								
-								double EA_E_total_area = 0;
-								// Add sigma(tR,s5R)(i) xEAe(s1,s2,s3,s4,s5,s6)[tR][s5R][i][1]	
-								for (int tR = 1; tR <= total_periods; tR++) {
+								// Add sigma(tR,s5R)(i) xEAe(s1,s2,s3,s4,s5,s6)[tR][s5R][i][1 + iter]	
+								for (int tR = 1 + iter; tR <= total_periods + iter; tR++) {
 									for (int s5R = 0; s5R < total_layer5; s5R++) {
 										for (int i = 0; i < total_EA_E_prescription_choices; i++) {
 											if (xEAe[strata_id][tR] != null 
 													&& xEAe[strata_id][tR][s5R] != null
 														&& xEAe[strata_id][tR][s5R][i] != null
-															&& xEAe[strata_id][tR][s5R][i][1] > 0) {		// if variable is defined, this value would be > 0 
-												int this_var_index = xEAe[strata_id][tR][s5R][i][1];
+															&& xEAe[strata_id][tR][s5R][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
+												int this_var_index = xEAe[strata_id][tR][s5R][i][1 + iter];
 												EA_E_total_area = EA_E_total_area + Double.valueOf(value[this_var_index]);
 											}
 										}
 									}	
 								}
-								fileOut.write("\t" + EA_E_total_area /*Double.valueOf(twoDForm.format(EA_E_total_area))*/);
 								
-								// Add sigma(i) xMS(s1,s2,s3,s4,s5,s6)[i][1]
-								double MS_E_total_area = 0;
+								// Add sigma(i) xMS(s1,s2,s3,s4,s5,s6)[i][1 + iter]
 								if (xMS[strata_id] != null) {		// only MS_E and BS_E might have null at this point and we need to check
 									for (int i = 0; i < total_MS_E_prescription_choices; i++) {
 										if (xMS[strata_id][i] != null 
-												&& xMS[strata_id][i][1] > 0) {		// if variable is defined, this value would be > 0 
-											int this_var_index = xMS[strata_id][i][1];
+												&& xMS[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
+											int this_var_index = xMS[strata_id][i][1 + iter];
 											MS_E_total_area = MS_E_total_area + Double.valueOf(value[this_var_index]);
 										}
 									}
 								}
-								fileOut.write("\t" + MS_E_total_area /*Double.valueOf(twoDForm.format(MS_E_total_area))*/);
 								
-								// Add sigma(i) xBS(s1,s2,s3,s4,s5,s6)[i][1]
-								double BS_E_total_area = 0;
+								// Add sigma(i) xBS(s1,s2,s3,s4,s5,s6)[i][1 + iter]
 								if (xBS[strata_id] != null) {		// only MS_E and BS_E might have null at this point and we need to check
 									for (int i = 0; i < total_BS_E_prescription_choices; i++) {
 										if (xBS[strata_id][i] != null 
-												&& xBS[strata_id][i][1] > 0) {		// if variable is defined, this value would be > 0 
-											int this_var_index = xBS[strata_id][i][1];
+												&& xBS[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
+											int this_var_index = xBS[strata_id][i][1 + iter];
 											BS_E_total_area = BS_E_total_area + Double.valueOf(value[this_var_index]);
 										}
 									}
 								}
-								fileOut.write("\t" + BS_E_total_area /*Double.valueOf(twoDForm.format(BS_E_total_area))*/);
-							}												
+							}														
+								
+							// Add Regenerated variables
+							for (int strata_5layers_id = 0; strata_5layers_id < total_model_strata_without_sizeclass; strata_5layers_id++) {
+								String strata_5layers = model_strata_without_sizeclass.get(strata_5layers_id);
+								int s5 = Collections.binarySearch(layer5, strata_5layers.split("_")[4]);
+						
+								// xNGr
+								for (int i = 0; i < total_NG_R_prescription_choices; i++) {
+									int t = 1 + iter;
+									for (int a = 1; a <= t - 1; a++) {
+										if(xNGr[strata_5layers_id][i] != null
+												&& xNGr[strata_5layers_id][i][1 + iter] != null
+														&& xNGr[strata_5layers_id][i][1 + iter][a] > 0) {		// if variable is defined, this value would be > 0 
+											int this_var_index = xNGr[strata_5layers_id][i][1 + iter][a];
+											NG_R_total_area = NG_R_total_area + Double.valueOf(value[this_var_index]);
+										}
+									}
+								}
+							
+								// xPBr
+								for (int i = 0; i < total_PB_R_prescription_choices; i++) {
+									int t = 1 + iter;
+									for (int a = 1; a <= t - 1; a++) {
+										if(xPBr[strata_5layers_id][i] != null
+												&& xPBr[strata_5layers_id][i][1 + iter] != null
+														&& xPBr[strata_5layers_id][i][1 + iter][a] > 0) {		// if variable is defined, this value would be > 0 
+											int this_var_index = xPBr[strata_5layers_id][i][1 + iter][a];
+											PB_R_total_area = PB_R_total_area + Double.valueOf(value[this_var_index]);
+										}
+									}
+								}
+								
+								// xGSr
+								for (int i = 0; i < total_GS_R_prescription_choices; i++) {
+									int t = 1 + iter;
+									for (int a = 1; a <= t - 1; a++) {
+										if(xGSr[strata_5layers_id][i] != null
+												&& xGSr[strata_5layers_id][i][1 + iter] != null
+														&& xGSr[strata_5layers_id][i][1 + iter][a] > 0) {		// if variable is defined, this value would be > 0 
+											int this_var_index = xGSr[strata_5layers_id][i][1 + iter][a];
+											GS_R_total_area = GS_R_total_area + Double.valueOf(value[this_var_index]);
+										}
+									}
+								}
+								
+								// xEAr
+								int t_regen = (iter == 0) ? 2 : 1;	// this is because iteration 0 could not have regenerated forest in period 1, but iterations >= 1 do have regenerated forest strata
+								for (int tR = t_regen + iter; tR <= total_periods + iter; tR++) {
+									for (int aR = 1; aR <= tR-1; aR++) {									
+										for (int s5R = 0; s5R < total_layer5; s5R++) {
+											for (int i = 0; i < total_EA_R_prescription_choices; i++) {
+												if(xEAr[strata_5layers_id][tR] != null
+														 && xEAr[strata_5layers_id][tR][aR] != null
+																 && xEAr[strata_5layers_id][tR][aR][s5R] != null
+																		 && xEAr[strata_5layers_id][tR][aR][s5R][i] != null
+																				 && xEAr[strata_5layers_id][tR][aR][s5R][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
+													int this_var_index = xEAr[strata_5layers_id][tR][aR][s5R][i][1 + iter];
+													EA_R_total_area = EA_R_total_area + Double.valueOf(value[this_var_index]);
+												}
+											}
+										}
+									}
+								}
+							}
+							
+							fileOut.write("\n" + iter);
+							fileOut.write("\t" + NG_E_total_area /*Double.valueOf(twoDForm.format(NG_E_total_area))*/);
+							fileOut.write("\t" + PB_E_total_area /*Double.valueOf(twoDForm.format(PB_E_total_area))*/);
+							fileOut.write("\t" + GS_E_total_area /*Double.valueOf(twoDForm.format(GS_E_total_area))*/);
+							fileOut.write("\t" + EA_E_total_area /*Double.valueOf(twoDForm.format(EA_E_total_area))*/);
+							fileOut.write("\t" + MS_E_total_area /*Double.valueOf(twoDForm.format(MS_E_total_area))*/);
+							fileOut.write("\t" + BS_E_total_area /*Double.valueOf(twoDForm.format(BS_E_total_area))*/);
+							fileOut.write("\t" + NG_R_total_area /*Double.valueOf(twoDForm.format(NG_R_total_area))*/);
+							fileOut.write("\t" + PB_R_total_area /*Double.valueOf(twoDForm.format(PB_R_total_area))*/);
+							fileOut.write("\t" + GS_R_total_area /*Double.valueOf(twoDForm.format(GS_R_total_area))*/);
+							fileOut.write("\t" + EA_R_total_area /*Double.valueOf(twoDForm.format(EA_R_total_area))*/);
+								
 							fileOut.close();
 							xNGe = null;			// Clear arrays not used any more
 							xPBe = null;			// Clear arrays not used any more
 							xGSe = null;			// Clear arrays not used any more
 							xEAe = null;			// Clear arrays not used any more
-							xMS = null;			// Clear arrays not used any more
-							xBS = null;			// Clear arrays not used any more
+							xMS = null;				// Clear arrays not used any more
+							xBS = null;				// Clear arrays not used any more
+							xNGr = null;			// Clear arrays not used any more
+							xPBr = null;			// Clear arrays not used any more
+							xGSr = null;			// Clear arrays not used any more
+							xEAr = null;			// Clear arrays not used any more
 						} catch (IOException e) {
 							System.err.println("Panel Solve Runs - FileWriter(output_management_overview_file) error - " + e.getClass().getName() + ": " + e.getMessage());
 						}
@@ -5066,7 +5129,7 @@ public class Solve_Iterations {
 										}	
 									}
 		
-									fileOut.write(var_id + "\t" + vname[var_id] + "\t" + value[var_id]  + "\t" + reduceCost[var_id + 1] + "\t" + total_penalty);		// because index starts from 1 not 0:    http://lpsolve.sourceforge.net/5.0/get_sensitivity_rhs.htm
+									fileOut.write(var_id + "\t" + vname[var_id] + "\t" + value[var_id]  + "\t" + reduceCost[var_id] + "\t" + total_penalty);
 								}
 								fileOut.close();
 							} catch (IOException e) {
@@ -5080,12 +5143,12 @@ public class Solve_Iterations {
 						if (flow_set_list.size() > 0) {		// write flow constraints if there is at least a flow set
 							output_flow_constraints_file.delete();
 							try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_flow_constraints_file))) {
-								String file_header = String.join("\t", "flow_id", "flow_description", "flow_arrangement", "flow_type", "lowerbound_percentage", "upperbound_percentage", "flow_output_original");
+								String file_header = String.join("\t", "iteration", "flow_id", "flow_description", "flow_arrangement", "flow_type", "lowerbound_percentage", "upperbound_percentage", "flow_output_original");
 								fileOut.write(file_header);
 								
 								// add constraints for each flow set
 								for (int i = 0; i < flow_set_list.size(); i++) {		// loop each flow set (or each row of the flow_constraints_table)								
-									String temp = flow_id_list.get(i) + "\t" + flow_description_list.get(i) + "\t"
+									String temp = iter + "\t" + flow_id_list.get(i) + "\t" + flow_description_list.get(i) + "\t"
 											+ flow_arrangement_list.get(i) + "\t" + flow_type_list.get(i) + "\t"
 											+ flow_lowerbound_percentage_list.get(i) + "\t" + flow_upperbound_percentage_list.get(i) + "\t";
 											
@@ -5122,55 +5185,55 @@ public class Solve_Iterations {
 						output_general_outputs_file.delete();
 						try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_general_outputs_file))) {
 							// Write variables info
-							fileOut.write("description" + "\t" + "value");
+							fileOut.write("iteration" + "\t" + "description" + "\t" + "value");
 
 							fileOut.newLine();
-							fileOut.write("Optimization solver" + "\t" + "LPSOLVE");
+							fileOut.write(iter + "\t" + "Optimization solver" + "\t" + "LPSOLVE");
 
 							fileOut.newLine();
-							fileOut.write("Solution status" + "\t" + lpsolve_status);
+							fileOut.write(iter + "\t" + "Solution status" + "\t" + lpsolve_status);
 
 							fileOut.newLine();
-							fileOut.write("Solution algorithm" + "\t" + lpsolve_algorithm);
+							fileOut.write(iter + "\t" + "Solution algorithm" + "\t" + lpsolve_algorithm);
 
 							fileOut.newLine();
-							fileOut.write("Simplex iterations" + "\t" + lpsolve_iteration);
+							fileOut.write(iter + "\t" + "Simplex iterations" + "\t" + lpsolve_iteration);
 							
 							fileOut.newLine();
-							fileOut.write("Prism version when problem solved" + "\t" + PrismMain.get_prism_version());
+							fileOut.write(iter + "\t" + "Prism version when problem solved" + "\t" + PrismMain.get_prism_version());
 							
 							fileOut.newLine();
-							fileOut.write("Date & time problem solved" + "\t" + dateFormat.format(new Date()));
+							fileOut.write(iter + "\t" + "Date & time problem solved" + "\t" + dateFormat.format(new Date()));
 							
 							fileOut.newLine();
 							if ((int) (time_reading / 60) == 0) {
-								fileOut.write("Time reading (minutes & seconds)" + "\t" + Double.valueOf(twoDForm.format(time_reading % 60)) + "s");
+								fileOut.write(iter + "\t" + "Time reading (minutes & seconds)" + "\t" + Double.valueOf(twoDForm.format(time_reading % 60)) + "s");
 							} else {
-								fileOut.write("Time reading (minutes & seconds)" + "\t" + (int) (time_reading / 60) + "m" + Double.valueOf(twoDForm.format(time_reading % 60)) + "s");
+								fileOut.write(iter + "\t" + "Time reading (minutes & seconds)" + "\t" + (int) (time_reading / 60) + "m" + Double.valueOf(twoDForm.format(time_reading % 60)) + "s");
 							}
 										
 							fileOut.newLine();
 							if ((int) (time_solving / 60) == 0) {
-								fileOut.write("Time solving (minutes & seconds)" + "\t" + Double.valueOf(twoDForm.format(time_solving % 60)) + "s");
+								fileOut.write(iter + "\t" + "Time solving (minutes & seconds)" + "\t" + Double.valueOf(twoDForm.format(time_solving % 60)) + "s");
 							} else {
-								fileOut.write("Time solving (minutes & seconds)" + "\t" + (int) (time_solving / 60) + "m" + Double.valueOf(twoDForm.format(time_solving % 60)) + "s");
+								fileOut.write(iter + "\t" + "Time solving (minutes & seconds)" + "\t" + (int) (time_solving / 60) + "m" + Double.valueOf(twoDForm.format(time_solving % 60)) + "s");
 							}
 							
 							fileOut.newLine();
 							if ((int) (time_writing / 60) == 0) {
-								fileOut.write("Time writing (minutes & seconds)" + "\t" + Double.valueOf(twoDForm.format(time_writing % 60)) + "s");
+								fileOut.write(iter + "\t" + "Time writing (minutes & seconds)" + "\t" + Double.valueOf(twoDForm.format(time_writing % 60)) + "s");
 							} else {
-								fileOut.write("Time writing (minutes & seconds)" + "\t" + (int) (time_writing / 60) + "m" + Double.valueOf(twoDForm.format(time_writing % 60)) + "s");	
+								fileOut.write(iter + "\t" + "Time writing (minutes & seconds)" + "\t" + (int) (time_writing / 60) + "m" + Double.valueOf(twoDForm.format(time_writing % 60)) + "s");	
 							}
 
 							fileOut.newLine();
-							fileOut.write("Total variables" + "\t" + lpsolve_total_variables);
+							fileOut.write(iter + "\t" + "Total variables" + "\t" + lpsolve_total_variables);
 
 							fileOut.newLine();
-							fileOut.write("Total constraints" + "\t" + lpsolve_total_constraints);
+							fileOut.write(iter + "\t" + "Total constraints" + "\t" + lpsolve_total_constraints);
 
 							fileOut.newLine();
-							fileOut.write("Objective value" + "\t" + Double.valueOf(twoDForm.format(objective_value)));
+							fileOut.write(iter + "\t" + "Objective value" + "\t" + Double.valueOf(twoDForm.format(objective_value)));
 
 							fileOut.close();
 						} catch (IOException e) {
