@@ -24,6 +24,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
+import prism_database.SQLite;
+
 public class Summarize_Outputs {
 	File runFolder;
 	int current_iteration;
@@ -54,7 +56,7 @@ public class Summarize_Outputs {
 //			output_variables_file[iter] = new File(runFolder.getAbsolutePath() + "/output_02_variables_" + iter + ".txt");
 //			output_constraints_file[iter] = new File(runFolder.getAbsolutePath() + "/output_03_constraints_" + iter + ".txt");	
 			output_management_overview_file[iter] = new File(runFolder.getAbsolutePath() + "/output_04_management_overview_" + iter + ".txt");
-//			output_management_details_file[iter] = new File(runFolder.getAbsolutePath() + "/output_05_management_details_" + iter + ".txt");	
+			output_management_details_file[iter] = new File(runFolder.getAbsolutePath() + "/output_05_management_details_" + iter + ".txt");	
 //			output_fly_constraints_file[iter] = new File(runFolder.getAbsolutePath() + "/output_05_fly_constraints_" + iter + ".txt");	
 			output_basic_constraints_file[iter] = new File(runFolder.getAbsolutePath() + "/output_06_basic_constraints_" + iter + ".txt");
 			output_flow_constraints_file[iter] = new File(runFolder.getAbsolutePath() + "/output_07_flow_constraints_" + iter + ".txt");
@@ -63,6 +65,13 @@ public class Summarize_Outputs {
 		summarize_output_01();	// this would export this output into a different format
 //		summarize_output_by_union(output_general_outputs_file, "summarize_output_01_general_outputs_v2.txt");
 		summarize_output_by_union(output_management_overview_file, "summarize_output_04_management_overview.txt");
+		summarize_output_by_union(output_management_details_file, "summarize_output_05_management_details.txt");
+		
+		// create a table inside the database.db
+		File summarize_output_management_details_file = new File(runFolder.getAbsolutePath() + "/summarize_output_05_management_details.txt");
+		File file_database = new File(runFolder.getAbsolutePath() + "/database.db");
+		SQLite.import_file_as_table_into_database(summarize_output_management_details_file, file_database);
+		
 		if (output_flow_constraints_file[current_iteration].exists()) summarize_output_by_union(output_flow_constraints_file, "summarize_output_07_flow_constraints.txt");
 		if (output_basic_constraints_file[current_iteration].exists()) summarize_output_06();	// this would export this output into a different format
 	}

@@ -4295,11 +4295,11 @@ public class Solve_Iterations {
 						// output_05_management_details
 						output_management_details_file.delete();
 						try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_management_details_file))) {
-							fileOut.write("var_id" + "\t" + "var_name" + "\t" + "var_value" + "\t" + "var_reduced_cost" + "\t");
+							fileOut.write("iteration" + "\t" + "var_id" + "\t" + "var_name" + "\t" + "var_value" + "\t" + "var_reduced_cost" + "\t" + "loss_rate_total" + "\t");
 							
 							for (int k = 0; k < total_replacing_disturbances; k++) {
 								int disturbance_index = k + 1;
-					        	String disturbance_name = (disturbance_index < 10) ? ("percentage_SR_0" + disturbance_index) : "percentage_SR_" + disturbance_index;
+					        	String disturbance_name = (disturbance_index < 10) ? ("loss_rate_SR_0" + disturbance_index) : "loss_rate_SR_" + disturbance_index;
 					        	fileOut.write(disturbance_name + "\t");
 					        }
 							
@@ -4331,7 +4331,7 @@ public class Solve_Iterations {
 									}
 
 									fileOut.newLine();
-									fileOut.write(i + "\t" + vname[i] 
+									fileOut.write(iter + "\t" + i + "\t" + vname[i] 
 											+ "\t" + Double.valueOf(value[i] /*Double.valueOf(twoDForm.format(value[i])*/)
 											+ "\t" + Double.valueOf(reduceCost[i + 1])); /*Double.valueOf(twoDForm.format(reduceCost[i]))*/ 	// because index starts from 1 not 0:    http://lpsolve.sourceforge.net/5.0/get_sensitivity_rhs.htm
 									
@@ -4340,6 +4340,11 @@ public class Solve_Iterations {
 									double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
 									double[][] loss_rate_std = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_std_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
 									double[][] user_loss_rate = get_stochastic_loss_rate_from_loss_rate_mean_and_loss_rate_std(user_chosen_loss_rate, loss_rate_mean, loss_rate_std, var_index, map_var_index_to_user_chosen_loss_rate);
+									double total_loss_rate = 0;
+									for (int k = 0; k < total_replacing_disturbances; k++) {
+										total_loss_rate = total_loss_rate + user_loss_rate[k][s5];
+									}
+									fileOut.write("\t" + Double.valueOf(total_loss_rate));
 									for (int k = 0; k < total_replacing_disturbances; k++) {
 										fileOut.write("\t" + Double.valueOf(user_loss_rate[k][s5]));
 									}
@@ -4373,12 +4378,7 @@ public class Solve_Iterations {
 							System.err.println("Panel Solve Runs - FileWriter(output_management_details_file) error - " + e.getClass().getName() + ": " + e.getMessage());
 						}
 						output_management_details_file.createNewFile();
-						
-						// create a table inside the database.db
-						SQLite.import_file_as_table_into_database(output_management_details_file, file_database);
-						
-						// fly_constraints --> don't need to create this file. Just clear query_value if this file exists
-						clear_query_value_for_fly_constraints(output_fly_constraints_file);		
+						clear_query_value_for_fly_constraints(output_fly_constraints_file);		// fly_constraints --> don't need to create this file. Just clear query_value if this file exists
 						
 						
 						// output_06_basic_constraints

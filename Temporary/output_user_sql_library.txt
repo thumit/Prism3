@@ -131,3 +131,57 @@ Select var_name, var_unit_management_cost from output_05_management_details
 all
 select * from output_05_management_details
 ----------
+test summarize loss rate from all iteartions - iterration 1st
+SELECT iteration, period, sr_area
+FROM
+
+
+(SELECT 
+CAST(iteration AS DECIMAL) as iteration, 
+CAST(var_period AS DECIMAL) as period, 
+ROUND(SUM(var_value*loss_rate_total/100), 1) as sr_area
+FROM summarize_output_05_management_details
+GROUP BY (iteration || period)
+)
+
+
+ORDER BY iteration, period
+----------
+test summarize loss rate from all iteartions - period 1st
+SELECT period, iteration, sr_area
+FROM
+
+
+(SELECT 
+CAST(iteration AS DECIMAL) as iteration, 
+CAST(var_period AS DECIMAL) as period, 
+ROUND(SUM(var_value*loss_rate_total/100), 1) as sr_area
+FROM summarize_output_05_management_details
+GROUP BY (iteration || period)
+)
+
+
+ORDER BY period, iteration
+----------
+test summarize loss area for all methods
+SELECT iteration, period,
+SUM(CASE WHEN t.method = 'NG' THEN t.grouped_area END) AS NG_area,
+SUM(CASE WHEN t.method = 'PB' THEN t.grouped_area END) AS PB_area,
+SUM(CASE WHEN t.method = 'GS' THEN t.grouped_area END) AS GS_area,
+SUM(CASE WHEN t.method = 'EA' THEN t.grouped_area END) AS EA_area,
+SUM(CASE WHEN t.method = 'MS' THEN t.grouped_area END) AS MS_area,
+SUM(CASE WHEN t.method = 'BS' THEN t.grouped_area END) AS BS_area
+FROM
+
+
+(SELECT 
+CAST(iteration AS DECIMAL) as iteration,
+CAST(var_period AS DECIMAL) as period,
+var_method as method, ROUND(SUM(var_value*loss_rate_total/100), 1) as grouped_area
+FROM summarize_output_05_management_details
+GROUP BY iteration, (period || method)
+) AS t
+
+
+GROUP BY iteration, period
+----------

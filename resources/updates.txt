@@ -1240,3 +1240,7 @@ All changes in this block are associated with PrismAlpha2.0.03.jar, Prism-Formul
 	- Rolling horizon - loss rate within iteration
 All changes in this block are associated with PrismAlpha2.0.04.jar, Prism-Formulation-10.docx, Rolling-horizon-formulation-07.docx
 --------------------------------------------------------------------------
+522. SQL Mode update
+	- output_05 is now have 2 more information added: iteration, loss_rate_total
+	- output_05 is now not exported as table into database for the summary file only, data from specific iterations are excluded
+	- show SQL Mode when the file summarize_output_05_management_details.txt is selected

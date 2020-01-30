@@ -534,7 +534,7 @@ public class Panel_Project extends JLayeredPane {
 							scrollPane_Right.setViewportView(chart_panel);
 						} 
 						
-						else if (currentInputFile.equals("output_05_management_details.txt")) {	
+						else if (currentInputFile.equals("summarize_output_05_management_details.txt")) {	
 						    Thread thread_management_details = new Thread() {			// Make a thread for output5
 								public void run() {
 									is_output_05_processing = true;
