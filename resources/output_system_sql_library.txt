@@ -746,44 +746,65 @@ GROUP BY iteration, period, activity
 -----------------------------------------------------------ACTIVITY---------------------------------------------------------
 
 ----------
-4.0. positive activity (excluding "no-action", full details)
+5.0. first period positive activity (excluding "no-action", full details)
 SELECT *
 
-FROM output_05_management_details
+FROM summarize_output_05_management_details
+INNER JOIN yield_tables
+ON 
+summarize_output_05_management_details.prescription = yield_tables.prescription 
+AND 
+summarize_output_05_management_details.row_id = yield_tables.row_id
+
+WHERE action_type NOT LIKE 'no-action' AND var_period = 1
+ORDER BY CAST(iteration AS DECIMAL), CAST(var_id AS DECIMAL)
+----------
+5.1. fisrt period positive activity (excluding "no-action", less details)
+SELECT 
+iteration, var_layer1 as layer1, var_layer2 as layer2, var_layer3 as layer3, var_layer4 as layer4,var_layer5 as layer5, var_layer6 as layer6, var_forest_status as forest_status, yield_tables.age_class as forest_age_class,
+yield_tables.prescription, yield_tables.row_id, var_method as method, action_type as activity, ROUND(var_value, 1) as management_area, 
+ROUND(var_value*loss_rate_total/100, 1) as disturbance_area,
+ROUND(var_value*rmcuft, 1) as harvest_volume,
+ROUND(var_value*var_unit_management_cost, 1) as total_cost
+
+FROM summarize_output_05_management_details
+INNER JOIN yield_tables
+ON 
+summarize_output_05_management_details.prescription = yield_tables.prescription 
+AND 
+summarize_output_05_management_details.row_id = yield_tables.row_id
+
+WHERE action_type NOT LIKE 'no-action' AND var_period = 1
+ORDER BY CAST(iteration AS DECIMAL), forest_status, layer1, layer2, layer3, layer4, layer5, layer6, CAST(forest_age_class AS DECIMAL), method, activity
+----------
+5.2. positive activity (excluding "no-action", full details)
+SELECT *
+
+FROM summarize_output_05_management_details
+INNER JOIN yield_tables
+ON 
+summarize_output_05_management_details.prescription = yield_tables.prescription 
+AND 
+summarize_output_05_management_details.row_id = yield_tables.row_id
 
 WHERE action_type NOT LIKE 'no-action'
+ORDER BY CAST(iteration AS DECIMAL), CAST(var_id AS DECIMAL)
 ----------
-4.1. positive activity (excluding "no-action", less details)
-SELECT var_layer1 as layer1, var_layer2 as layer2, var_layer3 as layer3, var_layer4 as layer4,var_layer5 as layer5, var_layer6 as layer6, var_forest_status as forest_status, age_class as forest_age, var_period as period, prescription, row_id, var_method as method, action_type as activity, ROUND(var_value, 1) as area
+5.3. positive activity (excluding "no-action", less details)
+SELECT 
+iteration, var_layer1 as layer1, var_layer2 as layer2, var_layer3 as layer3, var_layer4 as layer4,var_layer5 as layer5, var_layer6 as layer6, var_forest_status as forest_status, yield_tables.age_class as forest_age_class,
+yield_tables.prescription, yield_tables.row_id, var_period as period, var_method as method, action_type as activity, ROUND(var_value, 1) as management_area, 
+ROUND(var_value*loss_rate_total/100, 1) as disturbance_area,
+ROUND(var_value*rmcuft, 1) as harvest_volume,
+ROUND(var_value*var_unit_management_cost, 1) as total_cost
 
-FROM output_05_management_details
+FROM summarize_output_05_management_details
+INNER JOIN yield_tables
+ON 
+summarize_output_05_management_details.prescription = yield_tables.prescription 
+AND 
+summarize_output_05_management_details.row_id = yield_tables.row_id
 
 WHERE action_type NOT LIKE 'no-action'
-----------
-4.2. harvested volume by attributes of Existing & Regeneration strata
-SELECT var_layer1 as layer1, var_layer2 as layer2, var_layer3 as layer3, var_layer4 as layer4,var_layer5 as layer5, var_layer6 as layer6, var_forest_status as forest_status, age_class as forest_age, var_period as period, prescription, row_id, var_method as method, action_type as activity, ROUND(var_value, 1) as area, ROUND(var_value*rmcuft, 1) as volume
-
-FROM output_05_management_details
-
-WHERE CAST(volume AS DECIMAL) > 0
-
-ORDER BY forest_status, CAST(period AS DECIMAL), method, activity, layer1, layer2, layer3, layer4, layer5, layer6
-----------
-4.3. harvested volume by attributes of Existing strata
-SELECT var_layer1 as layer1, var_layer2 as layer2, var_layer3 as layer3, var_layer4 as layer4,var_layer5 as layer5, var_layer6 as layer6, var_forest_status as forest_status, age_class as forest_age, var_period as period, prescription, row_id, var_method as method, action_type as activity, ROUND(var_value, 1) as area, ROUND(var_value*rmcuft, 1) as volume
-
-FROM output_05_management_details
-
-WHERE CAST(volume AS DECIMAL) > 0 AND forest_status = 'E'
-
-ORDER BY forest_status, CAST(period AS DECIMAL), method, activity, layer1, layer2, layer3, layer4, layer5, layer6
-----------
-4.4. harvested volume by attributes of Regeneration strata
-SELECT var_layer1 as layer1, var_layer2 as layer2, var_layer3 as layer3, var_layer4 as layer4,var_layer5 as layer5, var_layer6 as layer6, var_forest_status as forest_status, age_class as forest_age, var_period as period, prescription, row_id, var_method as method, action_type as activity, ROUND(var_value, 1) as area, ROUND(var_value*rmcuft, 1) as volume
-
-FROM output_05_management_details
-
-WHERE CAST(volume AS DECIMAL) > 0 AND forest_status = 'R'
-
-ORDER BY forest_status, CAST(period AS DECIMAL), method, activity, layer1, layer2, layer3, layer4, layer5, layer6
+ORDER BY CAST(iteration AS DECIMAL), CAST(period AS DECIMAL), forest_status, layer1, layer2, layer3, layer4, layer5, layer6, CAST(forest_age_class AS DECIMAL), method, activity
 ----------
