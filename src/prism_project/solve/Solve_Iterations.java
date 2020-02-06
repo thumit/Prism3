@@ -881,17 +881,11 @@ public class Solve_Iterations {
 				
 				// This array stores cost information
 				double[] var_cost_value = new double[vname.length];
-				for (int i = 0; i < vname.length; i++) {
-					var_cost_value[i] = -9999;		// start with -9999
-				}
 							
 				// This array stores replacing disturbances information
 				String user_chosen_loss_rate = data[row][3].toString();
 				LinkedHashMap<Integer, double[][]> map_var_index_to_user_chosen_loss_rate = new LinkedHashMap<Integer, double[][]>();	// this map var_index to the stochastic SR array[k][s5]
 				int[] var_rd_condition_id = new int[vname.length];
-				for (int i = 0; i < vname.length; i++) {
-					var_rd_condition_id[i] = -9999;		// start with -9999   This is the priority id. example we have 4 conditions --> id from 0 to 3
-				}
 				
 				// This array is all zeroes of replacing disturbance info
 				double[][] all_zeroes_2D_array = new double[total_replacing_disturbances][total_layer5];
@@ -903,6 +897,9 @@ public class Solve_Iterations {
 				
 				System.out.println("Connecting " + new DecimalFormat("###,###,###").format(nvars) + " variables to disturbance & cost logic...");
 				for (int var_index = 0; var_index < vname.length; var_index++) {
+					var_cost_value[var_index] = -9999;			// start with -9999
+					var_rd_condition_id[var_index] = -9999;		// start with -9999   This is the priority id. example we have 4 conditions --> id from 0 to 3
+					
 					Information_Variable var_info = var_info_array[var_index];
 					int[] prescription_and_row = var_info.get_prescription_id_and_row_id();
 					int var_prescription_id = prescription_and_row[0];

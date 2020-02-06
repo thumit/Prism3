@@ -73,6 +73,12 @@ public class Information_Disturbance {
 			
 	
 	public int get_rd_condition_id_for_this_var(Information_Variable var_info, int table_id_to_find, int row_id_to_find) {
+		int t = var_info.get_period();
+		int tR = var_info.get_rotation_period();
+		if (t == tR) {
+			return -9999;	// always return -9999 if there is clear cut activity
+		}
+		
 		int id = -9999;
 		if (table_id_to_find != -9999) {	// If prescription exists (not exist when table_id_to_find = -9999)						
 			if (row_id_to_find < yield_tables_values[table_id_to_find].length && row_id_to_find != -9999) { 	// If row in this prescription exists (not exists when row_id_to_find = -9999 or >= total rows in that prescription)

@@ -1244,3 +1244,5 @@ All changes in this block are associated with PrismAlpha2.0.04.jar, Prism-Formul
 	- output_05 is now have 2 more information added: iteration, loss_rate_total
 	- output_05 is now not exported as table into database for the summary file only, data from specific iterations are excluded
 	- show SQL Mode when the file summarize_output_05_management_details.txt is selected
+	- bugfixed (incorrect positive loss rate for EA variable when the activity is clear cut)
+	- 28 system queries revised for the SQL Mode of summarize_output_05_management_details
