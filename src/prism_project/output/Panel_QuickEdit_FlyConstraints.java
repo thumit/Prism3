@@ -138,16 +138,17 @@ public class Panel_QuickEdit_FlyConstraints extends JPanel {
 					for (int i : selectedRow) {
 						if (!formatedTextField.getText().isEmpty() && !formatedTextField.getText().equals(".")) {	// Only apply the changes to selected rows when the text is not empty
 							data[i][column_to_change] = Double.valueOf(formatedTextField.getText());
-							
-							// this special if then is for output05 only
-							if (column_to_change == 3) {
-								for (int iter_col = 12; iter_col < data[i].length; iter_col++) {
-		    						data[i][iter_col] = null;  // reset the "value_iteration_"
-		    					}
-							}
 						} else {
 							data[i][column_to_change] = null;
 						}
+						
+						// this special if then is for output05 only
+						if (column_to_change == 3) {
+							for (int iter_col = 12; iter_col < data[i].length; iter_col++) {
+	    						data[i][iter_col] = null;  // reset the "value_iteration_"
+	    					}
+						}
+						
 						table.addRowSelectionInterval(table.convertRowIndexToView(i), table.convertRowIndexToView(i));	// allow null to bet set
 					}
 				}
