@@ -397,13 +397,10 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			            tableColumn.getHeaderValue(), false, false, -1, column);
 				maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
 				
-				if (getColumnName(column).equals("query_description")) {
-					tableColumn.setMinWidth(400);
-					
-				} else if (getColumnName(column).startsWith("value_iteartion_")) {
-					tableColumn.setMinWidth(150);
-				} else {
+				if (column != 1) {
 					tableColumn.setPreferredWidth(maxWidth);
+				} else {
+					tableColumn.setMinWidth(140);
 				}
 				return component;
 			}
@@ -1559,10 +1556,10 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 								List<String> parameters_indexes = new ArrayList<String>(get_parameters_indexes(current_parameter_index));
 														
 								// Process all the variables in output05 and use static_identifiers to trim to get the var_name_list & var_value_list
+								List<Information_Variable> var_info = new ArrayList<Information_Variable>();
 								List<Integer> var_iter = new ArrayList<Integer>();
 								List<Double> var_value = new ArrayList<Double>();	
 								List<Double> var_cost = new ArrayList<Double>();
-								List<Information_Variable> var_info = new ArrayList<Information_Variable>();
 								
 								for (int row = 0; row < data.length; row++) {	// row = var_index (each row is a variable)
 									if (are_all_static_identifiers_matched(var_info_list.get(row), static_identifiers)) {
@@ -1572,24 +1569,9 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 										var_info.add(var_info_list.get(row));
 									}	
 								}	
-								
-								// Convert lists to 1-D arrays
-								int[] viter = new int[var_iter.size()];
-								double[] vvalue = Stream.of(var_value.toArray(new Double[var_value.size()])).mapToDouble(Double::doubleValue).toArray();
-								double[] vcost = Stream.of(var_cost.toArray(new Double[var_cost.size()])).mapToDouble(Double::doubleValue).toArray();
-								Information_Variable[] vinfo = new Information_Variable[var_info.size()];	
-								for (int var_index = 0; var_index < var_info.size(); var_index++) {
-									vinfo[var_index] = var_info.get(var_index);
-									viter[var_index] = var_iter.get(var_index);
-								}	
-								
-								var_iter = null;	// Clear the lists to save memory
-								var_value = null;	// Clear the lists to save memory
-								var_cost = null;	// Clear the lists to save memory
-								var_info = null;	// Clear the lists to save memory
 										
 								// Get the sum result and update the GUI table
-								double[] iterations_values = query_os.get_results(read_database, viter, vinfo, vvalue, vcost, multiplier, parameters_indexes, dynamic_dentifiers_column_indexes, dynamic_identifiers);
+								double[] iterations_values = query_os.get_results(read_database, var_info, var_iter, var_value, var_cost, multiplier, parameters_indexes, dynamic_dentifiers_column_indexes, dynamic_identifiers);
 								for (int iter_col = 12; iter_col < colCount9; iter_col++) {
 									int current_iter = iter_col - 12;
 		    						data9[i][iter_col] = iterations_values[current_iter];
@@ -1950,44 +1932,40 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 	
 	
 	private class Querry_Optimal_Solution {
-		
-		public Querry_Optimal_Solution() {
 
+		public Querry_Optimal_Solution() {
 		}
 
-		
-		private double[] get_results(Read_Database read_database, int[] viter, Information_Variable[] vinfo, double[] vvalue, double[] vcost, double multiplier,			// vname, vvalue, vcost are results after filtered by static_identifiers
-				 List<String> parameters_indexes_list, List<String> dynamic_dentifiers_column_indexes, List<List<String>> dynamic_identifiers) {		
+		private double[] get_results(Read_Database read_database, List<Information_Variable> var_info,
+				List<Integer> var_iter, List<Double> var_value, List<Double> var_cost, double multiplier,
+				List<String> parameters_indexes_list, List<String> dynamic_dentifiers_column_indexes,
+				List<List<String>> dynamic_identifiers) {			// var_info, var_iter, var_value, var_cost are results after filtered by static_identifiers
+			 
 			double[] sum_all = new double[total_iteration];
 			for (int iter = 0; iter < total_iteration; iter++) {
 				sum_all[iter] = 0;
 			}
-			
+
 			// CREATE CONSTRAINTS-------------------------------------------------
 			// CREATE CONSTRAINTS-------------------------------------------------
 			// CREATE CONSTRAINTS-------------------------------------------------
-			
 			Information_Parameter parameter_info = new Information_Parameter(read_database);
 			// Constraints 15	
-			for (int var_index = 0; var_index < vinfo.length; var_index++) {	// Loop all variables that were trim by the static filter already: then add to sum_all
-				// Add all relevant variables
-				String method = vinfo[var_index].get_method();
-				if (method.equals("NG") || method.equals("PB") || method.equals("GS") || method.equals("EA") || method.equals("MS") || method.equals("BS")) {	
-					double para_value = parameter_info.get_total_value(
-							vinfo[var_index].get_prescription_id_and_row_id()[0],
-							vinfo[var_index].get_prescription_id_and_row_id()[1],
-							parameters_indexes_list,
-							dynamic_dentifiers_column_indexes, 
-							dynamic_identifiers,
-							vcost[var_index]);
-					para_value = para_value * multiplier;
-					
-					// Add to sum_all
-					int iter = viter[var_index];
-					sum_all[iter] = sum_all[iter] + para_value * vvalue[var_index];
-				}	
+			for (int var_index = 0; var_index < var_info.size(); var_index++) {	// Loop all variables that were trim by the static filter already: then add to sum_all
+				// Note no need to check methods since we already have the correct method when exporting the summary file
+				double para_value = parameter_info.get_total_value(
+						var_info.get(var_index).get_prescription_id_and_row_id()[0],
+						var_info.get(var_index).get_prescription_id_and_row_id()[1],
+						parameters_indexes_list,
+						dynamic_dentifiers_column_indexes, 
+						dynamic_identifiers,
+						var_cost.get(var_index));
+				para_value = para_value * multiplier;
+				
+				// Add to sum_all
+				int iter = var_iter.get(var_index);
+				sum_all[iter] = sum_all[iter] + para_value * var_value.get(var_index);	
 			}		
-			
 			return sum_all;	
 		}			
 	}
