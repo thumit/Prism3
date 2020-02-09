@@ -140,8 +140,10 @@ public class Panel_QuickEdit_FlyConstraints extends JPanel {
 							data[i][column_to_change] = Double.valueOf(formatedTextField.getText());
 							
 							// this special if then is for output05 only
-							if (column_to_change == 3 && data[0].length == 13) {
-								data[i][12] = null;  // reset the "fc_value"
+							if (column_to_change == 3) {
+								for (int iter_col = 12; iter_col < data[i].length; iter_col++) {
+		    						data[i][iter_col] = null;  // reset the "value_iteration_"
+		    					}
 							}
 						} else {
 							data[i][column_to_change] = null;

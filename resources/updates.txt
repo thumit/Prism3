@@ -1249,3 +1249,4 @@ All changes in this block are associated with PrismAlpha2.0.04.jar, Prism-Formul
 All changes in this block are associated with PrismAlpha2.0.05.jar, Prism-Formulation-10.docx, Rolling-horizon-formulation-07.docx
 --------------------------------------------------------------------------
 524. Speed up the process of reading file into JTable by modifying in the Panel_Project and Panel_Edit_Details (Reload_Table_Info)
+525. Activate NOSQL MODE to help study optimal solutions from all the solved iterations

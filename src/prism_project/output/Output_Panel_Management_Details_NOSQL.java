@@ -34,6 +34,7 @@ import java.awt.event.MouseEvent;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -112,6 +113,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 	
 	private Read_Input read;
 	private int total_Periods;
+	private int total_iteration;
 	
 	private File file_database;
 	private Read_Database read_database;
@@ -149,7 +151,16 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 		
 		read = new Read_Input();
 		read.read_general_inputs(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_01_general_inputs.txt"));
-		total_Periods = read.get_total_periods();		
+		total_Periods = read.get_total_periods();	
+		
+		// Identify the total iterations solved
+		File[] list_files = new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun).listFiles(new FilenameFilter() {
+			@Override
+			public boolean accept(File dir, String name) {
+				return name.startsWith("output_01_general_outputs_");
+			}
+		});
+		total_iteration = list_files.length;
 		// End of set up ---------------------------------------------------------------------------			
 		
 		
@@ -293,9 +304,15 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 		//Setup the table------------------------------------------------------------	
 		if (is_table9_loaded == false) { // Create a fresh new if Load fail				
 			rowCount9 = 0;
-			colCount9 = 13;
+			colCount9 = 12 + total_iteration;
 			data9 = new Object[rowCount9][colCount9];
-			columnNames9 = new String[] {"query_id", "query_description", "query_type",  "query_multiplier", "lowerbound", "lowerbound_perunit_penalty", "upperbound", "upperbound_perunit_penalty", "parameter_index", "static_identifiers", "dynamic_identifiers", "original_dynamic_identifiers", "query_value"};	         				
+			
+			String[] name1 = new String[] {"query_id", "query_description", "query_type",  "query_multiplier", "lowerbound", "lowerbound_perunit_penalty", "upperbound", "upperbound_perunit_penalty", "parameter_index", "static_identifiers", "dynamic_identifiers", "original_dynamic_identifiers"};	         				
+			String[] name2 = new String[total_iteration];
+			for (int i = 0; i < total_iteration; i++) {
+				name2[i] = "value_iteration_" + i;
+			}
+			columnNames9 = Stream.concat(Arrays.stream(name1), Arrays.stream(name2)).toArray(String[]::new);
 		}
 					
 		
@@ -305,13 +322,13 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			public Class getColumnClass(int c) {
 				if (c == 0) return Integer.class;      //column 0 accepts only Integer
 				else if (c >= 3 && c <= 7) return Double.class;      //column 3 to 7 accept only Double values  
-				else if (c == 12) return Double.class;      //column 12 accept only Double values 
+				else if (c >= 12) return Double.class;      //column 12 accept only Double values 
 				else return String.class;				
 			}
 			
 			@Override
 			public boolean isCellEditable(int row, int col) {
-				if (col == 0 || col >= colCount9 - 5) { //  The first and the last 5 columns are un-editable
+				if (col == 0 || col >= colCount9 - 5 - total_iteration) { //  The first and the last 5 columns are un-editable
 					return false;
 				} else {
 					return true;
@@ -326,7 +343,9 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
     			} else {
     				data9[row][col] = value;
     				if (col == 3) {
-    					data9[row][12] = null;
+    					for (int iter_col = 12; iter_col < colCount9; iter_col++) {
+    						data9[row][iter_col] = null;
+    					}
     					fireTableDataChanged();		// When constraint multiplier change then this would register the change and make the selection disappear
     					table9.setRowSelectionInterval(table9.convertRowIndexToView(row), table9.convertRowIndexToView(row));			// select the row again
     				}
@@ -346,7 +365,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 								} catch (NumberFormatException e) {
 									System.err.println(e.getClass().getName() + ": " + e.getMessage() + " Fail to convert String to Integer values in create_table9");
 								}	
-							} else if ((col >= 3 && col <= 7) || col == 12) {			//Column 3 to 7 and column 12 are Double
+							} else if ((col >= 3 && col <= 7) || col >= 12) {			//Column 3 to 7 and column 12 are Double
 								try {
 									data9[row][col] = Double.valueOf(String.valueOf(data9[row][col]));
 								} catch (NumberFormatException e) {
@@ -381,7 +400,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 				if (getColumnName(column).equals("query_description")) {
 					tableColumn.setMinWidth(400);
 					
-				} else if (getColumnName(column).equals("query_value")) {
+				} else if (getColumnName(column).startsWith("value_iteartion_")) {
 					tableColumn.setMinWidth(150);
 				} else {
 					tableColumn.setPreferredWidth(maxWidth);
@@ -426,7 +445,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
         };						
 			
 		for (int i = 0; i < columnNames9.length; i++) {
-			if (table9.getColumnName(i).equals("query_value")) {	// this is query_value column
+			if (table9.getColumnName(i).startsWith("value_iteartion_")) {	// this is query_value column
         		table9.getColumnModel().getColumn(i).setCellRenderer(r);
         	} 
 		}	
@@ -1263,7 +1282,9 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 						data9[selectedRow][9] = static_identifiersScrollPanel.get_static_info_from_GUI();
 						data9[selectedRow][10] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();	
 						data9[selectedRow][11] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
-						data9[selectedRow][12] = null;
+						for (int iter_col = 12; iter_col < colCount9; iter_col++) {
+    						data9[selectedRow][iter_col] = null;
+    					}
 						model9.fireTableDataChanged();	
 						
 						// Convert the edited Row to model view and then select it 
@@ -1465,14 +1486,17 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			}		
 			
 			// Process all the variables in output05
+			int iteration_col = table.getColumn("iteration").getModelIndex();
 			int name_col = table.getColumn("var_name").getModelIndex();
 			int value_col = table.getColumn("var_value").getModelIndex();
 			int cost_col = table.getColumn("var_unit_management_cost").getModelIndex();
+			List<Integer> var_iter_list = new ArrayList<Integer>();	
 			List<Double> var_value_list = new ArrayList<Double>();	
 			List<Double> var_cost_list = new ArrayList<Double>();
 			List<Information_Variable> var_info_list = new ArrayList<Information_Variable>();
 			
 			for (int row = 0; row < data.length; row++) {	// row = var_index (each row is a variable)
+				int iter = Integer.valueOf(String.valueOf(data[row][iteration_col])); 
 				String var_name = String.valueOf(data[row][name_col]);
 				double var_value = Double.valueOf(String.valueOf(data[row][value_col]));
 				double var_cost = Double.valueOf(String.valueOf(data[row][cost_col]));
@@ -1484,9 +1508,9 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 					int strata_id = Collections.binarySearch(model_strata, strata);
 					start_age = strata_starting_age[strata_id];
 				} 
-				int iter = 0;
 				Information_Variable var_info = new Information_Variable(iter, var_name, start_age, yield_tables_names_list);
 				
+				var_iter_list.add(iter);
 				var_value_list.add(var_value);
 				var_cost_list.add(var_cost);
 				var_info_list.add(var_info);	
@@ -1535,12 +1559,14 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 								List<String> parameters_indexes = new ArrayList<String>(get_parameters_indexes(current_parameter_index));
 														
 								// Process all the variables in output05 and use static_identifiers to trim to get the var_name_list & var_value_list
+								List<Integer> var_iter = new ArrayList<Integer>();
 								List<Double> var_value = new ArrayList<Double>();	
 								List<Double> var_cost = new ArrayList<Double>();
 								List<Information_Variable> var_info = new ArrayList<Information_Variable>();
 								
 								for (int row = 0; row < data.length; row++) {	// row = var_index (each row is a variable)
 									if (are_all_static_identifiers_matched(var_info_list.get(row), static_identifiers)) {
+										var_iter.add(var_iter_list.get(row));
 										var_value.add(var_value_list.get(row));
 										var_cost.add(var_cost_list.get(row));
 										var_info.add(var_info_list.get(row));
@@ -1548,19 +1574,26 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 								}	
 								
 								// Convert lists to 1-D arrays
+								int[] viter = new int[var_iter.size()];
 								double[] vvalue = Stream.of(var_value.toArray(new Double[var_value.size()])).mapToDouble(Double::doubleValue).toArray();
 								double[] vcost = Stream.of(var_cost.toArray(new Double[var_cost.size()])).mapToDouble(Double::doubleValue).toArray();
 								Information_Variable[] vinfo = new Information_Variable[var_info.size()];	
 								for (int var_index = 0; var_index < var_info.size(); var_index++) {
 									vinfo[var_index] = var_info.get(var_index);
+									viter[var_index] = var_iter.get(var_index);
 								}	
 								
+								var_iter = null;	// Clear the lists to save memory
 								var_value = null;	// Clear the lists to save memory
-								var_cost = null;
-								var_info = null;
+								var_cost = null;	// Clear the lists to save memory
+								var_info = null;	// Clear the lists to save memory
 										
 								// Get the sum result and update the GUI table
-								data9[i][12] = query_os.get_results(read_database, vinfo, vvalue, vcost, multiplier, parameters_indexes, dynamic_dentifiers_column_indexes, dynamic_identifiers);
+								double[] iterations_values = query_os.get_results(read_database, viter, vinfo, vvalue, vcost, multiplier, parameters_indexes, dynamic_dentifiers_column_indexes, dynamic_identifiers);
+								for (int iter_col = 12; iter_col < colCount9; iter_col++) {
+									int current_iter = iter_col - 12;
+		    						data9[i][iter_col] = iterations_values[current_iter];
+		    					}
 								table9.scrollRectToVisible(new Rectangle(table9.getCellRect(table9.convertRowIndexToView(i), 0, true)));
 								
 								// Get everything show up nicely
@@ -1923,18 +1956,20 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 		}
 
 		
-		private double get_results(Read_Database read_database, Information_Variable[] vinfo, double[] vvalue, double[] vcost, double multiplier,			// vname, vvalue, vcost are results after filtered by static_identifiers
+		private double[] get_results(Read_Database read_database, int[] viter, Information_Variable[] vinfo, double[] vvalue, double[] vcost, double multiplier,			// vname, vvalue, vcost are results after filtered by static_identifiers
 				 List<String> parameters_indexes_list, List<String> dynamic_dentifiers_column_indexes, List<List<String>> dynamic_identifiers) {		
+			double[] sum_all = new double[total_iteration];
+			for (int iter = 0; iter < total_iteration; iter++) {
+				sum_all[iter] = 0;
+			}
+			
 			// CREATE CONSTRAINTS-------------------------------------------------
 			// CREATE CONSTRAINTS-------------------------------------------------
 			// CREATE CONSTRAINTS-------------------------------------------------
 			
 			Information_Parameter parameter_info = new Information_Parameter(read_database);
 			// Constraints 15	
-			double sum_all = 0;
-			
 			for (int var_index = 0; var_index < vinfo.length; var_index++) {	// Loop all variables that were trim by the static filter already: then add to sum_all
-				
 				// Add all relevant variables
 				String method = vinfo[var_index].get_method();
 				if (method.equals("NG") || method.equals("PB") || method.equals("GS") || method.equals("EA") || method.equals("MS") || method.equals("BS")) {	
@@ -1948,7 +1983,8 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 					para_value = para_value * multiplier;
 					
 					// Add to sum_all
-					sum_all = sum_all + para_value * vvalue[var_index];
+					int iter = viter[var_index];
+					sum_all[iter] = sum_all[iter] + para_value * vvalue[var_index];
 				}	
 			}		
 			
