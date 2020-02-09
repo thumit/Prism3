@@ -615,22 +615,21 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			try {
 				String delimited = "\t";		// tab delimited
 				List<String> lines_list = Files.readAllLines(Paths.get(table_file.getAbsolutePath()), StandardCharsets.UTF_8);			
-				String[] a = lines_list.toArray(new String[lines_list.size()]);					
 												
 				// Setup the table---------------------------------
-				input_columnNames = a[0].split(delimited);		//tab delimited		//Read the first row	
-				input_rowCount = a.length - 1;  // - 1st row which is the column name
+				input_columnNames = lines_list.get(0).split(delimited);		//tab delimited		//Read the first row	
+				lines_list.remove(0); 	// remove the  first line which is the column name
+				input_rowCount = lines_list.size();
 				input_colCount = input_columnNames.length;
 				input_data = new Object[input_rowCount][input_colCount];
 				
 				// Populate the input_data matrix-----------------
 				for (int row = 0; row < input_rowCount; row++) {
-					String[] rowValue = a[row + 1].split(delimited);	//tab delimited	
+					String[] rowValue = lines_list.get(row).split(delimited);	//tab delimited
 					for (int col = 0; col < input_colCount; col++) {
-						input_data[row][col] = rowValue[col];
+						input_data[row][col] = rowValue[col];		// cannot make it the same as line #478 in Panel_Project (need to understand why and fix in the future)
 					}	
 				}
-				
 				
 				
 				// The below code is for adding column "model_condition" at the ending column of the old runs so the old runs have new format (we could and should delete all the below in the future)

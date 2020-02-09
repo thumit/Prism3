@@ -472,14 +472,13 @@ public class Panel_Project extends JLayeredPane {
 							rowCount = lines_list.size();
 							colCount = columnNames.length;
 							data = new Object[rowCount][colCount];
-							String[] a = lines_list.toArray(new String[rowCount]);
 							
 							// populate the data matrix
 							for (int row = 0; row < rowCount; row++) {
-								String[] rowValue = a[row].split(delimited);	// tab delimited	
-								int total_row_elements = rowValue.length;
-								for (int col = 0; col < colCount; col++) {
-									data[row][col] = (col < total_row_elements) ? rowValue[col] : "";		// if lacking data --> fill the data with empty string
+								data[row] = lines_list.get(row).split(delimited);	// tab delimited	
+								int total_row_elements = data[row].length;
+								for (int col = total_row_elements; col < colCount; col++) {
+									data[row][col] = "";		// if lacking data --> fill the data with empty string
 								}	
 							}
 							

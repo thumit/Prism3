@@ -1248,3 +1248,4 @@ All changes in this block are associated with PrismAlpha2.0.04.jar, Prism-Formul
 523. Fix bug 116 (incorrect positive loss rate for EA variable when the activity is clear cut) by adding code to the class Information_Disturbance and modifying code in the class Solve_Iterations to capture correct rd_condition_id for the EA variables at clear-cutting period
 All changes in this block are associated with PrismAlpha2.0.05.jar, Prism-Formulation-10.docx, Rolling-horizon-formulation-07.docx
 --------------------------------------------------------------------------
+524. Speed up the process of reading file into JTable by modifying in the Panel_Project and Panel_Edit_Details (Reload_Table_Info)
