@@ -1252,3 +1252,4 @@ All changes in this block are associated with PrismAlpha2.0.05.jar, Prism-Formul
 525. Activate NOSQL MODE to help study optimal solutions from all the solved iterations
 526. In NO SQL MODE for summarize_output_05, all value_iteration_  would be reset to null when the query_multiplier is edited manually or by the Quick Edit
 527. Improve speed of calculating NOSQL queries by remove unnecessary arrays and loops, also improve UI of the NOSQL table
+528. Boost reading speed when solving models by using hashmaps for strata and strata_5layers across all the places in Solve_Iterations class

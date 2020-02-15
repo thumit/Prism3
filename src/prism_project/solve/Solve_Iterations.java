@@ -173,6 +173,14 @@ public class Solve_Iterations {
 			}
 			int	total_model_strata = model_strata.size();		
 			int	total_model_strata_without_sizeclass = model_strata_without_sizeclass.size();	
+			LinkedHashMap<String, Integer> map_strata_to_strata_id = new LinkedHashMap<String, Integer>();
+			for (int id = 0; id < total_model_strata; id++) {
+				map_strata_to_strata_id.put(model_strata.get(id), id);		// strata = key, id = value		
+			}
+			LinkedHashMap<String, Integer> map_strata_without_sizeclass_to_id = new LinkedHashMap<String, Integer>();
+			for (int id = 0; id < total_model_strata_without_sizeclass; id++) {
+				map_strata_without_sizeclass_to_id.put(model_strata_without_sizeclass.get(id), id);		// strata_without_sizeclass = key, id = value		
+			}
 			
 			// Get info: input_03_non_ea_management
 			read.populate_nonea_lists(model_strata, model_strata_without_sizeclass, all_layers);
@@ -841,7 +849,7 @@ public class Solve_Iterations {
 				for (String strata: model_strata_without_sizeclass) {
 					String[] strata_layer = strata.split("_");
 					
-					int strata_5layers_id = Collections.binarySearch(model_strata_without_sizeclass, strata);
+					int strata_5layers_id = map_strata_without_sizeclass_to_id.get(strata);
 					int s1 = Collections.binarySearch(layer1, strata_layer[0]);
 					int s2 = Collections.binarySearch(layer2, strata_layer[1]);
 					int s3 = Collections.binarySearch(layer3, strata_layer[2]);
@@ -2249,14 +2257,14 @@ public class Solve_Iterations {
 								
 								// Add existing variables ----------------------------------------------
 								for (int s6 = 0; s6 < total_layer6; s6++) {
-									String strata_name = strata_5layers + "_" + layer6.get(s6);	
-									int strata_id = Collections.binarySearch(model_strata, strata_name);
+									String strata = strata_5layers + "_" + layer6.get(s6);	
+									int strata_id = (map_strata_to_strata_id.get(strata) != null) ? map_strata_to_strata_id.get(strata) : -1;
 									if (strata_id >= 0) {		// == if model_strata.contains(strata_name)   --   strata_id = -1 means list does not contain the string
 										
 										// Add - sigma(s6)(i)	xNGe[s1][s2][s3][s4][s5][s6][i][t] 	--> : X~
 										for (int i = 0; i < total_NG_E_prescription_choices; i++) {
 											if (xNGe[strata_id][i] != null) {
-												String var_name = "xNG_E_" + strata_name + "_" + i + "_" + t;
+												String var_name = "xNG_E_" + strata + "_" + i + "_" + t;
 												if(map_var_name_to_var_rd_condition_id.get(var_name) != null && map_var_name_to_var_rd_condition_id.get(var_name) != -9999) {
 													int rd_id = map_var_name_to_var_rd_condition_id.get(var_name);
 													double[][] loss_rate_mean = disturbance_info.get_loss_rate_mean_from_rd_condition_id(rd_id);
@@ -2274,7 +2282,7 @@ public class Solve_Iterations {
 										// Add - sigma(s6)(i)	xPBe[s1][s2][s3][s4][s5][s6][i][t] 	--> : X~
 										for (int i = 0; i < total_PB_E_prescription_choices; i++) {
 											if (xPBe[strata_id][i] != null) {
-												String var_name = "xPB_E_" + strata_name + "_" + i + "_" + t;
+												String var_name = "xPB_E_" + strata + "_" + i + "_" + t;
 												if(map_var_name_to_var_rd_condition_id.get(var_name) != null && map_var_name_to_var_rd_condition_id.get(var_name) != -9999) {
 													int rd_id = map_var_name_to_var_rd_condition_id.get(var_name);
 													double[][] loss_rate_mean = disturbance_info.get_loss_rate_mean_from_rd_condition_id(rd_id);
@@ -2292,7 +2300,7 @@ public class Solve_Iterations {
 										// Add - sigma(s6)(i)	xGSe[s1][s2][s3][s4][s5][s6][i][t] 	--> : X~
 										for (int i = 0; i < total_GS_E_prescription_choices; i++) {
 											if (xGSe[strata_id][i] != null) {
-												String var_name = "xGS_E_" + strata_name + "_" + i + "_" + t;
+												String var_name = "xGS_E_" + strata + "_" + i + "_" + t;
 												if(map_var_name_to_var_rd_condition_id.get(var_name) != null && map_var_name_to_var_rd_condition_id.get(var_name) != -9999) {
 													int rd_id = map_var_name_to_var_rd_condition_id.get(var_name);
 													double[][] loss_rate_mean = disturbance_info.get_loss_rate_mean_from_rd_condition_id(rd_id);
@@ -2314,7 +2322,7 @@ public class Solve_Iterations {
 													if (xEAe[strata_id][tR][s5RR] != null)
 														for (int i = 0; i < total_EA_E_prescription_choices; i++) {	// i
 															if (xEAe[strata_id][tR][s5RR][i] != null) {
-																String var_name = "xEA_E_" + strata_name + "_" + tR + "_" + layer5.get(s5RR) + "_" + i + "_" + t;
+																String var_name = "xEA_E_" + strata + "_" + tR + "_" + layer5.get(s5RR) + "_" + i + "_" + t;
 																if(map_var_name_to_var_rd_condition_id.get(var_name) != null && map_var_name_to_var_rd_condition_id.get(var_name) != -9999) {
 																	int rd_id = map_var_name_to_var_rd_condition_id.get(var_name);
 																	double[][] loss_rate_mean = disturbance_info.get_loss_rate_mean_from_rd_condition_id(rd_id);
@@ -2335,7 +2343,7 @@ public class Solve_Iterations {
 										if (xMS[strata_id] != null) {		// only MS_E and BS_E might have null at this point and we need to check
 											for (int i = 0; i < total_MS_E_prescription_choices; i++) {
 												if (xMS[strata_id][i] != null) {
-													String var_name = "xMS_E_" + strata_name + "_" + i + "_" + t;
+													String var_name = "xMS_E_" + strata + "_" + i + "_" + t;
 													if(map_var_name_to_var_rd_condition_id.get(var_name) != null && map_var_name_to_var_rd_condition_id.get(var_name) != -9999) {
 														int rd_id = map_var_name_to_var_rd_condition_id.get(var_name);
 														double[][] loss_rate_mean = disturbance_info.get_loss_rate_mean_from_rd_condition_id(rd_id);
@@ -2355,7 +2363,7 @@ public class Solve_Iterations {
 										if (xBS[strata_id] != null) {		// only MS_E and BS_E might have null at this point and we need to check
 											for (int i = 0; i < total_BS_E_prescription_choices; i++) {
 												if (xBS[strata_id][i] != null) {
-													String var_name = "xBS_E_" + strata_name + "_" + i + "_" + t;
+													String var_name = "xBS_E_" + strata + "_" + i + "_" + t;
 													if(map_var_name_to_var_rd_condition_id.get(var_name) != null && map_var_name_to_var_rd_condition_id.get(var_name) != -9999) {
 														int rd_id = map_var_name_to_var_rd_condition_id.get(var_name);
 														double[][] loss_rate_mean = disturbance_info.get_loss_rate_mean_from_rd_condition_id(rd_id);
@@ -2497,8 +2505,8 @@ public class Solve_Iterations {
 							
 							// Add existing variables ----------------------------------------------
 							for (int s6 = 0; s6 < total_layer6; s6++) {
-								String strata_name = strata_5layers + "_" + layer6.get(s6);	
-								int strata_id = Collections.binarySearch(model_strata, strata_name);
+								String strata = strata_5layers + "_" + layer6.get(s6);	
+								int strata_id = (map_strata_to_strata_id.get(strata) != null) ? map_strata_to_strata_id.get(strata) : -1;
 								if (strata_id >= 0) {		// == if model_strata.contains(strata_name)   --   strata_id = -1 means list does not contain the string
 									
 									// Add - sigma(s6)(i)	xNGe[s1][s2][s3][s4][s5][s6][i][t]
@@ -2813,12 +2821,12 @@ public class Solve_Iterations {
 								for (int s5 = 0; s5 < total_layer5; s5++) {
 									for (int s6 = 0; s6 < total_layer6; s6++) {
 										for (int i = 0; i < total_EA_E_prescription_choices; i++) {
-											String strata_name = strata_4layers + "_" + layer5.get(s5) + "_" + layer6.get(s6);
-											int strata_id = Collections.binarySearch(model_strata, strata_name);
+											String strata = strata_4layers + "_" + layer5.get(s5) + "_" + layer6.get(s6);
+											int strata_id = (map_strata_to_strata_id.get(strata) != null) ? map_strata_to_strata_id.get(strata) : -1;
 											
 											if (strata_id >= 0) {
-												strata_name = strata_4layers + "_" + layer5.get(s5) + "_" + layer6.get(s6);
-												String var_name = "xEA_E_" + strata_name + "_" + t + "_" + layer5.get(s5R) + "_" + i + "_" + t;
+												strata = strata_4layers + "_" + layer5.get(s5) + "_" + layer6.get(s6);
+												String var_name = "xEA_E_" + strata + "_" + t + "_" + layer5.get(s5R) + "_" + i + "_" + t;
 												if (map_var_name_to_var_value.get(var_name) != null) {
 													value_of_RHS = value_of_RHS + map_var_name_to_var_value.get(var_name);
 												}
@@ -2843,8 +2851,8 @@ public class Solve_Iterations {
 								}
 								
 								
-								String strata_name = strata_4layers + "_" + layer5.get(s5R);		// = s1,s2,s3,s4,s5R
-								int strata_5layers_id = Collections.binarySearch(model_strata_without_sizeclass, strata_name);
+								String strata_5layers= strata_4layers + "_" + layer5.get(s5R);		// = s1,s2,s3,s4,s5R
+								int strata_5layers_id = (map_strata_without_sizeclass_to_id.get(strata_5layers) != null) ? map_strata_without_sizeclass_to_id.get(strata_5layers) : -1;
 						
 								// Add - sigma(i) xNGr(s1,s2,s3,s4,s5R)[i][t+1][1]
 								for (int i = 0; i < total_NG_R_prescription_choices; i++) {
@@ -2915,7 +2923,7 @@ public class Solve_Iterations {
 							// Add sigma(s5) fire(s1,s2,s3,s4,s5)[t][s5R]
 							for (int s5 = 0; s5 < total_layer5; s5++) {
 								String strata_5layers = strata_4layers + "_" + layer5.get(s5);
-								int strata_5layers_id = Collections.binarySearch(model_strata_without_sizeclass, strata_5layers);
+								int strata_5layers_id = (map_strata_without_sizeclass_to_id.get(strata_5layers) != null) ? map_strata_without_sizeclass_to_id.get(strata_5layers) : -1;
 								c13_indexlist.get(c13_num).add(fire[strata_5layers_id][t][s5R]);
 								c13_valuelist.get(c13_num).add((double) 1);
 							}
@@ -2926,8 +2934,8 @@ public class Solve_Iterations {
 							for (int s5 = 0; s5 < total_layer5; s5++) {
 								for (int s6 = 0; s6 < total_layer6; s6++) {
 									for (int i = 0; i < total_EA_E_prescription_choices; i++) {
-										String strata_name = strata_4layers + "_" + layer5.get(s5) + "_" + layer6.get(s6);
-										int strata_id = Collections.binarySearch(model_strata, strata_name);
+										String strata = strata_4layers + "_" + layer5.get(s5) + "_" + layer6.get(s6);
+										int strata_id = (map_strata_to_strata_id.get(strata) != null) ? map_strata_to_strata_id.get(strata) : -1;
 										
 										if (strata_id >= 0) {
 											if (xEAe[strata_id][t] != null 
@@ -2947,8 +2955,8 @@ public class Solve_Iterations {
 								for (int s5 = 0; s5 < total_layer5; s5++) {
 									for (int a = 1; a <= t - 1; a++) {
 										for (int i = 0; i < total_EA_R_prescription_choices; i++) {
-											String strata_name = strata_4layers + "_" + layer5.get(s5);
-											int strata_5layers_id = Collections.binarySearch(model_strata_without_sizeclass, strata_name);
+											String strata_5layers = strata_4layers + "_" + layer5.get(s5);
+											int strata_5layers_id = (map_strata_without_sizeclass_to_id.get(strata_5layers) != null) ? map_strata_without_sizeclass_to_id.get(strata_5layers) : -1;
 											
 											if(xEAr[strata_5layers_id][t] != null
 													&& xEAr[strata_5layers_id][t][a] != null
@@ -2964,8 +2972,8 @@ public class Solve_Iterations {
 							}
 							
 							
-							String strata_name = strata_4layers + "_" + layer5.get(s5R);		// = s1,s2,s3,s4,s5R
-							int strata_5layers_id = Collections.binarySearch(model_strata_without_sizeclass, strata_name);
+							String strata_5layers = strata_4layers + "_" + layer5.get(s5R);		// = s1,s2,s3,s4,s5R
+							int strata_5layers_id = (map_strata_without_sizeclass_to_id.get(strata_5layers) != null) ? map_strata_without_sizeclass_to_id.get(strata_5layers) : -1;
 					
 							// Add - sigma(i) xNGr(s1,s2,s3,s4,s5R)[i][t+1][1]
 							for (int i = 0; i < total_NG_R_prescription_choices; i++) {
@@ -3262,21 +3270,11 @@ public class Solve_Iterations {
 				
 				
 				// Constraints 15------------------------------------------------- for y(j) and z(k) and v(n)		This is equation (10) in Prism-Formulation-10
-				LinkedHashMap<String, Integer> map_strata_to_strata_id = new LinkedHashMap<String, Integer>();
-				for (int strata_id = 0; strata_id < total_model_strata; strata_id++) {
-					map_strata_to_strata_id.put(model_strata.get(strata_id), strata_id);		// strata = key, strata_id = value		
-				}
-				LinkedHashMap<String, Integer> map_strata_without_sizeclass_to_id = new LinkedHashMap<String, Integer>();
-				for (int id = 0; id < total_model_strata_without_sizeclass; id++) {
-					map_strata_without_sizeclass_to_id.put(model_strata_without_sizeclass.get(id), id);		// strata_without_sizeclass = key, id = value		
-				}
-				
 				List<List<Integer>> c15_indexlist = new ArrayList<List<Integer>>();
 				List<List<Double>> c15_valuelist = new ArrayList<List<Double>>();
 				List<Double> c15_lblist = new ArrayList<Double>();
 				List<Double> c15_ublist = new ArrayList<Double>();
 				int c15_num = 0;
-
 				int current_freeConstraint = 0;
 				int current_softConstraint = 0;
 				int current_hardConstraint = 0;	
@@ -3324,10 +3322,8 @@ public class Solve_Iterations {
 					// Add user_defined_variables and parameters------------------------------------
 					List<String> static_methods = read.get_static_methods(id);
 					List<Integer> static_periods = read.get_static_periods(id).stream().map(Integer::parseInt).collect(Collectors.toList());	// convert List<String> --> List<Integer>
-					
 					Set<String> static_strata = read.get_static_strata(id);
 					Set<String> static_strata_without_sizeclass = read.get_static_strata_without_sizeclass(id);
-					
 					int multiplier_col = constraint_column_names_list.indexOf("bc_multiplier");
 					double multiplier = (!bc_values[id][multiplier_col].equals("null")) ?  Double.parseDouble(bc_values[id][multiplier_col]) : 0;	// if multiplier = null --> 0
 								
@@ -3336,7 +3332,6 @@ public class Solve_Iterations {
 					List<String> common_strata_without_sizeclass = new ArrayList<String>(model_strata_without_sizeclass);
 					common_strata.retainAll(static_strata);
 					common_strata_without_sizeclass.retainAll(static_strata_without_sizeclass);
-					
 					
 					
 					// Add existing variables --------------------------------------------------------------
