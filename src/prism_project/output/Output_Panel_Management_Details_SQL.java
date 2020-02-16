@@ -62,7 +62,6 @@ import prism_convenience.ToolBarWithBgImage;
 import prism_database.Setting;
 
 public class Output_Panel_Management_Details_SQL extends JLayeredPane {
-	private File output_05_management_details_file;
 	private String conn_path;
 	
 	private JTable database_table;
@@ -76,12 +75,11 @@ public class Output_Panel_Management_Details_SQL extends JLayeredPane {
 	
 	public Output_Panel_Management_Details_SQL(File output_05_management_details_file, String[] columnNames, Object[][] data, JButton SQL_link_button) {
 		// Some set up -------------------------------------------------------------------------------------------------------
-		this.output_05_management_details_file = output_05_management_details_file;
 		set_up_database_table(columnNames, data);
 		conn_path = "jdbc:sqlite:" + output_05_management_details_file.getParentFile().getAbsolutePath() + "/database.db";
 		
-		
-		database_table_scrollpane = new PrismTitleScrollPane("All records of the optimal solution", "CENTER", database_table);
+		String srcoll_name = (data.length == 999) ? "First 999 records of the optimal solutions" : "All records of the optimal solutions";
+		database_table_scrollpane = new PrismTitleScrollPane(srcoll_name, "CENTER", database_table);
 		database_table_scrollpane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		database_table_scrollpane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		

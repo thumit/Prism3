@@ -470,6 +470,9 @@ public class Panel_Project extends JLayeredPane {
 							columnNames = lines_list.get(0).split(delimited);		// read the first row	
 							lines_list.remove(0); 	// remove the  first line which is the column name
 							rowCount = lines_list.size();
+							if (currentInputFile.equals("summarize_output_05_management_details.txt")) {
+								rowCount = Math.min(rowCount, 999);		// only show 999 lines
+							}
 							colCount = columnNames.length;
 							data = new Object[rowCount][colCount];
 							
@@ -574,7 +577,7 @@ public class Panel_Project extends JLayeredPane {
 											System.out.println(rr.file_database.getAbsolutePath() + rr.last_modify);
 										}
 									}
-									management_details_NOSQL_panel = new Output_Panel_Management_Details_NOSQL(executor, currentProjectFolder, currentRun, table, data, model, NoSQL_link_button);
+									management_details_NOSQL_panel = new Output_Panel_Management_Details_NOSQL(executor, currentProjectFolder, currentRun, NoSQL_link_button);
 									management_details_SQL_panel.get_btnSwitch().setEnabled(true);
 									
 									is_output_05_processing = false;

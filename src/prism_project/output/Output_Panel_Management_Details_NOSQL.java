@@ -120,20 +120,14 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 	
 	private File currentProjectFolder;
 	private String currentRun;
-	private JTable table;
-	private Object[][] data;
-	private PrismTableModel model;
 	private JButton NOSQL_link_button;
 	
 	private ExecutorService executor;
 	
-	public Output_Panel_Management_Details_NOSQL(ExecutorService executor, File currentProjectFolder, String currentRun, JTable table, Object[][] data, PrismTableModel model, JButton NOSQL_link_button) {
+	public Output_Panel_Management_Details_NOSQL(ExecutorService executor, File currentProjectFolder, String currentRun, JButton NOSQL_link_button) {
 		this.executor = executor;
 		this.currentProjectFolder = currentProjectFolder;
 		this.currentRun = currentRun;
-		this.table = table;
-		this.data = data;
-		this.model = model;
 		this.NOSQL_link_button = NOSQL_link_button;
 		
 		
@@ -1482,37 +1476,59 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 				strata_starting_age[id] = Integer.parseInt(model_strata_data[id][read.get_ms_total_columns() - 2]);	// age_class		
 			}		
 			
-			// Process all the variables in output05
-			int iteration_col = table.getColumn("iteration").getModelIndex();
-			int name_col = table.getColumn("var_name").getModelIndex();
-			int value_col = table.getColumn("var_value").getModelIndex();
-			int cost_col = table.getColumn("var_unit_management_cost").getModelIndex();
+			// Process all the variables in summarize_output_05_management_details
 			List<Integer> var_iter_list = new ArrayList<Integer>();	
 			List<Double> var_value_list = new ArrayList<Double>();	
 			List<Double> var_cost_list = new ArrayList<Double>();
 			List<Information_Variable> var_info_list = new ArrayList<Information_Variable>();
 			
-			for (int row = 0; row < data.length; row++) {	// row = var_index (each row is a variable)
-				int iter = Integer.valueOf(String.valueOf(data[row][iteration_col])); 
-				String var_name = String.valueOf(data[row][name_col]);
-				double var_value = Double.valueOf(String.valueOf(data[row][value_col]));
-				double var_cost = Double.valueOf(String.valueOf(data[row][cost_col]));
+			try {
+				File file = new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/summarize_output_05_management_details.txt");
+				List<String> lines_list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);	
+				String delimited = "\t";		// tab delimited
+				String[] columnNames = lines_list.get(0).split(delimited);		// read the first row	
+				lines_list.remove(0); 	// remove the  first line which is the column name
+				int rowCount = lines_list.size();
+				int colCount = columnNames.length;
 				
-				int start_age = -9999;
-				if (var_name.startsWith("xNG_E") || var_name.startsWith("xPB_E") || var_name.startsWith("xGS_E") || var_name.startsWith("xEA_E") || var_name.startsWith("xMS_E") || var_name.startsWith("xBS_E")) {
-					String[] var_name_split= var_name.split("_");
-					String strata = String.join("_", var_name_split[2], var_name_split[3], var_name_split[4], var_name_split[5], var_name_split[6], var_name_split[7]);		// strata = merge 6 layers by _ 
-					int strata_id = Collections.binarySearch(model_strata, strata);
-					start_age = strata_starting_age[strata_id];
-				} 
-				Information_Variable var_info = new Information_Variable(iter, var_name, start_age, yield_tables_names_list);
+				int iteration_col = -9999; 
+				int name_col = -9999; 
+				int value_col = -9999; 
+				int cost_col = -9999; 
+				for (int col = 0; col < colCount; col++) {
+					System.out.println(columnNames[col]);
+					if (columnNames[col].equals("iteration")) iteration_col = col; 
+					if (columnNames[col].equals("var_name")) name_col = col; 
+					if (columnNames[col].equals("var_value")) value_col = col; 
+					if (columnNames[col].equals("var_unit_management_cost")) cost_col = col; 
+				}	
 				
-				var_iter_list.add(iter);
-				var_value_list.add(var_value);
-				var_cost_list.add(var_cost);
-				var_info_list.add(var_info);	
-			}	
-			
+				// populate the data matrix
+				for (int row = 0; row < rowCount; row++) {
+					String[] row_value = lines_list.get(row).split(delimited);	// tab delimited	
+					
+					int iter = Integer.valueOf(row_value[iteration_col]); 
+					String var_name = row_value[name_col];
+					double var_value = Double.valueOf(row_value[value_col]);
+					double var_cost = Double.valueOf(row_value[cost_col]);
+					
+					int start_age = -9999;
+					if (var_name.startsWith("xNG_E") || var_name.startsWith("xPB_E") || var_name.startsWith("xGS_E") || var_name.startsWith("xEA_E") || var_name.startsWith("xMS_E") || var_name.startsWith("xBS_E")) {
+						String[] var_name_split = var_name.split("_");
+						String strata = String.join("_", var_name_split[2], var_name_split[3], var_name_split[4], var_name_split[5], var_name_split[6], var_name_split[7]);		// strata = merge 6 layers by _ 
+						int strata_id = Collections.binarySearch(model_strata, strata);
+						start_age = strata_starting_age[strata_id];
+					} 
+					 
+					Information_Variable var_info = new Information_Variable(iter, var_name, start_age, yield_tables_names_list);
+					var_iter_list.add(iter);
+					var_value_list.add(var_value);
+					var_cost_list.add(var_cost);
+					var_info_list.add(var_info);	
+				}
+			} catch (IOException e1) {
+				System.err.println(e1.getClass().getName() + ": " + e1.getMessage() + " - Cannot load. New interface is created");
+			}
 			Querry_Optimal_Solution query_os = new Querry_Optimal_Solution(); 
 						
 								
@@ -1561,7 +1577,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 								List<Double> var_value = new ArrayList<Double>();	
 								List<Double> var_cost = new ArrayList<Double>();
 								
-								for (int row = 0; row < data.length; row++) {	// row = var_index (each row is a variable)
+								for (int row = 0; row < var_info_list.size(); row++) {	// row = var_index (each row is a variable)
 									if (are_all_static_identifiers_matched(var_info_list.get(row), static_identifiers)) {
 										var_iter.add(var_iter_list.get(row));
 										var_value.add(var_value_list.get(row));
