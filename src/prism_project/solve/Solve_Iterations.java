@@ -62,44 +62,62 @@ public class Solve_Iterations {
 	private double time_reading, time_solving, time_writing;
 	
 	public Solve_Iterations(File runFolder, PrismTableModel model, Object[][] data, int row) {
-		try {
-			//--------------------------------------------------------------------------------------------------------------------------
-		    //--------------------------------------------------------------------------------------------------------------------------  
-		    //--------------------------------------------------DELETE SOME OUTPUTS-----------------------------------------------------
-		    //--------------------------------------------------------------------------------------------------------------------------
-		    //--------------------------------------------------------------------------------------------------------------------------
-			// Identify the last solved iteration
-			File[] list_files = runFolder.listFiles(new FilenameFilter() {
-				@Override
-				public boolean accept(File dir, String name) {
-					return name.startsWith("output_01_general_outputs_");
-				}
-			});
-			
-			int last_solved_iter = -1;	// the case of "restart"
-			if (data[row][2].equals("continue")) last_solved_iter = list_files.length - 1;
-			// Delete some outputs
-			File[] contents = runFolder.listFiles();
-			if (contents != null) {
-				for (File f : contents) {
-					// Delete all output files, problem file, and solution file, but keep the fly_constraints file
-					if ((f.getName().startsWith("output") || f.getName().startsWith("summarize") || f.getName().startsWith("problem") || f.getName().startsWith("solution")) 
-							&& !f.getName().contains("fly_constraints")) {
-						String iter_name = f.getName().substring(f.getName().lastIndexOf("_") + 1, f.getName().lastIndexOf("."));
-						try {
-							if (Integer.parseInt(iter_name) > last_solved_iter) f.delete();
-						} catch (Exception e) {
-							e.printStackTrace();
-							f.delete();		// i.e. output_01_general_outputs.txt (1.xx.xx version output) would need to be deleted so users could run old model even without set up state_id input_11
-						}
+		//--------------------------------------------------------------------------------------------------------------------------
+	    //--------------------------------------------------------------------------------------------------------------------------  
+	    //--------------------------------------------------DELETE SOME OUTPUTS-----------------------------------------------------
+	    //--------------------------------------------------------------------------------------------------------------------------
+	    //--------------------------------------------------------------------------------------------------------------------------
+		// Identify the last solved iteration
+		File[] list_files = runFolder.listFiles(new FilenameFilter() {
+			@Override
+			public boolean accept(File dir, String name) {
+				return name.startsWith("output_01_general_outputs_");
+			}
+		});
+		
+		int max_iteration = Integer.parseInt(data[row][1].toString());
+		int last_solved_iter = -1;	// the case of "restart"
+		if (data[row][2].equals("continue")) last_solved_iter = list_files.length - 1;
+		// Delete some outputs
+		File[] contents = runFolder.listFiles();
+		if (contents != null) {
+			for (File f : contents) {
+				// Delete all output files, problem file, and solution file, but keep the fly_constraints file
+				if ((f.getName().startsWith("output") || f.getName().startsWith("problem") || f.getName().startsWith("solution")) && !f.getName().contains("fly_constraints")) {
+					String iter_name = f.getName().substring(f.getName().lastIndexOf("_") + 1, f.getName().lastIndexOf("."));
+					try {
+						if (Integer.parseInt(iter_name) > max_iteration) f.delete();
+					} catch (Exception e) {
+						e.printStackTrace();
+						f.delete();		// i.e. output_01_general_outputs.txt (1.xx.xx version output) would need to be deleted so users could run old model even without set up state_id input_11
 					}
 				}
+				
+				// Delete all summarize files
+				if (f.getName().startsWith("summarize")) f.delete();
 			}
 			
-			
-			
-			
-			
+			if (last_solved_iter > max_iteration) {
+				// summarize outputs
+				try {
+					Summarize_Outputs sumamrize_output = new Summarize_Outputs(runFolder, max_iteration);
+					sumamrize_output = null;
+					data[row][4] = "successful";
+					model.fireTableDataChanged();
+					System.out.println("No more solving needed for " + data[row][1].toString() + ". Your current data have been trim");
+				} catch (Exception e) {
+					System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Panel Solve Runs   -   Fail to summarize outputs for "+ runFolder);		
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		
+		
+		
+		
+		if (last_solved_iter < max_iteration)
+		try {
 			//--------------------------------------------------------------------------------------------------------------------------
 		    //--------------------------------------------------------------------------------------------------------------------------  
 		    //--------------------------------------------------READING ALL CORE INPUTS-------------------------------------------------
@@ -244,7 +262,6 @@ public class Solve_Iterations {
 		    //---------------------------------------------------SOLVING ITERATIONS-----------------------------------------------------
 		    //--------------------------------------------------------------------------------------------------------------------------
 		    //--------------------------------------------------------------------------------------------------------------------------
-			int max_iteration = Integer.parseInt(data[row][1].toString());
 			for (int iter = last_solved_iter + 1; iter <= max_iteration; iter++) {	// Loop all iterations
 				data[row][4] = "solving iteration " + iter;
 				model.fireTableDataChanged();
