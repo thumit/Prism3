@@ -286,14 +286,6 @@ public class Panel_Project extends JLayeredPane {
 		btnRefresh.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_refresh.png"));
 		btnRefresh.setFocusable(false);
 		btnRefresh.addActionListener(e -> {
-//			is_compact_view = (is_compact_view) ? false : true;
-//			if (is_compact_view) { 
-//				btnRefresh.setToolTipText("Refresh");
-//				btnRefresh.setIcon(IconHandle.get_rotated_scaledImageIcon(25, 25, "icon_refresh.png"));
-//			} else {
-//				btnRefresh.setToolTipText("Refresh and display only summary outputs");
-//				btnRefresh.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_refresh.png"));
-//			}
 			refreshProjectTree();
 		});
 		projectToolBar.add(btnRefresh);

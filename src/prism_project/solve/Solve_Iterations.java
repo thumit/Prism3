@@ -83,7 +83,8 @@ public class Solve_Iterations {
 			if (contents != null) {
 				for (File f : contents) {
 					// Delete all output files, problem file, and solution file, but keep the fly_constraints file
-					if ((f.getName().startsWith("output") || f.getName().startsWith("problem") || f.getName().startsWith("solution")) && !f.getName().contains("fly_constraints")) {
+					if ((f.getName().startsWith("output") || f.getName().startsWith("summarize") || f.getName().startsWith("problem") || f.getName().startsWith("solution")) 
+							&& !f.getName().contains("fly_constraints")) {
 						String iter_name = f.getName().substring(f.getName().lastIndexOf("_") + 1, f.getName().lastIndexOf("."));
 						try {
 							if (Integer.parseInt(iter_name) > last_solved_iter) f.delete();

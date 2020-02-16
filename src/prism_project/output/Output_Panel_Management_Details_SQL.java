@@ -78,8 +78,8 @@ public class Output_Panel_Management_Details_SQL extends JLayeredPane {
 		set_up_database_table(columnNames, data);
 		conn_path = "jdbc:sqlite:" + output_05_management_details_file.getParentFile().getAbsolutePath() + "/database.db";
 		
-		String srcoll_name = (data.length == 999) ? "First 999 records of the optimal solutions" : "All records of the optimal solutions";
-		database_table_scrollpane = new PrismTitleScrollPane(srcoll_name, "CENTER", database_table);
+		String scroll_name = (data.length == 999) ? "First 999 records of the optimal solutions" : "All records of the optimal solutions";
+		database_table_scrollpane = new PrismTitleScrollPane(scroll_name, "CENTER", database_table);
 		database_table_scrollpane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		database_table_scrollpane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		
