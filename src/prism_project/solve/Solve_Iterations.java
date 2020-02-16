@@ -100,11 +100,12 @@ public class Solve_Iterations {
 			if (last_solved_iter > max_iteration) {
 				// summarize outputs
 				try {
+					System.out.println("No more solving needed for " + data[row][0].toString() + ".\nPrism is trimming current outputs to build final solution......");
 					Summarize_Outputs sumamrize_output = new Summarize_Outputs(runFolder, max_iteration);
 					sumamrize_output = null;
 					data[row][4] = "successful";
 					model.fireTableDataChanged();
-					System.out.println("No more solving needed for " + data[row][1].toString() + ". Your current data have been trim");
+					System.out.println("Trimming is completed!");
 				} catch (Exception e) {
 					System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Panel Solve Runs   -   Fail to summarize outputs for "+ runFolder);		
 					e.printStackTrace();
