@@ -1256,3 +1256,4 @@ All changes in this block are associated with PrismAlpha2.0.05.jar, Prism-Formul
 529. Simplify the SQL and NOSQL Modes:
 	- show maximum of 999 records if summarize_output_05 has more records,
 	- summarize_output_05 is processed faster: processed in the NOSQL Mode, only necessary data would be read and read derectly to String to avoid data conversion
+530. Boost data reading speed significantly in NOSQL Mode by preforming the whole reading process by executor.submit (before the btn_GetResult)

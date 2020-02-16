@@ -1456,79 +1456,82 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			
 			
 			
-			// Database Info
-			String[] yield_tables_names = read_database.get_yield_tables_names();			
-			List<String> yield_tables_names_list = Arrays.asList(yield_tables_names); 		// Convert array to list
-						
-			// Read input files to retrieve values later
-			Read_Input read = new Read_Input();
-			read.read_model_strata(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_02_model_strata.txt"));
-
-			// Get info: input_02_modeled_strata
-			List<String> model_strata = read.get_model_strata();
-						
-			// Get the 2 parameter V(s1,s2,s3,s4,s5,s6) and A(s1,s2,s3,s4,s5,s6)
-			String[][] model_strata_data = read.get_ms_data();	
-			double[] strata_area = new double[model_strata.size()];
-			int[] strata_starting_age = new int[model_strata.size()];			
-			for (int id = 0; id < model_strata.size(); id++) {
-				strata_area[id] = Double.parseDouble(model_strata_data[id][7]);		// area (acres)
-				strata_starting_age[id] = Integer.parseInt(model_strata_data[id][read.get_ms_total_columns() - 2]);	// age_class		
-			}		
-			
 			// Process all the variables in summarize_output_05_management_details
 			List<Integer> var_iter_list = new ArrayList<Integer>();	
 			List<Double> var_value_list = new ArrayList<Double>();	
 			List<Double> var_cost_list = new ArrayList<Double>();
 			List<Information_Variable> var_info_list = new ArrayList<Information_Variable>();
 			
-			try {
-				File file = new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/summarize_output_05_management_details.txt");
-				List<String> lines_list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);	
-				String delimited = "\t";		// tab delimited
-				String[] columnNames = lines_list.get(0).split(delimited);		// read the first row	
-				lines_list.remove(0); 	// remove the  first line which is the column name
-				int rowCount = lines_list.size();
-				int colCount = columnNames.length;
-				
-				int iteration_col = -9999; 
-				int name_col = -9999; 
-				int value_col = -9999; 
-				int cost_col = -9999; 
-				for (int col = 0; col < colCount; col++) {
-					System.out.println(columnNames[col]);
-					if (columnNames[col].equals("iteration")) iteration_col = col; 
-					if (columnNames[col].equals("var_name")) name_col = col; 
-					if (columnNames[col].equals("var_value")) value_col = col; 
-					if (columnNames[col].equals("var_unit_management_cost")) cost_col = col; 
+			
+			executor.submit(() -> {
+				// Database Info
+				String[] yield_tables_names = read_database.get_yield_tables_names();			
+				List<String> yield_tables_names_list = Arrays.asList(yield_tables_names); 		// Convert array to list
+							
+				// Read input files to retrieve values later
+				Read_Input read = new Read_Input();
+				read.read_model_strata(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_02_model_strata.txt"));
+
+				// Get info: input_02_modeled_strata
+				List<String> model_strata = read.get_model_strata();
+							
+				// Get the 2 parameter V(s1,s2,s3,s4,s5,s6) and A(s1,s2,s3,s4,s5,s6)
+				String[][] model_strata_data = read.get_ms_data();	
+				double[] strata_area = new double[model_strata.size()];
+				int[] strata_starting_age = new int[model_strata.size()];			
+				for (int id = 0; id < model_strata.size(); id++) {
+					strata_area[id] = Double.parseDouble(model_strata_data[id][7]);		// area (acres)
+					strata_starting_age[id] = Integer.parseInt(model_strata_data[id][read.get_ms_total_columns() - 2]);	// age_class		
 				}	
 				
-				// populate the data matrix
-				for (int row = 0; row < rowCount; row++) {
-					String[] row_value = lines_list.get(row).split(delimited);	// tab delimited	
+				// Read the summary file and add necessary information to the lists
+				try {
+					File file = new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/summarize_output_05_management_details.txt");
+					List<String> lines_list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);	
+					String delimited = "\t";		// tab delimited
+					String[] columnNames = lines_list.get(0).split(delimited);		// read the first row	
+					lines_list.remove(0); 	// remove the  first line which is the column name
+					int rowCount = lines_list.size();
+					int colCount = columnNames.length;
 					
-					int iter = Integer.valueOf(row_value[iteration_col]); 
-					String var_name = row_value[name_col];
-					double var_value = Double.valueOf(row_value[value_col]);
-					double var_cost = Double.valueOf(row_value[cost_col]);
+					int iteration_col = -9999; 
+					int name_col = -9999; 
+					int value_col = -9999; 
+					int cost_col = -9999; 
+					for (int col = 0; col < colCount; col++) {
+						if (columnNames[col].equals("iteration")) iteration_col = col; 
+						if (columnNames[col].equals("var_name")) name_col = col; 
+						if (columnNames[col].equals("var_value")) value_col = col; 
+						if (columnNames[col].equals("var_unit_management_cost")) cost_col = col; 
+					}	
 					
-					int start_age = -9999;
-					if (var_name.startsWith("xNG_E") || var_name.startsWith("xPB_E") || var_name.startsWith("xGS_E") || var_name.startsWith("xEA_E") || var_name.startsWith("xMS_E") || var_name.startsWith("xBS_E")) {
-						String[] var_name_split = var_name.split("_");
-						String strata = String.join("_", var_name_split[2], var_name_split[3], var_name_split[4], var_name_split[5], var_name_split[6], var_name_split[7]);		// strata = merge 6 layers by _ 
-						int strata_id = Collections.binarySearch(model_strata, strata);
-						start_age = strata_starting_age[strata_id];
-					} 
-					 
-					Information_Variable var_info = new Information_Variable(iter, var_name, start_age, yield_tables_names_list);
-					var_iter_list.add(iter);
-					var_value_list.add(var_value);
-					var_cost_list.add(var_cost);
-					var_info_list.add(var_info);	
+					// populate the data matrix
+					for (int row = 0; row < rowCount; row++) {
+						String[] row_value = lines_list.get(row).split(delimited);	// tab delimited	
+						
+						int iter = Integer.valueOf(row_value[iteration_col]); 
+						String var_name = row_value[name_col];
+						double var_value = Double.valueOf(row_value[value_col]);
+						double var_cost = Double.valueOf(row_value[cost_col]);
+						
+						int starting_age = -9999;
+						if (var_name.startsWith("xNG_E") || var_name.startsWith("xPB_E") || var_name.startsWith("xGS_E") || var_name.startsWith("xEA_E") || var_name.startsWith("xMS_E") || var_name.startsWith("xBS_E")) {
+							String[] var_name_split = var_name.split("_");
+							String strata = String.join("_", var_name_split[2], var_name_split[3], var_name_split[4], var_name_split[5], var_name_split[6], var_name_split[7]);		// strata = merge 6 layers by _ 
+							int strata_id = Collections.binarySearch(model_strata, strata);
+							starting_age = strata_starting_age[strata_id];
+						} 
+						 
+						Information_Variable var_info = new Information_Variable(iter, var_name, starting_age, yield_tables_names_list);
+						var_iter_list.add(iter);
+						var_value_list.add(var_value);
+						var_cost_list.add(var_cost);
+						var_info_list.add(var_info);	
+					}
+				} catch (IOException e1) {
+					System.err.println(e1.getClass().getName() + ": " + e1.getMessage() + " - Reading data fail in NOSQL MODE");
 				}
-			} catch (IOException e1) {
-				System.err.println(e1.getClass().getName() + ": " + e1.getMessage() + " - Cannot load. New interface is created");
-			}
+			});
 			Querry_Optimal_Solution query_os = new Querry_Optimal_Solution(); 
 						
 								
