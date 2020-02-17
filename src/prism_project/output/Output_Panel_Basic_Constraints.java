@@ -17,20 +17,29 @@
 package prism_project.output;
 
 import java.awt.Component;
+import java.awt.Dialog;
 import java.awt.Dimension;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Window;
+import java.awt.event.HierarchyEvent;
+import java.awt.event.HierarchyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JButton;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
@@ -47,6 +56,7 @@ import org.jfree.data.general.DefaultPieDataset;
 import prism_convenience.IconHandle;
 import prism_convenience.PrismGridBagLayoutHandle;
 import prism_convenience.TableColumnsHandle;
+import prism_root.PrismMain;
 
 // Panel_Flow_Constraints--------------------------------------------------------------------------------	
 public class Output_Panel_Basic_Constraints extends JLayeredPane {
@@ -131,6 +141,50 @@ public class Output_Panel_Basic_Constraints extends JLayeredPane {
 			}
 		});
 		
+		JScrollPane scroll_bar_chart = new JScrollPane();
+		JScrollPane zoom_scrollpane = new JScrollPane();
+		zoom_scrollpane.setBorder(null);
+		zoom_scrollpane.addHierarchyListener(new HierarchyListener() {	// These codes make the scrollpane resizable
+		    public void hierarchyChanged(HierarchyEvent e) {
+		        Window window = SwingUtilities.getWindowAncestor(zoom_scrollpane);
+		        if (window instanceof Dialog) {
+		            Dialog dialog = (Dialog)window;
+		            if (!dialog.isResizable()) {
+		                dialog.setResizable(true);
+		            	GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+		        		int width = (int) (gd.getDisplayMode().getWidth() * 0.7);
+		        		int height = (int) (gd.getDisplayMode().getHeight() * 0.9);
+		                dialog.setPreferredSize(new Dimension(width, height));
+		            }
+		        }
+		    }
+		});
+		JButton btn_zoom = new JButton();
+		btn_zoom.setText("ZOOM");
+		btn_zoom.setVerticalTextPosition(SwingConstants.BOTTOM);
+		btn_zoom.setHorizontalTextPosition(SwingConstants.CENTER);
+//		btn_zoom.setToolTipText("explore");
+		btn_zoom.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_zoom.png"));
+		btn_zoom.setRolloverIcon(IconHandle.get_scaledImageIcon(35, 35, "icon_zoom.png"));
+		btn_zoom.setContentAreaFilled(false);
+		btn_zoom.addActionListener(e -> {
+//			PrismMain.get_main().setVisible(false);
+//			for (JInternalFrame i: PrismMain.get_Prism_DesktopPane().getAllFrames()) {
+//				i.setVisible(false);
+//			} 
+			zoom_scrollpane.setViewportView(scroll_bar_chart.getViewport().getView());
+			
+			String ExitOption[] = { "OK" };
+			int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), zoom_scrollpane,
+					"Prism Chart", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, ExitOption, ExitOption[0]);
+			
+//			PrismMain.get_main().setVisible(true);
+//			for (JInternalFrame i: PrismMain.get_Prism_DesktopPane().getAllFrames()) {
+//				i.setVisible(true);
+//			} 
+			scroll_bar_chart.setViewportView(zoom_scrollpane.getViewport().getView());
+		});
+		
 		radio_group.add(radio_button[0]);
 		radio_group.add(radio_button[1]);
 		radio_group.add(radio_button[2]);
@@ -138,21 +192,23 @@ public class Output_Panel_Basic_Constraints extends JLayeredPane {
 		radio_group.add(radio_button[4]);
 		radio_panel.add(radio_button[0], PrismGridBagLayoutHandle.get_c(c, "BOTH", 
 				0, 0, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
-				0, 10, 0, 10));	// insets top, left, bottom, right
+				10, 10, 10, 10));	// insets top, left, bottom, right
 		radio_panel.add(radio_button[1], PrismGridBagLayoutHandle.get_c(c, "BOTH", 
-				1, 0, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
-				0, 10, 0, 10));	// insets top, left, bottom, right
-		radio_panel.add(radio_button[2], PrismGridBagLayoutHandle.get_c(c, "BOTH", 
 				0, 1, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
 				10, 10, 10, 10));	// insets top, left, bottom, right
+		radio_panel.add(radio_button[2], PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+				0, 2, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				10, 10, 10, 10));	// insets top, left, bottom, right
 		radio_panel.add(radio_button[3], PrismGridBagLayoutHandle.get_c(c, "BOTH", 
-				1, 1, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				0, 3, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
 				10, 10, 10, 10));	// insets top, left, bottom, right
 		radio_panel.add(radio_button[4], PrismGridBagLayoutHandle.get_c(c, "BOTH", 
-				2, 1, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				0, 4, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
 				10, 10, 10, 10));	// insets top, left, bottom, right
+		radio_panel.add(btn_zoom, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+				1, 0, 1, 5, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				10, 20, 10, 10));	// insets top, left, bottom, right
         //---------------------------------------------------------------
-        JScrollPane scroll_bar_chart = new JScrollPane();
         scroll_bar_chart.setPreferredSize(new Dimension(100, 100));
         scroll_bar_chart.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scroll_bar_chart.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);

@@ -1255,7 +1255,8 @@ All changes in this block are associated with PrismAlpha2.0.05.jar, Prism-Formul
 528. Boost reading speed when solving models by using hashmaps for strata and strata_5layers across all the places in Solve_Iterations class
 529. Simplify the SQL and NOSQL Modes:
 	- show maximum of 999 records if summarize_output_05 has more records,
-	- summarize_output_05 is processed faster: processed in the NOSQL Mode, only necessary data would be read and read derectly to String to avoid data conversion
+	- summarize_output_05 is processed faster: processed in the NOSQL Mode, only necessary data would be read and read directly to String to avoid data conversion
 530. Boost data reading speed significantly in NOSQL Mode by preforming the whole reading process by executor.submit (before the btn_GetResult). By somehow the database is retrieved much more faster (I guess because the database is remembered correctly). The other good thing is even when we add rows and click on the calculator button, the calculation would only start after data reading have been completed.
 531. All summarize outputs will be deleted when the model is started solving on button click. 
 532. When the user-defined method is continue and the user-defined max iteration is less than the last solved iteration, data would be trim to recreate the summarize files, and data pre-processing would not be implemented
+533. Add zoom functionality to improve chart view for 3 summary outputs: 04 management overview, 06 basic constraints, 07 flow constraints
