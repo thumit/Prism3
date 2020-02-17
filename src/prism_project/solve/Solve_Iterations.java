@@ -94,7 +94,13 @@ public class Solve_Iterations {
 				}
 				
 				// Delete all summarize files
-				if (f.getName().startsWith("summarize")) f.delete();
+				if (last_solved_iter == max_iteration && f.getName().startsWith("summarize")) f.delete();
+			}
+			
+			if (last_solved_iter == max_iteration) {
+				data[row][4] = "successful";
+				model.fireTableDataChanged();
+				System.out.println("No more solving needed for " + data[row][0].toString() + ".\nPrism keeps current outputs as final solution.");
 			}
 			
 			if (last_solved_iter > max_iteration) {
