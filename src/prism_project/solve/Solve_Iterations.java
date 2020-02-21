@@ -94,24 +94,22 @@ public class Solve_Iterations {
 				}
 				
 				// Delete all summarize files
-				if (last_solved_iter == max_iteration && f.getName().startsWith("summarize")) f.delete();
+				if (last_solved_iter != max_iteration && f.getName().startsWith("summarize")) f.delete();
 			}
 			
-			if (last_solved_iter == max_iteration) {
-				data[row][4] = "successful";
-				model.fireTableDataChanged();
-				System.out.println("No more solving needed for " + data[row][0].toString() + ".\nPrism keeps current outputs as final solution.");
-			}
-			
-			if (last_solved_iter > max_iteration) {
+			if (last_solved_iter >= max_iteration) {
 				// summarize outputs
 				try {
-					System.out.println("No more solving needed for " + data[row][0].toString() + ".\nPrism is trimming current outputs to build final solution......");
-					Summarize_Outputs sumamrize_output = new Summarize_Outputs(runFolder, max_iteration);
-					sumamrize_output = null;
+					System.out.println("No more solving needed for " + data[row][0].toString() + ".");
+					if (last_solved_iter == max_iteration) System.out.println("Prism keeps current outputs as final solution.");
+					if (last_solved_iter > max_iteration) {
+						System.out.println("Prism is trimming current outputs to build final solution......");
+						Summarize_Outputs sumamrize_output = new Summarize_Outputs(runFolder, max_iteration);
+						sumamrize_output = null;
+						System.out.println("Trimming is completed!");
+					}
 					data[row][4] = "successful";
 					model.fireTableDataChanged();
-					System.out.println("Trimming is completed!");
 				} catch (Exception e) {
 					System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Panel Solve Runs   -   Fail to summarize outputs for "+ runFolder);		
 					e.printStackTrace();
