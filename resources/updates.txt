@@ -1262,3 +1262,19 @@ All changes in this block are associated with PrismAlpha2.0.05.jar, Prism-Formul
 533. Add zoom functionality to improve chart view for 3 summary outputs: 04 management overview, 06 basic constraints, 07 flow constraints
 All changes in this block are associated with PrismAlpha2.0.06.jar, Prism-Formulation-10.docx, Rolling-horizon-formulation-07.docx
 --------------------------------------------------------------------------
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+534. Remove MS and BS
+	- Solve_Iterations class: delete everything related to MS and BS including
+		+ remove reading input_05
+		+ remove MS, BS variable definitions
+		+ remove linkedhashmap for MS and BS variables
+		+ remove the equations 5e 5f (no merge case)
+		+ remove variables in 5a, 7a, 7b, 10 (merge case) 
+		+ remove 5b, 5c, 6e, 6f (merge case and no rolling case)
+		+ remove MS and BS for output generation in output_02, output_04, output_05
+	- Read_Input class: delete reading for input_05
+	- Information_Variable class: remove MS and BS variables
+	- Remove the description 5 in the Area Merging input window since MS and BS are removed

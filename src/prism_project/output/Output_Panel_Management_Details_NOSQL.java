@@ -1970,8 +1970,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			// CREATE CONSTRAINTS-------------------------------------------------
 			Information_Parameter parameter_info = new Information_Parameter(read_database);
 			// Constraints 15	
-			for (int var_index = 0; var_index < var_info.size(); var_index++) {	// Loop all variables that were trim by the static filter already: then add to sum_all
-				// Note no need to check methods since we already have the correct method when exporting the summary file
+			for (int var_index = 0; var_index < var_info.size(); var_index++) {	// Loop all variables that were trim by the static filter already, then add to sum_all
 				double para_value = parameter_info.get_total_value(
 						var_info.get(var_index).get_prescription_id_and_row_id()[0],
 						var_info.get(var_index).get_prescription_id_and_row_id()[1],
