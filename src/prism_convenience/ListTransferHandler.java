@@ -1,21 +1,4 @@
-/*******************************************************************************
- * Copyright (C) 2016-2018 PRISM Development Team
- * 
- * PRISM is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * PRISM is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with PRISM.  If not, see <http://www.gnu.org/licenses/>.
- ******************************************************************************/
 package prism_convenience;
-
 
 /*
  * Copyright (c) 1995, 2008, Oracle and/or its affiliates. All rights reserved.
@@ -47,8 +30,6 @@ package prism_convenience;
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
-
  
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;

@@ -1263,7 +1263,7 @@ All changes in this block are associated with PrismAlpha2.0.05.jar, Prism-Formul
 All changes in this block are associated with PrismAlpha2.0.06.jar, Prism-Formulation-10.docx, Rolling-horizon-formulation-07.docx
 --------------------------------------------------------------------------
 --------------------------------------------------------------------------
---------------------------------------------------------------------------
+---------------------------VERSION 3.*.**---------------------------------
 --------------------------------------------------------------------------
 --------------------------------------------------------------------------
 534. Remove MS and BS
@@ -1278,3 +1278,4 @@ All changes in this block are associated with PrismAlpha2.0.06.jar, Prism-Formul
 	- Read_Input class: delete reading for input_05
 	- Information_Variable class: remove MS and BS variables
 	- Remove the description 5 in the Area Merging input window since MS and BS are removed
+535. Update copyright information for all classes within the project
