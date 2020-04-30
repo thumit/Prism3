@@ -1279,3 +1279,4 @@ All changes in this block are associated with PrismAlpha2.0.06.jar, Prism-Formul
 	- Information_Variable class: remove MS and BS variables
 	- Remove the description 5 in the Area Merging input window since MS and BS are removed
 535. Update copyright information for all classes within the project
+536. Fix the bug 118 of incorrect warning of conversion rates after stand replacing disturbance events

@@ -2528,12 +2528,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				((DefaultTableCellRenderer) component).setIcon(null);
 				if (has_at_least_one_positive_loss_rate) {
 					double total_percentage = 0;
-					for (int i = 0; i < getRowCount(); i++) {	// loop all rows in a block && add to total percentage if the rows has the same covertype as the row at cursor
-						for (int j = 2; j < getColumnCount(); j++) {					
-							if (getValueAt(i, 0).toString().equals(getValueAt(row, 0).toString()) && table6c.convertColumnIndexToView(j) != -1) {	// -1 means the column is invisible
-								total_percentage = total_percentage + Double.parseDouble(getValueAt(i, j).toString());
-							}
-						}	
+					for (int i = 0; i < getRowCount(); i++) {	// loop all rows in a column && add to total percentage if the rows has the same covertype as the row at cursor
+						if (column >= 2 && getValueAt(i, 0).toString().equals(getValueAt(row, 0).toString()) && table6c.convertColumnIndexToView(column) != -1) {	// -1 means the column is invisible
+							total_percentage = total_percentage + Double.parseDouble(getValueAt(i, column).toString());
+						}
 					}
 					
 					if (total_percentage != 100 && column >= 2) {		// check if the total_percentage <> 100% --> problem icon for this cell because it is in the set of cells which make total_percentage <> 100%
@@ -2604,15 +2602,13 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						if (has_at_least_one_positive_loss_rate) {
 							double total_percentage = 0;
 							for (int i = 0; i < getRowCount(); i++) {	// loop all rows in a block && add to total percentage if the rows has the same covertype as the row at cursor
-								for (int j = 2; j < getColumnCount(); j++) {					
-									if (getValueAt(i, 0).toString().equals(getValueAt(row, 0).toString()) && table6c.convertColumnIndexToView(j) != -1) {	// -1 means the column is invisible
-										total_percentage = total_percentage + Double.parseDouble(getValueAt(i, j).toString());
-									}
+								if (column >= 2 && getValueAt(i, 0).toString().equals(getValueAt(row, 0).toString()) && table6c.convertColumnIndexToView(column) != -1) {	// -1 means the column is invisible
+									total_percentage = total_percentage + Double.parseDouble(getValueAt(i, column).toString());
 								}	
 							}
 							
 							if (total_percentage != 100 && column >= 2) {		// check if the total_percentage <> 100%
-								tip = "INFEASIBLE - The sum of all cells with the same layer5 = " + getValueAt(row, 0).toString() + " must be exactly 100";
+								tip = "INFEASIBLE - The sum of all cells in this column with the same layer5 = " + getValueAt(row, 0).toString() + " must be exactly 100";
 							}
 						};
 					} catch (RuntimeException e1) {
