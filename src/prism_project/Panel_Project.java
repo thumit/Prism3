@@ -810,7 +810,7 @@ public class Panel_Project extends JLayeredPane {
 							}
 						});
 						popup.add(updateMenuItem);
-						updateMenuItem.setEnabled(false);
+						updateMenuItem.setEnabled(true);
 					}
 					
 					
@@ -1351,103 +1351,79 @@ public class Panel_Project extends JLayeredPane {
 				}
 					
 				int file_changed_count = 0;
-				int file_deleted_count = 0;
+				
+				// VERY IMPORTANT NOTE: DO NOT USE THIS UPDATE MORE THAN ONCE BECAUSE THE DATA TRIM WOULD BE CORRECT FOR THE FIRST UPDATE ONLY
 				for (int i = 0; i < listOfEditRuns.length; i++) {
 					File[] contents = listOfEditRuns[i].listFiles();
 					if (contents != null) {
 						for (File f : contents) {
 							switch (f.getName()) {
-
-							case "input_05_non_sr_disturbances.txt":
-								try {
-									// Read sample file into data
-									File[] files = new File[] { FilesHandle.get_file_input_05(), FilesHandle.get_file_input_05_alt() };	
-									
-									for (File sample_file: files) {		// there are 2 sample files for HLC and CGNF to try
-										String delimited = "\t";		// tab delimited
-										List<String> list = Files.readAllLines(Paths.get(sample_file.getAbsolutePath()), StandardCharsets.UTF_8);			
-										String[] a = list.toArray(new String[list.size()]);		
+							case "input_06_sr_disturbances.txt":
+							case "input_07_management_cost.txt":
+							case "input_08_basic_constraints.txt":
+								{
+									try {
+										String delimited = "\t";
+										List<String> list = Files.readAllLines(Paths.get(f.getAbsolutePath()), StandardCharsets.UTF_8);
+										String[] a = list.toArray(new String[list.size()]);
+										String[] columnName = a[0].split(delimited);
+										int col_count = columnName.length;
 										
-										
-										columnNames = a[0].split(delimited);		//tab delimited		//Read the first row	
-										rowCount = a.length - 1;  // - 1st row which is the column name
-										colCount = columnNames.length;
-										data = new Object[rowCount][colCount];
-								
-										// populate the data matrix
-										for (int row = 0; row < rowCount; row++) {
-											data[row] = a[row + 1].split(delimited);	//tab delimited	
-										}
-										
-										
-										// Read old file into old_data
-										f = new File(f.getParentFile().getAbsolutePath() + "/" + "input_05_non_sr_disturbances.txt");		
-										delimited = "\t";		// tab delimited
-										list = Files.readAllLines(Paths.get(f.getAbsolutePath()), StandardCharsets.UTF_8);		
-										a = list.toArray(new String[list.size()]);		
-										
-										String[] old_columnNames = a[0].split(delimited);		//tab delimited		//Read the first row	
-										rowCount = a.length - 1;  // - 1st row which is the column name
-										colCount = old_columnNames.length;
-										Object[][] old_data = new Object[rowCount][colCount];
-								
-										// populate the data matrix
-										for (int row = 0; row < rowCount; row++) {
-											old_data[row] = a[row + 1].split(delimited);	//tab delimited	
-										}
-										
-										
-										if (old_columnNames.length == 4 && data.length == old_data.length) {	// This is the only case we would modify the old file, this file only has 4 columns and number of row in both file match
-											// paste from old_data to data
-											for (int row = 0; row < data.length; row++) {
-												for (int col = 0; col < data[row].length; col++) {
-													if (col == 3 || col == 4) data[row][col] = old_data[row][col - 1];
-												}
+										int column_to_delete = -1;
+										for (int col = 0; col < col_count; col++) {
+											if (columnName[col].equals("static_identifiers")) {
+												column_to_delete = col;
 											}
-
+										}
+										
+										// delete the methods in "static identifier" in every row of the file
+										if (column_to_delete != -1) {
+											// Delete the old file before writing new contents
 											if (f.exists()) {
-												f.delete();		// Delete the old file before writing new contents to that old file
+												f.delete();
 											}
-											
-											if (data != null && data.length > 0) {
-												try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(f))) {
-													for (int j = 0; j < columnNames.length; j++) {
-														fileOut.write(columnNames[j] + "\t");
-													}
-
-													for (int row = 0; row < data.length; row++) {
-														fileOut.newLine();
-														for (int col = 0; col < data[row].length; col++) {
-															fileOut.write(data[row][col] + "\t");
+	
+											try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(f))) {
+												for (int j = 0; j < col_count; j++) {
+													fileOut.write(columnName[j] + "\t");
+												}
+												
+												for (int row = 1; row < a.length; row++) {
+													fileOut.newLine();
+													String[] row_data = a[row].split(delimited);
+													for (int col = 0; col < col_count; col++) {
+														if (col != column_to_delete) {
+															fileOut.write(row_data[col] + "\t");
+														} else {	// this is the static identifier column which contains the silviculture methods
+															String[] static_data = row_data[col].split(";");
+															
+															List<String> new_static = new ArrayList<String>();
+															for (int dt = 0; dt < static_data.length; dt++) {
+																if (dt < 6) {
+																	new_static.add(static_data[dt]);
+																} else if (dt > 6) {
+																	int new_index = dt - 1;
+																	new_static.add(new_index + static_data[dt].substring(1));
+																}
+															}
+															String final_st = String.join(";", new_static);
+															fileOut.write(final_st + "\t");
 														}
 													}
-													fileOut.close();
-												} catch (IOException e) {
-													System.err.println(e.getClass().getName() + ": " + e.getMessage());
-												} 
-											}
+												}
+												fileOut.close();
+											} catch (IOException e) {
+												System.err.println(e.getClass().getName() + ": " + e.getMessage());
+											} 
+											
 											file_changed_count++;
 										}
+										
+									} catch (IOException e) {
+										e.printStackTrace();
 									}
-									
-									
-									// Now the old file might be modified or not. If not modified yet --> delete
-									f = new File(f.getParentFile().getAbsolutePath() + "/" + "input_05_non_sr_disturbances.txt");		
-									String delimited = "\t";		// tab delimited
-									List<String> list = Files.readAllLines(Paths.get(f.getAbsolutePath()), StandardCharsets.UTF_8);		
-									String[] a = list.toArray(new String[list.size()]);		
-									String[] columnNames = a[0].split(delimited);		//tab delimited		//Read the first row	
-									
-									if (columnNames.length == 4) { // This is the case we would delete the old file
-										f.delete();
-										file_deleted_count++;
-									}
-									
-								} catch (IOException e) {
-									e.printStackTrace();
+									break;
 								}
-								
-								break;
 							}
 						}
 					}
@@ -1478,12 +1454,7 @@ public class Panel_Project extends JLayeredPane {
 				
 				String warningText = "";
 				if (file_changed_count > 0) warningText = file_changed_count + " files have been modified.\n";
-				if (file_deleted_count > 0) warningText = file_deleted_count + " files have been deleted.\n";
-				if (file_deleted_count == 0 && file_changed_count == 0) warningText = "Prism found no need to modify anything.\n";
-				warningText = warningText + "\nHighlighted runs are updated to the lastest version 1.2.02.\n"; 
-				warningText = warningText + "\nNote 1: input_05 is modified when Prism found a solution to update your run.\n"; 
-				warningText = warningText + "Note 2: input_05 is deleted when Prism could not find a solution to update your run.\n";
-				warningText = warningText + "Note 3: Update result might not be correct in several cases. You are recommended to review input_05 after updating.";
+				warningText = warningText + "\nHighlighted runs are updated to the lastest version 3.0.02.\n"; 
 				String ExitOption[] = { "OK"};
 				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warningText, "Runs update",
 						JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(32, 32, "icon_light_on_yellow.png"), ExitOption, ExitOption[0]);

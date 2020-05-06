@@ -1282,3 +1282,6 @@ All changes in this block are associated with PrismAlpha2.0.06.jar, Prism-Formul
 536. Fix the bug 118 for incorrect warning of conversion rates after stand replacing disturbance events
 All changes in this block are associated with PrismAlpha3.0.01.jar, Prism-Formulation-11.docx, Rolling-horizon-formulation-08.docx
 --------------------------------------------------------------------------
+537. Remove silviculture methods from static identifiers in the UI
+	- Remove method get_file_input_05() and get_file_input_05_alt from FildeHandle class since they only help convert inputs from version 1.2.01 to 1.2.02 and now are not needed.
+	- Automatic update data from version 3.0.01 to 3.0.02 by removing silviculture method information from static_identifiers column in following inputs: input_06_sr_disturbances.txt, input_07_management_cost.txt, input_08_basic_constraints.txt. This update function must not be used more than once.
