@@ -48,7 +48,7 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 	public ScrollPane_StaticIdentifiers(Read_Database read_Database, int option, String panel_name) {
 		this.option = option;
 		
-		// option = 0 --> 6 layers		1 --> 4 layers       2 --> 6 layers + method_period		3 --> method choice     4 --> 6 layers +  method choice rotation_period rotation_age regen_layer5
+		// option = 0 --> 6 layers		1 --> 4 layers       2 --> 6 layers + period		3 --> method choice     4 --> 6 layers +  method choice rotation_period rotation_age regen_layer5
 		List<String> layers_title = new ArrayList<>(read_Database.get_layers_title());
 		List<String> layers_Title_ToolTip = new ArrayList<>(read_Database.get_layers_title_tooltip());
 		List<List<String>> allLayers = new ArrayList<>(read_Database.get_all_layers());
@@ -67,28 +67,16 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 		
 		if (option == 2) {
 			// Add 2 more into static identifiers
-			List<String> method_period_layers_title = new ArrayList<>(read_Database.get_method_period_layers_title());
-			List<List<String>> method_period_layers = new ArrayList<>(read_Database.get_method_period_layers());
+			List<String> period_layers_title = new ArrayList<>(read_Database.get_period_layers_title());
+			List<List<String>> period_layers = new ArrayList<>(read_Database.get_period_layers());
 
-			layers_title.addAll(method_period_layers_title);
-			layers_Title_ToolTip.addAll(method_period_layers_title);
-			allLayers.addAll(method_period_layers);
+			layers_title.addAll(period_layers_title);
+			layers_Title_ToolTip.addAll(period_layers_title);
+			allLayers.addAll(period_layers);
 			
 			// Full name of silviculture methods
-			List<List<String>> allmethods_ToolTips = read_Database.get_method_period_layers();
-			for (int i = 0; i < allmethods_ToolTips.get(0).size(); i++) {	// 0 is method, 1 is period
-				if (allmethods_ToolTips.get(0).get(i).equals("NG_E")) 	allmethods_ToolTips.get(0).set(i, "Natural Growth existing: choices 0-14");
-				if (allmethods_ToolTips.get(0).get(i).equals("PB_E")) 	allmethods_ToolTips.get(0).set(i, "Prescribed Burn existing: choices 0-14");
-				if (allmethods_ToolTips.get(0).get(i).equals("GS_E")) 	allmethods_ToolTips.get(0).set(i, "Group Selection existing: choices 0-14");
-				if (allmethods_ToolTips.get(0).get(i).equals("EA_E")) 	allmethods_ToolTips.get(0).set(i, "Even Age existing: choices 0-5");
-				if (allmethods_ToolTips.get(0).get(i).equals("MS_E")) 	allmethods_ToolTips.get(0).set(i, "Mixed Severity Wildfire: choices 0-14");
-				if (allmethods_ToolTips.get(0).get(i).equals("BS_E")) 	allmethods_ToolTips.get(0).set(i, "Severe Bark Beetle: choices 0-14");
-				if (allmethods_ToolTips.get(0).get(i).equals("NG_R")) 	allmethods_ToolTips.get(0).set(i, "Natural Growth regeneration: choices 0-14");
-				if (allmethods_ToolTips.get(0).get(i).equals("PB_R")) 	allmethods_ToolTips.get(0).set(i, "Prescribed Burn regeneration: choices 0-14");
-				if (allmethods_ToolTips.get(0).get(i).equals("GS_R")) 	allmethods_ToolTips.get(0).set(i, "Group Selection regeneration: choices 0-14");
-				if (allmethods_ToolTips.get(0).get(i).equals("EA_R")) 	allmethods_ToolTips.get(0).set(i, "Even Age regeneration: choices 0-5");		
-			}	
-			allLayers_ToolTips.addAll(allmethods_ToolTips);
+			List<List<String>> period_ToolTips = read_Database.get_period_layers();
+			allLayers_ToolTips.addAll(period_ToolTips);
 		}
 		
 		

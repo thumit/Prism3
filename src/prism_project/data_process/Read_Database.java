@@ -633,27 +633,24 @@ public class Read_Database {
 	}
 	
 	
-	public List<String> get_method_period_layers_title() {
+	public List<String> get_period_layers_title() {
 		// Layers title
-		List<String> method_period_layers_title = Arrays.asList(new String[] { "method", "period" });
-		return method_period_layers_title;
+		List<String> period_layers_title = Arrays.asList(new String[] { "period" });
+		return period_layers_title;
 	}
 
 	
-	public List<List<String>> get_method_period_layers() {
+	public List<List<String>> get_period_layers() {
 		// Layers element name
-		List<String> method = Arrays.asList(new String[] { "NG_E", "PB_E", "GS_E", "EA_E", "MS_E", "BS_E", "NG_R", "PB_R", "GS_R", "EA_R" });	// method
 		List<String> period = new ArrayList<String>() {		// period
 			{
 				for (int i = 1; i <= 99; i++) {add(Integer.toString(i));}
 			}
 		};	
 			
-		List<List<String>> method_period_layers = new ArrayList<List<String>>();
-		method_period_layers.add(method);
-		method_period_layers.add(period);
-			
-		return method_period_layers;
+		List<List<String>> period_layers = new ArrayList<List<String>>();
+		period_layers.add(period);
+		return period_layers;
 	}
 
 	
