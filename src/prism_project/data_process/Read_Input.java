@@ -911,14 +911,9 @@ public class Read_Input {
 	
 	
 	
-	public List<String> get_static_methods(int row) {
-		List<List<String>> static_identifiers = get_static_identifiers_in_row(row);
-		return static_identifiers.get(6);
-	}
-	
 	public List<String> get_static_periods(int row) {
 		List<List<String>> static_identifiers = get_static_identifiers_in_row(row);	
-		return static_identifiers.get(7);
+		return static_identifiers.get(6);
 	}	
 
 	

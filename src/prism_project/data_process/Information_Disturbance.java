@@ -55,7 +55,7 @@ public class Information_Disturbance {
 			all_condition_conversion_rate_std[priority] = get_3D_array_from_conversion_rate_mean_or_std(all_priority_condition_info[priority][5]);		// column 5 is conversion_rate_std
 			all_priority_condition_static_identifiers[priority] = get_condition_static_identifiers(all_priority_condition_info[priority][6]);	// column 6 is static identifiers
 			all_priority_condition_dynamic_identifiers[priority] = get_condition_dynamic_identifiers(all_priority_condition_info[priority][7]);	// column 7 is dynamic identifiers
-			all_priority_condition_dynamic_dentifiers_column_indexes[priority] = get_condition_dynamic_dentifiers_column_indexes(all_priority_condition_info[priority][7]);	// column 5 is dynamic identifiers
+			all_priority_condition_dynamic_dentifiers_column_indexes[priority] = get_condition_dynamic_dentifiers_column_indexes(all_priority_condition_info[priority][7]);	// column 7 is dynamic identifiers
 			
 			// sort for Binary search used in:     are_all_static_identifiers_matched()
 			for (List<String> this_static_identifier: all_priority_condition_static_identifiers[priority]) {
@@ -227,8 +227,7 @@ public class Information_Disturbance {
 //		if (static_identifiers.get(3).size() < all_layers.get(3).size() && Collections.binarySearch(static_identifiers.get(3), var_info.get_layer4()) < 0) return false;
 //		if (static_identifiers.get(4).size() < all_layers.get(4).size() && Collections.binarySearch(static_identifiers.get(4), var_info.get_layer5()) < 0) return false;
 //		if (var_info.get_forest_status().equals("E") && static_identifiers.get(5).size() < all_layers.get(5).size() && Collections.binarySearch(static_identifiers.get(5), var_info.get_layer6()) < 0) return false;	// layer6: size class
-//		if (Collections.binarySearch(static_identifiers.get(6), var_info.get_method() + "_" + var_info.get_forest_status()) < 0) return false;
-//		if (Collections.binarySearch(static_identifiers.get(7), String.valueOf(var_info.get_period())) < 0) return false;
+//		if (Collections.binarySearch(static_identifiers.get(6), String.valueOf(var_info.get_period())) < 0) return false;
 //		return true;
 		
 		
@@ -240,8 +239,7 @@ public class Information_Disturbance {
 		(static_identifiers.get(3).size() < all_layers.get(3).size() && Collections.binarySearch(static_identifiers.get(3), var_info.get_layer4()) < 0) ||
 		(static_identifiers.get(4).size() < all_layers.get(4).size() && Collections.binarySearch(static_identifiers.get(4), var_info.get_layer5()) < 0) ||
 		(var_info.get_forest_status().equals("E") && static_identifiers.get(5).size() < all_layers.get(5).size() && Collections.binarySearch(static_identifiers.get(5), var_info.get_layer6()) < 0) ||
-		Collections.binarySearch(static_identifiers.get(6), var_info.get_method() + "_" + var_info.get_forest_status()) < 0 ||
-		Collections.binarySearch(static_identifiers.get(7), String.valueOf(var_info.get_period())) < 0) 
+		Collections.binarySearch(static_identifiers.get(6), String.valueOf(var_info.get_period())) < 0) 
 		{
 			return false;
 		}
@@ -258,8 +256,7 @@ public class Information_Disturbance {
 //		Collections.binarySearch(static_identifiers.get(3), var_info.get_layer4()) < 0 ||
 //		Collections.binarySearch(static_identifiers.get(4), var_info.get_layer5()) < 0 ||
 //		(var_info.get_forest_status().equals("E") && Collections.binarySearch(static_identifiers.get(5), var_info.get_layer6()) < 0) ||
-//		Collections.binarySearch(static_identifiers.get(6), var_info.get_method() + "_" + var_info.get_forest_status()) < 0 ||
-//		Collections.binarySearch(static_identifiers.get(7), String.valueOf(var_info.get_period())) < 0) 
+//		Collections.binarySearch(static_identifiers.get(6), String.valueOf(var_info.get_period())) < 0) 
 //		{
 //			return false;
 //		}
@@ -273,8 +270,7 @@ public class Information_Disturbance {
 //		if (Collections.binarySearch(static_identifiers.get(3), var_info.get_layer4()) < 0) return false;
 //		if (Collections.binarySearch(static_identifiers.get(4), var_info.get_layer5()) < 0) return false;	// layer5 cover type
 //		if (var_info.get_forest_status().equals("E") && Collections.binarySearch(static_identifiers.get(5), var_info.get_layer6()) < 0) return false;	// layer6: size class
-//		if (Collections.binarySearch(static_identifiers.get(6), var_info.get_method() + "_" + var_info.get_forest_status()) < 0) return false;
-//		if (Collections.binarySearch(static_identifiers.get(7), String.valueOf(var_info.get_period())) < 0) return false;
+//		if (Collections.binarySearch(static_identifiers.get(6), String.valueOf(var_info.get_period())) < 0) return false;
 //		return true;
 	}			
 		
@@ -286,7 +282,7 @@ public class Information_Disturbance {
 		int total_static_identifiers = static_layer_info.length;
 		
 		//Get all static Identifiers to be in the list
-		for (int i = 0; i < total_static_identifiers; i++) {		// 6 first identifiers are strata's 6 layers (layer 0 to 5)	then method (6) then period	(7)
+		for (int i = 0; i < total_static_identifiers; i++) {		// 6 first identifiers are strata's 6 layers (layer 0 to 5)	then period	(6)
 			List<String> thisIdentifier = new ArrayList<String>();			
 			String[] identifierElements = static_layer_info[i].split("\\s+");				//space delimited
 			for (int j = 1; j < identifierElements.length; j++) {		//Ignore the first element which is the identifier index, so we loop from 1 not 0

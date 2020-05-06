@@ -1286,3 +1286,4 @@ All changes in this block are associated with PrismAlpha3.0.01.jar, Prism-Formul
 	- Remove method get_file_input_05() and get_file_input_05_alt from FildeHandle class since they only help convert inputs from version 1.2.01 to 1.2.02 and now are not needed.
 	- Automatic update data from version 3.0.01 to 3.0.02 by removing silviculture method information from static_identifiers column in following inputs: input_06_sr_disturbances.txt, input_07_management_cost.txt, input_08_basic_constraints.txt. This update function must not be used more than once.
 	- ScrollPane_StaticIdentifiers and Read_Database classes: option 2 = 6 layers + period (remove method)
+	- Remove method information in following classes Read_Input, Solve_Iteration, Information_Disturbance, Information_Cost

@@ -250,8 +250,7 @@ public class Information_Cost {
 //		if (static_identifiers.get(3).size() < all_layers.get(3).size() && Collections.binarySearch(static_identifiers.get(3), var_info.get_layer4()) < 0) return false;
 //		if (static_identifiers.get(4).size() < all_layers.get(4).size() && Collections.binarySearch(static_identifiers.get(4), var_info.get_layer5()) < 0) return false;
 //		if (var_info.get_forest_status().equals("E") && static_identifiers.get(5).size() < all_layers.get(5).size() && Collections.binarySearch(static_identifiers.get(5), var_info.get_layer6()) < 0) return false;	// layer6: size class
-//		if (Collections.binarySearch(static_identifiers.get(6), var_info.get_method() + "_" + var_info.get_forest_status()) < 0) return false;
-//		if (Collections.binarySearch(static_identifiers.get(7), String.valueOf(var_info.get_period())) < 0) return false;
+//		if (Collections.binarySearch(static_identifiers.get(6), String.valueOf(var_info.get_period())) < 0) return false;
 //		return true;
 		
 		
@@ -263,8 +262,7 @@ public class Information_Cost {
 		(static_identifiers.get(3).size() < all_layers.get(3).size() && Collections.binarySearch(static_identifiers.get(3), var_info.get_layer4()) < 0) ||
 		(static_identifiers.get(4).size() < all_layers.get(4).size() && Collections.binarySearch(static_identifiers.get(4), var_info.get_layer5()) < 0) ||
 		(var_info.get_forest_status().equals("E") && static_identifiers.get(5).size() < all_layers.get(5).size() && Collections.binarySearch(static_identifiers.get(5), var_info.get_layer6()) < 0) ||
-		Collections.binarySearch(static_identifiers.get(6), var_info.get_method() + "_" + var_info.get_forest_status()) < 0 ||
-		Collections.binarySearch(static_identifiers.get(7), String.valueOf(var_info.get_period())) < 0) 
+		Collections.binarySearch(static_identifiers.get(6), String.valueOf(var_info.get_period())) < 0) 
 		{
 			return false;
 		}
@@ -281,8 +279,7 @@ public class Information_Cost {
 //		Collections.binarySearch(static_identifiers.get(3), var_info.get_layer4()) < 0 ||
 //		Collections.binarySearch(static_identifiers.get(4), var_info.get_layer5()) < 0 ||
 //		(var_info.get_forest_status().equals("E") && Collections.binarySearch(static_identifiers.get(5), var_info.get_layer6()) < 0) ||
-//		Collections.binarySearch(static_identifiers.get(6), var_info.get_method() + "_" + var_info.get_forest_status()) < 0 ||
-//		Collections.binarySearch(static_identifiers.get(7), String.valueOf(var_info.get_period())) < 0) 
+//		Collections.binarySearch(static_identifiers.get(6), String.valueOf(var_info.get_period())) < 0) 
 //		{
 //			return false;
 //		}
@@ -296,8 +293,7 @@ public class Information_Cost {
 //		if (Collections.binarySearch(static_identifiers.get(3), var_info.get_layer4()) < 0) return false;
 //		if (Collections.binarySearch(static_identifiers.get(4), var_info.get_layer5()) < 0) return false;	// layer5 cover type
 //		if (var_info.get_forest_status().equals("E") && Collections.binarySearch(static_identifiers.get(5), var_info.get_layer6()) < 0) return false;	// layer6: size class
-//		if (Collections.binarySearch(static_identifiers.get(6), var_info.get_method() + "_" + var_info.get_forest_status()) < 0) return false;
-//		if (Collections.binarySearch(static_identifiers.get(7), String.valueOf(var_info.get_period())) < 0) return false;
+//		if (Collections.binarySearch(static_identifiers.get(6), String.valueOf(var_info.get_period())) < 0) return false;
 //		return true;
 	}			
 	
@@ -355,7 +351,7 @@ public class Information_Cost {
 		// Read the whole cell which include a string with many ; 
 		List<List<String>> cost_condition_static_identifiers = new ArrayList<List<String>>();	
 		StringTokenizer t1 = new StringTokenizer(static_identifiers_info, ";");
-		while (t1.hasMoreTokens()) {		// loop through each element (separated by ;) --> loop each static identifier which has: 6 first identifiers are strata's 6 layers (layer 0 to 5)	then method (6) then period	(7)
+		while (t1.hasMoreTokens()) {		// loop through each element (separated by ;) --> loop each static identifier which has: 6 first identifiers are strata's 6 layers (layer 0 to 5) then period (6)
 			String infor = t1.nextToken();
 			
 			List<String> thisIdentifier = new ArrayList<String>();

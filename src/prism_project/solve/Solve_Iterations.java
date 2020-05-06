@@ -2867,7 +2867,6 @@ public class Solve_Iterations {
 											
 						
 						// Add user_defined_variables and parameters------------------------------------
-						List<String> static_methods = read.get_static_methods(id);
 						List<Integer> static_periods = read.get_static_periods(id).stream().map(Integer::parseInt).collect(Collectors.toList());	// convert List<String> --> List<Integer>
 						Set<String> static_strata = read.get_static_strata(id);
 						Set<String> static_strata_without_sizeclass = read.get_static_strata_without_sizeclass(id);
@@ -2885,261 +2884,234 @@ public class Solve_Iterations {
 						for (String strata : common_strata) {
 							int strata_id = map_strata_to_strata_id.get(strata);			// Note we need index from model_strata not common_trata
 							
-							for (String method : static_methods) {
-								switch (method) {
-	
-								case "NG_E":
-									// Add xNGe[s1][s2][s3][s4][s5][s6][i][t]
-									for (int i = 0; i < xNGe[strata_id].length; i++) {
-										if (xNGe[strata_id][i] != null)
-										for (int period : static_periods) {		// Loop all periods of user-defined
-											int t = period + iter;		// this is a special case we need to adjust
-											if(xNGe[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 
-												int var_index = xNGe[strata_id][i][t];
-												double para_value = parameter_info.get_total_value(
-														var_info_array[var_index].get_prescription_id_and_row_id()[0],
-														var_info_array[var_index].get_prescription_id_and_row_id()[1],
-														parameters_indexes,
-														dynamic_dentifiers_column_indexes, 
-														dynamic_identifiers,
-														var_cost_value[var_index]);
-												para_value = para_value * multiplier;
-																																						
-												if (para_value > 0) {	// only add if parameter is non zero
-													c15_indexlist.get(c15_num).add(var_index);
-													c15_valuelist.get(c15_num).add((double) para_value);
-													}
-												}
-											}
-									}
-									break;
-									
-								case "PB_E":
-									// Add xPBe[s1][s2][s3][s4][s5][s6][i][t]
-									for (int i = 0; i < xPBe[strata_id].length; i++) {
-										if (xPBe[strata_id][i] != null)
-											for (int period : static_periods) {		//Loop all periods of user-defined
-												int t = period + iter;		// this is a special case we need to adjust
-												if(xPBe[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 
-													int var_index = xPBe[strata_id][i][t];
-													double para_value = parameter_info.get_total_value(
-															var_info_array[var_index].get_prescription_id_and_row_id()[0],
-															var_info_array[var_index].get_prescription_id_and_row_id()[1],
-															parameters_indexes,
-															dynamic_dentifiers_column_indexes, 
-															dynamic_identifiers,
-															var_cost_value[var_index]);
-													para_value = para_value * multiplier;
-																																							
-													if (para_value > 0) {	// only add if parameter is non zero
-														c15_indexlist.get(c15_num).add(var_index);
-														c15_valuelist.get(c15_num).add((double) para_value);
-													}
-												}
-											}
-									}
-									break;
-	
-								case "GS_E":
-									// Add xGSe[s1][s2][s3][s4][s5][s6][i][t]
-									for (int i = 0; i < xGSe[strata_id].length; i++) {
-										if (xGSe[strata_id][i] != null)
-											for (int period : static_periods) {		//Loop all periods of user-defined
-												int t = period + iter;		// this is a special case we need to adjust
-												if(xGSe[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 
-													int var_index = xGSe[strata_id][i][t];
-													double para_value = parameter_info.get_total_value(
-															var_info_array[var_index].get_prescription_id_and_row_id()[0],
-															var_info_array[var_index].get_prescription_id_and_row_id()[1],
-															parameters_indexes,
-															dynamic_dentifiers_column_indexes, 
-															dynamic_identifiers,
-															var_cost_value[var_index]);
-													para_value = para_value * multiplier;
-																																							
-													if (para_value > 0) {	// only add if parameter is non zero
-														c15_indexlist.get(c15_num).add(var_index);
-														c15_valuelist.get(c15_num).add((double) para_value);
-													}
-												}
-										}
-									}
-									break;
-									
-								case "EA_E":
-									// Add xEAe[s1][s2][s3][s4][s5][s6](tR)(s5R)(i)(t)
-									int total_no_1 = xEAe[strata_id].length;
-									for (int tR = 1 + iter; tR < total_no_1; tR++) {
-										if (xEAe[strata_id][tR] != null) {
-											int total_no_2 = xEAe[strata_id][tR].length;
-											for (int s5R = 0; s5R < total_no_2; s5R++) {
-												if (xEAe[strata_id][tR][s5R] != null) {
-													int total_no_3 = xEAe[strata_id][tR][s5R].length;
-													for (int i = 0; i < total_no_3; i++) {
-														if (xEAe[strata_id][tR][s5R][i] != null)
-															for (int period : static_periods) {		//Loop all periods, 	final cut at t but we need parameter at time tR
-																int t = period + iter;		// this is a special case we need to adjust
-																if (xEAe[strata_id][tR][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0   (this also removes the need of checking conversion and rotation) 
-																	int var_index = xEAe[strata_id][tR][s5R][i][t];
-																	double para_value = parameter_info.get_total_value(
-																			var_info_array[var_index].get_prescription_id_and_row_id()[0],
-																			var_info_array[var_index].get_prescription_id_and_row_id()[1],
-																			parameters_indexes,
-																			dynamic_dentifiers_column_indexes, 
-																			dynamic_identifiers,
-																			var_cost_value[var_index]);
-																	para_value = para_value * multiplier;
-																																											
-																	if (para_value > 0) {	// only add if parameter is non zero
-																		c15_indexlist.get(c15_num).add(var_index);
-																		c15_valuelist.get(c15_num).add((double) para_value);
-																	}
-																}
-															}
-													}
-												}
+							// Add xNGe[s1][s2][s3][s4][s5][s6][i][t]
+							for (int i = 0; i < xNGe[strata_id].length; i++) {
+								if (xNGe[strata_id][i] != null)
+								for (int period : static_periods) {		// Loop all periods of user-defined
+									int t = period + iter;		// this is a special case we need to adjust
+									if(xNGe[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 
+										int var_index = xNGe[strata_id][i][t];
+										double para_value = parameter_info.get_total_value(
+												var_info_array[var_index].get_prescription_id_and_row_id()[0],
+												var_info_array[var_index].get_prescription_id_and_row_id()[1],
+												parameters_indexes,
+												dynamic_dentifiers_column_indexes, 
+												dynamic_identifiers,
+												var_cost_value[var_index]);
+										para_value = para_value * multiplier;
+																																				
+										if (para_value > 0) {	// only add if parameter is non zero
+											c15_indexlist.get(c15_num).add(var_index);
+											c15_valuelist.get(c15_num).add((double) para_value);
 											}
 										}
 									}
-									break;
-									
+							}
+							
+							// Add xPBe[s1][s2][s3][s4][s5][s6][i][t]
+							for (int i = 0; i < xPBe[strata_id].length; i++) {
+								if (xPBe[strata_id][i] != null)
+									for (int period : static_periods) {		//Loop all periods of user-defined
+										int t = period + iter;		// this is a special case we need to adjust
+										if(xPBe[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 
+											int var_index = xPBe[strata_id][i][t];
+											double para_value = parameter_info.get_total_value(
+													var_info_array[var_index].get_prescription_id_and_row_id()[0],
+													var_info_array[var_index].get_prescription_id_and_row_id()[1],
+													parameters_indexes,
+													dynamic_dentifiers_column_indexes, 
+													dynamic_identifiers,
+													var_cost_value[var_index]);
+											para_value = para_value * multiplier;
+																																					
+											if (para_value > 0) {	// only add if parameter is non zero
+												c15_indexlist.get(c15_num).add(var_index);
+												c15_valuelist.get(c15_num).add((double) para_value);
+											}
+										}
+									}
+							}
+
+							// Add xGSe[s1][s2][s3][s4][s5][s6][i][t]
+							for (int i = 0; i < xGSe[strata_id].length; i++) {
+								if (xGSe[strata_id][i] != null)
+									for (int period : static_periods) {		//Loop all periods of user-defined
+										int t = period + iter;		// this is a special case we need to adjust
+										if(xGSe[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 
+											int var_index = xGSe[strata_id][i][t];
+											double para_value = parameter_info.get_total_value(
+													var_info_array[var_index].get_prescription_id_and_row_id()[0],
+													var_info_array[var_index].get_prescription_id_and_row_id()[1],
+													parameters_indexes,
+													dynamic_dentifiers_column_indexes, 
+													dynamic_identifiers,
+													var_cost_value[var_index]);
+											para_value = para_value * multiplier;
+																																					
+											if (para_value > 0) {	// only add if parameter is non zero
+												c15_indexlist.get(c15_num).add(var_index);
+												c15_valuelist.get(c15_num).add((double) para_value);
+											}
+										}
 								}
 							}
-						}	
-						
 								
+							// Add xEAe[s1][s2][s3][s4][s5][s6](tR)(s5R)(i)(t)
+							int total_no_1 = xEAe[strata_id].length;
+							for (int tR = 1 + iter; tR < total_no_1; tR++) {
+								if (xEAe[strata_id][tR] != null) {
+									int total_no_2 = xEAe[strata_id][tR].length;
+									for (int s5R = 0; s5R < total_no_2; s5R++) {
+										if (xEAe[strata_id][tR][s5R] != null) {
+											int total_no_3 = xEAe[strata_id][tR][s5R].length;
+											for (int i = 0; i < total_no_3; i++) {
+												if (xEAe[strata_id][tR][s5R][i] != null)
+													for (int period : static_periods) {		//Loop all periods, 	final cut at t but we need parameter at time tR
+														int t = period + iter;		// this is a special case we need to adjust
+														if (xEAe[strata_id][tR][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0   (this also removes the need of checking conversion and rotation) 
+															int var_index = xEAe[strata_id][tR][s5R][i][t];
+															double para_value = parameter_info.get_total_value(
+																	var_info_array[var_index].get_prescription_id_and_row_id()[0],
+																	var_info_array[var_index].get_prescription_id_and_row_id()[1],
+																	parameters_indexes,
+																	dynamic_dentifiers_column_indexes, 
+																	dynamic_identifiers,
+																	var_cost_value[var_index]);
+															para_value = para_value * multiplier;
+																																									
+															if (para_value > 0) {	// only add if parameter is non zero
+																c15_indexlist.get(c15_num).add(var_index);
+																c15_valuelist.get(c15_num).add((double) para_value);
+															}
+														}
+													}
+											}
+										}
+									}
+								}
+							}
+						}
+
 						
 						// Add regenerated variables --------------------------------------------------------------
 						for (String strata_5layers : common_strata_without_sizeclass) {
 							int strata_5layers_id = map_strata_without_sizeclass_to_id.get(strata_5layers);			// Note we need index from model_strata_without_sizeclass not common_trata_without_sizeclass
 	
-							for (String method : static_methods) {
-								switch (method) {
-	
-								case "NG_R":
-									// Add xNGr
-									if (xNGr[strata_5layers_id] != null)
-									for (int i = 0; i < xNGr[strata_5layers_id].length; i++) {
-										if (xNGr[strata_5layers_id][i] != null)
-										for (int period : static_periods) {		//Loop all periods, 	final cut at t but we need parameter at time tR
-											int t = period + iter; // this is a special case we need to adjust
-											if (xNGr[strata_5layers_id][i][t] != null)
-											for (int a = 1; a < xNGr[strata_5layers_id][i][t].length; a++) {
-												if (xNGr[strata_5layers_id][i][t][a] > 0) {		// if variable is defined, this value would be > 0 
-													int var_index = xNGr[strata_5layers_id][i][t][a];
-													double para_value = parameter_info.get_total_value(
-															var_info_array[var_index].get_prescription_id_and_row_id()[0],
-															var_info_array[var_index].get_prescription_id_and_row_id()[1],
-															parameters_indexes,
-															dynamic_dentifiers_column_indexes, 
-															dynamic_identifiers,
-															var_cost_value[var_index]);
-													para_value = para_value * multiplier;
-																																							
-													if (para_value > 0) {	// only add if parameter is non zero
-														c15_indexlist.get(c15_num).add(var_index);
-														c15_valuelist.get(c15_num).add((double) para_value);
-													}
-												}
-											}	
+							// Add xNGr
+							if (xNGr[strata_5layers_id] != null)
+							for (int i = 0; i < xNGr[strata_5layers_id].length; i++) {
+								if (xNGr[strata_5layers_id][i] != null)
+								for (int period : static_periods) {		//Loop all periods, 	final cut at t but we need parameter at time tR
+									int t = period + iter; // this is a special case we need to adjust
+									if (xNGr[strata_5layers_id][i][t] != null)
+									for (int a = 1; a < xNGr[strata_5layers_id][i][t].length; a++) {
+										if (xNGr[strata_5layers_id][i][t][a] > 0) {		// if variable is defined, this value would be > 0 
+											int var_index = xNGr[strata_5layers_id][i][t][a];
+											double para_value = parameter_info.get_total_value(
+													var_info_array[var_index].get_prescription_id_and_row_id()[0],
+													var_info_array[var_index].get_prescription_id_and_row_id()[1],
+													parameters_indexes,
+													dynamic_dentifiers_column_indexes, 
+													dynamic_identifiers,
+													var_cost_value[var_index]);
+											para_value = para_value * multiplier;
+																																					
+											if (para_value > 0) {	// only add if parameter is non zero
+												c15_indexlist.get(c15_num).add(var_index);
+												c15_valuelist.get(c15_num).add((double) para_value);
+											}
 										}
-									}
-									break;
+									}	
+								}
+							}
 									
-								case "PB_R":
-									// Add xPBr
-									if (xPBr[strata_5layers_id] != null)
-									for (int i = 0; i < xPBr[strata_5layers_id].length; i++) {
-										if (xPBr[strata_5layers_id][i] != null)
-										for (int period : static_periods) {		//Loop all periods, 	final cut at t but we need parameter at time tR
-											int t = period + iter; // this is a special case we need to adjust
-											if (xPBr[strata_5layers_id][i][t] != null)
-											for (int a = 1; a < xPBr[strata_5layers_id][i][t].length; a++) {
-												if (xPBr[strata_5layers_id][i][t][a] > 0) {		// if variable is defined, this value would be > 0 
-													int var_index = xPBr[strata_5layers_id][i][t][a];
-													double para_value = parameter_info.get_total_value(
-															var_info_array[var_index].get_prescription_id_and_row_id()[0],
-															var_info_array[var_index].get_prescription_id_and_row_id()[1],
-															parameters_indexes,
-															dynamic_dentifiers_column_indexes, 
-															dynamic_identifiers,
-															var_cost_value[var_index]);
-													para_value = para_value * multiplier;
-																																							
-													if (para_value > 0) {	// only add if parameter is non zero
-														c15_indexlist.get(c15_num).add(var_index);
-														c15_valuelist.get(c15_num).add((double) para_value);
-													}
-												}
-											}	
+							// Add xPBr
+							if (xPBr[strata_5layers_id] != null)
+							for (int i = 0; i < xPBr[strata_5layers_id].length; i++) {
+								if (xPBr[strata_5layers_id][i] != null)
+								for (int period : static_periods) {		//Loop all periods, 	final cut at t but we need parameter at time tR
+									int t = period + iter; // this is a special case we need to adjust
+									if (xPBr[strata_5layers_id][i][t] != null)
+									for (int a = 1; a < xPBr[strata_5layers_id][i][t].length; a++) {
+										if (xPBr[strata_5layers_id][i][t][a] > 0) {		// if variable is defined, this value would be > 0 
+											int var_index = xPBr[strata_5layers_id][i][t][a];
+											double para_value = parameter_info.get_total_value(
+													var_info_array[var_index].get_prescription_id_and_row_id()[0],
+													var_info_array[var_index].get_prescription_id_and_row_id()[1],
+													parameters_indexes,
+													dynamic_dentifiers_column_indexes, 
+													dynamic_identifiers,
+													var_cost_value[var_index]);
+											para_value = para_value * multiplier;
+																																					
+											if (para_value > 0) {	// only add if parameter is non zero
+												c15_indexlist.get(c15_num).add(var_index);
+												c15_valuelist.get(c15_num).add((double) para_value);
+											}
 										}
-									}
-									break;
+									}	
+								}
+							}
 	
-								case "GS_R":
-									// Add xGSr
-									if (xGSr[strata_5layers_id] != null)
-									for (int i = 0; i < xGSr[strata_5layers_id].length; i++) {
-										if (xGSr[strata_5layers_id][i] != null)
-										for (int period : static_periods) {		//Loop all periods, 	final cut at t but we need parameter at time tR
-											int t = period + iter; // this is a special case we need to adjust
-											if (xGSr[strata_5layers_id][i][t] != null)
-											for (int a = 1; a < xGSr[strata_5layers_id][i][t].length; a++) {
-												if (xGSr[strata_5layers_id][i][t][a] > 0) {		// if variable is defined, this value would be > 0 
-													int var_index = xGSr[strata_5layers_id][i][t][a];
-													double para_value = parameter_info.get_total_value(
-															var_info_array[var_index].get_prescription_id_and_row_id()[0],
-															var_info_array[var_index].get_prescription_id_and_row_id()[1],
-															parameters_indexes,
-															dynamic_dentifiers_column_indexes, 
-															dynamic_identifiers,
-															var_cost_value[var_index]);
-													para_value = para_value * multiplier;
-																																							
-													if (para_value > 0) {	// only add if parameter is non zero
-														c15_indexlist.get(c15_num).add(var_index);
-														c15_valuelist.get(c15_num).add((double) para_value);
-													}
-												}
-											}	
+							// Add xGSr
+							if (xGSr[strata_5layers_id] != null)
+							for (int i = 0; i < xGSr[strata_5layers_id].length; i++) {
+								if (xGSr[strata_5layers_id][i] != null)
+								for (int period : static_periods) {		//Loop all periods, 	final cut at t but we need parameter at time tR
+									int t = period + iter; // this is a special case we need to adjust
+									if (xGSr[strata_5layers_id][i][t] != null)
+									for (int a = 1; a < xGSr[strata_5layers_id][i][t].length; a++) {
+										if (xGSr[strata_5layers_id][i][t][a] > 0) {		// if variable is defined, this value would be > 0 
+											int var_index = xGSr[strata_5layers_id][i][t][a];
+											double para_value = parameter_info.get_total_value(
+													var_info_array[var_index].get_prescription_id_and_row_id()[0],
+													var_info_array[var_index].get_prescription_id_and_row_id()[1],
+													parameters_indexes,
+													dynamic_dentifiers_column_indexes, 
+													dynamic_identifiers,
+													var_cost_value[var_index]);
+											para_value = para_value * multiplier;
+																																					
+											if (para_value > 0) {	// only add if parameter is non zero
+												c15_indexlist.get(c15_num).add(var_index);
+												c15_valuelist.get(c15_num).add((double) para_value);
+											}
 										}
-									}
-									break;
+									}	
+								}
+							}
 									
-								case "EA_R":
-									// Add xEAr[s1][s2][s3][s4][s5][tR][aR][s5R][i][t]		  note   tR >= 2   -->   tR >= t >= tR - aR + 1
-									if (xEAr[strata_5layers_id] != null) {
-										int total_no_1 = xEAr[strata_5layers_id].length;
-										int t_regen = (iter == 0) ? 2 : 1;	// this is because iteration 0 could not have regenerated forest in period 1, but iterations >= 1 do have regenerated forest strata
-										for (int tR = t_regen + iter; tR < total_no_1; tR++) {
-											if (xEAr[strata_5layers_id][tR] != null) {
-												int total_no_2 = xEAr[strata_5layers_id][tR].length;
-												for (int aR = 1; aR < total_no_2; aR++) {
-													if (xEAr[strata_5layers_id][tR][aR] != null) {
-														int total_no_3 = xEAr[strata_5layers_id][tR][aR].length;
-														for (int s5R = 0; s5R < total_no_3; s5R++) {
-															if (xEAr[strata_5layers_id][tR][aR][s5R] != null) {
-																int total_no_4 = xEAr[strata_5layers_id][tR][aR][s5R].length;
-																for (int i = 0; i < total_no_4; i++) {
-																	if (xEAr[strata_5layers_id][tR][aR][s5R][i] != null) {
-																		for (int period : static_periods) {		//Loop all periods, 	final cut at tR but we need parameter at time t
-																			int t = period + iter; // this is a special case we need to adjust
-																			if (xEAr[strata_5layers_id][tR][aR][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0   (this also removes the need of checking conversion and rotation)
-																				int var_index = xEAr[strata_5layers_id][tR][aR][s5R][i][t];
-																				double para_value = parameter_info.get_total_value(
-																						var_info_array[var_index].get_prescription_id_and_row_id()[0],
-																						var_info_array[var_index].get_prescription_id_and_row_id()[1],
-																						parameters_indexes,
-																						dynamic_dentifiers_column_indexes, 
-																						dynamic_identifiers,
-																						var_cost_value[var_index]);
-																				para_value = para_value * multiplier;
-																																														
-																				if (para_value > 0) { // only add if parameter is non zero
-																					c15_indexlist.get(c15_num).add(var_index);
-																					c15_valuelist.get(c15_num).add((double) para_value);
-																				}
-																			}
+							// Add xEAr[s1][s2][s3][s4][s5][tR][aR][s5R][i][t]		  note   tR >= 2   -->   tR >= t >= tR - aR + 1
+							if (xEAr[strata_5layers_id] != null) {
+								int total_no_1 = xEAr[strata_5layers_id].length;
+								int t_regen = (iter == 0) ? 2 : 1;	// this is because iteration 0 could not have regenerated forest in period 1, but iterations >= 1 do have regenerated forest strata
+								for (int tR = t_regen + iter; tR < total_no_1; tR++) {
+									if (xEAr[strata_5layers_id][tR] != null) {
+										int total_no_2 = xEAr[strata_5layers_id][tR].length;
+										for (int aR = 1; aR < total_no_2; aR++) {
+											if (xEAr[strata_5layers_id][tR][aR] != null) {
+												int total_no_3 = xEAr[strata_5layers_id][tR][aR].length;
+												for (int s5R = 0; s5R < total_no_3; s5R++) {
+													if (xEAr[strata_5layers_id][tR][aR][s5R] != null) {
+														int total_no_4 = xEAr[strata_5layers_id][tR][aR][s5R].length;
+														for (int i = 0; i < total_no_4; i++) {
+															if (xEAr[strata_5layers_id][tR][aR][s5R][i] != null) {
+																for (int period : static_periods) {		//Loop all periods, 	final cut at tR but we need parameter at time t
+																	int t = period + iter; // this is a special case we need to adjust
+																	if (xEAr[strata_5layers_id][tR][aR][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0   (this also removes the need of checking conversion and rotation)
+																		int var_index = xEAr[strata_5layers_id][tR][aR][s5R][i][t];
+																		double para_value = parameter_info.get_total_value(
+																				var_info_array[var_index].get_prescription_id_and_row_id()[0],
+																				var_info_array[var_index].get_prescription_id_and_row_id()[1],
+																				parameters_indexes,
+																				dynamic_dentifiers_column_indexes, 
+																				dynamic_identifiers,
+																				var_cost_value[var_index]);
+																		para_value = para_value * multiplier;
+																																												
+																		if (para_value > 0) { // only add if parameter is non zero
+																			c15_indexlist.get(c15_num).add(var_index);
+																			c15_valuelist.get(c15_num).add((double) para_value);
 																		}
 																	}
 																}
@@ -3150,9 +3122,7 @@ public class Solve_Iterations {
 											}
 										}
 									}
-									break;
 								}
-								
 							}
 						}					
 						
