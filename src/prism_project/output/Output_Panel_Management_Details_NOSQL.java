@@ -1858,8 +1858,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 		Collections.binarySearch(static_identifiers.get(3), var_info.get_layer4()) < 0 ||
 		Collections.binarySearch(static_identifiers.get(4), var_info.get_layer5()) < 0 ||
 		(var_info.get_forest_status().equals("E") && Collections.binarySearch(static_identifiers.get(5), var_info.get_layer6()) < 0) ||
-		Collections.binarySearch(static_identifiers.get(6), var_info.get_method() + "_" + var_info.get_forest_status()) < 0 ||
-		Collections.binarySearch(static_identifiers.get(7), String.valueOf(var_info.get_period())) < 0) 
+		Collections.binarySearch(static_identifiers.get(6), String.valueOf(var_info.get_period())) < 0) 
 		{
 			return false;
 		}
