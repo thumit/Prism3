@@ -627,7 +627,7 @@ public class Read_Input {
 	}	
 	
 	//-------------------------------------------------------------------------------------------------------------------------------------------------	
-	//For input_06_sr_disturbances
+	//For input_06_natural_disturbances
 	private List<String> disturbance_condition_list;
 	
 	public void read_replacing_disturbances(File file) {

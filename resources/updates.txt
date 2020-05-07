@@ -1293,4 +1293,6 @@ All changes in this block are associated with PrismAlpha3.0.01.jar, Prism-Formul
 540. Completely remove input_05_non_sr_disturbance and its edit screen, and modify the current SR Disturbances to be Natural Disturbances. The modification includes:
 	- Remove and modify code in Panel_Edit_Details class
 	- Remove the classes: Panel_QuickEdit_Non_SR, ScrollPane_ConstraintsSplitNonSR
-	- SR Disturbances is modified to be Natural Disturbances
+	- SR Disturbances is modified to be Natural Disturbances. This also includes the modfication of input_06_sr_disturbances to be input_06_natural_disturbances
+All changes in this block are associated with PrismAlpha3.0.01.jar, Prism-Formulation-11.docx, Rolling-horizon-formulation-08.docx
+--------------------------------------------------------------------------

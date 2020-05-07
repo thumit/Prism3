@@ -191,7 +191,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	private PrismTableModel model4a;
 	private Object[][] data4a;
 	
-	// table input_06_sr_disturbances.txt
+	// table input_06_natural_disturbances.txt
 	private boolean is_table6_loaded = false;
 	private int rowCount6, colCount6;
 	private String[] columnNames6;
@@ -452,7 +452,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		}
 		
 		
-		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_06_sr_disturbances.txt");
+		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_06_natural_disturbances.txt");
 		if (table_file.exists()) { // Load from input
 			tableLoader = new Reload_Table_Info(table_file);
 			rowCount6 = tableLoader.get_rowCount();
@@ -5753,10 +5753,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	
 			// 4th Grid ------------------------------------------------------------------------------		// Buttons	
 			// 4th Grid -----------------------------------------------------------------------------
-			JPanel sr_disturbances_condition_panel = new JPanel(new GridBagLayout());
+			JPanel disturbances_condition_panel = new JPanel(new GridBagLayout());
 			TitledBorder border = new TitledBorder("Priority Conditons (top row = top priority, no row = no disturbance)");
 			border.setTitleJustification(TitledBorder.CENTER);
-			sr_disturbances_condition_panel.setBorder(border);
+			disturbances_condition_panel.setBorder(border);
 			GridBagConstraints c = new GridBagConstraints();
 			c.fill = GridBagConstraints.BOTH;
 			c.insets = new Insets(0, 5, 10, 10); // padding top 0, left 5, bottom 10, right 10
@@ -5771,7 +5771,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			c.gridy = 0;
 			c.weightx = 0;
 			c.weighty = 0;
-			sr_disturbances_condition_panel.add(btn_New, c);		
+			disturbances_condition_panel.add(btn_New, c);		
 			
 
 			// Add Spinner to move priority up or down
@@ -5788,7 +5788,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			c.gridy = 1;
 			c.weightx = 0;
 			c.weighty = 0;
-			sr_disturbances_condition_panel.add(spin_priority, c);
+			disturbances_condition_panel.add(spin_priority, c);
 			
 			
 			JButton btn_Edit = new JButton();
@@ -5800,7 +5800,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			c.gridy = 2;
 			c.weightx = 0;
 			c.weighty = 0;
-			sr_disturbances_condition_panel.add(btn_Edit, c);
+			disturbances_condition_panel.add(btn_Edit, c);
 		    
 
 			JButton btn_Delete = new JButton();
@@ -5813,10 +5813,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			c.gridy = 3;
 			c.weightx = 0;
 			c.weighty = 0;
-			sr_disturbances_condition_panel.add(btn_Delete, c);
+			disturbances_condition_panel.add(btn_Delete, c);
 
-			create_mass_check_button(sr_disturbances_condition_panel, c, 0, 4, 0, 0).addActionListener(e -> apply_mass_check_or_uncheck("mass_check", model6, table6, data6, colCount6));
-			create_mass_uncheck_button(sr_disturbances_condition_panel, c, 0, 5, 0, 0).addActionListener(e -> apply_mass_check_or_uncheck("mass_uncheck", model6, table6, data6, colCount6));
+			create_mass_check_button(disturbances_condition_panel, c, 0, 4, 0, 0).addActionListener(e -> apply_mass_check_or_uncheck("mass_check", model6, table6, data6, colCount6));
+			create_mass_uncheck_button(disturbances_condition_panel, c, 0, 5, 0, 0).addActionListener(e -> apply_mass_check_or_uncheck("mass_uncheck", model6, table6, data6, colCount6));
 			
 			
 			// Add Empty Label to make all buttons on top not middle
@@ -5825,7 +5825,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			c.gridy = 6;
 			c.weightx = 0;
 			c.weighty = 1;
-			sr_disturbances_condition_panel.add(new JLabel(), c);
+			disturbances_condition_panel.add(new JLabel(), c);
 			
 			// Add table7		
 			create_table6();
@@ -5835,7 +5835,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			c.weightx = 1;
 			c.weighty = 1;
 			c.gridheight = 7;
-			sr_disturbances_condition_panel.add(table_ScrollPane, c);
+			disturbances_condition_panel.add(table_ScrollPane, c);
 						
 			
 			// Add Listeners for buttons----------------------------------------------------------
@@ -6192,7 +6192,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			// Add 3 tables into the same panel
 			JPanel combine_panel = new JPanel(new GridBagLayout());
 			c = new GridBagConstraints();
-			// Add the sr_disturbances_tables_ScrollPane to the main Grid	
+			// Add the disturbances_tables_ScrollPane to the main Grid	
 			combine_panel.add(natural_disturbances_tables_ScrollPane, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
 					0, 0, 1, 1, 0.5, 1, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
 					0, 0, 0, 0));		// insets top, left, bottom, right
@@ -6205,8 +6205,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			split_pane_lower.setBorder(null);
 			split_pane_lower.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
 			split_pane_lower.setDividerSize(3);
-			sr_disturbances_condition_panel.setPreferredSize(new Dimension(535, 0));
-			split_pane_lower.setLeftComponent(sr_disturbances_condition_panel);
+			disturbances_condition_panel.setPreferredSize(new Dimension(535, 0));
+			split_pane_lower.setLeftComponent(disturbances_condition_panel);
 			split_pane_lower.setRightComponent(combine_panel);
 						
 			
@@ -9285,7 +9285,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		File input_02_file = new File(currentRunFolder.getAbsolutePath() + "/input_02_model_strata.txt");
 		File input_03_file = new File(currentRunFolder.getAbsolutePath() + "/input_03_non_ea_management.txt");
 		File input_04_file = new File(currentRunFolder.getAbsolutePath() + "/input_04_ea_management.txt");
-		File input_06_file = new File(currentRunFolder.getAbsolutePath() + "/input_06_sr_disturbances.txt");
+		File input_06_file = new File(currentRunFolder.getAbsolutePath() + "/input_06_natural_disturbances.txt");
 		File input_07_file = new File(currentRunFolder.getAbsolutePath() + "/input_07_management_cost.txt");
 		File input_08_file = new File(currentRunFolder.getAbsolutePath() + "/input_08_basic_constraints.txt");
 		File input_09_file = new File(currentRunFolder.getAbsolutePath() + "/input_09_flow_constraints.txt");

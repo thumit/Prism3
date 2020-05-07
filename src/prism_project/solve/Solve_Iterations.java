@@ -160,7 +160,7 @@ public class Solve_Iterations {
 				File input_02_file = new File(runFolder.getAbsolutePath() + "/input_02_model_strata.txt");
 				File input_03_file = new File(runFolder.getAbsolutePath() + "/input_03_non_ea_management.txt");
 				File input_04_file = new File(runFolder.getAbsolutePath() + "/input_04_ea_management.txt");
-				File input_06_file = new File(runFolder.getAbsolutePath() + "/input_06_sr_disturbances.txt");
+				File input_06_file = new File(runFolder.getAbsolutePath() + "/input_06_natural_disturbances.txt");
 				File input_07_file = new File(runFolder.getAbsolutePath() + "/input_07_management_cost.txt");
 				File input_08_file = new File(runFolder.getAbsolutePath() + "/input_08_basic_constraints.txt");
 				File input_09_file = new File(runFolder.getAbsolutePath() + "/input_09_flow_constraints.txt");
@@ -217,7 +217,7 @@ public class Solve_Iterations {
 				List<List<String>> ea_conversion_and_rotation_for_strata_without_sizeclass = read.get_ea_conversion_and_rotation_for_strata_without_sizeclass();
 				boolean is_ea_defined_with_some_rows = (input_04_file.exists()) ? true : false;
 				
-				// Get Info: input_06_sr_disturbances
+				// Get Info: input_06_natural_disturbances
 				List<String> disturbance_condition_list = read.get_disturbance_condition_list(); 
 				
 				// Get info: input_07_management_cost
