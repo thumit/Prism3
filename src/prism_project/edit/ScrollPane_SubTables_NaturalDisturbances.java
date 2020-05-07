@@ -27,13 +27,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.TitledBorder;
 
-public class ScrollPane_SubTables_SR_Disturbances extends JScrollPane {		
+public class ScrollPane_SubTables_NaturalDisturbances extends JScrollPane {		
 	private JTable table6a, table6b, table6c, table6d;
 	private Object[][] data6a, data6b, data6c, data6d;
 	private int total_replacing_disturbances;
 	private JScrollPane loss_rate_mean_scrollpane, loss_rate_std_scrollpane, conversion_rate_mean_scrollpane, conversion_rate_std_scrollpane;
 		
-	public ScrollPane_SubTables_SR_Disturbances(JTable table6a, Object[][] data6a, JTable table6b, Object[][] data6b, JTable table6c, Object[][] data6c, JTable table6d, Object[][] data6d, int total_replacing_disturbances) {	
+	public ScrollPane_SubTables_NaturalDisturbances(JTable table6a, Object[][] data6a, JTable table6b, Object[][] data6b, JTable table6c, Object[][] data6c, JTable table6d, Object[][] data6d, int total_replacing_disturbances) {	
 		this.table6a = table6a;
 		this.table6b = table6b;
 		this.table6c = table6c;

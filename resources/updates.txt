@@ -1290,3 +1290,6 @@ All changes in this block are associated with PrismAlpha3.0.01.jar, Prism-Formul
 	- Succesfully convert and test 10 models with silviculture methods removed
 538. Permanently exclude non-exsiting prescriptions from modeling. This is equivalent to making Boost 2 permanent. More details of Boost 2 are described at https://bitbucket.org/Prism-Members/prism/issues/26/memory-boosts. It was actually always implemented in the Prism software and only optional in the code base. Therefore this update does not change the current behavior of Prism.
 539. Delete the deprecated code in the Reload_Table_Info of the Panel_Edit_Details class. This code help include model_condition column to wherever needed and modify the disturbance information. We expect from version 3, users already had all modeled built and saved with new input format so the code could be removed.
+540. Completely remove input_05_non_sr_disturbance and its edit screen. The modification includes:
+	- Remove and modify code in Panel_Edit_Details class
+	- Remove the classes: Panel_QuickEdit_Non_SR, ScrollPane_ConstraintsSplitNonSR

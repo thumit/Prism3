@@ -43,7 +43,7 @@ import prism_convenience.IconHandle;
 import prism_convenience.PrismGridBagLayoutHandle;
 import prism_convenience.PrismTableModel;
 
-public class Panel_QuickEdit_SR extends JPanel {
+public class Panel_QuickEdit_NaturalDisturbances extends JPanel {
 	private JTable table6a, table6b, table6c;
 	private Object[][] data6a, data6b, data6c;
 	private DefaultTableCellRenderer render6a, render6b, render6c;
@@ -53,7 +53,7 @@ public class Panel_QuickEdit_SR extends JPanel {
 	private JButton btnApplyLrmean, btnApplyLrstd;
 	private JButton btnApplyPercentage;
 	
-	public Panel_QuickEdit_SR(JTable table6a, Object[][] data6a, JTable table6b, Object[][] data6b, JTable table6c, Object[][] data6c, JTable table6d, Object[][] data6d) {
+	public Panel_QuickEdit_NaturalDisturbances(JTable table6a, Object[][] data6a, JTable table6b, Object[][] data6b, JTable table6c, Object[][] data6c, JTable table6d, Object[][] data6d) {
 		this.table6a = table6a;
 		this.data6a = data6a;
 		this.render6a = (DefaultTableCellRenderer) table6a.getColumnModel().getColumn(0).getCellRenderer();
