@@ -1288,3 +1288,4 @@ All changes in this block are associated with PrismAlpha3.0.01.jar, Prism-Formul
 	- ScrollPane_StaticIdentifiers and Read_Database classes: option 2 = 6 layers + period (remove method)
 	- Remove method information in following classes Read_Input, Solve_Iteration, Information_Disturbance, Information_Cost, Output_Panel_Management_Details_NOSQL
 	- Succesfully convert and test 10 models with silviculture methods removed
+538. Permanently exclude non-exsiting prescriptions from modeling. This is equivalent to making Boost 2 permanent. More details of Boost 2 are described at https://bitbucket.org/Prism-Members/prism/issues/26/memory-boosts

@@ -3,7 +3,6 @@ Fact --- "Each time you get stuck you realize you need to learn more, but when y
 Fact --- Months that begin on a Sunday will always have a Friday the 13th. "Fact & Hints" feature was released in July 2018.
 Fact --- Prism has its name given by Eric Henderson, a regional planning analyst at US Forest Service Region I.
 Fact --- The original name of Prism was SpectrumLite. When you start Prism, the interface shows a spectrum of light.
-Fact --- Eric called pikachu a "rabbit". The pikachu image was removed from Prism interface.
 Fact --- Prism could remember the databases it reads to process faster the next times.
 Fact --- Your computer is using java version 10 or later. Java 10+ has some G1 Gabbage Collector features which Prism utilizes to perform better.
 Fact --- Prism could models unlimited types of stand-replacing disturbances. Eric uses one of them to represent a 40-year delay of forest regeneration after clear-cuts.

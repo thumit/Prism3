@@ -303,7 +303,6 @@ public class Solve_Iterations {
 					int total_PB_R_prescription_choices = 15;	// choices 0-14
 					int total_GS_R_prescription_choices = 15;	// choices 0-14
 					int total_EA_R_prescription_choices = 6;	// choices 0-5
-					boolean allow_Non_Existing_Prescription = false;
 					
 	
 					List<Double> objlist = new ArrayList<Double>();				//objective coefficient
@@ -444,17 +443,7 @@ public class Solve_Iterations {
 									String var_name = "xNG_E_" + strata + "_" + i + "_" + t;	
 									Information_Variable var_info = new Information_Variable(iter, var_name, strata_starting_age[strata_id], yield_tables_names_list);
 									
-									if (!allow_Non_Existing_Prescription) {		// Boost 2
-										if (var_info.get_prescription_id_and_row_id()[0] != -9999) {
-											var_info_list.add(var_info);
-											objlist.add((double) 0);
-											vnamelist.add(var_name);
-											vlblist.add((double) 0);
-											vublist.add(Double.MAX_VALUE);
-											xNGe[strata_id][i][t] = nvars;
-											nvars++;
-										}
-									} else {
+									if (var_info.get_prescription_id_and_row_id()[0] != -9999) {	// Boost 2 is permanent (only allow existing prescriptions to be modeled)
 										var_info_list.add(var_info);
 										objlist.add((double) 0);
 										vnamelist.add(var_name);
@@ -482,17 +471,7 @@ public class Solve_Iterations {
 									String var_name = "xPB_E_" + strata + "_" + i + "_" + t;										
 									Information_Variable var_info = new Information_Variable(iter, var_name, strata_starting_age[strata_id], yield_tables_names_list);
 									
-									if (!allow_Non_Existing_Prescription) {		// Boost 2
-										if (var_info.get_prescription_id_and_row_id()[0] != -9999) {
-											var_info_list.add(var_info);
-											objlist.add((double) 0);
-											vnamelist.add(var_name);
-											vlblist.add((double) 0);
-											vublist.add(Double.MAX_VALUE);
-											xPBe[strata_id][i][t] = nvars;
-											nvars++;
-										}
-									} else {
+									if (var_info.get_prescription_id_and_row_id()[0] != -9999) {	// Boost 2 is permanent (only allow existing prescriptions to be modeled)
 										var_info_list.add(var_info);
 										objlist.add((double) 0);
 										vnamelist.add(var_name);
@@ -520,17 +499,7 @@ public class Solve_Iterations {
 									String var_name = "xGS_E_" + strata + "_" + i + "_" + t;										
 									Information_Variable var_info = new Information_Variable(iter, var_name, strata_starting_age[strata_id], yield_tables_names_list);
 									
-									if (!allow_Non_Existing_Prescription) {		// Boost 2
-										if (var_info.get_prescription_id_and_row_id()[0] != -9999) {
-											var_info_list.add(var_info);
-											objlist.add((double) 0);
-											vnamelist.add(var_name);
-											vlblist.add((double) 0);
-											vublist.add(Double.MAX_VALUE);
-											xGSe[strata_id][i][t] = nvars;
-											nvars++;
-										}
-									} else {
+									if (var_info.get_prescription_id_and_row_id()[0] != -9999) {	// Boost 2 is permanent (only allow existing prescriptions to be modeled)
 										var_info_list.add(var_info);
 										objlist.add((double) 0);
 										vnamelist.add(var_name);
@@ -566,17 +535,7 @@ public class Solve_Iterations {
 												String var_name = "xEA_E_" + strata + "_" + tR + "_" + layer5.get(s5R) + "_" + i + "_" + t;
 												Information_Variable var_info = new Information_Variable(iter, var_name, strata_starting_age[strata_id], yield_tables_names_list);
 												
-												if (!allow_Non_Existing_Prescription) {		// Boost 2
-													if (var_info.get_prescription_id_and_row_id()[0] != -9999) {
-														var_info_list.add(var_info);
-														objlist.add((double) 0);
-														vnamelist.add(var_name);
-														vlblist.add((double) 0);
-														vublist.add(Double.MAX_VALUE);
-														xEAe[strata_id][tR][s5R][i][t] = nvars;
-														nvars++;
-													}
-												} else {
+												if (var_info.get_prescription_id_and_row_id()[0] != -9999) {	// Boost 2 is permanent (only allow existing prescriptions to be modeled)
 													var_info_list.add(var_info);
 													objlist.add((double) 0);
 													vnamelist.add(var_name);
@@ -610,17 +569,7 @@ public class Solve_Iterations {
 										String var_name = "xNG_R_" + strata + "_" + i + "_" + t + "_" + a;										
 										Information_Variable var_info = new Information_Variable(iter, var_name, -9999, yield_tables_names_list);
 										
-										if (!allow_Non_Existing_Prescription) {		// Boost 2
-											if (var_info.get_prescription_id_and_row_id()[0] != -9999) {
-												var_info_list.add(var_info);
-												objlist.add((double) 0);
-												vnamelist.add(var_name);							
-												vlblist.add((double) 0);
-												vublist.add(Double.MAX_VALUE);
-												xNGr[strata_5layers_id][i][t][a] = nvars;
-												nvars++;
-											}
-										} else {
+										if (var_info.get_prescription_id_and_row_id()[0] != -9999) {	// Boost 2 is permanent (only allow existing prescriptions to be modeled)
 											var_info_list.add(var_info);
 											objlist.add((double) 0);
 											vnamelist.add(var_name);							
@@ -652,17 +601,7 @@ public class Solve_Iterations {
 										String var_name = "xPB_R_" + strata + "_" + i + "_" + t + "_" + a;										
 										Information_Variable var_info = new Information_Variable(iter, var_name, -9999, yield_tables_names_list);
 										
-										if (!allow_Non_Existing_Prescription) {		// Boost 2
-											if (var_info.get_prescription_id_and_row_id()[0] != -9999) {
-												var_info_list.add(var_info);
-												objlist.add((double) 0);
-												vnamelist.add(var_name);							
-												vlblist.add((double) 0);
-												vublist.add(Double.MAX_VALUE);
-												xPBr[strata_5layers_id][i][t][a] = nvars;
-												nvars++;
-											}
-										} else {
+										if (var_info.get_prescription_id_and_row_id()[0] != -9999) {	// Boost 2 is permanent (only allow existing prescriptions to be modeled)
 											var_info_list.add(var_info);
 											objlist.add((double) 0);
 											vnamelist.add(var_name);							
@@ -694,17 +633,7 @@ public class Solve_Iterations {
 										String var_name = "xGS_R_" + strata + "_" + i + "_" + t + "_" + a;										
 										Information_Variable var_info = new Information_Variable(iter, var_name, -9999, yield_tables_names_list);
 										
-										if (!allow_Non_Existing_Prescription) {		// Boost 2
-											if (var_info.get_prescription_id_and_row_id()[0] != -9999) {
-												var_info_list.add(var_info);
-												objlist.add((double) 0);
-												vnamelist.add(var_name);							
-												vlblist.add((double) 0);
-												vublist.add(Double.MAX_VALUE);
-												xGSr[strata_5layers_id][i][t][a] = nvars;
-												nvars++;
-											}
-										} else {
+										if (var_info.get_prescription_id_and_row_id()[0] != -9999) {	// Boost 2 is permanent (only allow existing prescriptions to be modeled)
 											var_info_list.add(var_info);
 											objlist.add((double) 0);
 											vnamelist.add(var_name);							
@@ -744,17 +673,7 @@ public class Solve_Iterations {
 														String var_name = "xEA_R_" + strata + "_" + tR + "_" + aR + "_" + layer5.get(s5R) + "_" + i + "_" + t;										
 														Information_Variable var_info = new Information_Variable(iter, var_name, -9999, yield_tables_names_list);
 														
-														if (!allow_Non_Existing_Prescription) {		// Boost 2
-															if (var_info.get_prescription_id_and_row_id()[0] != -9999) {
-																var_info_list.add(var_info);
-																objlist.add((double) 0);
-																vnamelist.add(var_name);	
-																vlblist.add((double) 0);
-																vublist.add(Double.MAX_VALUE);
-																xEAr[strata_5layers_id][tR][aR][s5R][i][t] = nvars;
-																nvars++;
-															}
-														} else {
+														if (var_info.get_prescription_id_and_row_id()[0] != -9999) {	// Boost 2 is permanent (only allow existing prescriptions to be modeled)
 															var_info_list.add(var_info);
 															objlist.add((double) 0);
 															vnamelist.add(var_name);	
