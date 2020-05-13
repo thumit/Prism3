@@ -53,7 +53,7 @@ public class Information_Variable {
 			String[] term;
 			
 			switch (first_six_letters_of_var_name) {
-			case "xNG_E_":
+			case "xNC_E_":
 				term = var_name.substring(6).split("_");	// remove first 6 letters and then split
 				layer1 = term[0];
 				layer2 = term[1];
@@ -65,47 +65,9 @@ public class Information_Variable {
 				period = Integer.parseInt(term[7]);
 				age = starting_age + period - 1;		// calculate age for existing variable
 				
-				method = "NG";
+				method = "NC";
 				forest_status = "E";
-				yield_table_name_to_find = layer5 + "_" + layer6 + "_"+ method + "_" + forest_status + "_" + timing_choice;
-				yield_table_row_index_to_find = period - 1;
-				period = period - iter;		// adjust period. Eg. period 1 + iter should be adjusted to be 1. This is to apply condition in cost, disturbance, other inputs...
-				break;
-			
-			case "xPB_E_":
-				term = var_name.substring(6).split("_");	// remove first 6 letters and then split
-				layer1 = term[0];
-				layer2 = term[1];
-				layer3 = term[2];
-				layer4 = term[3];
-				layer5 = term[4];
-				layer6 = term[5];
-				timing_choice = Integer.parseInt(term[6]);
-				period = Integer.parseInt(term[7]);
-				age = starting_age + period - 1;		// calculate age for existing variable
-				
-				method = "PB";
-				forest_status = "E";
-				yield_table_name_to_find = layer5 + "_" + layer6 + "_"+ method + "_" + forest_status + "_" + timing_choice;
-				yield_table_row_index_to_find = period - 1;
-				period = period - iter;		// adjust period. Eg. period 1 + iter should be adjusted to be 1. This is to apply condition in cost, disturbance, other inputs...
-				break;
-			
-			case "xGS_E_":
-				term = var_name.substring(6).split("_");	// remove first 6 letters and then split
-				layer1 = term[0];
-				layer2 = term[1];
-				layer3 = term[2];
-				layer4 = term[3];
-				layer5 = term[4];
-				layer6 = term[5];
-				timing_choice = Integer.parseInt(term[6]);
-				period = Integer.parseInt(term[7]);	
-				age = starting_age + period - 1;		// calculate age for existing variable
-				
-				method = "GS";
-				forest_status = "E";
-				yield_table_name_to_find = layer5 + "_" + layer6 + "_"+ method + "_" + forest_status + "_" + timing_choice;
+				yield_table_name_to_find = yield_tables_names_list.get(timing_choice);
 				yield_table_row_index_to_find = period - 1;
 				period = period - iter;		// adjust period. Eg. period 1 + iter should be adjusted to be 1. This is to apply condition in cost, disturbance, other inputs...
 				break;

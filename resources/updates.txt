@@ -1296,3 +1296,6 @@ All changes in this block are associated with PrismAlpha3.0.01.jar, Prism-Formul
 	- SR Disturbances is modified to be Natural Disturbances. This also includes the modfication of input_06_sr_disturbances to be input_06_natural_disturbances
 All changes in this block are associated with PrismAlpha3.0.01.jar, Prism-Formulation-11.docx, Rolling-horizon-formulation-08.docx
 --------------------------------------------------------------------------
+538. Merging all uneven-aged variables for exiting strata. Modifications are mades in following classes:
+	- Solve_Iterations
+	- Information_Variables

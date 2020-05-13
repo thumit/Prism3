@@ -143,6 +143,7 @@ public class Solve_Iterations {
 				// Database Info
 				String[][][] yield_tables_values = read_database.get_yield_tables_values();
 				String[] yield_tables_column_names = read_database.get_yield_tables_column_names();
+				List<String> yield_tables_column_names_list = Arrays.asList(yield_tables_column_names); 
 				String[] yield_tables_names = read_database.get_yield_tables_names();			
 				List<String> yield_tables_names_list = Arrays.asList(yield_tables_names); 
 				
@@ -295,14 +296,17 @@ public class Solve_Iterations {
 					
 					
 					int total_age_classes = total_periods - 1 + iter;		//loop from age 1 to total_age_classes (for regenerated strata, set total_age_classes = total_periods - 1 + iter for rolling horizon update
-					int total_NG_E_prescription_choices = 15;	// choices 0-14
-					int total_PB_E_prescription_choices = 15;	// choices 0-14
-					int total_GS_E_prescription_choices = 15;	// choices 0-14
+					int total_prescriptions = yield_tables_values.length;
 					int total_EA_E_prescription_choices = 6;	// choices 0-5
 					int total_NG_R_prescription_choices = 15;	// choices 0-14
 					int total_PB_R_prescription_choices = 15;	// choices 0-14
 					int total_GS_R_prescription_choices = 15;	// choices 0-14
 					int total_EA_R_prescription_choices = 6;	// choices 0-5
+					
+					int method_col_id = yield_tables_column_names_list.indexOf("silv_method");
+					int status_col_id = yield_tables_column_names_list.indexOf("extreg");
+					int choice_col_id = yield_tables_column_names_list.indexOf("timingchoice");
+					
 					
 	
 					List<Double> objlist = new ArrayList<Double>();				//objective coefficient
@@ -318,9 +322,7 @@ public class Solve_Iterations {
 					int[] u = new int [total_softConstraints];	//u(j)
 					int[] z = new int [total_hardConstraints];	//z(k)
 					int[] v = new int [total_freeConstraints];	//v(n)
-	//				int[][][] xNGe = new int[total_model_strata][total_NG_E_prescription_choices][total_periods + 1 + iter];		//xNGe(s1,s2,s3,s4,s5,s6)(i)(t)	
-	//				int[][][] xPBe = new int[total_model_strata][total_PB_E_prescription_choices][total_periods + 1 + iter];		//xPBe(s1,s2,s3,s4,s5,s6)(i)(t)
-	//				int[][][] xGSe = new int[total_model_strata][total_GS_E_prescription_choices][total_periods + 1 + iter];		//xGSe(s1,s2,s3,s4,s5,s6)(i)(t)
+	//				int[][][] xNCe = new int[total_model_strata][total_prescriptions][total_periods + 1 + iter];		//xNCe(s1,s2,s3,s4,s5,s6)(i)(t)	
 	//				int[][][][][] xEAe = new int[total_model_strata][total_periods + 1][total_layer5][total_EA_E_prescription_choices][total_periods + 1 + iter];	//xEAe(s1,s2,s3,s4,s5,s6)(tR)(s5R)(i)(t)
 											// total_Periods + 1 + iter because tR starts from 1 to total_Periods + iter, ignore the 0
 	//				int[][][][] xNGr = new int[total_model_strata_without_sizeclass][total_NG_R_prescription_choices][total_periods + 1 + iter][total_AgeClasses + 1 + iter];		//xNGr(s1,s2,s3,s4,s5)(i)(t)(a)
@@ -333,9 +335,7 @@ public class Solve_Iterations {
 	//										// total_Periods + 1 + iter because tR starts from 1 to total_Periods + iter, ignore the 0		
 					
 					// The below variables are optimized by using jagged-arrays
-					int[][][] xNGe = null;
-					int[][][] xPBe = null;
-					int[][][] xGSe = null;
+					int[][][] xNCe = null;
 					int[][][][] xNGr = null;
 					int[][][][] xPBr = null;	
 					int[][][][] xGSr = null;
@@ -429,89 +429,37 @@ public class Solve_Iterations {
 						nvars++;				
 					}
 								
-					// Create decision variables xNGe(s1,s2,s3,s4,s5,s6)(i)(t)	
-					xNGe = new int[total_model_strata][][];
+					// Create decision variables xNCe(s1,s2,s3,s4,s5,s6)(i)(t)	
+					xNCe = new int[total_model_strata][][];
 					for (int strata_id = 0; strata_id < total_model_strata; strata_id++) {
 						String strata = model_strata.get(strata_id);
 						
-						xNGe[strata_id] = new int[total_NG_E_prescription_choices][];
-						for (int i = 0; i < total_NG_E_prescription_choices; i++) {
-							if (is_nonea_defined_with_some_rows && Collections.binarySearch(nonea_method_choice_for_strata.get(strata_id), "NG_E" + " " + i) >= 0) {	// Boost 1 (a.k.a. Silviculture Method)				
-								
-								xNGe[strata_id][i] = new int[total_periods + 1 + iter];
-								for (int t = 1 + iter; t <= total_periods + iter; t++) {
-									String var_name = "xNG_E_" + strata + "_" + i + "_" + t;	
-									Information_Variable var_info = new Information_Variable(iter, var_name, strata_starting_age[strata_id], yield_tables_names_list);
-									
-									if (var_info.get_prescription_id_and_row_id()[0] != -9999) {	// Boost 2 is permanent (only allow existing prescriptions to be modeled)
+						xNCe[strata_id] = new int[total_prescriptions][];
+						for (int i = 0; i < total_prescriptions; i++) {
+							
+							String method_choice_of_this_prescription = yield_tables_values[i][0][method_col_id] + "_" +  yield_tables_values[i][0][status_col_id] + " " + yield_tables_values[i][0][choice_col_id];
+							if (is_nonea_defined_with_some_rows && Collections.binarySearch(nonea_method_choice_for_strata.get(strata_id), method_choice_of_this_prescription) >= 0) {	// Boost 1 (a.k.a. Silviculture Method)				
+								// if matching s5_s6
+								String s5_s6_from_strata = strata.split("_")[4] + strata.split("_")[5];
+								String s5_s6_from_prescription = yield_tables_names[i].split("_")[0] + yield_tables_names[i].split("_")[1];
+								if (s5_s6_from_strata.equals(s5_s6_from_prescription)) {
+									xNCe[strata_id][i] = new int[total_periods + 1 + iter];
+									for (int t = 1 + iter; t <= total_periods + iter; t++) {
+										String var_name = "xNC_E_" + strata + "_" + i + "_" + t;	
+										Information_Variable var_info = new Information_Variable(iter, var_name, strata_starting_age[strata_id], yield_tables_names_list);
+										
 										var_info_list.add(var_info);
 										objlist.add((double) 0);
 										vnamelist.add(var_name);
 										vlblist.add((double) 0);
 										vublist.add(Double.MAX_VALUE);
-										xNGe[strata_id][i][t] = nvars;
+										xNCe[strata_id][i][t] = nvars;
 										nvars++;
 									}
 								}
 							}
 						}
 					}													
-					
-					// Create decision variables xPBe(s1,s2,s3,s4,s5,s6)(i)(t)	
-					xPBe = new int[total_model_strata][][];
-					for (int strata_id = 0; strata_id < total_model_strata; strata_id++) {
-						String strata = model_strata.get(strata_id);
-						
-						xPBe[strata_id] = new int[total_PB_E_prescription_choices][];
-						for (int i = 0; i < total_PB_E_prescription_choices; i++) {
-							if (is_nonea_defined_with_some_rows && Collections.binarySearch(nonea_method_choice_for_strata.get(strata_id), "PB_E" + " " + i) >= 0) {	// Boost 1 (a.k.a. Silviculture Method)	
-								
-								xPBe[strata_id][i] = new int[total_periods + 1 + iter];
-								for (int t = 1 + iter; t <= total_periods + iter; t++) {
-									String var_name = "xPB_E_" + strata + "_" + i + "_" + t;										
-									Information_Variable var_info = new Information_Variable(iter, var_name, strata_starting_age[strata_id], yield_tables_names_list);
-									
-									if (var_info.get_prescription_id_and_row_id()[0] != -9999) {	// Boost 2 is permanent (only allow existing prescriptions to be modeled)
-										var_info_list.add(var_info);
-										objlist.add((double) 0);
-										vnamelist.add(var_name);
-										vlblist.add((double) 0);
-										vublist.add(Double.MAX_VALUE);
-										xPBe[strata_id][i][t] = nvars;
-										nvars++;
-									}
-								}
-							}
-						}
-					}														
-					
-					// Create decision variables xGSe(s1,s2,s3,s4,s5,s6)(i)(t)		
-					xGSe = new int[total_model_strata][][];
-					for (int strata_id = 0; strata_id < total_model_strata; strata_id++) {
-						String strata = model_strata.get(strata_id);
-						
-						xGSe[strata_id] = new int[total_GS_E_prescription_choices][];
-						for (int i = 0; i < total_GS_E_prescription_choices; i++) {
-							if (is_nonea_defined_with_some_rows && Collections.binarySearch(nonea_method_choice_for_strata.get(strata_id), "GS_E" + " " + i) >= 0) {	// Boost 1 (a.k.a. Silviculture Method)		
-								
-								xGSe[strata_id][i] = new int[total_periods + 1 + iter];
-								for (int t = 1 + iter; t <= total_periods + iter; t++) {
-									String var_name = "xGS_E_" + strata + "_" + i + "_" + t;										
-									Information_Variable var_info = new Information_Variable(iter, var_name, strata_starting_age[strata_id], yield_tables_names_list);
-									
-									if (var_info.get_prescription_id_and_row_id()[0] != -9999) {	// Boost 2 is permanent (only allow existing prescriptions to be modeled)
-										var_info_list.add(var_info);
-										objlist.add((double) 0);
-										vnamelist.add(var_name);
-										vlblist.add((double) 0);
-										vublist.add(Double.MAX_VALUE);
-										xGSe[strata_id][i][t] = nvars;
-										nvars++;
-									}
-								}
-							}
-						}
-					}														
 					
 					// Create decision variables xEAe(s1,s2,s3,s4,s5,s6)(tR)(s5R)(i)(t)
 					xEAe = new int[total_model_strata][][][][];
@@ -925,31 +873,11 @@ public class Solve_Iterations {
 							c5_indexlist.add(new ArrayList<Integer>());
 							c5_valuelist.add(new ArrayList<Double>());
 							
-							// Add sigma(i) xNGe(s1,s2,s3,s4,s5,s6)[i][1]
-							for (int i = 0; i < total_NG_E_prescription_choices; i++) {
-								if (xNGe[strata_id][i] != null
-										&& xNGe[strata_id][i][1] > 0) {		// if variable is defined, this value would be > 0 
-									c5_indexlist.get(c5_num).add(xNGe[strata_id][i][1]);
-									c5_valuelist.get(c5_num).add((double) 1);
-									total_variables_added_for_this_stratum++;
-								}
-							}
-					
-							// Add sigma(i) xPBe(s1,s2,s3,s4,s5,s6)[i][1]
-							for (int i = 0; i < total_PB_E_prescription_choices; i++) {
-								if (xPBe[strata_id][i] != null
-										&& xPBe[strata_id][i][1] > 0) {		// if variable is defined, this value would be > 0 
-									c5_indexlist.get(c5_num).add(xPBe[strata_id][i][1]);
-									c5_valuelist.get(c5_num).add((double) 1);
-									total_variables_added_for_this_stratum++;
-								}
-							}
-							
-							// Add xGSe(s1,s2,s3,s4,s5,s6)[i][1]
-							for (int i = 0; i < total_GS_E_prescription_choices; i++) {
-								if (xGSe[strata_id][i] != null
-										&& xGSe[strata_id][i][1] > 0) {		// if variable is defined, this value would be > 0 
-									c5_indexlist.get(c5_num).add(xGSe[strata_id][i][1]);
+							// Add sigma(i) xNCe(s1,s2,s3,s4,s5,s6)[i][1]
+							for (int i = 0; i < total_prescriptions; i++) {
+								if (xNCe[strata_id][i] != null
+										&& xNCe[strata_id][i][1] > 0) {		// if variable is defined, this value would be > 0 
+									c5_indexlist.get(c5_num).add(xNCe[strata_id][i][1]);
 									c5_valuelist.get(c5_num).add((double) 1);
 									total_variables_added_for_this_stratum++;
 								}
@@ -1035,12 +963,12 @@ public class Solve_Iterations {
 						LinkedHashMap<Integer, Double> map_var_index_to_stochastic_var_value = new LinkedHashMap<Integer, Double>();
 						// Existing variables
 						for (int strata_id = 0; strata_id < total_model_strata; strata_id++) {
-							// xNGe(s1,s2,s3,s4,s5,s6)[i][1 + iter]
-							for (int i = 0; i < total_NG_E_prescription_choices; i++) {
-								if (xNGe[strata_id][i] != null
-										&& xNGe[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
+							// xNCe(s1,s2,s3,s4,s5,s6)[i][1 + iter]
+							for (int i = 0; i < total_prescriptions; i++) {
+								if (xNCe[strata_id][i] != null
+										&& xNCe[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
 									// Simulate stochastic SRs to get final_value which is the period 2 solution after stochastic disturbances
-									int var_index = xNGe[strata_id][i][1 + iter];	// this is the first period variable in this iteration or the second period variable in previous iteration
+									int var_index = xNCe[strata_id][i][1 + iter];	// this is the first period variable in this iteration or the second period variable in previous iteration
 									double final_value = get_period_two_variable_value_after_applying_stochastic_loss_rate_for_period_one_variable(
 											var_index, var_info_array, layer5, map_var_name_to_var_value, map_var_name_to_var_rd_condition_id, map_var_name_to_var_stochastic_loss_rates,
 											total_replacing_disturbances, disturbance_info, all_zeroes_2D_array);
@@ -1049,34 +977,6 @@ public class Solve_Iterations {
 								}
 							}
 					
-							// xPBe(s1,s2,s3,s4,s5,s6)[i][1 + iter]
-							for (int i = 0; i < total_PB_E_prescription_choices; i++) {
-								if (xPBe[strata_id][i] != null
-										&& xPBe[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
-									// Simulate stochastic SRs to get final_value which is the period 2 solution after stochastic disturbances
-									int var_index = xPBe[strata_id][i][1 + iter];	// this is the first period variable in this iteration or the second period variable in previous iteration
-									double final_value = get_period_two_variable_value_after_applying_stochastic_loss_rate_for_period_one_variable(
-											var_index, var_info_array, layer5, map_var_name_to_var_value, map_var_name_to_var_rd_condition_id, map_var_name_to_var_stochastic_loss_rates,
-											total_replacing_disturbances, disturbance_info, all_zeroes_2D_array);
-									// Mapping
-									map_var_index_to_stochastic_var_value.put(var_index, final_value);
-								}
-							}
-							
-							// xGSe(s1,s2,s3,s4,s5,s6)[i][1 + iter]
-							for (int i = 0; i < total_GS_E_prescription_choices; i++) {
-								if (xGSe[strata_id][i] != null
-										&& xGSe[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
-									// Simulate stochastic SRs to get final_value which is the period 2 solution after stochastic disturbances
-									int var_index = xGSe[strata_id][i][1 + iter];	// this is the first period variable in this iteration or the second period variable in previous iteration
-									double final_value = get_period_two_variable_value_after_applying_stochastic_loss_rate_for_period_one_variable(
-											var_index, var_info_array, layer5, map_var_name_to_var_value, map_var_name_to_var_rd_condition_id, map_var_name_to_var_stochastic_loss_rates,
-											total_replacing_disturbances, disturbance_info, all_zeroes_2D_array);
-									// Mapping
-									map_var_index_to_stochastic_var_value.put(var_index, final_value);
-								}
-							}
-							
 							// xEAe(s1,s2,s3,s4,s5,s6)[tR][s5R][i][1 + iter]	
 							for (int tR = 1 + iter; tR <= total_periods + iter; tR++) {
 								for (int s5R = 0; s5R < total_layer5; s5R++) {
@@ -1208,11 +1108,11 @@ public class Solve_Iterations {
 								// use LinkedHashMap to add all relevant variables in iteration 1+M
 								LinkedHashMap<Integer, String> map_var_index_to_var_state_id = new LinkedHashMap<Integer, String>();
 								
-								// xNGe(s1,s2,s3,s4,s5,s6)[i][1 + iter]
-								for (int i = 0; i < total_NG_E_prescription_choices; i++) {
-									if (xNGe[strata_id][i] != null
-											&& xNGe[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
-										int var_index = xNGe[strata_id][i][1 + iter];
+								// xNCe(s1,s2,s3,s4,s5,s6)[i][1 + iter]
+								for (int i = 0; i < total_prescriptions; i++) {
+									if (xNCe[strata_id][i] != null
+											&& xNCe[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
+										int var_index = xNCe[strata_id][i][1 + iter];
 										String prescription_and_row_id = var_info_array[var_index].get_yield_table_name_to_find() + " " + var_info_array[var_index].get_yield_table_row_index_to_find();
 										String state_id = map_prescription_and_row_id_to_state_id.get(prescription_and_row_id);
 										if (state_id == null) state_id = ""; // the case this var has prescription but missing row_id
@@ -1220,30 +1120,6 @@ public class Solve_Iterations {
 									}
 								}
 						
-								// xPBe(s1,s2,s3,s4,s5,s6)[i][1 + iter]
-								for (int i = 0; i < total_PB_E_prescription_choices; i++) {
-									if (xPBe[strata_id][i] != null
-											&& xPBe[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
-										int var_index = xPBe[strata_id][i][1 + iter];
-										String prescription_and_row_id = var_info_array[var_index].get_yield_table_name_to_find() + " " + var_info_array[var_index].get_yield_table_row_index_to_find();
-										String state_id = map_prescription_and_row_id_to_state_id.get(prescription_and_row_id);
-										if (state_id == null) state_id = ""; // the case this var has prescription but missing row_id
-										map_var_index_to_var_state_id.put(var_index, state_id);
-									}
-								}
-								
-								// xGSe(s1,s2,s3,s4,s5,s6)[i][1 + iter]
-								for (int i = 0; i < total_GS_E_prescription_choices; i++) {
-									if (xGSe[strata_id][i] != null
-											&& xGSe[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
-										int var_index = xGSe[strata_id][i][1 + iter];
-										String prescription_and_row_id = var_info_array[var_index].get_yield_table_name_to_find() + " " + var_info_array[var_index].get_yield_table_row_index_to_find();
-										String state_id = map_prescription_and_row_id_to_state_id.get(prescription_and_row_id);
-										if (state_id == null) state_id = ""; // the case this var has prescription but missing row_id
-										map_var_index_to_var_state_id.put(var_index, state_id);
-									}
-								}
-								
 								// xEAe(s1,s2,s3,s4,s5,s6)[tR][s5R][i][1 + iter]	
 								for (int tR = 1 + iter; tR <= total_periods + iter; tR++) {
 									for (int s5R = 0; s5R < total_layer5; s5R++) {
@@ -1613,16 +1489,16 @@ public class Solve_Iterations {
 					for (int strata_id = 0; strata_id < total_model_strata; strata_id++) {
 						int s5 = Collections.binarySearch(layer5, model_strata.get(strata_id).split("_")[4]);
 	
-						for (int i = 0; i < total_NG_E_prescription_choices; i++) {
+						for (int i = 0; i < total_prescriptions; i++) {
 							for (int t = 1 + iter; t <= total_periods - 1 + iter; t++) {
-								if (xNGe[strata_id][i] != null
-										&& xNGe[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 
+								if (xNCe[strata_id][i] != null
+										&& xNCe[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 
 									// Add constraint
 									c6_indexlist.add(new ArrayList<Integer>());
 									c6_valuelist.add(new ArrayList<Double>());
 									
-									// Add xNGe(s1,s2,s3,s4,s5,s6)[i][t]
-									int var_index = xNGe[strata_id][i][t];
+									// Add xNCe(s1,s2,s3,s4,s5,s6)[i][t]
+									int var_index = xNCe[strata_id][i][t];
 									double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
 									double[][] loss_rate_std = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_std_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
 									double[][] user_loss_rate = get_stochastic_loss_rate_from_loss_rate_mean_and_loss_rate_std(user_chosen_loss_rate, loss_rate_mean, loss_rate_std, var_index, map_var_index_to_user_chosen_loss_rate);
@@ -1631,12 +1507,12 @@ public class Solve_Iterations {
 										total_loss_rate = total_loss_rate + user_loss_rate[k][s5] / 100;
 									}
 									if (total_loss_rate != 1) {	// only add if parameter is non zero
-										c6_indexlist.get(c6_num).add(xNGe[strata_id][i][t]);
+										c6_indexlist.get(c6_num).add(xNCe[strata_id][i][t]);
 										c6_valuelist.get(c6_num).add((double) 1 - total_loss_rate);		// SR Fire loss Rate = P(-->x)
 									}
 									
-									// Add -xNGe(s1,s2,s3,s4,s5,s6)[i][t+1]
-									c6_indexlist.get(c6_num).add(xNGe[strata_id][i][t + 1]);
+									// Add -xNCe(s1,s2,s3,s4,s5,s6)[i][t+1]
+									c6_indexlist.get(c6_num).add(xNCe[strata_id][i][t + 1]);
 									c6_valuelist.get(c6_num).add((double) -1);
 									
 									// Add bounds
@@ -1649,84 +1525,6 @@ public class Solve_Iterations {
 					}			
 					
 					// 6b
-					for (int strata_id = 0; strata_id < total_model_strata; strata_id++) {
-						int s5 = Collections.binarySearch(layer5, model_strata.get(strata_id).split("_")[4]);
-	
-						for (int i = 0; i < total_PB_E_prescription_choices; i++) {
-							for (int t = 1 + iter; t <= total_periods - 1 + iter; t++) {
-								if (xPBe[strata_id][i] != null
-										&& xPBe[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 
-									// Add constraint
-									c6_indexlist.add(new ArrayList<Integer>());
-									c6_valuelist.add(new ArrayList<Double>());
-									
-									// Add xPBe(s1,s2,s3,s4,s5,s6)[i][t]
-									int var_index = xPBe[strata_id][i][t];
-									double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
-									double[][] loss_rate_std = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_std_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
-									double[][] user_loss_rate = get_stochastic_loss_rate_from_loss_rate_mean_and_loss_rate_std(user_chosen_loss_rate, loss_rate_mean, loss_rate_std, var_index, map_var_index_to_user_chosen_loss_rate);
-									double total_loss_rate = 0;
-									for (int k = 0; k < total_replacing_disturbances; k++) {
-										total_loss_rate = total_loss_rate + user_loss_rate[k][s5] / 100;
-									}
-									if (total_loss_rate != 1) {	// only add if parameter is non zero
-										c6_indexlist.get(c6_num).add(xPBe[strata_id][i][t]);
-										c6_valuelist.get(c6_num).add((double) 1 - total_loss_rate);		// SR Fire loss Rate = P(-->x)
-									}
-									
-									// Add -xPBe(s1,s2,s3,s4,s5,s6)[i][t+1]
-									c6_indexlist.get(c6_num).add(xPBe[strata_id][i][t + 1]);
-									c6_valuelist.get(c6_num).add((double) -1);
-									
-									// Add bounds
-									c6_lblist.add((double) 0);
-									c6_ublist.add((double) 0);
-									c6_num++;
-								}
-							}
-						}
-					}
-					
-					// 6c
-					for (int strata_id = 0; strata_id < total_model_strata; strata_id++) {
-						int s5 = Collections.binarySearch(layer5, model_strata.get(strata_id).split("_")[4]);
-	
-						for (int i = 0; i < total_GS_E_prescription_choices; i++) {
-							for (int t = 1 + iter; t <= total_periods - 1 + iter; t++) {
-								if (xGSe[strata_id][i] != null
-										&& xGSe[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 
-									//Add constraint
-									c6_indexlist.add(new ArrayList<Integer>());
-									c6_valuelist.add(new ArrayList<Double>());
-									
-									//Add xGSe(s1,s2,s3,s4,s5,s6)[i][t]
-									int var_index = xGSe[strata_id][i][t];
-									double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
-									double[][] loss_rate_std = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_std_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
-									double[][] user_loss_rate = get_stochastic_loss_rate_from_loss_rate_mean_and_loss_rate_std(user_chosen_loss_rate, loss_rate_mean, loss_rate_std, var_index, map_var_index_to_user_chosen_loss_rate);
-									double total_loss_rate = 0;
-									for (int k = 0; k < total_replacing_disturbances; k++) {
-										total_loss_rate = total_loss_rate + user_loss_rate[k][s5] / 100;
-									}
-									if (total_loss_rate != 1) {	// only add if parameter is non zero
-										c6_indexlist.get(c6_num).add(xGSe[strata_id][i][t]);
-										c6_valuelist.get(c6_num).add((double) 1 - total_loss_rate);		// SR Fire loss Rate = P(-->x)
-									}
-									
-									//Add -xGSe(s1,s2,s3,s4,s5,s6)[i][t+1]
-									c6_indexlist.get(c6_num).add(xGSe[strata_id][i][t + 1]);
-									c6_valuelist.get(c6_num).add((double) -1);												
-									
-									//add bounds
-									c6_lblist.add((double) 0);
-									c6_ublist.add((double) 0);
-									c6_num++;
-								}
-							}
-						}
-					}	
-					
-					// 6d
 					for (int strata_id = 0; strata_id < total_model_strata; strata_id++) {
 						String strata = model_strata.get(strata_id);
 						int s5 = Collections.binarySearch(layer5, strata.split("_")[4]);
@@ -1814,46 +1612,10 @@ public class Solve_Iterations {
 										int strata_id = (map_strata_to_strata_id.get(strata) != null) ? map_strata_to_strata_id.get(strata) : -1;
 										if (strata_id >= 0) {		// == if model_strata.contains(strata_name)   --   strata_id = -1 means list does not contain the string
 											
-											// Add - sigma(s6)(i)	xNGe[s1][s2][s3][s4][s5][s6][i][t] 	--> : X~
-											for (int i = 0; i < total_NG_E_prescription_choices; i++) {
-												if (xNGe[strata_id][i] != null) {
-													String var_name = "xNG_E_" + strata + "_" + i + "_" + t;
-													if(map_var_name_to_var_rd_condition_id.get(var_name) != null && map_var_name_to_var_rd_condition_id.get(var_name) != -9999) {
-														int rd_id = map_var_name_to_var_rd_condition_id.get(var_name);
-														double[][] loss_rate_mean = disturbance_info.get_loss_rate_mean_from_rd_condition_id(rd_id);
-														double[][][] conversion_rate_mean = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(rd_id);
-														double total_loss_rate_for_this_conversion = 0;
-														for (int k = 0; k < total_replacing_disturbances; k++) {
-	//														total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (loss_rate_mean[k][s5] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
-															total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (map_var_name_to_var_stochastic_loss_rates.get(var_name)[k] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
-														}
-														total_value_for_this_F = total_value_for_this_F + total_loss_rate_for_this_conversion * map_var_name_to_var_value.get(var_name);
-													}
-												}
-											}
-											
-											// Add - sigma(s6)(i)	xPBe[s1][s2][s3][s4][s5][s6][i][t] 	--> : X~
-											for (int i = 0; i < total_PB_E_prescription_choices; i++) {
-												if (xPBe[strata_id][i] != null) {
-													String var_name = "xPB_E_" + strata + "_" + i + "_" + t;
-													if(map_var_name_to_var_rd_condition_id.get(var_name) != null && map_var_name_to_var_rd_condition_id.get(var_name) != -9999) {
-														int rd_id = map_var_name_to_var_rd_condition_id.get(var_name);
-														double[][] loss_rate_mean = disturbance_info.get_loss_rate_mean_from_rd_condition_id(rd_id);
-														double[][][] conversion_rate_mean = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(rd_id);
-														double total_loss_rate_for_this_conversion = 0;
-														for (int k = 0; k < total_replacing_disturbances; k++) {
-	//														total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (loss_rate_mean[k][s5] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
-															total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (map_var_name_to_var_stochastic_loss_rates.get(var_name)[k] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
-														}
-														total_value_for_this_F = total_value_for_this_F + total_loss_rate_for_this_conversion * map_var_name_to_var_value.get(var_name);
-													}
-												}
-											}
-											
-											// Add - sigma(s6)(i)	xGSe[s1][s2][s3][s4][s5][s6][i][t] 	--> : X~
-											for (int i = 0; i < total_GS_E_prescription_choices; i++) {
-												if (xGSe[strata_id][i] != null) {
-													String var_name = "xGS_E_" + strata + "_" + i + "_" + t;
+											// Add - sigma(s6)(i)	xNCe[s1][s2][s3][s4][s5][s6][i][t] 	--> : X~
+											for (int i = 0; i < total_prescriptions; i++) {
+												if (xNCe[strata_id][i] != null) {
+													String var_name = "xNC_E_" + strata + "_" + i + "_" + t;
 													if(map_var_name_to_var_rd_condition_id.get(var_name) != null && map_var_name_to_var_rd_condition_id.get(var_name) != -9999) {
 														int rd_id = map_var_name_to_var_rd_condition_id.get(var_name);
 														double[][] loss_rate_mean = disturbance_info.get_loss_rate_mean_from_rd_condition_id(rd_id);
@@ -2021,52 +1783,10 @@ public class Solve_Iterations {
 									int strata_id = (map_strata_to_strata_id.get(strata) != null) ? map_strata_to_strata_id.get(strata) : -1;
 									if (strata_id >= 0) {		// == if model_strata.contains(strata_name)   --   strata_id = -1 means list does not contain the string
 										
-										// Add - sigma(s6)(i)	xNGe[s1][s2][s3][s4][s5][s6][i][t]
-										for (int i = 0; i < total_NG_E_prescription_choices; i++) {
-											if (xNGe[strata_id][i] != null) {
-												int var_index = xNGe[strata_id][i][t];
-												if(var_index > 0 && var_rd_condition_id[var_index] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
-													double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
-													double[][] loss_rate_std = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_std_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
-													double[][] user_loss_rate = get_stochastic_loss_rate_from_loss_rate_mean_and_loss_rate_std(user_chosen_loss_rate, loss_rate_mean, loss_rate_std, var_index, map_var_index_to_user_chosen_loss_rate);
-													double[][][] conversion_rate_mean = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
-													double total_loss_rate_for_this_conversion = 0;
-													for (int k = 0; k < total_replacing_disturbances; k++) {
-														total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (user_loss_rate[k][s5] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
-													}
-													if (total_loss_rate_for_this_conversion != 0) {	// only add if parameter is non zero
-														c12_indexlist.get(c12_num).add(var_index);
-														c12_valuelist.get(c12_num).add((double) - total_loss_rate_for_this_conversion);		// SR Fire loss Rate = P(s5, s5R --> x)
-													}
-												}
-											}
-										}
-										
-										// Add - sigma(s6)(i)	xPBe[s1][s2][s3][s4][s5][s6][i][t]
-										for (int i = 0; i < total_PB_E_prescription_choices; i++) {
-											if (xPBe[strata_id][i] != null) {
-												int var_index = xPBe[strata_id][i][t];
-												if(var_index > 0 && var_rd_condition_id[var_index] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
-													double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
-													double[][] loss_rate_std = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_std_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
-													double[][] user_loss_rate = get_stochastic_loss_rate_from_loss_rate_mean_and_loss_rate_std(user_chosen_loss_rate, loss_rate_mean, loss_rate_std, var_index, map_var_index_to_user_chosen_loss_rate);
-													double[][][] conversion_rate_mean = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]);
-													double total_loss_rate_for_this_conversion = 0;
-													for (int k = 0; k < total_replacing_disturbances; k++) {
-														total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (user_loss_rate[k][s5] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
-													}
-													if (total_loss_rate_for_this_conversion != 0) {	// only add if parameter is non zero
-														c12_indexlist.get(c12_num).add(var_index);
-														c12_valuelist.get(c12_num).add((double) - total_loss_rate_for_this_conversion);		// SR Fire loss Rate = P(s5, s5R --> x)
-													}	
-												}
-											}
-										}
-										
-										// Add - sigma(s6)(i)	xGSe[s1][s2][s3][s4][s5][s6][i][t]
-										for (int i = 0; i < total_GS_E_prescription_choices; i++) {
-											if (xGSe[strata_id][i] != null) {
-												int var_index = xGSe[strata_id][i][t];
+										// Add - sigma(s6)(i)	xNCe[s1][s2][s3][s4][s5][s6][i][t]
+										for (int i = 0; i < total_prescriptions; i++) {
+											if (xNCe[strata_id][i] != null) {
+												int var_index = xNCe[strata_id][i][t];
 												if(var_index > 0 && var_rd_condition_id[var_index] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
 													double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
 													double[][] loss_rate_std = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_std_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
@@ -2803,13 +2523,13 @@ public class Solve_Iterations {
 						for (String strata : common_strata) {
 							int strata_id = map_strata_to_strata_id.get(strata);			// Note we need index from model_strata not common_trata
 							
-							// Add xNGe[s1][s2][s3][s4][s5][s6][i][t]
-							for (int i = 0; i < xNGe[strata_id].length; i++) {
-								if (xNGe[strata_id][i] != null)
+							// Add xNCe[s1][s2][s3][s4][s5][s6][i][t]
+							for (int i = 0; i < xNCe[strata_id].length; i++) {
+								if (xNCe[strata_id][i] != null)
 								for (int period : static_periods) {		// Loop all periods of user-defined
 									int t = period + iter;		// this is a special case we need to adjust
-									if(xNGe[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 
-										int var_index = xNGe[strata_id][i][t];
+									if(xNCe[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 
+										int var_index = xNCe[strata_id][i][t];
 										double para_value = parameter_info.get_total_value(
 												var_info_array[var_index].get_prescription_id_and_row_id()[0],
 												var_info_array[var_index].get_prescription_id_and_row_id()[1],
@@ -2827,54 +2547,6 @@ public class Solve_Iterations {
 									}
 							}
 							
-							// Add xPBe[s1][s2][s3][s4][s5][s6][i][t]
-							for (int i = 0; i < xPBe[strata_id].length; i++) {
-								if (xPBe[strata_id][i] != null)
-									for (int period : static_periods) {		//Loop all periods of user-defined
-										int t = period + iter;		// this is a special case we need to adjust
-										if(xPBe[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 
-											int var_index = xPBe[strata_id][i][t];
-											double para_value = parameter_info.get_total_value(
-													var_info_array[var_index].get_prescription_id_and_row_id()[0],
-													var_info_array[var_index].get_prescription_id_and_row_id()[1],
-													parameters_indexes,
-													dynamic_dentifiers_column_indexes, 
-													dynamic_identifiers,
-													var_cost_value[var_index]);
-											para_value = para_value * multiplier;
-																																					
-											if (para_value > 0) {	// only add if parameter is non zero
-												c15_indexlist.get(c15_num).add(var_index);
-												c15_valuelist.get(c15_num).add((double) para_value);
-											}
-										}
-									}
-							}
-
-							// Add xGSe[s1][s2][s3][s4][s5][s6][i][t]
-							for (int i = 0; i < xGSe[strata_id].length; i++) {
-								if (xGSe[strata_id][i] != null)
-									for (int period : static_periods) {		//Loop all periods of user-defined
-										int t = period + iter;		// this is a special case we need to adjust
-										if(xGSe[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 
-											int var_index = xGSe[strata_id][i][t];
-											double para_value = parameter_info.get_total_value(
-													var_info_array[var_index].get_prescription_id_and_row_id()[0],
-													var_info_array[var_index].get_prescription_id_and_row_id()[1],
-													parameters_indexes,
-													dynamic_dentifiers_column_indexes, 
-													dynamic_identifiers,
-													var_cost_value[var_index]);
-											para_value = para_value * multiplier;
-																																					
-											if (para_value > 0) {	// only add if parameter is non zero
-												c15_indexlist.get(c15_num).add(var_index);
-												c15_valuelist.get(c15_num).add((double) para_value);
-											}
-										}
-								}
-							}
-								
 							// Add xEAe[s1][s2][s3][s4][s5][s6](tR)(s5R)(i)(t)
 							int total_no_1 = xEAe[strata_id].length;
 							for (int tR = 1 + iter; tR < total_no_1; tR++) {
@@ -3061,7 +2733,7 @@ public class Solve_Iterations {
 					
 					
 					// Clear arrays not used any more before final step of constraint 15 & solving -------------------------------------------------------------
-	//				xNGe = null;
+	//				xNCe = null;
 	//				xPBe = null;
 	//				xGSe = null;
 	//				xEAe = null;
@@ -3444,7 +3116,7 @@ public class Solve_Iterations {
 												+ "\t" + Double.valueOf(value[i]) /*Double.valueOf(twoDForm.format(value[i]))*/ 
 												+ "\t" + Double.valueOf(reduceCost[i])) /*Double.valueOf(twoDForm.format(reduceCost[i])))*/;
 										
-										if (vname[i].contains("xNG_") || vname[i].contains("xPB_") || vname[i].contains("xGS_") || vname[i].contains("xEA_")) {
+										if (vname[i].contains("xNC_") || vname[i].contains("xNG_") || vname[i].contains("xPB_") || vname[i].contains("xGS_") || vname[i].contains("xEA_")) {
 											double total_loss_rate_mean = 0;
 											int s5 = layer5.indexOf(var_info_array[i].get_layer5());
 											int var_index = i;
@@ -3493,10 +3165,10 @@ public class Solve_Iterations {
 							// output_04_management_overview
 							output_management_overview_file.delete();
 							try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_management_overview_file))) {
-								String file_header = String.join("\t", "iteration", "NG_E", "PB_E", "GS_E", "EA_E", "MS_E",	"BS_E", "NG_R", "PB_R", "GS_R", "EA_R");
+								String file_header = String.join("\t", "iteration", "NC_E", "", "", "EA_E", "MS_E",	"BS_E", "NG_R", "PB_R", "GS_R", "EA_R");
 								fileOut.write(file_header);
 								
-								double NG_E_total_area = 0;
+								double NC_E_total_area = 0;
 								double PB_E_total_area = 0;
 								double GS_E_total_area = 0;
 								double EA_E_total_area = 0;
@@ -3507,33 +3179,15 @@ public class Solve_Iterations {
 								double GS_R_total_area = 0;
 								double EA_R_total_area = 0;
 								for (int strata_id = 0; strata_id < total_model_strata; strata_id++) {
-									// Add sigma(i) xNGe(s1,s2,s3,s4,s5,s6)[i][1 + iter]
-									for (int i = 0; i < total_NG_E_prescription_choices; i++) {
-										if (xNGe[strata_id][i] != null
-												&& xNGe[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
-											int this_var_index = xNGe[strata_id][i][1 + iter];
-											NG_E_total_area = NG_E_total_area + Double.valueOf(value[this_var_index]);
+									// Add sigma(i) xNCe(s1,s2,s3,s4,s5,s6)[i][1 + iter]
+									for (int i = 0; i < total_prescriptions; i++) {
+										if (xNCe[strata_id][i] != null
+												&& xNCe[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
+											int this_var_index = xNCe[strata_id][i][1 + iter];
+											NC_E_total_area = NC_E_total_area + Double.valueOf(value[this_var_index]);
 										}
 									}
 							
-									// Add sigma(i) xPBe(s1,s2,s3,s4,s5,s6)[i][1 + iter]
-									for (int i = 0; i < total_PB_E_prescription_choices; i++) {
-										if (xPBe[strata_id][i] != null
-												&& xPBe[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
-											int this_var_index = xPBe[strata_id][i][1 + iter];
-											PB_E_total_area = PB_E_total_area + Double.valueOf(value[this_var_index]);
-										}
-									}
-									
-									// Add xGSe(s1,s2,s3,s4,s5,s6)[i][1 + iter]
-									for (int i = 0; i < total_GS_E_prescription_choices; i++) {
-										if (xGSe[strata_id][i] != null
-												&& xGSe[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
-											int this_var_index = xGSe[strata_id][i][1 + iter];
-											GS_E_total_area = GS_E_total_area + Double.valueOf(value[this_var_index]);
-										}
-									}
-									
 									// Add sigma(tR,s5R)(i) xEAe(s1,s2,s3,s4,s5,s6)[tR][s5R][i][1 + iter]	
 									for (int tR = 1 + iter; tR <= total_periods + iter; tR++) {
 										for (int s5R = 0; s5R < total_layer5; s5R++) {
@@ -3548,9 +3202,6 @@ public class Solve_Iterations {
 											}
 										}	
 									}
-									
-									MS_E_total_area = 0;
-									BS_E_total_area = 0;
 								}														
 									
 								// Add Regenerated variables
@@ -3618,7 +3269,7 @@ public class Solve_Iterations {
 								}
 								
 								fileOut.write("\n" + iter);
-								fileOut.write("\t" + NG_E_total_area /*Double.valueOf(twoDForm.format(NG_E_total_area))*/);
+								fileOut.write("\t" + NC_E_total_area /*Double.valueOf(twoDForm.format(NG_E_total_area))*/);
 								fileOut.write("\t" + PB_E_total_area /*Double.valueOf(twoDForm.format(PB_E_total_area))*/);
 								fileOut.write("\t" + GS_E_total_area /*Double.valueOf(twoDForm.format(GS_E_total_area))*/);
 								fileOut.write("\t" + EA_E_total_area /*Double.valueOf(twoDForm.format(EA_E_total_area))*/);
@@ -3630,9 +3281,7 @@ public class Solve_Iterations {
 								fileOut.write("\t" + EA_R_total_area /*Double.valueOf(twoDForm.format(EA_R_total_area))*/);
 									
 								fileOut.close();
-								xNGe = null;			// Clear arrays not used any more
-								xPBe = null;			// Clear arrays not used any more
-								xGSe = null;			// Clear arrays not used any more
+								xNCe = null;			// Clear arrays not used any more
 								xEAe = null;			// Clear arrays not used any more
 								xNGr = null;			// Clear arrays not used any more
 								xPBr = null;			// Clear arrays not used any more
@@ -3666,7 +3315,7 @@ public class Solve_Iterations {
 								
 								
 								for (int i = 0; i < value.length; i++) {
-									if (value[i] != 0 && (vname[i].contains("xNG_") || vname[i].contains("xPB_") || vname[i].contains("xGS_") || vname[i].contains("xEA_"))) {
+									if (value[i] != 0 && (vname[i].contains("xNC_") || vname[i].contains("xNG_") || vname[i].contains("xPB_") || vname[i].contains("xGS_") || vname[i].contains("xEA_"))) {
 										String prescription_name_to_find = var_info_array[i].get_yield_table_name_to_find();
 										int[] prescription_and_row = var_info_array[i].get_prescription_id_and_row_id();
 										int var_prescription_id = prescription_and_row[0];
@@ -4121,7 +3770,7 @@ public class Solve_Iterations {
 												+ "\t" + Double.valueOf(value[i]) /*Double.valueOf(twoDForm.format(value[i]))*/ 
 												+ "\t" + Double.valueOf(reduceCost[i + 1])) /*Double.valueOf(twoDForm.format(reduceCost[i])))*/;			// because index starts from 1 not 0:    http://lpsolve.sourceforge.net/5.0/get_sensitivity_rhs.htm
 										
-										if (vname[i].contains("xNG_") || vname[i].contains("xPB_") || vname[i].contains("xGS_") || vname[i].contains("xEA_")) {
+										if (vname[i].contains("xNC_") || vname[i].contains("xNG_") || vname[i].contains("xPB_") || vname[i].contains("xGS_") || vname[i].contains("xEA_")) {
 											double total_loss_rate_mean = 0;
 											int s5 = layer5.indexOf(var_info_array[i].get_layer5());
 											int var_index = i;
@@ -4170,10 +3819,10 @@ public class Solve_Iterations {
 							// output_04_management_overview
 							output_management_overview_file.delete();
 							try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_management_overview_file))) {
-								String file_header = String.join("\t", "iteration", "NG_E", "PB_E", "GS_E", "EA_E", "MS_E",	"BS_E", "NG_R", "PB_R", "GS_R", "EA_R");
+								String file_header = String.join("\t", "iteration", "NC_E", "", "", "EA_E", "MS_E",	"BS_E", "NG_R", "PB_R", "GS_R", "EA_R");
 								fileOut.write(file_header);
 								
-								double NG_E_total_area = 0;
+								double NC_E_total_area = 0;
 								double PB_E_total_area = 0;
 								double GS_E_total_area = 0;
 								double EA_E_total_area = 0;
@@ -4184,33 +3833,15 @@ public class Solve_Iterations {
 								double GS_R_total_area = 0;
 								double EA_R_total_area = 0;
 								for (int strata_id = 0; strata_id < total_model_strata; strata_id++) {
-									// Add sigma(i) xNGe(s1,s2,s3,s4,s5,s6)[i][1 + iter]
-									for (int i = 0; i < total_NG_E_prescription_choices; i++) {
-										if (xNGe[strata_id][i] != null
-												&& xNGe[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
-											int this_var_index = xNGe[strata_id][i][1 + iter];
-											NG_E_total_area = NG_E_total_area + Double.valueOf(value[this_var_index]);
+									// Add sigma(i) xNCe(s1,s2,s3,s4,s5,s6)[i][1 + iter]
+									for (int i = 0; i < total_prescriptions; i++) {
+										if (xNCe[strata_id][i] != null
+												&& xNCe[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
+											int this_var_index = xNCe[strata_id][i][1 + iter];
+											NC_E_total_area = NC_E_total_area + Double.valueOf(value[this_var_index]);
 										}
 									}
 							
-									// Add sigma(i) xPBe(s1,s2,s3,s4,s5,s6)[i][1 + iter]
-									for (int i = 0; i < total_PB_E_prescription_choices; i++) {
-										if (xPBe[strata_id][i] != null
-												&& xPBe[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
-											int this_var_index = xPBe[strata_id][i][1 + iter];
-											PB_E_total_area = PB_E_total_area + Double.valueOf(value[this_var_index]);
-										}
-									}
-									
-									// Add xGSe(s1,s2,s3,s4,s5,s6)[i][1 + iter]
-									for (int i = 0; i < total_GS_E_prescription_choices; i++) {
-										if (xGSe[strata_id][i] != null
-												&& xGSe[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
-											int this_var_index = xGSe[strata_id][i][1 + iter];
-											GS_E_total_area = GS_E_total_area + Double.valueOf(value[this_var_index]);
-										}
-									}
-									
 									// Add sigma(tR,s5R)(i) xEAe(s1,s2,s3,s4,s5,s6)[tR][s5R][i][1 + iter]	
 									for (int tR = 1 + iter; tR <= total_periods + iter; tR++) {
 										for (int s5R = 0; s5R < total_layer5; s5R++) {
@@ -4225,9 +3856,6 @@ public class Solve_Iterations {
 											}
 										}	
 									}
-									
-									MS_E_total_area = 0;
-									BS_E_total_area = 0;
 								}														
 									
 								// Add Regenerated variables
@@ -4295,7 +3923,7 @@ public class Solve_Iterations {
 								}
 								
 								fileOut.write("\n" + iter);
-								fileOut.write("\t" + NG_E_total_area /*Double.valueOf(twoDForm.format(NG_E_total_area))*/);
+								fileOut.write("\t" + NC_E_total_area /*Double.valueOf(twoDForm.format(NG_E_total_area))*/);
 								fileOut.write("\t" + PB_E_total_area /*Double.valueOf(twoDForm.format(PB_E_total_area))*/);
 								fileOut.write("\t" + GS_E_total_area /*Double.valueOf(twoDForm.format(GS_E_total_area))*/);
 								fileOut.write("\t" + EA_E_total_area /*Double.valueOf(twoDForm.format(EA_E_total_area))*/);
@@ -4307,9 +3935,7 @@ public class Solve_Iterations {
 								fileOut.write("\t" + EA_R_total_area /*Double.valueOf(twoDForm.format(EA_R_total_area))*/);
 									
 								fileOut.close();
-								xNGe = null;			// Clear arrays not used any more
-								xPBe = null;			// Clear arrays not used any more
-								xGSe = null;			// Clear arrays not used any more
+								xNCe = null;			// Clear arrays not used any more
 								xEAe = null;			// Clear arrays not used any more
 								xNGr = null;			// Clear arrays not used any more
 								xPBr = null;			// Clear arrays not used any more
@@ -4343,7 +3969,7 @@ public class Solve_Iterations {
 								
 								
 								for (int i = 0; i < value.length; i++) {
-									if (value[i] != 0 && (vname[i].contains("xNG_") || vname[i].contains("xPB_") || vname[i].contains("xGS_") || vname[i].contains("xEA_"))) {
+									if (value[i] != 0 && (vname[i].contains("xNC_") || vname[i].contains("xNG_") || vname[i].contains("xPB_") || vname[i].contains("xGS_") || vname[i].contains("xEA_"))) {
 										String prescription_name_to_find = var_info_array[i].get_yield_table_name_to_find();
 										int[] prescription_and_row = var_info_array[i].get_prescription_id_and_row_id();
 										int var_prescription_id = prescription_and_row[0];
@@ -4727,16 +4353,8 @@ public class Solve_Iterations {
 		String[] name_split = var_name.split("_");
 		String first_six_letters_of_var_name = var_name.substring(0, 6);
 		switch (first_six_letters_of_var_name) {
-		case "xNG_E_":
+		case "xNC_E_":
 			int period = Integer.parseInt(name_split[7 + 2]) - 1;
-			name_split[7 + 2] = String.valueOf(period);
-			break;
-		case "xPB_E_":
-			period = Integer.parseInt(name_split[7 + 2]) - 1;
-			name_split[7 + 2] = String.valueOf(period);
-			break;
-		case "xGS_E_":
-			period = Integer.parseInt(name_split[7 + 2]) - 1;
 			name_split[7 + 2] = String.valueOf(period);
 			break;
 		
@@ -4774,7 +4392,7 @@ public class Solve_Iterations {
 			break;
 		}
 		String period_one_var_name = String.join("_", name_split);
-		// Example with 2 SRs:  period_one_var_name = xNG_E_s1_s2_s3_s4_s5_s6 would be associated with  {10,20}		assume 2 stochastic loss rates drawn is 10% and 20%
+		// Example with 2 SRs:  period_one_var_name = xNC_E_s1_s2_s3_s4_s5_s6 would be associated with  {10,20}		assume 2 stochastic loss rates drawn is 10% and 20%
 		double[] stochastic_loss_rates_for_period_one_variable = new double[total_replacing_disturbances];
 		if (map_var_name_to_var_value.get(period_one_var_name) != null) {
 			int period_one_rd_id = map_var_name_to_var_rd_condition_id.get(period_one_var_name);
@@ -4822,16 +4440,8 @@ public class Solve_Iterations {
 		String[] name_split = var_name.split("_");
 		String first_six_letters_of_var_name = var_name.substring(0, 6);
 		switch (first_six_letters_of_var_name) {
-		case "xNG_E_":
+		case "xNC_E_":
 			int period = Integer.parseInt(name_split[7 + 2]) - 1;
-			name_split[7 + 2] = String.valueOf(period);
-			break;
-		case "xPB_E_":
-			period = Integer.parseInt(name_split[7 + 2]) - 1;
-			name_split[7 + 2] = String.valueOf(period);
-			break;
-		case "xGS_E_":
-			period = Integer.parseInt(name_split[7 + 2]) - 1;
 			name_split[7 + 2] = String.valueOf(period);
 			break;
 		
@@ -4909,16 +4519,8 @@ public class Solve_Iterations {
 		String[] name_split = var_name.split("_");
 		String first_six_letters_of_var_name = var_name.substring(0, 6);
 		switch (first_six_letters_of_var_name) {
-		case "xNG_E_":
+		case "xNC_E_":
 			int period = Integer.parseInt(name_split[7 + 2]) - 1;
-			name_split[7 + 2] = String.valueOf(period);
-			break;
-		case "xPB_E_":
-			period = Integer.parseInt(name_split[7 + 2]) - 1;
-			name_split[7 + 2] = String.valueOf(period);
-			break;
-		case "xGS_E_":
-			period = Integer.parseInt(name_split[7 + 2]) - 1;
 			name_split[7 + 2] = String.valueOf(period);
 			break;
 		

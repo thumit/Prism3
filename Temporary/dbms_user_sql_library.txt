@@ -501,3 +501,48 @@ GROUP BY (iteration || period)
 
 ORDER BY period, iteration
 ----------
+information of prescriptions
+SELECT * FROM
+
+(
+SELECT DISTINCT prescription, action_type AS activity, MAX(CAST(row_id as decimal)) AS row_id, age_class, COUNT(action_type) AS total_rows
+FROM yield_tables GROUP BY prescription
+
+UNION ALL
+
+SELECT DISTINCT prescription, action_type AS activity, MIN(CAST(row_id as decimal)) AS row_id, age_class, COUNT(action_type) AS total_rows
+FROM yield_tables GROUP BY prescription
+)
+
+ORDER BY prescription, row_id
+----------
+information of prescriptions - details
+SELECT * FROM
+
+
+(
+(SELECT * FROM
+
+(
+SELECT DISTINCT prescription, action_type AS activity, MAX(CAST(row_id as decimal)) AS row_id, age_class, COUNT(action_type) AS total_rows
+FROM yield_tables GROUP BY prescription
+
+UNION ALL
+
+SELECT DISTINCT prescription, action_type AS activity, MIN(CAST(row_id as decimal)) AS row_id, age_class, COUNT(action_type) AS total_rows
+FROM yield_tables GROUP BY prescription
+)
+
+ORDER BY prescription, row_id) AS t1
+
+
+
+LEFT JOIN
+
+
+(SELECT * FROM yield_tables) AS t2
+
+
+ON t1.prescription = t2.prescription AND CAST(t1.row_id as decimal) = t2.row_id
+)
+----------
