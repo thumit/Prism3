@@ -185,3 +185,7 @@ GROUP BY iteration, (period || method)
 
 GROUP BY iteration, period
 ----------
+all records
+
+Select * FROM summarize_output_05_management_details
+----------

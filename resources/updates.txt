@@ -1298,3 +1298,4 @@ All changes in this block are associated with PrismAlpha3.0.01.jar, Prism-Formul
 --------------------------------------------------------------------------
 538. Merging all uneven-aged variables for exiting strata. Modifications are mades in 2 classes (Solve_Iterations and Information_Variables)
 539. Merging all uneven-aged variables for regenerated strata. Modifications are mades in 2 classes (Solve_Iterations and Information_Variables)
+540. Remove tR from even-aged variables, successfully tested for non rolling horizon models

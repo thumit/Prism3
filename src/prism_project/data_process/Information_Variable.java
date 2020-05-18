@@ -22,7 +22,7 @@ import java.util.List;
 
 public class Information_Variable {
 	private String var_name, layer1, layer2, layer3, layer4, layer5, layer6, method, layer5_regen, forest_status;	// layer5_regen = regenerated cover type = s5R (after clear-cut or SR occurrence), while layer5 = s5 (before clear-cut or SR occurrence)
-	private int period, age, timing_choice, rotation_period, rotation_age;
+	private int iter, period, age, timing_choice, rotation_period, rotation_age;
 	private String yield_table_name_to_find;
 	private int yield_table_row_index_to_find;
 	private int[] prescription_id_and_row_id;
@@ -46,6 +46,7 @@ public class Information_Variable {
 		timing_choice = -9999;
 		yield_table_name_to_find = "";
 		yield_table_row_index_to_find = -9999;
+		this.iter = iter;
 		
 		
 		try {
@@ -80,19 +81,19 @@ public class Information_Variable {
 				layer4 = term[3];
 				layer5 = term[4];
 				layer6 = term[5];
-				rotation_period = Integer.parseInt(term[6]);
-				layer5_regen = term[7];
-				timing_choice = Integer.parseInt(term[8]);
-				period = Integer.parseInt(term[9]);	
+				// rotation_period = set it manually
+				layer5_regen = term[6];
+				timing_choice = Integer.parseInt(term[7]);
+				period = Integer.parseInt(term[8]);	
 				age = starting_age + period - 1;		// calculate age for existing variable
-				rotation_age = rotation_period + starting_age - 1;	// calculate rotation age for existing variable
+				// rotation_age = set it manually
 				
 				method = "EA";
 				forest_status = "E";
-				yield_table_name_to_find = layer5 + "_" + layer6 + "_" + method + "_" + forest_status + "_" + rotation_age + "_" + timing_choice;
+				yield_table_name_to_find = yield_tables_names_list.get(timing_choice);
 				yield_table_row_index_to_find = period - 1;
 				period = period - iter;		// adjust period. Eg. period 1 + iter should be adjusted to be 1. This is to apply condition in cost, disturbance, other inputs...
-				rotation_period = rotation_period - iter;		// adjust period. Eg. period 1 + iter should be adjusted to be 1. This is to apply condition in cost, disturbance, other inputs...
+				// rotation_period = rotation_period - iter;		// adjust period. Eg. period 1 + iter should be adjusted to be 1. This is to apply condition in cost, disturbance, other inputs...
 				break;
 				
 			case "xEA_R_":
@@ -213,8 +214,17 @@ public class Information_Variable {
 		return forest_status;
 	}
 	
+	public void set_rotation_period(int tR) {
+		rotation_period = tR;
+		rotation_period = rotation_period - iter; // adjusted
+	}
+	
 	public int get_rotation_period() {
 		return rotation_period;
+	}
+	
+	public void set_rotation_age(int aR) {
+		rotation_age = aR;
 	}
 	
 	public int get_rotation_age() {
