@@ -81,41 +81,17 @@ public class Information_Variable {
 				layer4 = term[3];
 				layer5 = term[4];
 				layer6 = term[5];
-				// rotation_period = set it manually
 				layer5_regen = term[6];
 				timing_choice = Integer.parseInt(term[7]);
 				period = Integer.parseInt(term[8]);	
 				age = starting_age + period - 1;		// calculate age for existing variable
-				// rotation_age = set it manually
+				// rotation_age and rotation_period are set manually
 				
 				method = "EA";
 				forest_status = "E";
 				yield_table_name_to_find = yield_tables_names_list.get(timing_choice);
 				yield_table_row_index_to_find = period - 1;
 				period = period - iter;		// adjust period. Eg. period 1 + iter should be adjusted to be 1. This is to apply condition in cost, disturbance, other inputs...
-				// rotation_period = rotation_period - iter;		// adjust period. Eg. period 1 + iter should be adjusted to be 1. This is to apply condition in cost, disturbance, other inputs...
-				break;
-				
-			case "xEA_R_":
-				term = var_name.substring(6).split("_");	// remove first 6 letters and then split
-				layer1 = term[0];
-				layer2 = term[1];
-				layer3 = term[2];
-				layer4 = term[3];
-				layer5 = term[4];
-				rotation_period = Integer.parseInt(term[5]);
-				rotation_age = Integer.parseInt(term[6]);
-				layer5_regen = term[7];
-				timing_choice = Integer.parseInt(term[8]);
-				period = Integer.parseInt(term[9]);
-				age = rotation_age + period - rotation_period; // a = aR + t - tR
-				
-				method = "EA";
-				forest_status = "R";
-				yield_table_name_to_find = layer5 + "_" + method + "_" + forest_status + "_" + rotation_age + "_" + timing_choice;
-				yield_table_row_index_to_find = rotation_age - 1 + period - rotation_period;
-				period = period - iter;		// adjust period. Eg. period 1 + iter should be adjusted to be 1. This is to apply condition in cost, disturbance, other inputs...
-				rotation_period = rotation_period - iter;		// adjust period. Eg. period 1 + iter should be adjusted to be 1. This is to apply condition in cost, disturbance, other inputs...
 				break;
 				
 			case "xNC_R_":
@@ -130,6 +106,26 @@ public class Information_Variable {
 				age = Integer.parseInt(term[7]);
 				
 				method = "NC";
+				forest_status = "R";
+				yield_table_name_to_find = yield_tables_names_list.get(timing_choice);
+				yield_table_row_index_to_find = age - 1;
+				period = period - iter;		// adjust period. Eg. period 1 + iter should be adjusted to be 1. This is to apply condition in cost, disturbance, other inputs...
+				break;
+				
+			case "xEA_R_":
+				term = var_name.substring(6).split("_");	// remove first 6 letters and then split
+				layer1 = term[0];
+				layer2 = term[1];
+				layer3 = term[2];
+				layer4 = term[3];
+				layer5 = term[4];
+				layer5_regen = term[5];
+				timing_choice = Integer.parseInt(term[6]);
+				period = Integer.parseInt(term[7]);
+				age = Integer.parseInt(term[8]);
+				// rotation_age and rotation_period are set manually
+				
+				method = "EA";
 				forest_status = "R";
 				yield_table_name_to_find = yield_tables_names_list.get(timing_choice);
 				yield_table_row_index_to_find = age - 1;
