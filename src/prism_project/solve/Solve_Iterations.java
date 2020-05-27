@@ -1800,7 +1800,7 @@ public class Solve_Iterations {
 									
 	
 									// NON-FIRE VARIABLES: X
-									// Add sigma(s5)(s6)(i) xEAe(s1,s2,s3,s4,s5,s6)[s5R][i][t=tR] 	--> : X~
+									// Add sigma(s5)(s6)(i) xEAe(s1,s2,s3,s4,s5,s6)[s5R][i][t=tR] 	--> : X~ ?
 									for (int s5 = 0; s5 < total_layer5; s5++) {
 										for (int s6 = 0; s6 < total_layer6; s6++) {
 											String strata = strata_4layers + "_" + layer5.get(s5) + "_" + layer6.get(s6);
@@ -1808,12 +1808,7 @@ public class Solve_Iterations {
 											if (strata_id >= 0) {
 												for (int i : list_of_ea_prescription_id_for_existing_strata[strata_id]) {
 													int rotation_period = rotation_period_from_precription[i]; // tR = total rows of this prescription
-													if (t == rotation_period 
-															&& xEAe[strata_id] != null 
-																&& xEAe[strata_id][s5R] != null
-																	&& xEAe[strata_id][s5R][i] != null
-																		&& xEAe[strata_id][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0
-														strata = strata_4layers + "_" + layer5.get(s5) + "_" + layer6.get(s6);
+													if (t == rotation_period) {		// It is very important to not use null check for jagged arrays here to avoid the incorrect of mapping
 														String var_name = "xEA_E_" + strata + "_" + layer5.get(s5R) + "_" + i + "_" + t;
 														if (map_var_name_to_var_value.get(var_name) != null) {
 															value_of_RHS = value_of_RHS + map_var_name_to_var_value.get(var_name);
@@ -1824,7 +1819,7 @@ public class Solve_Iterations {
 										}
 									}
 									
-									// Add sigma(s5)(i)(a) xEAr[s1][s2][s3][s4][s5][s5R][i][t][a] 	--> : X
+									// Add sigma(s5)(i)(a) xEAr[s1][s2][s3][s4][s5][s5R][i][t][a=aR] 	--> : X~ ?
 									for (int s5 = 0; s5 < total_layer5; s5++) {
 										String strata_5layers = strata_4layers + "_" + layer5.get(s5);		// = s1,s2,s3,s4,s5
 										int strata_5layers_id = (map_strata_without_sizeclass_to_id.get(strata_5layers) != null) ? map_strata_without_sizeclass_to_id.get(strata_5layers) : -1;
@@ -1832,13 +1827,8 @@ public class Solve_Iterations {
 											for (int i : list_of_ea_prescription_id_for_regenerated_strata[strata_5layers_id]) {
 												int rotation_age = yield_tables_values[i].length;// aR = total rows of this prescription 
 												for (int a = 1; a <= t - 1; a++) {	
-													if (a == rotation_age 
-															&& xEAr[strata_5layers_id] != null
-																&& xEAr[strata_5layers_id][s5R] != null
-																	&& xEAr[strata_5layers_id][s5R][i] != null
-																		&& xEAr[strata_5layers_id][s5R][i][t] != null
-																			&& xEAr[strata_5layers_id][s5R][i][t][a] > 0) {	// if variable is defined, this value would be > 0 
-														String var_name = "xEA_R_" + strata_5layers + layer5.get(s5R) + "_" + i + "_" + t + "_" + a;
+													if (a == rotation_age) {	// It is very important to not use null check for jagged arrays here to avoid the incorrect of mapping
+														String var_name = "xEA_R_" + strata_5layers + "_" + layer5.get(s5R) + "_" + i + "_" + t + "_" + a;
 														if (map_var_name_to_var_value.get(var_name) != null) {
 															value_of_RHS = value_of_RHS + map_var_name_to_var_value.get(var_name);
 														}

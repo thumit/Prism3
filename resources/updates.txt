@@ -1303,4 +1303,5 @@ All changes in this block are associated with PrismAlpha3.0.01.jar, Prism-Formul
 	- Remove the bug of unsolvable iterative models by deleting the wrong code of xEAr before no-merge 5a to 5d
 	- Remove the bug of wrong iterative models due to incorrect tracking the previous iteration period one variable indexes (t and a indexes)
 	- Replace total_age_classes by t to define xNCr variables
+	- Remove null check for jagged arrays in equation 8a since it cause incorrect mapping across iterations (VERY IMPORTANT IMPORTANT IMPORTANT IMPORTANT IMPORTANT IMPORTANT IMPORTANT IMPORTANT IMPORTANT)
 542. Remove the upper bound restriction filters that do not allow prescriptions with rotation periods > total planning period to be defined for EA_E and EA_R variables (not yet)
