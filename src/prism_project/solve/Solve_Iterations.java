@@ -1013,47 +1013,6 @@ public class Solve_Iterations {
 								}
 							}
 						}
-						
-						
-						
-						for (int strata_5layers_id = 0; strata_5layers_id < total_model_strata_without_sizeclass; strata_5layers_id++) {
-							String strata = model_strata_without_sizeclass.get(strata_5layers_id);
-							int s5 = Collections.binarySearch(layer5, strata.split("_")[4]);
-							xEAr[strata_5layers_id] = new int[total_layer5][][][];
-							for (int s5R = 0; s5R < total_layer5; s5R++) {
-								xEAr[strata_5layers_id][s5R] = new int[total_prescriptions][][];
-								for (int i : list_of_ea_prescription_id_for_regenerated_strata[strata_5layers_id]) {
-									int rotation_age = yield_tables_values[i].length;// aR = total rows of this prescription 
-									String this_covertype_conversion_and_rotation_age = layer5.get(s5) + " " + layer5.get(s5R) + " " + rotation_age;
-									// if prescription conditions match user-defined conditions
-									if (is_ea_defined_with_some_rows && Collections.binarySearch(ea_conversion_and_rotation_for_strata_without_sizeclass.get(strata_5layers_id), this_covertype_conversion_and_rotation_age) >= 0) {
-										xEAr[strata_5layers_id][s5R][i] = new int[total_periods + 1 + iter][];
-										int t_regen = (iter == 0) ? 2 : 1;	// this is because iteration 0 could not have regenerated forest in period 1, but iterations >= 1 do have regenerated forest strata
-										for (int t = t_regen + iter; t <= total_periods + iter; t++) {
-											xEAr[strata_5layers_id][s5R][i][t] = new int[t];
-											for (int a = 1; a <= t - 1; a++) {
-												int rotation_period = rotation_age + t - a;
-												if (t <= rotation_period 
-														&& rotation_period >= t_regen + iter && rotation_period <= total_periods + iter) {	// restrict prescriptions with tR = [t_regen + iter, total_period + iter]
-													String var_name = "xEA_R_" + strata + "_" + layer5.get(s5R) + "_" + i + "_" + t + "_" + a;										
-													Information_Variable var_info = new Information_Variable(iter, var_name, -9999, yield_tables_names_list);
-													var_info.set_rotation_period(rotation_period);
-													var_info.set_rotation_age(rotation_age);
-													
-													var_info_list.add(var_info);
-													objlist.add((double) 0);
-													vnamelist.add(var_name);	
-													vlblist.add((double) 0);
-													vublist.add(Double.MAX_VALUE);
-													xEAr[strata_5layers_id][s5R][i][t][a] = nvars;
-													nvars++;
-												}
-											}
-										}
-									}
-								}
-							}
-						}
 						// ---------------------------------------No-Merge & Merge options-------------------------------------------------
 						// ---------------------------------------No-Merge & Merge options-------------------------------------------------
 						// ---------------------------------------No-Merge & Merge options-------------------------------------------------
