@@ -295,9 +295,7 @@ public class Solve_Iterations {
 					List<Information_Variable> var_info_list = new ArrayList<Information_Variable>();
 					
 					
-					int total_age_classes = total_periods - 1 + iter;		//loop from age 1 to total_age_classes (for regenerated strata, set total_age_classes = total_periods - 1 + iter for rolling horizon update
 					int total_prescriptions = yield_tables_values.length;
-					
 					int method_col_id = yield_tables_column_names_list.indexOf("silv_method");
 					int status_col_id = yield_tables_column_names_list.indexOf("extreg");
 					int choice_col_id = yield_tables_column_names_list.indexOf("timingchoice");
@@ -380,11 +378,10 @@ public class Solve_Iterations {
 					int[] v = new int [total_freeConstraints];	//v(n)
 	//				int[][][] xNCe = new int[total_model_strata][total_prescriptions][total_periods + 1 + iter];		//xNCe(s1,s2,s3,s4,s5,s6)(i)(t)	
 	//				int[][][][] xEAe = new int[total_model_strata][total_layer5][total_prescriptions][total_periods + 1 + iter];	//xEAe(s1,s2,s3,s4,s5,s6)(s5R)(i)(t)
-											// total_Periods + 1 + iter because tR starts from 1 to total_Periods + iter, ignore the 0
-	//				int[][][][] xNCr = new int[total_model_strata_without_sizeclass][total_prescriptions][total_periods + 1 + iter][total_age_classes];		//xNCr(s1,s2,s3,s4,s5)(i)(t)(a)
-	//										// total_Periods + 1 + iter because tR starts from 1 to total_Periods + iter, ignore the 0				
-	//				int[][][][][] xEAr = new int[total_model_strata_without_sizeclass][total_layer5][total_prescriptions][total_periods + 1][total_age_classes];		//xEAr(s1,s2,s3,s4,s5)(s5R)(i)(t)(a)
+	//				int[][][][] xNCr = new int[total_model_strata_without_sizeclass][total_prescriptions][total_periods + 1 + iter][total_age_classes = t];		//xNCr(s1,s2,s3,s4,s5)(i)(t)(a)
+	//				int[][][][][] xEAr = new int[total_model_strata_without_sizeclass][total_layer5][total_prescriptions][total_periods + 1 + iter][total_age_classes = t];		//xEAr(s1,s2,s3,s4,s5)(s5R)(i)(t)(a)
 	//										// total_Periods + 1 + iter because tR starts from 1 to total_Periods + iter, ignore the 0		
+	//										// total_age_classes = t because a can be max at a = t - 1	
 					
 					// The below variables are optimized by using jagged-arrays
 					int[][][] xNCe = null;
@@ -520,7 +517,7 @@ public class Solve_Iterations {
 								// if prescription conditions match user-defined conditions
 								if (1 + iter <= rotation_period && rotation_period <= total_periods + iter		// restrict prescriptions with tR = [1+iter, total_period + iter]
 										&& is_ea_defined_with_some_rows && Collections.binarySearch(ea_conversion_and_rotation_for_strata.get(strata_id), this_covertype_conversion_and_rotation_age) >= 0) {	// Boost 1 (a.k.a. Silviculture Method)
-										xEAe[strata_id][s5R][i] = new int[total_periods + 1 + iter];	// check to see if we can replace total_periods + 1 + iter by rotation_period
+										xEAe[strata_id][s5R][i] = new int[total_periods + 1 + iter];	// check to see if we can replace total_periods + 1 + iter by rotation_period + 1
 										for (int t = 1 + iter; t <= rotation_period; t++) {
 											String var_name = "xEA_E_" + strata + "_" + layer5.get(s5R) + "_" + i + "_" + t;
 											Information_Variable var_info = new Information_Variable(iter, var_name, strata_starting_age[strata_id], yield_tables_names_list);
@@ -552,7 +549,7 @@ public class Solve_Iterations {
 								xNCr[strata_5layers_id][i] = new int[total_periods + 1 + iter][];
 								int t_regen = (iter == 0) ? 2 : 1;	// this is because iteration 0 could not have regenerated forest in period 1, but iterations >= 1 do have regenerated forest strata
 								for (int t = t_regen + iter; t <= total_periods + iter; t++) {
-									xNCr[strata_5layers_id][i][t] = new int[total_age_classes + 1 + iter];		// check if we could replace "total_age_classes + 1 + iter" by "t"
+									xNCr[strata_5layers_id][i][t] = new int[t];		// age class of regen forest could not is at max = t - 1
 									for (int a = 1; a <= t - 1; a++) {
 										String var_name = "xNC_R_" + strata + "_" + i + "_" + t + "_" + a;										
 										Information_Variable var_info = new Information_Variable(iter, var_name, -9999, yield_tables_names_list);
@@ -586,7 +583,7 @@ public class Solve_Iterations {
 									xEAr[strata_5layers_id][s5R][i] = new int[total_periods + 1 + iter][];
 									int t_regen = (iter == 0) ? 2 : 1;	// this is because iteration 0 could not have regenerated forest in period 1, but iterations >= 1 do have regenerated forest strata
 									for (int t = t_regen + iter; t <= total_periods + iter; t++) {
-										xEAr[strata_5layers_id][s5R][i][t] = new int[t];
+										xEAr[strata_5layers_id][s5R][i][t] = new int[t];	// age class of regen forest could not is at max = t - 1
 										for (int a = 1; a <= t - 1; a++) {
 											int rotation_period = rotation_age + t - a;
 											if (t <= rotation_period 
@@ -976,7 +973,7 @@ public class Solve_Iterations {
 							// xNCr
 							for (int i : list_of_nonea_prescription_id_for_regenerated_strata[strata_5layers_id]) {
 								int t = 1 + iter;
-								for (int a = 2; a <= t - 1; a++) {
+								for (int a = 2; a <= t - 1; a++) {		// to exclude regenerated variables at age class 1
 									if(xNCr[strata_5layers_id][i] != null
 											&& xNCr[strata_5layers_id][i][1 + iter] != null
 													&& xNCr[strata_5layers_id][i][1 + iter][a] > 0) {		// if variable is defined, this value would be > 0 
@@ -992,14 +989,13 @@ public class Solve_Iterations {
 							}
 						
 							// xEAr
-							int t_regen = (iter == 0) ? 2 : 1;	// this is because iteration 0 could not have regenerated forest in period 1, but iterations >= 1 do have regenerated forest strata
 							for (int s5R = 0; s5R < total_layer5; s5R++) {
 								for (int i : list_of_ea_prescription_id_for_regenerated_strata[strata_5layers_id]) {
 									int t = 1 + iter;
 									for (int a = 2; a <= t - 1; a++) {		// to exclude regenerated variables at age class 1
 										if(xEAr[strata_5layers_id][s5R] != null
 												 && xEAr[strata_5layers_id][s5R][i] != null
-														 && xEAr[strata_5layers_id][s5R][i][1 + iter] != null		// t = 1+ iter
+														 && xEAr[strata_5layers_id][s5R][i][1 + iter] != null
 																 && xEAr[strata_5layers_id][s5R][i][1 + iter][a] > 0) {		// if variable is defined, this value would be > 0 
 											// Simulate stochastic SRs to get final_value which is the period 2 solution after stochastic disturbances
 											int var_index = xEAr[strata_5layers_id][s5R][i][1 + iter][a];	// this is the first period variable in this iteration or the second period variable in previous iteration
