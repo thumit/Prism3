@@ -1853,7 +1853,7 @@ public class Solve_Iterations {
 									}
 									
 									
-									String strata_5layers= strata_4layers + "_" + layer5.get(s5R);		// = s1,s2,s3,s4,s5R
+									String strata_5layers = strata_4layers + "_" + layer5.get(s5R);		// = s1,s2,s3,s4,s5R
 									int strata_5layers_id = (map_strata_without_sizeclass_to_id.get(strata_5layers) != null) ? map_strata_without_sizeclass_to_id.get(strata_5layers) : -1;
 							
 									// Add - sigma(i) xNCr(s1,s2,s3,s4,s5R)[i][t+1][1]
@@ -3893,25 +3893,27 @@ public class Solve_Iterations {
 		String[] name_split = var_name.split("_");
 		String first_six_letters_of_var_name = var_name.substring(0, 6);
 		switch (first_six_letters_of_var_name) {
-		case "xNC_E_":
+		case "xNC_E_":			// t-->t - 1
 			int period = Integer.parseInt(name_split[7 + 2]) - 1;
 			name_split[7 + 2] = String.valueOf(period);
 			break;
 		
-		case "xEA_E_":
+		case "xEA_E_":			// t-->t - 1
 			period = Integer.parseInt(name_split[8 + 2]) - 1;
 			name_split[8 + 2] = String.valueOf(period);
 			break;
 			
-		case "xEA_R_":
+		case "xEA_R_":			// t-->t - 1	and 	a-->a - 1
 			period = Integer.parseInt(name_split[7 + 2]) - 1;
 			name_split[7 + 2] = String.valueOf(period);
+			int age = Integer.parseInt(name_split[8 + 2]) - 1;
+			name_split[8 + 2] = String.valueOf(age);
 			break;
 			
-		case "xNC_R_":
+		case "xNC_R_":			// t-->t - 1	and 	a-->a - 1
 			period = Integer.parseInt(name_split[6 + 2]) - 1;
 			name_split[6 + 2] = String.valueOf(period);
-			int age = Integer.parseInt(name_split[7 + 2]) - 1;
+			age = Integer.parseInt(name_split[7 + 2]) - 1;
 			name_split[7 + 2] = String.valueOf(age);
 			break;
 			
@@ -3967,25 +3969,27 @@ public class Solve_Iterations {
 		String[] name_split = var_name.split("_");
 		String first_six_letters_of_var_name = var_name.substring(0, 6);
 		switch (first_six_letters_of_var_name) {
-		case "xNC_E_":
+		case "xNC_E_":			// t-->t - 1
 			int period = Integer.parseInt(name_split[7 + 2]) - 1;
 			name_split[7 + 2] = String.valueOf(period);
 			break;
 		
-		case "xEA_E_":
+		case "xEA_E_":			// t-->t - 1
 			period = Integer.parseInt(name_split[8 + 2]) - 1;
 			name_split[8 + 2] = String.valueOf(period);
 			break;
 			
-		case "xEA_R_":
+		case "xEA_R_":			// t-->t - 1	and 	a-->a - 1
 			period = Integer.parseInt(name_split[7 + 2]) - 1;
 			name_split[7 + 2] = String.valueOf(period);
+			int age = Integer.parseInt(name_split[8 + 2]) - 1;
+			name_split[8 + 2] = String.valueOf(age);
 			break;
 			
-		case "xNC_R_":
+		case "xNC_R_":			// t-->t - 1	and 	a-->a - 1
 			period = Integer.parseInt(name_split[6 + 2]) - 1;
 			name_split[6 + 2] = String.valueOf(period);
-			int age = Integer.parseInt(name_split[7 + 2]) - 1;
+			age = Integer.parseInt(name_split[7 + 2]) - 1;
 			name_split[7 + 2] = String.valueOf(age);
 			break;
 			
@@ -4033,25 +4037,27 @@ public class Solve_Iterations {
 		String[] name_split = var_name.split("_");
 		String first_six_letters_of_var_name = var_name.substring(0, 6);
 		switch (first_six_letters_of_var_name) {
-		case "xNC_E_":
+		case "xNC_E_":			// t-->t - 1
 			int period = Integer.parseInt(name_split[7 + 2]) - 1;
 			name_split[7 + 2] = String.valueOf(period);
 			break;
 		
-		case "xEA_E_":
+		case "xEA_E_":			// t-->t - 1
 			period = Integer.parseInt(name_split[8 + 2]) - 1;
 			name_split[8 + 2] = String.valueOf(period);
 			break;
 			
-		case "xEA_R_":
+		case "xEA_R_":			// t-->t - 1	and 	a-->a - 1
 			period = Integer.parseInt(name_split[7 + 2]) - 1;
 			name_split[7 + 2] = String.valueOf(period);
+			int age = Integer.parseInt(name_split[8 + 2]) - 1;
+			name_split[8 + 2] = String.valueOf(age);
 			break;
 			
-		case "xNC_R_":
+		case "xNC_R_":			// t-->t - 1	and 	a-->a - 1
 			period = Integer.parseInt(name_split[6 + 2]) - 1;
 			name_split[6 + 2] = String.valueOf(period);
-			int age = Integer.parseInt(name_split[7 + 2]) - 1;
+			age = Integer.parseInt(name_split[7 + 2]) - 1;
 			name_split[7 + 2] = String.valueOf(age);
 			break;
 			
