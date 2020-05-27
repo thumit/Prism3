@@ -2065,7 +2065,7 @@ public class Solve_Iterations {
 									for (int a = 1; a <= t - 1; a++) {
 										int rotation_period = rotation_age + t - a;
 										if (a < rotation_age	// add this condition which is important
-												&& t <= rotation_period 
+												&& t < rotation_period 
 													&& rotation_period >= t_regen + iter && rotation_period <= total_periods + iter) {	// restrict prescriptions with tR = [t_regen + iter, total_period + iter]
 											
 											if(xEAr[strata_5layers_id][s5R] != null
