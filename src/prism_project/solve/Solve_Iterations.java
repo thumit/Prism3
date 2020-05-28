@@ -1786,7 +1786,7 @@ public class Solve_Iterations {
 									
 	
 									// NON-FIRE VARIABLES: X
-									// Add sigma(s5)(s6)(i) xEAe(s1,s2,s3,s4,s5,s6)[s5R][i][t=tR] 	--> : X~ ?
+									// Add sigma(s5)(s6)(i) xEAe(s1,s2,s3,s4,s5,s6)[s5R][i][t=tR] 	--> : X
 									for (int s5 = 0; s5 < total_layer5; s5++) {
 										for (int s6 = 0; s6 < total_layer6; s6++) {
 											String strata = strata_4layers + "_" + layer5.get(s5) + "_" + layer6.get(s6);
@@ -1805,7 +1805,7 @@ public class Solve_Iterations {
 										}
 									}
 									
-									// Add sigma(s5)(i)(a) xEAr[s1][s2][s3][s4][s5][s5R][i][t][a=aR] 	--> : X~ ?
+									// Add sigma(s5)(i)(a) xEAr[s1][s2][s3][s4][s5][s5R][i][t][a=aR] 	--> : X
 									for (int s5 = 0; s5 < total_layer5; s5++) {
 										String strata_5layers = strata_4layers + "_" + layer5.get(s5);		// = s1,s2,s3,s4,s5
 										int strata_5layers_id = (map_strata_without_sizeclass_to_id.get(strata_5layers) != null) ? map_strata_without_sizeclass_to_id.get(strata_5layers) : -1;
