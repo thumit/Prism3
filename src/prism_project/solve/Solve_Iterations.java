@@ -1676,9 +1676,8 @@ public class Solve_Iterations {
 										if (xNCr[strata_5layers_id][i] != null) 
 											if (xNCr[strata_5layers_id][i][t] != null) 
 												for (int a = 1; a <= t - 1; a++) {
-													if(xNCr[strata_5layers_id][i][t][a] > 0 && var_rd_condition_id[xNCr[strata_5layers_id][i][t][a]] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
-														
-														int var_index = xNCr[strata_5layers_id][i][t][a];
+													int var_index = xNCr[strata_5layers_id][i][t][a];
+													if(var_index > 0 && var_rd_condition_id[var_index] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
 														double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
 														double[][] loss_rate_std = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_std_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
 														double[][] user_loss_rate = get_stochastic_loss_rate_from_loss_rate_mean_and_loss_rate_std(user_chosen_loss_rate, loss_rate_mean, loss_rate_std, var_index, map_var_index_to_user_chosen_loss_rate);
@@ -1705,7 +1704,6 @@ public class Solve_Iterations {
 														&& xEAr[strata_5layers_id][s5RR][i] != null
 															&& xEAr[strata_5layers_id][s5RR][i][t] != null
 																&& xEAr[strata_5layers_id][s5RR][i][t][a] > 0) {	// if variable is defined, this value would be > 0 
-													
 													int var_index = xEAr[strata_5layers_id][s5RR][i][t][a];
 													if(var_index > 0 && var_rd_condition_id[var_index] != -9999) {		// if variable is defined, this value would be > 0 
 														double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
