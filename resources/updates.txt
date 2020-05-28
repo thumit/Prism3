@@ -1305,4 +1305,6 @@ All changes in this block are associated with PrismAlpha3.0.01.jar, Prism-Formul
 	- Replace total_age_classes by t to define xNCr variables
 	- Remove all null check for jagged arrays in equation 7a and 8a since it causes incorrect mapping across iterations (VERY IMPORTANT IMPORTANT IMPORTANT IMPORTANT IMPORTANT IMPORTANT IMPORTANT IMPORTANT IMPORTANT)
 	- Fix 9b with the if condition to be a < rotation_age 
+All changes in this block are associated with PrismAlpha3.0.03.jar, Prism-Formulation-12.docx, Rolling-horizon-formulation-09.docx
+--------------------------------------------------------------------------
 542. Remove the upper bound restriction filters that do not allow prescriptions with rotation periods > total planning period to be defined for EA_E and EA_R variables (not yet)
