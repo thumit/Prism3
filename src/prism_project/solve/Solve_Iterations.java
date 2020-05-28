@@ -1419,11 +1419,12 @@ public class Solve_Iterations {
 						for (int s5R = 0; s5R < total_layer5; s5R++) {
 							for (int i : list_of_ea_prescription_id_for_existing_strata[strata_id]) {
 								int rotation_period = rotation_period_from_precription[i]; // tR = total rows of this prescription
-								for (int t = 1 + iter; t <= rotation_period - 1; t++) {
-									if (xEAe[strata_id] != null 
-											&& xEAe[strata_id][s5R] != null
-												&& xEAe[strata_id][s5R][i] != null
-													&& xEAe[strata_id][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0
+								for (int t = 1 + iter; t <= total_periods - 1 + iter; t++) {
+									if (t < rotation_period
+											&&xEAe[strata_id] != null 
+												&& xEAe[strata_id][s5R] != null
+													&& xEAe[strata_id][s5R][i] != null
+														&& xEAe[strata_id][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0
 										// Add constraint
 										c6_indexlist.add(new ArrayList<Integer>());
 										c6_valuelist.add(new ArrayList<Double>());
