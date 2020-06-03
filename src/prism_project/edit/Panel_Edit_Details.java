@@ -4696,7 +4696,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	class Management_Category_GUI extends JLayeredPane {
 		List<List<JCheckBox>> checkboxStaticIdentifiers;
-		ScrollPane_DynamicIdentifiers dynamic_identifiersScrollPanel;
+		ScrollPane_DynamicIdentifiers dynamic_identifiers_scrollpane;
 		JPanel button_table_Panel;	
 		Panel_QuickEdit_Non_EA quick_edit;
 		JScrollPane scrollpane_QuickEdit;
@@ -4728,7 +4728,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			
 			// 2nd grid -----------------------------------------------------------------------
 			// 2nd grid -----------------------------------------------------------------------	
-			dynamic_identifiersScrollPanel = new ScrollPane_DynamicIdentifiers(read_database);
+			dynamic_identifiers_scrollpane = new ScrollPane_DynamicIdentifiers(read_database);
 			// End of 2nd grid -----------------------------------------------------------------------
 			// End of 2nd grid -----------------------------------------------------------------------			
 			
@@ -4855,7 +4855,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					if (selectedRow.length == 1) {		// Reload Constraint & Enable Edit	when: 1 row is selected and no cell is editing
 						int currentRow = selectedRow[0];
 						currentRow = table2.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
-						dynamic_identifiersScrollPanel.reload_this_constraint_dynamic_identifiers((String) data2[currentRow][3], (String) data2[currentRow][4]);	// 3, 4 are dynamic and original_dynamic
+						dynamic_identifiers_scrollpane.reload_this_constraint_dynamic_identifiers((String) data2[currentRow][3], (String) data2[currentRow][4]);	// 3, 4 are dynamic and original_dynamic
 						btn_Edit.setEnabled(true);
 					} else {		// Disable Edit
 						btn_Edit.setEnabled(false);
@@ -4905,10 +4905,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					}
 				}
 								
-				data2[rowCount2 - 1][1] = "Prescriptions with " + dynamic_identifiersScrollPanel.get_dynamic_description_from_GUI();
+				data2[rowCount2 - 1][1] = "Prescriptions with " + dynamic_identifiers_scrollpane.get_dynamic_description_from_GUI();
 				data2[rowCount2 - 1][2] = "NC_E";
-				data2[rowCount2 - 1][3] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();
-				data2[rowCount2 - 1][4] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
+				data2[rowCount2 - 1][3] = dynamic_identifiers_scrollpane.get_dynamic_info_from_GUI();
+				data2[rowCount2 - 1][4] = dynamic_identifiers_scrollpane.get_original_dynamic_info_from_GUI();
 				data2[rowCount2-1][5] = true;
 				model2.updateTableModelPrism(rowCount2, colCount2, data2, columnNames2);
 				update_id();
@@ -4933,15 +4933,15 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					selectedRow = table2.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems	
 	
 					// Apply change	
-					data2[selectedRow][3] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();
-					data2[rowCount2 - 1][4] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
+					data2[selectedRow][3] = dynamic_identifiers_scrollpane.get_dynamic_info_from_GUI();
+					data2[rowCount2 - 1][4] = dynamic_identifiers_scrollpane.get_original_dynamic_info_from_GUI();
 					model2.fireTableDataChanged();	
 					
 					// Convert the edited Row to model view and then select it 
 					int editRow = table2.convertRowIndexToView(selectedRow);
 					table2.setRowSelectionInterval(editRow, editRow);
 					
-					dynamic_identifiersScrollPanel.highlight();
+					dynamic_identifiers_scrollpane.highlight();
 				} 
 			});
 			
@@ -4949,13 +4949,13 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			btn_Edit.addMouseListener(new MouseAdapter() { // Add listener
 				public void mouseEntered(java.awt.event.MouseEvent e) {
 					if (table2.getSelectedRows().length == 1) {
-						dynamic_identifiersScrollPanel.highlight();
+						dynamic_identifiers_scrollpane.highlight();
 					}
 				}
 
 				public void mouseExited(java.awt.event.MouseEvent e) {
 					if (table2.getSelectedRows().length == 1) {
-						dynamic_identifiersScrollPanel.unhighlight();
+						dynamic_identifiers_scrollpane.unhighlight();
 					}
 				}
 			});
@@ -5170,7 +5170,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		    c.weighty = 1;
 			c.gridwidth = 1;
 			c.gridheight = 1;
-			upper_panel.add(dynamic_identifiersScrollPanel, c);
+			upper_panel.add(dynamic_identifiers_scrollpane, c);
 			
 			// Add the button_table_Panel & scrollpane_QuickEdit to a new Panel then add that panel to the main Grid
 			JPanel button_table_qedit_panel = new JPanel();
@@ -5729,7 +5729,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	class Natural_Disturbances_GUI extends JLayeredPane implements ActionListener {
 		List<List<JCheckBox>> checkboxStaticIdentifiers;
 		ScrollPane_StaticIdentifiers static_identifiers_scrollpane;
-		ScrollPane_DynamicIdentifiers dynamic_identifiersScrollPanel;
+		ScrollPane_DynamicIdentifiers dynamic_identifiers_scrollpane;
 		ScrollPane_SubTables_NaturalDisturbances natural_disturbances_tables_ScrollPane;
 		TableColumnsHandle table6a_handle, table6b_handle;
 		Panel_QuickEdit_NaturalDisturbances quick_edit;
@@ -5746,7 +5746,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 
 			
 			// 2nd Grid ------------------------------------------------------------------------------		// Dynamic identifiers
-			dynamic_identifiersScrollPanel = new ScrollPane_DynamicIdentifiers(read_database);
+			dynamic_identifiers_scrollpane = new ScrollPane_DynamicIdentifiers(read_database);
 			// End of 2nd Grid -----------------------------------------------------------------------
 				
 					
@@ -5870,7 +5870,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						int currentRow = selectedRow[0];
 						currentRow = table6.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
 						static_identifiers_scrollpane.reload_this_constraint_static_identifiers((String) data6[currentRow][6]);	// 6 is the static_identifiers which have some attributes selected				
-						dynamic_identifiersScrollPanel.reload_this_constraint_dynamic_identifiers((String) data6[currentRow][7], (String) data6[currentRow][8]);	// 6 is the original_dynamic_identifiers column
+						dynamic_identifiers_scrollpane.reload_this_constraint_dynamic_identifiers((String) data6[currentRow][7], (String) data6[currentRow][8]);	// 6 is the original_dynamic_identifiers column
 						natural_disturbances_tables_ScrollPane.reload_this_condition((String) data6[currentRow][2], (String) data6[currentRow][3], (String) data6[currentRow][4], (String) data6[currentRow][5]);
 						
 						btn_Edit.setEnabled(true);
@@ -5966,15 +5966,15 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				}
 					
 				data6[rowCount6 - 1][1] = String.join(" ..... ",
-						dynamic_identifiersScrollPanel.get_dynamic_description_from_GUI(),
+						dynamic_identifiers_scrollpane.get_dynamic_description_from_GUI(),
 						static_identifiers_scrollpane.get_static_description_from_GUI());
 				data6[rowCount6 - 1][2] = natural_disturbances_tables_ScrollPane.get_lr_mean_from_GUI();
 				data6[rowCount6 - 1][3] = natural_disturbances_tables_ScrollPane.get_lr_std_from_GUI();
 				data6[rowCount6 - 1][4] = natural_disturbances_tables_ScrollPane.get_cr_mean_from_GUI();
 				data6[rowCount6 - 1][5] = natural_disturbances_tables_ScrollPane.get_cr_std_from_GUI();
 				data6[rowCount6 - 1][6] = static_identifiers_scrollpane.get_static_info_from_GUI();
-				data6[rowCount6 - 1][7] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();
-				data6[rowCount6 - 1][8] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
+				data6[rowCount6 - 1][7] = dynamic_identifiers_scrollpane.get_dynamic_info_from_GUI();
+				data6[rowCount6 - 1][8] = dynamic_identifiers_scrollpane.get_original_dynamic_info_from_GUI();
 				data6[rowCount6 - 1][9] = true;
 								
 				model6.updateTableModelPrism(rowCount6, colCount6, data6, columnNames6);
@@ -6000,8 +6000,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					
 					// Apply change
 					data6[selectedRow][6] = static_identifiers_scrollpane.get_static_info_from_GUI();
-					data6[selectedRow][7] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();
-					data6[selectedRow][8] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
+					data6[selectedRow][7] = dynamic_identifiers_scrollpane.get_dynamic_info_from_GUI();
+					data6[selectedRow][8] = dynamic_identifiers_scrollpane.get_original_dynamic_info_from_GUI();
 					model6.fireTableDataChanged();	
 					
 					// Convert the edited Row to model view and then select it 
@@ -6009,7 +6009,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					table6.setRowSelectionInterval(editRow, editRow);
 					
 					static_identifiers_scrollpane.highlight();
-					dynamic_identifiersScrollPanel.highlight();			
+					dynamic_identifiers_scrollpane.highlight();			
 				} 
 			});			
 			
@@ -6018,14 +6018,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				public void mouseEntered(java.awt.event.MouseEvent e) {
 					if (table6.getSelectedRows().length == 1) {
 						static_identifiers_scrollpane.highlight();
-						dynamic_identifiersScrollPanel.highlight();
+						dynamic_identifiers_scrollpane.highlight();
 					}
 				}
 
 				public void mouseExited(java.awt.event.MouseEvent e) {
 					if (table6.getSelectedRows().length == 1) {
 						static_identifiers_scrollpane.unhighlight();
-						dynamic_identifiersScrollPanel.unhighlight();
+						dynamic_identifiers_scrollpane.unhighlight();
 					}
 				}
 			});
@@ -6268,7 +6268,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			c.gridheight = 1;
 			c.weightx = 0.5;
 			c.weighty = 1;
-			upper_panel.add(dynamic_identifiersScrollPanel, c);	
+			upper_panel.add(dynamic_identifiers_scrollpane, c);	
 						    				
 			// Add the combine_panel to the main Grid	
 			c.gridx = 0;
@@ -6302,8 +6302,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			}  	
 	    	
 	      	// Update Dynamic Identifier Panel
-	    	if (read_database.get_yield_tables_column_names() != null && dynamic_identifiersScrollPanel.get_allDynamicIdentifiers() == null) {
-	    		dynamic_identifiersScrollPanel = new ScrollPane_DynamicIdentifiers(read_database);	// "Get identifiers from yield table columns"
+	    	if (read_database.get_yield_tables_column_names() != null && dynamic_identifiers_scrollpane.get_allDynamicIdentifiers() == null) {
+	    		dynamic_identifiers_scrollpane = new ScrollPane_DynamicIdentifiers(read_database);	// "Get identifiers from yield table columns"
 	    	}	
 		}	
 		
@@ -6334,7 +6334,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	class Management_Cost_GUI extends JLayeredPane implements ActionListener {
 		List<List<JCheckBox>> checkboxStaticIdentifiers;
 		ScrollPane_StaticIdentifiers static_identifiers_scrollpane;
-		ScrollPane_DynamicIdentifiers dynamic_identifiersScrollPanel;
+		ScrollPane_DynamicIdentifiers dynamic_identifiers_scrollpane;
 		ScrollPane_SubTables_ManagementCost cost_tables_ScrollPane;
 		Panel_QuickEdit_ManagementCost quick_edit;
 
@@ -6350,7 +6350,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 
 			
 			// 2nd Grid ------------------------------------------------------------------------------		// Dynamic identifiers
-			dynamic_identifiersScrollPanel = new ScrollPane_DynamicIdentifiers(read_database);
+			dynamic_identifiers_scrollpane = new ScrollPane_DynamicIdentifiers(read_database);
 			// End of 2nd Grid -----------------------------------------------------------------------
 				
 					
@@ -6470,7 +6470,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						int currentRow = selectedRow[0];
 						currentRow = table7.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
 						static_identifiers_scrollpane.reload_this_constraint_static_identifiers((String) data7[currentRow][4]);	// 4 is the static_identifiers which have some attributes selected				
-						dynamic_identifiersScrollPanel.reload_this_constraint_dynamic_identifiers((String) data7[currentRow][5], (String) data7[currentRow][6]);	// 6 is the original_dynamic_identifiers column
+						dynamic_identifiers_scrollpane.reload_this_constraint_dynamic_identifiers((String) data7[currentRow][5], (String) data7[currentRow][6]);	// 6 is the original_dynamic_identifiers column
 						cost_tables_ScrollPane.reload_this_condition_action_cost_and_conversion_cost((String) data7[currentRow][2], (String) data7[currentRow][3]);
 						cost_tables_ScrollPane.show_active_columns_after_reload();
 						btn_Edit.setEnabled(true);
@@ -6546,13 +6546,13 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				}
 					
 				data7[rowCount7 - 1][1] = String.join(" ..... ",
-						dynamic_identifiersScrollPanel.get_dynamic_description_from_GUI(),
+						dynamic_identifiers_scrollpane.get_dynamic_description_from_GUI(),
 						static_identifiers_scrollpane.get_static_description_from_GUI());
 				data7[rowCount7 - 1][2] = cost_tables_ScrollPane.get_action_cost_info_from_GUI();
 				data7[rowCount7 - 1][3] = cost_tables_ScrollPane.get_conversion_cost_info_from_GUI();
 				data7[rowCount7 - 1][4] = static_identifiers_scrollpane.get_static_info_from_GUI();
-				data7[rowCount7 - 1][5] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();
-				data7[rowCount7 - 1][6] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
+				data7[rowCount7 - 1][5] = dynamic_identifiers_scrollpane.get_dynamic_info_from_GUI();
+				data7[rowCount7 - 1][6] = dynamic_identifiers_scrollpane.get_original_dynamic_info_from_GUI();
 				data7[rowCount7 - 1][7] = true;
 								
 				model7.updateTableModelPrism(rowCount7, colCount7, data7, columnNames7);
@@ -6578,8 +6578,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					
 					// Apply change
 					data7[selectedRow][4] = static_identifiers_scrollpane.get_static_info_from_GUI();
-					data7[selectedRow][5] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();
-					data7[selectedRow][6] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
+					data7[selectedRow][5] = dynamic_identifiers_scrollpane.get_dynamic_info_from_GUI();
+					data7[selectedRow][6] = dynamic_identifiers_scrollpane.get_original_dynamic_info_from_GUI();
 					model7.fireTableDataChanged();	
 					
 					// Convert the edited Row to model view and then select it 
@@ -6587,7 +6587,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					table7.setRowSelectionInterval(editRow, editRow);
 					
 					static_identifiers_scrollpane.highlight();
-					dynamic_identifiersScrollPanel.highlight();			
+					dynamic_identifiers_scrollpane.highlight();			
 				} 
 			});			
 			
@@ -6596,14 +6596,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				public void mouseEntered(java.awt.event.MouseEvent e) {
 					if (table7.getSelectedRows().length == 1) {
 						static_identifiers_scrollpane.highlight();
-						dynamic_identifiersScrollPanel.highlight();
+						dynamic_identifiers_scrollpane.highlight();
 					}
 				}
 
 				public void mouseExited(java.awt.event.MouseEvent e) {
 					if (table7.getSelectedRows().length == 1) {
 						static_identifiers_scrollpane.unhighlight();
-						dynamic_identifiersScrollPanel.unhighlight();
+						dynamic_identifiers_scrollpane.unhighlight();
 					}
 				}
 			});
@@ -6845,7 +6845,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			c.gridheight = 1;
 			c.weightx = 0.5;
 			c.weighty = 1;
-			upper_panel.add(dynamic_identifiersScrollPanel, c);	
+			upper_panel.add(dynamic_identifiers_scrollpane, c);	
 						    				
 			// Add the combine_panel to the main Grid	
 			c.gridx = 0;
@@ -6879,8 +6879,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			}  	
 	    	
 	      	//Update Dynamic Identifier Panel
-	    	if (read_database.get_yield_tables_column_names() != null && dynamic_identifiersScrollPanel.get_allDynamicIdentifiers() == null) {
-	    		dynamic_identifiersScrollPanel = new ScrollPane_DynamicIdentifiers(read_database);	// "Get identifiers from yield table columns"
+	    	if (read_database.get_yield_tables_column_names() != null && dynamic_identifiers_scrollpane.get_allDynamicIdentifiers() == null) {
+	    		dynamic_identifiers_scrollpane = new ScrollPane_DynamicIdentifiers(read_database);	// "Get identifiers from yield table columns"
 	    	}	    	
 		}	
 		
@@ -6915,9 +6915,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		List<JScrollPane> allDynamicIdentifiers_ScrollPane;
 		List<JCheckBox> checkboxParameters;
 		
-		ScrollPane_Parameters parametersScrollPanel;
+		ScrollPane_Parameters parameters_scrollpane;
 		ScrollPane_StaticIdentifiers static_identifiers_scrollpane;
-		ScrollPane_DynamicIdentifiers dynamic_identifiersScrollPanel;
+		ScrollPane_DynamicIdentifiers dynamic_identifiers_scrollpane;
 		JScrollPane table_scrollpane;	
 		JPanel button_table_Panel;
 		
@@ -6936,16 +6936,16 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 
 			
 			// 2nd Grid ------------------------------------------------------------------------------		// Dynamic identifiers
-			dynamic_identifiersScrollPanel = new ScrollPane_DynamicIdentifiers(read_database);
-			checkboxDynamicIdentifiers = dynamic_identifiersScrollPanel.get_checkboxDynamicIdentifiers();
-			allDynamicIdentifiers = dynamic_identifiersScrollPanel.get_allDynamicIdentifiers();
-			allDynamicIdentifiers_ScrollPane = dynamic_identifiersScrollPanel.get_allDynamicIdentifiers_ScrollPane();
+			dynamic_identifiers_scrollpane = new ScrollPane_DynamicIdentifiers(read_database);
+			checkboxDynamicIdentifiers = dynamic_identifiers_scrollpane.get_checkboxDynamicIdentifiers();
+			allDynamicIdentifiers = dynamic_identifiers_scrollpane.get_allDynamicIdentifiers();
+			allDynamicIdentifiers_ScrollPane = dynamic_identifiers_scrollpane.get_allDynamicIdentifiers_ScrollPane();
 			// End of 2nd Grid -----------------------------------------------------------------------
 				
 					
 			// 3rd grid ------------------------------------------------------------------------------		// Parameters
-			parametersScrollPanel = new ScrollPane_Parameters(read_database);
-			checkboxParameters = parametersScrollPanel.get_checkboxParameters();
+			parameters_scrollpane = new ScrollPane_Parameters(read_database);
+			checkboxParameters = parameters_scrollpane.get_checkboxParameters();
 			// End of 3rd grid -----------------------------------------------------------------------
 			
 	    	
@@ -7077,8 +7077,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						int currentRow = selectedRow[0];
 						currentRow = table8.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
 						static_identifiers_scrollpane.reload_this_constraint_static_identifiers((String) data8[currentRow][9]);	// 9 is the static_identifiers which have some attributes selected				
-						dynamic_identifiersScrollPanel.reload_this_constraint_dynamic_identifiers((String) data8[currentRow][10], (String) data8[currentRow][11]);	// 11 is the original_dynamic_identifiers column
-						parametersScrollPanel.reload_this_constraint_parameters((String) data8[currentRow][8]);	// 8 is the selected parameters of this constraint
+						dynamic_identifiers_scrollpane.reload_this_constraint_dynamic_identifiers((String) data8[currentRow][10], (String) data8[currentRow][11]);	// 11 is the original_dynamic_identifiers column
+						parameters_scrollpane.reload_this_constraint_parameters((String) data8[currentRow][8]);	// 8 is the selected parameters of this constraint
 						btn_Edit.setEnabled(true);
 					} else {		// Disable Edit
 						btn_Edit.setEnabled(false);
@@ -7129,15 +7129,15 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				
 				
 				data8[rowCount8 - 1][1] = String.join(" ..... ",
-						parametersScrollPanel.get_parameters_description_from_GUI(),
-						dynamic_identifiersScrollPanel.get_dynamic_description_from_GUI(),
+						parameters_scrollpane.get_parameters_description_from_GUI(),
+						dynamic_identifiers_scrollpane.get_dynamic_description_from_GUI(),
 						static_identifiers_scrollpane.get_static_description_from_GUI());
 				data8[rowCount8 - 1][2] = "FREE";
 				data8[rowCount8 - 1][3] = (double) 1;
-				data8[rowCount8 - 1][8] = parametersScrollPanel.get_parameters_info_from_GUI();
+				data8[rowCount8 - 1][8] = parameters_scrollpane.get_parameters_info_from_GUI();
 				data8[rowCount8 - 1][9] = static_identifiers_scrollpane.get_static_info_from_GUI();
-				data8[rowCount8 - 1][10] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();
-				data8[rowCount8 - 1][11] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
+				data8[rowCount8 - 1][10] = dynamic_identifiers_scrollpane.get_dynamic_info_from_GUI();
+				data8[rowCount8 - 1][11] = dynamic_identifiers_scrollpane.get_original_dynamic_info_from_GUI();
 				
 				model8.updateTableModelPrism(rowCount8, colCount8, data8, columnNames8);
 				update_id();
@@ -7165,8 +7165,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				
 				ScrollPane_ConstraintsSplitBasic constraint_split_ScrollPanel = new ScrollPane_ConstraintsSplitBasic(
 						static_identifiers_scrollpane.get_static_layer_title_as_checkboxes(),
-						parametersScrollPanel.get_checkboxParameters(),
-						dynamic_identifiersScrollPanel.get_allDynamicIdentifiers());
+						parameters_scrollpane.get_checkboxParameters(),
+						dynamic_identifiers_scrollpane.get_allDynamicIdentifiers());
 
 				
 				
@@ -7358,9 +7358,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 									parameter_description_info_list.add(checkboxParameters.get(i).getText());
 								}
 							}
-							if (parameter_description_info_list.isEmpty()) parameter_description_info_list.add(parametersScrollPanel.get_parameters_description_from_GUI());
+							if (parameter_description_info_list.isEmpty()) parameter_description_info_list.add(parameters_scrollpane.get_parameters_description_from_GUI());
 						} else { // --> disable this "else" if do not want the full description
-							parameter_description_info_list.add(parametersScrollPanel.get_parameters_description_from_GUI());
+							parameter_description_info_list.add(parameters_scrollpane.get_parameters_description_from_GUI());
 						}
 						
 						
@@ -7477,11 +7477,11 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						
 						
 						// Combine everything together to create the final lists
-						if (parameter_info_list.isEmpty()) parameter_info_list.add(parametersScrollPanel.get_parameters_info_from_GUI());
-						if (dynamic_info_list.isEmpty()) dynamic_info_list.add(dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI());
+						if (parameter_info_list.isEmpty()) parameter_info_list.add(parameters_scrollpane.get_parameters_info_from_GUI());
+						if (dynamic_info_list.isEmpty()) dynamic_info_list.add(dynamic_identifiers_scrollpane.get_dynamic_info_from_GUI());
 						if (static_info_list.isEmpty()) static_info_list.add(static_identifiers_scrollpane.get_static_info_from_GUI());
-						if (parameter_description_info_list.isEmpty()) parameter_description_info_list.add(parametersScrollPanel.get_parameters_description_from_GUI());
-						if (dynamic_description_info_list.isEmpty()) dynamic_description_info_list.add(dynamic_identifiersScrollPanel.get_dynamic_description_from_GUI());
+						if (parameter_description_info_list.isEmpty()) parameter_description_info_list.add(parameters_scrollpane.get_parameters_description_from_GUI());
+						if (dynamic_description_info_list.isEmpty()) dynamic_description_info_list.add(dynamic_identifiers_scrollpane.get_dynamic_description_from_GUI());
 						if (static_description_info_list.isEmpty()) static_description_info_list.add(static_identifiers_scrollpane.get_static_description_from_GUI());
 						
 						List<String> final_parameter_info_list = new ArrayList<String>();
@@ -7560,7 +7560,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 									data8[i][8] = final_parameter_info_list.get(i - rowCount8 + total_constraints);		// parameter splitter is active
 									data8[i][9] = final_static_info_list.get(i - rowCount8 + total_constraints);		// static splitter is active
 									data8[i][10] = final_dynamic_info_list.get(i - rowCount8 + total_constraints);		// dynamic splitter is active
-									data8[i][11] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
+									data8[i][11] = dynamic_identifiers_scrollpane.get_original_dynamic_info_from_GUI();
 								}	
 							}	
 	
@@ -7599,10 +7599,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					selectedRow = table8.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems		
 					
 					// Apply change
-					data8[selectedRow][8] = parametersScrollPanel.get_parameters_info_from_GUI();
+					data8[selectedRow][8] = parameters_scrollpane.get_parameters_info_from_GUI();
 					data8[selectedRow][9] = static_identifiers_scrollpane.get_static_info_from_GUI();
-					data8[selectedRow][10] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();	
-					data8[selectedRow][11] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
+					data8[selectedRow][10] = dynamic_identifiers_scrollpane.get_dynamic_info_from_GUI();	
+					data8[selectedRow][11] = dynamic_identifiers_scrollpane.get_original_dynamic_info_from_GUI();
 					model8.fireTableDataChanged();	
 					
 					// Convert the edited Row to model view and then select it 
@@ -7610,8 +7610,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					table8.setRowSelectionInterval(editRow, editRow);
 					
 					static_identifiers_scrollpane.highlight();
-					dynamic_identifiersScrollPanel.highlight();
-					parametersScrollPanel.highlight();
+					dynamic_identifiers_scrollpane.highlight();
+					parameters_scrollpane.highlight();
 				}
 			});
 			
@@ -7620,16 +7620,16 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				public void mouseEntered(java.awt.event.MouseEvent e) {
 					if (table8.getSelectedRows().length == 1) {
 						static_identifiers_scrollpane.highlight();
-						dynamic_identifiersScrollPanel.highlight();
-						parametersScrollPanel.highlight();
+						dynamic_identifiers_scrollpane.highlight();
+						parameters_scrollpane.highlight();
 					}
 				}
 
 				public void mouseExited(java.awt.event.MouseEvent e) {
 					if (table8.getSelectedRows().length == 1) {
 						static_identifiers_scrollpane.unhighlight();
-						dynamic_identifiersScrollPanel.unhighlight();
-						parametersScrollPanel.unhighlight();
+						dynamic_identifiers_scrollpane.unhighlight();
+						parameters_scrollpane.unhighlight();
 					}
 				}
 			});
@@ -7940,16 +7940,16 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			c.gridheight = 1;
 			c.weightx = 0.5;
 			c.weighty = 1;
-			upper_panel.add(dynamic_identifiersScrollPanel, c);	
+			upper_panel.add(dynamic_identifiers_scrollpane, c);	
 			    		
-			// Add the parametersScrollPanel to the main Grid	
+			// Add the parameters_scrollpane to the main Grid	
 			c.gridx = 0;
 			c.gridy = 2;
 			c.gridwidth = 1;
 			c.gridheight = 1;
 			c.weightx = 0;
 		    c.weighty = 1;
-		    lower_panel.add(parametersScrollPanel, c);						
+		    lower_panel.add(parameters_scrollpane, c);						
 		    	    		    
 		    // Add the button_table_Panel & scrollpane_QuickEdit to a new Panel then add that panel to the main Grid
 			JPanel button_table_qedit_panel = new JPanel();
@@ -7988,17 +7988,17 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			}  	
 	    	
 	       	// Update Parameter Panel
-	    	if (read_database.get_yield_tables_column_names() != null && parametersScrollPanel.get_checkboxParameters() == null) {
-	    		parametersScrollPanel = new ScrollPane_Parameters(read_database);	//"Get parameters from YT columns"
+	    	if (read_database.get_yield_tables_column_names() != null && parameters_scrollpane.get_checkboxParameters() == null) {
+	    		parameters_scrollpane = new ScrollPane_Parameters(read_database);	//"Get parameters from YT columns"
 	    	}
 	    	
 	      	// Update Dynamic Identifier Panel
-	    	if (read_database.get_yield_tables_column_names() != null && dynamic_identifiersScrollPanel.get_allDynamicIdentifiers() == null) {
-	    		dynamic_identifiersScrollPanel = new ScrollPane_DynamicIdentifiers(read_database);	// "Get identifiers from yield table columns"
+	    	if (read_database.get_yield_tables_column_names() != null && dynamic_identifiers_scrollpane.get_allDynamicIdentifiers() == null) {
+	    		dynamic_identifiers_scrollpane = new ScrollPane_DynamicIdentifiers(read_database);	// "Get identifiers from yield table columns"
 	    	}
 
 	    	// Only set button_table_Panel visible when Parameter scroll Pane have checkboxes created
-	    	if (parametersScrollPanel.get_checkboxParameters() == null) {
+	    	if (parameters_scrollpane.get_checkboxParameters() == null) {
 	    		button_table_Panel.setVisible(false);
 	    	} else {
 	    		button_table_Panel.setVisible(true);
