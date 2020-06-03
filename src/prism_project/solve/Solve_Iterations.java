@@ -159,7 +159,7 @@ public class Solve_Iterations {
 				// Read input files to retrieve values later
 				File input_01_file = new File(runFolder.getAbsolutePath() + "/input_01_general_inputs.txt");
 				File input_02_file = new File(runFolder.getAbsolutePath() + "/input_02_model_strata.txt");
-				File input_03_file = new File(runFolder.getAbsolutePath() + "/input_03_non_ea_management.txt");
+				File input_03_file = new File(runFolder.getAbsolutePath() + "/input_03_management_category.txt");
 				File input_04_file = new File(runFolder.getAbsolutePath() + "/input_04_ea_management.txt");
 				File input_06_file = new File(runFolder.getAbsolutePath() + "/input_06_natural_disturbances.txt");
 				File input_07_file = new File(runFolder.getAbsolutePath() + "/input_07_management_cost.txt");
@@ -169,7 +169,7 @@ public class Solve_Iterations {
 				Read_Input read = new Read_Input();
 				read.read_general_inputs(input_01_file);
 				read.read_model_strata(input_02_file);
-				read.read_non_ea_management(input_03_file);
+				read.read_management_category(input_03_file);
 				read.read_ea_management(input_04_file);
 				read.read_replacing_disturbances(input_06_file);
 				read.read_management_cost(input_07_file);
@@ -206,7 +206,7 @@ public class Solve_Iterations {
 					map_strata_without_sizeclass_to_id.put(model_strata_without_sizeclass.get(id), id);		// strata_without_sizeclass = key, id = value		
 				}
 				
-				// Get info: input_03_non_ea_management
+				// Get info: input_03_management_category
 				read.populate_nonea_lists(model_strata, model_strata_without_sizeclass, all_layers);
 				List<List<String>> nonea_method_choice_for_strata = read.get_nonea_method_choice_for_strata();
 				List<List<String>> nonea_method_choice_for_strata_without_sizeclass = read.get_nonea_method_choice_for_strata_without_sizeclass();

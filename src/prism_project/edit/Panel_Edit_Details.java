@@ -134,7 +134,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	// panels for the selected Run
 	private General_Inputs_GUI panel_General_Inputs_GUI;
 	private Model_Strata_GUI panel_Model_Strata_GUI;
-	private Non_EA_Management_GUI panel_Non_EA_Management_GUI;
+	private Management_Category_GUI panel_Management_Category_GUI;
 	private EA_Management_GUI panel_EA_Management_GUI;
 	private Natural_Disturbances_GUI panel_Natural_Disturbances_GUI;
 	private Management_Cost_GUI panel_Management_Cost_GUI;
@@ -167,7 +167,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	private PrismTableModel model3;
 	private Object[][] data3;
 	
-	// table input_03_non_ea_management.txt
+	// table input_03_management_category.txt
 	private boolean is_table2_loaded = false;
 	private int rowCount2, colCount2;
 	private String[] columnNames2;
@@ -302,7 +302,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		radio_button  = new JRadioButton[9];
 		radio_button[0]= new JRadioButton("General Inputs");
 		radio_button[1]= new JRadioButton("Model Strata");
-		radio_button[2]= new JRadioButton("Non-EA Management");
+		radio_button[2]= new JRadioButton("Management Category");
 		radio_button[3]= new JRadioButton("EA Management");
 		radio_button[4]= new JRadioButton("Natural Disturbances");
 		radio_button[5]= new JRadioButton("Management Cost");
@@ -343,7 +343,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					GUI_Text_splitpane.setLeftComponent(panel_Model_Strata_GUI);
 					GUI_Text_splitpane.setRightComponent(null);
 				} else if (j == 2) {
-					GUI_Text_splitpane.setLeftComponent(panel_Non_EA_Management_GUI);
+					GUI_Text_splitpane.setLeftComponent(panel_Management_Category_GUI);
 					GUI_Text_splitpane.setRightComponent(null);
 				} else if (j == 3) {
 					GUI_Text_splitpane.setLeftComponent(panel_EA_Management_GUI);
@@ -425,7 +425,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		}
 
 
-		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_03_non_ea_management.txt");
+		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_03_management_category.txt");
 		if (table_file.exists()) {        //Load from input
 			tableLoader = new Reload_Table_Info(table_file);
 			rowCount2 = tableLoader.get_rowCount();
@@ -533,7 +533,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			
 			panel_General_Inputs_GUI.get_database_directory_textfield().setText(file_database.getAbsolutePath());
 			panel_Model_Strata_GUI = new Model_Strata_GUI();
-			panel_Non_EA_Management_GUI = new Non_EA_Management_GUI();
+			panel_Management_Category_GUI = new Management_Category_GUI();
 			panel_EA_Management_GUI = new EA_Management_GUI();
 			panel_Natural_Disturbances_GUI = new Natural_Disturbances_GUI();
 			panel_Management_Cost_GUI = new Management_Cost_GUI();
@@ -723,12 +723,22 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	
 	//--------------------------------------------------------------------------------------------------------------------------
 	public void create_table2() {		
+		class comboBox_prescription_group extends JComboBox {	
+			public comboBox_prescription_group() {
+				addItem("NC_E");
+				addItem("EA_E");
+				addItem("NC_R");
+				addItem("EA_R");
+				setSelectedIndex(0);
+			}
+		}
+		
 		//Setup the table------------------------------------------------------------
 		if (is_table2_loaded == false) { // Create a fresh new if Load fail				
 			rowCount2 = 0;
-			colCount2 = 5;
+			colCount2 = 6;
 			data2 = new Object[rowCount2][colCount2];
-			columnNames2 = new String[] {"condition_id", "condition_description", "static_identifiers", "method_choice", "model_condition"};
+			columnNames2 = new String[] {"condition_id", "condition_description", "prescription_group", "dynamic_identifiers", "original_dynamic_identifiers", "model_condition"};	
 		}
 					
 		
@@ -737,13 +747,13 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			@Override
 			public Class getColumnClass(int c) {
 				if (c == 0) return Integer.class; // column 0 accepts only Integer
-				else if (c == 4) return Boolean.class;
+				else if (c == 5) return Boolean.class;
 				else return String.class;
 			}
 			
 			@Override
 			public boolean isCellEditable(int row, int col) {
-				if (col == 1 || col == 4) { 	// Only the 2nd column is editable
+				if (col == 1 || col == 2 || col == 5) { //  Only column "condition_description", "prescription_group", and "model_condition" are editable
 					return true;
 				} else {
 					return false;
@@ -768,7 +778,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 								} catch (NumberFormatException e) {
 									System.err.println(e.getClass().getName() + ": " + e.getMessage() + " Fail to convert String to Integer values in create_table2");
 								}
-							} else if (col == 4) {	// column 4 is Boolean
+							} else if (col == 5) {	// column 5 is Boolean
 								try {
 									data2[row][col] = Boolean.valueOf(String.valueOf(data2[row][col]));
 								} catch (NumberFormatException e) {
@@ -803,8 +813,22 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				if (column != 1) {
 					tableColumn.setPreferredWidth(maxWidth);
 				} else {
-					tableColumn.setMinWidth(500);
+					tableColumn.setMinWidth(400);
 				}
+				
+				// Set icon for cells
+				if (column == 2) {
+					if (getValueAt(row, 2) == null || getValueAt(row, 2).toString().equals("NC_E")) {
+						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_gray.png"));
+					} else if (getValueAt(row, 2).toString().equals("EA_E")) {
+						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_blue.png"));
+					} else if (getValueAt(row, 2).toString().equals("NC_R")) {
+						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_yellow.png"));
+					} else if (getValueAt(row, 2).toString().equals("EA_R")) {
+						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_red.png"));
+					}
+				}
+				
 				return component;
 			}	
 			
@@ -818,20 +842,21 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			}	
 		};
 
+		// Set up type for each column
+		table2.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new comboBox_prescription_group()));
 		((JComponent) table2.getDefaultRenderer(Boolean.class)).setOpaque(true);	// It's a bug in the synth-installed renderer, quick hack is to force the rendering checkbox opacity to true
 		((AbstractButton) table2.getDefaultRenderer(Boolean.class)).setSelectedIcon(IconHandle.get_scaledImageIcon(12, 12, "icon_check.png"));
 //		((AbstractButton) table3.getDefaultRenderer(Boolean.class)).setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_whitebox.png"));
 		
-		
-		// 
+		// Hide columns
 		TableColumnsHandle table_handle = new TableColumnsHandle(table2);
-		table_handle.setColumnVisible("static_identifiers", false);
-		table_handle.setColumnVisible("method_choice", false);
+		table_handle.setColumnVisible("dynamic_identifiers", false);
+		table_handle.setColumnVisible("original_dynamic_identifiers", false);
 
 		table2.setAutoResizeMode(0);		// 0 = JTable.AUTO_RESIZE_OFF
 		table2.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);  
 		table2.getTableHeader().setReorderingAllowed(false);		//Disable columns move
-		table2.setPreferredScrollableViewportSize(new Dimension(250, 20));
+		table2.setPreferredScrollableViewportSize(new Dimension(200, 20));
 	}		
 	
 	
@@ -3750,7 +3775,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_green.png"));
 					} else if (getValueAt(row, 5).toString().equals("RP or RN")) {
 						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_blue.png"));
-					}else {
+					} else {
 						((DefaultTableCellRenderer) component).setIcon(null);
 					}
 				}
@@ -4244,7 +4269,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 							
 					// create new instances
 					panel_Model_Strata_GUI = new Model_Strata_GUI();
-					panel_Non_EA_Management_GUI = new Non_EA_Management_GUI();
+					panel_Management_Category_GUI = new Management_Category_GUI();
 					panel_EA_Management_GUI = new EA_Management_GUI();
 					panel_Natural_Disturbances_GUI = new Natural_Disturbances_GUI();
 					panel_Management_Cost_GUI = new Management_Cost_GUI();
@@ -4669,30 +4694,32 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------
-	class Non_EA_Management_GUI extends JLayeredPane {
+	class Management_Category_GUI extends JLayeredPane {
 		List<List<JCheckBox>> checkboxStaticIdentifiers;
-		ScrollPane_StaticIdentifiers static_identifiers_scrollpane;
-		
-		List<List<JCheckBox>> checkboxStaticIdentifiers_silviculture;
-		ScrollPane_StaticIdentifiers static_identifiers_scrollpane_silviculture;
-		
+		ScrollPane_DynamicIdentifiers dynamic_identifiersScrollPanel;
 		JPanel button_table_Panel;	
 		Panel_QuickEdit_Non_EA quick_edit;
 		JScrollPane scrollpane_QuickEdit;
 		
-		public Non_EA_Management_GUI() {
+		public Management_Category_GUI() {
 			setLayout(new BorderLayout());	
 			// 1st grid -----------------------------------------------------------------------
 			// 1st grid -----------------------------------------------------------------------	
-			String panel_name = "Strata Attributes";
-			static_identifiers_scrollpane = new ScrollPane_StaticIdentifiers(read_database, 0, panel_name);
-			checkboxStaticIdentifiers = static_identifiers_scrollpane.get_CheckboxStaticIdentifiers();	
-			
-			for (int i = 0; i < checkboxStaticIdentifiers.size(); i++) {
-				for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {
-					checkboxStaticIdentifiers.get(i).get(j).setSelected(true);
-				}
-			}
+			String message = 
+					  "1. This screen is used to categorize management prescriptions into 4 specific groups\n"
+					+ "   - NC_E: (no clear-cuts existing) prescriptions without clear-cuts for existing forest strata\n"
+					+ "   - EA_E: (even-aged existing) prescriptions with clear-cuts for existing forest strata\n"
+					+ "   - NC_R: (no clear-cuts regenerated) prescriptions without clear-cuts for regenerated forest strata\n"
+					+ "   - EA_R: (even-aged regenerated) prescriptions with clear-cuts for regenerated forest strata\n\n"
+					+ "2. Dynamic identifiers are used to filter prescriptions in the yield tables database. You should use identifiers which have constant value within all rows of any prescription.\n\n"
+					+ "3. There might be some prescriptions in the yield tables that are not filtered out to categorize by your conditions. Those uncategorized prescriptions would be excluded from modeling.";
+			PrismTextAreaReadMe warning_textarea = new PrismTextAreaReadMe("icon_script.png", 1, 1);
+			warning_textarea.append(message);
+			warning_textarea.setSelectionStart(0);	// scroll to top
+			warning_textarea.setSelectionEnd(0);
+			warning_textarea.setEditable(false);
+			PrismTitleScrollPane infoScrollPane = new PrismTitleScrollPane("Notes for categorizing prescriptions", "CENTER", warning_textarea);
+			infoScrollPane.setPreferredSize(new Dimension(0, 250));
 			// End of 1st grid -----------------------------------------------------------------------
 			// End of 1st grid -----------------------------------------------------------------------						
 			
@@ -4701,15 +4728,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			
 			// 2nd grid -----------------------------------------------------------------------
 			// 2nd grid -----------------------------------------------------------------------	
-			panel_name = "Method & Choice to be implemented (choices limit = 0-14)";
-			static_identifiers_scrollpane_silviculture = new ScrollPane_StaticIdentifiers(read_database, 3, panel_name);
-			checkboxStaticIdentifiers_silviculture = static_identifiers_scrollpane_silviculture.get_CheckboxStaticIdentifiers();	
-			
-			for (int i = 0; i < checkboxStaticIdentifiers_silviculture.size(); i++) {
-				for (int j = 0; j < checkboxStaticIdentifiers_silviculture.get(i).size(); j++) {
-					checkboxStaticIdentifiers_silviculture.get(i).get(j).setSelected(true);
-				}
-			}
+			dynamic_identifiersScrollPanel = new ScrollPane_DynamicIdentifiers(read_database);
 			// End of 2nd grid -----------------------------------------------------------------------
 			// End of 2nd grid -----------------------------------------------------------------------			
 			
@@ -4720,7 +4739,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			// 4th Grid -----------------------------------------------------------------------------
 			// Add all buttons to a Panel----------------------------------
 			button_table_Panel = new JPanel(new GridBagLayout());
-			TitledBorder border = new TitledBorder("Aggregation Conditions (no row = disable all unenven-aged methods)");
+			TitledBorder border = new TitledBorder("Priority Conditions (no row = no prescriptions = infeasibility)");
 			border.setTitleJustification(TitledBorder.CENTER);
 			button_table_Panel.setBorder(border);
 			GridBagConstraints c2 = new GridBagConstraints();
@@ -4836,8 +4855,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					if (selectedRow.length == 1) {		// Reload Constraint & Enable Edit	when: 1 row is selected and no cell is editing
 						int currentRow = selectedRow[0];
 						currentRow = table2.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
-						static_identifiers_scrollpane.reload_this_constraint_static_identifiers((String) data2[currentRow][2]);	// 2 is the static_identifiers which have some attributes selected				
-						static_identifiers_scrollpane_silviculture.reload_this_constraint_static_identifiers((String) data2[currentRow][3]);	// 3 is the method & choice
+						dynamic_identifiersScrollPanel.reload_this_constraint_dynamic_identifiers((String) data2[currentRow][3], (String) data2[currentRow][4]);	// 3, 4 are dynamic and original_dynamic
 						btn_Edit.setEnabled(true);
 					} else {		// Disable Edit
 						btn_Edit.setEnabled(false);
@@ -4887,16 +4905,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					}
 				}
 								
-				data2[rowCount2 - 1][1] = String.join(" .....eligible to apply on..... ",
-						static_identifiers_scrollpane_silviculture.get_static_description_from_GUI(),
-						static_identifiers_scrollpane.get_static_description_from_GUI());
-				data2[rowCount2 - 1][2] = static_identifiers_scrollpane.get_static_info_from_GUI();
-				data2[rowCount2 - 1][3] = static_identifiers_scrollpane_silviculture.get_static_info_from_GUI();
-				data2[rowCount2-1][4] = true;
+				data2[rowCount2 - 1][1] = "Prescriptions with " + dynamic_identifiersScrollPanel.get_dynamic_description_from_GUI();
+				data2[rowCount2 - 1][2] = "NC_E";
+				data2[rowCount2 - 1][3] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();
+				data2[rowCount2 - 1][4] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
+				data2[rowCount2-1][5] = true;
 				model2.updateTableModelPrism(rowCount2, colCount2, data2, columnNames2);
 				update_id();
 				model2.fireTableDataChanged();
-				//quick_edit = new Panel_QuickEdit_Non_EA(table2, data2);		// 2 lines to update data for Quick Edit Panel
 	 			scrollpane_QuickEdit.setViewportView(quick_edit);
 				
 				// Convert the new Row to model view and then select it 
@@ -4917,16 +4933,15 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					selectedRow = table2.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems	
 	
 					// Apply change	
-					data2[selectedRow][2] = static_identifiers_scrollpane.get_static_info_from_GUI();
-					data2[selectedRow][3] = static_identifiers_scrollpane_silviculture.get_static_info_from_GUI();
+					data2[selectedRow][3] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();
+					data2[rowCount2 - 1][4] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
 					model2.fireTableDataChanged();	
 					
 					// Convert the edited Row to model view and then select it 
 					int editRow = table2.convertRowIndexToView(selectedRow);
 					table2.setRowSelectionInterval(editRow, editRow);
 					
-					static_identifiers_scrollpane.highlight();
-					static_identifiers_scrollpane_silviculture.highlight();
+					dynamic_identifiersScrollPanel.highlight();
 				} 
 			});
 			
@@ -4934,15 +4949,13 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			btn_Edit.addMouseListener(new MouseAdapter() { // Add listener
 				public void mouseEntered(java.awt.event.MouseEvent e) {
 					if (table2.getSelectedRows().length == 1) {
-						static_identifiers_scrollpane.highlight();
-						static_identifiers_scrollpane_silviculture.highlight();
+						dynamic_identifiersScrollPanel.highlight();
 					}
 				}
 
 				public void mouseExited(java.awt.event.MouseEvent e) {
 					if (table2.getSelectedRows().length == 1) {
-						static_identifiers_scrollpane.unhighlight();
-						static_identifiers_scrollpane_silviculture.unhighlight();
+						dynamic_identifiersScrollPanel.unhighlight();
 					}
 				}
 			});
@@ -5080,14 +5093,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
 						scrollpane_QuickEdit.setVisible(true);
 						// Get everything show up nicely
-						GUI_Text_splitpane.setLeftComponent(panel_Non_EA_Management_GUI);
+						GUI_Text_splitpane.setLeftComponent(panel_Management_Category_GUI);
 						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				} else {
 					btnQuickEdit.setToolTipText("Show Quick Edit Tool");
 					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
 					scrollpane_QuickEdit.setVisible(false);
 					// Get everything show up nicely
-					GUI_Text_splitpane.setLeftComponent(panel_Non_EA_Management_GUI);
+					GUI_Text_splitpane.setLeftComponent(panel_Management_Category_GUI);
 					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				}				
 			});
@@ -5148,7 +5161,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		    c.weighty = 1;
 			c.gridwidth = 1;
 			c.gridheight = 1;
-			upper_panel.add(static_identifiers_scrollpane, c);
+			upper_panel.add(infoScrollPane, c);
 			
 			// Add the 2nd grid -  to the main Grid	
 			c.gridx = 1;
@@ -5157,7 +5170,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		    c.weighty = 1;
 			c.gridwidth = 1;
 			c.gridheight = 1;
-			upper_panel.add(static_identifiers_scrollpane_silviculture, c);
+			upper_panel.add(dynamic_identifiersScrollPanel, c);
 			
 			// Add the button_table_Panel & scrollpane_QuickEdit to a new Panel then add that panel to the main Grid
 			JPanel button_table_qedit_panel = new JPanel();
@@ -9283,7 +9296,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	public void save_inputs_for_this_run() {
 		File input_01_file = new File(currentRunFolder.getAbsolutePath() + "/input_01_general_inputs.txt");
 		File input_02_file = new File(currentRunFolder.getAbsolutePath() + "/input_02_model_strata.txt");
-		File input_03_file = new File(currentRunFolder.getAbsolutePath() + "/input_03_non_ea_management.txt");
+		File input_03_file = new File(currentRunFolder.getAbsolutePath() + "/input_03_management_category.txt");
 		File input_04_file = new File(currentRunFolder.getAbsolutePath() + "/input_04_ea_management.txt");
 		File input_06_file = new File(currentRunFolder.getAbsolutePath() + "/input_06_natural_disturbances.txt");
 		File input_07_file = new File(currentRunFolder.getAbsolutePath() + "/input_07_management_cost.txt");
