@@ -134,7 +134,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	// panels for the selected Run
 	private General_Inputs panel_General_Inputs;
 	private Model_Strata panel_Model_Strata;
-	private Management_Category panel_Management_Category;
+	private Prescription_Category panel_Prescription_Category;
 	private EA_Management panel_EA_Management;
 	private Natural_Disturbances panel_Natural_Disturbances;
 	private Management_Cost panel_Management_Cost;
@@ -167,7 +167,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	private PrismTableModel model3;
 	private Object[][] data3;
 	
-	// table input_03_management_category.txt
+	// table input_03_prescription_category.txt
 	private boolean is_table2_loaded = false;
 	private int rowCount2, colCount2;
 	private String[] columnNames2;
@@ -302,7 +302,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		radio_button  = new JRadioButton[9];
 		radio_button[0]= new JRadioButton("General Inputs");
 		radio_button[1]= new JRadioButton("Model Strata");
-		radio_button[2]= new JRadioButton("Management Category");
+		radio_button[2]= new JRadioButton("Prescription Category");
 		radio_button[3]= new JRadioButton("EA Management");
 		radio_button[4]= new JRadioButton("Natural Disturbances");
 		radio_button[5]= new JRadioButton("Management Cost");
@@ -343,7 +343,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					great_splitpane.setLeftComponent(panel_Model_Strata);
 					great_splitpane.setRightComponent(null);
 				} else if (j == 2) {
-					great_splitpane.setLeftComponent(panel_Management_Category);
+					great_splitpane.setLeftComponent(panel_Prescription_Category);
 					great_splitpane.setRightComponent(null);
 				} else if (j == 3) {
 					great_splitpane.setLeftComponent(panel_EA_Management);
@@ -425,7 +425,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		}
 
 
-		table_file = new File(file_runfolder.getAbsolutePath() + "/input_03_management_category.txt");
+		table_file = new File(file_runfolder.getAbsolutePath() + "/input_03_prescription_category.txt");
 		if (table_file.exists()) {        //Load from input
 			tableLoader = new Reload_Table_Info(table_file);
 			rowCount2 = tableLoader.get_rowCount();
@@ -533,7 +533,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			
 			panel_General_Inputs.get_database_directory_textfield().setText(file_database.getAbsolutePath());
 			panel_Model_Strata = new Model_Strata();
-			panel_Management_Category = new Management_Category();
+			panel_Prescription_Category = new Prescription_Category();
 			panel_EA_Management = new EA_Management();
 			panel_Natural_Disturbances = new Natural_Disturbances();
 			panel_Management_Cost = new Management_Cost();
@@ -4269,7 +4269,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 							
 					// create new instances
 					panel_Model_Strata = new Model_Strata();
-					panel_Management_Category = new Management_Category();
+					panel_Prescription_Category = new Prescription_Category();
 					panel_EA_Management = new EA_Management();
 					panel_Natural_Disturbances = new Natural_Disturbances();
 					panel_Management_Cost = new Management_Cost();
@@ -4694,14 +4694,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------
-	class Management_Category extends JLayeredPane {
+	class Prescription_Category extends JLayeredPane {
 		List<List<JCheckBox>> checkboxStaticIdentifiers;
 		ScrollPane_DynamicIdentifiers dynamic_identifiers_scrollpane;
 		JPanel button_table_Panel;	
 		Panel_QuickEdit_Non_EA quick_edit;
 		JScrollPane scrollpane_QuickEdit;
 		
-		public Management_Category() {
+		public Prescription_Category() {
 			setLayout(new BorderLayout());	
 			// 1st grid -----------------------------------------------------------------------
 			// 1st grid -----------------------------------------------------------------------	
@@ -4712,7 +4712,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					+ "   - NC_R: (no clear-cuts regenerated) prescriptions without clear-cuts for regenerated forest strata\n"
 					+ "   - EA_R: (even-aged regenerated) prescriptions with clear-cuts for regenerated forest strata\n\n"
 					+ "2. Dynamic identifiers are used to filter prescriptions in the yield tables database. You should use identifiers which have constant value across all rows of each same prescription.\n\n"
-					+ "3. There might be some prescriptions in the yield tables that are not filtered out to categorize by your conditions. Those uncategorized prescriptions would be excluded from modeling.";
+					+ "3. Uncategorized prescriptions would be excluded from modeling even though they do exist in the database.";
 			PrismTextAreaReadMe warning_textarea = new PrismTextAreaReadMe("icon_script.png", 1, 1);
 			warning_textarea.append(message);
 			warning_textarea.setSelectionStart(0);	// scroll to top
@@ -5093,14 +5093,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
 						scrollpane_QuickEdit.setVisible(true);
 						// Get everything show up nicely
-						great_splitpane.setLeftComponent(panel_Management_Category);
+						great_splitpane.setLeftComponent(panel_Prescription_Category);
 						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				} else {
 					btnQuickEdit.setToolTipText("Show Quick Edit Tool");
 					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
 					scrollpane_QuickEdit.setVisible(false);
 					// Get everything show up nicely
-					great_splitpane.setLeftComponent(panel_Management_Category);
+					great_splitpane.setLeftComponent(panel_Prescription_Category);
 					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				}				
 			});
@@ -9296,7 +9296,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	public void save_inputs_for_this_run() {
 		File input_01_file = new File(file_runfolder.getAbsolutePath() + "/input_01_general_inputs.txt");
 		File input_02_file = new File(file_runfolder.getAbsolutePath() + "/input_02_model_strata.txt");
-		File input_03_file = new File(file_runfolder.getAbsolutePath() + "/input_03_management_category.txt");
+		File input_03_file = new File(file_runfolder.getAbsolutePath() + "/input_03_prescription_category.txt");
 		File input_04_file = new File(file_runfolder.getAbsolutePath() + "/input_04_ea_management.txt");
 		File input_06_file = new File(file_runfolder.getAbsolutePath() + "/input_06_natural_disturbances.txt");
 		File input_07_file = new File(file_runfolder.getAbsolutePath() + "/input_07_management_cost.txt");

@@ -199,13 +199,13 @@ public class Read_Input {
 	}
 	
 	//-------------------------------------------------------------------------------------------------------------------------------------------------	
-	//For input_03_management_category : must be read after model_strata
+	//For input_03_prescription_category : must be read after model_strata
 	private int nonea_total_rows, nonea_total_columns;
 	private String[][] category_data;
 	private List<List<String>> nonea_method_choice_for_strata;
 	private List<List<String>> nonea_method_choice_for_strata_without_sizeclass;
 
-	public void read_management_category(File file) {
+	public void read_prescription_category(File file) {
 		String delimited = "\t";		// tab delimited
 				
 		try {		
