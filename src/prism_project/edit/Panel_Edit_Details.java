@@ -119,12 +119,12 @@ import prism_project.data_process.Read_Database;
 import prism_root.PrismMain;
 
 public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
-	private JSplitPane GUI_Text_splitpane;
+	private JSplitPane great_splitpane;
 	private JPanel radio_panel;
-	private ButtonGroup radio_buttongroup;
+	private ButtonGroup radio_button_group;
 	private JRadioButton[] radio_button;
 	
-	private File currentRunFolder;
+	private File file_runfolder;
 	private File file_database;
 	private Read_Database read_database;
 	
@@ -132,15 +132,15 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	private int total_replacing_disturbance;
 	
 	// panels for the selected Run
-	private General_Inputs_GUI panel_General_Inputs_GUI;
-	private Model_Strata_GUI panel_Model_Strata_GUI;
-	private Management_Category_GUI panel_Management_Category_GUI;
-	private EA_Management_GUI panel_EA_Management_GUI;
-	private Natural_Disturbances_GUI panel_Natural_Disturbances_GUI;
-	private Management_Cost_GUI panel_Management_Cost_GUI;
-	private Basic_Constraints_GUI panel_Basic_Constraints_GUI;
-	private Flow_Constraints_GUI panel_Flow_Constraints_GUI;
-	private Area_Merging_GUI panel_Area_Merging_GUI;
+	private General_Inputs panel_General_Inputs;
+	private Model_Strata panel_Model_Strata;
+	private Management_Category panel_Management_Category;
+	private EA_Management panel_EA_Management;
+	private Natural_Disturbances panel_Natural_Disturbances;
+	private Management_Cost panel_Management_Cost;
+	private Basic_Constraints panel_Basic_Constraints;
+	private Flow_Constraints panel_Flow_Constraints;
+	private Area_Merging panel_Area_Merging;
 
 	// table model overView
 	private boolean is_table_overview_loaded = false;
@@ -287,9 +287,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	private PrismTextAreaReadMe readme = new PrismTextAreaReadMe("icon_tree.png", 70, 70);
 
 	
-	public Panel_Edit_Details(File RunFolder) {
+	public Panel_Edit_Details(File runfolder) {
 		super.setLayout(new BorderLayout());	
-		currentRunFolder = RunFolder;		// Get information from the run
+		this.file_runfolder = runfolder;		// Get information from the run
 
 		
 		// Create the interface ---------------------------------------------------------------------------------------------------------------------
@@ -297,7 +297,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		radio_panel = new JPanel();
 		radio_panel.setLayout(new FlowLayout());	
 		radio_panel.setPreferredSize(new Dimension(0, 45));
-		radio_buttongroup = new ButtonGroup();
+		radio_button_group = new ButtonGroup();
 		
 		radio_button  = new JRadioButton[9];
 		radio_button[0]= new JRadioButton("General Inputs");
@@ -311,13 +311,13 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		radio_button[8]= new JRadioButton("Area Merging");
 		radio_button[0].setSelected(true);
 		for (int i = 0; i < radio_button.length; i++) {
-				radio_buttongroup.add(radio_button[i]);
+				radio_button_group.add(radio_button[i]);
 				radio_panel.add(radio_button[i]);
 				radio_button[i].addActionListener(this);
 		}	
 		
-		GUI_Text_splitpane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		GUI_Text_splitpane.setDividerSize(0);
+		great_splitpane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+		great_splitpane.setDividerSize(0);
 			
 	
 		// Create all new 9 panels for the selected Run--------------------------------------------------
@@ -326,7 +326,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		
 		// Add all components to The Panel------------------------------------------------------------
 		super.add(radio_panel, BorderLayout.NORTH);
-		super.add(GUI_Text_splitpane, BorderLayout.CENTER);
+		super.add(great_splitpane, BorderLayout.CENTER);
 		super.setOpaque(false);
 		ToolTipManager.sharedInstance().setInitialDelay(0);	// Show toolTip immediately
 	}
@@ -337,32 +337,32 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		for (int j = 0; j < radio_button.length; j++) {
 			if (radio_button[j].isSelected()) {		
 				if (j == 0) {
-					GUI_Text_splitpane.setLeftComponent(panel_General_Inputs_GUI);
-					GUI_Text_splitpane.setRightComponent(null);
+					great_splitpane.setLeftComponent(panel_General_Inputs);
+					great_splitpane.setRightComponent(null);
 				} else if (j == 1) {
-					GUI_Text_splitpane.setLeftComponent(panel_Model_Strata_GUI);
-					GUI_Text_splitpane.setRightComponent(null);
+					great_splitpane.setLeftComponent(panel_Model_Strata);
+					great_splitpane.setRightComponent(null);
 				} else if (j == 2) {
-					GUI_Text_splitpane.setLeftComponent(panel_Management_Category_GUI);
-					GUI_Text_splitpane.setRightComponent(null);
+					great_splitpane.setLeftComponent(panel_Management_Category);
+					great_splitpane.setRightComponent(null);
 				} else if (j == 3) {
-					GUI_Text_splitpane.setLeftComponent(panel_EA_Management_GUI);
-					GUI_Text_splitpane.setRightComponent(null);
+					great_splitpane.setLeftComponent(panel_EA_Management);
+					great_splitpane.setRightComponent(null);
 				} else if (j == 4) {
-					GUI_Text_splitpane.setLeftComponent(panel_Natural_Disturbances_GUI);
-					GUI_Text_splitpane.setRightComponent(null);
+					great_splitpane.setLeftComponent(panel_Natural_Disturbances);
+					great_splitpane.setRightComponent(null);
 				} else if (j == 5) {
-					GUI_Text_splitpane.setLeftComponent(panel_Management_Cost_GUI);
-					GUI_Text_splitpane.setRightComponent(null);
+					great_splitpane.setLeftComponent(panel_Management_Cost);
+					great_splitpane.setRightComponent(null);
 				} else if (j == 6) {
-					GUI_Text_splitpane.setLeftComponent(panel_Basic_Constraints_GUI);
-					GUI_Text_splitpane.setRightComponent(null);
+					great_splitpane.setLeftComponent(panel_Basic_Constraints);
+					great_splitpane.setRightComponent(null);
 				} else if (j == 7) {
-					GUI_Text_splitpane.setLeftComponent(panel_Flow_Constraints_GUI);
-					GUI_Text_splitpane.setRightComponent(null);
+					great_splitpane.setLeftComponent(panel_Flow_Constraints);
+					great_splitpane.setRightComponent(null);
 				} else if (j == 8) {
-					GUI_Text_splitpane.setLeftComponent(panel_Area_Merging_GUI);
-					GUI_Text_splitpane.setRightComponent(null);
+					great_splitpane.setLeftComponent(panel_Area_Merging);
+					great_splitpane.setRightComponent(null);
 				}
 				
 				// Get everything show up nicely
@@ -399,7 +399,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		Reload_Table_Info tableLoader;
 
 
-		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_01_general_inputs.txt");
+		table_file = new File(file_runfolder.getAbsolutePath() + "/input_01_general_inputs.txt");
 		if (table_file.exists()) {        //Load from input
 			tableLoader = new Reload_Table_Info(table_file);
 			rowCount1 = tableLoader.get_rowCount();
@@ -412,7 +412,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		}
 
 
-		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_02_model_strata.txt");
+		table_file = new File(file_runfolder.getAbsolutePath() + "/input_02_model_strata.txt");
 		if (table_file.exists()) {        //Load from input
 			tableLoader = new Reload_Table_Info(table_file);
 			rowCount3 = tableLoader.get_rowCount();
@@ -425,7 +425,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		}
 
 
-		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_03_management_category.txt");
+		table_file = new File(file_runfolder.getAbsolutePath() + "/input_03_management_category.txt");
 		if (table_file.exists()) {        //Load from input
 			tableLoader = new Reload_Table_Info(table_file);
 			rowCount2 = tableLoader.get_rowCount();
@@ -439,7 +439,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		}
 
 
-		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_04_ea_management.txt");
+		table_file = new File(file_runfolder.getAbsolutePath() + "/input_04_ea_management.txt");
 		if (table_file.exists()) {		//Load from input
 			tableLoader = new Reload_Table_Info(table_file);
 			rowCount4 = tableLoader.get_rowCount();
@@ -452,7 +452,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		}
 		
 		
-		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_06_natural_disturbances.txt");
+		table_file = new File(file_runfolder.getAbsolutePath() + "/input_06_natural_disturbances.txt");
 		if (table_file.exists()) { // Load from input
 			tableLoader = new Reload_Table_Info(table_file);
 			rowCount6 = tableLoader.get_rowCount();
@@ -465,7 +465,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		}		
 
 		
-		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_07_management_cost.txt");
+		table_file = new File(file_runfolder.getAbsolutePath() + "/input_07_management_cost.txt");
 		if (table_file.exists()) { // Load from input
 			tableLoader = new Reload_Table_Info(table_file);
 			rowCount7 = tableLoader.get_rowCount();
@@ -477,7 +477,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			System.err.println("File not exists: " + table_file.getName() + " - New interface is created");
 		}		
 		
-		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_08_basic_constraints.txt");
+		table_file = new File(file_runfolder.getAbsolutePath() + "/input_08_basic_constraints.txt");
 		if (table_file.exists()) { // Load from input
 			tableLoader = new Reload_Table_Info(table_file);
 			rowCount8 = tableLoader.get_rowCount();
@@ -489,7 +489,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			System.err.println("File not exists: " + table_file.getName() + " - New interface is created");
 		}     
 		
-		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_09_flow_constraints.txt");
+		table_file = new File(file_runfolder.getAbsolutePath() + "/input_09_flow_constraints.txt");
 		if (table_file.exists()) { // Load from input
 			tableLoader = new Reload_Table_Info(table_file);
 			rowCount9 = tableLoader.get_rowCount();
@@ -501,7 +501,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			System.err.println("File not exists: " + table_file.getName() + " - New interface is created");
 		}  		
 		
-		table_file = new File(currentRunFolder.getAbsolutePath() + "/input_10_area_merging.txt");
+		table_file = new File(file_runfolder.getAbsolutePath() + "/input_10_area_merging.txt");
 		if (table_file.exists()) { // Load from input
 			tableLoader = new Reload_Table_Info(table_file);
 			rowCount10 = tableLoader.get_rowCount();
@@ -517,10 +517,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		
 		
 		
-		panel_General_Inputs_GUI = new General_Inputs_GUI();
+		panel_General_Inputs = new General_Inputs();
 		
 		// Load database of the run if exist---------------------------------------------------------------------
-		File database_to_load = new File(currentRunFolder.getAbsolutePath() + "/database.db");
+		File database_to_load = new File(file_runfolder.getAbsolutePath() + "/database.db");
 		if (database_to_load.exists()) {	// Load if the file exists
 			file_database = database_to_load;
 			
@@ -531,15 +531,15 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				PrismMain.get_databases_linkedlist().update(file_database, read_database);			
 			}
 			
-			panel_General_Inputs_GUI.get_database_directory_textfield().setText(file_database.getAbsolutePath());
-			panel_Model_Strata_GUI = new Model_Strata_GUI();
-			panel_Management_Category_GUI = new Management_Category_GUI();
-			panel_EA_Management_GUI = new EA_Management_GUI();
-			panel_Natural_Disturbances_GUI = new Natural_Disturbances_GUI();
-			panel_Management_Cost_GUI = new Management_Cost_GUI();
-			panel_Basic_Constraints_GUI = new Basic_Constraints_GUI();
-			panel_Flow_Constraints_GUI = new Flow_Constraints_GUI();
-			panel_Area_Merging_GUI = new Area_Merging_GUI();
+			panel_General_Inputs.get_database_directory_textfield().setText(file_database.getAbsolutePath());
+			panel_Model_Strata = new Model_Strata();
+			panel_Management_Category = new Management_Category();
+			panel_EA_Management = new EA_Management();
+			panel_Natural_Disturbances = new Natural_Disturbances();
+			panel_Management_Cost = new Management_Cost();
+			panel_Basic_Constraints = new Basic_Constraints();
+			panel_Flow_Constraints = new Flow_Constraints();
+			panel_Area_Merging = new Area_Merging();
 
 			// Matching data types after finishing reloads
 			model2.match_DataType();		//a smart way to retrieve the original data type :))))))
@@ -568,7 +568,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			System.out.println("File not exists: database.db - New interface is created");					
 		}
 		
-		GUI_Text_splitpane.setLeftComponent(panel_General_Inputs_GUI);	// Show the General_Inputs of the selected Run
+		great_splitpane.setLeftComponent(panel_General_Inputs);	// Show the General_Inputs of the selected Run
 		PrismMain.get_Prism_DesktopPane().getSelectedFrame().revalidate();
 		PrismMain.get_Prism_DesktopPane().getSelectedFrame().repaint();
     }
@@ -819,11 +819,11 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				// Set icon for cells
 				if (column == 2) {
 					if (getValueAt(row, 2) == null || getValueAt(row, 2).toString().equals("NC_E")) {
-						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_gray.png"));
+						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_green.png"));
 					} else if (getValueAt(row, 2).toString().equals("EA_E")) {
-						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_blue.png"));
-					} else if (getValueAt(row, 2).toString().equals("NC_R")) {
 						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_yellow.png"));
+					} else if (getValueAt(row, 2).toString().equals("NC_R")) {
+						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_blue.png"));
 					} else if (getValueAt(row, 2).toString().equals("EA_R")) {
 						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_red.png"));
 					}
@@ -3917,14 +3917,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------	
-	class General_Inputs_GUI extends JLayeredPane {
+	class General_Inputs extends JLayeredPane {
 		private JLabel totalPeriodsLabel, replacingDisturbancesLabel, discountRateLabel, solverLabel, solvingTimeLabel, exportProblemLabel, exportSolutionLabel;
 		private JComboBox totalPeriodsCombo, replacingDisturbancesCombo, discountRateCombo, solverCombo;
 		private JSpinner solvingTimeSpinner;
 		private JCheckBox exportProblemCheck, exportSolutionCheck;
 		private JTextField database_directory_textfield;
 		
-		public General_Inputs_GUI() {
+		public General_Inputs() {
 			setLayout(new GridBagLayout());
 			create_table1();
 			
@@ -4084,7 +4084,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 							}
 				    		total_replacing_disturbance = total_replacing_disturbance_combo_value;
 				    		is_table6_loaded = true;	// to have the old data stay (create_table6 would not create new empty data)
-				    		panel_Natural_Disturbances_GUI = new Natural_Disturbances_GUI();	// Renew the entire Natural_Disturbances screen
+				    		panel_Natural_Disturbances = new Natural_Disturbances();	// Renew the entire Natural_Disturbances screen
 						} else {
 							replacingDisturbancesCombo.setSelectedItem((int) total_replacing_disturbance);
 						}
@@ -4268,14 +4268,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					is_table10_loaded = false;
 							
 					// create new instances
-					panel_Model_Strata_GUI = new Model_Strata_GUI();
-					panel_Management_Category_GUI = new Management_Category_GUI();
-					panel_EA_Management_GUI = new EA_Management_GUI();
-					panel_Natural_Disturbances_GUI = new Natural_Disturbances_GUI();
-					panel_Management_Cost_GUI = new Management_Cost_GUI();
-					panel_Basic_Constraints_GUI = new Basic_Constraints_GUI();
-					panel_Flow_Constraints_GUI = new Flow_Constraints_GUI();
-					panel_Area_Merging_GUI = new Area_Merging_GUI();
+					panel_Model_Strata = new Model_Strata();
+					panel_Management_Category = new Management_Category();
+					panel_EA_Management = new EA_Management();
+					panel_Natural_Disturbances = new Natural_Disturbances();
+					panel_Management_Cost = new Management_Cost();
+					panel_Basic_Constraints = new Basic_Constraints();
+					panel_Flow_Constraints = new Flow_Constraints();
+					panel_Area_Merging = new Area_Merging();
 					
 					// We do not need match data type here. Note that  model3.match_DataType has the update view for table_overview --> we manually update the info of this tale by following line
 					model3.update_model_overview();		// this is just to trigger the update_model_overview
@@ -4285,8 +4285,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					readme.setText(null);
 					readme.append("Model is last edited by:     " + PrismMain.get_prism_version()  + "     on     " + dateFormat.format(new Date()) + "\n");
 					readme.append("Model is created by:     " + PrismMain.get_prism_version()   + "     on     " + dateFormat.format(new Date()) + "\n");
-					readme.append("Model location:     " + currentRunFolder + "\n");
-					readme.append("Model database:     " + currentRunFolder.getAbsolutePath() + "\\database.db" + "\n");
+					readme.append("Model location:     " + file_runfolder + "\n");
+					readme.append("Model database:     " + file_runfolder.getAbsolutePath() + "\\database.db" + "\n");
 					readme.append("Original database:     " + file_database.getAbsolutePath() + "\n");
 					readme.append("------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
 					readme.append("----------------------------------------------------- ADDITIONAL MODEL DESCRIPTION -----------------------------------------------------\n");
@@ -4311,7 +4311,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			
 		    // Load readme file-----------------------------------------------------------------
  			// Load readme file-----------------------------------------------------------------
-			File readme_file = new File(currentRunFolder.getAbsolutePath() + "/readme.txt");
+			File readme_file = new File(file_runfolder.getAbsolutePath() + "/readme.txt");
 			readme.activate_clicktosave_feature(readme_file);
 			try {
 				FileReader reader = new FileReader(readme_file.getAbsolutePath());
@@ -4433,14 +4433,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	class Model_Strata_GUI extends JLayeredPane implements ItemListener {
+	class Model_Strata extends JLayeredPane implements ItemListener {
 		List<List<JCheckBox>> checkboxStaticIdentifiers;
 		ScrollPane_StaticIdentifiers static_identifiers_scrollpane;
 		
 		Panel_QuickEdit_ModelStrata quick_edit;
 		JScrollPane scrollpane_QuickEdit;
 		
-		public Model_Strata_GUI() {
+		public Model_Strata() {
 			setLayout(new BorderLayout());
 			// 1st grid -----------------------------------------------------------------------
 			// 1st grid -----------------------------------------------------------------------	
@@ -4564,14 +4564,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
 						scrollpane_QuickEdit.setVisible(true);
 						// Get everything show up nicely
-						GUI_Text_splitpane.setLeftComponent(panel_Model_Strata_GUI);
+						great_splitpane.setLeftComponent(panel_Model_Strata);
 						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				} else {
 					btnQuickEdit.setToolTipText("Show Quick Edit Tool");
 					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
 					scrollpane_QuickEdit.setVisible(false);
 					// Get everything show up nicely
-					GUI_Text_splitpane.setLeftComponent(panel_Model_Strata_GUI);
+					great_splitpane.setLeftComponent(panel_Model_Strata);
 					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				}
 			});
@@ -4694,14 +4694,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------
-	class Management_Category_GUI extends JLayeredPane {
+	class Management_Category extends JLayeredPane {
 		List<List<JCheckBox>> checkboxStaticIdentifiers;
 		ScrollPane_DynamicIdentifiers dynamic_identifiers_scrollpane;
 		JPanel button_table_Panel;	
 		Panel_QuickEdit_Non_EA quick_edit;
 		JScrollPane scrollpane_QuickEdit;
 		
-		public Management_Category_GUI() {
+		public Management_Category() {
 			setLayout(new BorderLayout());	
 			// 1st grid -----------------------------------------------------------------------
 			// 1st grid -----------------------------------------------------------------------	
@@ -4711,14 +4711,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					+ "   - EA_E: (even-aged existing) prescriptions with clear-cuts for existing forest strata\n"
 					+ "   - NC_R: (no clear-cuts regenerated) prescriptions without clear-cuts for regenerated forest strata\n"
 					+ "   - EA_R: (even-aged regenerated) prescriptions with clear-cuts for regenerated forest strata\n\n"
-					+ "2. Dynamic identifiers are used to filter prescriptions in the yield tables database. You should use identifiers which have constant value within all rows of any prescription.\n\n"
+					+ "2. Dynamic identifiers are used to filter prescriptions in the yield tables database. You should use identifiers which have constant value across all rows of each same prescription.\n\n"
 					+ "3. There might be some prescriptions in the yield tables that are not filtered out to categorize by your conditions. Those uncategorized prescriptions would be excluded from modeling.";
 			PrismTextAreaReadMe warning_textarea = new PrismTextAreaReadMe("icon_script.png", 1, 1);
 			warning_textarea.append(message);
 			warning_textarea.setSelectionStart(0);	// scroll to top
 			warning_textarea.setSelectionEnd(0);
 			warning_textarea.setEditable(false);
-			PrismTitleScrollPane infoScrollPane = new PrismTitleScrollPane("Notes for categorizing prescriptions", "CENTER", warning_textarea);
+			PrismTitleScrollPane infoScrollPane = new PrismTitleScrollPane("Notes for categorizing management prescriptions", "CENTER", warning_textarea);
 			infoScrollPane.setPreferredSize(new Dimension(0, 250));
 			// End of 1st grid -----------------------------------------------------------------------
 			// End of 1st grid -----------------------------------------------------------------------						
@@ -5093,14 +5093,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
 						scrollpane_QuickEdit.setVisible(true);
 						// Get everything show up nicely
-						GUI_Text_splitpane.setLeftComponent(panel_Management_Category_GUI);
+						great_splitpane.setLeftComponent(panel_Management_Category);
 						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				} else {
 					btnQuickEdit.setToolTipText("Show Quick Edit Tool");
 					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
 					scrollpane_QuickEdit.setVisible(false);
 					// Get everything show up nicely
-					GUI_Text_splitpane.setLeftComponent(panel_Management_Category_GUI);
+					great_splitpane.setLeftComponent(panel_Management_Category);
 					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				}				
 			});
@@ -5216,7 +5216,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------
-	class EA_Management_GUI extends JLayeredPane {
+	class EA_Management extends JLayeredPane {
 		List<List<JCheckBox>> checkboxStaticIdentifiers;
 		ScrollPane_StaticIdentifiers static_identifiers_scrollpane;
 		ScrollPane_SubTable_EA_Management conversion_and_rotation_scrollpane;
@@ -5225,7 +5225,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		Panel_QuickEdit_EA quick_edit;
 		JScrollPane scrollpane_QuickEdit;
 		
-		public EA_Management_GUI() {
+		public EA_Management() {
 			// 1st grid -----------------------------------------------------------------------
 			// 1st grid -----------------------------------------------------------------------	
 			String panel_name = "Strata Attributes";
@@ -5628,14 +5628,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
 						scrollpane_QuickEdit.setVisible(true);
 						// Get everything show up nicely
-						GUI_Text_splitpane.setLeftComponent(panel_EA_Management_GUI);
+						great_splitpane.setLeftComponent(panel_EA_Management);
 						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				} else {
 					btnQuickEdit.setToolTipText("Show Quick Edit Tool");
 					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
 					scrollpane_QuickEdit.setVisible(false);
 					// Get everything show up nicely
-					GUI_Text_splitpane.setLeftComponent(panel_EA_Management_GUI);
+					great_splitpane.setLeftComponent(panel_EA_Management);
 					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				}				
 			});
@@ -5726,7 +5726,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------
-	class Natural_Disturbances_GUI extends JLayeredPane implements ActionListener {
+	class Natural_Disturbances extends JLayeredPane implements ActionListener {
 		List<List<JCheckBox>> checkboxStaticIdentifiers;
 		ScrollPane_StaticIdentifiers static_identifiers_scrollpane;
 		ScrollPane_DynamicIdentifiers dynamic_identifiers_scrollpane;
@@ -5734,7 +5734,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		TableColumnsHandle table6a_handle, table6b_handle;
 		Panel_QuickEdit_NaturalDisturbances quick_edit;
 
-		public Natural_Disturbances_GUI() {
+		public Natural_Disturbances() {
 			setLayout(new BorderLayout());		
 			
 			
@@ -6173,14 +6173,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
 					scrollpane_QuickEdit.setVisible(true);
 					// Get everything show up nicely
-					GUI_Text_splitpane.setLeftComponent(panel_Natural_Disturbances_GUI);
+					great_splitpane.setLeftComponent(panel_Natural_Disturbances);
 					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				} else {
 					btnQuickEdit.setToolTipText("Show Quick Edit Tool");
 					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
 					scrollpane_QuickEdit.setVisible(false);
 					// Get everything show up nicely
-					GUI_Text_splitpane.setLeftComponent(panel_Natural_Disturbances_GUI);
+					great_splitpane.setLeftComponent(panel_Natural_Disturbances);
 					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				}
  			});				
@@ -6331,14 +6331,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------
-	class Management_Cost_GUI extends JLayeredPane implements ActionListener {
+	class Management_Cost extends JLayeredPane implements ActionListener {
 		List<List<JCheckBox>> checkboxStaticIdentifiers;
 		ScrollPane_StaticIdentifiers static_identifiers_scrollpane;
 		ScrollPane_DynamicIdentifiers dynamic_identifiers_scrollpane;
 		ScrollPane_SubTables_ManagementCost cost_tables_ScrollPane;
 		Panel_QuickEdit_ManagementCost quick_edit;
 
-		public Management_Cost_GUI() {
+		public Management_Cost() {
 			setLayout(new BorderLayout());		
 			
 			
@@ -6751,14 +6751,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
 					scrollpane_QuickEdit.setVisible(true);
 					// Get everything show up nicely
-					GUI_Text_splitpane.setLeftComponent(panel_Management_Cost_GUI);
+					great_splitpane.setLeftComponent(panel_Management_Cost);
 					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				} else {
 					btnQuickEdit.setToolTipText("Show Quick Edit Tool");
 					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
 					scrollpane_QuickEdit.setVisible(false);
 					// Get everything show up nicely
-					GUI_Text_splitpane.setLeftComponent(panel_Management_Cost_GUI);
+					great_splitpane.setLeftComponent(panel_Management_Cost);
 					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				}
  			});				
@@ -6908,7 +6908,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------
-	class Basic_Constraints_GUI extends JLayeredPane implements ActionListener {
+	class Basic_Constraints extends JLayeredPane implements ActionListener {
 		List<List<JCheckBox>> checkboxStaticIdentifiers;
 		List<List<JCheckBox>> checkboxDynamicIdentifiers;
 		List<JCheckBox> allDynamicIdentifiers;
@@ -6924,7 +6924,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		Panel_QuickEdit_BasicConstraints quick_edit;
 		JScrollPane scrollpane_QuickEdit;
 		
-		public Basic_Constraints_GUI() {
+		public Basic_Constraints() {
 			setLayout(new BorderLayout());
 			
 			
@@ -7865,14 +7865,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
 					scrollpane_QuickEdit.setVisible(true);
 					// Get everything show up nicely
-					GUI_Text_splitpane.setLeftComponent(panel_Basic_Constraints_GUI);
+					great_splitpane.setLeftComponent(panel_Basic_Constraints);
 					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				} else {
 					btnQuickEdit.setToolTipText("Show Quick Edit Tool");
 					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
 					scrollpane_QuickEdit.setVisible(false);
 					// Get everything show up nicely
-					GUI_Text_splitpane.setLeftComponent(panel_Basic_Constraints_GUI);
+					great_splitpane.setLeftComponent(panel_Basic_Constraints);
 					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				}
  			});				
@@ -8029,7 +8029,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------
-	class Flow_Constraints_GUI extends JLayeredPane implements ActionListener {
+	class Flow_Constraints extends JLayeredPane implements ActionListener {
 		JTable basic_table;
 		PrismTableModel model_basic;
 		DefaultListModel id_list_model;
@@ -8040,7 +8040,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		Panel_QuickEdit_FlowConstraints quick_edit;
 		JScrollPane scrollpane_QuickEdit;
 		
-		public Flow_Constraints_GUI() {
+		public Flow_Constraints() {
 			setLayout(new BorderLayout());
 			
 			
@@ -8381,8 +8381,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 								}
 							}
 							model8.fireTableDataChanged();
-							panel_Flow_Constraints_GUI.get_model_basic().updateTableModelPrism(rowCount8, colCount8, data8, columnNames8);
-							panel_Flow_Constraints_GUI.get_model_basic().fireTableDataChanged();
+							panel_Flow_Constraints.get_model_basic().updateTableModelPrism(rowCount8, colCount8, data8, columnNames8);
+							panel_Flow_Constraints.get_model_basic().fireTableDataChanged();
 							
 							// show message that IDLE will be changed to FREE
 							String ExitOption[] = {"OK"};
@@ -8453,8 +8453,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 								}
 							}
 							model8.fireTableDataChanged();
-							panel_Flow_Constraints_GUI.get_model_basic().updateTableModelPrism(rowCount8, colCount8, data8, columnNames8);
-							panel_Flow_Constraints_GUI.get_model_basic().fireTableDataChanged();
+							panel_Flow_Constraints.get_model_basic().updateTableModelPrism(rowCount8, colCount8, data8, columnNames8);
+							panel_Flow_Constraints.get_model_basic().fireTableDataChanged();
 							
 							// show message that IDLE will be changed to FREE
 							String ExitOption[] = {"OK"};
@@ -8742,14 +8742,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
 					scrollpane_QuickEdit.setVisible(true);
 					// Get everything show up nicely
-					GUI_Text_splitpane.setLeftComponent(panel_Flow_Constraints_GUI);
+					great_splitpane.setLeftComponent(panel_Flow_Constraints);
 					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				} else {
 					btnQuickEdit.setToolTipText("Show Quick Edit Tool");
 					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
 					scrollpane_QuickEdit.setVisible(false);
 					// Get everything show up nicely
-					GUI_Text_splitpane.setLeftComponent(panel_Flow_Constraints_GUI);
+					great_splitpane.setLeftComponent(panel_Flow_Constraints);
 					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				}
  			});				
@@ -9010,10 +9010,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------
-	class Area_Merging_GUI extends JLayeredPane {
+	class Area_Merging extends JLayeredPane {
 		JButton btn_GetResult;
 		
-		public Area_Merging_GUI() {
+		public Area_Merging() {
 			setLayout(new BorderLayout());
 			
 			
@@ -9186,14 +9186,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
 						scrollpane_QuickEdit.setVisible(true);
 						// Get everything show up nicely
-						GUI_Text_splitpane.setLeftComponent(panel_Area_Merging_GUI);
+						great_splitpane.setLeftComponent(panel_Area_Merging);
 						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				} else {
 					btnQuickEdit.setToolTipText("Show Quick Edit Tool");
 					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
 					scrollpane_QuickEdit.setVisible(false);
 					// Get everything show up nicely
-					GUI_Text_splitpane.setLeftComponent(panel_Area_Merging_GUI);
+					great_splitpane.setLeftComponent(panel_Area_Merging);
 					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				}				
 			});
@@ -9294,16 +9294,16 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	// Get values to pass to other classes
 	// Add all input Files to a list
 	public void save_inputs_for_this_run() {
-		File input_01_file = new File(currentRunFolder.getAbsolutePath() + "/input_01_general_inputs.txt");
-		File input_02_file = new File(currentRunFolder.getAbsolutePath() + "/input_02_model_strata.txt");
-		File input_03_file = new File(currentRunFolder.getAbsolutePath() + "/input_03_management_category.txt");
-		File input_04_file = new File(currentRunFolder.getAbsolutePath() + "/input_04_ea_management.txt");
-		File input_06_file = new File(currentRunFolder.getAbsolutePath() + "/input_06_natural_disturbances.txt");
-		File input_07_file = new File(currentRunFolder.getAbsolutePath() + "/input_07_management_cost.txt");
-		File input_08_file = new File(currentRunFolder.getAbsolutePath() + "/input_08_basic_constraints.txt");
-		File input_09_file = new File(currentRunFolder.getAbsolutePath() + "/input_09_flow_constraints.txt");
-		File input_10_file = new File(currentRunFolder.getAbsolutePath() + "/input_10_area_merging.txt");
-		File input_11_file = new File(currentRunFolder.getAbsolutePath() + "/input_11_state_id.txt");
+		File input_01_file = new File(file_runfolder.getAbsolutePath() + "/input_01_general_inputs.txt");
+		File input_02_file = new File(file_runfolder.getAbsolutePath() + "/input_02_model_strata.txt");
+		File input_03_file = new File(file_runfolder.getAbsolutePath() + "/input_03_management_category.txt");
+		File input_04_file = new File(file_runfolder.getAbsolutePath() + "/input_04_ea_management.txt");
+		File input_06_file = new File(file_runfolder.getAbsolutePath() + "/input_06_natural_disturbances.txt");
+		File input_07_file = new File(file_runfolder.getAbsolutePath() + "/input_07_management_cost.txt");
+		File input_08_file = new File(file_runfolder.getAbsolutePath() + "/input_08_basic_constraints.txt");
+		File input_09_file = new File(file_runfolder.getAbsolutePath() + "/input_09_flow_constraints.txt");
+		File input_10_file = new File(file_runfolder.getAbsolutePath() + "/input_10_area_merging.txt");
+		File input_11_file = new File(file_runfolder.getAbsolutePath() + "/input_11_state_id.txt");
 		create_file_input(input_01_file, data1, columnNames1);
 		create_file_input(input_02_file, data3, columnNames3);	
 		create_file_input(input_03_file, data2, columnNames2);	// 3 and 2 are currently switched
@@ -9313,7 +9313,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		create_file_input(input_08_file, data8, columnNames8);
 		create_file_input(input_09_file, data9, columnNames9);
 		create_file_input(input_10_file, data10, columnNames10);
-		panel_Area_Merging_GUI.btn_GetResult.doClick();		// This would help get the data11 and columnNames11 for writing the output of state_id
+		panel_Area_Merging.btn_GetResult.doClick();		// This would help get the data11 and columnNames11 for writing the output of state_id
 		create_file_input(input_11_file, data11, columnNames11);
 		create_file_database();
 		create_readmeFile();
@@ -9323,7 +9323,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	public void save_inputs_and_delete_outputs_for_this_run() {
 		save_inputs_for_this_run();
 		// Delete all output files, problem file, and solution file, but keep the fly_constraints file
-		File[] contents = currentRunFolder.listFiles();
+		File[] contents = file_runfolder.listFiles();
 		if (contents != null) {
 			for (File f : contents) {
 				if ((f.getName().contains("output") || f.getName().contains("problem") || f.getName().contains("solution")) && !f.getName().contains("fly_constraints")) {
@@ -9362,7 +9362,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	
 	private void create_file_database() {	
 		// Note for this file, we just copy overwritten
-		File databaseFile = new File(currentRunFolder.getAbsolutePath() + "/" + "database.db");	
+		File databaseFile = new File(file_runfolder.getAbsolutePath() + "/" + "database.db");	
 		try {
 			if (file_database != null) Files.copy(file_database.toPath(), databaseFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 			PrismMain.get_databases_linkedlist().update(databaseFile, read_database);	// Allow saving the databse.db into remember list after stop editing and save					
@@ -9373,7 +9373,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	
 	
 	private void create_readmeFile() {	
-        File readmeFile = new File(currentRunFolder.getAbsolutePath() + "/" + "readme.txt");
+        File readmeFile = new File(file_runfolder.getAbsolutePath() + "/" + "readme.txt");
 		if (readmeFile.exists()) {
 			readmeFile.delete();		// Delete the old file before writing new contents
 		}
@@ -9388,7 +9388,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			// Write new last time edited
 			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd   -   HH:mm:ss");
 			readme.getDocument().insertString(0, "Model is last edited by:     " + PrismMain.get_prism_version()  + "     on     " + dateFormat.format(new Date()) + "\n", null);
-			pw = new FileWriter(currentRunFolder.getAbsolutePath() + "/" + "readme.txt");
+			pw = new FileWriter(file_runfolder.getAbsolutePath() + "/" + "readme.txt");
 			readme.write(pw);
 			pw.close();
 		} catch (BadLocationException | IOException e) {

@@ -201,7 +201,7 @@ public class Read_Input {
 	//-------------------------------------------------------------------------------------------------------------------------------------------------	
 	//For input_03_management_category : must be read after model_strata
 	private int nonea_total_rows, nonea_total_columns;
-	private String[][] nonea_data;
+	private String[][] category_data;
 	private List<List<String>> nonea_method_choice_for_strata;
 	private List<List<String>> nonea_method_choice_for_strata_without_sizeclass;
 
@@ -217,13 +217,13 @@ public class Read_Input {
 
 			nonea_total_rows = a.length;
 			nonea_total_columns = a[0].split(delimited).length;		// a[0].split(delimited) = String[] of the first row (this is the row below the column headers row which was removed already)	
-			nonea_data = new String[nonea_total_rows][nonea_total_columns];
+			category_data = new String[nonea_total_rows][nonea_total_columns];
 		
 			// read all values from all rows and columns
 			for (int i = 0; i < nonea_total_rows; i++) {		
 				String[] rowValue = a[i].split(delimited);		
 				for (int j = 0; j < nonea_total_columns; j++) {
-					nonea_data[i][j] = rowValue[j];
+					category_data[i][j] = rowValue[j];
 				}
 			}
 		} catch (IOException e) {
@@ -235,7 +235,7 @@ public class Read_Input {
 		List<List<String>> nonea_static_identifiers = new ArrayList<List<String>>();
 		
 		// read the whole cell into array
-		String[] staticLayer_Info = nonea_data[row][2].split(";");
+		String[] staticLayer_Info = category_data[row][2].split(";");
 		int total_staticIdentifiers = staticLayer_Info.length;
 		
 		// get all static Identifiers to be in the list
@@ -257,7 +257,7 @@ public class Read_Input {
 		List<List<String>> nonea_method_choice = new ArrayList<List<String>>();
 
 		// read the whole cell into array
-		String[] method_choice_info = nonea_data[row][3].split(";");
+		String[] method_choice_info = category_data[row][3].split(";");
 		int total_method_choice = method_choice_info.length;
 
 		// get all method and choice to be in the list
