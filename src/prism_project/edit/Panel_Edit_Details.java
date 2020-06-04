@@ -134,7 +134,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	private General_Inputs panel_General_Inputs;
 	private Model_Strata panel_Model_Strata;
 	private Prescription_Category panel_Prescription_Category;
-	private EA_Management panel_EA_Management;
+	private Prescription_Management panel_Prescription_Management;
 	private Natural_Disturbances panel_Natural_Disturbances;
 	private Management_Cost panel_Management_Cost;
 	private Basic_Constraints panel_Basic_Constraints;
@@ -174,7 +174,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	private PrismTableModel model2;
 	private Object[][] data2;
 	
-	// table input_04_ea_management.txt
+	// table input_04_prescription_management.txt
 	private boolean is_table4_loaded = false;
 	private int rowCount4, colCount4;
 	private String[] columnNames4;
@@ -294,7 +294,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		radio_button[0]= new JRadioButton("General Inputs");
 		radio_button[1]= new JRadioButton("Model Strata");
 		radio_button[2]= new JRadioButton("Prescription Category");
-		radio_button[3]= new JRadioButton("EA Management");
+		radio_button[3]= new JRadioButton("Prescription Management");
 		radio_button[4]= new JRadioButton("Natural Disturbances");
 		radio_button[5]= new JRadioButton("Management Cost");
 		radio_button[6]= new JRadioButton("Basic Constraints");
@@ -337,7 +337,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					great_splitpane.setLeftComponent(panel_Prescription_Category);
 					great_splitpane.setRightComponent(null);
 				} else if (j == 3) {
-					great_splitpane.setLeftComponent(panel_EA_Management);
+					great_splitpane.setLeftComponent(panel_Prescription_Management);
 					great_splitpane.setRightComponent(null);
 				} else if (j == 4) {
 					great_splitpane.setLeftComponent(panel_Natural_Disturbances);
@@ -429,7 +429,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		}
 
 
-		table_file = new File(file_runfolder.getAbsolutePath() + "/input_04_ea_management.txt");
+		table_file = new File(file_runfolder.getAbsolutePath() + "/input_04_prescription_management.txt");
 		if (table_file.exists()) {		//Load from input
 			tableLoader = new Reload_Table_Info(table_file);
 			rowCount4 = tableLoader.get_rowCount();
@@ -524,7 +524,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			panel_General_Inputs.get_database_directory_textfield().setText(file_database.getAbsolutePath());
 			panel_Model_Strata = new Model_Strata();
 			panel_Prescription_Category = new Prescription_Category();
-			panel_EA_Management = new EA_Management();
+			panel_Prescription_Management = new Prescription_Management();
 			panel_Natural_Disturbances = new Natural_Disturbances();
 			panel_Management_Cost = new Management_Cost();
 			panel_Basic_Constraints = new Basic_Constraints();
@@ -2723,10 +2723,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		
         // header tool-tip
 		String[] headerToolTips = new String[colCount7b];
-		headerToolTips[0] = "cover type (not dynamic) before the occurence of EA clear-cut or stand replacing disturbance";
-        headerToolTips[1] = "cover type after the occurence of EA clear-cut or stand replacing disturbance";
-        headerToolTips[2] = "currency per area unit of cover type conversion by EA cleat-cut";
-        headerToolTips[3] = "currency per area unit of cover type conversion by stand replacing disturbance";
+		headerToolTips[0] = "cover type (not dynamic) before the occurence of clear-cut or stand replacing disturbance event";
+        headerToolTips[1] = "cover type after the occurence of clear-cut or stand replacing disturbance event";
+        headerToolTips[2] = "currency per area unit of cover type conversion by cleat-cut";
+        headerToolTips[3] = "currency per area unit of cover type conversion by stand replacing disturbance event";
 		
         
 		//Create a table-------------------------------------------------------------			
@@ -3940,7 +3940,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					// create new instances
 					panel_Model_Strata = new Model_Strata();
 					panel_Prescription_Category = new Prescription_Category();
-					panel_EA_Management = new EA_Management();
+					panel_Prescription_Management = new Prescription_Management();
 					panel_Natural_Disturbances = new Natural_Disturbances();
 					panel_Management_Cost = new Management_Cost();
 					panel_Basic_Constraints = new Basic_Constraints();
@@ -4367,7 +4367,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	class Prescription_Category extends JLayeredPane {
 		ScrollPane_DynamicIdentifiers dynamic_identifiers_scrollpane;
 		JPanel button_table_Panel;	
-		Panel_QuickEdit_Non_EA quick_edit;
+		Panel_QuickEdit_Presciption_Category quick_edit;
 		JScrollPane scrollpane_QuickEdit;
 		
 		public Prescription_Category() {
@@ -4398,6 +4398,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			// 2nd grid -----------------------------------------------------------------------
 			// 2nd grid -----------------------------------------------------------------------	
 			dynamic_identifiers_scrollpane = new ScrollPane_DynamicIdentifiers(read_database);
+			dynamic_identifiers_scrollpane.set_scrollpane_name("Dynamic Identifiers  -  use yield attributes to filter prescriptions");
 			// End of 2nd grid -----------------------------------------------------------------------
 			// End of 2nd grid -----------------------------------------------------------------------			
 			
@@ -4503,7 +4504,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 
 			// scrollPane Quick Edit ----------------------------------------------------------------------
 			// scrollPane Quick Edit ----------------------------------------------------------------------
-			quick_edit = new Panel_QuickEdit_Non_EA(table2, data2);
+			quick_edit = new Panel_QuickEdit_Presciption_Category(table2, data2);
 			scrollpane_QuickEdit = new JScrollPane(quick_edit);
 			border = new TitledBorder("Quick Edit");
 			border.setTitleJustification(TitledBorder.CENTER);
@@ -4881,16 +4882,16 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------
-	class EA_Management extends JLayeredPane {
+	class Prescription_Management extends JLayeredPane {
 		List<List<JCheckBox>> checkboxStaticIdentifiers;
 		ScrollPane_StaticIdentifiers static_identifiers_scrollpane;
 		ScrollPane_DynamicIdentifiers dynamic_identifiers_scrollpane;
 		
 		JPanel button_table_Panel;	
-		Panel_QuickEdit_EA quick_edit;
+		Panel_QuickEdit_Prescription_Management quick_edit;
 		JScrollPane scrollpane_QuickEdit;
 		
-		public EA_Management() {
+		public Prescription_Management() {
 			setLayout(new BorderLayout());
 			// 1st grid -----------------------------------------------------------------------
 			// 1st grid -----------------------------------------------------------------------	
@@ -4912,6 +4913,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			// 2nd grid -----------------------------------------------------------------------
 			// 2nd grid -----------------------------------------------------------------------	
 			dynamic_identifiers_scrollpane = new ScrollPane_DynamicIdentifiers(read_database);
+			dynamic_identifiers_scrollpane.set_scrollpane_name("Dynamic Identifiers  -  use yield attributes to filter prescriptions");
 			// End of 2nd grid -----------------------------------------------------------------------
 			// End of 2nd grid -----------------------------------------------------------------------			
 
@@ -5015,7 +5017,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			
 			// scrollPane Quick Edit ----------------------------------------------------------------------
 			// scrollPane Quick Edit ----------------------------------------------------------------------
-			quick_edit = new Panel_QuickEdit_EA(table4, data4);
+			quick_edit = new Panel_QuickEdit_Prescription_Management(table4, data4);
 			scrollpane_QuickEdit = new JScrollPane(quick_edit);
 			border = new TitledBorder("Quick Edit");
 			border.setTitleJustification(TitledBorder.CENTER);
@@ -5085,7 +5087,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					}	
 				}
 				
-				data4[rowCount4 - 1][1] = static_identifiers_scrollpane.get_static_description_from_GUI();
+				data4[rowCount4 - 1][1] = "Prescriptions with "
+						+ dynamic_identifiers_scrollpane.get_dynamic_description_from_GUI()
+						+ ".....are eligible to apply on....."
+						+ static_identifiers_scrollpane.get_static_description_from_GUI();
 				data4[rowCount4 - 1][2] = null;
 				data4[rowCount4 - 1][3] = static_identifiers_scrollpane.get_static_info_from_GUI();
 				data4[rowCount4 - 1][4] = dynamic_identifiers_scrollpane.get_dynamic_info_from_GUI();
@@ -5274,14 +5279,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
 						scrollpane_QuickEdit.setVisible(true);
 						// Get everything show up nicely
-						great_splitpane.setLeftComponent(panel_EA_Management);
+						great_splitpane.setLeftComponent(panel_Prescription_Management);
 						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				} else {
 					btnQuickEdit.setToolTipText("Show Quick Edit Tool");
 					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
 					scrollpane_QuickEdit.setVisible(false);
 					// Get everything show up nicely
-					great_splitpane.setLeftComponent(panel_EA_Management);
+					great_splitpane.setLeftComponent(panel_Prescription_Management);
 					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				}				
 			});
@@ -8966,7 +8971,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		File input_01_file = new File(file_runfolder.getAbsolutePath() + "/input_01_general_inputs.txt");
 		File input_02_file = new File(file_runfolder.getAbsolutePath() + "/input_02_model_strata.txt");
 		File input_03_file = new File(file_runfolder.getAbsolutePath() + "/input_03_prescription_category.txt");
-		File input_04_file = new File(file_runfolder.getAbsolutePath() + "/input_04_ea_management.txt");
+		File input_04_file = new File(file_runfolder.getAbsolutePath() + "/input_04_prescription_management.txt");
 		File input_06_file = new File(file_runfolder.getAbsolutePath() + "/input_06_natural_disturbances.txt");
 		File input_07_file = new File(file_runfolder.getAbsolutePath() + "/input_07_management_cost.txt");
 		File input_08_file = new File(file_runfolder.getAbsolutePath() + "/input_08_basic_constraints.txt");

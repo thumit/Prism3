@@ -23,8 +23,8 @@ import java.awt.GridBagLayout;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 
-public class Panel_QuickEdit_EA extends JPanel {
-	public Panel_QuickEdit_EA(JTable table, Object[][] data) {
+public class Panel_QuickEdit_Prescription_Management extends JPanel {
+	public Panel_QuickEdit_Prescription_Management(JTable table, Object[][] data) {
 		setLayout(new GridBagLayout());
 		setPreferredSize(new Dimension(200, 0));
 	}

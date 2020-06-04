@@ -55,7 +55,8 @@ import prism_convenience.IconHandle;
 import prism_project.data_process.Read_Database;
 import prism_root.PrismMain;
 
-public class ScrollPane_DynamicIdentifiers extends JScrollPane {	
+public class ScrollPane_DynamicIdentifiers extends JScrollPane {
+	private String scrollpane_name = "Dynamic Identifiers  -  use yield attributes to filter variables";
 	private JCheckBox checkboxNoIdentifier;
 	private List<JCheckBox> allDynamicIdentifiers;
 	private JScrollPane selectIdentifiersScrollPanel;
@@ -137,7 +138,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 						for (int i = 0; i < yield_tables_column_names.length; i++) {
 							allDynamicIdentifiers.get(i).setSelected(false);
 							allDynamicIdentifiers_ScrollPane.get(i).setVisible(false);		//Set invisible all scrollPanes of dynamic identifiers
-							selectIdentifiersScrollPanel.setBorder(BorderFactory.createTitledBorder(null, "Dynamic Identifiers  -  use yield attributes to filter variables", TitledBorder.CENTER, 0));
+							selectIdentifiersScrollPanel.setBorder(BorderFactory.createTitledBorder(null, scrollpane_name, TitledBorder.CENTER, 0));
 							
 							//Do a resize to same size for JInteral Frame of the project to help repaint	
 							revalidate();
@@ -634,7 +635,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 
 		// ScrollPane contains the identifiers that are able to be selected
 		selectIdentifiersScrollPanel = new JScrollPane(select_Panel);
-		selectIdentifiersScrollPanel.setBorder(BorderFactory.createTitledBorder(null, "Dynamic Identifiers  -  use yield attributes to filter variables", TitledBorder.CENTER, 0));
+		selectIdentifiersScrollPanel.setBorder(BorderFactory.createTitledBorder(null, scrollpane_name, TitledBorder.CENTER, 0));
 		selectIdentifiersScrollPanel.setPreferredSize(new Dimension(200, 0));
 		
 		// add listeners to select NoIdentifier only
@@ -645,7 +646,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 				for (int i = 0; i < yield_tables_column_names.length; i++) {
 					allDynamicIdentifiers.get(i).setSelected(false);
 					allDynamicIdentifiers_ScrollPane.get(i).setVisible(false);		// Set invisible all scrollPanes of dynamic identifiers
-					selectIdentifiersScrollPanel.setBorder(BorderFactory.createTitledBorder(null, "Dynamic Identifiers  -  use yield attributes to filter variables", TitledBorder.CENTER, 0));
+					selectIdentifiersScrollPanel.setBorder(BorderFactory.createTitledBorder(null, scrollpane_name, TitledBorder.CENTER, 0));
 				} 
 				// Do a resize to same size for JInteral Frame of the project to help repaint	
 				revalidate();
@@ -666,6 +667,11 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 		
 		this.setBorder(null);
 		this.setPreferredSize(new Dimension(0, 250));	
+	}
+	
+	public void set_scrollpane_name(String new_name) {
+		scrollpane_name = new_name;
+		selectIdentifiersScrollPanel.setBorder(BorderFactory.createTitledBorder(null, scrollpane_name, TitledBorder.CENTER, 0));
 	}
 	
 	public List<List<JCheckBox>> get_checkboxDynamicIdentifiers() {
