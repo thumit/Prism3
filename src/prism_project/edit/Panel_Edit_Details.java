@@ -4891,6 +4891,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		JScrollPane scrollpane_QuickEdit;
 		
 		public EA_Management() {
+			setLayout(new BorderLayout());
 			// 1st grid -----------------------------------------------------------------------
 			// 1st grid -----------------------------------------------------------------------	
 			String panel_name = "Strata Attributes";
