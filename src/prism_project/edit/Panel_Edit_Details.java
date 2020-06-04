@@ -34,6 +34,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedWriter;
@@ -52,6 +53,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.EventObject;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -1106,6 +1108,157 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			}	
 		};
 
+		
+		
+		class CheckBoxEditor extends DefaultCellEditor {
+			protected JPanel panel;
+			protected JCheckBox[] checkbox = new JCheckBox[] {new JCheckBox("A"), new JCheckBox("B"), new JCheckBox("C")};
+
+			public CheckBoxEditor() {
+				super(new JCheckBox());
+				panel = new JPanel(new GridBagLayout());
+				panel.setRequestFocusEnabled(false);
+				GridBagConstraints c = new GridBagConstraints();
+				c.fill = GridBagConstraints.HORIZONTAL;
+				c.weightx = 1;
+			    c.weighty = 1;
+			    
+			    for (int i = 0; i < checkbox.length; i++) {
+					//Add to identifiersPanel
+					c.gridx = i;
+					c.gridy = 0;
+					panel.add(checkbox[i], c);
+				}
+			}
+
+			public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+				if (value instanceof String[]) {
+					String[] text = (String[]) value;
+					
+					for (int i = 0; i < checkbox.length; i++) {
+						checkbox[i].setSelected(false);
+						for (String selection : text) {
+							if (checkbox[i].getText().equals(selection)) {
+								checkbox[i].setSelected(true);
+							}
+						}
+					}
+				}
+				return panel;
+			}
+
+			public Object getCellEditorValue() {
+				String st = "";
+				for (int i = 0; i < checkbox.length; i++) {
+					if (checkbox[i].isSelected()) {
+						st = st + " " + checkbox[i].getText();
+					}
+				}
+				return st;
+			}
+			
+			public boolean isCellEditable(EventObject e) {
+				if (e instanceof KeyEvent) {
+					return false;
+				}
+				return super.isCellEditable(e);
+			}
+		}
+		
+		CheckBoxEditor checkboxeditor = new CheckBoxEditor(); 
+		table4.getColumn("layer5_regen").setCellEditor(checkboxeditor);
+		
+		
+		
+//		class CheckBoxesPanel extends JPanel {
+//			protected JCheckBox[] checkbox = new JCheckBox[] {new JCheckBox("A"), new JCheckBox("B"), new JCheckBox("C")};
+//			
+//			public CheckBoxesPanel() {
+//				setLayout(new GridBagLayout());
+//				setRequestFocusEnabled(false);
+//				GridBagConstraints c = new GridBagConstraints();
+//				c.fill = GridBagConstraints.HORIZONTAL;
+//				c.weightx = 1;
+//			    c.weighty = 1;
+//			    
+//			    for (int i = 0; i < checkbox.length; i++) {
+//					//Add to identifiersPanel
+//					c.gridx = i;
+//					c.gridy = 0;
+//					add(checkbox[i], c);
+//				}
+//			}
+//			
+//		    public void updateButtons(Object value) {
+//		    	if (value instanceof String[]) {
+//					String[] text = (String[]) value;
+//					for (int i = 0; i < checkbox.length; i++) {
+//						checkbox[i].setSelected(false);
+//						for (String selection : text) {
+//							if (checkbox[i].getText().equals(selection)) {
+//								checkbox[i].setSelected(true);
+//							}
+//						}
+//					}
+//				}
+//		    }
+//		    
+//			public JCheckBox[] get_checkbox() {
+//				return checkbox;
+//			}
+//		}
+//		
+//		class CheckBoxesRenderer extends CheckBoxesPanel implements TableCellRenderer {
+//		    @Override public void updateUI() {
+//		        super.updateUI();
+//		        setName("Table.cellRenderer");
+//		    }
+//		    @Override public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+//		        updateButtons(value);
+//		        return this;
+//		    }
+//		}
+//		
+//		class CheckBoxEditor extends DefaultCellEditor {
+//			protected CheckBoxesPanel panel = new CheckBoxesPanel();
+//
+//			public CheckBoxEditor() {
+//				super(new JCheckBox());
+//			}
+//
+//			public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+//				panel.updateButtons(value);
+//				return panel;
+//			}
+//
+//			public Object getCellEditorValue() {
+//				JCheckBox[] checkbox = panel.get_checkbox();
+//				String st = "";
+//				for (int i = 0; i < checkbox.length; i++) {
+//					if (checkbox[i].isSelected()) {
+//						st = st + " " + checkbox[i].getText();
+//					}
+//				}
+//				return st;
+//			}
+//			
+//			public boolean isCellEditable(EventObject e) {
+//				if (e instanceof KeyEvent) {
+//					return false;
+//				}
+//				return super.isCellEditable(e);
+//			}
+//		}
+//		
+//		CheckBoxEditor checkboxeditor = new CheckBoxEditor(); 
+//		CheckBoxesRenderer checkboxrender = new CheckBoxesRenderer(); 
+//		table4.getColumn("layer5_regen").setCellEditor(checkboxeditor);
+//		table4.getColumn("layer5_regen").setCellRenderer(checkboxrender);
+		
+		
+		
+		
+		
 		((JComponent) table4.getDefaultRenderer(Boolean.class)).setOpaque(true);	// It's a bug in the synth-installed renderer, quick hack is to force the rendering checkbox opacity to true
 		((AbstractButton) table4.getDefaultRenderer(Boolean.class)).setSelectedIcon(IconHandle.get_scaledImageIcon(12, 12, "icon_check.png"));
 
