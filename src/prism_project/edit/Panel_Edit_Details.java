@@ -60,6 +60,7 @@ import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
+import javax.swing.AbstractCellEditor;
 import javax.swing.Action;
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
@@ -100,6 +101,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
@@ -1093,7 +1095,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				if (column != 1) {
 					tableColumn.setPreferredWidth(maxWidth);
 				} else {
-					tableColumn.setMinWidth(400);
+					tableColumn.setMinWidth(600);
 				}
 				return component;
 			}	
@@ -1110,72 +1112,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 
 		
 		
-		class CheckBoxEditor extends DefaultCellEditor {
-			protected JPanel panel;
-			protected JCheckBox[] checkbox = new JCheckBox[] {new JCheckBox("A"), new JCheckBox("B"), new JCheckBox("C")};
-
-			public CheckBoxEditor() {
-				super(new JCheckBox());
-				panel = new JPanel(new GridBagLayout());
-				panel.setRequestFocusEnabled(false);
-				GridBagConstraints c = new GridBagConstraints();
-				c.fill = GridBagConstraints.HORIZONTAL;
-				c.weightx = 1;
-			    c.weighty = 1;
-			    
-			    for (int i = 0; i < checkbox.length; i++) {
-					//Add to identifiersPanel
-					c.gridx = i;
-					c.gridy = 0;
-					panel.add(checkbox[i], c);
-				}
-			}
-
-			public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-				if (value instanceof String[]) {
-					String[] text = (String[]) value;
-					
-					for (int i = 0; i < checkbox.length; i++) {
-						checkbox[i].setSelected(false);
-						for (String selection : text) {
-							if (checkbox[i].getText().equals(selection)) {
-								checkbox[i].setSelected(true);
-							}
-						}
-					}
-				}
-				return panel;
-			}
-
-			public Object getCellEditorValue() {
-				String st = "";
-				for (int i = 0; i < checkbox.length; i++) {
-					if (checkbox[i].isSelected()) {
-						st = st + " " + checkbox[i].getText();
-					}
-				}
-				return st;
-			}
-			
-			public boolean isCellEditable(EventObject e) {
-				if (e instanceof KeyEvent) {
-					return false;
-				}
-				return super.isCellEditable(e);
-			}
-		}
-		
-		CheckBoxEditor checkboxeditor = new CheckBoxEditor(); 
-		table4.getColumn("layer5_regen").setCellEditor(checkboxeditor);
-		
-		
-		
-//		class CheckBoxesPanel extends JPanel {
-//			protected JCheckBox[] checkbox = new JCheckBox[] {new JCheckBox("A"), new JCheckBox("B"), new JCheckBox("C")};
-//			
-//			public CheckBoxesPanel() {
-//				setLayout(new GridBagLayout());
-//				setRequestFocusEnabled(false);
+//		class CheckBoxEditor extends DefaultCellEditor {
+//			protected JPanel panel;
+//			protected JCheckBox[] checkbox = new JCheckBox[] {new JCheckBox("B"), new JCheckBox("C"), new JCheckBox("D"), new JCheckBox("E"), new JCheckBox("F"), new JCheckBox("G")};
+//
+//			public CheckBoxEditor() {
+//				super(new JCheckBox());
+//				panel = new JPanel(new GridBagLayout());
+//				panel.setRequestFocusEnabled(false);
 //				GridBagConstraints c = new GridBagConstraints();
 //				c.fill = GridBagConstraints.HORIZONTAL;
 //				c.weightx = 1;
@@ -1185,54 +1129,26 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 //					//Add to identifiersPanel
 //					c.gridx = i;
 //					c.gridy = 0;
-//					add(checkbox[i], c);
+//					panel.add(checkbox[i], c);
 //				}
-//			}
-//			
-//		    public void updateButtons(Object value) {
-//		    	if (value instanceof String[]) {
-//					String[] text = (String[]) value;
-//					for (int i = 0; i < checkbox.length; i++) {
-//						checkbox[i].setSelected(false);
-//						for (String selection : text) {
-//							if (checkbox[i].getText().equals(selection)) {
-//								checkbox[i].setSelected(true);
-//							}
-//						}
-//					}
-//				}
-//		    }
-//		    
-//			public JCheckBox[] get_checkbox() {
-//				return checkbox;
-//			}
-//		}
-//		
-//		class CheckBoxesRenderer extends CheckBoxesPanel implements TableCellRenderer {
-//		    @Override public void updateUI() {
-//		        super.updateUI();
-//		        setName("Table.cellRenderer");
-//		    }
-//		    @Override public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-//		        updateButtons(value);
-//		        return this;
-//		    }
-//		}
-//		
-//		class CheckBoxEditor extends DefaultCellEditor {
-//			protected CheckBoxesPanel panel = new CheckBoxesPanel();
-//
-//			public CheckBoxEditor() {
-//				super(new JCheckBox());
 //			}
 //
 //			public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-//				panel.updateButtons(value);
+//				List<String> current_selection = null;
+//		    	if (value instanceof String) {
+//					current_selection = Arrays.asList(((String) value).split(" "));
+//		    	}
+//		    	for (JCheckBox c : checkbox) {
+//		    		if (current_selection != null && current_selection.contains(c.getText())) {
+//		    			c.setSelected(true);
+//		    		} else {
+//		    			c.setSelected(false);
+//		    		}
+//		    	}
 //				return panel;
 //			}
 //
 //			public Object getCellEditorValue() {
-//				JCheckBox[] checkbox = panel.get_checkbox();
 //				String st = "";
 //				for (int i = 0; i < checkbox.length; i++) {
 //					if (checkbox[i].isSelected()) {
@@ -1251,10 +1167,97 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 //		}
 //		
 //		CheckBoxEditor checkboxeditor = new CheckBoxEditor(); 
-//		CheckBoxesRenderer checkboxrender = new CheckBoxesRenderer(); 
+//		checkboxeditor.setClickCountToStart(2);
 //		table4.getColumn("layer5_regen").setCellEditor(checkboxeditor);
-//		table4.getColumn("layer5_regen").setCellRenderer(checkboxrender);
 		
+		
+		
+		List<String> layer5 = read_database.get_all_layers().get(4);
+		JCheckBox[] layer5_checkboxes = new JCheckBox[layer5.size()];
+	    for (int i = 0; i < layer5.size(); i++) {
+	    	layer5_checkboxes[i] = new JCheckBox(layer5.get(i));
+		}
+		
+		class CheckBoxesPanel extends JPanel {
+			protected JCheckBox[] checkbox = layer5_checkboxes;
+			
+			public CheckBoxesPanel() {
+				setLayout(new GridBagLayout());
+				setRequestFocusEnabled(false);
+				GridBagConstraints c = new GridBagConstraints();
+				c.fill = GridBagConstraints.HORIZONTAL;
+				c.weightx = 1;
+			    c.weighty = 1;
+			    
+			    for (int i = 0; i < checkbox.length; i++) {
+					//Add to identifiersPanel
+					c.gridx = i;
+					c.gridy = 0;
+					add(checkbox[i], c);
+				}
+			}
+			
+		    public void updateButtons(Object value) {
+		    	List<String> current_selection = null;
+		    	if (value instanceof String) {
+					current_selection = Arrays.asList(((String) value).split(" "));
+		    	}
+		    	for (JCheckBox c : checkbox) {
+		    		if (current_selection != null && current_selection.contains(c.getText())) {
+		    			c.setSelected(true);
+		    		} else {
+		    			c.setSelected(false);
+		    		}
+		    	}
+		    }
+		    
+			public JCheckBox[] get_checkbox() {
+				return checkbox;
+			}
+		}
+		
+		class CheckBoxesRenderer extends CheckBoxesPanel implements TableCellRenderer {
+		    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+		        updateButtons(value);
+		        return this;
+		    }
+		}
+		
+		class CheckBoxesEditor extends AbstractCellEditor implements TableCellEditor {
+			protected CheckBoxesPanel panel = new CheckBoxesPanel();
+
+			public CheckBoxesEditor() {
+				
+			}
+
+			public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+				panel.updateButtons(value);
+				return panel;
+			}
+
+			public Object getCellEditorValue() {
+				JCheckBox[] checkbox = panel.get_checkbox();
+				String st = "";
+				for (int i = 0; i < checkbox.length; i++) {
+					if (checkbox[i].isSelected()) {
+						st = st + " " + checkbox[i].getText();
+					}
+				}
+				return st;
+			}
+			
+			public boolean isCellEditable(EventObject e) {
+				if (e instanceof KeyEvent) {
+					return false;
+				}
+				return super.isCellEditable(e);
+			}
+		}
+		
+		CheckBoxesEditor checkboxeditor = new CheckBoxesEditor(); 
+		CheckBoxesRenderer checkboxrender = new CheckBoxesRenderer(); 
+		table4.getColumn("layer5_regen").setCellEditor(checkboxeditor);
+		table4.getColumn("layer5_regen").setCellRenderer(checkboxrender); 
 		
 		
 		
