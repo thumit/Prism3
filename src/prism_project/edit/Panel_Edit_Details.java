@@ -1090,10 +1090,12 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			            tableColumn.getHeaderValue(), false, false, -1, column);
 				maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
 				
-				if (column != 1) {
-					tableColumn.setPreferredWidth(maxWidth);
-				} else {
+				if (column == 1) {
 					tableColumn.setMinWidth(600);
+				} else if (column == 2) {
+					tableColumn.setMinWidth(350);
+				} else {
+					tableColumn.setPreferredWidth(maxWidth);
 				}
 				return component;
 			}	
@@ -1182,7 +1184,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 //		}
 //		
 //		class CheckBoxesPanel extends JPanel {
-//			protected JCheckBox[] checkbox = layer5_checkboxes;
+//			protected JCheckBox[] checkbox = new JCheckBox[] {new JCheckBox("B"), new JCheckBox("C"), new JCheckBox("D"), new JCheckBox("E"), new JCheckBox("F"), new JCheckBox("G")};
 //			
 //			public CheckBoxesPanel() {
 //				setLayout(new GridBagLayout());
