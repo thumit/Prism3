@@ -408,13 +408,13 @@ public class Read_Input {
 	}
 		
 	//-------------------------------------------------------------------------------------------------------------------------------------------------	
-	//For input_04_prescription_management
+	//For input_04_prescription_assignment
 	private int ea_total_rows, ea_total_columns;
 	private String[][] ea_data;
 	private List<List<String>> ea_conversion_and_rotation_for_strata;
 	private List<List<String>> ea_conversion_and_rotation_for_strata_without_sizeclass;
 
-	public void read_prescription_management(File file) {
+	public void read_prescription_assignment(File file) {
 		String delimited = "\t";		// tab delimited
 				
 		try {		

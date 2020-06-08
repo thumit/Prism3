@@ -160,7 +160,7 @@ public class Solve_Iterations {
 				File input_01_file = new File(runFolder.getAbsolutePath() + "/input_01_general_inputs.txt");
 				File input_02_file = new File(runFolder.getAbsolutePath() + "/input_02_model_strata.txt");
 				File input_03_file = new File(runFolder.getAbsolutePath() + "/input_03_prescription_category.txt");
-				File input_04_file = new File(runFolder.getAbsolutePath() + "/input_04_prescription_management.txt");
+				File input_04_file = new File(runFolder.getAbsolutePath() + "/input_04_prescription_assignment.txt");
 				File input_06_file = new File(runFolder.getAbsolutePath() + "/input_06_natural_disturbances.txt");
 				File input_07_file = new File(runFolder.getAbsolutePath() + "/input_07_management_cost.txt");
 				File input_08_file = new File(runFolder.getAbsolutePath() + "/input_08_basic_constraints.txt");
@@ -170,7 +170,7 @@ public class Solve_Iterations {
 				read.read_general_inputs(input_01_file);
 				read.read_model_strata(input_02_file);
 				read.read_prescription_category(input_03_file);
-				read.read_prescription_management(input_04_file);
+				read.read_prescription_assignment(input_04_file);
 				read.read_replacing_disturbances(input_06_file);
 				read.read_management_cost(input_07_file);
 				read.read_basic_constraints(input_08_file);
@@ -212,7 +212,7 @@ public class Solve_Iterations {
 				List<List<String>> nonea_method_choice_for_strata_without_sizeclass = read.get_nonea_method_choice_for_strata_without_sizeclass();
 				boolean is_nonea_defined_with_some_rows = (input_03_file.exists()) ? true : false;
 				
-				// Get Info: input_04_prescription_management
+				// Get Info: input_04_prescription_assignment
 				read.populate_ea_lists(model_strata, model_strata_without_sizeclass, all_layers);
 				List<List<String>> ea_conversion_and_rotation_for_strata = read.get_ea_conversion_and_rotation_for_strata();
 				List<List<String>> ea_conversion_and_rotation_for_strata_without_sizeclass = read.get_ea_conversion_and_rotation_for_strata_without_sizeclass();
