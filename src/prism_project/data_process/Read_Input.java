@@ -37,6 +37,7 @@ public class Read_Input {
 		String[] column_name = list.get(0).split(delimited);		// 1st line is column name
 		List<String> column_names_list = Arrays.asList(column_name);
 		int model_condition_col = column_names_list.indexOf("model_condition");
+		list.remove(0);		// remove the first row (column headers row)
 		List<String> remove_list = new ArrayList<String>();	// this list contains all lines which have model_condition = false
 		for (String line : list) {
 			if (line.split(delimited)[model_condition_col].equals("false")) {
@@ -44,7 +45,6 @@ public class Read_Input {
 			}
 		}
 		list.removeAll(remove_list);	// remove lines where model_condition = false from the list
-		list.remove(0);		// remove the first row (column headers row)
 		return list;
 	}
 	
@@ -52,6 +52,7 @@ public class Read_Input {
 		String[] column_name = list.get(0).split(delimited);		// 1st line is column name
 		List<String> column_names_list = Arrays.asList(column_name);
 		int model_strata_col = column_names_list.indexOf("model_strata");
+		list.remove(0);		// remove the first row (column headers row)
 		List<String> remove_list = new ArrayList<String>();	// this list contains all lines which have model_condition = false
 		for (String line : list) {
 			if (line.split(delimited)[model_strata_col].equals("false")) {
@@ -59,7 +60,6 @@ public class Read_Input {
 			}
 		}
 		list.removeAll(remove_list);	// remove lines where model_strata = false from the list
-		list.remove(0);		// remove the first row (column headers row)
 		return list;
 	}
 	

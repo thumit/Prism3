@@ -1311,6 +1311,7 @@ All changes in this block are associated with PrismAlpha3.0.03.jar, Prism-Formul
 	- Fix the loop in equation 6b. Model logic and results will not change.
 	- Rename some scrollpanes for dynamic identifiers and parameters in Panel_Edit_Details class
 	- Rename internal classes and variables in Panel_Edit_Details class
+	- Refactors in Read_Input class
 543. Unlimited management prescriptions update
 	- Build editing GUI for Prescription Category. This GUI allows users to filter and categorize prescriptions into 4 specified groups NC_E, NC_R, EA_E, EA_R
 	- 
