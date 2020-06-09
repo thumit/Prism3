@@ -176,7 +176,7 @@ public class Read_Input {
 		return modeled_strata;
 	}
 	
-	public List<String> get_model_strata_without_sizeclass() {	// Note this is replaced in Panel_Solve because we need all the s5 --> use the below: get_model_strata_without_sizeclass_and_covertype + a loop add all s5
+	public List<String> get_model_strata_without_sizeclass() {	// Note this is replaced in Solve_Iterations because we need all the s5 --> use the below: get_model_strata_without_sizeclass_and_covertype + a loop add all s5
 		List<String> model_strata_without_sizeclass = new ArrayList<String>();
 		for (int i = 0; i < ms_total_rows; i++) {	
 			String combined_name = String.join("_", ms_data[i][1], ms_data[i][2], ms_data[i][3], ms_data[i][4], ms_data[i][5]);
@@ -200,7 +200,7 @@ public class Read_Input {
 	
 	//-------------------------------------------------------------------------------------------------------------------------------------------------	
 	//For input_03_prescription_category : must be read after model_strata
-	private int nonea_total_rows, nonea_total_columns;
+	private int category_total_rows, category_total_columns;
 	private String[][] category_data;
 	private List<List<String>> nonea_method_choice_for_strata;
 	private List<List<String>> nonea_method_choice_for_strata_without_sizeclass;
@@ -215,14 +215,14 @@ public class Read_Input {
 			list = get_list_of_checked_conditions(list, delimited);
 			String[] a = list.toArray(new String[list.size()]);
 
-			nonea_total_rows = a.length;
-			nonea_total_columns = a[0].split(delimited).length;		// a[0].split(delimited) = String[] of the first row (this is the row below the column headers row which was removed already)	
-			category_data = new String[nonea_total_rows][nonea_total_columns];
+			category_total_rows = a.length;
+			category_total_columns = a[0].split(delimited).length;		// a[0].split(delimited) = String[] of the first row (this is the row below the column headers row which was removed already)	
+			category_data = new String[category_total_rows][category_total_columns];
 		
 			// read all values from all rows and columns
-			for (int i = 0; i < nonea_total_rows; i++) {		
+			for (int i = 0; i < category_total_rows; i++) {		
 				String[] rowValue = a[i].split(delimited);		
-				for (int j = 0; j < nonea_total_columns; j++) {
+				for (int j = 0; j < category_total_columns; j++) {
 					category_data[i][j] = rowValue[j];
 				}
 			}
@@ -277,9 +277,9 @@ public class Read_Input {
 			
 	public void populate_nonea_lists(List<String> model_strata, List<String> model_strata_without_sizeclass, List<List<String>> all_layers) {	
 		// Calculate this first to avoid calculating it in the below loops------------------- ------------------------------------
-		List<List<String>>[] nonea_static_identifiers = new ArrayList[nonea_total_rows]; 
-		List<List<String>>[] nonea_method_choice  = new ArrayList[nonea_total_rows];
-		for (int row = 0; row < nonea_total_rows; row++) {	// load each row
+		List<List<String>>[] nonea_static_identifiers = new ArrayList[category_total_rows]; 
+		List<List<String>>[] nonea_method_choice  = new ArrayList[category_total_rows];
+		for (int row = 0; row < category_total_rows; row++) {	// load each row
 			nonea_static_identifiers[row] = get_nonea_static_identifiers_in_row(row);			
 			nonea_method_choice[row] = get_nonea_method_choice_in_row(row);
 		}
@@ -296,7 +296,7 @@ public class Read_Input {
 			String strata = model_strata.get(strata_id);
 			String[] layer = strata.split("_");
 		
-			for (int row = 0; row < nonea_total_rows; row++) {	// load each row
+			for (int row = 0; row < category_total_rows; row++) {	// load each row
 				List<List<String>> static_identifiers = nonea_static_identifiers[row];			
 				List<List<String>> method_choice = nonea_method_choice[row];	
 				
@@ -352,7 +352,7 @@ public class Read_Input {
 			String strata_5layers = model_strata_without_sizeclass.get(strata_5layers_id);
 			String[] layer = strata_5layers.split("_");
 		
-			for (int row = 0; row < nonea_total_rows; row++) {	// load each row
+			for (int row = 0; row < category_total_rows; row++) {	// load each row
 				List<List<String>> static_identifiers = nonea_static_identifiers[row];			
 				List<List<String>> method_choice = nonea_method_choice[row];	
 				
@@ -396,7 +396,7 @@ public class Read_Input {
 	}	
 	
 	public int get_nonea_total_rows() {
-		return nonea_total_rows;
+		return category_total_rows;
 	}
 	
 	public List<List<String>> get_nonea_method_choice_for_strata() {
@@ -670,7 +670,7 @@ public class Read_Input {
 	private List<String> constraint_column_names_list;
 	private int bc_total_rows, bc_total_columns;
 	private String[][] bc_data;
-	private int constraint_id_col, constraint_description_col, constraint_type_col, constraint_multiplier_col, lowerbound_col, lowerbound_perunit_penalty_col,
+	private int bc_id_col, bc_description_col, bc_type_col, bc_multiplier_col, lowerbound_col, lowerbound_perunit_penalty_col,
 			upperbound_col, upperbound_perunit_penalty_col, parameter_index_col, static_identifiers_col, dynamic_identifiers_col;
 
 	public void read_basic_constraints(File file) {
@@ -694,10 +694,10 @@ public class Read_Input {
 			
 			//List of constraint column names
 			constraint_column_names_list = Arrays.asList(columnName);	
-			constraint_id_col = constraint_column_names_list.indexOf("bc_id");
-			constraint_description_col = constraint_column_names_list.indexOf("bc_description");
-			constraint_type_col = constraint_column_names_list.indexOf("bc_type");
-			constraint_multiplier_col = constraint_column_names_list.indexOf("bc_multiplier");
+			bc_id_col = constraint_column_names_list.indexOf("bc_id");
+			bc_description_col = constraint_column_names_list.indexOf("bc_description");
+			bc_type_col = constraint_column_names_list.indexOf("bc_type");
+			bc_multiplier_col = constraint_column_names_list.indexOf("bc_multiplier");
 			lowerbound_col = constraint_column_names_list.indexOf("lowerbound");
 			lowerbound_perunit_penalty_col = constraint_column_names_list.indexOf("lowerbound_perunit_penalty");
 			upperbound_col = constraint_column_names_list.indexOf("upperbound");
@@ -732,18 +732,18 @@ public class Read_Input {
 		return bc_data;
 	}
 
-	public int get_UC_total_rows() {
+	public int get_bc_total_rows() {
 		return bc_total_rows;
 	}
 
-	public int get_UC_total_columns() {
+	public int get_bc_total_columns() {
 		return bc_total_columns;
 	}
 		
 	public int get_total_hardConstraints() {
 		int total = 0;
 		for (int i = 1; i < bc_total_rows; i++) {		//From 2nd row			
-			if (bc_data[i][constraint_type_col].equals("HARD")) total++;
+			if (bc_data[i][bc_type_col].equals("HARD")) total++;
 		}	
 		return total;
 	}	
@@ -751,8 +751,8 @@ public class Read_Input {
 	public double[] get_hardConstraints_LB() {
 		List<Double> list = new ArrayList<Double>();
 		for (int i = 1; i < bc_total_rows; i++) {		//From 2nd row			
-			if (bc_data[i][constraint_type_col].equals("HARD") && !bc_data[i][lowerbound_col].equals("null")) list.add(Double.parseDouble(bc_data[i][lowerbound_col]));
-			if (bc_data[i][constraint_type_col].equals("HARD") && bc_data[i][lowerbound_col].equals("null")) list.add((double) 0);		//Change "null" value of LB to 0
+			if (bc_data[i][bc_type_col].equals("HARD") && !bc_data[i][lowerbound_col].equals("null")) list.add(Double.parseDouble(bc_data[i][lowerbound_col]));
+			if (bc_data[i][bc_type_col].equals("HARD") && bc_data[i][lowerbound_col].equals("null")) list.add((double) 0);		//Change "null" value of LB to 0
 		}			
 		double[] array = Stream.of(list.toArray(new Double[list.size()])).mapToDouble(Double::doubleValue).toArray();
 		return array;
@@ -761,8 +761,8 @@ public class Read_Input {
 	public double[] get_hardConstraints_UB() {
 		List<Double> list = new ArrayList<Double>();
 		for (int i = 1; i < bc_total_rows; i++) {		//From 2nd row			
-			if (bc_data[i][constraint_type_col].equals("HARD")  && !bc_data[i][upperbound_col].equals("null")) list.add(Double.parseDouble(bc_data[i][upperbound_col]));
-			if (bc_data[i][constraint_type_col].equals("HARD")  && bc_data[i][upperbound_col].equals("null")) list.add(Double.MAX_VALUE);	//Change "null" value of UB to Double.Max_Value
+			if (bc_data[i][bc_type_col].equals("HARD")  && !bc_data[i][upperbound_col].equals("null")) list.add(Double.parseDouble(bc_data[i][upperbound_col]));
+			if (bc_data[i][bc_type_col].equals("HARD")  && bc_data[i][upperbound_col].equals("null")) list.add(Double.MAX_VALUE);	//Change "null" value of UB to Double.Max_Value
 		}			
 		double[] array = Stream.of(list.toArray(new Double[list.size()])).mapToDouble(Double::doubleValue).toArray();
 		return array;
@@ -771,7 +771,7 @@ public class Read_Input {
 	public int get_total_softConstraints() {
 		int total = 0;	
 		for (int i = 1; i < bc_total_rows; i++) {		//From 2nd row			
-			if (bc_data[i][constraint_type_col].equals("SOFT")) total++;
+			if (bc_data[i][bc_type_col].equals("SOFT")) total++;
 		}	
 		return total;
 	}		
@@ -780,8 +780,8 @@ public class Read_Input {
 	public double[] get_softConstraints_LB() {
 		List<Double> list = new ArrayList<Double>();
 		for (int i = 1; i < bc_total_rows; i++) {		//From 2nd row			
-			if (bc_data[i][constraint_type_col].equals("SOFT") && !bc_data[i][lowerbound_col].equals("null")) list.add(Double.parseDouble(bc_data[i][lowerbound_col]));
-			if (bc_data[i][constraint_type_col].equals("SOFT") && bc_data[i][lowerbound_col].equals("null")) list.add((double) 0);		//Change "null" value of LB to 0
+			if (bc_data[i][bc_type_col].equals("SOFT") && !bc_data[i][lowerbound_col].equals("null")) list.add(Double.parseDouble(bc_data[i][lowerbound_col]));
+			if (bc_data[i][bc_type_col].equals("SOFT") && bc_data[i][lowerbound_col].equals("null")) list.add((double) 0);		//Change "null" value of LB to 0
 		}				
 		double[] array = Stream.of(list.toArray(new Double[list.size()])).mapToDouble(Double::doubleValue).toArray();
 		return array;
@@ -790,8 +790,8 @@ public class Read_Input {
 	public double[] get_softConstraints_UB() {	
 		List<Double> list = new ArrayList<Double>();
 		for (int i = 1; i < bc_total_rows; i++) {		//From 2nd row			
-			if (bc_data[i][constraint_type_col].equals("SOFT")  && !bc_data[i][upperbound_col].equals("null")) list.add(Double.parseDouble(bc_data[i][upperbound_col]));
-			if (bc_data[i][constraint_type_col].equals("SOFT")  && bc_data[i][upperbound_col].equals("null")) list.add(Double.MAX_VALUE);	//Change "null" value of UB to Double.Max_Value
+			if (bc_data[i][bc_type_col].equals("SOFT")  && !bc_data[i][upperbound_col].equals("null")) list.add(Double.parseDouble(bc_data[i][upperbound_col]));
+			if (bc_data[i][bc_type_col].equals("SOFT")  && bc_data[i][upperbound_col].equals("null")) list.add(Double.MAX_VALUE);	//Change "null" value of UB to Double.Max_Value
 		}			
 		double[] array = Stream.of(list.toArray(new Double[list.size()])).mapToDouble(Double::doubleValue).toArray();
 		return array;
@@ -800,8 +800,8 @@ public class Read_Input {
 	public double[] get_softConstraints_LB_Weight() {
 		List<Double> list = new ArrayList<Double>();
 		for (int i = 1; i < bc_total_rows; i++) {		//From 2nd row			
-			if (bc_data[i][constraint_type_col].equals("SOFT") && !bc_data[i][lowerbound_perunit_penalty_col].equals("null")) list.add(Double.parseDouble(bc_data[i][lowerbound_perunit_penalty_col]));
-			if (bc_data[i][constraint_type_col].equals("SOFT") && bc_data[i][lowerbound_perunit_penalty_col].equals("null")) list.add((double) 0);		//Change "null" value of LB_Weight to 0
+			if (bc_data[i][bc_type_col].equals("SOFT") && !bc_data[i][lowerbound_perunit_penalty_col].equals("null")) list.add(Double.parseDouble(bc_data[i][lowerbound_perunit_penalty_col]));
+			if (bc_data[i][bc_type_col].equals("SOFT") && bc_data[i][lowerbound_perunit_penalty_col].equals("null")) list.add((double) 0);		//Change "null" value of LB_Weight to 0
 		}			
 		double[] array = Stream.of(list.toArray(new Double[list.size()])).mapToDouble(Double::doubleValue).toArray();
 		return array;
@@ -810,8 +810,8 @@ public class Read_Input {
 	public double[] get_softConstraints_UB_Weight() {	
 		List<Double> list = new ArrayList<Double>();
 		for (int i = 1; i < bc_total_rows; i++) {		//From 2nd row			
-			if (bc_data[i][constraint_type_col].equals("SOFT") && !bc_data[i][upperbound_perunit_penalty_col].equals("null")) list.add(Double.parseDouble(bc_data[i][upperbound_perunit_penalty_col]));
-			if (bc_data[i][constraint_type_col].equals("SOFT") && bc_data[i][upperbound_perunit_penalty_col].equals("null")) list.add((double) 0);		//Change "null" value of UB_Weight to 0
+			if (bc_data[i][bc_type_col].equals("SOFT") && !bc_data[i][upperbound_perunit_penalty_col].equals("null")) list.add(Double.parseDouble(bc_data[i][upperbound_perunit_penalty_col]));
+			if (bc_data[i][bc_type_col].equals("SOFT") && bc_data[i][upperbound_perunit_penalty_col].equals("null")) list.add((double) 0);		//Change "null" value of UB_Weight to 0
 		}			
 		double[] array = Stream.of(list.toArray(new Double[list.size()])).mapToDouble(Double::doubleValue).toArray();
 		return array;
@@ -821,7 +821,7 @@ public class Read_Input {
 	public int get_total_freeConstraints() {
 		int total = 0;
 		for (int i = 1; i < bc_total_rows; i++) {		//From 2nd row		
-			if (bc_data[i][constraint_type_col].equals("FREE")) total++;
+			if (bc_data[i][bc_type_col].equals("FREE")) total++;
 		}	
 		return total;
 	}	
