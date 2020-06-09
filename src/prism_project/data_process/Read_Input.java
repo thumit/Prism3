@@ -37,20 +37,21 @@ public class Read_Input {
 		String[] column_name = list.get(0).split(delimited);		// 1st line is column name
 		List<String> column_names_list = Arrays.asList(column_name);
 		int model_condition_col = column_names_list.indexOf("model_condition");
-		if (model_condition_col != -1) {	// check if the column "model_condition" exists. This is indicator of the new input file format --> we do backward compatibility
-			List<String> remove_list = new ArrayList<String>();	// this list contains all lines which have model_condition = false
-			for (String line : list) {
-				if (line.split(delimited)[model_condition_col].equals("false")) {
-					remove_list.add(line);
-				}
+		List<String> remove_list = new ArrayList<String>();	// this list contains all lines which have model_condition = false
+		for (String line : list) {
+			if (line.split(delimited)[model_condition_col].equals("false")) {
+				remove_list.add(line);
 			}
-			list.removeAll(remove_list);	// remove lines where model_condition = false from the list
 		}
+		list.removeAll(remove_list);	// remove lines where model_condition = false from the list
 		list.remove(0);		// remove the first row (column headers row)
 		return list;
 	}
 	
-	private List<String> get_list_of_checked_strata(List<String> list, String delimited, int model_strata_col) {
+	private List<String> get_list_of_checked_strata(List<String> list, String delimited) {
+		String[] column_name = list.get(0).split(delimited);		// 1st line is column name
+		List<String> column_names_list = Arrays.asList(column_name);
+		int model_strata_col = column_names_list.indexOf("model_strata");
 		List<String> remove_list = new ArrayList<String>();	// this list contains all lines which have model_condition = false
 		for (String line : list) {
 			if (line.split(delimited)[model_strata_col].equals("false")) {
@@ -73,8 +74,7 @@ public class Read_Input {
 				
 		try {		
 			// All lines to be in array
-			List<String> list;
-			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
+			List<String> list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
 			list.remove(0);	// Remove the first row (Column names)
 			String[] a = list.toArray(new String[list.size()]);
 								
@@ -133,9 +133,8 @@ public class Read_Input {
 				
 		try {		
 			// All lines to be in array
-			List<String> list;
-			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
-			list = get_list_of_checked_strata(list, delimited, 9);
+			List<String> list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
+			list = get_list_of_checked_strata(list, delimited);
 			String[] a = list.toArray(new String[list.size()]);
 						
 			ms_total_rows = a.length;
@@ -210,8 +209,7 @@ public class Read_Input {
 				
 		try {		
 			// all lines to be in array
-			List<String> list;
-			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
+			List<String> list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
 			list = get_list_of_checked_conditions(list, delimited);
 			String[] a = list.toArray(new String[list.size()]);
 
@@ -419,8 +417,7 @@ public class Read_Input {
 				
 		try {		
 			// All lines to be in array
-			List<String> list;
-			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
+			List<String> list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
 			list = get_list_of_checked_conditions(list, delimited);
 			String[] a = list.toArray(new String[list.size()]);
 								
@@ -678,8 +675,7 @@ public class Read_Input {
 				
 		try {		
 			// All lines to be in array
-			List<String> list;
-			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
+			List<String> list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
 			List<String> remove_list = new ArrayList<String>();	// this list contains all lines which have bc_type = IDLE
 			for (String i : list) {
 				if (i.split(delimited)[2].equals("IDLE")) {
@@ -740,7 +736,7 @@ public class Read_Input {
 		return bc_total_columns;
 	}
 		
-	public int get_total_hardConstraints() {
+	public int get_total_hard_constraints() {
 		int total = 0;
 		for (int i = 1; i < bc_total_rows; i++) {		//From 2nd row			
 			if (bc_data[i][bc_type_col].equals("HARD")) total++;
@@ -748,7 +744,7 @@ public class Read_Input {
 		return total;
 	}	
 
-	public double[] get_hardConstraints_LB() {
+	public double[] get_hard_constraints_LB() {
 		List<Double> list = new ArrayList<Double>();
 		for (int i = 1; i < bc_total_rows; i++) {		//From 2nd row			
 			if (bc_data[i][bc_type_col].equals("HARD") && !bc_data[i][lowerbound_col].equals("null")) list.add(Double.parseDouble(bc_data[i][lowerbound_col]));
@@ -758,7 +754,7 @@ public class Read_Input {
 		return array;
 	}
 
-	public double[] get_hardConstraints_UB() {
+	public double[] get_hard_constraints_UB() {
 		List<Double> list = new ArrayList<Double>();
 		for (int i = 1; i < bc_total_rows; i++) {		//From 2nd row			
 			if (bc_data[i][bc_type_col].equals("HARD")  && !bc_data[i][upperbound_col].equals("null")) list.add(Double.parseDouble(bc_data[i][upperbound_col]));
@@ -768,7 +764,7 @@ public class Read_Input {
 		return array;
 	}
 	
-	public int get_total_softConstraints() {
+	public int get_total_soft_constraints() {
 		int total = 0;	
 		for (int i = 1; i < bc_total_rows; i++) {		//From 2nd row			
 			if (bc_data[i][bc_type_col].equals("SOFT")) total++;
@@ -777,7 +773,7 @@ public class Read_Input {
 	}		
 				
 	
-	public double[] get_softConstraints_LB() {
+	public double[] get_soft_constraints_LB() {
 		List<Double> list = new ArrayList<Double>();
 		for (int i = 1; i < bc_total_rows; i++) {		//From 2nd row			
 			if (bc_data[i][bc_type_col].equals("SOFT") && !bc_data[i][lowerbound_col].equals("null")) list.add(Double.parseDouble(bc_data[i][lowerbound_col]));
@@ -787,7 +783,7 @@ public class Read_Input {
 		return array;
 	}
 
-	public double[] get_softConstraints_UB() {	
+	public double[] get_soft_constraints_UB() {	
 		List<Double> list = new ArrayList<Double>();
 		for (int i = 1; i < bc_total_rows; i++) {		//From 2nd row			
 			if (bc_data[i][bc_type_col].equals("SOFT")  && !bc_data[i][upperbound_col].equals("null")) list.add(Double.parseDouble(bc_data[i][upperbound_col]));
@@ -797,7 +793,7 @@ public class Read_Input {
 		return array;
 	}	
 	
-	public double[] get_softConstraints_LB_Weight() {
+	public double[] get_soft_constraints_LB_Weight() {
 		List<Double> list = new ArrayList<Double>();
 		for (int i = 1; i < bc_total_rows; i++) {		//From 2nd row			
 			if (bc_data[i][bc_type_col].equals("SOFT") && !bc_data[i][lowerbound_perunit_penalty_col].equals("null")) list.add(Double.parseDouble(bc_data[i][lowerbound_perunit_penalty_col]));
@@ -807,7 +803,7 @@ public class Read_Input {
 		return array;
 	}
 
-	public double[] get_softConstraints_UB_Weight() {	
+	public double[] get_sof_constraints_UB_Weight() {	
 		List<Double> list = new ArrayList<Double>();
 		for (int i = 1; i < bc_total_rows; i++) {		//From 2nd row			
 			if (bc_data[i][bc_type_col].equals("SOFT") && !bc_data[i][upperbound_perunit_penalty_col].equals("null")) list.add(Double.parseDouble(bc_data[i][upperbound_perunit_penalty_col]));
@@ -818,7 +814,7 @@ public class Read_Input {
 	}		
 
 	
-	public int get_total_freeConstraints() {
+	public int get_total_free_constraints() {
 		int total = 0;
 		for (int i = 1; i < bc_total_rows; i++) {		//From 2nd row		
 			if (bc_data[i][bc_type_col].equals("FREE")) total++;
@@ -831,14 +827,14 @@ public class Read_Input {
 		List<List<String>> static_identifiers = new ArrayList<List<String>>();
 		
 		//Read the whole cell into array
-		String[] staticLayer_Info = bc_data[row][static_identifiers_col].split(";");		//Note: row 0 is the title only, row 1 is constraint 1,.....
-		int total_staticIdentifiers = staticLayer_Info.length;
+		String[] static_identifiers_info = bc_data[row][static_identifiers_col].split(";");		//Note: row 0 is the title only, row 1 is constraint 1,.....
+		int total_static_identifiers = static_identifiers_info.length;
 		
 		//Get all static Identifiers to be in the list
-		for (int i = 0; i < total_staticIdentifiers; i++) {		//6 first identifiers is strata 6 layers (layer 0 to 5)		
+		for (int i = 0; i < total_static_identifiers; i++) {		//6 first identifiers is strata 6 layers (layer 0 to 5)		
 			List<String> thisIdentifier = new ArrayList<String>();
 			
-			String[] identifierElements = staticLayer_Info[i].split("\\s+");				//space delimited
+			String[] identifierElements = static_identifiers_info[i].split("\\s+");				//space delimited
 			for (int j = 1; j < identifierElements.length; j++) {		//Ignore the first element which is the identifier index, so we loop from 1 not 0
 				thisIdentifier.add(identifierElements[j].replaceAll("\\s+",""));		//Add element name, if name has spaces then remove all the spaces
 			}
@@ -922,15 +918,15 @@ public class Read_Input {
 		List<List<String>> dynamic_identifiers = new ArrayList<List<String>>();
 		
 		//Read the whole cell into array
-		String[] dynamicLayer_Info = bc_data[row][dynamic_identifiers_col].split(";");		//Note: row 0 is the title only, row 1 is constraint 1,.....
-		int total_dynamicIdentifiers = dynamicLayer_Info.length;
+		String[] dynamic_identifiers_info = bc_data[row][dynamic_identifiers_col].split(";");		//Note: row 0 is the title only, row 1 is constraint 1,.....
+		int total_dynamic_identifiers = dynamic_identifiers_info.length;
 	
 		
 		//Get all dynamic Identifiers to be in the list
-		for (int i = 0; i < total_dynamicIdentifiers; i++) {	
+		for (int i = 0; i < total_dynamic_identifiers; i++) {	
 			List<String> thisIdentifier = new ArrayList<String>();
 			
-			String[] identifierElements = dynamicLayer_Info[i].split("\\s+");				//space delimited
+			String[] identifierElements = dynamic_identifiers_info[i].split("\\s+");				//space delimited
 			for (int j = 1; j < identifierElements.length; j++) {		//Ignore the first element which is the identifier column index, so we loop from 1 not 0
 				thisIdentifier.add(identifierElements[j].replaceAll("\\s+",""));		//Add element name, if name has spaces then remove all the spaces
 			}
@@ -946,12 +942,12 @@ public class Read_Input {
 		List<String> dynamic_identifiers_column_indexes = new ArrayList<String>();
 			
 		//Read the whole cell into array
-		String[] dynamicLayer_Info = bc_data[row][dynamic_identifiers_col].split(";");		//Note: row 0 is the title only, row 1 is constraint 1,.....
-		int total_dynamicIdentifiers = dynamicLayer_Info.length;
+		String[] dynamic_identifiers_info = bc_data[row][dynamic_identifiers_col].split(";");		//Note: row 0 is the title only, row 1 is constraint 1,.....
+		int total_dynamic_identifiers = dynamic_identifiers_info.length;
 
 		//Get all dynamic Identifiers to be in the list
-		for (int i = 0; i < total_dynamicIdentifiers; i++) {	
-			String[] identifierElements = dynamicLayer_Info[i].split("\\s+");				//space delimited
+		for (int i = 0; i < total_dynamic_identifiers; i++) {	
+			String[] identifierElements = dynamic_identifiers_info[i].split("\\s+");				//space delimited
 			//add the first element which is the identifier column index
 			dynamic_identifiers_column_indexes.add(identifierElements[0].replaceAll("\\s+",""));
 		}
@@ -964,9 +960,9 @@ public class Read_Input {
 		List<String> parameters_indexes_list = new ArrayList<String>();
 		
 		//Read the whole cell into array
-		String[] parameter_Info = bc_data[row][parameter_index_col].split("\\s+");			
-		for (int i = 0; i < parameter_Info.length; i++) {	
-			parameters_indexes_list.add(parameter_Info[i].replaceAll("\\s+",""));
+		String[] parameter_info = bc_data[row][parameter_index_col].split("\\s+");			
+		for (int i = 0; i < parameter_info.length; i++) {	
+			parameters_indexes_list.add(parameter_info[i].replaceAll("\\s+",""));
 		}				
 		return parameters_indexes_list;
 	}	
@@ -983,8 +979,7 @@ public class Read_Input {
 				
 		try {		
 			// all lines to be in array
-			List<String> list;
-			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
+			List<String> list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
 			String[] a = list.toArray(new String[list.size()]);
 						
 			// read the first row into array. This will be column names
@@ -1120,8 +1115,7 @@ public class Read_Input {
 				
 		try {		
 			// All lines to be in array
-			List<String> list;
-			list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
+			List<String> list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
 			list.remove(0);	// Remove the first row (Column names)
 			String[] a = list.toArray(new String[list.size()]);
 								

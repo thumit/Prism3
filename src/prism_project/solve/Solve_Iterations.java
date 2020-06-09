@@ -227,15 +227,15 @@ public class Solve_Iterations {
 				// Get info: input_08_basic_constraints
 				List<String> constraint_column_names_list = read.get_constraint_column_names_list();
 				String[][] bc_values = read.get_bc_data();		
-				int total_softConstraints = read.get_total_softConstraints();
-				double[] softConstraints_LB = read.get_softConstraints_LB();
-				double[] softConstraints_UB = read.get_softConstraints_UB();
-				double[] softConstraints_LB_Weight = read.get_softConstraints_LB_Weight();
-				double[] softConstraints_UB_Weight = read.get_softConstraints_UB_Weight();		
-				int total_hardConstraints = read.get_total_hardConstraints();
-				double[] hardConstraints_LB = read.get_hardConstraints_LB();
-				double[] hardConstraints_UB = read.get_hardConstraints_UB();	
-				int total_freeConstraints = read.get_total_freeConstraints();
+				int total_softConstraints = read.get_total_soft_constraints();
+				double[] softConstraints_LB = read.get_soft_constraints_LB();
+				double[] softConstraints_UB = read.get_soft_constraints_UB();
+				double[] softConstraints_LB_Weight = read.get_soft_constraints_LB_Weight();
+				double[] softConstraints_UB_Weight = read.get_sof_constraints_UB_Weight();		
+				int total_hardConstraints = read.get_total_hard_constraints();
+				double[] hardConstraints_LB = read.get_hard_constraints_LB();
+				double[] hardConstraints_UB = read.get_hard_constraints_UB();	
+				int total_freeConstraints = read.get_total_free_constraints();
 				
 				// Get info: input_09_flow_constraints	
 				List<List<List<Integer>>> flow_set_list = read.get_flow_set_list();
