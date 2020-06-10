@@ -2135,17 +2135,12 @@ public class Solve_Iterations {
 					for (int id = 1; id < total_freeConstraints + total_softConstraints + total_hardConstraints + 1; id++) {	//Loop from 1 because the first row of the userConstraint file is just title
 						long bc_time_start = System.currentTimeMillis();		// measure time before adding each basic constraint
 						
-						// Get the parameter indexes list
-						List<String> parameters_indexes = read.get_parameters_indexes_in_row(id);
-						// Get the dynamic identifiers indexes list
-						List<String> dynamic_dentifiers_column_indexes = read.get_dynamic_identifiers_column_indexes_in_row(id);
-						List<List<String>> dynamic_identifiers = read.get_dynamic_identifiers_in_row(id);
-						// Sort String so binary search could be used in "Information_Parameter - are_all_dynamic_identifiers_matched"
-						for (List<String> this_dynamic_identifier: dynamic_identifiers) {
-							Collections.sort(this_dynamic_identifier);
-						}
 						
-								
+						List<String> parameters_indexes = read.get_parameters_indexes_in_row(id);			// Get the parameter indexes list
+						List<List<String>> dynamic_identifiers = read.get_dynamic_identifiers_in_row(id);	// Get the dynamic identifiers indexes list
+						List<String> dynamic_dentifiers_column_indexes = read.get_dynamic_identifiers_column_indexes_in_row(id);
+
+						
 						// Add constraint
 						c15_indexlist.add(new ArrayList<Integer>());
 						c15_valuelist.add(new ArrayList<Double>());

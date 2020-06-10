@@ -1573,7 +1573,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 								List<List<String>> static_identifiers = new ArrayList<>(identifiers_processing.get_static_identifiers(current_static_identifiers));
 								List<List<String>> dynamic_identifiers = new ArrayList<>(identifiers_processing.get_dynamic_identifiers(current_dynamic_identifiers));
 								List<String> dynamic_dentifiers_column_indexes = new ArrayList<>(identifiers_processing.get_dynamic_dentifiers_column_indexes(current_dynamic_identifiers));
-								List<String> parameters_indexes = new ArrayList<String>(get_parameters_indexes(current_parameter_index));
+								List<String> parameters_indexes = new ArrayList<String>(identifiers_processing.get_parameters_indexes(current_parameter_index));
 														
 								// Process all the variables in output05 and use static_identifiers to trim to get the var_name_list & var_value_list
 								List<Information_Variable> var_info = new ArrayList<Information_Variable>();
@@ -1838,21 +1838,6 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			}			
 		}
 	}
-	
-	
-	// Get the following from each row-------------------------------------------------------------------------------------
-	private List<String> get_parameters_indexes(String current_parameter_index) {
-		List<String> parameters_indexes_list = new ArrayList<String>();
-		
-		//Read the whole cell into array
-		String[] parameter_Info = current_parameter_index.split("\\s+");			
-		for (int i = 0; i < parameter_Info.length; i++) {	
-			parameters_indexes_list.add(parameter_Info[i].replaceAll("\\s+",""));
-		}				
-		return parameters_indexes_list;
-	}
-	// End of Get the following from each row-------------------------------------------------------------------------------------
-	
 	
 	
 	

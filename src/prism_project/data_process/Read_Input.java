@@ -917,13 +917,8 @@ public class Read_Input {
 	
 	
 	public List<String> get_parameters_indexes_in_row(int row) {	
-		List<String> parameters_indexes_list = new ArrayList<String>();
-		
-		//Read the whole cell into array
-		String[] parameter_info = bc_data[row][parameter_index_col].split("\\s+");			
-		for (int i = 0; i < parameter_info.length; i++) {	
-			parameters_indexes_list.add(parameter_info[i].replaceAll("\\s+",""));
-		}				
+		String parameters_info = bc_data[row][parameter_index_col];			
+		List<String> parameters_indexes_list = identifiers_processing.get_parameters_indexes(parameters_info);
 		return parameters_indexes_list;
 	}	
 	

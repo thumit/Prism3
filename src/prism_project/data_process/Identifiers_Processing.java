@@ -28,7 +28,7 @@ public class Identifiers_Processing {
 	private Read_Database read_database;
 	
 	public Identifiers_Processing(Read_Database read_database) {
-		this.read_database =  read_database;	
+		this.read_database = read_database;	
 	}
 		
 	
@@ -172,4 +172,14 @@ public class Identifiers_Processing {
 		return dynamic_dentifiers_column_indexes;
 	}
 	
+	
+	public List<String> get_parameters_indexes(String parameters_info) {
+		List<String> parameters_indexes_list = new ArrayList<String>();
+		//Read the whole cell into array
+		String[] parameter_indexes_array = parameters_info.split("\\s+");			
+		for (int i = 0; i < parameter_indexes_array.length; i++) {	
+			parameters_indexes_list.add(parameter_indexes_array[i].replaceAll("\\s+",""));
+		}				
+		return parameters_indexes_list;
+	}
 }
