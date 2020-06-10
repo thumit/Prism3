@@ -1312,7 +1312,7 @@ All changes in this block are associated with PrismAlpha3.0.03.jar, Prism-Formul
 	- Rename some scrollpanes for dynamic identifiers and parameters in Panel_Edit_Details class
 	- Rename internal classes and variables in Panel_Edit_Details class
 	- Refactors in Read_Input class including reanmes and modify reading method to prevent future incorrect list reading.
-	- Simplify methods for Information_Cost, Information_Disturbance, Information_Parameter, Read_Input by adding Identifiers_Processing class
+	- Simplify methods for Information_Cost, Information_Disturbance, Information_Parameter, Read_Input by adding Identifiers_Processing class, Output_Panel_Management_Details_NOSQL
 	- Identifiers_Processing: add Collections.sort for get_static_identifiers and get_dynamic_identifiers so we can remove the Sorts in all other places
 543. Unlimited management prescriptions update
 	- Build editing GUI for Prescription Category. This GUI allows users to filter and categorize prescriptions into 4 specified groups NC_E, NC_R, EA_E, EA_R

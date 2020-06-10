@@ -25,11 +25,10 @@ import java.util.StringTokenizer;
 
 //This class is created only when there is at least 1 condition --> no need to check null condition
 public class Identifiers_Processing {
-	private List<List<String>> all_layers;
-	
+	private Read_Database read_database;
 	
 	public Identifiers_Processing(Read_Database read_database) {
-		all_layers =  read_database.get_all_layers();	
+		this.read_database =  read_database;	
 	}
 		
 	
@@ -46,6 +45,7 @@ public class Identifiers_Processing {
 		
 		
 		// The below check also implements Speed Boost RRB9. Same as above but it is the faster this way 
+		List<List<String>> all_layers = read_database.get_all_layers();
 		if (
 		(static_identifiers.get(0).size() < all_layers.get(0).size() && Collections.binarySearch(static_identifiers.get(0), var_info.get_layer1()) < 0) ||
 		(static_identifiers.get(1).size() < all_layers.get(1).size() && Collections.binarySearch(static_identifiers.get(1), var_info.get_layer2()) < 0) ||
