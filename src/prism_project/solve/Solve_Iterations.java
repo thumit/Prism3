@@ -2136,7 +2136,7 @@ public class Solve_Iterations {
 						long bc_time_start = System.currentTimeMillis();		// measure time before adding each basic constraint
 						
 						// Get the parameter indexes list
-						List<String> parameters_indexes = read.get_parameters_indexes(id);
+						List<String> parameters_indexes = read.get_parameters_indexes_in_row(id);
 						// Get the dynamic identifiers indexes list
 						List<String> dynamic_dentifiers_column_indexes = read.get_dynamic_identifiers_column_indexes_in_row(id);
 						List<List<String>> dynamic_identifiers = read.get_dynamic_identifiers_in_row(id);
@@ -2172,9 +2172,9 @@ public class Solve_Iterations {
 											
 						
 						// Add user_defined_variables and parameters------------------------------------
-						List<Integer> static_periods = read.get_static_periods(id).stream().map(Integer::parseInt).collect(Collectors.toList());	// convert List<String> --> List<Integer>
-						Set<String> static_strata = read.get_static_strata(id);
-						Set<String> static_strata_without_sizeclass = read.get_static_strata_without_sizeclass(id);
+						List<Integer> static_periods = read.get_static_periods_in_row(id).stream().map(Integer::parseInt).collect(Collectors.toList());	// convert List<String> --> List<Integer>
+						Set<String> static_strata = read.get_static_strata_in_row(id);
+						Set<String> static_strata_without_sizeclass = read.get_static_strata_without_sizeclass_in_row(id);
 						int multiplier_col = constraint_column_names_list.indexOf("bc_multiplier");
 						double multiplier = (!bc_values[id][multiplier_col].equals("null")) ?  Double.parseDouble(bc_values[id][multiplier_col]) : 0;	// if multiplier = null --> 0
 									

@@ -86,6 +86,7 @@ import prism_convenience.MixedRangeCombinationIterable;
 import prism_convenience.PrismTableModel;
 import prism_convenience.TableColumnsHandle;
 import prism_convenience.ToolBarWithBgImage;
+import prism_project.data_process.Identifiers_Processing;
 import prism_project.data_process.Information_Parameter;
 import prism_project.data_process.Information_Variable;
 import prism_project.data_process.LinkedList_Databases_Item;
@@ -112,6 +113,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 	private PrismTableModel input_model9;
 	private Object[][] input_data9;
 	
+	private Identifiers_Processing identifiers_processing;
 	private Read_Input read;
 	private int total_Periods;
 	private int total_iteration;
@@ -144,7 +146,8 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			}
 		}
 		
-		read = new Read_Input(null);
+		identifiers_processing = new Identifiers_Processing(read_database);
+		read = new Read_Input(read_database);
 		read.read_general_inputs(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_01_general_inputs.txt"));
 		total_Periods = read.get_total_periods();	
 		
@@ -1469,11 +1472,8 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 				String[] yield_tables_names = read_database.get_yield_tables_names();			
 				List<String> yield_tables_names_list = Arrays.asList(yield_tables_names); 		// Convert array to list
 							
-				// Read input files to retrieve values later
-				Read_Input read = new Read_Input(read_database);
-				read.read_model_strata(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_02_model_strata.txt"));
-
 				// Get info: input_02_modeled_strata
+				read.read_model_strata(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_02_model_strata.txt"));
 				List<String> model_strata = read.get_model_strata();
 							
 				// Get the 2 parameter V(s1,s2,s3,s4,s5,s6) and A(s1,s2,s3,s4,s5,s6)
@@ -1570,9 +1570,9 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 								String current_static_identifiers = (String) data9[i][9];
 								String current_dynamic_identifiers = (String) data9[i][10];
 														
-								List<List<String>> static_identifiers = new ArrayList<>(get_static_identifiers_in_row(current_static_identifiers));
-								List<List<String>> dynamic_identifiers = new ArrayList<>(get_dynamic_identifiers_in_row(current_dynamic_identifiers));
-								List<String> dynamic_dentifiers_column_indexes = new ArrayList<>(get_dynamic_dentifiers_column_indexes_in_row(current_dynamic_identifiers));
+								List<List<String>> static_identifiers = new ArrayList<>(identifiers_processing.get_static_identifiers(current_static_identifiers));
+								List<List<String>> dynamic_identifiers = new ArrayList<>(identifiers_processing.get_dynamic_identifiers(current_dynamic_identifiers));
+								List<String> dynamic_dentifiers_column_indexes = new ArrayList<>(identifiers_processing.get_dynamic_dentifiers_column_indexes(current_dynamic_identifiers));
 								List<String> parameters_indexes = new ArrayList<String>(get_parameters_indexes(current_parameter_index));
 														
 								// Process all the variables in output05 and use static_identifiers to trim to get the var_name_list & var_value_list
@@ -1582,7 +1582,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 								List<Double> var_cost = new ArrayList<Double>();
 								
 								for (int row = 0; row < var_info_list.size(); row++) {	// row = var_index (each row is a variable)
-									if (are_all_static_identifiers_matched(var_info_list.get(row), static_identifiers)) {
+									if (identifiers_processing.are_all_static_identifiers_matched(var_info_list.get(row), static_identifiers)) {
 										var_iter.add(var_iter_list.get(row));
 										var_value.add(var_value_list.get(row));
 										var_cost.add(var_cost_list.get(row));
@@ -1840,99 +1840,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 	}
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	// Get the following from each row-------------------------------------------------------------------------------------
-	private Boolean are_all_static_identifiers_matched(Information_Variable var_info, List<List<String>> static_identifiers) {	
-		if (
-		Collections.binarySearch(static_identifiers.get(0), var_info.get_layer1()) < 0 ||
-		Collections.binarySearch(static_identifiers.get(1), var_info.get_layer2()) < 0 ||
-		Collections.binarySearch(static_identifiers.get(2), var_info.get_layer3()) < 0 ||
-		Collections.binarySearch(static_identifiers.get(3), var_info.get_layer4()) < 0 ||
-		Collections.binarySearch(static_identifiers.get(4), var_info.get_layer5()) < 0 ||
-		(var_info.get_forest_status().equals("E") && Collections.binarySearch(static_identifiers.get(5), var_info.get_layer6()) < 0) ||
-		Collections.binarySearch(static_identifiers.get(6), String.valueOf(var_info.get_period())) < 0) 
-		{
-			return false;
-		}
-		return true;		
-	}
-	
-	
-	private List<List<String>> get_static_identifiers_in_row(String current_static_identifiers) {
-		List<List<String>> static_identifiers = new ArrayList<List<String>>();
-		
-		//Read the whole cell into array
-		String[] staticLayer_Info = current_static_identifiers.split(";");		//Note: row 0 is the title only, row 1 is constraint 1,.....
-		int total_staticIdentifiers = staticLayer_Info.length;
-		
-		//Get all static Identifiers to be in the list
-		for (int i = 0; i < total_staticIdentifiers; i++) {		//6 first identifiers is strata 6 layers (layer 0 to 5)		
-			List<String> thisIdentifier = new ArrayList<String>();
-			
-			String[] identifierElements = staticLayer_Info[i].split("\\s+");				//space delimited
-			for (int j = 1; j < identifierElements.length; j++) {		//Ignore the first element which is the identifier index, so we loop from 1 not 0
-				thisIdentifier.add(identifierElements[j].replaceAll("\\s+",""));		//Add element name, if name has spaces then remove all the spaces
-			}
-			
-			// sort for Binary search used in:     are_all_static_identifiers_matched()
-			Collections.sort(thisIdentifier);
-			static_identifiers.add(thisIdentifier);
-		}
-			
-		return static_identifiers;
-	}
-	
-	
-	private List<List<String>> get_dynamic_identifiers_in_row(String current_dynamic_identifiers) {
-		List<List<String>> dynamic_identifiers = new ArrayList<List<String>>();
-		
-		//Read the whole cell into array
-		String[] dynamicLayer_Info = current_dynamic_identifiers.split(";");
-		int total_dynamicIdentifiers = dynamicLayer_Info.length;
-	
-		
-		//Get all dynamic Identifiers to be in the list
-		for (int i = 0; i < total_dynamicIdentifiers; i++) {	
-			List<String> thisIdentifier = new ArrayList<String>();
-			
-			String[] identifierElements = dynamicLayer_Info[i].split("\\s+");				//space delimited
-			for (int j = 1; j < identifierElements.length; j++) {		//Ignore the first element which is the identifier column index, so we loop from 1 not 0
-				thisIdentifier.add(identifierElements[j].replaceAll("\\s+",""));		//Add element name, if name has spaces then remove all the spaces
-			}
-			
-			dynamic_identifiers.add(thisIdentifier);
-		}
-			
-		return dynamic_identifiers;
-	}	
-	
-	
-	private List<String> get_dynamic_dentifiers_column_indexes_in_row(String current_dynamic_identifiers) {
-		List<String> dynamic_dentifiers_column_indexes = new ArrayList<String>();
-			
-		//Read the whole cell into array
-		String[] dynamicLayer_Info = current_dynamic_identifiers.split(";");		//Note: row 0 is the title only, row 1 is constraint 1,.....
-		int total_dynamicIdentifiers = dynamicLayer_Info.length;
-
-		//Get all dynamic Identifiers to be in the list
-		for (int i = 0; i < total_dynamicIdentifiers; i++) {	
-			String[] identifierElements = dynamicLayer_Info[i].split("\\s+");				//space delimited
-			//add the first element which is the identifier column index
-			dynamic_dentifiers_column_indexes.add(identifierElements[0].replaceAll("\\s+",""));
-		}
-			
-		return dynamic_dentifiers_column_indexes;
-	}	
-	
-	
 	private List<String> get_parameters_indexes(String current_parameter_index) {
 		List<String> parameters_indexes_list = new ArrayList<String>();
 		
@@ -1949,9 +1857,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 	
 	
 	
-	
 	private class Querry_Optimal_Solution {
-
 		public Querry_Optimal_Solution() {
 		}
 

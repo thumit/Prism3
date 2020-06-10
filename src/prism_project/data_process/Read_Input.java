@@ -834,7 +834,7 @@ public class Read_Input {
 	}	
 	
 	
-	public Set<String> get_static_strata(int row) {
+	public Set<String> get_static_strata_in_row(int row) {
 		Set<String> static_strata = new HashSet<String>();
 		List<List<String>> static_identifiers = get_static_identifiers_in_row(row);
 		// first 6 layers
@@ -856,7 +856,7 @@ public class Read_Input {
 	}	
 
 	
-	public Set<String> get_static_strata_without_sizeclass(int row) {	
+	public Set<String> get_static_strata_without_sizeclass_in_row(int row) {	
 		Set<String> static_strata_without_sizeclass = new HashSet<String>();
 		List<List<String>> static_identifiers = get_static_identifiers_in_row(row);
 		// first 5 layers
@@ -876,7 +876,7 @@ public class Read_Input {
 	}
 	
 	
-	public Set<String> get_static_strata_without_sizeclass_and_covertype(int row) {	
+	public Set<String> get_static_strata_without_sizeclass_and_covertype_in_row(int row) {	
 		Set<String> static_strata_without_sizeclass_and_covertype = new HashSet<String>();
 		List<List<String>> static_identifiers = get_static_identifiers_in_row(row);
 		// first 4 layers
@@ -895,7 +895,7 @@ public class Read_Input {
 	
 	
 	
-	public List<String> get_static_periods(int row) {
+	public List<String> get_static_periods_in_row(int row) {
 		List<List<String>> static_identifiers = get_static_identifiers_in_row(row);	
 		return static_identifiers.get(6);
 	}	
@@ -916,7 +916,7 @@ public class Read_Input {
 	}	
 	
 	
-	public List<String> get_parameters_indexes(int row) {	
+	public List<String> get_parameters_indexes_in_row(int row) {	
 		List<String> parameters_indexes_list = new ArrayList<String>();
 		
 		//Read the whole cell into array
