@@ -249,16 +249,14 @@ public class Read_Input {
 			int total_prescriptions = yield_tables_values.length;
 			prescription_group = new String[total_prescriptions];
 			for (int prescription_id = 0; prescription_id < total_prescriptions; prescription_id++) {
-				if (prescription_group[prescription_id] == null) {	// If this prescription is not categorized yet then loop all priority conditions to find the matching condition
-					for (int priority = 0; priority < category_total_rows; priority++) {	// Loop from the highest priority condition to the lowest
-						// If the first row of this prescription meets this priority condition dynamic identifiers then assign the group categorization to this prescription
-						int row_id = 0;
-						if (identifiers_processing.are_all_dynamic_identifiers_matched(
-								yield_tables_values, prescription_id, row_id,
-								all_priority_condition_dynamic_dentifiers_column_indexes[priority],
-								all_priority_condition_dynamic_identifiers[priority])) {
-							prescription_group[prescription_id] = category_data[priority][category_prescription_group_col];
-						}
+				for (int priority = 0; priority < category_total_rows; priority++) {	// Loop from the highest priority condition to the lowest
+					// If this prescription is not categorized yet, and the first row of this prescription meets this priority condition dynamic identifiers then assign the group categorization to this prescription
+					int row_id = 0;
+					if (prescription_group[prescription_id] == null && identifiers_processing.are_all_dynamic_identifiers_matched(
+							yield_tables_values, prescription_id, row_id,
+							all_priority_condition_dynamic_dentifiers_column_indexes[priority],
+							all_priority_condition_dynamic_identifiers[priority])) {
+						prescription_group[prescription_id] = category_data[priority][category_prescription_group_col];
 					}
 				}
 			}
