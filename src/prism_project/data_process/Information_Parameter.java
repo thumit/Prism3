@@ -30,7 +30,6 @@ public class Information_Parameter {
 	
 	public double get_total_value(int table_id_to_find, int row_id_to_find,
 			List<String> parameters_indexes, List<String> dynamic_dentifiers_column_indexes, List<List<String>> dynamic_identifiers, double cost_value) {		// Note: already sort each of the dynamic_identifiers in Panel_Solve
-		
 		String first_dynamic_identifier_index = dynamic_dentifiers_column_indexes.get(0);
 		String first_parameter_index = parameters_indexes.get(0);
 		double value_to_return = 0;						
@@ -38,7 +37,6 @@ public class Information_Parameter {
 		if (first_dynamic_identifier_index.equals("NoIdentifier") && first_parameter_index.equals("NoParameter")) {	// This is the only case when we don't need to check yield table
 			value_to_return = 1;
 		} else {	// Check the prescription (a.k.a. yield table) 				
-			
 			if (table_id_to_find != -9999) {	// If prescription exists (not exist when table_id_to_find = -9999)						
 				if (row_id_to_find < yield_tables_values[table_id_to_find].length && row_id_to_find != -9999) { 	// If row in this prescription exists (not exists when row_id_to_find = -9999 or >= total rows in that prescription)
 					
@@ -62,10 +60,7 @@ public class Information_Parameter {
 			} else { // If prescription does not exist
 //				System.out.println("Not found table " + yield_table_name_to_find);
 			}
-			
 		}
-		
 		return value_to_return;
 	}
-
 }
