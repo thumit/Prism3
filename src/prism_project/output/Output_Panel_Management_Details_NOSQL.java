@@ -144,7 +144,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			}
 		}
 		
-		read = new Read_Input();
+		read = new Read_Input(null);
 		read.read_general_inputs(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_01_general_inputs.txt"));
 		total_Periods = read.get_total_periods();	
 		
@@ -1470,7 +1470,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 				List<String> yield_tables_names_list = Arrays.asList(yield_tables_names); 		// Convert array to list
 							
 				// Read input files to retrieve values later
-				Read_Input read = new Read_Input();
+				Read_Input read = new Read_Input(null);
 				read.read_model_strata(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_02_model_strata.txt"));
 
 				// Get info: input_02_modeled_strata

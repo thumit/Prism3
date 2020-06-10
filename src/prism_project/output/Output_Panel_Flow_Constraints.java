@@ -94,7 +94,7 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 	String[][] bc_values;
 	
 	public Output_Panel_Flow_Constraints(File currentProjectFolder, String currentRun, JTable flow_table, Object[][] flow_data) {
-		Read_Input read = new Read_Input();
+		Read_Input read = new Read_Input(null);
 		read.read_basic_constraints(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_08_basic_constraints.txt"));
 		bc_values = read.get_bc_data();
 		//---------------------------------------------------------------

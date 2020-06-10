@@ -166,7 +166,7 @@ public class Solve_Iterations {
 				File input_08_file = new File(runFolder.getAbsolutePath() + "/input_08_basic_constraints.txt");
 				File input_09_file = new File(runFolder.getAbsolutePath() + "/input_09_flow_constraints.txt");
 				File input_11_file = new File(runFolder.getAbsolutePath() + "/input_11_state_id.txt");
-				Read_Input read = new Read_Input();
+				Read_Input read = new Read_Input(read_database);
 				read.read_general_inputs(input_01_file);
 				read.read_model_strata(input_02_file);
 				read.read_prescription_category(input_03_file);
@@ -289,8 +289,8 @@ public class Solve_Iterations {
 					
 					// Set up problem-------------------------------------------------		
 					// Some more data process definitions
-					Information_Disturbance disturbance_info = (disturbance_condition_list != null) ? new Information_Disturbance(read_database, disturbance_condition_list, all_layers) : null;
-					Information_Cost cost_info = (cost_condition_list != null) ? new Information_Cost(read_database, cost_condition_list, all_layers) : null;
+					Information_Disturbance disturbance_info = (disturbance_condition_list != null) ? new Information_Disturbance(read_database, disturbance_condition_list) : null;
+					Information_Cost cost_info = (cost_condition_list != null) ? new Information_Cost(read_database, cost_condition_list) : null;
 					Information_Parameter parameter_info = new Information_Parameter(read_database);
 					List<Information_Variable> var_info_list = new ArrayList<Information_Variable>();
 					

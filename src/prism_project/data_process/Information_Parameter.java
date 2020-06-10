@@ -17,16 +17,15 @@
 
 package prism_project.data_process;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.StringTokenizer;
 
 public class Information_Parameter {
+	private Identifiers_Processing identifiers_processing;
 	private String[][][] yield_tables_values;
 	
 	public Information_Parameter(Read_Database read_database) {
-		// Some set up
-		this.yield_tables_values = read_database.get_yield_tables_values();
+		identifiers_processing = new Identifiers_Processing(read_database);
+		yield_tables_values = read_database.get_yield_tables_values();
 	}
 	
 	public double get_total_value(int table_id_to_find, int row_id_to_find,
@@ -43,7 +42,7 @@ public class Information_Parameter {
 			if (table_id_to_find != -9999) {	// If prescription exists (not exist when table_id_to_find = -9999)						
 				if (row_id_to_find < yield_tables_values[table_id_to_find].length && row_id_to_find != -9999) { 	// If row in this prescription exists (not exists when row_id_to_find = -9999 or >= total rows in that prescription)
 					
-					boolean constraint_dynamicIdentifiers_matched = are_all_dynamic_identifiers_matched(yield_tables_values, table_id_to_find, row_id_to_find, dynamic_dentifiers_column_indexes, dynamic_identifiers);								
+					boolean constraint_dynamicIdentifiers_matched = identifiers_processing.are_all_dynamic_identifiers_matched(yield_tables_values, table_id_to_find, row_id_to_find, dynamic_dentifiers_column_indexes, dynamic_identifiers);								
 					if (constraint_dynamicIdentifiers_matched) {					
 						if (first_parameter_index.equals("NoParameter")) {			// Return 1 if NoParameter & all dynamic identifiers match
 							value_to_return = 1;							
@@ -67,37 +66,6 @@ public class Information_Parameter {
 		}
 		
 		return value_to_return;
-	}
-		
-
-	private Boolean are_all_dynamic_identifiers_matched(String[][][] yield_tables_values, int table_id_to_find, int row_id_to_find,
-			List<String> dynamic_identifiers_column_indexes, List<List<String>> dynamic_identifiers) {
-		
-		if (!dynamic_identifiers_column_indexes.get(0).equals("NoIdentifier")) {	//If there are dynamic identifiers, Check if in the same row of this yield table we have all the dynamic identifiers match	
-			int identifiers_count = 0;
-			for (List<String> this_dynamic_identifier : dynamic_identifiers) {	// loop all dynamic identifiers
-				int current_dynamic_column = Integer.parseInt(dynamic_identifiers_column_indexes.get(identifiers_count));		//This is the yield table column of the dynamic identifier
-				if (this_dynamic_identifier.get(0).contains(",")) {	//if this is a range identifier (the 1st element of this identifier contains ",")							
-					double yt_value = Double.parseDouble(yield_tables_values[table_id_to_find][row_id_to_find][current_dynamic_column]);
-					for (String range : this_dynamic_identifier) {	//Loop all ranges of this range identifier
-						StringTokenizer tok = new StringTokenizer(range, ",");	// split by ,
-						// will for sure have 2 items in the range --> do not need while check here
-						double min_value = Double.parseDouble(tok.nextToken().replace("[", ""));
-						double max_value = Double.parseDouble(tok.nextToken().replace(")", ""));	
-						if (!(min_value <= yt_value && yt_value < max_value)) {
-							return false;
-						}
-					}										
-				} else { // if this is a discrete identifier
-					int index = Collections.binarySearch(this_dynamic_identifier, yield_tables_values[table_id_to_find][row_id_to_find][current_dynamic_column]);
-					if (index < 0) 	{	// If all selected items in this list do not contain the value in the same column (This is String comparison, we may need to change to present data manually change by users, ex. ponderosa 221 vs 221.00) 
-						return false;			
-					}
-				}
-				identifiers_count++;
-			}
-		}	
-		return true;
 	}
 
 }

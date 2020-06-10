@@ -16,7 +16,6 @@
  */
 
 package prism_project.data_process;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -32,7 +31,12 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 public class Read_Input {
-
+	private Identifiers_Processing identifiers_processing;
+	
+	public Read_Input(Read_Database read_database) {
+		identifiers_processing = new Identifiers_Processing(read_database);
+	}
+	
 	private List<String> get_list_of_checked_conditions(List<String> list, String delimited) {
 		String[] column_name = list.get(0).split(delimited);		// 1st line is column name
 		List<String> column_names_list = Arrays.asList(column_name);
@@ -824,24 +828,8 @@ public class Read_Input {
 	
 	
 	public List<List<String>> get_static_identifiers_in_row(int row) {
-		List<List<String>> static_identifiers = new ArrayList<List<String>>();
-		
-		//Read the whole cell into array
-		String[] static_identifiers_info = bc_data[row][static_identifiers_col].split(";");		//Note: row 0 is the title only, row 1 is constraint 1,.....
-		int total_static_identifiers = static_identifiers_info.length;
-		
-		//Get all static Identifiers to be in the list
-		for (int i = 0; i < total_static_identifiers; i++) {		//6 first identifiers is strata 6 layers (layer 0 to 5)		
-			List<String> thisIdentifier = new ArrayList<String>();
-			
-			String[] identifierElements = static_identifiers_info[i].split("\\s+");				//space delimited
-			for (int j = 1; j < identifierElements.length; j++) {		//Ignore the first element which is the identifier index, so we loop from 1 not 0
-				thisIdentifier.add(identifierElements[j].replaceAll("\\s+",""));		//Add element name, if name has spaces then remove all the spaces
-			}
-			
-			static_identifiers.add(thisIdentifier);
-		}
-			
+		String static_identifiers_info = bc_data[row][static_identifiers_col];		//Note: row 0 is the title only, row 1 is constraint 1,.....
+		List<List<String>> static_identifiers = identifiers_processing.get_static_identifiers(static_identifiers_info);
 		return static_identifiers;
 	}	
 	
@@ -915,43 +903,15 @@ public class Read_Input {
 	
 	
 	public List<List<String>> get_dynamic_identifiers_in_row(int row) {
-		List<List<String>> dynamic_identifiers = new ArrayList<List<String>>();
-		
-		//Read the whole cell into array
-		String[] dynamic_identifiers_info = bc_data[row][dynamic_identifiers_col].split(";");		//Note: row 0 is the title only, row 1 is constraint 1,.....
-		int total_dynamic_identifiers = dynamic_identifiers_info.length;
-	
-		
-		//Get all dynamic Identifiers to be in the list
-		for (int i = 0; i < total_dynamic_identifiers; i++) {	
-			List<String> thisIdentifier = new ArrayList<String>();
-			
-			String[] identifierElements = dynamic_identifiers_info[i].split("\\s+");				//space delimited
-			for (int j = 1; j < identifierElements.length; j++) {		//Ignore the first element which is the identifier column index, so we loop from 1 not 0
-				thisIdentifier.add(identifierElements[j].replaceAll("\\s+",""));		//Add element name, if name has spaces then remove all the spaces
-			}
-			
-			dynamic_identifiers.add(thisIdentifier);
-		}
-			
+		String dynamic_identifiers_info = bc_data[row][dynamic_identifiers_col];		//Note: row 0 is the title only, row 1 is constraint 1,.....
+		List<List<String>> dynamic_identifiers = identifiers_processing.get_dynamic_identifiers(dynamic_identifiers_info);
 		return dynamic_identifiers;
 	}	
 	
 	
 	public List<String> get_dynamic_identifiers_column_indexes_in_row(int row) {	//Column 8 in the GUI table "Dynamic identifiers". The whole is contained by UC_value[i][8]
-		List<String> dynamic_identifiers_column_indexes = new ArrayList<String>();
-			
-		//Read the whole cell into array
-		String[] dynamic_identifiers_info = bc_data[row][dynamic_identifiers_col].split(";");		//Note: row 0 is the title only, row 1 is constraint 1,.....
-		int total_dynamic_identifiers = dynamic_identifiers_info.length;
-
-		//Get all dynamic Identifiers to be in the list
-		for (int i = 0; i < total_dynamic_identifiers; i++) {	
-			String[] identifierElements = dynamic_identifiers_info[i].split("\\s+");				//space delimited
-			//add the first element which is the identifier column index
-			dynamic_identifiers_column_indexes.add(identifierElements[0].replaceAll("\\s+",""));
-		}
-			
+		String dynamic_identifiers_info = bc_data[row][dynamic_identifiers_col];		//Note: row 0 is the title only, row 1 is constraint 1,.....
+		List<String> dynamic_identifiers_column_indexes = identifiers_processing.get_dynamic_dentifiers_column_indexes(dynamic_identifiers_info);
 		return dynamic_identifiers_column_indexes;
 	}	
 	
