@@ -1307,7 +1307,7 @@ All changes in this block are associated with PrismAlpha3.0.01.jar, Prism-Formul
 	- Fix 9b with the if condition to be a < rotation_age 
 All changes in this block are associated with PrismAlpha3.0.03.jar, Prism-Formulation-12.docx, Rolling-horizon-formulation-09.docx
 --------------------------------------------------------------------------
-542. Minor refactors:
+542. Others:
 	- Fix the loop in equation 6b. Model logic and results will not change.
 	- Rename some scrollpanes for dynamic identifiers and parameters in Panel_Edit_Details class
 	- Rename internal classes and variables in Panel_Edit_Details class
@@ -1318,5 +1318,6 @@ All changes in this block are associated with PrismAlpha3.0.03.jar, Prism-Formul
 	- Modify some descriptions in the Prescription_Category and Prescription_Assignment screens
 543. Unlimited management prescriptions update
 	- Build editing GUI for Prescription Category. This GUI allows users to filter and categorize prescriptions into 4 specified groups NC_E, NC_R, EA_E, EA_R
-	- 
+	- Build editing GUI for Prescription Assignment. This GUI allows users to assign prescriptions to be implemented on selected model strata.
+	- Build reading logic for Prescription Category 
 5xx. Remove the upper bound restriction filters that do not allow prescriptions with rotation periods > total planning period to be defined for EA_E and EA_R variables (not yet)

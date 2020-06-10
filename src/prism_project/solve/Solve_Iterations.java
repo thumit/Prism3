@@ -207,10 +207,8 @@ public class Solve_Iterations {
 				}
 				
 				// Get info: input_03_prescription_category
-				read.populate_nonea_lists(model_strata, model_strata_without_sizeclass, all_layers);
-				List<List<String>> nonea_method_choice_for_strata = read.get_nonea_method_choice_for_strata();
-				List<List<String>> nonea_method_choice_for_strata_without_sizeclass = read.get_nonea_method_choice_for_strata_without_sizeclass();
-				boolean is_nonea_defined_with_some_rows = (input_03_file.exists()) ? true : false;
+				String[] prescription_group = read.get_prescription_group();
+				boolean is_prescription_category_defined_with_some_rows = (input_03_file.exists()) ? true : false;
 				
 				// Get Info: input_04_prescription_assignment
 				read.populate_ea_lists(model_strata, model_strata_without_sizeclass, all_layers);
@@ -330,14 +328,10 @@ public class Solve_Iterations {
 						list_of_nonea_prescription_id_for_existing_strata[strata_id] = new ArrayList<Integer>();
 						list_of_ea_prescription_id_for_existing_strata[strata_id] = new ArrayList<Integer>();
 						for (int i = 0; i < total_prescriptions; i++) {
-							if (s5_s6_from_existing_strata[strata_id].equals(s5_s6_from_prescription[i]) 
-								&& yield_tables_values[i][0][method_col_id].equals("EA")
-									&& yield_tables_values[i][0][status_col_id].equals("E")) {
+							if (s5_s6_from_existing_strata[strata_id].equals(s5_s6_from_prescription[i]) && prescription_group[i].equals("EA_E")) {
 								list_of_ea_prescription_id_for_existing_strata[strata_id].add(i);
 							}
-							if (s5_s6_from_existing_strata[strata_id].equals(s5_s6_from_prescription[i]) 
-									&& (!yield_tables_values[i][0][method_col_id].equals("EA"))
-										&& yield_tables_values[i][0][status_col_id].equals("E")) {
+							if (s5_s6_from_existing_strata[strata_id].equals(s5_s6_from_prescription[i]) && prescription_group[i].equals("NC_E")) {
 								list_of_nonea_prescription_id_for_existing_strata[strata_id].add(i);
 							}
 						}
@@ -347,14 +341,10 @@ public class Solve_Iterations {
 						list_of_nonea_prescription_id_for_regenerated_strata[strata_id] = new ArrayList<Integer>();
 						list_of_ea_prescription_id_for_regenerated_strata[strata_id] = new ArrayList<Integer>();
 						for (int i = 0; i < total_prescriptions; i++) {
-							if (s5_from_regenerated_strata[strata_id].equals(s5_from_prescription[i]) 
-									&& yield_tables_values[i][0][method_col_id].equals("EA")
-										&& yield_tables_values[i][0][status_col_id].equals("R")) {
+							if (s5_from_regenerated_strata[strata_id].equals(s5_from_prescription[i]) && prescription_group[i].equals("EA_R")) {
 								list_of_ea_prescription_id_for_regenerated_strata[strata_id].add(i);
 							}
-							if (s5_from_regenerated_strata[strata_id].equals(s5_from_prescription[i]) 
-									&& (!yield_tables_values[i][0][method_col_id].equals("EA"))
-										&& yield_tables_values[i][0][status_col_id].equals("R")) {
+							if (s5_from_regenerated_strata[strata_id].equals(s5_from_prescription[i]) && prescription_group[i].equals("NC_R")) {
 								list_of_nonea_prescription_id_for_regenerated_strata[strata_id].add(i);
 							}
 						}
@@ -484,7 +474,7 @@ public class Solve_Iterations {
 						for (int i : list_of_nonea_prescription_id_for_existing_strata[strata_id]) {
 							String method_choice_of_this_prescription = yield_tables_values[i][0][method_col_id] + "_" +  yield_tables_values[i][0][status_col_id] + " " + yield_tables_values[i][0][choice_col_id];
 							// if prescription for E strata, and matching s5_s6, and match user-defined conditions
-							if (is_nonea_defined_with_some_rows && Collections.binarySearch(nonea_method_choice_for_strata.get(strata_id), method_choice_of_this_prescription) >= 0) {	// Boost 1 (a.k.a. Silviculture Method)				
+							if (is_prescription_category_defined_with_some_rows /*&& Collections.binarySearch(nonea_method_choice_for_strata.get(strata_id), method_choice_of_this_prescription) >= 0*/) {	// Boost 1 (a.k.a. Silviculture Method)				
 								xNCe[strata_id][i] = new int[total_periods + 1 + iter];
 								for (int t = 1 + iter; t <= total_periods + iter; t++) {
 									String var_name = "xNC_E_" + strata + "_" + i + "_" + t;	
@@ -545,7 +535,7 @@ public class Solve_Iterations {
 						xNCr[strata_5layers_id] = new int[total_prescriptions][][];
 						for (int i : list_of_nonea_prescription_id_for_regenerated_strata[strata_5layers_id]) {
 							String method_choice_of_this_prescription = yield_tables_values[i][0][method_col_id] + "_" +  yield_tables_values[i][0][status_col_id] + " " + yield_tables_values[i][0][choice_col_id];
-							if (is_nonea_defined_with_some_rows && Collections.binarySearch(nonea_method_choice_for_strata_without_sizeclass.get(strata_5layers_id), method_choice_of_this_prescription) >= 0) {	// Boost 1 (a.k.a. Silviculture Method)
+							if (is_prescription_category_defined_with_some_rows /*&& Collections.binarySearch(nonea_method_choice_for_strata_without_sizeclass.get(strata_5layers_id), method_choice_of_this_prescription) >= 0*/) {	// Boost 1 (a.k.a. Silviculture Method)
 								xNCr[strata_5layers_id][i] = new int[total_periods + 1 + iter][];
 								int t_regen = (iter == 0) ? 2 : 1;	// this is because iteration 0 could not have regenerated forest in period 1, but iterations >= 1 do have regenerated forest strata
 								for (int t = t_regen + iter; t <= total_periods + iter; t++) {
@@ -3745,8 +3735,6 @@ public class Solve_Iterations {
 				// These could be set to null only after all iterations are solved
 				read = null;     												// Clear the lists to save memory       
 				read_database = null;											// Clear the lists to save memory
-				nonea_method_choice_for_strata = null;							// Clear the lists to save memory
-				nonea_method_choice_for_strata_without_sizeclass = null;		// Clear the lists to save memory
 				ea_conversion_and_rotation_for_strata = null;					// Clear the lists to save memory
 				ea_conversion_and_rotation_for_strata_without_sizeclass = null;	// Clear the lists to save memory
 			}

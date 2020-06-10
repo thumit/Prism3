@@ -4541,7 +4541,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					+ "   - EA_E: prescriptions for existing forest strata with a clear-cut activity at the end\n"
 					+ "   - NC_R: prescriptions for regenerated forest strata without clear-cut activities\n"
 					+ "   - EA_R: prescriptions for regenerated forest strata with a clear-cut activities at the end\n\n"
-					+ "2. Dynamic identifiers are used to filter prescriptions in the yield tables database. If any row within a prescription meets the dynamic identifiers condition then the prescription will be considered as meeting the condition. Therefore, you should select any identifier which have a constant value across all rows of each same prescription.\n\n"
+					+ "2. Dynamic identifiers are used to filter prescriptions in the yield tables database. If the first row of a prescription meets the dynamic identifiers condition then the prescription will be considered as meeting the condition. On the right screen, you should select any identifier which has a constant value across all rows within each same prescription.\n\n"
 					+ "3. Uncategorized prescriptions would be excluded from modeling even though they do exist in the database.";
 			PrismTextAreaReadMe warning_textarea = new PrismTextAreaReadMe("icon_script.png", 1, 1);
 			warning_textarea.append(message);

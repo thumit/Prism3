@@ -32,9 +32,11 @@ import java.util.stream.Stream;
 
 public class Read_Input {
 	private Identifiers_Processing identifiers_processing;
+	private String[][][] yield_tables_values;
 	
 	public Read_Input(Read_Database read_database) {
 		identifiers_processing = new Identifiers_Processing(read_database);
+		yield_tables_values = read_database.get_yield_tables_values();
 	}
 	
 	private List<String> get_list_of_checked_conditions(List<String> list, String delimited) {
@@ -205,8 +207,7 @@ public class Read_Input {
 	//For input_03_prescription_category : must be read after model_strata
 	private int category_total_rows, category_total_columns;
 	private String[][] category_data;
-	private List<List<String>> nonea_method_choice_for_strata;
-	private List<List<String>> nonea_method_choice_for_strata_without_sizeclass;
+	String[] prescription_group;
 
 	public void read_prescription_category(File file) {
 		String delimited = "\t";		// tab delimited
@@ -228,185 +229,55 @@ public class Read_Input {
 					category_data[i][j] = rowValue[j];
 				}
 			}
+			
+			// Logic: If the first row of a prescription meets the dynamic identifiers condition then the prescription will be considered as meeting the condition.
+			// Note columnNames2 = new String[] {"condition_id", "condition_description", "prescription_group", "dynamic_identifiers", "original_dynamic_identifiers", "model_condition"};
+			int category_prescription_group_col = 2;
+			int category_dynamic_identifiers_col = 3;
+			// This array stores dynamic identifiers in each row of the input table
+			List<List<String>>[] all_priority_condition_dynamic_identifiers = new ArrayList[category_total_rows];
+			List<String>[] all_priority_condition_dynamic_dentifiers_column_indexes = new ArrayList[category_total_rows];
+			for (int priority = 0; priority < category_total_rows; priority++) {	// Looping from the highest priority condition to the lowest, each priority is a row in the table GUI
+				String dynamic_identifiers_info = category_data[priority][category_dynamic_identifiers_col];	
+				List<List<String>> category_dynamic_identifiers = identifiers_processing.get_dynamic_identifiers(dynamic_identifiers_info);
+				List<String> category_dynamic_identifiers_column_indexes = identifiers_processing.get_dynamic_dentifiers_column_indexes(dynamic_identifiers_info);
+				all_priority_condition_dynamic_identifiers[priority] = category_dynamic_identifiers;
+				all_priority_condition_dynamic_dentifiers_column_indexes[priority] = category_dynamic_identifiers_column_indexes;
+			}
+			
+			// Categorize prescriptions into groups
+			int total_prescriptions = yield_tables_values.length;
+			prescription_group = new String[total_prescriptions];
+			for (int prescription_id = 0; prescription_id < total_prescriptions; prescription_id++) {
+				if (prescription_group[prescription_id] == null) {	// If this prescription is not categorized yet then loop all priority conditions to find the matching condition
+					for (int priority = 0; priority < category_total_rows; priority++) {	// Loop from the highest priority condition to the lowest
+						// If the first row of this prescription meets this priority condition dynamic identifiers then assign the group categorization to this prescription
+						int row_id = 0;
+						if (identifiers_processing.are_all_dynamic_identifiers_matched(
+								yield_tables_values, prescription_id, row_id,
+								all_priority_condition_dynamic_dentifiers_column_indexes[priority],
+								all_priority_condition_dynamic_identifiers[priority])) {
+							prescription_group[prescription_id] = category_data[priority][category_prescription_group_col];
+						}
+					}
+				}
+			}
+			
+//			// test results
+//			for (int i = 0; i < prescription_group.length; i++) {
+//				System.out.println(yield_tables_values[i][0][0] + " --> " + prescription_group[i]);
+//			}
 		} catch (IOException e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 		}
 	}
-	
-	public List<List<String>> get_nonea_static_identifiers_in_row(int row) {
-		List<List<String>> nonea_static_identifiers = new ArrayList<List<String>>();
-		
-		// read the whole cell into array
-		String[] staticLayer_Info = category_data[row][2].split(";");
-		int total_staticIdentifiers = staticLayer_Info.length;
-		
-		// get all static Identifiers to be in the list
-		for (int i = 0; i < total_staticIdentifiers; i++) {		//6 first identifiers is strata 6 layers (layer 0 to 5)		
-			List<String> thisIdentifier = new ArrayList<String>();
-			
-			String[] identifierElements = staticLayer_Info[i].split("\\s+");				//space delimited
-			for (int j = 1; j < identifierElements.length; j++) {		//Ignore the first element which is the identifier index, so we loop from 1 not 0
-				thisIdentifier.add(identifierElements[j].replaceAll("\\s+",""));		//Add element name, if name has spaces then remove all the spaces
-			}
-			
-			nonea_static_identifiers.add(thisIdentifier);
-		}
-			
-		return nonea_static_identifiers;
-	}	
-	
-	public List<List<String>> get_nonea_method_choice_in_row(int row) {
-		List<List<String>> nonea_method_choice = new ArrayList<List<String>>();
 
-		// read the whole cell into array
-		String[] method_choice_info = category_data[row][3].split(";");
-		int total_method_choice = method_choice_info.length;
-
-		// get all method and choice to be in the list
-		for (int i = 0; i < total_method_choice; i++) {		// only 2: method and choice	
-			List<String> thisIdentifier = new ArrayList<String>();
-			
-			String[] identifierElements = method_choice_info[i].split("\\s+"); 		// space delimited
-			for (int j = 1; j < identifierElements.length; j++) { 					// ignore the first element which is the identifier index, so we loop from 1 not 0
-				thisIdentifier.add(identifierElements[j].replaceAll("\\s+", "")); 	// add element name, if name has spaces then remove all the spaces
-			}
-			
-			nonea_method_choice.add(thisIdentifier);
-		}
-			
-		return nonea_method_choice;
-	}
-			
-	public void populate_nonea_lists(List<String> model_strata, List<String> model_strata_without_sizeclass, List<List<String>> all_layers) {	
-		// Calculate this first to avoid calculating it in the below loops------------------- ------------------------------------
-		List<List<String>>[] nonea_static_identifiers = new ArrayList[category_total_rows]; 
-		List<List<String>>[] nonea_method_choice  = new ArrayList[category_total_rows];
-		for (int row = 0; row < category_total_rows; row++) {	// load each row
-			nonea_static_identifiers[row] = get_nonea_static_identifiers_in_row(row);			
-			nonea_method_choice[row] = get_nonea_method_choice_in_row(row);
-		}
-		
-
-		
-		// existing 6 layers ------------------------------------ ------------------------------------ ------------------------------------
-		nonea_method_choice_for_strata = new ArrayList<List<String>>();
-		for (int i = 0; i < model_strata.size(); i++) {
-			nonea_method_choice_for_strata.add(new ArrayList<String>());
-		}
-		
-		for (int strata_id = 0; strata_id < model_strata.size(); strata_id++) {
-			String strata = model_strata.get(strata_id);
-			String[] layer = strata.split("_");
-		
-			for (int row = 0; row < category_total_rows; row++) {	// load each row
-				List<List<String>> static_identifiers = nonea_static_identifiers[row];			
-				List<List<String>> method_choice = nonea_method_choice[row];	
-				
-				// The below check also implements Speed Boost RRB9
-				if (	(static_identifiers.get(0).size() == all_layers.get(0).size() || Collections.binarySearch(static_identifiers.get(0), layer[0]) >= 0) && 
-						(static_identifiers.get(1).size() == all_layers.get(1).size() || Collections.binarySearch(static_identifiers.get(1), layer[1]) >= 0) && 
-						(static_identifiers.get(2).size() == all_layers.get(2).size() || Collections.binarySearch(static_identifiers.get(2), layer[2]) >= 0) && 
-						(static_identifiers.get(3).size() == all_layers.get(3).size() || Collections.binarySearch(static_identifiers.get(3), layer[3]) >= 0) && 
-						(static_identifiers.get(4).size() == all_layers.get(4).size() || Collections.binarySearch(static_identifiers.get(4), layer[4]) >= 0) && 
-						(static_identifiers.get(5).size() == all_layers.get(5).size() || Collections.binarySearch(static_identifiers.get(5), layer[5]) >= 0)	)	
-				{
-					for (String method : method_choice.get(0)) {
-						for (String choice : method_choice.get(1)) {
-							if (!nonea_method_choice_for_strata.get(strata_id).contains(method + " " + choice)) {
-								nonea_method_choice_for_strata.get(strata_id).add(method + " " + choice);
-							}
-						}
-					}
-				}
-				
-//				// Without RRB9 --> no need all_layers
-//				if (	Collections.binarySearch(static_identifiers.get(0), layer1) >= 0 && 
-//						Collections.binarySearch(static_identifiers.get(1), layer2) >= 0 && 
-//						Collections.binarySearch(static_identifiers.get(2), layer3) >= 0 && 
-//						Collections.binarySearch(static_identifiers.get(3), layer4) >= 0 && 
-//						Collections.binarySearch(static_identifiers.get(4), layer5) >= 0 && 
-//						Collections.binarySearch(static_identifiers.get(5), layer6) >= 0)	
-//				{
-//					for (String method : method_choice.get(0)) {
-//						for (String choice : method_choice.get(1)) {
-//							if (!nonea_method_choice_for_strata.get(strata_id).contains(method + " " + choice)) {
-//								nonea_method_choice_for_strata.get(strata_id).add(method + " " + choice);
-//							}
-//						}
-//					}
-//				}
-			}
-		}
-		
-		for (List<String> i : nonea_method_choice_for_strata) {
-			Collections.sort(i);	// sort to use Binary Search when needed (in Panel_Solve)
-		}
-		
-		
-		
-		// regeneration 5 layers ------------------------------------ ------------------------------------ ------------------------------------
-		nonea_method_choice_for_strata_without_sizeclass = new ArrayList<List<String>>();
-		for (int i = 0; i < model_strata_without_sizeclass.size(); i++) {
-			nonea_method_choice_for_strata_without_sizeclass.add(new ArrayList<String>());
-		}
-		
-		for (int strata_5layers_id = 0; strata_5layers_id < model_strata_without_sizeclass.size(); strata_5layers_id++) {
-			String strata_5layers = model_strata_without_sizeclass.get(strata_5layers_id);
-			String[] layer = strata_5layers.split("_");
-		
-			for (int row = 0; row < category_total_rows; row++) {	// load each row
-				List<List<String>> static_identifiers = nonea_static_identifiers[row];			
-				List<List<String>> method_choice = nonea_method_choice[row];	
-				
-				// The below check also implements Speed Boost RRB9
-				if (	(static_identifiers.get(0).size() == all_layers.get(0).size() || Collections.binarySearch(static_identifiers.get(0), layer[0]) >= 0) && 
-						(static_identifiers.get(1).size() == all_layers.get(1).size() || Collections.binarySearch(static_identifiers.get(1), layer[1]) >= 0) && 
-						(static_identifiers.get(2).size() == all_layers.get(2).size() || Collections.binarySearch(static_identifiers.get(2), layer[2]) >= 0) && 
-						(static_identifiers.get(3).size() == all_layers.get(3).size() || Collections.binarySearch(static_identifiers.get(3), layer[3]) >= 0) && 
-						(static_identifiers.get(4).size() == all_layers.get(4).size() || Collections.binarySearch(static_identifiers.get(4), layer[4]) >= 0) )	
-				{
-					for (String method : method_choice.get(0)) {
-						for (String choice : method_choice.get(1)) {
-							if (!nonea_method_choice_for_strata_without_sizeclass.get(strata_5layers_id).contains(method + " " + choice)) {
-								nonea_method_choice_for_strata_without_sizeclass.get(strata_5layers_id).add(method + " " + choice);
-							}
-						}
-					}	
-				}
-				
-//				// Without RRB9 --> no need all_layers
-//				if (	Collections.binarySearch(static_identifiers.get(0), layer1) >= 0 && 
-//						Collections.binarySearch(static_identifiers.get(1), layer2) >= 0 && 
-//						Collections.binarySearch(static_identifiers.get(2), layer3) >= 0 && 
-//						Collections.binarySearch(static_identifiers.get(3), layer4) >= 0 && 
-//						Collections.binarySearch(static_identifiers.get(4), layer5) >= 0	)	
-//				{
-//					for (String method : method_choice.get(0)) {
-//						for (String choice : method_choice.get(1)) {
-//							if (!nonea_method_choice_for_strata_without_sizeclass.get(strata_5layers_id).contains(method + " " + choice)) {
-//								nonea_method_choice_for_strata_without_sizeclass.get(strata_5layers_id).add(method + " " + choice);
-//							}
-//						}
-//					}	
-//				}
-			}
-		}	
-		
-		for (List<String> i : nonea_method_choice_for_strata_without_sizeclass) {
-			Collections.sort(i);	// sort to use Binary Search when needed (in Panel_Solve)
-		}
-	}	
-	
-	public int get_nonea_total_rows() {
+	public int get_category_total_rows() {
 		return category_total_rows;
 	}
 	
-	public List<List<String>> get_nonea_method_choice_for_strata() {
-		return nonea_method_choice_for_strata;
-	}
-	
-	public List<List<String>> get_nonea_method_choice_for_strata_without_sizeclass() {
-		return nonea_method_choice_for_strata_without_sizeclass;
+	public String[] get_prescription_group() {
+		return prescription_group;
 	}
 		
 	//-------------------------------------------------------------------------------------------------------------------------------------------------	
