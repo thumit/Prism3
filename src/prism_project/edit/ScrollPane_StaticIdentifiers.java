@@ -37,20 +37,19 @@ import javax.swing.border.TitledBorder;
 import prism_convenience.ColorUtil;
 import prism_project.data_process.Read_Database;
 
-
-
 public class ScrollPane_StaticIdentifiers extends JScrollPane {
 	private List<List<JCheckBox>> checkboxStaticIdentifiers;
 	private List<JLabel> layers_title_label;
 	private JPanel identifiers_panel;
 	private int option;
 
-	public ScrollPane_StaticIdentifiers(Read_Database read_Database, int option, String panel_name) {
+	public ScrollPane_StaticIdentifiers(Read_Database read_database, int option, String panel_name) {
 		this.option = option;	// option = 0 --> 6 layers		1 --> 4 layers       2 --> 6 layers + period
-		List<String> layers_title = new ArrayList<>(read_Database.get_layers_title());
-		List<String> layers_title_toolip = new ArrayList<>(read_Database.get_layers_title_tooltip());
-		List<List<String>> all_layers = new ArrayList<>(read_Database.get_all_layers());
-		List<List<String>> all_layers_toolip = new ArrayList<>(read_Database.get_all_layers_tooltips());
+		List<String> layers_title = new ArrayList<>(read_database.get_layers_title());
+		List<String> layers_title_toolip = new ArrayList<>(read_database.get_layers_title_tooltip());
+		List<List<String>> all_layers = new ArrayList<>(read_database.get_all_layers());
+		List<List<String>> all_layers_toolip = new ArrayList<>(read_database.get_all_layers_tooltips());
+		//-------------------------------------------------------------------------------------------
 		
 		if (option == 1) {
 			for (int count = 0; count <= 1; count++) {	// a loop to remove the last layer 2 times
@@ -62,20 +61,15 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 		}
 		
 		if (option == 2) {
-			// add 2 more into static identifiers
-			List<String> period_layers_title = new ArrayList<>(read_Database.get_period_layers_title());
-			List<List<String>> period_layers = new ArrayList<>(read_Database.get_period_layers());
-
+			// add period into static identifiers
+			List<String> period_layers_title = new ArrayList<>(read_database.get_period_layers_title());
+			List<List<String>> period_layers = new ArrayList<>(read_database.get_period_layers());
 			layers_title.addAll(period_layers_title);
 			layers_title_toolip.addAll(period_layers_title);
 			all_layers.addAll(period_layers);
-			
-			// full name of silviculture methods
-			List<List<String>> period_ToolTips = read_Database.get_period_layers();
-			all_layers_toolip.addAll(period_ToolTips);
+			all_layers_toolip.addAll(period_layers);
 		}
-
-		
+		//-------------------------------------------------------------------------------------------
 		
 		// add all layers labels and CheckBoxes to identifiersPanel
 		identifiers_panel = new JPanel(new GridBagLayout());		
@@ -85,9 +79,9 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 	    c1.weighty = 1;
     
 		// add all layers labels
-	    int total_staticIdentifiers = all_layers.size();
+	    int total_static_identifiers = all_layers.size();
 	    layers_title_label = new ArrayList<JLabel>();
-		for (int i = 0; i < total_staticIdentifiers; i++) {
+		for (int i = 0; i < total_static_identifiers; i++) {
 			JLabel title = new JLabel(layers_title.get(i));
 			String title_tooltip = layers_title_toolip.get(i);
 			
@@ -130,12 +124,11 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 			c1.gridy = 0;
 			identifiers_panel.add(layers_title_label.get(i), c1);
 		}
-		
-
+		//-------------------------------------------------------------------------------------------		
 		
 		// add CheckBox for all layers
 		checkboxStaticIdentifiers = new ArrayList<List<JCheckBox>>();
-		for (int i = 0; i < total_staticIdentifiers; i++) {		//Loop all layers
+		for (int i = 0; i < total_static_identifiers; i++) {		//Loop all layers
 			List<JCheckBox> temp_List = new ArrayList<JCheckBox>();		//A temporary List
 			checkboxStaticIdentifiers.add(temp_List);
 			for (int j = 0; j < all_layers.get(i).size(); j++) {		//Loop all elements in each layer
@@ -168,15 +161,14 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 				});
 			}
 		}
-		
-		
+		//-------------------------------------------------------------------------------------------
 		
 		// add listeners to select all or de-select all
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				boolean is_at_least_one_item_checked = false;
-				for (int i = 0; i < total_staticIdentifiers; i++) {		//Loop all layers
+				for (int i = 0; i < total_static_identifiers; i++) {		//Loop all layers
 					for (int j = 0; j < all_layers.get(i).size(); j++) {		//Loop all elements in each layer
 						if (checkboxStaticIdentifiers.get(i).get(j).isSelected()) {
 							is_at_least_one_item_checked = true;
@@ -186,14 +178,14 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 				}
 				
 				if (is_at_least_one_item_checked) {
-					for (int i = 0; i < total_staticIdentifiers; i++) {		//Loop all layers
+					for (int i = 0; i < total_static_identifiers; i++) {		//Loop all layers
 						for (int j = 0; j < all_layers.get(i).size(); j++) {		//Loop all elements in each layer
 							checkboxStaticIdentifiers.get(i).get(j).setSelected(false);
 							layers_title_label.get(i).setEnabled(false);
 						}
 					}
 				} else {
-					for (int i = 0; i < total_staticIdentifiers; i++) {		//Loop all layers
+					for (int i = 0; i < total_static_identifiers; i++) {		//Loop all layers
 						for (int j = 0; j < all_layers.get(i).size(); j++) {		//Loop all elements in each layer
 							checkboxStaticIdentifiers.get(i).get(j).setSelected(true);
 							layers_title_label.get(i).setEnabled(true);
@@ -202,9 +194,8 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 				}
 			}
 		});		
+		//-------------------------------------------------------------------------------------------
 	    
-	    
-		
 		setViewportView(identifiers_panel);
 		setViewportBorder(null);
 		TitledBorder border = new TitledBorder(panel_name);

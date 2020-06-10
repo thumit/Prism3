@@ -64,7 +64,7 @@ public class ScrollPane_Parameters extends JScrollPane {
 				String YTcolumnName = yield_tables_column_names[i];
 
 				checkboxParameter.add(new JCheckBox(YTcolumnName));		//add checkbox
-				String tip = read_database.get_ParameterToolTip(YTcolumnName) + " (Column index: " + i + ")";
+				String tip = read_database.get_parameter_tooltip(YTcolumnName) + " (Column index: " + i + ")";
 				checkboxParameter.get(i).setToolTipText(tip);		//add toolTip
 				
 //				// Disable Parameter check box if unit is not per Acre

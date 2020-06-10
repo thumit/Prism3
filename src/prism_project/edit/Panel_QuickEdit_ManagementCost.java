@@ -368,7 +368,7 @@ public class Panel_QuickEdit_ManagementCost extends JPanel {
 					column_checkboxes.add(new JCheckBox(table7a.getColumnName(i)));
 					column_checkboxes.get(i - 2).setSelected(true);		// -2 because we ignore 2 columns
 									
-					String tip = read_database.get_ParameterToolTip(column_checkboxes.get(i - 2).getText()) + " (Column index: " + (int) (i - 2) + ")";
+					String tip = read_database.get_parameter_tooltip(column_checkboxes.get(i - 2).getText()) + " (Column index: " + (int) (i - 2) + ")";
 					column_checkboxes.get(i - 2).setToolTipText(tip);		
 					
 //					// Disable Parameter check box if unit is not per Acre

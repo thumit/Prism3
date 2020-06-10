@@ -2669,7 +2669,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		if (yield_tables_column_names != null) {      
 	        for (int i = 2; i < colCount7a; i++) {
 	        	int yt_col = i - 2;
-	        	headerToolTips[i] = "currency per " + read_database.get_ParameterToolTip(yield_tables_column_names[yt_col]) + " (Column index: " + yt_col + ")";	
+	        	headerToolTips[i] = "currency per " + read_database.get_parameter_tooltip(yield_tables_column_names[yt_col]) + " (Column index: " + yt_col + ")";	
 			}
 		}
 	

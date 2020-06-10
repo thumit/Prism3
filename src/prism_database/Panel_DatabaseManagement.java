@@ -1749,7 +1749,7 @@ public class Panel_DatabaseManagement extends JLayeredPane {
 				Read_Database read_Database = new Read_Database(null);
 				for (int i = 0; i < colCount; i++) {	
 					pst = conn.prepareStatement("INSERT OR IGNORE INTO yield_tables_definition (col_index, col_name, description, data_type) VALUES(" 
-									+ i + ", '" + table_ColumnNames[i] + "', '" + read_Database.get_ParameterToolTip(table_ColumnNames[i]) + "', 'TEXT');");
+									+ i + ", '" + table_ColumnNames[i] + "', '" + read_Database.get_parameter_tooltip(table_ColumnNames[i]) + "', 'TEXT');");
 					pst.executeUpdate();
 				}
 				

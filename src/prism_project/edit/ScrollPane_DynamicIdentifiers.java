@@ -105,7 +105,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 
 				checkboxDynamicIdentifiers.add(new ArrayList<JCheckBox>());		//add empty List
 				allDynamicIdentifiers.add(new JCheckBox(YTcolumnName));		//add checkbox
-				allDynamicIdentifiers.get(i).setToolTipText(read_Database.get_ParameterToolTip(YTcolumnName) + " (Column index: " + i + ")");		//add toolTip
+				allDynamicIdentifiers.get(i).setToolTipText(read_Database.get_parameter_tooltip(YTcolumnName) + " (Column index: " + i + ")");		//add toolTip
 				
 				// add checkboxParameter to the Panel
 			    c2.gridx = 0;
@@ -312,7 +312,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 											String nameOfColumnAndUniqueValue = currentCheckBoxName + " " + unique_values_list.get(j);	//The name
 																		
 											checkboxDynamicIdentifiers.get(currentCheckBoxIndex).add(new JCheckBox(unique_values_list.get(j)));
-											checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(j).setToolTipText(read_Database.get_ParameterToolTip(nameOfColumnAndUniqueValue));	//ToolTip of this Name from Prism Library;
+											checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(j).setToolTipText(read_Database.get_parameter_tooltip(nameOfColumnAndUniqueValue));	//ToolTip of this Name from Prism Library;
 											c_dP.gridx = 0;
 											c_dP.gridy = 1 + j;
 											discretePanel.add(checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(j), c_dP);
@@ -320,7 +320,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 											c_dP.gridx = 1;
 											c_dP.gridy = 1 + j;
 											JTextField name_TF = new JTextField(20);
-											name_TF.setText(read_Database.get_ParameterToolTip(nameOfColumnAndUniqueValue));	//ToolTip of this Name from Prism Library
+											name_TF.setText(read_Database.get_parameter_tooltip(nameOfColumnAndUniqueValue));	//ToolTip of this Name from Prism Library
 											discretePanel.add(name_TF, c_dP);
 											
 											//Add listener for TextField to be toolTip

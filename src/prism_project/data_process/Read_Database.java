@@ -499,16 +499,13 @@ public class Read_Database {
 		return strata_definition_values;
 	}	
 	
-	
 	public List<String> get_layers_title() {   
 		return layers_title;
 	}
-
 	
 	public List<String> get_layers_title_tooltip() {	
 		return layers_title_tooltip;
 	}
-	
 	
 	public List<List<String>> get_all_layers() {		
 		return all_layers;
@@ -524,16 +521,13 @@ public class Read_Database {
 	// This block is For 2 extra layers ------------------------------------------------------------------------------------------------------
 	// This block is For 2 extra layers ------------------------------------------------------------------------------------------------------
 	// This block is For 2 extra layers ------------------------------------------------------------------------------------------------------	
-	public List<String> get_period_layers_title() {
-		// Layers title
+	public List<String> get_period_layers_title() {	// layers title = period
 		List<String> period_layers_title = Arrays.asList(new String[] { "period" });
 		return period_layers_title;
 	}
-
 	
-	public List<List<String>> get_period_layers() {
-		// Layers element name
-		List<String> period = new ArrayList<String>() {		// period
+	public List<List<String>> get_period_layers() {	// layers elements = 1, 2, ..., 99
+		List<String> period = new ArrayList<String>() {
 			{
 				for (int i = 1; i <= 99; i++) {add(Integer.toString(i));}
 			}
@@ -542,10 +536,9 @@ public class Read_Database {
 		period_layers.add(period);
 		return period_layers;
 	}
-
 	
-	public String get_ParameterToolTip(String yt_columnName) {
-		String toolTip = "";
+	public String get_parameter_tooltip(String yt_columnName) {
+		String tooltip = "";
 		
 		File file_yield_dictionary = FilesHandle.get_file_yield_dictionary();
 		String delimited = ","; // 		","		comma delimited			"\\s+"		space delimited		"\t"	tab delimited	
@@ -563,24 +556,17 @@ public class Read_Database {
 				String[] rowValue = a[i].split(delimited);
 				for (int j = 0; j < totalCols && j < rowValue.length; j++) {
 					value[i][j] = rowValue[j];		// to make toolTip text separated with space, may need the above line if there is spaces in layer and elements name in the file StrataDefinition.csv
-				
 				}				
 				// Tool tip identified by comparing the name before and after normalization
 				if (yt_columnName.equals(value[i][0]) || StringHandle.normalize(yt_columnName).equals(StringHandle.normalize(value[i][0]))) {
-					toolTip = value[i][1];
+					tooltip = value[i][1];
 				}
 			}	
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 		}
-		return toolTip;
+		return tooltip;
 	}	
-	
-	
-	
-	
-	
-	
 	
 }
