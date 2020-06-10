@@ -18,7 +18,6 @@
 package prism_project.data_process;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 	
 // This class is created only when there is at least 1 condition --> no need to check null condition
@@ -57,16 +56,6 @@ public class Information_Disturbance {
 			all_priority_condition_static_identifiers[priority] = identifiers_processing.get_static_identifiers(all_priority_condition_info[priority][6]);	// column 6 is static identifiers
 			all_priority_condition_dynamic_identifiers[priority] = identifiers_processing.get_dynamic_identifiers(all_priority_condition_info[priority][7]);	// column 7 is dynamic identifiers
 			all_priority_condition_dynamic_dentifiers_column_indexes[priority] = identifiers_processing.get_dynamic_dentifiers_column_indexes(all_priority_condition_info[priority][7]);	// column 7 is dynamic identifiers
-			
-			// sort for Binary search used in:     are_all_static_identifiers_matched()
-			for (List<String> this_static_identifier: all_priority_condition_static_identifiers[priority]) {
-				Collections.sort(this_static_identifier);
-			}	
-			
-			// sort for Binary search used in:     are_all_dynamic_identifiers_matched()
-			for (List<String> this_dynamic_identifier: all_priority_condition_dynamic_identifiers[priority]) {
-				Collections.sort(this_dynamic_identifier);
-			}			
 		}
 	}
 			

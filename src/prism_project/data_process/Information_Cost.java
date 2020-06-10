@@ -56,18 +56,6 @@ public class Information_Cost {
 			all_priority_condition_static_identifiers[priority] = identifiers_processing.get_static_identifiers(this_condition_info[4]);	// column 4 is static identifiers
 			all_priority_condition_dynamic_identifiers[priority] = identifiers_processing.get_dynamic_identifiers(this_condition_info[5]);	// column 5 is dynamic identifiers
 			all_priority_condition_dynamic_dentifiers_column_indexes[priority] = identifiers_processing.get_dynamic_dentifiers_column_indexes(this_condition_info[5]);	// column 5 is dynamic identifiers
-		
-			
-			// sort for Binary search used in:     are_all_static_identifiers_matched()
-			for (List<String> this_static_identifier: all_priority_condition_static_identifiers[priority]) {
-				Collections.sort(this_static_identifier);
-			}	
-			
-			// sort for Binary search used in:     are_all_dynamic_identifiers_matched()
-			for (List<String> this_dynamic_identifier: all_priority_condition_dynamic_identifiers[priority]) {
-				Collections.sort(this_dynamic_identifier);
-			}			
-		
 		}
 		
 		// Some more set up

@@ -1470,7 +1470,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 				List<String> yield_tables_names_list = Arrays.asList(yield_tables_names); 		// Convert array to list
 							
 				// Read input files to retrieve values later
-				Read_Input read = new Read_Input(null);
+				Read_Input read = new Read_Input(read_database);
 				read.read_model_strata(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_02_model_strata.txt"));
 
 				// Get info: input_02_modeled_strata

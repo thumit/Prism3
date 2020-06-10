@@ -132,6 +132,7 @@ public class Identifiers_Processing {
 			StringTokenizer t2 = new StringTokenizer(infor, " ");	// info_array = the array storing all the elements split by " "
 			if (t2.hasMoreTokens()) t2.nextToken();					// Ignore the first element which is the identifier index
 			while (t2.hasMoreTokens()) this_identifier.add(t2.nextToken().replaceAll("\\s+",""));	// Add element name, if name has spaces then remove all the spaces
+			Collections.sort(this_identifier);	// sort for Binary search used in:     are_all_static_identifiers_matched()
 			static_identifiers.add(this_identifier);
 		}
 		return static_identifiers;
@@ -150,6 +151,7 @@ public class Identifiers_Processing {
 			StringTokenizer t2 = new StringTokenizer(infor, " ");	// info_array = the array storing all the elements split by " "
 			if (t2.hasMoreTokens()) t2.nextToken();					// Ignore the first element which is the identifier index
 			while (t2.hasMoreTokens()) this_identifier.add(t2.nextToken().replaceAll("\\s+",""));	// Add element name, if name has spaces then remove all the spaces
+			Collections.sort(this_identifier);	// sort for Binary search used in:     are_all_dynamic_identifiers_matched()
 			dynamic_identifiers.add(this_identifier);
 		}
 		return dynamic_identifiers;
