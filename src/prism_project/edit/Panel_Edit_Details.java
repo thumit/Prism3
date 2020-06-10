@@ -4537,11 +4537,11 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			// 1st grid -----------------------------------------------------------------------	
 			String message = 
 					  "1. This screen is used to categorize management prescriptions into 4 specific groups\n"
-					+ "   - NC_E: (no clear-cuts existing) prescriptions without clear-cuts for existing forest strata\n"
-					+ "   - EA_E: (even-aged existing) prescriptions with clear-cuts for existing forest strata\n"
-					+ "   - NC_R: (no clear-cuts regenerated) prescriptions without clear-cuts for regenerated forest strata\n"
-					+ "   - EA_R: (even-aged regenerated) prescriptions with clear-cuts for regenerated forest strata\n\n"
-					+ "2. Dynamic identifiers are used to filter prescriptions in the yield tables database. You should use identifiers which have constant value across all rows of each same prescription.\n\n"
+					+ "   - NC_E: prescriptions for existing forest strata without clear-cut activities\n"
+					+ "   - EA_E: prescriptions for existing forest strata with a clear-cut activity at the end\n"
+					+ "   - NC_R: prescriptions for regenerated forest strata without clear-cut activities\n"
+					+ "   - EA_R: prescriptions for regenerated forest strata with a clear-cut activities at the end\n\n"
+					+ "2. Dynamic identifiers are used to filter prescriptions in the yield tables database. If any row within a prescription meets the dynamic identifiers condition then the prescription will be considered as meeting the condition. Therefore, you should select any identifier which have a constant value across all rows of each same prescription.\n\n"
 					+ "3. Uncategorized prescriptions would be excluded from modeling even though they do exist in the database.";
 			PrismTextAreaReadMe warning_textarea = new PrismTextAreaReadMe("icon_script.png", 1, 1);
 			warning_textarea.append(message);
@@ -4570,7 +4570,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			// 4th Grid -----------------------------------------------------------------------------
 			// Add all buttons to a Panel----------------------------------
 			button_table_Panel = new JPanel(new GridBagLayout());
-			TitledBorder border = new TitledBorder("Priority Conditions (no row = no prescriptions = infeasibility)");
+			TitledBorder border = new TitledBorder("Priority Conditions (no row = no prescriptions included into the model)");
 			border.setTitleJustification(TitledBorder.CENTER);
 			button_table_Panel.setBorder(border);
 			GridBagConstraints c2 = new GridBagConstraints();
@@ -5085,7 +5085,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			// 4th Grid -----------------------------------------------------------------------------
 			// Add all buttons to a Panel----------------------------------
 			button_table_Panel = new JPanel(new GridBagLayout());
-			TitledBorder border = new TitledBorder("Agregation Conditions (no row = disable all even-aged methods)");
+			TitledBorder border = new TitledBorder("Agregation Conditions (no row = no prescriptions included into the model)");
 			border.setTitleJustification(TitledBorder.CENTER);
 			button_table_Panel.setBorder(border);
 			GridBagConstraints c2 = new GridBagConstraints();
