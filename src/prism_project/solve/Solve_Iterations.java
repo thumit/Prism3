@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -146,6 +147,8 @@ public class Solve_Iterations {
 				List<String> yield_tables_column_names_list = Arrays.asList(yield_tables_column_names); 
 				String[] yield_tables_names = read_database.get_yield_tables_names();			
 				List<String> yield_tables_names_list = Arrays.asList(yield_tables_names); 
+				int total_prescriptions = yield_tables_values.length;
+				int activity_col_id = yield_tables_column_names_list.indexOf("action_type");
 				
 				// Get info: layers from database (strata_definition)
 				List<List<String>> all_layers =  read_database.get_all_layers();		
@@ -211,12 +214,12 @@ public class Solve_Iterations {
 				boolean is_prescription_category_defined_with_some_rows = (input_03_file.exists()) ? true : false;
 				
 				// Get Info: input_04_prescription_assignment
-				read.populate_ea_lists(model_strata, model_strata_without_sizeclass, all_layers);
-				List<Integer>[] list_of_prescription_ids_for_strata = read.get_list_of_prescription_ids_for_strata();
-				List<Integer>[] list_of_prescription_ids_for_strata_without_sizeclass = read.get_list_of_prescription_ids_for_strata_without_sizeclass();
-				Set<Integer>[] set_of_s5R_for_strata = read.get_set_of_s5R_for_strata();
-				Set<Integer>[] set_of_s5R_for_strata_without_sizeclass = read.get_set_of_s5R_for_strata_without_sizeclass();
-				boolean is_ea_defined_with_some_rows = (input_04_file.exists()) ? true : false;
+				read.process_data_from_prescription_assignment(model_strata, model_strata_without_sizeclass);
+				Set<Integer>[] set_of_prescription_ids_for_strata = read.get_set_of_prescription_ids_for_strata();
+				Set<Integer>[] set_of_prescription_ids_for_strata_without_sizeclass = read.get_set_of_prescription_ids_for_strata_without_sizeclass();
+				Set<Integer>[][] set_of_prescription_ids_for_strata_with_s5R = read.get_set_of_prescription_ids_for_strata_with_s5R();
+				Set<Integer>[][] set_of_prescription_ids_for_strata_without_sizeclass_with_s5R = read.get_set_of_prescription_ids_for_strata_without_sizeclass_with_s5R();
+				boolean is_prescription_assignment_defined_with_some_rows = (input_04_file.exists()) ? true : false;
 				
 				// Get Info: input_06_natural_disturbances
 				List<String> disturbance_condition_list = read.get_disturbance_condition_list(); 
@@ -294,14 +297,6 @@ public class Solve_Iterations {
 					Information_Parameter parameter_info = new Information_Parameter(read_database);
 					List<Information_Variable> var_info_list = new ArrayList<Information_Variable>();
 					
-					
-					int total_prescriptions = yield_tables_values.length;
-					int method_col_id = yield_tables_column_names_list.indexOf("silv_method");
-					int status_col_id = yield_tables_column_names_list.indexOf("extreg");
-					int choice_col_id = yield_tables_column_names_list.indexOf("timingchoice");
-					int activity_col_id = yield_tables_column_names_list.indexOf("action_type");
-					
-					
 					// Some pre-calculations to speed up reading time
 					String[] s5_s6_from_existing_strata = new String[total_model_strata];
 					String[] s5_s6_from_prescription = new String[total_prescriptions];
@@ -327,8 +322,6 @@ public class Solve_Iterations {
 					}
 					for (int strata_id = 0; strata_id < total_model_strata; strata_id++) {
 						String strata = model_strata.get(strata_id);
-						
-						// prescriptions identified by prescription category
 						list_of_nonea_prescription_id_for_existing_strata[strata_id] = new ArrayList<Integer>();
 						list_of_ea_prescription_id_for_existing_strata[strata_id] = new ArrayList<Integer>();
 						for (int i = 0; i < total_prescriptions; i++) {
@@ -339,15 +332,9 @@ public class Solve_Iterations {
 								list_of_nonea_prescription_id_for_existing_strata[strata_id].add(i);
 							}
 						}
-						
-						// intersect with prescriptions identified by prescription assignment to get final results
-						list_of_nonea_prescription_id_for_existing_strata[strata_id].retainAll(list_of_prescription_ids_for_strata[strata_id]);
-						list_of_ea_prescription_id_for_existing_strata[strata_id].retainAll(list_of_prescription_ids_for_strata[strata_id]);
 					}
 					for (int strata_id = 0; strata_id < total_model_strata_without_sizeclass; strata_id++) {
 						String strata = model_strata_without_sizeclass.get(strata_id);
-						
-						// prescriptions identified by prescription category
 						list_of_nonea_prescription_id_for_regenerated_strata[strata_id] = new ArrayList<Integer>();
 						list_of_ea_prescription_id_for_regenerated_strata[strata_id] = new ArrayList<Integer>();
 						for (int i = 0; i < total_prescriptions; i++) {
@@ -358,11 +345,10 @@ public class Solve_Iterations {
 								list_of_nonea_prescription_id_for_regenerated_strata[strata_id].add(i);
 							}
 						}
-						
-						// intersect with prescriptions identified by prescription assignment to get final results
-						list_of_nonea_prescription_id_for_regenerated_strata[strata_id].retainAll(list_of_prescription_ids_for_strata_without_sizeclass[strata_id]);
-						list_of_ea_prescription_id_for_regenerated_strata[strata_id].retainAll(list_of_prescription_ids_for_strata_without_sizeclass[strata_id]);
 					}
+					
+					
+					
 					
 					
 					List<Double> objlist = new ArrayList<Double>();				//objective coefficient
@@ -483,7 +469,9 @@ public class Solve_Iterations {
 					for (int strata_id = 0; strata_id < total_model_strata; strata_id++) {
 						String strata = model_strata.get(strata_id);
 						xNCe[strata_id] = new int[total_prescriptions][];
-						for (int i : list_of_nonea_prescription_id_for_existing_strata[strata_id]) {
+						Set<Integer> filter_set = new HashSet<Integer>(set_of_prescription_ids_for_strata[strata_id]);
+						filter_set.retainAll(list_of_nonea_prescription_id_for_existing_strata[strata_id]);	// filter out the NC_E prescriptions only
+						for (int i : filter_set) {
 							xNCe[strata_id][i] = new int[total_periods + 1 + iter];
 							for (int t = 1 + iter; t <= total_periods + iter; t++) {
 								String var_name = "xNC_E_" + strata + "_" + i + "_" + t;	
@@ -505,9 +493,11 @@ public class Solve_Iterations {
 					for (int strata_id = 0; strata_id < total_model_strata; strata_id++) {
 						String strata = model_strata.get(strata_id);
 						xEAe[strata_id] = new int[total_layer5][][];
-						for (int s5R : set_of_s5R_for_strata[strata_id]) {
+						for (int s5R = 0; s5R < total_layer5; s5R++) {
 							xEAe[strata_id][s5R] = new int[total_prescriptions][];
-							for (int i : list_of_ea_prescription_id_for_existing_strata[strata_id]) {
+							Set<Integer> filter_set = new HashSet<Integer>(set_of_prescription_ids_for_strata_with_s5R[strata_id][s5R]);
+							filter_set.retainAll(list_of_ea_prescription_id_for_existing_strata[strata_id]);	// filter out the EA_E prescriptions only
+							for (int i : filter_set) {
 								int rotation_period = rotation_period_from_precription[i]; // tR = total rows of this prescription    need compare: tR = [1+iter, total_period + iter]	
 								int rotation_age = rotation_period + strata_starting_age[strata_id] - 1;
 								if (1 + iter <= rotation_period && rotation_period <= total_periods + iter) {		// restrict prescriptions with tR = [1+iter, total_period + iter]
@@ -536,7 +526,9 @@ public class Solve_Iterations {
 					for (int strata_5layers_id = 0; strata_5layers_id < total_model_strata_without_sizeclass; strata_5layers_id++) {
 						String strata = model_strata_without_sizeclass.get(strata_5layers_id);
 						xNCr[strata_5layers_id] = new int[total_prescriptions][][];
-						for (int i : list_of_nonea_prescription_id_for_regenerated_strata[strata_5layers_id]) {
+						Set<Integer> filter_set = new HashSet<Integer>(set_of_prescription_ids_for_strata_without_sizeclass[strata_5layers_id]);
+						filter_set.retainAll(list_of_nonea_prescription_id_for_regenerated_strata[strata_5layers_id]);	// filter out the NC_R prescriptions only
+						for (int i : filter_set) {
 							xNCr[strata_5layers_id][i] = new int[total_periods + 1 + iter][];
 							int t_regen = (iter == 0) ? 2 : 1;	// this is because iteration 0 could not have regenerated forest in period 1, but iterations >= 1 do have regenerated forest strata
 							for (int t = t_regen + iter; t <= total_periods + iter; t++) {
@@ -562,9 +554,11 @@ public class Solve_Iterations {
 					for (int strata_5layers_id = 0; strata_5layers_id < total_model_strata_without_sizeclass; strata_5layers_id++) {
 						String strata = model_strata_without_sizeclass.get(strata_5layers_id);
 						xEAr[strata_5layers_id] = new int[total_layer5][][][];
-						for (int s5R : set_of_s5R_for_strata_without_sizeclass[strata_5layers_id]) {
+						for (int s5R = 0; s5R < total_layer5; s5R++) {
 							xEAr[strata_5layers_id][s5R] = new int[total_prescriptions][][];
-							for (int i : list_of_ea_prescription_id_for_regenerated_strata[strata_5layers_id]) {
+							Set<Integer> filter_set = new HashSet<Integer>(set_of_prescription_ids_for_strata_without_sizeclass_with_s5R[strata_5layers_id][s5R]);
+							filter_set.retainAll(list_of_ea_prescription_id_for_regenerated_strata[strata_5layers_id]);	// filter out the EA_R prescriptions only
+							for (int i : filter_set) {
 								int rotation_age = yield_tables_values[i].length;// aR = total rows of this prescription 
 								xEAr[strata_5layers_id][s5R][i] = new int[total_periods + 1 + iter][];
 								int t_regen = (iter == 0) ? 2 : 1;	// this is because iteration 0 could not have regenerated forest in period 1, but iterations >= 1 do have regenerated forest strata
