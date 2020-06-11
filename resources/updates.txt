@@ -1319,5 +1319,6 @@ All changes in this block are associated with PrismAlpha3.0.03.jar, Prism-Formul
 543. Unlimited management prescriptions update
 	- Build editing GUI for Prescription Category. This GUI allows users to filter and categorize prescriptions into 4 specified groups NC_E, NC_R, EA_E, EA_R
 	- Build editing GUI for Prescription Assignment. This GUI allows users to assign prescriptions to be implemented on selected model strata.
-	- Build reading logic for Prescription Category 
+	- Build reading logic for Prescription Category and Prescription Assignment
+	- Build solving logic for Prescription Category and Prescription Assignment
 5xx. Remove the upper bound restriction filters that do not allow prescriptions with rotation periods > total planning period to be defined for EA_E and EA_R variables (not yet)

@@ -31,10 +31,12 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 public class Read_Input {
+	private Read_Database read_database;
 	private Identifiers_Processing identifiers_processing;
 	private String[][][] yield_tables_values;
 	
 	public Read_Input(Read_Database read_database) {
+		this.read_database = read_database;	
 		identifiers_processing = new Identifiers_Processing(read_database);
 		yield_tables_values = read_database.get_yield_tables_values();
 	}
@@ -231,7 +233,8 @@ public class Read_Input {
 			}
 			
 			// Logic: If the first row of a prescription meets the dynamic identifiers condition then the prescription will be considered as meeting the condition.
-			// Note columnNames2 = new String[] {"condition_id", "condition_description", "prescription_group", "dynamic_identifiers", "original_dynamic_identifiers", "model_condition"};
+			// Logic: condition is PRIORITY CONDITION
+			// Note: columnNames2 = new String[] {"condition_id", "condition_description", "prescription_group", "dynamic_identifiers", "original_dynamic_identifiers", "model_condition"};
 			int category_prescription_group_col = 2;
 			int category_dynamic_identifiers_col = 3;
 			// This array stores dynamic identifiers in each row of the input table
@@ -280,10 +283,12 @@ public class Read_Input {
 		
 	//-------------------------------------------------------------------------------------------------------------------------------------------------	
 	//For input_04_prescription_assignment
-	private int ea_total_rows, ea_total_columns;
-	private String[][] ea_data;
-	private List<List<String>> ea_conversion_and_rotation_for_strata;
-	private List<List<String>> ea_conversion_and_rotation_for_strata_without_sizeclass;
+	private int assignment_total_rows, assignment_total_columns;
+	private String[][] assignment_data;
+	private List<List<String>>[] static_identifiers_for_row;
+	private List<Integer>[] list_of_prescription_ids_for_row;
+	private Set<Integer>[] set_of_s5R_for_strata, set_of_s5R_for_strata_without_sizeclass;
+	private List<Integer>[] list_of_prescription_ids_for_strata, list_of_prescription_ids_for_strata_without_sizeclass;
 
 	public void read_prescription_assignment(File file) {
 		String delimited = "\t";		// tab delimited
@@ -294,15 +299,57 @@ public class Read_Input {
 			list = get_list_of_checked_conditions(list, delimited);
 			String[] a = list.toArray(new String[list.size()]);
 								
-			ea_total_rows = a.length;
-			ea_total_columns = a[0].split(delimited).length;		// a[0].split(delimited) = String[] of the first row (this is the row below the column headers row which was removed already)	
-			ea_data = new String[ea_total_rows][ea_total_columns];
+			assignment_total_rows = a.length;
+			assignment_total_columns = a[0].split(delimited).length;		// a[0].split(delimited) = String[] of the first row (this is the row below the column headers row which was removed already)	
+			assignment_data = new String[assignment_total_rows][assignment_total_columns];
 		
 			// read all values from all rows and columns
-			for (int i = 0; i < ea_total_rows; i++) {		
+			for (int i = 0; i < assignment_total_rows; i++) {		
 				String[] rowValue = a[i].split(delimited);		
-				for (int j = 0; j < ea_total_columns; j++) {
-					ea_data[i][j] = rowValue[j];
+				for (int j = 0; j < assignment_total_columns; j++) {
+					assignment_data[i][j] = rowValue[j];
+				}
+			}
+			
+			// Logic: If the first row of a prescription meets the dynamic identifiers condition then the prescription will be considered as meeting the condition.
+			// Logic: condition is AGGREGATION CONDITION
+			// Note: columnNames4 = new String[] {"condition_id", "condition_description", "layer5_regen", "static_identifiers", "dynamic_identifiers", "original_dynamic_identifiers", "model_condition"};
+			int assignment_static_identifiers_col = 3;
+			int assignment_dynamic_identifiers_col = 4;
+			List<List<String>>[] all_condition_static_identifiers = new ArrayList[assignment_total_rows];	// This array stores static identifiers in each row of the input table
+			List<List<String>>[] all_condition_dynamic_identifiers = new ArrayList[assignment_total_rows];	// This array stores dynamic identifiers in each row of the input table
+			List<String>[] all_condition_dynamic_dentifiers_column_indexes = new ArrayList[assignment_total_rows];
+			for (int aggregation_condition = 0; aggregation_condition < assignment_total_rows; aggregation_condition++) {		// Loop all aggregation conditions
+				String static_identifiers_info = assignment_data[aggregation_condition][assignment_static_identifiers_col];	
+				List<List<String>> assignment_static_identifiers = identifiers_processing.get_static_identifiers(static_identifiers_info);
+				all_condition_static_identifiers[aggregation_condition] = assignment_static_identifiers;
+				
+				String dynamic_identifiers_info = assignment_data[aggregation_condition][assignment_dynamic_identifiers_col];	
+				List<List<String>> assignment_dynamic_identifiers = identifiers_processing.get_dynamic_identifiers(dynamic_identifiers_info);
+				List<String> assignment_dynamic_identifiers_column_indexes = identifiers_processing.get_dynamic_dentifiers_column_indexes(dynamic_identifiers_info);
+				all_condition_dynamic_identifiers[aggregation_condition] = assignment_dynamic_identifiers;
+				all_condition_dynamic_dentifiers_column_indexes[aggregation_condition] = assignment_dynamic_identifiers_column_indexes;
+			}
+			static_identifiers_for_row = all_condition_static_identifiers;
+			
+			// create the list
+			int total_prescriptions = yield_tables_values.length;
+			list_of_prescription_ids_for_row = new ArrayList[assignment_total_rows];
+			for (int aggregation_condition = 0; aggregation_condition < assignment_total_rows; aggregation_condition++) {	// Loop all aggregation conditions
+				list_of_prescription_ids_for_row[aggregation_condition] = new ArrayList<Integer>();
+			}
+			
+			// add prescription ids to the list & add layer5_regen ids to the list
+			for (int prescription_id = 0; prescription_id < total_prescriptions; prescription_id++) {
+				for (int aggregation_condition = 0; aggregation_condition < assignment_total_rows; aggregation_condition++) {	// Loop all aggregation conditions
+					// If the first row of this prescription meets this aggregation condition dynamic identifiers then add the prescription_id to the list_of_prescriptions_for_this_row 
+					int row_id = 0;
+					if (identifiers_processing.are_all_dynamic_identifiers_matched(
+							yield_tables_values, prescription_id, row_id,
+							all_condition_dynamic_dentifiers_column_indexes[aggregation_condition],
+							all_condition_dynamic_identifiers[aggregation_condition])) {
+						list_of_prescription_ids_for_row[aggregation_condition].add(prescription_id);
+					}
 				}
 			}
 		} catch (IOException e) {
@@ -310,91 +357,22 @@ public class Read_Input {
 		}
 	}
 	
-	public List<List<String>> get_ea_static_identifiers_in_row(int row) {
-		List<List<String>> ea_static_identifiers = new ArrayList<List<String>>();
-		
-		//Read the whole cell into array
-		String[] staticLayer_Info = ea_data[row][2].split(";");
-		int total_staticIdentifiers = staticLayer_Info.length;
-		
-		//Get all static Identifiers to be in the list
-		for (int i = 0; i < total_staticIdentifiers; i++) {		//6 first identifiers is strata 6 layers (layer 0 to 5)		
-			List<String> thisIdentifier = new ArrayList<String>();
-			
-			String[] identifierElements = staticLayer_Info[i].split("\\s+");				//space delimited
-			for (int j = 1; j < identifierElements.length; j++) {		//Ignore the first element which is the identifier index, so we loop from 1 not 0
-				thisIdentifier.add(identifierElements[j].replaceAll("\\s+",""));		//Add element name, if name has spaces then remove all the spaces
-			}
-			
-			ea_static_identifiers.add(thisIdentifier);
-		}
-			
-		return ea_static_identifiers;
-	}	
-	
-	public List<List<String>> get_ea_conversion_and_rotation_in_row(int row) {
-		List<List<String>> ea_conversion_and_rotation = new ArrayList<List<String>>();		// 3 elements
-		
-		
-		// All lines except the 1st line to be in a list;		
-		String[] list = ea_data[row][3].split(";");	// each element of this list is a row as seen in table4a in Prism GUI
-		
-		List<String> covertype_conversions_and_existing_rotation_ages_list = new ArrayList<String>();
-		List<String> covertype_conversions_and_regeneration_rotation_ages_list = new ArrayList<String>();
-		List<String> covertype_conversions_list = new ArrayList<String>();
-		
-		for (int i = 0; i < list.length; i++) {
-			String[] values = list[i].split("\\s+");
-			if (values[6].equals("true")) {	// this is the implementation boolean value as seen in table4a in Prism GUI
-				covertype_conversions_list.add(values[0] + " " + values[1]);	// layer5  layer5_regen
-				int e_RA_min = Integer.parseInt(values[2]);
-				int e_RA_max = Integer.parseInt(values[3]);
-				int r_RA_min = Integer.parseInt(values[4]);
-				int r_RA_max = Integer.parseInt(values[5]);
-
-				for (int age = e_RA_min; age <= e_RA_max; age++) {
-					String temp = values[0] + " " + values[1] + " " + age;
-					covertype_conversions_and_existing_rotation_ages_list.add(temp);
-				}
-				
-				for (int age = r_RA_min; age <= r_RA_max; age++) {
-					String temp = values[0] + " " + values[1] + " " + age;
-					covertype_conversions_and_regeneration_rotation_ages_list.add(temp);
-				}
-			}
-		}
-		
-		
-		ea_conversion_and_rotation.add(covertype_conversions_and_existing_rotation_ages_list);		// add 1st element
-		ea_conversion_and_rotation.add(covertype_conversions_and_regeneration_rotation_ages_list);		// add 2nd element
-		ea_conversion_and_rotation.add(covertype_conversions_list);		// add 3rd element
-		return ea_conversion_and_rotation;
-	}
-			
 	public void populate_ea_lists(List<String> model_strata, List<String> model_strata_without_sizeclass, List<List<String>> all_layers) {	
-		// Calculate this first to avoid calculating it in the below loops------------------- ------------------------------------
-		List<List<String>>[] ea_static_identifiers = new ArrayList[ea_total_rows]; 
-		List<List<String>>[] ea_conversion_and_rotation  = new ArrayList[ea_total_rows];
-		for (int row = 0; row < ea_total_rows; row++) {	// load each row
-			ea_static_identifiers[row] = get_ea_static_identifiers_in_row(row);			
-			ea_conversion_and_rotation[row] = get_ea_conversion_and_rotation_in_row(row);
-		}
-		
-
-		
 		// existing 6 layers ------------------------------------ ------------------------------------ ------------------------------------
-		ea_conversion_and_rotation_for_strata = new ArrayList<List<String>>();
+		list_of_prescription_ids_for_strata = new ArrayList[model_strata.size()];
+		set_of_s5R_for_strata = new HashSet[model_strata.size()];
 		for (int i = 0; i < model_strata.size(); i++) {
-			ea_conversion_and_rotation_for_strata.add(new ArrayList<String>());
+			list_of_prescription_ids_for_strata[i] = new ArrayList<Integer>();
+			set_of_s5R_for_strata[i] = new HashSet<Integer>();
 		}
 		
 		for (int strata_id = 0; strata_id < model_strata.size(); strata_id++) {
 			String strata = model_strata.get(strata_id);
 			String[] layer = strata.split("_");
 		
-			for (int row = 0; row < ea_total_rows; row++) {	// load each row
-				List<List<String>> static_identifiers = ea_static_identifiers[row];			
-				List<List<String>> conversion_and_rotation = ea_conversion_and_rotation[row];	
+			for (int row = 0; row < assignment_total_rows; row++) {	// load each row   (loop all aggregation conditions)
+				List<List<String>> static_identifiers = static_identifiers_for_row[row];			
+				List<Integer> list_of_prescription_ids = list_of_prescription_ids_for_row[row];
 				
 				// The below check also implements Speed Boost RRB9
 				if (	(static_identifiers.get(0).size() == all_layers.get(0).size() || Collections.binarySearch(static_identifiers.get(0), layer[0]) >= 0) && 
@@ -402,12 +380,18 @@ public class Read_Input {
 						(static_identifiers.get(2).size() == all_layers.get(2).size() || Collections.binarySearch(static_identifiers.get(2), layer[2]) >= 0) && 
 						(static_identifiers.get(3).size() == all_layers.get(3).size() || Collections.binarySearch(static_identifiers.get(3), layer[3]) >= 0) && 
 						(static_identifiers.get(4).size() == all_layers.get(4).size() || Collections.binarySearch(static_identifiers.get(4), layer[4]) >= 0) && 
-						(static_identifiers.get(5).size() == all_layers.get(5).size() || Collections.binarySearch(static_identifiers.get(5), layer[5]) >= 0)	)	
+						(static_identifiers.get(5).size() == all_layers.get(5).size() || Collections.binarySearch(static_identifiers.get(5), layer[5]) >= 0))	
 				{
-					for (String s5_s5r_a : conversion_and_rotation.get(0)) {	// this list is covertype_conversions_and_existing_rotation_ages_list);
-							if (!ea_conversion_and_rotation_for_strata.get(strata_id).contains(s5_s5r_a)) {
-								ea_conversion_and_rotation_for_strata.get(strata_id).add(s5_s5r_a);
-							}
+					list_of_prescription_ids_for_strata[strata_id].addAll(list_of_prescription_ids);	// union
+					
+					int assignment_layer5_regen_col = 2;
+					List<String> layer5 = read_database.get_all_layers().get(4);
+					String layer5_regen_info = assignment_data[row][assignment_layer5_regen_col];
+					String[] layer5_regen_array = layer5_regen_info.split(" ");
+					for (String layer5_regen : layer5_regen_array) {
+						System.out.println("." + layer5_regen + ".");
+						int s5R = layer5.indexOf(layer5_regen);
+						if (s5R >= 0) set_of_s5R_for_strata[strata_id].add(s5R);
 					}
 				}
 				
@@ -417,49 +401,49 @@ public class Read_Input {
 //						Collections.binarySearch(static_identifiers.get(2), layer3) >= 0 &&
 //						Collections.binarySearch(static_identifiers.get(3), layer4) >= 0 && 
 //						Collections.binarySearch(static_identifiers.get(4), layer5) >= 0 && 
-//						Collections.binarySearch(static_identifiers.get(5), layer6) >= 0	)	
+//						Collections.binarySearch(static_identifiers.get(5), layer6) >= 0)	
 //				{
-//					for (String s5_s5r_a : conversion_and_rotation.get(0)) {	// this list is covertype_conversions_and_existing_rotation_ages_list);
-//							if (!ea_conversion_and_rotation_for_strata.get(strata_id).contains(s5_s5r_a)) {
-//								ea_conversion_and_rotation_for_strata.get(strata_id).add(s5_s5r_a);
-//							}
-//					}
+//				list_of_prescription_ids_for_strata[strata_id].addAll(list_of_prescription_ids);	// union
 //				}
 			}
 		}
 		
-		for (List<String> i : ea_conversion_and_rotation_for_strata) {
-			Collections.sort(i);	// sort to use Binary Search when needed (in Panel_Solve)
-		}
 		
 		
 		
 		// regeneration 5 layers ------------------------------------ ------------------------------------ ------------------------------------
-		ea_conversion_and_rotation_for_strata_without_sizeclass = new ArrayList<List<String>>();
+		list_of_prescription_ids_for_strata_without_sizeclass = new ArrayList[model_strata_without_sizeclass.size()];
+		set_of_s5R_for_strata_without_sizeclass = new HashSet[model_strata_without_sizeclass.size()];
 		for (int i = 0; i < model_strata_without_sizeclass.size(); i++) {
-			ea_conversion_and_rotation_for_strata_without_sizeclass.add(new ArrayList<String>());
+			list_of_prescription_ids_for_strata_without_sizeclass[i] = new ArrayList<Integer>();
+			set_of_s5R_for_strata_without_sizeclass[i] = new HashSet<Integer>();
 		}
 		
 		for (int strata_5layers_id = 0; strata_5layers_id < model_strata_without_sizeclass.size(); strata_5layers_id++) {
 			String strata_5layers = model_strata_without_sizeclass.get(strata_5layers_id);
 			String[] layer = strata_5layers.split("_");
 		
-			for (int row = 0; row < ea_total_rows; row++) {	// load each row
-				List<List<String>> static_identifiers = ea_static_identifiers[row];			
-				List<List<String>> conversion_and_rotation = ea_conversion_and_rotation[row];	
+			for (int row = 0; row < assignment_total_rows; row++) {	// load each row   (loop all aggregation conditions)
+				List<List<String>> static_identifiers = static_identifiers_for_row[row];			
+				List<Integer> list_of_prescription_ids = list_of_prescription_ids_for_row[row];	
 				
 				// The below check also implements Speed Boost RRB9
 				if (	(static_identifiers.get(0).size() == all_layers.get(0).size() || Collections.binarySearch(static_identifiers.get(0), layer[0]) >= 0) && 
 						(static_identifiers.get(1).size() == all_layers.get(1).size() || Collections.binarySearch(static_identifiers.get(1), layer[1]) >= 0) && 
 						(static_identifiers.get(2).size() == all_layers.get(2).size() || Collections.binarySearch(static_identifiers.get(2), layer[2]) >= 0) && 
 						(static_identifiers.get(3).size() == all_layers.get(3).size() || Collections.binarySearch(static_identifiers.get(3), layer[3]) >= 0) && 
-						(static_identifiers.get(4).size() == all_layers.get(4).size() || Collections.binarySearch(static_identifiers.get(4), layer[4]) >= 0) )	
+						(static_identifiers.get(4).size() == all_layers.get(4).size() || Collections.binarySearch(static_identifiers.get(4), layer[4]) >= 0))	
 				{
+					list_of_prescription_ids_for_strata_without_sizeclass[strata_5layers_id].addAll(list_of_prescription_ids);	// union
 					
-					for (String s5_s5r_a : conversion_and_rotation.get(1)) {	// this list is covertype_conversions_and_regeneration_rotation_ages_list);
-						if (!ea_conversion_and_rotation_for_strata_without_sizeclass.get(strata_5layers_id).contains(s5_s5r_a)) {
-							ea_conversion_and_rotation_for_strata_without_sizeclass.get(strata_5layers_id).add(s5_s5r_a);
-						}
+					int assignment_layer5_regen_col = 2;
+					List<String> layer5 = read_database.get_all_layers().get(4);
+					String layer5_regen_info = assignment_data[row][assignment_layer5_regen_col];
+					String[] layer5_regen_array = layer5_regen_info.split(" ");
+					for (String layer5_regen : layer5_regen_array) {
+						System.out.println("." + layer5_regen + ".");
+						int s5R = layer5.indexOf(layer5_regen);
+						if (s5R >= 0) set_of_s5R_for_strata_without_sizeclass[strata_5layers_id].add(s5R);
 					}
 				}
 				
@@ -468,33 +452,33 @@ public class Read_Input {
 //						Collections.binarySearch(static_identifiers.get(1), layer2) >= 0 && 
 //						Collections.binarySearch(static_identifiers.get(2), layer3) >= 0 && 
 //						Collections.binarySearch(static_identifiers.get(3), layer4) >= 0 && 
-//						Collections.binarySearch(static_identifiers.get(4), layer5) >= 0	)	
+//						Collections.binarySearch(static_identifiers.get(4), layer5) >= 0)	
 //				{
-//					for (String s5_s5r_a : conversion_and_rotation.get(1)) {	// this list is covertype_conversions_and_regeneration_rotation_ages_list);
-//						if (!ea_conversion_and_rotation_for_strata_without_sizeclass.get(strata_5layers_id).contains(s5_s5r_a)) {
-//							ea_conversion_and_rotation_for_strata_without_sizeclass.get(strata_5layers_id).add(s5_s5r_a);
-//						}
-//					}
+//				list_of_prescription_ids_for_strata_without_sizeclass[strata_5layers_id].addAll(list_of_prescription_ids);	// union
 //				}
 			}
 		}	
-		
-		for (List<String> i : ea_conversion_and_rotation_for_strata_without_sizeclass) {
-			Collections.sort(i);	// sort to use Binary Search when needed (in Panel_Solve)
-		}
 	}	
 	
-	public int get_ea_total_rows() {
-		return ea_total_rows;
+	public int get_assignment_total_rows() {
+		return assignment_total_rows;
 	}
 	
-	public List<List<String>> get_ea_conversion_and_rotation_for_strata() {
-		return ea_conversion_and_rotation_for_strata;		// each existing stratum includes a list of "layer5 layer5_regen rotation_age"
+	public List<Integer>[] get_list_of_prescription_ids_for_strata() {
+		return list_of_prescription_ids_for_strata;		// each existing stratum includes a list of prescriptions
 	}
 	
-	public List<List<String>> get_ea_conversion_and_rotation_for_strata_without_sizeclass() {
-		return ea_conversion_and_rotation_for_strata_without_sizeclass;		// each regenerated stratum includes a list of "layer5 layer5_regen rotation_age"
+	public List<Integer>[] get_list_of_prescription_ids_for_strata_without_sizeclass() {
+		return list_of_prescription_ids_for_strata_without_sizeclass;		// each regenerated stratum includes a list of prescriptions
 	}	
+	
+	public Set<Integer>[] get_set_of_s5R_for_strata() {
+		return set_of_s5R_for_strata;
+	}
+	
+	public Set<Integer>[] get_set_of_s5R_for_strata_without_sizeclass() {
+		return set_of_s5R_for_strata_without_sizeclass;
+	}
 	
 	//-------------------------------------------------------------------------------------------------------------------------------------------------	
 	//For input_06_natural_disturbances
