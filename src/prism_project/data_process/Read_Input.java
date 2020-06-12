@@ -38,7 +38,7 @@ public class Read_Input {
 	public Read_Input(Read_Database read_database) {
 		this.read_database = read_database;	
 		identifiers_processing = new Identifiers_Processing(read_database);
-		yield_tables_values = read_database.get_yield_tables_values();
+		if (read_database != null) yield_tables_values = read_database.get_yield_tables_values();	// add null here since it causes error of not showing up summarize_output_07 (this case uses read_database = null)
 	}
 	
 	private List<String> get_list_of_checked_conditions(List<String> list, String delimited) {
