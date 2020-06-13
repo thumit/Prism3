@@ -661,10 +661,9 @@ public class Solve_Iterations {
 						int var_row_id = prescription_id_and_row_id[1];
 						
 						
-						if (var_prescription_id != -9999 && var_row_id < yield_tables_values[var_prescription_id].length && var_row_id != -9999) {	
-							// The above if then is not necessary (because we already have it in the void call), it is here just to help not create unnecessary Cost object as below
-							// And because of this, it would save processing time
-							
+						if (var_row_id != -9999 && var_row_id < yield_tables_values[var_prescription_id].length) {	
+							// The above if then is not necessary (because we already have it in the void call), 
+							// It is here to help not create unnecessary Cost objects and therefore would save processing time
 							// Replacing Disturbances -----------------------------------
 							// Replacing Disturbances -----------------------------------
 							if (disturbance_info != null) {	// in case there is condition --> calculate this one right away since they will be definitely used
@@ -708,8 +707,6 @@ public class Solve_Iterations {
 							} else {
 								var_cost_value[var_index] = 0;
 							}
-						} else {
-							var_cost_value[var_index] = 0;
 						}
 						
 						if (var_index + 1 > 1 && ((var_index + 1) % 30000 == 0 || var_index + 1 == vname.length)) {
@@ -2849,12 +2846,8 @@ public class Solve_Iterations {
 										
 	
 										String data_connection = "good";
-										if (var_prescription_id == -9999) {
-											data_connection = "missing yield table";
-										} else {
-											if (yield_tables_values[var_prescription_id].length <= var_row_id) {
-												data_connection = "missing row id = " + var_row_id;
-											}
+										if (yield_tables_values[var_prescription_id].length <= var_row_id) {
+											data_connection = "missing row id = " + var_row_id;
 										}
 	
 										fileOut.newLine();
@@ -3464,12 +3457,8 @@ public class Solve_Iterations {
 										
 	
 										String data_connection = "good";
-										if (var_prescription_id == -9999) {
-											data_connection = "missing yield table";
-										} else {
-											if (yield_tables_values[var_prescription_id].length <= var_row_id) {
-												data_connection = "missing row id = " + var_row_id;
-											}
+										if (yield_tables_values[var_prescription_id].length <= var_row_id) {
+											data_connection = "missing row id = " + var_row_id;
 										}
 	
 										fileOut.newLine();

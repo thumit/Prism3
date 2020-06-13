@@ -68,16 +68,14 @@ public class Information_Disturbance {
 		}
 		
 		int id = -9999;
-		if (prescription_id != -9999) {	// If prescription exists (not exist when prescription_id = -9999)						
-			if (row_id < yield_tables_values[prescription_id].length && row_id != -9999) { 	// If row in this prescription exists (not exists when row_id = -9999 or >= total rows in that prescription)
-				int priority = 0;
-				while (id == -9999 && priority < all_priority_condition_info.length) {		// loop all condition until found the one matched
-					if (identifiers_processing.are_all_static_identifiers_matched(var_info, all_priority_condition_static_identifiers[priority])
-								&& identifiers_processing.are_all_dynamic_identifiers_matched(prescription_id, row_id, all_priority_condition_dynamic_dentifiers_column_indexes[priority], all_priority_condition_dynamic_identifiers[priority])) {
-						id = priority;
-					}
-					priority++;
+		if (row_id != -9999 && row_id < yield_tables_values[prescription_id].length) { 	// If row in this prescription exists (not exists when row_id = -9999 or >= total rows in that prescription)
+			int priority = 0;
+			while (id == -9999 && priority < all_priority_condition_info.length) {		// loop all condition until found the one matched
+				if (identifiers_processing.are_all_static_identifiers_matched(var_info, all_priority_condition_static_identifiers[priority])
+							&& identifiers_processing.are_all_dynamic_identifiers_matched(prescription_id, row_id, all_priority_condition_dynamic_dentifiers_column_indexes[priority], all_priority_condition_dynamic_identifiers[priority])) {
+					id = priority;
 				}
+				priority++;
 			}
 		}
 		return id;	
