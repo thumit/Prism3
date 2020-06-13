@@ -479,7 +479,18 @@ public class Read_Database {
 		return valueReturn;	
 	}
 
-	
+	public int[] get_starting_age_class_for_prescription() {
+		List<String> yield_tables_column_names_list = Arrays.asList(yield_tables_column_names);	// convert array to list
+		int age_class_col_id = yield_tables_column_names_list.indexOf("age_class");
+		
+		int total_prescriptions = yield_tables_values.length;
+		int[] starting_age_class_for_prescription = new int[total_prescriptions];
+		for (int i = 0; i < total_prescriptions; i++) {
+			starting_age_class_for_prescription[i] = Integer.valueOf(yield_tables_values[i][0][age_class_col_id]);	// row 0 is the first period (1st row)
+			
+		}	
+		return starting_age_class_for_prescription;
+	}
 	
 	
 	// This block is For existing_strata ------------------------------------------------------------------------------------------------------

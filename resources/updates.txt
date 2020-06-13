@@ -1330,4 +1330,8 @@ All changes in this block are associated with PrismAlpha3.0.04.jar, Prism-Formul
 	- Information_Variable class: remove the usage of yield_tables_names_list in the function, rename timing_choice --> prescription_id, and remove searching precsription_id logic since it is not needed
 545. VERY IMPORTANT LOGIC REFACTOR: remove checking if prescription exists in all the places (Solve_Iterations, Information_Parameter, Information_Disturbance, Information_Cost)
 546. VERY IMPORTANT LOGIC FIX: Output_Panel_Management_Details_NOSQL: calculate starting age for NC_E and EA_E instead of NG_E, PB_E, GS_E, EA_E, ... This might lead to incorrect calculations. NOTE NOTE NOTE: In future update, we need to update when merging NC_E and EA_E variables.
+547. add the fuction get_starting_age_class_for_prescription in the Read_Database class
+
+
+
 5xx. Remove the upper bound restriction filters that do not allow prescriptions with rotation periods > total planning period to be defined for EA_E and EA_R variables (not yet)
