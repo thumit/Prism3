@@ -35,9 +35,9 @@ public class Summarize_Outputs {
 	File[] output_constraints_file;
 	File[] output_management_overview_file;
 	File[] output_management_details_file;
-	File[] output_fly_constraints_file ;
 	File[] output_basic_constraints_file;
 	File[] output_flow_constraints_file;
+	File output_fly_constraints_file;
 	
 	public Summarize_Outputs(File runFolder, int current_iteration) {		// summarize when the current iteration is solved
 		this.runFolder = runFolder;
@@ -48,7 +48,6 @@ public class Summarize_Outputs {
 		output_constraints_file = new File[current_iteration + 1];
 		output_management_overview_file = new File[current_iteration + 1];
 		output_management_details_file = new File[current_iteration + 1];
-		output_fly_constraints_file = new File[current_iteration + 1];
 		output_basic_constraints_file = new File[current_iteration + 1];
 		output_flow_constraints_file = new File[current_iteration + 1];
 		for (int iter = 0; iter <= current_iteration; iter++) {	// Loop all iterations
@@ -58,10 +57,10 @@ public class Summarize_Outputs {
 //			output_constraints_file[iter] = new File(runFolder.getAbsolutePath() + "/output_03_constraints_" + iter + ".txt");	
 			output_management_overview_file[iter] = new File(runFolder.getAbsolutePath() + "/output_04_management_overview_" + iter + ".txt");
 			output_management_details_file[iter] = new File(runFolder.getAbsolutePath() + "/output_05_management_details_" + iter + ".txt");	
-//			output_fly_constraints_file[iter] = new File(runFolder.getAbsolutePath() + "/output_05_fly_constraints_" + iter + ".txt");	
 			output_basic_constraints_file[iter] = new File(runFolder.getAbsolutePath() + "/output_06_basic_constraints_" + iter + ".txt");
 			output_flow_constraints_file[iter] = new File(runFolder.getAbsolutePath() + "/output_07_flow_constraints_" + iter + ".txt");
 		}
+		output_fly_constraints_file = new File(runFolder.getAbsolutePath() + "/output_05_fly_constraints.txt"); 
 		
 		summarize_output_01();	// this would export this output into a different format
 //		summarize_output_by_union(output_general_outputs_file, "summarize_output_01_general_outputs_v2.txt");
@@ -73,6 +72,7 @@ public class Summarize_Outputs {
 		File file_database = new File(runFolder.getAbsolutePath() + "/database.db");
 		SQLite.import_file_as_table_into_database(summarize_output_management_details_file, file_database);
 		
+		reset_fly_constraints(output_fly_constraints_file, current_iteration);
 		if (output_flow_constraints_file[current_iteration].exists()) summarize_output_by_union(output_flow_constraints_file, "summarize_output_07_flow_constraints.txt");
 		if (output_basic_constraints_file[current_iteration].exists()) summarize_output_06();	// this would export this output into a different format
 	}
@@ -159,6 +159,62 @@ public class Summarize_Outputs {
 		// file
 		File summarize_output_general_outputs_file = new File(runFolder.getAbsolutePath() + "/summarize_output_06_basic_constraints.txt");	
 		create_file(summarize_output_general_outputs_file, summarize_data, summarize_column_name);
+	}
+	
+	private void reset_fly_constraints(File file, int iter) {	// delete all iterations columns in the file that is more than this iter
+		try {		
+			if (file.exists()) {
+				// all lines to be in array
+				List<String> list;
+				list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
+				String[] a = list.toArray(new String[list.size()]);
+				int total_rows = a.length;
+				int total_columns = a[0].split("\t").length;
+				String[] column_names = a[0].split("\t");		// 1st line is column name
+				
+				// reset with new column names and data to be cleared
+				int total_cols_to_add = iter + 1;
+				int total_cols_to_remove = 0;
+				for (String col_name : column_names) {
+					if (col_name.startsWith("value_iteration_")) {
+						total_cols_to_remove++;
+					}
+				}
+				
+				String[] new_column_names = new String[total_columns - total_cols_to_remove + total_cols_to_add];		// iter_0, iter_1, ...
+				for (int j = 0; j < new_column_names.length; j++) {
+					if (j < total_columns - total_cols_to_remove) {
+						new_column_names[j] = column_names[j];
+					} else {
+						int this_iter = j - (total_columns - total_cols_to_remove);
+						new_column_names[j] = "value_iteration_" + this_iter;
+					}
+				}
+				
+				// write			
+				try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(file))) {
+					fileOut.write(String.join("\t", new_column_names));	// the columns headers, 1st row
+					// read and write all values from all rows and columns except the query_value (last column) in the row >=1
+					for (int i = 1; i < total_rows; i++) {
+						fileOut.newLine();
+						String[] rowValue = a[i].split("\t");
+						for (int j = 0; j < new_column_names.length; j++) {
+							if (j < total_columns - total_cols_to_remove) {
+								fileOut.write(rowValue[j] + "\t");
+							} else {
+								fileOut.write(null + "\t");
+							}
+						}
+					}
+					fileOut.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+					System.err.println(e.getClass().getName() + ": " + e.getMessage());
+				} 
+			}
+		} catch (IOException e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+		}
 	}
 	
 	private String[][] get_data_from_output(File file) {

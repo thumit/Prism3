@@ -45,7 +45,6 @@ import java.util.stream.Stream;
 import lpsolve.LpSolve;
 import lpsolve.LpSolveException;
 import prism_convenience.PrismTableModel;
-import prism_database.SQLite;
 import prism_project.data_process.Information_Cost;
 import prism_project.data_process.Information_Disturbance;
 import prism_project.data_process.Information_Parameter;
@@ -2841,7 +2840,6 @@ public class Solve_Iterations {
 										int[] prescription_and_row = var_info_array[i].get_prescription_id_and_row_id();
 										int var_prescription_id = prescription_and_row[0];
 										int var_row_id = prescription_and_row[1];
-										
 	
 										String data_connection = "good";
 										if (yield_tables_values[var_prescription_id].length <= var_row_id) {
@@ -2896,7 +2894,6 @@ public class Solve_Iterations {
 								System.err.println("Panel Solve Runs - FileWriter(output_management_details_file) error - " + e.getClass().getName() + ": " + e.getMessage());
 							}
 							output_management_details_file.createNewFile();
-							clear_query_value_for_fly_constraints(output_fly_constraints_file);		// fly_constraints --> don't need to create this file. Just clear query_value if this file exists
 							
 							
 							// output_06_basic_constraints
@@ -3452,7 +3449,6 @@ public class Solve_Iterations {
 										int[] prescription_and_row = var_info_array[i].get_prescription_id_and_row_id();
 										int var_prescription_id = prescription_and_row[0];
 										int var_row_id = prescription_and_row[1];
-										
 	
 										String data_connection = "good";
 										if (yield_tables_values[var_prescription_id].length <= var_row_id) {
@@ -3502,12 +3498,6 @@ public class Solve_Iterations {
 								System.err.println("Panel Solve Runs - FileWriter(output_management_details_file) error - " + e.getClass().getName() + ": " + e.getMessage());
 							}
 							output_management_details_file.createNewFile();
-							
-							// create a table inside the database.db
-							SQLite.import_file_as_table_into_database(output_management_details_file, file_database);
-							
-							// fly_constraints --> don't need to create this file. Just clear query_value if this file exists
-							clear_query_value_for_fly_constraints(output_fly_constraints_file);		
 							
 							
 							// output_06_basic_constraints
@@ -3725,7 +3715,6 @@ public class Solve_Iterations {
 				output_constraints_file.delete();
 				output_management_overview_file.delete();
 				output_management_details_file.delete();	
-				clear_query_value_for_fly_constraints(output_fly_constraints_file);	
 				output_basic_constraints_file.delete();
 				output_flow_constraints_file.delete();
 			} catch (LpSolveException e) {
@@ -3741,7 +3730,6 @@ public class Solve_Iterations {
 				output_constraints_file.delete();
 				output_management_overview_file.delete();
 				output_management_details_file.delete();	
-				clear_query_value_for_fly_constraints(output_fly_constraints_file);	
 				output_basic_constraints_file.delete();
 				output_flow_constraints_file.delete();
 			}		
@@ -3758,7 +3746,6 @@ public class Solve_Iterations {
 				output_constraints_file.delete();
 				output_management_overview_file.delete();
 				output_management_details_file.delete();	
-				clear_query_value_for_fly_constraints(output_fly_constraints_file);	
 				output_basic_constraints_file.delete();
 				output_flow_constraints_file.delete();
 			} finally {
@@ -4084,39 +4071,5 @@ public class Solve_Iterations {
 	
 	
 	
-	private void clear_query_value_for_fly_constraints(File file) {
-		try {		
-			if (file.exists()) {
-				// All lines to be in array
-				List<String> list;
-				list = Files.readAllLines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8);
-				String[] a = list.toArray(new String[list.size()]);
-									
-				int totalRows = a.length;
-				int totalColumns = a[0].split("\t").length;				
-			
-				try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(file))) {
-					fileOut.write(a[0]);	// the columns headers, 1st row
-					// read and write all values from all rows and columns except the query_value (last column) in the row >=1
-					for (int i = 1; i < totalRows; i++) {
-						fileOut.newLine();
-						
-						String[] rowValue = a[i].split("\t");
-						for (int j = 0; j < totalColumns; j++) {
-							if (j == totalColumns - 1) {	// this is the query_value column (last column)
-								rowValue[j] = null;
-							}
-							fileOut.write(rowValue[j] + "\t");
-						}
-					}
-					fileOut.close();
-				} catch (IOException e) {
-					System.err.println(e.getClass().getName() + ": " + e.getMessage());
-				} 
-			}
-		} catch (IOException e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage());
-		}
-	}
 }
 
