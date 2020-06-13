@@ -256,7 +256,7 @@ public class Read_Input {
 					// If this prescription is not categorized yet, and the first row of this prescription meets this priority condition dynamic identifiers then assign the group categorization to this prescription
 					int row_id = 0;
 					if (prescription_group[prescription_id] == null && identifiers_processing.are_all_dynamic_identifiers_matched(
-							yield_tables_values, prescription_id, row_id,
+							prescription_id, row_id,
 							all_priority_condition_dynamic_dentifiers_column_indexes[priority],
 							all_priority_condition_dynamic_identifiers[priority])) {
 						prescription_group[prescription_id] = category_data[priority][category_prescription_group_col];
@@ -345,7 +345,7 @@ public class Read_Input {
 					// If the first row of this prescription meets this aggregation condition dynamic identifiers then add the prescription_id to the list_of_prescriptions_for_this_row 
 					int row_id = 0;
 					if (identifiers_processing.are_all_dynamic_identifiers_matched(
-							yield_tables_values, prescription_id, row_id,
+							prescription_id, row_id,
 							all_condition_dynamic_dentifiers_column_indexes[aggregation_condition],
 							all_condition_dynamic_identifiers[aggregation_condition])) {
 						list_of_prescription_ids_for_row[aggregation_condition].add(prescription_id);

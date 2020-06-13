@@ -60,7 +60,7 @@ public class Information_Disturbance {
 	}
 			
 	
-	public int get_rd_condition_id_for_this_var(Information_Variable var_info, int table_id_to_find, int row_id_to_find) {
+	public int get_rd_condition_id_for_this_var(Information_Variable var_info, int prescription_id, int row_id) {
 		int t = var_info.get_period();
 		int tR = var_info.get_rotation_period();
 		if (t == tR) {
@@ -68,12 +68,12 @@ public class Information_Disturbance {
 		}
 		
 		int id = -9999;
-		if (table_id_to_find != -9999) {	// If prescription exists (not exist when table_id_to_find = -9999)						
-			if (row_id_to_find < yield_tables_values[table_id_to_find].length && row_id_to_find != -9999) { 	// If row in this prescription exists (not exists when row_id_to_find = -9999 or >= total rows in that prescription)
+		if (prescription_id != -9999) {	// If prescription exists (not exist when prescription_id = -9999)						
+			if (row_id < yield_tables_values[prescription_id].length && row_id != -9999) { 	// If row in this prescription exists (not exists when row_id = -9999 or >= total rows in that prescription)
 				int priority = 0;
 				while (id == -9999 && priority < all_priority_condition_info.length) {		// loop all condition until found the one matched
 					if (identifiers_processing.are_all_static_identifiers_matched(var_info, all_priority_condition_static_identifiers[priority])
-								&& identifiers_processing.are_all_dynamic_identifiers_matched(yield_tables_values, table_id_to_find, row_id_to_find, all_priority_condition_dynamic_dentifiers_column_indexes[priority], all_priority_condition_dynamic_identifiers[priority])) {
+								&& identifiers_processing.are_all_dynamic_identifiers_matched(prescription_id, row_id, all_priority_condition_dynamic_dentifiers_column_indexes[priority], all_priority_condition_dynamic_identifiers[priority])) {
 						id = priority;
 					}
 					priority++;
@@ -112,14 +112,14 @@ public class Information_Disturbance {
 	}
 	
 	
-//	public double[][][] get_conversion_rate_mean(Information_Variable var_info, int table_id_to_find, int row_id_to_find) {
-//		if (table_id_to_find != -9999) {	// If prescription exists (not exist when table_id_to_find = -9999)						
-//			if (row_id_to_find < yield_tables_values[table_id_to_find].length && row_id_to_find != -9999) { 	// If row in this prescription exists (not exists when row_id_to_find = -9999 or >= total rows in that prescription)
+//	public double[][][] get_conversion_rate_mean(Information_Variable var_info, int prescription_id, int row_id) {
+//		if (prescription_id != -9999) {	// If prescription exists (not exist when prescription_id = -9999)						
+//			if (row_id < yield_tables_values[prescription_id].length && row_id != -9999) { 	// If row in this prescription exists (not exists when row_id = -9999 or >= total rows in that prescription)
 //				if (all_priority_condition_info != null) {		// If there is at least one condition	
 //					int priority = 0;
 //					while (priority < all_priority_condition_info.length) {		// loop all condition until found the one matched
 //						if (are_all_static_identifiers_matched(var_info, all_priority_condition_static_identifiers[priority])
-//									&& are_all_dynamic_identifiers_matched(yield_tables_values, table_id_to_find, row_id_to_find, all_priority_condition_dynamic_dentifiers_column_indexes[priority], all_priority_condition_dynamic_identifiers[priority])) {
+//									&& are_all_dynamic_identifiers_matched(yield_tables_values, prescription_id, row_id, all_priority_condition_dynamic_dentifiers_column_indexes[priority], all_priority_condition_dynamic_identifiers[priority])) {
 //							return (double[][][]) all_condition_conversion_rate_mean[priority];
 //						}
 //						priority++;

@@ -17,18 +17,18 @@
 
 package prism_project.data_process;
 
-import java.util.Collections;
 import java.util.List;
 
 public class Information_Variable {
-	private String var_name, layer1, layer2, layer3, layer4, layer5, layer6, method, layer5_regen, forest_status;	// layer5_regen = regenerated cover type = s5R (after clear-cut or SR occurrence), while layer5 = s5 (before clear-cut or SR occurrence)
-	private int iter, period, age, timing_choice, rotation_period, rotation_age;
-	private String yield_table_name_to_find;
-	private int yield_table_row_index_to_find;
+	private String var_name, method, layer1, layer2, layer3, layer4, layer5, layer6, layer5_regen, forest_status;	// layer5_regen = regenerated cover type = s5R (after clear-cut or SR occurrence), while layer5 = s5 (before clear-cut or SR occurrence)
+	private int iter, period, age, prescription_id, rotation_period, rotation_age;
+	private String prescription;
+	private int row_id;
 	private int[] prescription_id_and_row_id;
 	
-	public Information_Variable(int iter, String var_name, int starting_age, List<String> yield_tables_names_list) {
+	public Information_Variable(int iter, String var_name, int starting_age, List<String> prescriptions_list) {
 		// Set up
+		this.iter = iter;
 		this.var_name = var_name;
 		layer1 = "";
 		layer2 = "";
@@ -43,10 +43,9 @@ public class Information_Variable {
 		rotation_age = -9999;
 		period = -9999;
 		age = -9999;
-		timing_choice = -9999;
-		yield_table_name_to_find = "";
-		yield_table_row_index_to_find = -9999;
-		this.iter = iter;
+		prescription = "";
+		prescription_id = -9999;
+		row_id = -9999;
 		
 		
 		try {
@@ -62,14 +61,14 @@ public class Information_Variable {
 				layer4 = term[3];
 				layer5 = term[4];
 				layer6 = term[5];
-				timing_choice = Integer.parseInt(term[6]);
+				prescription_id = Integer.parseInt(term[6]);
 				period = Integer.parseInt(term[7]);
 				age = starting_age + period - 1;		// calculate age for existing variable
 				
 				method = "NC";
 				forest_status = "E";
-				yield_table_name_to_find = yield_tables_names_list.get(timing_choice);
-				yield_table_row_index_to_find = period - 1;
+				prescription = prescriptions_list.get(prescription_id);
+				row_id = period - 1;
 				period = period - iter;		// adjust period. Eg. period 1 + iter should be adjusted to be 1. This is to apply condition in cost, disturbance, other inputs...
 				break;
 			
@@ -82,15 +81,15 @@ public class Information_Variable {
 				layer5 = term[4];
 				layer6 = term[5];
 				layer5_regen = term[6];
-				timing_choice = Integer.parseInt(term[7]);
+				prescription_id = Integer.parseInt(term[7]);
 				period = Integer.parseInt(term[8]);	
 				age = starting_age + period - 1;		// calculate age for existing variable
 				// rotation_age and rotation_period are set manually
 				
 				method = "EA";
 				forest_status = "E";
-				yield_table_name_to_find = yield_tables_names_list.get(timing_choice);
-				yield_table_row_index_to_find = period - 1;
+				prescription = prescriptions_list.get(prescription_id);
+				row_id = period - 1;
 				period = period - iter;		// adjust period. Eg. period 1 + iter should be adjusted to be 1. This is to apply condition in cost, disturbance, other inputs...
 				break;
 				
@@ -101,14 +100,14 @@ public class Information_Variable {
 				layer3 = term[2];
 				layer4 = term[3];
 				layer5 = term[4];
-				timing_choice = Integer.parseInt(term[5]);
+				prescription_id = Integer.parseInt(term[5]);
 				period = Integer.parseInt(term[6]);
 				age = Integer.parseInt(term[7]);
 				
 				method = "NC";
 				forest_status = "R";
-				yield_table_name_to_find = yield_tables_names_list.get(timing_choice);
-				yield_table_row_index_to_find = age - 1;
+				prescription = prescriptions_list.get(prescription_id);
+				row_id = age - 1;
 				period = period - iter;		// adjust period. Eg. period 1 + iter should be adjusted to be 1. This is to apply condition in cost, disturbance, other inputs...
 				break;
 				
@@ -120,15 +119,15 @@ public class Information_Variable {
 				layer4 = term[3];
 				layer5 = term[4];
 				layer5_regen = term[5];
-				timing_choice = Integer.parseInt(term[6]);
+				prescription_id = Integer.parseInt(term[6]);
 				period = Integer.parseInt(term[7]);
 				age = Integer.parseInt(term[8]);
 				// rotation_age and rotation_period are set manually
 				
 				method = "EA";
 				forest_status = "R";
-				yield_table_name_to_find = yield_tables_names_list.get(timing_choice);
-				yield_table_row_index_to_find = age - 1;
+				prescription = prescriptions_list.get(prescription_id);
+				row_id = age - 1;
 				period = period - iter;		// adjust period. Eg. period 1 + iter should be adjusted to be 1. This is to apply condition in cost, disturbance, other inputs...
 				break;
 				
@@ -150,22 +149,12 @@ public class Information_Variable {
 			// No worry if catching error. Because variable without method jump into this --> no need warning here
 		}
 
-
 		
 		
-		// if prescription exists in the yield_tables database --> the 2 numbers will not be -9999
-		prescription_id_and_row_id = new int [2];	// first index is prescription, second index is row_id   	
-    	int prescription_id_to_find = -9999, row_id_to_find = -9999;
-		if (!method.equals("")) {
-    		int id_to_search = Collections.binarySearch(yield_tables_names_list, yield_table_name_to_find);				
-    		if (id_to_search >= 0) {		// If prescription (a.k.k yield table name) exists						
-    			prescription_id_to_find = id_to_search;
-    			row_id_to_find = yield_table_row_index_to_find;
-    		}
-    	}
-    	prescription_id_and_row_id[0] = prescription_id_to_find;
-    	prescription_id_and_row_id[1] = row_id_to_find;
-		yield_tables_names_list = null;		// clear object to save memory
+		// if this is the f variables then both prescription_id and row_id would be = -9999 (defined at the start)
+		prescription_id_and_row_id = new int [2];	// first index is prescription, second index is row_id  
+		prescription_id_and_row_id[0] = prescription_id;
+		prescription_id_and_row_id[1] = row_id;		// Note prescription always exists, while row_id might not exist in the yield tables
 	}
 	
 	
@@ -235,16 +224,16 @@ public class Information_Variable {
 		return age;
 	}
 	
-	public int get_timing_choice() {
-		return timing_choice;
+	public int get_prescription_id() {
+		return prescription_id;
 	}
 	
-	public String get_yield_table_name_to_find() {
-		return yield_table_name_to_find;
+	public String get_prescription() {
+		return prescription;
 	}
 	
-	public int get_yield_table_row_index_to_find() {
-		return yield_table_row_index_to_find;
+	public int get_row_id() {
+		return row_id;
 	}
 	
 	public int[] get_prescription_id_and_row_id() {	// Return only when prescription exists in the database yield tables. Otherwise, the 2 numbers will be -9999

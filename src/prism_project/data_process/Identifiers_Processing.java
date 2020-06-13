@@ -26,9 +26,11 @@ import java.util.StringTokenizer;
 //This class is created only when there is at least 1 condition --> no need to check null condition
 public class Identifiers_Processing {
 	private Read_Database read_database;
+	private String[][][] yield_tables_values;
 	
 	public Identifiers_Processing(Read_Database read_database) {
 		this.read_database = read_database;	
+		this.yield_tables_values = read_database.get_yield_tables_values();
 	}
 		
 	
@@ -89,15 +91,13 @@ public class Identifiers_Processing {
 	}	
 	
 	
-	public Boolean are_all_dynamic_identifiers_matched(String[][][] yield_tables_values, int table_id_to_find, int row_id_to_find,
-			List<String> dynamic_identifiers_column_indexes, List<List<String>> dynamic_identifiers) {
-		
+	public Boolean are_all_dynamic_identifiers_matched(int prescription_id, int row_id, List<String> dynamic_identifiers_column_indexes, List<List<String>> dynamic_identifiers) {
 		if (!dynamic_identifiers_column_indexes.get(0).equals("NoIdentifier")) {	//If there are dynamic identifiers, Check if in the same row of this yield table we have all the dynamic identifiers match	
 			int identifiers_count = 0;
 			for (List<String> this_dynamic_identifier : dynamic_identifiers) {	// loop all dynamic identifiers
 				int current_dynamic_column = Integer.parseInt(dynamic_identifiers_column_indexes.get(identifiers_count));		//This is the yield table column of the dynamic identifier
 				if (this_dynamic_identifier.get(0).contains(",")) {	//if this is a range identifier (the 1st element of this identifier contains ",")							
-					double yt_value = Double.parseDouble(yield_tables_values[table_id_to_find][row_id_to_find][current_dynamic_column]);
+					double yt_value = Double.parseDouble(yield_tables_values[prescription_id][row_id][current_dynamic_column]);
 					for (String range : this_dynamic_identifier) {	//Loop all ranges of this range identifier
 						StringTokenizer tok = new StringTokenizer(range, ",");	// split by ,
 						// will for sure have 2 items in the range --> do not need while check here
@@ -108,7 +108,7 @@ public class Identifiers_Processing {
 						}
 					}										
 				} else { // if this is a discrete identifier
-					int index = Collections.binarySearch(this_dynamic_identifier, yield_tables_values[table_id_to_find][row_id_to_find][current_dynamic_column]);
+					int index = Collections.binarySearch(this_dynamic_identifier, yield_tables_values[prescription_id][row_id][current_dynamic_column]);
 					if (index < 0) 	{	// If all selected items in this list do not contain the value in the same column (This is String comparison, we may need to change to present data manually change by users, ex. ponderosa 221 vs 221.00) 
 						return false;			
 					}

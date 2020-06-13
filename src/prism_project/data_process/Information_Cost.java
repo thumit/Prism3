@@ -80,21 +80,19 @@ public class Information_Cost {
 			
 	
 	public double get_cost_value(				
-			Information_Variable var_info, int table_id_to_find, int row_id_to_find,
+			Information_Variable var_info, int prescription_id, int row_id,
 			List<String> cost_condition_list,
 			List<String> conversion_after_disturbances_classification_list,		// i.e. P P disturbance		P D disturbance			This is already sorted because we already sorted all layers, including layer5
 			List<Double> conversion_after_disturbances_total_loss_rate_list) {
-		
-
 		double value_to_return = 0;
+
 		
-		
-		if (table_id_to_find != -9999) {	// If prescription exists (not exist when table_id_to_find = -9999)						
-			if (row_id_to_find < yield_tables_values[table_id_to_find].length && row_id_to_find != -9999) { 	// If row in this prescription exists (not exists when row_id_to_find = -9999 or >= total rows in that prescription)
-				String var_action_type = yield_tables_values[table_id_to_find][row_id_to_find][action_type_col_id];
+		if (prescription_id != -9999) {	// If prescription exists (not exist when prescription_id = -9999)						
+			if (row_id < yield_tables_values[prescription_id].length && row_id != -9999) { 	// If row in this prescription exists (not exists when row_id = -9999 or >= total rows in that prescription)
+				String var_action_type = yield_tables_values[prescription_id][row_id][action_type_col_id];
 				
 				// The following includes 1 list for the action_cost and 1 list for the conversion_cost
-				List<List<List<String>>> final_cost_list = get_final_action_cost_list_and_conversion_cost_list_for_this_variable(cost_condition_list, var_info, var_action_type, table_id_to_find, row_id_to_find);
+				List<List<List<String>>> final_cost_list = get_final_action_cost_list_and_conversion_cost_list_for_this_variable(cost_condition_list, var_info, var_action_type, prescription_id, row_id);
 				
 				
 				// action_cost: include 2 lists for column name (i.e. hca_allsx) and value (i.e. 360)
@@ -107,7 +105,7 @@ public class Information_Cost {
 					else {
 						int sorted_id = Collections.binarySearch(yield_tables_sorted_col_names_list, final_cost_list.get(0).get(0).get(item));
 						int col_id = get_original_col_id_from_sorted_col_id[sorted_id];
-						value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(0).get(1).get(item)) * Double.parseDouble(yield_tables_values[table_id_to_find][row_id_to_find][col_id]);
+						value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(0).get(1).get(item)) * Double.parseDouble(yield_tables_values[prescription_id][row_id][col_id]);
 					}
 				}								
 				
@@ -141,7 +139,7 @@ public class Information_Cost {
 	
 	private List<List<List<String>>> get_final_action_cost_list_and_conversion_cost_list_for_this_variable(
 			List<String> cost_condition_list, Information_Variable var_info, String var_action_type,
-			int table_id_to_find, int row_id_to_find) {	
+			int prescription_id, int row_id) {	
 		
 		List<String> final_action_cost_column_list = new ArrayList<String>();		// example: 	"acres", "...", "hca_allsx", ... -->see table 8a in the GUI of Cost Management
 		List<String> final_action_cost_value_list = new ArrayList<String>(); 		// example: 	"360", "...", "1.2", ...
@@ -153,7 +151,7 @@ public class Information_Cost {
 		for (int priority = 0; priority < cost_condition_list.size(); priority++) {		// Looping from the highest priority cost condition to the lowest			
 			// If this condition is satisfied
 			if (identifiers_processing.are_all_static_identifiers_matched(var_info, all_priority_condition_static_identifiers[priority]) && 
-					identifiers_processing.are_all_dynamic_identifiers_matched(yield_tables_values, table_id_to_find, row_id_to_find, all_priority_condition_dynamic_dentifiers_column_indexes[priority], all_priority_condition_dynamic_identifiers[priority])) {
+					identifiers_processing.are_all_dynamic_identifiers_matched(prescription_id, row_id, all_priority_condition_dynamic_dentifiers_column_indexes[priority], all_priority_condition_dynamic_identifiers[priority])) {
 				
 				// For action_cost
 				if (all_priority_condition_info[priority][2].length() > 0) {		// this guarantees the string is not ""
