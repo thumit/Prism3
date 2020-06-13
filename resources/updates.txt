@@ -1333,6 +1333,8 @@ All changes in this block are associated with PrismAlpha3.0.04.jar, Prism-Formul
 547. Add the method calculate_starting_age_class_for_prescription and function get_starting_age_class_for_prescription in the Read_Database class for future usage
 548. Add read_database and remove starting_age for the call of Information_Variable class; And use the get_starting_age_class_for_prescription fuction in Solve_Iterations class and Output_Panel_Management_Details_NOSQL class since it would be potentially incorrect if using the old function get_starting_ageclass. The old function identifies the starting age from NG_E_0 prescription and could be incorrect for other prescriptions such as PB, GS, etc. This update would exclude the need of future update as described in 546.
 549. Fix to reset the fly_constraints properly after solving the models (delete code in the Solve_Iterations class, modify that code and move to Summarize_Output class). Previously, the data in this file is no treset which leads to a bug of failed calculating while in the output_05 NOSQL MODE.
-
+550. Fix to process deleting or keeping the output files correctly when restart or continue solving iterative models
+551. Fix the error of not showing up summarize_output_07 (this case uses
+read_database = null). The fix is applied in Read_Input class
 
 5xx. Remove the upper bound restriction filters that do not allow prescriptions with rotation periods > total planning period to be defined for EA_E and EA_R variables (not yet)
