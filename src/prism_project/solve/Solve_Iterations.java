@@ -75,48 +75,58 @@ public class Solve_Iterations {
 				return name.startsWith("output_01_general_outputs_");
 			}
 		});
-		
+		int last_solved_iter = list_files.length - 1;
 		int max_iteration = Integer.parseInt(data[row][1].toString());
-		int last_solved_iter = -1;	// the case of "restart"
-		if (data[row][2].equals("continue")) last_solved_iter = list_files.length - 1;
-		// Delete some outputs
-		File[] contents = runFolder.listFiles();
-		if (contents != null) {
-			for (File f : contents) {
-				// Delete all output files, problem file, and solution file, but keep the fly_constraints file
-				if ((f.getName().startsWith("output") || f.getName().startsWith("problem") || f.getName().startsWith("solution")) && !f.getName().contains("fly_constraints")) {
-					String iter_name = f.getName().substring(f.getName().lastIndexOf("_") + 1, f.getName().lastIndexOf("."));
-					try {
-						if (Integer.parseInt(iter_name) > max_iteration) f.delete();
-					} catch (Exception e) {
-						e.printStackTrace();
-						f.delete();		// i.e. output_01_general_outputs.txt (1.xx.xx version output) would need to be deleted so users could run old model even without set up state_id input_11
+		
+		if (data[row][2].equals("restart")) {	// delete all except input files and fly_constraints file
+			last_solved_iter = -1;
+			// Delete all output files, problem file, and solution file, but keep the fly_constraints file
+			File[] contents = runFolder.listFiles();
+			if (contents != null) {
+				for (File f : contents) {
+					if ((f.getName().startsWith("output") || f.getName().startsWith("problem") || f.getName().startsWith("solution") || f.getName().startsWith("summarize")) && !f.getName().contains("fly_constraints")) {
+						f.delete();
 					}
 				}
-				
-				// Delete all summarize files
-				if (last_solved_iter != max_iteration && f.getName().startsWith("summarize")) f.delete();
+			}
+		} else { // the case "continue"
+			if (last_solved_iter < max_iteration) {
+				System.out.println("Prism is trimming current outputs to build final solution up to the last found iteration......");
+				Summarize_Outputs sumamrize_output = new Summarize_Outputs(runFolder, last_solved_iter);
+				sumamrize_output = null;
+				System.out.println("Trimming is completed!");
 			}
 			
-			if (last_solved_iter >= max_iteration) {
-				// summarize outputs
-				try {
-					System.out.println("No more solving needed for " + data[row][0].toString() + ".");
-					if (last_solved_iter == max_iteration) System.out.println("Prism keeps current outputs as final solution.");
-					if (last_solved_iter > max_iteration) {
-						System.out.println("Prism is trimming current outputs to build final solution......");
-						Summarize_Outputs sumamrize_output = new Summarize_Outputs(runFolder, max_iteration);
-						sumamrize_output = null;
-						System.out.println("Trimming is completed!");
-					}
-					data[row][4] = "successful";
-					model.fireTableDataChanged();
-				} catch (Exception e) {
-					System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Panel Solve Runs   -   Fail to summarize outputs for "+ runFolder);		
-					e.printStackTrace();
-				}
+			if (last_solved_iter == max_iteration) {
+				System.out.println("No more solving needed for " + data[row][0].toString());
+				System.out.println("Prism keeps current outputs as final solution.");
 			}
+			
+			File[] contents = runFolder.listFiles();
+			if (last_solved_iter > max_iteration && contents != null) {
+				for (File f : contents) {
+					if ((f.getName().startsWith("output") || f.getName().startsWith("problem") || f.getName().startsWith("solution")) && !f.getName().contains("fly_constraints")) {
+						String iter_name = f.getName().substring(f.getName().lastIndexOf("_") + 1, f.getName().lastIndexOf("."));
+						try {
+							if (Integer.parseInt(iter_name) > max_iteration) f.delete();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+					if (f.getName().startsWith("summarize")) f.delete();	// Delete all summarize files
+				}
+				
+				System.out.println("Prism is trimming current outputs to build final solution......");
+				Summarize_Outputs sumamrize_output = new Summarize_Outputs(runFolder, max_iteration);
+				sumamrize_output = null;
+				System.out.println("Trimming is completed!");
+			}
+
+			data[row][4] = "successful";
+			model.fireTableDataChanged();
 		}
+		
+		
 		
 		
 		
