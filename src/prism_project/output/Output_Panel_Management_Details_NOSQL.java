@@ -1516,20 +1516,12 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 						double var_cost = Double.valueOf(row_value[cost_col]);
 						
 						int starting_age = -9999;
-						if (var_name.startsWith("xNG_E") || var_name.startsWith("xPB_E") || var_name.startsWith("xGS_E") || var_name.startsWith("xEA_E") || var_name.startsWith("xMS_E") || var_name.startsWith("xBS_E")) {
+						if (var_name.startsWith("xNC_E") || var_name.startsWith("xEA_E")) {
 							String[] var_name_split = var_name.split("_");
 							String strata = String.join("_", var_name_split[2], var_name_split[3], var_name_split[4], var_name_split[5], var_name_split[6], var_name_split[7]);		// strata = merge 6 layers by _ 
 							int strata_id = Collections.binarySearch(model_strata, strata);
 							starting_age = strata_starting_age[strata_id];
 						} 
-						
-//						int starting_age = -9999;
-//						if (var_name.startsWith("xNC_E") || var_name.startsWith("xEA_E")) {
-//							String[] var_name_split = var_name.split("_");
-//							String strata = String.join("_", var_name_split[2], var_name_split[3], var_name_split[4], var_name_split[5], var_name_split[6], var_name_split[7]);		// strata = merge 6 layers by _ 
-//							int strata_id = Collections.binarySearch(model_strata, strata);
-//							starting_age = strata_starting_age[strata_id];
-//						} 
 						 
 						Information_Variable var_info = new Information_Variable(iter, var_name, starting_age, yield_tables_names_list);
 						var_iter_list.add(iter);
