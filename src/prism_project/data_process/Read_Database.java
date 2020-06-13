@@ -48,6 +48,7 @@ public class Read_Database {
 	private String[] yield_tables_column_names;
 	private String[] yield_tables_column_types;
 	private List<String>[] unique_values_list;
+	private int[] age_class_for_prescription;
 	
 	private String[][] existing_strata_values;
 	private String[][] strata_definition_values;	
@@ -212,6 +213,7 @@ public class Read_Database {
 				}
 			}
 			
+			calculate_starting_age_class_for_prescription();
 			yield_tables_column_unique_values = null;	// clear to save memory
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -479,19 +481,22 @@ public class Read_Database {
 		return valueReturn;	
 	}
 
-	public int[] get_starting_age_class_for_prescription() {
+	private void calculate_starting_age_class_for_prescription() {
 		List<String> yield_tables_column_names_list = Arrays.asList(yield_tables_column_names);	// convert array to list
 		int age_class_col_id = yield_tables_column_names_list.indexOf("age_class");
 		
 		int total_prescriptions = yield_tables_values.length;
-		int[] starting_age_class_for_prescription = new int[total_prescriptions];
+		age_class_for_prescription = new int[total_prescriptions];
 		for (int i = 0; i < total_prescriptions; i++) {
-			starting_age_class_for_prescription[i] = Integer.valueOf(yield_tables_values[i][0][age_class_col_id]);	// row 0 is the first period (1st row)
+			age_class_for_prescription[i] = Integer.valueOf(yield_tables_values[i][0][age_class_col_id]);	// row 0 is the first period (1st row)
 			
 		}	
-		return starting_age_class_for_prescription;
 	}
 	
+	public int[] get_starting_age_class_for_prescription() {
+		return age_class_for_prescription;
+	}
+
 	
 	// This block is For existing_strata ------------------------------------------------------------------------------------------------------
 	// This block is For existing_strata ------------------------------------------------------------------------------------------------------

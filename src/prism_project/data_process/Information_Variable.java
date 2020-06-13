@@ -17,6 +17,7 @@
 
 package prism_project.data_process;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class Information_Variable {
@@ -26,7 +27,11 @@ public class Information_Variable {
 	private int row_id;
 	private int[] prescription_id_and_row_id;
 	
-	public Information_Variable(int iter, String var_name, int starting_age, List<String> prescriptions_list) {
+	public Information_Variable(int iter, String var_name, Read_Database read_database) {
+		String[] yield_tables_names = read_database.get_yield_tables_names();			
+		List<String> prescriptions_list = Arrays.asList(yield_tables_names);
+		int[] starting_age_class_for_prescription = read_database.get_starting_age_class_for_prescription();
+		
 		// Set up
 		this.iter = iter;
 		this.var_name = var_name;
@@ -63,7 +68,7 @@ public class Information_Variable {
 				layer6 = term[5];
 				prescription_id = Integer.parseInt(term[6]);
 				period = Integer.parseInt(term[7]);
-				age = starting_age + period - 1;		// calculate age for existing variable
+				age = starting_age_class_for_prescription[prescription_id] + period - 1;		// calculate age for existing variable
 				
 				method = "NC";
 				forest_status = "E";
@@ -83,7 +88,7 @@ public class Information_Variable {
 				layer5_regen = term[6];
 				prescription_id = Integer.parseInt(term[7]);
 				period = Integer.parseInt(term[8]);	
-				age = starting_age + period - 1;		// calculate age for existing variable
+				age = starting_age_class_for_prescription[prescription_id] + period - 1;		// calculate age for existing variable
 				// rotation_age and rotation_period are set manually
 				
 				method = "EA";

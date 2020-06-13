@@ -1509,21 +1509,12 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 					// populate the data matrix
 					for (int row = 0; row < rowCount; row++) {
 						String[] row_value = lines_list.get(row).split(delimited);	// tab delimited	
-						
 						int iter = Integer.valueOf(row_value[iteration_col]); 
 						String var_name = row_value[name_col];
 						double var_value = Double.valueOf(row_value[value_col]);
 						double var_cost = Double.valueOf(row_value[cost_col]);
 						
-						int starting_age = -9999;
-						if (var_name.startsWith("xNC_E") || var_name.startsWith("xEA_E")) {
-							String[] var_name_split = var_name.split("_");
-							String strata = String.join("_", var_name_split[2], var_name_split[3], var_name_split[4], var_name_split[5], var_name_split[6], var_name_split[7]);		// strata = merge 6 layers by _ 
-							int strata_id = Collections.binarySearch(model_strata, strata);
-							starting_age = strata_starting_age[strata_id];
-						} 
-						 
-						Information_Variable var_info = new Information_Variable(iter, var_name, starting_age, yield_tables_names_list);
+						Information_Variable var_info = new Information_Variable(iter, var_name, read_database);
 						var_iter_list.add(iter);
 						var_value_list.add(var_value);
 						var_cost_list.add(var_cost);
