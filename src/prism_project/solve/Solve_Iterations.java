@@ -325,8 +325,8 @@ public class Solve_Iterations {
 						s5_from_regenerated_strata[strata_id] = strata_5layers.split("_")[4];
 					}
 					for (int i = 0; i < total_prescriptions; i++) {
-						s5_from_prescription[i] = yield_tables_names[i].split("_")[0]; 
-						s5_s6_from_prescription[i] = yield_tables_names[i].split("_")[0] + "_" + yield_tables_names[i].split("_")[1];
+						s5_from_prescription[i] = yield_tables_names[i].split("_")[2]; 
+						s5_s6_from_prescription[i] = yield_tables_names[i].split("_")[2] + "_" + yield_tables_names[i].split("_")[3];
 						rotation_period_for_precription[i] = yield_tables_values[i].length;		//= tR = total rows of this prescription 
 					}
 					for (int strata_id = 0; strata_id < total_model_strata; strata_id++) {

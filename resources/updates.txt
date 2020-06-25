@@ -1337,5 +1337,7 @@ All changes in this block are associated with PrismAlpha3.0.04.jar, Prism-Formul
 551. Fix the error of not showing up summarize_output_07 (this case uses read_database = null). The fix is applied in Read_Input class
 All changes in this block are associated with PrismAlpha3.0.05.jar, Prism-Formulation-12.docx, Rolling-horizon-formulation-09.docx
 --------------------------------------------------------------------------
+552. Temporarily add prefix for every prescription (column zero) in the yield tables. There are 4 predefined prefixes E_0, E_1, R_0, R_1 to represent a prescription would be for existing strata (E) or regenerated strata (R), and the prescription would end without a clear-cut (0) or with a clear-cut (1). In the future, users are required to build the databases with these 4 prefixes applied for prescriptions, and this temporary code will be removed.
+
 
 5xx. Remove the upper bound restriction filters that do not allow prescriptions with rotation periods > total planning period to be defined for EA_E and EA_R variables (not yet)
