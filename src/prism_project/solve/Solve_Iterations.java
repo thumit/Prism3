@@ -157,7 +157,6 @@ public class Solve_Iterations {
 				List<String> yield_tables_column_names_list = Arrays.asList(yield_tables_column_names); 
 				String[] yield_tables_names = read_database.get_yield_tables_names();			
 				int total_prescriptions = yield_tables_values.length;
-				String[] prescription_group = read_database.get_prescription_group();
 				int activity_col_id = yield_tables_column_names_list.indexOf("action_type");
 				
 				// Get info: layers from database (strata_definition)

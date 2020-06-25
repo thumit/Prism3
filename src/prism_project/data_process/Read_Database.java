@@ -76,7 +76,7 @@ public class Read_Database {
 			Read_existing_strata();
 			Read_yield_tables();
 			identify_starting_age_class_for_prescription();
-			identify_group_for_prescription();
+//			identify_group_for_prescription();
 		}
 		
 		
@@ -539,29 +539,6 @@ public class Read_Database {
 	}
 	
 	
-	public String get_starting_ageclass(String cover_type, String size_class, String method, String timing_choice) {
-		method = "NG";	// only use NG table to find starting age class
-		timing_choice ="0";
-		String forest_status = "E";
-		String tableName_toFind = "E_0_" + cover_type + "_" + size_class + "_" + method + "_" + forest_status + "_" + timing_choice;
-		
-		String valueReturn = null;
-		try {
-			int index = Arrays.asList(yield_tables_names).indexOf(tableName_toFind);
-			
-			List<String> yield_tables_column_names_list = Arrays.asList(yield_tables_column_names);	// Convert array to list
-			int age_class_index = yield_tables_column_names_list.indexOf("st_age_10");																// CNPZ case
-			if (yield_tables_column_names_list.contains("age_class")) age_class_index = yield_tables_column_names_list.indexOf("age_class");		// CGNF case
-			
-			valueReturn = yield_tables_values[index][0][age_class_index];			// row 0 is the first period (1st row)
-		} catch (Exception e) {
-			valueReturn = null;
-			System.err.println(e.getClass().getName() + ": " + e.getMessage() + "   -   Not found age class from yield table: " + tableName_toFind);
-		}
-		
-		return valueReturn;	
-	}
-
 	private void identify_starting_age_class_for_prescription() {
 		List<String> yield_tables_column_names_list = Arrays.asList(yield_tables_column_names);	// convert array to list
 		int age_class_col_id = yield_tables_column_names_list.indexOf("age_class");
@@ -578,19 +555,19 @@ public class Read_Database {
 		return starting_age_class_for_prescription;
 	}
 
-	private void identify_group_for_prescription() {
-		int total_prescriptions = yield_tables_values.length;
-		prescription_group = new String[total_prescriptions];
-		starting_age_class_for_prescription = new int[total_prescriptions];
-		for (int i = 0; i < total_prescriptions; i++) {
-			prescription_group[i] = yield_tables_names[i].substring(0, 3);	// the first 3 characters could be either : E_0, E_1, R_0, R_1
-			
-		}	
-	}
-	
-	public String[] get_prescription_group() {
-		return prescription_group;
-	}
+//	private void identify_group_for_prescription() {
+//		int total_prescriptions = yield_tables_values.length;
+//		prescription_group = new String[total_prescriptions];
+//		starting_age_class_for_prescription = new int[total_prescriptions];
+//		for (int i = 0; i < total_prescriptions; i++) {
+//			prescription_group[i] = yield_tables_names[i].substring(0, 3);	// the first 3 characters could be either : E_0, E_1, R_0, R_1
+//			
+//		}	
+//	}
+//	
+//	public String[] get_prescription_group() {
+//		return prescription_group;
+//	}
 	
 	// This block is For existing_strata ------------------------------------------------------------------------------------------------------
 	// This block is For existing_strata ------------------------------------------------------------------------------------------------------

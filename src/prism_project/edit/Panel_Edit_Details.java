@@ -633,7 +633,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		data_overview[1][0] = "model strata   --o--   model acres";
 		data_overview[2][0] = "highlighted strata   --o--   highlighted acres";
 		data_overview[3][0] = "prescriptions in your database";
-		data_overview[4][0] = "existing strata without NG_E_0 prescriptions";
+		data_overview[4][0] = "existing strata with zero applicable prescriptions";
 		
 		
 		
@@ -853,6 +853,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	//--------------------------------------------------------------------------------------------------------------------------
 	public void create_table3() {
 		//Setup the table------------------------------------------------------------	
+		List<String>[] applicable_prescriptions = null;
+		
 		if (is_table3_loaded == false) { // create a fresh new if Load fail		
 			List<String> layers_title = read_database.get_layers_title();
 			rowCount3 = 0;
@@ -863,7 +865,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				columnNames3[i + 1] = layers_title.get(i);	// add 6 layers to the column header name
 			}
 			columnNames3[colCount3 - 3] = "area";	// add 3 more columns
-			columnNames3[colCount3 - 2] = "age_class";
+			columnNames3[colCount3 - 2] = "applicable_prescriptions";
 			columnNames3[colCount3 - 1] = "model_strata";	
 			
 			// get the raw existing_strata from the database------------------------------------------------------
@@ -881,20 +883,26 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						existing_strata_values[row][4], existing_strata_values[row][5], existing_strata_values[row][6]);	// ignore the strata_id column and re-create it
 			}					
 			
-			// update ""age_class" column
+			// update ""applicable_prescriptions" column
+			applicable_prescriptions = new ArrayList[rowCount3];
+			String[] yield_tables_names = read_database.get_yield_tables_names();
 			for (int row = 0; row < rowCount3; row++) {						
 				String s5 = data3[row][5].toString();
 				String s6 = data3[row][6].toString();
-				if (read_database.get_starting_ageclass(s5, s6, "NG", "0") != null) {
-					data3[row][colCount3 - 2] = Integer.valueOf(read_database.get_starting_ageclass(s5, s6, "A", "0"));	
-				}												
-			}
-
-			for (int row = 0; row < rowCount3; row++) {
-				data3[row][colCount3 - 1] = (data3[row][colCount3 - 2] != null) ? true : false;		// select all strata as model_strata if age class is  found
+				applicable_prescriptions[row] = new ArrayList<String>();
+				
+				for (String prescription : yield_tables_names) {
+					if (prescription.startsWith("E_0_" + s5 + "_" + s6) || prescription.startsWith("E_1_" + s5 + "_" + s6)) {
+						applicable_prescriptions[row].add(prescription);;
+					}
+				}
+				int applicable_count = applicable_prescriptions[row].size();
+				data3[row][colCount3 - 2] = applicable_count;	
+				data3[row][colCount3 - 1] = (applicable_count > 0) ? true : false;	// auto-select this stratum to be model_strata if there is at least 1 applicable prescription
 			}
 		}		
-					
+		
+		
 		
 		//Create a table-------------------------------------------------------------
 		model3 = new PrismTableModel(rowCount3, colCount3, data3, columnNames3) {
@@ -926,7 +934,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 								} catch (NumberFormatException e) {
 									System.err.println(e.getClass().getName() + ": " + e.getMessage() + " Fail to convert String to Double values in create_table3");
 								}	
-							} else if (col == colCount3 - 2) {			//column "Age Class" accepts only Integer
+							} else if (col == colCount3 - 2) {			//column "applicable_prescriptions" accepts only Integer
 								try {
 									data3[row][col] = Integer.valueOf(String.valueOf(data3[row][col]));
 								} catch (NumberFormatException e) {
@@ -950,7 +958,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			public void update_model_overview() {  
 				// de-select all model_strata that has not found starting age-class
 				for (int row = 0; row < rowCount3; row++) {
-					if (data3[row][colCount3 - 2] == null) {
+					if ((int) data3[row][colCount3 - 2] == 0) {
 						data3[row][colCount3 - 1] = false;
 					}
 				}
@@ -970,10 +978,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				}
 				
 				
-				int total_strata_without_NG_E_0_prescription = 0;
+				int total_strata_without_applicable_prescriptions = 0;
 		        for (int row = 0; row < rowCount3; row++) {				        	
-		        	if (data3[row][colCount3 - 2] == null) {
-		        		total_strata_without_NG_E_0_prescription = total_strata_without_NG_E_0_prescription + 1;
+		        	if ((int) data3[row][colCount3 - 2] == 0) {
+		        		total_strata_without_applicable_prescriptions = total_strata_without_applicable_prescriptions + 1;
 		        	}
 				}
 		        
@@ -983,13 +991,40 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		        data_overview[0][1] = rowCount3 + "   --o--   " + formatter.format((Number) availableAcres);
 				data_overview[1][1] = modeledStrata + "   --o--   " + formatter.format((Number) modeledAcres);
 		        data_overview[3][1] = read_database.get_yield_tables_values().length;
-		        data_overview[4][1] = total_strata_without_NG_E_0_prescription;
+		        data_overview[4][1] = total_strata_without_applicable_prescriptions;
 				model_overview.fireTableDataChanged();
 			}
 		};
 
 		
+		List<String>[] tooltip = (applicable_prescriptions != null) ? applicable_prescriptions.clone() : null;
 		table3 = new JTable(model3) {
+			@Override			//These override is to make the width of the cell fit all contents of the cell
+			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+				// For the cells in table								
+				Component component = super.prepareRenderer(renderer, row, column);
+				int rendererWidth = component.getPreferredSize().width;
+				TableColumn tableColumn = getColumnModel().getColumn(column);
+				int maxWidth = Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth());
+				
+				// For the column names
+				TableCellRenderer renderer2 = table3.getTableHeader().getDefaultRenderer();	
+				Component component2 = renderer2.getTableCellRendererComponent(table3,
+			            tableColumn.getHeaderValue(), false, false, -1, column);
+				maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
+				
+				tableColumn.setPreferredWidth(maxWidth);
+				return component;
+			}	
+			
+			@Override	// Implement table cell tool tips           
+			public String getToolTipText(MouseEvent e) {
+				java.awt.Point p = e.getPoint();
+				int row = rowAtPoint(p);
+				int col = columnAtPoint(p);
+				String tip = (table3.getColumnName(col).equals("applicable_prescriptions") && tooltip != null) ? String.join(", ", tooltip[row]) : null;
+				return tip;
+			}	
 		};
 
 		
@@ -1001,8 +1036,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 //		table3.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		table3.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);	  
 		table3.getTableHeader().setReorderingAllowed(false);		//Disable columns move
-//		table3.createDefaultColumnsFromModel(); // Very important code to refresh the number of Columns	shown
-        table3.getColumnModel().getColumn(colCount3 - 1).setPreferredWidth(100);	//Set width of Column "Strata in optimization model" bigger
 		table3.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		table3.setFillsViewportHeight(true);
 		TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model3);
