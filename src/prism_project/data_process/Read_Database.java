@@ -202,40 +202,40 @@ public class Read_Database {
 						|| yield_tables_values[i][0][0].startsWith("R_1"))) {
 					if (yield_tables_values[i][0][0].contains("_NG_E_")) {
 						String[] term = yield_tables_values[i][0][0].split("_");
-						new_name = String.join("_", "E", "0", term[0], term[1], String.valueOf(i));
+						new_name = "E_0_" + term[0] + "_" + term[1] + "_" + i;
 					} else if (yield_tables_values[i][0][0].contains("_PB_E_")) {
 						String[] term = yield_tables_values[i][0][0].split("_");
-						new_name = String.join("_", "E", "0", term[0], term[1], String.valueOf(i));
+						new_name = "E_0_" + term[0] + "_" + term[1] + "_" + i;
 					} else if (yield_tables_values[i][0][0].contains("_GS_E_")) {
 						String[] term = yield_tables_values[i][0][0].split("_");
-						new_name = String.join("_", "E", "0", term[0], term[1], String.valueOf(i));
+						new_name = "E_0_" + term[0] + "_" + term[1] + "_" + i;
 					} else if (yield_tables_values[i][0][0].contains("_MS_E_")) {
 						String[] term = yield_tables_values[i][0][0].split("_");
-						new_name = String.join("_", "E", "0", term[0], term[1], String.valueOf(i));
+						new_name = "E_0_" + term[0] + "_" + term[1] + "_" + i;
 					} else if (yield_tables_values[i][0][0].contains("_BS_E_")) {
 						String[] term = yield_tables_values[i][0][0].split("_");
-						new_name = String.join("_", "E", "0", term[0], term[1], String.valueOf(i));
+						new_name = "E_0_" + term[0] + "_" + term[1] + "_" + i;
 					} else if (yield_tables_values[i][0][0].contains("_EA_E_")) {
 						String[] term = yield_tables_values[i][0][0].split("_");
-						new_name = String.join("_", "E", "1", term[0], term[1], String.valueOf(i));
+						new_name = "E_1_" + term[0] + "_" + term[1] + "_" + i;
 					} else if (yield_tables_values[i][0][0].contains("_NG_R_")) {
 						String[] term = yield_tables_values[i][0][0].split("_");
-						new_name = String.join("_", "R", "0", term[0], String.valueOf(i));
+						new_name = "R_0_" + term[0] + "_" + i;
 					} else if (yield_tables_values[i][0][0].contains("_PB_R_")) {
 						String[] term = yield_tables_values[i][0][0].split("_");
-						new_name = String.join("_", "R", "0", term[0], String.valueOf(i));
+						new_name = "R_0_" + term[0] + "_" + i;
 					} else if (yield_tables_values[i][0][0].contains("_GS_R_")) {
 						String[] term = yield_tables_values[i][0][0].split("_");
-						new_name = String.join("_", "R", "0", term[0], String.valueOf(i));
+						new_name = "R_0_" + term[0] + "_" + i;
 					} else if (yield_tables_values[i][0][0].contains("_MS_R_")) {
 						String[] term = yield_tables_values[i][0][0].split("_");
-						new_name = String.join("_", "R", "0", term[0], String.valueOf(i));
+						new_name = "R_0_" + term[0] + "_" + i;
 					} else if (yield_tables_values[i][0][0].contains("_BS_R_")) {
 						String[] term = yield_tables_values[i][0][0].split("_");
-						new_name = String.join("_", "R", "0", term[0], String.valueOf(i));
+						new_name = "R_0_" + term[0] + "_" + i;
 					} else if (yield_tables_values[i][0][0].contains("_EA_R_")) {
 						String[] term = yield_tables_values[i][0][0].split("_");
-						new_name = String.join("_", "R", "1", term[0], String.valueOf(i));
+						new_name = "R_1_" + term[0] + "_" + i;
 					}
 				}
 				yield_tables_names[i] = new_name;
