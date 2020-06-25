@@ -234,10 +234,6 @@ public class Read_Database {
 					new_name = "R_1_" + term[0] + "_" + i;
 				}
 				yield_tables_names[i] = new_name;
-				yield_tables_column_unique_values[0] = new LinkedHashSet<>();
-				for (String name : yield_tables_names) {
-					yield_tables_column_unique_values[0].add(name);
-				}
 						
 				int total_rows = yield_tables_values[i].length;
 				for (int row = 0; row < total_rows; row++) {
@@ -245,6 +241,11 @@ public class Read_Database {
 				}
 				System.out.println(yield_tables_values[i][0][0]);
 			}	
+			
+			yield_tables_column_unique_values[0] = new LinkedHashSet<>();
+			for (String name : yield_tables_names) {
+				yield_tables_column_unique_values[0].add(name);
+			}
 			// End: delete
 			//---------------------------------------------------------------------------------------------
 			//---------------------------------------------------------------------------------------------

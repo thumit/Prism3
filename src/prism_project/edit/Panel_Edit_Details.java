@@ -1022,7 +1022,16 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				java.awt.Point p = e.getPoint();
 				int row = rowAtPoint(p);
 				int col = columnAtPoint(p);
-				String tip = (table3.getColumnName(col).equals("applicable_prescriptions") && tooltip != null) ? String.join(", ", tooltip[row]) : null;
+				String tip = null;
+				if (table3.getColumnName(col).equals("applicable_prescriptions") && tooltip != null) {
+					int total_applicable = tooltip[row].size();
+					tip = "";
+					for (int i = 0; i < total_applicable; i++) {
+						tip = tip + tooltip[row].get(i) + "<br>";
+						if ((i + 1) % 5 == 0 && i < total_applicable - 1) tip = tip + "<br>";
+					}
+					tip = "<html>" + tip + "<html>";
+				}
 				return tip;
 			}	
 		};
