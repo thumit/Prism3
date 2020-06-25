@@ -876,7 +876,11 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			data3 = new Object[rowCount3][colCount3];
 			for (int row = 0; row < rowCount3; row++) {
 				for (int column = 0; column < existing_strata_colCount; column++) {		// loop all existing strata columns (strata_id, layer 1 ... 6, acres). This do ntot have the last 2 columns as seen in the GUI (ageclass & model_strata)
-					data3[row][column] = existing_strata_values[row][column];
+					if (column != 7) {
+						data3[row][column] = existing_strata_values[row][column];
+					} else {	// this is the area column
+						data3[row][column] = Double.valueOf(existing_strata_values[row][column]);
+					}
 				}
 				data3[row][0] = String.join("_", 
 						existing_strata_values[row][1], existing_strata_values[row][2], existing_strata_values[row][3],
@@ -915,7 +919,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				}
 				int applicable_count = applicable_prescriptions[row].size();
 				data3[row][colCount3 - 2] = applicable_count;	
+				columnNames3[colCount3 - 3] = "area";
 				columnNames3[colCount3 - 2] = "applicable_prescriptions";
+				columnNames3[colCount3 - 1] = "model_strata";
 			}
 		}
 		
@@ -923,6 +929,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		
 		//Create a table-------------------------------------------------------------
 		model3 = new PrismTableModel(rowCount3, colCount3, data3, columnNames3) {
+			@Override
+			public Class getColumnClass(int c) {
+				if (c == 7) return Double.class;
+				else if (c == 8) return Integer.class;
+				else if (c == 9) return Boolean.class;
+				else return String.class;				
+			}
+			
 			@Override
 			public boolean isCellEditable(int row, int col) {
 				if (col < colCount3 - 1) { // Only the last column is editable
