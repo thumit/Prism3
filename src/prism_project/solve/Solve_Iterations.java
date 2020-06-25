@@ -157,6 +157,7 @@ public class Solve_Iterations {
 				List<String> yield_tables_column_names_list = Arrays.asList(yield_tables_column_names); 
 				String[] yield_tables_names = read_database.get_yield_tables_names();			
 				int total_prescriptions = yield_tables_values.length;
+				String[] prescription_group = read_database.get_prescription_group();
 				int activity_col_id = yield_tables_column_names_list.indexOf("action_type");
 				
 				// Get info: layers from database (strata_definition)
@@ -217,10 +218,6 @@ public class Solve_Iterations {
 				for (int id = 0; id < total_model_strata_without_sizeclass; id++) {
 					map_strata_without_sizeclass_to_id.put(model_strata_without_sizeclass.get(id), id);		// strata_without_sizeclass = key, id = value		
 				}
-				
-				// Get info: input_03_prescription_category
-				String[] prescription_group = read.get_prescription_group();
-				boolean is_prescription_category_defined_with_some_rows = (input_03_file.exists()) ? true : false;
 				
 				// Get Info: input_04_prescription_assignment
 				read.process_data_from_prescription_assignment(model_strata, model_strata_without_sizeclass);
@@ -307,54 +304,48 @@ public class Solve_Iterations {
 					List<Information_Variable> var_info_list = new ArrayList<Information_Variable>();
 					
 					// Some pre-calculations to speed up reading time
-					String[] s5_s6_from_existing_strata = new String[total_model_strata];
-					String[] s5_s6_from_prescription = new String[total_prescriptions];
-					String[] s5_from_regenerated_strata = new String[total_model_strata_without_sizeclass];
-					String[] s5_from_prescription = new String[total_prescriptions];
-					int[] rotation_period_for_precription = new int[total_prescriptions];
+					int[] total_rows_of_precription = new int[total_prescriptions];
+					for (int i = 0; i < total_prescriptions; i++) {
+						total_rows_of_precription[i] = yield_tables_values[i].length;		// In case of existing prescription, tR = total rows of this prescription 
+					}
+					
 					List<Integer>[] NC_E_prescription_ids = new ArrayList[total_model_strata];
 					List<Integer>[] EA_E_prescription_ids = new ArrayList[total_model_strata];
 					List<Integer>[] NC_R_prescription_ids = new ArrayList[total_model_strata_without_sizeclass];
 					List<Integer>[] EA_R_prescription_ids = new ArrayList[total_model_strata_without_sizeclass];
 					for (int strata_id = 0; strata_id < total_model_strata; strata_id++) {
 						String strata = model_strata.get(strata_id);
-						s5_s6_from_existing_strata[strata_id] = strata.split("_")[4] + "_" + strata.split("_")[5];
-					}
-					for (int strata_id = 0; strata_id < total_model_strata_without_sizeclass; strata_id++) {
-						String strata_5layers = model_strata_without_sizeclass.get(strata_id);
-						s5_from_regenerated_strata[strata_id] = strata_5layers.split("_")[4];
-					}
-					for (int i = 0; i < total_prescriptions; i++) {
-						s5_from_prescription[i] = yield_tables_names[i].split("_")[2]; 
-						s5_s6_from_prescription[i] = yield_tables_names[i].split("_")[2] + "_" + yield_tables_names[i].split("_")[3];
-						rotation_period_for_precription[i] = yield_tables_values[i].length;		//= tR = total rows of this prescription 
-					}
-					for (int strata_id = 0; strata_id < total_model_strata; strata_id++) {
-						String strata = model_strata.get(strata_id);
+						String s5_s6_from_existing_strata = strata.split("_")[4] + "_" + strata.split("_")[5];
+						
 						NC_E_prescription_ids[strata_id] = new ArrayList<Integer>();
 						EA_E_prescription_ids[strata_id] = new ArrayList<Integer>();
 						for (int i = 0; i < total_prescriptions; i++) {
-							if (s5_s6_from_existing_strata[strata_id].equals(s5_s6_from_prescription[i]) && prescription_group[i] != null && prescription_group[i].equals("EA_E")) {
-								EA_E_prescription_ids[strata_id].add(i);
-							}
-							if (s5_s6_from_existing_strata[strata_id].equals(s5_s6_from_prescription[i]) && prescription_group[i] != null && prescription_group[i].equals("NC_E")) {
+							if (yield_tables_names[i].startsWith("E_0_" + s5_s6_from_existing_strata)) {
 								NC_E_prescription_ids[strata_id].add(i);
+							} else if (yield_tables_names[i].startsWith("E_1_" + s5_s6_from_existing_strata)) {
+								EA_E_prescription_ids[strata_id].add(i);
 							}
 						}
 					}
 					for (int strata_id = 0; strata_id < total_model_strata_without_sizeclass; strata_id++) {
 						String strata = model_strata_without_sizeclass.get(strata_id);
+						String s5_from_regenerated_strata = strata.split("_")[4];
+						
 						NC_R_prescription_ids[strata_id] = new ArrayList<Integer>();
 						EA_R_prescription_ids[strata_id] = new ArrayList<Integer>();
 						for (int i = 0; i < total_prescriptions; i++) {
-							if (s5_from_regenerated_strata[strata_id].equals(s5_from_prescription[i]) && prescription_group[i] != null && prescription_group[i].equals("EA_R")) {
-								EA_R_prescription_ids[strata_id].add(i);
-							}
-							if (s5_from_regenerated_strata[strata_id].equals(s5_from_prescription[i]) && prescription_group[i] != null && prescription_group[i].equals("NC_R")) {
+							if (yield_tables_names[i].startsWith("R_0_" + s5_from_regenerated_strata)) {
 								NC_R_prescription_ids[strata_id].add(i);
+							} else if (yield_tables_names[i].startsWith("R_1_" + s5_from_regenerated_strata)) {
+								EA_R_prescription_ids[strata_id].add(i);
 							}
 						}
 					}
+					
+					
+					
+					
+					
 					
 					
 					
@@ -505,7 +496,7 @@ public class Solve_Iterations {
 							Set<Integer> filter_set = new HashSet<Integer>(set_of_prescription_ids_for_strata_with_s5R[strata_id][s5R]);
 							filter_set.retainAll(EA_E_prescription_ids[strata_id]);	// filter out the EA_E prescriptions only
 							for (int i : filter_set) {
-								int rotation_period = rotation_period_for_precription[i]; // tR = total rows of this prescription    need compare: tR = [1+iter, total_period + iter]	
+								int rotation_period = total_rows_of_precription[i]; // tR = total rows of this prescription    need compare: tR = [1+iter, total_period + iter]	
 								int rotation_age = rotation_period + starting_age_class_for_prescription[i] - 1;
 								if (1 + iter <= rotation_period && rotation_period <= total_periods + iter) {		// restrict prescriptions with tR = [1+iter, total_period + iter]
 									xEAe[strata_id][s5R][i] = new int[total_periods + 1 + iter];	// check to see if we can replace total_periods + 1 + iter by rotation_period + 1
@@ -1401,10 +1392,10 @@ public class Solve_Iterations {
 						
 						for (int s5R = 0; s5R < total_layer5; s5R++) {
 							for (int i : EA_E_prescription_ids[strata_id]) {
-								int rotation_period = rotation_period_for_precription[i]; // tR = total rows of this prescription
+								int rotation_period = total_rows_of_precription[i]; // tR = total rows of this prescription
 								for (int t = 1 + iter; t <= total_periods - 1 + iter; t++) {
 									if (t < rotation_period
-											&&xEAe[strata_id] != null 
+											&& xEAe[strata_id] != null 
 												&& xEAe[strata_id][s5R] != null
 													&& xEAe[strata_id][s5R][i] != null
 														&& xEAe[strata_id][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0
@@ -1501,7 +1492,7 @@ public class Solve_Iterations {
 											// Add - sigma(s6)(s5R')(i)   xEAe(s1,s2,s3,s4,s5,s6)(s5R')(i)(t) 	--> : X~
 											for (int s5RR = 0; s5RR < total_layer5; s5RR++) {		// s5R'
 												for (int i : EA_E_prescription_ids[strata_id]) {		// It is very important to not use null check for jagged arrays here to avoid the incorrect of mapping
-													int rotation_period = rotation_period_for_precription[i]; // tR = total rows of this prescription
+													int rotation_period = total_rows_of_precription[i]; // tR = total rows of this prescription
 													String var_name = "xEA_E_" + strata + "_" + layer5.get(s5RR) + "_" + i + "_" + t;
 													if(t < rotation_period && map_var_name_to_var_rd_condition_id.get(var_name) != null && map_var_name_to_var_rd_condition_id.get(var_name) != -9999) {
 														int rd_id = map_var_name_to_var_rd_condition_id.get(var_name);
@@ -1629,7 +1620,7 @@ public class Solve_Iterations {
 												if (xEAe[strata_id][s5RR] != null)
 													for (int i : EA_E_prescription_ids[strata_id]) {
 														if (xEAe[strata_id][s5RR][i] != null) {
-															int rotation_period = rotation_period_for_precription[i]; // tR = total rows of this prescription
+															int rotation_period = total_rows_of_precription[i]; // tR = total rows of this prescription
 															int var_index = xEAe[strata_id][s5RR][i][t];
 															if (t < rotation_period && var_index > 0 && var_rd_condition_id[var_index] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
 																double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
@@ -1777,7 +1768,7 @@ public class Solve_Iterations {
 											int strata_id = (map_strata_to_strata_id.get(strata) != null) ? map_strata_to_strata_id.get(strata) : -1;
 											if (strata_id >= 0) {
 												for (int i : EA_E_prescription_ids[strata_id]) {
-													int rotation_period = rotation_period_for_precription[i]; // tR = total rows of this prescription
+													int rotation_period = total_rows_of_precription[i]; // tR = total rows of this prescription
 													if (t == rotation_period) {		// It is very important to not use null check for jagged arrays here to avoid the incorrect of mapping
 														String var_name = "xEA_E_" + strata + "_" + layer5.get(s5R) + "_" + i + "_" + t;
 														if (map_var_name_to_var_value.get(var_name) != null) {
@@ -1875,7 +1866,7 @@ public class Solve_Iterations {
 										int strata_id = (map_strata_to_strata_id.get(strata) != null) ? map_strata_to_strata_id.get(strata) : -1;
 										if (strata_id >= 0) {
 											for (int i : EA_E_prescription_ids[strata_id]) {	
-												int rotation_period = rotation_period_for_precription[i]; // tR = total rows of this prescription
+												int rotation_period = total_rows_of_precription[i]; // tR = total rows of this prescription
 												if (t == rotation_period 
 														&& xEAe[strata_id] != null 
 															&& xEAe[strata_id][s5R] != null
