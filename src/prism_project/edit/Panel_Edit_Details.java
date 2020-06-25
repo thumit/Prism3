@@ -900,7 +900,24 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				data3[row][colCount3 - 2] = applicable_count;	
 				data3[row][colCount3 - 1] = (applicable_count > 0) ? true : false;	// auto-select this stratum to be model_strata if there is at least 1 applicable prescription
 			}
-		}		
+		} else {	// if loading successfully, we still need this calculation for tooltip
+			applicable_prescriptions = new ArrayList[rowCount3];
+			String[] yield_tables_names = read_database.get_yield_tables_names();
+			for (int row = 0; row < rowCount3; row++) {						
+				String s5 = data3[row][5].toString();
+				String s6 = data3[row][6].toString();
+				applicable_prescriptions[row] = new ArrayList<String>();
+				
+				for (String prescription : yield_tables_names) {
+					if (prescription.startsWith("E_0_" + s5 + "_" + s6) || prescription.startsWith("E_1_" + s5 + "_" + s6)) {
+						applicable_prescriptions[row].add(prescription);;
+					}
+				}
+				int applicable_count = applicable_prescriptions[row].size();
+				data3[row][colCount3 - 2] = applicable_count;	
+				columnNames3[colCount3 - 2] = "applicable_prescriptions";
+			}
+		}
 		
 		
 		
@@ -1133,7 +1150,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
 				
 				if (column == 1) {
-					tableColumn.setMinWidth(600);
+					tableColumn.setMinWidth(400);
 				} else if (column == 2) {
 					tableColumn.setMinWidth(350);
 				} else {
