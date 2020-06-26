@@ -377,8 +377,8 @@ public class Solve_Iterations {
 					int[][][][][] xEAr = null;
 					
 							
-					// Declare arrays to keep replacing-disturbance variables f(s1,s2,s3,s4,s5,t,s5R)
-					int[][][] fire = new int[total_model_strata_without_sizeclass][total_periods + 1 + iter][total_layer5];						
+					// Declare arrays to keep replacing-disturbance variables f(s1,s2,s3,s4,s5,s5R,t)
+					int[][][] fire = new int[total_model_strata_without_sizeclass][total_layer5][total_periods + 1 + iter];						
 								
 					
 					// Get the 2 parameter V(s1,s2,s3,s4,s5,s6) and A(s1,s2,s3,s4,s5,s6)
@@ -584,31 +584,19 @@ public class Solve_Iterations {
 						}
 					}
 					
-
-					
-					
-					
 					//-----------------------replacing disturbance variables
-					// Create decision variables f(s1,s2,s3,s4,s5,t,s5R)	
+					// Create decision variables f(s1,s2,s3,s4,s5,s5R,t)	
 					for (String strata: model_strata_without_sizeclass) {
-						String[] strata_layer = strata.split("_");
-						
 						int strata_5layers_id = map_strata_without_sizeclass_to_id.get(strata);
-						int s1 = Collections.binarySearch(layer1, strata_layer[0]);
-						int s2 = Collections.binarySearch(layer2, strata_layer[1]);
-						int s3 = Collections.binarySearch(layer3, strata_layer[2]);
-						int s4 = Collections.binarySearch(layer4, strata_layer[3]);
-						int s5 = Collections.binarySearch(layer5, strata_layer[4]);
-						for (int t = 1 + iter; t <= total_periods + iter; t++) {
-							for (int s5R = 0; s5R < total_layer5; s5R++) {
-								String var_name = "f_" + layer1.get(s1) + "_" + layer2.get(s2) + "_" + layer3.get(s3) + "_" + layer4.get(s4) + "_" + layer5.get(s5) + "_" + t + "_" + layer5.get(s5R);
+						for (int s5R = 0; s5R < total_layer5; s5R++) {
+							for (int t = 1 + iter; t <= total_periods + iter; t++) {
+								String var_name = "f_" + strata + "_" + layer5.get(s5R) + "_" + t;
 								var_info_list.add(new Information_Variable(iter, var_name, read_database));
-								
 								objlist.add((double) 0);			
 								vnamelist.add(var_name);										
 								vlblist.add((double) 0);
 								vublist.add(Double.MAX_VALUE);
-								fire[strata_5layers_id][t][s5R] = nvars;
+								fire[strata_5layers_id][s5R][t] = nvars;
 								nvars++;	
 							}
 						}
@@ -1462,8 +1450,8 @@ public class Solve_Iterations {
 							String strata_5layers = model_strata_without_sizeclass.get(strata_5layers_id);
 							int s5 = Collections.binarySearch(layer5, strata_5layers.split("_")[4]);
 	
-							for (int t = iter; t <= iter; t++) {		// t = M
-								for (int s5R = 0; s5R < total_layer5; s5R++) {
+							for (int s5R = 0; s5R < total_layer5; s5R++) {
+								for (int t = iter; t <= iter; t++) {		// t = M
 									double total_value_for_this_F = 0;			// Note note note I am testing using the deterministic mean
 									
 									// Add existing variables ----------------------------------------------
@@ -1553,8 +1541,8 @@ public class Solve_Iterations {
 											}
 										}
 									}
-									// Map	fire[s1][s2][s3][s4][s5][t][s5R]
-									String var_name = "f_" + strata_5layers + "_" + t + "_" + layer5.get(s5R);
+									// Map	fire[s1][s2][s3][s4][s5][s5R][t]
+									String var_name = "f_" + strata_5layers + "_" + layer5.get(s5R) + "_" + t;
 									map_F_name_to_stochastic_F_value.put(var_name, total_value_for_this_F);
 								}
 							}											
@@ -1575,14 +1563,14 @@ public class Solve_Iterations {
 						String strata_5layers = model_strata_without_sizeclass.get(strata_5layers_id);
 						int s5 = Collections.binarySearch(layer5, strata_5layers.split("_")[4]);
 	
-						for (int t = 1 + iter; t <= total_periods + iter; t++) {
-							for (int s5R = 0; s5R < total_layer5; s5R++) {
+						for (int s5R = 0; s5R < total_layer5; s5R++) {
+							for (int t = 1 + iter; t <= total_periods + iter; t++) {
 								// Add constraint
 								c12_indexlist.add(new ArrayList<Integer>());
 								c12_valuelist.add(new ArrayList<Double>());
 								
-								// Add	fire[s1][s2][s3][s4][s5][t][s5R]
-								c12_indexlist.get(c12_num).add(fire[strata_5layers_id][t][s5R]);
+								// Add	fire[s1][s2][s3][s4][s5][s5R][t]
+								c12_indexlist.get(c12_num).add(fire[strata_5layers_id][s5R][t]);
 								c12_valuelist.get(c12_num).add((double) 1);	
 								
 								
@@ -1741,20 +1729,19 @@ public class Solve_Iterations {
 					// 8a
 					if (iter >= 1) {
 						for (String strata_4layers: model_strata_without_sizeclass_and_covertype) {
-							for (int t = iter; t <= iter; t++) {	// t=M									
-								for (int s5R = 0; s5R < total_layer5; s5R++) {
-									
+							for (int s5R = 0; s5R < total_layer5; s5R++) {
+								for (int t = iter; t <= iter; t++) {	// t=M									
 									// Add constraint
 									c13_indexlist.add(new ArrayList<Integer>());
 									c13_valuelist.add(new ArrayList<Double>());
 									
 									
 									// FIRE VARIABLES: F~
-									// Add sigma(s5) fire(s1,s2,s3,s4,s5)[t][s5R] 	--> : F~
+									// Add sigma(s5) fire(s1,s2,s3,s4,s5)[s5R][t] 	--> : F~
 									double value_of_RHS = 0;
 									for (int s5 = 0; s5 < total_layer5; s5++) {
 										String strata_5layers = strata_4layers + "_" + layer5.get(s5);
-										String var_name = "f_" + strata_5layers + "_" + t + "_" + layer5.get(s5R);
+										String var_name = "f_" + strata_5layers + "_" + layer5.get(s5R) + "_" + t;
 										value_of_RHS = value_of_RHS + map_F_name_to_stochastic_F_value.get(var_name);
 									}
 									
@@ -1839,20 +1826,19 @@ public class Solve_Iterations {
 					
 					// 8b
 					for (String strata_4layers: model_strata_without_sizeclass_and_covertype) {
-						for (int t = 1 + iter; t <= total_periods - 1 + iter; t++) {										
-							for (int s5R = 0; s5R < total_layer5; s5R++) {
-								
+						for (int s5R = 0; s5R < total_layer5; s5R++) {
+							for (int t = 1 + iter; t <= total_periods - 1 + iter; t++) {										
 								// Add constraint
 								c13_indexlist.add(new ArrayList<Integer>());
 								c13_valuelist.add(new ArrayList<Double>());
 								
 								
 								// FIRE VARIABLES
-								// Add sigma(s5) fire(s1,s2,s3,s4,s5)[t][s5R]
+								// Add sigma(s5) fire(s1,s2,s3,s4,s5)[s5R][t]
 								for (int s5 = 0; s5 < total_layer5; s5++) {
 									String strata_5layers = strata_4layers + "_" + layer5.get(s5);
 									int strata_5layers_id = (map_strata_without_sizeclass_to_id.get(strata_5layers) != null) ? map_strata_without_sizeclass_to_id.get(strata_5layers) : -1;
-									c13_indexlist.get(c13_num).add(fire[strata_5layers_id][t][s5R]);
+									c13_indexlist.get(c13_num).add(fire[strata_5layers_id][s5R][t]);
 									c13_valuelist.get(c13_num).add((double) 1);
 								}
 								

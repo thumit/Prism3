@@ -143,8 +143,8 @@ public class Information_Variable {
 				layer3 = term[2];
 				layer4 = term[3];
 				layer5 = term[4];
-				period = Integer.parseInt(term[5]);
-				layer5_regen = term[6];
+				layer5_regen = term[5];
+				period = Integer.parseInt(term[6]);
 				period = period - iter;		// adjust period. Eg. period 1 + iter should be adjusted to be 1. This is to apply condition in cost, disturbance, other inputs...
 				break;
 			default:
@@ -241,7 +241,7 @@ public class Information_Variable {
 		return row_id;
 	}
 	
-	public int[] get_prescription_id_and_row_id() {	// Return only when prescription exists in the database yield tables. Otherwise, the 2 numbers will be -9999
+	public int[] get_prescription_id_and_row_id() {
 		return prescription_id_and_row_id;
 	}
 }
