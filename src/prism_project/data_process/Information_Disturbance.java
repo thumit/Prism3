@@ -60,12 +60,13 @@ public class Information_Disturbance {
 	}
 			
 	
-	public int get_rd_condition_id_for_this_var(Information_Variable var_info, int prescription_id, int row_id) {
+	public int get_rd_condition_id_for_this_var(Information_Variable var_info) {
+		int prescription_id = var_info.get_prescription_id();
+		int row_id = var_info.get_row_id();
 		int t = var_info.get_period();
 		int tR = var_info.get_rotation_period();
-		if (t == tR) {
-			return -9999;	// always return -9999 if there is clear cut activity
-		}
+		
+		if (t == tR) return -9999;	// return -9999 if there is clear cut activity for x variable. Note that if variable is not x (f, y, z, v, l, b) then t = tR =-9999 --> always return -9999
 		
 		int id = -9999;
 		if (row_id != -9999 && row_id < yield_tables_values[prescription_id].length) { 	// If row in this prescription exists (not exists when row_id = -9999 or >= total rows in that prescription)

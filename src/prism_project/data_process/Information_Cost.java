@@ -80,10 +80,12 @@ public class Information_Cost {
 			
 	
 	public double get_cost_value(				
-			Information_Variable var_info, int prescription_id, int row_id,
+			Information_Variable var_info,
 			List<String> cost_condition_list,
 			List<String> conversion_after_disturbances_classification_list,		// i.e. P P disturbance		P D disturbance			This is already sorted because we already sorted all layers, including layer5
 			List<Double> conversion_after_disturbances_total_loss_rate_list) {
+		int prescription_id = var_info.get_prescription_id();
+		int row_id = var_info.get_row_id();
 		double value_to_return = 0;
 
 		

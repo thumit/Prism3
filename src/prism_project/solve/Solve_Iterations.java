@@ -637,26 +637,23 @@ public class Solve_Iterations {
 					
 					System.out.println("Connecting " + new DecimalFormat("###,###,###").format(nvars) + " variables to disturbance & cost logic...");
 					for (int var_index = 0; var_index < vname.length; var_index++) {
-						var_cost_value[var_index] = -9999;			// start with -9999
-						var_rd_condition_id[var_index] = -9999;		// start with -9999   This is the priority id. example we have 4 conditions --> id from 0 to 3
-						
 						Information_Variable var_info = var_info_array[var_index];
-						int var_prescription_id = var_info.get_prescription_id();
-						int var_row_id = var_info.get_row_id();
+						int prescription_id = var_info_array[var_index].get_prescription_id();
+						int row_id = var_info.get_row_id();
 						
+						// Replacing Disturbances -----------------------------------
+						// Replacing Disturbances -----------------------------------
+						if (disturbance_info != null) {	// in case there is condition --> calculate this one right away since they will be definitely used
+							var_rd_condition_id[var_index] = disturbance_info.get_rd_condition_id_for_this_var(var_info);	// always return -9999 or a number
+						}
 						
-						if (var_row_id != -9999 && var_row_id < yield_tables_values[var_prescription_id].length) {	
-							// The above if then is not necessary (because we already have it in the void call), 
+						// Cost ------------------------------------------------------
+						// Cost ------------------------------------------------------
+						var_cost_value[var_index] = 0;	// start with initial value of 0
+						if (cost_info != null) {		// in case there is condition --> calculate this one right away for future usage
+							if (row_id != -9999 && row_id < total_rows_of_precription[prescription_id]) {	
+							// This second if then is not necessary because we already have it in the function call 
 							// It is here to help not create unnecessary Cost objects and therefore would save processing time
-							// Replacing Disturbances -----------------------------------
-							// Replacing Disturbances -----------------------------------
-							if (disturbance_info != null) {	// in case there is condition --> calculate this one right away since they will be definitely used
-								var_rd_condition_id[var_index] = disturbance_info.get_rd_condition_id_for_this_var(var_info, var_prescription_id, var_row_id);	// always return -9999 or a number
-							}
-							
-							// Cost ------------------------------------------------------
-							// Cost ------------------------------------------------------
-							if (cost_info != null) {	// in case there is condition --> calculate this one right away for future usage
 								int s5 = Collections.binarySearch(layer5, var_info.get_layer5());
 								int t = var_info.get_period();
 								int tR = var_info.get_rotation_period();
@@ -680,19 +677,16 @@ public class Solve_Iterations {
 											conversion_after_disturbances_total_loss_rate_list.add(total_loss_rate_for_this_conversion);
 										}														
 									}
-								} else {
-									var_rd_condition_id[var_index] = -9999;		// fix percentage bug, printing out wrong percentages in output_05 for areas EA where t = tR
 								}
 								
 								var_cost_value[var_index] = cost_info.get_cost_value(
-												var_info, var_prescription_id, var_row_id,
-												cost_condition_list, conversion_after_disturbances_classification_list, conversion_after_disturbances_total_loss_rate_list);		// always return 0 or a number
+										var_info, cost_condition_list,
+										conversion_after_disturbances_classification_list,
+										conversion_after_disturbances_total_loss_rate_list);	// always return 0 or a number
 								var_cost_value[var_index] = var_cost_value[var_index] * discounted_value;	// Cost is discounted
-							} else {
-								var_cost_value[var_index] = 0;
 							}
 						}
-						
+						// Print
 						if (var_index + 1 > 1 && ((var_index + 1) % 30000 == 0 || var_index + 1 == vname.length)) {
 							System.out.println("           - Established connections:           " + new DecimalFormat("###,###,###").format(var_index + 1) + "             " + dateFormat.format(new Date()));
 						}
