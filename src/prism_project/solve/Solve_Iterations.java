@@ -556,14 +556,14 @@ public class Solve_Iterations {
 							Set<Integer> filter_set = new HashSet<Integer>(set_of_prescription_ids_for_strata_without_sizeclass_with_s5R[strata_5layers_id][s5R]);
 							filter_set.retainAll(EA_R_prescription_ids[strata_5layers_id]);	// filter out the EA_R prescriptions only
 							for (int i : filter_set) {
-								int rotation_age = yield_tables_values[i].length;// aR = total rows of this prescription 
+								int rotation_age = total_rows_of_precription[i]; 
 								xEAr[strata_5layers_id][s5R][i] = new int[total_periods + 1 + iter][];
 								int t_regen = (iter == 0) ? 2 : 1;	// this is because iteration 0 could not have regenerated forest in period 1, but iterations >= 1 do have regenerated forest strata
 								for (int t = t_regen + iter; t <= total_periods + iter; t++) {
 									xEAr[strata_5layers_id][s5R][i][t] = new int[t];	// age class of regen forest could not is at max = t - 1
 									for (int a = 1; a <= t - 1; a++) {
 										int rotation_period = rotation_age + t - a;
-										if (t <= rotation_period 
+										if (a <= rotation_age 	// This would also make t <= rotation_period
 												&& rotation_period >= t_regen + iter && rotation_period <= total_periods + iter) {	// restrict prescriptions with tR = [t_regen + iter, total_period + iter]
 											String var_name = "xEA_R_" + strata + "_" + layer5.get(s5R) + "_" + i + "_" + t + "_" + a;										
 											Information_Variable var_info = new Information_Variable(iter, var_name, read_database);
@@ -1521,7 +1521,7 @@ public class Solve_Iterations {
 										// Add - sigma(s5R')(i)(a)	xEAr[s1][s2][s3][s4][s5][s5R'][i][t][a] 	--> : X~
 										for (int s5RR = 0; s5RR < total_layer5; s5RR++) {
 											for (int i : EA_R_prescription_ids[strata_5layers_id]) {
-												int rotation_age = yield_tables_values[i].length;// aR = total rows of this prescription 
+												int rotation_age = total_rows_of_precription[i]; 
 												for (int a = 1; a <= t - 1; a++) {	
 													if(a < rotation_age) {		// It is very important to not use null check for jagged arrays here to avoid the incorrect of mapping
 														String var_name = "xEA_R_" + strata_5layers + "_" + layer5.get(s5RR) + "_" + i + "_" + t + "_" + a;
@@ -1659,7 +1659,7 @@ public class Solve_Iterations {
 									// Add - sigma(s5R')(i)(a)	xEAr[s1][s2][s3][s4][s5][s5R'][i][t][a]
 									for (int s5RR = 0; s5RR < total_layer5; s5RR++) {
 										for (int i : EA_R_prescription_ids[strata_5layers_id]) {
-											int rotation_age = yield_tables_values[i].length;// aR = total rows of this prescription 
+											int rotation_age = total_rows_of_precription[i]; 
 											for (int a = 1; a <= t - 1; a++) {	
 												if(a < rotation_age
 													&& xEAr[strata_5layers_id][s5RR] != null
@@ -1772,7 +1772,7 @@ public class Solve_Iterations {
 										int strata_5layers_id = (map_strata_without_sizeclass_to_id.get(strata_5layers) != null) ? map_strata_without_sizeclass_to_id.get(strata_5layers) : -1;
 										if (strata_5layers_id >= 0) {
 											for (int i : EA_R_prescription_ids[strata_5layers_id]) {
-												int rotation_age = yield_tables_values[i].length;// aR = total rows of this prescription 
+												int rotation_age = total_rows_of_precription[i];
 												for (int a = 1; a <= t - 1; a++) {	
 													if (a == rotation_age) {	// It is very important to not use null check for jagged arrays here to avoid the incorrect of mapping
 														String var_name = "xEA_R_" + strata_5layers + "_" + layer5.get(s5R) + "_" + i + "_" + t + "_" + a;
@@ -1871,7 +1871,7 @@ public class Solve_Iterations {
 									int strata_5layers_id = (map_strata_without_sizeclass_to_id.get(strata_5layers) != null) ? map_strata_without_sizeclass_to_id.get(strata_5layers) : -1;
 									if (strata_5layers_id >= 0) {
 										for (int i : EA_R_prescription_ids[strata_5layers_id]) {
-											int rotation_age = yield_tables_values[i].length;// aR = total rows of this prescription 
+											int rotation_age = total_rows_of_precription[i]; 
 											for (int a = 1; a <= t - 1; a++) {	
 												if (a == rotation_age 
 														&& xEAr[strata_5layers_id] != null
@@ -2005,13 +2005,12 @@ public class Solve_Iterations {
 						int s5 = Collections.binarySearch(layer5, strata_5layers.split("_")[4]);
 						for (int s5R = 0; s5R < total_layer5; s5R++) {
 							for (int i : EA_R_prescription_ids[strata_5layers_id]) {
-								int rotation_age = yield_tables_values[i].length;// aR = total rows of this prescription 
+								int rotation_age = total_rows_of_precription[i]; 
 								int t_regen = (iter == 0) ? 2 : 1;	// this is because iteration 0 could not have regenerated forest in period 1, but iterations >= 1 do have regenerated forest strata
 								for (int t = t_regen + iter; t <= total_periods + iter; t++) {
 									for (int a = 1; a <= t - 1; a++) {
 										int rotation_period = rotation_age + t - a;
-										if (a < rotation_age	// add this condition which is important
-												&& t < rotation_period 
+										if (a < rotation_age	// add this condition which is important. This would also make t < rotation_period
 													&& rotation_period >= t_regen + iter && rotation_period <= total_periods + iter) {	// restrict prescriptions with tR = [t_regen + iter, total_period + iter]
 											
 											if(xEAr[strata_5layers_id][s5R] != null
@@ -2047,8 +2046,6 @@ public class Solve_Iterations {
 												c14_num++;	
 											}
 										}
-										
-										
 									}
 								}
 							}
@@ -2147,7 +2144,7 @@ public class Solve_Iterations {
 							for (int i : NC_E_prescription_ids[strata_id]) {
 								if (xNCe[strata_id][i] != null)
 								for (int period : static_periods) {		// Loop all periods of user-defined
-									int t = period + iter;		// this is a special case we need to adjust
+									int t = period + iter;				// this is a special case we need to adjust
 									if(xNCe[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 
 										int var_index = xNCe[strata_id][i][t];
 										double para_value = parameter_info.get_total_value(
@@ -2174,8 +2171,8 @@ public class Solve_Iterations {
 									if (xEAe[strata_id][s5R] != null) {
 										for (int i : EA_E_prescription_ids[strata_id]) {
 											if (xEAe[strata_id][s5R][i] != null)
-												for (int period : static_periods) {		//Loop all periods, 	final cut at t but we need parameter at time tR
-													int t = period + iter;		// this is a special case we need to adjust
+												for (int period : static_periods) {		// Loop all periods of user-defined
+													int t = period + iter;				// this is a special case we need to adjust
 													if (xEAe[strata_id][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0   (this also removes the need of checking conversion and rotation) 
 														int var_index = xEAe[strata_id][s5R][i][t];
 														double para_value = parameter_info.get_total_value(
@@ -2208,8 +2205,8 @@ public class Solve_Iterations {
 							if (xNCr[strata_5layers_id] != null)
 								for (int i : NC_R_prescription_ids[strata_5layers_id]) {
 									if (xNCr[strata_5layers_id][i] != null)
-									for (int period : static_periods) {		//Loop all periods, 	final cut at t but we need parameter at time tR
-										int t = period + iter; // this is a special case we need to adjust
+									for (int period : static_periods) {		// Loop all periods of user-defined
+										int t = period + iter;				// this is a special case we need to adjust
 										if (xNCr[strata_5layers_id][i][t] != null)
 										for (int a = 1; a < xNCr[strata_5layers_id][i][t].length; a++) {
 											if (xNCr[strata_5layers_id][i][t][a] > 0) {		// if variable is defined, this value would be > 0 
@@ -2238,8 +2235,8 @@ public class Solve_Iterations {
 									if (xEAr[strata_5layers_id][s5R] != null) {
 										for (int i : EA_R_prescription_ids[strata_5layers_id]) {
 											if (xEAr[strata_5layers_id][s5R][i] != null) {
-												for (int period : static_periods) {		//Loop all periods, 	final cut at t but we need parameter at time tR
-													int t = period + iter; // this is a special case we need to adjust
+												for (int period : static_periods) {		// Loop all periods of user-defined
+													int t = period + iter; 				// this is a special case we need to adjust
 													if (xEAr[strata_5layers_id][s5R][i][t] != null) {
 														for (int a = 1; a <= t - 1; a++) {
 															if (xEAr[strata_5layers_id][s5R][i][t][a] > 0) {		// if variable is defined, this value would be > 0   (this also removes the need of checking conversion and rotation)
@@ -2356,8 +2353,10 @@ public class Solve_Iterations {
 						}
 										
 						
-						// Add constraints for each flow set
-						/*	Example:
+						/*	
+						  Add constraints for each flow set 
+						  Example:
+						  
 						  Sigma 1 contains bc_id = [1], [1], [2]				// Left Sigma 		 Left term
 						  Sigma 2 contains bc_id = [1], [2], [3], [4]			// Right Sigma 		 Right term
 						  
