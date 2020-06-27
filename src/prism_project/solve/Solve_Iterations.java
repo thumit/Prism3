@@ -2726,9 +2726,11 @@ public class Solve_Iterations {
 											int t = var_info_array[var_index].get_period();
 											int prescription_id = var_info_array[var_index].get_prescription_id();
 											int row_id = var_info_array[var_index].get_row_id();
-											String action = yield_tables_values[prescription_id][row_id][activity_col_id];
-											int activity_id = activity.indexOf(action);
-											area[t][activity_id] = area[t][activity_id] + value[i];
+											if (row_id != -9999	&& row_id < total_rows_of_precription[prescription_id]) {
+												String action = yield_tables_values[prescription_id][row_id][activity_col_id];
+												int activity_id = activity.indexOf(action);
+												area[t][activity_id] = area[t][activity_id] + value[i];
+											}
 										}
 									}
 								}
@@ -3286,9 +3288,11 @@ public class Solve_Iterations {
 											int t = var_info_array[var_index].get_period();
 											int prescription_id = var_info_array[var_index].get_prescription_id();
 											int row_id = var_info_array[var_index].get_row_id();
-											String action = yield_tables_values[prescription_id][row_id][activity_col_id];
-											int activity_id = activity.indexOf(action);
-											area[t][activity_id] = area[t][activity_id] + value[i];
+											if (row_id != -9999	&& row_id < total_rows_of_precription[prescription_id]) {
+												String action = yield_tables_values[prescription_id][row_id][activity_col_id];
+												int activity_id = activity.indexOf(action);
+												area[t][activity_id] = area[t][activity_id] + value[i];
+											}
 										}
 									}
 								}
