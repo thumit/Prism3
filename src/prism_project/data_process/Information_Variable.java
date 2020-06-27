@@ -157,6 +157,8 @@ public class Information_Variable {
 		
 		
 		// if this is the f variable or variable that is not in the 4 main types (NC_E, NC_R, EA_E, EA_R) then both prescription_id and row_id would be = -9999 (defined at the start)
+		// Note prescription always exists, while row_id might not exist in the yield tables
+		
 		prescription_id_and_row_id = new int [2];	// first index is prescription, second index is row_id  
 		prescription_id_and_row_id[0] = prescription_id;
 		prescription_id_and_row_id[1] = row_id;		// Note prescription always exists, while row_id might not exist in the yield tables
@@ -229,19 +231,15 @@ public class Information_Variable {
 		return age;
 	}
 	
-	public int get_prescription_id() {
-		return prescription_id;
-	}
-	
 	public String get_prescription() {
 		return prescription;
 	}
 	
-	public int get_row_id() {
-		return row_id;
+	public int get_prescription_id() {
+		return prescription_id;
 	}
 	
-	public int[] get_prescription_id_and_row_id() {
-		return prescription_id_and_row_id;
+	public int get_row_id() {
+		return row_id;
 	}
 }

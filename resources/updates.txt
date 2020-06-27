@@ -1348,4 +1348,5 @@ All changes in this block are associated with PrismAlpha3.0.05.jar, Prism-Formul
 	- Switch t and s5R positions for f variable
  	- Remove t < tR in eq. (9b) since the condition a < aR would guarantee it. ALso use the a <= aR instead of the t <= tR when defining the xEAr variables
 	- Speed up constraint reading time using the total_rows_of_precription[i] instead of yield_tables_values[i].length to find rotation_age for regenerated variables
+	- Remove the function get_prescription_id_and_row_id() in Information_Variable class
 5xx. Remove the upper bound restriction filters that do not allow prescriptions with rotation periods > total planning period to be defined for EA_E and EA_R variables (not yet)

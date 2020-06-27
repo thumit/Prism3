@@ -641,9 +641,8 @@ public class Solve_Iterations {
 						var_rd_condition_id[var_index] = -9999;		// start with -9999   This is the priority id. example we have 4 conditions --> id from 0 to 3
 						
 						Information_Variable var_info = var_info_array[var_index];
-						int[] prescription_id_and_row_id = var_info.get_prescription_id_and_row_id();
-						int var_prescription_id = prescription_id_and_row_id[0];
-						int var_row_id = prescription_id_and_row_id[1];
+						int var_prescription_id = var_info.get_prescription_id();
+						int var_row_id = var_info.get_row_id();
 						
 						
 						if (var_row_id != -9999 && var_row_id < yield_tables_values[var_prescription_id].length) {	
@@ -2148,8 +2147,8 @@ public class Solve_Iterations {
 									if(xNCe[strata_id][i][t] > 0) {		// if variable is defined, this value would be > 0 
 										int var_index = xNCe[strata_id][i][t];
 										double para_value = parameter_info.get_total_value(
-												var_info_array[var_index].get_prescription_id_and_row_id()[0],
-												var_info_array[var_index].get_prescription_id_and_row_id()[1],
+												var_info_array[var_index].get_prescription_id(),
+												var_info_array[var_index].get_row_id(),
 												parameters_indexes,
 												dynamic_dentifiers_column_indexes, 
 												dynamic_identifiers,
@@ -2176,8 +2175,8 @@ public class Solve_Iterations {
 													if (xEAe[strata_id][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0   (this also removes the need of checking conversion and rotation) 
 														int var_index = xEAe[strata_id][s5R][i][t];
 														double para_value = parameter_info.get_total_value(
-																var_info_array[var_index].get_prescription_id_and_row_id()[0],
-																var_info_array[var_index].get_prescription_id_and_row_id()[1],
+																var_info_array[var_index].get_prescription_id(),
+																var_info_array[var_index].get_row_id(),
 																parameters_indexes,
 																dynamic_dentifiers_column_indexes, 
 																dynamic_identifiers,
@@ -2212,8 +2211,8 @@ public class Solve_Iterations {
 											if (xNCr[strata_5layers_id][i][t][a] > 0) {		// if variable is defined, this value would be > 0 
 												int var_index = xNCr[strata_5layers_id][i][t][a];
 												double para_value = parameter_info.get_total_value(
-														var_info_array[var_index].get_prescription_id_and_row_id()[0],
-														var_info_array[var_index].get_prescription_id_and_row_id()[1],
+														var_info_array[var_index].get_prescription_id(),
+														var_info_array[var_index].get_row_id(),
 														parameters_indexes,
 														dynamic_dentifiers_column_indexes, 
 														dynamic_identifiers,
@@ -2242,8 +2241,8 @@ public class Solve_Iterations {
 															if (xEAr[strata_5layers_id][s5R][i][t][a] > 0) {		// if variable is defined, this value would be > 0   (this also removes the need of checking conversion and rotation)
 																int var_index = xEAr[strata_5layers_id][s5R][i][t][a];
 																double para_value = parameter_info.get_total_value(
-																		var_info_array[var_index].get_prescription_id_and_row_id()[0],
-																		var_info_array[var_index].get_prescription_id_and_row_id()[1],
+																		var_info_array[var_index].get_prescription_id(),
+																		var_info_array[var_index].get_row_id(),
 																		parameters_indexes,
 																		dynamic_dentifiers_column_indexes, 
 																		dynamic_identifiers,
@@ -2810,9 +2809,9 @@ public class Solve_Iterations {
 						        }
 								
 								fileOut.write("var_unit_management_cost" + "\t");
-								fileOut.write("var_method" + "\t" + "var_forest_status" + "\t" + "var_layer1" + "\t" + "var_layer2" + "\t" + "var_layer3" + "\t" + "var_layer4" + "\t" + "var_layer5" + "\t" + "var_layer6" + "\t" 
-										+ "var_choice" + "\t" + "var_period" + "\t" + "var_age" + "\t" + "var_rotation_period" + "\t" + "var_rotation_age" + "\t" + "var_regen_covertype" + "\t"
-										+ "data_connection" + "\t" + "prescription" + "\t" + "row_id");
+								fileOut.write("var_method" + "\t" + "var_forest_status" + "\t" + "var_layer1" + "\t" + "var_layer2" + "\t" + "var_layer3" + "\t" + "var_layer4" + "\t" + "var_layer5" + "\t" + "var_layer6"
+								+ "\t" + "var_period" + "\t" + "var_age" + "\t" + "var_rotation_period" + "\t" + "var_rotation_age" + "\t" + "var_layer5_regen" + "\t"
+										+ "data_connection" + "\t" + "prescription_id" + "\t" + "prescription"+ "\t" + "row_id");
 	//							for (int col = 2; col < yield_tables_column_names.length; col++) {		// do not write prescription & row_id column header
 	//								fileOut.write("\t" + yield_tables_column_names[col]);
 	//							}
@@ -2821,13 +2820,11 @@ public class Solve_Iterations {
 								
 								for (int i = 0; i < value.length; i++) {
 									if (value[i] != 0 && (vname[i].contains("xNC_") || vname[i].contains("xEA_"))) {
-										String prescription_name_to_find = var_info_array[i].get_prescription();
-										int[] prescription_and_row = var_info_array[i].get_prescription_id_and_row_id();
-										int var_prescription_id = prescription_and_row[0];
-										int var_row_id = prescription_and_row[1];
+										int var_prescription_id = var_info_array[i].get_prescription_id();
+										int var_row_id = var_info_array[i].get_row_id();
 	
 										String data_connection = "good";
-										if (yield_tables_values[var_prescription_id].length <= var_row_id) {
+										if (total_rows_of_precription[var_prescription_id] <= var_row_id) {
 											data_connection = "missing row id = " + var_row_id;
 										}
 	
@@ -2855,12 +2852,12 @@ public class Solve_Iterations {
 												+ "\t" + var_info_array[i].get_layer1() + "\t" + var_info_array[i].get_layer2()
 												+ "\t" + var_info_array[i].get_layer3() + "\t" + var_info_array[i].get_layer4()
 												+ "\t" + var_info_array[i].get_layer5() + "\t" + var_info_array[i].get_layer6()
-												+ "\t" + var_info_array[i].get_prescription_id() + "\t" + var_info_array[i].get_period()
+												+ "\t" + var_info_array[i].get_period()
 												+ "\t" + String.valueOf(var_info_array[i].get_age()).replace("-9999",  "") 
 												+ "\t" + String.valueOf(var_info_array[i].get_rotation_period()).replace("-9999",  "") 
 												+ "\t" + String.valueOf(var_info_array[i].get_rotation_age()).replace("-9999",  "") 
 												+ "\t" + var_info_array[i].get_regenerated_covertype()
-												+ "\t" + data_connection + "\t" + prescription_name_to_find + "\t" + var_row_id);
+												+ "\t" + data_connection + "\t" + var_info_array[i].get_prescription_id() + "\t" + var_info_array[i].get_prescription() + "\t" + var_row_id);
 	//									for (int col = 2; col < yield_tables_column_names.length; col++) {		// do not write prescription & row_id in the yield_tables
 	//										if (data_connection.equals("good")) {
 	//											fileOut.write("\t" + yield_tables_values[var_prescription_id][var_row_id][col]);
@@ -3410,18 +3407,18 @@ public class Solve_Iterations {
 							// output_05_management_details
 							output_management_details_file.delete();
 							try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_management_details_file))) {
-								fileOut.write("var_id" + "\t" + "var_name" + "\t" + "var_value" + "\t" + "var_reduced_cost" + "\t");
+								fileOut.write("iteration" + "\t" + "var_id" + "\t" + "var_name" + "\t" + "var_value" + "\t" + "var_reduced_cost" + "\t" + "loss_rate_total" + "\t");
 								
 								for (int k = 0; k < total_replacing_disturbances; k++) {
 									int disturbance_index = k + 1;
-						        	String disturbance_name = (disturbance_index < 10) ? ("percentage_SR_0" + disturbance_index) : "percentage_SR_" + disturbance_index;
+						        	String disturbance_name = (disturbance_index < 10) ? ("loss_rate_SR_0" + disturbance_index) : "loss_rate_SR_" + disturbance_index;
 						        	fileOut.write(disturbance_name + "\t");
 						        }
 								
 								fileOut.write("var_unit_management_cost" + "\t");
-								fileOut.write("var_method" + "\t" + "var_forest_status" + "\t" + "var_layer1" + "\t" + "var_layer2" + "\t" + "var_layer3" + "\t" + "var_layer4" + "\t" + "var_layer5" + "\t" + "var_layer6" + "\t" 
-										+ "var_choice" + "\t" + "var_period" + "\t" + "var_age" + "\t" + "var_rotation_period" + "\t" + "var_rotation_age" + "\t" + "var_regen_covertype" + "\t"
-										+ "data_connection" + "\t" + "prescription" + "\t" + "row_id");
+								fileOut.write("var_method" + "\t" + "var_forest_status" + "\t" + "var_layer1" + "\t" + "var_layer2" + "\t" + "var_layer3" + "\t" + "var_layer4" + "\t" + "var_layer5" + "\t" + "var_layer6"
+								+ "\t" + "var_period" + "\t" + "var_age" + "\t" + "var_rotation_period" + "\t" + "var_rotation_age" + "\t" + "var_layer5_regen" + "\t"
+										+ "data_connection" + "\t" + "prescription_id" + "\t" + "prescription"+ "\t" + "row_id");
 	//							for (int col = 2; col < yield_tables_column_names.length; col++) {		// do not write prescription & row_id column header
 	//								fileOut.write("\t" + yield_tables_column_names[col]);
 	//							}
@@ -3430,18 +3427,16 @@ public class Solve_Iterations {
 								
 								for (int i = 0; i < value.length; i++) {
 									if (value[i] != 0 && (vname[i].contains("xNC_") || vname[i].contains("xEA_"))) {
-										String prescription_name_to_find = var_info_array[i].get_prescription();
-										int[] prescription_and_row = var_info_array[i].get_prescription_id_and_row_id();
-										int var_prescription_id = prescription_and_row[0];
-										int var_row_id = prescription_and_row[1];
+										int var_prescription_id = var_info_array[i].get_prescription_id();
+										int var_row_id = var_info_array[i].get_row_id();
 	
 										String data_connection = "good";
-										if (yield_tables_values[var_prescription_id].length <= var_row_id) {
+										if (total_rows_of_precription[var_prescription_id] <= var_row_id) {
 											data_connection = "missing row id = " + var_row_id;
 										}
 	
 										fileOut.newLine();
-										fileOut.write(i + "\t" + vname[i] 
+										fileOut.write(iter + "\t" + i + "\t" + vname[i] 
 												+ "\t" + Double.valueOf(value[i] /*Double.valueOf(twoDForm.format(value[i])*/)
 												+ "\t" + Double.valueOf(reduceCost[i + 1])); /*Double.valueOf(twoDForm.format(reduceCost[i]))*/ 	// because index starts from 1 not 0:    http://lpsolve.sourceforge.net/5.0/get_sensitivity_rhs.htm
 										
@@ -3450,6 +3445,11 @@ public class Solve_Iterations {
 										double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
 										double[][] loss_rate_std = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_std_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
 										double[][] user_loss_rate = get_stochastic_loss_rate_from_loss_rate_mean_and_loss_rate_std(user_chosen_loss_rate, loss_rate_mean, loss_rate_std, var_index, map_var_index_to_user_chosen_loss_rate);
+										double total_loss_rate = 0;
+										for (int k = 0; k < total_replacing_disturbances; k++) {
+											total_loss_rate = total_loss_rate + user_loss_rate[k][s5];
+										}
+										fileOut.write("\t" + Double.valueOf(total_loss_rate));
 										for (int k = 0; k < total_replacing_disturbances; k++) {
 											fileOut.write("\t" + Double.valueOf(user_loss_rate[k][s5]));
 										}
@@ -3459,12 +3459,12 @@ public class Solve_Iterations {
 												+ "\t" + var_info_array[i].get_layer1() + "\t" + var_info_array[i].get_layer2()
 												+ "\t" + var_info_array[i].get_layer3() + "\t" + var_info_array[i].get_layer4()
 												+ "\t" + var_info_array[i].get_layer5() + "\t" + var_info_array[i].get_layer6()
-												+ "\t" + var_info_array[i].get_prescription_id() + "\t" + var_info_array[i].get_period()
+												+ "\t" + var_info_array[i].get_period()
 												+ "\t" + String.valueOf(var_info_array[i].get_age()).replace("-9999",  "") 
 												+ "\t" + String.valueOf(var_info_array[i].get_rotation_period()).replace("-9999",  "") 
 												+ "\t" + String.valueOf(var_info_array[i].get_rotation_age()).replace("-9999",  "") 
 												+ "\t" + var_info_array[i].get_regenerated_covertype()
-												+ "\t" + data_connection + "\t" + prescription_name_to_find + "\t" + var_row_id);
+												+ "\t" + data_connection + "\t" + var_info_array[i].get_prescription_id() + "\t" + var_info_array[i].get_prescription() + "\t" + var_row_id);
 	//									for (int col = 2; col < yield_tables_column_names.length; col++) {		// do not write prescription & row_id in the yield_tables
 	//										if (data_connection.equals("good")) {
 	//											fileOut.write("\t" + yield_tables_values[var_prescription_id][var_row_id][col]);
