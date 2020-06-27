@@ -303,39 +303,50 @@ public class Solve_Iterations {
 					List<Information_Variable> var_info_list = new ArrayList<Information_Variable>();
 					
 					// Some pre-calculations to speed up reading time
+					// Pre-identify s5 and s6 for each stratum and Pre-caterorize prescriptions for each stratum
 					int[] total_rows_of_precription = new int[total_prescriptions];
 					for (int i = 0; i < total_prescriptions; i++) {
 						total_rows_of_precription[i] = yield_tables_values[i].length;		// In case of existing prescription, tR = total rows of this prescription 
 					}
 					
+					int[] s5_for_model_strata = new int[total_model_strata]; 
+					int[] s6_for_model_strata = new int[total_model_strata];
+					int[] s5_for_model_strata_without_sizeclass = new int[total_model_strata_without_sizeclass];
+					
 					List<Integer>[] NC_E_prescription_ids = new ArrayList[total_model_strata];
 					List<Integer>[] EA_E_prescription_ids = new ArrayList[total_model_strata];
 					List<Integer>[] NC_R_prescription_ids = new ArrayList[total_model_strata_without_sizeclass];
 					List<Integer>[] EA_R_prescription_ids = new ArrayList[total_model_strata_without_sizeclass];
+					
 					for (int strata_id = 0; strata_id < total_model_strata; strata_id++) {
 						String strata = model_strata.get(strata_id);
-						String s5_s6_from_existing_strata = strata.split("_")[4] + "_" + strata.split("_")[5];
+						int s5 = Collections.binarySearch(layer5, strata.split("_")[4]);
+						int s6 = Collections.binarySearch(layer6, strata.split("_")[5]);
+						s5_for_model_strata[strata_id] = s5;
+						s6_for_model_strata[strata_id] = s6;
+						String s5_s6 = layer5.get(s5) + "_" + layer6.get(s6);
 						
 						NC_E_prescription_ids[strata_id] = new ArrayList<Integer>();
 						EA_E_prescription_ids[strata_id] = new ArrayList<Integer>();
 						for (int i = 0; i < total_prescriptions; i++) {
-							if (yield_tables_names[i].startsWith("E_0_" + s5_s6_from_existing_strata)) {
+							if (yield_tables_names[i].startsWith("E_0_" + s5_s6)) {
 								NC_E_prescription_ids[strata_id].add(i);
-							} else if (yield_tables_names[i].startsWith("E_1_" + s5_s6_from_existing_strata)) {
+							} else if (yield_tables_names[i].startsWith("E_1_" + s5_s6)) {
 								EA_E_prescription_ids[strata_id].add(i);
 							}
 						}
 					}
 					for (int strata_id = 0; strata_id < total_model_strata_without_sizeclass; strata_id++) {
 						String strata = model_strata_without_sizeclass.get(strata_id);
-						String s5_from_regenerated_strata = strata.split("_")[4];
+						int s5 = Collections.binarySearch(layer5, strata.split("_")[4]);
+						s5_for_model_strata_without_sizeclass[strata_id] = s5;
 						
 						NC_R_prescription_ids[strata_id] = new ArrayList<Integer>();
 						EA_R_prescription_ids[strata_id] = new ArrayList<Integer>();
 						for (int i = 0; i < total_prescriptions; i++) {
-							if (yield_tables_names[i].startsWith("R_0_" + s5_from_regenerated_strata)) {
+							if (yield_tables_names[i].startsWith("R_0_" + layer5.get(s5))) {
 								NC_R_prescription_ids[strata_id].add(i);
-							} else if (yield_tables_names[i].startsWith("R_1_" + s5_from_regenerated_strata)) {
+							} else if (yield_tables_names[i].startsWith("R_1_" + layer5.get(s5))) {
 								EA_R_prescription_ids[strata_id].add(i);
 							}
 						}
@@ -546,7 +557,7 @@ public class Solve_Iterations {
 						}
 					}						
 					
-					// Create decision variables xEAr(s1,s2,s3,s4,s5)(s5R)(i)(t)(a)	-->xEAr(s1,s2,s3,s4,s5)(s5R)(i)(t)(a)
+					// Create decision variables xEAr(s1,s2,s3,s4,s5)(s5R)(i)(t)(a)
 					xEAr = new int[total_model_strata_without_sizeclass][][][][];
 					for (int strata_5layers_id = 0; strata_5layers_id < total_model_strata_without_sizeclass; strata_5layers_id++) {
 						String strata = model_strata_without_sizeclass.get(strata_5layers_id);
@@ -563,7 +574,7 @@ public class Solve_Iterations {
 									xEAr[strata_5layers_id][s5R][i][t] = new int[t];	// age class of regen forest could not is at max = t - 1
 									for (int a = 1; a <= t - 1; a++) {
 										int rotation_period = rotation_age + t - a;
-										if (a <= rotation_age 	// This would also make t <= rotation_period
+										if (a <= rotation_age 	// This would also make t <= rotation_period    and     t_regen + iter <= rotation_period
 												&& rotation_period >= t_regen + iter && rotation_period <= total_periods + iter) {	// restrict prescriptions with tR = [t_regen + iter, total_period + iter]
 											String var_name = "xEA_R_" + strata + "_" + layer5.get(s5R) + "_" + i + "_" + t + "_" + a;										
 											Information_Variable var_info = new Information_Variable(iter, var_name, read_database);
@@ -921,8 +932,7 @@ public class Solve_Iterations {
 							
 						// Regenerated variables
 						for (int strata_5layers_id = 0; strata_5layers_id < total_model_strata_without_sizeclass; strata_5layers_id++) {
-							String strata_5layers = model_strata_without_sizeclass.get(strata_5layers_id);
-							int s5 = Collections.binarySearch(layer5, strata_5layers.split("_")[4]);
+							int s5 = s5_for_model_strata_without_sizeclass[strata_5layers_id];
 					
 							// xNCr
 							for (int i : NC_R_prescription_ids[strata_5layers_id]) {
@@ -1166,9 +1176,7 @@ public class Solve_Iterations {
 							for (int strata_5layers_id = 0; strata_5layers_id < total_model_strata_without_sizeclass; strata_5layers_id++) {
 								// use LinkedHashMap to add all relevant variables in iteration 1+M
 								LinkedHashMap<Integer, String> map_var_index_to_var_state_id = new LinkedHashMap<Integer, String>();
-								
-								String strata_5layers = model_strata_without_sizeclass.get(strata_5layers_id);
-								int s5 = Collections.binarySearch(layer5, strata_5layers.split("_")[4]);
+								int s5 = s5_for_model_strata_without_sizeclass[strata_5layers_id];
 						
 								// xNCr
 								for (int i : NC_R_prescription_ids[strata_5layers_id]) {
@@ -1328,7 +1336,7 @@ public class Solve_Iterations {
 					
 					// 6a
 					for (int strata_id = 0; strata_id < total_model_strata; strata_id++) {
-						int s5 = Collections.binarySearch(layer5, model_strata.get(strata_id).split("_")[4]);
+						int s5 = s5_for_model_strata[strata_id];
 	
 						for (int i : NC_E_prescription_ids[strata_id]) {
 							for (int t = 1 + iter; t <= total_periods - 1 + iter; t++) {
@@ -1367,8 +1375,7 @@ public class Solve_Iterations {
 					
 					// 6b
 					for (int strata_id = 0; strata_id < total_model_strata; strata_id++) {
-						String strata = model_strata.get(strata_id);
-						int s5 = Collections.binarySearch(layer5, strata.split("_")[4]);
+						int s5 = s5_for_model_strata[strata_id];
 						
 						for (int s5R = 0; s5R < total_layer5; s5R++) {
 							for (int i : EA_E_prescription_ids[strata_id]) {
@@ -1441,7 +1448,7 @@ public class Solve_Iterations {
 						// 12 --> Loop writing in this way will improve speed. This is also applied to eq. 15 to save running time. Other equations are fast so it is not needed to use this type of loop
 						for (int strata_5layers_id = 0; strata_5layers_id < total_model_strata_without_sizeclass; strata_5layers_id++) {
 							String strata_5layers = model_strata_without_sizeclass.get(strata_5layers_id);
-							int s5 = Collections.binarySearch(layer5, strata_5layers.split("_")[4]);
+							int s5 = s5_for_model_strata_without_sizeclass[strata_5layers_id];
 	
 							for (int s5R = 0; s5R < total_layer5; s5R++) {
 								for (int t = iter; t <= iter; t++) {		// t = M
@@ -1554,7 +1561,7 @@ public class Solve_Iterations {
 					// 12 --> Loop writing in this way will improve speed. This is also applied to eq. 15 to save running time. Other equations are fast so it is not needed to use this type of loop
 					for (int strata_5layers_id = 0; strata_5layers_id < total_model_strata_without_sizeclass; strata_5layers_id++) {
 						String strata_5layers = model_strata_without_sizeclass.get(strata_5layers_id);
-						int s5 = Collections.binarySearch(layer5, strata_5layers.split("_")[4]);
+						int s5 = s5_for_model_strata_without_sizeclass[strata_5layers_id];
 	
 						for (int s5R = 0; s5R < total_layer5; s5R++) {
 							for (int t = 1 + iter; t <= total_periods + iter; t++) {
@@ -1950,8 +1957,7 @@ public class Solve_Iterations {
 					
 					// 9a
 					for (int strata_5layers_id = 0; strata_5layers_id < total_model_strata_without_sizeclass; strata_5layers_id++) {
-						String strata_5layers = model_strata_without_sizeclass.get(strata_5layers_id);
-						int s5 = Collections.binarySearch(layer5, strata_5layers.split("_")[4]);
+						int s5 = s5_for_model_strata_without_sizeclass[strata_5layers_id];
 				
 						for (int i : NC_R_prescription_ids[strata_5layers_id]) {
 							int t_regen = (iter == 0) ? 2 : 1;	// this is because iteration 0 could not have regenerated forest in period 1, but iterations >= 1 do have regenerated forest strata
@@ -1994,8 +2000,7 @@ public class Solve_Iterations {
 					
 					// 9b
 					for (int strata_5layers_id = 0; strata_5layers_id < total_model_strata_without_sizeclass; strata_5layers_id++) {
-						String strata_5layers = model_strata_without_sizeclass.get(strata_5layers_id);
-						int s5 = Collections.binarySearch(layer5, strata_5layers.split("_")[4]);
+						int s5 = s5_for_model_strata_without_sizeclass[strata_5layers_id];
 						for (int s5R = 0; s5R < total_layer5; s5R++) {
 							for (int i : EA_R_prescription_ids[strata_5layers_id]) {
 								int rotation_age = total_rows_of_precription[i]; 
@@ -2308,7 +2313,7 @@ public class Solve_Iterations {
 					
 					
 					
-					// Constraints 16 (flow)------------------------------------------------This is equation (11) in Prism-Formulation-10
+					// Constraints 11 (flow)------------------------------------------------This is equation (11) in Prism-Formulation-10
 					List<List<Integer>> c16_indexlist = new ArrayList<List<Integer>>();
 					List<List<Double>> c16_valuelist = new ArrayList<List<Double>>();
 					List<Double> c16_lblist = new ArrayList<Double>();
@@ -2735,9 +2740,6 @@ public class Solve_Iterations {
 									
 								// Add Regenerated variables
 								for (int strata_5layers_id = 0; strata_5layers_id < total_model_strata_without_sizeclass; strata_5layers_id++) {
-									String strata_5layers = model_strata_without_sizeclass.get(strata_5layers_id);
-									int s5 = Collections.binarySearch(layer5, strata_5layers.split("_")[4]);
-							
 									// xNCr
 									for (int i : NC_R_prescription_ids[strata_5layers_id]) {
 										int t = 1 + iter;
@@ -3342,9 +3344,6 @@ public class Solve_Iterations {
 									
 								// Add Regenerated variables
 								for (int strata_5layers_id = 0; strata_5layers_id < total_model_strata_without_sizeclass; strata_5layers_id++) {
-									String strata_5layers = model_strata_without_sizeclass.get(strata_5layers_id);
-									int s5 = Collections.binarySearch(layer5, strata_5layers.split("_")[4]);
-							
 									// xNCr
 									for (int i : NC_R_prescription_ids[strata_5layers_id]) {
 										int t = 1 + iter;
