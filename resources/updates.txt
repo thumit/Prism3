@@ -1344,11 +1344,16 @@ All changes in this block are associated with PrismAlpha3.0.05.jar, Prism-Formul
 556. Fix to improve reading speed for prescription renames in Read_Database class.
 557. Allow tooltip to show all applicable prescriptions in Model Strata screen when loading an exsiting model. Previously, tooltip only shows when importing a new database. Existing model which has the old ageclass column will also be updated with applicable prescriptions.
 558. Fix to show cells in area column of the Model Strata screen as double values (by adding column class for table3, loading double value of string to area column data, and reapplying some column headers in the case of importing a new database)
-559. Apply Prism-Formulation-13-v2
+559. Others:
 	- Switch t and s5R positions for f variable
  	- Remove t < tR in eq. (9b) since the condition a < aR would guarantee it. ALso use the a <= aR instead of the t <= tR when defining the xEAr variables
 	- Speed up constraint reading time using the total_rows_of_precription[i] instead of yield_tables_values[i].length to find rotation_age for regenerated variables
 	- Remove the function get_prescription_id_and_row_id() in Information_Variable class
 	- Revise (simplify) the pre-calculation for replacing disturbances and cost in Solve_Iterations class
 	- Pre-identify s5 and s6 for each stratum to remove all associated binary search for s5 and s6 that would help speed up reading time 
+560. New output 04 summary with area data for each activity in each period of every iteration
+561. Apply Prism-Formulation-13-v2
+	- 
+
+
 5xx. Remove the upper bound restriction filters that do not allow prescriptions with rotation periods > total planning period to be defined for EA_E and EA_R variables (not yet)

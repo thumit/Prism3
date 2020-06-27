@@ -19,7 +19,6 @@ package prism_project.output;
 
 import java.awt.Dialog;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
@@ -32,7 +31,6 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-import javax.swing.JInternalFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -325,91 +323,91 @@ public class Output_Panel_Management_Overview extends JLayeredPane {
 	@SuppressWarnings("deprecation")
 	private JFreeChart create_single_bar_chart(JTable table, Object[][] data, int selectedRow) {	
 		final DefaultCategoryDataset dataset = new DefaultCategoryDataset( );
-		String chart_name = "Highlight an iteration to view chart";
+		String chart_name = "Highlight a row to view chart";
 		if (selectedRow >= 0) {
-			chart_name = "iteration " + data[selectedRow][0].toString() + " - " + "first period management area";
+			chart_name = "iteration " + data[selectedRow][0].toString() + " - period " + data[selectedRow][1].toString() + " area";
 			// Put all into dataset		
-			for (int i = 1; i < data[0].length; i++) {
+			for (int i = 2; i < data[0].length; i++) {
 				dataset.addValue(Double.valueOf(data[selectedRow][i].toString()), "area", table.getColumnName(i));
 			}
 		}
 		
 		Chart charts = new Chart();
-		return charts.create_single_bar_chart(chart_name, "silviculture method", "area", dataset);
+		return charts.create_single_bar_chart(chart_name, "activity", "area", dataset);
 	}	
 	
 	
 	@SuppressWarnings("deprecation")
 	private JFreeChart create_single_pie_chart(JTable table, Object[][] data, int selectedRow) {			
 		final DefaultPieDataset dataset = new DefaultPieDataset( );
-		String chart_name = "Highlight an iteration to view chart";
+		String chart_name = "Highlight a row to view chart";
 		if (selectedRow >= 0) {
-			chart_name = "iteration " + data[selectedRow][0].toString() + " - " + "first period management area";
+			chart_name = "iteration " + data[selectedRow][0].toString() + " - period " + data[selectedRow][1].toString() + " area";
 			// Put all into dataset		
-			for (int i = 1; i < data[0].length; i++) {
+			for (int i = 2; i < data[0].length; i++) {
 				dataset.setValue(table.getColumnName(i), Double.valueOf(data[selectedRow][i].toString()));
 			}
 		}
 		
 		Chart charts = new Chart();
-		return charts.create_single_pie_chart(chart_name, "list of silviculture methods", dataset);
+		return charts.create_single_pie_chart(chart_name, "list of activities", dataset);
 	}	
 	
 	
 	@SuppressWarnings("deprecation")
 	private JFreeChart create_multiple_bar_chart(JTable table, Object[][] data, int[] selectedRows) {		
 		final DefaultCategoryDataset dataset = new DefaultCategoryDataset( );
-		String chart_name = "Highlight single or multiple iterations to view chart";
+		String chart_name = "Highlight single or multiple rows to view chart";
 		if (selectedRows.length >= 1) {
-			chart_name = "Comparison for highlighted iterations";
+			chart_name = "Comparison for highlighted rows";
 			for (int selectedRow: selectedRows) {
 				// Put all into dataset		
-				for (int i = 1; i < data[0].length; i++) {
-					dataset.addValue(Double.valueOf(data[selectedRow][i].toString()), "iteration " + data[selectedRow][0].toString(), table.getColumnName(i));
+				for (int i = 2; i < data[0].length; i++) {
+					dataset.addValue(Double.valueOf(data[selectedRow][i].toString()), "iteration " + data[selectedRow][0].toString() + ", period " + data[selectedRow][1].toString(), table.getColumnName(i));
 				}
 			}
 		}
 		
 		Chart charts = new Chart();
-		return charts.create_multiple_bar_chart(chart_name, "silviculture method", "area", dataset);
+		return charts.create_multiple_bar_chart(chart_name, "activity", "area", dataset);
 	}	
 
 	
 	@SuppressWarnings("deprecation")
 	private JFreeChart create_multiple_stacked_bar1_chart(JTable table, Object[][] data, int[] selectedRows) {			
 		final DefaultCategoryDataset dataset = new DefaultCategoryDataset( );
-		String chart_name = "Highlight single or multiple iterations to view chart";
+		String chart_name = "Highlight single or multiple rows to view chart";
 		if (selectedRows.length >= 1) {
-			chart_name = "Comparison for highlighted iterations";
+			chart_name = "Comparison for highlighted rows";
 			for (int selectedRow: selectedRows) {
 				// Put all into dataset		
-				for (int i = 1; i < data[0].length; i++) {
-					dataset.addValue(Double.valueOf(data[selectedRow][i].toString()), table.getColumnName(i), "iteration " + data[selectedRow][0].toString());
+				for (int i = 2; i < data[0].length; i++) {
+					dataset.addValue(Double.valueOf(data[selectedRow][i].toString()), table.getColumnName(i), data[selectedRow][0].toString() + "," + data[selectedRow][1].toString());
 				}
 			}
 		}
 		
 		Chart charts = new Chart();
-		return charts.create_multiple_stacked_bar1_chart(chart_name, "iteration (stacked by silviculture methods)", "area", dataset);
+		return charts.create_multiple_stacked_bar1_chart(chart_name, "iteration, period (stacked by activity)", "area", dataset);
 	}	
 	
 	
 	@SuppressWarnings("deprecation")
 	private JFreeChart create_multiple_stacked_bar2_chart(JTable table, Object[][] data, int[] selectedRows) {			
 		final DefaultCategoryDataset dataset = new DefaultCategoryDataset( );
-		String chart_name = "Highlight single or multiple iterations to view chart";
+		String chart_name = "Highlight single or multiple rows to view chart";
 		if (selectedRows.length >= 1) {
-			chart_name = "Comparison for highlighted iterations";
+			chart_name = "Comparison for highlighted rows";
 			for (int selectedRow: selectedRows) {
 				// Put all into dataset		
-				for (int i = 1; i < data[0].length; i++) {
-					dataset.addValue(Double.valueOf(data[selectedRow][i].toString()), "iteration " + data[selectedRow][0].toString(), table.getColumnName(i));
+				for (int i = 2; i < data[0].length; i++) {
+					dataset.addValue(Double.valueOf(data[selectedRow][i].toString()), "iteration " + data[selectedRow][0].toString() + ", period " + data[selectedRow][1].toString(), table.getColumnName(i));
 				}
 			}
 		}
 		
 		Chart charts = new Chart();
-		return charts.create_multiple_stacked_bar2_chart(chart_name, "silviculture method (stacked by iterations)", "area", dataset);
+		return charts.create_multiple_stacked_bar2_chart(chart_name, "activity (stacked by iteration, period)", "area", dataset);
 	}	
 }	
 

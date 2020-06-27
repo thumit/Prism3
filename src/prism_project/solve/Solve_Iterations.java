@@ -2707,86 +2707,42 @@ public class Solve_Iterations {
 							// output_04_management_overview
 							output_management_overview_file.delete();
 							try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_management_overview_file))) {
-								String file_header = String.join("\t", "iteration", "NC_E", "EA_E", "NC_R", "EA_R");
+								List<String> activity = read_database.get_col_unique_values_list(activity_col_id);
+								String file_header = String.join("\t", activity);
+								file_header = "iteration" + "\t" + "period" + "\t" + file_header;
 								fileOut.write(file_header);
 								
-								double NC_E_total_area = 0;
-								double EA_E_total_area = 0;
-								double NC_R_total_area = 0;
-								double EA_R_total_area = 0;
-								for (int strata_id = 0; strata_id < total_model_strata; strata_id++) {
-									// Add sigma(i) xNCe(s1,s2,s3,s4,s5,s6)[i][1 + iter]
-									for (int i : NC_E_prescription_ids[strata_id]) {
-										if (xNCe[strata_id][i] != null
-												&& xNCe[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
-											int this_var_index = xNCe[strata_id][i][1 + iter];
-											NC_E_total_area = NC_E_total_area + Double.valueOf(value[this_var_index]);
-										}
+								double[][] area = new double[total_periods + 1][activity.size()];	// area in each period for each activity
+								for (double[] sub_area : area) {
+									for (double a : sub_area) {
+										a = 0;
 									}
-							
-									// Add sigma(s5R)(i) xEAe(s1,s2,s3,s4,s5,s6)[s5R][i][1 + iter]	
-									for (int s5R = 0; s5R < total_layer5; s5R++) {
-										for (int i : EA_E_prescription_ids[strata_id]) {
-											if (xEAe[strata_id] != null 
-													&& xEAe[strata_id][s5R] != null
-														&& xEAe[strata_id][s5R][i] != null
-															&& xEAe[strata_id][s5R][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
-												int this_var_index = xEAe[strata_id][s5R][i][1 + iter];
-												EA_E_total_area = EA_E_total_area + Double.valueOf(value[this_var_index]);
-											}
-										}
-									}	
-								}														
-									
-								// Add Regenerated variables
-								for (int strata_5layers_id = 0; strata_5layers_id < total_model_strata_without_sizeclass; strata_5layers_id++) {
-									// xNCr
-									for (int i : NC_R_prescription_ids[strata_5layers_id]) {
-										int t = 1 + iter;
-										for (int a = 1; a <= t - 1; a++) {
-											if(xNCr[strata_5layers_id][i] != null
-													&& xNCr[strata_5layers_id][i][1 + iter] != null
-															&& xNCr[strata_5layers_id][i][1 + iter][a] > 0) {		// if variable is defined, this value would be > 0 
-												int this_var_index = xNCr[strata_5layers_id][i][1 + iter][a];
-												NC_R_total_area = NC_R_total_area + Double.valueOf(value[this_var_index]);
-											}
-										}
-									}
+								}
 								
-									// xEAr
-									if (xEAr[strata_5layers_id] != null) {
-										for (int s5R = 0; s5R < total_layer5; s5R++) {
-											if (xEAr[strata_5layers_id][s5R] != null) {
-												for (int i : EA_R_prescription_ids[strata_5layers_id]) {
-													if (xEAr[strata_5layers_id][s5R][i] != null) {
-														int t_regen = (iter == 0) ? 2 : 1;	// this is because iteration 0 could not have regenerated forest in period 1, but iterations >= 1 do have regenerated forest strata
-														int t = 1 + iter;
-														if (xEAr[strata_5layers_id][s5R][i][t] != null) {
-															for (int a = 1; a <= t - 1; a++) {
-																if (xEAr[strata_5layers_id][s5R][i][t][a] > 0) {		// if variable is defined, this value would be > 0   (this also removes the need of checking conversion and rotation)
-																	int this_var_index = xEAr[strata_5layers_id][s5R][i][t][a];
-																	EA_R_total_area = EA_R_total_area + Double.valueOf(value[this_var_index]);
-																}
-															}
-														}
-													}
-												}
-											}
+								for (int i = 0; i < value.length; i++) {
+									if (value[i] != 0) {	// only process variable that is not zero
+										if (vname[i].startsWith("x")) {
+											int var_index = i;
+											int t = var_info_array[var_index].get_period();
+											int prescription_id = var_info_array[var_index].get_prescription_id();
+											int row_id = var_info_array[var_index].get_row_id();
+											String action = yield_tables_values[prescription_id][row_id][activity_col_id];
+											int activity_id = activity.indexOf(action);
+											area[t][activity_id] = area[t][activity_id] + value[i];
 										}
 									}
 								}
 								
-								fileOut.write("\n" + iter);
-								fileOut.write("\t" + NC_E_total_area /*Double.valueOf(twoDForm.format(NC_E_total_area))*/);
-								fileOut.write("\t" + EA_E_total_area /*Double.valueOf(twoDForm.format(EA_E_total_area))*/);
-								fileOut.write("\t" + NC_R_total_area /*Double.valueOf(twoDForm.format(NC_R_total_area))*/);
-								fileOut.write("\t" + EA_R_total_area /*Double.valueOf(twoDForm.format(EA_R_total_area))*/);
-									
+								for (int t = 1; t <= total_periods; t++) {
+									fileOut.write("\n" + iter + "\t" + t);
+									for (double a : area[t]) {
+										fileOut.write("\t" + a /*Double.valueOf(twoDForm.format(area))*/);
+									}
+								}
+								
 								fileOut.close();
-								xNCe = null;			// Clear arrays not used any more
-								xEAe = null;			// Clear arrays not used any more
-								xNCr = null;			// Clear arrays not used any more
-								xEAr = null;			// Clear arrays not used any more
+								activity = null;			// Clear arrays not used any more
+								area = null;	// Clear arrays not used any more
 							} catch (IOException e) {
 								System.err.println("Panel Solve Runs - FileWriter(output_management_overview_file) error - " + e.getClass().getName() + ": " + e.getMessage());
 							}
@@ -3311,86 +3267,42 @@ public class Solve_Iterations {
 							// output_04_management_overview
 							output_management_overview_file.delete();
 							try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_management_overview_file))) {
-								String file_header = String.join("\t", "iteration", "NC_E", "EA_E",  "NC_R", "EA_R");
+								List<String> activity = read_database.get_col_unique_values_list(activity_col_id);
+								String file_header = String.join("\t", activity);
+								file_header = "iteration" + "\t" + "period" + "\t" + file_header;
 								fileOut.write(file_header);
 								
-								double NC_E_total_area = 0;
-								double EA_E_total_area = 0;
-								double NC_R_total_area = 0;
-								double EA_R_total_area = 0;
-								for (int strata_id = 0; strata_id < total_model_strata; strata_id++) {
-									// Add sigma(i) xNCe(s1,s2,s3,s4,s5,s6)[i][1 + iter]
-									for (int i : NC_E_prescription_ids[strata_id]) {
-										if (xNCe[strata_id][i] != null
-												&& xNCe[strata_id][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
-											int this_var_index = xNCe[strata_id][i][1 + iter];
-											NC_E_total_area = NC_E_total_area + Double.valueOf(value[this_var_index]);
-										}
+								double[][] area = new double[total_periods + 1][activity.size()];	// area in each period for each activity
+								for (double[] sub_area : area) {
+									for (double a : sub_area) {
+										a = 0;
 									}
-							
-									// Add sigma(s5R)(i) xEAe(s1,s2,s3,s4,s5,s6)[s5R][i][1 + iter]	
-									for (int s5R = 0; s5R < total_layer5; s5R++) {
-										for (int i : EA_E_prescription_ids[strata_id]) {
-											if (xEAe[strata_id] != null 
-													&& xEAe[strata_id][s5R] != null
-														&& xEAe[strata_id][s5R][i] != null
-															&& xEAe[strata_id][s5R][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
-												int this_var_index = xEAe[strata_id][s5R][i][1 + iter];
-												EA_E_total_area = EA_E_total_area + Double.valueOf(value[this_var_index]);
-											}
-										}
-									}	
-								}														
-									
-								// Add Regenerated variables
-								for (int strata_5layers_id = 0; strata_5layers_id < total_model_strata_without_sizeclass; strata_5layers_id++) {
-									// xNCr
-									for (int i : NC_R_prescription_ids[strata_5layers_id]) {
-										int t = 1 + iter;
-										for (int a = 1; a <= t - 1; a++) {
-											if(xNCr[strata_5layers_id][i] != null
-													&& xNCr[strata_5layers_id][i][1 + iter] != null
-															&& xNCr[strata_5layers_id][i][1 + iter][a] > 0) {		// if variable is defined, this value would be > 0 
-												int this_var_index = xNCr[strata_5layers_id][i][1 + iter][a];
-												NC_R_total_area = NC_R_total_area + Double.valueOf(value[this_var_index]);
-											}
-										}
-									}
-									
-									// xEAr
-									if (xEAr[strata_5layers_id] != null) {
-										for (int s5R = 0; s5R < total_layer5; s5R++) {
-											if (xEAr[strata_5layers_id][s5R] != null) {
-												for (int i : EA_R_prescription_ids[strata_5layers_id]) {
-													if (xEAr[strata_5layers_id][s5R][i] != null) {
-														int t_regen = (iter == 0) ? 2 : 1;	// this is because iteration 0 could not have regenerated forest in period 1, but iterations >= 1 do have regenerated forest strata
-														int t = 1 + iter;
-														if (xEAr[strata_5layers_id][s5R][i][t] != null) {
-															for (int a = 1; a <= t - 1; a++) {
-																if (xEAr[strata_5layers_id][s5R][i][t][a] > 0) {		// if variable is defined, this value would be > 0   (this also removes the need of checking conversion and rotation)
-																	int this_var_index = xEAr[strata_5layers_id][s5R][i][t][a];
-																	EA_R_total_area = EA_R_total_area + Double.valueOf(value[this_var_index]);
-																}
-															}
-														}
-													}
-												}
-											}
+								}
+								
+								for (int i = 0; i < value.length; i++) {
+									if (value[i] != 0) {	// only process variable that is not zero
+										if (vname[i].startsWith("x")) {
+											int var_index = i;
+											int t = var_info_array[var_index].get_period();
+											int prescription_id = var_info_array[var_index].get_prescription_id();
+											int row_id = var_info_array[var_index].get_row_id();
+											String action = yield_tables_values[prescription_id][row_id][activity_col_id];
+											int activity_id = activity.indexOf(action);
+											area[t][activity_id] = area[t][activity_id] + value[i];
 										}
 									}
 								}
 								
-								fileOut.write("\n" + iter);
-								fileOut.write("\t" + NC_E_total_area /*Double.valueOf(twoDForm.format(NC_E_total_area))*/);
-								fileOut.write("\t" + EA_E_total_area /*Double.valueOf(twoDForm.format(EA_E_total_area))*/);
-								fileOut.write("\t" + NC_R_total_area /*Double.valueOf(twoDForm.format(NC_R_total_area))*/);
-								fileOut.write("\t" + EA_R_total_area /*Double.valueOf(twoDForm.format(EA_R_total_area))*/);
-									
+								for (int t = 1; t <= total_periods; t++) {
+									fileOut.write("\n" + iter + "\t" + t);
+									for (double a : area[t]) {
+										fileOut.write("\t" + a /*Double.valueOf(twoDForm.format(area))*/);
+									}
+								}
+								
 								fileOut.close();
-								xNCe = null;			// Clear arrays not used any more
-								xEAe = null;			// Clear arrays not used any more
-								xNCr = null;			// Clear arrays not used any more
-								xEAr = null;			// Clear arrays not used any more
+								activity = null;			// Clear arrays not used any more
+								area = null;	// Clear arrays not used any more
 							} catch (IOException e) {
 								System.err.println("Panel Solve Runs - FileWriter(output_management_overview_file) error - " + e.getClass().getName() + ": " + e.getMessage());
 							}
