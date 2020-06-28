@@ -810,7 +810,7 @@ public class Panel_Project extends JLayeredPane {
 							}
 						});
 						popup.add(updateMenuItem);
-						updateMenuItem.setEnabled(true);
+						updateMenuItem.setEnabled(false);
 					}
 					
 					
