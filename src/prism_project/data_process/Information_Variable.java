@@ -54,31 +54,12 @@ public class Information_Variable {
 		
 		
 		try {
-			String first_six_letters_of_var_name = var_name.substring(0, 6);
+			String first_six_letters_of_var_name = var_name.substring(0, 4);
 			String[] term;
 			
 			switch (first_six_letters_of_var_name) {
-			case "xNC_E_":
-				term = var_name.substring(6).split("_");	// remove first 6 letters and then split
-				layer1 = term[0];
-				layer2 = term[1];
-				layer3 = term[2];
-				layer4 = term[3];
-				layer5 = term[4];
-				layer6 = term[5];
-				prescription_id = Integer.parseInt(term[6]);
-				period = Integer.parseInt(term[7]);
-				age = starting_age_class_for_prescription[prescription_id] + period - 1;		// calculate age for existing variable
-				
-				method = "NC";
-				forest_status = "E";
-				prescription = prescriptions_list.get(prescription_id);
-				row_id = period - 1;
-				period = period - iter;		// adjust period. Eg. period 1 + iter should be adjusted to be 1. This is to apply condition in cost, disturbance, other inputs...
-				break;
-			
-			case "xEA_E_":
-				term = var_name.substring(6).split("_");	// remove first 6 letters and then split
+			case "x_E_":
+				term = var_name.substring(4).split("_");	// remove first 4 letters and then split
 				layer1 = term[0];
 				layer2 = term[1];
 				layer3 = term[2];
@@ -91,33 +72,15 @@ public class Information_Variable {
 				age = starting_age_class_for_prescription[prescription_id] + period - 1;		// calculate age for existing variable
 				// rotation_age and rotation_period are set manually
 				
-				method = "EA";
+				method = "";
 				forest_status = "E";
 				prescription = prescriptions_list.get(prescription_id);
 				row_id = period - 1;
 				period = period - iter;		// adjust period. Eg. period 1 + iter should be adjusted to be 1. This is to apply condition in cost, disturbance, other inputs...
 				break;
 				
-			case "xNC_R_":
-				term = var_name.substring(6).split("_");	// remove first 6 letters and then split
-				layer1 = term[0];
-				layer2 = term[1];
-				layer3 = term[2];
-				layer4 = term[3];
-				layer5 = term[4];
-				prescription_id = Integer.parseInt(term[5]);
-				period = Integer.parseInt(term[6]);
-				age = Integer.parseInt(term[7]);
-				
-				method = "NC";
-				forest_status = "R";
-				prescription = prescriptions_list.get(prescription_id);
-				row_id = age - 1;
-				period = period - iter;		// adjust period. Eg. period 1 + iter should be adjusted to be 1. This is to apply condition in cost, disturbance, other inputs...
-				break;
-				
-			case "xEA_R_":
-				term = var_name.substring(6).split("_");	// remove first 6 letters and then split
+			case "x_R_":
+				term = var_name.substring(4).split("_");	// remove first 4 letters and then split
 				layer1 = term[0];
 				layer2 = term[1];
 				layer3 = term[2];
@@ -129,7 +92,7 @@ public class Information_Variable {
 				age = Integer.parseInt(term[8]);
 				// rotation_age and rotation_period are set manually
 				
-				method = "EA";
+				method = "";
 				forest_status = "R";
 				prescription = prescriptions_list.get(prescription_id);
 				row_id = age - 1;
