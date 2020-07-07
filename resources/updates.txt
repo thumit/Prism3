@@ -1353,8 +1353,9 @@ All changes in this block are associated with PrismAlpha3.0.05.jar, Prism-Formul
 	- Pre-identify s5 and s6 for each stratum to remove all associated binary search for s5 and s6 that would help speed up reading time 
 560. New output 04 summary with area data for each activity in each period of every iteration
 561. Apply Prism-Formulation-13-v2 (first try). Some loops are still kept separated for easier tracking. Future loop merging is possible.
-562. Allow clear-cut variables in equation 7. This is because the total loss rate is zero for clear-cut variables and therefore the logic will not be different.
+562. Allow clear-cut variables in equation 7a and 7b. This is because the total loss rate is zero for clear-cut variables and therefore the logic will not be different.
 563. Refactor variable names and constraint indexes
-564. Very important refactor to merge loops within equation 7a nad 7b
-
+564. Very important refactor to merge loops within equation 7a and 7b
+All changes in this block are associated with PrismAlpha3.1.01.jar, Prism-Formulation-13-V3.docx, Rolling-horizon-formulation-10-V3.docx
+--------------------------------------------------------------------------
 5xx. Remove the upper bound restriction filters that do not allow prescriptions with rotation periods > total planning period to be defined for EA_E and EA_R variables (not yet)
