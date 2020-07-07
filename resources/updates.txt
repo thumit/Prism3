@@ -1359,4 +1359,5 @@ All changes in this block are associated with PrismAlpha3.0.05.jar, Prism-Formul
 All changes in this block are associated with PrismAlpha3.1.01.jar, Prism-Formulation-13-V3.docx, Rolling-horizon-formulation-10-V3.docx
 --------------------------------------------------------------------------
 565. Show the version of Prism in the welcome screen.
+566. Show percentage symbol where the input format is percentage to avoid confusion. This is applied in Natural Disturbances screen, Flow Constraints screen, and Area Merging screen.
 5xx. Remove the upper bound restriction filters that do not allow prescriptions with rotation periods > total planning period to be defined for EA_E and EA_R variables (not yet)

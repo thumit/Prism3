@@ -1703,17 +1703,17 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
         };						
 		
         
-        // Set Double precision for cells
+        // show percentage for cells
         DefaultTableCellRenderer r2 = new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object
 			value, boolean isSelected, boolean hasFocus, int row, int column) {			
 				setHorizontalAlignment(JLabel.RIGHT);			
-				DecimalFormat formatter = new DecimalFormat("###,###.###");
+				DecimalFormat formatter = new DecimalFormat("###,###.### %");
 				formatter.setMinimumFractionDigits(0);
 				formatter.setMaximumFractionDigits(10);	// show value with max 10 digits after the dot if it is double value
 				if (value instanceof Double) {
-					value = formatter.format((Number) value);
+					value = formatter.format((Double) value / 100);
 				}
 				setHorizontalAlignment(JLabel.RIGHT);
 				return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
@@ -2257,17 +2257,17 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
         };						
 		
         
-        // Set Double precision for cells
+        // show percentage for cells
         DefaultTableCellRenderer r2 = new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object
 			value, boolean isSelected, boolean hasFocus, int row, int column) {			
 				setHorizontalAlignment(JLabel.RIGHT);			
-				DecimalFormat formatter = new DecimalFormat("###,###.###");
+				DecimalFormat formatter = new DecimalFormat("###,###.### %");
 				formatter.setMinimumFractionDigits(0);
 				formatter.setMaximumFractionDigits(10);	// show value with max 10 digits after the dot if it is double value
 				if (value instanceof Double) {
-					value = formatter.format((Number) value);
+					value = formatter.format((Double) value / 100);
 				}
 				setHorizontalAlignment(JLabel.RIGHT);
 				return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
@@ -3501,30 +3501,24 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			}			
 		};
 
-        // Set Double precision for cells
-        DefaultTableCellRenderer r2 = new DefaultTableCellRenderer() {
+        // show percentage for cell
+        DefaultTableCellRenderer r = new DefaultTableCellRenderer() {
             @Override
-            public Component getTableCellRendererComponent(JTable table, Object
-			value, boolean isSelected, boolean hasFocus, int row, int column) {			
-				setHorizontalAlignment(JLabel.RIGHT);			
-				DecimalFormat formatter = new DecimalFormat("###,###.###");
-				formatter.setMinimumFractionDigits(0);
-				formatter.setMaximumFractionDigits(10);	// show value with max 10 digits after the dot if it is double value
-				if (value instanceof Double) {
-					value = formatter.format((Number) value);
+            public Component getTableCellRendererComponent(JTable table, Object	value, boolean isSelected, boolean hasFocus, int row, int column) {
+            	if (column == 4 || column ==5) {
+					setHorizontalAlignment(JLabel.RIGHT);
+					DecimalFormat formatter = new DecimalFormat("###,###.### %");
+					formatter.setMinimumFractionDigits(0);
+					formatter.setMaximumFractionDigits(10);	// show value with max 10 digits after the dot if it is double value
+					if (value instanceof Double) {
+						value = formatter.format((Double) value / 100);
+					}
 				}
-				return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             }
         };
-             
-		
-		for (int i = 0; i < columnNames9.length; i++) {
-			if (i < 4 || i > 5) {
-
-			} else {
-				table9.getColumnModel().getColumn(i).setCellRenderer(r2);
-			}
-		}
+        table9.getColumnModel().getColumn(4).setCellRenderer(r);
+        table9.getColumnModel().getColumn(5).setCellRenderer(r);
     
 
         // Set up Type for column 3
@@ -3690,19 +3684,31 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		};
 		
 		
-		// Set Color for text in some columns where data_type = "TEXT"
+		// Set color for text in some columns where data_type = "TEXT" and show percentage for some column
         DefaultTableCellRenderer r = new DefaultTableCellRenderer() {
         	Color default_color = getForeground();
             @Override
             public Component getTableCellRendererComponent(JTable table, Object	value, boolean isSelected, boolean hasFocus, int row, int column) {
-				super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-				setForeground(table.getValueAt(row, 1).toString().equals("TEXT") ? Color.RED : default_color);
-                return this;
+            	if (column == 0 || column == 1) {
+            		setForeground(table.getValueAt(row, 1).toString().equals("TEXT") ? Color.RED : default_color);
+            	}
+				
+				if (column == 6) {
+					setHorizontalAlignment(JLabel.RIGHT);
+					DecimalFormat formatter = new DecimalFormat("###,###.### %");
+					formatter.setMinimumFractionDigits(0);
+					formatter.setMaximumFractionDigits(10);	// show value with max 10 digits after the dot if it is double value
+					if (value instanceof Double) {
+						value = formatter.format((Double) value / 100);
+					}
+				}
+				
+                return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             }
         };
-		for (int col = 0; col <= 1; col++) {
-			 table10.getColumnModel().getColumn(col).setCellRenderer(r);
-		}
+        table10.getColumnModel().getColumn(0).setCellRenderer(r);
+        table10.getColumnModel().getColumn(1).setCellRenderer(r);
+		table10.getColumnModel().getColumn(6).setCellRenderer(r);
 
         
 		// Set up checkbox and combobox for column 4 and 7
