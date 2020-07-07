@@ -1384,7 +1384,7 @@ public class Solve_Iterations {
 											for (int s5RR = 0; s5RR < total_layer5; s5RR++) {		// s5R'
 												for (int i : E_prescription_ids[strata_id]) {		// It is very important to not use null check for jagged arrays here to avoid the incorrect of mapping
 													String var_name = "x_E_" + strata + "_" + layer5.get(s5RR) + "_" + i + "_" + t;
-													if(map_var_name_to_var_rd_condition_id.get(var_name) != null && map_var_name_to_var_rd_condition_id.get(var_name) != -9999) {
+													if (map_var_name_to_var_rd_condition_id.get(var_name) != null && map_var_name_to_var_rd_condition_id.get(var_name) != -9999) {
 														int rd_id = map_var_name_to_var_rd_condition_id.get(var_name);
 														double[][] loss_rate_mean = disturbance_info.get_loss_rate_mean_from_rd_condition_id(rd_id);
 														double[][][] conversion_rate_mean = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(rd_id);
@@ -1406,7 +1406,7 @@ public class Solve_Iterations {
 											for (int i : R_prescription_ids[strata_5layers_id]) {
 												for (int a = 1; a <= t - 1; a++) {	
 													String var_name = "x_R_" + strata_5layers + "_" + layer5.get(s5RR) + "_" + i + "_" + t + "_" + a;
-													if(map_var_name_to_var_rd_condition_id.get(var_name) != null && map_var_name_to_var_rd_condition_id.get(var_name) != -9999) {
+													if (map_var_name_to_var_rd_condition_id.get(var_name) != null && map_var_name_to_var_rd_condition_id.get(var_name) != -9999) {
 														int rd_id = map_var_name_to_var_rd_condition_id.get(var_name);
 														double[][] loss_rate_mean = disturbance_info.get_loss_rate_mean_from_rd_condition_id(rd_id);
 														double[][][] conversion_rate_mean = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(rd_id);
@@ -2448,9 +2448,13 @@ public class Solve_Iterations {
 							try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_management_overview_file))) {
 								List<String> activity = read_database.get_col_unique_values_list(activity_col_id);
 								String file_header = String.join("\t", activity);
-								file_header = "iteration" + "\t" + "period" + "\t" + file_header;
+								file_header = "iteration" + "\t" + "period" + "\t" + "no-data"  + "\t" + file_header;
 								fileOut.write(file_header);
 								
+								double[] no_data_area = new double[total_periods + 1];
+								for (double a : no_data_area) {
+									a = 0;
+								}
 								double[][] area = new double[total_periods + 1][activity.size()];	// area in each period for each activity
 								for (double[] sub_area : area) {
 									for (double a : sub_area) {
@@ -2469,13 +2473,15 @@ public class Solve_Iterations {
 												String action = yield_tables_values[prescription_id][row_id][activity_col_id];
 												int activity_id = activity.indexOf(action);
 												area[t][activity_id] = area[t][activity_id] + value[i];
+											} else {
+												no_data_area[t] = no_data_area[t] + value[i];
 											}
 										}
 									}
 								}
 								
 								for (int t = 1; t <= total_periods; t++) {
-									fileOut.write("\n" + iter + "\t" + t);
+									fileOut.write("\n" + iter + "\t" + t + "\t" + no_data_area[t]);
 									for (double a : area[t]) {
 										fileOut.write("\t" + a /*Double.valueOf(twoDForm.format(area))*/);
 									}
@@ -3010,9 +3016,13 @@ public class Solve_Iterations {
 							try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_management_overview_file))) {
 								List<String> activity = read_database.get_col_unique_values_list(activity_col_id);
 								String file_header = String.join("\t", activity);
-								file_header = "iteration" + "\t" + "period" + "\t" + file_header;
+								file_header = "iteration" + "\t" + "period" + "\t" + "no-data"  + "\t" + file_header;
 								fileOut.write(file_header);
 								
+								double[] no_data_area = new double[total_periods + 1];
+								for (double a : no_data_area) {
+									a = 0;
+								}
 								double[][] area = new double[total_periods + 1][activity.size()];	// area in each period for each activity
 								for (double[] sub_area : area) {
 									for (double a : sub_area) {
@@ -3031,13 +3041,15 @@ public class Solve_Iterations {
 												String action = yield_tables_values[prescription_id][row_id][activity_col_id];
 												int activity_id = activity.indexOf(action);
 												area[t][activity_id] = area[t][activity_id] + value[i];
+											} else {
+												no_data_area[t] = no_data_area[t] + value[i];
 											}
 										}
 									}
 								}
 								
 								for (int t = 1; t <= total_periods; t++) {
-									fileOut.write("\n" + iter + "\t" + t);
+									fileOut.write("\n" + iter + "\t" + t + "\t" + no_data_area[t]);
 									for (double a : area[t]) {
 										fileOut.write("\t" + a /*Double.valueOf(twoDForm.format(area))*/);
 									}

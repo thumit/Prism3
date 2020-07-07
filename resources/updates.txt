@@ -1360,4 +1360,5 @@ All changes in this block are associated with PrismAlpha3.1.01.jar, Prism-Formul
 --------------------------------------------------------------------------
 565. Show the version of Prism in the welcome screen.
 566. Show percentage symbol where the input format is percentage to avoid confusion. This is applied in Natural Disturbances screen, Flow Constraints screen, and Area Merging screen.
+567. Fix the issue #122 of showing incorrect total areas in output 04 and its output summary. This is because of missing data in your database. output 04 is now also reporting the total area with no-data (i.e. prescriptions that do not have the required row ids in the yield tables of your database)
 5xx. Remove the upper bound restriction filters that do not allow prescriptions with rotation periods > total planning period to be defined for EA_E and EA_R variables (not yet)
