@@ -1355,5 +1355,6 @@ All changes in this block are associated with PrismAlpha3.0.05.jar, Prism-Formul
 561. Apply Prism-Formulation-13-v2 (first try). Some loops are still kept separated for easier tracking. Future loop merging is possible.
 562. Allow clear-cut variables in equation 7. This is because the total loss rate is zero for clear-cut variables and therefore the logic will not be different.
 563. Refactor variable names and constraint indexes
+564. Very important refactor to merge loops within equation 7a nad 7b
 
 5xx. Remove the upper bound restriction filters that do not allow prescriptions with rotation periods > total planning period to be defined for EA_E and EA_R variables (not yet)
