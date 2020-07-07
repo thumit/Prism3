@@ -1405,9 +1405,8 @@ public class Solve_Iterations {
 											// clear-cut prescriptions: Add - sigma(s6)(s5R')(i)   xEAe(s1,s2,s3,s4,s5,s6)(s5R')(i)(t) 	--> : X~
 											for (int s5RR = 0; s5RR < total_layer5; s5RR++) {		// s5R'
 												for (int i : EA_E_prescription_ids[strata_id]) {		// It is very important to not use null check for jagged arrays here to avoid the incorrect of mapping
-													int rotation_period = total_rows_of_precription[i]; // tR = total rows of this prescription
 													String var_name = "x_E_" + strata + "_" + layer5.get(s5RR) + "_" + i + "_" + t;
-													if(t < rotation_period && map_var_name_to_var_rd_condition_id.get(var_name) != null && map_var_name_to_var_rd_condition_id.get(var_name) != -9999) {
+													if(map_var_name_to_var_rd_condition_id.get(var_name) != null && map_var_name_to_var_rd_condition_id.get(var_name) != -9999) {
 														int rd_id = map_var_name_to_var_rd_condition_id.get(var_name);
 														double[][] loss_rate_mean = disturbance_info.get_loss_rate_mean_from_rd_condition_id(rd_id);
 														double[][][] conversion_rate_mean = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(rd_id);
@@ -1449,19 +1448,17 @@ public class Solve_Iterations {
 											for (int i : EA_R_prescription_ids[strata_5layers_id]) {
 												int rotation_age = total_rows_of_precription[i]; 
 												for (int a = 1; a <= t - 1; a++) {	
-													if(a < rotation_age) {		// It is very important to not use null check for jagged arrays here to avoid the incorrect of mapping
-														String var_name = "x_R_" + strata_5layers + "_" + layer5.get(s5RR) + "_" + i + "_" + t + "_" + a;
-														if(map_var_name_to_var_rd_condition_id.get(var_name) != null && map_var_name_to_var_rd_condition_id.get(var_name) != -9999) {
-															int rd_id = map_var_name_to_var_rd_condition_id.get(var_name);
-															double[][] loss_rate_mean = disturbance_info.get_loss_rate_mean_from_rd_condition_id(rd_id);
-															double[][][] conversion_rate_mean = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(rd_id);
-															double total_loss_rate_for_this_conversion = 0;
-															for (int k = 0; k < total_replacing_disturbances; k++) {
-//																			total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (loss_rate_mean[k][s5] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
-																total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (map_var_name_to_var_stochastic_loss_rates.get(var_name)[k] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
-															}
-															total_value_for_this_F = total_value_for_this_F + total_loss_rate_for_this_conversion * map_var_name_to_var_value.get(var_name);
+													String var_name = "x_R_" + strata_5layers + "_" + layer5.get(s5RR) + "_" + i + "_" + t + "_" + a;
+													if(map_var_name_to_var_rd_condition_id.get(var_name) != null && map_var_name_to_var_rd_condition_id.get(var_name) != -9999) {
+														int rd_id = map_var_name_to_var_rd_condition_id.get(var_name);
+														double[][] loss_rate_mean = disturbance_info.get_loss_rate_mean_from_rd_condition_id(rd_id);
+														double[][][] conversion_rate_mean = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(rd_id);
+														double total_loss_rate_for_this_conversion = 0;
+														for (int k = 0; k < total_replacing_disturbances; k++) {
+//																		total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (loss_rate_mean[k][s5] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
+															total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (map_var_name_to_var_stochastic_loss_rates.get(var_name)[k] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
 														}
+														total_value_for_this_F = total_value_for_this_F + total_loss_rate_for_this_conversion * map_var_name_to_var_value.get(var_name);
 													}
 												}
 											}
@@ -1484,7 +1481,7 @@ public class Solve_Iterations {
 					List<Double> c12_ublist = new ArrayList<Double>();
 					int c12_num = 0; 
 					
-					// 12 --> Loop writing in this way will improve speed. This is also applied to eq. 15 to save running time. Other equations are fast so it is not needed to use this type of loop
+					// Loop writing in this way will improve speed. This is also applied to eq. 15 to save running time. Other equations are fast so it is not needed to use this type of loop
 					for (int strata_5layers_id = 0; strata_5layers_id < total_model_strata_without_sizeclass; strata_5layers_id++) {
 						String strata_5layers = model_strata_without_sizeclass.get(strata_5layers_id);
 						int s5 = s5_for_model_strata_without_sizeclass[strata_5layers_id];
@@ -1533,9 +1530,8 @@ public class Solve_Iterations {
 												if (xEAe[strata_id][s5RR] != null)
 													for (int i : EA_E_prescription_ids[strata_id]) {
 														if (xEAe[strata_id][s5RR][i] != null) {
-															int rotation_period = total_rows_of_precription[i]; // tR = total rows of this prescription
 															int var_index = xEAe[strata_id][s5RR][i][t];
-															if (t < rotation_period && var_index > 0 && var_rd_condition_id[var_index] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
+															if (var_index > 0 && var_rd_condition_id[var_index] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
 																double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
 																double[][] loss_rate_std = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_std_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
 																double[][] user_loss_rate = get_stochastic_loss_rate_from_loss_rate_mean_and_loss_rate_std(user_chosen_loss_rate, loss_rate_mean, loss_rate_std, var_index, map_var_index_to_user_chosen_loss_rate);
@@ -1585,10 +1581,8 @@ public class Solve_Iterations {
 									// Add - sigma(s5R')(i)(a)	xEAr[s1][s2][s3][s4][s5][s5R'][i][t][a]
 									for (int s5RR = 0; s5RR < total_layer5; s5RR++) {
 										for (int i : EA_R_prescription_ids[strata_5layers_id]) {
-											int rotation_age = total_rows_of_precription[i]; 
 											for (int a = 1; a <= t - 1; a++) {	
-												if(a < rotation_age
-													&& xEAr[strata_5layers_id][s5RR] != null
+												if(xEAr[strata_5layers_id][s5RR] != null
 														&& xEAr[strata_5layers_id][s5RR][i] != null
 															&& xEAr[strata_5layers_id][s5RR][i][t] != null
 																&& xEAr[strata_5layers_id][s5RR][i][t][a] > 0) {	// if variable is defined, this value would be > 0 
