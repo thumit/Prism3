@@ -254,7 +254,7 @@ public class Solve_Iterations {
 				List<Double> flow_lowerbound_percentage_list = read.get_flow_lowerbound_percentage_list();
 				List<Double> flow_upperbound_percentage_list = read.get_flow_upperbound_percentage_list();			
 				System.out.println("Reading process finished for all core inputs          " + dateFormat.format(new Date()));
-				System.out.println("Optimization models will be built based on Prism-Formulation-12, Rolling-Horizon-Formulation_09");
+				System.out.println("Optimization models will be built based on Prism-Formulation-13-V3, Rolling-Horizon-Formulation_10-V3");
 				
 				// Get info: input_11_state_id
 				LinkedHashMap<String, String> map_prescription_and_row_id_to_state_id = read.get_map_prescription_and_row_id_to_state_id();
@@ -276,10 +276,8 @@ public class Solve_Iterations {
 					System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------------");
 					System.out.println();
 					System.out.println("ITERATION " + iter);
-					
-					// Read the hard-coding input if iteration >= 1 (for hard-coding 1st period period variables)
 					if (iter >= 1) {
-						time_start = System.currentTimeMillis();		// measure time before reading
+						time_start = System.currentTimeMillis();	// measure time before reading
 					}
 					
 					// Create all outputs				
@@ -295,14 +293,10 @@ public class Solve_Iterations {
 					output_flow_constraints_file = new File(runFolder.getAbsolutePath() + "/output_07_flow_constraints_" + iter + ".txt");
 					
 					
-					// Set up problem-------------------------------------------------		
-					// Some more data process definitions
-					Information_Disturbance disturbance_info = (disturbance_condition_list != null) ? new Information_Disturbance(read_database, disturbance_condition_list) : null;
-					Information_Cost cost_info = (cost_condition_list != null) ? new Information_Cost(read_database, cost_condition_list) : null;
-					Information_Parameter parameter_info = new Information_Parameter(read_database);
-					List<Information_Variable> var_info_list = new ArrayList<Information_Variable>();
-					
-					// Some pre-calculations to speed up reading time
+
+					// Pre-calculations to speed up reading time----------------------------------------------------
+					// Pre-calculations to speed up reading time----------------------------------------------------
+					// Pre-calculations to speed up reading time----------------------------------------------------
 					// Pre-identify s5 and s6 for each stratum and Pre-caterorize prescriptions for each stratum
 					int[] total_rows_of_precription = new int[total_prescriptions];
 					for (int i = 0; i < total_prescriptions; i++) {
@@ -362,25 +356,25 @@ public class Solve_Iterations {
 					
 					
 					
-					
-					
-					
-					
-					
-					
-					
-					List<Double> objlist = new ArrayList<Double>();				//objective coefficient
-					List<String> vnamelist = new ArrayList<String>();			//variable name
-					List<Double> vlblist = new ArrayList<Double>();				//lower bound
-					List<Double> vublist = new ArrayList<Double>();				//upper bound
+					// DEFINITIONS --------------------------------------------------------------
+					// DEFINITIONS --------------------------------------------------------------
+					// DEFINITIONS --------------------------------------------------------------
+					Information_Parameter parameter_info = new Information_Parameter(read_database);
+					Information_Disturbance disturbance_info = (disturbance_condition_list != null) ? new Information_Disturbance(read_database, disturbance_condition_list) : null;
+					Information_Cost cost_info = (cost_condition_list != null) ? new Information_Cost(read_database, cost_condition_list) : null;
+					List<Information_Variable> var_info_list = new ArrayList<Information_Variable>();
+					List<Double> objlist = new ArrayList<Double>();		// objective coefficient
+					List<String> vnamelist = new ArrayList<String>();	// variable name
+					List<Double> vlblist = new ArrayList<Double>();		// lower bound
+					List<Double> vublist = new ArrayList<Double>();		// upper bound
 					int nvars = 0;
 					
 					// declare arrays to keep variables. some variables are optimized by using jagged-arrays (xE, xR, fire)
-					int[] y = new int [total_softConstraints];	//y(j)
-					int[] l = new int [total_softConstraints];	//l(j)
-					int[] u = new int [total_softConstraints];	//u(j)
-					int[] z = new int [total_hardConstraints];	//z(k)
-					int[] v = new int [total_freeConstraints];	//v(n)
+					int[] y = new int [total_softConstraints];	// y(j)
+					int[] l = new int [total_softConstraints];	// l(j)
+					int[] u = new int [total_softConstraints];	// u(j)
+					int[] z = new int [total_hardConstraints];	// z(k)
+					int[] v = new int [total_freeConstraints];	// v(n)
 	//				int[][][][] xE = new int[total_model_strata][total_layer5][total_prescriptions][total_periods + 1 + iter];	//xE(s1,s2,s3,s4,s5,s6)(s5R)(i)(t)
 	//				int[][][][][] xR = new int[total_model_strata_without_sizeclass][total_layer5][total_prescriptions][total_periods + 1 + iter][total_age_classes = t - 1];		//xR(s1,s2,s3,s4,s5)(s5R)(i)(t)(a)
 	//										// total_Periods + 1 + iter because tR starts from 1 to total_Periods + iter, ignore the 0		
