@@ -295,7 +295,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		radio_button  = new JRadioButton[9];
 		radio_button[0]= new JRadioButton("General Inputs");
 		radio_button[1]= new JRadioButton("Model Strata");
-		radio_button[2]= new JRadioButton("Prescription Category");
+		radio_button[2]= new JRadioButton("Prescription Category");		radio_button[2].setVisible(false); // hide this to delete all of this input later
 		radio_button[3]= new JRadioButton("Prescription Assignment");
 		radio_button[4]= new JRadioButton("Natural Disturbances");
 		radio_button[5]= new JRadioButton("Management Cost");
@@ -5162,7 +5162,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			// 4th Grid -----------------------------------------------------------------------------
 			// Add all buttons to a Panel----------------------------------
 			button_table_Panel = new JPanel(new GridBagLayout());
-			TitledBorder border = new TitledBorder("Agregation Conditions (no row = no prescriptions included into the model)");
+			TitledBorder border = new TitledBorder("Agregation Conditions  -  Prescriptions are assigned when data in their first row (row_id = 0) satisfy the dynamic identifiers");
 			border.setTitleJustification(TitledBorder.CENTER);
 			button_table_Panel.setBorder(border);
 			GridBagConstraints c2 = new GridBagConstraints();

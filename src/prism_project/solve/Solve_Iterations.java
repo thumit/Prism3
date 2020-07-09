@@ -122,7 +122,7 @@ public class Solve_Iterations {
 				System.out.println("Trimming is completed!");
 			}
 
-			data[row][4] = "successful";
+			data[row][4] = "trimming done";
 			model.fireTableDataChanged();
 		}
 		
