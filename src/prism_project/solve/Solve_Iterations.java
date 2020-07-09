@@ -564,7 +564,7 @@ public class Solve_Iterations {
 								for (int t = t_regen + iter; t <= total_periods + iter; t++) {
 									xR[strata_5layers_id][s5R][i][t] = new int[t];	// in period t, age class of any regenerated forest is at max = t - 1
 									int A_FINAL = Math.min(rotation_age, t - 1);	
-									for (int a = 1; a <= A_FINAL; a++) {	// this loop guarantees that prescriptions with clear-cut beyond planning horizon are allowed
+									for (int a = 1; a <= A_FINAL; a++) {	// this loop guarantees that prescriptions with clear-cut beyond planning horizon are allowed a <= A_FINAL --> a <= rotation_age --> rotation_age + t - rotation_period <= rotation_age --> t <= rotation_period
 										int rotation_period = rotation_age + t - a;
 										String var_name = "x_R_" + strata + "_" + layer5.get(s5R) + "_" + i + "_" + t + "_" + a;										
 										Information_Variable var_info = new Information_Variable(iter, var_name, read_database);
