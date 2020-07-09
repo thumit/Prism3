@@ -1715,7 +1715,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				if (value instanceof Double) {
 					value = formatter.format((Double) value / 100);
 				}
-				setHorizontalAlignment(JLabel.RIGHT);
 				return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             }
         };
@@ -1956,7 +1955,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				if (value instanceof Double) {
 					value = formatter.format((Number) value);
 				}
-				setHorizontalAlignment(JLabel.RIGHT);
 				return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             }
         };

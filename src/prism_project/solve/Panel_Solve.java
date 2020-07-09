@@ -39,7 +39,9 @@ import javax.swing.ButtonGroup;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -47,7 +49,10 @@ import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
+import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
+import javax.swing.plaf.basic.BasicComboBoxRenderer;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.text.DefaultCaret;
@@ -79,14 +84,14 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 		rowCount = runsList.length;
 		colCount = 5;
 		data = new Object[rowCount][colCount];
-        columnNames= new String[] {"Model" , "Max Iteration", "Method", "LRWI" , "Status"};
+		columnNames = new String[] { "Model", "Disturbances", "From Iteration", "To Iteration", "Status" };
 		
 		// Populate the data matrix
 		for (int row = 0; row < rowCount; row++) {
 			data[row][0] = runsList[row].getName();
-			data[row][1] = 0;
-			data[row][2] = "continue";
-			data[row][3] = "mean";
+			data[row][1] = "mean";
+			data[row][2] = "restart";
+			data[row][3] = 0;
 			data[row][4] = "waiting";
 		}			
 		
@@ -94,7 +99,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
         model = new PrismTableModel(rowCount, colCount, data, columnNames) {
         	@Override
 			public Class getColumnClass(int col) {
-				return (col == 1) ? Integer.class : String.class;
+				return (col == 3) ? Integer.class : String.class;
 			}
 			
 			@Override
@@ -124,11 +129,9 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 				
 				// Apply
 				if (column == 0) {
-					tableColumn.setPreferredWidth(80);
-				} else if (column >= 1 && column <= 3) {
-					tableColumn.setMaxWidth(maxWidth);
-				} else {
 					tableColumn.setMinWidth(80);
+				} else {
+					tableColumn.setPreferredWidth(maxWidth);
 				}
 				return component;
 			}
@@ -138,11 +141,35 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 				java.awt.Point p = e.getPoint();
 				int row = rowAtPoint(p);
 				int column = columnAtPoint(p);
-				String tip = (table.getColumnName(column).equals("Model") && row >= 0 && getValueAt(row, column) != null) ? getValueAt(row, column).toString() : null;
+				String tip = null;
+				if (row >= 0 && getValueAt(row, column) != null) {
+					if (table.getColumnName(column).equals("Model")) tip = getValueAt(row, column).toString();
+					if (table.getColumnName(column).equals("From Iteration") && getValueAt(row, column).toString().equals("restart")) tip = "solve from iteration 0";
+					if (table.getColumnName(column).equals("From Iteration") && getValueAt(row, column).toString().equals("continue")) tip = "solve from last solved iteration";
+				}
 				return tip;
 			}	
         };
         
+        class ToolTipComboBoxRenderer extends BasicComboBoxRenderer {
+			@Override
+			public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+				Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+				if (String.valueOf(value).equals("restart")) {
+					list.setToolTipText("from iteration 0");
+				} else if (String.valueOf(value).equals("continue")) {
+					list.setToolTipText("from last solved iteration");
+				}
+				if (isSelected) {
+					c.setBackground(UIManager.getColor("Tree.selectionBackground"));	// this works to have the desired color
+					c.setForeground(UIManager.getColor("Tree.selectionForeground"));
+				} else {
+					c.setBackground(Color.WHITE);
+					c.setForeground(UIManager.getColor("Tree.foreground"));
+				}
+				return c;
+			}
+		}
         class Combo_Iteration extends JComboBox {	
 			public Combo_Iteration() {
 				for (int i = 0; i <= 99; i++) {addItem(i);}
@@ -151,21 +178,34 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 		}
         class Combo_Method extends JComboBox {	
 			public Combo_Method() {
+				ToolTipComboBoxRenderer r = new ToolTipComboBoxRenderer();
+				setRenderer(r);
 				addItem("restart");
 				addItem("continue");
 				setSelectedIndex(1);
+				
 			}
 		}
-        class Combo_LR_Assumption extends JComboBox {	
-			public Combo_LR_Assumption() {
+        class Combo_Disturbances_Assumption extends JComboBox {	
+			public Combo_Disturbances_Assumption() {
 				addItem("random");
 				addItem("mean");
 				setSelectedIndex(1);
 			}
 		}
-        table.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(new Combo_Iteration()));  
+        table.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(new Combo_Disturbances_Assumption())); 
         table.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new Combo_Method())); 
-        table.getColumnModel().getColumn(3).setCellEditor(new DefaultCellEditor(new Combo_LR_Assumption())); 
+        table.getColumnModel().getColumn(3).setCellEditor(new DefaultCellEditor(new Combo_Iteration())); 
+        
+        DefaultTableCellRenderer r = new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object
+			value, boolean isSelected, boolean hasFocus, int row, int column) {			
+				setHorizontalAlignment(JLabel.LEFT);			
+				return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            }
+        };
+        table.getColumnModel().getColumn(3).setCellRenderer(r);
 //      DefaultTableCellRenderer renderer = (DefaultTableCellRenderer)table.getDefaultRenderer(Object.class);
 //      renderer.setHorizontalAlignment(SwingConstants.LEFT);		// Set alignment of values in the table to the left side
 //      table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -218,7 +258,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 		button_solve.setHorizontalTextPosition(JButton.CENTER);
 		button_solve.setVerticalTextPosition(JButton.BOTTOM);
 		button_solve.setFont(new Font(null, Font.BOLD, 15));
-		button_solve.setText("CLICK TO GET SOLUTIONS");
+		button_solve.setText("CLICK TO SOLVE");
 		button_solve.setRequestFocusEnabled(false);
 		button_solve.addActionListener(e -> {
 			if (solvingstatus == false) {
@@ -285,7 +325,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 						}
 						
 						solvingstatus = false;
-						button_solve.setText("CLICK TO GET SOLUTIONS");
+						button_solve.setText("CLICK TO SOLVE");
 						button_solve.setIcon(IconHandle.get_scaledImageIcon(128, 128, "icon_main_off.png"));
 						for (int i = 0; i < radioButton.length; i++) {
 							radioButton[i].setEnabled(true);

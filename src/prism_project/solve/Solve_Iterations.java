@@ -76,7 +76,7 @@ public class Solve_Iterations {
 			}
 		});
 		int last_solved_iter = list_files.length - 1;
-		int max_iteration = Integer.parseInt(data[row][1].toString());
+		int max_iteration = Integer.parseInt(data[row][3].toString());
 		
 		if (data[row][2].equals("restart")) {	// delete all except input files and fly_constraints file
 			last_solved_iter = -1;
@@ -623,7 +623,7 @@ public class Solve_Iterations {
 					double[] var_cost_value = new double[vname.length];
 								
 					// This array stores replacing disturbances information
-					String user_chosen_loss_rate = data[row][3].toString();
+					String user_chosen_loss_rate = data[row][1].toString();
 					LinkedHashMap<Integer, double[][]> map_var_index_to_user_chosen_loss_rate = new LinkedHashMap<Integer, double[][]>();	// this map var_index to the stochastic SR array[k][s5]
 					int[] var_rd_condition_id = new int[vname.length];
 					
@@ -2695,7 +2695,7 @@ public class Solve_Iterations {
 								fileOut.write(iter + "\t" + "Rolling horizon - iterating method" + "\t" + data[row][2].toString());
 								
 								fileOut.newLine();
-								fileOut.write(iter + "\t" + "Rolling horizon - loss rate within iteration" + "\t" + data[row][3].toString());
+								fileOut.write(iter + "\t" + "Rolling horizon - disturbances" + "\t" + data[row][1].toString());
 								
 								fileOut.newLine();
 								fileOut.write(iter + "\t" + "Prism version when problem solved" + "\t" + PrismMain.get_prism_version());
@@ -3260,10 +3260,10 @@ public class Solve_Iterations {
 								fileOut.write(iter + "\t" + "Simplex iterations" + "\t" + lpsolve_iteration);
 								
 								fileOut.newLine();
-								fileOut.write(iter + "\t" + "Rolling horizon - iterating method" + "\t" + data[row][2].toString());
+								fileOut.write(iter + "\t" + "Rolling horizon - iterative method" + "\t" + data[row][2].toString());
 								
 								fileOut.newLine();
-								fileOut.write(iter + "\t" + "Rolling horizon - loss rate within iteration" + "\t" + data[row][3].toString());
+								fileOut.write(iter + "\t" + "Rolling horizon - disturbances" + "\t" + data[row][1].toString());
 								
 								fileOut.newLine();
 								fileOut.write(iter + "\t" + "Prism version when problem solved" + "\t" + PrismMain.get_prism_version());
