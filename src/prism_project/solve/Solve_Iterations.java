@@ -478,7 +478,7 @@ public class Solve_Iterations {
 								filter_set.retainAll(NC_E_prescription_ids[strata_id]);	// filter out the NC_E prescriptions only
 								for (int i : filter_set) {
 									xE[strata_id][s5R][i] = new int[total_periods + 1 + iter];
-									for (int t = 1 + iter; t <= total_periods + iter; t++) {
+									for (int t = 1 + iter; t <= total_periods + iter; t++) {	// --> always loop to the ending period of the horizon (allow missing row ids)
 										String var_name = "x_E_" + strata + "_" + layer5.get(s5R) + "_" + i + "_" + t;	
 										Information_Variable var_info = new Information_Variable(iter, var_name, read_database);
 										
@@ -497,24 +497,23 @@ public class Solve_Iterations {
 							filter_set = new HashSet<Integer>(set_of_prescription_ids_for_strata_with_s5R[strata_id][s5R]);
 							filter_set.retainAll(EA_E_prescription_ids[strata_id]);	// filter out the EA_E prescriptions only
 							for (int i : filter_set) {
-								int rotation_period = total_rows_of_precription[i]; // tR = total rows of this prescription    need compare: tR = [1+iter, total_period + iter]	
+								int rotation_period = total_rows_of_precription[i]; // tR = total rows of this prescription
 								int rotation_age = rotation_period + starting_age_class_for_prescription[i] - 1;
-								if (1 + iter <= rotation_period && rotation_period <= total_periods + iter) {		// restrict prescriptions with tR = [1+iter, total_period + iter]
-									xE[strata_id][s5R][i] = new int[total_periods + 1 + iter];	// check to see if we can replace total_periods + 1 + iter by rotation_period + 1
-									for (int t = 1 + iter; t <= rotation_period; t++) {
-										String var_name = "x_E_" + strata + "_" + layer5.get(s5R) + "_" + i + "_" + t;
-										Information_Variable var_info = new Information_Variable(iter, var_name, read_database);
-										var_info.set_rotation_period(rotation_period);
-										var_info.set_rotation_age(rotation_age);
-										
-										var_info_list.add(var_info);
-										objlist.add((double) 0);
-										vnamelist.add(var_name);
-										vlblist.add((double) 0);
-										vublist.add(Double.MAX_VALUE);
-										xE[strata_id][s5R][i][t] = nvars;
-										nvars++;
-									}
+								int T_FINAL = Math.min(rotation_period, total_periods + iter);	// --> always loop to the rotation period (if tR within the horizon) or to the ending period of the horizon (if tR out of the planning horizon)
+								xE[strata_id][s5R][i] = new int[total_periods + 1 + iter];	// define broader otherwise Eq. 7 will fail
+								for (int t = 1 + iter; t <= T_FINAL; t++) {		// this loop guarantees that prescriptions with clear-cut beyond planning horizon are allowed
+									String var_name = "x_E_" + strata + "_" + layer5.get(s5R) + "_" + i + "_" + t;
+									Information_Variable var_info = new Information_Variable(iter, var_name, read_database);
+									var_info.set_rotation_period(rotation_period);
+									var_info.set_rotation_age(rotation_age);
+									
+									var_info_list.add(var_info);
+									objlist.add((double) 0);
+									vnamelist.add(var_name);
+									vlblist.add((double) 0);
+									vublist.add(Double.MAX_VALUE);
+									xE[strata_id][s5R][i][t] = nvars;
+									nvars++;
 								}
 							}
 						}
@@ -563,24 +562,22 @@ public class Solve_Iterations {
 								xR[strata_5layers_id][s5R][i] = new int[total_periods + 1 + iter][];
 								int t_regen = (iter == 0) ? 2 : 1;	// this is because iteration 0 could not have regenerated forest in period 1, but iterations >= 1 do have regenerated forest strata
 								for (int t = t_regen + iter; t <= total_periods + iter; t++) {
-									xR[strata_5layers_id][s5R][i][t] = new int[t];	// age class of regen forest could not is at max = t - 1
-									for (int a = 1; a <= t - 1; a++) {
+									xR[strata_5layers_id][s5R][i][t] = new int[t];	// in period t, age class of any regenerated forest is at max = t - 1
+									int A_FINAL = Math.min(rotation_age, t - 1);	
+									for (int a = 1; a <= A_FINAL; a++) {	// this loop guarantees that prescriptions with clear-cut beyond planning horizon are allowed
 										int rotation_period = rotation_age + t - a;
-										if (a <= rotation_age 	//   <-->   a <= rotation_period - t + a   -->   t <= rotation_period    and     t_regen + iter <= rotation_period
-												&& t_regen + iter <= rotation_period && rotation_period <= total_periods + iter) {	// restrict prescriptions with tR = [t_regen + iter, total_period + iter]
-											String var_name = "x_R_" + strata + "_" + layer5.get(s5R) + "_" + i + "_" + t + "_" + a;										
-											Information_Variable var_info = new Information_Variable(iter, var_name, read_database);
-											var_info.set_rotation_period(rotation_period);
-											var_info.set_rotation_age(rotation_age);
-											
-											var_info_list.add(var_info);
-											objlist.add((double) 0);
-											vnamelist.add(var_name);	
-											vlblist.add((double) 0);
-											vublist.add(Double.MAX_VALUE);
-											xR[strata_5layers_id][s5R][i][t][a] = nvars;
-											nvars++;
-										}
+										String var_name = "x_R_" + strata + "_" + layer5.get(s5R) + "_" + i + "_" + t + "_" + a;										
+										Information_Variable var_info = new Information_Variable(iter, var_name, read_database);
+										var_info.set_rotation_period(rotation_period);
+										var_info.set_rotation_age(rotation_age);
+										
+										var_info_list.add(var_info);
+										objlist.add((double) 0);
+										vnamelist.add(var_name);	
+										vlblist.add((double) 0);
+										vublist.add(Double.MAX_VALUE);
+										xR[strata_5layers_id][s5R][i][t][a] = nvars;
+										nvars++;
 									}
 								}
 							}
@@ -1255,13 +1252,12 @@ public class Solve_Iterations {
 							
 							// non-clear-cut prescriptions
 							for (int i : NC_E_prescription_ids[strata_id]) {
-								int rotation_period = total_periods + iter; // to allow missing row_id for NC_E prescriptions
-								for (int t = 1 + iter; t <= total_periods - 1 + iter; t++) {
-									if (t < rotation_period
-											&& xE[strata_id] != null 
-												&& xE[strata_id][s5R] != null
-													&& xE[strata_id][s5R][i] != null
-														&& xE[strata_id][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0
+								int T_END = total_periods + iter; // to allow missing row_id for NC_E prescriptions --> always loop to the ending period of the horizon
+								for (int t = 1 + iter; t <= T_END - 1; t++) {
+									if (xE[strata_id] != null 
+											&& xE[strata_id][s5R] != null
+												&& xE[strata_id][s5R][i] != null
+													&& xE[strata_id][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0
 										// Add constraint
 										c6_indexlist.add(new ArrayList<Integer>());
 										c6_valuelist.add(new ArrayList<Double>());
@@ -1294,13 +1290,13 @@ public class Solve_Iterations {
 							
 							// clear-cut prescriptions
 							for (int i : EA_E_prescription_ids[strata_id]) {
-								int rotation_period = total_rows_of_precription[i]; // tR = total rows of this prescription
-								for (int t = 1 + iter; t <= total_periods - 1 + iter; t++) {
-									if (t < rotation_period
-											&& xE[strata_id] != null 
-												&& xE[strata_id][s5R] != null
-													&& xE[strata_id][s5R][i] != null
-														&& xE[strata_id][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0
+								int rotation_period = total_rows_of_precription[i]; // T_END = tR = total rows of this prescription
+								int T_FINAL = Math.min(rotation_period, total_periods + iter);	// --> always loop to the rotation period (if within the horizon) or to the ending period of the horizon (if out of the planning horizon)
+								for (int t = 1 + iter; t <= T_FINAL - 1; t++) {
+									if (xE[strata_id] != null 
+											&& xE[strata_id][s5R] != null
+												&& xE[strata_id][s5R][i] != null
+													&& xE[strata_id][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0
 										// Add constraint
 										c6_indexlist.add(new ArrayList<Integer>());
 										c6_valuelist.add(new ArrayList<Double>());
@@ -1368,7 +1364,7 @@ public class Solve_Iterations {
 	
 							for (int s5R = 0; s5R < total_layer5; s5R++) {
 								for (int t = iter; t <= iter; t++) {		// t = M
-									double total_value_for_this_F = 0;			// Note note note I am testing using the deterministic mean
+									double total_value_for_this_F = 0;		// Note note note I am testing using the deterministic mean
 									
 									// Add existing variables  	xE(s1,s2,s3,s4,s5,s6)(s5R')(i)(t) 	--> : X~
 									for (int s6 = 0; s6 < total_layer6; s6++) {
@@ -1415,6 +1411,7 @@ public class Solve_Iterations {
 											}
 										}
 									}
+									
 									// Map	fire[s1][s2][s3][s4][s5][s5R][t]
 									String var_name = "f_" + strata_5layers + "_" + layer5.get(s5R) + "_" + t;
 									map_F_name_to_stochastic_F_value.put(var_name, total_value_for_this_F);
@@ -1456,7 +1453,7 @@ public class Solve_Iterations {
 											for (int s5RR = 0; s5RR < total_layer5; s5RR++) {		// s5R'
 												if (xE[strata_id][s5RR] != null)
 													for (int i : E_prescription_ids[strata_id]) {
-														if (xE[strata_id][s5RR][i] != null) {
+														if (xE[strata_id][s5RR][i] != null) { 
 															int var_index = xE[strata_id][s5RR][i][t];
 															if (var_index > 0 && var_rd_condition_id[var_index] != -9999) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
 																double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
@@ -1486,10 +1483,9 @@ public class Solve_Iterations {
 											for (int a = 1; a <= t - 1; a++) {	
 												if(xR[strata_5layers_id][s5RR] != null
 														&& xR[strata_5layers_id][s5RR][i] != null
-															&& xR[strata_5layers_id][s5RR][i][t] != null
-																&& xR[strata_5layers_id][s5RR][i][t][a] > 0) {	// if variable is defined, this value would be > 0 
+															&& xR[strata_5layers_id][s5RR][i][t] != null) {	// if variable is defined, this value would be > 0 
 													int var_index = xR[strata_5layers_id][s5RR][i][t][a];
-													if(var_index > 0 && var_rd_condition_id[var_index] != -9999) {		// if variable is defined, this value would be > 0 
+													if (var_index > 0 && var_rd_condition_id[var_index] != -9999) {		// if variable is defined, this value would be > 0 
 														double[][] loss_rate_mean = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
 														double[][] loss_rate_std = (var_rd_condition_id[var_index] != -9999) ? disturbance_info.get_loss_rate_std_from_rd_condition_id(var_rd_condition_id[var_index]) : all_zeroes_2D_array;
 														double[][] user_loss_rate = get_stochastic_loss_rate_from_loss_rate_mean_and_loss_rate_std(user_chosen_loss_rate, loss_rate_mean, loss_rate_std, var_index, map_var_index_to_user_chosen_loss_rate);
@@ -1808,12 +1804,10 @@ public class Solve_Iterations {
 							for (int i : EA_R_prescription_ids[strata_5layers_id]) {
 								int rotation_age = total_rows_of_precription[i]; 
 								int t_regen = (iter == 0) ? 2 : 1;	// this is because iteration 0 could not have regenerated forest in period 1, but iterations >= 1 do have regenerated forest strata
-								for (int t = t_regen + iter; t <= total_periods + iter; t++) {
+								for (int t = t_regen + iter; t <= total_periods - 1 + iter; t++) {
 									for (int a = 1; a <= t - 1; a++) {
 										int rotation_period = rotation_age + t - a;
-										if (a < rotation_age	// add this condition which is important. This would also make t < rotation_period
-													&& rotation_period >= t_regen + iter && rotation_period <= total_periods + iter) {	// restrict prescriptions with tR = [t_regen + iter, total_period + iter]
-											
+										if (a < rotation_age) {	// add this condition which is important. This would also make t < rotation_period
 											if (xR[strata_5layers_id][s5R] != null
 													 && xR[strata_5layers_id][s5R][i] != null
 															 && xR[strata_5layers_id][s5R][i][t] != null
@@ -2747,13 +2741,13 @@ public class Solve_Iterations {
 							
 							
 							// show successful or fail in the GUI
-							data[row][4] = "successful";
+							data[row][4] = "iteration " + iter + " done";
 							model.fireTableDataChanged();
 							value = null; reduceCost = null; dual = null; slack = null;		// clear arrays to save memory
 							vlb = null; vub = null; vname = null; objvals = null;			// clear arrays to save memory
 						} else {
 							if (is_problem_exported) cplex_wrapper.exportModel(problem_file.getAbsolutePath());
-							data[row][4] = "fail";
+							data[row][4] = "iteration " + iter + " fail";
 							model.fireTableDataChanged();
 						}
 					}
@@ -3315,13 +3309,13 @@ public class Solve_Iterations {
 							
 							
 							// show successful or fail in the GUI
-							data[row][4] = "successful";
+							data[row][4] = "iteration " + iter + " done";
 							model.fireTableDataChanged();
 							value = null; /*reduceCost = null; dual = null; slack = null;*/		// clear arrays to save memory
 							vlb = null; vub = null; vname = null; objvals = null;			// clear arrays to save memory
 						} else {
 							if (is_problem_exported) solver.writeLp(problem_file.getAbsolutePath());
-							data[row][4] = "fail";
+							data[row][4] = "iteration " + iter + " fail";
 							model.fireTableDataChanged();
 						}						
 						solver.deleteLp();
