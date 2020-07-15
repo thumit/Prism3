@@ -186,6 +186,8 @@ GROUP BY iteration, (period || method)
 GROUP BY iteration, period
 ----------
 all records
-
-Select * FROM summarize_output_05_management_details
+Select * FROM summarize_output_05_management_details INNER JOIN yield_tables USING  (prescription, row_id)
+----------
+all records - Left join to allow missing row id
+Select * FROM summarize_output_05_management_details LEFT JOIN yield_tables USING  (prescription, row_id)
 ----------

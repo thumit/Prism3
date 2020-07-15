@@ -194,7 +194,7 @@ public class Read_Database {
 			// This code is used to rename prescription to start with E_0, E_1, R_0, R_1 (E and R is the forest status, 0 and 1 indicate prescription without or with a clear cut at the end)
 			// In the future, users are required to name the prescriptions with either one of the above 4 prefixes, and therefore the below code could be removed.
 			for (int i = 0; i < total_prescriptions; i++) {
-				System.out.print("old prescription = " + yield_tables_values[i][0][0] + "     --->     new prescription = ");
+//				System.out.print("old prescription = " + yield_tables_values[i][0][0] + "     --->     new prescription = ");
 				String new_name = "";
 				if (yield_tables_values[i][0][0].contains("_NG_E_")) {
 					String[] term = yield_tables_values[i][0][0].split("_");
@@ -238,8 +238,8 @@ public class Read_Database {
 				int total_rows = yield_tables_values[i].length;
 				for (int row = 0; row < total_rows; row++) {
 					yield_tables_values[i][row][0] = yield_tables_names[i];
+					System.out.println(yield_tables_values[i][0][0]);
 				}
-				System.out.println(yield_tables_values[i][0][0]);
 			}	
 			
 			yield_tables_column_unique_values[0] = new LinkedHashSet<>();
