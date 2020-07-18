@@ -190,62 +190,62 @@ public class Read_Database {
 			
 			//---------------------------------------------------------------------------------------------
 			//---------------------------------------------------------------------------------------------
-			// Begin: can delete this below code in the future. 
-			// This code is used to rename prescription to start with E_0, E_1, R_0, R_1 (E and R is the forest status, 0 and 1 indicate prescription without or with a clear cut at the end)
-			// In the future, users are required to name the prescriptions with either one of the above 4 prefixes, and therefore the below code could be removed.
-			for (int i = 0; i < total_prescriptions; i++) {
-//				System.out.print("old prescription = " + yield_tables_values[i][0][0] + "     --->     new prescription = ");
-				String new_name = "";
-				if (yield_tables_values[i][0][0].contains("_NG_E_")) {
-					String[] term = yield_tables_values[i][0][0].split("_");
-					new_name = "E_0_" + term[0] + "_" + term[1] + "_" + i;
-				} else if (yield_tables_values[i][0][0].contains("_PB_E_")) {
-					String[] term = yield_tables_values[i][0][0].split("_");
-					new_name = "E_0_" + term[0] + "_" + term[1] + "_" + i;
-				} else if (yield_tables_values[i][0][0].contains("_GS_E_")) {
-					String[] term = yield_tables_values[i][0][0].split("_");
-					new_name = "E_0_" + term[0] + "_" + term[1] + "_" + i;
-				} else if (yield_tables_values[i][0][0].contains("_MS_E_")) {
-					String[] term = yield_tables_values[i][0][0].split("_");
-					new_name = "E_0_" + term[0] + "_" + term[1] + "_" + i;
-				} else if (yield_tables_values[i][0][0].contains("_BS_E_")) {
-					String[] term = yield_tables_values[i][0][0].split("_");
-					new_name = "E_0_" + term[0] + "_" + term[1] + "_" + i;
-				} else if (yield_tables_values[i][0][0].contains("_EA_E_")) {
-					String[] term = yield_tables_values[i][0][0].split("_");
-					new_name = "E_1_" + term[0] + "_" + term[1] + "_" + i;
-				} else if (yield_tables_values[i][0][0].contains("_NG_R_")) {
-					String[] term = yield_tables_values[i][0][0].split("_");
-					new_name = "R_0_" + term[0] + "_" + i;
-				} else if (yield_tables_values[i][0][0].contains("_PB_R_")) {
-					String[] term = yield_tables_values[i][0][0].split("_");
-					new_name = "R_0_" + term[0] + "_" + i;
-				} else if (yield_tables_values[i][0][0].contains("_GS_R_")) {
-					String[] term = yield_tables_values[i][0][0].split("_");
-					new_name = "R_0_" + term[0] + "_" + i;
-				} else if (yield_tables_values[i][0][0].contains("_MS_R_")) {
-					String[] term = yield_tables_values[i][0][0].split("_");
-					new_name = "R_0_" + term[0] + "_" + i;
-				} else if (yield_tables_values[i][0][0].contains("_BS_R_")) {
-					String[] term = yield_tables_values[i][0][0].split("_");
-					new_name = "R_0_" + term[0] + "_" + i;
-				} else if (yield_tables_values[i][0][0].contains("_EA_R_")) {
-					String[] term = yield_tables_values[i][0][0].split("_");
-					new_name = "R_1_" + term[0] + "_" + i;
-				}
-				yield_tables_names[i] = new_name;
-						
-				int total_rows = yield_tables_values[i].length;
-				for (int row = 0; row < total_rows; row++) {
-					yield_tables_values[i][row][0] = yield_tables_names[i];
-					System.out.println(yield_tables_values[i][0][0]);
-				}
-			}	
-			
-			yield_tables_column_unique_values[0] = new LinkedHashSet<>();
-			for (String name : yield_tables_names) {
-				yield_tables_column_unique_values[0].add(name);
-			}
+//			// Begin: can delete this below code in the future. 
+//			// This code is used to rename prescription to start with E_0, E_1, R_0, R_1 (E and R is the forest status, 0 and 1 indicate prescription without or with a clear cut at the end)
+//			// In the future, users are required to name the prescriptions with either one of the above 4 prefixes, and therefore the below code could be removed.
+//			for (int i = 0; i < total_prescriptions; i++) {
+////				System.out.print("old prescription = " + yield_tables_values[i][0][0] + "     --->     new prescription = ");
+//				String new_name = "";
+//				if (yield_tables_values[i][0][0].contains("_NG_E_")) {
+//					String[] term = yield_tables_values[i][0][0].split("_");
+//					new_name = "E_0_" + term[0] + "_" + term[1] + "_" + i;
+//				} else if (yield_tables_values[i][0][0].contains("_PB_E_")) {
+//					String[] term = yield_tables_values[i][0][0].split("_");
+//					new_name = "E_0_" + term[0] + "_" + term[1] + "_" + i;
+//				} else if (yield_tables_values[i][0][0].contains("_GS_E_")) {
+//					String[] term = yield_tables_values[i][0][0].split("_");
+//					new_name = "E_0_" + term[0] + "_" + term[1] + "_" + i;
+//				} else if (yield_tables_values[i][0][0].contains("_MS_E_")) {
+//					String[] term = yield_tables_values[i][0][0].split("_");
+//					new_name = "E_0_" + term[0] + "_" + term[1] + "_" + i;
+//				} else if (yield_tables_values[i][0][0].contains("_BS_E_")) {
+//					String[] term = yield_tables_values[i][0][0].split("_");
+//					new_name = "E_0_" + term[0] + "_" + term[1] + "_" + i;
+//				} else if (yield_tables_values[i][0][0].contains("_EA_E_")) {
+//					String[] term = yield_tables_values[i][0][0].split("_");
+//					new_name = "E_1_" + term[0] + "_" + term[1] + "_" + i;
+//				} else if (yield_tables_values[i][0][0].contains("_NG_R_")) {
+//					String[] term = yield_tables_values[i][0][0].split("_");
+//					new_name = "R_0_" + term[0] + "_" + i;
+//				} else if (yield_tables_values[i][0][0].contains("_PB_R_")) {
+//					String[] term = yield_tables_values[i][0][0].split("_");
+//					new_name = "R_0_" + term[0] + "_" + i;
+//				} else if (yield_tables_values[i][0][0].contains("_GS_R_")) {
+//					String[] term = yield_tables_values[i][0][0].split("_");
+//					new_name = "R_0_" + term[0] + "_" + i;
+//				} else if (yield_tables_values[i][0][0].contains("_MS_R_")) {
+//					String[] term = yield_tables_values[i][0][0].split("_");
+//					new_name = "R_0_" + term[0] + "_" + i;
+//				} else if (yield_tables_values[i][0][0].contains("_BS_R_")) {
+//					String[] term = yield_tables_values[i][0][0].split("_");
+//					new_name = "R_0_" + term[0] + "_" + i;
+//				} else if (yield_tables_values[i][0][0].contains("_EA_R_")) {
+//					String[] term = yield_tables_values[i][0][0].split("_");
+//					new_name = "R_1_" + term[0] + "_" + i;
+//				}
+//				yield_tables_names[i] = new_name;
+//						
+//				int total_rows = yield_tables_values[i].length;
+//				for (int row = 0; row < total_rows; row++) {
+//					yield_tables_values[i][row][0] = yield_tables_names[i];
+//					System.out.println(yield_tables_values[i][0][0]);
+//				}
+//			}	
+//			
+//			yield_tables_column_unique_values[0] = new LinkedHashSet<>();
+//			for (String name : yield_tables_names) {
+//				yield_tables_column_unique_values[0].add(name);
+//			}
 			// End: delete
 			//---------------------------------------------------------------------------------------------
 			//---------------------------------------------------------------------------------------------

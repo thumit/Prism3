@@ -1,3 +1,6 @@
+yield_tables sorted
+SELECT * FROM yield_tables ORDER BY prescription, CAST(row_id as decimal) ASC
+----------
 test join 1
 SELECT *
 FROM output_05_management_details
