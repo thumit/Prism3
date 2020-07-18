@@ -1368,3 +1368,5 @@ All changes in this block are associated with PrismAlpha3.1.01.jar, Prism-Formul
 572. Revise system queries in the output SQL Mode to examine the output data. Queries are put into following categories: logic check, area, disturbance, harvest volume, activity, and others. 
 573. Revise system queries in the Database Management to examine the input data.
 574. Disable the temporary code to add prefixes at 552. The code is still kept for possible future usage.
+All changes in this block are associated with PrismAlpha3.1.02.jar, Prism-Formulation-14.docx
+--------------------------------------------------------------------------

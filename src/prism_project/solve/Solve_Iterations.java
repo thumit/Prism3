@@ -254,7 +254,7 @@ public class Solve_Iterations {
 				List<Double> flow_lowerbound_percentage_list = read.get_flow_lowerbound_percentage_list();
 				List<Double> flow_upperbound_percentage_list = read.get_flow_upperbound_percentage_list();			
 				System.out.println("Reading process finished for all core inputs          " + dateFormat.format(new Date()));
-				System.out.println("Optimization models will be built based on Prism-Formulation-13-V3, Rolling-Horizon-Formulation_10-V3");
+				System.out.println("Optimization models will be built based on Prism-Formulation-14");
 				
 				// Get info: input_11_state_id
 				LinkedHashMap<String, String> map_prescription_and_row_id_to_state_id = read.get_map_prescription_and_row_id_to_state_id();

@@ -1095,3 +1095,10 @@ ON e_table.Covertype = r_table.Covertype)
 
 WHERE  e_table.Covertype IS NULL
 ----------
+new strata id
+SELECT (layer1 || '_' || layer2 || '_' || layer3 || '_' || layer4 || '_' || layer5 || '_' || layer6) as strata_id, layer1, layer2, layer3, layer4, layer5, layer6, acres FROM  existing_strata ORDER BY (layer1 || layer2 || layer3 || layer4 || layer5 || layer6) ASC;
+----------
+create new existing strata table
+CREATE TABLE existing_strata_new AS
+SELECT (layer1 || '_' || layer2 || '_' || layer3 || '_' || layer4 || '_' || layer5 || '_' || layer6) as strata_id, layer1, layer2, layer3, layer4, layer5, layer6, acres FROM  existing_strata
+----------
