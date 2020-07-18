@@ -546,3 +546,549 @@ LEFT JOIN
 ON t1.prescription = t2.prescription AND CAST(t1.row_id as decimal) = t2.row_id
 )
 ----------
+New split
+SELECT
+Status,
+Clearcut,
+Covertype,
+SUBSTR(Leftover, 1, INSTR(Leftover, '_')-1) as Sizeclass,
+SUBSTR(Leftover, INSTR(Leftover, '_')+1) as Leftover
+FROM
+
+(
+SELECT
+Status,
+Clearcut,
+SUBSTR(Leftover, 1, INSTR(Leftover, '_')-1) as Covertype,
+SUBSTR(Leftover, INSTR(Leftover, '_')+1) as Leftover
+FROM
+
+(
+SELECT
+Status,
+SUBSTR(Leftover, 1, INSTR(Leftover, '_')-1) as Clearcut,
+SUBSTR(Leftover, INSTR(Leftover, '_')+1) as Leftover
+FROM
+
+(
+SELECT 
+SUBSTR(pres, 1, INSTR(pres, '_')-1) as Status,
+SUBSTR(pres, INSTR(pres, '_')+1) as Leftover
+FROM
+(SELECT DISTINCT prescription  as pres FROM yield_tables
+WHERE prescription LIKE '%\E\_0\_%' ESCAPE '\' 
+OR prescription LIKE '%\E\_1\_%' ESCAPE '\')
+)
+)
+)
+----------
+new 3.0
+SELECT
+Covertype,
+Sizeclass,
+SUM(CASE when Status = 'E' AND Clearcut = '0' then 1 else 0 end) E_0_Prescriptions,
+SUM(CASE when Status = 'E' AND Clearcut = '1' then 1 else 0 end) E_1_Prescriptions,
+SUM(1) Total_Prescriptions
+FROM
+
+
+
+(
+SELECT
+Status,
+Clearcut,
+Covertype,
+SUBSTR(Leftover, 1, INSTR(Leftover, '_')-1) as Sizeclass,
+SUBSTR(Leftover, INSTR(Leftover, '_')+1) as Leftover
+FROM
+
+(
+SELECT
+Status,
+Clearcut,
+SUBSTR(Leftover, 1, INSTR(Leftover, '_')-1) as Covertype,
+SUBSTR(Leftover, INSTR(Leftover, '_')+1) as Leftover
+FROM
+
+(
+SELECT
+Status,
+SUBSTR(Leftover, 1, INSTR(Leftover, '_')-1) as Clearcut,
+SUBSTR(Leftover, INSTR(Leftover, '_')+1) as Leftover
+FROM
+
+(
+SELECT 
+SUBSTR(pres, 1, INSTR(pres, '_')-1) as Status,
+SUBSTR(pres, INSTR(pres, '_')+1) as Leftover
+FROM
+(SELECT DISTINCT prescription  as pres FROM yield_tables
+WHERE prescription LIKE '%\E\_0\_%' ESCAPE '\' 
+OR prescription LIKE '%\E\_1\_%' ESCAPE '\')
+)
+)
+)
+)
+
+
+
+GROUP BY
+Covertype,
+Sizeclass
+
+
+
+
+UNION ALL
+
+SELECT
+'Total_Prescriptions' as CoverType2,
+'' as SizeClass2,
+SUM(case when prescription LIKE '%\E\_0\_%' ESCAPE '\' then 1 else 0 end) E_0,
+SUM(case when prescription LIKE '%\E\_1\_%' ESCAPE '\' then 1 else 0 end) E_1,
+SUM(case when prescription LIKE '%%' then 1 else 0 end) Total_Prescriptions
+FROM (SELECT DISTINCT prescription FROM yield_tables)
+----------
+new 3.1
+SELECT
+Covertype,
+SUM(CASE when Status = 'E' AND Clearcut = '0' then 1 else 0 end) E_0_Prescriptions,
+SUM(CASE when Status = 'E' AND Clearcut = '1' then 1 else 0 end) E_1_Prescriptions,
+SUM(CASE when Status = 'R' AND Clearcut = '0' then 1 else 0 end) R_0_Prescriptions,
+SUM(CASE when Status = 'R' AND Clearcut = '1' then 1 else 0 end) R_1_Prescriptions,
+SUM(1) Total_Prescriptions
+FROM
+
+
+
+(
+SELECT
+Status,
+Clearcut,
+Covertype,
+SUBSTR(Leftover, 1, INSTR(Leftover, '_')-1) as Sizeclass,
+SUBSTR(Leftover, INSTR(Leftover, '_')+1) as Leftover
+FROM
+
+(
+SELECT
+Status,
+Clearcut,
+SUBSTR(Leftover, 1, INSTR(Leftover, '_')-1) as Covertype,
+SUBSTR(Leftover, INSTR(Leftover, '_')+1) as Leftover
+FROM
+
+(
+SELECT
+Status,
+SUBSTR(Leftover, 1, INSTR(Leftover, '_')-1) as Clearcut,
+SUBSTR(Leftover, INSTR(Leftover, '_')+1) as Leftover
+FROM
+
+(
+SELECT 
+SUBSTR(pres, 1, INSTR(pres, '_')-1) as Status,
+SUBSTR(pres, INSTR(pres, '_')+1) as Leftover
+FROM
+(SELECT DISTINCT prescription  as pres FROM yield_tables)
+)
+)
+)
+)
+
+
+
+GROUP BY
+Covertype
+----------
+new 3.1 better
+SELECT
+SUBSTR(DISTINCT prescription, 5, INSTR(DISTINCT prescription, "_")-1) as CoverType,
+SUM(case when prescription LIKE '%\E\_0\_%' ESCAPE '\' then 1 else 0 end) E_0_Prescriptions,
+SUM(case when prescription LIKE '%\E\_1\_%' ESCAPE '\' then 1 else 0 end) E_1_Prescriptions,
+SUM(case when prescription LIKE '%\R\_0\_%' ESCAPE '\' then 1 else 0 end) R_0_Prescriptions,
+SUM(case when prescription LIKE '%\R\_1\_%' ESCAPE '\' then 1 else 0 end) R_1_Prescriptions,
+SUM(case when prescription LIKE '%%' then 1 else 0 end) Total_Prescriptions
+FROM (SELECT DISTINCT prescription FROM yield_tables)
+GROUP BY CoverType
+
+UNION ALL
+
+SELECT
+'Total_Prescriptions' as CoverType2,
+SUM(case when prescription LIKE '%\E\_0\_%' ESCAPE '\' then 1 else 0 end) E_0,
+SUM(case when prescription LIKE '%\E\_1\_%' ESCAPE '\' then 1 else 0 end) E_1,
+SUM(case when prescription LIKE '%\R\_0\_%' ESCAPE '\' then 1 else 0 end) R_0,
+SUM(case when prescription LIKE '%\R\_1\_%' ESCAPE '\' then 1 else 0 end) R_1,
+SUM(case when prescription LIKE '%%' then 1 else 0 end) Total_Prescriptions
+FROM (SELECT DISTINCT prescription FROM yield_tables)
+----------
+new 2.0
+SELECT
+Covertype,
+Sizeclass,
+MIN(CAST(rotation_age as decimal)) AS E_min_rotation_age, 
+MAX(CAST(rotation_age as decimal)) AS E_max_rotation_age
+FROM
+
+
+
+(
+SELECT
+rotation_age,
+Status,
+Clearcut,
+Covertype,
+SUBSTR(Leftover, 1, INSTR(Leftover, '_')-1) as Sizeclass,
+SUBSTR(Leftover, INSTR(Leftover, '_')+1) as Leftover
+FROM
+
+(
+SELECT
+rotation_age,
+Status,
+Clearcut,
+SUBSTR(Leftover, 1, INSTR(Leftover, '_')-1) as Covertype,
+SUBSTR(Leftover, INSTR(Leftover, '_')+1) as Leftover
+FROM
+
+(
+SELECT
+rotation_age,
+Status,
+SUBSTR(Leftover, 1, INSTR(Leftover, '_')-1) as Clearcut,
+SUBSTR(Leftover, INSTR(Leftover, '_')+1) as Leftover
+FROM
+
+(
+SELECT 
+rotation_age,
+SUBSTR(prescription, 1, INSTR(prescription, '_')-1) as Status,
+SUBSTR(prescription, INSTR(prescription, '_')+1) as Leftover
+FROM
+(SELECT DISTINCT prescription, 
+MAX(CAST(age_class as INTEGER)) AS rotation_age
+FROM yield_tables
+WHERE prescription LIKE '%E\_1\_%' ESCAPE '\' GROUP BY prescription)
+)
+)
+)
+)
+
+
+
+GROUP BY Covertype, Sizeclass
+----------
+new 2.1
+SELECT
+Covertype as E_covertype,
+MIN(CAST(rotation_age as decimal)) AS E_min_rotation_age, 
+MAX(CAST(rotation_age as decimal)) AS E_max_rotation_age
+FROM
+
+
+
+(
+SELECT
+rotation_age,
+Status,
+Clearcut,
+SUBSTR(Leftover, 1, INSTR(Leftover, '_')-1) as Covertype,
+SUBSTR(Leftover, INSTR(Leftover, '_')+1) as Leftover
+FROM
+
+(
+SELECT
+rotation_age,
+Status,
+SUBSTR(Leftover, 1, INSTR(Leftover, '_')-1) as Clearcut,
+SUBSTR(Leftover, INSTR(Leftover, '_')+1) as Leftover
+FROM
+
+(
+SELECT 
+rotation_age,
+SUBSTR(prescription, 1, INSTR(prescription, '_')-1) as Status,
+SUBSTR(prescription, INSTR(prescription, '_')+1) as Leftover
+FROM
+(SELECT DISTINCT prescription, 
+MAX(CAST(age_class as INTEGER)) AS rotation_age
+FROM yield_tables
+WHERE prescription LIKE '%E\_1\_%' ESCAPE '\' GROUP BY prescription)
+)
+)
+)
+
+
+
+GROUP BY Covertype
+----------
+new 2.2
+SELECT
+Covertype as R_covertype,
+MIN(CAST(rotation_age as decimal)) AS R_min_rotation_age, 
+MAX(CAST(rotation_age as decimal)) AS R_max_rotation_age
+FROM
+
+
+
+(
+SELECT
+rotation_age,
+Status,
+Clearcut,
+SUBSTR(Leftover, 1, INSTR(Leftover, '_')-1) as Covertype,
+SUBSTR(Leftover, INSTR(Leftover, '_')+1) as Leftover
+FROM
+
+(
+SELECT
+rotation_age,
+Status,
+SUBSTR(Leftover, 1, INSTR(Leftover, '_')-1) as Clearcut,
+SUBSTR(Leftover, INSTR(Leftover, '_')+1) as Leftover
+FROM
+
+(
+SELECT 
+rotation_age,
+SUBSTR(prescription, 1, INSTR(prescription, '_')-1) as Status,
+SUBSTR(prescription, INSTR(prescription, '_')+1) as Leftover
+FROM
+(SELECT DISTINCT prescription, 
+MAX(CAST(age_class as INTEGER)) AS rotation_age
+FROM yield_tables
+WHERE prescription LIKE '%R\_1\_%' ESCAPE '\' GROUP BY prescription)
+)
+)
+)
+
+
+
+GROUP BY Covertype
+----------
+new 2.3
+SELECT
+e_table.Covertype,
+e_table.E_min_rotation_age,
+e_table.E_max_rotation_age,
+r_table.R_min_rotation_age,
+r_table.R_max_rotation_age
+FROM
+(
+
+
+
+
+(SELECT
+Covertype,
+MIN(CAST(rotation_age as decimal)) AS E_min_rotation_age, 
+MAX(CAST(rotation_age as decimal)) AS E_max_rotation_age
+FROM
+
+
+
+(
+SELECT
+rotation_age,
+Status,
+Clearcut,
+SUBSTR(Leftover, 1, INSTR(Leftover, '_')-1) as Covertype,
+SUBSTR(Leftover, INSTR(Leftover, '_')+1) as Leftover
+FROM
+
+(
+SELECT
+rotation_age,
+Status,
+SUBSTR(Leftover, 1, INSTR(Leftover, '_')-1) as Clearcut,
+SUBSTR(Leftover, INSTR(Leftover, '_')+1) as Leftover
+FROM
+
+(
+SELECT 
+rotation_age,
+SUBSTR(prescription, 1, INSTR(prescription, '_')-1) as Status,
+SUBSTR(prescription, INSTR(prescription, '_')+1) as Leftover
+FROM
+(SELECT DISTINCT prescription, 
+MAX(CAST(age_class as INTEGER)) AS rotation_age
+FROM yield_tables
+WHERE prescription LIKE '%E\_1\_%' ESCAPE '\' GROUP BY prescription)
+)
+)
+)
+
+
+
+GROUP BY Covertype) AS e_table
+
+
+LEFT JOIN
+
+
+(SELECT
+Covertype,
+MIN(CAST(rotation_age as decimal)) AS R_min_rotation_age, 
+MAX(CAST(rotation_age as decimal)) AS R_max_rotation_age
+FROM
+
+
+
+(
+SELECT
+rotation_age,
+Status,
+Clearcut,
+SUBSTR(Leftover, 1, INSTR(Leftover, '_')-1) as Covertype,
+SUBSTR(Leftover, INSTR(Leftover, '_')+1) as Leftover
+FROM
+
+(
+SELECT
+rotation_age,
+Status,
+SUBSTR(Leftover, 1, INSTR(Leftover, '_')-1) as Clearcut,
+SUBSTR(Leftover, INSTR(Leftover, '_')+1) as Leftover
+FROM
+
+(
+SELECT 
+rotation_age,
+SUBSTR(prescription, 1, INSTR(prescription, '_')-1) as Status,
+SUBSTR(prescription, INSTR(prescription, '_')+1) as Leftover
+FROM
+(SELECT DISTINCT prescription, 
+MAX(CAST(age_class as INTEGER)) AS rotation_age
+FROM yield_tables
+WHERE prescription LIKE '%R\_1\_%' ESCAPE '\' GROUP BY prescription)
+)
+)
+)
+
+
+
+GROUP BY Covertype) AS r_table
+
+
+ON e_table.Covertype = r_table.Covertype)
+
+
+
+
+
+UNION ALL
+
+
+
+
+
+SELECT
+r_table.Covertype,
+e_table.E_min_rotation_age,
+e_table.E_max_rotation_age,
+r_table.R_min_rotation_age,
+r_table.R_max_rotation_age
+FROM
+(
+
+
+(SELECT
+Covertype,
+MIN(CAST(rotation_age as decimal)) AS R_min_rotation_age, 
+MAX(CAST(rotation_age as decimal)) AS R_max_rotation_age
+FROM
+
+
+
+(
+SELECT
+rotation_age,
+Status,
+Clearcut,
+SUBSTR(Leftover, 1, INSTR(Leftover, '_')-1) as Covertype,
+SUBSTR(Leftover, INSTR(Leftover, '_')+1) as Leftover
+FROM
+
+(
+SELECT
+rotation_age,
+Status,
+SUBSTR(Leftover, 1, INSTR(Leftover, '_')-1) as Clearcut,
+SUBSTR(Leftover, INSTR(Leftover, '_')+1) as Leftover
+FROM
+
+(
+SELECT 
+rotation_age,
+SUBSTR(prescription, 1, INSTR(prescription, '_')-1) as Status,
+SUBSTR(prescription, INSTR(prescription, '_')+1) as Leftover
+FROM
+(SELECT DISTINCT prescription, 
+MAX(CAST(age_class as INTEGER)) AS rotation_age
+FROM yield_tables
+WHERE prescription LIKE '%R\_1\_%' ESCAPE '\' GROUP BY prescription)
+)
+)
+)
+
+
+
+GROUP BY Covertype) AS r_table
+
+
+LEFT JOIN
+
+
+(SELECT
+Covertype,
+MIN(CAST(rotation_age as decimal)) AS E_min_rotation_age, 
+MAX(CAST(rotation_age as decimal)) AS E_max_rotation_age
+FROM
+
+
+
+(
+SELECT
+rotation_age,
+Status,
+Clearcut,
+SUBSTR(Leftover, 1, INSTR(Leftover, '_')-1) as Covertype,
+SUBSTR(Leftover, INSTR(Leftover, '_')+1) as Leftover
+FROM
+
+(
+SELECT
+rotation_age,
+Status,
+SUBSTR(Leftover, 1, INSTR(Leftover, '_')-1) as Clearcut,
+SUBSTR(Leftover, INSTR(Leftover, '_')+1) as Leftover
+FROM
+
+(
+SELECT 
+rotation_age,
+SUBSTR(prescription, 1, INSTR(prescription, '_')-1) as Status,
+SUBSTR(prescription, INSTR(prescription, '_')+1) as Leftover
+FROM
+(SELECT DISTINCT prescription, 
+MAX(CAST(age_class as INTEGER)) AS rotation_age
+FROM yield_tables
+WHERE prescription LIKE '%E\_1\_%' ESCAPE '\' GROUP BY prescription)
+)
+)
+)
+
+
+
+GROUP BY Covertype) AS e_table
+
+
+ON e_table.Covertype = r_table.Covertype)
+
+
+
+
+
+WHERE  e_table.Covertype IS NULL
+----------
