@@ -192,22 +192,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	private PrismTableModel model6;
 	private Object[][] data6;
 	
-	// table input_06a --> loss probability mean
-	private boolean is_table6a_loaded = false;
-	private int rowCount6a, colCount6a;
-	private String[] columnNames6a;
-	private JTable table6a;
-	private PrismTableModel model6a;
-	private Object[][] data6a;
-	
-	// table input_06b --> loss probability standard deviation
-	private boolean is_table6b_loaded = false;
-	private int rowCount6b, colCount6b;
-	private String[] columnNames6b;
-	private JTable table6b;
-	private PrismTableModel model6b;
-	private Object[][] data6b;
-	
 	// table input_06c --> conversion rate mean
 	private boolean is_table6c_loaded = false;
 	private int rowCount6c, colCount6c;
@@ -376,7 +360,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		is_table2_loaded = false;
 		is_table4_loaded = false;
 		is_table6_loaded = false;
-		is_table6a_loaded = false;
 		is_table6c_loaded = false;
 		is_table7_loaded = false;
 		is_table7a_loaded = false;
@@ -538,7 +521,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			model3.match_DataType();		//a smart way to retrieve the original data type :))))))
 			model4.match_DataType();		//a smart way to retrieve the original data type :))))))
 			model6.match_DataType();		//a smart way to retrieve the original data type :))))))
-			model6a.match_DataType();		//a smart way to retrieve the original data type :))))))
 			model6c.match_DataType();		//a smart way to retrieve the original data type :))))))
 			model7.match_DataType();		//a smart way to retrieve the original data type :))))))
 			model7a.match_DataType();		//a smart way to retrieve the original data type :))))))
@@ -1362,9 +1344,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		//Setup the table------------------------------------------------------------	
 		if (is_table6_loaded == false) { // Create a fresh new if Load fail				
 			rowCount6 = 0;
-			colCount6 = 10;
+			colCount6 = 15;
 			data6 = new Object[rowCount6][colCount6];
-			columnNames6 = new String[] {"condition_id", "condition_description", "lr_mean", "lr_std", "cr_mean", "cr_std", "static_identifiers", "dynamic_identifiers", "original_dynamic_identifiers", "model_condition"};
+			columnNames6 = new String[] {"condition_id", "condition_description", "disturbance_id", "loss_rate_data", "normalizing_function", "parameter_a", "parameter_b", "mean", "std", "cr_mean", "cr_std", "static_identifiers", "dynamic_identifiers", "original_dynamic_identifiers", "model_condition"};
 		}
 					
 		
@@ -1372,13 +1354,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		model6 = new PrismTableModel(rowCount6, colCount6, data6, columnNames6) {
 			@Override
 			public Class getColumnClass(int c) {
-				if (c == 9) return Boolean.class;
+				if (c == 14) return Boolean.class;
+				else if (c >= 5 && c <= 8) return Double.class;      //column 5 to 7 accept only Double values   
 				else return String.class;
 			}
 			
 			@Override
 			public boolean isCellEditable(int row, int col) {
-				if (col == 1 || col == 9) { //  columns "description" and "model_condition" are editable
+				if ((col >= 1 && col <= 8) || col == 14) {	// some columns are editable
 					return true;
 				} else {
 					return false;
@@ -1397,11 +1380,17 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						if (String.valueOf(data6[row][col]).equals("null")) {
 							data6[row][col] = null;
 						} else {	
-							if (col == 9) {
+							if (col == 14) {
 								try {
 									data6[row][col] = Boolean.valueOf(String.valueOf(data6[row][col]));
 								} catch (NumberFormatException e) {
 									System.err.println(e.getClass().getName() + ": " + e.getMessage() + " Fail to convert String to Boolean values in create_table6");
+								}
+							} else if (col >= 5 && col <= 8) {			// Columns 5 to 8 are Double
+								try {
+									data6[row][col] = Double.valueOf(String.valueOf(data6[row][col]));
+								} catch (NumberFormatException e) {
+									System.err.println(e.getClass().getName() + ": " + e.getMessage() + " Fail to convert String to Double values in create_table6");
 								}
 							} else {
 								data6[row][col] = String.valueOf(data6[row][col]);
@@ -1429,10 +1418,12 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			            tableColumn.getHeaderValue(), false, false, -1, column);
 				maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
 				
-				if (column != 1) {
-					tableColumn.setPreferredWidth(maxWidth);
+				if (column == 1) {
+					tableColumn.setMinWidth(130);
+				} else if (column == 3) {
+					tableColumn.setMinWidth(110);
 				} else {
-					tableColumn.setMinWidth(200);
+					tableColumn.setPreferredWidth(maxWidth);
 				}
 				return component;
 			}
@@ -1441,20 +1432,121 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			public String getToolTipText(MouseEvent e) {
 				java.awt.Point p = e.getPoint();
 				int row = rowAtPoint(p);
-				int col = columnAtPoint(p);
-				String tip = (table6.getColumnName(col).equals("condition_description") && row >= 0 && getValueAt(row, col) != null) ? getValueAt(row, col).toString() : null;
+				int column = columnAtPoint(p);
+				String tip = null;
+				if (row >= 0 && getValueAt(row, column) != null) {
+					if (table6.getColumnName(column).equals("condition_description")) {
+						tip = getValueAt(row, column).toString();
+					} else if (table6.getColumnName(column).equals("normalizing_function")) {
+						switch (getValueAt(row, column).toString()) {
+						case "Inverse":
+							tip = "f(x) = 1/(x+a) where x+a>0";
+							break;
+						case "Logarithmic":
+							tip = "f(x,a) = log(x+a) where x+a>0";
+							break;
+						case "Logarithmic 10":
+							tip = "f(x,a) = log10(x+a) where x+a>0";
+							break;
+						case "Square Root":
+							tip = "f(x,a) = sqrt(x+a) where x+a>0";
+							break;
+						case "Exponential":
+							tip = "f(x) = e^x";
+							break;
+						case "Power":
+							tip = "f(x,a,b) = (x+a)^b where x+a>0 if b is not integral";
+							break;
+						case "Arcsine":
+							tip = "f(x) = log(x+sqrt(x^2 + 1)";
+							break;
+						case "Box Cox":
+							tip = "f(x,a,b) = ((x+a)^b - 1)/b where b<>0   OR   f(x,a,b) = log(x+a) where b=0";
+							break;
+						default: 
+							tip = "";
+						}
+					} else if (table6.getColumnName(column).equals("loss_rate_data")) {
+						tip = "x = {" + getValueAt(row, column).toString() + "}";
+					} else if (table6.getColumnName(column).equals("parameter_a")) {
+						tip = "a = " + getValueAt(row, column).toString();
+					}else if (table6.getColumnName(column).equals("parameter_b")) {
+						tip = "b = " + getValueAt(row, column).toString();
+					};
+				}
 				return tip;
-			}			
+			}
 		};
 		
 		((JComponent) table6.getDefaultRenderer(Boolean.class)).setOpaque(true);
 		((AbstractButton) table6.getDefaultRenderer(Boolean.class)).setSelectedIcon(IconHandle.get_scaledImageIcon(12, 12, "icon_check.png"));
 		
+		class ToolTipComboBoxRenderer extends BasicComboBoxRenderer {
+			@Override
+			public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+				Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+				String tip = null;
+				switch (String.valueOf(value)) {
+				case "Inverse":
+					tip = "f(x) = 1/(x+a) where x+a>0";
+					break;
+				case "Logarithmic":
+					tip = "f(x,a) = log(x+a) where x+a>0";
+					break;
+				case "Logarithmic 10":
+					tip = "f(x,a) = log10(x+a) where x+a>0";
+					break;
+				case "Square Root":
+					tip = "f(x,a) = sqrt(x+a) where x+a>0";
+					break;
+				case "Exponential":
+					tip = "f(x) = e^x";
+					break;
+				case "Power":
+					tip = "f(x,a,b) = (x+a)^b where x+a>0 if b is not integral";
+					break;
+				case "Arcsine":
+					tip = "f(x) = log(x+sqrt(x^2 + 1)";
+					break;
+				case "Box Cox":
+					tip = "f(x,a,b) = ((x+a)^b - 1)/b where b<>0   OR   f(x,a,b) = log(x+a) where b=0";
+					break;
+				default: 
+					tip = "f(x) = x";
+				}
+				list.setToolTipText(tip);
+				
+				if (isSelected) {
+					c.setBackground(UIManager.getColor("Tree.selectionBackground"));	// this works to have the desired color
+					c.setForeground(UIManager.getColor("Tree.selectionForeground"));
+				} else {
+					c.setBackground(Color.WHITE);
+					c.setForeground(UIManager.getColor("Tree.foreground"));
+				}
+				return c;
+			}
+		}
+		class Transformation_Technique extends JComboBox {	
+			public Transformation_Technique() {
+				ToolTipComboBoxRenderer ren = new ToolTipComboBoxRenderer();
+				setRenderer(ren);
+				addItem(null);
+				addItem("Inverse");
+				addItem("Logarithmic");
+				addItem("Logarithmic 10");
+				addItem("Square Root");
+				addItem("Exponential");
+				addItem("Power");
+				addItem("Arcsine");
+				addItem("Box Cox");
+				setSelectedIndex(0);
+				setMaximumRowCount(10);
+			}
+		};
+		table6.getColumnModel().getColumn(4).setCellEditor(new DefaultCellEditor(new Transformation_Technique()));
 		
 		// Hide columns
 		TableColumnsHandle table_handle = new TableColumnsHandle(table6);
-		table_handle.setColumnVisible("lr_mean", false);
-		table_handle.setColumnVisible("lr_std", false);
 		table_handle.setColumnVisible("cr_mean", false);
 		table_handle.setColumnVisible("cr_std", false);
 		table_handle.setColumnVisible("static_identifiers", false);
@@ -1471,362 +1563,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	
 	
 	//--------------------------------------------------------------------------------------------------------------------------
-	public void create_table6a() {
-		// Setup the table------------------------------------------------------------	
-		if (is_table6a_loaded == false) { // Create a fresh new if Load fail				
-			rowCount6a = 1;
-			colCount6a = total_replacing_disturbance;
-			data6a = new Object[rowCount6a][colCount6a];
-	        columnNames6a = new String[colCount6a];
-	        for (int col = 0; col < colCount6a; col++) {
-	        	int disturbance_index = col + 1;
-	        	if (disturbance_index < 10) columnNames6a[col] = "SR_0" + disturbance_index; else columnNames6a[col] = "SR_" + disturbance_index;
-	        }
-	        
-			// Populate the data matrix
-			for (int row = 0; row < rowCount6a; row++) {
-				for (int col = 0; col < colCount6a; col++) {
-					data6a[row][col] = (double) 0;
-				}
-			}			
-		}
-		
-		
-        // Header tool-tip
-		String[] headerToolTips = new String[colCount6a];
-        for (int col = 0; col < colCount6a; col++) {
-			headerToolTips[col] = "loss rate mean of " + columnNames6a[col];
-        }
-        
-		
-		// Create a table-------------------------------------------------------------		
-        model6a = new PrismTableModel(rowCount6a, colCount6a, data6a, columnNames6a) {
-        	@Override
-    		public boolean isCellEditable(int row, int col) {
-        		return true;
-    		}
-
-        	@Override
-    		public void setValueAt(Object value, int row, int col) {
-    			if (/*value != null && */(((Number) value).doubleValue() < 0 || ((Number) value).doubleValue() > 100)) {		// not allow null to be set
-    				JOptionPane.showMessageDialog(PrismMain.get_Prism_DesktopPane(), "Your input has not been accepted. Only double values in the range 0-100 (%) would be allowed.");
-    			} else {
-    				data6a[row][col] = value;
-    				// this is to address the case when the changes are made for only one cell. Without the if then, when we use quick edit to change multiple cells there would be many fireTableDataChanged() are called --> very slow
-    				if (table6a.getSelectedRows().length == 1) {	// only fire the change when the table has only one cell selected, need to store the current row and column before fire the change. Otherwise the re-selection would be fail
-    					int currentRow = table6a.getSelectedRow();		        	
-    					int currentCol = table6a.getSelectedColumn();	
-    					fireTableDataChanged();		// This will clear the selection 
-    					table6a.changeSelection(currentRow, currentCol, true, false);	// This will add the selection back (reselect previous cell)
-    				}
-    			}
-    		}
-        	
-        	@Override
-			public void match_DataType() {
-				for (int row = 0; row < rowCount6a; row++) {
-					for (int col = 0; col < colCount6a; col++) {
-						if (String.valueOf(data6a[row][col]).equals("null")) {
-							data6a[row][col] = null;
-						} else {					
-							try {
-								data6a[row][col] = Double.valueOf(String.valueOf(data6a[row][col]));
-							} catch (NumberFormatException e) {
-								System.err.println(e.getClass().getName() + ": " + e.getMessage() + " Fail to convert String to Double values in create_table6a");
-							}	
-						}	
-					}	
-				}	
-			}
-        };
-        
-        
-		table6a = new JTable(model6a) {
-			@Override			// These override is to make the width of the cell fit all contents of the cell
-			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
-				// For the cells in table								
-				Component component = super.prepareRenderer(renderer, row, column);
-				int rendererWidth = component.getPreferredSize().width;
-				TableColumn tableColumn = getColumnModel().getColumn(column);
-				int maxWidth = Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth());
-				
-				// For the column names
-				TableCellRenderer renderer2 = table6a.getTableHeader().getDefaultRenderer();	
-				Component component2 = renderer2.getTableCellRendererComponent(table6a,
-			            tableColumn.getHeaderValue(), false, false, -1, column);
-				maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
-				
-				tableColumn.setPreferredWidth(maxWidth);
-				
-				// Set icon for cells: when total percentage of a given block 		NOTE: we need to use getValueAt because of the compact view feature which makes mismatching between full data and displayed data
-				double total_percentage = 0;
-				// loop all columns & add to total percentage
-				for (int j = 0; j < getColumnCount(); j++) {					
-					total_percentage = total_percentage + Double.parseDouble(getValueAt(row, j).toString());
-				} 
-					
-				if (total_percentage > 100) {		// check if the total_percentage > 100% --> problem icon for this cell because it is in the set of cells which make total_percentage > 100%
-					((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(14, 14, "icon_problem.png"));
-				} else {
-					((DefaultTableCellRenderer) component).setIcon(null);
-				}
-				
-				return component;
-			}		
-			
-			@Override		// implement table header tool tips
-            protected JTableHeader createDefaultTableHeader() {
-                return new JTableHeader(columnModel) {
-                    public String getToolTipText(MouseEvent e) {
-                        String tip = null;
-                        java.awt.Point p = e.getPoint();
-						if (columnModel.getColumnIndexAtX(p.x) >= 0) {
-                        	int index = columnModel.getColumnIndexAtX(p.x);
-                            int realIndex = columnModel.getColumn(index).getModelIndex();
-                            tip = headerToolTips[realIndex];
-                        }
-                        return tip;
-                    }
-                };
-            }
-			
-			@Override		// implement table header tool tips         
-			public String getToolTipText(MouseEvent e) {
-				String tip = null;
-				java.awt.Point p = e.getPoint();
-				int row = rowAtPoint(p);
-				int column = columnAtPoint(p);
-				try {
-					DecimalFormat formatter = new DecimalFormat("###,###.###");
-					formatter.setMinimumFractionDigits(0);
-					formatter.setMaximumFractionDigits(2);
-					String percentage = formatter.format((Number) getValueAt(row, column));
-					String disturbance_name = table6a.getColumnName(column);
-					tip = percentage + "% of the area would be destroyed by " + disturbance_name;
-				
-					// Show problem tip 		NOTE: we need to use getValueAt because of the compact view feature which makes mismatching between full data and displayed data
-					double total_percentage = 0;
-					for (int j = 0; j < getColumnCount(); j++) {					
-						total_percentage = total_percentage + Double.parseDouble(getValueAt(row, j).toString());
-					}
-					if (total_percentage > 100 && column >= 1) {		// check if the total_percentage > 100% 
-						tip = "The sum of all cells must not exceed 100 for deterministic model";
-					}
-				} catch (RuntimeException e1) {
-					System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
-				}	
-				return tip;
-			}
-		};			
-        
-        
-        // show percentage for cells
-        DefaultTableCellRenderer r = new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object
-			value, boolean isSelected, boolean hasFocus, int row, int column) {			
-				setHorizontalAlignment(JLabel.RIGHT);			
-				DecimalFormat formatter = new DecimalFormat("###,###.### %");
-				formatter.setMinimumFractionDigits(0);
-				formatter.setMaximumFractionDigits(10);	// show value with max 10 digits after the dot if it is double value
-				if (value instanceof Double) {
-					value = formatter.format((Double) value / 100);
-				}
-				return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            }
-        };
-		for (int i = 0; i < columnNames6a.length; i++) {
-			table6a.getColumnModel().getColumn(i).setCellRenderer(r);
-		}		
-				
-		table6a.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		table6a.setCellSelectionEnabled(true);
-        table6a.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        table6a.getTableHeader().setReorderingAllowed(false);		// Disable columns move
-        table6a.setPreferredScrollableViewportSize(new Dimension(400, 100));
-//      table6a.setFillsViewportHeight(true);
-	}	
-
-	
-	//--------------------------------------------------------------------------------------------------------------------------
-	public void create_table6b() {
-		// Setup the table------------------------------------------------------------	
-		if (is_table6b_loaded == false) { // Create a fresh new if Load fail				
-			rowCount6b = 1;
-			colCount6b = total_replacing_disturbance;
-			data6b = new Object[rowCount6b][colCount6b];
-	        columnNames6b = new String[colCount6b];
-	        for (int col = 0; col < colCount6b; col++) {
-	        	int disturbance_index = col + 1;
-	        	if (disturbance_index < 10) columnNames6b[col] = "SR_0" + disturbance_index; else columnNames6b[col] = "SR_" + disturbance_index;
-	        }
-	        
-			// Populate the data matrix
-			for (int row = 0; row < rowCount6b; row++) {
-				for (int col = 0; col < colCount6b; col++) {
-					data6b[row][col] = (double) 0;
-				}
-			}			
-		}
-		
-		
-        // Header tool-tip
-		String[] headerToolTips = new String[colCount6b];
-        for (int col = 0; col < colCount6b; col++) {
-			headerToolTips[col] = "loss rate std of " + columnNames6b[col];
-        }
-        
-		
-		// Create a table-------------------------------------------------------------		
-        model6b = new PrismTableModel(rowCount6b, colCount6b, data6b, columnNames6b) {
-        	@Override
-    		public boolean isCellEditable(int row, int col) {
-        		return true;
-    		}
-
-        	@Override
-    		public void setValueAt(Object value, int row, int col) {
-    			if (/*value != null && */(((Number) value).doubleValue() < 0 || ((Number) value).doubleValue() > 100)) {		// not allow null to be set
-    				JOptionPane.showMessageDialog(PrismMain.get_Prism_DesktopPane(), "Your input has not been accepted. Only double values in the range 0-100 (%) would be allowed.");
-    			} else {
-    				data6b[row][col] = value;
-    				// this is to address the case when the changes are made for only one cell. Without the if then, when we use quick edit to change multiple cells there would be many fireTableDataChanged() are called --> very slow
-    				if (table6b.getSelectedRows().length == 1) {	// only fire the change when the table has only one cell selected, need to store the current row and column before fire the change. Otherwise the re-selection would be fail
-    					int currentRow = table6b.getSelectedRow();		        	
-    					int currentCol = table6b.getSelectedColumn();	
-    					fireTableDataChanged();		// This will clear the selection 
-    					table6b.changeSelection(currentRow, currentCol, true, false);	// This will add the selection back (reselect previous cell)
-    				}
-    			}
-    		}
-        	
-        	@Override
-			public void match_DataType() {
-				for (int row = 0; row < rowCount6b; row++) {
-					for (int col = 0; col < colCount6b; col++) {
-						if (String.valueOf(data6b[row][col]).equals("null")) {
-							data6b[row][col] = null;
-						} else {					
-							try {
-								data6b[row][col] = Double.valueOf(String.valueOf(data6b[row][col]));
-							} catch (NumberFormatException e) {
-								System.err.println(e.getClass().getName() + ": " + e.getMessage() + " Fail to convert String to Double values in create_table6b");
-							}	
-						}	
-					}	
-				}	
-			}
-        };
-        
-        
-		table6b = new JTable(model6b) {
-			@Override			// These override is to make the width of the cell fit all contents of the cell
-			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
-				// For the cells in table								
-				Component component = super.prepareRenderer(renderer, row, column);
-				int rendererWidth = component.getPreferredSize().width;
-				TableColumn tableColumn = getColumnModel().getColumn(column);
-				int maxWidth = Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth());
-				
-				// For the column names
-				TableCellRenderer renderer2 = table6b.getTableHeader().getDefaultRenderer();	
-				Component component2 = renderer2.getTableCellRendererComponent(table6b,
-			            tableColumn.getHeaderValue(), false, false, -1, column);
-				maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
-				
-				tableColumn.setPreferredWidth(maxWidth);
-				
-				// Set icon for cells: when total percentage of a given block 		NOTE: we need to use getValueAt because of the compact view feature which makes mismatching between full data and displayed data
-				double total_percentage = 0;
-				// loop all columns & add to total percentage
-				for (int j = 0; j < getColumnCount(); j++) {					
-					total_percentage = total_percentage + Double.parseDouble(getValueAt(row, j).toString());
-				} 
-					
-				if (total_percentage > 100) {		// check if the total_percentage > 100% --> problem icon for this cell because it is in the set of cells which make total_percentage > 100%
-					((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(14, 14, "icon_problem.png"));
-				} else {
-					((DefaultTableCellRenderer) component).setIcon(null);
-				}
-				
-				return component;
-			}		
-			
-			@Override		// implement table header tool tips
-            protected JTableHeader createDefaultTableHeader() {
-                return new JTableHeader(columnModel) {
-                    public String getToolTipText(MouseEvent e) {
-                        String tip = null;
-                        java.awt.Point p = e.getPoint();
-						if (columnModel.getColumnIndexAtX(p.x) >= 0) {
-                        	int index = columnModel.getColumnIndexAtX(p.x);
-                            int realIndex = columnModel.getColumn(index).getModelIndex();
-                            tip = headerToolTips[realIndex];
-                        }
-                        return tip;
-                    }
-                };
-            }
-			
-			@Override		// implement table header tool tips         
-			public String getToolTipText(MouseEvent e) {
-				String tip = null;
-				java.awt.Point p = e.getPoint();
-				int row = rowAtPoint(p);
-				int column = columnAtPoint(p);
-				try {
-					DecimalFormat formatter = new DecimalFormat("###,###.###");
-					formatter.setMinimumFractionDigits(0);
-					formatter.setMaximumFractionDigits(2);
-					String percentage = formatter.format((Number) getValueAt(row, column));
-					String disturbance_name = table6b.getColumnName(column);
-					tip = percentage + "% is the standard deviation for the mean rate of " + disturbance_name;
-				
-					// Show problem tip 		NOTE: we need to use getValueAt because of the compact view feature which makes mismatching between full data and displayed data
-					double total_percentage = 0;
-					for (int j = 0; j < getColumnCount(); j++) {					
-						total_percentage = total_percentage + Double.parseDouble(getValueAt(row, j).toString());
-					}
-					if (total_percentage > 100 && column >= 1) {		// check if the total_percentage > 100% 
-						tip = "The sum of all cells must not exceed 100 for deterministic model";
-					}
-				} catch (RuntimeException e1) {
-					System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
-				}	
-				return tip;
-			}
-		};			
-        
-        
-        // show percentage for cells
-        DefaultTableCellRenderer r = new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object
-			value, boolean isSelected, boolean hasFocus, int row, int column) {			
-				setHorizontalAlignment(JLabel.RIGHT);			
-				DecimalFormat formatter = new DecimalFormat("###,###.### %");
-				formatter.setMinimumFractionDigits(0);
-				formatter.setMaximumFractionDigits(10);	// show value with max 10 digits after the dot if it is double value
-				if (value instanceof Double) {
-					value = formatter.format((Double) value / 100);
-				}
-				return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            }
-        };
-		for (int i = 0; i < columnNames6b.length; i++) {
-			table6b.getColumnModel().getColumn(i).setCellRenderer(r);
-		}		
-				
-		table6b.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		table6b.setCellSelectionEnabled(true);
-        table6b.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        table6b.getTableHeader().setReorderingAllowed(false);		// Disable columns move
-        table6b.setPreferredScrollableViewportSize(new Dimension(400, 100));
-//      table6b.setFillsViewportHeight(true);
-	}		
-	
-	
-	//--------------------------------------------------------------------------------------------------------------------------
 	public void create_table6c() {	
 		List<List<String>> all_layers = read_database.get_all_layers();
 		List<List<String>> all_layers_tooltips = read_database.get_all_layers_tooltips();
@@ -1835,7 +1571,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		// Setup the table------------------------------------------------------------	
 		if (is_table6c_loaded == false) { // Create a fresh new if Load fail				
 			rowCount6c = total_CoverType * total_CoverType;
-			colCount6c =  total_replacing_disturbance + 2;
+			colCount6c =  3;
 			data6c = new Object[rowCount6c][colCount6c];
 	        columnNames6c = new String[colCount6c];
 	        columnNames6c[0] = "layer5";
@@ -1934,31 +1670,20 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				Component component2 = renderer2.getTableCellRendererComponent(table6c,
 			            tableColumn.getHeaderValue(), false, false, -1, column);
 				maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
-				
 				tableColumn.setPreferredWidth(maxWidth);
-				
-				// Set icon for cells: when total percentage of a given block 		NOTE: we need to use getValueAt because of the compact view feature which makes mismatching between full data and displayed data
-				boolean has_at_least_one_positive_loss_rate = false;
-				for (int j = 0; j < data6a[0].length; j++) {
-					if (!has_at_least_one_positive_loss_rate && 
-							(Double.valueOf(data6a[0][j].toString()) != 0 || Double.valueOf(data6b[0][j].toString()) != 0)) {
-						has_at_least_one_positive_loss_rate = true;
+
+				// icon
+				((DefaultTableCellRenderer) component).setIcon(null);
+				double total_percentage = 0;
+				for (int i = 0; i < getRowCount(); i++) {	// loop all rows in a column && add to total percentage if the rows has the same covertype as the row at cursor
+					if (column >= 2 && getValueAt(i, 0).toString().equals(getValueAt(row, 0).toString()) && table6c.convertColumnIndexToView(column) != -1) {	// -1 means the column is invisible
+						total_percentage = total_percentage + Double.parseDouble(getValueAt(i, column).toString());
 					}
 				}
-
-				((DefaultTableCellRenderer) component).setIcon(null);
-				if (has_at_least_one_positive_loss_rate) {
-					double total_percentage = 0;
-					for (int i = 0; i < getRowCount(); i++) {	// loop all rows in a column && add to total percentage if the rows has the same covertype as the row at cursor
-						if (column >= 2 && getValueAt(i, 0).toString().equals(getValueAt(row, 0).toString()) && table6c.convertColumnIndexToView(column) != -1) {	// -1 means the column is invisible
-							total_percentage = total_percentage + Double.parseDouble(getValueAt(i, column).toString());
-						}
-					}
-					
-					if (total_percentage != 100 && column >= 2) {		// check if the total_percentage <> 100% --> problem icon for this cell because it is in the set of cells which make total_percentage <> 100%
-						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(14, 14, "icon_problem.png"));
-					}
-				};
+				
+				if (total_percentage != 100 && column >= 2) {		// check if the total_percentage <> 100% --> problem icon for this cell because it is in the set of cells which make total_percentage <> 100%
+					((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(14, 14, "icon_problem.png"));
+				}
 				table6c.revalidate();
 				table6c.repaint();
 				
@@ -2008,25 +1733,15 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						tip = "For the total area with cover type = " + getValueAt(row, 0).toString() + " destroyed by "  + disturbance_name + ", " + percentage + "% of this area will be regenerated as cover type = " + getValueAt(row, 1).toString();
 					
 						// Show problem tip 		NOTE: we need to use getValueAt because of the compact view feature which makes mismatching between full data and displayed data
-						boolean has_at_least_one_positive_loss_rate = false;
-						for (int j = 0; j < data6a[0].length; j++) {
-							if (!has_at_least_one_positive_loss_rate && 
-									(Double.valueOf(data6a[0][j].toString()) != 0 || Double.valueOf(data6b[0][j].toString()) != 0)) {
-								has_at_least_one_positive_loss_rate = true;
-							}
+						double total_percentage = 0;
+						for (int i = 0; i < getRowCount(); i++) {	// loop all rows in a block && add to total percentage if the rows has the same covertype as the row at cursor
+							if (column >= 2 && getValueAt(i, 0).toString().equals(getValueAt(row, 0).toString()) && table6c.convertColumnIndexToView(column) != -1) {	// -1 means the column is invisible
+								total_percentage = total_percentage + Double.parseDouble(getValueAt(i, column).toString());
+							}	
 						}
 						
-						if (has_at_least_one_positive_loss_rate) {
-							double total_percentage = 0;
-							for (int i = 0; i < getRowCount(); i++) {	// loop all rows in a block && add to total percentage if the rows has the same covertype as the row at cursor
-								if (column >= 2 && getValueAt(i, 0).toString().equals(getValueAt(row, 0).toString()) && table6c.convertColumnIndexToView(column) != -1) {	// -1 means the column is invisible
-									total_percentage = total_percentage + Double.parseDouble(getValueAt(i, column).toString());
-								}	
-							}
-							
-							if (total_percentage != 100 && column >= 2) {		// check if the total_percentage <> 100%
-								tip = "INFEASIBLE - The sum of all cells in this column with the same layer5 = " + getValueAt(row, 0).toString() + " must be exactly 100";
-							}
+						if (total_percentage != 100 && column >= 2) {		// check if the total_percentage <> 100%
+							tip = "INFEASIBLE - The sum of all cells in this column with the same layer5 = " + getValueAt(row, 0).toString() + " must be exactly 100";
 						}
 					} catch (RuntimeException e1) {
 						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
@@ -2119,7 +1834,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		table6c.setCellSelectionEnabled(true);
         table6c.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         table6c.getTableHeader().setReorderingAllowed(false);		//Disable columns move
-        table6c.setPreferredScrollableViewportSize(new Dimension(400, 100));
+        table6c.setPreferredScrollableViewportSize(new Dimension(200, 100));
 //      table6c.setFillsViewportHeight(true);
 //      TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model6c);	//Add sorter
 //		for (int i = 1; i < colCount6c; i++) {
@@ -2141,7 +1856,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		// Setup the table------------------------------------------------------------	
 		if (is_table6d_loaded == false) { // Create a fresh new if Load fail				
 			rowCount6d = total_CoverType * total_CoverType;
-			colCount6d =  total_replacing_disturbance + 2;
+			colCount6d =  3;
 			data6d = new Object[rowCount6d][colCount6d];
 	        columnNames6d = new String[colCount6d];
 	        columnNames6d[0] = "layer5";
@@ -2406,7 +2121,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		table6d.setCellSelectionEnabled(true);
         table6d.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         table6d.getTableHeader().setReorderingAllowed(false);		//Disable columns move
-        table6d.setPreferredScrollableViewportSize(new Dimension(400, 100));
+        table6d.setPreferredScrollableViewportSize(new Dimension(200, 100));
 //      table6d.setFillsViewportHeight(true);
 //      TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model6d);	//Add sorter
 //		for (int i = 1; i < colCount6d; i++) {
@@ -2524,7 +2239,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		table7.setAutoResizeMode(0);		// 0 = JTable.AUTO_RESIZE_OFF
 		table7.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);  
 		table7.getTableHeader().setReorderingAllowed(false);		//Disable columns move
-		table7.setPreferredScrollableViewportSize(new Dimension(150, 100));
+		table7.setPreferredScrollableViewportSize(new Dimension(200, 100));
 //		table7.setFillsViewportHeight(true);
 	}		
 
@@ -3818,19 +3533,19 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), message, "Change the total number of stand replacing disturbances",
 								JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
 						if (response == 0) {
-							for (int i = 0; i < rowCount6; i++) {
-								data6[i][2] = get_adjusted_replacing_disturbances_infor_6ab(total_replacing_disturbance_combo_value, data6[i][2], "0");	// loss rate mean
-								data6[i][3] = get_adjusted_replacing_disturbances_infor_6ab(total_replacing_disturbance_combo_value, data6[i][3], "0");	// loss rate std
-								data6[i][4] = get_adjusted_replacing_disturbances_infor(total_replacing_disturbance_combo_value, data6[i][4], "0");	// conversion rate mean
-								data6[i][5] = get_adjusted_replacing_disturbances_infor(total_replacing_disturbance_combo_value, data6[i][5], "0");	// conversion rate std
-							}
-				    		total_replacing_disturbance = total_replacing_disturbance_combo_value;
-				    		is_table6_loaded = true;	// to have the old data stay (create_table6 would not create new empty data)
-				    		panel_Natural_Disturbances = new Natural_Disturbances();	// Renew the entire Natural_Disturbances screen
+//							for (int i = 0; i < rowCount6; i++) {
+//								data6[i][2] = get_adjusted_replacing_disturbances_infor_6ab(total_replacing_disturbance_combo_value, data6[i][2], "0");	// loss rate mean
+//								data6[i][3] = get_adjusted_replacing_disturbances_infor_6ab(total_replacing_disturbance_combo_value, data6[i][3], "0");	// loss rate std
+//								data6[i][4] = get_adjusted_replacing_disturbances_infor(total_replacing_disturbance_combo_value, data6[i][4], "0");	// conversion rate mean
+//								data6[i][5] = get_adjusted_replacing_disturbances_infor(total_replacing_disturbance_combo_value, data6[i][5], "0");	// conversion rate std
+//							}
+//				    		total_replacing_disturbance = total_replacing_disturbance_combo_value;
+//				    		is_table6_loaded = true;	// to have the old data stay (create_table6 would not create new empty data)
+//				    		panel_Natural_Disturbances = new Natural_Disturbances();	// Renew the entire Natural_Disturbances screen
 						} else {
 							replacingDisturbancesCombo.setSelectedItem((int) total_replacing_disturbance);
 						}
-					} 
+					}
 					
 					// Apply any change in the GUI to the table
 					data1[0][1] = totalPeriodsCombo.getSelectedItem().toString();	
@@ -3841,57 +3556,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					data1[5][1] = (exportProblemCheck.isSelected()) ? "true" : "false";
 					data1[6][1] = (exportSolutionCheck.isSelected()) ? "true" : "false";
 					model1.fireTableDataChanged();
-				}
-				
-				public Object get_adjusted_replacing_disturbances_infor_6ab(int total_replacing_disturbance_combo_value, Object data6_cell, String new_value) {
-					String cell_info = (String) data6_cell;
-					if (cell_info.length() > 0) {
-						String[] sub_info = cell_info.split(" ");
-						String[] sub_info_adjusted = new String[total_replacing_disturbance_combo_value];
-						if (total_replacing_disturbance > total_replacing_disturbance_combo_value) {	// Case when decreasing the number of SRs --> Clear the unused data/column (keep the old data)
-							for (int col = 0; col < total_replacing_disturbance_combo_value; col++) {
-								sub_info_adjusted[col] = sub_info[col];
-							}
-						} else {	// Case when increasing the number of SRs --> Clear the unused data/column (keep the old data)
-							for (int col = 0; col < total_replacing_disturbance; col++) {
-								sub_info_adjusted[col] = sub_info[col];
-							}
-							for (int col = total_replacing_disturbance; col < total_replacing_disturbance_combo_value; col++) {
-								sub_info_adjusted[col] = new_value;
-							}
-						}
-						String cell_info_adjusted = String.join(" ", sub_info_adjusted);
-						return cell_info_adjusted;
-					}
-					return cell_info;
-				}
-				
-				public Object get_adjusted_replacing_disturbances_infor(int total_replacing_disturbance_combo_value, Object data6_cell, String new_value) {
-					String cell_info = (String) data6_cell;
-					if (cell_info.length() > 0) {
-						String[] info_array = cell_info.split(";");	
-						String[] info_array_adjusted = new String[info_array.length];
-						for (int row = 0; row < info_array.length; row++) {			
-							String[] sub_info = info_array[row].split(" ");
-							String[] sub_info_adjusted = new String[2 + total_replacing_disturbance_combo_value];
-							if (total_replacing_disturbance > total_replacing_disturbance_combo_value) {	// Case when decreasing the number of SRs --> Clear the unused data/column (keep the old data)
-								for (int col = 0; col < 2 + total_replacing_disturbance_combo_value; col++) {
-									sub_info_adjusted[col] = sub_info[col];
-								}
-							} else {	// Case when increasing the number of SRs --> Clear the unused data/column (keep the old data)
-								for (int col = 0; col < 2 + total_replacing_disturbance; col++) {
-									sub_info_adjusted[col] = sub_info[col];
-								}
-								for (int col = 2 + total_replacing_disturbance; col < 2 + total_replacing_disturbance_combo_value; col++) {
-									sub_info_adjusted[col] = new_value;
-								}
-							}
-							info_array_adjusted[row] = String.join(" ", sub_info_adjusted);		
-						} 
-						String cell_info_adjusted = String.join(";", info_array_adjusted);
-						return cell_info_adjusted;
-					}
-					return cell_info;
 				}
 			};
 			totalPeriodsCombo.addActionListener(apply);
@@ -5518,12 +5182,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				
 					
 			// 3rd grid ------------------------------------------------------------------------------		// Parameters
-			create_table6a();
-			create_table6b();
 			create_table6c();
 			create_table6d();
-			natural_disturbances_tables_ScrollPane = new ScrollPane_SubTables_NaturalDisturbances(table6a, data6a, table6b, data6b, table6c, data6c, table6d, data6d, total_replacing_disturbance);
-			natural_disturbances_tables_ScrollPane.update_4_tables_data(data6a, data6b, data6c, data6d);
+			natural_disturbances_tables_ScrollPane = new ScrollPane_SubTables_NaturalDisturbances(table6c, data6c, table6d, data6d);
+			natural_disturbances_tables_ScrollPane.update_2_tables_data(data6c, data6d);
 			// End of 3rd grid -----------------------------------------------------------------------
 				    			
 	
@@ -5603,7 +5265,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			c.weighty = 1;
 			disturbances_condition_panel.add(new JLabel(), c);
 			
-			// Add table7		
+			// Add table6		
 			create_table6();
 			JScrollPane table_ScrollPane = new JScrollPane(table6);
 			c.gridx = 1;
@@ -5620,9 +5282,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			class Table_Interaction {
 				void refresh() {
 					// Cancel editing before moving conditions up or down
-					if (table6a.isEditing()) {
-						table6a.getCellEditor().cancelCellEditing();
-					}		
 					if (table6c.isEditing()) {
 						table6c.getCellEditor().cancelCellEditing();
 					}
@@ -5632,17 +5291,17 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					if (selectedRow.length == 1) {		// Show the set's identifiers
 						int currentRow = selectedRow[0];
 						currentRow = table6.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
-						static_identifiers_scrollpane.reload_this_constraint_static_identifiers((String) data6[currentRow][6]);	// 6 is the static_identifiers which have some attributes selected				
-						dynamic_identifiers_scrollpane.reload_this_constraint_dynamic_identifiers((String) data6[currentRow][7], (String) data6[currentRow][8]);	// 6 is the original_dynamic_identifiers column
-						natural_disturbances_tables_ScrollPane.reload_this_condition((String) data6[currentRow][2], (String) data6[currentRow][3], (String) data6[currentRow][4], (String) data6[currentRow][5]);
+						static_identifiers_scrollpane.reload_this_constraint_static_identifiers((String) data6[currentRow][11]);	// 11 is the static_identifiers which have some attributes selected				
+						dynamic_identifiers_scrollpane.reload_this_constraint_dynamic_identifiers((String) data6[currentRow][12], (String) data6[currentRow][13]);	// 13 is the original_dynamic_identifiers column
+						natural_disturbances_tables_ScrollPane.reload_this_condition((String) data6[currentRow][9], (String) data6[currentRow][10]);
 						
 						btn_Edit.setEnabled(true);
 						quick_edit.enable_all_apply_buttons();
-						natural_disturbances_tables_ScrollPane.show_4_tables();
+						natural_disturbances_tables_ScrollPane.show_2_tables();
 					} else {		// Disable Edit
 						btn_Edit.setEnabled(false);
 						quick_edit.disable_all_apply_buttons();
-						natural_disturbances_tables_ScrollPane.hide_4_tables();
+						natural_disturbances_tables_ScrollPane.hide_2_tables();
 					}
 					
 					if (selectedRow.length >= 1 && table6.isEnabled()) {	// Enable Delete  when: >=1 row is selected, table is enable (often after Edit button finished its task)
@@ -5672,33 +5331,13 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		        }
 		    });
 			
-			table6a.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
-		        public void valueChanged(ListSelectionEvent event) {
-		        	int currentRow = table6.getSelectedRow();		        	
-					currentRow = table6.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
-					natural_disturbances_tables_ScrollPane.update_4_tables_data(data6a, data6b, data6c, data6d);	// Update so we have the latest data of table 6a & 6c to retrieve and write to table6 below
-					data6[currentRow][2] = natural_disturbances_tables_ScrollPane.get_lr_mean_from_GUI();	
-					model6.fireTableCellUpdated(currentRow, 2);
-		        }
-		    });
-			
-			table6b.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
-		        public void valueChanged(ListSelectionEvent event) {
-		        	int currentRow = table6.getSelectedRow();		        	
-					currentRow = table6.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
-					natural_disturbances_tables_ScrollPane.update_4_tables_data(data6a, data6b, data6c, data6d);	// Update so we have the latest data of table 6a & 6c to retrieve and write to table6 below
-					data6[currentRow][3] = natural_disturbances_tables_ScrollPane.get_lr_std_from_GUI();	
-					model6.fireTableCellUpdated(currentRow, 3);
-		        }
-		    });
-			
 			table6c.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
 		        public void valueChanged(ListSelectionEvent event) {
 		        	int currentRow = table6.getSelectedRow();		        	
 					currentRow = table6.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
-					natural_disturbances_tables_ScrollPane.update_4_tables_data(data6a, data6b, data6c, data6d);	// Update so we have the latest data of table 6a & 6c to retrieve and write to table6 below
-					data6[currentRow][4] = natural_disturbances_tables_ScrollPane.get_cr_mean_from_GUI();		
-					model6.fireTableCellUpdated(currentRow, 4);
+					natural_disturbances_tables_ScrollPane.update_2_tables_data(data6c, data6d);	// Update so we have the latest data of table 6c to retrieve and write to table6 below
+					data6[currentRow][9] = natural_disturbances_tables_ScrollPane.get_cr_mean_from_GUI();		
+					model6.fireTableCellUpdated(currentRow, 9);
 		        }
 		    });
 			
@@ -5706,9 +5345,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		        public void valueChanged(ListSelectionEvent event) {
 		        	int currentRow = table6.getSelectedRow();		        	
 					currentRow = table6.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
-					natural_disturbances_tables_ScrollPane.update_4_tables_data(data6a, data6b, data6c, data6d);	// Update so we have the latest data of table 6a & 6c to retrieve and write to table6 below
-					data6[currentRow][5] = natural_disturbances_tables_ScrollPane.get_cr_std_from_GUI();		
-					model6.fireTableCellUpdated(currentRow, 5);
+					natural_disturbances_tables_ScrollPane.update_2_tables_data(data6c, data6d);	// Update so we have the latest data of table 6c to retrieve and write to table6 below
+					data6[currentRow][10] = natural_disturbances_tables_ScrollPane.get_cr_std_from_GUI();		
+					model6.fireTableCellUpdated(currentRow, 10);
 		        }
 		    });
 			
@@ -5731,14 +5370,19 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				data6[rowCount6 - 1][1] = String.join(" ..... ",
 						dynamic_identifiers_scrollpane.get_dynamic_description_from_GUI(),
 						static_identifiers_scrollpane.get_static_description_from_GUI());
-				data6[rowCount6 - 1][2] = natural_disturbances_tables_ScrollPane.get_lr_mean_from_GUI();
-				data6[rowCount6 - 1][3] = natural_disturbances_tables_ScrollPane.get_lr_std_from_GUI();
-				data6[rowCount6 - 1][4] = natural_disturbances_tables_ScrollPane.get_cr_mean_from_GUI();
-				data6[rowCount6 - 1][5] = natural_disturbances_tables_ScrollPane.get_cr_std_from_GUI();
-				data6[rowCount6 - 1][6] = static_identifiers_scrollpane.get_static_info_from_GUI();
-				data6[rowCount6 - 1][7] = dynamic_identifiers_scrollpane.get_dynamic_info_from_GUI();
-				data6[rowCount6 - 1][8] = dynamic_identifiers_scrollpane.get_original_dynamic_info_from_GUI();
-				data6[rowCount6 - 1][9] = true;
+				data6[rowCount6 - 1][2] = null;
+				data6[rowCount6 - 1][3] = null;
+				data6[rowCount6 - 1][4] = null;
+				data6[rowCount6 - 1][5] = null;
+				data6[rowCount6 - 1][6] = null;
+				data6[rowCount6 - 1][7] = null;
+				data6[rowCount6 - 1][8] = null;
+				data6[rowCount6 - 1][9] = natural_disturbances_tables_ScrollPane.get_cr_mean_from_GUI();
+				data6[rowCount6 - 1][10] = natural_disturbances_tables_ScrollPane.get_cr_std_from_GUI();
+				data6[rowCount6 - 1][11] = static_identifiers_scrollpane.get_static_info_from_GUI();
+				data6[rowCount6 - 1][12] = dynamic_identifiers_scrollpane.get_dynamic_info_from_GUI();
+				data6[rowCount6 - 1][13] = dynamic_identifiers_scrollpane.get_original_dynamic_info_from_GUI();
+				data6[rowCount6 - 1][14] = true;
 								
 				model6.updateTableModelPrism(rowCount6, colCount6, data6, columnNames6);
 				model6.fireTableDataChanged();		
@@ -5762,9 +5406,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					selectedRow = table6.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems	
 					
 					// Apply change
-					data6[selectedRow][6] = static_identifiers_scrollpane.get_static_info_from_GUI();
-					data6[selectedRow][7] = dynamic_identifiers_scrollpane.get_dynamic_info_from_GUI();
-					data6[selectedRow][8] = dynamic_identifiers_scrollpane.get_original_dynamic_info_from_GUI();
+					data6[selectedRow][11] = static_identifiers_scrollpane.get_static_info_from_GUI();
+					data6[selectedRow][12] = dynamic_identifiers_scrollpane.get_dynamic_info_from_GUI();
+					data6[selectedRow][13] = dynamic_identifiers_scrollpane.get_original_dynamic_info_from_GUI();
 					model6.fireTableDataChanged();	
 					
 					// Convert the edited Row to model view and then select it 
@@ -5910,7 +5554,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			
 			// scrollPane Quick Edit ----------------------------------------------------------------------	
 			// scrollPane Quick Edit ----------------------------------------------------------------------	
-			quick_edit = new Panel_QuickEdit_NaturalDisturbances(table6a, data6a, table6b, data6b, table6c, data6c, table6d, data6d);
+			quick_edit = new Panel_QuickEdit_NaturalDisturbances(table6c, data6c, table6d, data6d);
 			quick_edit.disable_all_apply_buttons();
 			JScrollPane scrollpane_QuickEdit = new JScrollPane(quick_edit);			
 			border = new TitledBorder("Quick Edit ");
@@ -5981,13 +5625,13 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			split_pane_lower.setBorder(null);
 			split_pane_lower.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
 			split_pane_lower.setDividerSize(3);
-			disturbances_condition_panel.setPreferredSize(new Dimension(535, 0));
+			disturbances_condition_panel.setPreferredSize(new Dimension(920, 0));
 			split_pane_lower.setLeftComponent(disturbances_condition_panel);
 			split_pane_lower.setRightComponent(combine_panel);
 						
 			
 			    			    
-			// Add all Grids to the Main Grid-----------------------------------------------------------------------
+			// Add all Grids to the Main Grid-----------------------------------------------------------------------.
 			// Add all Grids to the Main Grid-----------------------------------------------------------------------
 			JSplitPane split_pane = new JSplitPane();
 			split_pane.setBorder(null);

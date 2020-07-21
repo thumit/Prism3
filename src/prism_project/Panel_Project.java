@@ -142,7 +142,7 @@ public class Panel_Project extends JLayeredPane {
 		ToolTipManager.sharedInstance().setInitialDelay(0);		//Show toolTip immediately
 
 		splitPanel = new JSplitPane();
-//		splitPane.setResizeWeight(0.15);
+//		splitPanel.setResizeWeight(0.15);
 		splitPanel.setOneTouchExpandable(true);
 		splitPanel.setDividerLocation(250);
 //		splitPanel.setDividerSize(5);

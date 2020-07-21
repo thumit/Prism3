@@ -27,39 +27,19 @@ import javax.swing.JTable;
 import javax.swing.border.TitledBorder;
 
 public class ScrollPane_SubTables_NaturalDisturbances extends JScrollPane {		
-	private JTable table6a, table6b, table6c, table6d;
-	private Object[][] data6a, data6b, data6c, data6d;
-	private int total_replacing_disturbances;
-	private JScrollPane loss_rate_mean_scrollpane, loss_rate_std_scrollpane, conversion_rate_mean_scrollpane, conversion_rate_std_scrollpane;
+	private JTable table6c, table6d;
+	private Object[][] data6c, data6d;
+	private JScrollPane conversion_rate_mean_scrollpane, conversion_rate_std_scrollpane;
 		
-	public ScrollPane_SubTables_NaturalDisturbances(JTable table6a, Object[][] data6a, JTable table6b, Object[][] data6b, JTable table6c, Object[][] data6c, JTable table6d, Object[][] data6d, int total_replacing_disturbances) {	
-		this.table6a = table6a;
-		this.table6b = table6b;
+	public ScrollPane_SubTables_NaturalDisturbances(JTable table6c, Object[][] data6c, JTable table6d, Object[][] data6d) {
 		this.table6c = table6c;
 		this.table6d = table6d;
-		this.data6a = data6a;
-		this.data6b = data6b;
 		this.data6c = data6c;
 		this.data6d = data6d;
-		this.total_replacing_disturbances = total_replacing_disturbances;
 		
 	
-		loss_rate_mean_scrollpane = new JScrollPane(/*this.table6a*/);
-		TitledBorder border = new TitledBorder("Loss rate mean (%)");
-		border.setTitleJustification(TitledBorder.CENTER);
-		loss_rate_mean_scrollpane.setBorder(border);
-		loss_rate_mean_scrollpane.setPreferredSize(new Dimension(0, 0));
-		
-		
-		loss_rate_std_scrollpane = new JScrollPane(/*this.table6b*/);
-		border = new TitledBorder("Loss rate standard deviation");
-		border.setTitleJustification(TitledBorder.CENTER);
-		loss_rate_std_scrollpane.setBorder(border);
-		loss_rate_std_scrollpane.setPreferredSize(new Dimension(0, 0));
-		
-		
 		conversion_rate_mean_scrollpane = new JScrollPane(/*this.table6c*/);
-		border = new TitledBorder("Conversion rate mean (%)");
+		TitledBorder border = new TitledBorder("Conversion rate mean (%)");
 		border.setTitleJustification(TitledBorder.CENTER);
 		conversion_rate_mean_scrollpane.setBorder(border);
 		conversion_rate_mean_scrollpane.setPreferredSize(new Dimension(0, 0));
@@ -72,10 +52,6 @@ public class ScrollPane_SubTables_NaturalDisturbances extends JScrollPane {
 		conversion_rate_std_scrollpane.setPreferredSize(new Dimension(0, 0));
 		
 		
-		loss_rate_mean_scrollpane.getVerticalScrollBar().setModel(loss_rate_std_scrollpane.getVerticalScrollBar().getModel());	 //<--------------synchronize
-		loss_rate_mean_scrollpane.getHorizontalScrollBar().setModel(loss_rate_std_scrollpane.getHorizontalScrollBar().getModel());	 //<--------------synchronize
-		table6b.setSelectionModel(table6a.getSelectionModel());	 //<--------------synchronize
-		table6b.setColumnModel(table6a.getColumnModel());	 //<--------------synchronize
 		conversion_rate_mean_scrollpane.getVerticalScrollBar().setModel(conversion_rate_std_scrollpane.getVerticalScrollBar().getModel());	 //<--------------synchronize
 		conversion_rate_mean_scrollpane.getHorizontalScrollBar().setModel(conversion_rate_std_scrollpane.getHorizontalScrollBar().getModel());	 //<--------------synchronize
 		table6d.setSelectionModel(table6c.getSelectionModel());	 //<--------------synchronize
@@ -89,12 +65,6 @@ public class ScrollPane_SubTables_NaturalDisturbances extends JScrollPane {
 		c.gridy = 0;
 		c.weightx = 1;
 	    c.weighty = 1;
-	    combine_panel.add(loss_rate_mean_scrollpane, c);
-		c.gridx = 1;
-		c.gridy = 0;
-		c.weightx = 1.4;
-	    c.weighty = 1;
-	    c.gridheight = 2;	//  delete this line to allow conversion rate std (activate line 110)
 	    combine_panel.add(conversion_rate_mean_scrollpane, c);
 	    c.fill = GridBagConstraints.BOTH;
 		c.gridx = 0;
@@ -102,35 +72,13 @@ public class ScrollPane_SubTables_NaturalDisturbances extends JScrollPane {
 		c.weightx = 1;
 	    c.weighty = 1;
 	    c.gridheight = 1;	//  delete this line to allow conversion rate std (activate line 110)
-	    combine_panel.add(loss_rate_std_scrollpane, c);
-		c.gridx = 1;
-		c.gridy = 1;
-		c.weightx = 1;
-	    c.weighty = 1;
-//	    combine_panel.add(conversion_rate_std_scrollpane, c);
+	    combine_panel.add(conversion_rate_std_scrollpane, c);
+	    conversion_rate_std_scrollpane.setVisible(false);
 	  
 		
 		setViewportView(combine_panel);
 		setBorder(null);
 	}	
-			
-	
-	public String get_lr_mean_from_GUI() {	
-		String lr_mean = data6a[0][0].toString();
-		for (int col = 1; col < data6a[0].length; col++) {
-			lr_mean = lr_mean + " " + data6a[0][col].toString();
-		}
-		return lr_mean;
-	}
-	
-	
-	public String get_lr_std_from_GUI() {	
-		String lr_std = data6b[0][0].toString();
-		for (int col = 1; col < data6b[0].length; col++) {
-			lr_std = lr_std + " " + data6b[0][col].toString();
-		}
-		return lr_std;
-	}
 	
 	
 	public String get_cr_mean_from_GUI() {	
@@ -165,31 +113,13 @@ public class ScrollPane_SubTables_NaturalDisturbances extends JScrollPane {
 	}
 	
 	
-	public void reload_this_condition(String lr_mean, String lr_std, String cr_mean, String cr_std) {	
-		// Reload table6a
-		if(lr_mean.length() > 0) {		// this guarantees the string is not ""
-			String[] info_6a = lr_mean.split(" ");					
-			for (int col = 0; col < total_replacing_disturbances; col++) {	// Just load up to the current number of SRs so old runs which have all 99 disturbances could be loaded)
-				double rate = Double.valueOf(info_6a[col]);
-				data6a[0][col] = rate;
-			}
-		}
-		
-		// Reload table6b
-		if(lr_std.length() > 0) {		// this guarantees the string is not ""
-			String[] info_6b = lr_std.split(" ");					
-			for (int col = 0; col < total_replacing_disturbances; col++) {	// Just load up to the current number of SRs so old runs which have all 99 disturbances could be loaded)
-				double rate = Double.valueOf(info_6b[col]);
-				data6b[0][col] = rate;
-			}
-		}
-		
+	public void reload_this_condition(String cr_mean, String cr_std) {	
 		// Reload table6c
 		if(cr_mean.length() > 0) {		// this guarantees the string is not ""
 			String[] info_6c = cr_mean.split(";");					
 			for (int row = 0; row < info_6c.length; row++) {			
 				String[] sub_info = info_6c[row].split(" ");
-				for (int col = 2; col < 2 + total_replacing_disturbances; col++) {	// Just load up to the current number of SRs so old runs which have all 99 disturbances could be loaded)
+				for (int col = 2; col < data6c[row].length; col++) {
 					double percentage = Double.valueOf(sub_info[col]);
 					data6c[row][col] = percentage;
 				}
@@ -201,7 +131,7 @@ public class ScrollPane_SubTables_NaturalDisturbances extends JScrollPane {
 			String[] info_6d = cr_std.split(";");					
 			for (int row = 0; row < info_6d.length; row++) {			
 				String[] sub_info = info_6d[row].split(" ");
-				for (int col = 2; col < 2 + total_replacing_disturbances; col++) {	// Just load up to the current number of SRs so old runs which have all 99 disturbances could be loaded)
+				for (int col = 2; col < data6d[row].length; col++) {
 					double percentage = Double.valueOf(sub_info[col]);
 					data6d[row][col] = percentage;
 				}
@@ -210,31 +140,22 @@ public class ScrollPane_SubTables_NaturalDisturbances extends JScrollPane {
 	}
 
 
-	public JScrollPane get_loss_rate_mean_scrollpane() {
-		return loss_rate_mean_scrollpane;
-	}
 
 	public JScrollPane get_conversion_rate_mean_scrollpane() {
 		return conversion_rate_mean_scrollpane;
 	}
 	
-	public void show_4_tables() {			
-		loss_rate_mean_scrollpane.setViewportView(table6a);
-		loss_rate_std_scrollpane.setViewportView(table6b);
+	public void show_2_tables() {			
 		conversion_rate_mean_scrollpane.setViewportView(table6c);
 		conversion_rate_std_scrollpane.setViewportView(table6d);
 	}
 	
-	public void hide_4_tables() {			
-		loss_rate_mean_scrollpane.setViewportView(null);
-		loss_rate_std_scrollpane.setViewportView(null);
+	public void hide_2_tables() {			
 		conversion_rate_mean_scrollpane.setViewportView(null);
 		conversion_rate_std_scrollpane.setViewportView(null);
 	}
 	
-	public void update_4_tables_data(Object[][] data6a, Object[][] data6b, Object[][] data6c, Object[][] data6d) {			
-		this.data6a = data6a;
-		this.data6b = data6b;
+	public void update_2_tables_data(Object[][] data6c, Object[][] data6d) {			
 		this.data6c = data6c;
 		this.data6d = data6d;
 	}
