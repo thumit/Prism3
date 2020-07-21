@@ -116,32 +116,18 @@ public class ScrollPane_SubTables_NaturalDisturbances extends JScrollPane {
 			
 	
 	public String get_lr_mean_from_GUI() {	
-		String lr_mean = "";
-		for (int row = 0; row < data6a.length; row++) {
-			lr_mean = lr_mean + data6a[row][0] + " " + data6a[row][1];
-			for (int col = 2; col < data6a[row].length; col++) {
-				lr_mean = lr_mean + " " + data6a[row][col].toString();
-			}
-			lr_mean = lr_mean + ";";
-		}			
-		if (!lr_mean.equals("")) {
-			lr_mean = lr_mean.substring(0, lr_mean.length() - 1);		// remove the last ;
+		String lr_mean = data6a[0][0].toString();
+		for (int col = 1; col < data6a[0].length; col++) {
+			lr_mean = lr_mean + " " + data6a[0][col].toString();
 		}
 		return lr_mean;
 	}
 	
 	
 	public String get_lr_std_from_GUI() {	
-		String lr_std = "";
-		for (int row = 0; row < data6b.length; row++) {
-			lr_std = lr_std + data6b[row][0] + " " + data6b[row][1];
-			for (int col = 2; col < data6b[row].length; col++) {
-				lr_std = lr_std + " " + data6b[row][col].toString();
-			}
-			lr_std = lr_std + ";";
-		}			
-		if (!lr_std.equals("")) {
-			lr_std = lr_std.substring(0, lr_std.length() - 1);		// remove the last ;
+		String lr_std = data6b[0][0].toString();
+		for (int col = 1; col < data6b[0].length; col++) {
+			lr_std = lr_std + " " + data6b[0][col].toString();
 		}
 		return lr_std;
 	}
@@ -182,25 +168,19 @@ public class ScrollPane_SubTables_NaturalDisturbances extends JScrollPane {
 	public void reload_this_condition(String lr_mean, String lr_std, String cr_mean, String cr_std) {	
 		// Reload table6a
 		if(lr_mean.length() > 0) {		// this guarantees the string is not ""
-			String[] info_6a = lr_mean.split(";");					
-			for (int row = 0; row < info_6a.length; row++) {			
-				String[] sub_info = info_6a[row].split(" ");
-				for (int col = 2; col <  2 + total_replacing_disturbances; col++) {	// Just load up to the current number of SRs so old runs which have all 99 disturbances could be loaded)
-					double rate = Double.valueOf(sub_info[col]);
-					data6a[row][col] = rate;
-				}
+			String[] info_6a = lr_mean.split(" ");					
+			for (int col = 0; col < total_replacing_disturbances; col++) {	// Just load up to the current number of SRs so old runs which have all 99 disturbances could be loaded)
+				double rate = Double.valueOf(info_6a[col]);
+				data6a[0][col] = rate;
 			}
 		}
 		
 		// Reload table6b
 		if(lr_std.length() > 0) {		// this guarantees the string is not ""
-			String[] info_6b = lr_std.split(";");					
-			for (int row = 0; row < info_6b.length; row++) {			
-				String[] sub_info = info_6b[row].split(" ");
-				for (int col = 2; col <  2 + total_replacing_disturbances; col++) {	// Just load up to the current number of SRs so old runs which have all 99 disturbances could be loaded)
-					double rate = Double.valueOf(sub_info[col]);
-					data6b[row][col] = rate;
-				}
+			String[] info_6b = lr_std.split(" ");					
+			for (int col = 0; col < total_replacing_disturbances; col++) {	// Just load up to the current number of SRs so old runs which have all 99 disturbances could be loaded)
+				double rate = Double.valueOf(info_6b[col]);
+				data6b[0][col] = rate;
 			}
 		}
 		
