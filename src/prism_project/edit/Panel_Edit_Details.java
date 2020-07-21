@@ -644,7 +644,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
         table_overview.getTableHeader().setReorderingAllowed(false);		//Disable columns move
         table_overview.getColumnModel().getColumn(0).setPreferredWidth(200);	//Set width of 1st Column bigger
         table_overview.setTableHeader(null);
-        table_overview.setPreferredScrollableViewportSize(new Dimension(350, 120));
+        table_overview.setPreferredScrollableViewportSize(new Dimension(0, 0));
         table_overview.setFillsViewportHeight(true);
 	}
     
@@ -689,7 +689,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		table1.getColumnModel().getColumn(0).setPreferredWidth(250);	//Set width of 1st Column bigger
 		table1.getColumnModel().getColumn(1).setPreferredWidth(100);	//Set width of 2nd Column bigger
 //		table1.setTableHeader(null);
-		table1.setPreferredScrollableViewportSize(new Dimension(400, 100));
+		table1.setPreferredScrollableViewportSize(new Dimension(0, 0));
 //		table1.setFillsViewportHeight(true);
 	}
 	
@@ -1058,7 +1058,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 //		table3.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		table3.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);	  
 		table3.getTableHeader().setReorderingAllowed(false);		//Disable columns move
-		table3.setPreferredScrollableViewportSize(new Dimension(500, 70));
+		table3.setPreferredScrollableViewportSize(new Dimension(0, 0));
 		table3.setFillsViewportHeight(true);
 		TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model3);
 		table3.setRowSorter(sorter);
@@ -1335,7 +1335,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		table4.setAutoResizeMode(0);		// 0 = JTable.AUTO_RESIZE_OFF
 		table4.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);  
 		table4.getTableHeader().setReorderingAllowed(false);		//Disable columns move
-		table4.setPreferredScrollableViewportSize(new Dimension(250, 20));
+		table4.setPreferredScrollableViewportSize(new Dimension(0, 0));
 	}	
 	
 	
@@ -1461,7 +1461,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 							tip = "f(x) = log(x+sqrt(x^2 + 1)";
 							break;
 						case "Box Cox":
-							tip = "f(x,a,b) = ((x+a)^b - 1)/b where b<>0   OR   f(x,a,b) = log(x+a) where b=0";
+							tip = "f(x,a,b) = ((x+a)^b - 1)/b where b<>0   AND   f(x,a,b) = log(x+a) where b=0";
 							break;
 						default: 
 							tip = "";
@@ -1470,8 +1470,12 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						tip = "x = {" + getValueAt(row, column).toString() + "}";
 					} else if (table6.getColumnName(column).equals("parameter_a")) {
 						tip = "a = " + getValueAt(row, column).toString();
-					}else if (table6.getColumnName(column).equals("parameter_b")) {
+					} else if (table6.getColumnName(column).equals("parameter_b")) {
 						tip = "b = " + getValueAt(row, column).toString();
+					} else if (table6.getColumnName(column).equals("mean")) {
+						tip = "mean of f(x) = " + getValueAt(row, column).toString();
+					} else if (table6.getColumnName(column).equals("mean")) {
+						tip = "standard deviation of f(x) = " + getValueAt(row, column).toString();
 					};
 				}
 				return tip;
@@ -1556,7 +1560,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		table6.setAutoResizeMode(0);		// 0 = JTable.AUTO_RESIZE_OFF
 		table6.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);  
 		table6.getTableHeader().setReorderingAllowed(false);		//Disable columns move
-		table6.setPreferredScrollableViewportSize(new Dimension(150, 100));
+		table6.setPreferredScrollableViewportSize(new Dimension(0, 0));
 //		table6.setFillsViewportHeight(true);
 	}
 	
@@ -1573,13 +1577,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			rowCount6c = total_CoverType * total_CoverType;
 			colCount6c =  3;
 			data6c = new Object[rowCount6c][colCount6c];
-	        columnNames6c = new String[colCount6c];
-	        columnNames6c[0] = "layer5";
-	        columnNames6c[1] = "layer5_regen";
-	        for (int col = 2; col < colCount6c; col++) {
-	        	int disturbance_index = col - 1;
-	        	if (disturbance_index < 10) columnNames6c[col] = "SR_0" + disturbance_index; else columnNames6c[col] = "SR_" + disturbance_index;
-	        }
+			columnNames6c = new String[] {"layer5", "layer5_regen", "mean"};
 	        
 			// Populate the data matrix
 	        int row = 0;
@@ -1587,23 +1585,16 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				for (int j = 0; j < total_CoverType; j++) {
 					data6c[row][0] = all_layers.get(4).get(i);
 					data6c[row][1] = all_layers.get(4).get(j);	
-					for (int col = 2; col < colCount6c; col++) {
-						if (i==j) data6c[row][col] = (double) 0; else data6c[row][col] = (double) 0;
-					}
+					data6c[row][2] = (i == j) ? (double) 100 : (double) 0;
 					row++;
 				}
 			}			
 		}
 		
-		
         // Header tool-tip
 		String[] headerToolTips = new String[colCount6c];
 		headerToolTips[0] = "layer5 (not dynamic) before the occurrence of stand replacing disturbances";
         headerToolTips[1] = "layer5 regenerated after the occurrence of stand replacing disturbances";
-        for (int col = 2; col < colCount6c; col++) {
-        	String disturbance_name = columnNames6c[col].replaceAll("percentage_", "");
-			headerToolTips[col] = "conversion rate mean of " + disturbance_name;
-        }
         
 		
 		// Create a table-------------------------------------------------------------		
@@ -1729,8 +1720,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						formatter.setMinimumFractionDigits(0);
 						formatter.setMaximumFractionDigits(2);
 						String percentage = formatter.format((Number) getValueAt(row, column));
-						String disturbance_name = table6c.getColumnName(column).replaceAll("percentage_", "");
-						tip = "For the total area with cover type = " + getValueAt(row, 0).toString() + " destroyed by "  + disturbance_name + ", " + percentage + "% of this area will be regenerated as cover type = " + getValueAt(row, 1).toString();
+						tip = percentage + "% of the area subjected to this disturbance will be regenerated as cover type " + getValueAt(row, 1).toString();
 					
 						// Show problem tip 		NOTE: we need to use getValueAt because of the compact view feature which makes mismatching between full data and displayed data
 						double total_percentage = 0;
@@ -1821,20 +1811,16 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
         };
 			
 		
-		for (int i = 0; i < columnNames6c.length; i++) {
-			if (i < 2) {
-        		table6c.getColumnModel().getColumn(i).setCellRenderer(r);
-        	} else {
-        		table6c.getColumnModel().getColumn(i).setCellRenderer(r2);
-        	}
-		}		
+        table6c.getColumnModel().getColumn(0).setCellRenderer(r);
+        table6c.getColumnModel().getColumn(1).setCellRenderer(r);
+        table6c.getColumnModel().getColumn(2).setCellRenderer(r2);
 		
 		
 		table6c.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		table6c.setCellSelectionEnabled(true);
         table6c.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         table6c.getTableHeader().setReorderingAllowed(false);		//Disable columns move
-        table6c.setPreferredScrollableViewportSize(new Dimension(200, 100));
+        table6c.setPreferredScrollableViewportSize(new Dimension(0, 0));
 //      table6c.setFillsViewportHeight(true);
 //      TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model6c);	//Add sorter
 //		for (int i = 1; i < colCount6c; i++) {
@@ -1858,13 +1844,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			rowCount6d = total_CoverType * total_CoverType;
 			colCount6d =  3;
 			data6d = new Object[rowCount6d][colCount6d];
-	        columnNames6d = new String[colCount6d];
-	        columnNames6d[0] = "layer5";
-	        columnNames6d[1] = "layer5_regen";
-	        for (int col = 2; col < colCount6d; col++) {
-	        	int disturbance_index = col - 1;
-	        	if (disturbance_index < 10) columnNames6d[col] = "SR_0" + disturbance_index; else columnNames6d[col] = "SR_" + disturbance_index;
-	        }
+			columnNames6d = new String[] {"layer5", "layer5_regen", "std"};
 	        
 			// Populate the data matrix
 	        int row = 0;
@@ -1872,23 +1852,16 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				for (int j = 0; j < total_CoverType; j++) {
 					data6d[row][0] = all_layers.get(4).get(i);
 					data6d[row][1] = all_layers.get(4).get(j);	
-					for (int col = 2; col < colCount6d; col++) {
-						if (i==j) data6d[row][col] = (double) 0; else data6d[row][col] = (double) 0;
-					}
+					data6d[row][2] = (double) 0;
 					row++;
 				}
 			}			
 		}
 		
-		
         // Header tool-tip
 		String[] headerToolTips = new String[colCount6d];
 		headerToolTips[0] = "layer5 (not dynamic) before the occurrence of stand replacing disturbances";
         headerToolTips[1] = "layer5 regenerated after the occurrence of stand replacing disturbances";
-        for (int col = 2; col < colCount6d; col++) {
-        	String disturbance_name = columnNames6d[col].replaceAll("percentage_", "");
-			headerToolTips[col] = "conversion rate standard deviation of " + disturbance_name;
-        }
         
 		
 		// Create a table-------------------------------------------------------------		
@@ -2015,21 +1988,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						formatter.setMinimumFractionDigits(0);
 						formatter.setMaximumFractionDigits(2);
 						String percentage = formatter.format((Number) getValueAt(row, column));
-						String disturbance_name = table6d.getColumnName(column).replaceAll("percentage_", "");
-						tip = "For the total area with cover type = " + getValueAt(row, 0).toString() + " destroyed by "  + disturbance_name + ", " + percentage + "% of this area will be regenerated as cover type = " + getValueAt(row, 1).toString();
-					
-						// Show problem tip 		NOTE: we need to use getValueAt because of the compact view feature which makes mismatching between full data and displayed data
-						double total_percentage = 0;
-						for (int i = 0; i < getRowCount(); i++) {	// loop all rows in a block && add to total percentage if the rows has the same covertype as the row at cursor
-							for (int j = 2; j < getColumnCount(); j++) {					
-								if (getValueAt(i, 0).toString().equals(getValueAt(row, 0).toString()) && table6d.convertColumnIndexToView(j) != -1) {	// -1 means the column is invisible
-									total_percentage = total_percentage + Double.parseDouble(getValueAt(i, j).toString());
-								}
-							}	
-						}
-						if (total_percentage > 100 && column >= 2) {		// check if the total_percentage > 100% 
-							tip = "INFEASIBLE - The sum of all cells with the same layer5 = " + getValueAt(row, 0).toString() + " must not exceed 100";
-						}
+						tip = percentage + "% is the standard deviation for the area subjected to this disturbance to be regenerated as cover type " + getValueAt(row, 1).toString();
 					} catch (RuntimeException e1) {
 						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
 					}
@@ -2108,20 +2067,16 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
         };
 			
 		
-		for (int i = 0; i < columnNames6d.length; i++) {
-			if (i < 2) {
-        		table6d.getColumnModel().getColumn(i).setCellRenderer(r);
-        	} else {
-        		table6d.getColumnModel().getColumn(i).setCellRenderer(r2);
-        	}
-		}		
+        table6d.getColumnModel().getColumn(0).setCellRenderer(r);
+        table6d.getColumnModel().getColumn(1).setCellRenderer(r);
+        table6d.getColumnModel().getColumn(2).setCellRenderer(r2);		
 		
 		
 		table6d.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		table6d.setCellSelectionEnabled(true);
         table6d.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         table6d.getTableHeader().setReorderingAllowed(false);		//Disable columns move
-        table6d.setPreferredScrollableViewportSize(new Dimension(200, 100));
+        table6d.setPreferredScrollableViewportSize(new Dimension(0, 0));
 //      table6d.setFillsViewportHeight(true);
 //      TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model6d);	//Add sorter
 //		for (int i = 1; i < colCount6d; i++) {
@@ -2239,7 +2194,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		table7.setAutoResizeMode(0);		// 0 = JTable.AUTO_RESIZE_OFF
 		table7.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);  
 		table7.getTableHeader().setReorderingAllowed(false);		//Disable columns move
-		table7.setPreferredScrollableViewportSize(new Dimension(200, 100));
+		table7.setPreferredScrollableViewportSize(new Dimension(0, 0));
 //		table7.setFillsViewportHeight(true);
 	}		
 
@@ -2460,7 +2415,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
         table7a.getTableHeader().setReorderingAllowed(false);		//Disable columns move
         
 //      table7a.setTableHeader(null);
-        table7a.setPreferredScrollableViewportSize(new Dimension(200, 100));
+        table7a.setPreferredScrollableViewportSize(new Dimension(0, 0));
 //      table7a.setFillsViewportHeight(true);
         TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model7a);	//Add sorter
 		for (int i = 1; i < colCount7a; i++) {
@@ -2680,7 +2635,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
         table7b.getTableHeader().setReorderingAllowed(false);		//Disable columns move
         
 //      table7b.setTableHeader(null);
-        table7b.setPreferredScrollableViewportSize(new Dimension(200, 100));
+        table7b.setPreferredScrollableViewportSize(new Dimension(0, 0));
 //      table7b.setFillsViewportHeight(true);
         TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model7b);	//Add sorter
 		for (int i = 0; i < colCount7b; i++) {
@@ -2892,7 +2847,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		table8.setAutoResizeMode(0);		// 0 = JTable.AUTO_RESIZE_OFF
 		table8.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);  
 		table8.getTableHeader().setReorderingAllowed(false);		//Disable columns move
-		table8.setPreferredScrollableViewportSize(new Dimension(200, 100));
+		table8.setPreferredScrollableViewportSize(new Dimension(0, 0));
 //		table8.setFillsViewportHeight(true);
 	}
 	
@@ -3072,7 +3027,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		table9.setAutoResizeMode(0);		// 0 = JTable.AUTO_RESIZE_OFF
 		table9.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);  
 		table9.getTableHeader().setReorderingAllowed(false);		//Disable columns move
-		table9.setPreferredScrollableViewportSize(new Dimension(250, 100));
+		table9.setPreferredScrollableViewportSize(new Dimension(0, 0));
 	}	
 	
 	
@@ -3266,7 +3221,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		table10.setAutoResizeMode(0);		// 0 = JTable.AUTO_RESIZE_OFF
 		table10.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);  
 		table10.getTableHeader().setReorderingAllowed(false);		//Disable columns move
-		table10.setPreferredScrollableViewportSize(new Dimension(400, 20));
+		table10.setPreferredScrollableViewportSize(new Dimension(0, 0));
 	}
 	
 	

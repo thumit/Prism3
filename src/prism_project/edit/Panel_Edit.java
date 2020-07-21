@@ -136,7 +136,7 @@ public class Panel_Edit extends JLayeredPane implements ActionListener {
 			for (int i = 0; i < listOfEditRuns.length; i++) {
 				if (radioButton_Left[i].isSelected()) {
 					String[] ExitOption = { "Save", "Cancel"};
-					int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(),"Outputs from " + listOfEditRuns[i].getName() + "  will be deleted when click 'Save'.\nSave now?", "Save Confirmation",
+					int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(),"Outputs from " + listOfEditRuns[i].getName() + " will be deleted when click 'Save'.\nSave now?", "Save Confirmation",
 							JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
 					
 					if (response == 0) {		
