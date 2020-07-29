@@ -1375,3 +1375,4 @@ All changes in this block are associated with PrismAlpha3.1.02.jar, Prism-Formul
 	- Simplify the conversion rate mean table.
 	- Remove the usage of the deprecated total replacing disturbances in the General Inputs screen. 
 	- Build a new UI that supports adding multiple disturbances independently, allows optional loss rate data, allows data transformation with predefined functions and parameters, incorporates meaningful tool-tips.
+576. Total disturbances is now retrieve from Natural Disturbances (instead of from General Inputs)
