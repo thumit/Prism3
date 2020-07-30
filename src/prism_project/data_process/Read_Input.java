@@ -109,7 +109,7 @@ public class Read_Input {
 		return Integer.parseInt(gi_data[0][1]);
 	}
 	
-	public int get_total_replacing_disturbances() {
+	public int get_total_years_in_one_period() {
 		return Integer.parseInt(gi_data[1][1]);
 	}
 

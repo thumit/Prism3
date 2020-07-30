@@ -191,10 +191,10 @@ public class Solve_Iterations {
 				
 				// Get info: input_01_general_inputs
 				int total_periods = read.get_total_periods();
-//				int total_replacing_disturbances = read.get_total_replacing_disturbances();		// remove because of deprecated
-				double annualDiscountRate = read.get_discount_rate() / 100;
+				int total_years_in_one_period = read.get_total_years_in_one_period();
+				double annual_discount_rate = read.get_discount_rate() / 100;
 				String solver_for_optimization = read.get_solver();
-				int solvingTimeLimit = read.get_solving_time() * 60;	//convert to seconds
+				int solving_time_limit = read.get_solving_time() * 60;	//convert to seconds
 				boolean is_problem_exported = read.get_export_problem();
 				boolean is_solution_exported = read.get_export_solution();
 							
@@ -657,7 +657,7 @@ public class Solve_Iterations {
 								int s5 = Collections.binarySearch(layer5, var_info.get_layer5());
 								int t = var_info.get_period();
 								int tR = var_info.get_rotation_period();
-								double discounted_value = 1 / Math.pow(1 + annualDiscountRate, 10 * (t - 1));
+								double discounted_value = 1 / Math.pow(1 + annual_discount_rate, total_years_in_one_period * (t - 1));
 								
 								List<String> conversion_after_disturbances_classification_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
 								List<Double> conversion_after_disturbances_total_loss_rate_list = new ArrayList<Double>();	// i.e. 0.25				0.75
@@ -2378,7 +2378,7 @@ public class Solve_Iterations {
 					
 					
 					if (solver_for_optimization.equals("CPLEX")) {
-						prismcplex.Cplex_Wrapper cplex_wrapper = new prismcplex.Cplex_Wrapper(nvars, vlb, vub, vname, objvals, solvingTimeLimit);		vlb = null; vub = null; objvals = null;	// cannot clear vame because it is going to be used
+						prismcplex.Cplex_Wrapper cplex_wrapper = new prismcplex.Cplex_Wrapper(nvars, vlb, vub, vname, objvals, solving_time_limit);		vlb = null; vub = null; objvals = null;	// cannot clear vame because it is going to be used
 						// add constraints & Clear arrays to save memory
 						cplex_wrapper.addRows(c2_lb, c2_ub, c2_index, c2_value); 	c2_lb = null;  c2_ub = null;  c2_index = null;  c2_value = null;	// Constraints 2
 						cplex_wrapper.addRows(c5_lb, c5_ub, c5_index, c5_value); 	c5_lb = null;  c5_ub = null;  c5_index = null;  c5_value = null;	// Constraints 5

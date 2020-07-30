@@ -130,7 +130,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	private Read_Database read_database;
 	
 	private int total_period;
-	private int total_replacing_disturbance;
 	
 	// panels for the selected Run
 	private General_Inputs panel_General_Inputs;
@@ -659,8 +658,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			columnNames1 = new String[] { "description", "selection" };
 			
 			// Populate the data matrix
-			data1[0][0] = "Total planning periods (decades)";	
-			data1[1][0] = "Total replacing disturbances";
+			data1[0][0] = "Number of planning periods";	
+			data1[1][0] = "How many years is a period";
 			data1[2][0] = "Annual discount rate (%)";
 			data1[3][0] = "Solver for optimization";
 			data1[4][0] = "Maximum solving time (minutes)";
@@ -668,10 +667,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			data1[6][0] = "Export original solution file";
 			
 			data1[0][1] = "5";	
-			data1[1][1] = "1";
+			data1[1][1] = "10";
 			data1[2][1] = "0";
 			data1[3][1] = "CPLEX";
-			data1[4][1] = "99";
+			data1[4][1] = "100";
 			data1[5][1] = "false";
 			data1[6][1] = "false";
 		}
@@ -3330,8 +3329,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------	
 	class General_Inputs extends JLayeredPane {
-		private JLabel totalPeriodsLabel, replacingDisturbancesLabel, discountRateLabel, solverLabel, solvingTimeLabel, exportProblemLabel, exportSolutionLabel;
-		private JComboBox totalPeriodsCombo, replacingDisturbancesCombo, discountRateCombo, solverCombo;
+		private JLabel totalPeriodsLabel, totalYearsLabel, discountRateLabel, solverLabel, solvingTimeLabel, exportProblemLabel, exportSolutionLabel;
+		private JComboBox totalPeriodsCombo, totalYearsCombo, discountRateCombo, solverCombo;
 		private JSpinner solvingTimeSpinner;
 		private JCheckBox exportProblemCheck, exportSolutionCheck;
 		private JTextField database_directory_textfield;
@@ -3342,21 +3341,21 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			
 			
 			//-----------------------------------------------------
-			totalPeriodsLabel = new JLabel("Total planning periods (decades)");
+			totalPeriodsLabel = new JLabel("Number of planning periods");
 			totalPeriodsCombo = new JComboBox();		
-			for (int i = 1; i <= 99; i++) {
+			for (int i = 1; i <= 100; i++) {
 				totalPeriodsCombo.addItem(i);
 			}
 			//-----------------------------------------------------
-			replacingDisturbancesLabel = new JLabel("Total replacing disturbances");
-			replacingDisturbancesCombo = new JComboBox();		
-			for (int i = 1; i <= 99; i++) {
-				replacingDisturbancesCombo.addItem(i);
+			totalYearsLabel = new JLabel("How many years is a period");
+			totalYearsCombo = new JComboBox();		
+			for (int i = 1; i <= 100; i++) {
+				totalYearsCombo.addItem(i);
 			}
 			//-----------------------------------------------------
 			discountRateLabel = new JLabel("Annual discount rate (%)");
 			discountRateCombo = new JComboBox();		
-			for (int i = 0; i <= 99; i++) {
+			for (int i = 0; i <= 100; i++) {
 				double value = (double) i / 10;
 				discountRateCombo.addItem(value);
 			}
@@ -3459,9 +3458,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			//-----------------------------------------------------
 			// Load info from input to GUI
 			total_period = Integer.valueOf((String) data1[0][1]);		
-			total_replacing_disturbance = Integer.valueOf((String) data1[1][1]);
 			totalPeriodsCombo.setSelectedItem(Integer.valueOf((String) data1[0][1]));
-			replacingDisturbancesCombo.setSelectedItem(Integer.valueOf((String) data1[1][1]));
+			totalYearsCombo.setSelectedItem(Integer.valueOf((String) data1[1][1]));
 			discountRateCombo.setSelectedItem(Double.valueOf((String) data1[2][1]));
 			solverCombo.setSelectedItem(String.valueOf(data1[3][1]));
 			solvingTimeSpinner.setValue(Integer.valueOf((String) data1[4][1]));					
@@ -3474,37 +3472,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			Action apply = new AbstractAction() {
 				public void actionPerformed(ActionEvent e) {
 					total_period = Integer.parseInt(totalPeriodsCombo.getSelectedItem().toString());
-					replacingDisturbancesCombo.getUI().setPopupVisible(replacingDisturbancesCombo, false);	// This would close the drop down to avoid 1 click to close it
-					int total_replacing_disturbance_combo_value = Integer.parseInt(replacingDisturbancesCombo.getSelectedItem().toString());
-					if (total_replacing_disturbance_combo_value != total_replacing_disturbance) { 
-						String ExitOption[] = {"Apply", "Cancel"};
-						String message = (total_replacing_disturbance > total_replacing_disturbance_combo_value)
-								? "You are decreasing the total number of stand replacing disturbances.\n"
-										+ "Some data in the Natural Disturbances screen will be removed and can not be reverted.\n"
-										+ "Apply change?"
-								: "You are increasing the total number of stand replacing disturbances.\n"
-										+ "The added disturbances are ready to be defined in the Natural Disturbances screen.\n"
-										+ "Apply change?";
-						int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), message, "Change the total number of stand replacing disturbances",
-								JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
-						if (response == 0) {
-//							for (int i = 0; i < rowCount6; i++) {
-//								data6[i][2] = get_adjusted_replacing_disturbances_infor_6ab(total_replacing_disturbance_combo_value, data6[i][2], "0");	// loss rate mean
-//								data6[i][3] = get_adjusted_replacing_disturbances_infor_6ab(total_replacing_disturbance_combo_value, data6[i][3], "0");	// loss rate std
-//								data6[i][4] = get_adjusted_replacing_disturbances_infor(total_replacing_disturbance_combo_value, data6[i][4], "0");	// conversion rate mean
-//								data6[i][5] = get_adjusted_replacing_disturbances_infor(total_replacing_disturbance_combo_value, data6[i][5], "0");	// conversion rate std
-//							}
-//				    		total_replacing_disturbance = total_replacing_disturbance_combo_value;
-//				    		is_table6_loaded = true;	// to have the old data stay (create_table6 would not create new empty data)
-//				    		panel_Natural_Disturbances = new Natural_Disturbances();	// Renew the entire Natural_Disturbances screen
-						} else {
-							replacingDisturbancesCombo.setSelectedItem((int) total_replacing_disturbance);
-						}
-					}
-					
 					// Apply any change in the GUI to the table
 					data1[0][1] = totalPeriodsCombo.getSelectedItem().toString();	
-					data1[1][1] = replacingDisturbancesCombo.getSelectedItem().toString();
+					data1[1][1] = totalYearsCombo.getSelectedItem().toString();
 					data1[2][1] = discountRateCombo.getSelectedItem().toString();
 					data1[3][1] = solverCombo.getSelectedItem().toString();
 					data1[4][1] = (Integer) solvingTimeSpinner.getValue();
@@ -3514,7 +3484,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				}
 			};
 			totalPeriodsCombo.addActionListener(apply);
-			replacingDisturbancesCombo.addActionListener(apply);
+			totalYearsCombo.addActionListener(apply);
 			discountRateCombo.addActionListener(apply);
 			solverCombo.addActionListener(apply);
 			exportProblemCheck.addActionListener(apply);
@@ -3528,11 +3498,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		        public void stateChanged(ChangeEvent e) {
 		        	solvingTimeSpinner.setValue(solvingTimeSpinner.getValue());
 		        	total_period = Integer.parseInt(totalPeriodsCombo.getSelectedItem().toString());
-		        	total_replacing_disturbance = Integer.parseInt(replacingDisturbancesCombo.getSelectedItem().toString());
-		        	
 		        	// Apply any change in the GUI to the table
 		        	data1[0][1] = totalPeriodsCombo.getSelectedItem().toString();	
-					data1[1][1] = replacingDisturbancesCombo.getSelectedItem().toString();
+					data1[1][1] = totalYearsCombo.getSelectedItem().toString();
 					data1[2][1] = discountRateCombo.getSelectedItem().toString();
 					data1[3][1] = solverCombo.getSelectedItem().toString();
 					data1[4][1] = (Integer)solvingTimeSpinner.getValue();
@@ -3731,12 +3699,12 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
  					0, 12, 10, 30));		// insets top, left, bottom, right		
  			
  			// Add 
- 			super.add(replacingDisturbancesLabel, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+ 			super.add(totalYearsLabel, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
  					0, 2, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
  					0, 12, 10, 30));		// insets top, left, bottom, right	
 
  			// Add 
- 			super.add(replacingDisturbancesCombo, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+ 			super.add(totalYearsCombo, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
  					1, 2, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
  					0, 12, 10, 30));		// insets top, left, bottom, right	
 	
