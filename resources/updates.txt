@@ -1375,6 +1375,7 @@ All changes in this block are associated with PrismAlpha3.1.02.jar, Prism-Formul
 	- Simplify the conversion rate mean table.
 	- Remove the usage of the deprecated total replacing disturbances in the General Inputs screen. 
 	- Build a new UI that supports adding multiple disturbances independently, allows optional loss rate data, allows data transformation with predefined functions and parameters, incorporates meaningful tool-tips.
+	- Implement the logic of new disturbances design in solving models.
 576. Total disturbances is now retrieve from Natural Disturbances (instead of from General Inputs)
 577. Fix a bug of wrong index used for coversion rate in equations 7a and 7b which lead to decreasing total area across iterations.
 578. In General Input screen, users could now define how many years in a time period. This information is applied to calculate the discounted cost.
