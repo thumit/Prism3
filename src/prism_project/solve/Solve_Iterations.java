@@ -676,8 +676,10 @@ public class Solve_Iterations {
 									for (int s5R = 0; s5R < total_layer5; s5R++) {
 										double total_loss_rate_for_this_conversion = 0;
 										for (int k = 0; k < total_disturbances; k++) {
-											conversion_rate_mean[k] = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index][k]);
-											total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (user_loss_rate[k] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
+											if (var_rd_condition_id[var_index][k] != -9999) {
+												conversion_rate_mean[k] = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index][k]);
+												total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (user_loss_rate[k] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
+											}
 										}
 										if (total_loss_rate_for_this_conversion > 0) {
 											conversion_after_disturbances_classification_list.add(layer5.get(s5) + " " + layer5.get(s5R) + " " + "disturbance");

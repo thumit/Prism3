@@ -1378,3 +1378,4 @@ All changes in this block are associated with PrismAlpha3.1.02.jar, Prism-Formul
 576. Total disturbances is now retrieve from Natural Disturbances (instead of from General Inputs)
 577. Fix a bug of wrong index used for coversion rate in equations 7a and 7b which lead to decreasing total area across iterations.
 578. In General Input screen, users could now define how many years in a time period. This information is applied to calculate the discounted cost.
+579. Fix a bug of not checking var_rd_condition_id when precalculating cost information which lead to failure of solving when there are more than one replacing disturbances.
