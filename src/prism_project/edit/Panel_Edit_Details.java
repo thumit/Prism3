@@ -4825,7 +4825,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				public void mouseExited(java.awt.event.MouseEvent e) {
 					if (table4.getSelectedRows().length == 1) {
 						static_identifiers_scrollpane.unhighlight();
-						dynamic_identifiers_scrollpane.highlight();	
+						dynamic_identifiers_scrollpane.unhighlight();	
 					}
 				}
 			});
@@ -5176,14 +5176,33 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			c.weighty = 0;
 			disturbances_condition_panel.add(btn_Delete, c);
 
+			
 			create_mass_check_button(disturbances_condition_panel, c, 0, 4, 0, 0).addActionListener(e -> apply_mass_check_or_uncheck("mass_check", model6, table6, data6, colCount6));
 			create_mass_uncheck_button(disturbances_condition_panel, c, 0, 5, 0, 0).addActionListener(e -> apply_mass_check_or_uncheck("mass_uncheck", model6, table6, data6, colCount6));
+			
+			
+			JButton btn_GetResult = new JButton() {
+				public Point getToolTipLocation(MouseEvent event) {
+					return new Point(getWidth() - 10, 8);
+				}
+			};
+			btn_GetResult.setFont(new Font(null, Font.BOLD, 14));
+//			btn_GetResult.setText("Get Result");
+			btn_GetResult.setToolTipText("Generate possible parameters, mean, and std");
+			btn_GetResult.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_calculator.png"));
+			btn_GetResult.setRolloverIcon(IconHandle.get_scaledImageIcon(35, 35, "icon_calculator.png"));
+			btn_GetResult.setContentAreaFilled(false);
+			c.gridx = 0;
+			c.gridy = 6;
+			c.weightx = 0;
+			c.weighty = 0;
+			disturbances_condition_panel.add(btn_GetResult, c);
 			
 			
 			// Add Empty Label to make all buttons on top not middle
 			c.insets = new Insets(0, 0, 0, 0); // No padding
 			c.gridx = 0;
-			c.gridy = 6;
+			c.gridy = 7;
 			c.weightx = 0;
 			c.weighty = 1;
 			disturbances_condition_panel.add(new JLabel(), c);
@@ -5195,7 +5214,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			c.gridy = 0;
 			c.weightx = 1;
 			c.weighty = 1;
-			c.gridheight = 7;
+			c.gridheight = 8;
 			disturbances_condition_panel.add(table_ScrollPane, c);
 						
 			
@@ -5229,8 +5248,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					
 					if (selectedRow.length >= 1 && table6.isEnabled()) {	// Enable Delete  when: >=1 row is selected, table is enable (often after Edit button finished its task)
 						btn_Delete.setEnabled(true);
+						btn_GetResult.setEnabled(true);
 					} else {		// Disable Delete & Spinner
 						btn_Delete.setEnabled(false);
+						btn_GetResult.setEnabled(false);
 					}	
 					
 					if (selectedRow.length >= 1) {	// Enable Spinner when: >=1 row is selected
@@ -5468,6 +5489,58 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					model6.fireTableDataChanged();	
 				}
 			});			
+			
+			
+			// Get results
+			btn_GetResult.addActionListener(e -> {
+				//Cancel editing before delete
+				if (table6.isEditing()) {
+					table6.getCellEditor().cancelCellEditing();
+				}				
+				
+				String ExitOption[] = {"Generate data", "Cancel"};
+				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), "Generate mean and std based on your normalizing function and associated parameters?", "Confirm Generate",
+						JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
+				if (response == 0) {
+					// Get selected rows
+					int[] selectedRow = table6.getSelectedRows();	
+					for (int i = 0; i < selectedRow.length; i++) {
+						selectedRow[i] = table6.convertRowIndexToModel(selectedRow[i]);	///Convert row index because "Sort" causes problems
+					}
+					
+					// Apply change
+					try {
+						for (int i : selectedRow) {
+							String[] data_string = String.valueOf(data6[i][3]).split(" ");		// original data
+							double[] data_double = Arrays.stream(data_string).mapToDouble(Double::parseDouble).toArray();
+							
+							double sum = 0.0;
+							double num = 0.0;
+							for (double n : data_double) {
+								sum += n;
+							}
+							double mean = sum / data_double.length;
+							for (double n : data_double) {
+								double numn = Math.pow((n - mean), 2);
+								num += numn;
+							}
+							double std = Math.sqrt(num / data_double.length);
+
+							data6[i][7] = mean;
+							data6[i][8] = std;
+						}
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					} finally {
+						
+					}
+					
+					model6.fireTableDataChanged();	
+					for (int i: selectedRow) {
+						table6.addRowSelectionInterval(i, i);
+					}
+				}
+			});	
 			// End of Listeners for table8 & buttons -----------------------------------------------------------------------
 			// End of Listeners for table8 & buttons -----------------------------------------------------------------------		    
 		    
