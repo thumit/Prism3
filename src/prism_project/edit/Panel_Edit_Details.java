@@ -1473,7 +1473,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						tip = "b = " + getValueAt(row, column).toString();
 					} else if (table6.getColumnName(column).equals("mean")) {
 						tip = "mean of f(x) = " + getValueAt(row, column).toString();
-					} else if (table6.getColumnName(column).equals("mean")) {
+					} else if (table6.getColumnName(column).equals("std")) {
 						tip = "standard deviation of f(x) = " + getValueAt(row, column).toString();
 					};
 				}

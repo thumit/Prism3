@@ -3506,7 +3506,6 @@ public class Solve_Iterations {
 			int var_index, Information_Variable[] var_info_array, 
 			LinkedHashMap<String, Double> map_var_name_to_var_value,
 			LinkedHashMap<String, int[]> map_var_name_to_var_rd_condition_id,
-			LinkedHashMap<String, double[]> map_var_name_to_var_stochastic_loss_rates,
 			Information_Disturbance disturbance_info) {
 		int total_disturbances = disturbance_info.get_total_disturbances();
 		
@@ -3601,8 +3600,7 @@ public class Solve_Iterations {
 		// if not doing random drawn yet then do it and map it
 		if (map_var_name_to_var_stochastic_loss_rates.get(period_one_var_name) == null) {	
 			double[] stochastic_loss_rates_for_period_one_variable = get_stochastic_loss_rates_for_period_one_variable(
-					var_index, var_info_array, map_var_name_to_var_value, map_var_name_to_var_rd_condition_id, map_var_name_to_var_stochastic_loss_rates,
-					disturbance_info);
+					var_index, var_info_array, map_var_name_to_var_value, map_var_name_to_var_rd_condition_id, disturbance_info);
 			map_var_name_to_var_stochastic_loss_rates.put(period_one_var_name, stochastic_loss_rates_for_period_one_variable);
 		}
 
