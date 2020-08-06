@@ -34,35 +34,44 @@ public class Information_Disturbance {
 	private String[][][] yield_tables_values;
 	
 	private String[] all_condition_disturbance_name;
-	private double[] all_condition_loss_rate_mean, all_condition_loss_rate_std;
+	private String[] all_condition_function;
+	private double[] all_condition_parameter_a, all_condition_parameter_b;
+	private double[] all_condition_mean, all_condition_std;
 	private Object[] all_condition_conversion_rate_mean, all_condition_conversion_rate_std;	// contains 2D array for all conditions
 	
 	public Information_Disturbance(Read_Database read_database, List<String> disturbance_condition_list) {
 		identifiers_processing = new Identifiers_Processing(read_database);
 		yield_tables_values = read_database.get_yield_tables_values();
 		
-		all_priority_condition_static_identifiers = new ArrayList[disturbance_condition_list.size()];
-		all_priority_condition_dynamic_identifiers = new ArrayList[disturbance_condition_list.size()];
-		all_priority_condition_dynamic_dentifiers_column_indexes = new ArrayList[disturbance_condition_list.size()];
-		all_priority_condition_info = new String[disturbance_condition_list.size()][];
-		all_condition_disturbance_name = new String[disturbance_condition_list.size()];
-		all_condition_loss_rate_mean = new double[disturbance_condition_list.size()];
-		all_condition_loss_rate_std = new double[disturbance_condition_list.size()];
-		all_condition_conversion_rate_mean = new Object[disturbance_condition_list.size()];
-		all_condition_conversion_rate_std = new Object[disturbance_condition_list.size()];
+		int condition_count = disturbance_condition_list.size();
+		all_priority_condition_static_identifiers = new ArrayList[condition_count];
+		all_priority_condition_dynamic_identifiers = new ArrayList[condition_count];
+		all_priority_condition_dynamic_dentifiers_column_indexes = new ArrayList[condition_count];
+		all_priority_condition_info = new String[condition_count][];
+		all_condition_disturbance_name = new String[condition_count];
+		all_condition_function = new String[condition_count];
+		all_condition_parameter_a = new double[condition_count];
+		all_condition_parameter_b = new double[condition_count];
+		all_condition_mean = new double[condition_count];
+		all_condition_std = new double[condition_count];
+		all_condition_conversion_rate_mean = new Object[condition_count];
+		all_condition_conversion_rate_std = new Object[condition_count];
 		
 		// Just do this once when an object of this class is created, not every time we encounter a variable
 		int count = -1;
-		for (int priority = 0; priority < disturbance_condition_list.size(); priority++) {		// Looping from the highest priority condition to the lowest, each priority is a row in the table GUI
+		for (int priority = 0; priority < condition_count; priority++) {		// Looping from the highest priority condition to the lowest, each priority is a row in the table GUI
 			all_priority_condition_info[priority] = disturbance_condition_list.get(priority).split("\t");
 			String disturbance_name = all_priority_condition_info[priority][2];
 			if (map_disturbance_name_to_id.get(disturbance_name) == null) {
 				count++;
 			}
 			map_disturbance_name_to_id.put(disturbance_name, count);
-			all_condition_disturbance_name [priority] = all_priority_condition_info[priority][2];	 // column 2 is disturbance name
-			all_condition_loss_rate_mean[priority] = (all_priority_condition_info[priority][7] != null) ? Double.parseDouble(all_priority_condition_info[priority][7]) : 0; // column 7 is loss_rate_mean
-			all_condition_loss_rate_std[priority] = (all_priority_condition_info[priority][8] != null) ? Double.parseDouble(all_priority_condition_info[priority][8]) : 0; 	// column 8 is loss_rate_std
+			all_condition_disturbance_name[priority] = all_priority_condition_info[priority][2];	// column 2 is disturbance name
+			all_condition_function[priority] = all_priority_condition_info[priority][4];	 		// column 4 is normalizing function
+			all_condition_parameter_a[priority] = (all_priority_condition_info[priority][5] != null) ? Double.parseDouble(all_priority_condition_info[priority][5]) : 0; // column 5 is parameter_a
+			all_condition_parameter_b[priority] = (all_priority_condition_info[priority][6] != null) ? Double.parseDouble(all_priority_condition_info[priority][6]) : 0; // column 6 is parameter_b
+			all_condition_mean[priority] = (all_priority_condition_info[priority][7] != null) ? Double.parseDouble(all_priority_condition_info[priority][7]) : 0; // column 7 is loss_rate_mean
+			all_condition_std[priority] = (all_priority_condition_info[priority][8] != null) ? Double.parseDouble(all_priority_condition_info[priority][8]) : 0; 	// column 8 is loss_rate_std
 			all_condition_conversion_rate_mean[priority] = get_2D_array_from_conversion_rate_mean_or_std(all_priority_condition_info[priority][9]);		// column 9 is conversion_rate_mean
 			all_condition_conversion_rate_std[priority] = get_2D_array_from_conversion_rate_mean_or_std(all_priority_condition_info[priority][10]);		// column 10 is conversion_rate_std
 			all_priority_condition_static_identifiers[priority] = identifiers_processing.get_static_identifiers(all_priority_condition_info[priority][11]);	// column 11 is static identifiers
@@ -99,16 +108,37 @@ public class Information_Disturbance {
 		return id;	
 	}
 	
+	public String get_normalizing_function_from_rd_condition_id(int condition_id) {
+		if (condition_id != -9999) {					
+			return all_condition_function[condition_id];
+		}
+		return "null";
+	}
+	
+	public double get_parameter_a_from_rd_condition_id(int condition_id) {
+		if (condition_id != -9999) {					
+			return all_condition_parameter_a[condition_id];
+		}
+		return 0;	
+	}
+	
+	public double get_parameter_b_from_rd_condition_id(int condition_id) {
+		if (condition_id != -9999) {					
+			return all_condition_parameter_b[condition_id];
+		}
+		return 0;	
+	}
+	
 	public double get_mean_from_rd_condition_id(int condition_id) {		// this is the mean of the transformed function
 		if (condition_id != -9999) {					
-			return all_condition_loss_rate_mean[condition_id];
+			return all_condition_mean[condition_id];
 		}
 		return 0;	
 	}
 	
 	public double get_std_from_rd_condition_id(int condition_id) {		// this is the std of the transformed function
 		if (condition_id != -9999) {					
-			return all_condition_loss_rate_std[condition_id];
+			return all_condition_std[condition_id];
 		}
 		return 0;	
 	}
