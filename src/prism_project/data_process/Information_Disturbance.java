@@ -99,14 +99,14 @@ public class Information_Disturbance {
 		return id;	
 	}
 	
-	public double get_loss_rate_mean_from_rd_condition_id(int condition_id) {
+	public double get_mean_from_rd_condition_id(int condition_id) {		// this is the mean of the transformed function
 		if (condition_id != -9999) {					
 			return all_condition_loss_rate_mean[condition_id];
 		}
 		return 0;	
 	}
 	
-	public double get_loss_rate_std_from_rd_condition_id(int condition_id) {
+	public double get_std_from_rd_condition_id(int condition_id) {		// this is the std of the transformed function
 		if (condition_id != -9999) {					
 			return all_condition_loss_rate_std[condition_id];
 		}
