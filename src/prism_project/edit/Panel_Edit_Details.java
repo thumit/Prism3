@@ -1460,7 +1460,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 							tip = "f(x) = log(x+sqrt(x^2 + 1)";
 							break;
 						case "Box Cox":
-							tip = "f(x,a,b) = ((x+a)^b - 1)/b where b<>0   AND   f(x,a,b) = log(x+a) where b=0";
+							tip = "f(x,a,b) = ((x+a)^b - 1)/b where b<>0   AND   f(x,a,b) = log(x+a) where b=0   (x+a>0 for both)";
 							break;
 						default: 
 							tip = "";
