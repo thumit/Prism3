@@ -66,12 +66,12 @@ public class Information_Disturbance {
 				count++;
 			}
 			map_disturbance_name_to_id.put(disturbance_name, count);
-			all_condition_disturbance_name[priority] = all_priority_condition_info[priority][2];	// column 2 is disturbance name
-			all_condition_function[priority] = all_priority_condition_info[priority][4];	 		// column 4 is normalizing function
-			all_condition_parameter_a[priority] = (all_priority_condition_info[priority][5] != null) ? Double.parseDouble(all_priority_condition_info[priority][5]) : 0; // column 5 is parameter_a
-			all_condition_parameter_b[priority] = (all_priority_condition_info[priority][6] != null) ? Double.parseDouble(all_priority_condition_info[priority][6]) : 0; // column 6 is parameter_b
-			all_condition_mean[priority] = (all_priority_condition_info[priority][7] != null) ? Double.parseDouble(all_priority_condition_info[priority][7]) : 0; // column 7 is loss_rate_mean
-			all_condition_std[priority] = (all_priority_condition_info[priority][8] != null) ? Double.parseDouble(all_priority_condition_info[priority][8]) : 0; 	// column 8 is loss_rate_std
+			all_condition_disturbance_name[priority] = all_priority_condition_info[priority][2];	// column 2 is disturbance name			allow reading "null"
+			all_condition_function[priority] = all_priority_condition_info[priority][4];	 		// column 4 is normalizing function		allow reading "null"
+			all_condition_parameter_a[priority] = (!all_priority_condition_info[priority][5].equals("null")) ? Double.parseDouble(all_priority_condition_info[priority][5]) : 0; // column 5 is parameter_a
+			all_condition_parameter_b[priority] = (!all_priority_condition_info[priority][6].equals("null")) ? Double.parseDouble(all_priority_condition_info[priority][6]) : 0; // column 6 is parameter_b
+			all_condition_mean[priority] = (!all_priority_condition_info[priority][7].equals("null")) ? Double.parseDouble(all_priority_condition_info[priority][7]) : 0; // column 7 is loss_rate_mean
+			all_condition_std[priority] = (!all_priority_condition_info[priority][8].equals("null")) ? Double.parseDouble(all_priority_condition_info[priority][8]) : 0; 	// column 8 is loss_rate_std
 			all_condition_conversion_rate_mean[priority] = get_2D_array_from_conversion_rate_mean_or_std(all_priority_condition_info[priority][9]);		// column 9 is conversion_rate_mean
 			all_condition_conversion_rate_std[priority] = get_2D_array_from_conversion_rate_mean_or_std(all_priority_condition_info[priority][10]);		// column 10 is conversion_rate_std
 			all_priority_condition_static_identifiers[priority] = identifiers_processing.get_static_identifiers(all_priority_condition_info[priority][11]);	// column 11 is static identifiers
