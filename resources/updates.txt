@@ -1382,3 +1382,14 @@ All changes in this block are associated with PrismAlpha3.1.02.jar, Prism-Formul
 579. Fix a bug of not checking var_rd_condition_id when precalculating cost information which lead to failure of solving when there are more than one replacing disturbances.
 580. In Natural Disturbance screen, add a button to calculate mean and std from loss rate data (Normal Distribution assumption only). This would be updated to apply for other normalizing functions in the future
 590. Fix the highlight error (not disappear) after hovering the mouse outsite of the button Modify area in Prescription Assignment screen
+591. In the Solve screen, disturbances are now categorized by deterministic
+    and stochastic (instead of mean and random previously)
+592. Statistics class are added for data transformation and back-transformation based on normalizing functions including: normal, inverse, logarithmic, logarithmic10, square root, exponential, power, arcsine (not yet), box cox (use with care)
+593. Modify Management Cost
+	- In the activity cost table, action_list and acres are modified to be activity and area. This would require a mannual replacing of acres to be area in input_07_management_cost
+	- In the conversion cost table, action is modified to be by activity. This would require a mannual replacing of action to be activity in input_07_management_cost
+	- Remove the default costs of 240 and 360 for the activity cost table and the conversion cost table
+	- Remove the conversion from list to array in get_cost_value function of the Information_Cost class
+594. Important modification of the database yield_tables: action_type must be renamed to activity. 
+	- All SQL commands for both DBMS and output_05 are modified to use activity
+	- Reading fuction in Read_database class is modified to use activity

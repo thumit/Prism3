@@ -170,7 +170,7 @@ public class Panel_QuickEdit_ManagementCost extends JPanel {
 				
 				for (int i : selectedRow) {
 					for (int j : selectedCol) {
-						if (!formatedTextfield.getText().equals(".") && j != 0) {	// Only apply the changes to selected cells in columns > 0 (from 'acres' column)
+						if (!formatedTextfield.getText().equals(".") && j != 0) {	// Only apply the changes to selected cells in columns > 0 (from 'area' column)
 							data7a[i][j] = (formatedTextfield.getText().isEmpty())? null : Double.valueOf(formatedTextfield.getText());
 						}
 					}
@@ -343,7 +343,7 @@ public class Panel_QuickEdit_ManagementCost extends JPanel {
 						
 			// Create a radio buttons-----------------------------------------------------------------------------
 			radioButton = new JRadioButton[2];		
-			radioButton[0] = new JRadioButton("Select default columns (acres and harvested volume in cubic feet per acre)");
+			radioButton[0] = new JRadioButton("Select default columns (area and harvested volume in cubic feet per area unit)");
 			radioButton[1] = new JRadioButton("Select active columns (active column has at least one cell with unempty value)");
 			
 			
@@ -364,7 +364,7 @@ public class Panel_QuickEdit_ManagementCost extends JPanel {
 			// Create a list of JCheckBox-------------------------------------------------------------------------
 			List<JCheckBox> column_checkboxes = new ArrayList<JCheckBox>();		
 			for (int i = 0; i < table7a.getColumnModel().getColumnCount(); i++) {
-				if (i > 1) {	// ignore columns 0 and 1: action_list & acres
+				if (i > 1) {	// ignore columns 0 and 1: activity & area
 					column_checkboxes.add(new JCheckBox(table7a.getColumnName(i)));
 					column_checkboxes.get(i - 2).setSelected(true);		// -2 because we ignore 2 columns
 									
@@ -443,8 +443,8 @@ public class Panel_QuickEdit_ManagementCost extends JPanel {
 			// Listener 1		
 			radioButton[0].addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {		//3 columns at start only
-					column_handle.setColumnVisible("action_list", true);	// show column acres
-					column_handle.setColumnVisible("acres", true);	// show column acres
+					column_handle.setColumnVisible("activity", true);	// show column area
+					column_handle.setColumnVisible("area", true);	// show column area
 					for (JCheckBox i: column_checkboxes) {
 						i.setSelected(true);		// true then false to activate the ChangeListener
 						i.setSelected(false);
@@ -468,8 +468,8 @@ public class Panel_QuickEdit_ManagementCost extends JPanel {
 						}	
 					}
 					
-					// For only acres column (No check boxes so we have to set visible/invisible manually)
-					if (active_col_id.contains(1)) {	// if acres is active column
+					// For only area column (No check boxes so we have to set visible/invisible manually)
+					if (active_col_id.contains(1)) {	// if area is active column
 						column_handle.setColumnVisible(columnNames7a[1], true);	// show column
 					} else {
 						column_handle.setColumnVisible(columnNames7a[1], false);	// hide column
@@ -477,7 +477,7 @@ public class Panel_QuickEdit_ManagementCost extends JPanel {
 						
 					// For columns > 1 (Have check boxes to we only have to check/uncheck)
 					for (int i = 0; i < columnNames7a.length; i++) {						
-						if (i > 1) {	// ignore columns 0 and 1: action_list & acres	
+						if (i > 1) {	// ignore columns 0 and 1: activity & area	
 							column_checkboxes.get(i - 2).setSelected(false);		// -2 because we ignore 2 columns
 							if (active_col_id.contains(i)) {
 								column_checkboxes.get(i - 2).setSelected(true);		// -2 because we ignore 2 columns

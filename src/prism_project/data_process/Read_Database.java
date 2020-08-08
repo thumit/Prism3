@@ -472,16 +472,16 @@ public class Read_Database {
 		return yield_tables_names;
 	}
 	
-	public String[] get_action_type() {
-		List<String> actionList = null;
+	public String[] get_activities() {
+		List<String> activity_list = null;
 		
 		List<String> yield_tables_column_names_list = Arrays.asList(yield_tables_column_names);	// Convert array to list		
-		int index = yield_tables_column_names_list.indexOf("action_type");
-		actionList = get_col_unique_values_list(index);			
+		int index = yield_tables_column_names_list.indexOf("activity");
+		activity_list = get_col_unique_values_list(index);			
 		
-		Collections.sort(actionList);	// Sort this list
-		String[] action_type = actionList.toArray(new String[actionList.size()]);	// Convert list to array	
-		return action_type;
+		Collections.sort(activity_list);	// Sort this list
+		String[] activity = activity_list.toArray(new String[activity_list.size()]);	// Convert list to array	
+		return activity;
 	}
 	
 	public List<String> get_col_unique_values_list(int col) {

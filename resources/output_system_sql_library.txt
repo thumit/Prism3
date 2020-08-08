@@ -38,7 +38,7 @@ FROM
 (SELECT 
 CAST(iteration AS INTEGER) AS iteration,
 CAST(var_period AS INTEGER) AS period,
-yield_tables.action_type AS activity,
+yield_tables.activity AS activity,
 var_forest_status AS forest_status,
 SUM(var_value) AS area
 FROM summarize_output_05_management_details LEFT JOIN yield_tables USING (prescription, row_id)
@@ -56,7 +56,7 @@ FROM
 (SELECT 
 CAST(iteration AS INTEGER) AS iteration,
 CAST(var_period AS INTEGER) AS period,
-yield_tables.action_type AS activity,
+yield_tables.activity AS activity,
 var_forest_status AS forest_status,
 SUM(var_value) AS area
 FROM summarize_output_05_management_details LEFT JOIN yield_tables USING (prescription, row_id)
@@ -81,7 +81,7 @@ FROM
 (SELECT 
 CAST(iteration AS INTEGER) AS iteration,
 CAST(var_period AS INTEGER) AS period,
-yield_tables.action_type AS activity,
+yield_tables.activity AS activity,
 var_forest_status AS forest_status,
 SUM(var_value) AS area,
 SUM(var_value*loss_rate_total/100) AS disturbance_area
@@ -104,7 +104,7 @@ FROM
 (SELECT 
 CAST(iteration AS INTEGER) AS iteration,
 CAST(var_period AS INTEGER) AS period,
-yield_tables.action_type AS activity,
+yield_tables.activity AS activity,
 var_forest_status AS forest_status,
 SUM(var_value) AS area,
 SUM(var_value*loss_rate_total/100) AS disturbance_area
@@ -124,7 +124,7 @@ ROUND(SUM(CASE WHEN t.volume > 0 THEN t.volume END), 2) AS total_harvest_volume
 FROM
 
 (SELECT 
-CAST(iteration AS INTEGER) as iteration, CAST(var_period AS INTEGER) as period, var_forest_status AS forest_status, action_type AS activity, SUM(var_value*rmcuft) as volume
+CAST(iteration AS INTEGER) as iteration, CAST(var_period AS INTEGER) as period, var_forest_status AS forest_status, activity AS activity, SUM(var_value*rmcuft) as volume
 FROM summarize_output_05_management_details LEFT JOIN yield_tables USING  (prescription, row_id)
 WHERE rmcuft > 0
 GROUP BY iteration, period, activity, forest_status) AS t
@@ -139,7 +139,7 @@ ROUND(SUM(CASE WHEN t.volume > 0 THEN t.volume END), 2) AS total_harvest_volume
 FROM
 
 (SELECT 
-CAST(iteration AS INTEGER) as iteration, CAST(var_period AS INTEGER) as period, var_forest_status AS forest_status, action_type AS activity, SUM(var_value*rmcuft) as volume
+CAST(iteration AS INTEGER) as iteration, CAST(var_period AS INTEGER) as period, var_forest_status AS forest_status, activity AS activity, SUM(var_value*rmcuft) as volume
 FROM summarize_output_05_management_details LEFT JOIN yield_tables USING  (prescription, row_id)
 WHERE rmcuft > 0
 GROUP BY iteration, period, activity, forest_status) AS t
@@ -154,7 +154,7 @@ ROUND(SUM(CASE WHEN t.volume > 0 THEN t.volume END), 2) AS total_harvest_volume
 FROM
 
 (SELECT 
-CAST(iteration AS INTEGER) as iteration, CAST(var_period AS INTEGER) as period, var_forest_status AS forest_status, action_type AS activity, SUM(var_value*rmcuft) as volume
+CAST(iteration AS INTEGER) as iteration, CAST(var_period AS INTEGER) as period, var_forest_status AS forest_status, activity AS activity, SUM(var_value*rmcuft) as volume
 FROM summarize_output_05_management_details LEFT JOIN yield_tables USING  (prescription, row_id)
 WHERE rmcuft > 0
 GROUP BY iteration, period, activity, forest_status) AS t
@@ -167,7 +167,7 @@ GROUP BY iteration, period, activity
 5.1. activity excluding "no-action" by iteration, period
 SELECT 
 iteration, var_period as period, var_layer1 as layer1, var_layer2 as layer2, var_layer3 as layer3, var_layer4 as layer4, var_layer5 as layer5, var_layer6 as layer6, var_forest_status as forest_status, age_class,
-action_type as activity, ROUND(var_value, 2) as area, 
+activity as activity, ROUND(var_value, 2) as area, 
 ROUND(var_value*loss_rate_total/100, 2) as disturbance_area,
 ROUND(var_value*rmcuft, 2) as harvest_volume,
 ROUND(var_value*var_unit_management_cost, 2) as cost,
@@ -175,7 +175,7 @@ prescription, row_id
 
 FROM summarize_output_05_management_details LEFT JOIN yield_tables USING  (prescription, row_id)
 
-WHERE action_type NOT LIKE 'no-action'
+WHERE activity NOT LIKE 'no-action'
 ORDER BY CAST(iteration AS INTEGER), CAST(period AS INTEGER), forest_status, layer1, layer2, layer3, layer4, layer5, layer6, CAST(age_class AS INTEGER), activity
 ----------
 5.2. activity excluding "no-action" by iteration, period (more details)
@@ -185,7 +185,7 @@ SELECT * FROM
 (
 SELECT 
 iteration, var_period as period, var_layer1 as layer1, var_layer2 as layer2, var_layer3 as layer3, var_layer4 as layer4, var_layer5 as layer5, var_layer6 as layer6, var_forest_status as forest_status, age_class,
-action_type as activity, ROUND(var_value, 2) as area, 
+activity as activity, ROUND(var_value, 2) as area, 
 ROUND(var_value*loss_rate_total/100, 2) as disturbance_area,
 ROUND(var_value*rmcuft, 2) as harvest_volume,
 ROUND(var_value*var_unit_management_cost, 2) as cost,
@@ -193,7 +193,7 @@ prescription, row_id
 
 FROM summarize_output_05_management_details LEFT JOIN yield_tables USING  (prescription, row_id)
 
-WHERE action_type NOT LIKE 'no-action'
+WHERE activity NOT LIKE 'no-action'
 ORDER BY CAST(iteration AS INTEGER), CAST(period AS INTEGER), forest_status, layer1, layer2, layer3, layer4, layer5, layer6, CAST(age_class AS INTEGER), activity
 )
 

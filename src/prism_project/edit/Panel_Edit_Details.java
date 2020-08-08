@@ -2204,45 +2204,43 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		String[] yield_tables_column_names = read_database.get_yield_tables_column_names();
 		if (is_table7a_loaded == false) { // Create a fresh new if Load fail	
 			// This all_actions List contains all actions loaded from yield tables------------------------------------------------------------
-			List<String> action_list = new ArrayList<String>();
+			List<String> activity = new ArrayList<String>();
 			if (yield_tables_column_names != null) {	//create table with column include yield tables columns
-				for (String action: read_database.get_action_type()) {
-					action_list.add(action);					
+				for (String act: read_database.get_activities()) {
+					activity.add(act);					
 				}	
 				
-				rowCount7a = action_list.size();			
+				rowCount7a = activity.size();			
 				colCount7a = 2 + yield_tables_column_names.length;
 				data7a = new Object[rowCount7a][colCount7a];
 				columnNames7a = new String[2 + yield_tables_column_names.length];
-				columnNames7a[0] = "action_list";
-				columnNames7a[1] = "acres";
+				columnNames7a[0] = "activity";
+				columnNames7a[1] = "area";
 				for (int i = 2; i < columnNames7a.length; i++) {
 					columnNames7a[i] = yield_tables_column_names[i - 2];				
 				}	
 			} else {
-				rowCount7a = action_list.size();			
+				rowCount7a = activity.size();			
 				colCount7a = 2;
 				data7a = new Object[rowCount7a][colCount7a];
-				columnNames7a= new String[] {"action_list", "acres"};
+				columnNames7a= new String[] {"activity", "area"};
 			}			
-			
 	       			
 			// Populate the data matrix
 			for (int i = 0; i < rowCount7a; i++) {
-				data7a[i][0] = action_list.get(i);
-				data7a[i][1] = (action_list.get(i).equalsIgnoreCase("no-action")) ? (double) 0 : (double) 360; 
+				data7a[i][0] = activity.get(i);
 			}
 		}		
 		
 		
         // header tool-tip
 		String[] headerToolTips = new String[colCount7a];
-		headerToolTips[0] = "all unique actions found from  yield_tables in your selected database";
-        headerToolTips[1] = "currency per acre where an action is implemented";
+		headerToolTips[0] = "all unique activities found from yield_tables in your selected database";
+        headerToolTips[1] = "currency per unit of area where an activity is implemented";
 		if (yield_tables_column_names != null) {      
 	        for (int i = 2; i < colCount7a; i++) {
 	        	int yt_col = i - 2;
-	        	headerToolTips[i] = "currency per " + read_database.get_parameter_tooltip(yield_tables_column_names[yt_col]) + " (Column index: " + yt_col + ")";	
+	        	headerToolTips[i] = "currency per unit of " + yield_tables_column_names[yt_col] + " produced by an activity";	
 			}
 		}
 	
@@ -2439,7 +2437,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				rowCount7b = total_CoverType * total_CoverType;		
 				colCount7b = 4;
 				data7b = new Object[rowCount7b][colCount7b];
-				columnNames7b = new String[] {"layer5", "layer5_regen", "action", "disturbance"};
+				columnNames7b = new String[] {"layer5", "layer5_regen", "activity", "disturbance"};
 			}		
 			       			
 			// Populate the data matrix
@@ -2448,7 +2446,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					for (int j = 0; j < total_CoverType; j++) {
 						data7b[table_row][0] = all_layers.get(4).get(i);
 						data7b[table_row][1] = all_layers.get(4).get(j);
-						data7b[table_row][2] = (double) 240; 
 						table_row++;
 				}
 			}

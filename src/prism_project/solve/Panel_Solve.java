@@ -130,6 +130,8 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 				// Apply
 				if (column == 0) {
 					tableColumn.setMinWidth(80);
+				} else if (column == 4) {
+					tableColumn.setPreferredWidth(120);
 				} else {
 					tableColumn.setPreferredWidth(maxWidth);
 				}
@@ -223,7 +225,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 		TitledBorder border = new TitledBorder("Objective");
 		border.setTitleJustification(TitledBorder.CENTER);
 		panel_radio.setBorder(border);
-		panel_radio.setPreferredSize((new Dimension(100, 100)));
+		panel_radio.setPreferredSize((new Dimension(150, 100)));
 		
 		GridBagConstraints c = new GridBagConstraints();
 		ButtonGroup radioGroup = new ButtonGroup();		
@@ -391,7 +393,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 		splitpane = new JSplitPane();
 //		splitPanel.setResizeWeight(0.5);
 		splitpane.setOneTouchExpandable(true);
-		splitpane.setDividerLocation(450);
+		splitpane.setDividerLocation(480);
 //		splitPanel.setDividerSize(5);
 //		splitPanel.getComponent(2).setCursor(new Cursor(Cursor.HAND_CURSOR));		
 		splitpane.setLeftComponent(combine_panel);

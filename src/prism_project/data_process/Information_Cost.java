@@ -22,7 +22,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
-import java.util.stream.Stream;
 // IMPORTANT:  THE LOGIC IS COMPLEX WITHOUT EXPLANATION
 
 
@@ -34,7 +33,7 @@ public class Information_Cost {
 	private List<String>[] all_priority_condition_dynamic_dentifiers_column_indexes;
 	private String[][] all_priority_condition_info;	
 	
-	private int action_type_col_id;
+	private int activity_col_id;
 	private String[][][] yield_tables_values;
 	private List<String> yield_tables_original_col_names_list, yield_tables_sorted_col_names_list;
 	private int[] get_original_col_id_from_sorted_col_id;
@@ -75,7 +74,7 @@ public class Information_Cost {
 			}
 		}
 		
-		action_type_col_id = yield_tables_original_col_names_list.indexOf("action_type");
+		activity_col_id = yield_tables_original_col_names_list.indexOf("activity");
 	}
 			
 	
@@ -90,16 +89,15 @@ public class Information_Cost {
 
 		
 		if (row_id != -9999 && row_id < yield_tables_values[prescription_id].length) { 	// If row in this prescription exists (not exists when row_id = -9999 or >= total rows in that prescription)
-			String var_action_type = yield_tables_values[prescription_id][row_id][action_type_col_id];
+			String var_activity = yield_tables_values[prescription_id][row_id][activity_col_id];
 			
 			// The following includes 1 list for the action_cost and 1 list for the conversion_cost
-			List<List<List<String>>> final_cost_list = get_final_action_cost_list_and_conversion_cost_list_for_this_variable(cost_condition_list, var_info, var_action_type, prescription_id, row_id);
-			
+			List<List<List<String>>> final_cost_list = get_final_action_cost_list_and_conversion_cost_list_for_this_variable(cost_condition_list, var_info, var_activity, prescription_id, row_id);
 			
 			// action_cost: include 2 lists for column name (i.e. hca_allsx) and value (i.e. 360)
 			for (int item = 0; item < final_cost_list.get(0).get(0).size(); item++) {	// loop list:  final_cost_list.get(0).get(0) which is final_action_cost_column_list
 				// Add cost per acre
-				if (final_cost_list.get(0).get(0).get(item).equals("acres")) {
+				if (final_cost_list.get(0).get(0).get(item).equals("area")) {
 					value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(0).get(1).get(item));
 				} 
 				// Add cost per unit of the yield table column
@@ -110,38 +108,32 @@ public class Information_Cost {
 				}
 			}								
 			
-			
-			// convert list to 1-D array since it is faster to get item from array than get item from list?????? --> should I remove this?
-			double[] conversion_after_disturbances_total_loss_rate = Stream.of(conversion_after_disturbances_total_loss_rate_list.toArray(new Double[conversion_after_disturbances_total_loss_rate_list.size()])).mapToDouble(Double::doubleValue).toArray();
-			
-			
 			// conversion_cost: include 2 lists for column name (i.e. P D action) and value (i.e. 240)
 			for (int item = 0; item < final_cost_list.get(1).get(0).size(); item++) {	// loop list:  final_cost_list.get(1).get(0) which is final_conversion_cost_column_list
 				// add conversion cost for post management action (i.e clear cut) or post replacing disturbance (i.e. SRFire)
 				// note only one of them is true: for example if it is clear cut --> no replacing disturbance anymore, replacing disturbance can happen in areas where no clear cut implemented
 				if (var_info.get_rotation_period() == var_info.get_period()) {	// period is the rotation period (this if guarantees variable to be EA_E or EA_R)
-					String conversion_cost_to_apply = var_info.get_layer5() + " " + var_info.get_regenerated_covertype() + " " + "action";
+					String conversion_cost_to_apply = var_info.get_layer5() + " " + var_info.get_regenerated_covertype() + " " + "activity";
 					if (final_cost_list.get(1).get(0).get(item).equals(conversion_cost_to_apply)) {
 						value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(1).get(1).get(item));
 					} 
 				} else {	// when period is not the rotation_period (variable can be anything except EA_E or EA_R in period = rotation period when clear cut happens). Here replacing disturbances can happen
 					int index = Collections.binarySearch(conversion_after_disturbances_classification_list, final_cost_list.get(1).get(0).get(item));		// i.e.   { (P P disturbance), (P D disturbance)} would contain (P P disturbance)
 					if (index >= 0) {
-						value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(1).get(1).get(item)) * conversion_after_disturbances_total_loss_rate[index];		// total_loss_rate is from all SRs for this conversion classification
+						value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(1).get(1).get(item)) * conversion_after_disturbances_total_loss_rate_list.get(index);		// total_loss_rate is from all SRs for this conversion classification
 					}
 				}	
 			}
-			
 		}
 		return value_to_return;	
 	}
 
 	
 	private List<List<List<String>>> get_final_action_cost_list_and_conversion_cost_list_for_this_variable(
-			List<String> cost_condition_list, Information_Variable var_info, String var_action_type,
+			List<String> cost_condition_list, Information_Variable var_info, String var_activity,
 			int prescription_id, int row_id) {	
 		
-		List<String> final_action_cost_column_list = new ArrayList<String>();		// example: 	"acres", "...", "hca_allsx", ... -->see table 8a in the GUI of Cost Management
+		List<String> final_action_cost_column_list = new ArrayList<String>();		// example: 	"area", "...", "hca_allsx", ... -->see table 8a in the GUI of Cost Management
 		List<String> final_action_cost_value_list = new ArrayList<String>(); 		// example: 	"360", "...", "1.2", ...
 		
 		List<String> final_conversion_cost_column_list = new ArrayList<String>();	// example: P D action         	W L disturbance 
@@ -155,10 +147,10 @@ public class Information_Cost {
 				
 				// For action_cost
 				if (all_priority_condition_info[priority][2].length() > 0) {		// this guarantees the string is not ""
-					List<String[]> action_cost_list = get_condition_action_cost(all_priority_condition_info[priority][2], var_action_type);
-					for (String[] c: action_cost_list) {			// c example: clearcut acres 360		c example2: clearcut hca_allsx 0
+					List<String[]> action_cost_list = get_condition_action_cost(all_priority_condition_info[priority][2], var_activity);
+					for (String[] c: action_cost_list) {			// c example: clearcut area 360		c example2: clearcut hca_allsx 0
 						if (!final_action_cost_column_list.contains(c[1])) {		// the GUI already guarantees the value >=0		-->  this mean null (as seen in the GUI) will be escaped	
-							final_action_cost_column_list.add(c[1]);	// i.e. acres    hca_allsx
+							final_action_cost_column_list.add(c[1]);	// i.e. area    hca_allsx
 							final_action_cost_value_list.add(c[2]);		// i.e. 360
 						}
 					}
@@ -197,7 +189,7 @@ public class Information_Cost {
 	}
 	
 	
-	private List<String[]> get_condition_action_cost(String action_cost_info, String var_action_type) {	
+	private List<String[]> get_condition_action_cost(String action_cost_info, String var_activity) {	
 		// tokenizer is used instead of String.split because it is faster
 		// Read the whole cell which include a string with many ; 
 		List<String[]> action_cost = new ArrayList<String[]>();	
@@ -213,7 +205,7 @@ public class Information_Cost {
 				count++;
 			}
 		    
-			if (info_array[0].equals(var_action_type)) {	// info_array[0] = clearcut			only get the info matched with the var_action_type
+			if (info_array[0].equals(var_activity)) {	// info_array[0] = clearcut			only get the info matched with the var_activity
 				action_cost.add(info_array);
 			}
 		}

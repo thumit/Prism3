@@ -65,7 +65,7 @@ public class ScrollPane_SubTables_ManagementCost extends JScrollPane {
 		
 		
 		conversion_base_adjust_scrollpane = new JScrollPane(/*this.table7b*/);
-		border = new TitledBorder("Conversion cost per area unit of conversion");
+		border = new TitledBorder("Conversion cost per area unit of column header");
 		border.setTitleJustification(TitledBorder.CENTER);
 		conversion_base_adjust_scrollpane.setBorder(border);
 		conversion_base_adjust_scrollpane.setPreferredSize(new Dimension(0, 0));
