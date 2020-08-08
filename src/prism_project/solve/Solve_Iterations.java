@@ -3404,10 +3404,10 @@ public class Solve_Iterations {
 			std[k] = disturbance_info.get_std_from_rd_condition_id(var_rd_condition_id[var_index][k]);
 		}
 
-		// in case stochastic loss rate type = "mean"
-		if (user_loss_rate_type.equals("mean")) return stat.get_deterministic_loss_rates_from_transformed_data(total_disturbances, mean, std, transform_function, parameter_a, parameter_b);
+		// in case stochastic loss rate type = "deterministic"
+		if (user_loss_rate_type.equals("deterministic")) return stat.get_deterministic_loss_rates_from_transformed_data(total_disturbances, mean, std, transform_function, parameter_a, parameter_b);
 		
-		// in case stochastic loss rate type = "random"
+		// in case stochastic loss rate type = "stochastic"
 		if (map_var_index_to_user_chosen_loss_rate.get(var_index) != null) {	// return if already had the stochastic
 			return map_var_index_to_user_chosen_loss_rate.get(var_index);
 		} else {	// if not having the stochastic yet, create it and map it
@@ -3416,8 +3416,6 @@ public class Solve_Iterations {
 			return stochastic_loss_rates;
 		}
 	}
-	
-	
 	
 	
 	// this period 1 calculation is used for the period 2 calculation only
@@ -3432,21 +3430,18 @@ public class Solve_Iterations {
 		int[] period_one_rd_condition_id = map_var_name_to_var_rd_condition_id.get(period_one_var_name);
 		double[] mean = new double[total_disturbances];
 		double[] std = new double[total_disturbances];
-		String[] transform_function = new String[total_disturbances];
+		String[] normalizing_function = new String[total_disturbances];
 		double[] parameter_a = new double[total_disturbances];
 		double[] parameter_b = new double[total_disturbances];
 		for (int k = 0; k < total_disturbances; k++) {
-			transform_function[k] = disturbance_info.get_normalizing_function_from_rd_condition_id(period_one_rd_condition_id[k]);
+			normalizing_function[k] = disturbance_info.get_normalizing_function_from_rd_condition_id(period_one_rd_condition_id[k]);
 			parameter_a[k] = disturbance_info.get_parameter_a_from_rd_condition_id(period_one_rd_condition_id[k]);
 			parameter_b[k] = disturbance_info.get_parameter_b_from_rd_condition_id(period_one_rd_condition_id[k]);	
 			mean[k] = disturbance_info.get_mean_from_rd_condition_id(period_one_rd_condition_id[k]);
 			std[k] = disturbance_info.get_std_from_rd_condition_id(period_one_rd_condition_id[k]);
 		}
-		return stat.get_stochastic_loss_rates_from_transformed_data(total_disturbances, mean, std, transform_function, parameter_a, parameter_b);
+		return stat.get_stochastic_loss_rates_from_transformed_data(total_disturbances, mean, std, normalizing_function, parameter_a, parameter_b);
 	}
-	
-	
-	
 	
 	
 	// apply to eq (5) (7a)

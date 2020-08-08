@@ -84,12 +84,12 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 		rowCount = runsList.length;
 		colCount = 5;
 		data = new Object[rowCount][colCount];
-		columnNames = new String[] { "Model", "Disturbances", "From Iteration", "To Iteration", "Status" };
+		columnNames = new String[] { "Model", "Disturbances", "From Iteration", "To Iteration", "Solving Status" };
 		
 		// Populate the data matrix
 		for (int row = 0; row < rowCount; row++) {
 			data[row][0] = runsList[row].getName();
-			data[row][1] = "mean";
+			data[row][1] = "deterministic";
 			data[row][2] = "restart";
 			data[row][3] = 0;
 			data[row][4] = "waiting";
@@ -188,8 +188,8 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 		}
         class Combo_Disturbances_Assumption extends JComboBox {	
 			public Combo_Disturbances_Assumption() {
-				addItem("random");
-				addItem("mean");
+				addItem("deterministic");
+				addItem("stochastic");
 				setSelectedIndex(1);
 			}
 		}
