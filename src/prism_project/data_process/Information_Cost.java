@@ -91,38 +91,43 @@ public class Information_Cost {
 		if (row_id != -9999 && row_id < yield_tables_values[prescription_id].length) { 	// If row in this prescription exists (not exists when row_id = -9999 or >= total rows in that prescription)
 			String var_activity = yield_tables_values[prescription_id][row_id][activity_col_id];
 			
-			// The following includes 1 list for the action_cost and 1 list for the conversion_cost
+			// The following includes information for action_cost and conversion_cost
 			List<List<List<String>>> final_cost_list = get_final_action_cost_list_and_conversion_cost_list_for_this_variable(cost_condition_list, var_info, var_activity, prescription_id, row_id);
+			List<String> final_action_cost_column_list = final_cost_list.get(0).get(0);		// example: 	{area,	...,	hca_allsx,	...} 	-->see table 8a in the GUI of Cost Management
+			List<String> final_action_cost_value_list = final_cost_list.get(0).get(1); 		// example: 	{360,	...,	1.2,		...}
+			List<String> final_conversion_cost_column_list = final_cost_list.get(1).get(0);	// example: 	{P D activity,	W L disturbance} 
+			List<String> final_conversion_cost_value_list = final_cost_list.get(1).get(1);	// example: 	{240,         	120}
+			
 			
 			// action_cost: include 2 lists for column name (i.e. hca_allsx) and value (i.e. 360)
-			for (int item = 0; item < final_cost_list.get(0).get(0).size(); item++) {	// loop list:  final_cost_list.get(0).get(0) which is final_action_cost_column_list
+			for (int item = 0; item < final_action_cost_column_list.size(); item++) {	// loop list
 				// Add cost per acre
-				if (final_cost_list.get(0).get(0).get(item).equals("area")) {
-					value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(0).get(1).get(item));
+				if (final_action_cost_column_list.get(item).equals("area")) {
+					value_to_return = value_to_return + Double.parseDouble(final_action_cost_value_list.get(item));
 				} 
 				// Add cost per unit of the yield table column
 				else {
-					int sorted_id = Collections.binarySearch(yield_tables_sorted_col_names_list, final_cost_list.get(0).get(0).get(item));
+					int sorted_id = Collections.binarySearch(yield_tables_sorted_col_names_list, final_action_cost_column_list.get(item));
 					int col_id = get_original_col_id_from_sorted_col_id[sorted_id];
-					value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(0).get(1).get(item)) * Double.parseDouble(yield_tables_values[prescription_id][row_id][col_id]);
+					value_to_return = value_to_return + Double.parseDouble(final_action_cost_value_list.get(item)) * Double.parseDouble(yield_tables_values[prescription_id][row_id][col_id]);
 				}
-			}								
+			}
 			
 			// conversion_cost: include 2 lists for column name (i.e. P D action) and value (i.e. 240)
-			for (int item = 0; item < final_cost_list.get(1).get(0).size(); item++) {	// loop list:  final_cost_list.get(1).get(0) which is final_conversion_cost_column_list
+			for (int item = 0; item < final_conversion_cost_column_list.size(); item++) {	// loop list
 				// add conversion cost for post management action (i.e clear cut) or post replacing disturbance (i.e. SRFire)
 				// note only one of them is true: for example if it is clear cut --> no replacing disturbance anymore, replacing disturbance can happen in areas where no clear cut implemented
 				if (var_info.get_rotation_period() == var_info.get_period()) {	// period is the rotation period (this if guarantees variable to be EA_E or EA_R)
 					String conversion_cost_to_apply = var_info.get_layer5() + " " + var_info.get_regenerated_covertype() + " " + "activity";
-					if (final_cost_list.get(1).get(0).get(item).equals(conversion_cost_to_apply)) {
-						value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(1).get(1).get(item));
+					if (final_conversion_cost_column_list.get(item).equals(conversion_cost_to_apply)) {
+						value_to_return = value_to_return + Double.parseDouble(final_conversion_cost_value_list.get(item));
 					} 
 				} else {	// when period is not the rotation_period (variable can be anything except EA_E or EA_R in period = rotation period when clear cut happens). Here replacing disturbances can happen
-					int index = Collections.binarySearch(conversion_after_disturbances_classification_list, final_cost_list.get(1).get(0).get(item));		// i.e.   { (P P disturbance), (P D disturbance)} would contain (P P disturbance)
+					int index = Collections.binarySearch(conversion_after_disturbances_classification_list, final_conversion_cost_column_list.get(item));		// i.e.   { (P P disturbance), (P D disturbance)} would contain (P P disturbance)
 					if (index >= 0) {
-						value_to_return = value_to_return + Double.parseDouble(final_cost_list.get(1).get(1).get(item)) * conversion_after_disturbances_total_loss_rate_list.get(index);		// total_loss_rate is from all SRs for this conversion classification
+						value_to_return = value_to_return + Double.parseDouble(final_conversion_cost_value_list.get(item)) * conversion_after_disturbances_total_loss_rate_list.get(index);		// total_loss_rate is from all SRs for this conversion classification
 					}
-				}	
+				}
 			}
 		}
 		return value_to_return;	
