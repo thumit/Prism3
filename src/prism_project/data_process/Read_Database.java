@@ -472,13 +472,14 @@ public class Read_Database {
 		return yield_tables_names;
 	}
 	
+	public int get_activity_column_index() {
+		List<String> yield_tables_column_names_list = Arrays.asList(yield_tables_column_names);	// convert array to list
+		return yield_tables_column_names_list.indexOf("activity");
+	}
+	
 	public String[] get_activities() {
-		List<String> activity_list = null;
-		
-		List<String> yield_tables_column_names_list = Arrays.asList(yield_tables_column_names);	// Convert array to list		
-		int index = yield_tables_column_names_list.indexOf("activity");
-		activity_list = get_col_unique_values_list(index);			
-		
+		int col = get_activity_column_index() ;
+		List<String> activity_list = get_col_unique_values_list(col);			
 		Collections.sort(activity_list);	// Sort this list
 		String[] activity = activity_list.toArray(new String[activity_list.size()]);	// Convert list to array	
 		return activity;
@@ -534,15 +535,17 @@ public class Read_Database {
 		return unique_values_list[col];
 	}
 	
+	private int get_age_class_column_index() {
+		List<String> yield_tables_column_names_list = Arrays.asList(yield_tables_column_names);	// convert array to list
+		return yield_tables_column_names_list.indexOf("age_class");
+	}
 	
 	private void identify_starting_age_class_for_prescription() {
-		List<String> yield_tables_column_names_list = Arrays.asList(yield_tables_column_names);	// convert array to list
-		int age_class_col_id = yield_tables_column_names_list.indexOf("age_class");
-		
+		int col = get_age_class_column_index();
 		int total_prescriptions = yield_tables_values.length;
 		starting_age_class_for_prescription = new int[total_prescriptions];
 		for (int i = 0; i < total_prescriptions; i++) {
-			starting_age_class_for_prescription[i] = Integer.valueOf(yield_tables_values[i][0][age_class_col_id]);	// row 0 is the first period (1st row)
+			starting_age_class_for_prescription[i] = Integer.valueOf(yield_tables_values[i][0][col]);	// row 0 is the first period (1st row)
 			
 		}	
 	}

@@ -1392,4 +1392,4 @@ All changes in this block are associated with PrismAlpha3.1.02.jar, Prism-Formul
 	- Remove the conversion from list to array in get_cost_value function of the Information_Cost class
 594. Important modification of the database yield_tables: action_type must be renamed to activity. 
 	- All SQL commands for both DBMS and output_05 are modified to use activity
-	- Reading fuction in Read_database class is modified to use activity
+	- Reading fuctions in Read_database class and Solve_Iterations class are modified to use activity

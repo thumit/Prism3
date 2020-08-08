@@ -154,10 +154,9 @@ public class Solve_Iterations {
 				String[][][] yield_tables_values = read_database.get_yield_tables_values();
 				int[] starting_age_class_for_prescription = read_database.get_starting_age_class_for_prescription();
 				String[] yield_tables_column_names = read_database.get_yield_tables_column_names();
-				List<String> yield_tables_column_names_list = Arrays.asList(yield_tables_column_names); 
 				String[] yield_tables_names = read_database.get_yield_tables_names();			
 				int total_prescriptions = yield_tables_values.length;
-				int activity_col_id = yield_tables_column_names_list.indexOf("action_type");
+				int activity_col_id = read_database.get_activity_column_index();
 				
 				// Get info: layers from database (strata_definition)
 				List<List<String>> all_layers =  read_database.get_all_layers();		
