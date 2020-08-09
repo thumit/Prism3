@@ -174,7 +174,7 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 		}
         class Combo_Iteration extends JComboBox {	
 			public Combo_Iteration() {
-				for (int i = 0; i <= 99; i++) {addItem(i);}
+				for (int i = 0; i <= 1000; i++) {addItem(i);}
 				setSelectedIndex(0);
 			}
 		}
