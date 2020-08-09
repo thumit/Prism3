@@ -198,10 +198,10 @@ public class Statistics {
 	
 	public double back_transform_Arcsine(double f_x, double a, double b) {
 		/* 
-		 f(x) = log(x+sqrt(x^2 + 1))
-		 x = 
+		 f(x) = asin(x/100)
+		 x = sin(f(x)) * 100
 		 */
-		return -999999;		// Review this. note that arcsin <> arcsinh
+		return Math.sin(f_x) * 100;	// note that arcsin <> arcsinh
 	}
 	
 	
@@ -211,10 +211,10 @@ public class Statistics {
 		 x + a = e^f(x)					if b=0
 		 x + a = (b*f(x) + 1)^(1/b)		otherwise
 		 */
-		if (b == 0) return Math.exp(f_x) - a;
-		else return Math.pow(b * f_x + 1, 1 / b) - a;
+		if (b == 0) {
+			return Math.exp(f_x) - a;
+		} else {
+			return Math.pow(b * f_x + 1, 1 / b) - a;
+		}
 	}
 }
-	
-	
-	
