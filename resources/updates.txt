@@ -1389,7 +1389,8 @@ All changes in this block are associated with PrismAlpha3.1.02.jar, Prism-Formul
 	- In the activity cost table, action_list and acres are modified to be activity and area. This would require a mannual replacing of acres to be area in input_07_management_cost
 	- In the conversion cost table, action is modified to be by activity. This would require a mannual replacing of action to be activity in input_07_management_cost
 	- Remove the default costs of 240 and 360 for the activity cost table and the conversion cost table
-	- Remove the conversion from list to array in get_cost_value function of the Information_Cost class
+	- Remove the conversion from list to array and add some lists in get_cost_value function of the Information_Cost class. This significantly improves reading speed
 594. Important modification of the database yield_tables: action_type must be renamed to activity. 
 	- All SQL commands for both DBMS and output_05 are modified to use activity
-	- Reading fuctions in Read_database class and Solve_Iterations class are modified to use activity
+	- Reading functions in Read_database class and Solve_Iterations class are modified to use activity
+595. Apply the adjustment for loss rates from multiple disturbances. The adjustment is suggested by Eric

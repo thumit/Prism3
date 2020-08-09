@@ -95,8 +95,8 @@ public class Information_Cost {
 			List<List<List<String>>> final_cost_list = get_final_action_cost_list_and_conversion_cost_list_for_this_variable(cost_condition_list, var_info, var_activity, prescription_id, row_id);
 			List<String> final_action_cost_column_list = final_cost_list.get(0).get(0);		// example: 	{area,	...,	hca_allsx,	...} 	-->see table 8a in the GUI of Cost Management
 			List<String> final_action_cost_value_list = final_cost_list.get(0).get(1); 		// example: 	{360,	...,	1.2,		...}
-			List<String> final_conversion_cost_column_list = final_cost_list.get(1).get(0);	// example: 	{P D activity,	W L disturbance} 
-			List<String> final_conversion_cost_value_list = final_cost_list.get(1).get(1);	// example: 	{240,         	120}
+			List<String> final_conversion_cost_column_list = final_cost_list.get(1).get(0);	// example: 	{P D activity,	W L disturbance,	...} 
+			List<String> final_conversion_cost_value_list = final_cost_list.get(1).get(1);	// example: 	{240,         	120,				...}
 			
 			
 			// action_cost: include 2 lists for column name (i.e. hca_allsx) and value (i.e. 360)

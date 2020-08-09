@@ -41,25 +41,52 @@ public class Statistics {
 	
 	
 	public double[] get_back_transform_and_adjustment(int total_disturbances, double[] transformed_loss_rate, String[] transform_function, double[] parameter_a, double[] parameter_b) {
-		double[] back_transformed_loss_rate = new double[total_disturbances];
-		double[] adjusted_loss_rate = new double[total_disturbances];
-		double total_pecentage = 0;
-		
 		// back transform
+		double[] back_transformed_loss_rate = new double[total_disturbances];
+		double total_pecentage = 0;
 		for (int k = 0; k < total_disturbances; k++) {
 			back_transformed_loss_rate[k] = get_back_transformed_number(transformed_loss_rate[k], transform_function[k], parameter_a[k], parameter_b[k]);	
 			total_pecentage = total_pecentage + back_transformed_loss_rate[k];
 		}
+		if (total_pecentage <= 100) return back_transformed_loss_rate;
 		
-		// adjustment when necessary. adjustment is based on Eric's suggestion
-		if (total_pecentage > 100) {
-			for (int k = 0; k < total_disturbances; k++) {
-				adjusted_loss_rate[k] = adjusted_loss_rate[k] * 100 / total_pecentage;
-			}
-			return adjusted_loss_rate;
-		} else {
-			return back_transformed_loss_rate;
+		/* adjustment (the case when total_pecentage > 100): 
+		 Example:	 In the area specified by this variable we have 3 stand replacing disturbances with below back_transformed_loss_rate
+		 SR1 = 80%
+		 SR2 = 50%
+		 SR3 = 70%
+		
+		 1. We need to calculate proportional_loss_rate (plr)
+		 plr of SR1 = 80 * 100 / (80 + 70 + 50) = 40
+		 plr of SR2 = 50 * 100 / (80 + 70 + 50) = 25
+		 plr of SR3 = 70 * 100 / (80 + 70 + 50) = 35
+		 
+		 2.Then calculate the adjusted total percentage (atp) by using a loop
+		 atp of loop 1 = 0 + 80 * (100 - 0) / 100 = 80
+		 atp of loop 2 = 80 + 50 * (100 - 80) / 100 = 90
+		 atp of loop 3 = 90 + 70 * (100 - 90) / 100 = 97	 -->  atp = 97 is the adjusted total percentage 
+		 
+		 3. Finally, calculate the adjusted loss rate (alr) as final result to apply
+		 alr of SR1 = 40 * 97 / 100
+		 alr of SR2 = 25 * 97 / 100
+		 alr of SR3 = 35 * 97 / 100
+		 */		
+		double[] proportional_loss_rate = new double[total_disturbances];
+		// 1. plr
+		for (int k = 0; k < total_disturbances; k++) {
+			proportional_loss_rate[k] = back_transformed_loss_rate[k] * 100 / total_pecentage;
 		}
+		// 2. atp
+		double adjusted_total_percentage = 0;
+		for (int k = 0; k < total_disturbances; k++) {
+			adjusted_total_percentage = adjusted_total_percentage + back_transformed_loss_rate[k] * (100 - adjusted_total_percentage) / 100;
+		}
+		// 3. alr
+		double[] adjusted_loss_rate = new double[total_disturbances];
+		for (int k = 0; k < total_disturbances; k++) {
+			adjusted_loss_rate[k] = proportional_loss_rate[k] * adjusted_total_percentage / 100;
+		}
+		return adjusted_loss_rate;
 	}
 	
 	

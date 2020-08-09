@@ -3498,18 +3498,7 @@ public class Solve_Iterations {
 		}
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	
 	
@@ -3525,17 +3514,14 @@ public class Solve_Iterations {
 	
 	private static double[] withoutZero_To_WithZero(int total_var, double[] value, int[] index) {
 		double[] array = new double[total_var];	
-		
-		//all values to be 0
+		// all values to be 0
 		for (int i = 0; i < total_var; i++) {
 			array[i] = 0;
 		} 
-		
-		//for other values, check index & value to set it
+		// for other values, check index & value to set it
 		for (int i = 0; i < index.length; i++) {
 			array[index[i]] = value[i];
 		} 
-
 		return array;
 	}	
 	
@@ -3547,18 +3533,13 @@ public class Solve_Iterations {
 	}
 	
 	
-    /*
-     * Checks whether the status corresponds to a valid solution
-     * 
-     * @param status    The status id returned by lpsolve
-     * @return          Boolean which indicates if the solution is valid
-     */
+    // Checks whether the status corresponds to a valid solution
+	// @param status    The status id returned by lpsolve
+	// @return          Boolean which indicates if the solution is valid
 	private static boolean isSolutionValid(int status) {
 		return (status == 0) || (status == 1) || (status == 11) || (status == 12);
 	}
 	// End of For LPSOLVE only ----------------------------------------------------------------------------------------
-	
-	
 	
 }
 
