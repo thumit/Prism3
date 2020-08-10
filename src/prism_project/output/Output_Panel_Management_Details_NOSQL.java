@@ -1503,7 +1503,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 						if (columnNames[col].equals("iteration")) iteration_col = col; 
 						if (columnNames[col].equals("var_name")) name_col = col; 
 						if (columnNames[col].equals("var_value")) value_col = col; 
-						if (columnNames[col].equals("var_unit_management_cost")) cost_col = col; 
+						if (columnNames[col].equals("var_per_area_unit_cost")) cost_col = col; 
 					}	
 					
 					// populate the data matrix

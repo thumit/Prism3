@@ -1394,4 +1394,4 @@ All changes in this block are associated with PrismAlpha3.1.02.jar, Prism-Formul
 	- All SQL commands for both DBMS and output_05 are modified to use activity
 	- Reading functions in Read_database class and Solve_Iterations class are modified to use activity
 595. Apply the adjustment for loss rates from multiple disturbances. The adjustment is suggested by Eric
-596. change terms in output_02, output_05, and commands in the SQL system library for output_05: var_unit_management_cost and loss_rate_total are modified to be var_per_area_unit_cost and var_loss_rate_total.
+596. change terms in output_02, output_05, commands in the SQL system library for output_05, and reading variable information in the NOSQL mode of output_05: var_unit_management_cost and loss_rate_total are modified to be var_per_area_unit_cost and var_loss_rate_total.
