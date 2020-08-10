@@ -84,7 +84,7 @@ CAST(var_period AS INTEGER) AS period,
 yield_tables.activity AS activity,
 var_forest_status AS forest_status,
 SUM(var_value) AS area,
-SUM(var_value*var_loss_rate_total/100) AS disturbance_area
+SUM(var_value*loss_rate_total/100) AS disturbance_area
 FROM summarize_output_05_management_details LEFT JOIN yield_tables USING  (prescription, row_id)
 GROUP BY iteration, period, activity, forest_status) AS t
 
@@ -107,7 +107,7 @@ CAST(var_period AS INTEGER) AS period,
 yield_tables.activity AS activity,
 var_forest_status AS forest_status,
 SUM(var_value) AS area,
-SUM(var_value*var_loss_rate_total/100) AS disturbance_area
+SUM(var_value*loss_rate_total/100) AS disturbance_area
 FROM summarize_output_05_management_details LEFT JOIN yield_tables USING  (prescription, row_id)
 GROUP BY iteration, period, activity, forest_status) AS t
 
@@ -168,9 +168,9 @@ GROUP BY iteration, period, activity
 SELECT 
 iteration, var_period as period, var_layer1 as layer1, var_layer2 as layer2, var_layer3 as layer3, var_layer4 as layer4, var_layer5 as layer5, var_layer6 as layer6, var_forest_status as forest_status, age_class,
 activity as activity, ROUND(var_value, 2) as area, 
-ROUND(var_value*var_loss_rate_total/100, 2) as disturbance_area,
+ROUND(var_value*loss_rate_total/100, 2) as disturbance_area,
 ROUND(var_value*rmcuft, 2) as harvest_volume,
-ROUND(var_value*var_per_area_unit_cost, 2) as cost,
+ROUND(var_value*var_unit_management_cost, 2) as cost,
 prescription, row_id
 
 FROM summarize_output_05_management_details LEFT JOIN yield_tables USING  (prescription, row_id)
@@ -186,9 +186,9 @@ SELECT * FROM
 SELECT 
 iteration, var_period as period, var_layer1 as layer1, var_layer2 as layer2, var_layer3 as layer3, var_layer4 as layer4, var_layer5 as layer5, var_layer6 as layer6, var_forest_status as forest_status, age_class,
 activity as activity, ROUND(var_value, 2) as area, 
-ROUND(var_value*var_loss_rate_total/100, 2) as disturbance_area,
+ROUND(var_value*loss_rate_total/100, 2) as disturbance_area,
 ROUND(var_value*rmcuft, 2) as harvest_volume,
-ROUND(var_value*var_per_area_unit_cost, 2) as cost,
+ROUND(var_value*var_unit_management_cost, 2) as cost,
 prescription, row_id
 
 FROM summarize_output_05_management_details LEFT JOIN yield_tables USING  (prescription, row_id)

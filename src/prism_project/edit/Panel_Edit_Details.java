@@ -1463,7 +1463,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 							tip = "f(x,a,b) = ((x+a)^b - 1)/b where b<>0   AND   f(x,a,b) = log(x+a) where b=0   (x+a>0 for both)";
 							break;
 						default: 
-							tip = "";
+							tip = "f(x) = x";
 						}
 					} else if (table6.getColumnName(column).equals("loss_rate_data")) {
 						tip = "x = {" + getValueAt(row, column).toString() + "}";
@@ -1509,10 +1509,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					tip = "f(x,a,b) = (x+a)^b where x+a>0 if b is not integral";
 					break;
 				case "Arcsine":
-					tip = "f(x) = log(x+sqrt(x^2 + 1)";
+					tip = "f(x) = asin(x/100)";
 					break;
 				case "Box Cox":
-					tip = "f(x,a,b) = ((x+a)^b - 1)/b where b<>0   OR   f(x,a,b) = log(x+a) where b=0";
+					tip = "f(x,a,b) = ((x+a)^b - 1)/b where b<>0   AND   f(x,a,b) = log(x+a) where b=0   (x+a>0 for both)";
 					break;
 				default: 
 					tip = "f(x) = x";

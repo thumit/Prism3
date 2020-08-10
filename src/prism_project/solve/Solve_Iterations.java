@@ -2372,7 +2372,7 @@ public class Solve_Iterations {
 							// output_02_variable
 							output_variables_file.delete();
 							try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_variables_file))) {
-								String file_header = String.join("\t", "var_id", "var_name", "var_value", "var_reduced_cost", "var_total_lr_mean", "var_rd_condition_id");
+								String file_header = String.join("\t", "var_id", "var_name", "var_value", "var_reduced_cost", "var_loss_rate_total", "var_rd_condition_id");
 								fileOut.write(file_header);
 								
 								for (int i = 0; i < value.length; i++) {
@@ -2484,7 +2484,7 @@ public class Solve_Iterations {
 							// output_05_management_details
 							output_management_details_file.delete();
 							try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_management_details_file))) {
-								fileOut.write("iteration" + "\t" + "var_id" + "\t" + "var_name" + "\t" + "var_value" + "\t" + "var_reduced_cost" + "\t" + "loss_rate_total" + "\t");
+								fileOut.write("iteration" + "\t" + "var_id" + "\t" + "var_name" + "\t" + "var_value" + "\t" + "var_reduced_cost" + "\t" + "var_loss_rate_total" + "\t");
 								
 								for (int k = 0; k < total_disturbances; k++) {
 									int disturbance_index = k + 1;
@@ -2492,7 +2492,7 @@ public class Solve_Iterations {
 						        	fileOut.write(disturbance_name + "\t");
 						        }
 								
-								fileOut.write("var_unit_management_cost" + "\t");
+								fileOut.write("var_per_area_unit_cost" + "\t");
 								fileOut.write("var_method" + "\t" + "var_forest_status" + "\t" + "var_layer1" + "\t" + "var_layer2" + "\t" + "var_layer3" + "\t" + "var_layer4" + "\t" + "var_layer5" + "\t" + "var_layer6"
 								+ "\t" + "var_period" + "\t" + "var_age" + "\t" + "var_rotation_period" + "\t" + "var_rotation_age" + "\t" + "var_layer5_regen" + "\t"
 										+ "data_connection" + "\t" + "prescription_id" + "\t" + "prescription"+ "\t" + "row_id");
@@ -2938,7 +2938,7 @@ public class Solve_Iterations {
 							// output_02_variable
 							output_variables_file.delete();
 							try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_variables_file))) {
-								String file_header = String.join("\t", "var_id", "var_name", "var_value", "var_reduced_cost", "var_total_lr_mean", "var_rd_condition_id");
+								String file_header = String.join("\t", "var_id", "var_name", "var_value", "var_reduced_cost", "var_loss_rate_total", "var_rd_condition_id");
 								fileOut.write(file_header);
 								
 								for (int i = 0; i < value.length; i++) {
@@ -3050,7 +3050,7 @@ public class Solve_Iterations {
 							// output_05_management_details
 							output_management_details_file.delete();
 							try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_management_details_file))) {
-								fileOut.write("iteration" + "\t" + "var_id" + "\t" + "var_name" + "\t" + "var_value" + "\t" + "var_reduced_cost" + "\t" + "loss_rate_total" + "\t");
+								fileOut.write("iteration" + "\t" + "var_id" + "\t" + "var_name" + "\t" + "var_value" + "\t" + "var_reduced_cost" + "\t" + "var_loss_rate_total" + "\t");
 								
 								for (int k = 0; k < total_disturbances; k++) {
 									int disturbance_index = k + 1;
@@ -3058,7 +3058,7 @@ public class Solve_Iterations {
 						        	fileOut.write(disturbance_name + "\t");
 						        }
 								
-								fileOut.write("var_unit_management_cost" + "\t");
+								fileOut.write("var_per_area_unit_cost" + "\t");
 								fileOut.write("var_method" + "\t" + "var_forest_status" + "\t" + "var_layer1" + "\t" + "var_layer2" + "\t" + "var_layer3" + "\t" + "var_layer4" + "\t" + "var_layer5" + "\t" + "var_layer6"
 								+ "\t" + "var_period" + "\t" + "var_age" + "\t" + "var_rotation_period" + "\t" + "var_rotation_age" + "\t" + "var_layer5_regen" + "\t"
 										+ "data_connection" + "\t" + "prescription_id" + "\t" + "prescription"+ "\t" + "row_id");
