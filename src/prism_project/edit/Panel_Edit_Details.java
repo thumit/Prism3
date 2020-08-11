@@ -1434,11 +1434,12 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				int row = rowAtPoint(p);
 				int column = columnAtPoint(p);
 				String tip = null;
-				if (row >= 0 && getValueAt(row, column) != null) {
+				String value = (getValueAt(row, column) != null) ? getValueAt(row, column).toString() : "";
+				if (row >= 0) {
 					if (table6.getColumnName(column).equals("condition_description")) {
-						tip = getValueAt(row, column).toString();
+						tip = value;
 					} else if (table6.getColumnName(column).equals("normalizing_function")) {
-						switch (getValueAt(row, column).toString()) {
+						switch (value) {
 						case "Inverse":
 							tip = "f(x) = 1/(x+a) where x+a>0";
 							break;
@@ -1469,15 +1470,19 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 							tip = "f(x) = x";
 						}
 					} else if (table6.getColumnName(column).equals("loss_rate_data")) {
-						tip = "x = {" + getValueAt(row, column).toString() + "}";
+						tip = "x = {" + value + "}";
 					} else if (table6.getColumnName(column).equals("parameter_a")) {
-						tip = "a = " + getValueAt(row, column).toString();
+						if (value.equals("")) value = "0";
+						tip = "a = " + value;
 					} else if (table6.getColumnName(column).equals("parameter_b")) {
-						tip = "b = " + getValueAt(row, column).toString();
+						if (value.equals("")) value = "0";
+						tip = "b = " + value;
 					} else if (table6.getColumnName(column).equals("mean")) {
-						tip = "mean of f(x) = " + getValueAt(row, column).toString();
+						if (value.equals("")) value = "0";
+						tip = "mean of f(x) = " + value;
 					} else if (table6.getColumnName(column).equals("std")) {
-						tip = "standard deviation of f(x) = " + getValueAt(row, column).toString();
+						if (value.equals("")) value = "0";
+						tip = "standard deviation of f(x) = " + value;
 					};
 				}
 				return tip;
