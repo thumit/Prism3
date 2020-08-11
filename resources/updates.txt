@@ -1399,4 +1399,5 @@ All changes in this block are associated with PrismAlpha3.1.02.jar, Prism-Formul
 589. Add all function to help calculate transformed mean and std in the Natural Disturbances screen based on original loss rates, transform function, parameters.
 590. Allow tooltips to show default value of zero for a, b, mean, std in the Natural Disturbances sceen if they are null.
 591. Add a default input_06_natural_disturbances file into resources folder of prism package. This file will be read and apply if users do not define any disturbance.
+All changes in this block are associated with PrismAlpha3.1.03.jar, Prism-Formulation-14.docx
 --------------------------------------------------------------------------
