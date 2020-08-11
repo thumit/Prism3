@@ -1460,7 +1460,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 							tip = "f(x) = asin(x/100)";
 							break;
 						case "Box Cox":
-							tip = "f(x,a,b) = ((x+a)^b - 1)/b where b<>0   AND   f(x,a,b) = log(x+a) where b=0   (x+a>0 for both)";
+							tip = "f(x,a,b) = ((x+a)^b - 1)/b where b<>0, x+a>0 if b is not integral" + "<br>";
+							tip = tip + "f(x,a,b) = log(x+a) where b=0, x+a>0" + "<br>";
+							tip = "<html>" + tip + "<html>";
 							break;
 						default: 
 							tip = "f(x) = x";
@@ -1512,7 +1514,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					tip = "f(x) = asin(x/100)";
 					break;
 				case "Box Cox":
-					tip = "f(x,a,b) = ((x+a)^b - 1)/b where b<>0   AND   f(x,a,b) = log(x+a) where b=0   (x+a>0 for both)";
+					tip = "f(x,a,b) = ((x+a)^b - 1)/b where b<>0, x+a>0 if b is not integral" + "<br>";
+					tip = tip + "f(x,a,b) = log(x+a) where b=0, x+a>0" + "<br>";
+					tip = "<html>" + tip + "<html>";
 					break;
 				default: 
 					tip = "f(x) = x";

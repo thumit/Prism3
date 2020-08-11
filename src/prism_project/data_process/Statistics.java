@@ -207,7 +207,8 @@ public class Statistics {
 	
 	public double back_transform_Box_Cox(double f_x, double a, double b) {
 		/* 
-		 f(x,a,b) = ((x+a)^b - 1)/b where b<>0   AND   f(x,a,b) = log(x+a) where b=0	(x+a>0 for both)
+		 f(x,a,b) = ((x+a)^b - 1)/b where b<>0, x+a>0 if b is not integral  
+		 f(x,a,b) = log(x+a) where b=0, x+a>0
 		 x + a = e^f(x)					if b=0
 		 x + a = (b*f(x) + 1)^(1/b)		otherwise
 		 */
