@@ -150,7 +150,6 @@ public class Statistics {
 		else return Double.MAX_VALUE;
 	}
 	
-	
 	public double back_transform_Logarithmic(double f_x, double a, double b) {
 		/* 
 		 f(x,a) = log(x+a) where x+a>0
@@ -158,7 +157,6 @@ public class Statistics {
 		 */
 		return Math.exp(f_x) - a;
 	}
-	
 	
 	public double back_transform_Logarithmic_10(double f_x, double a, double b) {
 		/* 
@@ -168,7 +166,6 @@ public class Statistics {
 		return Math.pow(10, f_x) - a;
 	}
 	
-	
 	public double back_transform_Square_Root(double f_x, double a, double b) {
 		/* 
 		 f(x,a) = sqrt(x+a) where x+a>0
@@ -176,7 +173,6 @@ public class Statistics {
 		 */
 		return Math.pow(f_x, 2) - a;
 	}
-	
 	
 	public double back_transform_Exponential(double f_x, double a, double b) {
 		/* 
@@ -186,15 +182,13 @@ public class Statistics {
 		return Math.log(f_x);
 	}
 	
-	
 	public double back_transform_Power(double f_x, double a, double b) {
 		/* 
-		 f(x) = 10^x
-		 x = log10(f(x))
+		 f(x,a,b) = (x+a)^b where x+a>0 if b is not integral
+		 x = f(x)^(1/b) - a
 		 */
-		return Math.log10(f_x);
+		return Math.pow(f_x, 1 / b) - a;
 	}
-	
 	
 	public double back_transform_Arcsine(double f_x, double a, double b) {
 		/* 
@@ -203,7 +197,6 @@ public class Statistics {
 		 */
 		return Math.sin(f_x) * 100;	// note that arcsin <> arcsinh
 	}
-	
 	
 	public double back_transform_Box_Cox(double f_x, double a, double b) {
 		/* 
@@ -216,6 +209,98 @@ public class Statistics {
 			return Math.exp(f_x) - a;
 		} else {
 			return Math.pow(b * f_x + 1, 1 / b) - a;
+		}
+	}
+	
+	
+
+	
+	
+	// FOR USING IN NATURAL DISTURBANCES SCREEN
+	// FOR USING IN NATURAL DISTURBANCES SCREEN
+	// FOR USING IN NATURAL DISTURBANCES SCREEN
+	public double[] get_transformed_loss_rates(double[] loss_rate, String transform_function, double parameter_a, double parameter_b) {
+		double[] x = loss_rate;
+		double a = parameter_a;
+		double b = parameter_b;
+		int count = x.length;
+		double[] f_x = new double[count];
+		for (int i = 0; i < count; i++) {
+			switch (transform_function) {
+			case "null":
+				f_x[i] = loss_rate[i];		// no transformation
+				break;
+			case "Inverse":
+				f_x[i] = transform_Inverse(x[i], a, b);
+				break;
+			case "Logarithmic":
+				f_x[i] = transform_Logarithmic(x[i], a, b);
+				break;
+			case "Logarithmic 10":
+				f_x[i] = transform_Logarithmic_10(x[i], a, b);
+				break;
+			case "Square Root":
+				f_x[i] = transform_Square_Root(x[i], a, b);
+				break;
+			case "Exponential":
+				f_x[i] = transform_Exponential(x[i], a, b);
+				break;
+			case "Power":
+				f_x[i] = transform_Power(x[i], a, b);
+				break;
+			case "Arcsine":
+				f_x[i] = transform_Arcsine(x[i], a, b);
+				break;
+			case "Box Cox":
+				f_x[i] = transform_Box_Cox(x[i], a, b);
+				break;
+			}
+		}
+		return f_x;
+	}
+	
+	public double transform_Inverse(double x, double a, double b) {
+		// f(x) = 1/(x+a)
+		return 1 / (x + a);
+	}
+	
+	public double transform_Logarithmic(double x, double a, double b) {
+		// f(x,a) = log(x+a) where x+a>0 
+		return Math.log(x + a);
+	}
+	
+	public double transform_Logarithmic_10(double x, double a, double b) {
+		// f(x,a) = log10(x+a) where x+a>0
+		return Math.log10(x + a);
+	}
+	
+	public double transform_Square_Root(double x, double a, double b) {
+		// f(x,a) = sqrt(x+a) where x+a>0
+		return Math.sqrt(x + a);
+	}
+	
+	public double transform_Exponential(double x, double a, double b) {
+		// f(x) = e^x
+		return Math.exp(x);
+	}
+	
+	public double transform_Power(double x, double a, double b) {
+		// f(x,a,b) = (x+a)^b where x+a>0 if b is not integral
+		return Math.pow(x + a, b);
+	}
+	
+	public double transform_Arcsine(double x, double a, double b) {
+		// f(x) = asin(x/100)
+		return Math.asin(x / 100) * 100;	// note that arcsin <> arcsinh
+	}
+	
+	public double transform_Box_Cox(double x, double a, double b) {
+		// f(x,a,b) = ((x+a)^b - 1)/b where b<>0, x+a>0 if b is not integral  
+		// f(x,a,b) = log(x+a) where b=0, x+a>0
+		if (b == 0) {
+			return Math.log(x + a);
+		} else {
+			return (Math.pow(x + a, b) - 1) / b;
 		}
 	}
 }

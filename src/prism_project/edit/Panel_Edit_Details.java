@@ -117,6 +117,7 @@ import prism_convenience.PrismTitleScrollPane;
 import prism_convenience.TableColumnsHandle;
 import prism_convenience.ToolBarWithBgImage;
 import prism_project.data_process.Read_Database;
+import prism_project.data_process.Statistics;
 import prism_root.PrismMain;
 
 public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
@@ -1460,7 +1461,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 							tip = "f(x) = asin(x/100)";
 							break;
 						case "Box Cox":
-							tip = "f(x,a,b) = ((x+a)^b - 1)/b where b<>0, x+a>0 if b is not integral" + "<br>";
+							tip = "f(x,a,b) = ((x+a)^b - 1)/b where b is not 0, x+a>0 if b is not integral" + "<br>";
 							tip = tip + "f(x,a,b) = log(x+a) where b=0, x+a>0" + "<br>";
 							tip = "<html>" + tip + "<html>";
 							break;
@@ -1514,7 +1515,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					tip = "f(x) = asin(x/100)";
 					break;
 				case "Box Cox":
-					tip = "f(x,a,b) = ((x+a)^b - 1)/b where b<>0, x+a>0 if b is not integral" + "<br>";
+					tip = "f(x,a,b) = ((x+a)^b - 1)/b where b is not 0, x+a>0 if b is not integral" + "<br>";
 					tip = tip + "f(x,a,b) = log(x+a) where b=0, x+a>0" + "<br>";
 					tip = "<html>" + tip + "<html>";
 					break;
@@ -5500,35 +5501,46 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				}				
 				
 				String ExitOption[] = {"Generate data", "Cancel"};
-				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), "Generate mean and std based on your normalizing function and associated parameters?", "Confirm Generate",
+				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), "Generate mean and std based on your loss rates, normalizing function, and associated parameters?", "Confirm Generate",
 						JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
 				if (response == 0) {
 					// Get selected rows
 					int[] selectedRow = table6.getSelectedRows();	
 					for (int i = 0; i < selectedRow.length; i++) {
-						selectedRow[i] = table6.convertRowIndexToModel(selectedRow[i]);	///Convert row index because "Sort" causes problems
+						selectedRow[i] = table6.convertRowIndexToModel(selectedRow[i]);	// convert row index because "Sort" causes problems
 					}
 					
 					// Apply change
 					try {
 						for (int i : selectedRow) {
-							String[] data_string = String.valueOf(data6[i][3]).split(" ");		// original data
-							double[] data_double = Arrays.stream(data_string).mapToDouble(Double::parseDouble).toArray();
-							
-							double sum = 0.0;
-							double num = 0.0;
-							for (double n : data_double) {
-								sum += n;
+							String[] loss_rate_string = String.valueOf(data6[i][3]).trim().split("\\s+");		// original data
+							try {
+								double[] loss_rate = Arrays.stream(loss_rate_string).mapToDouble(Double::parseDouble).toArray();
+								String transform_function = (data6[i][4] != null) ? String.valueOf(data6[i][4]) : "null";
+								double parameter_a = (data6[i][5] != null) ? (double) data6[i][5] : 0;
+								double parameter_b = (data6[i][6] != null) ? (double) data6[i][6] : 0;
+								Statistics stat = new Statistics();
+								double[] transformed_loss_rate = stat.get_transformed_loss_rates(loss_rate, transform_function, parameter_a, parameter_b);
+								
+								// calculate mean and std of the transformed loss rates
+								double sum = 0.0;
+								double num = 0.0;
+								for (double n : transformed_loss_rate) {
+									sum += n;
+								}
+								double mean = sum / transformed_loss_rate.length;
+								for (double n : transformed_loss_rate) {
+									double numn = Math.pow((n - mean), 2);
+									num += numn;
+								}
+								double std = Math.sqrt(num / transformed_loss_rate.length);
+								data6[i][7] = mean;
+								data6[i][8] = std;
+							} catch (Exception e1) {	// in case failed to read loss_rate
+								data6[i][7] = null;
+								data6[i][8] = null;
+								e1.printStackTrace();
 							}
-							double mean = sum / data_double.length;
-							for (double n : data_double) {
-								double numn = Math.pow((n - mean), 2);
-								num += numn;
-							}
-							double std = Math.sqrt(num / data_double.length);
-
-							data6[i][7] = mean;
-							data6[i][8] = std;
 						}
 					} catch (Exception e1) {
 						e1.printStackTrace();
