@@ -43,6 +43,7 @@ import java.util.stream.Stream;
 
 import lpsolve.LpSolve;
 import lpsolve.LpSolveException;
+import prism_convenience.FilesHandle;
 import prism_convenience.PrismTableModel;
 import prism_project.data_process.Information_Cost;
 import prism_project.data_process.Information_Disturbance;
@@ -172,7 +173,7 @@ public class Solve_Iterations {
 				File input_02_file = new File(runFolder.getAbsolutePath() + "/input_02_model_strata.txt");
 				File input_03_file = new File(runFolder.getAbsolutePath() + "/input_03_prescription_category.txt");
 				File input_04_file = new File(runFolder.getAbsolutePath() + "/input_04_prescription_assignment.txt");
-				File input_06_file = new File(runFolder.getAbsolutePath() + "/input_06_natural_disturbances.txt");
+				File input_06_file = new File(runFolder.getAbsolutePath() + "/input_06_natural_disturbances.txt");		if (!input_06_file.exists()) input_06_file = FilesHandle.get_file_input_06(); // if there is no disturbance defined
 				File input_07_file = new File(runFolder.getAbsolutePath() + "/input_07_management_cost.txt");
 				File input_08_file = new File(runFolder.getAbsolutePath() + "/input_08_basic_constraints.txt");
 				File input_09_file = new File(runFolder.getAbsolutePath() + "/input_09_flow_constraints.txt");

@@ -372,4 +372,29 @@ public class FilesHandle {
 		} 
 		return file_yield_dictionary;
 	}
+	
+	
+	public static File get_file_input_06() {
+		// Read input_06 file from the system
+		File file_input_06_natural_disturbances = null;
+		try {
+			file_input_06_natural_disturbances = new File(get_temporaryFolder().getAbsolutePath() + "/" + "input_06_natural_disturbances.txt");
+			file_input_06_natural_disturbances.deleteOnExit();
+
+			InputStream initialStream = PrismMain.get_main().getClass().getResourceAsStream("/input_06_natural_disturbances.txt");
+			byte[] buffer = new byte[initialStream.available()];
+			initialStream.read(buffer);
+
+			OutputStream outStream = new FileOutputStream(file_input_06_natural_disturbances);
+			outStream.write(buffer);
+
+			initialStream.close();
+			outStream.close();
+		} catch (FileNotFoundException e1) {
+			System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+		} catch (IOException e2) {
+			System.err.println(e2.getClass().getName() + ": " + e2.getMessage());
+		} 
+		return file_input_06_natural_disturbances;
+	}
 }

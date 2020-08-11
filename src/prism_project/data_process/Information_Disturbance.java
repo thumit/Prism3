@@ -23,7 +23,7 @@ import java.util.List;
 	
 // This class is created only when there is at least 1 condition --> no need to check null condition
 public class Information_Disturbance {
-	private int total_disturbances;
+	private int total_disturbances = 0;
 	private LinkedHashMap<String, Integer> map_disturbance_name_to_id = new LinkedHashMap<String, Integer>();
 	
 	private Identifiers_Processing identifiers_processing;
