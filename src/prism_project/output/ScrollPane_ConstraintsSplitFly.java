@@ -26,9 +26,8 @@ import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.DefaultCellEditor;
+
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -36,112 +35,139 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 
+import prism_convenience.PrismGridBagLayoutHandle;
 import prism_convenience.PrismTableModel;
 import prism_convenience.TableColumnsHandle;
 
 public class ScrollPane_ConstraintsSplitFly extends JScrollPane {
-
-	private List<JCheckBox> selected_staticCheckboxes;
-	private List<JCheckBox> selected_parametersCheckboxes;
-	private List<JCheckBox> selected_dynamicCheckboxes;
+	private List<JCheckBox> static_split_checkboxes, static_descriptor_checkboxes;
+	private List<JCheckBox> parameters_split_checkboxes, parameters_descriptor_checkboxes;
+	private List<JCheckBox> dynamic_split_checkboxes, dynamic_descriptor_checkboxes;
 	private JTable table;
 	private Object[][] data;
-	private JCheckBox autoDescription;
+	private JCheckBox auto_description;
 	
 	
-	public ScrollPane_ConstraintsSplitFly (List<JCheckBox> staticCheckboxes, List<JCheckBox> parametersCheckboxes, List<JCheckBox> dynamicCheckboxes) {
-		// staticScrollPane	------------------------------------------------------------------------------	
-		selected_staticCheckboxes = new ArrayList<JCheckBox>();
-		for (JCheckBox i : staticCheckboxes) {
-			selected_staticCheckboxes.add(new JCheckBox(i.getText()));
-		}
+	public ScrollPane_ConstraintsSplitFly(List<JCheckBox> static_checkboxes, List<JCheckBox> parameters_checkboxes, List<JCheckBox> dynamic_checkboxes) {
+		GridBagConstraints c = new GridBagConstraints();
 		
-		JPanel staticPanel = new JPanel();
-		staticPanel.setLayout(new GridBagLayout());
-		GridBagConstraints c1 = new GridBagConstraints();
-		c1.fill = GridBagConstraints.HORIZONTAL;
-		c1.weightx = 1;
-		c1.weighty = 1;
-
-		// Add all checkboxes
-		for (int i = 0; i < selected_staticCheckboxes.size(); i++) {
-			c1.gridx = 0;
-			c1.gridy = i;
-			staticPanel.add(selected_staticCheckboxes.get(i), c1);
+		// static_split_scrollpane	----------------------------------------------------------------------------------	
+		static_split_checkboxes = new ArrayList<JCheckBox>();
+		for (JCheckBox i : static_checkboxes) {
+			static_split_checkboxes.add(new JCheckBox(i.getText()));
 		}
-		
-		JScrollPane staticScrollPane = new JScrollPane(staticPanel);
-		TitledBorder border = new TitledBorder("Static Identifiers");
+		JPanel static_split_panel = new JPanel(new GridBagLayout());
+		for (int i = 0; i < static_split_checkboxes.size(); i++) {
+			static_split_panel.add(static_split_checkboxes.get(i), PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
+					0, i, 1, 1, 1, 1, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+					0, 0, 0, 0));		// insets top, left, bottom, right
+		}
+		JScrollPane static_split_scrollpane = new JScrollPane(static_split_panel);
+		TitledBorder border = new TitledBorder("Static Identifiers - Split");
 		border.setTitleJustification(TitledBorder.CENTER);
-		staticScrollPane.setBorder(border);
-		staticScrollPane.setPreferredSize(new Dimension(250, 250));
+		static_split_scrollpane.setBorder(border);
+		static_split_scrollpane.setPreferredSize(new Dimension(300, 250));
 
 		
 		
 		
-		// parametersScrollPane	------------------------------------------------------------------------------	
-//		List<JCheckBox> selected_parametersCheckboxes = new ArrayList<JCheckBox>();
-//		for (JCheckBox i : parametersCheckboxes) {
-//			if (i.isSelected()) {
-//				selected_parametersCheckboxes.add(new JCheckBox(i.getText()));
-//			}		
-//		}
-		
-		
-		selected_parametersCheckboxes = new ArrayList<JCheckBox>();
-		selected_parametersCheckboxes.add(new JCheckBox("Selected Parameters"));
-		
-		JPanel parametersPanel = new JPanel();
-		parametersPanel.setLayout(new GridBagLayout());
-		c1 = new GridBagConstraints();
-		c1.fill = GridBagConstraints.HORIZONTAL;
-		c1.weightx = 1;
-		c1.weighty = 1;
-
-		// Add all checkboxes
-		for (int i = 0; i < selected_parametersCheckboxes.size(); i++) {
-			c1.gridx = 0;
-			c1.gridy = i;
-			parametersPanel.add(selected_parametersCheckboxes.get(i), c1);
+		// static_descriptor_scrollpane	----------------------------------------------------------------------------------	
+		static_descriptor_checkboxes = new ArrayList<JCheckBox>();
+		for (JCheckBox i : static_checkboxes) {
+			static_descriptor_checkboxes.add(new JCheckBox(i.getText()));
 		}
-		
-		JScrollPane parametersScrollPane = new JScrollPane(parametersPanel);
-		border = new TitledBorder("Parameters");
+		JPanel static_descriptor_panel = new JPanel(new GridBagLayout());
+		for (int i = 0; i < static_descriptor_checkboxes.size(); i++) {
+			static_descriptor_panel.add(static_descriptor_checkboxes.get(i), PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
+					0, i, 1, 1, 1, 1, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+					0, 0, 0, 0));		// insets top, left, bottom, right
+		}
+		JScrollPane static_descriptor_scrollpane = new JScrollPane(static_descriptor_panel);
+		border = new TitledBorder("Static Identifiers - Descriptor");
 		border.setTitleJustification(TitledBorder.CENTER);
-		parametersScrollPane.setBorder(border);
-		parametersScrollPane.setPreferredSize(new Dimension(250, 250));		
+		static_descriptor_scrollpane.setBorder(border);
+		static_descriptor_scrollpane.setPreferredSize(new Dimension(300, 250));
 		
 		
 		
 		
-		// dynamicScrollPane	------------------------------------------------------------------------------	
-		selected_dynamicCheckboxes = new ArrayList<JCheckBox>();
-		for (JCheckBox i : dynamicCheckboxes) {
+		// parameters_split_scrollpane	------------------------------------------------------------------------------	
+		parameters_split_checkboxes = new ArrayList<JCheckBox>();
+		parameters_split_checkboxes.add(new JCheckBox("Parameters"));
+		JPanel parameters_split_panel = new JPanel(new GridBagLayout());
+		for (int i = 0; i < parameters_split_checkboxes.size(); i++) {
+			parameters_split_panel.add(parameters_split_checkboxes.get(i), PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
+					0, i, 1, 1, 1, 1, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+					0, 0, 0, 0));		// insets top, left, bottom, right
+		}
+		JScrollPane parameters_split_scrollpane = new JScrollPane(parameters_split_panel);
+		border = new TitledBorder("Parameters - Split");
+		border.setTitleJustification(TitledBorder.CENTER);
+		parameters_split_scrollpane.setBorder(border);
+		parameters_split_scrollpane.setPreferredSize(new Dimension(300, 250));		
+		
+		
+		
+		
+		// parameters_descriptor_scrollpane	------------------------------------------------------------------------------	
+		parameters_descriptor_checkboxes = new ArrayList<JCheckBox>();
+		parameters_descriptor_checkboxes.add(new JCheckBox("Parameters"));
+		JPanel parameters_descriptor_panel = new JPanel(new GridBagLayout());
+		for (int i = 0; i < parameters_descriptor_checkboxes.size(); i++) {
+			parameters_descriptor_panel.add(parameters_descriptor_checkboxes.get(i), PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
+					0, i, 1, 1, 1, 1, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+					0, 0, 0, 0));		// insets top, left, bottom, right
+		}
+		JScrollPane parameters_descriptor_scrollpane = new JScrollPane(parameters_descriptor_panel);
+		border = new TitledBorder("Parameters - Descriptor");
+		border.setTitleJustification(TitledBorder.CENTER);
+		parameters_descriptor_scrollpane.setBorder(border);
+		parameters_descriptor_scrollpane.setPreferredSize(new Dimension(300, 250));	
+				
+		
+		
+		
+		// dynamic_split_scrollpane	------------------------------------------------------------------------------	
+		dynamic_split_checkboxes = new ArrayList<JCheckBox>();
+		for (JCheckBox i : dynamic_checkboxes) {
 			if (i.isSelected()) {
-				selected_dynamicCheckboxes.add(new JCheckBox(i.getText()));
+				dynamic_split_checkboxes.add(new JCheckBox(i.getText()));
 			}		
 		}
-		
-		JPanel dynamicPanel = new JPanel();
-		dynamicPanel.setLayout(new GridBagLayout());
-		c1 = new GridBagConstraints();
-		c1.fill = GridBagConstraints.HORIZONTAL;
-		c1.weightx = 1;
-		c1.weighty = 1;
-
-		// Add all checkboxes
-		for (int i = 0; i < selected_dynamicCheckboxes.size(); i++) {
-			c1.gridx = 0;
-			c1.gridy = i;
-			dynamicPanel.add(selected_dynamicCheckboxes.get(i), c1);
+		JPanel dynamic_split_panel = new JPanel(new GridBagLayout());
+		for (int i = 0; i < dynamic_split_checkboxes.size(); i++) {
+			dynamic_split_panel.add(dynamic_split_checkboxes.get(i), PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
+					0, i, 1, 1, 1, 1, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+					0, 0, 0, 0));		// insets top, left, bottom, right
 		}
-		
-		JScrollPane dynamicScrollPane = new JScrollPane(dynamicPanel);
-		border = new TitledBorder("Dynamic Identifiers");
+		JScrollPane dynamic_split_scrollpane = new JScrollPane(dynamic_split_panel);
+		border = new TitledBorder("Dynamic Identifiers - Split");
 		border.setTitleJustification(TitledBorder.CENTER);
-		dynamicScrollPane.setBorder(border);
-		dynamicScrollPane.setPreferredSize(new Dimension(250, 250));					
+		dynamic_split_scrollpane.setBorder(border);
+		dynamic_split_scrollpane.setPreferredSize(new Dimension(300, 250));					
 		
+		
+		
+		
+		// dynamic_descriptor_scrollpane	------------------------------------------------------------------------------	
+		dynamic_descriptor_checkboxes = new ArrayList<JCheckBox>();
+		for (JCheckBox i : dynamic_checkboxes) {
+			if (i.isSelected()) {
+				dynamic_descriptor_checkboxes.add(new JCheckBox(i.getText()));
+			}		
+		}
+		JPanel dynamic_descriptor_panel = new JPanel(new GridBagLayout());
+		for (int i = 0; i < dynamic_descriptor_checkboxes.size(); i++) {
+			dynamic_descriptor_panel.add(dynamic_descriptor_checkboxes.get(i), PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
+					0, i, 1, 1, 1, 1, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+					0, 0, 0, 0));		// insets top, left, bottom, right
+		}
+		JScrollPane dynamic_descriptor_scrollpane = new JScrollPane(dynamic_descriptor_panel);
+		border = new TitledBorder("Dynamic Identifiers - Descriptor");
+		border.setTitleJustification(TitledBorder.CENTER);
+		dynamic_descriptor_scrollpane.setBorder(border);
+		dynamic_descriptor_scrollpane.setPreferredSize(new Dimension(300, 250));	
+				
 		
 		
 		
@@ -169,33 +195,17 @@ public class ScrollPane_ConstraintsSplitFly extends JScrollPane {
 				}
 			}
 		};
-		
 		table = new JTable(model);
-		
-		class comboBox_constraint_type extends JComboBox {	
-			public comboBox_constraint_type() {
-				addItem("SOFT");
-				addItem("HARD");
-				addItem("FREE");
-				setSelectedIndex(0);
-			}
-		}
-		
-		// Set up Type for each column 2
-		table.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new comboBox_constraint_type()));	
 		table.getColumnModel().getColumn(1).setPreferredWidth(400);	//Set width of Column bigger
-
-
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);  
 		table.getTableHeader().setReorderingAllowed(false);		//Disable columns move
 
-		JScrollPane tableScrollPane = new JScrollPane(table);
+		JScrollPane table_scrollpane = new JScrollPane(table);
 		border = new TitledBorder("Infomation below is applied for all new queries");
 		border.setTitleJustification(TitledBorder.CENTER);
-		tableScrollPane.setBorder(border);
-		tableScrollPane.setPreferredSize(new Dimension(600, 100));		// only the 150 matters, 650 does not matter
-		//Hide the id column	
-		// Different way to hide columns
+		table_scrollpane.setBorder(border);
+		table_scrollpane.setPreferredSize(new Dimension(600, 100));		// only the 150 matters, 650 does not matter
+		// Hide columns
 		TableColumnsHandle table_handle = new TableColumnsHandle(table);
 		table_handle.setColumnVisible("query_id", false);
 		table_handle.setColumnVisible("query_type", false);
@@ -211,12 +221,12 @@ public class ScrollPane_ConstraintsSplitFly extends JScrollPane {
 
 		
 		
-		// Add all to a Panel------------------------------------------------------------------------------	
-		JPanel popupPanel = new JPanel();	
+				// Add all to a pop-up panel------------------------------------------------------------------------------	
+		JPanel popup_panel = new JPanel(new GridBagLayout());	
 		//	These codes make the popupPanel resizable --> the Big ScrollPane resizable --> JOptionPane resizable
-		popupPanel.addHierarchyListener(new HierarchyListener() {
+		popup_panel.addHierarchyListener(new HierarchyListener() {
 		    public void hierarchyChanged(HierarchyEvent e) {
-		        Window window = SwingUtilities.getWindowAncestor(popupPanel);
+		        Window window = SwingUtilities.getWindowAncestor(popup_panel);
 		        if (window instanceof Dialog) {
 		            Dialog dialog = (Dialog)window;
 		            if (!dialog.isResizable()) {
@@ -225,64 +235,54 @@ public class ScrollPane_ConstraintsSplitFly extends JScrollPane {
 		        }
 		    }
 		});
+		// Add Static Split
+		popup_panel.add(static_split_scrollpane, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+				0, 1, 1, 1, 1, 1, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				0, 0, 0, 0));		// insets top, left, bottom, right
+		// Add Static descriptor
+		popup_panel.add(static_descriptor_scrollpane, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+				0, 2, 1, 1, 1, 1, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				0, 0, 0, 0));		// insets top, left, bottom, right
+		// Add Dynamic Split
+		popup_panel.add(dynamic_split_scrollpane, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+				1, 1, 1, 1, 1, 1, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				0, 0, 0, 0));		// insets top, left, bottom, right
+		// Add Dynamic descriptor
+		popup_panel.add(dynamic_descriptor_scrollpane, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+				1, 2, 1, 1, 1, 1, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				0, 0, 0, 0));		// insets top, left, bottom, right
+		// Add Parameters Split
+		popup_panel.add(parameters_split_scrollpane, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+				2, 1, 1, 1, 1, 1, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				0, 0, 0, 0));		// insets top, left, bottom, right
+		// Add Parameters descriptor
+		popup_panel.add(parameters_descriptor_scrollpane, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+				2, 2, 1, 1, 1, 1, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				0, 0, 0, 0));		// insets top, left, bottom, right
+		// Add table scrollpane
+		popup_panel.add(table_scrollpane, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+				0, 3, 3, 1, 1, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				0, 0, 0, 0));		// insets top, left, bottom, right
+		// Add auto description checkbox
+		auto_description = new JCheckBox("Add descriptors to constraints description (i.e. bc_description)");
+		auto_description.setSelected(true);
+		popup_panel.add(auto_description, PrismGridBagLayoutHandle.get_c(c, "CENTER", 
+				0, 4, 3, 1, 1, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				0, 0, 0, 0));		// insets top, left, bottom, right
 		
 		
-		popupPanel.setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
-		c.fill = GridBagConstraints.BOTH;
-
-		// Add Static Splitters
-		c.gridx = 0;
-		c.gridy = 0;
-		c.weightx = 1;
-		c.weighty = 1;
-		popupPanel.add(staticScrollPane, c);
-
-		// Add Dynamic Splitters
-		c.gridx = 1;
-		c.gridy = 0;
-		c.weightx = 1;
-		c.weighty = 1;
-		popupPanel.add(dynamicScrollPane, c);
-
-		// Add Parameters Splitters
-		c.gridx = 2;
-		c.gridy = 0;
-		c.weightx = 1;
-		c.weighty = 1;
-		popupPanel.add(parametersScrollPane, c);
-		
-		// Add tableScrollPane
-		c.gridx = 0;
-		c.gridy = 1;
-		c.weightx = 1;
-		c.weighty = 0;
-		c.gridwidth = 3;
-		popupPanel.add(tableScrollPane, c);
-		
-		// Add autoDescription checkbox
-		autoDescription = new JCheckBox("Add splitting infomation to query_description");
-		autoDescription.setSelected(true);
-		c.fill = GridBagConstraints.CENTER;
-		c.gridx = 0;
-		c.gridy = 2;
-		c.weightx = 1;
-		c.weighty = 0;
-		c.gridwidth = 3;
-		popupPanel.add(autoDescription, c);
-
 		
 		
 		// Add the Panel to this Big ScrollPane------------------------------------------------------------------------------
 		setBorder(null);
-		setViewportView(popupPanel);			
+		setViewportView(popup_panel);		
 	}
 	
 	
 	public List<Integer> get_static_split_id() {
 		List<Integer> static_split_id = new ArrayList<Integer>();
-		for (int i = 0; i < selected_staticCheckboxes.size(); i++) {
-			if (selected_staticCheckboxes.get(i).isSelected()) {
+		for (int i = 0; i < static_split_checkboxes.size(); i++) {
+			if (static_split_checkboxes.get(i).isSelected()) {
 				static_split_id.add(i);
 			}
 		}
@@ -290,9 +290,20 @@ public class ScrollPane_ConstraintsSplitFly extends JScrollPane {
 	}
 	
 	
+	public List<Integer> get_static_descriptor_id() {
+		List<Integer> static_descriptor_id = new ArrayList<Integer>();
+		for (int i = 0; i < static_descriptor_checkboxes.size(); i++) {
+			if (static_descriptor_checkboxes.get(i).isSelected()) {
+				static_descriptor_id.add(i);
+			}
+		}
+		return static_descriptor_id;
+	}
+	
+	
 	public List<String> get_dynamic_split_name() {
 		List<String> dynamic_split_name = new ArrayList<String>();
-		for (JCheckBox i: selected_dynamicCheckboxes) {
+		for (JCheckBox i: dynamic_split_checkboxes) {
 			if (i.isSelected()) {
 				dynamic_split_name.add(i.getText());
 			}
@@ -301,8 +312,25 @@ public class ScrollPane_ConstraintsSplitFly extends JScrollPane {
 	}
 	
 	
+	public List<String> get_dynamic_descriptor_name() {
+		List<String> dynamic_descriptor_name = new ArrayList<String>();
+		for (JCheckBox i: dynamic_descriptor_checkboxes) {
+			if (i.isSelected()) {
+				dynamic_descriptor_name.add(i.getText());
+			}
+		}
+		return dynamic_descriptor_name;
+	}
+	
+	
 	public Boolean is_parameters_split() {
-		if (selected_parametersCheckboxes.get(0).isSelected()) return true;
+		if (parameters_split_checkboxes.get(0).isSelected()) return true;
+		return false;
+	}
+	
+	
+	public Boolean is_parameters_descriptor() {
+		if (parameters_descriptor_checkboxes.get(0).isSelected()) return true;
 		return false;
 	}
 	
@@ -313,7 +341,7 @@ public class ScrollPane_ConstraintsSplitFly extends JScrollPane {
 	
 	
 	public JCheckBox get_autoDescription() {
-		return autoDescription;
+		return auto_description;
 	}
 	
 	public void stop_editing() {

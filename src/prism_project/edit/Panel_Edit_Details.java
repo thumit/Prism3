@@ -6595,9 +6595,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), constraint_split_ScrollPanel, "Create multiple constraints - checked items will be split",
 						JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, ExitOption, ExitOption[0]);
 				if (response == 0) {	// Add Constraints
-					
-					
-					
 					// calculate parameter_permutation
 					int total_parameter_permutation = 1;
 					if (constraint_split_ScrollPanel.is_parameters_split()) { 	//if parameters would be split
@@ -6613,8 +6610,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 							total_parameter_permutation = total_parameter_permutation * total_checked_elements;
 						}
 					}
-					
-					
 					
 					// calculate dynamic_permutation
 					int total_dynamic_permutation = 1;
@@ -6633,7 +6628,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						int total_checked_elements = 0;
 						for (int j = 0; j < checkboxDynamicIdentifiers.get(i).size(); j++) {
 							if (checkboxDynamicIdentifiers.get(i).get(j).isSelected() && checkboxDynamicIdentifiers.get(i).get(j).isVisible()) {	// If element of this dynamic is checked		
-								total_checked_elements ++;	// Increase number of constraints
+								total_checked_elements++; // Increase number of constraints
 							}
 						}
 						total_dynamic_permutation = total_dynamic_permutation * total_checked_elements;
@@ -6646,7 +6641,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						int total_checked_elements = 0;
 						for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {
 							if (checkboxStaticIdentifiers.get(i).get(j).isSelected() && checkboxStaticIdentifiers.get(i).get(j).isVisible()) {	// If element of this static is checked		
-								total_checked_elements ++;	// Increase number of constraints
+								total_checked_elements++;	// Increase number of constraints
 							}
 						}
 						total_static_permutation = total_static_permutation * total_checked_elements;
@@ -6656,26 +6651,23 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					int total_constraints = total_parameter_permutation * total_dynamic_permutation * total_static_permutation;
 					System.out.println(total_constraints);
 					
-					
 					// Ask to confirm adding if there are more than 1000 constraints
 					int response2 = 0;	
-					if (total_constraints > 10000) {
+					if (total_constraints > 1000) {
 						String ExitOption2[] = {"Add","Cancel"};
 						String warningText = "Prism is going to add " + total_constraints + " constraints. It might take time. Continue to add?";
 						response2 = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warningText, "Confirm adding constraints",
 								JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption2, ExitOption2[1]);
-						
 					}
-						
 					if (response2 == 0) {	
 						constraint_split_ScrollPanel.stop_editing();
-						
-						
-//						// Example: 
-//						List<List<String>> lists = new ArrayList<List<String>>();
-//						lists.add(Arrays.asList(new String[] { "lay1 a", "lay1 b", "lay1 c" }));
-//						lists.add(Arrays.asList(new String[] { "lay2 c d e" }));
-//						lists.add(Arrays.asList(new String[] { "lay3 f", "lay3 g" }));
+						/* 
+						Example: 
+						List<List<String>> lists = new ArrayList<List<String>>();
+						lists.add(Arrays.asList(new String[] { "lay1 a", "lay1 b", "lay1 c" }));
+						lists.add(Arrays.asList(new String[] { "lay2 c d e" }));
+						lists.add(Arrays.asList(new String[] { "lay3 f", "lay3 g" }));
+						*/
 						
 						
 						// for parameters------------------------------------------------------------------------------------------------------
@@ -6694,7 +6686,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						for (int i = 0; i < checkboxDynamicIdentifiers.size(); i++) {
 							if (allDynamicIdentifiers_ScrollPane.get(i).isVisible()) {
 								List<String> joined_string_list = new ArrayList<String>();
-								
 								if (dynamic_split_id.contains(i)) {	// if this dynamic layer must be split
 									for (int j = 0; j < checkboxDynamicIdentifiers.get(i).size(); j++) {
 										if (checkboxDynamicIdentifiers.get(i).get(j).isSelected() && checkboxDynamicIdentifiers.get(i).get(j).isVisible()) {	// If element of this static is checked		
@@ -6704,7 +6695,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 											joined_string_list.add(String.join(" ", temp));
 										}	
 									}
-									
 									dynamic_iterable_lists.add(joined_string_list);
 								} else {		// if this dynamic layer would not be split
 									List<String> temp = new ArrayList<String>(); 
@@ -6715,11 +6705,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 										}	
 									}
 									joined_string_list.add(String.join(" ", temp));
-									
 									dynamic_iterable_lists.add(joined_string_list);
 								}
 							}
-						}
+						}		
 						// Create lists
 						List<String> dynamic_info_list = new ArrayList<String>();
 						// Get all permutation
@@ -6734,7 +6723,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						List<List<String>> static_iterable_lists = new ArrayList<List<String>>();
 						for (int i = 0; i < checkboxStaticIdentifiers.size(); i++) {
 							List<String> joined_string_list = new ArrayList<String>();
-							
 							if (static_split_id.contains(i)) {	// if this static layer must be split
 								for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {
 									if (checkboxStaticIdentifiers.get(i).get(j).isSelected() && checkboxStaticIdentifiers.get(i).get(j).isVisible()) {	// If element of this static is checked		
@@ -6771,17 +6759,61 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						
 						
 						
-						// for parameter description------------------------------------------------------------------------------------------------------
-						List<String> parameter_description_info_list = new ArrayList<String>();
-						if (constraint_split_ScrollPanel.is_parameters_split()) { 	//if parameters would be split
-							for (int i = 0; i < checkboxParameters.size(); i++) {
-								if (checkboxParameters.get(i).isSelected() && checkboxParameters.get(i).isVisible()) {	// If this parameter is checked		
-									parameter_description_info_list.add(checkboxParameters.get(i).getText());
+						// Pre descriptions
+						List<Integer> static_descriptor_id = constraint_split_ScrollPanel.get_static_descriptor_id();	// id of static layers to be in description
+						List<Integer> dynamic_descriptor_id = new ArrayList<Integer>();	// id of dynamic attribute to be descriptor (not the real yield table column id)
+						List<String> dynamic_descriptor_name = constraint_split_ScrollPanel.get_dynamic_descriptor_name();	// name of dynamic attribute to be descriptor
+						for (String name : dynamic_descriptor_name) {
+							// Find the index
+							int i = 0;
+							for (int cb_id = 0; cb_id < allDynamicIdentifiers.size(); cb_id++) {
+								if (allDynamicIdentifiers.get(cb_id).getText().equals(name)) {
+									i = cb_id;
+									dynamic_descriptor_id.add(i);
+									break;
 								}
 							}
-							if (parameter_description_info_list.isEmpty()) parameter_description_info_list.add(parameters_scrollpane.get_parameters_description_from_GUI());
-						} else { // --> disable this "else" if do not want the full description
-							parameter_description_info_list.add(parameters_scrollpane.get_parameters_description_from_GUI());
+						}
+						
+						
+						// for parameter description------------------------------------------------------------------------------------------------------
+						List<String> parameter_description_info_list = new ArrayList<String>();
+						if (parameters_scrollpane.get_checkboxNoParameter().isSelected()) {
+							if (constraint_split_ScrollPanel.is_parameters_descriptor()) {
+								parameter_description_info_list.add("Area");
+							} else {
+								parameter_description_info_list.add("");
+							}
+						} else if (parameters_scrollpane.get_checkboxCostParameter().isSelected()) {
+							if (constraint_split_ScrollPanel.is_parameters_descriptor()) {
+								parameter_description_info_list.add("Cost");
+							} else {
+								parameter_description_info_list.add("");
+							}
+						} else {
+							if (constraint_split_ScrollPanel.is_parameters_split()) { 	//if parameters would be split
+								for (int i = 0; i < checkboxParameters.size(); i++) {
+									if (checkboxParameters.get(i).isSelected() && checkboxParameters.get(i).isVisible()) {	// If this parameter is checked	
+										if (constraint_split_ScrollPanel.is_parameters_descriptor()) {
+											parameter_description_info_list.add(checkboxParameters.get(i).getText());
+										} else {
+											parameter_description_info_list.add("");
+										}
+									}
+								}
+							} else {
+								if (constraint_split_ScrollPanel.is_parameters_descriptor()) {
+									List<String> temp = new ArrayList<String>(); 
+									for (int i = 0; i < checkboxParameters.size(); i++) {
+										if (checkboxParameters.get(i).isSelected() && checkboxParameters.get(i).isVisible()) {	// If this parameter is checked	
+											temp.add(checkboxParameters.get(i).getText());
+										}
+									}
+									parameter_description_info_list.add(String.join(" + ", temp));
+								} else {
+									parameter_description_info_list.add("");
+								}
+							}
 						}
 						
 						
@@ -6789,46 +6821,34 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						List<List<String>> dynamic_description_iterable_lists = new ArrayList<List<String>>();
 						for (int i = 0; i < checkboxDynamicIdentifiers.size(); i++) {
 							List<String> joined_string_list = new ArrayList<String>();
-
-							if (dynamic_split_id.contains(i)) {	// if this static layer must be split
+							if (dynamic_split_id.contains(i)) {	// if this dynamic layer must be split
 								for (int j = 0; j < checkboxDynamicIdentifiers.get(i).size(); j++) {
 									if (checkboxDynamicIdentifiers.get(i).get(j).isSelected() && checkboxDynamicIdentifiers.get(i).get(j).isVisible()) {	// If element of this dynamic is checked		
-										List<String> temp = new ArrayList<String>(); 
-										temp.add(allDynamicIdentifiers.get(i).getText());
-										temp.add(checkboxDynamicIdentifiers.get(i).get(j).getText());	
-										joined_string_list.add(String.join(" ", temp));
+										if (dynamic_descriptor_id.contains(i)) {
+											List<String> temp = new ArrayList<String>(); 
+											temp.add(allDynamicIdentifiers.get(i).getText());
+											temp.add(checkboxDynamicIdentifiers.get(i).get(j).getText());	
+											joined_string_list.add(String.join(" ", temp));
+										} else {
+											joined_string_list.add("");
+										}
 									}	
 								}
-								
 								dynamic_description_iterable_lists.add(joined_string_list);
-							} else {	// this else is almost the same as "get_dynamic_description_from_GUI" --> disable this "else" if do not want the full description
-								// Count the total of checked items in each identifier 
-								int total_check_items = 0;
-								int total_items = 0;
-								if (allDynamicIdentifiers_ScrollPane.get(i).isVisible() && checkboxDynamicIdentifiers.get(i).size() > 0) {	// get the active identifiers (when identifier ScrollPane is visible and List size >0)
-									for (int j = 0; j < checkboxDynamicIdentifiers.get(i).size(); j++) { //Loop all checkBoxes in this active identifier
-										if (checkboxDynamicIdentifiers.get(i).get(j).isSelected() && checkboxDynamicIdentifiers.get(i).get(j).isVisible()) {
-											total_check_items++;
-										}
-										if (checkboxDynamicIdentifiers.get(i).get(j).isVisible()) {
-											total_items++;
-										}
+							} else {		// if this dynamic layer would not be split
+								if (dynamic_descriptor_id.contains(i)) {
+									List<String> temp = new ArrayList<String>(); 
+									temp.add(allDynamicIdentifiers.get(i).getText());
+									for (int j = 0; j < checkboxDynamicIdentifiers.get(i).size(); j++) {
+										if (checkboxDynamicIdentifiers.get(i).get(j).isSelected() && checkboxDynamicIdentifiers.get(i).get(j).isVisible()) {	// If element of this static is checked		
+											temp.add(checkboxDynamicIdentifiers.get(i).get(j).getText());	
+										}	
 									}
+									joined_string_list.add(String.join(" ", temp));
+								} else {
+									joined_string_list.add("");
 								}
-								// Add to description only when the total of checked items < the total items
-								if (total_check_items < total_items) {
-									String dynamic_info = allDynamicIdentifiers.get(i).getText();
-									
-									for (int j = 0; j < checkboxDynamicIdentifiers.get(i).size(); j++) { 	// Loop all checkBoxes in this active identifier
-										String checkboxName = checkboxDynamicIdentifiers.get(i).get(j).getText();									
-										// Add if it is (selected & visible)
-										if (checkboxDynamicIdentifiers.get(i).get(j).isSelected() && checkboxDynamicIdentifiers.get(i).get(j).isVisible()) {
-											dynamic_info = String.join(" ", dynamic_info, checkboxName);
-										}
-									}
-									joined_string_list.add(dynamic_info);
-									dynamic_description_iterable_lists.add(joined_string_list);
-								}
+								dynamic_description_iterable_lists.add(joined_string_list);
 							}
 						}	
 						// Create lists
@@ -6836,7 +6856,11 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						// Get all permutation
 						MixedRangeCombinationIterable<String> dynamic_description_iterable = new MixedRangeCombinationIterable<String>(dynamic_description_iterable_lists);
 						for (List<String> element : dynamic_description_iterable) {
-							String joined_string = String.join(" | ", element);
+							List<String> temp_list = new ArrayList<String>();
+							for (String st : element) {
+								if (!st.equals("")) temp_list.add(st);
+							}
+							String joined_string = String.join(" | ", temp_list);
 							dynamic_description_info_list.add(joined_string);
 						}
 						
@@ -6845,44 +6869,34 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						List<List<String>> static_description_iterable_lists = new ArrayList<List<String>>();
 						for (int i = 0; i < checkboxStaticIdentifiers.size(); i++) {
 							List<String> joined_string_list = new ArrayList<String>();
-							
 							if (static_split_id.contains(i)) {	// if this static layer must be split
 								for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {
 									if (checkboxStaticIdentifiers.get(i).get(j).isSelected() && checkboxStaticIdentifiers.get(i).get(j).isVisible()) {	// If element of this static is checked		
-										List<String> temp = new ArrayList<String>(); 
-										temp.add(static_identifiers_scrollpane.get_static_layer_title_as_checkboxes().get(i).getText());
-										temp.add(checkboxStaticIdentifiers.get(i).get(j).getText());	
-										joined_string_list.add(String.join(" ", temp));
-									}	
-								}
-								
-								static_description_iterable_lists.add(joined_string_list);
-							} else {	// this else is almost the same as "get_static_description_from_GUI" --> disable this "else" if do not want the full description
-								// Count the total of checked items in each layer 
-								int total_check_items = 0;
-								int total_items = 0;
-								for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {		//Loop all elements in each layer
-									if (checkboxStaticIdentifiers.get(i).get(j).isSelected() && checkboxStaticIdentifiers.get(i).get(j).isVisible()) {
-										total_check_items++;
-									}
-									if (checkboxStaticIdentifiers.get(i).get(j).isVisible()) {
-										total_items++;
-									}	
-								}
-								// Add to description only when the total of checked items < the total items
-								if (total_check_items < total_items) {
-									String static_info = static_identifiers_scrollpane.get_static_layer_title_as_checkboxes().get(i).getText();
-									
-									for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {		//Loop all elements in each layer
-										String checkboxName = checkboxStaticIdentifiers.get(i).get(j).getText();				
-										// Add if it is (selected & visible)
-										if (checkboxStaticIdentifiers.get(i).get(j).isSelected() && checkboxStaticIdentifiers.get(i).get(j).isVisible()) {
-											static_info = String.join(" ", static_info, checkboxName);
+										if (static_descriptor_id.contains(i)) {
+											List<String> temp = new ArrayList<String>(); 
+											temp.add(static_identifiers_scrollpane.get_static_layer_title_as_checkboxes().get(i).getText());
+											temp.add(checkboxStaticIdentifiers.get(i).get(j).getText());	
+											joined_string_list.add(String.join(" ", temp));
+										} else {
+											joined_string_list.add("");
 										}
-									}
-									joined_string_list.add(static_info);
-									static_description_iterable_lists.add(joined_string_list);
+									}	
 								}
+								static_description_iterable_lists.add(joined_string_list);
+							} else {		// if this static layer would not be split
+								if (static_descriptor_id.contains(i)) {
+									List<String> temp = new ArrayList<String>(); 
+									temp.add(static_identifiers_scrollpane.get_static_layer_title_as_checkboxes().get(i).getText());
+									for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {
+										if (checkboxStaticIdentifiers.get(i).get(j).isSelected() && checkboxStaticIdentifiers.get(i).get(j).isVisible()) {	// If element of this static is checked			
+											temp.add(checkboxStaticIdentifiers.get(i).get(j).getText());	
+										}	
+									}
+									joined_string_list.add(String.join(" ", temp));
+								} else {
+									joined_string_list.add("");
+								}
+								static_description_iterable_lists.add(joined_string_list);
 							}
 						}	
 						// Create lists
@@ -6890,7 +6904,11 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						// Get all permutation
 						MixedRangeCombinationIterable<String> description_iterable = new MixedRangeCombinationIterable<String>(static_description_iterable_lists);
 						for (List<String> element : description_iterable) {
-							String joined_string = String.join(" | ", element);
+							List<String> temp_list = new ArrayList<String>();
+							for (String st : element) {
+								if (!st.equals("")) temp_list.add(st);
+							}
+							String joined_string = String.join(" | ", temp_list);
 							static_description_info_list.add(joined_string);
 						}
 						
@@ -6901,9 +6919,12 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						if (parameter_info_list.isEmpty()) parameter_info_list.add(parameters_scrollpane.get_parameters_info_from_GUI());
 						if (dynamic_info_list.isEmpty()) dynamic_info_list.add(dynamic_identifiers_scrollpane.get_dynamic_info_from_GUI());
 						if (static_info_list.isEmpty()) static_info_list.add(static_identifiers_scrollpane.get_static_info_from_GUI());
-						if (parameter_description_info_list.isEmpty()) parameter_description_info_list.add(parameters_scrollpane.get_parameters_description_from_GUI());
-						if (dynamic_description_info_list.isEmpty()) dynamic_description_info_list.add(dynamic_identifiers_scrollpane.get_dynamic_description_from_GUI());
-						if (static_description_info_list.isEmpty()) static_description_info_list.add(static_identifiers_scrollpane.get_static_description_from_GUI());
+//						if (parameter_description_info_list.isEmpty()) parameter_description_info_list.add(parametersScrollPanel.get_parameters_description_from_GUI());
+//						if (dynamic_description_info_list.isEmpty()) dynamic_description_info_list.add(dynamic_identifiersScrollPanel.get_dynamic_description_from_GUI());
+//						if (static_description_info_list.isEmpty()) static_description_info_list.add(static_identifiersScrollPanel.get_static_description_from_GUI());
+						if (parameter_description_info_list.isEmpty()) parameter_description_info_list.add("");
+						if (dynamic_description_info_list.isEmpty()) dynamic_description_info_list.add("");
+						if (static_description_info_list.isEmpty()) static_description_info_list.add("");
 						
 						List<String> final_parameter_info_list = new ArrayList<String>();
 						List<String> final_dynamic_info_list = new ArrayList<String>();
@@ -6917,9 +6938,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 									final_static_info_list.add(static_info_list.get(j));
 									
 									List<String> temp_list = new ArrayList<String>();
-									temp_list.add(parameter_description_info_list.get(p));
-									temp_list.add(dynamic_description_info_list.get(i));
-									temp_list.add(static_description_info_list.get(j));
+									if (!parameter_description_info_list.get(p).equals("")) temp_list.add(parameter_description_info_list.get(p));
+									if (!dynamic_description_info_list.get(i).equals("")) temp_list.add(dynamic_description_info_list.get(i));
+									if (!static_description_info_list.get(j).equals("")) temp_list.add(static_description_info_list.get(j));
 									String joined_string = String.join(" ..... ", temp_list);
 									final_description_info_list.add(joined_string);
 								}
@@ -6945,7 +6966,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						System.out.println("--------------------------------------------");
 						
 						
-						
+
 						
 						// Add all constraints------------------------------------------------------------------------------------------------------
 						if (total_constraints > 0) {
@@ -6958,11 +6979,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 							}
 							
 							Object[][] temp_data = constraint_split_ScrollPanel.get_multiple_constraints_data();
-							JCheckBox autoDescription = constraint_split_ScrollPanel.get_autoDescription();
-							
+							JCheckBox auto_description = constraint_split_ScrollPanel.get_autoDescription();
 							for (int i = rowCount8 - total_constraints; i < rowCount8; i++) {
 								for (int j = 0; j < colCount8; j++) {
-									if (autoDescription.isSelected()) {
+									if (auto_description.isSelected()) {
 										if (temp_data[0][1] == null) {
 											data8[i][1] = /*"set constraint" + " " + (i - rowCount8 + total_constraints + 1) + " ..... " +*/ final_description_info_list.get(i - rowCount8 + total_constraints);
 										} else {

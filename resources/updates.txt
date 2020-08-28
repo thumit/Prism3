@@ -1381,9 +1381,8 @@ All changes in this block are associated with PrismAlpha3.1.02.jar, Prism-Formul
 578. In General Input screen, users could now define how many years in a time period. This information is applied to calculate the discounted cost.
 579. Fix a bug of not checking var_rd_condition_id when precalculating cost information which lead to failure of solving when there are more than one replacing disturbances.
 580. In Natural Disturbance screen, add a button to calculate mean and std from loss rate data (Normal Distribution assumption only). This would be updated to apply for other normalizing functions in the future
-581. Fix the highlight error (not disappear) after hovering the mouse outsite of the button Modify area in Prescription Assignment screen
-582. In the Solve screen, disturbances are now categorized by deterministic
-    and stochastic (instead of mean and random previously)
+581. Fix the highlight error (not disappear) after hovering the mouse outside of the button Modify area in Prescription Assignment screen
+582. In the Solve screen, disturbances are now categorized by deterministic and stochastic (instead of mean and random previously)
 583. Statistics class are added for data transformation and back-transformation based on normalizing functions including: normal, inverse, logarithmic, logarithmic10, square root, exponential, power, arcsine (not yet), box cox (use with care)
 584. Modify Management Cost
 	- In the activity cost table, action_list and acres are modified to be activity and area. This would require a mannual replacing of acres to be area in input_07_management_cost
@@ -1397,7 +1396,8 @@ All changes in this block are associated with PrismAlpha3.1.02.jar, Prism-Formul
 587. change terms in output_02, output_05, commands in the SQL system library for output_05, and reading variable information in the NOSQL mode of output_05: var_unit_management_cost and loss_rate_total are modified to be var_per_area_unit_cost and var_loss_rate_total.
 588. Fix the power back transform function
 589. Add all function to help calculate transformed mean and std in the Natural Disturbances screen based on original loss rates, transform function, parameters.
-590. Allow tooltips to show default value of zero for a, b, mean, std in the Natural Disturbances sceen if they are null.
+590. Allow tooltips to show default value of zero for a, b, mean, std in the Natural Disturbances screen if they are null.
 591. Add a default input_06_natural_disturbances file into resources folder of prism package. This file will be read and apply if users do not define any disturbance.
 All changes in this block are associated with PrismAlpha3.1.03.jar, Prism-Formulation-14.docx
 --------------------------------------------------------------------------
+592. Allow options to include a limited subset of descriptors when adding multiple basic constraints or multiple NOSQL (summarize_output_05) constraints in batch mode.

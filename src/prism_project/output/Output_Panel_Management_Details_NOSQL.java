@@ -480,9 +480,9 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 		List<JScrollPane> allDynamicIdentifiers_ScrollPane;
 		List<JCheckBox> checkboxParameters;
 		
-		ScrollPane_Parameters parametersScrollPanel;
-		ScrollPane_StaticIdentifiers static_identifiersScrollPanel;
-		ScrollPane_DynamicIdentifiers dynamic_identifiersScrollPanel;
+		ScrollPane_Parameters parameters_scrollpane;
+		ScrollPane_StaticIdentifiers static_identifiers_scrollpane;
+		ScrollPane_DynamicIdentifiers dynamic_identifiers_scrollpane;
 		JPanel button_table_Panel;
 		
 		Panel_QuickEdit_FlyConstraints quick_edit;
@@ -493,8 +493,8 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			
 			// 1st grid ------------------------------------------------------------------------------		// Static identifiers	
 			String panel_name = "Static Identifiers  -  use model attributes to filter variables";
-			static_identifiersScrollPanel = new ScrollPane_StaticIdentifiers(read_database, 2, panel_name);
-			checkboxStaticIdentifiers = static_identifiersScrollPanel.get_CheckboxStaticIdentifiers();		
+			static_identifiers_scrollpane = new ScrollPane_StaticIdentifiers(read_database, 2, panel_name);
+			checkboxStaticIdentifiers = static_identifiers_scrollpane.get_CheckboxStaticIdentifiers();		
 					
 			// Update GUI for time period 
 	    	for (int j = 0; j < checkboxStaticIdentifiers.get(checkboxStaticIdentifiers.size() - 1).size(); j++) {			//The last element is Time period			
@@ -509,19 +509,19 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 
 			
 			// 2nd Grid ------------------------------------------------------------------------------		// Dynamic identifiers
-			dynamic_identifiersScrollPanel = new ScrollPane_DynamicIdentifiers(read_database);
-			checkboxDynamicIdentifiers = dynamic_identifiersScrollPanel.get_checkboxDynamicIdentifiers();
-			allDynamicIdentifiers = dynamic_identifiersScrollPanel.get_allDynamicIdentifiers();
-			allDynamicIdentifiers_ScrollPane = dynamic_identifiersScrollPanel.get_allDynamicIdentifiers_ScrollPane();
-			dynamic_identifiersScrollPanel.setPreferredSize(new Dimension(0, 250));
+			dynamic_identifiers_scrollpane = new ScrollPane_DynamicIdentifiers(read_database);
+			checkboxDynamicIdentifiers = dynamic_identifiers_scrollpane.get_checkboxDynamicIdentifiers();
+			allDynamicIdentifiers = dynamic_identifiers_scrollpane.get_allDynamicIdentifiers();
+			allDynamicIdentifiers_ScrollPane = dynamic_identifiers_scrollpane.get_allDynamicIdentifiers_ScrollPane();
+			dynamic_identifiers_scrollpane.setPreferredSize(new Dimension(0, 250));
 			// End of 2nd Grid -----------------------------------------------------------------------
 				
 					
 			// 3rd grid ------------------------------------------------------------------------------		// Parameters
-			parametersScrollPanel = new ScrollPane_Parameters(read_database);
-			checkboxParameters = parametersScrollPanel.get_checkboxParameters();
-			parametersScrollPanel.setBorder(BorderFactory.createTitledBorder(null, "Parameters", TitledBorder.CENTER, 0));
-	    	parametersScrollPanel.setPreferredSize(new Dimension(200, 100));
+			parameters_scrollpane = new ScrollPane_Parameters(read_database);
+			checkboxParameters = parameters_scrollpane.get_checkboxParameters();
+			parameters_scrollpane.setBorder(BorderFactory.createTitledBorder(null, "Parameters", TitledBorder.CENTER, 0));
+	    	parameters_scrollpane.setPreferredSize(new Dimension(200, 100));
 			// End of 3rd grid -----------------------------------------------------------------------
 			
 	    	
@@ -697,9 +697,9 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 					if (selectedRow.length == 1) {		// Reload Constraint & Enable Edit	when: 1 row is selected and no cell is editing
 						int currentRow = selectedRow[0];
 						currentRow = table9.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
-						static_identifiersScrollPanel.reload_this_constraint_static_identifiers((String) data9[currentRow][9]);	// 9 is the static_identifiers which have some attributes selected				
-						dynamic_identifiersScrollPanel.reload_this_constraint_dynamic_identifiers((String) data9[currentRow][10], (String) data9[currentRow][11]);	// 11 is the original_dynamic_identifiers column
-						parametersScrollPanel.reload_this_constraint_parameters((String) data9[currentRow][8]);	// 8 is the selected parameters of this constraint
+						static_identifiers_scrollpane.reload_this_constraint_static_identifiers((String) data9[currentRow][9]);	// 9 is the static_identifiers which have some attributes selected				
+						dynamic_identifiers_scrollpane.reload_this_constraint_dynamic_identifiers((String) data9[currentRow][10], (String) data9[currentRow][11]);	// 11 is the original_dynamic_identifiers column
+						parameters_scrollpane.reload_this_constraint_parameters((String) data9[currentRow][8]);	// 8 is the selected parameters of this constraint
 						btn_Edit.setEnabled(true);
 					} else {		// Disable Edit
 						btn_Edit.setEnabled(false);
@@ -727,9 +727,9 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 					if (selectedRow.length == 1) {		// Enable Edit	when: 1 row is selected and no cell is editing
 						int currentRow = selectedRow[0];
 						currentRow = table9.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
-						static_identifiersScrollPanel.reload_this_constraint_static_identifiers((String) data9[currentRow][9]);	// 9 is the static_identifiers which have some attributes selected				
-						dynamic_identifiersScrollPanel.reload_this_constraint_dynamic_identifiers((String) data9[currentRow][10], (String) data9[currentRow][11]);	// 11 is the original_dynamic_identifiers column
-						parametersScrollPanel.reload_this_constraint_parameters((String) data9[currentRow][8]);	// 8 is the selected parameters of this constraint
+						static_identifiers_scrollpane.reload_this_constraint_static_identifiers((String) data9[currentRow][9]);	// 9 is the static_identifiers which have some attributes selected				
+						dynamic_identifiers_scrollpane.reload_this_constraint_dynamic_identifiers((String) data9[currentRow][10], (String) data9[currentRow][11]);	// 11 is the original_dynamic_identifiers column
+						parameters_scrollpane.reload_this_constraint_parameters((String) data9[currentRow][8]);	// 8 is the selected parameters of this constraint
 						btn_Edit.setEnabled(true);
 					} else {		// Disable Edit
 						btn_Edit.setEnabled(false);
@@ -771,14 +771,14 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 					}
 						
 					data9[rowCount9 - 1][1] = String.join(" ..... ",
-							parametersScrollPanel.get_parameters_description_from_GUI(),
-							dynamic_identifiersScrollPanel.get_dynamic_description_from_GUI(),
-							static_identifiersScrollPanel.get_static_description_from_GUI());
+							parameters_scrollpane.get_parameters_description_from_GUI(),
+							dynamic_identifiers_scrollpane.get_dynamic_description_from_GUI(),
+							static_identifiers_scrollpane.get_static_description_from_GUI());
 					data9[rowCount9 - 1][3] = (double) 1;
-					data9[rowCount9 - 1][8] = parametersScrollPanel.get_parameters_info_from_GUI();
-					data9[rowCount9 - 1][9] = static_identifiersScrollPanel.get_static_info_from_GUI();
-					data9[rowCount9 - 1][10] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();
-					data9[rowCount9 - 1][11] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
+					data9[rowCount9 - 1][8] = parameters_scrollpane.get_parameters_info_from_GUI();
+					data9[rowCount9 - 1][9] = static_identifiers_scrollpane.get_static_info_from_GUI();
+					data9[rowCount9 - 1][10] = dynamic_identifiers_scrollpane.get_dynamic_info_from_GUI();
+					data9[rowCount9 - 1][11] = dynamic_identifiers_scrollpane.get_original_dynamic_info_from_GUI();
 					
 					model9.updateTableModelPrism(rowCount9, colCount9, data9, columnNames9);
 					update_id();
@@ -803,9 +803,9 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 					}
 					
 					ScrollPane_ConstraintsSplitFly constraint_split_ScrollPanel = new ScrollPane_ConstraintsSplitFly(
-							static_identifiersScrollPanel.get_static_layer_title_as_checkboxes(),
-							parametersScrollPanel.get_checkboxParameters(),
-							dynamic_identifiersScrollPanel.get_allDynamicIdentifiers());
+							static_identifiers_scrollpane.get_static_layer_title_as_checkboxes(),
+							parameters_scrollpane.get_checkboxParameters(),
+							dynamic_identifiers_scrollpane.get_allDynamicIdentifiers());
 
 					
 					
@@ -813,9 +813,6 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 					int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), constraint_split_ScrollPanel, "Create multiple queries - checked items will be split",
 							JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, ExitOption, ExitOption[0]);
 					if (response == 0) {	// Add Constraints
-						
-						
-						
 						// calculate parameter_permutation
 						int total_parameter_permutation = 1;
 						if (constraint_split_ScrollPanel.is_parameters_split()) { 	//if parameters would be split
@@ -831,8 +828,6 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 								total_parameter_permutation = total_parameter_permutation * total_checked_elements;
 							}
 						}
-						
-						
 						
 						// calculate dynamic_permutation
 						int total_dynamic_permutation = 1;
@@ -887,13 +882,13 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 							
 						if (response2 == 0) {	
 							constraint_split_ScrollPanel.stop_editing();
-							
-							
-//							// Example: 
-//							List<List<String>> lists = new ArrayList<List<String>>();
-//							lists.add(Arrays.asList(new String[] { "lay1 a", "lay1 b", "lay1 c" }));
-//							lists.add(Arrays.asList(new String[] { "lay2 c d e" }));
-//							lists.add(Arrays.asList(new String[] { "lay3 f", "lay3 g" }));
+							/* 
+							Example: 
+							List<List<String>> lists = new ArrayList<List<String>>();
+							lists.add(Arrays.asList(new String[] { "lay1 a", "lay1 b", "lay1 c" }));
+							lists.add(Arrays.asList(new String[] { "lay2 c d e" }));
+							lists.add(Arrays.asList(new String[] { "lay3 f", "lay3 g" }));
+							*/
 							
 							
 							// for parameters------------------------------------------------------------------------------------------------------
@@ -912,7 +907,6 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 							for (int i = 0; i < checkboxDynamicIdentifiers.size(); i++) {
 								if (allDynamicIdentifiers_ScrollPane.get(i).isVisible()) {
 									List<String> joined_string_list = new ArrayList<String>();
-									
 									if (dynamic_split_id.contains(i)) {	// if this dynamic layer must be split
 										for (int j = 0; j < checkboxDynamicIdentifiers.get(i).size(); j++) {
 											if (checkboxDynamicIdentifiers.get(i).get(j).isSelected() && checkboxDynamicIdentifiers.get(i).get(j).isVisible()) {	// If element of this static is checked		
@@ -922,7 +916,6 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 												joined_string_list.add(String.join(" ", temp));
 											}	
 										}
-										
 										dynamic_iterable_lists.add(joined_string_list);
 									} else {		// if this dynamic layer would not be split
 										List<String> temp = new ArrayList<String>(); 
@@ -933,7 +926,6 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 											}	
 										}
 										joined_string_list.add(String.join(" ", temp));
-										
 										dynamic_iterable_lists.add(joined_string_list);
 									}
 								}
@@ -952,7 +944,6 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 							List<List<String>> static_iterable_lists = new ArrayList<List<String>>();
 							for (int i = 0; i < checkboxStaticIdentifiers.size(); i++) {
 								List<String> joined_string_list = new ArrayList<String>();
-								
 								if (static_split_id.contains(i)) {	// if this static layer must be split
 									for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {
 										if (checkboxStaticIdentifiers.get(i).get(j).isSelected() && checkboxStaticIdentifiers.get(i).get(j).isVisible()) {	// If element of this static is checked		
@@ -989,17 +980,61 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 							
 							
 							
-							// for parameter description------------------------------------------------------------------------------------------------------
-							List<String> parameter_description_info_list = new ArrayList<String>();
-							if (constraint_split_ScrollPanel.is_parameters_split()) { 	//if parameters would be split
-								for (int i = 0; i < checkboxParameters.size(); i++) {
-									if (checkboxParameters.get(i).isSelected() && checkboxParameters.get(i).isVisible()) {	// If this parameter is checked		
-										parameter_description_info_list.add(checkboxParameters.get(i).getText());
+							// Pre descriptions
+							List<Integer> static_descriptor_id = constraint_split_ScrollPanel.get_static_descriptor_id();	// id of static layers to be in description
+							List<Integer> dynamic_descriptor_id = new ArrayList<Integer>();	// id of dynamic attribute to be descriptor (not the real yield table column id)
+							List<String> dynamic_descriptor_name = constraint_split_ScrollPanel.get_dynamic_descriptor_name();	// name of dynamic attribute to be descriptor
+							for (String name : dynamic_descriptor_name) {
+								// Find the index
+								int i = 0;
+								for (int cb_id = 0; cb_id < allDynamicIdentifiers.size(); cb_id++) {
+									if (allDynamicIdentifiers.get(cb_id).getText().equals(name)) {
+										i = cb_id;
+										dynamic_descriptor_id.add(i);
+										break;
 									}
 								}
-								if (parameter_description_info_list.isEmpty()) parameter_description_info_list.add(parametersScrollPanel.get_parameters_description_from_GUI());
-							} else { // --> disable this "else" if do not want the full description
-								parameter_description_info_list.add(parametersScrollPanel.get_parameters_description_from_GUI());
+							}
+							
+							
+							// for parameter description------------------------------------------------------------------------------------------------------
+							List<String> parameter_description_info_list = new ArrayList<String>();
+							if (parameters_scrollpane.get_checkboxNoParameter().isSelected()) {
+								if (constraint_split_ScrollPanel.is_parameters_descriptor()) {
+									parameter_description_info_list.add("Area");
+								} else {
+									parameter_description_info_list.add("");
+								}
+							} else if (parameters_scrollpane.get_checkboxCostParameter().isSelected()) {
+								if (constraint_split_ScrollPanel.is_parameters_descriptor()) {
+									parameter_description_info_list.add("Cost");
+								} else {
+									parameter_description_info_list.add("");
+								}
+							} else {
+								if (constraint_split_ScrollPanel.is_parameters_split()) { 	//if parameters would be split
+									for (int i = 0; i < checkboxParameters.size(); i++) {
+										if (checkboxParameters.get(i).isSelected() && checkboxParameters.get(i).isVisible()) {	// If this parameter is checked	
+											if (constraint_split_ScrollPanel.is_parameters_descriptor()) {
+												parameter_description_info_list.add(checkboxParameters.get(i).getText());
+											} else {
+												parameter_description_info_list.add("");
+											}
+										}
+									}
+								} else {
+									if (constraint_split_ScrollPanel.is_parameters_descriptor()) {
+										List<String> temp = new ArrayList<String>(); 
+										for (int i = 0; i < checkboxParameters.size(); i++) {
+											if (checkboxParameters.get(i).isSelected() && checkboxParameters.get(i).isVisible()) {	// If this parameter is checked	
+												temp.add(checkboxParameters.get(i).getText());
+											}
+										}
+										parameter_description_info_list.add(String.join(" + ", temp));
+									} else {
+										parameter_description_info_list.add("");
+									}
+								}
 							}
 							
 							
@@ -1007,46 +1042,34 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 							List<List<String>> dynamic_description_iterable_lists = new ArrayList<List<String>>();
 							for (int i = 0; i < checkboxDynamicIdentifiers.size(); i++) {
 								List<String> joined_string_list = new ArrayList<String>();
-
-								if (dynamic_split_id.contains(i)) {	// if this static layer must be split
+								if (dynamic_split_id.contains(i)) {	// if this dynamic layer must be split
 									for (int j = 0; j < checkboxDynamicIdentifiers.get(i).size(); j++) {
 										if (checkboxDynamicIdentifiers.get(i).get(j).isSelected() && checkboxDynamicIdentifiers.get(i).get(j).isVisible()) {	// If element of this dynamic is checked		
-											List<String> temp = new ArrayList<String>(); 
-											temp.add(allDynamicIdentifiers.get(i).getText());
-											temp.add(checkboxDynamicIdentifiers.get(i).get(j).getText());	
-											joined_string_list.add(String.join(" ", temp));
+											if (dynamic_descriptor_id.contains(i)) {
+												List<String> temp = new ArrayList<String>(); 
+												temp.add(allDynamicIdentifiers.get(i).getText());
+												temp.add(checkboxDynamicIdentifiers.get(i).get(j).getText());	
+												joined_string_list.add(String.join(" ", temp));
+											} else {
+												joined_string_list.add("");
+											}
 										}	
 									}
-									
 									dynamic_description_iterable_lists.add(joined_string_list);
-								} else {	// this else is almost the same as "get_dynamic_description_from_GUI" --> disable this "else" if do not want the full description
-									// Count the total of checked items in each identifier 
-									int total_check_items = 0;
-									int total_items = 0;
-									if (allDynamicIdentifiers_ScrollPane.get(i).isVisible() && checkboxDynamicIdentifiers.get(i).size() > 0) {	// get the active identifiers (when identifier ScrollPane is visible and List size >0)
-										for (int j = 0; j < checkboxDynamicIdentifiers.get(i).size(); j++) { //Loop all checkBoxes in this active identifier
-											if (checkboxDynamicIdentifiers.get(i).get(j).isSelected() && checkboxDynamicIdentifiers.get(i).get(j).isVisible()) {
-												total_check_items++;
-											}
-											if (checkboxDynamicIdentifiers.get(i).get(j).isVisible()) {
-												total_items++;
-											}
+								} else {		// if this dynamic layer would not be split
+									if (dynamic_descriptor_id.contains(i)) {
+										List<String> temp = new ArrayList<String>(); 
+										temp.add(allDynamicIdentifiers.get(i).getText());
+										for (int j = 0; j < checkboxDynamicIdentifiers.get(i).size(); j++) {
+											if (checkboxDynamicIdentifiers.get(i).get(j).isSelected() && checkboxDynamicIdentifiers.get(i).get(j).isVisible()) {	// If element of this static is checked		
+												temp.add(checkboxDynamicIdentifiers.get(i).get(j).getText());	
+											}	
 										}
+										joined_string_list.add(String.join(" ", temp));
+									} else {
+										joined_string_list.add("");
 									}
-									// Add to description only when the total of checked items < the total items
-									if (total_check_items < total_items) {
-										String dynamic_info = allDynamicIdentifiers.get(i).getText();
-										
-										for (int j = 0; j < checkboxDynamicIdentifiers.get(i).size(); j++) { 	// Loop all checkBoxes in this active identifier
-											String checkboxName = checkboxDynamicIdentifiers.get(i).get(j).getText();									
-											// Add if it is (selected & visible)
-											if (checkboxDynamicIdentifiers.get(i).get(j).isSelected() && checkboxDynamicIdentifiers.get(i).get(j).isVisible()) {
-												dynamic_info = String.join(" ", dynamic_info, checkboxName);
-											}
-										}
-										joined_string_list.add(dynamic_info);
-										dynamic_description_iterable_lists.add(joined_string_list);
-									}
+									dynamic_description_iterable_lists.add(joined_string_list);
 								}
 							}	
 							// Create lists
@@ -1054,7 +1077,11 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 							// Get all permutation
 							MixedRangeCombinationIterable<String> dynamic_description_iterable = new MixedRangeCombinationIterable<String>(dynamic_description_iterable_lists);
 							for (List<String> element : dynamic_description_iterable) {
-								String joined_string = String.join(" | ", element);
+								List<String> temp_list = new ArrayList<String>();
+								for (String st : element) {
+									if (!st.equals("")) temp_list.add(st);
+								}
+								String joined_string = String.join(" | ", temp_list);
 								dynamic_description_info_list.add(joined_string);
 							}
 							
@@ -1063,44 +1090,34 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 							List<List<String>> static_description_iterable_lists = new ArrayList<List<String>>();
 							for (int i = 0; i < checkboxStaticIdentifiers.size(); i++) {
 								List<String> joined_string_list = new ArrayList<String>();
-								
 								if (static_split_id.contains(i)) {	// if this static layer must be split
 									for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {
 										if (checkboxStaticIdentifiers.get(i).get(j).isSelected() && checkboxStaticIdentifiers.get(i).get(j).isVisible()) {	// If element of this static is checked		
-											List<String> temp = new ArrayList<String>(); 
-											temp.add(static_identifiersScrollPanel.get_static_layer_title_as_checkboxes().get(i).getText());
-											temp.add(checkboxStaticIdentifiers.get(i).get(j).getText());	
-											joined_string_list.add(String.join(" ", temp));
-										}	
-									}
-									
-									static_description_iterable_lists.add(joined_string_list);
-								} else {	// this else is almost the same as "get_static_description_from_GUI" --> disable this "else" if do not want the full description
-									// Count the total of checked items in each layer 
-									int total_check_items = 0;
-									int total_items = 0;
-									for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {		//Loop all elements in each layer
-										if (checkboxStaticIdentifiers.get(i).get(j).isSelected() && checkboxStaticIdentifiers.get(i).get(j).isVisible()) {
-											total_check_items++;
-										}
-										if (checkboxStaticIdentifiers.get(i).get(j).isVisible()) {
-											total_items++;
-										}	
-									}
-									// Add to description only when the total of checked items < the total items
-									if (total_check_items < total_items) {
-										String static_info = static_identifiersScrollPanel.get_static_layer_title_as_checkboxes().get(i).getText();
-										
-										for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {		//Loop all elements in each layer
-											String checkboxName = checkboxStaticIdentifiers.get(i).get(j).getText();				
-											// Add if it is (selected & visible)
-											if (checkboxStaticIdentifiers.get(i).get(j).isSelected() && checkboxStaticIdentifiers.get(i).get(j).isVisible()) {
-												static_info = String.join(" ", static_info, checkboxName);
+											if (static_descriptor_id.contains(i)) {
+												List<String> temp = new ArrayList<String>(); 
+												temp.add(static_identifiers_scrollpane.get_static_layer_title_as_checkboxes().get(i).getText());
+												temp.add(checkboxStaticIdentifiers.get(i).get(j).getText());	
+												joined_string_list.add(String.join(" ", temp));
+											} else {
+												joined_string_list.add("");
 											}
-										}
-										joined_string_list.add(static_info);
-										static_description_iterable_lists.add(joined_string_list);
+										}	
 									}
+									static_description_iterable_lists.add(joined_string_list);
+								} else {		// if this static layer would not be split
+									if (static_descriptor_id.contains(i)) {
+										List<String> temp = new ArrayList<String>(); 
+										temp.add(static_identifiers_scrollpane.get_static_layer_title_as_checkboxes().get(i).getText());
+										for (int j = 0; j < checkboxStaticIdentifiers.get(i).size(); j++) {
+											if (checkboxStaticIdentifiers.get(i).get(j).isSelected() && checkboxStaticIdentifiers.get(i).get(j).isVisible()) {	// If element of this static is checked			
+												temp.add(checkboxStaticIdentifiers.get(i).get(j).getText());	
+											}	
+										}
+										joined_string_list.add(String.join(" ", temp));
+									} else {
+										joined_string_list.add("");
+									}
+									static_description_iterable_lists.add(joined_string_list);
 								}
 							}	
 							// Create lists
@@ -1108,7 +1125,11 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 							// Get all permutation
 							MixedRangeCombinationIterable<String> description_iterable = new MixedRangeCombinationIterable<String>(static_description_iterable_lists);
 							for (List<String> element : description_iterable) {
-								String joined_string = String.join(" | ", element);
+								List<String> temp_list = new ArrayList<String>();
+								for (String st : element) {
+									if (!st.equals("")) temp_list.add(st);
+								}
+								String joined_string = String.join(" | ", temp_list);
 								static_description_info_list.add(joined_string);
 							}
 							
@@ -1116,12 +1137,15 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 							
 							
 							// Combine everything together to create the final lists
-							if (parameter_info_list.isEmpty()) parameter_info_list.add(parametersScrollPanel.get_parameters_info_from_GUI());
-							if (dynamic_info_list.isEmpty()) dynamic_info_list.add(dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI());
-							if (static_info_list.isEmpty()) static_info_list.add(static_identifiersScrollPanel.get_static_info_from_GUI());
-							if (parameter_description_info_list.isEmpty()) parameter_description_info_list.add(parametersScrollPanel.get_parameters_description_from_GUI());
-							if (dynamic_description_info_list.isEmpty()) dynamic_description_info_list.add(dynamic_identifiersScrollPanel.get_dynamic_description_from_GUI());
-							if (static_description_info_list.isEmpty()) static_description_info_list.add(static_identifiersScrollPanel.get_static_description_from_GUI());
+							if (parameter_info_list.isEmpty()) parameter_info_list.add(parameters_scrollpane.get_parameters_info_from_GUI());
+							if (dynamic_info_list.isEmpty()) dynamic_info_list.add(dynamic_identifiers_scrollpane.get_dynamic_info_from_GUI());
+							if (static_info_list.isEmpty()) static_info_list.add(static_identifiers_scrollpane.get_static_info_from_GUI());
+//							if (parameter_description_info_list.isEmpty()) parameter_description_info_list.add(parametersScrollPanel.get_parameters_description_from_GUI());
+//							if (dynamic_description_info_list.isEmpty()) dynamic_description_info_list.add(dynamic_identifiersScrollPanel.get_dynamic_description_from_GUI());
+//							if (static_description_info_list.isEmpty()) static_description_info_list.add(static_identifiersScrollPanel.get_static_description_from_GUI());
+							if (parameter_description_info_list.isEmpty()) parameter_description_info_list.add("");
+							if (dynamic_description_info_list.isEmpty()) dynamic_description_info_list.add("");
+							if (static_description_info_list.isEmpty()) static_description_info_list.add("");
 							
 							List<String> final_parameter_info_list = new ArrayList<String>();
 							List<String> final_dynamic_info_list = new ArrayList<String>();
@@ -1135,9 +1159,9 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 										final_static_info_list.add(static_info_list.get(j));
 										
 										List<String> temp_list = new ArrayList<String>();
-										temp_list.add(parameter_description_info_list.get(p));
-										temp_list.add(dynamic_description_info_list.get(i));
-										temp_list.add(static_description_info_list.get(j));
+										if (!parameter_description_info_list.get(p).equals("")) temp_list.add(parameter_description_info_list.get(p));
+										if (!dynamic_description_info_list.get(i).equals("")) temp_list.add(dynamic_description_info_list.get(i));
+										if (!static_description_info_list.get(j).equals("")) temp_list.add(static_description_info_list.get(j));
 										String joined_string = String.join(" ..... ", temp_list);
 										final_description_info_list.add(joined_string);
 									}
@@ -1177,7 +1201,6 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 								
 								Object[][] temp_data = constraint_split_ScrollPanel.get_multiple_constraints_data();
 								JCheckBox autoDescription = constraint_split_ScrollPanel.get_autoDescription();
-								
 								for (int i = rowCount9 - total_constraints; i < rowCount9; i++) {
 									for (int j = 0; j < colCount9; j++) {
 										if (autoDescription.isSelected()) {
@@ -1199,7 +1222,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 										data9[i][8] = final_parameter_info_list.get(i - rowCount9 + total_constraints);		// parameter splitter is active
 										data9[i][9] = final_static_info_list.get(i - rowCount9 + total_constraints);		// static splitter is active
 										data9[i][10] = final_dynamic_info_list.get(i - rowCount9 + total_constraints);		// dynamic splitter is active
-										data9[i][11] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
+										data9[i][11] = dynamic_identifiers_scrollpane.get_original_dynamic_info_from_GUI();
 									}	
 								}	
 		
@@ -1273,10 +1296,10 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 						selectedRow = table9.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems	
 						
 						// Apply change
-						data9[selectedRow][8] = parametersScrollPanel.get_parameters_info_from_GUI();
-						data9[selectedRow][9] = static_identifiersScrollPanel.get_static_info_from_GUI();
-						data9[selectedRow][10] = dynamic_identifiersScrollPanel.get_dynamic_info_from_GUI();	
-						data9[selectedRow][11] = dynamic_identifiersScrollPanel.get_original_dynamic_info_from_GUI();
+						data9[selectedRow][8] = parameters_scrollpane.get_parameters_info_from_GUI();
+						data9[selectedRow][9] = static_identifiers_scrollpane.get_static_info_from_GUI();
+						data9[selectedRow][10] = dynamic_identifiers_scrollpane.get_dynamic_info_from_GUI();	
+						data9[selectedRow][11] = dynamic_identifiers_scrollpane.get_original_dynamic_info_from_GUI();
 						for (int iter_col = 12; iter_col < colCount9; iter_col++) {
     						data9[selectedRow][iter_col] = null;
     					}
@@ -1286,9 +1309,9 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 						int editRow = table9.convertRowIndexToView(selectedRow);
 						table9.setRowSelectionInterval(editRow, editRow);
 						
-						static_identifiersScrollPanel.highlight();
-						dynamic_identifiersScrollPanel.highlight();
-						parametersScrollPanel.highlight();
+						static_identifiers_scrollpane.highlight();
+						dynamic_identifiers_scrollpane.highlight();
+						parameters_scrollpane.highlight();
 					}
 				}
 			});
@@ -1297,17 +1320,17 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			btn_Edit.addMouseListener(new MouseAdapter() { // Add listener
 				public void mouseEntered(java.awt.event.MouseEvent e) {
 					if (table9.getSelectedRows().length == 1) {
-						static_identifiersScrollPanel.highlight();
-						dynamic_identifiersScrollPanel.highlight();
-						parametersScrollPanel.highlight();
+						static_identifiers_scrollpane.highlight();
+						dynamic_identifiers_scrollpane.highlight();
+						parameters_scrollpane.highlight();
 					}		
 				}
 
 				public void mouseExited(java.awt.event.MouseEvent e) {
 					if (table9.getSelectedRows().length == 1) {
-						static_identifiersScrollPanel.unhighlight();
-						dynamic_identifiersScrollPanel.unhighlight();
-						parametersScrollPanel.unhighlight();
+						static_identifiers_scrollpane.unhighlight();
+						dynamic_identifiers_scrollpane.unhighlight();
+						parameters_scrollpane.unhighlight();
 					}
 				}
 			});
@@ -1596,12 +1619,12 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 								// To make UI refresh better
 								table9.revalidate();
 								table9.repaint();
-								parametersScrollPanel.revalidate();
-								parametersScrollPanel.repaint();
-								static_identifiersScrollPanel.revalidate();
-								static_identifiersScrollPanel.repaint();
-								dynamic_identifiersScrollPanel.revalidate();
-								dynamic_identifiersScrollPanel.repaint();
+								parameters_scrollpane.revalidate();
+								parameters_scrollpane.repaint();
+								static_identifiers_scrollpane.revalidate();
+								static_identifiers_scrollpane.repaint();
+								dynamic_identifiers_scrollpane.revalidate();
+								dynamic_identifiers_scrollpane.repaint();
 							});
 						}
 						
@@ -1626,12 +1649,12 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 								// To make UI refresh better
 								table9.revalidate();
 								table9.repaint();
-								parametersScrollPanel.revalidate();
-								parametersScrollPanel.repaint();
-								static_identifiersScrollPanel.revalidate();
-								static_identifiersScrollPanel.repaint();
-								dynamic_identifiersScrollPanel.revalidate();
-								dynamic_identifiersScrollPanel.repaint();
+								parameters_scrollpane.revalidate();
+								parameters_scrollpane.repaint();
+								static_identifiers_scrollpane.revalidate();
+								static_identifiers_scrollpane.repaint();
+								dynamic_identifiers_scrollpane.revalidate();
+								dynamic_identifiers_scrollpane.repaint();
 							});
 						}
 					}
@@ -1771,7 +1794,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			c.gridheight = 1;
 			c.weightx = 0.4;
 		    c.weighty = 1;
-		    upper_panel.add(static_identifiersScrollPanel, c);				
+		    upper_panel.add(static_identifiers_scrollpane, c);				
 		    		
 			// Add dynamic_identifiersPanel to the main Grid
 			c.gridx = 2;
@@ -1780,7 +1803,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			c.gridheight = 1;
 			c.weightx = 0.5;
 			c.weighty = 1;
-			upper_panel.add(dynamic_identifiersScrollPanel, c);	
+			upper_panel.add(dynamic_identifiers_scrollpane, c);	
 			    		
 			// Add the parametersScrollPanel to the main Grid	
 			c.gridx = 0;
@@ -1789,7 +1812,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			c.gridheight = 1;
 			c.weightx = 0;
 		    c.weighty = 1;
-		    lower_panel.add(parametersScrollPanel, c);						
+		    lower_panel.add(parameters_scrollpane, c);						
 		    	    		    
 		    // Add the button_table_Panel & scrollpane_QuickEdit to a new Panel then add that panel to the main Grid
 			JPanel button_table_qedit_panel = new JPanel();
