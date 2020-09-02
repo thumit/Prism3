@@ -3336,6 +3336,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			selectedRows[i] = table.convertRowIndexToView(selectedRows[i]);		// Convert row index to view because "Sort" causes problems	
 			table.addRowSelectionInterval(selectedRows[i], selectedRows[i]); 
 		}
+		if (selectedRows.length != 0) table.scrollRectToVisible(new Rectangle(table.getCellRect(table.convertRowIndexToView(selectedRows[0]), 0, true)));	// move to the first highlighted row
 	}
 	//--------------------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------------------

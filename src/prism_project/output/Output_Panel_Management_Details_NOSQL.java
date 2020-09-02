@@ -1486,6 +1486,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 						selectedRows[i] = table9.convertRowIndexToView(selectedRows[i]);		// Convert row index to view because "Sort" causes problems	
 						table9.addRowSelectionInterval(selectedRows[i], selectedRows[i]); 
 					}
+					if (selectedRows.length != 0) table9.scrollRectToVisible(new Rectangle(table9.getCellRect(table9.convertRowIndexToView(selectedRows[0]), 0, true)));	// move to the first highlighted row
 				}
 			});
 			
