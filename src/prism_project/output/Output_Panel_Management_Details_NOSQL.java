@@ -1458,6 +1458,11 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			btn_Sort.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {
+					// Identify selection
+					int[] selectedRows = table9.getSelectedRows();
+					for (int i = 0; i < selectedRows.length; i++) {
+						selectedRows[i] = table9.convertRowIndexToModel(selectedRows[i]);		// Convert row index to model because "Sort" causes problems	
+					}
 					if (table9.isEditing()) {
 						table9.getCellEditor().stopCellEditing();
 					}
@@ -1471,6 +1476,11 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 						filterHeader.setFilterOnUpdates(true);
 						btn_Sort.setText("ON");
 						btn_Sort.repaint();
+					}
+					// Reselect
+					for (int i = 0; i < selectedRows.length; i++) {
+						selectedRows[i] = table9.convertRowIndexToView(selectedRows[i]);		// Convert row index to view because "Sort" causes problems	
+						table9.addRowSelectionInterval(selectedRows[i], selectedRows[i]); 
 					}
 				}
 			});

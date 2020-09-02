@@ -3312,6 +3312,11 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	
 	// Apply sort or nosort
 	private void apply_sort_or_nosort(TableFilterHeader filterHeader, JToggleButton btn, PrismTableModel model, JTable table) {
+		// Identify selection
+		int[] selectedRows = table.getSelectedRows();
+		for (int i = 0; i < selectedRows.length; i++) {
+			selectedRows[i] = table.convertRowIndexToModel(selectedRows[i]);		// Convert row index to model because "Sort" causes problems	
+		}
 		if (table.isEditing()) {
 			table.getCellEditor().stopCellEditing();
 		}
@@ -3325,6 +3330,11 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			filterHeader.setFilterOnUpdates(true);
 			btn.setText("ON");
 			btn.repaint();
+		}
+		// Reselect
+		for (int i = 0; i < selectedRows.length; i++) {
+			selectedRows[i] = table.convertRowIndexToView(selectedRows[i]);		// Convert row index to view because "Sort" causes problems	
+			table.addRowSelectionInterval(selectedRows[i], selectedRows[i]); 
 		}
 	}
 	//--------------------------------------------------------------------------------------------------------------------------
