@@ -4780,6 +4780,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				if (table4.isEditing()) {
 					table4.getCellEditor().stopCellEditing();
 				}
+				filterHeader.resetFilter();
 				
 				// Add 1 row
 				rowCount4++;
@@ -6554,6 +6555,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				if (table8.isEditing()) {
 					table8.getCellEditor().stopCellEditing();
 				}
+				filterHeader.resetFilter();
 				
 				// Add 1 row
 				rowCount8++;
@@ -6599,6 +6601,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				if (table8.isEditing()) {
 					table8.getCellEditor().stopCellEditing();
 				}
+				filterHeader.resetFilter();
 				
 				ScrollPane_ConstraintsSplitBasic constraint_split_ScrollPanel = new ScrollPane_ConstraintsSplitBasic(
 						static_identifiers_scrollpane.get_static_layer_title_as_checkboxes(),
@@ -7793,6 +7796,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						if (table9.isEditing()) {
 							table9.getCellEditor().stopCellEditing();
 						}
+						filterHeader.resetFilter();
 						
 						// Add 1 row
 						rowCount9++;

@@ -754,6 +754,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			
 			
 
+			TableFilterHeader filterHeader = new TableFilterHeader(null, AutoChoices.ENABLED);
 			// New single
 			btn_NewSingle.addActionListener(new ActionListener() {
 				@Override
@@ -761,6 +762,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 					if (table9.isEditing()) {
 						table9.getCellEditor().cancelCellEditing();
 					}
+					filterHeader.resetFilter();
 					
 					// Add 1 row
 					rowCount9++;
@@ -802,6 +804,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 					if (table9.isEditing()) {
 						table9.getCellEditor().cancelCellEditing();
 					}
+					filterHeader.resetFilter();
 					
 					ScrollPane_ConstraintsSplitFly constraint_split_ScrollPanel = new ScrollPane_ConstraintsSplitFly(
 							static_identifiers_scrollpane.get_static_layer_title_as_checkboxes(),
@@ -1253,6 +1256,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 					if (table9.isEditing()) {
 						table9.getCellEditor().cancelCellEditing();
 					}
+					filterHeader.resetFilter();
 					
 					// Add all basic constraints
 					rowCount9 = rowCount9 + input_rowCount9;
@@ -1454,7 +1458,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 					
 			
 			// Sort
-			TableFilterHeader filterHeader = new TableFilterHeader(null, AutoChoices.ENABLED);
+//			TableFilterHeader filterHeader = new TableFilterHeader(null, AutoChoices.ENABLED);		Move to before the New button
 			btn_Sort.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {

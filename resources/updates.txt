@@ -1402,4 +1402,5 @@ All changes in this block are associated with PrismAlpha3.1.03.jar, Prism-Formul
 --------------------------------------------------------------------------
 592. Allow options to include a limited subset of descriptors when adding multiple basic constraints or multiple NOSQL (summarize_output_05) constraints in batch mode.
 593. Allow sorting and drop-down filtering when clicking on the SORT button in PRISM. The SORT buttons are currently available at following screens: Prescription Assignment, Basic Constraints, Flow Constraints, and Fly Constraints (NOSQL MODE)
-594. Allow rehighlighting rows after clicking on the SORT button in PRISM.
+594. Rehighlight rows after clicking on the SORT button in PRISM.
+595. Reset/clear the table header drop-down filter when adding new single/multiple rows at following screens: Prescription Assignment, Basic Constraints, Flow Constraints, and Fly Constraints (NOSQL MODE)
