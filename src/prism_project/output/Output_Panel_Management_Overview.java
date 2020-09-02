@@ -17,20 +17,28 @@ along with PRISM. If not, see <http://www.gnu.org/licenses/>.
 
 package prism_project.output;
 
+import java.awt.BorderLayout;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -42,6 +50,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -54,6 +64,7 @@ import org.jfree.data.general.DefaultPieDataset;
 
 import prism_convenience.IconHandle;
 import prism_convenience.PrismGridBagLayoutHandle;
+import prism_convenience.TableColumnsHandle;
 import prism_root.PrismMain;
 
 // Panel_Flow_Constraints--------------------------------------------------------------------------------	
@@ -183,6 +194,8 @@ public class Output_Panel_Management_Overview extends JLayeredPane {
 			scroll_bar_chart.setViewportView(zoom_scrollpane.getViewport().getView());
 		});
 		
+		Filter_Columns filter_columns = new Filter_Columns(radio_button, overview_table);
+		
 		radio_group.add(radio_button[0]);
 		radio_group.add(radio_button[1]);
 		radio_group.add(radio_button[2]);
@@ -203,8 +216,11 @@ public class Output_Panel_Management_Overview extends JLayeredPane {
 		radio_panel.add(radio_button[4], PrismGridBagLayoutHandle.get_c(c, "BOTH", 
 				0, 4, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
 				10, 10, 10, 10));	// insets top, left, bottom, right
+		radio_panel.add(filter_columns.get_btn_column_filter(), PrismGridBagLayoutHandle.get_c(c, "BOTH", 
+				1, 0, 1, 2, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				10, 20, 10, 10));	// insets top, left, bottom, right
 		radio_panel.add(btn_zoom, PrismGridBagLayoutHandle.get_c(c, "BOTH", 
-				1, 0, 1, 5, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				1, 2, 1, 2, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
 				10, 20, 10, 10));	// insets top, left, bottom, right
         //---------------------------------------------------------------
         scroll_bar_chart.setPreferredSize(new Dimension(100, 100));
@@ -328,7 +344,8 @@ public class Output_Panel_Management_Overview extends JLayeredPane {
 			chart_name = "iteration " + data[selectedRow][0].toString() + " - period " + data[selectedRow][1].toString() + " area";
 			// Put all into dataset		
 			for (int i = 2; i < data[0].length; i++) {
-				dataset.addValue(Double.valueOf(data[selectedRow][i].toString()), "area", table.getColumnName(i));
+				// add to chart only when column is visible
+				if (table.convertColumnIndexToView(i) != - 1) dataset.addValue(Double.valueOf(data[selectedRow][i].toString()), "area", table.getColumnName(table.convertColumnIndexToView(i)));
 			}
 		}
 		
@@ -345,7 +362,8 @@ public class Output_Panel_Management_Overview extends JLayeredPane {
 			chart_name = "iteration " + data[selectedRow][0].toString() + " - period " + data[selectedRow][1].toString() + " area";
 			// Put all into dataset		
 			for (int i = 2; i < data[0].length; i++) {
-				dataset.setValue(table.getColumnName(i), Double.valueOf(data[selectedRow][i].toString()));
+				// add to chart only when column is visible
+				if (table.convertColumnIndexToView(i) != - 1) dataset.setValue(table.getColumnName(table.convertColumnIndexToView(i)), Double.valueOf(data[selectedRow][i].toString()));
 			}
 		}
 		
@@ -363,7 +381,8 @@ public class Output_Panel_Management_Overview extends JLayeredPane {
 			for (int selectedRow: selectedRows) {
 				// Put all into dataset		
 				for (int i = 2; i < data[0].length; i++) {
-					dataset.addValue(Double.valueOf(data[selectedRow][i].toString()), "iteration " + data[selectedRow][0].toString() + ", period " + data[selectedRow][1].toString(), table.getColumnName(i));
+					// add to chart only when column is visible
+					if (table.convertColumnIndexToView(i) != - 1) dataset.addValue(Double.valueOf(data[selectedRow][i].toString()), "iteration " + data[selectedRow][0].toString() + ", period " + data[selectedRow][1].toString(), table.getColumnName(table.convertColumnIndexToView(i)));
 				}
 			}
 		}
@@ -382,7 +401,8 @@ public class Output_Panel_Management_Overview extends JLayeredPane {
 			for (int selectedRow: selectedRows) {
 				// Put all into dataset		
 				for (int i = 2; i < data[0].length; i++) {
-					dataset.addValue(Double.valueOf(data[selectedRow][i].toString()), table.getColumnName(i), data[selectedRow][0].toString() + "," + data[selectedRow][1].toString());
+					// add to chart only when column is visible
+					if (table.convertColumnIndexToView(i) != - 1) dataset.addValue(Double.valueOf(data[selectedRow][i].toString()), table.getColumnName(table.convertColumnIndexToView(i)), data[selectedRow][0].toString() + "," + data[selectedRow][1].toString());
 				}
 			}
 		}
@@ -401,7 +421,8 @@ public class Output_Panel_Management_Overview extends JLayeredPane {
 			for (int selectedRow: selectedRows) {
 				// Put all into dataset		
 				for (int i = 2; i < data[0].length; i++) {
-					dataset.addValue(Double.valueOf(data[selectedRow][i].toString()), "iteration " + data[selectedRow][0].toString() + ", period " + data[selectedRow][1].toString(), table.getColumnName(i));
+					// add to chart only when column is visible
+					if (table.convertColumnIndexToView(i) != - 1) dataset.addValue(Double.valueOf(data[selectedRow][i].toString()), "iteration " + data[selectedRow][0].toString() + ", period " + data[selectedRow][1].toString(), table.getColumnName(table.convertColumnIndexToView(i)));
 				}
 			}
 		}
@@ -409,5 +430,118 @@ public class Output_Panel_Management_Overview extends JLayeredPane {
 		Chart charts = new Chart();
 		return charts.create_multiple_stacked_bar2_chart(chart_name, "activity (stacked by iteration, period)", "area", dataset);
 	}	
+	
+	class Filter_Columns {
+		private JButton btn_column_filter;
+		
+		public Filter_Columns(JRadioButton[] radio_button, JTable table) {
+			// Must set this show/hide column method when all columns are still visible------------------------------------------------------
+			TableColumnsHandle column_handle = new TableColumnsHandle(table);
+						
+			// Create radio buttons-----------------------------------------------------------------------------
+			JRadioButton[] radioButton = new JRadioButton[2];		
+			radioButton[0] = new JRadioButton("Select all activities");
+			radioButton[1] = new JRadioButton("Deselect all activities");
+			ButtonGroup radioGroup = new ButtonGroup();
+			radioGroup.add(radioButton[0]);
+			radioGroup.add(radioButton[1]);
+			
+			// Create a radio panel
+			JPanel radio_panel = new JPanel(new GridLayout(0, 1));
+			radio_panel.setBorder(BorderFactory.createTitledBorder("Quick options"));
+			radio_panel.add(radioButton[0]);
+			radio_panel.add(radioButton[1]);
+						
+			// Create a list of JCheckBox-------------------------------------------------------------------------
+			List<JCheckBox> column_checkboxes = new ArrayList<JCheckBox>();		
+			for (int i = 0; i < table.getColumnModel().getColumnCount(); i++) {
+				if (i > 1) {	// ignore columns 0 and 1: activity & area
+					column_checkboxes.add(new JCheckBox(table.getColumnName(i)));
+					column_checkboxes.get(i - 2).setSelected(true);		// -2 because we ignore 2 columns
+				}
+			}
+			
+			// Add listener for JCheckBoxes
+			for (JCheckBox i: column_checkboxes) {
+				i.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent actionEvent) {
+						radioGroup.clearSelection();
+					}
+				});
+				i.addChangeListener(new ChangeListener() {
+					@Override
+					public void stateChanged(ChangeEvent changeEvent) {
+						if (i.isSelected()) {
+							column_handle.setColumnVisible(i.getText(), true);	// show column
+						} else {
+							column_handle.setColumnVisible(i.getText(), false);	// hide column
+						}
+					}
+				});
+			}
+
+			// Add JCheckBoxes to check_panel
+			JPanel check_panel = new JPanel();
+			check_panel.setLayout(new GridLayout(0, 3));
+			for (JCheckBox i: column_checkboxes) {
+				check_panel.add(i);
+			}
+			
+			// Add check_panel to a scroll panel
+			JScrollPane scrollPane = new JScrollPane(check_panel);				
+			scrollPane.setBorder(BorderFactory.createTitledBorder("Available activities (no-data represents missing data)"));
+			scrollPane.setPreferredSize(new Dimension(600, 250));
+			
+			// Add listeners for radio buttons			
+			// Listener 1		
+			radioButton[0].addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent event) {		// select all
+					for (JCheckBox i: column_checkboxes) {
+						i.setSelected(true);
+					}						
+				}
+			});
+			
+			// Listener 2	
+			radioButton[1].addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent event) {		// deselect all
+					for (JCheckBox i: column_checkboxes) {
+						i.setSelected(false);
+					}						
+				}
+			});
+			
+			// Add radioPanel & scrollPane to a panel				
+			JPanel panel_column_filter = new JPanel(new BorderLayout());
+			panel_column_filter.add(radio_panel, BorderLayout.NORTH);
+			panel_column_filter.add(scrollPane, BorderLayout.CENTER);
+			
+			// Create this button------------------------------------------------------------------------------------------------------
+			btn_column_filter = new JButton();
+			btn_column_filter.setText("FILTER");
+			btn_column_filter.setVerticalTextPosition(SwingConstants.BOTTOM);
+			btn_column_filter.setHorizontalTextPosition(SwingConstants.CENTER);
+//			btn_column_filter.setToolTipText("column filter");
+			btn_column_filter.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_binoculars.png"));
+			btn_column_filter.setRolloverIcon(IconHandle.get_scaledImageIcon(35, 35, "icon_binoculars.png"));
+			btn_column_filter.setContentAreaFilled(false);
+			btn_column_filter.addActionListener(e -> {
+				String ExitOption[] = { "Ok" };
+				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), panel_column_filter,
+						"Select columns for visualization", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
+						IconHandle.get_scaledImageIcon(50, 50, "icon_binoculars.png"), ExitOption, ExitOption[0]);
+				if (response == 0) {
+				}
+//				for (JRadioButton r : radio_button) {
+//					if (r.isSelected()) r.doClick();	// this will help update the chart through radio's listener
+//				}
+			});
+		}
+		
+		public JButton get_btn_column_filter() {
+			return btn_column_filter;
+		}
+	}
 }	
 
