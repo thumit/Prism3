@@ -79,8 +79,9 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-import javax.swing.table.TableRowSorter;
 
+import net.coderazzi.filters.gui.AutoChoices;
+import net.coderazzi.filters.gui.TableFilterHeader;
 import prism_convenience.IconHandle;
 import prism_convenience.MixedRangeCombinationIterable;
 import prism_convenience.PrismTableModel;
@@ -1453,25 +1454,24 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 					
 			
 			// Sort
+			TableFilterHeader filterHeader = new TableFilterHeader(null, AutoChoices.ENABLED);
 			btn_Sort.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {
 					if (table9.isEditing()) {
-						table9.getCellEditor().cancelCellEditing();
+						table9.getCellEditor().stopCellEditing();
 					}
-					
 					if (btn_Sort.getText().equals("ON")) {
-						btn_Save.setEnabled(true);
+						filterHeader.setTable(null);
 						table9.setRowSorter(null);
 						btn_Sort.setText("OFF");
 						btn_Sort.repaint();
 					} else if (btn_Sort.getText().equals("OFF")) {
-						btn_Save.setEnabled(false);
-						TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model9); // Add sorter
-						table9.setRowSorter(sorter);
+						filterHeader.setTable(table9);
+						filterHeader.setFilterOnUpdates(true);
 						btn_Sort.setText("ON");
 						btn_Sort.repaint();
-					}	
+					}
 				}
 			});
 			

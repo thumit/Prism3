@@ -106,6 +106,8 @@ import javax.swing.table.TableRowSorter;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultFormatter;
 
+import net.coderazzi.filters.gui.AutoChoices;
+import net.coderazzi.filters.gui.TableFilterHeader;
 import prism_convenience.FilesHandle;
 import prism_convenience.IconHandle;
 import prism_convenience.MixedRangeCombinationIterable;
@@ -3309,17 +3311,18 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	};
 	
 	// Apply sort or nosort
-	private void apply_sort_or_nosort(JToggleButton btn, PrismTableModel model, JTable table) {
+	private void apply_sort_or_nosort(TableFilterHeader filterHeader, JToggleButton btn, PrismTableModel model, JTable table) {
 		if (table.isEditing()) {
 			table.getCellEditor().stopCellEditing();
 		}
 		if (btn.getText().equals("ON")) {
+			filterHeader.setTable(null);
 			table.setRowSorter(null);
 			btn.setText("OFF");
 			btn.repaint();
 		} else if (btn.getText().equals("OFF")) {
-			TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>(model); // Add sorter
-			table.setRowSorter(sorter);
+			filterHeader.setTable(table);
+			filterHeader.setFilterOnUpdates(true);
 			btn.setText("ON");
 			btn.repaint();
 		}
@@ -4159,7 +4162,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 
 			
 			JToggleButton btn_Sort = create_sort_button(button_table_Panel, c2, 0, 4, 0, 0);
-			btn_Sort.addActionListener(e -> apply_sort_or_nosort(btn_Sort, model2, table2));
+			TableFilterHeader filterHeader = new TableFilterHeader(null, AutoChoices.ENABLED);
+			btn_Sort.addActionListener(e -> apply_sort_or_nosort(filterHeader, btn_Sort, model2, table2));
 
 			
 			create_mass_check_button(button_table_Panel, c2, 0, 5, 0, 0).addActionListener(e -> apply_mass_check_or_uncheck("mass_check", model2, table2, data2, colCount2));
@@ -4674,7 +4678,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 
 			
 			JToggleButton btn_Sort = create_sort_button(button_table_Panel, c2, 0, 4, 0, 0);
-			btn_Sort.addActionListener(e -> apply_sort_or_nosort(btn_Sort, model4, table4));
+			TableFilterHeader filterHeader = new TableFilterHeader(null, AutoChoices.ENABLED);
+			btn_Sort.addActionListener(e -> apply_sort_or_nosort(filterHeader, btn_Sort, model4, table4));
 
 			
 			create_mass_check_button(button_table_Panel, c2, 0, 5, 0, 0).addActionListener(e ->	apply_mass_check_or_uncheck("mass_check", model4, table4, data4, colCount4));
@@ -6449,7 +6454,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 
 
 			JToggleButton btn_Sort = create_sort_button(button_table_Panel, c2, 0, 5, 0, 0);
-			btn_Sort.addActionListener(e -> apply_sort_or_nosort(btn_Sort, model8, table8));
+			TableFilterHeader filterHeader = new TableFilterHeader(null, AutoChoices.ENABLED);
+			btn_Sort.addActionListener(e -> apply_sort_or_nosort(filterHeader, btn_Sort, model8, table8));
 
 			
 			JButton btn_Examine = new JButton();
@@ -7670,7 +7676,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 
 			
 			JToggleButton btn_Sort = create_sort_button(button_table_Panel, c2, 0, 4, 0, 0);
-			btn_Sort.addActionListener(e -> apply_sort_or_nosort(btn_Sort, model9, table9));
+			TableFilterHeader filterHeader = new TableFilterHeader(null, AutoChoices.ENABLED);
+			btn_Sort.addActionListener(e -> apply_sort_or_nosort(filterHeader, btn_Sort, model9, table9));
 
 			
 			JToggleButton btn_Examine = new JToggleButton();
@@ -8472,7 +8479,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 
 
 			JToggleButton btn_Sort = create_sort_button(button_table_Panel, c2, 0, 0, 0, 0);
-			btn_Sort.addActionListener(e -> apply_sort_or_nosort(btn_Sort, model10, table10));
+			TableFilterHeader filterHeader = new TableFilterHeader(null, AutoChoices.ENABLED);
+			btn_Sort.addActionListener(e -> apply_sort_or_nosort(filterHeader, btn_Sort, model10, table10));
 
 
 			create_mass_check_button(button_table_Panel, c2, 0, 1, 0, 0).addActionListener(e -> apply_mass_check_or_uncheck("mass_check", model10, table10, data10, colCount10));
