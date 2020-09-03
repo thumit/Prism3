@@ -647,7 +647,7 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 		
 		String chart_name = "Highlight single or multiple flows to view chart";
 		if (selectedRows.length >= 1) {
-			chart_name = "Comparison for highlighted flows of the Folow Data\n";
+			chart_name = "Comparison for highlighted flows of the Flow Data\n";
 			for (int selectedRow: selectedRows) {
 				chart_name = String.join("   ", chart_name, flow_data[selectedRow][0].toString() + "," + flow_data[selectedRow][1].toString());
 
@@ -814,7 +814,7 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 		
 		String chart_name = "Highlight single or multiple flows to view chart";
 		if (selectedRows.length >= 1) {
-			chart_name = "Comparison for highlighted flows of the Folow Data\n";
+			chart_name = "Comparison for highlighted flows of the Flow Data\n";
 			for (int selectedRow: selectedRows) {
 				chart_name = String.join("   ", chart_name, flow_data[selectedRow][0].toString() + "," + flow_data[selectedRow][1].toString());
 
@@ -855,7 +855,7 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 		
 		String chart_name = "Highlight single or multiple flows to view chart";
 		if (selectedRows.length >= 1) {
-			chart_name = "Comparison for highlighted flows of the Folow Data\n";
+			chart_name = "Comparison for highlighted flows of the Flow Data\n";
 			for (int selectedRow: selectedRows) {
 				chart_name = String.join("   ", chart_name, flow_data[selectedRow][0].toString() + "," + flow_data[selectedRow][1].toString());
 
