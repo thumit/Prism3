@@ -365,6 +365,7 @@ public class Output_Panel_Management_Overview extends JLayeredPane {
 				// add to chart only when column is visible
 				if (table.convertColumnIndexToView(i) != - 1) dataset.setValue(table.getColumnName(table.convertColumnIndexToView(i)), Double.valueOf(data[selectedRow][i].toString()));
 			}
+			if (dataset.getItemCount() == 1) dataset.setValue("zero", 0);	// this is to prevent frozen when the pie chart only has 1 dataset 
 		}
 		
 		Chart charts = new Chart();
@@ -491,7 +492,7 @@ public class Output_Panel_Management_Overview extends JLayeredPane {
 			// Add check_panel to a scroll panel
 			JScrollPane scrollPane = new JScrollPane(check_panel);				
 			scrollPane.setBorder(BorderFactory.createTitledBorder("Available activities (no-data represents missing data)"));
-			scrollPane.setPreferredSize(new Dimension(600, 250));
+			scrollPane.setPreferredSize(new Dimension(550, 250));
 			
 			// Add listeners for radio buttons			
 			// Listener 1		

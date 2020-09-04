@@ -382,7 +382,7 @@ public class Output_Panel_Basic_Constraints extends JLayeredPane {
 			for (int i = 0; i < total_iteration; i++) {
 				dataset.setValue("iteration " + String.valueOf(i), Double.valueOf(bc_data[selectedRow][i + 4].toString()));
 			}
-			if (total_iteration == 1) dataset.setValue("others", 0);	// this is to prevent frozen when the pie chart only has 1 dataset (1 iteration)	
+			if (total_iteration == 1) dataset.setValue("zero", 0);	// this is to prevent frozen when the pie chart only has 1 dataset (1 iteration)	
 		}
 		
 		Chart charts = new Chart();
