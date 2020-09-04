@@ -534,9 +534,9 @@ public class Output_Panel_Management_Overview extends JLayeredPane {
 						IconHandle.get_scaledImageIcon(50, 50, "icon_binoculars.png"), ExitOption, ExitOption[0]);
 				if (response == 0) {
 				}
-//				for (JRadioButton r : radio_button) {
-//					if (r.isSelected()) r.doClick();	// this will help update the chart through radio's listener
-//				}
+				for (JRadioButton r : radio_button) {
+					if (r.isSelected()) r.doClick();	// this will help update the chart through radio's listener
+				}
 			});
 		}
 		
