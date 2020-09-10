@@ -484,7 +484,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 		ScrollPane_Parameters parameters_scrollpane;
 		ScrollPane_StaticIdentifiers static_identifiers_scrollpane;
 		ScrollPane_DynamicIdentifiers dynamic_identifiers_scrollpane;
-		JPanel button_table_Panel;
+		JPanel button_table_panel;
 		
 		Panel_QuickEdit_FlyConstraints quick_edit;
 		JScrollPane scrollpane_QuickEdit;
@@ -530,8 +530,8 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			// 4th Grid ------------------------------------------------------------------------------		// Buttons	
 			// 4th Grid -----------------------------------------------------------------------------
 			// Add all buttons to a Panel----------------------------------
-			button_table_Panel = new JPanel(new GridBagLayout());
-			button_table_Panel.setBorder(BorderFactory.createTitledBorder(null, "Optimal Solution Queries", TitledBorder.CENTER, 0));
+			button_table_panel = new JPanel(new GridBagLayout());
+			button_table_panel.setBorder(BorderFactory.createTitledBorder(null, "Optimal Solution Queries", TitledBorder.CENTER, 0));
 			GridBagConstraints c2 = new GridBagConstraints();
 			c2.fill = GridBagConstraints.BOTH;
 			c2.insets = new Insets(0, 5, 5, 10); // padding top 0, left 5, bottom 10, right 10
@@ -539,40 +539,47 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			
 			JButton btn_NewSingle = new JButton();
 			btn_NewSingle.setFont(new Font(null, Font.BOLD, 14));
-//			btn_NewSingle.setText("NEW SINGLE");
+//			btn_NewSingle.setText("NEW SET");
 			btn_NewSingle.setToolTipText("New");
-			btn_NewSingle.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_add.png"));					
+			btn_NewSingle.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_add.png"));
+			btn_NewSingle.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_add.png"));
+			btn_NewSingle.setContentAreaFilled(false);
 			c2.gridx = 0;
 			c2.gridy = 0;
 			c2.weightx = 0;
 			c2.weighty = 0;
-			button_table_Panel.add(btn_NewSingle, c2);
+			button_table_panel.add(btn_NewSingle, c2);		
 			
-			
+
 			JButton btn_New_Multiple = new JButton();
 			btn_New_Multiple.setFont(new Font(null, Font.BOLD, 14));
 //			btn_New_Multiple.setText("NEW MULTIPLE");
 			btn_New_Multiple.setToolTipText("New multiple");
-			btn_New_Multiple.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_add3.png"));				
+			btn_New_Multiple.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_add3.png"));				
+			btn_New_Multiple.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_add3.png"));
+			btn_New_Multiple.setContentAreaFilled(false);
 			c2.gridx = 0;
 			c2.gridy = 1;
 			c2.weightx = 0;
 			c2.weighty = 0;
-			button_table_Panel.add(btn_New_Multiple, c2);
+			button_table_panel.add(btn_New_Multiple, c2);
 			
 			
 			JButton btn_Import_basic_Constraints = new JButton();
 			btn_Import_basic_Constraints.setFont(new Font(null, Font.BOLD, 14));
 //			btn_Import_basic_Constraints.setText("IMPORT");
 			btn_Import_basic_Constraints.setToolTipText("Import Basic Constraints");
-			btn_Import_basic_Constraints.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_add4.png"));				
+			btn_Import_basic_Constraints.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_add4.png"));	
+			btn_Import_basic_Constraints.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_add4.png"));
+			btn_Import_basic_Constraints.setContentAreaFilled(false);
 			c2.gridx = 0;
 			c2.gridy = 2;
 			c2.weightx = 0;
 			c2.weighty = 0;
-			button_table_Panel.add(btn_Import_basic_Constraints, c2);
+			button_table_panel.add(btn_Import_basic_Constraints, c2);
 			
 			
+			// Add Spinner to move priority up or down
 			JSpinner spin_move_rows = new JSpinner (new SpinnerNumberModel(1, 0, 2, 1));
 			spin_move_rows.setToolTipText("Move");
 			JFormattedTextField SpinnerText = ((DefaultEditor) spin_move_rows.getEditor()).getTextField();
@@ -581,37 +588,41 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			SpinnerText.setFocusable(false);
 //			DefaultFormatter formatter = (DefaultFormatter) SpinnerText.getFormatter();
 //		    formatter.setCommitsOnValidEdit(true);
-		    spin_move_rows.setEnabled(false);
+			spin_move_rows.setEnabled(false);
 		    c2.gridx = 0;
 			c2.gridy = 3;
 			c2.weightx = 0;
 			c2.weighty = 0;
-			button_table_Panel.add(spin_move_rows, c2);
+			button_table_panel.add(spin_move_rows, c2);
 			
 			
 			JButton btn_Edit = new JButton();
 //			btn_Edit.setText("EDIT");
 			btn_Edit.setToolTipText("Modify");
-			btn_Edit.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_swap.png"));
-			btn_Edit.setEnabled(false);					
+			btn_Edit.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_swap.png"));
+			btn_Edit.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_swap.png"));
+			btn_Edit.setContentAreaFilled(false);
+			btn_Edit.setEnabled(false);	
 			c2.gridx = 0;
 			c2.gridy = 4;
 			c2.weightx = 0;
 			c2.weighty = 0;
-			button_table_Panel.add(btn_Edit, c2);
-			
-			
+			button_table_panel.add(btn_Edit, c2);
+		    
+
 			JButton btn_Delete = new JButton();
 			btn_Delete.setFont(new Font(null, Font.BOLD, 14));
 //			btn_Delete.setText("DELETE");
 			btn_Delete.setToolTipText("Delete");
-			btn_Delete.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_erase.png"));
-			btn_Delete.setEnabled(false);					
+			btn_Delete.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_erase.png"));
+			btn_Delete.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_erase.png"));
+			btn_Delete.setContentAreaFilled(false);
+			btn_Delete.setEnabled(false);
 			c2.gridx = 0;
 			c2.gridy = 5;
 			c2.weightx = 0;
 			c2.weighty = 0;
-			button_table_Panel.add(btn_Delete, c2);
+			button_table_panel.add(btn_Delete, c2);
 			
 			
 			JToggleButton btn_Sort = new JToggleButton();
@@ -619,13 +630,15 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			btn_Sort.setFocusPainted(false);
 			btn_Sort.setFont(new Font(null, Font.BOLD, 12));
 			btn_Sort.setText("OFF");
-			btn_Sort.setToolTipText("Sorter mode: 'ON' click columns header to sort rows. 'OFF' retrieve original rows position");
-			btn_Sort.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_sort.png"));					
+			btn_Sort.setToolTipText("Filter and Sorter");
+			btn_Sort.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_sort.png"));	
+			btn_Sort.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_sort.png"));
+			btn_Sort.setContentAreaFilled(false);
 			c2.gridx = 0;
 			c2.gridy = 6;
 			c2.weightx = 0;
 			c2.weighty = 0;
-			button_table_Panel.add(btn_Sort, c2);
+			button_table_panel.add(btn_Sort, c2);
 			
 			
 			JButton btn_GetResult = new JButton() {
@@ -636,15 +649,15 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			btn_GetResult.setFont(new Font(null, Font.BOLD, 14));
 //			btn_GetResult.setText("Get Result");
 			btn_GetResult.setToolTipText("Calculate & Save");
-			btn_GetResult.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_calculator.png"));
-			btn_GetResult.setRolloverIcon(IconHandle.get_scaledImageIcon(35, 35, "icon_calculator.png"));
+			btn_GetResult.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_calculator.png"));
+			btn_GetResult.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_calculator.png"));
 			btn_GetResult.setContentAreaFilled(false);
 			btn_GetResult.setEnabled(false);
 			c2.gridx = 0;
 			c2.gridy = 7;
 			c2.weightx = 0;
 			c2.weighty = 0;
-			button_table_Panel.add(btn_GetResult, c2);
+			button_table_panel.add(btn_GetResult, c2);
 			
 			
 			JButton btn_Save = new JButton() {
@@ -655,14 +668,14 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			btn_Save.setFont(new Font(null, Font.BOLD, 14));
 //			btn_Save.setText("Save");
 			btn_Save.setToolTipText("Save");
-			btn_Save.setIcon(IconHandle.get_scaledImageIcon(20, 20, "icon_save.png"));
-			btn_Save.setRolloverIcon(IconHandle.get_scaledImageIcon(27, 27, "icon_save.png"));
+			btn_Save.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_save.png"));
+			btn_Save.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_save.png"));
 			btn_Save.setContentAreaFilled(false);
 			c2.gridx = 0;
 			c2.gridy = 8;
 			c2.weightx = 0;
 			c2.weighty = 0;
-			button_table_Panel.add(btn_Save, c2);
+			button_table_panel.add(btn_Save, c2);
 			
 			
 			c2.insets = new Insets(0, 0, 0, 0); // No padding
@@ -671,7 +684,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			c2.gridy = 9;
 			c2.weightx = 0;
 			c2.weighty = 1;
-			button_table_Panel.add(new JLabel(), c2);
+			button_table_panel.add(new JLabel(), c2);
 			
 			// Add table9				
 			create_table9();
@@ -681,7 +694,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			c2.weightx = 1;
 			c2.weighty = 1;
 			c2.gridheight = 10;
-			button_table_Panel.add(table_ScrollPane, c2);
+			button_table_panel.add(table_ScrollPane, c2);
 			// End of 4th Grid -----------------------------------------------------------------------
 			// End of 4th Grid -----------------------------------------------------------------------	
 			
@@ -1829,10 +1842,10 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 		    c.weighty = 1;
 		    lower_panel.add(parameters_scrollpane, c);						
 		    	    		    
-		    // Add the button_table_Panel & scrollpane_QuickEdit to a new Panel then add that panel to the main Grid
+		    // Add the button_table_panel & scrollpane_QuickEdit to a new Panel then add that panel to the main Grid
 			JPanel button_table_qedit_panel = new JPanel();
 			button_table_qedit_panel.setLayout(new BorderLayout());
-			button_table_qedit_panel.add(button_table_Panel, BorderLayout.CENTER);
+			button_table_qedit_panel.add(button_table_panel, BorderLayout.CENTER);
 			button_table_qedit_panel.add(scrollpane_QuickEdit, BorderLayout.EAST);			
 			c.gridx = 1;
 			c.gridy = 2;
