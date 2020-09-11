@@ -6515,7 +6515,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			btn_Examine.setFont(new Font(null, Font.BOLD, 14));
 			btn_Examine.setEnabled(false);
 			btn_Examine.setToolTipText("Examine");
-			btn_Examine.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_zoom.png"));
+			btn_Examine.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_zoom.png"));
 			btn_Examine.setVisible(false);
 			c2.gridx = 0;
 			c2.gridy = 6;

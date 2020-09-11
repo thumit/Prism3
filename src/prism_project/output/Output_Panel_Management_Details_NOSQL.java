@@ -667,6 +667,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			btn_Clear.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_sweep.png"));	
 			btn_Clear.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_sweep.png"));
 			btn_Clear.setContentAreaFilled(false);
+			btn_Clear.setEnabled(false);
 			c2.gridx = 0;
 			c2.gridy = 8;
 			c2.weightx = 0;
@@ -1620,6 +1621,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 								btn_Delete.setVisible(false);
 								btn_Sort.setVisible(false);
 								btn_GetResult.setVisible(false);
+								btn_Clear.setVisible(false);
 								btn_Save.setVisible(false);
 								
 								if (table9.isEditing()) {
@@ -1690,6 +1692,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 								btn_Delete.setVisible(true);
 								btn_Sort.setVisible(true);
 								btn_GetResult.setVisible(true);
+								btn_Clear.setVisible(true);
 								btn_Save.setVisible(true);
 								
 								// To make UI refresh better
