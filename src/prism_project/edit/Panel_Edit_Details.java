@@ -27,7 +27,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -4114,19 +4113,19 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			
 			// add to panel
 			button_table_panel.add(btn_New,
-					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 0, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c2, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 0, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			button_table_panel.add(spin_move_rows,
 					PrismGridBagLayoutHandle.get_c(c2, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 1, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			button_table_panel.add(btn_Edit,
-					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 2, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c2, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 2, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			button_table_panel.add(btn_Delete,
-					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 3, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c2, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 3, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			button_table_panel.add(btn_Sort,
-					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 4, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c2, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 4, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			button_table_panel.add(btn_Check,
-					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 5, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c2, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 5, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			button_table_panel.add(btn_Uncheck,
-					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 6, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c2, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 6, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			// Add Empty Label to make all buttons on top not middle
 			button_table_panel.add(new JLabel(), 
 					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 7, 1, 1, 0, 1, /*insets top, left, bottom, right*/ 0, 0, 0, 0)); 
@@ -4585,21 +4584,21 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			create_table4();
 			JScrollPane table_scrollpane = new JScrollPane(table4);
 			
-			// add to panel
+			// 
 			button_table_panel.add(btn_New,
-					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 0, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c2, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 0, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			button_table_panel.add(spin_move_rows,
 					PrismGridBagLayoutHandle.get_c(c2, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 1, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			button_table_panel.add(btn_Edit,
-					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 2, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c2, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 2, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			button_table_panel.add(btn_Delete,
-					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 3, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c2, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 3, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			button_table_panel.add(btn_Sort,
-					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 4, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c2, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 4, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			button_table_panel.add(btn_Check,
-					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 5, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c2, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 5, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			button_table_panel.add(btn_Uncheck,
-					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 6, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c2, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 6, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			// Add Empty Label to make all buttons on top not middle
 			button_table_panel.add(new JLabel(), 
 					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 7, 1, 1, 0, 1, /*insets top, left, bottom, right*/ 0, 0, 0, 0)); 
@@ -5050,37 +5049,27 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			JToggleButton btn_Sort = create_toggle_button("OFF", "Filter and Sorter", "icon_sort.png");
 			JButton btn_Check = create_button(null, "Check", "icon_check.png");
 			JButton btn_Uncheck = create_button(null, "Uncheck", "icon_uncheck.png");
-			JButton btn_GetResult = new JButton() {
-				public Point getToolTipLocation(MouseEvent event) {
-					return new Point(getWidth() - 10, 8);
-				}
-			};
-			btn_GetResult.setFont(new Font(null, Font.BOLD, 14));
-//			btn_GetResult.setText("Get Result");
-			btn_GetResult.setToolTipText("Generate mean and std");
-			btn_GetResult.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_calculator.png"));
-			btn_GetResult.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_calculator.png"));
-			btn_GetResult.setContentAreaFilled(false);
+			JButton btn_GetResult = create_button(null, "Generate mean and std", "icon_calculator.png");
 			create_table6();
 			JScrollPane table_scrollpane = new JScrollPane(table6);
 			
 			// add to panel
 			disturbances_condition_panel.add(btn_New,
-					PrismGridBagLayoutHandle.get_c(c, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 0, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 0, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			disturbances_condition_panel.add(spin_move_rows,
 					PrismGridBagLayoutHandle.get_c(c, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 1, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			disturbances_condition_panel.add(btn_Edit,
-					PrismGridBagLayoutHandle.get_c(c, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 2, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 2, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			disturbances_condition_panel.add(btn_Delete,
-					PrismGridBagLayoutHandle.get_c(c, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 3, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 3, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			disturbances_condition_panel.add(btn_Sort,
-					PrismGridBagLayoutHandle.get_c(c, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 4, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 4, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			disturbances_condition_panel.add(btn_Check,
-					PrismGridBagLayoutHandle.get_c(c, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 5, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 5, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			disturbances_condition_panel.add(btn_Uncheck,
-					PrismGridBagLayoutHandle.get_c(c, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 6, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 6, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			disturbances_condition_panel.add(btn_GetResult, 
-					PrismGridBagLayoutHandle.get_c(c, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 7, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10)); 
+					PrismGridBagLayoutHandle.get_c(c, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 7, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10)); 
 			// Add Empty Label to make all buttons on top not middle
 			disturbances_condition_panel.add(new JLabel(), 
 					PrismGridBagLayoutHandle.get_c(c, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 8, 1, 1, 0, 1, /*insets top, left, bottom, right*/ 0, 0, 0, 0)); 
@@ -5680,19 +5669,19 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			
 			// add to panel
 			cost_condition_panel.add(btn_New,
-					PrismGridBagLayoutHandle.get_c(c, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 0, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 0, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			cost_condition_panel.add(spin_move_rows,
 					PrismGridBagLayoutHandle.get_c(c, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 1, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			cost_condition_panel.add(btn_Edit,
-					PrismGridBagLayoutHandle.get_c(c, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 2, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 2, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			cost_condition_panel.add(btn_Delete,
-					PrismGridBagLayoutHandle.get_c(c, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 3, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 3, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			cost_condition_panel.add(btn_Sort,
-					PrismGridBagLayoutHandle.get_c(c, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 4, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 4, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			cost_condition_panel.add(btn_Check,
-					PrismGridBagLayoutHandle.get_c(c, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 5, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 5, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			cost_condition_panel.add(btn_Uncheck,
-					PrismGridBagLayoutHandle.get_c(c, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 6, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 6, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			// Add Empty Label to make all buttons on top not middle
 			cost_condition_panel.add(new JLabel(), 
 					PrismGridBagLayoutHandle.get_c(c, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 7, 1, 1, 0, 1, /*insets top, left, bottom, right*/ 0, 0, 0, 0)); 
@@ -6233,19 +6222,19 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			
 			// add to panel
 			button_table_panel.add(btn_New,
-					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 0, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c2, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 0, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			button_table_panel.add(btn_New_Multiple,
-					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 1, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c2, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 1, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			button_table_panel.add(spin_move_rows,
 					PrismGridBagLayoutHandle.get_c(c2, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 2, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			button_table_panel.add(btn_Edit,
-					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 3, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c2, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 3, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			button_table_panel.add(btn_Delete,
-					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 4, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c2, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 4, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			button_table_panel.add(btn_Sort,
-					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 5, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c2, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 5, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			button_table_panel.add(btn_Examine,
-					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 6, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c2, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 6, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			// Add Empty Label to make all buttons on top not middle
 			button_table_panel.add(new JLabel(), 
 					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 7, 1, 1, 0, 1, /*insets top, left, bottom, right*/ 0, 0, 0, 0)); 
@@ -7408,17 +7397,17 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			
 			// add to panel
 			button_table_panel.add(btn_New,
-					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 0, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c2, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 0, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			button_table_panel.add(spin_move_rows,
 					PrismGridBagLayoutHandle.get_c(c2, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 1, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			button_table_panel.add(btn_Edit,
-					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 2, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c2, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 2, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			button_table_panel.add(btn_Delete,
-					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 3, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c2, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 3, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			button_table_panel.add(btn_Sort,
-					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 4, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c2, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 4, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			button_table_panel.add(btn_Examine,
-					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 5, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c2, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 5, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			// Add Empty Label to make all buttons on top not middle
 			button_table_panel.add(new JLabel(), 
 					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 6, 1, 1, 0, 1, /*insets top, left, bottom, right*/ 0, 0, 0, 0)); 
@@ -8203,40 +8192,22 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			JToggleButton btn_Sort = create_toggle_button("OFF", "Filter and Sorter", "icon_sort.png");
 			JButton btn_Check = create_button(null, "Check", "icon_check.png");
 			JButton btn_Uncheck = create_button(null, "Uncheck", "icon_uncheck.png");
-			// compact view
-			JButton btn_compact = new JButton();
-			btn_compact.setVerticalTextPosition(SwingConstants.BOTTOM);
-			btn_compact.setHorizontalTextPosition(SwingConstants.CENTER);
-			btn_compact.setToolTipText("switch to compact view");
-			btn_compact.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_script_gray.png"));
-			btn_compact.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_script_gray.png"));
-			btn_compact.setContentAreaFilled(false);
-			// GetResult
-			btn_GetResult = new JButton() {
-				public Point getToolTipLocation(MouseEvent event) {
-					return new Point(getWidth() - 10, 8);
-				}
-			};
-			btn_GetResult.setFont(new Font(null, Font.BOLD, 14));
-//			btn_GetResult.setText("Get Result");
-			btn_GetResult.setToolTipText("Generate merging result & Save");
-			btn_GetResult.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_calculator.png"));
-			btn_GetResult.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_calculator.png"));
-			btn_GetResult.setContentAreaFilled(false);
+			JButton btn_compact = create_button(null, "Switch to compact view", "icon_script_gray.png");
+			btn_GetResult = create_button(null, "Generate mean and std", "icon_calculator.png");
 			create_table10();
 			JScrollPane table_scrollpane = new JScrollPane(table10);	
 			
 			// add to panel
 			button_table_panel.add(btn_Sort,
-					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 0, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c2, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 0, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			button_table_panel.add(btn_Check,
-					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 1, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c2, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 1, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			button_table_panel.add(btn_Uncheck,
-					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 2, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c2, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 2, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			button_table_panel.add(btn_compact,
-					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 3, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c2, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 3, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			button_table_panel.add(btn_GetResult,
-					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 4, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+					PrismGridBagLayoutHandle.get_c(c2, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 4, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
 			// Add Empty Label to make all buttons on top not middle
 			button_table_panel.add(new JLabel(), 
 					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 5, 1, 1, 0, 1, /*insets top, left, bottom, right*/ 0, 0, 0, 0)); 
@@ -8352,7 +8323,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					table10.getCellEditor().cancelCellEditing();
 				}
 				switch (btn_compact.getToolTipText()) {
-				case "switch to compact view":
+				case "Switch to compact view":
 					if (data10 != null) {		
 						RowFilter<Object, Object> compact_filter = new RowFilter<Object, Object>() {
 							public boolean include(Entry entry) {
@@ -8364,13 +8335,13 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						sorter.setRowFilter(compact_filter);
 						table10.setRowSorter(sorter);
 					}
-					btn_compact.setToolTipText("switch to full view");
+					btn_compact.setToolTipText("Switch to full view");
 					btn_compact.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_script.png"));
 					btn_compact.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_script.png"));
 					break;
-				case "switch to full view":
+				case "Switch to full view":
 					table10.setRowSorter(null);
-					btn_compact.setToolTipText("switch to compact view");
+					btn_compact.setToolTipText("Switch to compact view");
 					btn_compact.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_script_gray.png"));
 					btn_compact.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_script_gray.png"));
 					break;
