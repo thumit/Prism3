@@ -1409,3 +1409,4 @@ All changes in this block are associated with PrismAlpha3.1.03.jar, Prism-Formul
 598. Allow Sorter and Filter in Natural Disturbances and Management Cost screens.
 599. Improve UI for all buttons in PRISM (remove button border, remove button name text, rescale button icon, modify insets, etc.)
 600. Add the clear button for the summarize_output_05 NOSQL MODE. This button helps clear all values from all iterations in the highlighted rows.
+601. Refactor in Panel_Edit_Details for building repetitive components and their functions (buttons, spinners, etc.)

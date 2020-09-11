@@ -533,7 +533,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			button_table_panel = new JPanel(new GridBagLayout());
 			button_table_panel.setBorder(BorderFactory.createTitledBorder(null, "Optimal Solution Queries", TitledBorder.CENTER, 0));
 			GridBagConstraints c2 = new GridBagConstraints();
-			c2.fill = GridBagConstraints.BOTH;
+			c2.fill = GridBagConstraints.CENTER;
 			c2.insets = new Insets(0, 5, 3, 10); // padding top 0, left 5, bottom 3, right 10
 			
 			
@@ -709,6 +709,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			c2.weightx = 1;
 			c2.weighty = 1;
 			c2.gridheight = 11;
+			c2.fill = GridBagConstraints.BOTH;
 			button_table_panel.add(table_ScrollPane, c2);
 			// End of 4th Grid -----------------------------------------------------------------------
 			// End of 4th Grid -----------------------------------------------------------------------	

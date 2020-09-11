@@ -27,7 +27,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -3239,46 +3238,49 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
     //--------------------------------------------------------------------------------------------------------------------------
     //--------------------------------------------------------------------------------------------------------------------------  
     //--------------------------------------------------------------------------------------------------------------------------
-    //----------------------------------Functions to Create Repetitive Buttons and Functions-------------------------------------------
+    //----------------------------------------Create Repetitive Buttons and Functions-------------------------------------------
     //--------------------------------------------------------------------------------------------------------------------------
     //--------------------------------------------------------------------------------------------------------------------------	
-	// Mass Check model_condition Button
-	private JButton create_mass_check_button(JPanel panel, GridBagConstraints c, int gridx, int gridy, int weightx,	int weighty) {
-		JButton button_check = new JButton();
-//		button_check.setText("check");
-//		button_check.setVerticalTextPosition(SwingConstants.BOTTOM);
-//		button_check.setHorizontalTextPosition(SwingConstants.CENTER);
-		button_check.setToolTipText("Check");
-		button_check.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_check.png"));
-		button_check.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_check.png"));
-		button_check.setContentAreaFilled(false);
-		c.gridx = gridx;
-		c.gridy = gridy;
-		c.weightx = weightx;
-		c.weighty = weighty;
-		panel.add(button_check, c);
-		return button_check;
-	}
-	
-	// Mass Uncheck model_condition Button
-	private JButton create_mass_uncheck_button(JPanel panel, GridBagConstraints c, int gridx, int gridy, int weightx, int weighty) {
-		JButton button_uncheck = new JButton();
-//		button_uncheck.setText("uncheck");
-//		button_uncheck.setVerticalTextPosition(SwingConstants.BOTTOM);
-//		button_uncheck.setHorizontalTextPosition(SwingConstants.CENTER);
-		button_uncheck.setToolTipText("Uncheck");
-		button_uncheck.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_uncheck.png"));
-		button_uncheck.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_uncheck.png"));
-		button_uncheck.setContentAreaFilled(false);
-		c.gridx = gridx;
-		c.gridy = gridy;
-		c.weightx = weightx;
-		c.weighty = weighty;
-		panel.add(button_uncheck, c);
-		return button_uncheck;
+	private JButton create_button(String text, String tooltip_text, String icon_file_name) {
+		JButton button = new JButton();
+		button.setFont(new Font(null, Font.BOLD, 12));
+		if (text != null) button.setText(text);
+//		button.setVerticalTextPosition(SwingConstants.BOTTOM);
+//		button.setHorizontalTextPosition(SwingConstants.CENTER);
+		button.setToolTipText(tooltip_text);
+		button.setIcon(IconHandle.get_scaledImageIcon(18, 18, icon_file_name));
+		button.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, icon_file_name));
+		button.setContentAreaFilled(false);
+		return button;
 	}
 
-	// Apply check or uncheck
+	private JToggleButton create_toggle_button(String text, String tooltip_text, String icon_file_name) { 
+		JToggleButton button = new JToggleButton();
+		button.setSelected(false);
+		button.setFocusPainted(false);
+		button.setFont(new Font(null, Font.BOLD, 12));
+		if (text != null) button.setText(text);
+		button.setToolTipText(tooltip_text);
+		button.setIcon(IconHandle.get_scaledImageIcon(18, 18, icon_file_name));
+		button.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, icon_file_name));
+		button.setContentAreaFilled(false);
+		return button;
+	};
+	
+	private JSpinner create_rows_spinner() { 
+		JSpinner rows_spinner = new JSpinner (new SpinnerNumberModel(1, 0, 2, 1));
+		rows_spinner.setToolTipText("Move");
+		JFormattedTextField SpinnerText = ((DefaultEditor) rows_spinner.getEditor()).getTextField();
+		SpinnerText.setHorizontalAlignment(JTextField.LEFT);
+		SpinnerText.setEditable(false);
+		SpinnerText.setFocusable(false);
+//		DefaultFormatter formatter = (DefaultFormatter) SpinnerText.getFormatter();
+//	    formatter.setCommitsOnValidEdit(true);
+		rows_spinner.setEnabled(false);
+		return rows_spinner;
+	};
+	
+	// Apply mass check/uncheck
 	private void apply_mass_check_or_uncheck(String check_option, PrismTableModel model, JTable table, Object[][] data, int colCount) {		
 		boolean check_or_uncheck = check_option.equals("mass_check") ? true : false;		
 		int[] selectedRow = table.getSelectedRows();
@@ -3292,27 +3294,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		}
 		if (table == table3) model3.update_model_overview();	// Do not remove this line because it would deselect strata without NG_E_0 prescription. This is important
 	}
-
-	// Sort Button
-	private JToggleButton create_sort_button(JPanel panel, GridBagConstraints c, int gridx, int gridy, int weightx, int weighty) { 
-		JToggleButton button_sort = new JToggleButton();
-		button_sort.setSelected(false);
-		button_sort.setFocusPainted(false);
-		button_sort.setFont(new Font(null, Font.BOLD, 12));
-		button_sort.setText("OFF");
-		button_sort.setToolTipText("Filter and Sorter");
-		button_sort.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_sort.png"));
-		button_sort.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_sort.png"));
-		button_sort.setContentAreaFilled(false);
-		c.gridx = gridx;
-		c.gridy = gridy;
-		c.weightx = weightx;
-		c.weighty = weighty;
-		panel.add(button_sort, c);
-		return button_sort;
-	};
 	
-	// Apply sort or nosort
+	// Apply sort/nosort
 	private void apply_sort_or_nosort(TableFilterHeader filterHeader, JToggleButton btn, PrismTableModel model, JTable table) {
 		// Identify selection
 		int[] selectedRows = table.getSelectedRows();
@@ -4117,92 +4100,49 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			border.setTitleJustification(TitledBorder.CENTER);
 			button_table_panel.setBorder(border);
 			GridBagConstraints c2 = new GridBagConstraints();
-			c2.fill = GridBagConstraints.BOTH;
-			c2.insets = new Insets(0, 5, 5, 10); // padding top 0, left 5, bottom 5, right 10
 			
+			// create
+			JButton btn_New = create_button(null, "New", "icon_add.png");
+			JSpinner spin_move_rows = create_rows_spinner();
+			JButton btn_Edit = create_button(null, "Modify", "icon_swap.png");
+			JButton btn_Delete = create_button(null, "Delete", "icon_erase.png");
+			JToggleButton btn_Sort = create_toggle_button("OFF", "Filter and Sorter", "icon_sort.png");
+			JButton btn_Check = create_button(null, "Check", "icon_check.png");
+			JButton btn_Uncheck = create_button(null, "Uncheck", "icon_uncheck.png");
+			create_table2();
+			JScrollPane table_scrollpane = new JScrollPane(table2);
 			
-			JButton btn_NewSingle = new JButton();
-			btn_NewSingle.setFont(new Font(null, Font.BOLD, 14));
-//			btn_NewSingle.setText("NEW SINGLE");
-			btn_NewSingle.setToolTipText("New");
-			btn_NewSingle.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_add.png"));
-			c2.gridx = 0;
-			c2.gridy = 0;
-			c2.weightx = 0;
-			c2.weighty = 0;
-			button_table_panel.add(btn_NewSingle, c2);
+			// add to panel
+			button_table_panel.add(btn_New,
+					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 0, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			button_table_panel.add(spin_move_rows,
+					PrismGridBagLayoutHandle.get_c(c2, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 1, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			button_table_panel.add(btn_Edit,
+					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 2, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			button_table_panel.add(btn_Delete,
+					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 3, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			button_table_panel.add(btn_Sort,
+					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 4, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			button_table_panel.add(btn_Check,
+					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 5, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			button_table_panel.add(btn_Uncheck,
+					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 6, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			// Add Empty Label to make all buttons on top not middle
+			button_table_panel.add(new JLabel(), 
+					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 7, 1, 1, 0, 1, /*insets top, left, bottom, right*/ 0, 0, 0, 0)); 
+			button_table_panel.add(table_scrollpane,
+					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 1, 0, 1, 8, 1, 1, /*insets top, left, bottom, right*/ 0, 0, 0, 0)); 
 			
-			
-			JSpinner spin_move_rows = new JSpinner (new SpinnerNumberModel(1, 0, 2, 1));
-			spin_move_rows.setToolTipText("Move");
-			JFormattedTextField SpinnerText = ((DefaultEditor) spin_move_rows.getEditor()).getTextField();
-			SpinnerText.setHorizontalAlignment(JTextField.LEFT);
-			SpinnerText.setEditable(false);
-			SpinnerText.setFocusable(false);
-//			DefaultFormatter formatter = (DefaultFormatter) SpinnerText.getFormatter();
-//		    formatter.setCommitsOnValidEdit(true);
-		    spin_move_rows.setEnabled(false);
-		    c2.gridx = 0;
-			c2.gridy = 1;
-			c2.weightx = 0;
-			c2.weighty = 0;
-			button_table_panel.add(spin_move_rows, c2);
-			
-			
-			JButton btn_Edit = new JButton();
-//			btn_Edit.setText("EDIT");
-			btn_Edit.setToolTipText("Modify");
-			btn_Edit.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_swap.png"));
+			// initial set up
+			spin_move_rows.setEnabled(false);
 			btn_Edit.setEnabled(false);
-			c2.gridx = 0;
-			c2.gridy = 2;
-			c2.weightx = 0;
-			c2.weighty = 0;
-			button_table_panel.add(btn_Edit, c2);
-			
-			
-			JButton btn_Delete = new JButton();
-			btn_Delete.setFont(new Font(null, Font.BOLD, 14));
-//			btn_Delete.setText("DELETE");
-			btn_Delete.setToolTipText("Delete");
-			btn_Delete.setIcon(IconHandle.get_scaledImageIcon(16, 16, "icon_erase.png"));
 			btn_Delete.setEnabled(false);
-			c2.gridx = 0;
-			c2.gridy = 3;
-			c2.weightx = 0;
-			c2.weighty = 0;
-			button_table_panel.add(btn_Delete, c2);
-
 			
-			JToggleButton btn_Sort = create_sort_button(button_table_panel, c2, 0, 4, 0, 0);
+			// add listeners
 			TableFilterHeader filterHeader = new TableFilterHeader(null, AutoChoices.ENABLED);
 			btn_Sort.addActionListener(e -> apply_sort_or_nosort(filterHeader, btn_Sort, model2, table2));
-
-			
-			create_mass_check_button(button_table_panel, c2, 0, 5, 0, 0).addActionListener(e -> apply_mass_check_or_uncheck("mass_check", model2, table2, data2, colCount2));
-			create_mass_uncheck_button(button_table_panel, c2, 0, 6, 0, 0).addActionListener(e -> apply_mass_check_or_uncheck("mass_uncheck", model2, table2, data2, colCount2));
-			
-
-			c2.insets = new Insets(0, 0, 0, 0); // No padding
-			// Add Empty Label to make all buttons on top not middle
-			c2.gridx = 0;
-			c2.gridy = 7;
-			c2.weightx = 0;
-			c2.weighty = 1;
-			button_table_panel.add(new JLabel(), c2);
-			
-			// Add table2				
-			create_table2();
-			JScrollPane table_ScrollPane = new JScrollPane(table2);	
-//			c2.insets = new Insets(1, 0, 0, 0);			// Activate to remove the ugly inside border
-//			Border tempBorder = BorderFactory.createMatteBorder(1, 1, 1, 1, ColorUtil.makeTransparent(Color.BLACK, 0));
-//			table_ScrollPane.setBorder(tempBorder);
-			c2.gridx = 1;
-			c2.gridy = 0;
-			c2.weightx = 1;
-			c2.weighty = 1;
-			c2.gridheight = 8;
-			button_table_panel.add(table_ScrollPane, c2);
+			btn_Check.addActionListener(e -> apply_mass_check_or_uncheck("mass_check", model2, table2, data2, colCount2));
+			btn_Uncheck.addActionListener(e -> apply_mass_check_or_uncheck("mass_uncheck", model2, table2, data2, colCount2));
 			// End of 4th Grid -----------------------------------------------------------------------
 			// End of 4th Grid -----------------------------------------------------------------------	
 
@@ -4264,7 +4204,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 
 			
 			// New single
-			btn_NewSingle.addActionListener(e -> {
+			btn_New.addActionListener(e -> {
 				if (table2.isEditing()) {
 					table2.getCellEditor().stopCellEditing();
 				}
@@ -4633,97 +4573,49 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			border.setTitleJustification(TitledBorder.CENTER);
 			button_table_panel.setBorder(border);
 			GridBagConstraints c2 = new GridBagConstraints();
-			c2.fill = GridBagConstraints.BOTH;
-			c2.insets = new Insets(0, 5, 5, 10); // padding top 0, left 5, bottom 5, right 10
 			
+			// create
+			JButton btn_New = create_button(null, "New", "icon_add.png");
+			JSpinner spin_move_rows = create_rows_spinner();
+			JButton btn_Edit = create_button(null, "Modify", "icon_swap.png");
+			JButton btn_Delete = create_button(null, "Delete", "icon_erase.png");
+			JToggleButton btn_Sort = create_toggle_button("OFF", "Filter and Sorter", "icon_sort.png");
+			JButton btn_Check = create_button(null, "Check", "icon_check.png");
+			JButton btn_Uncheck = create_button(null, "Uncheck", "icon_uncheck.png");
+			create_table4();
+			JScrollPane table_scrollpane = new JScrollPane(table4);
 			
-			JButton btn_NewSingle = new JButton();
-			btn_NewSingle.setFont(new Font(null, Font.BOLD, 14));
-//			btn_NewSingle.setText("NEW SET");
-			btn_NewSingle.setToolTipText("New");
-			btn_NewSingle.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_add.png"));
-			btn_NewSingle.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_add.png"));
-			btn_NewSingle.setContentAreaFilled(false);
-			c2.gridx = 0;
-			c2.gridy = 0;
-			c2.weightx = 0;
-			c2.weighty = 0;
-			button_table_panel.add(btn_NewSingle, c2);		
+			// add to panel
+			button_table_panel.add(btn_New,
+					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 0, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			button_table_panel.add(spin_move_rows,
+					PrismGridBagLayoutHandle.get_c(c2, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 1, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			button_table_panel.add(btn_Edit,
+					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 2, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			button_table_panel.add(btn_Delete,
+					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 3, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			button_table_panel.add(btn_Sort,
+					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 4, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			button_table_panel.add(btn_Check,
+					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 5, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			button_table_panel.add(btn_Uncheck,
+					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 6, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			// Add Empty Label to make all buttons on top not middle
+			button_table_panel.add(new JLabel(), 
+					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 7, 1, 1, 0, 1, /*insets top, left, bottom, right*/ 0, 0, 0, 0)); 
+			button_table_panel.add(table_scrollpane,
+					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 1, 0, 1, 8, 1, 1, /*insets top, left, bottom, right*/ 0, 0, 0, 0)); 
 			
-
-			// Add Spinner to move priority up or down
-			JSpinner spin_move_rows = new JSpinner (new SpinnerNumberModel(1, 0, 2, 1));
-			spin_move_rows.setToolTipText("Move");
-			JFormattedTextField SpinnerText = ((DefaultEditor) spin_move_rows.getEditor()).getTextField();
-			SpinnerText.setHorizontalAlignment(JTextField.LEFT);
-			SpinnerText.setEditable(false);
-			SpinnerText.setFocusable(false);
-//			DefaultFormatter formatter = (DefaultFormatter) SpinnerText.getFormatter();
-//		    formatter.setCommitsOnValidEdit(true);
+			// initial set up
 			spin_move_rows.setEnabled(false);
-		    c2.gridx = 0;
-			c2.gridy = 1;
-			c2.weightx = 0;
-			c2.weighty = 0;
-			button_table_panel.add(spin_move_rows, c2);
-			
-			
-			JButton btn_Edit = new JButton();
-//			btn_Edit.setText("EDIT");
-			btn_Edit.setToolTipText("Modify");
-			btn_Edit.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_swap.png"));
-			btn_Edit.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_swap.png"));
-			btn_Edit.setContentAreaFilled(false);
-			btn_Edit.setEnabled(false);	
-			c2.gridx = 0;
-			c2.gridy = 2;
-			c2.weightx = 0;
-			c2.weighty = 0;
-			button_table_panel.add(btn_Edit, c2);
-		    
-
-			JButton btn_Delete = new JButton();
-			btn_Delete.setFont(new Font(null, Font.BOLD, 14));
-//			btn_Delete.setText("DELETE");
-			btn_Delete.setToolTipText("Delete");
-			btn_Delete.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_erase.png"));
-			btn_Delete.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_erase.png"));
-			btn_Delete.setContentAreaFilled(false);
+			btn_Edit.setEnabled(false);
 			btn_Delete.setEnabled(false);
-			c2.gridx = 0;
-			c2.gridy = 3;
-			c2.weightx = 0;
-			c2.weighty = 0;
-			button_table_panel.add(btn_Delete, c2);
-
 			
-			JToggleButton btn_Sort = create_sort_button(button_table_panel, c2, 0, 4, 0, 0);
+			// add listeners
 			TableFilterHeader filterHeader = new TableFilterHeader(null, AutoChoices.ENABLED);
 			btn_Sort.addActionListener(e -> apply_sort_or_nosort(filterHeader, btn_Sort, model4, table4));
-
-			
-			create_mass_check_button(button_table_panel, c2, 0, 5, 0, 0).addActionListener(e ->	apply_mass_check_or_uncheck("mass_check", model4, table4, data4, colCount4));
-			create_mass_uncheck_button(button_table_panel, c2, 0, 6, 0, 0).addActionListener(e-> apply_mass_check_or_uncheck("mass_uncheck", model4, table4, data4, colCount4));
-
-
-			c2.insets = new Insets(0, 0, 0, 0); // No padding
-			// Add Empty Label to make all buttons on top not middle
-			c2.gridx = 0;
-			c2.gridy = 7;
-			c2.weightx = 0;
-			c2.weighty = 1;
-			button_table_panel.add(new JLabel(), c2);
-
-			
-			// Add table4
-			create_table4();
-			JScrollPane table_ScrollPane = new JScrollPane(table4);	
-			c2.gridx = 1;
-			c2.gridy = 0;
-			c2.weightx = 1;
-			c2.weighty = 1;
-			c2.gridheight = 8;
-			button_table_panel.add(table_ScrollPane, c2);
+			btn_Check.addActionListener(e -> apply_mass_check_or_uncheck("mass_check", model4, table4, data4, colCount4));
+			btn_Uncheck.addActionListener(e-> apply_mass_check_or_uncheck("mass_uncheck", model4, table4, data4, colCount4));
 			// End of 4th Grid -----------------------------------------------------------------------
 			// End of 4th Grid -----------------------------------------------------------------------	
 			
@@ -4786,7 +4678,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			
 			
 			// New single
-			btn_NewSingle.addActionListener(e -> {
+			btn_New.addActionListener(e -> {
 				if (table4.isEditing()) {
 					table4.getCellEditor().stopCellEditing();
 				}
@@ -5123,19 +5015,17 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 
 		public Natural_Disturbances() {
 			setLayout(new BorderLayout());		
-			
-			
 			// 1st grid ------------------------------------------------------------------------------		// Static identifiers	
 			String panel_name = "Static Identifiers  -  use strata attributes to filter variables";
 			static_identifiers_scrollpane = new ScrollPane_StaticIdentifiers(read_database, 2, panel_name);
 			checkboxStaticIdentifiers = static_identifiers_scrollpane.get_CheckboxStaticIdentifiers();
 			// End of 1st grid -----------------------------------------------------------------------
-
+			
 			
 			// 2nd Grid ------------------------------------------------------------------------------		// Dynamic identifiers
 			dynamic_identifiers_scrollpane = new ScrollPane_DynamicIdentifiers(read_database);
 			// End of 2nd Grid -----------------------------------------------------------------------
-				
+			
 					
 			// 3rd grid ------------------------------------------------------------------------------		// Parameters
 			create_table6c();
@@ -5143,88 +5033,23 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			natural_disturbances_tables_ScrollPane = new ScrollPane_SubTables_NaturalDisturbances(table6c, data6c, table6d, data6d);
 			natural_disturbances_tables_ScrollPane.update_2_tables_data(data6c, data6d);
 			// End of 3rd grid -----------------------------------------------------------------------
-				    			
-	
+			
+			
 			// 4th Grid ------------------------------------------------------------------------------		// Buttons	
-			// 4th Grid -----------------------------------------------------------------------------
 			JPanel disturbances_condition_panel = new JPanel(new GridBagLayout());
 			TitledBorder border = new TitledBorder("Priority Conditons (top row = top priority, no row = no disturbance)");
 			border.setTitleJustification(TitledBorder.CENTER);
 			disturbances_condition_panel.setBorder(border);
 			GridBagConstraints c = new GridBagConstraints();
-			c.fill = GridBagConstraints.BOTH;
-			c.insets = new Insets(0, 5, 5, 10); // padding top 0, left 5, bottom 5, right 10
-			
-			
-			JButton btn_New = new JButton();
-			btn_New.setFont(new Font(null, Font.BOLD, 14));
-//			btn_New.setText("NEW SET");
-			btn_New.setToolTipText("New");
-			btn_New.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_add.png"));
-			btn_New.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_add.png"));
-			btn_New.setContentAreaFilled(false);
-			c.gridx = 0;
-			c.gridy = 0;
-			c.weightx = 0;
-			c.weighty = 0;
-			disturbances_condition_panel.add(btn_New, c);		
-			
 
-			// Add Spinner to move priority up or down
-			JSpinner spin_priority = new JSpinner (new SpinnerNumberModel(1, 0, 2, 1));
-			spin_priority.setToolTipText("Move");
-			JFormattedTextField SpinnerText = ((DefaultEditor) spin_priority.getEditor()).getTextField();
-			SpinnerText.setHorizontalAlignment(JTextField.LEFT);
-			SpinnerText.setEditable(false);
-			SpinnerText.setFocusable(false);
-//			DefaultFormatter formatter = (DefaultFormatter) SpinnerText.getFormatter();
-//		    formatter.setCommitsOnValidEdit(true);
-		    spin_priority.setEnabled(false);
-		    c.gridx = 0;
-			c.gridy = 1;
-			c.weightx = 0;
-			c.weighty = 0;
-			disturbances_condition_panel.add(spin_priority, c);
-			
-			
-			JButton btn_Edit = new JButton();
-//			btn_Edit.setText("EDIT");
-			btn_Edit.setToolTipText("Modify");
-			btn_Edit.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_swap.png"));
-			btn_Edit.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_swap.png"));
-			btn_Edit.setContentAreaFilled(false);
-			btn_Edit.setEnabled(false);	
-			c.gridx = 0;
-			c.gridy = 2;
-			c.weightx = 0;
-			c.weighty = 0;
-			disturbances_condition_panel.add(btn_Edit, c);
-		    
-
-			JButton btn_Delete = new JButton();
-			btn_Delete.setFont(new Font(null, Font.BOLD, 14));
-//			btn_Delete.setText("DELETE");
-			btn_Delete.setToolTipText("Delete");
-			btn_Delete.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_erase.png"));
-			btn_Delete.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_erase.png"));
-			btn_Delete.setContentAreaFilled(false);
-			btn_Delete.setEnabled(false);
-			c.gridx = 0;
-			c.gridy = 3;
-			c.weightx = 0;
-			c.weighty = 0;
-			disturbances_condition_panel.add(btn_Delete, c);
-
-			
-			JToggleButton btn_Sort = create_sort_button(disturbances_condition_panel, c, 0, 4, 0, 0);
-			TableFilterHeader filterHeader = new TableFilterHeader(null, AutoChoices.ENABLED);
-			btn_Sort.addActionListener(e -> apply_sort_or_nosort(filterHeader, btn_Sort, model6, table6));
-			
-			
-			create_mass_check_button(disturbances_condition_panel, c, 0, 5, 0, 0).addActionListener(e -> apply_mass_check_or_uncheck("mass_check", model6, table6, data6, colCount6));
-			create_mass_uncheck_button(disturbances_condition_panel, c, 0, 6, 0, 0).addActionListener(e -> apply_mass_check_or_uncheck("mass_uncheck", model6, table6, data6, colCount6));
-			
-			
+			// create
+			JButton btn_New = create_button(null, "New", "icon_add.png");
+			JSpinner spin_move_rows = create_rows_spinner();
+			JButton btn_Edit = create_button(null, "Modify", "icon_swap.png");
+			JButton btn_Delete = create_button(null, "Delete", "icon_erase.png");
+			JToggleButton btn_Sort = create_toggle_button("OFF", "Filter and Sorter", "icon_sort.png");
+			JButton btn_Check = create_button(null, "Check", "icon_check.png");
+			JButton btn_Uncheck = create_button(null, "Uncheck", "icon_uncheck.png");
 			JButton btn_GetResult = new JButton() {
 				public Point getToolTipLocation(MouseEvent event) {
 					return new Point(getWidth() - 10, 8);
@@ -5236,31 +5061,45 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			btn_GetResult.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_calculator.png"));
 			btn_GetResult.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_calculator.png"));
 			btn_GetResult.setContentAreaFilled(false);
-			c.gridx = 0;
-			c.gridy = 7;
-			c.weightx = 0;
-			c.weighty = 0;
-			disturbances_condition_panel.add(btn_GetResult, c);
-			
-			
-			// Add Empty Label to make all buttons on top not middle
-			c.insets = new Insets(0, 0, 0, 0); // No padding
-			c.gridx = 0;
-			c.gridy = 8;
-			c.weightx = 0;
-			c.weighty = 1;
-			disturbances_condition_panel.add(new JLabel(), c);
-			
-			// Add table6		
 			create_table6();
-			JScrollPane table_ScrollPane = new JScrollPane(table6);
-			c.gridx = 1;
-			c.gridy = 0;
-			c.weightx = 1;
-			c.weighty = 1;
-			c.gridheight = 9;
-			disturbances_condition_panel.add(table_ScrollPane, c);
-						
+			JScrollPane table_scrollpane = new JScrollPane(table6);
+			
+			// add to panel
+			disturbances_condition_panel.add(btn_New,
+					PrismGridBagLayoutHandle.get_c(c, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 0, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			disturbances_condition_panel.add(spin_move_rows,
+					PrismGridBagLayoutHandle.get_c(c, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 1, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			disturbances_condition_panel.add(btn_Edit,
+					PrismGridBagLayoutHandle.get_c(c, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 2, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			disturbances_condition_panel.add(btn_Delete,
+					PrismGridBagLayoutHandle.get_c(c, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 3, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			disturbances_condition_panel.add(btn_Sort,
+					PrismGridBagLayoutHandle.get_c(c, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 4, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			disturbances_condition_panel.add(btn_Check,
+					PrismGridBagLayoutHandle.get_c(c, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 5, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			disturbances_condition_panel.add(btn_Uncheck,
+					PrismGridBagLayoutHandle.get_c(c, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 6, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			disturbances_condition_panel.add(btn_GetResult, 
+					PrismGridBagLayoutHandle.get_c(c, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 7, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10)); 
+			// Add Empty Label to make all buttons on top not middle
+			disturbances_condition_panel.add(new JLabel(), 
+					PrismGridBagLayoutHandle.get_c(c, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 8, 1, 1, 0, 1, /*insets top, left, bottom, right*/ 0, 0, 0, 0)); 
+			disturbances_condition_panel.add(table_scrollpane,
+					PrismGridBagLayoutHandle.get_c(c, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 1, 0, 1, 9, 1, 1, /*insets top, left, bottom, right*/ 0, 0, 0, 0)); 
+			
+			// initial set up
+			spin_move_rows.setEnabled(false);
+			btn_Edit.setEnabled(false);
+			btn_Delete.setEnabled(false);
+			btn_GetResult.setEnabled(false);
+			
+			// add listeners
+			TableFilterHeader filterHeader = new TableFilterHeader(null, AutoChoices.ENABLED);
+			btn_Sort.addActionListener(e -> apply_sort_or_nosort(filterHeader, btn_Sort, model6, table6));
+			btn_Check.addActionListener(e -> apply_mass_check_or_uncheck("mass_check", model6, table6, data6, colCount6));
+			btn_Uncheck.addActionListener(e -> apply_mass_check_or_uncheck("mass_uncheck", model6, table6, data6, colCount6));
+			// End of 4th Grid -----------------------------------------------------------------------	
+			
 			
 			// Add Listeners for buttons----------------------------------------------------------
 			// Add Listeners for buttons----------------------------------------------------------							
@@ -5299,9 +5138,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					}	
 					
 					if (selectedRow.length >= 1) {	// Enable Spinner when: >=1 row is selected
-						spin_priority.setEnabled(true);
+						spin_move_rows.setEnabled(true);
 					} else {		// Disable Delete & Spinner
-						spin_priority.setEnabled(false);
+						spin_move_rows.setEnabled(false);
 					}
 				}
 			}
@@ -5427,11 +5266,11 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			
 			
 			// Spinner
-			spin_priority.addChangeListener(new ChangeListener() {
+			spin_move_rows.addChangeListener(new ChangeListener() {
 		        @Override
 		        public void stateChanged(ChangeEvent e) {
-					int up_or_down = (int) spin_priority.getValue() - 1;										
-					spin_priority.setValue((int) 1);	// Reset spinner value to 1
+					int up_or_down = (int) spin_move_rows.getValue() - 1;										
+					spin_move_rows.setValue((int) 1);	// Reset spinner value to 1
 										
 					if (up_or_down == 1) {	// move up
 						// Cancel editing before moving conditions up or down
@@ -5798,8 +5637,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 
 		public Management_Cost() {
 			setLayout(new BorderLayout());		
-			
-			
 			// 1st grid ------------------------------------------------------------------------------		// Static identifiers	
 			String panel_name = "Static Identifiers  -  use strata attributes to filter variables";
 			static_identifiers_scrollpane = new ScrollPane_StaticIdentifiers(read_database, 2, panel_name);
@@ -5829,96 +5666,50 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			border.setTitleJustification(TitledBorder.CENTER);
 			cost_condition_panel.setBorder(border);
 			GridBagConstraints c = new GridBagConstraints();
-			c.fill = GridBagConstraints.BOTH;
-			c.insets = new Insets(0, 5, 5, 10); // padding top 0, left 5, bottom 5, right 10
-			
-			
-			JButton btn_New = new JButton();
-			btn_New.setFont(new Font(null, Font.BOLD, 14));
-//			btn_New.setText("NEW SET");
-			btn_New.setToolTipText("New");
-			btn_New.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_add.png"));
-			btn_New.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_add.png"));
-			btn_New.setContentAreaFilled(false);
-			c.gridx = 0;
-			c.gridy = 0;
-			c.weightx = 0;
-			c.weighty = 0;
-			cost_condition_panel.add(btn_New, c);		
-			
 
-			// Add Spinner to move priority up or down
-			JSpinner spin_priority = new JSpinner (new SpinnerNumberModel(1, 0, 2, 1));
-			spin_priority.setToolTipText("Move");
-			JFormattedTextField SpinnerText = ((DefaultEditor) spin_priority.getEditor()).getTextField();
-			SpinnerText.setHorizontalAlignment(JTextField.LEFT);
-			SpinnerText.setEditable(false);
-			SpinnerText.setFocusable(false);
-//			DefaultFormatter formatter = (DefaultFormatter) SpinnerText.getFormatter();
-//		    formatter.setCommitsOnValidEdit(true);
-		    spin_priority.setEnabled(false);
-		    c.gridx = 0;
-			c.gridy = 1;
-			c.weightx = 0;
-			c.weighty = 0;
-			cost_condition_panel.add(spin_priority, c);
+			// create
+			JButton btn_New = create_button(null, "New", "icon_add.png");
+			JSpinner spin_move_rows = create_rows_spinner();
+			JButton btn_Edit = create_button(null, "Modify", "icon_swap.png");
+			JButton btn_Delete = create_button(null, "Delete", "icon_erase.png");
+			JToggleButton btn_Sort = create_toggle_button("OFF", "Filter and Sorter", "icon_sort.png");
+			JButton btn_Check = create_button(null, "Check", "icon_check.png");
+			JButton btn_Uncheck = create_button(null, "Uncheck", "icon_uncheck.png");
+			create_table7();
+			JScrollPane table_scrollpane = new JScrollPane(table7);
 			
+			// add to panel
+			cost_condition_panel.add(btn_New,
+					PrismGridBagLayoutHandle.get_c(c, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 0, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			cost_condition_panel.add(spin_move_rows,
+					PrismGridBagLayoutHandle.get_c(c, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 1, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			cost_condition_panel.add(btn_Edit,
+					PrismGridBagLayoutHandle.get_c(c, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 2, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			cost_condition_panel.add(btn_Delete,
+					PrismGridBagLayoutHandle.get_c(c, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 3, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			cost_condition_panel.add(btn_Sort,
+					PrismGridBagLayoutHandle.get_c(c, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 4, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			cost_condition_panel.add(btn_Check,
+					PrismGridBagLayoutHandle.get_c(c, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 5, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			cost_condition_panel.add(btn_Uncheck,
+					PrismGridBagLayoutHandle.get_c(c, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 6, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			// Add Empty Label to make all buttons on top not middle
+			cost_condition_panel.add(new JLabel(), 
+					PrismGridBagLayoutHandle.get_c(c, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 7, 1, 1, 0, 1, /*insets top, left, bottom, right*/ 0, 0, 0, 0)); 
+			cost_condition_panel.add(table_scrollpane,
+					PrismGridBagLayoutHandle.get_c(c, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 1, 0, 1, 8, 1, 1, /*insets top, left, bottom, right*/ 0, 0, 0, 0)); 
 			
-			JButton btn_Edit = new JButton();
-//			btn_Edit.setText("EDIT");
-			btn_Edit.setToolTipText("Modify");
-			btn_Edit.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_swap.png"));
-			btn_Edit.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_swap.png"));
-			btn_Edit.setContentAreaFilled(false);
-			btn_Edit.setEnabled(false);	
-			c.gridx = 0;
-			c.gridy = 2;
-			c.weightx = 0;
-			c.weighty = 0;
-			cost_condition_panel.add(btn_Edit, c);
-		    
-
-			JButton btn_Delete = new JButton();
-			btn_Delete.setFont(new Font(null, Font.BOLD, 14));
-//			btn_Delete.setText("DELETE");
-			btn_Delete.setToolTipText("Delete");
-			btn_Delete.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_erase.png"));
-			btn_Delete.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_erase.png"));
-			btn_Delete.setContentAreaFilled(false);
+			// initial set up
+			spin_move_rows.setEnabled(false);
+			btn_Edit.setEnabled(false);
 			btn_Delete.setEnabled(false);
-			c.gridx = 0;
-			c.gridy = 3;
-			c.weightx = 0;
-			c.weighty = 0;
-			cost_condition_panel.add(btn_Delete, c);
-
 			
-			JToggleButton btn_Sort = create_sort_button(cost_condition_panel, c, 0, 4, 0, 0);
+			// add listeners
 			TableFilterHeader filterHeader = new TableFilterHeader(null, AutoChoices.ENABLED);
 			btn_Sort.addActionListener(e -> apply_sort_or_nosort(filterHeader, btn_Sort, model7, table7));
+			btn_Check.addActionListener(e -> apply_mass_check_or_uncheck("mass_check", model7, table7, data7, colCount7));
+			btn_Uncheck.addActionListener(e -> apply_mass_check_or_uncheck("mass_uncheck", model7, table7, data7, colCount7));
 			
-			
-			create_mass_check_button(cost_condition_panel, c, 0, 5, 0, 0).addActionListener(e -> apply_mass_check_or_uncheck("mass_check", model7, table7, data7, colCount7));
-			create_mass_uncheck_button(cost_condition_panel, c, 0, 6, 0, 0).addActionListener(e -> apply_mass_check_or_uncheck("mass_uncheck", model7, table7, data7, colCount7));
-
-			
-			// Add Empty Label to make all buttons on top not middle
-			c.insets = new Insets(0, 0, 0, 0); // No padding			
-			c.gridx = 0;
-			c.gridy = 7;
-			c.weightx = 0;
-			c.weighty = 1;
-			cost_condition_panel.add(new JLabel(), c);
-			
-			// Add table7				
-			create_table7();
-			JScrollPane table_ScrollPane = new JScrollPane(table7);
-			c.gridx = 1;
-			c.gridy = 0;
-			c.weightx = 1;
-			c.weighty = 1;
-			c.gridheight = 8;
-			cost_condition_panel.add(table_ScrollPane, c);
 						
 			
 			// Add Listeners for buttons----------------------------------------------------------
@@ -5959,9 +5750,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					}	
 					
 					if (selectedRow.length >= 1) {	// Enable Spinner when: >=1 row is selected
-						spin_priority.setEnabled(true);
+						spin_move_rows.setEnabled(true);
 					} else {		// Disable Delete & Spinner
-						spin_priority.setEnabled(false);
+						spin_move_rows.setEnabled(false);
 					}
 				}
 			}
@@ -6080,11 +5871,11 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			
 			
 			// Spinner
-			spin_priority.addChangeListener(new ChangeListener() {
+			spin_move_rows.addChangeListener(new ChangeListener() {
 		        @Override
 		        public void stateChanged(ChangeEvent e) {
-					int up_or_down = (int) spin_priority.getValue() - 1;										
-					spin_priority.setValue((int) 1);	// Reset spinner value to 1
+					int up_or_down = (int) spin_move_rows.getValue() - 1;										
+					spin_move_rows.setValue((int) 1);	// Reset spinner value to 1
 										
 					if (up_or_down == 1) {	// move up
 						// Cancel editing before moving conditions up or down
@@ -6428,120 +6219,48 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			border3.setTitleJustification(TitledBorder.CENTER);
 			button_table_panel.setBorder(border3);
 			GridBagConstraints c2 = new GridBagConstraints();
-			c2.fill = GridBagConstraints.BOTH;
-			c2.insets = new Insets(0, 5, 5, 10); // padding top 0, left 5, bottom 5, right 10
 			
+			// create
+			JButton btn_New = create_button(null, "New", "icon_add.png");
+			JButton btn_New_Multiple = create_button(null, "New multiple", "icon_add3.png");
+			JSpinner spin_move_rows = create_rows_spinner();
+			JButton btn_Edit = create_button(null, "Modify", "icon_swap.png");
+			JButton btn_Delete = create_button(null, "Delete", "icon_erase.png");
+			JToggleButton btn_Sort = create_toggle_button("OFF", "Filter and Sorter", "icon_sort.png");
+			JToggleButton btn_Examine = create_toggle_button(null, "Examine", "icon_zoom.png");
+			create_table8();
+			table_scrollpane = new JScrollPane(table8);
 			
-			JButton btn_NewSingle = new JButton();
-			btn_NewSingle.setFont(new Font(null, Font.BOLD, 14));
-//			btn_NewSingle.setText("NEW SET");
-			btn_NewSingle.setToolTipText("New");
-			btn_NewSingle.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_add.png"));
-			btn_NewSingle.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_add.png"));
-			btn_NewSingle.setContentAreaFilled(false);
-			c2.gridx = 0;
-			c2.gridy = 0;
-			c2.weightx = 0;
-			c2.weighty = 0;
-			button_table_panel.add(btn_NewSingle, c2);		
+			// add to panel
+			button_table_panel.add(btn_New,
+					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 0, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			button_table_panel.add(btn_New_Multiple,
+					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 1, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			button_table_panel.add(spin_move_rows,
+					PrismGridBagLayoutHandle.get_c(c2, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 2, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			button_table_panel.add(btn_Edit,
+					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 3, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			button_table_panel.add(btn_Delete,
+					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 4, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			button_table_panel.add(btn_Sort,
+					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 5, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			button_table_panel.add(btn_Examine,
+					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 6, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			// Add Empty Label to make all buttons on top not middle
+			button_table_panel.add(new JLabel(), 
+					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 7, 1, 1, 0, 1, /*insets top, left, bottom, right*/ 0, 0, 0, 0)); 
+			button_table_panel.add(table_scrollpane,
+					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 1, 0, 1, 8, 1, 1, /*insets top, left, bottom, right*/ 0, 0, 0, 0)); 
 			
-
-			JButton btn_New_Multiple = new JButton();
-			btn_New_Multiple.setFont(new Font(null, Font.BOLD, 14));
-//			btn_New_Multiple.setText("NEW MULTIPLE");
-			btn_New_Multiple.setToolTipText("New multiple");
-			btn_New_Multiple.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_add3.png"));				
-			btn_New_Multiple.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_add3.png"));
-			btn_New_Multiple.setContentAreaFilled(false);
-			c2.gridx = 0;
-			c2.gridy = 1;
-			c2.weightx = 0;
-			c2.weighty = 0;
-			button_table_panel.add(btn_New_Multiple, c2);
-			
-			
-			// Add Spinner to move priority up or down
-			JSpinner spin_move_rows = new JSpinner (new SpinnerNumberModel(1, 0, 2, 1));
-			spin_move_rows.setToolTipText("Move");
-			JFormattedTextField SpinnerText = ((DefaultEditor) spin_move_rows.getEditor()).getTextField();
-			SpinnerText.setHorizontalAlignment(JTextField.LEFT);
-			SpinnerText.setEditable(false);
-			SpinnerText.setFocusable(false);
-//			DefaultFormatter formatter = (DefaultFormatter) SpinnerText.getFormatter();
-//		    formatter.setCommitsOnValidEdit(true);
+			// initial set up
 			spin_move_rows.setEnabled(false);
-		    c2.gridx = 0;
-			c2.gridy = 2;
-			c2.weightx = 0;
-			c2.weighty = 0;
-			button_table_panel.add(spin_move_rows, c2);
-			
-			
-			JButton btn_Edit = new JButton();
-//			btn_Edit.setText("EDIT");
-			btn_Edit.setToolTipText("Modify");
-			btn_Edit.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_swap.png"));
-			btn_Edit.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_swap.png"));
-			btn_Edit.setContentAreaFilled(false);
-			btn_Edit.setEnabled(false);	
-			c2.gridx = 0;
-			c2.gridy = 3;
-			c2.weightx = 0;
-			c2.weighty = 0;
-			button_table_panel.add(btn_Edit, c2);
-		    
-
-			JButton btn_Delete = new JButton();
-			btn_Delete.setFont(new Font(null, Font.BOLD, 14));
-//			btn_Delete.setText("DELETE");
-			btn_Delete.setToolTipText("Delete");
-			btn_Delete.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_erase.png"));
-			btn_Delete.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_erase.png"));
-			btn_Delete.setContentAreaFilled(false);
+			btn_Edit.setEnabled(false);
 			btn_Delete.setEnabled(false);
-			c2.gridx = 0;
-			c2.gridy = 4;
-			c2.weightx = 0;
-			c2.weighty = 0;
-			button_table_panel.add(btn_Delete, c2);
-
-
-			JToggleButton btn_Sort = create_sort_button(button_table_panel, c2, 0, 5, 0, 0);
+			btn_Examine.setVisible(false);
+			
+			// add listeners
 			TableFilterHeader filterHeader = new TableFilterHeader(null, AutoChoices.ENABLED);
 			btn_Sort.addActionListener(e -> apply_sort_or_nosort(filterHeader, btn_Sort, model8, table8));
-
-			
-			JButton btn_Examine = new JButton();
-			btn_Examine.setFont(new Font(null, Font.BOLD, 14));
-			btn_Examine.setEnabled(false);
-			btn_Examine.setToolTipText("Examine");
-			btn_Examine.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_zoom.png"));
-			btn_Examine.setVisible(false);
-			c2.gridx = 0;
-			c2.gridy = 6;
-			c2.weightx = 0;
-			c2.weighty = 0;
-			button_table_panel.add(btn_Examine, c2);
-			
-			
-			c2.insets = new Insets(0, 0, 0, 0); // No padding
-			// Add Empty Label to make all buttons on top not middle
-			c2.gridx = 0;
-			c2.gridy = 7;
-			c2.weightx = 0;
-			c2.weighty = 1;
-			button_table_panel.add(new JLabel(), c2);
-			
-			
-			// Add table8				
-			create_table8();
-			table_scrollpane = new JScrollPane(table8);	
-			c2.gridx = 1;
-			c2.gridy = 0;
-			c2.weightx = 1;
-			c2.weighty = 1;
-			c2.gridheight = 8;
-			button_table_panel.add(table_scrollpane, c2);
 			// End of 4th Grid -----------------------------------------------------------------------
 			// End of 4th Grid -----------------------------------------------------------------------	
 			
@@ -6593,7 +6312,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			
 
 			// New single
-			btn_NewSingle.addActionListener(e -> {	
+			btn_New.addActionListener(e -> {	
 				if (table8.isEditing()) {
 					table8.getCellEditor().stopCellEditing();
 				}
@@ -7676,111 +7395,48 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			border3.setTitleJustification(TitledBorder.CENTER);
 			button_table_panel.setBorder(border3);
 			GridBagConstraints c2 = new GridBagConstraints();
-			c2.fill = GridBagConstraints.BOTH;
-			c2.insets = new Insets(0, 5, 5, 10); // padding top 0, left 5, bottom 5, right 10
-			
-			
-			JButton btn_NewSingle = new JButton();
-			btn_NewSingle.setFont(new Font(null, Font.BOLD, 14));
-//			btn_NewSingle.setText("NEW SET");
-			btn_NewSingle.setToolTipText("New");
-			btn_NewSingle.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_add.png"));
-			btn_NewSingle.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_add.png"));
-			btn_NewSingle.setContentAreaFilled(false);
-			c2.gridx = 0;
-			c2.gridy = 0;
-			c2.weightx = 0;
-			c2.weighty = 0;
-			button_table_panel.add(btn_NewSingle, c2);		
-			
 
-			// Add Spinner to move priority up or down
-			JSpinner spin_move_rows = new JSpinner (new SpinnerNumberModel(1, 0, 2, 1));
-			spin_move_rows.setToolTipText("Move");
-			JFormattedTextField SpinnerText = ((DefaultEditor) spin_move_rows.getEditor()).getTextField();
-			SpinnerText.setHorizontalAlignment(JTextField.LEFT);
-			SpinnerText.setEditable(false);
-			SpinnerText.setFocusable(false);
-//			DefaultFormatter formatter = (DefaultFormatter) SpinnerText.getFormatter();
-//		    formatter.setCommitsOnValidEdit(true);
+			// create
+			JButton btn_New = create_button(null, "New (at least 2 Sigma boxes)", "icon_add.png");
+			JSpinner spin_move_rows = create_rows_spinner();
+			JButton btn_Edit = create_button(null, "Modify", "icon_swap.png");
+			JButton btn_Delete = create_button(null, "Delete", "icon_erase.png");
+			JToggleButton btn_Sort = create_toggle_button("OFF", "Filter and Sorter", "icon_sort.png");
+			JToggleButton btn_Examine = create_toggle_button("OFF", "Examine", "icon_zoom.png");
+			create_table9();
+			JScrollPane table_scrollpane = new JScrollPane(table9);	
+			
+			// add to panel
+			button_table_panel.add(btn_New,
+					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 0, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			button_table_panel.add(spin_move_rows,
+					PrismGridBagLayoutHandle.get_c(c2, "CENTER", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 1, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			button_table_panel.add(btn_Edit,
+					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 2, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			button_table_panel.add(btn_Delete,
+					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 3, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			button_table_panel.add(btn_Sort,
+					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 4, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			button_table_panel.add(btn_Examine,
+					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 5, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			// Add Empty Label to make all buttons on top not middle
+			button_table_panel.add(new JLabel(), 
+					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 6, 1, 1, 0, 1, /*insets top, left, bottom, right*/ 0, 0, 0, 0)); 
+			button_table_panel.add(table_scrollpane,
+					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 1, 0, 1, 7, 1, 1, /*insets top, left, bottom, right*/ 0, 0, 0, 0)); 
+			
+			// initial set up
 			spin_move_rows.setEnabled(false);
-		    c2.gridx = 0;
-			c2.gridy = 1;
-			c2.weightx = 0;
-			c2.weighty = 0;
-			button_table_panel.add(spin_move_rows, c2);
-			
-			
-			JButton btn_Edit = new JButton();
-//			btn_Edit.setText("EDIT");
-			btn_Edit.setToolTipText("Modify");
-			btn_Edit.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_swap.png"));
-			btn_Edit.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_swap.png"));
-			btn_Edit.setContentAreaFilled(false);
-			btn_Edit.setEnabled(false);	
-			c2.gridx = 0;
-			c2.gridy = 2;
-			c2.weightx = 0;
-			c2.weighty = 0;
-			button_table_panel.add(btn_Edit, c2);
-		    
-
-			JButton btn_Delete = new JButton();
-			btn_Delete.setFont(new Font(null, Font.BOLD, 14));
-//			btn_Delete.setText("DELETE");
-			btn_Delete.setToolTipText("Delete");
-			btn_Delete.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_erase.png"));
-			btn_Delete.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_erase.png"));
-			btn_Delete.setContentAreaFilled(false);
+			btn_Edit.setEnabled(false);
 			btn_Delete.setEnabled(false);
-			c2.gridx = 0;
-			c2.gridy = 3;
-			c2.weightx = 0;
-			c2.weighty = 0;
-			button_table_panel.add(btn_Delete, c2);
-
+			btn_Examine.setEnabled(false);
 			
-			JToggleButton btn_Sort = create_sort_button(button_table_panel, c2, 0, 4, 0, 0);
+			// add listeners
 			TableFilterHeader filterHeader = new TableFilterHeader(null, AutoChoices.ENABLED);
 			btn_Sort.addActionListener(e -> apply_sort_or_nosort(filterHeader, btn_Sort, model9, table9));
-
-			
-			JToggleButton btn_Examine = new JToggleButton();
-			btn_Examine.setSelected(false);
-			btn_Examine.setEnabled(false);
-			btn_Examine.setFocusPainted(false);
-			btn_Examine.setFont(new Font(null, Font.BOLD, 12));
-			btn_Examine.setToolTipText("Examine");
-			btn_Examine.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_zoom.png"));	
-			btn_Examine.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_zoom.png"));
-			btn_Examine.setContentAreaFilled(false);
-			c2.gridx = 0;
-			c2.gridy = 5;
-			c2.weightx = 0;
-			c2.weighty = 0;
-			button_table_panel.add(btn_Examine, c2);
-			
-			
-			c2.insets = new Insets(0, 0, 0, 0); // No padding
-			// Add Empty Label to make all buttons on top not middle
-			c2.gridx = 0;
-			c2.gridy = 6;
-			c2.weightx = 0;
-			c2.weighty = 1;
-			button_table_panel.add(new JLabel(), c2);
-			
-			
-			// Add table9				
-			create_table9();
-			JScrollPane table_ScrollPane = new JScrollPane(table9);	
-			c2.gridx = 1;
-			c2.gridy = 0;
-			c2.weightx = 1;
-			c2.weighty = 1;
-			c2.gridheight = 7;
-			button_table_panel.add(table_ScrollPane, c2);
 			// End of 4th Grid -----------------------------------------------------------------------
 			// End of 4th Grid -----------------------------------------------------------------------	
+			
 			
 			
 			
@@ -7830,7 +7486,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			
 
 			// New single
-			btn_NewSingle.addActionListener(e -> {	
+			btn_New.addActionListener(e -> {	
 				if (flow_scrollPane.get_flow_info_from_GUI().contains(";")) {	// Add constraint if there are at least 2 terms separated by ;
 					if (!non_existing_ids_in_the_flow(flow_scrollPane.get_basic_ids_from_GUI()).isEmpty()) {  // the case when flow arrangement contain non-existing basic constraints
 						String warning_message = "Flow cannot be added because Flow Arrangement contains non-existing basic constraints:\n"
@@ -8110,7 +7766,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			// Examine
 			btn_Examine.addActionListener(e -> {
 				if (btn_Examine.isSelected()) {
-					btn_NewSingle.setEnabled(false); 
+					btn_Examine.setText("ON");
+					btn_New.setEnabled(false); 
 					spin_move_rows.setEnabled(false);
 					btn_Edit.setEnabled(false);
 					btn_Delete.setEnabled(false);
@@ -8127,7 +7784,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					PrismTitleScrollPane examine_scrollpane = new PrismTitleScrollPane("", "LEFT", examine_textarea);
 					examine_scrollpane.setPreferredSize(new Dimension(0, 0));
 					examine_scrollpane.setBorder(null);
-					table_ScrollPane.setViewportView(examine_scrollpane);
+					table_scrollpane.setViewportView(examine_scrollpane);
 					
 					if (flow_type.equals("FREE")) {
 						examine_textarea.append("This flow has no impact because it is FREE. Only HARD flows have impact.");
@@ -8210,8 +7867,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					examine_textarea.setSelectionEnd(0);
 					examine_textarea.setEditable(false);
 				} else {
-					table_ScrollPane.setViewportView(table9);
-					btn_NewSingle.setEnabled(true); 
+					btn_Examine.setText("OFF");
+					table_scrollpane.setViewportView(table9);
+					btn_New.setEnabled(true); 
 					spin_move_rows.setEnabled(true);
 					btn_Edit.setEnabled(true);
 					btn_Delete.setEnabled(true);
@@ -8533,8 +8191,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			setLayout(new BorderLayout());
 			
 			
-			
-			
 			// 1st grid -----------------------------------------------------------------------
 			// 1st grid -----------------------------------------------------------------------	
 			JPanel button_table_panel = new JPanel(new GridBagLayout());
@@ -8542,19 +8198,11 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			border.setTitleJustification(TitledBorder.CENTER);
 			button_table_panel.setBorder(border);
 			GridBagConstraints c2 = new GridBagConstraints();
-			c2.fill = GridBagConstraints.BOTH;
-			c2.insets = new Insets(0, 5, 5, 10); // padding top 0, left 5, bottom 5, right 10
-
-
-			JToggleButton btn_Sort = create_sort_button(button_table_panel, c2, 0, 0, 0, 0);
-			TableFilterHeader filterHeader = new TableFilterHeader(null, AutoChoices.ENABLED);
-			btn_Sort.addActionListener(e -> apply_sort_or_nosort(filterHeader, btn_Sort, model10, table10));
-
-
-			create_mass_check_button(button_table_panel, c2, 0, 1, 0, 0).addActionListener(e -> apply_mass_check_or_uncheck("mass_check", model10, table10, data10, colCount10));
-			create_mass_uncheck_button(button_table_panel, c2, 0, 2, 0, 0).addActionListener(e -> apply_mass_check_or_uncheck("mass_uncheck", model10, table10, data10, colCount10));
 			
-			
+			// create
+			JToggleButton btn_Sort = create_toggle_button("OFF", "Filter and Sorter", "icon_sort.png");
+			JButton btn_Check = create_button(null, "Check", "icon_check.png");
+			JButton btn_Uncheck = create_button(null, "Uncheck", "icon_uncheck.png");
 			// compact view
 			JButton btn_compact = new JButton();
 			btn_compact.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -8563,42 +8211,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			btn_compact.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_script_gray.png"));
 			btn_compact.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_script_gray.png"));
 			btn_compact.setContentAreaFilled(false);
-			btn_compact.addActionListener(e -> {
-				if (table10.isEditing()) {
-					table10.getCellEditor().cancelCellEditing();
-				}
-				switch (btn_compact.getToolTipText()) {
-				case "switch to compact view":
-					if (data10 != null) {		
-						RowFilter<Object, Object> compact_filter = new RowFilter<Object, Object>() {
-							public boolean include(Entry entry) {
-								Boolean implementation = (boolean) entry.getValue(8);
-								return implementation == true;
-							}
-						};
-						TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>((PrismTableModel) table10.getModel());
-						sorter.setRowFilter(compact_filter);
-						table10.setRowSorter(sorter);
-					}
-					btn_compact.setToolTipText("switch to full view");
-					btn_compact.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_script.png"));
-					btn_compact.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_script.png"));
-					break;
-				case "switch to full view":
-					table10.setRowSorter(null);
-					btn_compact.setToolTipText("switch to compact view");
-					btn_compact.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_script_gray.png"));
-					btn_compact.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_script_gray.png"));
-					break;
-				}
-			});
-			c2.gridx = 0;
-			c2.gridy = 3;
-			c2.weightx = 0;
-			c2.weighty = 0;
-			button_table_panel.add(btn_compact, c2);
-					
-			
 			// GetResult
 			btn_GetResult = new JButton() {
 				public Point getToolTipLocation(MouseEvent event) {
@@ -8611,31 +8223,31 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			btn_GetResult.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_calculator.png"));
 			btn_GetResult.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_calculator.png"));
 			btn_GetResult.setContentAreaFilled(false);
-			c2.gridx = 0;
-			c2.gridy = 4;
-			c2.weightx = 0;
-			c2.weighty = 0;
-			button_table_panel.add(btn_GetResult, c2);
-			
-			
-			c2.insets = new Insets(0, 0, 0, 0); // No padding
-			// Add Empty Label to make all buttons on top not middle
-			c2.gridx = 0;
-			c2.gridy = 5;
-			c2.weightx = 0;
-			c2.weighty = 1;
-			button_table_panel.add(new JLabel(), c2);
-			
-			
-			// Add table10				
 			create_table10();
 			JScrollPane table_scrollpane = new JScrollPane(table10);	
-			c2.gridx = 1;
-			c2.gridy = 0;
-			c2.weightx = 1;
-			c2.weighty = 1;
-			c2.gridheight = 6;
-			button_table_panel.add(table_scrollpane, c2);
+			
+			// add to panel
+			button_table_panel.add(btn_Sort,
+					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 0, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			button_table_panel.add(btn_Check,
+					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 1, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			button_table_panel.add(btn_Uncheck,
+					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 2, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			button_table_panel.add(btn_compact,
+					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 3, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			button_table_panel.add(btn_GetResult,
+					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 4, 1, 1, 0, 0, /*insets top, left, bottom, right*/ 0, 5, 5, 10));
+			// Add Empty Label to make all buttons on top not middle
+			button_table_panel.add(new JLabel(), 
+					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 0, 5, 1, 1, 0, 1, /*insets top, left, bottom, right*/ 0, 0, 0, 0)); 
+			button_table_panel.add(table_scrollpane,
+					PrismGridBagLayoutHandle.get_c(c2, "BOTH", /*gridx, gridy, gridwidth, gridheight, weightx, weighty*/ 1, 0, 1, 6, 1, 1, /*insets top, left, bottom, right*/ 0, 0, 0, 0)); 
+			
+			// add listeners
+			TableFilterHeader filterHeader = new TableFilterHeader(null, AutoChoices.ENABLED);
+			btn_Sort.addActionListener(e -> apply_sort_or_nosort(filterHeader, btn_Sort, model10, table10));
+			btn_Check.addActionListener(e -> apply_mass_check_or_uncheck("mass_check", model10, table10, data10, colCount10));
+			btn_Uncheck.addActionListener(e -> apply_mass_check_or_uncheck("mass_uncheck", model10, table10, data10, colCount10));
 			// End of 1st grid -----------------------------------------------------------------------
 			// End of 1st grid -----------------------------------------------------------------------						
 			
@@ -8735,13 +8347,43 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			
 			// Add Listeners for table10 & buttons----------------------------------------------------------
 			// Add Listeners for table10 & buttons----------------------------------------------------------
+			btn_compact.addActionListener(e -> {
+				if (table10.isEditing()) {
+					table10.getCellEditor().cancelCellEditing();
+				}
+				switch (btn_compact.getToolTipText()) {
+				case "switch to compact view":
+					if (data10 != null) {		
+						RowFilter<Object, Object> compact_filter = new RowFilter<Object, Object>() {
+							public boolean include(Entry entry) {
+								Boolean implementation = (boolean) entry.getValue(8);
+								return implementation == true;
+							}
+						};
+						TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>((PrismTableModel) table10.getModel());
+						sorter.setRowFilter(compact_filter);
+						table10.setRowSorter(sorter);
+					}
+					btn_compact.setToolTipText("switch to full view");
+					btn_compact.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_script.png"));
+					btn_compact.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_script.png"));
+					break;
+				case "switch to full view":
+					table10.setRowSorter(null);
+					btn_compact.setToolTipText("switch to compact view");
+					btn_compact.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_script_gray.png"));
+					btn_compact.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_script_gray.png"));
+					break;
+				}
+			});
+			
 			btn_GetResult.addActionListener(e -> {
 				merging_result.generate_merging_result(data10, read_database);
 				data11 = merging_result.get_data11();					// to pass back to save the state_id output
 				columnNames11 = merging_result.get_columnNames11();		// to pass back to save the state_id output
 			});
-			// End of Listeners for table8 & buttons -----------------------------------------------------------------------
-			// End of Listeners for table8 & buttons -----------------------------------------------------------------------
+			// End of Listeners for table & buttons -----------------------------------------------------------------------
+			// End of Listeners for table & buttons -----------------------------------------------------------------------
 
 			
 			
