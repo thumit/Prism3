@@ -3404,10 +3404,10 @@ public class Solve_Iterations {
 			std[k] = disturbance_info.get_std_from_rd_condition_id(var_rd_condition_id[var_index][k]);
 		}
 
-		// in case stochastic loss rate type = "deterministic"
+		// in case loss rate type = "deterministic"
 		if (user_loss_rate_type.equals("deterministic")) return stat.get_deterministic_loss_rates_from_transformed_data(total_disturbances, mean, std, transform_function, parameter_a, parameter_b);
 		
-		// in case stochastic loss rate type = "stochastic"
+		// in case loss rate type = "stochastic"
 		if (map_var_index_to_user_chosen_loss_rate.get(var_index) != null) {	// return if already had the stochastic
 			return map_var_index_to_user_chosen_loss_rate.get(var_index);
 		} else {	// if not having the stochastic yet, create it and map it
@@ -3479,8 +3479,7 @@ public class Solve_Iterations {
 			// if not doing random drawn yet then do it and map it
 			if (map_var_name_to_var_stochastic_loss_rates.get(period_one_var_name) == null) {	
 				double[] stochastic_loss_rates_for_period_one_variable = get_stochastic_loss_rates_for_period_one_variable(
-						period_one_var_name, map_var_name_to_var_value,
-						map_var_name_to_var_rd_condition_id, disturbance_info);
+						period_one_var_name, map_var_name_to_var_value, map_var_name_to_var_rd_condition_id, disturbance_info);
 				map_var_name_to_var_stochastic_loss_rates.put(period_one_var_name, stochastic_loss_rates_for_period_one_variable);
 			}
 

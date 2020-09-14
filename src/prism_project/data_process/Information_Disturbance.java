@@ -61,22 +61,22 @@ public class Information_Disturbance {
 		int count = -1;
 		for (int priority = 0; priority < condition_count; priority++) {		// Looping from the highest priority condition to the lowest, each priority is a row in the table GUI
 			all_priority_condition_info[priority] = disturbance_condition_list.get(priority).split("\t");
-			String disturbance_name = all_priority_condition_info[priority][2];
+			String disturbance_name = all_priority_condition_info[priority][3];
 			if (map_disturbance_name_to_id.get(disturbance_name) == null) {
 				count++;
 			}
 			map_disturbance_name_to_id.put(disturbance_name, count);
-			all_condition_disturbance_name[priority] = all_priority_condition_info[priority][2];	// column 2 is disturbance name			allow reading "null"
-			all_condition_function[priority] = all_priority_condition_info[priority][4];	 		// column 4 is normalizing function		allow reading "null"
-			all_condition_parameter_a[priority] = (!all_priority_condition_info[priority][5].equals("null")) ? Double.parseDouble(all_priority_condition_info[priority][5]) : 0; // column 5 is parameter_a
-			all_condition_parameter_b[priority] = (!all_priority_condition_info[priority][6].equals("null")) ? Double.parseDouble(all_priority_condition_info[priority][6]) : 0; // column 6 is parameter_b
-			all_condition_mean[priority] = (!all_priority_condition_info[priority][7].equals("null")) ? Double.parseDouble(all_priority_condition_info[priority][7]) : 0; // column 7 is loss_rate_mean
-			all_condition_std[priority] = (!all_priority_condition_info[priority][8].equals("null")) ? Double.parseDouble(all_priority_condition_info[priority][8]) : 0; 	// column 8 is loss_rate_std
-			all_condition_conversion_rate_mean[priority] = get_2D_array_from_conversion_rate_mean_or_std(all_priority_condition_info[priority][9]);		// column 9 is conversion_rate_mean
-			all_condition_conversion_rate_std[priority] = get_2D_array_from_conversion_rate_mean_or_std(all_priority_condition_info[priority][10]);		// column 10 is conversion_rate_std
-			all_priority_condition_static_identifiers[priority] = identifiers_processing.get_static_identifiers(all_priority_condition_info[priority][11]);	// column 11 is static identifiers
-			all_priority_condition_dynamic_identifiers[priority] = identifiers_processing.get_dynamic_identifiers(all_priority_condition_info[priority][12]);	// column 12 is dynamic identifiers
-			all_priority_condition_dynamic_dentifiers_column_indexes[priority] = identifiers_processing.get_dynamic_dentifiers_column_indexes(all_priority_condition_info[priority][13]);	// column 13 is dynamic identifiers
+			all_condition_disturbance_name[priority] = all_priority_condition_info[priority][3];	// column 3 is disturbance name			allow reading "null"
+			all_condition_function[priority] = all_priority_condition_info[priority][6];	 		// column 6 is normalizing function		allow reading "null"
+			all_condition_parameter_a[priority] = (!all_priority_condition_info[priority][7].equals("null")) ? Double.parseDouble(all_priority_condition_info[priority][7]) : 0; // column 7 is parameter_a
+			all_condition_parameter_b[priority] = (!all_priority_condition_info[priority][8].equals("null")) ? Double.parseDouble(all_priority_condition_info[priority][8]) : 0; // column 8 is parameter_b
+			all_condition_mean[priority] = (!all_priority_condition_info[priority][9].equals("null")) ? Double.parseDouble(all_priority_condition_info[priority][9]) : 0; // column 9 is loss_rate_mean
+			all_condition_std[priority] = (!all_priority_condition_info[priority][10].equals("null")) ? Double.parseDouble(all_priority_condition_info[priority][10]) : 0; 	// column 10 is loss_rate_std
+			all_condition_conversion_rate_mean[priority] = get_2D_array_from_conversion_rate_mean_or_std(all_priority_condition_info[priority][11]);		// column 11 is conversion_rate_mean
+			all_condition_conversion_rate_std[priority] = get_2D_array_from_conversion_rate_mean_or_std(all_priority_condition_info[priority][12]);		// column 12 is conversion_rate_std
+			all_priority_condition_static_identifiers[priority] = identifiers_processing.get_static_identifiers(all_priority_condition_info[priority][13]);	// column 13 is static identifiers
+			all_priority_condition_dynamic_identifiers[priority] = identifiers_processing.get_dynamic_identifiers(all_priority_condition_info[priority][14]);	// column 14 is dynamic identifiers
+			all_priority_condition_dynamic_dentifiers_column_indexes[priority] = identifiers_processing.get_dynamic_dentifiers_column_indexes(all_priority_condition_info[priority][15]);	// column 15 is dynamic identifiers
 		}
 		total_disturbances = map_disturbance_name_to_id.size();
 	}

@@ -1344,9 +1344,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		//Setup the table------------------------------------------------------------	
 		if (is_table6_loaded == false) { // Create a fresh new if Load fail				
 			rowCount6 = 0;
-			colCount6 = 15;
+			colCount6 = 17;
 			data6 = new Object[rowCount6][colCount6];
-			columnNames6 = new String[] {"condition_id", "condition_description", "disturbance_id", "loss_rate_data", "normalizing_function", "parameter_a", "parameter_b", "mean", "std", "cr_mean", "cr_std", "static_identifiers", "dynamic_identifiers", "original_dynamic_identifiers", "model_condition"};
+			columnNames6 = new String[] {"condition_id", "condition_description", "condition_category", "disturbance_id", "disturbance_approach", "loss_rate_data", "normalizing_function", "parameter_a", "parameter_b", "mean", "std", "cr_mean", "cr_std", "static_identifiers", "dynamic_identifiers", "original_dynamic_identifiers", "model_condition"};
 		}
 					
 		
@@ -1354,14 +1354,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		model6 = new PrismTableModel(rowCount6, colCount6, data6, columnNames6) {
 			@Override
 			public Class getColumnClass(int c) {
-				if (c == 14) return Boolean.class;
-				else if (c >= 5 && c <= 8) return Double.class;      //column 5 to 7 accept only Double values   
+				if (c == 16) return Boolean.class;
+				else if (c >= 7 && c <= 10) return Double.class;  
 				else return String.class;
 			}
 			
 			@Override
 			public boolean isCellEditable(int row, int col) {
-				if ((col >= 1 && col <= 8) || col == 14) {	// some columns are editable
+				if ((col >= 1 && col <= 10) || col == 16) {	// some columns are editable
 					return true;
 				} else {
 					return false;
@@ -1380,13 +1380,13 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						if (String.valueOf(data6[row][col]).equals("null")) {
 							data6[row][col] = null;
 						} else {	
-							if (col == 14) {
+							if (col == 16) {
 								try {
 									data6[row][col] = Boolean.valueOf(String.valueOf(data6[row][col]));
 								} catch (NumberFormatException e) {
 									System.err.println(e.getClass().getName() + ": " + e.getMessage() + " Fail to convert String to Boolean values in create_table6");
 								}
-							} else if (col >= 5 && col <= 8) {			// Columns 5 to 8 are Double
+							} else if (col >= 7 && col <= 10) {			// Columns 7 to 10 are Double
 								try {
 									data6[row][col] = Double.valueOf(String.valueOf(data6[row][col]));
 								} catch (NumberFormatException e) {
@@ -1420,11 +1420,27 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				
 				if (column == 1) {
 					tableColumn.setMinWidth(130);
-				} else if (column == 3) {
+				} else if (column == 5) {
 					tableColumn.setMinWidth(110);
 				} else {
 					tableColumn.setPreferredWidth(maxWidth);
 				}
+				
+				// Set icon for cells
+				if (column == 2) {
+					if (getValueAt(row, 2).toString().equals("Local simulation")) {
+						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_blue.png"));
+					} else if (getValueAt(row, 2).toString().equals("Global adjustment")) {
+						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_red.png"));
+					}
+				} else if (column == 4) {
+					if (getValueAt(row, 4).toString().equals("Deterministic")) {
+						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_blue.png"));
+					} else if (getValueAt(row, 4).toString().equals("Stochastic")) {
+						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_red.png"));
+					}
+				}
+				
 				return component;
 			}
 			
@@ -1539,8 +1555,31 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				return c;
 			}
 		}
-		class Transformation_Technique extends JComboBox {	
-			public Transformation_Technique() {
+		
+		class Condition_Category extends JComboBox {	
+			public Condition_Category() {
+				ToolTipComboBoxRenderer ren = new ToolTipComboBoxRenderer();
+				setRenderer(ren);
+				addItem("Local simulation");
+				addItem("Global adjustment");
+				setSelectedIndex(0);
+			}
+		};
+		table6.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new Condition_Category()));
+		
+		class Disturbance_Approach extends JComboBox {	
+			public Disturbance_Approach() {
+				ToolTipComboBoxRenderer ren = new ToolTipComboBoxRenderer();
+				setRenderer(ren);
+				addItem("Deterministic");
+				addItem("Stochastic");
+				setSelectedIndex(0);
+			}
+		};
+		table6.getColumnModel().getColumn(4).setCellEditor(new DefaultCellEditor(new Disturbance_Approach()));
+		
+		class Normalizing_Function extends JComboBox {	
+			public Normalizing_Function() {
 				ToolTipComboBoxRenderer ren = new ToolTipComboBoxRenderer();
 				setRenderer(ren);
 				addItem(null);
@@ -1556,7 +1595,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				setMaximumRowCount(10);
 			}
 		};
-		table6.getColumnModel().getColumn(4).setCellEditor(new DefaultCellEditor(new Transformation_Technique()));
+		table6.getColumnModel().getColumn(6).setCellEditor(new DefaultCellEditor(new Normalizing_Function()));
 		
 		// Hide columns
 		TableColumnsHandle table_handle = new TableColumnsHandle(table6);
@@ -5105,9 +5144,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					if (selectedRow.length == 1) {		// Show the set's identifiers
 						int currentRow = selectedRow[0];
 						currentRow = table6.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
-						static_identifiers_scrollpane.reload_this_constraint_static_identifiers((String) data6[currentRow][11]);	// 11 is the static_identifiers which have some attributes selected				
-						dynamic_identifiers_scrollpane.reload_this_constraint_dynamic_identifiers((String) data6[currentRow][12], (String) data6[currentRow][13]);	// 13 is the original_dynamic_identifiers column
-						natural_disturbances_tables_ScrollPane.reload_this_condition((String) data6[currentRow][9], (String) data6[currentRow][10]);
+						static_identifiers_scrollpane.reload_this_constraint_static_identifiers((String) data6[currentRow][13]);	// 13 is the static_identifiers which have some attributes selected				
+						dynamic_identifiers_scrollpane.reload_this_constraint_dynamic_identifiers((String) data6[currentRow][15], (String) data6[currentRow][15]);	// 15 is the original_dynamic_identifiers column
+						natural_disturbances_tables_ScrollPane.reload_this_condition((String) data6[currentRow][11], (String) data6[currentRow][12]);
 						
 						btn_Edit.setEnabled(true);
 						quick_edit.enable_all_apply_buttons();
@@ -5152,8 +5191,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		        	int currentRow = table6.getSelectedRow();		        	
 					currentRow = table6.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
 					natural_disturbances_tables_ScrollPane.update_2_tables_data(data6c, data6d);	// Update so we have the latest data of table 6c to retrieve and write to table6 below
-					data6[currentRow][9] = natural_disturbances_tables_ScrollPane.get_cr_mean_from_GUI();		
-					model6.fireTableCellUpdated(currentRow, 9);
+					data6[currentRow][11] = natural_disturbances_tables_ScrollPane.get_cr_mean_from_GUI();		
+					model6.fireTableCellUpdated(currentRow, 11);
 		        }
 		    });
 			
@@ -5162,8 +5201,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		        	int currentRow = table6.getSelectedRow();		        	
 					currentRow = table6.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
 					natural_disturbances_tables_ScrollPane.update_2_tables_data(data6c, data6d);	// Update so we have the latest data of table 6c to retrieve and write to table6 below
-					data6[currentRow][10] = natural_disturbances_tables_ScrollPane.get_cr_std_from_GUI();		
-					model6.fireTableCellUpdated(currentRow, 10);
+					data6[currentRow][12] = natural_disturbances_tables_ScrollPane.get_cr_std_from_GUI();		
+					model6.fireTableCellUpdated(currentRow, 12);
 		        }
 		    });
 			
@@ -5186,19 +5225,21 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				data6[rowCount6 - 1][1] = String.join(" ..... ",
 						dynamic_identifiers_scrollpane.get_dynamic_description_from_GUI(),
 						static_identifiers_scrollpane.get_static_description_from_GUI());
-				data6[rowCount6 - 1][2] = null;
+				data6[rowCount6 - 1][2] = "Local simulation";
 				data6[rowCount6 - 1][3] = null;
-				data6[rowCount6 - 1][4] = null;
+				data6[rowCount6 - 1][4] = "Deterministic";
 				data6[rowCount6 - 1][5] = null;
 				data6[rowCount6 - 1][6] = null;
 				data6[rowCount6 - 1][7] = null;
 				data6[rowCount6 - 1][8] = null;
-				data6[rowCount6 - 1][9] = natural_disturbances_tables_ScrollPane.get_cr_mean_from_GUI();
-				data6[rowCount6 - 1][10] = natural_disturbances_tables_ScrollPane.get_cr_std_from_GUI();
-				data6[rowCount6 - 1][11] = static_identifiers_scrollpane.get_static_info_from_GUI();
-				data6[rowCount6 - 1][12] = dynamic_identifiers_scrollpane.get_dynamic_info_from_GUI();
-				data6[rowCount6 - 1][13] = dynamic_identifiers_scrollpane.get_original_dynamic_info_from_GUI();
-				data6[rowCount6 - 1][14] = true;
+				data6[rowCount6 - 1][9] = null;
+				data6[rowCount6 - 1][10] = null;
+				data6[rowCount6 - 1][11] = natural_disturbances_tables_ScrollPane.get_cr_mean_from_GUI();
+				data6[rowCount6 - 1][12] = natural_disturbances_tables_ScrollPane.get_cr_std_from_GUI();
+				data6[rowCount6 - 1][13] = static_identifiers_scrollpane.get_static_info_from_GUI();
+				data6[rowCount6 - 1][14] = dynamic_identifiers_scrollpane.get_dynamic_info_from_GUI();
+				data6[rowCount6 - 1][15] = dynamic_identifiers_scrollpane.get_original_dynamic_info_from_GUI();
+				data6[rowCount6 - 1][16] = true;
 								
 				model6.updateTableModelPrism(rowCount6, colCount6, data6, columnNames6);
 				model6.fireTableDataChanged();		
@@ -5222,9 +5263,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					selectedRow = table6.convertRowIndexToModel(selectedRow);		// Convert row index because "Sort" causes problems	
 					
 					// Apply change
-					data6[selectedRow][11] = static_identifiers_scrollpane.get_static_info_from_GUI();
-					data6[selectedRow][12] = dynamic_identifiers_scrollpane.get_dynamic_info_from_GUI();
-					data6[selectedRow][13] = dynamic_identifiers_scrollpane.get_original_dynamic_info_from_GUI();
+					data6[selectedRow][13] = static_identifiers_scrollpane.get_static_info_from_GUI();
+					data6[selectedRow][14] = dynamic_identifiers_scrollpane.get_dynamic_info_from_GUI();
+					data6[selectedRow][15] = dynamic_identifiers_scrollpane.get_original_dynamic_info_from_GUI();
 					model6.fireTableDataChanged();	
 					
 					// Convert the edited Row to model view and then select it 
@@ -5386,9 +5427,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 							String[] loss_rate_string = String.valueOf(data6[i][3]).trim().split("\\s+");		// original data
 							try {
 								double[] loss_rate = Arrays.stream(loss_rate_string).mapToDouble(Double::parseDouble).toArray();
-								String transform_function = (data6[i][4] != null) ? String.valueOf(data6[i][4]) : "null";
-								double parameter_a = (data6[i][5] != null) ? (double) data6[i][5] : 0;
-								double parameter_b = (data6[i][6] != null) ? (double) data6[i][6] : 0;
+								String transform_function = (data6[i][6] != null) ? String.valueOf(data6[i][6]) : "null";
+								double parameter_a = (data6[i][7] != null) ? (double) data6[i][7] : 0;
+								double parameter_b = (data6[i][8] != null) ? (double) data6[i][8] : 0;
 								Statistics stat = new Statistics();
 								double[] transformed_loss_rate = stat.get_transformed_loss_rates(loss_rate, transform_function, parameter_a, parameter_b);
 								
@@ -5404,11 +5445,11 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 									num += numn;
 								}
 								double std = Math.sqrt(num / transformed_loss_rate.length);
-								data6[i][7] = mean;
-								data6[i][8] = std;
+								data6[i][9] = mean;
+								data6[i][10] = std;
 							} catch (Exception e1) {	// in case failed to read loss_rate
-								data6[i][7] = null;
-								data6[i][8] = null;
+								data6[i][9] = null;
+								data6[i][10] = null;
 								e1.printStackTrace();
 							}
 						}
