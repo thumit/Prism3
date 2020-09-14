@@ -52,6 +52,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.EventObject;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -1438,6 +1439,36 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_blue.png"));
 					} else if (getValueAt(row, 4).toString().equals("Stochastic")) {
 						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_red.png"));
+					}
+				}
+				
+//				if (getValueAt(row, 11).toString().equals("true")) {	// because we hide 5 columns
+//					if ((column == 2 && getValueAt(row, 2).toString().equals("Global adjustment")) || column == 3 || column == 16) {
+//						// uncheck this condition if the condition category is global and disturbance_id in this condition is not in the list of disturbances in the local simulation category
+//						List<String> disturbances_list = new ArrayList<String>();	// list of disturbances in the local simulation category where model_condition = true
+//						for (int r = 0; r < rowCount6; r++) {
+//							if (((String) data6[r][2]).equals("Local simulation") && ((boolean) data6[r][16]) == true) {
+//								disturbances_list.add((String) data6[r][3]);
+//							}
+//						}
+//						if (!disturbances_list.contains((String) data6[row][3])) {
+//							data6[row][16] = false;
+//						}
+//					}
+//				}
+				
+				// uncheck every condition where the condition category is global and disturbance_id in this condition is not in the list of disturbances in the local simulation category (set to true)
+				Set<String> disturbances_set = new HashSet<String>();	// list of disturbances in the local simulation category where model_condition = true
+				for (int r = 0; r < rowCount6; r++) {
+					if (String.valueOf(data6[r][2]).equals("Local simulation") && String.valueOf(data6[r][16]).equals("true")) {
+						disturbances_set.add(String.valueOf(data6[r][3]));
+					}
+				}
+				for (int r = 0; r < getRowCount(); r++) {	// loop all visible rows only (filter might show only some rows)
+					if (getValueAt(r, 11).toString().equals("true") && getValueAt(r, 2).toString().equals("Global adjustment")) {	// 11 not 16 because we hide 5 columns
+						if (!disturbances_set.contains(String.valueOf(getValueAt(r, 3)))) {
+							setValueAt(false, r, 11);
+						}
 					}
 				}
 				
@@ -4246,6 +4277,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				if (table2.isEditing()) {
 					table2.getCellEditor().stopCellEditing();
 				}
+				filterHeader.resetFilter();
 				
 				// Add 1 row
 				rowCount2++;
@@ -5212,6 +5244,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				if (table6.isEditing()) {
 					table6.getCellEditor().stopCellEditing();
 				}
+				filterHeader.resetFilter();
 				
 				// Add 1 row
 				rowCount6++;
@@ -5826,6 +5859,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				if (table7.isEditing()) {
 					table7.getCellEditor().stopCellEditing();
 				}
+				filterHeader.resetFilter();
 				
 				// Add 1 row
 				rowCount7++;
@@ -5833,7 +5867,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				for (int ii = 0; ii < rowCount7 - 1; ii++) {
 					for (int jj = 0; jj < colCount7; jj++) {
 						data7[ii][jj] = model7.getValueAt(ii, jj);
-					}	
+					}
 				}
 					
 				data7[rowCount7 - 1][1] = String.join(" ..... ",

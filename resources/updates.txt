@@ -1412,3 +1412,6 @@ All changes in this block are associated with PrismAlpha3.1.03.jar, Prism-Formul
 601. Refactor in Panel_Edit_Details for building repetitive components and their functions (buttons, spinners, etc.)
 602. Alow global adjustment for the disturbance-simulation results (more details at issue #126)
 	- In the Natural Disturbances screen, add 2 new columns: condition_category (Local simulation, Global adjustment) and disturbance_approach (Deterministic, Stochastic)
+	- In the Natural Disturbances screen, conditions with global adjustment set to true will be automatically verified and will be set to false if not feasible.
+
+603. Reset/clear the table header drop-down filter when adding new single/multiple rows at following screens: Natural Disturbances and Management Cost (more of 595)
