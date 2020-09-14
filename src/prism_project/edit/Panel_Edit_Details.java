@@ -5457,7 +5457,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					// Apply change
 					try {
 						for (int i : selectedRow) {
-							String[] loss_rate_string = String.valueOf(data6[i][3]).trim().split("\\s+");		// original data
+							String[] loss_rate_string = String.valueOf(data6[i][5]).trim().split("\\s+");		// original data
 							try {
 								double[] loss_rate = Arrays.stream(loss_rate_string).mapToDouble(Double::parseDouble).toArray();
 								String transform_function = (data6[i][6] != null) ? String.valueOf(data6[i][6]) : "null";
@@ -5494,7 +5494,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					
 					model6.fireTableDataChanged();	
 					for (int i: selectedRow) {
-						table6.addRowSelectionInterval(i, i);
+						table6.addRowSelectionInterval(table6.convertRowIndexToView(i), table6.convertRowIndexToView(i));
 					}
 				}
 			});	
