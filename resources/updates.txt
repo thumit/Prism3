@@ -1415,3 +1415,5 @@ All changes in this block are associated with PrismAlpha3.1.03.jar, Prism-Formul
 	- In the Natural Disturbances screen, conditions with global adjustment set to true will be automatically verified and will be set to false if not feasible.
 
 603. Reset/clear the table header drop-down filter when adding new single/multiple rows at following screens: Natural Disturbances and Management Cost (more of 595)
+604. In all input screens, the spinner to move rows will be alvaialbe only when the Filter and Sorter is off and there is at least one highlighted row.
+605. Fix the bug in Natural Disturbance and Management Cost screens: if deleting all rows and adding rows again the Filter and Sorter will fail. 

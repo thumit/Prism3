@@ -5195,11 +5195,11 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					} else {		// Disable Delete & Spinner
 						btn_Delete.setEnabled(false);
 						btn_GetResult.setEnabled(false);
-					}	
+					}
 					
-					if (selectedRow.length >= 1) {	// Enable Spinner when: >=1 row is selected
+					if (selectedRow.length >= 1 && btn_Sort.getText().equals("OFF")) {	// Enable Spinner when: >=1 row is selected and Sorter is off
 						spin_move_rows.setEnabled(true);
-					} else {		// Disable Delete & Spinner
+					} else {		// Disable Spinner
 						spin_move_rows.setEnabled(false);
 					}
 				}
@@ -5668,22 +5668,22 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		}	
 		
 	    // Update set_id column. set_id needs to be unique-----------------
-	    public void update_id() {  		
-			List<Integer> id_list = new ArrayList<Integer>();			
-		
-			for (int row = 0; row < rowCount6; row++) {
+	    public void update_id() { 
+	    	List<Integer> id_list = new ArrayList<Integer>();			
+			
+			for (int row = 0; row < rowCount4; row++) {
 				if (data6[row][0] != null) {
-					id_list.add(Integer.valueOf((String) data6[row][0].toString()/*.replace("Set ", "")*/));
+					id_list.add((int) data6[row][0]);
 				}
 			}			
 			
-			for (int row = 0; row < rowCount6; row++) {
+			for (int row = 0; row < rowCount4; row++) {
 				if (data6[row][0] == null) {
 					int new_id = (id_list.size() > 0) ? Collections.max(id_list) + 1 : 1;	//new id = (max id + 1) or = 1 if no row
-					data6[row][0] = /*"Set " + */new_id;
+					data6[row][0] = new_id;
 					id_list.add(new_id);
 				}
-			}			
+			}		
 		}
 	}
 	
@@ -5810,11 +5810,11 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						btn_Delete.setEnabled(true);
 					} else {		// Disable Delete & Spinner
 						btn_Delete.setEnabled(false);
-					}	
+					}
 					
-					if (selectedRow.length >= 1) {	// Enable Spinner when: >=1 row is selected
+					if (selectedRow.length >= 1 && btn_Sort.getText().equals("OFF")) {	// Enable Spinner when: >=1 row is selected and Sorter is off
 						spin_move_rows.setEnabled(true);
-					} else {		// Disable Delete & Spinner
+					} else {		// Disable Spinner
 						spin_move_rows.setEnabled(false);
 					}
 				}
@@ -6210,22 +6210,22 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		}	
 		
 	    // Update set_id column. set_id needs to be unique-----------------
-	    public void update_id() {  		
-			List<Integer> id_list = new ArrayList<Integer>();			
-		
-			for (int row = 0; row < rowCount7; row++) {
+	    public void update_id() {  
+	    	List<Integer> id_list = new ArrayList<Integer>();			
+			
+			for (int row = 0; row < rowCount4; row++) {
 				if (data7[row][0] != null) {
-					id_list.add(Integer.valueOf((String) data7[row][0].toString()/*.replace("Set ", "")*/));
+					id_list.add((int) data7[row][0]);
 				}
 			}			
 			
-			for (int row = 0; row < rowCount7; row++) {
+			for (int row = 0; row < rowCount4; row++) {
 				if (data7[row][0] == null) {
 					int new_id = (id_list.size() > 0) ? Collections.max(id_list) + 1 : 1;	//new id = (max id + 1) or = 1 if no row
-					data7[row][0] = /*"Set " + */new_id;
+					data7[row][0] = new_id;
 					id_list.add(new_id);
 				}
-			}			
+			}	
 		}
 	}
 	
