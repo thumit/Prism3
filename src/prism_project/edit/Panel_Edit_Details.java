@@ -1419,8 +1419,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			            tableColumn.getHeaderValue(), false, false, -1, column);
 				maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
 				
-				if (column == 1) {
-					tableColumn.setMinWidth(130);
+				if (column == 1 || column == 2) {
+					tableColumn.setMinWidth(150);
 				} else if (column == 5) {
 					tableColumn.setMinWidth(110);
 				} else {
@@ -1457,6 +1457,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 //					}
 //				}
 				
+				// THIS IS VERY SLOW
 				// uncheck every condition where the condition category is global and disturbance_id in this condition is not in the list of disturbances in the local simulation category (set to true)
 				Set<String> disturbances_set = new HashSet<String>();	// list of disturbances in the local simulation category where model_condition = true
 				for (int r = 0; r < rowCount6; r++) {
@@ -3364,6 +3365,72 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		if (table == table3) model3.update_model_overview();	// Do not remove this line because it would deselect strata without NG_E_0 prescription. This is important
 	}
 	
+	private void apply_row_spinning(JSpinner rows_spinner, PrismTableModel model, JTable table, Object[][] data) {		
+		int up_or_down = (int) rows_spinner.getValue() - 1;										
+		rows_spinner.setValue((int) 1);	// Reset spinner value to 1
+		
+		int rowCount = model.getRowCount();
+		int colCount = model.getColumnCount();
+		if (up_or_down == 1) {	// move up
+			// Cancel editing before moving conditions up or down
+			if (table.isEditing()) {
+				table.getCellEditor().cancelCellEditing();
+			}	
+			
+			// Get selected rows
+			int[] selectedRow = table.getSelectedRows();		// No need to convert row index because we never allow Sort when moving rows
+			List<Integer> selected_ids = new ArrayList<Integer>() {{ for (int i : selectedRow) add(i);}};	// Convert array to list
+			
+			if (selected_ids.size() >=1 && selected_ids.get(0) > 0) {	// If there is at least 1 row selected & the first row is not selected
+				for (int i = 0; i < rowCount; i++) {
+					if (selected_ids.contains(i)) {		
+						for (int j = 0; j < colCount; j++) {
+							Object temp = data[i - 1][j];
+							data[i - 1][j] = data[i][j];
+							data[i][j] = temp;
+						}
+					}
+				}							
+				model.fireTableDataChanged();	// Update the changes and select the currently selected conditions
+				for (int i: selectedRow) {
+					table.addRowSelectionInterval(i - 1, i - 1);
+				}
+			}
+			
+			// Scroll to the first row of the current selected rows (- 3 to see the 3 unselected rows above when moving up)
+			table.scrollRectToVisible(new Rectangle(table.getCellRect(table.convertRowIndexToView(table.getSelectedRow()) - 3, 0, true)));	
+		}
+							
+		if (up_or_down == -1) {	// move down						
+			if (table.isEditing()) {
+				table.getCellEditor().cancelCellEditing();	// cancel editing before moving conditions up or down
+			}	
+			
+			// Get selected rows
+			int[] selectedRow = table.getSelectedRows();		// No need to convert row index because we never allow Sort when moving rows
+			List<Integer> selectedRowList = new ArrayList<Integer>() {{ for (int i : selectedRow) add(i);}};	// Convert array to list
+			
+			if (selectedRowList.size() >=1 && selectedRowList.get(selectedRowList.size() - 1) < rowCount - 1) {	// If ...
+				for (int i = rowCount - 1; i >= 0; i--) {
+					if (selectedRowList.contains(i)) {		
+						for (int j = 0; j < colCount; j++) {
+							Object temp = data[i + 1][j];
+							data[i + 1][j] = data[i][j];
+							data[i][j] = temp;
+						}
+					}
+				}						
+				model.fireTableDataChanged();	// Update the changes and select the currently selected conditions
+				for (int i: selectedRow) {
+					table.addRowSelectionInterval(i + 1, i + 1);
+				}	
+			}
+			
+			// Scroll to the last row of the current selected rows (+ 3 to see the next 3 unselected rows below when moving down)
+			table.scrollRectToVisible(new Rectangle(table.getCellRect(table.convertRowIndexToView(table.getSelectedRows()[table.getSelectedRows().length - 1]) + 3, 0, true)));	
+		}
+	}
+	
 	// Apply sort/nosort
 	private void apply_sort_or_nosort(TableFilterHeader filterHeader, JToggleButton btn, PrismTableModel model, JTable table) {
 		// Identify selection
@@ -4212,6 +4279,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			btn_Sort.addActionListener(e -> apply_sort_or_nosort(filterHeader, btn_Sort, model2, table2));
 			btn_Check.addActionListener(e -> apply_mass_check_or_uncheck("mass_check", model2, table2, data2, colCount2));
 			btn_Uncheck.addActionListener(e -> apply_mass_check_or_uncheck("mass_uncheck", model2, table2, data2, colCount2));
+			spin_move_rows.addChangeListener(e-> apply_row_spinning(spin_move_rows, model2, table2, data2));
 			// End of 4th Grid -----------------------------------------------------------------------
 			// End of 4th Grid -----------------------------------------------------------------------	
 
@@ -4342,72 +4410,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					}
 				}
 			});
-			
-			
-			// Spinner
-		    spin_move_rows.addChangeListener(new ChangeListener() {
-		        @Override
-		        public void stateChanged(ChangeEvent e) {
-					int up_or_down = (int) spin_move_rows.getValue() - 1;										
-					spin_move_rows.setValue((int) 1);	// Reset spinner value to 1
-										
-					if (up_or_down == 1) {	// move up
-						// Cancel editing before moving conditions up or down
-						if (table2.isEditing()) {
-							table2.getCellEditor().cancelCellEditing();
-						}	
-						
-						// Get selected rows
-						int[] selectedRow = table2.getSelectedRows();		// No need to convert row index because we never allow Sort when moving rows
-						List<Integer> selectedRowList = new ArrayList<Integer>() {{ for (int i : selectedRow) add(i);}};	// Convert array to list
-						
-						if (selectedRowList.size() >=1 && selectedRowList.get(0) > 0) {	// If there is at least 1 row selected & the first row is not selected
-							for (int i = 0; i < rowCount2; i++) {
-								if (selectedRowList.contains(i)) {		
-									for (int j = 0; j < colCount2; j++) {
-										Object temp = data2[i - 1][j];
-										data2[i - 1][j] = data2[i][j];
-										data2[i][j] = temp;
-									}
-								}
-							}							
-							model2.fireTableDataChanged();	// Update the changes and select the currently selected conditions
-							for (int i: selectedRow) {
-								table2.addRowSelectionInterval(i - 1, i - 1);
-							}
-						}
-					}
-										
-					if (up_or_down == -1) {	// move down						
-						if (table2.isEditing()) {
-							table2.getCellEditor().cancelCellEditing();	// cancel editing before moving conditions up or down
-						}	
-						
-						// Get selected rows
-						int[] selectedRow = table2.getSelectedRows();		// No need to convert row index because we never allow Sort when moving rows
-						List<Integer> selectedRowList = new ArrayList<Integer>() {{ for (int i : selectedRow) add(i);}};	// Convert array to list
-						
-						if (selectedRowList.size() >=1 && selectedRowList.get(selectedRowList.size() - 1) < rowCount2 - 1) {	// If ...
-							for (int i = rowCount2 - 1; i >= 0; i--) {
-								if (selectedRowList.contains(i)) {		
-									for (int j = 0; j < colCount2; j++) {
-										Object temp = data2[i + 1][j];
-										data2[i + 1][j] = data2[i][j];
-										data2[i][j] = temp;
-									}
-								}
-							}						
-							model2.fireTableDataChanged();	// Update the changes and select the currently selected conditions
-							for (int i: selectedRow) {
-								table2.addRowSelectionInterval(i + 1, i + 1);
-							}	
-						}						
-					}
-					
-					// Scroll to the first row of the current selected rows
-					table2.scrollRectToVisible(new Rectangle(table2.getCellRect(table2.convertRowIndexToView(table2.getSelectedRow()), 0, true)));	
-		        }
-		    });
 		    
 				
 			// Delete
@@ -4686,6 +4688,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			btn_Sort.addActionListener(e -> apply_sort_or_nosort(filterHeader, btn_Sort, model4, table4));
 			btn_Check.addActionListener(e -> apply_mass_check_or_uncheck("mass_check", model4, table4, data4, colCount4));
 			btn_Uncheck.addActionListener(e-> apply_mass_check_or_uncheck("mass_uncheck", model4, table4, data4, colCount4));
+			spin_move_rows.addChangeListener(e-> apply_row_spinning(spin_move_rows, model4, table4, data4));
 			// End of 4th Grid -----------------------------------------------------------------------
 			// End of 4th Grid -----------------------------------------------------------------------	
 			
@@ -4826,72 +4829,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			});
 			
 			
-			// Spinner
-		    spin_move_rows.addChangeListener(new ChangeListener() {
-		        @Override
-		        public void stateChanged(ChangeEvent e) {
-					int up_or_down = (int) spin_move_rows.getValue() - 1;										
-					spin_move_rows.setValue((int) 1);	// Reset spinner value to 1
-										
-					if (up_or_down == 1) {	// move up
-						// Cancel editing before moving conditions up or down
-						if (table4.isEditing()) {
-							table4.getCellEditor().cancelCellEditing();
-						}	
-						
-						// Get selected rows
-						int[] selectedRow = table4.getSelectedRows();		// No need to convert row index because we never allow Sort when moving rows
-						List<Integer> selectedRowList = new ArrayList<Integer>() {{ for (int i : selectedRow) add(i);}};	// Convert array to list
-						
-						if (selectedRowList.size() >=1 && selectedRowList.get(0) > 0) {	// If there is at least 1 row selected & the first row is not selected
-							for (int i = 0; i < rowCount4; i++) {
-								if (selectedRowList.contains(i)) {		
-									for (int j = 0; j < colCount4; j++) {
-										Object temp = data4[i - 1][j];
-										data4[i - 1][j] = data4[i][j];
-										data4[i][j] = temp;
-									}
-								}
-							}							
-							model4.fireTableDataChanged();	// Update the changes and select the currently selected conditions
-							for (int i: selectedRow) {
-								table4.addRowSelectionInterval(i - 1, i - 1);
-							}
-						}
-					}
-										
-					if (up_or_down == -1) {	// move down						
-						if (table4.isEditing()) {
-							table4.getCellEditor().cancelCellEditing();	// cancel editing before moving conditions up or down
-						}	
-						
-						// Get selected rows
-						int[] selectedRow = table4.getSelectedRows();		// No need to convert row index because we never allow Sort when moving rows
-						List<Integer> selectedRowList = new ArrayList<Integer>() {{ for (int i : selectedRow) add(i);}};	// Convert array to list
-						
-						if (selectedRowList.size() >=1 && selectedRowList.get(selectedRowList.size() - 1) < rowCount4 - 1) {	// If ...
-							for (int i = rowCount4 - 1; i >= 0; i--) {
-								if (selectedRowList.contains(i)) {		
-									for (int j = 0; j < colCount4; j++) {
-										Object temp = data4[i + 1][j];
-										data4[i + 1][j] = data4[i][j];
-										data4[i][j] = temp;
-									}
-								}
-							}						
-							model4.fireTableDataChanged();	// Update the changes and select the currently selected conditions
-							for (int i: selectedRow) {
-								table4.addRowSelectionInterval(i + 1, i + 1);
-							}	
-						}						
-					}
-					
-					// Scroll to the first row of the current selected rows
-					table4.scrollRectToVisible(new Rectangle(table4.getCellRect(table4.convertRowIndexToView(table4.getSelectedRow()), 0, true)));	
-		        }
-		    });
-		    
-				
 			// Delete
 			btn_Delete.addActionListener(e -> {
 				//Cancel editing before delete
@@ -5158,6 +5095,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			btn_Sort.addActionListener(e -> apply_sort_or_nosort(filterHeader, btn_Sort, model6, table6));
 			btn_Check.addActionListener(e -> apply_mass_check_or_uncheck("mass_check", model6, table6, data6, colCount6));
 			btn_Uncheck.addActionListener(e -> apply_mass_check_or_uncheck("mass_uncheck", model6, table6, data6, colCount6));
+			spin_move_rows.addChangeListener(e-> apply_row_spinning(spin_move_rows, model6, table6, data6));
 			// End of 4th Grid -----------------------------------------------------------------------	
 			
 			
@@ -5326,72 +5264,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					}
 				}
 			});
-			
-			
-			// Spinner
-			spin_move_rows.addChangeListener(new ChangeListener() {
-		        @Override
-		        public void stateChanged(ChangeEvent e) {
-					int up_or_down = (int) spin_move_rows.getValue() - 1;										
-					spin_move_rows.setValue((int) 1);	// Reset spinner value to 1
-										
-					if (up_or_down == 1) {	// move up
-						// Cancel editing before moving conditions up or down
-						if (table6.isEditing()) {
-							table6.getCellEditor().cancelCellEditing();
-						}	
-						
-						// Get selected rows
-						int[] selectedRow = table6.getSelectedRows();		// No need to convert row index because we never allow Sort when moving rows
-						List<Integer> selectedRowList = new ArrayList<Integer>() {{ for (int i : selectedRow) add(i);}};	// Convert array to list
-						
-						if (selectedRowList.size() >=1 && selectedRowList.get(0) > 0) {	// If there is at least 1 row selected & the first row is not selected
-							for (int i = 0; i < rowCount6; i++) {
-								if (selectedRowList.contains(i)) {		
-									for (int j = 0; j < colCount6; j++) {
-										Object temp = data6[i - 1][j];
-										data6[i - 1][j] = data6[i][j];
-										data6[i][j] = temp;
-									}
-								}
-							}							
-							model6.fireTableDataChanged();	// Update the changes and select the currently selected conditions
-							for (int i: selectedRow) {
-								table6.addRowSelectionInterval(i - 1, i - 1);
-							}
-						}
-					}
-										
-					if (up_or_down == -1) {	// move down						
-						if (table6.isEditing()) {
-							table6.getCellEditor().cancelCellEditing();	// cancel editing before moving conditions up or down
-						}	
-						
-						// Get selected rows
-						int[] selectedRow = table6.getSelectedRows();		// No need to convert row index because we never allow Sort when moving rows
-						List<Integer> selectedRowList = new ArrayList<Integer>() {{ for (int i : selectedRow) add(i);}};	// Convert array to list
-						
-						if (selectedRowList.size() >=1 && selectedRowList.get(selectedRowList.size() - 1) < rowCount6 - 1) {	// If ...
-							for (int i = rowCount6 - 1; i >= 0; i--) {
-								if (selectedRowList.contains(i)) {		
-									for (int j = 0; j < colCount6; j++) {
-										Object temp = data6[i + 1][j];
-										data6[i + 1][j] = data6[i][j];
-										data6[i][j] = temp;
-									}
-								}
-							}						
-							model6.fireTableDataChanged();	// Update the changes and select the currently selected conditions
-							for (int i: selectedRow) {
-								table6.addRowSelectionInterval(i + 1, i + 1);
-							}	
-						}						
-					}
-					
-					// Scroll to the first row of the current selected rows
-					table6.scrollRectToVisible(new Rectangle(table6.getCellRect(table6.convertRowIndexToView(table6.getSelectedRow()), 0, true)));	
-		        }
-		    });
 		    
 			
 			// Delete
@@ -5772,7 +5644,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			btn_Sort.addActionListener(e -> apply_sort_or_nosort(filterHeader, btn_Sort, model7, table7));
 			btn_Check.addActionListener(e -> apply_mass_check_or_uncheck("mass_check", model7, table7, data7, colCount7));
 			btn_Uncheck.addActionListener(e -> apply_mass_check_or_uncheck("mass_uncheck", model7, table7, data7, colCount7));
-			
+			spin_move_rows.addChangeListener(e-> apply_row_spinning(spin_move_rows, model7, table7, data7));
 						
 			
 			// Add Listeners for buttons----------------------------------------------------------
@@ -5932,72 +5804,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					}
 				}
 			});
-			
-			
-			// Spinner
-			spin_move_rows.addChangeListener(new ChangeListener() {
-		        @Override
-		        public void stateChanged(ChangeEvent e) {
-					int up_or_down = (int) spin_move_rows.getValue() - 1;										
-					spin_move_rows.setValue((int) 1);	// Reset spinner value to 1
-										
-					if (up_or_down == 1) {	// move up
-						// Cancel editing before moving conditions up or down
-						if (table7.isEditing()) {
-							table7.getCellEditor().cancelCellEditing();
-						}	
-						
-						// Get selected rows
-						int[] selectedRow = table7.getSelectedRows();		// No need to convert row index because we never allow Sort when moving rows
-						List<Integer> selectedRowList = new ArrayList<Integer>() {{ for (int i : selectedRow) add(i);}};	// Convert array to list
-						
-						if (selectedRowList.size() >=1 && selectedRowList.get(0) > 0) {	// If there is at least 1 row selected & the first row is not selected
-							for (int i = 0; i < rowCount7; i++) {
-								if (selectedRowList.contains(i)) {		
-									for (int j = 0; j < colCount7; j++) {
-										Object temp = data7[i - 1][j];
-										data7[i - 1][j] = data7[i][j];
-										data7[i][j] = temp;
-									}
-								}
-							}							
-							model7.fireTableDataChanged();	// Update the changes and select the currently selected conditions
-							for (int i: selectedRow) {
-								table7.addRowSelectionInterval(i - 1, i - 1);
-							}
-						}
-					}
-										
-					if (up_or_down == -1) {	// move down						
-						if (table7.isEditing()) {
-							table7.getCellEditor().cancelCellEditing();	// cancel editing before moving conditions up or down
-						}	
-						
-						// Get selected rows
-						int[] selectedRow = table7.getSelectedRows();		// No need to convert row index because we never allow Sort when moving rows
-						List<Integer> selectedRowList = new ArrayList<Integer>() {{ for (int i : selectedRow) add(i);}};	// Convert array to list
-						
-						if (selectedRowList.size() >=1 && selectedRowList.get(selectedRowList.size() - 1) < rowCount7 - 1) {	// If ...
-							for (int i = rowCount7 - 1; i >= 0; i--) {
-								if (selectedRowList.contains(i)) {		
-									for (int j = 0; j < colCount7; j++) {
-										Object temp = data7[i + 1][j];
-										data7[i + 1][j] = data7[i][j];
-										data7[i][j] = temp;
-									}
-								}
-							}						
-							model7.fireTableDataChanged();	// Update the changes and select the currently selected conditions
-							for (int i: selectedRow) {
-								table7.addRowSelectionInterval(i + 1, i + 1);
-							}	
-						}						
-					}
-					
-					// Scroll to the first row of the current selected rows
-					table7.scrollRectToVisible(new Rectangle(table7.getCellRect(table7.convertRowIndexToView(table7.getSelectedRow()), 0, true)));	
-		        }
-		    });
 		    
 			
 			// Delete
@@ -6325,6 +6131,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			// add listeners
 			TableFilterHeader filterHeader = new TableFilterHeader(null, AutoChoices.ENABLED);
 			btn_Sort.addActionListener(e -> apply_sort_or_nosort(filterHeader, btn_Sort, model8, table8));
+			spin_move_rows.addChangeListener(e-> apply_row_spinning(spin_move_rows, model8, table8, data8));
 			// End of 4th Grid -----------------------------------------------------------------------
 			// End of 4th Grid -----------------------------------------------------------------------	
 			
@@ -6918,75 +6725,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					}
 				}
 			});
-			
-			
-			// Spinner
-		    spin_move_rows.addChangeListener(new ChangeListener() {
-		        @Override
-		        public void stateChanged(ChangeEvent e) {
-					int up_or_down = (int) spin_move_rows.getValue() - 1;										
-					spin_move_rows.setValue((int) 1);	// Reset spinner value to 1
-										
-					if (up_or_down == 1) {	// move up
-						// Cancel editing before moving conditions up or down
-						if (table8.isEditing()) {
-							table8.getCellEditor().cancelCellEditing();
-						}	
-						
-						// Get selected rows
-						int[] selectedRow = table8.getSelectedRows();		// No need to convert row index because we never allow Sort when moving rows
-						List<Integer> selected_ids = new ArrayList<Integer>() {{ for (int i : selectedRow) add(i);}};	// Convert array to list
-						
-						if (selected_ids.size() >=1 && selected_ids.get(0) > 0) {	// If there is at least 1 row selected & the first row is not selected
-							for (int i = 0; i < rowCount8; i++) {
-								if (selected_ids.contains(i)) {		
-									for (int j = 0; j < colCount8; j++) {
-										Object temp = data8[i - 1][j];
-										data8[i - 1][j] = data8[i][j];
-										data8[i][j] = temp;
-									}
-								}
-							}							
-							model8.fireTableDataChanged();	// Update the changes and select the currently selected conditions
-							for (int i: selectedRow) {
-								table8.addRowSelectionInterval(i - 1, i - 1);
-							}
-						}
-						
-						// Scroll to the first row of the current selected rows (- 3 to see the 3 unselected rows above when moving up)
-						table8.scrollRectToVisible(new Rectangle(table8.getCellRect(table8.convertRowIndexToView(table8.getSelectedRow()) - 3, 0, true)));	
-					}
-										
-					if (up_or_down == -1) {	// move down						
-						if (table8.isEditing()) {
-							table8.getCellEditor().cancelCellEditing();	// cancel editing before moving conditions up or down
-						}	
-						
-						// Get selected rows
-						int[] selectedRow = table8.getSelectedRows();		// No need to convert row index because we never allow Sort when moving rows
-						List<Integer> selectedRowList = new ArrayList<Integer>() {{ for (int i : selectedRow) add(i);}};	// Convert array to list
-						
-						if (selectedRowList.size() >=1 && selectedRowList.get(selectedRowList.size() - 1) < rowCount8 - 1) {	// If ...
-							for (int i = rowCount8 - 1; i >= 0; i--) {
-								if (selectedRowList.contains(i)) {		
-									for (int j = 0; j < colCount8; j++) {
-										Object temp = data8[i + 1][j];
-										data8[i + 1][j] = data8[i][j];
-										data8[i][j] = temp;
-									}
-								}
-							}						
-							model8.fireTableDataChanged();	// Update the changes and select the currently selected conditions
-							for (int i: selectedRow) {
-								table8.addRowSelectionInterval(i + 1, i + 1);
-							}	
-						}
-						
-						// Scroll to the last row of the current selected rows (+ 3 to see the next 3 unselected rows below when moving down)
-						table8.scrollRectToVisible(new Rectangle(table8.getCellRect(table8.convertRowIndexToView(table8.getSelectedRows()[table8.getSelectedRows().length - 1]) + 3, 0, true)));	
-					}
-		        }
-		    });
 		    
 				
 			// Delete
@@ -7498,6 +7236,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			// add listeners
 			TableFilterHeader filterHeader = new TableFilterHeader(null, AutoChoices.ENABLED);
 			btn_Sort.addActionListener(e -> apply_sort_or_nosort(filterHeader, btn_Sort, model9, table9));
+			spin_move_rows.addChangeListener(e-> apply_row_spinning(spin_move_rows, model9, table9, data9));
 			// End of 4th Grid -----------------------------------------------------------------------
 			// End of 4th Grid -----------------------------------------------------------------------	
 			
@@ -7715,73 +7454,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					}
 				}
 			});
-			
-			
-			// Spinner
-		    spin_move_rows.addChangeListener(new ChangeListener() {
-		        @Override
-		        public void stateChanged(ChangeEvent e) {
-					int up_or_down = (int) spin_move_rows.getValue() - 1;										
-					spin_move_rows.setValue((int) 1);	// Reset spinner value to 1
-										
-					if (up_or_down == 1) {	// move up
-						// Cancel editing before moving conditions up or down
-						if (table9.isEditing()) {
-							table9.getCellEditor().cancelCellEditing();
-						}	
-						
-						// Get selected rows
-						int[] selectedRow = table9.getSelectedRows();		// No need to convert row index because we never allow Sort when moving rows
-						List<Integer> selectedRowList = new ArrayList<Integer>() {{ for (int i : selectedRow) add(i);}};	// Convert array to list
-						
-						if (selectedRowList.size() >=1 && selectedRowList.get(0) > 0) {	// If there is at least 1 row selected & the first row is not selected
-							for (int i = 0; i < rowCount9; i++) {
-								if (selectedRowList.contains(i)) {		
-									for (int j = 0; j < colCount9; j++) {
-										Object temp = data9[i - 1][j];
-										data9[i - 1][j] = data9[i][j];
-										data9[i][j] = temp;
-									}
-								}
-							}							
-							model9.fireTableDataChanged();	// Update the changes and select the currently selected conditions
-							for (int i: selectedRow) {
-								table9.addRowSelectionInterval(i - 1, i - 1);
-							}
-						}
-					}
-										
-					if (up_or_down == -1) {	// move down						
-						if (table9.isEditing()) {
-							table9.getCellEditor().cancelCellEditing();	// cancel editing before moving conditions up or down
-						}	
-						
-						// Get selected rows
-						int[] selectedRow = table9.getSelectedRows();		// No need to convert row index because we never allow Sort when moving rows
-						List<Integer> selectedRowList = new ArrayList<Integer>() {{ for (int i : selectedRow) add(i);}};	// Convert array to list
-						
-						if (selectedRowList.size() >=1 && selectedRowList.get(selectedRowList.size() - 1) < rowCount9 - 1) {	// If ...
-							for (int i = rowCount9 - 1; i >= 0; i--) {
-								if (selectedRowList.contains(i)) {		
-									for (int j = 0; j < colCount9; j++) {
-										Object temp = data9[i + 1][j];
-										data9[i + 1][j] = data9[i][j];
-										data9[i][j] = temp;
-									}
-								}
-							}						
-							model9.fireTableDataChanged();	// Update the changes and select the currently selected conditions
-							for (int i: selectedRow) {
-								table9.addRowSelectionInterval(i + 1, i + 1);
-							}	
-						}						
-					}
-					
-					// Scroll to the first row of the current selected rows
-					table9.scrollRectToVisible(new Rectangle(table9.getCellRect(table9.convertRowIndexToView(table9.getSelectedRow()), 0, true)));	
-					flow_scrollPane.reload_flow_arrangement_for_one_flow(table9, data9, spin_sigma);
-		        }
-		    });
 		    
 				
 			// Delete

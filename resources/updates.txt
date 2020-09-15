@@ -1410,10 +1410,12 @@ All changes in this block are associated with PrismAlpha3.1.03.jar, Prism-Formul
 599. Improve UI for all buttons in PRISM (remove button border, remove button name text, rescale button icon, modify insets, etc.)
 600. Add the clear button for the summarize_output_05 NOSQL MODE. This button helps clear all values from all iterations in the highlighted rows.
 601. Refactor in Panel_Edit_Details for building repetitive components and their functions (buttons, spinners, etc.)
-602. Alow global adjustment for the disturbance-simulation results (more details at issue #126)
+602. Allow global adjustment for the disturbance-simulation results (more details at issue #126)
 	- In the Natural Disturbances screen, add 2 new columns: condition_category (Local simulation, Global adjustment) and disturbance_approach (Deterministic, Stochastic)
 	- In the Natural Disturbances screen, conditions with global adjustment set to true will be automatically verified and will be set to false if not feasible.
 
 603. Reset/clear the table header drop-down filter when adding new single/multiple rows at following screens: Natural Disturbances and Management Cost (more of 595)
 604. In all input screens, the spinner to move rows will be alvaialbe only when the Filter and Sorter is off and there is at least one highlighted row.
 605. Fix the bug in Natural Disturbance and Management Cost screens: if deleting all rows and adding rows again the Filter and Sorter will fail. 
+606. Refactors:
+	- Create a share.df function for rows spinner to remove redundancy
