@@ -1421,4 +1421,5 @@ All changes in this block are associated with PrismAlpha3.1.03.jar, Prism-Formul
 605. Fix the bug in Natural Disturbance and Management Cost screens: if deleting all rows and adding rows again the Filter and Sorter will fail. 
 606. Refactors:
 	- Create a share.df function for rows spinner to remove redundancy
-607. Fix the bug in Natural Disturbance and Management Cost screens: failed to update condition_id when adding new rows
+607. Fix the bug: failed to update condition_id when adding new rows in Natural Disturbance and Management Cost screens
+608. Fix the bug: first existing stratum is not included into equation 5 (issue 128 in BitBucket) by always adding one book-keeping variable before defining other variables. 

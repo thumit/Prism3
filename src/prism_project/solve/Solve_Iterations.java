@@ -398,6 +398,14 @@ public class Solve_Iterations {
 					// CREATE OBJECTIVE FUNCTION-------------------------------------------------
 					// CREATE OBJECTIVE FUNCTION-------------------------------------------------
 					// CREATE OBJECTIVE FUNCTION-------------------------------------------------
+					// A book-keeping variable is added to fix the bug: first existing stratum is not included into equation 5 (issue 128 in BitBucket)
+					var_info_list.add(new Information_Variable(iter, "Book-keeping", read_database));
+					objlist.add((double) 0);
+					vnamelist.add("Book-keeping");
+					vlblist.add((double) 0);
+					vublist.add((double) 0);
+					nvars++;
+					
 					// Create soft constraint decision variables y(j)			
 					for (int j = 0; j < total_softConstraints; j++) {
 						String var_name = "y_" + j;
@@ -3441,6 +3449,7 @@ public class Solve_Iterations {
 	
 	
 	// apply to eq (5) (7a)
+	// this is the second period variable in previous iteration OR the first period variable in this iteration 
 	private double get_period_two_variable_value_after_applying_stochastic_loss_rate_for_period_one_variable(
 			int var_index, Information_Variable[] var_info_array,
 			LinkedHashMap<String, Double> map_var_name_to_var_value,
