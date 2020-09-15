@@ -1355,7 +1355,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		model6 = new PrismTableModel(rowCount6, colCount6, data6, columnNames6) {
 			@Override
 			public Class getColumnClass(int c) {
-				if (c == 16) return Boolean.class;
+				if (c == 0) return Integer.class;
+				else if (c == 16) return Boolean.class;
 				else if (c >= 7 && c <= 10) return Double.class;  
 				else return String.class;
 			}
@@ -1381,7 +1382,13 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						if (String.valueOf(data6[row][col]).equals("null")) {
 							data6[row][col] = null;
 						} else {	
-							if (col == 16) {
+							if (col == 0) {		// column 0 is Integer
+								try {
+									data6[row][col] = Integer.valueOf(String.valueOf(data6[row][col]));
+								} catch (NumberFormatException e) {
+									System.err.println(e.getClass().getName() + ": " + e.getMessage() + " Fail to convert String to Integer values in create_table6");
+								}	
+							} else if (col == 16) {
 								try {
 									data6[row][col] = Boolean.valueOf(String.valueOf(data6[row][col]));
 								} catch (NumberFormatException e) {
@@ -2184,7 +2191,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		model7 = new PrismTableModel(rowCount7, colCount7, data7, columnNames7) {
 			@Override
 			public Class getColumnClass(int c) {
-				if (c == 7) return Boolean.class;
+				if (c == 0) return Integer.class;
+				else if (c == 7) return Boolean.class;
 				else return String.class;
 			}
 			
@@ -2209,7 +2217,13 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						if (String.valueOf(data7[row][col]).equals("null")) {
 							data7[row][col] = null;
 						} else {	
-							if (col == 7) {
+							if (col == 0) {		// column 0 is Integer
+								try {
+									data7[row][col] = Integer.valueOf(String.valueOf(data7[row][col]));
+								} catch (NumberFormatException e) {
+									System.err.println(e.getClass().getName() + ": " + e.getMessage() + " Fail to convert String to Integer values in create_table7");
+								}	
+							} else if (col == 7) {
 								try {
 									data7[row][col] = Boolean.valueOf(String.valueOf(data7[row][col]));
 								} catch (NumberFormatException e) {
@@ -5543,13 +5557,13 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	    public void update_id() { 
 	    	List<Integer> id_list = new ArrayList<Integer>();			
 			
-			for (int row = 0; row < rowCount4; row++) {
+			for (int row = 0; row < rowCount6; row++) {
 				if (data6[row][0] != null) {
 					id_list.add((int) data6[row][0]);
 				}
 			}			
 			
-			for (int row = 0; row < rowCount4; row++) {
+			for (int row = 0; row < rowCount6; row++) {
 				if (data6[row][0] == null) {
 					int new_id = (id_list.size() > 0) ? Collections.max(id_list) + 1 : 1;	//new id = (max id + 1) or = 1 if no row
 					data6[row][0] = new_id;
@@ -6019,13 +6033,13 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	    public void update_id() {  
 	    	List<Integer> id_list = new ArrayList<Integer>();			
 			
-			for (int row = 0; row < rowCount4; row++) {
+			for (int row = 0; row < rowCount7; row++) {
 				if (data7[row][0] != null) {
 					id_list.add((int) data7[row][0]);
 				}
 			}			
 			
-			for (int row = 0; row < rowCount4; row++) {
+			for (int row = 0; row < rowCount7; row++) {
 				if (data7[row][0] == null) {
 					int new_id = (id_list.size() > 0) ? Collections.max(id_list) + 1 : 1;	//new id = (max id + 1) or = 1 if no row
 					data7[row][0] = new_id;
