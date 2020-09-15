@@ -625,8 +625,8 @@ public class Solve_Iterations {
 					double[] var_cost_value = new double[vname.length];
 								
 					// This array stores replacing disturbances information
-					String user_loss_rate_type = data[row][1].toString();
-					LinkedHashMap<Integer, double[]> map_var_index_to_user_chosen_loss_rate = new LinkedHashMap<Integer, double[]>();	// this map var_index to the user loss rates array[k]
+					String modelling_approach = data[row][1].toString();
+					LinkedHashMap<Integer, double[]> map_var_index_to_user_loss_rates = new LinkedHashMap<Integer, double[]>();	// this map var_index to the user loss rates array[k]
 					int[][] var_rd_condition_id = new int[vname.length][];
 					int[][] var_global_adjustment_rd_condition_id = new int[vname.length][];
 					for (int i = 0; i < vname.length; i++) {
@@ -649,6 +649,10 @@ public class Solve_Iterations {
 								var_global_adjustment_rd_condition_id[var_index][k] = disturbance_info.get_global_adjustment_rd_condition_id_for(var_info, k);	// for each variable with each disturbance k, always return -9999 or a number
 							}
 						}
+						// map every var_index to user_loss_rates first, then use just the map later
+						double[] this_var_index_user_loss_rates = get_user_loss_rates_for_this_var(modelling_approach, var_rd_condition_id, var_index, disturbance_info);
+						map_var_index_to_user_loss_rates.put(var_index, this_var_index_user_loss_rates);
+						
 						
 						// Cost ------------------------------------------------------
 						// Cost ------------------------------------------------------
@@ -666,7 +670,7 @@ public class Solve_Iterations {
 								List<Double> conversion_after_disturbances_total_loss_rate_list = new ArrayList<Double>();	// i.e. 0.25				0.75
 								
 								if (t != tR) {		// Note: no replacing disturbance in the period = rotation period --> no conversion cost after replacing disturbance
-									double[] user_loss_rate = get_user_loss_rates_from_rd_condition_ids(user_loss_rate_type, var_rd_condition_id, var_index, map_var_index_to_user_chosen_loss_rate, disturbance_info);
+									double[] user_loss_rate = map_var_index_to_user_loss_rates.get(var_index);
 									double[][][] conversion_rate_mean = new double[total_disturbances][][];
 									
 									for (int s5R = 0; s5R < total_layer5; s5R++) {
@@ -1269,7 +1273,7 @@ public class Solve_Iterations {
 										
 										// Add xE(s1,s2,s3,s4,s5,s6)[s5R][i][t]
 										int var_index = xE[strata_id][s5R][i][t];
-										double[] user_loss_rate = get_user_loss_rates_from_rd_condition_ids(user_loss_rate_type, var_rd_condition_id, var_index, map_var_index_to_user_chosen_loss_rate, disturbance_info);
+										double[] user_loss_rate = map_var_index_to_user_loss_rates.get(var_index);
 										double total_loss_rate = 0;
 										for (int k = 0; k < total_disturbances; k++) {
 											total_loss_rate = total_loss_rate + user_loss_rate[k] / 100;
@@ -1307,7 +1311,7 @@ public class Solve_Iterations {
 										
 										// Add xE(s1,s2,s3,s4,s5,s6)[s5R][i][t]
 										int var_index = xE[strata_id][s5R][i][t];
-										double[] user_loss_rate = get_user_loss_rates_from_rd_condition_ids(user_loss_rate_type, var_rd_condition_id, var_index, map_var_index_to_user_chosen_loss_rate, disturbance_info);
+										double[] user_loss_rate = map_var_index_to_user_loss_rates.get(var_index);
 										double total_loss_rate = 0;
 										for (int k = 0; k < total_disturbances; k++) {
 											total_loss_rate = total_loss_rate + user_loss_rate[k] / 100;
@@ -1459,7 +1463,7 @@ public class Solve_Iterations {
 														if (xE[strata_id][s5RR][i] != null) { 
 															int var_index = xE[strata_id][s5RR][i][t];
 															if (var_index > 0 && var_rd_condition_id[var_index] != null) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
-																double[] user_loss_rate = get_user_loss_rates_from_rd_condition_ids(user_loss_rate_type, var_rd_condition_id, var_index, map_var_index_to_user_chosen_loss_rate, disturbance_info);
+																double[] user_loss_rate = map_var_index_to_user_loss_rates.get(var_index);
 																double[][][] conversion_rate_mean = new double[total_disturbances][][];
 																double total_loss_rate_for_this_conversion = 0;
 																for (int k = 0; k < total_disturbances; k++) {
@@ -1490,7 +1494,7 @@ public class Solve_Iterations {
 															&& xR[strata_5layers_id][s5RR][i][t] != null) {	// if variable is defined, this value would be > 0 
 													int var_index = xR[strata_5layers_id][s5RR][i][t][a];
 													if (var_index > 0 && var_rd_condition_id[var_index] != null) {		// if variable is defined, this value would be > 0 
-														double[] user_loss_rate = get_user_loss_rates_from_rd_condition_ids(user_loss_rate_type, var_rd_condition_id, var_index, map_var_index_to_user_chosen_loss_rate, disturbance_info);
+														double[] user_loss_rate = map_var_index_to_user_loss_rates.get(var_index);
 														double[][][] conversion_rate_mean = new double[total_disturbances][][];
 														double total_loss_rate_for_this_conversion = 0;
 														for (int k = 0; k < total_disturbances; k++) {
@@ -1780,7 +1784,7 @@ public class Solve_Iterations {
 											
 											// Add xR(s1,s2,s3,s4,s5)[s5R][i][t][a]
 											int var_index = xR[strata_5layers_id][s5R][i][t][a];
-											double[] user_loss_rate = get_user_loss_rates_from_rd_condition_ids(user_loss_rate_type, var_rd_condition_id, var_index, map_var_index_to_user_chosen_loss_rate, disturbance_info);
+											double[] user_loss_rate = map_var_index_to_user_loss_rates.get(var_index);
 											double total_loss_rate = 0;
 											for (int k = 0; k < total_disturbances; k++) {
 												total_loss_rate = total_loss_rate + user_loss_rate[k] / 100;
@@ -1822,7 +1826,7 @@ public class Solve_Iterations {
 												
 												// Add xR(s1,s2,s3,s4,s5)[s5R][i][t][a]
 												int var_index = xR[strata_5layers_id][s5R][i][t][a];
-												double[] user_loss_rate = get_user_loss_rates_from_rd_condition_ids(user_loss_rate_type, var_rd_condition_id, var_index, map_var_index_to_user_chosen_loss_rate, disturbance_info);
+												double[] user_loss_rate = map_var_index_to_user_loss_rates.get(var_index);
 												double total_loss_rate = 0;
 												for (int k = 0; k < total_disturbances; k++) {
 													total_loss_rate = total_loss_rate + user_loss_rate[k] / 100;
@@ -2389,7 +2393,7 @@ public class Solve_Iterations {
 										if (vname[i].startsWith("x")) {
 											double total_loss_rate = 0;
 											int var_index = i;
-											double[] user_loss_rate = get_user_loss_rates_from_rd_condition_ids(user_loss_rate_type, var_rd_condition_id, var_index, map_var_index_to_user_chosen_loss_rate, disturbance_info);
+											double[] user_loss_rate = map_var_index_to_user_loss_rates.get(var_index);
 											for (int k = 0; k < total_disturbances; k++) {
 												total_loss_rate = total_loss_rate + Double.valueOf(user_loss_rate[k]);
 											}
@@ -2523,7 +2527,7 @@ public class Solve_Iterations {
 										
 										double total_loss_rate = 0;
 										int var_index = i;
-										double[] user_loss_rate = get_user_loss_rates_from_rd_condition_ids(user_loss_rate_type, var_rd_condition_id, var_index, map_var_index_to_user_chosen_loss_rate, disturbance_info);
+										double[] user_loss_rate = map_var_index_to_user_loss_rates.get(var_index);
 										for (int k = 0; k < total_disturbances; k++) {
 											total_loss_rate = total_loss_rate + Double.valueOf(user_loss_rate[k]);
 										}
@@ -2955,7 +2959,7 @@ public class Solve_Iterations {
 										if (vname[i].startsWith("x")) {
 											double total_loss_rate = 0;
 											int var_index = i;
-											double[] user_loss_rate = get_user_loss_rates_from_rd_condition_ids(user_loss_rate_type, var_rd_condition_id, var_index, map_var_index_to_user_chosen_loss_rate, disturbance_info);
+											double[] user_loss_rate = map_var_index_to_user_loss_rates.get(var_index);
 											for (int k = 0; k < total_disturbances; k++) {
 												total_loss_rate = total_loss_rate + Double.valueOf(user_loss_rate[k]);
 											}
@@ -3089,7 +3093,7 @@ public class Solve_Iterations {
 										
 										double total_loss_rate = 0;
 										int var_index = i;
-										double[] user_loss_rate = get_user_loss_rates_from_rd_condition_ids(user_loss_rate_type, var_rd_condition_id, var_index, map_var_index_to_user_chosen_loss_rate, disturbance_info);
+										double[] user_loss_rate = map_var_index_to_user_loss_rates.get(var_index);
 										for (int k = 0; k < total_disturbances; k++) {
 											total_loss_rate = total_loss_rate + Double.valueOf(user_loss_rate[k]);
 										}
@@ -3387,13 +3391,9 @@ public class Solve_Iterations {
 	
 	
 	// apply to eq (6) (7b) (9) and printing some outputs
-	private double[] get_user_loss_rates_from_rd_condition_ids(
-			String user_loss_rate_type, int[][] var_rd_condition_id, int var_index,
-			LinkedHashMap<Integer, double[]> map_var_index_to_user_chosen_loss_rate,
-			Information_Disturbance disturbance_info) {
+	private double[] get_user_loss_rates_for_this_var(String modelling_approach, int[][] var_rd_condition_id, int var_index, Information_Disturbance disturbance_info) {
 		Statistics stat = new Statistics();
 		int total_disturbances = disturbance_info.get_total_disturbances();
-		
 		double[] mean = new double[total_disturbances];
 		double[] std = new double[total_disturbances];
 		String[] transform_function = new String[total_disturbances];
@@ -3408,16 +3408,9 @@ public class Solve_Iterations {
 		}
 
 		// in case loss rate type = "deterministic"
-		if (user_loss_rate_type.equals("deterministic")) return stat.get_deterministic_loss_rates_from_transformed_data(total_disturbances, mean, std, transform_function, parameter_a, parameter_b);
-		
+		if (modelling_approach.equals("deterministic")) return stat.get_deterministic_loss_rates_from_transformed_data(total_disturbances, mean, std, transform_function, parameter_a, parameter_b);
 		// in case loss rate type = "stochastic"
-		if (map_var_index_to_user_chosen_loss_rate.get(var_index) != null) {	// return if already had the stochastic
-			return map_var_index_to_user_chosen_loss_rate.get(var_index);
-		} else {	// if not having the stochastic yet, create it and map it
-			double[] stochastic_loss_rates = stat.get_stochastic_loss_rates_from_transformed_data(total_disturbances, mean, std, transform_function, parameter_a, parameter_b);
-			map_var_index_to_user_chosen_loss_rate.put(var_index, stochastic_loss_rates);
-			return stochastic_loss_rates;
-		}
+		else return stat.get_stochastic_loss_rates_from_transformed_data(total_disturbances, mean, std, transform_function, parameter_a, parameter_b);
 	}
 	
 	
