@@ -33,6 +33,7 @@ public class Information_Disturbance {
 	private String[][] all_priority_condition_info;	
 	private String[][][] yield_tables_values;
 	
+	private String[] all_condition_category;
 	private String[] all_condition_disturbance_name;
 	private String[] all_condition_function;
 	private double[] all_condition_parameter_a, all_condition_parameter_b;
@@ -48,6 +49,7 @@ public class Information_Disturbance {
 		all_priority_condition_dynamic_identifiers = new ArrayList[condition_count];
 		all_priority_condition_dynamic_dentifiers_column_indexes = new ArrayList[condition_count];
 		all_priority_condition_info = new String[condition_count][];
+		all_condition_category = new String[condition_count];
 		all_condition_disturbance_name = new String[condition_count];
 		all_condition_function = new String[condition_count];
 		all_condition_parameter_a = new double[condition_count];
@@ -66,6 +68,7 @@ public class Information_Disturbance {
 				count++;
 			}
 			map_disturbance_name_to_id.put(disturbance_name, count);
+			all_condition_category[priority] = all_priority_condition_info[priority][2];	// column 2 is condition category
 			all_condition_disturbance_name[priority] = all_priority_condition_info[priority][3];	// column 3 is disturbance name			allow reading "null"
 			all_condition_function[priority] = all_priority_condition_info[priority][6];	 		// column 6 is normalizing function		allow reading "null"
 			all_condition_parameter_a[priority] = (!all_priority_condition_info[priority][7].equals("null")) ? Double.parseDouble(all_priority_condition_info[priority][7]) : 0; // column 7 is parameter_a
@@ -96,16 +99,41 @@ public class Information_Disturbance {
 			if (row_id != -9999 && row_id < yield_tables_values[prescription_id].length) { 	// If row in this prescription exists (not exists when row_id = -9999 or >= total rows in that prescription)
 				int priority = 0;
 				while (id == -9999 && priority < all_priority_condition_info.length) { // loop all condition associated with  the disturbance k until found the one matched 
-					if (map_disturbance_name_to_id.get(all_condition_disturbance_name[priority]) == k
-							&& identifiers_processing.are_all_static_identifiers_matched(var_info, all_priority_condition_static_identifiers[priority])
-								&& identifiers_processing.are_all_dynamic_identifiers_matched(prescription_id, row_id, all_priority_condition_dynamic_dentifiers_column_indexes[priority], all_priority_condition_dynamic_identifiers[priority])) {
+					if (all_condition_category[priority].equals("Local simulation")
+							&& map_disturbance_name_to_id.get(all_condition_disturbance_name[priority]) == k
+								&& identifiers_processing.are_all_static_identifiers_matched(var_info, all_priority_condition_static_identifiers[priority])
+									&& identifiers_processing.are_all_dynamic_identifiers_matched(prescription_id, row_id, all_priority_condition_dynamic_dentifiers_column_indexes[priority], all_priority_condition_dynamic_identifiers[priority])) {
 						id = priority;
 					}
 					priority++;
 				}
 			}
 		}
-		return id;	
+		return id;
+	}
+	
+	public int get_global_adjustment_rd_condition_id_for(Information_Variable var_info, int k) {	// each condition_id in this array is associated with only one variable with one disturbance k
+		int prescription_id = var_info.get_prescription_id();
+		int row_id = var_info.get_row_id();
+		int t = var_info.get_period();
+		int tR = var_info.get_rotation_period();
+		
+		int id = -9999;		// return -9999 if there is clear cut activity for x variable. In the case when variable is not x (f, y, z, v, l, b) then t = tR =-9999 --> always return -9999
+		if (t != tR) {	// this would automatically filter the x variable
+			if (row_id != -9999 && row_id < yield_tables_values[prescription_id].length) { 	// If row in this prescription exists (not exists when row_id = -9999 or >= total rows in that prescription)
+				int priority = 0;
+				while (id == -9999 && priority < all_priority_condition_info.length) { // loop all condition associated with  the disturbance k until found the one matched 
+					if (all_condition_category[priority].equals("Global adjustment")
+							&& map_disturbance_name_to_id.get(all_condition_disturbance_name[priority]) == k
+								&& identifiers_processing.are_all_static_identifiers_matched(var_info, all_priority_condition_static_identifiers[priority])
+									&& identifiers_processing.are_all_dynamic_identifiers_matched(prescription_id, row_id, all_priority_condition_dynamic_dentifiers_column_indexes[priority], all_priority_condition_dynamic_identifiers[priority])) {
+						id = priority;
+					}
+					priority++;
+				}
+			}
+		}
+		return id;
 	}
 	
 	public String get_normalizing_function_from_rd_condition_id(int condition_id) {

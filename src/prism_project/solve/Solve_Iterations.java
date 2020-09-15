@@ -626,10 +626,12 @@ public class Solve_Iterations {
 								
 					// This array stores replacing disturbances information
 					String user_loss_rate_type = data[row][1].toString();
-					LinkedHashMap<Integer, double[]> map_var_index_to_user_chosen_loss_rate = new LinkedHashMap<Integer, double[]>();	// this map var_index to the stochastic SR array[k]
+					LinkedHashMap<Integer, double[]> map_var_index_to_user_chosen_loss_rate = new LinkedHashMap<Integer, double[]>();	// this map var_index to the user loss rates array[k]
 					int[][] var_rd_condition_id = new int[vname.length][];
+					int[][] var_global_adjustment_rd_condition_id = new int[vname.length][];
 					for (int i = 0; i < vname.length; i++) {
 						var_rd_condition_id[i] = new int[total_disturbances];
+						var_global_adjustment_rd_condition_id[i] = new int[total_disturbances];
 					}
 
 					
@@ -644,6 +646,7 @@ public class Solve_Iterations {
 						if (disturbance_info != null) {	// in case there is condition --> calculate this one right away since they will be definitely used
 							for (int k = 0; k < total_disturbances; k++) {
 								var_rd_condition_id[var_index][k] = disturbance_info.get_rd_condition_id_for(var_info, k);	// for each variable with each disturbance k, always return -9999 or a number
+								var_global_adjustment_rd_condition_id[var_index][k] = disturbance_info.get_global_adjustment_rd_condition_id_for(var_info, k);	// for each variable with each disturbance k, always return -9999 or a number
 							}
 						}
 						
