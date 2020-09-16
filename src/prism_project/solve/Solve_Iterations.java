@@ -633,7 +633,7 @@ public class Solve_Iterations {
 					double[] var_cost_value = new double[vname.length];
 								
 					// This array stores replacing disturbances information
-					String modelling_approach = data[row][1].toString();
+					String disturbance_option = data[row][1].toString();
 					LinkedHashMap<Integer, double[]> map_var_index_to_user_loss_rates = new LinkedHashMap<Integer, double[]>();	// this map var_index to the user loss rates array[k]
 					int[][] var_rd_condition_id = new int[vname.length][];
 					int[][] var_global_adjustment_rd_condition_id = new int[vname.length][];
@@ -658,7 +658,7 @@ public class Solve_Iterations {
 							}
 						}
 						// map every var_index to user_loss_rates first, then use just the map later
-						double[] this_var_index_user_loss_rates = get_user_loss_rates_for_this_var(modelling_approach, var_rd_condition_id, var_index, disturbance_info);
+						double[] this_var_index_user_loss_rates = get_user_loss_rates_for_this_var(var_rd_condition_id, var_index, disturbance_info);
 						map_var_index_to_user_loss_rates.put(var_index, this_var_index_user_loss_rates);
 						
 						
@@ -907,7 +907,8 @@ public class Solve_Iterations {
 													&& xE[strata_id][s5R][i][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
 										// Simulate stochastic SRs to get final_value which is the period 2 solution after stochastic disturbances
 										int var_index = xE[strata_id][s5R][i][1 + iter];	// this is the first period variable in this iteration or the second period variable in previous iteration
-										double final_value = get_period_two_variable_value_after_applying_stochastic_loss_rate_for_period_one_variable(
+										double final_value = get_period_two_variable_value_after_applying_new_loss_rates_for_period_one_variable(
+												disturbance_option,
 												var_index, var_info_array, map_var_name_to_var_value,
 												map_var_name_to_var_rd_condition_id,
 												map_var_name_to_var_stochastic_loss_rates, disturbance_info);
@@ -930,7 +931,8 @@ public class Solve_Iterations {
 																 && xR[strata_5layers_id][s5R][i][1 + iter][a] > 0) {		// if variable is defined, this value would be > 0 
 											// Simulate stochastic SRs to get final_value which is the period 2 solution after stochastic disturbances
 											int var_index = xR[strata_5layers_id][s5R][i][1 + iter][a];	// this is the first period variable in this iteration or the second period variable in previous iteration
-											double final_value = get_period_two_variable_value_after_applying_stochastic_loss_rate_for_period_one_variable(
+											double final_value = get_period_two_variable_value_after_applying_new_loss_rates_for_period_one_variable(
+													disturbance_option,
 													var_index, var_info_array, map_var_name_to_var_value,
 													map_var_name_to_var_rd_condition_id,
 													map_var_name_to_var_stochastic_loss_rates, disturbance_info);
@@ -3411,58 +3413,68 @@ public class Solve_Iterations {
 	
 	
 	// apply to eq (6) (7b) (9) and printing some outputs
-	private double[] get_user_loss_rates_for_this_var(String modelling_approach, int[][] var_rd_condition_id, int var_index, Information_Disturbance disturbance_info) {
+	private double[] get_user_loss_rates_for_this_var(int[][] var_rd_condition_id, int var_index, Information_Disturbance disturbance_info) {
 		Statistics stat = new Statistics();
 		int total_disturbances = disturbance_info.get_total_disturbances();
-		double[] mean = new double[total_disturbances];
-		double[] std = new double[total_disturbances];
-		String[] transform_function = new String[total_disturbances];
+		String[] modelling_approach = new String[total_disturbances];
+		String[] normalizing_function = new String[total_disturbances];
 		double[] parameter_a = new double[total_disturbances];
 		double[] parameter_b = new double[total_disturbances];
+		double[] mean = new double[total_disturbances];
+		double[] std = new double[total_disturbances];
 		for (int k = 0; k < total_disturbances; k++) {
-			transform_function[k] = disturbance_info.get_normalizing_function_from_rd_condition_id(var_rd_condition_id[var_index][k]);
+			modelling_approach[k] = disturbance_info.get_modelling_approach_from_rd_condition_id(var_rd_condition_id[var_index][k]);
+			normalizing_function[k] = disturbance_info.get_normalizing_function_from_rd_condition_id(var_rd_condition_id[var_index][k]);
 			parameter_a[k] = disturbance_info.get_parameter_a_from_rd_condition_id(var_rd_condition_id[var_index][k]);
 			parameter_b[k] = disturbance_info.get_parameter_b_from_rd_condition_id(var_rd_condition_id[var_index][k]);	
 			mean[k] = disturbance_info.get_mean_from_rd_condition_id(var_rd_condition_id[var_index][k]);
 			std[k] = disturbance_info.get_std_from_rd_condition_id(var_rd_condition_id[var_index][k]);
 		}
-
-		// in case loss rate type = "deterministic"
-		if (modelling_approach.equals("deterministic")) return stat.get_deterministic_loss_rates_from_transformed_data(total_disturbances, mean, std, transform_function, parameter_a, parameter_b);
-		// in case loss rate type = "stochastic"
-		else return stat.get_stochastic_loss_rates_from_transformed_data(total_disturbances, mean, std, transform_function, parameter_a, parameter_b);
+		return stat.get_user_loss_rates_from_transformed_data(total_disturbances, modelling_approach, normalizing_function, parameter_a, parameter_b, mean, std);
 	}
 	
 	
 	// this period 1 calculation is used for the period 2 calculation only
-	private double[] get_stochastic_loss_rates_for_period_one_variable(
+	private double[] get_new_loss_rates_for_period_one_variable(
+			String disturbance_option,
 			String period_one_var_name, 
 			LinkedHashMap<String, Double> map_var_name_to_var_value,
 			LinkedHashMap<String, int[]> map_var_name_to_var_rd_condition_id,
 			Information_Disturbance disturbance_info) {
 		Statistics stat = new Statistics();
 		int total_disturbances = disturbance_info.get_total_disturbances();
-		
-		int[] period_one_rd_condition_id = map_var_name_to_var_rd_condition_id.get(period_one_var_name);
-		double[] mean = new double[total_disturbances];
-		double[] std = new double[total_disturbances];
+		String[] modelling_approach = new String[total_disturbances];
 		String[] normalizing_function = new String[total_disturbances];
 		double[] parameter_a = new double[total_disturbances];
 		double[] parameter_b = new double[total_disturbances];
+		double[] mean = new double[total_disturbances];
+		double[] std = new double[total_disturbances];
+		int[] period_one_rd_condition_id = map_var_name_to_var_rd_condition_id.get(period_one_var_name);
 		for (int k = 0; k < total_disturbances; k++) {
+			modelling_approach[k] = disturbance_info.get_modelling_approach_from_rd_condition_id(period_one_rd_condition_id[k]);
 			normalizing_function[k] = disturbance_info.get_normalizing_function_from_rd_condition_id(period_one_rd_condition_id[k]);
 			parameter_a[k] = disturbance_info.get_parameter_a_from_rd_condition_id(period_one_rd_condition_id[k]);
 			parameter_b[k] = disturbance_info.get_parameter_b_from_rd_condition_id(period_one_rd_condition_id[k]);	
 			mean[k] = disturbance_info.get_mean_from_rd_condition_id(period_one_rd_condition_id[k]);
 			std[k] = disturbance_info.get_std_from_rd_condition_id(period_one_rd_condition_id[k]);
 		}
-		return stat.get_stochastic_loss_rates_from_transformed_data(total_disturbances, mean, std, normalizing_function, parameter_a, parameter_b);
+		
+		/*disturbance option
+		  user defined: Before solving an iteration, re-simulate disturbances for the period 1 variables of the previous iteration based on user-defined modelling approach in the Natural Disturbances screen
+		  full stochastic: Before solving an iteration, re-simulate disturbances for the period 1 variables of the previous iteration based on stochastic modelling approach regardless of what defined by users in the Natural Disturbances screen
+		*/
+		if (disturbance_option.equals("full stochastic")) {
+			return stat.get_stochastic_loss_rates_from_transformed_data(total_disturbances, normalizing_function, parameter_a, parameter_b, mean, std);
+		} else {
+			return stat.get_user_loss_rates_from_transformed_data(total_disturbances, modelling_approach, normalizing_function, parameter_a, parameter_b, mean, std);
+		}
 	}
 	
 	
 	// apply to eq (5) (7a)
 	// this is the second period variable in previous iteration OR the first period variable in this iteration 
-	private double get_period_two_variable_value_after_applying_stochastic_loss_rate_for_period_one_variable(
+	private double get_period_two_variable_value_after_applying_new_loss_rates_for_period_one_variable(
+			String disturbance_option, 
 			int var_index, Information_Variable[] var_info_array,
 			LinkedHashMap<String, Double> map_var_name_to_var_value,
 			LinkedHashMap<String, int[]> map_var_name_to_var_rd_condition_id,
@@ -3495,8 +3507,8 @@ public class Solve_Iterations {
 		if (map_var_name_to_var_value.get(period_one_var_name) != null) {
 			// if not doing random drawn yet then do it and map it
 			if (map_var_name_to_var_stochastic_loss_rates.get(period_one_var_name) == null) {	
-				double[] stochastic_loss_rates_for_period_one_variable = get_stochastic_loss_rates_for_period_one_variable(
-						period_one_var_name, map_var_name_to_var_value, map_var_name_to_var_rd_condition_id, disturbance_info);
+				double[] stochastic_loss_rates_for_period_one_variable = get_new_loss_rates_for_period_one_variable(
+						disturbance_option, period_one_var_name, map_var_name_to_var_value, map_var_name_to_var_rd_condition_id, disturbance_info);
 				map_var_name_to_var_stochastic_loss_rates.put(period_one_var_name, stochastic_loss_rates_for_period_one_variable);
 			}
 

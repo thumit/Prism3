@@ -35,6 +35,7 @@ public class Information_Disturbance {
 	
 	private String[] all_condition_category;
 	private String[] all_condition_disturbance_name;
+	private String[] all_condition_modelling_approach;
 	private String[] all_condition_function;
 	private double[] all_condition_parameter_a, all_condition_parameter_b;
 	private double[] all_condition_mean, all_condition_std;
@@ -51,6 +52,7 @@ public class Information_Disturbance {
 		all_priority_condition_info = new String[condition_count][];
 		all_condition_category = new String[condition_count];
 		all_condition_disturbance_name = new String[condition_count];
+		all_condition_modelling_approach = new String[condition_count]; 
 		all_condition_function = new String[condition_count];
 		all_condition_parameter_a = new double[condition_count];
 		all_condition_parameter_b = new double[condition_count];
@@ -63,6 +65,7 @@ public class Information_Disturbance {
 			all_priority_condition_info[priority] = disturbance_condition_list.get(priority).split("\t");
 			all_condition_category[priority] = all_priority_condition_info[priority][2];	// column 2 is condition category
 			all_condition_disturbance_name[priority] = all_priority_condition_info[priority][3];	// column 3 is disturbance name			allow reading "null"
+			all_condition_modelling_approach[priority] = all_priority_condition_info[priority][4];	// column 4 is modelling approach
 			all_condition_function[priority] = all_priority_condition_info[priority][6];	 		// column 6 is normalizing function		allow reading "null"
 			all_condition_parameter_a[priority] = (!all_priority_condition_info[priority][7].equals("null")) ? Double.parseDouble(all_priority_condition_info[priority][7]) : 0; // column 7 is parameter_a
 			all_condition_parameter_b[priority] = (!all_priority_condition_info[priority][8].equals("null")) ? Double.parseDouble(all_priority_condition_info[priority][8]) : 0; // column 8 is parameter_b
@@ -138,6 +141,13 @@ public class Information_Disturbance {
 			}
 		}
 		return id;
+	}
+	
+	public String get_modelling_approach_from_rd_condition_id(int condition_id) {
+		if (condition_id != -9999) {					
+			return all_condition_modelling_approach[condition_id];
+		}
+		return "null";
 	}
 	
 	public String get_normalizing_function_from_rd_condition_id(int condition_id) {

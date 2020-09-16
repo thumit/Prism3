@@ -84,12 +84,12 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 		rowCount = runsList.length;
 		colCount = 5;
 		data = new Object[rowCount][colCount];
-		columnNames = new String[] { "Model", "Disturbances", "From Iteration", "To Iteration", "Solving Status" };
+		columnNames = new String[] { "Model", "Disturbance Option", "From Iteration", "To Iteration", "Solving Status" };
 		
 		// Populate the data matrix
 		for (int row = 0; row < rowCount; row++) {
 			data[row][0] = runsList[row].getName();
-			data[row][1] = "deterministic";
+			data[row][1] = "user defined";
 			data[row][2] = "restart";
 			data[row][3] = 0;
 			data[row][4] = "waiting";
@@ -148,6 +148,8 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 					if (table.getColumnName(column).equals("Model")) tip = getValueAt(row, column).toString();
 					if (table.getColumnName(column).equals("From Iteration") && getValueAt(row, column).toString().equals("restart")) tip = "solve from iteration 0";
 					if (table.getColumnName(column).equals("From Iteration") && getValueAt(row, column).toString().equals("continue")) tip = "solve from last solved iteration";
+					if (table.getColumnName(column).equals("Disturbance Option") && getValueAt(row, column).toString().equals("user defined")) tip = "Before solving an iteration, re-simulate disturbances for the period 1 variables of the previous iteration based on user-defined modelling approach in the Natural Disturbances screen";
+					if (table.getColumnName(column).equals("Disturbance Option") && getValueAt(row, column).toString().equals("full stochastic")) tip = "Before solving an iteration, re-simulate disturbances for the period 1 variables of the previous iteration based on stochastic modelling approach regardless of what defined by users in the Natural Disturbances screen";
 				}
 				return tip;
 			}	
@@ -188,14 +190,16 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 				
 			}
 		}
-        class Combo_Disturbances_Assumption extends JComboBox {	
-			public Combo_Disturbances_Assumption() {
-				addItem("deterministic");
-				addItem("stochastic");
-				setSelectedIndex(1);
+        class Combo_Disturbance_Option extends JComboBox {	
+			public Combo_Disturbance_Option() {
+				ToolTipComboBoxRenderer r = new ToolTipComboBoxRenderer();
+				setRenderer(r);
+				addItem("user defined");
+				addItem("full stochastic");
+				setSelectedIndex(0);
 			}
 		}
-        table.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(new Combo_Disturbances_Assumption())); 
+        table.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(new Combo_Disturbance_Option())); 
         table.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new Combo_Method())); 
         table.getColumnModel().getColumn(3).setCellEditor(new DefaultCellEditor(new Combo_Iteration())); 
         

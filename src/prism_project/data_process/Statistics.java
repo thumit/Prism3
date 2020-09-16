@@ -24,13 +24,27 @@ public class Statistics {
 	}
 	
 	
-	public double[] get_deterministic_loss_rates_from_transformed_data(int total_disturbances, double[] mean, double[] std, String[] transform_function, double[] parameter_a, double[] parameter_b) {
-		// no need random draw: transformed_loss_rate[] = mean[]
-		return get_back_transform_and_adjustment(total_disturbances, mean, transform_function, parameter_a, parameter_b);
+	public double[] get_user_loss_rates_from_transformed_data(int total_disturbances, String[] modelling_approach, String[] transform_function, double[] parameter_a, double[] parameter_b, double[] mean, double[] std) {
+		// random draw then return the back transformed and adjusted data:  transformed_loss_rate[] = random[] of the mean[] and std[]
+		double[] transformed_loss_rate = new double[total_disturbances];
+		for (int k = 0; k < total_disturbances; k++) {
+			if (modelling_approach[k].equals("Deterministic")) {
+				transformed_loss_rate[k] = mean[k];	// no need random draw: transformed_loss_rate[] = mean[]
+			} else {	// stochastic
+				transformed_loss_rate[k] = get_gaussian_random_number(mean[k], std[k]);	// random draw then return the back transformed and adjusted data:  transformed_loss_rate[] = random[] of the mean[] and std[]
+			}
+		}
+		return get_back_transform_and_adjustment(total_disturbances, transformed_loss_rate, transform_function, parameter_a, parameter_b);
 	}
 	
 	
-	public double[] get_stochastic_loss_rates_from_transformed_data(int total_disturbances, double[] mean, double[] std, String[] transform_function, double[] parameter_a, double[] parameter_b) {
+//	public double[] get_deterministic_loss_rates_from_transformed_data(int total_disturbances, String[] transform_function, double[] parameter_a, double[] parameter_b, double[] mean, double[] std) {
+//		// no need random draw: transformed_loss_rate[] = mean[]
+//		return get_back_transform_and_adjustment(total_disturbances, mean, transform_function, parameter_a, parameter_b);
+//	}
+	
+	
+	public double[] get_stochastic_loss_rates_from_transformed_data(int total_disturbances, String[] transform_function, double[] parameter_a, double[] parameter_b, double[] mean, double[] std) {
 		// random draw then return the back transformed and adjusted data:  transformed_loss_rate[] = random[] of the mean[] and std[]
 		double[] random_draw_loss_rate = new double[total_disturbances];
 		for (int k = 0; k < total_disturbances; k++) {
