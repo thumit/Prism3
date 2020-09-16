@@ -1415,6 +1415,8 @@ All changes in this block are associated with PrismAlpha3.1.03.jar, Prism-Formul
 	- In the Natural Disturbances screen, conditions with global adjustment set to true will be automatically verified and will be set to false if not feasible.
 	- Very inportant: map every var_index to user_loss_rates first, then use just the map later
 	- Replace the file input_06_natural_disturbances in the resources folder of prism package (update to 591) because the Natural Disturbances table has 2 more columns.
+	- Allow exporting global_adjustment_rd_condition_id to output_02 (the 6th column) and mapping this condition for future usage in iterative models.
+	- Fix map_disturbance_name_to_id in Information_Disturbance class to map correctly
 
 603. Reset/clear the table header drop-down filter when adding new single/multiple rows at following screens: Natural Disturbances and Management Cost (more of 595)
 604. In all input screens, the spinner to move rows will be alvaialbe only when the Filter and Sorter is off and there is at least one highlighted row.

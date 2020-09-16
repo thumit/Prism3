@@ -40,7 +40,7 @@ public class Information_Disturbance {
 	private double[] all_condition_mean, all_condition_std;
 	private Object[] all_condition_conversion_rate_mean, all_condition_conversion_rate_std;	// contains 2D array for all conditions
 	
-	public Information_Disturbance(Read_Database read_database, List<String> disturbance_condition_list) {
+	public Information_Disturbance(Read_Database read_database, List<String> disturbance_condition_list) {	// Create this class once for each iteration
 		identifiers_processing = new Identifiers_Processing(read_database);
 		yield_tables_values = read_database.get_yield_tables_values();
 		
@@ -59,15 +59,8 @@ public class Information_Disturbance {
 		all_condition_conversion_rate_mean = new Object[condition_count];
 		all_condition_conversion_rate_std = new Object[condition_count];
 		
-		// Just do this once when an object of this class is created, not every time we encounter a variable
-		int count = -1;
 		for (int priority = 0; priority < condition_count; priority++) {		// Looping from the highest priority condition to the lowest, each priority is a row in the table GUI
 			all_priority_condition_info[priority] = disturbance_condition_list.get(priority).split("\t");
-			String disturbance_name = all_priority_condition_info[priority][3];
-			if (map_disturbance_name_to_id.get(disturbance_name) == null) {
-				count++;
-			}
-			map_disturbance_name_to_id.put(disturbance_name, count);
 			all_condition_category[priority] = all_priority_condition_info[priority][2];	// column 2 is condition category
 			all_condition_disturbance_name[priority] = all_priority_condition_info[priority][3];	// column 3 is disturbance name			allow reading "null"
 			all_condition_function[priority] = all_priority_condition_info[priority][6];	 		// column 6 is normalizing function		allow reading "null"
@@ -80,6 +73,17 @@ public class Information_Disturbance {
 			all_priority_condition_static_identifiers[priority] = identifiers_processing.get_static_identifiers(all_priority_condition_info[priority][13]);	// column 13 is static identifiers
 			all_priority_condition_dynamic_identifiers[priority] = identifiers_processing.get_dynamic_identifiers(all_priority_condition_info[priority][14]);	// column 14 is dynamic identifiers
 			all_priority_condition_dynamic_dentifiers_column_indexes[priority] = identifiers_processing.get_dynamic_dentifiers_column_indexes(all_priority_condition_info[priority][15]);	// column 15 is dynamic identifiers
+		}
+		
+		// mapping disturbance
+		int count = -1;
+		for (int priority = 0; priority < condition_count; priority++) {		// Looping from the highest priority condition to the lowest (only Local simulation), each priority is a row in the table GUI
+			String disturbance_name = all_condition_disturbance_name[priority];
+			String condition_category = all_condition_category[priority];
+			if (condition_category.equals("Local simulation") && map_disturbance_name_to_id.get(disturbance_name) == null) {
+				count++;
+				map_disturbance_name_to_id.put(disturbance_name, count);
+			}
 		}
 		total_disturbances = map_disturbance_name_to_id.size();
 	}

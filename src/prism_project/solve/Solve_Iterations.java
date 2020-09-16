@@ -800,6 +800,7 @@ public class Solve_Iterations {
 					LinkedHashMap<String, Double> map_var_name_to_var_value = null;
 					LinkedHashMap<String, Double> map_var_name_to_var_total_loss_rate = null;
 					LinkedHashMap<String, int[]> map_var_name_to_var_rd_condition_id = null;
+					LinkedHashMap<String, int[]> map_var_name_to_var_global_adjustment_rd_condition_id = null;
 					LinkedHashMap<String, double[]> map_var_name_to_var_stochastic_loss_rates = null;
 					
 					
@@ -865,6 +866,7 @@ public class Solve_Iterations {
 						map_var_name_to_var_value = new LinkedHashMap<String, Double>();
 						map_var_name_to_var_total_loss_rate = new LinkedHashMap<String, Double>();
 						map_var_name_to_var_rd_condition_id = new LinkedHashMap<String, int[]>(); 
+						map_var_name_to_var_global_adjustment_rd_condition_id = new LinkedHashMap<String, int[]>(); 
 						map_var_name_to_var_stochastic_loss_rates = new LinkedHashMap<String, double[]>(); 
 						int previous_iter = iter - 1;
 						File previous_output_variables_file = new File(runFolder.getAbsolutePath() + "/output_02_variables_" + previous_iter + ".txt");
@@ -881,10 +883,12 @@ public class Solve_Iterations {
 							// read all values from all rows and columns
 							for (int i = 0; i < file_total_rows; i++) {
 								String[] row_value = a[i].split(delimited);
-								map_var_name_to_var_value.put(row_value[1], Double.valueOf(row_value[2]));						// var_name = key, id = var_value
+								map_var_name_to_var_value.put(row_value[1], Double.valueOf(row_value[2]));					// var_name = key, id = var_value
 								map_var_name_to_var_total_loss_rate.put(row_value[1], Double.valueOf(row_value[4]));		// var_name = key, sum of all loss rate means = var_value
 								int[] rd_condition_id = Arrays.stream(row_value[5].split(" ")).mapToInt(Integer::parseInt).toArray(); 
-								map_var_name_to_var_rd_condition_id.put(row_value[1], rd_condition_id);			// var_name = key, rd_condition_id[] = var_value
+								map_var_name_to_var_rd_condition_id.put(row_value[1], rd_condition_id);						// var_name = key, rd_condition_id[] = var_value
+								int[] global_adjustment_rd_condition_id = Arrays.stream(row_value[6].split(" ")).mapToInt(Integer::parseInt).toArray(); 
+								map_var_name_to_var_global_adjustment_rd_condition_id.put(row_value[1], global_adjustment_rd_condition_id);	// var_name = key, global_adjustment_rd_condition_id[] = var_value
 							}
 						} catch (IOException e) {
 							System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -2388,7 +2392,7 @@ public class Solve_Iterations {
 							// output_02_variable
 							output_variables_file.delete();
 							try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_variables_file))) {
-								String file_header = String.join("\t", "var_id", "var_name", "var_value", "var_reduced_cost", "var_loss_rate_total", "var_rd_condition_id");
+								String file_header = String.join("\t", "var_id", "var_name", "var_value", "var_reduced_cost", "var_loss_rate_total", "var_rd_condition_id", "var_global_adjustment_rd_condition_id");
 								fileOut.write(file_header);
 								
 								for (int i = 0; i < value.length; i++) {
@@ -2410,9 +2414,13 @@ public class Solve_Iterations {
 											for (int k = 0; k < total_disturbances; k++) {
 												fileOut.write(var_rd_condition_id[i][k] + " ");
 											}
+											fileOut.write("\t"); 
+											for (int k = 0; k < total_disturbances; k++) {
+												fileOut.write(var_global_adjustment_rd_condition_id[i][k] + " ");
+											}
 										} else {
-											fileOut.write("\t" + "-9999"); 
-											fileOut.write("\t" + "-9999"); 
+											fileOut.write("\t" + "-9999" + "\t" + "-9999");
+											fileOut.write("\t" + "-9999" + "\t" + "-9999");
 										}
 									}
 								}
@@ -2954,7 +2962,7 @@ public class Solve_Iterations {
 							// output_02_variable
 							output_variables_file.delete();
 							try (BufferedWriter fileOut = new BufferedWriter(new FileWriter(output_variables_file))) {
-								String file_header = String.join("\t", "var_id", "var_name", "var_value", "var_reduced_cost", "var_loss_rate_total", "var_rd_condition_id");
+								String file_header = String.join("\t", "var_id", "var_name", "var_value", "var_reduced_cost", "var_loss_rate_total", "var_rd_condition_id", "var_global_adjustment_rd_condition_id");
 								fileOut.write(file_header);
 								
 								for (int i = 0; i < value.length; i++) {
@@ -2976,9 +2984,13 @@ public class Solve_Iterations {
 											for (int k = 0; k < total_disturbances; k++) {
 												fileOut.write(var_rd_condition_id[i][k] + " ");
 											}
+											fileOut.write("\t"); 
+											for (int k = 0; k < total_disturbances; k++) {
+												fileOut.write(var_global_adjustment_rd_condition_id[i][k] + " ");
+											}
 										} else {
-											fileOut.write("\t" + "-9999"); 
-											fileOut.write("\t" + "-9999"); 
+											fileOut.write("\t" + "-9999" + "\t" + "-9999");
+											fileOut.write("\t" + "-9999" + "\t" + "-9999");
 										}
 									}
 								}
