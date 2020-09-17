@@ -24,7 +24,7 @@ public class Statistics {
 	}
 	
 	
-	public double[] get_user_loss_rates_from_transformed_data(int total_disturbances, String[] modelling_approach, String[] transform_function, double[] parameter_a, double[] parameter_b, double[] mean, double[] std) {
+	public double[] get_user_loss_rates_from_transformed_data(int total_disturbances, String[] modelling_approach, String[] transform_function, double[] parameter_a, double[] parameter_b, double[] mean, double[] std, double[] back_transformed_global_adjustment) {
 		double[] transformed_loss_rate = new double[total_disturbances];
 		for (int k = 0; k < total_disturbances; k++) {
 			if (modelling_approach[k].equals("Deterministic")) {
@@ -33,7 +33,7 @@ public class Statistics {
 				transformed_loss_rate[k] = get_gaussian_random_number(mean[k], std[k]);	// random draw: transformed_loss_rate[] = random[] of the mean[] and std[]
 			}
 		}
-		return get_back_transform_and_adjustment(total_disturbances, transformed_loss_rate, transform_function, parameter_a, parameter_b);
+		return get_back_transform_and_adjustment(total_disturbances, transformed_loss_rate, transform_function, parameter_a, parameter_b, back_transformed_global_adjustment);
 	}
 	
 	
@@ -43,25 +43,25 @@ public class Statistics {
 //	}
 	
 	
-	public double[] get_stochastic_loss_rates_from_transformed_data(int total_disturbances, String[] transform_function, double[] parameter_a, double[] parameter_b, double[] mean, double[] std) {
+	public double[] get_stochastic_loss_rates_from_transformed_data(int total_disturbances, String[] transform_function, double[] parameter_a, double[] parameter_b, double[] mean, double[] std, double[] back_transformed_global_adjustment) {
 		// random draw then return the back transformed and adjusted data:  transformed_loss_rate[] = random[] of the mean[] and std[]
 		double[] random_draw_loss_rate = new double[total_disturbances];
 		for (int k = 0; k < total_disturbances; k++) {
 			random_draw_loss_rate[k] = get_gaussian_random_number(mean[k], std[k]);	
 		}
-		return get_back_transform_and_adjustment(total_disturbances, random_draw_loss_rate, transform_function, parameter_a, parameter_b);
+		return get_back_transform_and_adjustment(total_disturbances, random_draw_loss_rate, transform_function, parameter_a, parameter_b, back_transformed_global_adjustment);
 	}
 	
 	
-	public double[] get_back_transform_and_adjustment(int total_disturbances, double[] transformed_loss_rate, String[] transform_function, double[] parameter_a, double[] parameter_b) {
+	public double[] get_back_transform_and_adjustment(int total_disturbances, double[] transformed_loss_rate, String[] transform_function, double[] parameter_a, double[] parameter_b, double[] back_transformed_global_adjustment) {
 		// back transform
-		double[] back_transformed_loss_rate = new double[total_disturbances];
+		double[] global_adjusted_back_transformed_loss_rate = new double[total_disturbances];
 		double total_pecentage = 0;
 		for (int k = 0; k < total_disturbances; k++) {
-			back_transformed_loss_rate[k] = get_back_transformed_number(transformed_loss_rate[k], transform_function[k], parameter_a[k], parameter_b[k]);	
-			total_pecentage = total_pecentage + back_transformed_loss_rate[k];
+			global_adjusted_back_transformed_loss_rate[k] = back_transformed_global_adjustment[k] * get_back_transformed_number(transformed_loss_rate[k], transform_function[k], parameter_a[k], parameter_b[k]);	
+			total_pecentage = total_pecentage + global_adjusted_back_transformed_loss_rate[k];
 		}
-		if (total_pecentage <= 100) return back_transformed_loss_rate;
+		if (total_pecentage <= 100) return global_adjusted_back_transformed_loss_rate;
 		
 		/* adjustment (the case when total_pecentage > 100): 
 		 Example:	 In the area specified by this variable we have 3 stand replacing disturbances with below back_transformed_loss_rate
@@ -87,12 +87,12 @@ public class Statistics {
 		double[] proportional_loss_rate = new double[total_disturbances];
 		// 1. plr
 		for (int k = 0; k < total_disturbances; k++) {
-			proportional_loss_rate[k] = back_transformed_loss_rate[k] * 100 / total_pecentage;
+			proportional_loss_rate[k] = global_adjusted_back_transformed_loss_rate[k] * 100 / total_pecentage;
 		}
 		// 2. atp
 		double adjusted_total_percentage = 0;
 		for (int k = 0; k < total_disturbances; k++) {
-			adjusted_total_percentage = adjusted_total_percentage + back_transformed_loss_rate[k] * (100 - adjusted_total_percentage) / 100;
+			adjusted_total_percentage = adjusted_total_percentage + global_adjusted_back_transformed_loss_rate[k] * (100 - adjusted_total_percentage) / 100;
 		}
 		// 3. alr
 		double[] adjusted_loss_rate = new double[total_disturbances];

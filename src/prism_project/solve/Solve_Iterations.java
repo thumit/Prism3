@@ -658,7 +658,7 @@ public class Solve_Iterations {
 							}
 						}
 						// map every var_index to user_loss_rates first, then use just the map later
-						double[] this_var_index_user_loss_rates = get_user_loss_rates_for_this_var(var_rd_condition_id, var_index, disturbance_info);
+						double[] this_var_index_user_loss_rates = get_user_loss_rates_for_this_var(var_rd_condition_id, var_global_adjustment_rd_condition_id, var_index, disturbance_info);
 						map_var_index_to_user_loss_rates.put(var_index, this_var_index_user_loss_rates);
 						
 						
@@ -911,6 +911,7 @@ public class Solve_Iterations {
 												disturbance_option,
 												var_index, var_info_array, map_var_name_to_var_value,
 												map_var_name_to_var_rd_condition_id,
+												map_var_name_to_var_global_adjustment_rd_condition_id,
 												map_var_name_to_var_new_loss_rates, disturbance_info);
 										// Mapping
 										map_var_index_to_stochastic_var_value.put(var_index, final_value);
@@ -935,6 +936,7 @@ public class Solve_Iterations {
 													disturbance_option,
 													var_index, var_info_array, map_var_name_to_var_value,
 													map_var_name_to_var_rd_condition_id,
+													map_var_name_to_var_global_adjustment_rd_condition_id,
 													map_var_name_to_var_new_loss_rates, disturbance_info);
 											// Mapping
 											map_var_index_to_stochastic_var_value.put(var_index, final_value);
@@ -3413,7 +3415,7 @@ public class Solve_Iterations {
 	
 	
 	// apply to eq (6) (7b) (9) and printing some outputs
-	private double[] get_user_loss_rates_for_this_var(int[][] var_rd_condition_id, int var_index, Information_Disturbance disturbance_info) {
+	private double[] get_user_loss_rates_for_this_var(int[][] var_rd_condition_id, int[][] var_global_adjustment_rd_condition_id, int var_index, Information_Disturbance disturbance_info) {
 		Statistics stat = new Statistics();
 		int total_disturbances = disturbance_info.get_total_disturbances();
 		String[] modelling_approach = new String[total_disturbances];
@@ -3422,6 +3424,7 @@ public class Solve_Iterations {
 		double[] parameter_b = new double[total_disturbances];
 		double[] mean = new double[total_disturbances];
 		double[] std = new double[total_disturbances];
+		double[] back_transformed_global_adjustment = new double[total_disturbances];
 		for (int k = 0; k < total_disturbances; k++) {
 			modelling_approach[k] = disturbance_info.get_modelling_approach_from_rd_condition_id(var_rd_condition_id[var_index][k]);
 			normalizing_function[k] = disturbance_info.get_normalizing_function_from_rd_condition_id(var_rd_condition_id[var_index][k]);
@@ -3429,8 +3432,9 @@ public class Solve_Iterations {
 			parameter_b[k] = disturbance_info.get_parameter_b_from_rd_condition_id(var_rd_condition_id[var_index][k]);	
 			mean[k] = disturbance_info.get_mean_from_rd_condition_id(var_rd_condition_id[var_index][k]);
 			std[k] = disturbance_info.get_std_from_rd_condition_id(var_rd_condition_id[var_index][k]);
+			back_transformed_global_adjustment[k] = disturbance_info.get_back_transformed_global_adjustment_for_using_across_iteration(var_global_adjustment_rd_condition_id[var_index][k]);
 		}
-		return stat.get_user_loss_rates_from_transformed_data(total_disturbances, modelling_approach, normalizing_function, parameter_a, parameter_b, mean, std);
+		return stat.get_user_loss_rates_from_transformed_data(total_disturbances, modelling_approach, normalizing_function, parameter_a, parameter_b, mean, std, back_transformed_global_adjustment);
 	}
 	
 	
@@ -3440,6 +3444,7 @@ public class Solve_Iterations {
 			String period_one_var_name, 
 			LinkedHashMap<String, Double> map_var_name_to_var_value,
 			LinkedHashMap<String, int[]> map_var_name_to_var_rd_condition_id,
+			LinkedHashMap<String, int[]> map_var_name_to_var_global_adjustment_rd_condition_id,
 			Information_Disturbance disturbance_info) {
 		Statistics stat = new Statistics();
 		int total_disturbances = disturbance_info.get_total_disturbances();
@@ -3449,7 +3454,9 @@ public class Solve_Iterations {
 		double[] parameter_b = new double[total_disturbances];
 		double[] mean = new double[total_disturbances];
 		double[] std = new double[total_disturbances];
+		double[] back_transformed_global_adjustment = new double[total_disturbances];
 		int[] period_one_rd_condition_id = map_var_name_to_var_rd_condition_id.get(period_one_var_name);
+		int[] period_one_global_adjustment_rd_condition_id = map_var_name_to_var_global_adjustment_rd_condition_id.get(period_one_var_name);
 		for (int k = 0; k < total_disturbances; k++) {
 			modelling_approach[k] = disturbance_info.get_modelling_approach_from_rd_condition_id(period_one_rd_condition_id[k]);
 			normalizing_function[k] = disturbance_info.get_normalizing_function_from_rd_condition_id(period_one_rd_condition_id[k]);
@@ -3457,6 +3464,7 @@ public class Solve_Iterations {
 			parameter_b[k] = disturbance_info.get_parameter_b_from_rd_condition_id(period_one_rd_condition_id[k]);	
 			mean[k] = disturbance_info.get_mean_from_rd_condition_id(period_one_rd_condition_id[k]);
 			std[k] = disturbance_info.get_std_from_rd_condition_id(period_one_rd_condition_id[k]);
+			back_transformed_global_adjustment[k] = disturbance_info.get_back_transformed_global_adjustment_for_using_across_iteration(period_one_global_adjustment_rd_condition_id[k]);
 		}
 		
 		/*disturbance option
@@ -3464,9 +3472,9 @@ public class Solve_Iterations {
 		  full stochastic: Before solving an iteration, re-simulate disturbances for the period 1 variables of the previous iteration based on stochastic modelling approach regardless of what defined by users in the Natural Disturbances screen
 		*/
 		if (disturbance_option.equals("full stochastic")) {
-			return stat.get_stochastic_loss_rates_from_transformed_data(total_disturbances, normalizing_function, parameter_a, parameter_b, mean, std);
+			return stat.get_stochastic_loss_rates_from_transformed_data(total_disturbances, normalizing_function, parameter_a, parameter_b, mean, std, back_transformed_global_adjustment);
 		} else {
-			return stat.get_user_loss_rates_from_transformed_data(total_disturbances, modelling_approach, normalizing_function, parameter_a, parameter_b, mean, std);
+			return stat.get_user_loss_rates_from_transformed_data(total_disturbances, modelling_approach, normalizing_function, parameter_a, parameter_b, mean, std, back_transformed_global_adjustment);
 		}
 	}
 	
@@ -3478,6 +3486,7 @@ public class Solve_Iterations {
 			int var_index, Information_Variable[] var_info_array,
 			LinkedHashMap<String, Double> map_var_name_to_var_value,
 			LinkedHashMap<String, int[]> map_var_name_to_var_rd_condition_id,
+			LinkedHashMap<String, int[]> map_var_name_to_var_global_adjustment_rd_condition_id,
 			LinkedHashMap<String, double[]> map_var_name_to_var_new_loss_rates,
 			Information_Disturbance disturbance_info) { 	
 		
@@ -3508,7 +3517,7 @@ public class Solve_Iterations {
 			// if not doing random drawn yet then do it and map it
 			if (map_var_name_to_var_new_loss_rates.get(period_one_var_name) == null) {	
 				double[] new_loss_rates_for_period_one_variable = get_new_loss_rates_for_period_one_variable(
-						disturbance_option, period_one_var_name, map_var_name_to_var_value, map_var_name_to_var_rd_condition_id, disturbance_info);
+						disturbance_option, period_one_var_name, map_var_name_to_var_value, map_var_name_to_var_rd_condition_id, map_var_name_to_var_global_adjustment_rd_condition_id, disturbance_info);
 				map_var_name_to_var_new_loss_rates.put(period_one_var_name, new_loss_rates_for_period_one_variable);
 			}
 
