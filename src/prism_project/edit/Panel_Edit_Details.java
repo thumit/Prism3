@@ -5129,7 +5129,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						int currentRow = selectedRow[0];
 						currentRow = table6.convertRowIndexToModel(currentRow);		// Convert row index because "Sort" causes problems	
 						static_identifiers_scrollpane.reload_this_constraint_static_identifiers((String) data6[currentRow][13]);	// 13 is the static_identifiers which have some attributes selected				
-						dynamic_identifiers_scrollpane.reload_this_constraint_dynamic_identifiers((String) data6[currentRow][15], (String) data6[currentRow][15]);	// 15 is the original_dynamic_identifiers column
+						dynamic_identifiers_scrollpane.reload_this_constraint_dynamic_identifiers((String) data6[currentRow][14], (String) data6[currentRow][15]);	// 15 is the original_dynamic_identifiers column
 						natural_disturbances_tables_ScrollPane.reload_this_condition((String) data6[currentRow][11], (String) data6[currentRow][12]);
 						
 						btn_Edit.setEnabled(true);
