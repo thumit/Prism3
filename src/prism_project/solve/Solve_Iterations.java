@@ -801,7 +801,7 @@ public class Solve_Iterations {
 					LinkedHashMap<String, Double> map_var_name_to_var_total_loss_rate = null;
 					LinkedHashMap<String, int[]> map_var_name_to_var_rd_condition_id = null;
 					LinkedHashMap<String, int[]> map_var_name_to_var_global_adjustment_rd_condition_id = null;
-					LinkedHashMap<String, double[]> map_var_name_to_var_stochastic_loss_rates = null;
+					LinkedHashMap<String, double[]> map_var_name_to_var_new_loss_rates = null;
 					
 					
 					List<List<Integer>> c5_indexlist = new ArrayList<List<Integer>>();	
@@ -867,7 +867,7 @@ public class Solve_Iterations {
 						map_var_name_to_var_total_loss_rate = new LinkedHashMap<String, Double>();
 						map_var_name_to_var_rd_condition_id = new LinkedHashMap<String, int[]>(); 
 						map_var_name_to_var_global_adjustment_rd_condition_id = new LinkedHashMap<String, int[]>(); 
-						map_var_name_to_var_stochastic_loss_rates = new LinkedHashMap<String, double[]>(); 
+						map_var_name_to_var_new_loss_rates = new LinkedHashMap<String, double[]>(); 
 						int previous_iter = iter - 1;
 						File previous_output_variables_file = new File(runFolder.getAbsolutePath() + "/output_02_variables_" + previous_iter + ".txt");
 						String delimited = "\t";		// tab delimited
@@ -911,7 +911,7 @@ public class Solve_Iterations {
 												disturbance_option,
 												var_index, var_info_array, map_var_name_to_var_value,
 												map_var_name_to_var_rd_condition_id,
-												map_var_name_to_var_stochastic_loss_rates, disturbance_info);
+												map_var_name_to_var_new_loss_rates, disturbance_info);
 										// Mapping
 										map_var_index_to_stochastic_var_value.put(var_index, final_value);
 									}
@@ -935,7 +935,7 @@ public class Solve_Iterations {
 													disturbance_option,
 													var_index, var_info_array, map_var_name_to_var_value,
 													map_var_name_to_var_rd_condition_id,
-													map_var_name_to_var_stochastic_loss_rates, disturbance_info);
+													map_var_name_to_var_new_loss_rates, disturbance_info);
 											// Mapping
 											map_var_index_to_stochastic_var_value.put(var_index, final_value);
 										}
@@ -1401,7 +1401,7 @@ public class Solve_Iterations {
 														for (int k = 0; k < total_disturbances; k++) {
 															if (rd_condition_id[k] != -9999) {
 																double[][] conversion_rate_mean = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(rd_condition_id[k]);
-																total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (map_var_name_to_var_stochastic_loss_rates.get(var_name)[k] / 100) * (conversion_rate_mean[s5][s5R] / 100);
+																total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (map_var_name_to_var_new_loss_rates.get(var_name)[k] / 100) * (conversion_rate_mean[s5][s5R] / 100);
 															}
 														}
 														total_value_for_this_F = total_value_for_this_F + total_loss_rate_for_this_conversion * map_var_name_to_var_value.get(var_name);
@@ -1423,7 +1423,7 @@ public class Solve_Iterations {
 														for (int k = 0; k < total_disturbances; k++) {
 															if (rd_condition_id[k] != -9999) {
 																double[][] conversion_rate_mean = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(rd_condition_id[k]);
-																total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (map_var_name_to_var_stochastic_loss_rates.get(var_name)[k] / 100) * (conversion_rate_mean[s5][s5R] / 100);
+																total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (map_var_name_to_var_new_loss_rates.get(var_name)[k] / 100) * (conversion_rate_mean[s5][s5R] / 100);
 															}
 														}
 														total_value_for_this_F = total_value_for_this_F + total_loss_rate_for_this_conversion * map_var_name_to_var_value.get(var_name);
@@ -3478,7 +3478,7 @@ public class Solve_Iterations {
 			int var_index, Information_Variable[] var_info_array,
 			LinkedHashMap<String, Double> map_var_name_to_var_value,
 			LinkedHashMap<String, int[]> map_var_name_to_var_rd_condition_id,
-			LinkedHashMap<String, double[]> map_var_name_to_var_stochastic_loss_rates,
+			LinkedHashMap<String, double[]> map_var_name_to_var_new_loss_rates,
 			Information_Disturbance disturbance_info) { 	
 		
 		// get the period 1 solution from previous iteration
@@ -3506,21 +3506,21 @@ public class Solve_Iterations {
 		
 		if (map_var_name_to_var_value.get(period_one_var_name) != null) {
 			// if not doing random drawn yet then do it and map it
-			if (map_var_name_to_var_stochastic_loss_rates.get(period_one_var_name) == null) {	
-				double[] stochastic_loss_rates_for_period_one_variable = get_new_loss_rates_for_period_one_variable(
+			if (map_var_name_to_var_new_loss_rates.get(period_one_var_name) == null) {	
+				double[] new_loss_rates_for_period_one_variable = get_new_loss_rates_for_period_one_variable(
 						disturbance_option, period_one_var_name, map_var_name_to_var_value, map_var_name_to_var_rd_condition_id, disturbance_info);
-				map_var_name_to_var_stochastic_loss_rates.put(period_one_var_name, stochastic_loss_rates_for_period_one_variable);
+				map_var_name_to_var_new_loss_rates.put(period_one_var_name, new_loss_rates_for_period_one_variable);
 			}
 
-			// apply the total stochastic loss rate to period 2 variable and return the value
-			double total_stochastic_loss_rates = 0;
-			for (double i : map_var_name_to_var_stochastic_loss_rates.get(period_one_var_name)) {	// each i is the stochastic rate for one SR
-				total_stochastic_loss_rates = total_stochastic_loss_rates + i;
+			// apply the total new loss rate to period 2 variable and return the value
+			double total_new_loss_rates = 0;
+			for (double i : map_var_name_to_var_new_loss_rates.get(period_one_var_name)) {	// each i is the stochastic rate for one SR
+				total_new_loss_rates = total_new_loss_rates + i;
 			}
 			
 			// Calculate the period 2 variable after the consequence of stochastic loss
 			double period_one_var_value = map_var_name_to_var_value.get(period_one_var_name);
-			double period_two_value = (1 - total_stochastic_loss_rates / 100) * period_one_var_value;
+			double period_two_value = (1 - total_new_loss_rates / 100) * period_one_var_value;
 			return period_two_value;
 		} else {
 			return 0; 	// in case period one variable is not found then period 2 variable should be 0

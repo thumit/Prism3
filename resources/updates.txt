@@ -1418,7 +1418,7 @@ All changes in this block are associated with PrismAlpha3.1.03.jar, Prism-Formul
 	- Allow exporting global_adjustment_rd_condition_id to output_02 (the 6th column) and mapping this condition for future usage in iterative models.
 	- Fix map_disturbance_name_to_id in Information_Disturbance class to map correctly
 	- Create 2 maps for mapping condition id to global adjustment value to use in 2 cases (withi iteration and across interation)
-	- Very important: in Statistics class, the get_back_transformed_number function is now adjusted for negative result only. Previously is was also adjusted if result > 100.
+	- Very important: in Statistics class, the get_back_transformed_number function is now adjusted for negative result only. Previously it was also adjusted if result > 100.
 
 603. Reset/clear the table header drop-down filter when adding new single/multiple rows at following screens: Natural Disturbances and Management Cost (more of 595)
 604. In all input screens, the spinner to move rows will be alvaialbe only when the Filter and Sorter is off and there is at least one highlighted row.

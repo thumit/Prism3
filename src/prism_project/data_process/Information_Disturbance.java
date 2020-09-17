@@ -42,8 +42,8 @@ public class Information_Disturbance {
 	private double[] all_condition_mean, all_condition_std;
 	private Object[] all_condition_conversion_rate_mean, all_condition_conversion_rate_std;	// contains 2D array for all conditions
 	
-	private LinkedHashMap<Integer, Double> map_global_adjustment_rd_condition_id_to_adjustment_value;								// apply within iteration
-	private LinkedHashMap<Integer, Double> map_global_adjustment_rd_condition_id_to_adjustment_value_for_using_across_iteration;  	// apply (across iteration) to period 1 variable solution from previous iteration 
+	private LinkedHashMap<Integer, Double> map_global_adjustment_rd_condition_id_to_back_transformed_adjustment_value;								// apply within iteration
+	private LinkedHashMap<Integer, Double> map_global_adjustment_rd_condition_id_to_back_transformed_adjustment_value_for_using_across_iteration;  	// apply (across iteration) to period 1 variable solution from previous iteration 
 	
 	
 	public Information_Disturbance(Read_Database read_database, List<String> disturbance_condition_list) {	// Create this class once for each iteration
@@ -96,8 +96,8 @@ public class Information_Disturbance {
 		total_disturbances = map_disturbance_name_to_id.size();
 		
 		// mapping global adjustment: map twice to use in 2 different cases
-		map_global_adjustment_rd_condition_id_to_adjustment_value = create_a_new_instance_of_mapping_global_adjustment();								// apply within iteration
-		map_global_adjustment_rd_condition_id_to_adjustment_value_for_using_across_iteration = create_a_new_instance_of_mapping_global_adjustment();  	// apply (across iteration) to period 1 variable solution from previous iteration 
+		map_global_adjustment_rd_condition_id_to_back_transformed_adjustment_value = create_a_new_instance_of_mapping_global_adjustment();								// apply within iteration
+		map_global_adjustment_rd_condition_id_to_back_transformed_adjustment_value_for_using_across_iteration = create_a_new_instance_of_mapping_global_adjustment();  	// apply (across iteration) to period 1 variable solution from previous iteration 
 	}
 	
 	public int get_total_disturbances() {
@@ -223,6 +223,22 @@ public class Information_Disturbance {
 		return cr_mean_or_std;
 	}
 	
+	// GLOBAL ADJUSTMENT
+	// GLOBAL ADJUSTMENT
+	// GLOBAL ADJUSTMENT
+	public double get_back_transformed_global_adjustment_for_using_within_iteration(int global_adjustment_rd_condition_id) {
+		if (global_adjustment_rd_condition_id != -9999) {					
+			return map_global_adjustment_rd_condition_id_to_back_transformed_adjustment_value.get(global_adjustment_rd_condition_id);
+		}
+		return 1;	// global multiplier = 1 for no adjustment
+	}
+	
+	public double get_back_transformed_global_adjustment_for_using_across_iteration(int global_adjustment_rd_condition_id) {
+		if (global_adjustment_rd_condition_id != -9999) {					
+			return map_global_adjustment_rd_condition_id_to_back_transformed_adjustment_value_for_using_across_iteration.get(global_adjustment_rd_condition_id);
+		}
+		return 1;	// global multiplier = 1 for no adjustment
+	}
 	
 	private LinkedHashMap<Integer, Double> create_a_new_instance_of_mapping_global_adjustment() {
 		Statistics stat = new Statistics();
