@@ -25,13 +25,12 @@ public class Statistics {
 	
 	
 	public double[] get_user_loss_rates_from_transformed_data(int total_disturbances, String[] modelling_approach, String[] transform_function, double[] parameter_a, double[] parameter_b, double[] mean, double[] std) {
-		// random draw then return the back transformed and adjusted data:  transformed_loss_rate[] = random[] of the mean[] and std[]
 		double[] transformed_loss_rate = new double[total_disturbances];
 		for (int k = 0; k < total_disturbances; k++) {
 			if (modelling_approach[k].equals("Deterministic")) {
 				transformed_loss_rate[k] = mean[k];	// no need random draw: transformed_loss_rate[] = mean[]
 			} else {	// stochastic
-				transformed_loss_rate[k] = get_gaussian_random_number(mean[k], std[k]);	// random draw then return the back transformed and adjusted data:  transformed_loss_rate[] = random[] of the mean[] and std[]
+				transformed_loss_rate[k] = get_gaussian_random_number(mean[k], std[k]);	// random draw: transformed_loss_rate[] = random[] of the mean[] and std[]
 			}
 		}
 		return get_back_transform_and_adjustment(total_disturbances, transformed_loss_rate, transform_function, parameter_a, parameter_b);
@@ -112,16 +111,16 @@ public class Statistics {
 	}
 	
 	
-	public double get_back_transformed_number(double transformed_loss_rate, String transform_function, double parameter_a, double parameter_b) {
-		double f_x = transformed_loss_rate;
+	public double get_back_transformed_number(double transformed_number, String transform_function, double parameter_a, double parameter_b) {
+		double f_x = transformed_number;
 		double a = parameter_a;
 		double b = parameter_b;
 		double back_transform = 0;	// this value is not important, just make it a random 0 here
 		
-		// use the function here to back transform, the result is adjusted if <0 or >100
+		// use the function here to back transform, the result is adjusted if <0
 		switch (transform_function) {
 		case "null":
-			back_transform = transformed_loss_rate;		// no transformation
+			back_transform = transformed_number;		// no transformation
 			break;
 		case "Inverse":
 			back_transform = back_transform_Inverse(f_x, a, b);
@@ -149,7 +148,6 @@ public class Statistics {
 			break;
 		}
 		if (back_transform < 0) back_transform = 0;			// = 0 if the back transform < 0
-		if (back_transform > 100) back_transform = 100;		// = 100 if the back transform > 100
 		return back_transform;
 	}
 	

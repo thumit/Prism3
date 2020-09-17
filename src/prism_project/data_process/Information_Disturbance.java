@@ -27,6 +27,7 @@ public class Information_Disturbance {
 	private LinkedHashMap<String, Integer> map_disturbance_name_to_id = new LinkedHashMap<String, Integer>();
 	
 	private Identifiers_Processing identifiers_processing;
+	private int condition_count;
 	private List<List<String>>[] all_priority_condition_static_identifiers;
 	private List<List<String>>[] all_priority_condition_dynamic_identifiers;
 	private List<String>[] all_priority_condition_dynamic_dentifiers_column_indexes;
@@ -41,11 +42,15 @@ public class Information_Disturbance {
 	private double[] all_condition_mean, all_condition_std;
 	private Object[] all_condition_conversion_rate_mean, all_condition_conversion_rate_std;	// contains 2D array for all conditions
 	
+	private LinkedHashMap<Integer, Double> map_global_adjustment_rd_condition_id_to_adjustment_value;								// apply within iteration
+	private LinkedHashMap<Integer, Double> map_global_adjustment_rd_condition_id_to_adjustment_value_for_using_across_iteration;  	// apply (across iteration) to period 1 variable solution from previous iteration 
+	
+	
 	public Information_Disturbance(Read_Database read_database, List<String> disturbance_condition_list) {	// Create this class once for each iteration
 		identifiers_processing = new Identifiers_Processing(read_database);
 		yield_tables_values = read_database.get_yield_tables_values();
 		
-		int condition_count = disturbance_condition_list.size();
+		condition_count = disturbance_condition_list.size();
 		all_priority_condition_static_identifiers = new ArrayList[condition_count];
 		all_priority_condition_dynamic_identifiers = new ArrayList[condition_count];
 		all_priority_condition_dynamic_dentifiers_column_indexes = new ArrayList[condition_count];
@@ -89,6 +94,10 @@ public class Information_Disturbance {
 			}
 		}
 		total_disturbances = map_disturbance_name_to_id.size();
+		
+		// mapping global adjustment: map twice to use in 2 different cases
+		map_global_adjustment_rd_condition_id_to_adjustment_value = create_a_new_instance_of_mapping_global_adjustment();								// apply within iteration
+		map_global_adjustment_rd_condition_id_to_adjustment_value_for_using_across_iteration = create_a_new_instance_of_mapping_global_adjustment();  	// apply (across iteration) to period 1 variable solution from previous iteration 
 	}
 	
 	public int get_total_disturbances() {
@@ -212,5 +221,31 @@ public class Information_Disturbance {
 			}
 		}
 		return cr_mean_or_std;
+	}
+	
+	
+	private LinkedHashMap<Integer, Double> create_a_new_instance_of_mapping_global_adjustment() {
+		Statistics stat = new Statistics();
+		LinkedHashMap<Integer, Double> map = new LinkedHashMap<Integer, Double>();
+		for (int priority = 0; priority < condition_count; priority++) {		// Looping from the highest priority condition to the lowest (only Global adjustment), each priority is a row in the table GUI
+			String condition_category = all_condition_category[priority];
+			if (condition_category.equals("Global adjustment")) {
+				String modelling_approach = all_condition_modelling_approach[priority];
+				String normalizing_function = all_condition_function[priority];
+				double parameter_a = all_condition_parameter_a[priority];
+				double parameter_b = all_condition_parameter_b[priority];
+				double mean = all_condition_mean[priority];
+				double std = all_condition_std[priority];
+				
+				double transformed_number = 0;
+				if (modelling_approach.equals("Deterministic")) {
+					transformed_number = mean;	// no need random draw: transformed_loss_rate[] = mean[]
+				} else {	// stochastic
+					transformed_number = stat.get_gaussian_random_number(mean, std);	// random draw: transformed_loss_rate[] = random[] of the mean[] and std[]
+				}
+				map.put(priority, stat.get_back_transformed_number(transformed_number, normalizing_function, parameter_a, parameter_b));
+			}
+		}
+		return map;
 	}
 }
