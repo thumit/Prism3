@@ -1903,7 +1903,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
         table6c.getColumnModel().getColumn(2).setCellRenderer(r2);
 		
 		
-		table6c.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+//		table6c.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		table6c.setCellSelectionEnabled(true);
         table6c.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         table6c.getTableHeader().setReorderingAllowed(false);		//Disable columns move
@@ -5464,7 +5464,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			split_pane_lower.setBorder(null);
 			split_pane_lower.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
 			split_pane_lower.setDividerSize(3);
-			disturbances_condition_panel.setPreferredSize(new Dimension(920, 0));
+			split_pane_lower.setResizeWeight(0.72);
+//			disturbances_condition_panel.setPreferredSize(new Dimension(920, 0));
 			split_pane_lower.setLeftComponent(disturbances_condition_panel);
 			split_pane_lower.setRightComponent(combine_panel);
 						

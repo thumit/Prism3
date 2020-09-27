@@ -1423,10 +1423,12 @@ All changes in this block are associated with PrismAlpha3.1.03.jar, Prism-Formul
 603. Reset/clear the table header drop-down filter when adding new single/multiple rows at following screens: Natural Disturbances and Management Cost (more of 595)
 604. In all input screens, the spinner to move rows will be alvaialbe only when the Filter and Sorter is off and there is at least one highlighted row.
 605. Fix the bug in Natural Disturbance and Management Cost screens: if deleting all rows and adding rows again the Filter and Sorter will fail. 
-606. Refactor: create a share.df function for rows spinner to remove redundancy
+606. Refactor: create a shared function for rows spinner to remove redundancy
 607. Fix the bug: failed to update condition_id when adding new rows in Natural Disturbance and Management Cost screens
 608. Fix the bug: first existing stratum is not included into equation 5 (issue 128 in BitBucket) by always adding one book-keeping variable before defining other variables.
-609. Very important: AAllow customizing modelling approach (mix of deterministic and/or stochastic) for disturbances within an iteration. 
+609. Very important: Allow customizing modelling approach (mix of deterministic and/or stochastic) for disturbances within an iteration. 
 610. Allow options for re-simulating disturbances before solving an iteration: Solving screen table has logic updated with the Disturbance Option column (replaces the Disturbances column) which has 2 options of:
 	- user defined: Before solving an iteration, re-simulate disturbances for the period 1 variables of the previous iteration based on user-defined modelling approach in the Natural Disturbances screen
 	- full stochastic: Before solving an iteration, re-simulate disturbances for the period 1 variables of the previous iteration based on stochastic modelling approach regardless of what defined by users in the Natural Disturbances screen
+All changes in this block are associated with PrismAlpha3.1.04.jar, Prism-Formulation-14.docx
+--------------------------------------------------------------------------
