@@ -1,3 +1,6 @@
+sort yield tables
+SELECT * FROM yield_tables ORDER BY prescription, CAST(row_id as decimal) ASC
+----------
 rename column action_type to activity in the yield_tables
 ALTER TABLE yield_tables RENAME COLUMN action_type TO activity
 ----------
