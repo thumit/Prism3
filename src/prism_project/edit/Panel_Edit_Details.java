@@ -1657,22 +1657,23 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	public void create_table6c() {	
 		List<List<String>> all_layers = read_database.get_all_layers();
 		List<List<String>> all_layers_tooltips = read_database.get_all_layers_tooltips();
-		int total_CoverType = all_layers.get(4).size();	
+		int total_CoverType = all_layers.get(4).size();
+		int total_SizeClass = all_layers.get(5).size();
 		
 		// Setup the table------------------------------------------------------------	
 		if (is_table6c_loaded == false) { // Create a fresh new if Load fail				
-			rowCount6c = total_CoverType * total_CoverType;
+			rowCount6c = total_CoverType * total_SizeClass;
 			colCount6c =  3;
 			data6c = new Object[rowCount6c][colCount6c];
-			columnNames6c = new String[] {"layer5", "layer5_regen", "mean"};
+			columnNames6c = new String[] {"layer5_regen", "layer6_regen", "mean"};
 	        
 			// Populate the data matrix
 	        int row = 0;
 			for (int i = 0; i < total_CoverType; i++) {
-				for (int j = 0; j < total_CoverType; j++) {
+				for (int j = 0; j < total_SizeClass; j++) {
 					data6c[row][0] = all_layers.get(4).get(i);
-					data6c[row][1] = all_layers.get(4).get(j);	
-					data6c[row][2] = (i == j) ? (double) 100 : (double) 0;
+					data6c[row][1] = all_layers.get(5).get(j);	
+					data6c[row][2] = (double) 0;
 					row++;
 				}
 			}			
@@ -1680,8 +1681,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		
         // Header tool-tip
 		String[] headerToolTips = new String[colCount6c];
-		headerToolTips[0] = "layer5 (not dynamic) before the occurrence of stand replacing disturbances";
-        headerToolTips[1] = "layer5 regenerated after the occurrence of stand replacing disturbances";
+        headerToolTips[0] = "layer5 regenerated after the occurrence of stand replacing disturbances";
+        headerToolTips[1] = "layer6 regenerated after the occurrence of stand replacing disturbances";
         
 		
 		// Create a table-------------------------------------------------------------		
@@ -1753,13 +1754,13 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				// icon
 				((DefaultTableCellRenderer) component).setIcon(null);
 				double total_percentage = 0;
-				for (int i = 0; i < getRowCount(); i++) {	// loop all rows in a column && add to total percentage if the rows has the same covertype as the row at cursor
-					if (column >= 2 && getValueAt(i, 0).toString().equals(getValueAt(row, 0).toString()) && table6c.convertColumnIndexToView(column) != -1) {	// -1 means the column is invisible
+				for (int i = 0; i < getRowCount(); i++) {	// loop all rows in a column && add to total percentage
+					if (column >= 2 && table6c.convertColumnIndexToView(column) != -1) {	// -1 means the column is invisible
 						total_percentage = total_percentage + Double.parseDouble(getValueAt(i, column).toString());
 					}
 				}
 				
-				if (total_percentage != 100 && column >= 2) {		// check if the total_percentage <> 100% --> problem icon for this cell because it is in the set of cells which make total_percentage <> 100%
+				if (total_percentage != 100 && column >= 2) {		// check if the total_percentage <> 100% --> problem icon for this cell
 					((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(14, 14, "icon_problem.png"));
 				}
 				table6c.revalidate();
@@ -1790,7 +1791,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				java.awt.Point p = e.getPoint();
 				int row = rowAtPoint(p);
 				int column = columnAtPoint(p);
-				if (table6c.getColumnName(column).equals("layer5") || table6c.getColumnName(column).equals("layer5_regen")) {
+				if (table6c.getColumnName(column).equals("layer5_regen")) {
 					try {
 						tip = getValueAt(row, column).toString();
 						for (int i = 0; i < total_CoverType; i++) {
@@ -1799,9 +1800,16 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					} catch (RuntimeException e1) {
 						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
 					}
-				}
-				
-				if (!table6c.getColumnName(column).equals("layer5") && !table6c.getColumnName(column).equals("layer5_regen")) {
+				} else if (table6c.getColumnName(column).equals("layer6_regen")) {
+					try {
+						tip = getValueAt(row, column).toString();
+						for (int i = 0; i < total_SizeClass; i++) {
+							if (tip.equals(all_layers.get(5).get(i))) tip = all_layers_tooltips.get(5).get(i);							
+						}
+					} catch (RuntimeException e1) {
+						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+					}
+				} else {
 					try {
 						DecimalFormat formatter = new DecimalFormat("###,###.###");
 						formatter.setMinimumFractionDigits(0);
@@ -1811,20 +1819,19 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					
 						// Show problem tip 		NOTE: we need to use getValueAt because of the compact view feature which makes mismatching between full data and displayed data
 						double total_percentage = 0;
-						for (int i = 0; i < getRowCount(); i++) {	// loop all rows in a block && add to total percentage if the rows has the same covertype as the row at cursor
-							if (column >= 2 && getValueAt(i, 0).toString().equals(getValueAt(row, 0).toString()) && table6c.convertColumnIndexToView(column) != -1) {	// -1 means the column is invisible
+						for (int i = 0; i < getRowCount(); i++) {	// loop all rows in a column && add to total percentage
+							if (column >= 2 && table6c.convertColumnIndexToView(column) != -1) {	// -1 means the column is invisible
 								total_percentage = total_percentage + Double.parseDouble(getValueAt(i, column).toString());
 							}	
 						}
 						
 						if (total_percentage != 100 && column >= 2) {		// check if the total_percentage <> 100%
-							tip = "INFEASIBLE - The sum of all cells in this column with the same layer5 = " + getValueAt(row, 0).toString() + " must be exactly 100";
+							tip = "INFEASIBLE - The sum of all cells in this column must be exactly 100";
 						}
 					} catch (RuntimeException e1) {
 						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
 					}
-				}	
-				
+				}
 				return tip;
 			}
 		};			
@@ -1852,7 +1859,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			} else {
 				currentColor = color2;
 			}
-			for (int j = 0; j < total_CoverType; j++) {
+			for (int j = 0; j < total_SizeClass; j++) {
 				rowColor[rCount] = currentColor;
 				rCount++;
 			}
@@ -1924,21 +1931,22 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	public void create_table6d() {	
 		List<List<String>> all_layers = read_database.get_all_layers();
 		List<List<String>> all_layers_tooltips = read_database.get_all_layers_tooltips();
-		int total_CoverType = all_layers.get(4).size();	
+		int total_CoverType = all_layers.get(4).size();
+		int total_SizeClass = all_layers.get(5).size();
 		
 		// Setup the table------------------------------------------------------------	
 		if (is_table6d_loaded == false) { // Create a fresh new if Load fail				
-			rowCount6d = total_CoverType * total_CoverType;
+			rowCount6d = total_CoverType * total_SizeClass;
 			colCount6d =  3;
 			data6d = new Object[rowCount6d][colCount6d];
-			columnNames6d = new String[] {"layer5", "layer5_regen", "std"};
+			columnNames6d = new String[] {"layer5_regen", "layer6_regen", "std"};
 	        
 			// Populate the data matrix
 	        int row = 0;
 			for (int i = 0; i < total_CoverType; i++) {
-				for (int j = 0; j < total_CoverType; j++) {
+				for (int j = 0; j < total_SizeClass; j++) {
 					data6d[row][0] = all_layers.get(4).get(i);
-					data6d[row][1] = all_layers.get(4).get(j);	
+					data6d[row][1] = all_layers.get(5).get(j);	
 					data6d[row][2] = (double) 0;
 					row++;
 				}
@@ -1947,8 +1955,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		
         // Header tool-tip
 		String[] headerToolTips = new String[colCount6d];
-		headerToolTips[0] = "layer5 (not dynamic) before the occurrence of stand replacing disturbances";
-        headerToolTips[1] = "layer5 regenerated after the occurrence of stand replacing disturbances";
+        headerToolTips[0] = "layer5 regenerated after the occurrence of stand replacing disturbances";
+        headerToolTips[1] = "layer6 regenerated after the occurrence of stand replacing disturbances";
         
 		
 		// Create a table-------------------------------------------------------------		
@@ -2058,7 +2066,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				java.awt.Point p = e.getPoint();
 				int row = rowAtPoint(p);
 				int column = columnAtPoint(p);
-				if (table6d.getColumnName(column).equals("layer5") || table6d.getColumnName(column).equals("layer5_regen")) {
+				if (table6d.getColumnName(column).equals("layer5_regen")) {
 					try {
 						tip = getValueAt(row, column).toString();
 						for (int i = 0; i < total_CoverType; i++) {
@@ -2067,9 +2075,16 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					} catch (RuntimeException e1) {
 						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
 					}
-				}
-				
-				if (!table6d.getColumnName(column).equals("layer5") && !table6d.getColumnName(column).equals("layer5_regen")) {
+				} else if (table6d.getColumnName(column).equals("layer6_regen")) {
+					try {
+						tip = getValueAt(row, column).toString();
+						for (int i = 0; i < total_SizeClass; i++) {
+							if (tip.equals(all_layers.get(5).get(i))) tip = all_layers_tooltips.get(5).get(i);							
+						}
+					} catch (RuntimeException e1) {
+						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+					}
+				} else {
 					try {
 						DecimalFormat formatter = new DecimalFormat("###,###.###");
 						formatter.setMinimumFractionDigits(0);
@@ -2079,8 +2094,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					} catch (RuntimeException e1) {
 						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
 					}
-				}	
-				
+				}
 				return tip;
 			}
 		};			
@@ -2108,7 +2122,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			} else {
 				currentColor = color2;
 			}
-			for (int j = 0; j < total_CoverType; j++) {
+			for (int j = 0; j < total_SizeClass; j++) {
 				rowColor[rCount] = currentColor;
 				rCount++;
 			}
