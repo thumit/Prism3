@@ -2538,23 +2538,25 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	public void create_table7b() {	
 		String[] yield_tables_column_names = read_database.get_yield_tables_column_names();
 		List<List<String>> all_layers = read_database.get_all_layers();
-		int total_CoverType = all_layers.get(4).size();		// total number of elements - 1 in layer5 Cover Type (0 to...)	
+		List<List<String>> all_layers_tooltips = read_database.get_all_layers_tooltips();
+		int total_CoverType = all_layers.get(4).size();
+		int total_SizeClass = all_layers.get(5).size();
 		
 		//Setup the table------------------------------------------------------------	
 		if (is_table7b_loaded == false) { // Create a fresh new if Load fail	
 			if (yield_tables_column_names != null) {	//create table with column include yield tables columns
-				rowCount7b = total_CoverType * total_CoverType;		
+				rowCount7b = total_CoverType * total_SizeClass;		
 				colCount7b = 4;
 				data7b = new Object[rowCount7b][colCount7b];
-				columnNames7b = new String[] {"layer5", "layer5_regen", "activity", "disturbance"};
+				columnNames7b = new String[] {"layer5_regen", "layer6_regen", "activity", "disturbance"};
 			}		
 			       			
 			// Populate the data matrix
 			 int table_row = 0;
 				for (int i = 0; i < total_CoverType; i++) {
-					for (int j = 0; j < total_CoverType; j++) {
+					for (int j = 0; j < total_SizeClass; j++) {
 						data7b[table_row][0] = all_layers.get(4).get(i);
-						data7b[table_row][1] = all_layers.get(4).get(j);
+						data7b[table_row][1] = all_layers.get(5).get(j);
 						table_row++;
 				}
 			}
@@ -2563,8 +2565,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		
         // header tool-tip
 		String[] headerToolTips = new String[colCount7b];
-		headerToolTips[0] = "cover type (not dynamic) before the occurence of clear-cut or stand replacing disturbance event";
-        headerToolTips[1] = "cover type after the occurence of clear-cut or stand replacing disturbance event";
+		headerToolTips[0] = "layer5 regenerated after the occurrence of stand replacing disturbances";
+        headerToolTips[1] = "layer6 regenerated after the occurrence of stand replacing disturbances";
         headerToolTips[2] = "currency per area unit of cover type conversion by cleat-cut";
         headerToolTips[3] = "currency per area unit of cover type conversion by stand replacing disturbance event";
 		
@@ -2659,6 +2661,34 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
                     }
                 };
             }
+			
+			@Override       
+			public String getToolTipText(MouseEvent e) {
+				String tip = null;
+				java.awt.Point p = e.getPoint();
+				int row = rowAtPoint(p);
+				int column = columnAtPoint(p);
+				if (table7b.getColumnName(column).equals("layer5_regen")) {
+					try {
+						tip = getValueAt(row, column).toString();
+						for (int i = 0; i < total_CoverType; i++) {
+							if (tip.equals(all_layers.get(4).get(i))) tip = all_layers_tooltips.get(4).get(i);							
+						}
+					} catch (RuntimeException e1) {
+						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+					}
+				} else if (table7b.getColumnName(column).equals("layer6_regen")) {
+					try {
+						tip = getValueAt(row, column).toString();
+						for (int i = 0; i < total_SizeClass; i++) {
+							if (tip.equals(all_layers.get(5).get(i))) tip = all_layers_tooltips.get(5).get(i);							
+						}
+					} catch (RuntimeException e1) {
+						System.err.println(e1.getClass().getName() + ": " + e1.getMessage());
+					}
+				}
+				return tip;
+			}
 		};
 		
 
@@ -2675,7 +2705,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			} else {
 				currentColor = color2;
 			}
-			for (int j = 0; j < total_CoverType; j++) {
+			for (int j = 0; j < total_SizeClass; j++) {
 				rowColor[rCount] = currentColor;
 				rCount++;
 			}
