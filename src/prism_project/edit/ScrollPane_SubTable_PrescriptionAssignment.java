@@ -36,7 +36,7 @@ public class ScrollPane_SubTable_PrescriptionAssignment extends JScrollPane {
 		this.data4a = data4a;
 		
 		conversion_implementation_scrollpane = new JScrollPane(/*this.table4a*/);
-		TitledBorder border = new TitledBorder("Regeneration (after clearcut only)");
+		TitledBorder border = new TitledBorder("Post clearcut regeneration");
 		border.setTitleJustification(TitledBorder.CENTER);
 		conversion_implementation_scrollpane.setBorder(border);
 		conversion_implementation_scrollpane.setPreferredSize(new Dimension(0, 0));

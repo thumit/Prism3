@@ -49,7 +49,6 @@ public class ScrollPane_SubTables_ManagementCost extends JScrollPane {
 		this.table7a = table7a;
 		this.data7a = data7a;
 		this.columnNames7a = columnNames7a;
-		
 		this.table7b = table7b;
 		this.data7b = data7b;
 		this.columnNames7b = columnNames7b;
@@ -65,7 +64,7 @@ public class ScrollPane_SubTables_ManagementCost extends JScrollPane {
 		
 		
 		conversion_base_adjust_scrollpane = new JScrollPane(/*this.table7b*/);
-		border = new TitledBorder("Conversion cost per area unit of column header");
+		border = new TitledBorder("Regeneration cost per area unit of column header");
 		border.setTitleJustification(TitledBorder.CENTER);
 		conversion_base_adjust_scrollpane.setBorder(border);
 		conversion_base_adjust_scrollpane.setPreferredSize(new Dimension(0, 0));

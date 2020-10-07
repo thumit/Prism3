@@ -4809,7 +4809,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		
 		JPanel button_table_panel;	
 		ScrollPane_SubTable_PrescriptionAssignment conversion_implementation_table_scrollPane;
-		Panel_QuickEdit_Prescription_Assignment quick_edit;
+		Panel_QuickEdit_PrescriptionAssignment quick_edit;
 		JScrollPane scrollpane_QuickEdit;
 		
 		public Prescription_Assignment() {
@@ -4894,20 +4894,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			// End of 4th Grid -----------------------------------------------------------------------	
 			
 			
-			// scrollPane Quick Edit ----------------------------------------------------------------------
-			// scrollPane Quick Edit ----------------------------------------------------------------------
-			quick_edit = new Panel_QuickEdit_Prescription_Assignment(table4, data4);
-			scrollpane_QuickEdit = new JScrollPane(quick_edit);
-			border = new TitledBorder("Quick Edit");
-			border.setTitleJustification(TitledBorder.CENTER);
-			scrollpane_QuickEdit.setBorder(border);
-			scrollpane_QuickEdit.setVisible(false);
-			
-			
 			// Add Listeners for table4 & buttons----------------------------------------------------------
 			// Add Listeners for table4 & buttons----------------------------------------------------------
-			
-			
 			// table4
 			class Table_Interaction {
 				void refresh() {
@@ -4924,11 +4912,11 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						dynamic_identifiers_scrollpane.reload_this_constraint_dynamic_identifiers((String) data4[currentRow][4], (String) data4[currentRow][5]);	// 4, 5 are dynamic and original_dynamic
 						conversion_implementation_table_scrollPane.reload_this_condition((String) data4[currentRow][2]);
 						btn_Edit.setEnabled(true);
-//						quick_edit.enable_all_apply_buttons();
+						quick_edit.enable_all_apply_buttons();
 						conversion_implementation_table_scrollPane.show_table();
 					} else {		// Disable Edit
 						btn_Edit.setEnabled(false);
-//						quick_edit.disable_all_apply_buttons();
+						quick_edit.disable_all_apply_buttons();
 						conversion_implementation_table_scrollPane.hide_table();
 					}
 					
@@ -5091,10 +5079,20 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				}
 				
 			});
-
 			// End of Listeners for table4 & buttons -----------------------------------------------------------------------
 			// End of Listeners for table4 & buttons -----------------------------------------------------------------------
 	        
+			
+			// scrollPane Quick Edit ----------------------------------------------------------------------
+			// scrollPane Quick Edit ----------------------------------------------------------------------
+			quick_edit = new Panel_QuickEdit_PrescriptionAssignment(table4a, data4a);
+			quick_edit.disable_all_apply_buttons();
+			scrollpane_QuickEdit = new JScrollPane(quick_edit);
+			border = new TitledBorder("Quick Edit");
+			border.setTitleJustification(TitledBorder.CENTER);
+			scrollpane_QuickEdit.setBorder(border);
+			scrollpane_QuickEdit.setVisible(false);
+			 
 
 			// ToolBar Panel ----------------------------------------------------------------------------
 			// ToolBar Panel ----------------------------------------------------------------------------
