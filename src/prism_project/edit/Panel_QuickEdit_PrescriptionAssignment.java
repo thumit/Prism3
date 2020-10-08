@@ -19,22 +19,15 @@ package prism_project.edit;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
-import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableRowSorter;
 
@@ -47,76 +40,76 @@ public class Panel_QuickEdit_PrescriptionAssignment extends JPanel {
 	private Object[][] data4a;
 	private DefaultTableCellRenderer render4a;
 	private JButton btn_compact;
-	private JLabel view_label;
 
-	public Panel_QuickEdit_PrescriptionAssignment(JTable table4a, Object[][] data4a) {
+	public Panel_QuickEdit_PrescriptionAssignment(JTable table4a, Object[][] data4a, JButton mass_check, JButton mass_uncheck) {
 		this.table4a = table4a;
 		this.data4a = data4a;
 		this.render4a = (DefaultTableCellRenderer) table4a.getColumnModel().getColumn(0).getCellRenderer();
 		setLayout(new GridBagLayout());
 		
 		
-		
 		// -------------------------------------------------------------------------------------------------
 		// -------------------------------------------------------------------------------------------------
 		// -------------------------------------------------------------------------------------------------
-		JPanel qd2 = new JPanel();
-		qd2.setLayout(new GridBagLayout());
+		JPanel combine_panel = new JPanel(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		
 
+		// Add button check all--------------------------------------------------------------------------------------
+//		combine_panel.add(new JLabel("check"), PrismGridBagLayoutHandle.get_c(c, "CENTER", 
+//				0, 1, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+//				0, 0, 0, 0));		// insets top, left, bottom, right
+		combine_panel.add(mass_check, PrismGridBagLayoutHandle.get_c(c, "CENTER", 
+				0, 0, 1, 2, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				0, 0, 0, 0));		// insets top, left, bottom, right
+		
+		
+		// Add button uncheck all------------------------------------------------------------------------------------
+//		combine_panel.add(new JLabel("uncheck"), PrismGridBagLayoutHandle.get_c(c, "CENTER", 
+//				1, 1, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+//				0, 0, 0, 0));		// insets top, left, bottom, right
+		combine_panel.add(mass_uncheck, PrismGridBagLayoutHandle.get_c(c, "CENTER", 
+				1, 0, 1, 2, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+				0, 0, 0, 0));		// insets top, left, bottom, right
+		
+		
 		// Add Label-------------------------------------------------------------------------------------------------
-		qd2.add(new JLabel("Cr mean (%)"), PrismGridBagLayoutHandle.get_c(c, "CENTER", 
-				1, 1, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
-				0, 0, 0, 0));		// insets top, left, bottom, right
-		
-		// Add button check all
-		qd2.add(new JFormattedTextField(), PrismGridBagLayoutHandle.get_c(c, "CENTER", 
-				1, 0, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
-				0, 0, 0, 0));		// insets top, left, bottom, right
-		
-		
-		// Add Label-------------------------------------------------------------------------------------------------
-		view_label  = new JLabel("switch view");
-		qd2.add(view_label, PrismGridBagLayoutHandle.get_c(c, "CENTER", 
-				2, 1, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
-				0, 0, 0, 0));		// insets top, left, bottom, right
-		
+//		combine_panel.add(new JLabel("switch view"), PrismGridBagLayoutHandle.get_c(c, "CENTER", 
+//				2, 1, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
+//				0, 0, 0, 0));		// insets top, left, bottom, right
 		// Add button compact view
 		btn_compact = new JButton();
 		btn_compact.setVerticalTextPosition(SwingConstants.BOTTOM);
 		btn_compact.setHorizontalTextPosition(SwingConstants.CENTER);
 		btn_compact.setToolTipText("switch to compact view");
-		btn_compact.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_script_gray.png"));
-		btn_compact.setRolloverIcon(IconHandle.get_scaledImageIcon(35, 35, "icon_script_gray.png"));
+		btn_compact.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_script_gray.png"));
+		btn_compact.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_script_gray.png"));
 		btn_compact.setContentAreaFilled(false);
 		btn_compact.addActionListener(e -> {
 			switch (btn_compact.getToolTipText()) {
 			case "switch to compact view":
 				btn_compact.setToolTipText("switch to full view");
-				btn_compact.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_script.png"));
-				btn_compact.setRolloverIcon(IconHandle.get_scaledImageIcon(35, 35, "icon_script.png"));
+				btn_compact.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_script.png"));
+				btn_compact.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_script.png"));
 				break;
 			case "switch to full view":
 				btn_compact.setToolTipText("switch to compact view");
-				btn_compact.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_script_gray.png"));
-				btn_compact.setRolloverIcon(IconHandle.get_scaledImageIcon(35, 35, "icon_script_gray.png"));
+				btn_compact.setIcon(IconHandle.get_scaledImageIcon(18, 18, "icon_script_gray.png"));
+				btn_compact.setRolloverIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_script_gray.png"));
 				break;
 			}
 			reset_view_without_changing_label();
 		});
-		qd2.add(btn_compact, PrismGridBagLayoutHandle.get_c(c, "CENTER", 
+		combine_panel.add(btn_compact, PrismGridBagLayoutHandle.get_c(c, "CENTER", 
 				2, 0, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
 				0, 0, 0, 0));		// insets top, left, bottom, right
 		// -------------------------------------------------------------------------------------------------
 		// -------------------------------------------------------------------------------------------------
 		// -------------------------------------------------------------------------------------------------
 		
-		
-		
 				
-		// Add 2 panels to this big Panel
-		add(qd2, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
+		// Add to this big panel
+		add(combine_panel, PrismGridBagLayoutHandle.get_c(c, "HORIZONTAL", 
 				0, 0, 1, 1, 1, 1, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
 				0, 0, 0, 0));		// insets top, left, bottom, right
 	}

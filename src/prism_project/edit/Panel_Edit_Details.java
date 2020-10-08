@@ -5085,7 +5085,11 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			
 			// scrollPane Quick Edit ----------------------------------------------------------------------
 			// scrollPane Quick Edit ----------------------------------------------------------------------
-			quick_edit = new Panel_QuickEdit_PrescriptionAssignment(table4a, data4a);
+			JButton mass_check = create_button(null, "Check", "icon_check.png");
+			JButton mass_uncheck = create_button(null, "Uncheck", "icon_uncheck.png");
+			mass_check.addActionListener(e -> apply_mass_check_or_uncheck("mass_check", model4a, table4a, data4a, colCount4a));
+			mass_uncheck.addActionListener(e-> apply_mass_check_or_uncheck("mass_uncheck", model4a, table4a, data4a, colCount4a));
+			quick_edit = new Panel_QuickEdit_PrescriptionAssignment(table4a, data4a, mass_check, mass_uncheck);
 			quick_edit.disable_all_apply_buttons();
 			scrollpane_QuickEdit = new JScrollPane(quick_edit);
 			border = new TitledBorder("Quick Edit");
