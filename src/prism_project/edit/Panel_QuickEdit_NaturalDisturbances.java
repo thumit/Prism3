@@ -67,7 +67,7 @@ public class Panel_QuickEdit_NaturalDisturbances extends JPanel {
 		
 
 		// Add Label-------------------------------------------------------------------------------------------------
-		qd2.add(new JLabel("Cr mean (%)"), PrismGridBagLayoutHandle.get_c(c, "CENTER", 
+		qd2.add(new JLabel("rate (%)"), PrismGridBagLayoutHandle.get_c(c, "CENTER", 
 				1, 2, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
 				0, 0, 0, 0));		// insets top, left, bottom, right
 
