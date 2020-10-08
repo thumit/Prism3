@@ -1081,7 +1081,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			rowCount4 = 0;
 			colCount4 = 7;
 			data4 = new Object[rowCount4][colCount4];
-			columnNames4 = new String[] {"condition_id", "condition_description", "layer5_regen", "static_identifiers", "dynamic_identifiers", "original_dynamic_identifiers", "model_condition"};
+			columnNames4 = new String[] {"condition_id", "condition_description", "regeneration_implementation", "static_identifiers", "dynamic_identifiers", "original_dynamic_identifiers", "model_condition"};
 		}
 					
 		
@@ -1156,8 +1156,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				
 				if (column == 1) {
 					tableColumn.setMinWidth(400);
-				} else if (column == 2) {
-					tableColumn.setMinWidth(350);
 				} else {
 					tableColumn.setPreferredWidth(maxWidth);
 				}
@@ -1252,6 +1250,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 
 		// Hide columns
 		TableColumnsHandle table_handle = new TableColumnsHandle(table4);
+		table_handle.setColumnVisible("regeneration_implementation", false);
 		table_handle.setColumnVisible("static_identifiers", false);
 		table_handle.setColumnVisible("dynamic_identifiers", false);
 		table_handle.setColumnVisible("original_dynamic_identifiers", false);
