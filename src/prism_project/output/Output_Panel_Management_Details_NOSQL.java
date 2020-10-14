@@ -1545,7 +1545,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 							
 				// Get info: input_02_modeled_strata
 				read.read_model_strata(new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/input_02_model_strata.txt"));
-				List<String> model_strata = read.get_model_strata();
+				List<String> model_strata = read.get_E_model_strata();
 							
 				// Get the 2 parameter V(s1,s2,s3,s4,s5,s6) and A(s1,s2,s3,s4,s5,s6)
 				String[][] model_strata_data = read.get_ms_data();	

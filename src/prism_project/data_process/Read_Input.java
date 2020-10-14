@@ -176,7 +176,7 @@ public class Read_Input {
 		return ms_total_columns;
 	}
 	
-	public List<String> get_model_strata() {
+	public List<String> get_E_model_strata() {
 		List<String> modeled_strata = new ArrayList<String>();
 		for (int i = 0; i < ms_total_rows; i++) {		
 			String combined_name = String.join("_", ms_data[i][1], ms_data[i][2], ms_data[i][3], ms_data[i][4], ms_data[i][5], ms_data[i][6]);
@@ -185,7 +185,7 @@ public class Read_Input {
 		return modeled_strata;
 	}
 	
-	public List<String> get_model_strata_without_sizeclass() {	// Note this is replaced in Solve_Iterations because we need all the s5 --> use the below: get_model_strata_without_sizeclass_and_covertype + a loop add all s5
+	public List<String> get_E_model_strata_without_sizeclass() {	// Note this is replaced in Solve_Iterations because we need all the s5 --> use the below: get_model_strata_without_sizeclass_and_covertype + a loop add all s5
 		List<String> model_strata_without_sizeclass = new ArrayList<String>();
 		for (int i = 0; i < ms_total_rows; i++) {	
 			String combined_name = String.join("_", ms_data[i][1], ms_data[i][2], ms_data[i][3], ms_data[i][4], ms_data[i][5]);
@@ -196,7 +196,7 @@ public class Read_Input {
 		return model_strata_without_sizeclass;
 	}	
 	
-	public List<String> get_model_strata_without_sizeclass_and_covertype() {
+	public List<String> get_E_model_strata_without_sizeclass_and_covertype() {
 		List<String> model_strata_without_sizeclass_and_covertype = new ArrayList<String>();
 		for (int i = 0; i < ms_total_rows; i++) {		
 			String combined_name = String.join("_", ms_data[i][1], ms_data[i][2], ms_data[i][3], ms_data[i][4]);		
