@@ -1108,3 +1108,72 @@ create new existing strata table
 CREATE TABLE existing_strata_new AS
 SELECT (layer1 || '_' || layer2 || '_' || layer3 || '_' || layer4 || '_' || layer5 || '_' || layer6) as strata_id, layer1, layer2, layer3, layer4, layer5, layer6, acres FROM  existing_strata
 ----------
+Count R prescriptions
+SELECT
+Covertype,
+Sizeclass,
+SUM(CASE when Status = 'R' AND Clearcut = '0' then 1 else 0 end) R_0_Prescriptions,
+SUM(CASE when Status = 'R' AND Clearcut = '1' then 1 else 0 end) R_1_Prescriptions,
+SUM(1) Total_Prescriptions
+FROM
+
+
+
+(
+SELECT
+Status,
+Clearcut,
+Covertype,
+SUBSTR(Leftover, 1, INSTR(Leftover, '_')-1) as Sizeclass,
+SUBSTR(Leftover, INSTR(Leftover, '_')+1) as Leftover
+FROM
+
+(
+SELECT
+Status,
+Clearcut,
+SUBSTR(Leftover, 1, INSTR(Leftover, '_')-1) as Covertype,
+SUBSTR(Leftover, INSTR(Leftover, '_')+1) as Leftover
+FROM
+
+(
+SELECT
+Status,
+SUBSTR(Leftover, 1, INSTR(Leftover, '_')-1) as Clearcut,
+SUBSTR(Leftover, INSTR(Leftover, '_')+1) as Leftover
+FROM
+
+(
+SELECT 
+SUBSTR(pres, 1, INSTR(pres, '_')-1) as Status,
+SUBSTR(pres, INSTR(pres, '_')+1) as Leftover
+FROM
+(SELECT DISTINCT prescription  as pres FROM yield_tables
+WHERE SUBSTR(prescription, 1, 3) = 'R_0' OR SUBSTR(prescription, 1, 3) = 'R_1')
+)
+)
+)
+)
+
+
+
+GROUP BY
+Covertype,
+Sizeclass
+
+
+
+
+UNION ALL
+
+SELECT
+'Total_Prescriptions' as CoverType2,
+'' as SizeClass2,
+SUM(case when SUBSTR(prescription, 1, 3) = 'R_0' then 1 else 0 end) R_0,
+SUM(case when SUBSTR(prescription, 1, 3) = 'R_1' then 1 else 0 end) R_1,
+SUM(case when SUBSTR(prescription, 1, 2) = 'R_' then 1 else 0 end) Total_Prescriptions
+FROM (SELECT DISTINCT prescription FROM yield_tables)
+----------
+Examine R prescriptions
+select prescription, vegt, dvegtype, strcl, dstructclass from yield_tables where row_id ='0' and SUBSTR(prescription, 1, 1) = 'R' 
+----------
