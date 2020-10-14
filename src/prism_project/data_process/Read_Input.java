@@ -289,8 +289,8 @@ public class Read_Input {
 	private String[][] assignment_data;
 	private List<List<String>>[] static_identifiers_for_row;
 	private List<Integer>[] list_of_prescription_ids_for_row;
-	private Set<Integer>[] set_of_prescription_ids_for_strata, set_of_prescription_ids_for_strata_without_sizeclass;						// apply to NC_E, NC_R
-	private Set<Integer>[][] set_of_prescription_ids_for_strata_with_s5R, set_of_prescription_ids_for_strata_without_sizeclass_with_s5R;	// apply to EA_E, EA_R
+	private Set<Integer>[] set_of_prescription_ids_for_strata, set_of_prescription_ids_for_strata_without_sizeclass;						// apply to E_0, R_0
+	private Set<Integer>[][] set_of_prescription_ids_for_strata_with_s5R, set_of_prescription_ids_for_strata_without_sizeclass_with_s5R;	// apply to E_1, R_1
 
 	public void read_prescription_assignment(File file) {
 		String delimited = "\t";		// tab delimited

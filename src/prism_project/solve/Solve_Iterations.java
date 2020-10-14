@@ -309,10 +309,10 @@ public class Solve_Iterations {
 					
 					List<Integer>[] E_prescription_ids = new ArrayList[total_model_strata];
 					List<Integer>[] R_prescription_ids = new ArrayList[total_model_strata_without_sizeclass];
-					List<Integer>[] NC_E_prescription_ids = new ArrayList[total_model_strata];
-					List<Integer>[] EA_E_prescription_ids = new ArrayList[total_model_strata];
-					List<Integer>[] NC_R_prescription_ids = new ArrayList[total_model_strata_without_sizeclass];
-					List<Integer>[] EA_R_prescription_ids = new ArrayList[total_model_strata_without_sizeclass];
+					List<Integer>[] E_0_prescription_ids = new ArrayList[total_model_strata];
+					List<Integer>[] E_1_prescription_ids = new ArrayList[total_model_strata];
+					List<Integer>[] R_0_prescription_ids = new ArrayList[total_model_strata_without_sizeclass];
+					List<Integer>[] R_1_prescription_ids = new ArrayList[total_model_strata_without_sizeclass];
 					
 					for (int strata_id = 0; strata_id < total_model_strata; strata_id++) {
 						String strata = model_strata.get(strata_id);
@@ -323,14 +323,14 @@ public class Solve_Iterations {
 						String s5_s6 = layer5.get(s5) + "_" + layer6.get(s6);
 						
 						E_prescription_ids[strata_id] = new ArrayList<Integer>();
-						NC_E_prescription_ids[strata_id] = new ArrayList<Integer>();
-						EA_E_prescription_ids[strata_id] = new ArrayList<Integer>();
+						E_0_prescription_ids[strata_id] = new ArrayList<Integer>();
+						E_1_prescription_ids[strata_id] = new ArrayList<Integer>();
 						for (int i = 0; i < total_prescriptions; i++) {
 							if (yield_tables_names[i].startsWith("E_0_" + s5_s6)) {
-								NC_E_prescription_ids[strata_id].add(i);
+								E_0_prescription_ids[strata_id].add(i);
 								E_prescription_ids[strata_id].add(i);
 							} else if (yield_tables_names[i].startsWith("E_1_" + s5_s6)) {
-								EA_E_prescription_ids[strata_id].add(i);
+								E_1_prescription_ids[strata_id].add(i);
 								E_prescription_ids[strata_id].add(i);
 							}
 						}
@@ -341,14 +341,14 @@ public class Solve_Iterations {
 						s5_for_model_strata_without_sizeclass[strata_id] = s5;
 						
 						R_prescription_ids[strata_id] = new ArrayList<Integer>();
-						NC_R_prescription_ids[strata_id] = new ArrayList<Integer>();
-						EA_R_prescription_ids[strata_id] = new ArrayList<Integer>();
+						R_0_prescription_ids[strata_id] = new ArrayList<Integer>();
+						R_1_prescription_ids[strata_id] = new ArrayList<Integer>();
 						for (int i = 0; i < total_prescriptions; i++) {
 							if (yield_tables_names[i].startsWith("R_0_" + layer5.get(s5))) {
-								NC_R_prescription_ids[strata_id].add(i);
+								R_0_prescription_ids[strata_id].add(i);
 								R_prescription_ids[strata_id].add(i);
 							} else if (yield_tables_names[i].startsWith("R_1_" + layer5.get(s5))) {
-								EA_R_prescription_ids[strata_id].add(i);
+								R_1_prescription_ids[strata_id].add(i);
 								R_prescription_ids[strata_id].add(i);
 							}
 						}
@@ -481,11 +481,11 @@ public class Solve_Iterations {
 							xE[strata_id][s5R] = new int[total_prescriptions][];
 							Set<Integer> filter_set;
 							
-							// non-clear-cut prescriptions (NC_E)
+							// non-clear-cut prescriptions (E_0)
 							int s5 = s5_for_model_strata[strata_id];
 							if (s5 == s5R) {
 								filter_set = new HashSet<Integer>(set_of_prescription_ids_for_strata[strata_id]);
-								filter_set.retainAll(NC_E_prescription_ids[strata_id]);	// filter out the NC_E prescriptions only
+								filter_set.retainAll(E_0_prescription_ids[strata_id]);	// filter out the E_0 prescriptions only
 								for (int i : filter_set) {
 									xE[strata_id][s5R][i] = new int[total_periods + 1 + iter];
 									for (int t = 1 + iter; t <= total_periods + iter; t++) {	// --> always loop to the ending period of the horizon (allow missing row ids)
@@ -503,9 +503,9 @@ public class Solve_Iterations {
 								}
 							}
 							
-							// clear-cut prescriptions (EA_E)
+							// clear-cut prescriptions (E_1)
 							filter_set = new HashSet<Integer>(set_of_prescription_ids_for_strata_with_s5R[strata_id][s5R]);
-							filter_set.retainAll(EA_E_prescription_ids[strata_id]);	// filter out the EA_E prescriptions only
+							filter_set.retainAll(E_1_prescription_ids[strata_id]);	// filter out the E_1 prescriptions only
 							for (int i : filter_set) {
 								int rotation_period = total_rows_of_precription[i]; // tR = total rows of this prescription
 								int rotation_age = rotation_period + starting_age_class_for_prescription[i] - 1;
@@ -538,11 +538,11 @@ public class Solve_Iterations {
 							xR[strata_5layers_id][s5R] = new int[total_prescriptions][][];
 							Set<Integer> filter_set;
 							
-							// non-clear-cut prescriptions (NC_R)
+							// non-clear-cut prescriptions (R_0)
 							int s5 = s5_for_model_strata_without_sizeclass[strata_5layers_id];
 							if (s5 == s5R) {
 								filter_set = new HashSet<Integer>(set_of_prescription_ids_for_strata_without_sizeclass[strata_5layers_id]);
-								filter_set.retainAll(NC_R_prescription_ids[strata_5layers_id]);	// filter out the NC_R prescriptions only
+								filter_set.retainAll(R_0_prescription_ids[strata_5layers_id]);	// filter out the R_0 prescriptions only
 								for (int i : filter_set) {
 									xR[strata_5layers_id][s5R][i] = new int[total_periods + 1 + iter][];
 									int t_regen = (iter == 0) ? 2 : 1;	// this is because iteration 0 could not have regenerated forest in period 1, but iterations >= 1 do have regenerated forest strata
@@ -564,9 +564,9 @@ public class Solve_Iterations {
 								}
 							}
 							
-							// clear-cut prescriptions (EA_R)
+							// clear-cut prescriptions (R_1)
 							filter_set = new HashSet<Integer>(set_of_prescription_ids_for_strata_without_sizeclass_with_s5R[strata_5layers_id][s5R]);
-							filter_set.retainAll(EA_R_prescription_ids[strata_5layers_id]);	// filter out the EA_R prescriptions only
+							filter_set.retainAll(R_1_prescription_ids[strata_5layers_id]);	// filter out the R_1 prescriptions only
 							for (int i : filter_set) {
 								int rotation_age = total_rows_of_precription[i]; 
 								xR[strata_5layers_id][s5R][i] = new int[total_periods + 1 + iter][];
@@ -1276,8 +1276,8 @@ public class Solve_Iterations {
 						for (int s5R = 0; s5R < total_layer5; s5R++) {
 							
 							// non-clear-cut prescriptions
-							for (int i : NC_E_prescription_ids[strata_id]) {
-								int T_END = total_periods + iter; // to allow missing row_id for NC_E prescriptions --> always loop to the ending period of the horizon
+							for (int i : E_0_prescription_ids[strata_id]) {
+								int T_END = total_periods + iter; // to allow missing row_id for E_0 prescriptions --> always loop to the ending period of the horizon
 								for (int t = 1 + iter; t <= T_END - 1; t++) {
 									if (xE[strata_id] != null 
 											&& xE[strata_id][s5R] != null
@@ -1313,7 +1313,7 @@ public class Solve_Iterations {
 							}
 							
 							// clear-cut prescriptions
-							for (int i : EA_E_prescription_ids[strata_id]) {
+							for (int i : E_1_prescription_ids[strata_id]) {
 								int rotation_period = total_rows_of_precription[i]; // T_END = tR = total rows of this prescription
 								int T_FINAL = Math.min(rotation_period, total_periods + iter);	// --> always loop to the rotation period (if within the horizon) or to the ending period of the horizon (if out of the planning horizon)
 								for (int t = 1 + iter; t <= T_FINAL - 1; t++) {
@@ -1596,7 +1596,7 @@ public class Solve_Iterations {
 											String strata = strata_4layers + "_" + layer5.get(s5) + "_" + layer6.get(s6);
 											int strata_id = (map_strata_to_strata_id.get(strata) != null) ? map_strata_to_strata_id.get(strata) : -1;
 											if (strata_id >= 0) {
-												for (int i : EA_E_prescription_ids[strata_id]) {
+												for (int i : E_1_prescription_ids[strata_id]) {
 													int rotation_period = total_rows_of_precription[i]; // tR = total rows of this prescription
 													if (t == rotation_period) {		// It is very important to not use null check for jagged arrays here to avoid the incorrect of mapping
 														String var_name = "x_E_" + strata + "_" + layer5.get(s5R) + "_" + i + "_" + t;
@@ -1614,7 +1614,7 @@ public class Solve_Iterations {
 										String strata_5layers = strata_4layers + "_" + layer5.get(s5);		// = s1,s2,s3,s4,s5
 										int strata_5layers_id = (map_strata_without_sizeclass_to_id.get(strata_5layers) != null) ? map_strata_without_sizeclass_to_id.get(strata_5layers) : -1;
 										if (strata_5layers_id >= 0) {
-											for (int i : EA_R_prescription_ids[strata_5layers_id]) {
+											for (int i : R_1_prescription_ids[strata_5layers_id]) {
 												int rotation_age = total_rows_of_precription[i];
 												for (int a = 1; a <= t - 1; a++) {	
 													if (a == rotation_age) {	// It is very important to not use null check for jagged arrays here to avoid the incorrect of mapping
@@ -1684,7 +1684,7 @@ public class Solve_Iterations {
 										String strata = strata_4layers + "_" + layer5.get(s5) + "_" + layer6.get(s6);
 										int strata_id = (map_strata_to_strata_id.get(strata) != null) ? map_strata_to_strata_id.get(strata) : -1;
 										if (strata_id >= 0) {
-											for (int i : EA_E_prescription_ids[strata_id]) {	
+											for (int i : E_1_prescription_ids[strata_id]) {	
 												int rotation_period = total_rows_of_precription[i]; // tR = total rows of this prescription
 												if (t == rotation_period 
 														&& xE[strata_id] != null 
@@ -1704,7 +1704,7 @@ public class Solve_Iterations {
 									String strata_5layers = strata_4layers + "_" + layer5.get(s5);		// = s1,s2,s3,s4,s5
 									int strata_5layers_id = (map_strata_without_sizeclass_to_id.get(strata_5layers) != null) ? map_strata_without_sizeclass_to_id.get(strata_5layers) : -1;
 									if (strata_5layers_id >= 0) {
-										for (int i : EA_R_prescription_ids[strata_5layers_id]) {
+										for (int i : R_1_prescription_ids[strata_5layers_id]) {
 											int rotation_age = total_rows_of_precription[i]; 
 											for (int a = 1; a <= t - 1; a++) {	
 												if (a == rotation_age 
@@ -1785,7 +1785,7 @@ public class Solve_Iterations {
 						for (int s5R = 0; s5R < total_layer5; s5R++) {
 							
 							// non-clear-cut prescriptions
-							for (int i : NC_R_prescription_ids[strata_5layers_id]) {
+							for (int i : R_0_prescription_ids[strata_5layers_id]) {
 								int t_regen = (iter == 0) ? 2 : 1;	// this is because iteration 0 could not have regenerated forest in period 1, but iterations >= 1 do have regenerated forest strata
 								for (int t = t_regen + iter; t <= total_periods - 1 + iter; t++) {  
 									for (int a = 1; a <= t - 1; a++) {
@@ -1824,7 +1824,7 @@ public class Solve_Iterations {
 							}
 							
 							// clear-cut prescriptions
-							for (int i : EA_R_prescription_ids[strata_5layers_id]) {
+							for (int i : R_1_prescription_ids[strata_5layers_id]) {
 								int rotation_age = total_rows_of_precription[i]; 
 								int t_regen = (iter == 0) ? 2 : 1;	// this is because iteration 0 could not have regenerated forest in period 1, but iterations >= 1 do have regenerated forest strata
 								for (int t = t_regen + iter; t <= total_periods - 1 + iter; t++) {
