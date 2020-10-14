@@ -289,8 +289,8 @@ public class Read_Input {
 	private String[][] assignment_data;
 	private List<List<String>>[] static_identifiers_for_row;
 	private List<Integer>[] list_of_prescription_ids_for_row;
-	private Set<Integer>[] set_of_prescription_ids_for_strata, set_of_prescription_ids_for_strata_without_sizeclass;						// apply to E_0, R_0
-	private Set<Integer>[][] set_of_prescription_ids_for_strata_with_s5R, set_of_prescription_ids_for_strata_without_sizeclass_with_s5R;	// apply to E_1, R_1
+	private Set<Integer>[] set_of_prescription_ids_for_E_strata, set_of_prescription_ids_for_R_strata;									// apply to E_0, R_0
+	private Set<Integer>[][][] set_of_prescription_ids_for_E_strata_with_s5R_s6R, set_of_prescription_ids_for_R_strata_with_s5R_s6R;	// apply to E_1, R_1
 
 	public void read_prescription_assignment(File file) {
 		String delimited = "\t";		// tab delimited
@@ -359,28 +359,33 @@ public class Read_Input {
 		}
 	}
 	
-	public void process_data_from_prescription_assignment(List<String> model_strata, List<String> model_strata_without_sizeclass) {	
+	public void process_data_from_prescription_assignment(List<String> E_model_strata, List<String> R_model_strata) {	
 		List<List<String>> all_layers = read_database.get_all_layers();
 		List<String> layer5 = all_layers.get(4);
+		List<String> layer6 = all_layers.get(5);
 		int total_layer5 = layer5.size();
+		int total_layer6 = layer6.size();
 		
-		// existing 6 layers ------------------------------------ ------------------------------------ ------------------------------------
-		int total_model_strata = model_strata.size();
-		set_of_prescription_ids_for_strata = new HashSet[total_model_strata];
-		for (int strata_id = 0; strata_id < total_model_strata; strata_id++) {
-			set_of_prescription_ids_for_strata[strata_id] = new HashSet<Integer>();
+		// E strata ------------------------------------ ------------------------------------ ------------------------------------
+		int total_E_model_strata = E_model_strata.size();
+		set_of_prescription_ids_for_E_strata = new HashSet[total_E_model_strata];
+		for (int strata_id = 0; strata_id < total_E_model_strata; strata_id++) {
+			set_of_prescription_ids_for_E_strata[strata_id] = new HashSet<Integer>();
 		}
 		
-		set_of_prescription_ids_for_strata_with_s5R = new HashSet[total_model_strata][];
-		for (int strata_id = 0; strata_id < total_model_strata; strata_id++) {
-			set_of_prescription_ids_for_strata_with_s5R[strata_id] = new HashSet[total_layer5];
+		set_of_prescription_ids_for_E_strata_with_s5R_s6R = new HashSet[total_E_model_strata][][];
+		for (int strata_id = 0; strata_id < total_E_model_strata; strata_id++) {
+			set_of_prescription_ids_for_E_strata_with_s5R_s6R[strata_id] = new HashSet[total_layer5][];
 			for (int s5R = 0; s5R < total_layer5; s5R++) {
-				set_of_prescription_ids_for_strata_with_s5R[strata_id][s5R] = new HashSet<Integer>();
+				set_of_prescription_ids_for_E_strata_with_s5R_s6R[strata_id][s5R] = new HashSet[total_layer6];
+				for (int s6R = 0; s6R < total_layer6; s6R++) {
+					set_of_prescription_ids_for_E_strata_with_s5R_s6R[strata_id][s5R][s6R] = new HashSet<Integer>();
+				}
 			}
 		}
 		
-		for (int strata_id = 0; strata_id < model_strata.size(); strata_id++) {
-			String strata = model_strata.get(strata_id);
+		for (int strata_id = 0; strata_id < E_model_strata.size(); strata_id++) {
+			String strata = E_model_strata.get(strata_id);
 			String[] layer = strata.split("_");
 		
 			for (int row = 0; row < assignment_total_rows; row++) {	// load each row   (loop all aggregation conditions)
@@ -395,15 +400,18 @@ public class Read_Input {
 						(static_identifiers.get(4).size() == all_layers.get(4).size() || Collections.binarySearch(static_identifiers.get(4), layer[4]) >= 0) && 
 						(static_identifiers.get(5).size() == all_layers.get(5).size() || Collections.binarySearch(static_identifiers.get(5), layer[5]) >= 0))	
 				{
-					set_of_prescription_ids_for_strata[strata_id].addAll(list_of_prescription_ids);	// union
+					set_of_prescription_ids_for_E_strata[strata_id].addAll(list_of_prescription_ids);	// union
 					
-					int assignment_layer5_regen_col = 2;
-					String layer5_regen_info = assignment_data[row][assignment_layer5_regen_col];
-					String[] array = layer5_regen_info.split(" ");
-					for (String layer5_regen : array) {
-						int s5R = layer5.indexOf(layer5_regen);
-						if (s5R >= 0) {
-							set_of_prescription_ids_for_strata_with_s5R[strata_id][s5R].addAll(list_of_prescription_ids);	// union
+					int regeneration_col = 2;
+					String regeneration_info = assignment_data[row][regeneration_col];
+					String[] array = regeneration_info.split(";");
+					for (String regen_combination : array) {
+						String[] this_combination = regen_combination.split(" ");
+						int s5R = layer5.indexOf(this_combination[0]);
+						int s6R = layer6.indexOf(this_combination[1]);
+						String implementation = this_combination[2];
+						if (s5R >= 0 && s6R >= 0 && implementation.equals("true")) {
+							set_of_prescription_ids_for_E_strata_with_s5R_s6R[strata_id][s5R][s6R].addAll(list_of_prescription_ids);	// union
 						}
 					}
 				}
@@ -422,47 +430,52 @@ public class Read_Input {
 		}
 		
 		
-		
-		
-		// regeneration 5 layers ------------------------------------ ------------------------------------ ------------------------------------
-		int total_model_strata_without_sizeclass = model_strata_without_sizeclass.size();
-		set_of_prescription_ids_for_strata_without_sizeclass = new HashSet[total_model_strata_without_sizeclass];  
-		for (int strata_5layers_id = 0; strata_5layers_id < total_model_strata_without_sizeclass; strata_5layers_id++) {  
-			set_of_prescription_ids_for_strata_without_sizeclass[strata_5layers_id] = new HashSet<Integer>();  
+		// R strata ------------------------------------ ------------------------------------ ------------------------------------
+		int total_R_model_strata = R_model_strata.size();
+		set_of_prescription_ids_for_R_strata = new HashSet[total_R_model_strata];
+		for (int strata_id = 0; strata_id < total_R_model_strata; strata_id++) {
+			set_of_prescription_ids_for_R_strata[strata_id] = new HashSet<Integer>();
 		}
 		
-		set_of_prescription_ids_for_strata_without_sizeclass_with_s5R = new HashSet[total_model_strata_without_sizeclass][];
-		for (int strata_5layers_id = 0; strata_5layers_id < total_model_strata_without_sizeclass; strata_5layers_id++) {
-			set_of_prescription_ids_for_strata_without_sizeclass_with_s5R[strata_5layers_id] = new HashSet[total_layer5];
+		set_of_prescription_ids_for_R_strata_with_s5R_s6R = new HashSet[total_R_model_strata][][];
+		for (int strata_id = 0; strata_id < total_R_model_strata; strata_id++) {
+			set_of_prescription_ids_for_R_strata_with_s5R_s6R[strata_id] = new HashSet[total_layer5][];
 			for (int s5R = 0; s5R < total_layer5; s5R++) {
-				set_of_prescription_ids_for_strata_without_sizeclass_with_s5R[strata_5layers_id][s5R] = new HashSet<Integer>();
+				set_of_prescription_ids_for_R_strata_with_s5R_s6R[strata_id][s5R] = new HashSet[total_layer6];
+				for (int s6R = 0; s6R < total_layer6; s6R++) {
+					set_of_prescription_ids_for_R_strata_with_s5R_s6R[strata_id][s5R][s6R] = new HashSet<Integer>();
+				}
 			}
 		}
 		
-		for (int strata_5layers_id = 0; strata_5layers_id < model_strata_without_sizeclass.size(); strata_5layers_id++) {
-			String strata_5layers = model_strata_without_sizeclass.get(strata_5layers_id);
-			String[] layer = strata_5layers.split("_");
+		for (int strata_id = 0; strata_id < R_model_strata.size(); strata_id++) {
+			String strata = R_model_strata.get(strata_id);
+			String[] layer = strata.split("_");
 		
 			for (int row = 0; row < assignment_total_rows; row++) {	// load each row   (loop all aggregation conditions)
 				List<List<String>> static_identifiers = static_identifiers_for_row[row];			
-				List<Integer> list_of_prescription_ids = list_of_prescription_ids_for_row[row];	
+				List<Integer> list_of_prescription_ids = list_of_prescription_ids_for_row[row];
 				
 				// The below check also implements Speed Boost RRB9
 				if (	(static_identifiers.get(0).size() == all_layers.get(0).size() || Collections.binarySearch(static_identifiers.get(0), layer[0]) >= 0) && 
 						(static_identifiers.get(1).size() == all_layers.get(1).size() || Collections.binarySearch(static_identifiers.get(1), layer[1]) >= 0) && 
 						(static_identifiers.get(2).size() == all_layers.get(2).size() || Collections.binarySearch(static_identifiers.get(2), layer[2]) >= 0) && 
 						(static_identifiers.get(3).size() == all_layers.get(3).size() || Collections.binarySearch(static_identifiers.get(3), layer[3]) >= 0) && 
-						(static_identifiers.get(4).size() == all_layers.get(4).size() || Collections.binarySearch(static_identifiers.get(4), layer[4]) >= 0))	
+						(static_identifiers.get(4).size() == all_layers.get(4).size() || Collections.binarySearch(static_identifiers.get(4), layer[4]) >= 0) && 
+						(static_identifiers.get(5).size() == all_layers.get(5).size() || Collections.binarySearch(static_identifiers.get(5), layer[5]) >= 0))	
 				{
-					set_of_prescription_ids_for_strata_without_sizeclass[strata_5layers_id].addAll(list_of_prescription_ids);	// union
+					set_of_prescription_ids_for_R_strata[strata_id].addAll(list_of_prescription_ids);	// union
 					
-					int assignment_layer5_regen_col = 2;
-					String layer5_regen_info = assignment_data[row][assignment_layer5_regen_col];
-					String[] array = layer5_regen_info.split(" ");
-					for (String layer5_regen : array) {
-						int s5R = layer5.indexOf(layer5_regen);
-						if (s5R >= 0) {
-							set_of_prescription_ids_for_strata_without_sizeclass_with_s5R[strata_5layers_id][s5R].addAll(list_of_prescription_ids);	// union
+					int regeneration_col = 2;
+					String regeneration_info = assignment_data[row][regeneration_col];
+					String[] array = regeneration_info.split(";");
+					for (String regen_combination : array) {
+						String[] this_combination = regen_combination.split(" ");
+						int s5R = layer5.indexOf(this_combination[0]);
+						int s6R = layer6.indexOf(this_combination[1]);
+						String implementation = this_combination[2];
+						if (s5R >= 0 && s6R >= 0 && implementation.equals("true")) {
+							set_of_prescription_ids_for_R_strata_with_s5R_s6R[strata_id][s5R][s6R].addAll(list_of_prescription_ids);	// union
 						}
 					}
 				}
@@ -470,34 +483,35 @@ public class Read_Input {
 //				// Without RRB9 --> no need all_layers
 //				if (	Collections.binarySearch(static_identifiers.get(0), layer1) >= 0 && 
 //						Collections.binarySearch(static_identifiers.get(1), layer2) >= 0 && 
-//						Collections.binarySearch(static_identifiers.get(2), layer3) >= 0 && 
+//						Collections.binarySearch(static_identifiers.get(2), layer3) >= 0 &&
 //						Collections.binarySearch(static_identifiers.get(3), layer4) >= 0 && 
-//						Collections.binarySearch(static_identifiers.get(4), layer5) >= 0)	
+//						Collections.binarySearch(static_identifiers.get(4), layer5) >= 0 && 
+//						Collections.binarySearch(static_identifiers.get(5), layer6) >= 0)	
 //				{
 //				...
 //				}
 			}
-		}	
+		}
 	}	
 	
 	public int get_assignment_total_rows() {
 		return assignment_total_rows;
 	}
 	
-	public Set<Integer>[] get_set_of_prescription_ids_for_strata() {
-		return set_of_prescription_ids_for_strata;
+	public Set<Integer>[] get_set_of_prescription_ids_for_E_strata() {
+		return set_of_prescription_ids_for_E_strata;
 	}
 	
-	public Set<Integer>[] get_set_of_prescription_ids_for_strata_without_sizeclass() {
-		return set_of_prescription_ids_for_strata_without_sizeclass;
+	public Set<Integer>[] get_set_of_prescription_ids_for_R_strata() {
+		return set_of_prescription_ids_for_R_strata;
 	}	
 	
-	public Set<Integer>[][] get_set_of_prescription_ids_for_strata_with_s5R() {
-		return set_of_prescription_ids_for_strata_with_s5R;
+	public Set<Integer>[][][] get_set_of_prescription_ids_for_E_strata_with_s5R_s6R() {
+		return set_of_prescription_ids_for_E_strata_with_s5R_s6R;
 	}
 	
-	public Set<Integer>[][] get_set_of_prescription_ids_for_strata_without_sizeclass_with_s5R() {
-		return set_of_prescription_ids_for_strata_without_sizeclass_with_s5R;
+	public Set<Integer>[][][] get_set_of_prescription_ids_for_R_strata_with_s5R_s6R() {
+		return set_of_prescription_ids_for_R_strata_with_s5R_s6R;
 	}	
 	
 	//-------------------------------------------------------------------------------------------------------------------------------------------------	

@@ -220,10 +220,10 @@ public class Solve_Iterations {
 				
 				// Get Info: input_04_prescription_assignment
 				read.process_data_from_prescription_assignment(model_strata, model_strata_without_sizeclass);
-				Set<Integer>[] set_of_prescription_ids_for_strata = read.get_set_of_prescription_ids_for_strata();
-				Set<Integer>[] set_of_prescription_ids_for_strata_without_sizeclass = read.get_set_of_prescription_ids_for_strata_without_sizeclass();
-				Set<Integer>[][] set_of_prescription_ids_for_strata_with_s5R = read.get_set_of_prescription_ids_for_strata_with_s5R();
-				Set<Integer>[][] set_of_prescription_ids_for_strata_without_sizeclass_with_s5R = read.get_set_of_prescription_ids_for_strata_without_sizeclass_with_s5R();
+				Set<Integer>[] set_of_prescription_ids_for_strata = read.get_set_of_prescription_ids_for_E_strata();
+				Set<Integer>[] set_of_prescription_ids_for_strata_without_sizeclass = read.get_set_of_prescription_ids_for_R_strata();
+				Set<Integer>[][] set_of_prescription_ids_for_strata_with_s5R = read.get_set_of_prescription_ids_for_E_strata_with_s5R_s6R();
+				Set<Integer>[][] set_of_prescription_ids_for_strata_without_sizeclass_with_s5R = read.get_set_of_prescription_ids_for_R_strata_with_s5R_s6R();
 				boolean is_prescription_assignment_defined_with_some_rows = (input_04_file.exists()) ? true : false;
 				
 				// Get Info: input_06_natural_disturbances
