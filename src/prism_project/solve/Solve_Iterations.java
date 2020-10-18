@@ -835,16 +835,19 @@ public class Solve_Iterations {
 							c5_indexlist.add(new ArrayList<Integer>());
 							c5_valuelist.add(new ArrayList<Double>());
 							
-							// Add sigma(s5R)(i) xE(s1,s2,s3,s4,s5,s6)[s5R][i][1]	
+							// Add sigma[s5R][s6R][i] xE[s1,s2,s3,s4,s5,s6][s5R][s6R][i][1]	
 							for (int s5R = 0; s5R < total_layer5; s5R++) {
-								for (int i : E_prescription_ids[strata_id]) {
-									if (xE[strata_id] != null 
-											&& xE[strata_id][s5R] != null
-												&& xE[strata_id][s5R][i] != null
-													&& xE[strata_id][s5R][i][1] > 0) {		// if variable is defined, this value would be > 0 
-										c5_indexlist.get(c5_num).add(xE[strata_id][s5R][i][1]);
-										c5_valuelist.get(c5_num).add((double) 1);
-										total_variables_added_for_this_stratum++;
+								for (int s6R = 0; s6R < total_layer6; s6R++) {
+									for (int i : E_prescription_ids[strata_id]) {
+										if (xE[strata_id] != null 
+												&& xE[strata_id][s5R] != null
+													&& xE[strata_id][s5R][s6R] != null
+														&& xE[strata_id][s5R][s6R][i] != null
+															&& xE[strata_id][s5R][s6R][i][1] > 0) {		// if variable is defined, this value would be > 0  
+											c5_indexlist.get(c5_num).add(xE[strata_id][s5R][s6R][i][1]);
+											c5_valuelist.get(c5_num).add((double) 1);
+											total_variables_added_for_this_stratum++;
+										}
 									}
 								}
 							}	
