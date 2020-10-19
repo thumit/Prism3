@@ -389,8 +389,8 @@ public class Solve_Iterations {
 	//										// total_Periods + 1 + iter because tR starts from 1 to total_Periods + iter, ignore the 0		
 	//										// total_age_classes can be max at a = t - 1	
 					int[][][][][] xE = null;		// xE(s1,s2,s3,s4,s5,s6)(s5R)(s6R)(i)(t)				
-					int[][][][][][] xR = null;	// xR(s1,s2,s3,s4,s5,s6)(s5R)(s6R)(i)(t)(a)
-					int[][][][] fire = new int[total_R_model_strata][total_layer5][total_layer6][total_periods + 1 + iter];		// f(s1,s2,s3,s4,s5,s6)(s5R)(s6R)(i)(t)		-->  replacing-disturbance variables (IMPORTANT NOTE that s5 and s6 must cover both E model strata and R model strata)			
+					int[][][][][][] xR = null;		// xR(s1,s2,s3,s4,s5,s6)(s5R)(s6R)(i)(t)(a)
+					int[][] fire = new int[total_R_model_strata][total_periods + 1 + iter];		// f(s1,s2,s3,s4,s5R,s6R(t)		-->  replacing-disturbance variables			
 					
 					// get the area parameter for existing strata V(s1,s2,s3,s4,s5,s6)
 					String[][] E_model_strata_data = read.get_ms_data();	
@@ -611,21 +611,17 @@ public class Solve_Iterations {
 					
 					//-----------------------replacing disturbance variables
 					// Create decision variables f(s1,s2,s3,s4,s5,s6,s5R,s6R,t)	
-					for (String strata: R_model_strata) {
-						int r_strata_id = map_R_strata_to_strata_id.get(strata);
-						for (int s5R = 0; s5R < total_layer5; s5R++) {
-							for (int s6R = 0; s6R < total_layer6; s6R++) {
-								for (int t = 1 + iter; t <= total_periods + iter; t++) {
-									String var_name = "f_" + strata + "_" + layer5.get(s5R) + "_" + layer6.get(s6R) + "_" + t;
-									var_info_list.add(new Information_Variable(iter, var_name, read_database));
-									objlist.add((double) 0);			
-									vnamelist.add(var_name);										
-									vlblist.add((double) 0);
-									vublist.add(Double.MAX_VALUE);
-									fire[r_strata_id][s5R][s6R][t] = nvars;
-									nvars++;	
-								}
-							}
+					for (int r_strata_id = 0; r_strata_id < total_R_model_strata; r_strata_id++) {
+						String strata = R_model_strata.get(r_strata_id);
+						for (int t = 1 + iter; t <= total_periods + iter; t++) {
+							String var_name = "f_" + strata + "_" + t;
+							var_info_list.add(new Information_Variable(iter, var_name, read_database));
+							objlist.add((double) 0);			
+							vnamelist.add(var_name);										
+							vlblist.add((double) 0);
+							vublist.add(Double.MAX_VALUE);
+							fire[r_strata_id][t] = nvars;
+							nvars++;	
 						}
 					}					
 					
@@ -1416,55 +1412,65 @@ public class Solve_Iterations {
 					LinkedHashMap<String, Double> map_F_name_to_stochastic_F_value = new LinkedHashMap<String, Double>();
 					if (iter >= 1) {
 						// Loop writing in this way will improve speed. This is also applied to eq. 15 to save running time. Other equations are fast so it is not needed to use this type of loop
-						for (int r_strata_id = 0; r_strata_id < total_R_model_strata; r_strata_id++) {
-							String r_strata = R_model_strata.get(r_strata_id);
-							String e_strata = r_strata;	
-							int e_strata_id = (map_E_strata_to_strata_id.get(e_strata) != null) ? map_E_strata_to_strata_id.get(e_strata) : -1;
-							
+						for (String strata_4layers: E_model_strata_without_sizeclass_and_covertype) {
 							for (int s5R = 0; s5R < total_layer5; s5R++) {
 								for (int s6R = 0; s6R < total_layer6; s6R++) {
 									for (int t = iter; t <= iter; t++) {		// t = M
 										double total_value_for_this_F = 0;		// Note note note I am testing using the deterministic mean
 										
-										// Add existing variables  	xE[s1,s2,s3,s4,s5,s6][s5R'][s6R'][i][t] 	--> : X~
-										if (e_strata_id >= 0) {		// == if model_strata.contains(strata_name)   --   strata_id = -1 means list does not contain the string
-											for (int s5RR = 0; s5RR < total_layer5; s5RR++) {		// s5R'
-												for (int s6RR = 0; s6RR < total_layer6; s6RR++) {	// s6R'
-													for (int i : E_prescription_ids[e_strata_id]) {		// It is very important to not use null check for jagged arrays here to avoid the incorrect of mapping
-														String var_name = "x_E_" + e_strata + "_" + layer5.get(s5RR) + "_" + layer6.get(s6RR) + "_" + i + "_" + t;
-														if (map_var_name_to_var_rd_condition_id.get(var_name) != null && map_var_name_to_var_rd_condition_id.get(var_name) != null) {
-															int[] rd_condition_id = map_var_name_to_var_rd_condition_id.get(var_name);
-															double total_loss_rate_for_this_conversion = 0;
-															for (int k = 0; k < total_disturbances; k++) {
-																if (rd_condition_id[k] != -9999) {
-																	double[][] conversion_rate_mean = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(rd_condition_id[k]);
-																	total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (map_var_name_to_var_new_loss_rates.get(var_name)[k] / 100) * (conversion_rate_mean[s5][s5R] / 100);
+										// Add existing variables: Sigma(s5,s6,s5R',s6R',i)  	xE[s1,s2,s3,s4,s5,s6][s5R'][s6R'][i][t] 	--> : X~
+										for (int s5 = 0; s5 < total_layer5; s5++) {
+											for (int s6 = 0; s6 < total_layer6; s6++) {
+												String e_strata = strata_4layers + "_" + layer5.get(s5) + "_" + layer6.get(s6);
+												int e_strata_id = (map_E_strata_to_strata_id.get(e_strata) != null) ? map_E_strata_to_strata_id.get(e_strata) : -1;
+												if (e_strata_id >= 0) {		// == if model_strata.contains(strata_name)   --   strata_id = -1 means list does not contain the string
+													for (int s5RR = 0; s5RR < total_layer5; s5RR++) {		// s5R'
+														for (int s6RR = 0; s6RR < total_layer6; s6RR++) {	// s6R'
+															for (int i : E_prescription_ids[e_strata_id]) {		// It is very important to not use null check for jagged arrays here to avoid the incorrect of mapping
+																String var_name = "x_E_" + e_strata + "_" + layer5.get(s5RR) + "_" + layer6.get(s6RR) + "_" + i + "_" + t;
+																if (map_var_name_to_var_rd_condition_id.get(var_name) != null && map_var_name_to_var_rd_condition_id.get(var_name) != null) {
+																	int[] rd_condition_id = map_var_name_to_var_rd_condition_id.get(var_name);
+																	double total_loss_rate_for_this_conversion = 0;
+																	for (int k = 0; k < total_disturbances; k++) {
+																		if (rd_condition_id[k] != -9999) {
+																			double[][] conversion_rate_mean = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(rd_condition_id[k]);
+																			total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (map_var_name_to_var_new_loss_rates.get(var_name)[k] / 100) * (conversion_rate_mean[s5][s5R] / 100);
+																		}
+																	}
+																	total_value_for_this_F = total_value_for_this_F + total_loss_rate_for_this_conversion * map_var_name_to_var_value.get(var_name);
 																}
 															}
-															total_value_for_this_F = total_value_for_this_F + total_loss_rate_for_this_conversion * map_var_name_to_var_value.get(var_name);
 														}
 													}
 												}
 											}
 										}
 										
-										// Add regeneration variables 	xR[s1][s2][s3][s4][s5][s6][s5R'][s6R'][i][t][a] 	--> : X~
+										// Add regeneration variables: Sigma(s5,s6,s5R',s6R',i,a) 	xR[s1][s2][s3][s4][s5][s6][s5R'][s6R'][i][t][a] 	--> : X~
 										if ((iter == 0 && t >= 2) || (iter >= 1)) {		 // if there is only iteration 0 then we add regeneration variables for period >= 2 only
-											for (int s5RR = 0; s5RR < total_layer5; s5RR++) {		// s5R'
-												for (int s6RR = 0; s6RR < total_layer6; s6RR++) {	// s6R'
-													for (int i : R_prescription_ids[r_strata_id]) {
-														for (int a = 1; a <= t - 1; a++) {	
-															String var_name = "x_R_" + r_strata + "_" + layer5.get(s5RR) + "_" + layer6.get(s6RR) + "_" + i + "_" + t + "_" + a;
-															if (map_var_name_to_var_rd_condition_id.get(var_name) != null && map_var_name_to_var_rd_condition_id.get(var_name) != null) {
-																int[] rd_condition_id = map_var_name_to_var_rd_condition_id.get(var_name);
-																double total_loss_rate_for_this_conversion = 0;
-																for (int k = 0; k < total_disturbances; k++) {
-																	if (rd_condition_id[k] != -9999) {
-																		double[][] conversion_rate_mean = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(rd_condition_id[k]);
-																		total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (map_var_name_to_var_new_loss_rates.get(var_name)[k] / 100) * (conversion_rate_mean[s5][s5R] / 100);
+											for (int s5 = 0; s5 < total_layer5; s5++) {
+												for (int s6 = 0; s6 < total_layer6; s6++) {
+													String r_strata = strata_4layers + "_" + layer5.get(s5) + "_" + layer6.get(s6);
+													int r_strata_id = (map_R_strata_to_strata_id.get(r_strata) != null) ? map_R_strata_to_strata_id.get(r_strata) : -1;
+													if (r_strata_id >= 0) {
+														for (int s5RR = 0; s5RR < total_layer5; s5RR++) {		// s5R'
+															for (int s6RR = 0; s6RR < total_layer6; s6RR++) {	// s6R'
+																for (int i : R_prescription_ids[r_strata_id]) {
+																	for (int a = 1; a <= t - 1; a++) {	
+																		String var_name = "x_R_" + r_strata + "_" + layer5.get(s5RR) + "_" + layer6.get(s6RR) + "_" + i + "_" + t + "_" + a;
+																		if (map_var_name_to_var_rd_condition_id.get(var_name) != null && map_var_name_to_var_rd_condition_id.get(var_name) != null) {
+																			int[] rd_condition_id = map_var_name_to_var_rd_condition_id.get(var_name);
+																			double total_loss_rate_for_this_conversion = 0;
+																			for (int k = 0; k < total_disturbances; k++) {
+																				if (rd_condition_id[k] != -9999) {
+																					double[][] conversion_rate_mean = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(rd_condition_id[k]);
+																					total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (map_var_name_to_var_new_loss_rates.get(var_name)[k] / 100) * (conversion_rate_mean[s5][s5R] / 100);
+																				}
+																			}
+																			total_value_for_this_F = total_value_for_this_F + total_loss_rate_for_this_conversion * map_var_name_to_var_value.get(var_name);
+																		}
 																	}
 																}
-																total_value_for_this_F = total_value_for_this_F + total_loss_rate_for_this_conversion * map_var_name_to_var_value.get(var_name);
 															}
 														}
 													}
@@ -1472,12 +1478,12 @@ public class Solve_Iterations {
 											}
 										}
 										
-										// Map	fire[s1][s2][s3][s4][s5][s6][s5R][s6R][t]
-										String var_name = "f_" + r_strata + "_" + layer5.get(s5R) + "_" + layer6.get(s6R)+ "_" + t;
-										map_F_name_to_stochastic_F_value.put(var_name, total_value_for_this_F);
+										// Map	fire[s1][s2][s3][s4][s5R][s6R][t]
+										String var_name = "f_" + strata_4layers + "_" + layer5.get(s5R) + "_" + layer6.get(s6R)+ "_" + t;
+										map_F_name_to_stochastic_F_value.put(var_name, total_value_for_this_F);	
 									}
 								}
-							}											
+							}
 						}
 					}
 					
@@ -1491,11 +1497,7 @@ public class Solve_Iterations {
 					int c7_num = 0; 
 					
 					// Loop writing in this way will improve speed. This is also applied to eq. 15 to save running time. Other equations are fast so it is not needed to use this type of loop
-					for (int r_strata_id = 0; r_strata_id < total_R_model_strata; r_strata_id++) {
-						String r_strata = R_model_strata.get(r_strata_id);
-						String e_strata = r_strata;	
-						int e_strata_id = (map_E_strata_to_strata_id.get(e_strata) != null) ? map_E_strata_to_strata_id.get(e_strata) : -1;
-	
+					for (String strata_4layers: E_model_strata_without_sizeclass_and_covertype) {
 						for (int s5R = 0; s5R < total_layer5; s5R++) {
 							for (int s6R = 0; s6R < total_layer6; s6R++) {
 								for (int t = 1 + iter; t <= total_periods + iter; t++) {
@@ -1503,72 +1505,88 @@ public class Solve_Iterations {
 									c7_indexlist.add(new ArrayList<Integer>());
 									c7_valuelist.add(new ArrayList<Double>());
 									
-									// Add	fire[s1][s2][s3][s4][s5][s6][s5R][s6R][t]
-									c7_indexlist.get(c7_num).add(fire[r_strata_id][s5R][s6R][t]);
+									// Add	fire[s1][s2][s3][s4][s5R][s6R][t]		 Note that: index of f variable is same as r_strata
+									String f_strata = strata_4layers + "_" + layer5.get(s5R) + "_" + layer6.get(s6R);
+									int f_strata_id = (map_R_strata_to_strata_id.get(f_strata) != null) ? map_R_strata_to_strata_id.get(f_strata) : -1;
+									c7_indexlist.get(c7_num).add(fire[f_strata_id][t]);
 									c7_valuelist.get(c7_num).add((double) 1);	
 									
-									// Add existing variables 	- sigma(s5R')(s6R')(i) xE(s1,s2,s3,s4,s5,s6)(s5R')(s6R')(i)(t)	----------------------------------------------
-									if (e_strata_id >= 0) {		// == if model_strata.contains(strata_name)   --   strata_id = -1 means list does not contain the string
-										if (xE[e_strata_id] != null) {
-											for (int s5RR = 0; s5RR < total_layer5; s5RR++) {		// s5R'
-												if (xE[e_strata_id][s5RR] != null) {
-													for (int s6RR = 0; s6RR < total_layer6; s6RR++) {	// s6R'
-														if (xE[e_strata_id][s5RR][s6RR] != null) {
-															for (int i : E_prescription_ids[e_strata_id]) {
-																if (xE[e_strata_id][s5RR][s6RR][i] != null) { 
-																	int var_index = xE[e_strata_id][s5RR][s6RR][i][t];
-																	if (var_index > 0 && var_rd_condition_id[var_index] != null) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
-																		double[] user_loss_rate = map_var_index_to_user_loss_rates.get(var_index);
-																		double[][][] conversion_rate_mean = new double[total_disturbances][][];
-																		double total_loss_rate_for_this_conversion = 0;
-																		for (int k = 0; k < total_disturbances; k++) {
-																			if (var_rd_condition_id[var_index][k] != -9999) {
-																				conversion_rate_mean[k] = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index][k]);
-																				total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (user_loss_rate[k] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
+									// Add existing variables: Sigma(s5,s6,s5R',s6R',i) xE(s1,s2,s3,s4,s5,s6)(s5R')(s6R')(i)(t)	----------------------------------------------
+									for (int s5 = 0; s5 < total_layer5; s5++) {
+										for (int s6 = 0; s6 < total_layer6; s6++) {
+											String e_strata = strata_4layers + "_" + layer5.get(s5) + "_" + layer6.get(s6);
+											int e_strata_id = (map_E_strata_to_strata_id.get(e_strata) != null) ? map_E_strata_to_strata_id.get(e_strata) : -1;
+											if (e_strata_id >= 0) {		// == if model_strata.contains(strata_name)   --   strata_id = -1 means list does not contain the string
+												if (xE[e_strata_id] != null) {
+													for (int s5RR = 0; s5RR < total_layer5; s5RR++) {		// s5R'
+														if (xE[e_strata_id][s5RR] != null) {
+															for (int s6RR = 0; s6RR < total_layer6; s6RR++) {	// s6R'
+																if (xE[e_strata_id][s5RR][s6RR] != null) {
+																	for (int i : E_prescription_ids[e_strata_id]) {
+																		if (xE[e_strata_id][s5RR][s6RR][i] != null) { 
+																			int var_index = xE[e_strata_id][s5RR][s6RR][i][t];
+																			if (var_index > 0 && var_rd_condition_id[var_index] != null) {		// if variable is defined (this value would be > 0) and there is replacing disturbance associated with this variable
+																				double[] user_loss_rate = map_var_index_to_user_loss_rates.get(var_index);
+																				double[][][] conversion_rate_mean = new double[total_disturbances][][];
+																				double total_loss_rate_for_this_conversion = 0;
+																				for (int k = 0; k < total_disturbances; k++) {
+																					if (var_rd_condition_id[var_index][k] != -9999) {
+																						conversion_rate_mean[k] = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index][k]);
+																						total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (user_loss_rate[k] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
+																					}
+																				}
+																				if (total_loss_rate_for_this_conversion != 0) {	// only add if parameter is non zero
+																					c7_indexlist.get(c7_num).add(var_index);
+																					c7_valuelist.get(c7_num).add((double) - total_loss_rate_for_this_conversion);		// SR Fire loss Rate = P(s5, s5R --> x)
+																				}
 																			}
-																		}
-																		if (total_loss_rate_for_this_conversion != 0) {	// only add if parameter is non zero
-																			c7_indexlist.get(c7_num).add(var_index);
-																			c7_valuelist.get(c7_num).add((double) - total_loss_rate_for_this_conversion);		// SR Fire loss Rate = P(s5, s5R --> x)
 																		}
 																	}
 																}
 															}
 														}
 													}
-												}
+												}												
 											}
 										}
 									}
-		
-									// Add regeneration variables	- sigma(s5R')(s6R')(i)(a)	xR[s1][s2][s3][s4][s5][s6][s5R'][s6R'][i][t][a]	----------------------------------------------
+									
+									// Add regeneration variables	- sigma(s5,s6,s5R',s6R',i,a)	xR[s1][s2][s3][s4][s5][s6][s5R'][s6R'][i][t][a]	----------------------------------------------
 									if ((iter == 0 && t >= 2) || (iter >= 1)) {		 // if there is only iteration 0 then we add regeneration variables for period >= 2 only
-										for (int s5RR = 0; s5RR < total_layer5; s5RR++) {
-											for (int s6RR = 0; s6RR < total_layer6; s6RR++) {	// s6R'
-												for (int i : R_prescription_ids[r_strata_id]) {
-													for (int a = 1; a <= t - 1; a++) {	
-														if(xR[r_strata_id][s5RR] != null
-																&& xR[r_strata_id][s5RR][s6RR] != null
-																	&& xR[r_strata_id][s5RR][s6RR][i] != null
-																		&& xR[r_strata_id][s5RR][s6RR][i][t] != null) {	// if variable is defined, this value would be > 0 
-															int var_index = xR[r_strata_id][s5RR][s6RR][i][t][a];
-															if (var_index > 0 && var_rd_condition_id[var_index] != null) {		// if variable is defined, this value would be > 0 
-																double[] user_loss_rate = map_var_index_to_user_loss_rates.get(var_index);
-																double[][][] conversion_rate_mean = new double[total_disturbances][][];
-																double total_loss_rate_for_this_conversion = 0;
-																for (int k = 0; k < total_disturbances; k++) {
-																	 if (var_rd_condition_id[var_index][k] != -9999) {
-																		conversion_rate_mean[k] = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index][k]);
-																		total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (user_loss_rate[k] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
-																	 }
-																}
-																if (total_loss_rate_for_this_conversion != 0) {	// only add if parameter is non zero
-																	c7_indexlist.get(c7_num).add(var_index);
-																	c7_valuelist.get(c7_num).add((double) - total_loss_rate_for_this_conversion);		// SR Fire loss Rate = P(s5, s5R --> x)
+										for (int s5 = 0; s5 < total_layer5; s5++) {
+											for (int s6 = 0; s6 < total_layer6; s6++) {
+												String r_strata = strata_4layers + "_" + layer5.get(s5) + "_" + layer6.get(s6);
+												int r_strata_id = (map_R_strata_to_strata_id.get(r_strata) != null) ? map_R_strata_to_strata_id.get(r_strata) : -1;
+												if (r_strata_id >= 0) {
+													for (int s5RR = 0; s5RR < total_layer5; s5RR++) {
+														for (int s6RR = 0; s6RR < total_layer6; s6RR++) {	// s6R'
+															for (int i : R_prescription_ids[r_strata_id]) {
+																for (int a = 1; a <= t - 1; a++) {	
+																	if(xR[r_strata_id][s5RR] != null
+																			&& xR[r_strata_id][s5RR][s6RR] != null
+																				&& xR[r_strata_id][s5RR][s6RR][i] != null
+																					&& xR[r_strata_id][s5RR][s6RR][i][t] != null) {	// if variable is defined, this value would be > 0 
+																		int var_index = xR[r_strata_id][s5RR][s6RR][i][t][a];
+																		if (var_index > 0 && var_rd_condition_id[var_index] != null) {		// if variable is defined, this value would be > 0 
+																			double[] user_loss_rate = map_var_index_to_user_loss_rates.get(var_index);
+																			double[][][] conversion_rate_mean = new double[total_disturbances][][];
+																			double total_loss_rate_for_this_conversion = 0;
+																			for (int k = 0; k < total_disturbances; k++) {
+																				 if (var_rd_condition_id[var_index][k] != -9999) {
+																					conversion_rate_mean[k] = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index][k]);
+																					total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (user_loss_rate[k] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
+																				 }
+																			}
+																			if (total_loss_rate_for_this_conversion != 0) {	// only add if parameter is non zero
+																				c7_indexlist.get(c7_num).add(var_index);
+																				c7_valuelist.get(c7_num).add((double) - total_loss_rate_for_this_conversion);		// SR Fire loss Rate = P(s5, s5R --> x)
+																			}
+																		}
+																	}
 																}
 															}
 														}
-													}
+													}	
 												}
 											}
 										}
@@ -1580,9 +1598,8 @@ public class Solve_Iterations {
 									c7_num++;
 								}
 							}
-						}											
-					}					
-								
+						}
+					}
 					
 					double[] c7_lb = Stream.of(c7_lblist.toArray(new Double[c7_lblist.size()])).mapToDouble(Double::doubleValue).toArray();
 					double[] c7_ub = Stream.of(c7_ublist.toArray(new Double[c7_ublist.size()])).mapToDouble(Double::doubleValue).toArray();		
@@ -1626,14 +1643,9 @@ public class Solve_Iterations {
 										
 										
 										// FIRE VARIABLES: F~
-										// Add sigma(s5,s6) fire[s1,s2,s3,s4,s5,s6][s5R][s6R][t] 	--> : F~
-										double value_of_RHS = 0;
-										for (int s5 = 0; s5 < total_layer5; s5++) {
-											for (int s6 = 0; s6 < total_layer6; s6++) {
-												String var_name = "f_" + strata_4layers + "_" + layer5.get(s5) + "_" + layer6.get(s6) + "_" + layer5.get(s5R) + "_" + layer6.get(s6R) + "_" + t;
-												value_of_RHS = value_of_RHS + map_F_name_to_stochastic_F_value.get(var_name);
-											}
-										}
+										// Add -fire[s1,s2,s3,s4,s5R,s6R][t] 	--> -F~
+										String f_var_name = "f_" + strata_4layers + "_" + layer5.get(s5R) + "_" + layer6.get(s6R) + "_" + t;
+										double value_of_RHS = map_F_name_to_stochastic_F_value.get(f_var_name);
 										
 		
 										// NON-FIRE VARIABLES: X   (for only variables with clear-cuts)
@@ -1722,15 +1734,11 @@ public class Solve_Iterations {
 									
 									
 									// FIRE VARIABLES
-									// Add sigma(s5) fire[s1,s2,s3,s4,s5,s6][s5R][s6R][t]
-									for (int s5 = 0; s5 < total_layer5; s5++) {
-										for (int s6 = 0; s6 < total_layer6; s6++) {
-											String r_strata = strata_4layers + "_" + layer5.get(s5) + "_" + layer6.get(s6);
-											int r_strata_id = (map_R_strata_to_strata_id.get(r_strata) != null) ? map_R_strata_to_strata_id.get(r_strata) : -1;
-											c8_indexlist.get(c8_num).add(fire[r_strata_id][s5R][s6R][t]);
-											c8_valuelist.get(c8_num).add((double) 1);
-										}
-									}
+									// Add fire[s1,s2,s3,s4,s5R,s6R][t]
+									String f_strata = strata_4layers + "_" + layer5.get(s5R) + "_" + layer6.get(s6R);
+									int f_strata_id = (map_R_strata_to_strata_id.get(f_strata) != null) ? map_R_strata_to_strata_id.get(f_strata) : -1;
+									c8_indexlist.get(c8_num).add(fire[f_strata_id][t]);
+									c8_valuelist.get(c8_num).add((double) 1);
 									
 		
 									// NON-FIRE VARIABLES:	(for only variables with clear-cuts)

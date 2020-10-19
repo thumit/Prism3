@@ -107,11 +107,9 @@ public class Information_Variable {
 				layer2 = term[1];
 				layer3 = term[2];
 				layer4 = term[3];
-				layer5 = term[4];
-				layer6 = term[5];
-				layer5_regen = term[6];
-				layer6_regen = term[7];
-				period = Integer.parseInt(term[8]);
+				layer5_regen = term[4];
+				layer6_regen = term[5];
+				period = Integer.parseInt(term[6]);
 				period = period - iter;		// adjust period. Eg. period 1 + iter should be adjusted to be 1. This is to apply condition in cost, disturbance, other inputs...
 				break;
 			default:
