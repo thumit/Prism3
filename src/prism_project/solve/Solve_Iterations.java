@@ -256,7 +256,7 @@ public class Solve_Iterations {
 				List<Double> flow_lowerbound_percentage_list = read.get_flow_lowerbound_percentage_list();
 				List<Double> flow_upperbound_percentage_list = read.get_flow_upperbound_percentage_list();			
 				System.out.println("Reading process finished for all core inputs          " + dateFormat.format(new Date()));
-				System.out.println("Optimization models will be built based on Prism-Formulation-14");
+				System.out.println("Optimization models will be built based on Prism-Formulation-15-v3");
 				
 				// Get info: input_11_state_id
 				LinkedHashMap<String, String> map_prescription_and_row_id_to_state_id = read.get_map_prescription_and_row_id_to_state_id();
@@ -1479,8 +1479,8 @@ public class Solve_Iterations {
 										}
 										
 										// Map	fire[s1][s2][s3][s4][s5R][s6R][t]
-										String var_name = "f_" + strata_4layers + "_" + layer5.get(s5R) + "_" + layer6.get(s6R)+ "_" + t;
-										map_F_name_to_stochastic_F_value.put(var_name, total_value_for_this_F);	
+										String f_var_name = "f_" + strata_4layers + "_" + layer5.get(s5R) + "_" + layer6.get(s6R)+ "_" + t;
+										map_F_name_to_stochastic_F_value.put(f_var_name, total_value_for_this_F);	
 									}
 								}
 							}
