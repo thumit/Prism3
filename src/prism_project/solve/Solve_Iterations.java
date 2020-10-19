@@ -1304,80 +1304,83 @@ public class Solve_Iterations {
 					int c6_num = 0;
 					
 					for (int strata_id = 0; strata_id < total_E_model_strata; strata_id++) {
-						int s5 = s5_for_E_model_strata[strata_id];
 						for (int s5R = 0; s5R < total_layer5; s5R++) {
-							
-							// non-clear-cut prescriptions
-							for (int i : E_0_prescription_ids[strata_id]) {
-								int T_END = total_periods + iter; // to allow missing row_id for E_0 prescriptions --> always loop to the ending period of the horizon
-								for (int t = 1 + iter; t <= T_END - 1; t++) {
-									if (xE[strata_id] != null 
-											&& xE[strata_id][s5R] != null
-												&& xE[strata_id][s5R][i] != null
-													&& xE[strata_id][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0
-										// Add constraint
-										c6_indexlist.add(new ArrayList<Integer>());
-										c6_valuelist.add(new ArrayList<Double>());
-										
-										// Add xE(s1,s2,s3,s4,s5,s6)[s5R][i][t]
-										int var_index = xE[strata_id][s5R][i][t];
-										double[] user_loss_rate = map_var_index_to_user_loss_rates.get(var_index);
-										double total_loss_rate = 0;
-										for (int k = 0; k < total_disturbances; k++) {
-											total_loss_rate = total_loss_rate + user_loss_rate[k] / 100;
+							for (int s6R = 0; s6R < total_layer6; s6R++) {
+								
+								// non-clear-cut prescriptions
+								for (int i : E_0_prescription_ids[strata_id]) {
+									int T_END = total_periods + iter; // to allow missing row_id for E_0 prescriptions --> always loop to the ending period of the horizon
+									for (int t = 1 + iter; t <= T_END - 1; t++) {
+										if (xE[strata_id] != null 
+												&& xE[strata_id][s5R] != null
+													&& xE[strata_id][s5R][s6R] != null
+														&& xE[strata_id][s5R][s6R][i] != null
+															&& xE[strata_id][s5R][s6R][i][t] > 0) {		// if variable is defined, this value would be > 0
+											// Add constraint
+											c6_indexlist.add(new ArrayList<Integer>());
+											c6_valuelist.add(new ArrayList<Double>());
+											
+											// Add xE[s1,s2,s3,s4,s5,s6][s5R][i][t]
+											int var_index = xE[strata_id][s5R][s6R][i][t];
+											double[] user_loss_rate = map_var_index_to_user_loss_rates.get(var_index);
+											double total_loss_rate = 0;
+											for (int k = 0; k < total_disturbances; k++) {
+												total_loss_rate = total_loss_rate + user_loss_rate[k] / 100;
+											}
+											
+											if (total_loss_rate != 1) {	// only add if parameter is non zero
+												c6_indexlist.get(c6_num).add(xE[strata_id][s5R][s6R][i][t]);
+												c6_valuelist.get(c6_num).add((double) 1 - total_loss_rate);		// SR Fire loss Rate = P(-->x)
+											}
+											
+											// Add -xE[s1,s2,s3,s4,s5,s6][s5R][i][t+1]
+											c6_indexlist.get(c6_num).add(xE[strata_id][s5R][s6R][i][t + 1]);
+											c6_valuelist.get(c6_num).add((double) -1);
+											
+											// Add bounds
+											c6_lblist.add((double) 0);
+											c6_ublist.add((double) 0);
+											c6_num++;
 										}
-										
-										if (total_loss_rate != 1) {	// only add if parameter is non zero
-											c6_indexlist.get(c6_num).add(xE[strata_id][s5R][i][t]);
-											c6_valuelist.get(c6_num).add((double) 1 - total_loss_rate);		// SR Fire loss Rate = P(-->x)
-										}
-										
-										// Add -xE(s1,s2,s3,s4,s5,s6)[s5R][i][t+1]
-										c6_indexlist.get(c6_num).add(xE[strata_id][s5R][i][t + 1]);
-										c6_valuelist.get(c6_num).add((double) -1);
-										
-										// Add bounds
-										c6_lblist.add((double) 0);
-										c6_ublist.add((double) 0);
-										c6_num++;
 									}
 								}
-							}
-							
-							// clear-cut prescriptions
-							for (int i : E_1_prescription_ids[strata_id]) {
-								int rotation_period = total_rows_of_precription[i]; // T_END = tR = total rows of this prescription
-								int T_FINAL = Math.min(rotation_period, total_periods + iter);	// --> always loop to the rotation period (if within the horizon) or to the ending period of the horizon (if out of the planning horizon)
-								for (int t = 1 + iter; t <= T_FINAL - 1; t++) {
-									if (xE[strata_id] != null 
-											&& xE[strata_id][s5R] != null
-												&& xE[strata_id][s5R][i] != null
-													&& xE[strata_id][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0
-										// Add constraint
-										c6_indexlist.add(new ArrayList<Integer>());
-										c6_valuelist.add(new ArrayList<Double>());
-										
-										// Add xE(s1,s2,s3,s4,s5,s6)[s5R][i][t]
-										int var_index = xE[strata_id][s5R][i][t];
-										double[] user_loss_rate = map_var_index_to_user_loss_rates.get(var_index);
-										double total_loss_rate = 0;
-										for (int k = 0; k < total_disturbances; k++) {
-											total_loss_rate = total_loss_rate + user_loss_rate[k] / 100;
+								
+								// clear-cut prescriptions
+								for (int i : E_1_prescription_ids[strata_id]) {
+									int rotation_period = total_rows_of_precription[i]; // T_END = tR = total rows of this prescription
+									int T_FINAL = Math.min(rotation_period, total_periods + iter);	// --> always loop to the rotation period (if within the horizon) or to the ending period of the horizon (if out of the planning horizon)
+									for (int t = 1 + iter; t <= T_FINAL - 1; t++) {
+										if (xE[strata_id] != null 
+												&& xE[strata_id][s5R][s6R] != null
+													&& xE[strata_id][s5R][s6R] != null
+														&& xE[strata_id][s5R][s6R][i] != null
+															&& xE[strata_id][s5R][s6R][i][t] > 0) {		// if variable is defined, this value would be > 0
+											// Add constraint
+											c6_indexlist.add(new ArrayList<Integer>());
+											c6_valuelist.add(new ArrayList<Double>());
+											
+											// Add xE[s1,s2,s3,s4,s5,s6][s5R][i][t]
+											int var_index = xE[strata_id][s5R][s6R][i][t];
+											double[] user_loss_rate = map_var_index_to_user_loss_rates.get(var_index);
+											double total_loss_rate = 0;
+											for (int k = 0; k < total_disturbances; k++) {
+												total_loss_rate = total_loss_rate + user_loss_rate[k] / 100;
+											}
+											
+											if (total_loss_rate != 1) {	// only add if parameter is non zero
+												c6_indexlist.get(c6_num).add(xE[strata_id][s5R][s6R][i][t]);
+												c6_valuelist.get(c6_num).add((double) 1 - total_loss_rate);		// SR Fire loss Rate = P(-->x)
+											}
+											
+											// Add - xE(s1,s2,s3,s4,s5,s6)[s5R][i][t+1]		
+											c6_indexlist.get(c6_num).add(xE[strata_id][s5R][s6R][i][t + 1]);
+											c6_valuelist.get(c6_num).add((double) -1);																					
+											
+											// Add bounds
+											c6_lblist.add((double) 0);
+											c6_ublist.add((double) 0);
+											c6_num++;
 										}
-										
-										if (total_loss_rate != 1) {	// only add if parameter is non zero
-											c6_indexlist.get(c6_num).add(xE[strata_id][s5R][i][t]);
-											c6_valuelist.get(c6_num).add((double) 1 - total_loss_rate);		// SR Fire loss Rate = P(-->x)
-										}
-										
-										// Add - xE(s1,s2,s3,s4,s5,s6)[s5R][i][t+1]		
-										c6_indexlist.get(c6_num).add(xE[strata_id][s5R][i][t + 1]);
-										c6_valuelist.get(c6_num).add((double) -1);																					
-										
-										// Add bounds
-										c6_lblist.add((double) 0);
-										c6_ublist.add((double) 0);
-										c6_num++;
 									}
 								}
 							}
