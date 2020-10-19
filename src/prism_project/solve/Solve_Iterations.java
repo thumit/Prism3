@@ -361,6 +361,20 @@ public class Solve_Iterations {
 						}
 					}
 					
+//					// Available s5R s6R for f; also available s5 s6 for xR (from prescription name)
+//					boolean[][] has_R_prescriptions = new boolean[total_layer5][total_layer6];
+//					for (int s5 = 0; s5 < total_layer5; s5++) {
+//						for (int s6 = 0; s6 < total_layer6; s6++) {
+//							has_R_prescriptions[s5][s6] = false;
+//						}
+//					}
+//					for (int i = 0; i < total_prescriptions; i++) {
+//						String[] prescription_name = yield_tables_names[i].split("_");
+//						int s5 = Collections.binarySearch(layer5, prescription_name[2]);
+//						int s6 = Collections.binarySearch(layer6, prescription_name[3]);
+//						has_R_prescriptions[s5][s6] = true;
+//					}
+					
 					
 					
 					// DEFINITIONS --------------------------------------------------------------
@@ -610,7 +624,7 @@ public class Solve_Iterations {
 					}
 					
 					//-----------------------replacing disturbance variables
-					// Create decision variables f(s1,s2,s3,s4,s5,s6,s5R,s6R,t)	
+					// Create decision variables f(s1,s2,s3,s4,s5R,s6R,t)	
 					for (int r_strata_id = 0; r_strata_id < total_R_model_strata; r_strata_id++) {
 						String strata = R_model_strata.get(r_strata_id);
 						for (int t = 1 + iter; t <= total_periods + iter; t++) {
@@ -623,7 +637,7 @@ public class Solve_Iterations {
 							fire[r_strata_id][t] = nvars;
 							nvars++;	
 						}
-					}					
+					}
 					
 								
 					// Convert lists to 1-D arrays
