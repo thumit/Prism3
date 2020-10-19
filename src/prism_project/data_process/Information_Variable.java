@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Information_Variable {
-	private String var_name, method, layer1, layer2, layer3, layer4, layer5, layer6, layer5_regen, forest_status;	// layer5_regen = regenerated cover type = s5R (after clear-cut or SR occurrence), while layer5 = s5 (before clear-cut or SR occurrence)
+	private String var_name, method, layer1, layer2, layer3, layer4, layer5, layer6, layer5_regen, layer6_regen, forest_status;	// layer5_regen = regenerated cover type = s5R (after clear-cut or SR occurrence), while layer5 = s5 (before clear-cut or SR occurrence)
 	private int iter, period, age, prescription_id, rotation_period, rotation_age;
 	private String prescription;
 	private int row_id;
@@ -35,14 +35,15 @@ public class Information_Variable {
 		// Set up
 		this.iter = iter;
 		this.var_name = var_name;
+		method = "";
 		layer1 = "";
 		layer2 = "";
 		layer3 = "";
 		layer4 = "";
 		layer5 = "";
 		layer6 = "";
-		method = "";
 		layer5_regen = "";
+		layer6_regen = "";
 		forest_status = "";
 		rotation_period = -9999;
 		rotation_age = -9999;
@@ -67,12 +68,12 @@ public class Information_Variable {
 				layer5 = term[4];
 				layer6 = term[5];
 				layer5_regen = term[6];
-				prescription_id = Integer.parseInt(term[7]);
-				period = Integer.parseInt(term[8]);	
+				layer6_regen = term[7];
+				prescription_id = Integer.parseInt(term[8]);
+				period = Integer.parseInt(term[9]);	
 				age = starting_age_class_for_prescription[prescription_id] + period - 1;		// calculate age for existing variable
 				// rotation_age and rotation_period are set manually
 				
-				method = "";
 				forest_status = "E";
 				prescription = prescriptions_list.get(prescription_id);
 				row_id = period - 1;
@@ -86,13 +87,14 @@ public class Information_Variable {
 				layer3 = term[2];
 				layer4 = term[3];
 				layer5 = term[4];
-				layer5_regen = term[5];
-				prescription_id = Integer.parseInt(term[6]);
-				period = Integer.parseInt(term[7]);
-				age = Integer.parseInt(term[8]);
+				layer6 = term[5];
+				layer5_regen = term[6];
+				layer6_regen = term[7];
+				prescription_id = Integer.parseInt(term[8]);
+				period = Integer.parseInt(term[9]);
+				age = Integer.parseInt(term[10]);
 				// rotation_age and rotation_period are set manually
 				
-				method = "";
 				forest_status = "R";
 				prescription = prescriptions_list.get(prescription_id);
 				row_id = age - 1;
@@ -106,8 +108,10 @@ public class Information_Variable {
 				layer3 = term[2];
 				layer4 = term[3];
 				layer5 = term[4];
-				layer5_regen = term[5];
-				period = Integer.parseInt(term[6]);
+				layer6 = term[5];
+				layer5_regen = term[6];
+				layer6_regen = term[7];
+				period = Integer.parseInt(term[8]);
 				period = period - iter;		// adjust period. Eg. period 1 + iter should be adjusted to be 1. This is to apply condition in cost, disturbance, other inputs...
 				break;
 			default:
@@ -121,7 +125,6 @@ public class Information_Variable {
 		
 		// if this is the f variable or variable that is not in the 4 main types (NC_E, NC_R, EA_E, EA_R) then both prescription_id and row_id would be = -9999 (defined at the start)
 		// Note prescription always exists, while row_id might not exist in the yield tables
-		
 		prescription_id_and_row_id = new int [2];	// first index is prescription, second index is row_id  
 		prescription_id_and_row_id[0] = prescription_id;
 		prescription_id_and_row_id[1] = row_id;		// Note prescription always exists, while row_id might not exist in the yield tables
@@ -164,6 +167,10 @@ public class Information_Variable {
 	public String get_regenerated_covertype() {
 		return layer5_regen;
 	}	
+	
+	public String get_regenerated_sizeclass() {
+		return layer6_regen;
+	}
 	
 	public String get_forest_status() {
 		return forest_status;
