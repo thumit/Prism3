@@ -3565,19 +3565,19 @@ public class Solve_Iterations {
 		// get the period 1 solution from previous iteration
 		String var_name = var_info_array[var_index].get_var_name();
 		String[] name_split = var_name.split("_");
-		String first_six_letters_of_var_name = var_name.substring(0, 4);
-		switch (first_six_letters_of_var_name) {
+		String first_four_letters_of_var_name = var_name.substring(0, 4);
+		switch (first_four_letters_of_var_name) {
 		
 		case "x_E_":			// t-->t - 1
-			int period = Integer.parseInt(name_split[8 + 2]) - 1;
-			name_split[8 + 2] = String.valueOf(period);
+			int period = Integer.parseInt(name_split[9 + 2]) - 1;
+			name_split[9 + 2] = String.valueOf(period);
 			break;
 			
 		case "x_R_":			// t-->t - 1	and 	a-->a - 1
-			period = Integer.parseInt(name_split[7 + 2]) - 1;
-			name_split[7 + 2] = String.valueOf(period);
-			int age = Integer.parseInt(name_split[8 + 2]) - 1;
-			name_split[8 + 2] = String.valueOf(age);
+			period = Integer.parseInt(name_split[9 + 2]) - 1;
+			name_split[9 + 2] = String.valueOf(period);
+			int age = Integer.parseInt(name_split[10 + 2]) - 1;
+			name_split[10 + 2] = String.valueOf(age);
 			break;
 			
 		default:

@@ -54,10 +54,10 @@ public class Information_Variable {
 		
 		
 		try {
-			String first_six_letters_of_var_name = var_name.substring(0, 4);
+			String first_four_letters_of_var_name = var_name.substring(0, 4);
 			String[] term;
 			
-			switch (first_six_letters_of_var_name) {
+			switch (first_four_letters_of_var_name) {
 			case "x_E_":
 				term = var_name.substring(4).split("_");	// remove first 4 letters and then split
 				layer1 = term[0];
