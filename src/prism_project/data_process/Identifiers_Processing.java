@@ -41,7 +41,7 @@ public class Identifiers_Processing {
 //		if (static_identifiers.get(2).size() < all_layers.get(2).size() && Collections.binarySearch(static_identifiers.get(2), var_info.get_layer3()) < 0) return false;
 //		if (static_identifiers.get(3).size() < all_layers.get(3).size() && Collections.binarySearch(static_identifiers.get(3), var_info.get_layer4()) < 0) return false;
 //		if (static_identifiers.get(4).size() < all_layers.get(4).size() && Collections.binarySearch(static_identifiers.get(4), var_info.get_layer5()) < 0) return false;
-//		if (var_info.get_forest_status().equals("E") && static_identifiers.get(5).size() < all_layers.get(5).size() && Collections.binarySearch(static_identifiers.get(5), var_info.get_layer6()) < 0) return false;	// layer6: size class
+//		if (static_identifiers.get(5).size() < all_layers.get(5).size() && Collections.binarySearch(static_identifiers.get(5), var_info.get_layer6()) < 0) return false;
 //		if (Collections.binarySearch(static_identifiers.get(6), String.valueOf(var_info.get_period())) < 0) return false;
 //		return true;
 		
@@ -54,7 +54,7 @@ public class Identifiers_Processing {
 		(static_identifiers.get(2).size() < all_layers.get(2).size() && Collections.binarySearch(static_identifiers.get(2), var_info.get_layer3()) < 0) ||
 		(static_identifiers.get(3).size() < all_layers.get(3).size() && Collections.binarySearch(static_identifiers.get(3), var_info.get_layer4()) < 0) ||
 		(static_identifiers.get(4).size() < all_layers.get(4).size() && Collections.binarySearch(static_identifiers.get(4), var_info.get_layer5()) < 0) ||
-		(var_info.get_forest_status().equals("E") && static_identifiers.get(5).size() < all_layers.get(5).size() && Collections.binarySearch(static_identifiers.get(5), var_info.get_layer6()) < 0) ||
+		(static_identifiers.get(5).size() < all_layers.get(5).size() && Collections.binarySearch(static_identifiers.get(5), var_info.get_layer6()) < 0) ||
 		Collections.binarySearch(static_identifiers.get(6), String.valueOf(var_info.get_period())) < 0) 
 		{
 			return false;
@@ -70,7 +70,7 @@ public class Identifiers_Processing {
 //		Collections.binarySearch(static_identifiers.get(2), var_info.get_layer3()) < 0 ||
 //		Collections.binarySearch(static_identifiers.get(3), var_info.get_layer4()) < 0 ||
 //		Collections.binarySearch(static_identifiers.get(4), var_info.get_layer5()) < 0 ||
-//		(var_info.get_forest_status().equals("E") && Collections.binarySearch(static_identifiers.get(5), var_info.get_layer6()) < 0) ||
+//		Collections.binarySearch(static_identifiers.get(5), var_info.get_layer6()) < 0 ||
 //		Collections.binarySearch(static_identifiers.get(6), String.valueOf(var_info.get_period())) < 0) 
 //		{
 //			return false;
@@ -85,7 +85,7 @@ public class Identifiers_Processing {
 //		if (Collections.binarySearch(static_identifiers.get(2), var_info.get_layer3()) < 0) return false;
 //		if (Collections.binarySearch(static_identifiers.get(3), var_info.get_layer4()) < 0) return false;
 //		if (Collections.binarySearch(static_identifiers.get(4), var_info.get_layer5()) < 0) return false;	// layer5 cover type
-//		if (var_info.get_forest_status().equals("E") && Collections.binarySearch(static_identifiers.get(5), var_info.get_layer6()) < 0) return false;	// layer6: size class
+//		if (Collections.binarySearch(static_identifiers.get(5), var_info.get_layer6()) < 0) return false;	// layer6: size class
 //		if (Collections.binarySearch(static_identifiers.get(6), String.valueOf(var_info.get_period())) < 0) return false;
 //		return true;
 	}	
