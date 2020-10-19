@@ -1541,7 +1541,7 @@ public class Solve_Iterations {
 										}
 									}
 		
-									// Add regeneration variables	- sigma(s5R')(s6R')(i)(a)	xR[s1][s2][s3][s4][s5][s5R'][s6R'][i][t][a]	----------------------------------------------
+									// Add regeneration variables	- sigma(s5R')(s6R')(i)(a)	xR[s1][s2][s3][s4][s5][s6][s5R'][s6R'][i][t][a]	----------------------------------------------
 									if ((iter == 0 && t >= 2) || (iter >= 1)) {		 // if there is only iteration 0 then we add regeneration variables for period >= 2 only
 										for (int s5RR = 0; s5RR < total_layer5; s5RR++) {
 											for (int s6RR = 0; s6RR < total_layer6; s6RR++) {	// s6R'
@@ -1618,86 +1618,94 @@ public class Solve_Iterations {
 					if (iter >= 1) {
 						for (String strata_4layers: E_model_strata_without_sizeclass_and_covertype) {
 							for (int s5R = 0; s5R < total_layer5; s5R++) {
-								for (int t = iter; t <= iter; t++) {	// t=M									
-									// Add constraint
-									c8_indexlist.add(new ArrayList<Integer>());
-									c8_valuelist.add(new ArrayList<Double>());
-									
-									
-									// FIRE VARIABLES: F~
-									// Add sigma(s5) fire(s1,s2,s3,s4,s5)[s5R][t] 	--> : F~
-									double value_of_RHS = 0;
-									for (int s5 = 0; s5 < total_layer5; s5++) {
-										String strata_5layers = strata_4layers + "_" + layer5.get(s5);
-										String var_name = "f_" + strata_5layers + "_" + layer5.get(s5R) + "_" + t;
-										value_of_RHS = value_of_RHS + map_F_name_to_stochastic_F_value.get(var_name);
-									}
-									
-	
-									// NON-FIRE VARIABLES: X   (for only variables with clear-cuts)
-									// Add sigma(s5)(s6)(i) xE(s1,s2,s3,s4,s5,s6)[s5R][i][t=tR] 	--> : X
-									for (int s5 = 0; s5 < total_layer5; s5++) {
-										for (int s6 = 0; s6 < total_layer6; s6++) {
-											String strata = strata_4layers + "_" + layer5.get(s5) + "_" + layer6.get(s6);
-											int strata_id = (map_E_strata_to_strata_id.get(strata) != null) ? map_E_strata_to_strata_id.get(strata) : -1;
-											if (strata_id >= 0) {
-												for (int i : E_1_prescription_ids[strata_id]) {
-													int rotation_period = total_rows_of_precription[i]; // tR = total rows of this prescription
-													if (t == rotation_period) {		// It is very important to not use null check for jagged arrays here to avoid the incorrect of mapping
-														String var_name = "x_E_" + strata + "_" + layer5.get(s5R) + "_" + i + "_" + t;
-														if (map_var_name_to_var_value.get(var_name) != null) {
-															value_of_RHS = value_of_RHS + map_var_name_to_var_value.get(var_name);
+								for (int s6R = 0; s6R < total_layer6; s6R++) {
+									for (int t = iter; t <= iter; t++) {	// t=M									
+										// Add constraint
+										c8_indexlist.add(new ArrayList<Integer>());
+										c8_valuelist.add(new ArrayList<Double>());
+										
+										
+										// FIRE VARIABLES: F~
+										// Add sigma(s5,s6) fire[s1,s2,s3,s4,s5,s6][s5R][s6R][t] 	--> : F~
+										double value_of_RHS = 0;
+										for (int s5 = 0; s5 < total_layer5; s5++) {
+											for (int s6 = 0; s6 < total_layer6; s6++) {
+												String var_name = "f_" + strata_4layers + "_" + layer5.get(s5) + "_" + layer6.get(s6) + "_" + layer5.get(s5R) + "_" + layer6.get(s6R) + "_" + t;
+												value_of_RHS = value_of_RHS + map_F_name_to_stochastic_F_value.get(var_name);
+											}
+										}
+										
+		
+										// NON-FIRE VARIABLES: X   (for only variables with clear-cuts)
+										// Add sigma(s5)(s6)(i) xE(s1,s2,s3,s4,s5,s6)[s5R][s6R][i][t=tR] 	--> : X
+										for (int s5 = 0; s5 < total_layer5; s5++) {
+											for (int s6 = 0; s6 < total_layer6; s6++) {
+												String e_strata = strata_4layers + "_" + layer5.get(s5) + "_" + layer6.get(s6);
+												int e_strata_id = (map_E_strata_to_strata_id.get(e_strata) != null) ? map_E_strata_to_strata_id.get(e_strata) : -1;
+												if (e_strata_id >= 0) {
+													for (int i : E_1_prescription_ids[e_strata_id]) {
+														int rotation_period = total_rows_of_precription[i]; // tR = total rows of this prescription
+														if (t == rotation_period) {		// It is very important to not use null check for jagged arrays here to avoid the incorrect of mapping
+															String var_name = "x_E_" + e_strata + "_" + layer5.get(s5R) + "_" + layer6.get(s6R) + "_" + i + "_" + t;
+															if (map_var_name_to_var_value.get(var_name) != null) {
+																value_of_RHS = value_of_RHS + map_var_name_to_var_value.get(var_name);
+															}
 														}
 													}
 												}
 											}
 										}
-									}
-									
-									// Add sigma(s5)(i)(a) xR[s1][s2][s3][s4][s5][s5R][i][t][a=aR] 	--> : X
-									for (int s5 = 0; s5 < total_layer5; s5++) {
-										String strata_5layers = strata_4layers + "_" + layer5.get(s5);		// = s1,s2,s3,s4,s5
-										int strata_5layers_id = (map_R_strata_to_strata_id.get(strata_5layers) != null) ? map_R_strata_to_strata_id.get(strata_5layers) : -1;
-										if (strata_5layers_id >= 0) {
-											for (int i : R_1_prescription_ids[strata_5layers_id]) {
-												int rotation_age = total_rows_of_precription[i];
-												for (int a = 1; a <= t - 1; a++) {	
-													if (a == rotation_age) {	// It is very important to not use null check for jagged arrays here to avoid the incorrect of mapping
-														String var_name = "x_R_" + strata_5layers + "_" + layer5.get(s5R) + "_" + i + "_" + t + "_" + a;
-														if (map_var_name_to_var_value.get(var_name) != null) {
-															value_of_RHS = value_of_RHS + map_var_name_to_var_value.get(var_name);
+										
+										// Add sigma(s5)(s6)(i)(a) xR[s1][s2][s3][s4][s5][s6][s5R][s6R][i][t][a=aR] 	--> : X
+										for (int s5 = 0; s5 < total_layer5; s5++) {
+											for (int s6 = 0; s6 < total_layer6; s6++) {
+												String r_strata = strata_4layers + "_" + layer5.get(s5) + "_" + layer6.get(s6);
+												int r_strata_id = (map_R_strata_to_strata_id.get(r_strata) != null) ? map_R_strata_to_strata_id.get(r_strata) : -1;
+												if (r_strata_id >= 0) {
+													for (int i : R_1_prescription_ids[r_strata_id]) {
+														int rotation_age = total_rows_of_precription[i];
+														for (int a = 1; a <= t - 1; a++) {	
+															if (a == rotation_age) {	// It is very important to not use null check for jagged arrays here to avoid the incorrect of mapping
+																String var_name = "x_R_" + r_strata + "_" + layer5.get(s5R) + "_" + layer6.get(s6R) + "_" + i + "_" + t + "_" + a;
+																if (map_var_name_to_var_value.get(var_name) != null) {
+																	value_of_RHS = value_of_RHS + map_var_name_to_var_value.get(var_name);
+																}
+															}
 														}
 													}
 												}
 											}
 										}
-									}
-									
-									
-									String strata_5layers = strata_4layers + "_" + layer5.get(s5R);		// = s1,s2,s3,s4,s5R
-									int strata_5layers_id = (map_R_strata_to_strata_id.get(strata_5layers) != null) ? map_R_strata_to_strata_id.get(strata_5layers) : -1;
-									
-									
-									// Add -sigma(s5R')(i) xR(s1,s2,s3,s4,s5][s5R'][i][t+1][1]
-									for (int s5RR = 0; s5RR < total_layer5; s5RR++) {
-										if (strata_5layers_id >= 0) {
-											for (int i : R_prescription_ids[strata_5layers_id]) {
-												if(xR[strata_5layers_id] != null
-														&& xR[strata_5layers_id][s5RR] != null
-															&& xR[strata_5layers_id][s5RR][i] != null
-																&& xR[strata_5layers_id][s5RR][i][t + 1] != null
-																	&& xR[strata_5layers_id][s5RR][i][t + 1][1] > 0) {	// if variable is defined, this value would be > 0 
-													c8_indexlist.get(c8_num).add(xR[strata_5layers_id][s5RR][i][t + 1][1]);
-													c8_valuelist.get(c8_num).add((double) -1);
+										
+										
+										String r_strata = strata_4layers + "_" + layer5.get(s5R) + "_" + layer6.get(s6R);		// = s1,s2,s3,s4,s5R,s6R
+										int r_strata_id = (map_R_strata_to_strata_id.get(r_strata) != null) ? map_R_strata_to_strata_id.get(r_strata) : -1;
+										
+										
+										// Add -sigma(s5R')(s6R')(i) xR(s1,s2,s3,s4,s5,s6][s5R'][s6R'][i][t+1][1]
+										for (int s5RR = 0; s5RR < total_layer5; s5RR++) {
+											for (int s6RR = 0; s6RR < total_layer6; s6RR++) {
+												if (r_strata_id >= 0) {
+													for (int i : R_prescription_ids[r_strata_id]) {
+														if(xR[r_strata_id] != null
+																&& xR[r_strata_id][s5RR] != null
+																	&& xR[r_strata_id][s5RR][s6RR] != null
+																		&& xR[r_strata_id][s5RR][s6RR][i] != null
+																			&& xR[r_strata_id][s5RR][s6RR][i][t + 1] != null
+																				&& xR[r_strata_id][s5RR][s6RR][i][t + 1][1] > 0) {	// if variable is defined, this value would be > 0 
+															c8_indexlist.get(c8_num).add(xR[r_strata_id][s5RR][s6RR][i][t + 1][1]);
+															c8_valuelist.get(c8_num).add((double) -1);
+														}
+													}
 												}
 											}
 										}
+										
+										// Add bounds
+										c8_lblist.add((double) - value_of_RHS);
+										c8_ublist.add((double) - value_of_RHS);
+										c8_num++;
 									}
-									
-									// Add bounds
-									c8_lblist.add((double) - value_of_RHS);
-									c8_ublist.add((double) - value_of_RHS);
-									c8_num++;
 								}
 							}							
 						}
@@ -1706,91 +1714,102 @@ public class Solve_Iterations {
 					// 8b
 					for (String strata_4layers: E_model_strata_without_sizeclass_and_covertype) {
 						for (int s5R = 0; s5R < total_layer5; s5R++) {
-							for (int t = 1 + iter; t <= total_periods - 1 + iter; t++) {										
-								// Add constraint
-								c8_indexlist.add(new ArrayList<Integer>());
-								c8_valuelist.add(new ArrayList<Double>());
-								
-								
-								// FIRE VARIABLES
-								// Add sigma(s5) fire(s1,s2,s3,s4,s5)[s5R][t]
-								for (int s5 = 0; s5 < total_layer5; s5++) {
-									String strata_5layers = strata_4layers + "_" + layer5.get(s5);
-									int strata_5layers_id = (map_R_strata_to_strata_id.get(strata_5layers) != null) ? map_R_strata_to_strata_id.get(strata_5layers) : -1;
-									c8_indexlist.get(c8_num).add(fire[strata_5layers_id][s5R][t]);
-									c8_valuelist.get(c8_num).add((double) 1);
-								}
-								
-	
-								// NON-FIRE VARIABLES:	(for only variables with clear-cuts)
-								// Add sigma(s5)(s6)(i) xE(s1,s2,s3,s4,s5,s6)[s5R][i][t=tR]
-								for (int s5 = 0; s5 < total_layer5; s5++) {
-									for (int s6 = 0; s6 < total_layer6; s6++) {
-										String strata = strata_4layers + "_" + layer5.get(s5) + "_" + layer6.get(s6);
-										int strata_id = (map_E_strata_to_strata_id.get(strata) != null) ? map_E_strata_to_strata_id.get(strata) : -1;
-										if (strata_id >= 0) {
-											for (int i : E_1_prescription_ids[strata_id]) {	
-												int rotation_period = total_rows_of_precription[i]; // tR = total rows of this prescription
-												if (t == rotation_period 
-														&& xE[strata_id] != null 
-															&& xE[strata_id][s5R] != null
-																&& xE[strata_id][s5R][i] != null
-																	&& xE[strata_id][s5R][i][t] > 0) {		// if variable is defined, this value would be > 0
-													c8_indexlist.get(c8_num).add(xE[strata_id][s5R][i][t]);
-													c8_valuelist.get(c8_num).add((double) 1);
+							for (int s6R = 0; s6R < total_layer6; s6R++) {
+								for (int t = 1 + iter; t <= total_periods - 1 + iter; t++) {										
+									// Add constraint
+									c8_indexlist.add(new ArrayList<Integer>());
+									c8_valuelist.add(new ArrayList<Double>());
+									
+									
+									// FIRE VARIABLES
+									// Add sigma(s5) fire[s1,s2,s3,s4,s5,s6][s5R][s6R][t]
+									for (int s5 = 0; s5 < total_layer5; s5++) {
+										for (int s6 = 0; s6 < total_layer6; s6++) {
+											String r_strata = strata_4layers + "_" + layer5.get(s5) + "_" + layer6.get(s6);
+											int r_strata_id = (map_R_strata_to_strata_id.get(r_strata) != null) ? map_R_strata_to_strata_id.get(r_strata) : -1;
+											c8_indexlist.get(c8_num).add(fire[r_strata_id][s5R][s6R][t]);
+											c8_valuelist.get(c8_num).add((double) 1);
+										}
+									}
+									
+		
+									// NON-FIRE VARIABLES:	(for only variables with clear-cuts)
+									// Add sigma(s5)(s6)(i) xE[s1,s2,s3,s4,s5,s6][s5R][s6R][i][t=tR]
+									for (int s5 = 0; s5 < total_layer5; s5++) {
+										for (int s6 = 0; s6 < total_layer6; s6++) {
+											String e_strata = strata_4layers + "_" + layer5.get(s5) + "_" + layer6.get(s6);
+											int e_strata_id = (map_E_strata_to_strata_id.get(e_strata) != null) ? map_E_strata_to_strata_id.get(e_strata) : -1;
+											if (e_strata_id >= 0) {
+												for (int i : E_1_prescription_ids[e_strata_id]) {	
+													int rotation_period = total_rows_of_precription[i]; // tR = total rows of this prescription
+													if (t == rotation_period 
+															&& xE[e_strata_id] != null 
+																&& xE[e_strata_id][s5R] != null
+																	&& xE[e_strata_id][s5R][s6R] != null
+																		&& xE[e_strata_id][s5R][s6R][i] != null
+																			&& xE[e_strata_id][s5R][s6R][i][t] > 0) {		// if variable is defined, this value would be > 0
+														c8_indexlist.get(c8_num).add(xE[e_strata_id][s5R][s6R][i][t]);
+														c8_valuelist.get(c8_num).add((double) 1);
+													}
 												}
 											}
 										}
 									}
-								}
-								
-								// Add sigma(s5)(i)(a) xR[s1][s2][s3][s4][s5][s5R][i][t][a]
-								for (int s5 = 0; s5 < total_layer5; s5++) {
-									String strata_5layers = strata_4layers + "_" + layer5.get(s5);		// = s1,s2,s3,s4,s5
-									int strata_5layers_id = (map_R_strata_to_strata_id.get(strata_5layers) != null) ? map_R_strata_to_strata_id.get(strata_5layers) : -1;
-									if (strata_5layers_id >= 0) {
-										for (int i : R_1_prescription_ids[strata_5layers_id]) {
-											int rotation_age = total_rows_of_precription[i]; 
-											for (int a = 1; a <= t - 1; a++) {	
-												if (a == rotation_age 
-														&& xR[strata_5layers_id] != null
-															&& xR[strata_5layers_id][s5R] != null
-																&& xR[strata_5layers_id][s5R][i] != null
-																	&& xR[strata_5layers_id][s5R][i][t] != null
-																		&& xR[strata_5layers_id][s5R][i][t][a] > 0) {	// if variable is defined, this value would be > 0 
-													c8_indexlist.get(c8_num).add(xR[strata_5layers_id][s5R][i][t][a]);
-													c8_valuelist.get(c8_num).add((double) 1);
+									
+									// Add sigma(s5)(s6)(i)(a) xR[s1][s2][s3][s4][s5][s6][s5R][i][t][a]
+									for (int s5 = 0; s5 < total_layer5; s5++) {
+										for (int s6 = 0; s6 < total_layer6; s6++) {
+											String r_strata = strata_4layers + "_" + layer5.get(s5) + "_" + layer6.get(s6);		// = s1,s2,s3,s4,s5,s6
+											int r_strata_id = (map_R_strata_to_strata_id.get(r_strata) != null) ? map_R_strata_to_strata_id.get(r_strata) : -1;
+											if (r_strata_id >= 0) {
+												for (int i : R_1_prescription_ids[r_strata_id]) {
+													int rotation_age = total_rows_of_precription[i]; 
+													for (int a = 1; a <= t - 1; a++) {	
+														if (a == rotation_age 
+																&& xR[r_strata_id] != null
+																	&& xR[r_strata_id][s5R] != null
+																		&& xR[r_strata_id][s5R][s6R] != null
+																			&& xR[r_strata_id][s5R][s6R][i] != null
+																				&& xR[r_strata_id][s5R][s6R][i][t] != null
+																					&& xR[r_strata_id][s5R][s6R][i][t][a] > 0) {	// if variable is defined, this value would be > 0
+															c8_indexlist.get(c8_num).add(xR[r_strata_id][s5R][s6R][i][t][a]);
+															c8_valuelist.get(c8_num).add((double) 1);
+														}
+													}
 												}
 											}
 										}
 									}
-								}
-								
-								
-								String strata_5layers = strata_4layers + "_" + layer5.get(s5R);		// = s1,s2,s3,s4,s5R
-								int strata_5layers_id = (map_R_strata_to_strata_id.get(strata_5layers) != null) ? map_R_strata_to_strata_id.get(strata_5layers) : -1;
-						
-								
-								// Add -sigma(s5R')(i) xR(s1,s2,s3,s4,s5][s5R'][i][t+1][1]
-								for (int s5RR = 0; s5RR < total_layer5; s5RR++) {
-									if (strata_5layers_id >= 0) {
-										for (int i : R_prescription_ids[strata_5layers_id]) {
-											if(xR[strata_5layers_id] != null
-													&& xR[strata_5layers_id][s5RR] != null
-														&& xR[strata_5layers_id][s5RR][i] != null
-															&& xR[strata_5layers_id][s5RR][i][t + 1] != null
-																&& xR[strata_5layers_id][s5RR][i][t + 1][1] > 0) {	// if variable is defined, this value would be > 0 
-												c8_indexlist.get(c8_num).add(xR[strata_5layers_id][s5RR][i][t + 1][1]);
-												c8_valuelist.get(c8_num).add((double) -1);
+									
+									
+									String r_strata = strata_4layers + "_" + layer5.get(s5R) + "_" + layer6.get(s6R);		// = s1,s2,s3,s4,s5R,s6R
+									int r_strata_id = (map_R_strata_to_strata_id.get(r_strata) != null) ? map_R_strata_to_strata_id.get(r_strata) : -1;
+							
+									
+									// Add -sigma(s5R')(s6R')(i) xR(s1,s2,s3,s4,s5,s6][s5R'][s6R'][i][t+1][1]
+									for (int s5RR = 0; s5RR < total_layer5; s5RR++) {
+										for (int s6RR = 0; s6RR < total_layer6; s6RR++) {
+											if (r_strata_id >= 0) {
+												for (int i : R_prescription_ids[r_strata_id]) {
+													if(xR[r_strata_id] != null
+															&& xR[r_strata_id][s5RR] != null
+																	&& xR[r_strata_id][s5RR][s6RR] != null
+																	&& xR[r_strata_id][s5RR][s6RR][i] != null
+																		&& xR[r_strata_id][s5RR][s6RR][i][t + 1] != null
+																			&& xR[r_strata_id][s5RR][s6RR][i][t + 1][1] > 0) {	// if variable is defined, this value would be > 0 
+														c8_indexlist.get(c8_num).add(xR[r_strata_id][s5RR][s6RR][i][t + 1][1]);
+														c8_valuelist.get(c8_num).add((double) -1);
+													}
+												}
 											}
 										}
 									}
+									
+									// Add bounds
+									c8_lblist.add((double) 0);
+									c8_ublist.add((double) 0);
+									c8_num++;
 								}
-								
-								// Add bounds
-								c8_lblist.add((double) 0);
-								c8_ublist.add((double) 0);
-								c8_num++;
 							}
 						}							
 					}
