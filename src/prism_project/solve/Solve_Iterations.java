@@ -1528,6 +1528,57 @@ public class Solve_Iterations {
 					List<Double> c7_ublist = new ArrayList<Double>();
 					int c7_num = 0; 
 					
+//					// New way to write this equation
+//					for (String strata_4layers: E_model_strata_without_sizeclass_and_covertype) {
+//						for (int s5R = 0; s5R < total_layer5; s5R++) {
+//							for (int s6R = 0; s6R < total_layer6; s6R++) {
+//								if (has_R_prescriptions[s5R][s6R]) {
+//									for (int t = 1 + iter; t <= total_periods + iter; t++) {
+//										// Add constraint
+//										c7_indexlist.add(new ArrayList<Integer>());
+//										c7_valuelist.add(new ArrayList<Double>());
+//										
+//										// Add	fire[s1][s2][s3][s4][s5R][s6R][t]
+//										String f_strata = strata_4layers + "_" + layer5.get(s5R) + "_" + layer6.get(s6R);
+//										int f_strata_id = (map_R_strata_to_strata_id.get(f_strata) != null) ? map_R_strata_to_strata_id.get(f_strata) : -1;
+//										c7_indexlist.get(c7_num).add(fire[f_strata_id][t]);
+//										c7_valuelist.get(c7_num).add((double) 1);	
+//										
+//										// Add existing variables: -sigma(s5,s6,s5R',s6R',i) xE(s1,s2,s3,s4,s5,s6)(s5R')(s6R')(i)(t)	----------------------------------------------
+//										// Add regeneration variables	- sigma(s5,s6,s5R',s6R',i,a)	xR[s1][s2][s3][s4][s5][s6][s5R'][s6R'][i][t][a]	----------------------------------------------
+//										for (int var_index = 0; var_index < nvars; var_index++) {
+//											if (var_info_array[var_index].get_layer1().equals(var_info_array[f_strata_id].get_layer1())
+//													&& var_info_array[var_index].get_layer2().equals(var_info_array[f_strata_id].get_layer2())
+//															&& var_info_array[var_index].get_layer3().equals(var_info_array[f_strata_id].get_layer3())
+//																	&& var_info_array[var_index].get_layer4().equals(var_info_array[f_strata_id].get_layer4())
+//																			&& var_info_array[var_index].get_period() == var_info_array[f_strata_id].get_period())
+//											if (var_rd_condition_id[var_index] != null) {		// if there is replacing disturbance associated with this variable
+//												double[] user_loss_rate = map_var_index_to_user_loss_rates.get(var_index);
+//												double[][][] conversion_rate_mean = new double[total_disturbances][][];
+//												double total_loss_rate_for_this_conversion = 0;
+//												for (int k = 0; k < total_disturbances; k++) {
+//													if (var_rd_condition_id[var_index][k] != -9999) {
+//														conversion_rate_mean[k] = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index][k]);
+//														total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (user_loss_rate[k] / 100) * (conversion_rate_mean[k][s5R][s6R] / 100);
+//													}
+//												}
+//												if (total_loss_rate_for_this_conversion != 0) {	// only add if parameter is non zero
+//													c7_indexlist.get(c7_num).add(var_index);
+//													c7_valuelist.get(c7_num).add((double) - total_loss_rate_for_this_conversion);		// SR Fire loss Rate = P(s5, s5R --> x)
+//												}
+//											}
+//										}
+//			
+//										// Add bounds
+//										c7_lblist.add((double) 0);
+//										c7_ublist.add((double) 0);
+//										c7_num++;
+//									}
+//								}
+//							}
+//						}
+//					}
+					
 					// Loop writing in this way will improve speed. This is also applied to eq. 15 to save running time. Other equations are fast so it is not needed to use this type of loop
 					for (String strata_4layers: E_model_strata_without_sizeclass_and_covertype) {
 						for (int s5R = 0; s5R < total_layer5; s5R++) {
@@ -1538,7 +1589,7 @@ public class Solve_Iterations {
 										c7_indexlist.add(new ArrayList<Integer>());
 										c7_valuelist.add(new ArrayList<Double>());
 										
-										// Add	fire[s1][s2][s3][s4][s5R][s6R][t]		 Note that: index of f variable is same as r_strata
+										// Add	fire[s1][s2][s3][s4][s5R][s6R][t]
 										String f_strata = strata_4layers + "_" + layer5.get(s5R) + "_" + layer6.get(s6R);
 										int f_strata_id = (map_R_strata_to_strata_id.get(f_strata) != null) ? map_R_strata_to_strata_id.get(f_strata) : -1;
 										c7_indexlist.get(c7_num).add(fire[f_strata_id][t]);
