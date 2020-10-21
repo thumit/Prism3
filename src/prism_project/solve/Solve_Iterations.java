@@ -725,16 +725,18 @@ public class Solve_Iterations {
 									double[][][] conversion_rate_mean = new double[total_disturbances][][];
 									
 									for (int s5R = 0; s5R < total_layer5; s5R++) {
-										double total_loss_rate_for_this_conversion = 0;
-										for (int k = 0; k < total_disturbances; k++) {
-											if (var_rd_condition_id[var_index][k] != -9999) {
-												conversion_rate_mean[k] = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index][k]);
-												total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (user_loss_rate[k] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
+										for (int s6R = 0; s6R < total_layer6; s6R++) {
+											double total_loss_rate_for_this_conversion = 0;
+											for (int k = 0; k < total_disturbances; k++) {
+												if (var_rd_condition_id[var_index][k] != -9999) {
+													conversion_rate_mean[k] = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index][k]);
+													total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (user_loss_rate[k] / 100) * (conversion_rate_mean[k][s5R][s6R] / 100);
+												}
 											}
-										}
-										if (total_loss_rate_for_this_conversion > 0) {
-											conversion_after_disturbances_classification_list.add(layer5.get(s5) + " " + layer5.get(s5R) + " " + "disturbance");
-											conversion_after_disturbances_total_loss_rate_list.add(total_loss_rate_for_this_conversion);
+											if (total_loss_rate_for_this_conversion > 0) {
+												conversion_after_disturbances_classification_list.add(layer5.get(s5) + " " + layer5.get(s5R) + " " + "disturbance");
+												conversion_after_disturbances_total_loss_rate_list.add(total_loss_rate_for_this_conversion);
+											}														
 										}														
 									}
 								}
@@ -1465,7 +1467,7 @@ public class Solve_Iterations {
 																		for (int k = 0; k < total_disturbances; k++) {
 																			if (rd_condition_id[k] != -9999) {
 																				double[][] conversion_rate_mean = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(rd_condition_id[k]);
-																				total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (map_var_name_to_var_new_loss_rates.get(var_name)[k] / 100) * (conversion_rate_mean[s5][s5R] / 100);
+																				total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (map_var_name_to_var_new_loss_rates.get(var_name)[k] / 100) * (conversion_rate_mean[s5R][s6R] / 100);
 																			}
 																		}
 																		total_value_for_this_F = total_value_for_this_F + total_loss_rate_for_this_conversion * map_var_name_to_var_value.get(var_name);
@@ -1495,7 +1497,7 @@ public class Solve_Iterations {
 																				for (int k = 0; k < total_disturbances; k++) {
 																					if (rd_condition_id[k] != -9999) {
 																						double[][] conversion_rate_mean = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(rd_condition_id[k]);
-																						total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (map_var_name_to_var_new_loss_rates.get(var_name)[k] / 100) * (conversion_rate_mean[s5][s5R] / 100);
+																						total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (map_var_name_to_var_new_loss_rates.get(var_name)[k] / 100) * (conversion_rate_mean[s5R][s6R] / 100);
 																					}
 																				}
 																				total_value_for_this_F = total_value_for_this_F + total_loss_rate_for_this_conversion * map_var_name_to_var_value.get(var_name);
@@ -1616,7 +1618,7 @@ public class Solve_Iterations {
 																					for (int k = 0; k < total_disturbances; k++) {
 																						if (var_rd_condition_id[var_index][k] != -9999) {
 																							conversion_rate_mean[k] = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index][k]);
-																							total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (user_loss_rate[k] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
+																							total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (user_loss_rate[k] / 100) * (conversion_rate_mean[k][s5R][s6R] / 100);
 																						}
 																					}
 																					if (total_loss_rate_for_this_conversion != 0) {	// only add if parameter is non zero
@@ -1658,7 +1660,7 @@ public class Solve_Iterations {
 																				for (int k = 0; k < total_disturbances; k++) {
 																					 if (var_rd_condition_id[var_index][k] != -9999) {
 																						conversion_rate_mean[k] = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index][k]);
-																						total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (user_loss_rate[k] / 100) * (conversion_rate_mean[k][s5][s5R] / 100);
+																						total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (user_loss_rate[k] / 100) * (conversion_rate_mean[k][s5R][s6R] / 100);
 																					 }
 																				}
 																				if (total_loss_rate_for_this_conversion != 0) {	// only add if parameter is non zero

@@ -24,6 +24,8 @@ import java.util.List;
 // This class is created only when there is at least 1 condition --> no need to check null condition
 public class Information_Disturbance {
 	private int total_disturbances = 0;
+	int total_layer5;
+	int total_layer6;
 	private LinkedHashMap<String, Integer> map_disturbance_name_to_id = new LinkedHashMap<String, Integer>();
 	
 	private Identifiers_Processing identifiers_processing;
@@ -47,6 +49,10 @@ public class Information_Disturbance {
 	
 	
 	public Information_Disturbance(Read_Database read_database, List<String> disturbance_condition_list) {	// Create this class once for each iteration
+		List<List<String>> all_layers =  read_database.get_all_layers();
+		List<String> layer5 = all_layers.get(4);		total_layer5 = layer5.size();
+		List<String> layer6 = all_layers.get(5);		total_layer6 = layer6.size();
+		
 		identifiers_processing = new Identifiers_Processing(read_database);
 		yield_tables_values = read_database.get_yield_tables_values();
 		
@@ -208,14 +214,13 @@ public class Information_Disturbance {
 		return null;	
 	}
 	
-	private double[][] get_2D_array_from_conversion_rate_mean_or_std(String conversion_rate_mean_or_std) {	//	[covertype_before][covertype_after]
+	private double[][] get_2D_array_from_conversion_rate_mean_or_std(String conversion_rate_mean_or_std) {	//	[layer5_regen][layer6_regen]
 		//Read the whole cell into array
-		String[] array = conversion_rate_mean_or_std.split(";");		// example 2 disturbance types:       B B 0.1;B C 1.2
-		int total_covertype = (int) Math.sqrt(array.length);
-		double[][] cr_mean_or_std = new double[total_covertype][total_covertype];
-		for (int i = 0; i < total_covertype; i++) {
-			for (int j = 0; j < total_covertype; j++) {
-				int current_array_position = total_covertype * i + j;
+		String[] array = conversion_rate_mean_or_std.split(";");		// example:       B F 0.1;B G 1.2
+		double[][] cr_mean_or_std = new double[total_layer5][total_layer6];
+		for (int i = 0; i < total_layer5; i++) {
+			for (int j = 0; j < total_layer6; j++) {
+				int current_array_position = total_layer5 * i + j;
 				String[] info = array[current_array_position].split("\\s+");    // example:       B B 0.0
 				cr_mean_or_std[i][j] = Double.parseDouble(info[2]);
 			}
