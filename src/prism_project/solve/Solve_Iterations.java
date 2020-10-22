@@ -169,8 +169,9 @@ public class Solve_Iterations {
 				List<String> layer6 = all_layers.get(5);		int total_layer6 = layer6.size();
 				
 				// Pre-calculate available s5R s6R for f; also available s5 s6 for xR (from prescription name)
-				boolean[][] has_R_prescriptions = new boolean[total_layer5][total_layer6];
+				boolean[][] has_R_prescriptions = new boolean[total_layer5][];
 				for (int s5 = 0; s5 < total_layer5; s5++) {
+					has_R_prescriptions[s5] = new boolean[total_layer6];
 					for (int s6 = 0; s6 < total_layer6; s6++) {
 						has_R_prescriptions[s5][s6] = false;
 					}
