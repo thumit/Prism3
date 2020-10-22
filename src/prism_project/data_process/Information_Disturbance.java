@@ -218,14 +218,15 @@ public class Information_Disturbance {
 		//Read the whole cell into array
 		String[] array = conversion_rate_mean_or_std.split(";");		// example:       B F 0.1;B G 1.2
 		double[][] cr_mean_or_std = new double[total_layer5][];
+		
+		int count = 0;
 		for (int i = 0; i < total_layer5; i++) {
 			cr_mean_or_std[i] = new double[total_layer6];
-		}
-		for (int i = 0; i < total_layer5; i++) {
 			for (int j = 0; j < total_layer6; j++) {
-				int current_array_position = total_layer5 * i + j;
+				int current_array_position = count;
 				String[] info = array[current_array_position].split("\\s+");    // example:       B B 0.0
 				cr_mean_or_std[i][j] = Double.parseDouble(info[2]);
+				count++;
 			}
 		}
 		return cr_mean_or_std;
