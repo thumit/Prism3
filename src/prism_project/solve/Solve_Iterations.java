@@ -1456,8 +1456,9 @@ public class Solve_Iterations {
 											// Add regeneration variables: Sigma(s5,s6,s5R',s6R',i,a) xR[s1][s2][s3][s4][s5][s6][s5R'][s6R'][i][t][a] 	--> : X~
 											for (int s5 = 0; s5 < total_layer5; s5++) {
 												for (int s6 = 0; s6 < total_layer6; s6++) {
-													// X~E
 													String strata = strata_4layers + "_" + layer5.get(s5) + "_" + layer6.get(s6);
+													
+													// X~E
 													int e_strata_id = (map_E_strata_to_strata_id.get(strata) != null) ? map_E_strata_to_strata_id.get(strata) : -1;
 													if (e_strata_id >= 0) {		// == if model_strata.contains(strata_name)   --   strata_id = -1 means list does not contain the string
 														for (int s5RR = 0; s5RR < total_layer5; s5RR++) {		// s5R'
@@ -1548,8 +1549,9 @@ public class Solve_Iterations {
 										// Add regeneration variables	-sigma(s5,s6,s5R',s6R',i,a)	xR[s1][s2][s3][s4][s5][s6][s5R'][s6R'][i][t][a]	----------------------------------------------
 										for (int s5 = 0; s5 < total_layer5; s5++) {
 											for (int s6 = 0; s6 < total_layer6; s6++) {
-												// -xE
 												String strata = strata_4layers + "_" + layer5.get(s5) + "_" + layer6.get(s6);
+												
+												// -xE
 												int e_strata_id = (map_E_strata_to_strata_id.get(strata) != null) ? map_E_strata_to_strata_id.get(strata) : -1;
 												if (e_strata_id >= 0) {		// == if model_strata.contains(strata_name)   --   strata_id = -1 means list does not contain the string
 													if (xE[e_strata_id] != null) {
