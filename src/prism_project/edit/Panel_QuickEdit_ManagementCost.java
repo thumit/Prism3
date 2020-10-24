@@ -18,8 +18,6 @@ along with PRISM. If not, see <http://www.gnu.org/licenses/>.
 package prism_project.edit;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -47,7 +45,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableRowSorter;
 
 import prism_convenience.IconHandle;
@@ -60,7 +57,7 @@ import prism_root.PrismMain;
 public class Panel_QuickEdit_ManagementCost extends JPanel {
 	private JTable table7b;
 	private Object[][] data7b;
-	private DefaultTableCellRenderer render7b;
+	private TableRowSorter<PrismTableModel> table7b_original_sorter;
 	
 	private JButton btn_compact;
 	private JLabel view_label;
@@ -71,11 +68,8 @@ public class Panel_QuickEdit_ManagementCost extends JPanel {
 	public Panel_QuickEdit_ManagementCost(Read_Database read_database, JTable table7a, Object[][] data7a, String[] columnNames7a, JTable table7b, Object[][] data7b) {
 		this.table7b = table7b;
 		this.data7b = data7b;
-		this.render7b = (DefaultTableCellRenderer) table7b.getColumnModel().getColumn(0).getCellRenderer();
-		
-		
+		this.table7b_original_sorter = (TableRowSorter<PrismTableModel>) table7b.getRowSorter();
 		setLayout(new GridBagLayout());
-		
 		
 		
 		
@@ -556,31 +550,15 @@ public class Panel_QuickEdit_ManagementCost extends JPanel {
 					return false;	// hide the row when all cells have the value of zero
 				}
 			};
-			TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>((PrismTableModel) table7b.getModel());
-			sorter.setRowFilter(compact_filter);
-			table7b.setRowSorter(sorter);
-			
-			// Set Color and Alignment for Cells
-	        DefaultTableCellRenderer compact_r = new DefaultTableCellRenderer() {
-	            @Override
-	            public Component getTableCellRendererComponent(JTable table, Object
-				value, boolean isSelected, boolean hasFocus, int row, int column) {
-					super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-					setHorizontalAlignment(JLabel.LEFT);
-					setBackground(new Color(160, 160, 160));	// Set cell background color	
-					if (isSelected)	setBackground(table.getSelectionBackground());	// Set background color	for selected row
-	                return this;
-	            }
-	        };
-			for (int i = 0; i < 2; i++) {	// first 2 columns only
-				table7b.getColumnModel().getColumn(i).setCellRenderer(compact_r);
+			TableRowSorter<PrismTableModel> compact_sorter = new TableRowSorter<PrismTableModel>((PrismTableModel) table7b.getModel());
+			compact_sorter.setRowFilter(compact_filter);
+			for (int i = 0; i < table7b.getColumnCount(); i++) {
+				compact_sorter.setSortable(i, false);	// use sorter to filter available layer5_regen and layer6_regen but we do not allow clicking on the table column header to sort
 			}
+			table7b.setRowSorter(compact_sorter);
 			break;
 		case "switch to compact view":
-			table7b.setRowSorter(null);
-			for (int i = 0; i < 2; i++) {	// first 2 columns only
-				table7b.getColumnModel().getColumn(i).setCellRenderer(render7b);
-			}
+			table7b.setRowSorter(table7b_original_sorter);
 			break;
 		}
 	}
