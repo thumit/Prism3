@@ -1085,7 +1085,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		}
 					
 		
-		//Create a table-------------------------------------------------------------		
+		// Create a table-------------------------------------------------------------		
 		model4 = new PrismTableModel(rowCount4, colCount4, data4, columnNames4) {
 			@Override
 			public Class getColumnClass(int c) {
@@ -1171,82 +1171,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				return tip;
 			}	
 		};
-
-		
-//		List<String> layer5 = read_database.get_all_layers().get(4);
-//		JCheckBox[] layer5_checkboxes = new JCheckBox[layer5.size()];
-//	    for (int i = 0; i < layer5.size(); i++) {
-//	    	layer5_checkboxes[i] = new JCheckBox(layer5.get(i));
-//		}
-//		
-//		class CheckBoxEditor extends DefaultCellEditor {
-//			protected JPanel panel;
-//			protected JCheckBox[] checkbox = layer5_checkboxes;
-//
-//			public CheckBoxEditor() {
-//				super(new JCheckBox());
-//				panel = new JPanel(new GridBagLayout());
-//				panel.setRequestFocusEnabled(false);
-//				GridBagConstraints c = new GridBagConstraints();
-//				c.fill = GridBagConstraints.HORIZONTAL;
-//				c.weightx = 1;
-//			    c.weighty = 1;
-//			    
-//			    for (int i = 0; i < checkbox.length; i++) {
-//					//Add to identifiersPanel
-//					c.gridx = i;
-//					c.gridy = 0;
-//					panel.add(checkbox[i], c);
-//				}
-//			}
-//
-//			public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-//				List<String> current_selection = null;
-//		    	if (value instanceof String) {
-//					current_selection = Arrays.asList(((String) value).split(" "));
-//		    	}
-//		    	for (JCheckBox c : checkbox) {
-//		    		if (current_selection != null && current_selection.contains(c.getText())) {
-//		    			c.setSelected(true);
-//		    		} else {
-//		    			c.setSelected(false);
-//		    		}
-//		    	}
-//				return panel;
-//			}
-//
-//			public Object getCellEditorValue() {
-//				String st = "";
-//				for (int i = 0; i < checkbox.length; i++) {
-//					if (checkbox[i].isSelected()) {
-//						st = st + " " + checkbox[i].getText();
-//					}
-//				}
-//				return st;
-//			}
-//			
-//			public boolean isCellEditable(EventObject e) {
-//				if (e instanceof KeyEvent) {
-//					return false;
-//				}
-//				return super.isCellEditable(e);
-//			}
-//		}
-//		
-//		CheckBoxEditor checkboxeditor = new CheckBoxEditor(); 
-//		checkboxeditor.setClickCountToStart(2);
-//		table4.getColumn("layer5_regen").setCellEditor(checkboxeditor);
-		
-		
-		
-
-		
-		
 		
 		
 		((JComponent) table4.getDefaultRenderer(Boolean.class)).setOpaque(true);	// It's a bug in the synth-installed renderer, quick hack is to force the rendering checkbox opacity to true
 		((AbstractButton) table4.getDefaultRenderer(Boolean.class)).setSelectedIcon(IconHandle.get_scaledImageIcon(12, 12, "icon_check.png"));
-
 
 		// Hide columns
 		TableColumnsHandle table_handle = new TableColumnsHandle(table4);
@@ -1266,20 +1194,20 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	public void create_table4a() {	
 		List<List<String>> all_layers = read_database.get_all_layers();
 		List<List<String>> all_layers_tooltips = read_database.get_all_layers_tooltips();
-		int total_CoverType = all_layers.get(4).size();
-		int total_SizeClass = all_layers.get(5).size();
+		List<String> layer5 = all_layers.get(4);		int total_layer5 = layer5.size();
+		List<String> layer6 = all_layers.get(5);		int total_layer6 = layer6.size();
 		
 		// Setup the table------------------------------------------------------------	
 		if (is_table4a_loaded == false) { // Create a fresh new if Load fail				
-			rowCount4a = total_CoverType * total_SizeClass;
+			rowCount4a = total_layer5 * total_layer6;
 			colCount4a =  3;
 			data4a = new Object[rowCount4a][colCount4a];
 			columnNames4a = new String[] {"layer5_regen", "layer6_regen", "implementation"};
 	        
 			// Populate the data matrix
 	        int row = 0;
-			for (int i = 0; i < total_CoverType; i++) {
-				for (int j = 0; j < total_SizeClass; j++) {
+			for (int i = 0; i < total_layer5; i++) {
+				for (int j = 0; j < total_layer6; j++) {
 					data4a[row][0] = all_layers.get(4).get(i);
 					data4a[row][1] = all_layers.get(5).get(j);	
 					data4a[row][2] = false;
@@ -1361,7 +1289,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			            tableColumn.getHeaderValue(), false, false, -1, column);
 				maxWidth = Math.max(maxWidth, component2.getPreferredSize().width);
 				tableColumn.setPreferredWidth(maxWidth);
-				
 				return component;
 			}		
 			
@@ -1390,7 +1317,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				if (table4a.getColumnName(column).equals("layer5_regen")) {
 					try {
 						tip = getValueAt(row, column).toString();
-						for (int i = 0; i < total_CoverType; i++) {
+						for (int i = 0; i < total_layer5; i++) {
 							if (tip.equals(all_layers.get(4).get(i))) tip = all_layers_tooltips.get(4).get(i);							
 						}
 					} catch (RuntimeException e1) {
@@ -1399,7 +1326,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				} else if (table4a.getColumnName(column).equals("layer6_regen")) {
 					try {
 						tip = getValueAt(row, column).toString();
-						for (int i = 0; i < total_SizeClass; i++) {
+						for (int i = 0; i < total_layer6; i++) {
 							if (tip.equals(all_layers.get(5).get(i))) tip = all_layers_tooltips.get(5).get(i);							
 						}
 					} catch (RuntimeException e1) {
@@ -1409,64 +1336,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				return tip;
 			}
 		};			
-        
 		
-		// Define a set of icon for some columns
-		ImageIcon[] imageIconArray = new ImageIcon[colCount4a];
-		for (int i = 0; i < colCount4a; i++) {
-			if (i == 2) {
-				imageIconArray[i] = IconHandle.get_scaledImageIcon(3, 3, "icon_main.png");
-			}
-		}
-		
-		
-		// Define a set of background color for all rows
-		Color[] rowColor = new Color[rowCount4a];
-		Color color1 = new Color(160, 160, 160);
-		Color color2 = new Color(192, 192, 192);
-		Color currentColor = color2;
-		int rCount = 0;
-
-		for (int i = 0; i < total_CoverType; i++) {
-			if (currentColor == color2) {
-				currentColor = color1;
-			} else {
-				currentColor = color2;
-			}
-			for (int j = 0; j < total_SizeClass; j++) {
-				rowColor[rCount] = currentColor;
-				rCount++;
-			}
-		}
-		
-				
-		// Set Color and Alignment for Cells
-        DefaultTableCellRenderer r = new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object
-			value, boolean isSelected, boolean hasFocus, int row, int column) {
-				super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-				// setForeground(Color.RED);
-				setHorizontalAlignment(JLabel.LEFT);
-				// setFont(getFont().deriveFont(Font.BOLD));               	
-				setBackground(rowColor[row]);		//Set cell background color
-				if (isSelected) {
-					setBackground(table.getSelectionBackground());		//Set background color	for selected row
-				}
-				setIcon(imageIconArray[column]);	// Set icons for cells in some columns
-				setIconTextGap(15);		// Set the distance between icon and the actual data value
-//				setHorizontalAlignment(rowAlignment[row]);			
-                return this;
-            }
-        };						
-			
-		
-        table4a.getColumnModel().getColumn(0).setCellRenderer(r);
-        table4a.getColumnModel().getColumn(1).setCellRenderer(r);
         ((JComponent) table4a.getDefaultRenderer(Boolean.class)).setOpaque(true);	// It's a bug in the synth-installed renderer, quick hack is to force the rendering checkbox opacity to true
 		((AbstractButton) table4a.getDefaultRenderer(Boolean.class)).setSelectedIcon(IconHandle.get_scaledImageIcon(12, 12, "icon_check.png"));
-		
-		
 //		table4a.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		table4a.setCellSelectionEnabled(true);
         table4a.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -1481,6 +1353,23 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 //			}
 //		}
 //		table4a.setRowSorter(sorter);
+		// Do not show unavailable combination of layer5_regen and layer6_regen
+		RowFilter<Object, Object> layers_filter = new RowFilter<Object, Object>() {
+			public boolean include(Entry entry) {
+				int s5 = Collections.binarySearch(layer5, (String) entry.getValue(0));
+				int s6 = Collections.binarySearch(layer6,  (String) entry.getValue(1));
+				if (read_database.get_has_R_prescriptions()[s5][s6] == true) {
+					return true;
+				}
+				return false;	// hide the row when the database does not have R prescription for this combination of layer5_regen and layer6_regen
+			}
+		};
+		TableRowSorter<PrismTableModel> layers_sorter = new TableRowSorter<PrismTableModel>(model4a);
+		layers_sorter.setRowFilter(layers_filter);
+		for (int i = 0; i < colCount4a; i++) {
+			layers_sorter.setSortable(i, false);	// use sorter to filter available layer5_regen and layer6_regen but we do not allow clicking on the table column header to sort
+		}
+		table4a.setRowSorter(layers_sorter);
 	}
 	
 	
@@ -1801,20 +1690,20 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	public void create_table6c() {	
 		List<List<String>> all_layers = read_database.get_all_layers();
 		List<List<String>> all_layers_tooltips = read_database.get_all_layers_tooltips();
-		int total_CoverType = all_layers.get(4).size();
-		int total_SizeClass = all_layers.get(5).size();
+		int total_layer5 = all_layers.get(4).size();
+		int total_layer6 = all_layers.get(5).size();
 		
 		// Setup the table------------------------------------------------------------	
 		if (is_table6c_loaded == false) { // Create a fresh new if Load fail				
-			rowCount6c = total_CoverType * total_SizeClass;
+			rowCount6c = total_layer5 * total_layer6;
 			colCount6c =  3;
 			data6c = new Object[rowCount6c][colCount6c];
 			columnNames6c = new String[] {"layer5_regen", "layer6_regen", "mean"};
 	        
 			// Populate the data matrix
 	        int row = 0;
-			for (int i = 0; i < total_CoverType; i++) {
-				for (int j = 0; j < total_SizeClass; j++) {
+			for (int i = 0; i < total_layer5; i++) {
+				for (int j = 0; j < total_layer6; j++) {
 					data6c[row][0] = all_layers.get(4).get(i);
 					data6c[row][1] = all_layers.get(5).get(j);	
 					data6c[row][2] = (double) 0;
@@ -1938,7 +1827,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				if (table6c.getColumnName(column).equals("layer5_regen")) {
 					try {
 						tip = getValueAt(row, column).toString();
-						for (int i = 0; i < total_CoverType; i++) {
+						for (int i = 0; i < total_layer5; i++) {
 							if (tip.equals(all_layers.get(4).get(i))) tip = all_layers_tooltips.get(4).get(i);							
 						}
 					} catch (RuntimeException e1) {
@@ -1947,7 +1836,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				} else if (table6c.getColumnName(column).equals("layer6_regen")) {
 					try {
 						tip = getValueAt(row, column).toString();
-						for (int i = 0; i < total_SizeClass; i++) {
+						for (int i = 0; i < total_layer6; i++) {
 							if (tip.equals(all_layers.get(5).get(i))) tip = all_layers_tooltips.get(5).get(i);							
 						}
 					} catch (RuntimeException e1) {
@@ -1997,13 +1886,13 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		Color currentColor = color2;
 		int rCount = 0;
 
-		for (int i = 0; i < total_CoverType; i++) {
+		for (int i = 0; i < total_layer5; i++) {
 			if (currentColor == color2) {
 				currentColor = color1;
 			} else {
 				currentColor = color2;
 			}
-			for (int j = 0; j < total_SizeClass; j++) {
+			for (int j = 0; j < total_layer6; j++) {
 				rowColor[rCount] = currentColor;
 				rCount++;
 			}
@@ -2075,20 +1964,20 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	public void create_table6d() {	
 		List<List<String>> all_layers = read_database.get_all_layers();
 		List<List<String>> all_layers_tooltips = read_database.get_all_layers_tooltips();
-		int total_CoverType = all_layers.get(4).size();
-		int total_SizeClass = all_layers.get(5).size();
+		int total_layer5 = all_layers.get(4).size();
+		int total_layer6 = all_layers.get(5).size();
 		
 		// Setup the table------------------------------------------------------------	
 		if (is_table6d_loaded == false) { // Create a fresh new if Load fail				
-			rowCount6d = total_CoverType * total_SizeClass;
+			rowCount6d = total_layer5 * total_layer6;
 			colCount6d =  3;
 			data6d = new Object[rowCount6d][colCount6d];
 			columnNames6d = new String[] {"layer5_regen", "layer6_regen", "std"};
 	        
 			// Populate the data matrix
 	        int row = 0;
-			for (int i = 0; i < total_CoverType; i++) {
-				for (int j = 0; j < total_SizeClass; j++) {
+			for (int i = 0; i < total_layer5; i++) {
+				for (int j = 0; j < total_layer6; j++) {
 					data6d[row][0] = all_layers.get(4).get(i);
 					data6d[row][1] = all_layers.get(5).get(j);	
 					data6d[row][2] = (double) 0;
@@ -2213,7 +2102,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				if (table6d.getColumnName(column).equals("layer5_regen")) {
 					try {
 						tip = getValueAt(row, column).toString();
-						for (int i = 0; i < total_CoverType; i++) {
+						for (int i = 0; i < total_layer5; i++) {
 							if (tip.equals(all_layers.get(4).get(i))) tip = all_layers_tooltips.get(4).get(i);							
 						}
 					} catch (RuntimeException e1) {
@@ -2222,7 +2111,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				} else if (table6d.getColumnName(column).equals("layer6_regen")) {
 					try {
 						tip = getValueAt(row, column).toString();
-						for (int i = 0; i < total_SizeClass; i++) {
+						for (int i = 0; i < total_layer6; i++) {
 							if (tip.equals(all_layers.get(5).get(i))) tip = all_layers_tooltips.get(5).get(i);							
 						}
 					} catch (RuntimeException e1) {
@@ -2260,13 +2149,13 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		Color currentColor = color2;
 		int rCount = 0;
 
-		for (int i = 0; i < total_CoverType; i++) {
+		for (int i = 0; i < total_layer5; i++) {
 			if (currentColor == color2) {
 				currentColor = color1;
 			} else {
 				currentColor = color2;
 			}
-			for (int j = 0; j < total_SizeClass; j++) {
+			for (int j = 0; j < total_layer6; j++) {
 				rowColor[rCount] = currentColor;
 				rCount++;
 			}
@@ -2683,13 +2572,13 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		String[] yield_tables_column_names = read_database.get_yield_tables_column_names();
 		List<List<String>> all_layers = read_database.get_all_layers();
 		List<List<String>> all_layers_tooltips = read_database.get_all_layers_tooltips();
-		int total_CoverType = all_layers.get(4).size();
-		int total_SizeClass = all_layers.get(5).size();
+		int total_layer5 = all_layers.get(4).size();
+		int total_layer6 = all_layers.get(5).size();
 		
 		//Setup the table------------------------------------------------------------	
 		if (is_table7b_loaded == false) { // Create a fresh new if Load fail	
 			if (yield_tables_column_names != null) {	//create table with column include yield tables columns
-				rowCount7b = total_CoverType * total_SizeClass;		
+				rowCount7b = total_layer5 * total_layer6;		
 				colCount7b = 4;
 				data7b = new Object[rowCount7b][colCount7b];
 				columnNames7b = new String[] {"layer5_regen", "layer6_regen", "activity", "disturbance"};
@@ -2697,8 +2586,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			       			
 			// Populate the data matrix
 			 int table_row = 0;
-				for (int i = 0; i < total_CoverType; i++) {
-					for (int j = 0; j < total_SizeClass; j++) {
+				for (int i = 0; i < total_layer5; i++) {
+					for (int j = 0; j < total_layer6; j++) {
 						data7b[table_row][0] = all_layers.get(4).get(i);
 						data7b[table_row][1] = all_layers.get(5).get(j);
 						table_row++;
@@ -2815,7 +2704,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				if (table7b.getColumnName(column).equals("layer5_regen")) {
 					try {
 						tip = getValueAt(row, column).toString();
-						for (int i = 0; i < total_CoverType; i++) {
+						for (int i = 0; i < total_layer5; i++) {
 							if (tip.equals(all_layers.get(4).get(i))) tip = all_layers_tooltips.get(4).get(i);							
 						}
 					} catch (RuntimeException e1) {
@@ -2824,7 +2713,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				} else if (table7b.getColumnName(column).equals("layer6_regen")) {
 					try {
 						tip = getValueAt(row, column).toString();
-						for (int i = 0; i < total_SizeClass; i++) {
+						for (int i = 0; i < total_layer6; i++) {
 							if (tip.equals(all_layers.get(5).get(i))) tip = all_layers_tooltips.get(5).get(i);							
 						}
 					} catch (RuntimeException e1) {
@@ -2843,13 +2732,13 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		Color currentColor = color2;
 		int rCount = 0;
 
-		for (int i = 0; i < total_CoverType; i++) {
+		for (int i = 0; i < total_layer5; i++) {
 			if (currentColor == color2) {
 				currentColor = color1;
 			} else {
 				currentColor = color2;
 			}
-			for (int j = 0; j < total_SizeClass; j++) {
+			for (int j = 0; j < total_layer6; j++) {
 				rowColor[rCount] = currentColor;
 				rCount++;
 			}
