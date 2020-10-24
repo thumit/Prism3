@@ -158,6 +158,7 @@ public class Solve_Iterations {
 				String[] yield_tables_names = read_database.get_yield_tables_names();			
 				int total_prescriptions = yield_tables_values.length;
 				int activity_col_id = read_database.get_activity_column_index();
+				boolean[][] has_R_prescriptions = read_database.get_has_R_prescriptions();
 				
 				// Get info: layers from database (strata_definition)
 				List<List<String>> all_layers =  read_database.get_all_layers();		
@@ -167,23 +168,6 @@ public class Solve_Iterations {
 				List<String> layer4 = all_layers.get(3);
 				List<String> layer5 = all_layers.get(4);		int total_layer5 = layer5.size();
 				List<String> layer6 = all_layers.get(5);		int total_layer6 = layer6.size();
-				
-				// Pre-calculate available s5R s6R for f; also available s5 s6 for xR (from prescription name)
-				boolean[][] has_R_prescriptions = new boolean[total_layer5][];
-				for (int s5 = 0; s5 < total_layer5; s5++) {
-					has_R_prescriptions[s5] = new boolean[total_layer6];
-					for (int s6 = 0; s6 < total_layer6; s6++) {
-						has_R_prescriptions[s5][s6] = false;
-					}
-				}
-				for (int i = 0; i < total_prescriptions; i++) {
-					if (yield_tables_names[i].startsWith("R_")) {
-						String[] prescription_name = yield_tables_names[i].split("_");
-						int s5 = Collections.binarySearch(layer5, prescription_name[2]);
-						int s6 = Collections.binarySearch(layer6, prescription_name[3]);
-						has_R_prescriptions[s5][s6] = true;
-					}
-				}
 					
 				// Read input files to retrieve values later
 				File input_01_file = new File(runFolder.getAbsolutePath() + "/input_01_general_inputs.txt");

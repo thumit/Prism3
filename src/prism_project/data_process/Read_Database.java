@@ -43,13 +43,19 @@ import prism_convenience.StringHandle;
 import prism_root.PrismMain;
 
 public class Read_Database {
+	private Connection conn = null;
+	private Statement st = null;
+	private ResultSet rs = null;
+	private ResultSetMetaData rsmd = null;
+	private File file_database;
+	
 	private String[][][] yield_tables_values;
 	private String[] yield_tables_names;
 	private String[] yield_tables_column_names;
 	private String[] yield_tables_column_types;
 	private List<String>[] unique_values_list;
 	private int[] starting_age_class_for_prescription;
-	private String[] prescription_group;
+	private boolean[][] has_R_prescriptions;
 	
 	private String[][] existing_strata_values;
 	private String[][] strata_definition_values;	
@@ -57,28 +63,18 @@ public class Read_Database {
 	private List<String> layers_title_tooltip;
 	private List<List<String>> all_layers;
 	private List<List<String>> all_layers_tooltips;
-	
-	private Connection conn = null;
-	private Statement st = null;
-	private ResultSet rs = null;
-	private ResultSetMetaData rsmd = null;
-	
-	private File file_database;
-	
 	private LinkedList_Layers layers;
 	
 	public Read_Database(File file_database) {
 		this.file_database = file_database;
-		
 		
 		if (file_database != null && file_database.exists()) {	
 			Read_strata_definition();
 			Read_existing_strata();
 			Read_yield_tables();
 			identify_starting_age_class_for_prescription();
-//			identify_group_for_prescription();
+			identify_layer5_regen_and_layer6_regen_that_has_R_prescriptions();
 		}
-		
 		
 //		Thread t = new Thread() {
 //			public void run() {
@@ -588,20 +584,34 @@ public class Read_Database {
 	public int[] get_starting_age_class_for_prescription() {
 		return starting_age_class_for_prescription;
 	}
+	
+	private void identify_layer5_regen_and_layer6_regen_that_has_R_prescriptions() {
+		List<String> layer5 = all_layers.get(4);		int total_layer5 = layer5.size();
+		List<String> layer6 = all_layers.get(5);		int total_layer6 = layer6.size();
+		has_R_prescriptions = new boolean[total_layer5][];
+		for (int s5 = 0; s5 < total_layer5; s5++) {
+			has_R_prescriptions[s5] = new boolean[total_layer6];
+			for (int s6 = 0; s6 < total_layer6; s6++) {
+				has_R_prescriptions[s5][s6] = false;
+			}
+		}
+		int total_prescriptions = yield_tables_values.length;
+		for (int i = 0; i < total_prescriptions; i++) {
+			if (yield_tables_names[i].startsWith("R_")) {
+				String[] prescription_name = yield_tables_names[i].split("_");
+				int s5 = Collections.binarySearch(layer5, prescription_name[2]);
+				int s6 = Collections.binarySearch(layer6, prescription_name[3]);
+				has_R_prescriptions[s5][s6] = true;
+			}
+		}
+	}
+	
+	public boolean[][] get_has_R_prescriptions() {
+		return has_R_prescriptions;
+	}
 
-//	private void identify_group_for_prescription() {
-//		int total_prescriptions = yield_tables_values.length;
-//		prescription_group = new String[total_prescriptions];
-//		starting_age_class_for_prescription = new int[total_prescriptions];
-//		for (int i = 0; i < total_prescriptions; i++) {
-//			prescription_group[i] = yield_tables_names[i].substring(0, 3);	// the first 3 characters could be either : E_0, E_1, R_0, R_1
-//			
-//		}	
-//	}
-//	
-//	public String[] get_prescription_group() {
-//		return prescription_group;
-//	}
+	
+	
 	
 	// This block is For existing_strata ------------------------------------------------------------------------------------------------------
 	// This block is For existing_strata ------------------------------------------------------------------------------------------------------
@@ -650,7 +660,7 @@ public class Read_Database {
 	public List<List<String>> get_period_layers() {	// layers elements = 1, 2, ..., 99
 		List<String> period = new ArrayList<String>() {
 			{
-				for (int i = 1; i <= 99; i++) {add(Integer.toString(i));}
+				for (int i = 1; i <= 100; i++) {add(Integer.toString(i));}
 			}
 		};	
 		List<List<String>> period_layers = new ArrayList<List<String>>();
