@@ -45,7 +45,7 @@ import prism_convenience.PrismTableModel;
 public class Panel_QuickEdit_NaturalDisturbances extends JPanel {
 	private JTable table6c;
 	private Object[][] data6c;
-	private DefaultTableCellRenderer render6c;
+	private TableRowSorter<PrismTableModel> table6c_original_sorter;
 	private JButton btn_compact;
 	private JLabel view_label;
 	private JButton btnApplyPercentage;
@@ -53,9 +53,8 @@ public class Panel_QuickEdit_NaturalDisturbances extends JPanel {
 	public Panel_QuickEdit_NaturalDisturbances(JTable table6c, Object[][] data6c, JTable table6d, Object[][] data6d) {
 		this.table6c = table6c;
 		this.data6c = data6c;
-		this.render6c = (DefaultTableCellRenderer) table6c.getColumnModel().getColumn(0).getCellRenderer();
+		this.table6c_original_sorter = (TableRowSorter<PrismTableModel>) table6c.getRowSorter();
 		setLayout(new GridBagLayout());
-		
 		
 		
 		// -------------------------------------------------------------------------------------------------
@@ -217,7 +216,6 @@ public class Panel_QuickEdit_NaturalDisturbances extends JPanel {
 	
 	public void reset_view_without_changing_label() {
 		if (table6c.isEditing()) table6c.getCellEditor().cancelCellEditing();
-		
 		switch (btn_compact.getToolTipText()) {
 		case "switch to full view":
 			// for table 6c: conversion rate mean
@@ -231,31 +229,15 @@ public class Panel_QuickEdit_NaturalDisturbances extends JPanel {
 					return false;	// hide the row when all cells have the value of zero
 				}
 			};
-			TableRowSorter<PrismTableModel> sorter = new TableRowSorter<PrismTableModel>((PrismTableModel) table6c.getModel());
-			sorter.setRowFilter(compact_filter);
-			table6c.setRowSorter(sorter);
-			
-			// Set Color and Alignment for Cells
-	        DefaultTableCellRenderer compact_r = new DefaultTableCellRenderer() {
-	            @Override
-	            public Component getTableCellRendererComponent(JTable table, Object
-				value, boolean isSelected, boolean hasFocus, int row, int column) {
-					super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-					setHorizontalAlignment(JLabel.LEFT);
-					setBackground(new Color(160, 160, 160));	// Set cell background color	
-					if (isSelected)	setBackground(table.getSelectionBackground());	// Set background color	for selected row
-	                return this;
-	            }
-	        };
-			for (int i = 0; i < 2; i++) {	// first 2 columns only
-				table6c.getColumnModel().getColumn(i).setCellRenderer(compact_r);
+			TableRowSorter<PrismTableModel> compact_sorter = new TableRowSorter<PrismTableModel>((PrismTableModel) table6c.getModel());
+			compact_sorter.setRowFilter(compact_filter);
+			for (int i = 0; i < table6c.getColumnCount(); i++) {
+				compact_sorter.setSortable(i, false);	// use sorter to filter available layer5_regen and layer6_regen but we do not allow clicking on the table column header to sort
 			}
+			table6c.setRowSorter(compact_sorter);
 			break;
 		case "switch to compact view":
-			table6c.setRowSorter(null);
-			for (int i = 0; i < 2; i++) {	// first 2 columns only
-				table6c.getColumnModel().getColumn(i).setCellRenderer(render6c);
-			}
+			table6c.setRowSorter(table6c_original_sorter);
 			break;
 		}
 	}

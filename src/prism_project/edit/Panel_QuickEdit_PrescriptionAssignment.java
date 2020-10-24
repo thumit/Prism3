@@ -34,13 +34,13 @@ import prism_convenience.PrismTableModel;
 public class Panel_QuickEdit_PrescriptionAssignment extends JPanel {
 	private JTable table4a;
 	private Object[][] data4a;
-	private TableRowSorter<PrismTableModel> original_sorter;
+	private TableRowSorter<PrismTableModel> table4a_original_sorter;
 	private JButton btn_compact;
 
 	public Panel_QuickEdit_PrescriptionAssignment(JTable table4a, Object[][] data4a, JButton mass_check, JButton mass_uncheck) {
 		this.table4a = table4a;
 		this.data4a = data4a;
-		this.original_sorter = (TableRowSorter<PrismTableModel>) table4a.getRowSorter();
+		this.table4a_original_sorter = (TableRowSorter<PrismTableModel>) table4a.getRowSorter();
 		setLayout(new GridBagLayout());
 		
 		
@@ -122,7 +122,6 @@ public class Panel_QuickEdit_PrescriptionAssignment extends JPanel {
 	
 	public void reset_view_without_changing_label() {
 		if (table4a.isEditing()) table4a.getCellEditor().cancelCellEditing();
-		
 		switch (btn_compact.getToolTipText()) {
 		case "switch to full view":
 			RowFilter<Object, Object> compact_filter = new RowFilter<Object, Object>() {
@@ -143,7 +142,7 @@ public class Panel_QuickEdit_PrescriptionAssignment extends JPanel {
 			table4a.setRowSorter(compact_sorter);
 			break;
 		case "switch to compact view":
-			table4a.setRowSorter(original_sorter);
+			table4a.setRowSorter(table4a_original_sorter);
 			break;
 		}
 	}

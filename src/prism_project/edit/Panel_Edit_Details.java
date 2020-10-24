@@ -1690,8 +1690,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	public void create_table6c() {	
 		List<List<String>> all_layers = read_database.get_all_layers();
 		List<List<String>> all_layers_tooltips = read_database.get_all_layers_tooltips();
-		int total_layer5 = all_layers.get(4).size();
-		int total_layer6 = all_layers.get(5).size();
+		List<String> layer5 = all_layers.get(4);		int total_layer5 = layer5.size();
+		List<String> layer6 = all_layers.get(5);		int total_layer6 = layer6.size();
 		
 		// Setup the table------------------------------------------------------------	
 		if (is_table6c_loaded == false) { // Create a fresh new if Load fail				
@@ -1870,56 +1870,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		};			
         
 		
-		// Define a set of icon for some columns
-		ImageIcon[] imageIconArray = new ImageIcon[colCount6c];
-		for (int i = 0; i < colCount6c; i++) {
-			if (i == 2) {
-				imageIconArray[i] = IconHandle.get_scaledImageIcon(3, 3, "icon_main.png");
-			}
-		}
-		
-		
-		// Define a set of background color for all rows
-		Color[] rowColor = new Color[rowCount6c];
-		Color color1 = new Color(160, 160, 160);
-		Color color2 = new Color(192, 192, 192);
-		Color currentColor = color2;
-		int rCount = 0;
-
-		for (int i = 0; i < total_layer5; i++) {
-			if (currentColor == color2) {
-				currentColor = color1;
-			} else {
-				currentColor = color2;
-			}
-			for (int j = 0; j < total_layer6; j++) {
-				rowColor[rCount] = currentColor;
-				rCount++;
-			}
-		}
-		
-				
-		// Set Color and Alignment for Cells
-        DefaultTableCellRenderer r = new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object
-			value, boolean isSelected, boolean hasFocus, int row, int column) {
-				super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-				// setForeground(Color.RED);
-				setHorizontalAlignment(JLabel.LEFT);
-				// setFont(getFont().deriveFont(Font.BOLD));               	
-				setBackground(rowColor[row]);		//Set cell background color
-				if (isSelected) {
-					setBackground(table.getSelectionBackground());		//Set background color	for selected row
-				}
-				setIcon(imageIconArray[column]);	// Set icons for cells in some columns
-				setIconTextGap(15);		// Set the distance between icon and the actual data value
-//				setHorizontalAlignment(rowAlignment[row]);			
-                return this;
-            }
-        };						
-		
-        
         // show percentage for cells
         DefaultTableCellRenderer r2 = new DefaultTableCellRenderer() {
             @Override
@@ -1936,13 +1886,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             }
         };
-			
-		
-        table6c.getColumnModel().getColumn(0).setCellRenderer(r);
-        table6c.getColumnModel().getColumn(1).setCellRenderer(r);
         table6c.getColumnModel().getColumn(2).setCellRenderer(r2);
-		
-		
+        
+        
 //		table6c.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		table6c.setCellSelectionEnabled(true);
         table6c.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -1957,6 +1903,23 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 //			}
 //		}
 //		table6c.setRowSorter(sorter);
+		// Do not show unavailable combination of layer5_regen and layer6_regen
+		RowFilter<Object, Object> layers_filter = new RowFilter<Object, Object>() {
+			public boolean include(Entry entry) {
+				int s5 = Collections.binarySearch(layer5, (String) entry.getValue(0));
+				int s6 = Collections.binarySearch(layer6,  (String) entry.getValue(1));
+				if (read_database.get_has_R_prescriptions()[s5][s6] == true) {
+					return true;
+				}
+				return false;	// hide the row when the database does not have R prescription for this combination of layer5_regen and layer6_regen
+			}
+		};
+		TableRowSorter<PrismTableModel> layers_sorter = new TableRowSorter<PrismTableModel>(model6c);
+		layers_sorter.setRowFilter(layers_filter);
+		for (int i = 0; i < colCount6c; i++) {
+			layers_sorter.setSortable(i, false);	// use sorter to filter available layer5_regen and layer6_regen but we do not allow clicking on the table column header to sort
+		}
+		table6c.setRowSorter(layers_sorter);
 	}		
 	
 	
@@ -1964,8 +1927,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	public void create_table6d() {	
 		List<List<String>> all_layers = read_database.get_all_layers();
 		List<List<String>> all_layers_tooltips = read_database.get_all_layers_tooltips();
-		int total_layer5 = all_layers.get(4).size();
-		int total_layer6 = all_layers.get(5).size();
+		List<String> layer5 = all_layers.get(4);		int total_layer5 = layer5.size();
+		List<String> layer6 = all_layers.get(5);		int total_layer6 = layer6.size();
 		
 		// Setup the table------------------------------------------------------------	
 		if (is_table6d_loaded == false) { // Create a fresh new if Load fail				
@@ -2132,56 +2095,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			}
 		};			
         
-		
-		// Define a set of icon for some columns
-		ImageIcon[] imageIconArray = new ImageIcon[colCount6d];
-		for (int i = 0; i < colCount6d; i++) {
-			if (i == 2) {
-				imageIconArray[i] = IconHandle.get_scaledImageIcon(3, 3, "icon_main.png");
-			}
-		}
-		
-		
-		// Define a set of background color for all rows
-		Color[] rowColor = new Color[rowCount6d];
-		Color color1 = new Color(160, 160, 160);
-		Color color2 = new Color(192, 192, 192);
-		Color currentColor = color2;
-		int rCount = 0;
-
-		for (int i = 0; i < total_layer5; i++) {
-			if (currentColor == color2) {
-				currentColor = color1;
-			} else {
-				currentColor = color2;
-			}
-			for (int j = 0; j < total_layer6; j++) {
-				rowColor[rCount] = currentColor;
-				rCount++;
-			}
-		}
-		
-				
-		// Set Color and Alignment for Cells
-        DefaultTableCellRenderer r = new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object
-			value, boolean isSelected, boolean hasFocus, int row, int column) {
-				super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-				// setForeground(Color.RED);
-				setHorizontalAlignment(JLabel.LEFT);
-				// setFont(getFont().deriveFont(Font.BOLD));               	
-				setBackground(rowColor[row]);		//Set cell background color
-				if (isSelected) {
-					setBackground(table.getSelectionBackground());		//Set background color	for selected row
-				}
-				setIcon(imageIconArray[column]);	// Set icons for cells in some columns
-				setIconTextGap(15);		// Set the distance between icon and the actual data value
-//				setHorizontalAlignment(rowAlignment[row]);			
-                return this;
-            }
-        };						
-		
         
         // Set Double precision for cells
         DefaultTableCellRenderer r2 = new DefaultTableCellRenderer() {
@@ -2199,13 +2112,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             }
         };
-			
-		
-        table6d.getColumnModel().getColumn(0).setCellRenderer(r);
-        table6d.getColumnModel().getColumn(1).setCellRenderer(r);
         table6d.getColumnModel().getColumn(2).setCellRenderer(r2);		
 		
-		
+        
 		table6d.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		table6d.setCellSelectionEnabled(true);
         table6d.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -2220,6 +2129,23 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 //			}
 //		}
 //		table6d.setRowSorter(sorter);
+		// Do not show unavailable combination of layer5_regen and layer6_regen
+		RowFilter<Object, Object> layers_filter = new RowFilter<Object, Object>() {
+			public boolean include(Entry entry) {
+				int s5 = Collections.binarySearch(layer5, (String) entry.getValue(0));
+				int s6 = Collections.binarySearch(layer6,  (String) entry.getValue(1));
+				if (read_database.get_has_R_prescriptions()[s5][s6] == true) {
+					return true;
+				}
+				return false;	// hide the row when the database does not have R prescription for this combination of layer5_regen and layer6_regen
+			}
+		};
+		TableRowSorter<PrismTableModel> layers_sorter = new TableRowSorter<PrismTableModel>(model6d);
+		layers_sorter.setRowFilter(layers_filter);
+		for (int i = 0; i < colCount6d; i++) {
+			layers_sorter.setSortable(i, false);	// use sorter to filter available layer5_regen and layer6_regen but we do not allow clicking on the table column header to sort
+		}
+		table6d.setRowSorter(layers_sorter);
 	}
 	
 	
