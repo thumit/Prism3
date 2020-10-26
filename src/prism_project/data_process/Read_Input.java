@@ -743,51 +743,31 @@ public class Read_Input {
 	}	
 
 	
-	public Set<String> get_static_strata_without_sizeclass_in_row(int row) {	
-		Set<String> static_strata_without_sizeclass = new HashSet<String>();
-		List<List<String>> static_identifiers = get_static_identifiers_in_row(row);
-		// first 5 layers
-		for (String layer1: static_identifiers.get(0)) {
-			for (String layer2: static_identifiers.get(1)) {
-				for (String layer3: static_identifiers.get(2)) {
-					for (String layer4: static_identifiers.get(3)) {
-						for (String layer5: static_identifiers.get(4)) {
-							String combined_name = String.join("_", layer1, layer2, layer3, layer4, layer5);
-							static_strata_without_sizeclass.add(combined_name);
-						}					
-					}					
-				}				
-			}	
+	public LinkedHashMap<String, Integer> get_map_static_layer_in_row(int layer, int row) {
+		List<List<String>> static_identifiers = get_static_identifiers_in_row(row);	
+		LinkedHashMap<String, Integer> map = new LinkedHashMap<String, Integer>();
+		int count = static_identifiers.get(layer).size();
+		for (int s = 0; s < count; s++) {
+			map.put(static_identifiers.get(layer).get(s), s);
 		}
-		return static_strata_without_sizeclass;
+		return map;
 	}
 	
-	
-	public Set<String> get_static_strata_without_sizeclass_and_covertype_in_row(int row) {	
-		Set<String> static_strata_without_sizeclass_and_covertype = new HashSet<String>();
-		List<List<String>> static_identifiers = get_static_identifiers_in_row(row);
-		// first 4 layers
-		for (String layer1: static_identifiers.get(0)) {
-			for (String layer2: static_identifiers.get(1)) {
-				for (String layer3: static_identifiers.get(2)) {
-					for (String layer4: static_identifiers.get(3)) {
-						String combined_name = String.join("_", layer1, layer2, layer3, layer4);
-						static_strata_without_sizeclass_and_covertype.add(combined_name);
-					}					
-				}				
-			}	
+	public LinkedHashMap<Integer, Integer> get_map_static_period_in_row(int row) {
+		List<List<String>> static_identifiers = get_static_identifiers_in_row(row);	
+		LinkedHashMap<Integer, Integer> map = new LinkedHashMap<Integer, Integer>();
+		int count = static_identifiers.get(6).size();
+		for (int s = 0; s < count; s++) {
+			map.put(Integer.valueOf(static_identifiers.get(6).get(s)), s);
 		}
-		return static_strata_without_sizeclass_and_covertype;
-	}	
-	
-	
+		return map;
+	}
 	
 	public List<String> get_static_periods_in_row(int row) {
 		List<List<String>> static_identifiers = get_static_identifiers_in_row(row);	
 		return static_identifiers.get(6);
 	}	
 
-	
 	
 	public List<List<String>> get_dynamic_identifiers_in_row(int row) {
 		String dynamic_identifiers_info = bc_data[row][dynamic_identifiers_col];		//Note: row 0 is the title only, row 1 is constraint 1,.....

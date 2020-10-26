@@ -32,13 +32,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import lpsolve.LpSolve;
@@ -2095,96 +2096,140 @@ public class Solve_Iterations {
 											
 						
 						// Add user_defined_variables and parameters------------------------------------
-						List<Integer> static_periods = read.get_static_periods_in_row(id).stream().map(Integer::parseInt).collect(Collectors.toList());	// convert List<String> --> List<Integer>
-						Set<String> static_strata = read.get_static_strata_in_row(id);
 						int multiplier_col = constraint_column_names_list.indexOf("bc_multiplier");
 						double multiplier = (!bc_values[id][multiplier_col].equals("null")) ?  Double.parseDouble(bc_values[id][multiplier_col]) : 0;	// if multiplier = null --> 0
-									
-						// These 4 lines create the intersection sets, the original id could be retrieved from the 2 maps: map_E_strata_to_strata_id & map_R_strata_to_strata_id
-						List<String> common_E_strata = new ArrayList<String>(E_model_strata);
-						List<String> common_R_strata = new ArrayList<String>(R_model_strata);
-						common_E_strata.retainAll(static_strata);
-						common_R_strata.retainAll(static_strata);
+						LinkedHashMap<String, Integer> map_static_layer1 = read.get_map_static_layer_in_row(0, id);
+						LinkedHashMap<String, Integer> map_static_layer2 = read.get_map_static_layer_in_row(1, id);
+						LinkedHashMap<String, Integer> map_static_layer3 = read.get_map_static_layer_in_row(2, id);
+						LinkedHashMap<String, Integer> map_static_layer4 = read.get_map_static_layer_in_row(3, id);
+						LinkedHashMap<String, Integer> map_static_layer5 = read.get_map_static_layer_in_row(4, id);
+						LinkedHashMap<String, Integer> map_static_layer6 = read.get_map_static_layer_in_row(5, id);
+//						LinkedHashMap<String, Integer> map_static_period = read.get_map_static_layer_in_row(6, id);
+						LinkedHashMap<Integer, Integer> map_static_period = read.get_map_static_period_in_row(id);
 						
-						// Add existing variables xE[s1][s2][s3][s4][s5][s6](s5R)(s6R)(i)(t) --------------------------------------------------------------
-						for (String e_strata : common_E_strata) {
-							int e_strata_id = map_E_strata_to_strata_id.get(e_strata);			// Note we need index from model_strata not common_trata
-							if (xE[e_strata_id] != null) {
-								for (int s5R = 0; s5R < total_layer5; s5R++) {
-									if (xE[e_strata_id][s5R] != null) {
-										for (int s6R = 0; s6R < total_layer6; s6R++) {
-											if (xE[e_strata_id][s5R][s6R] != null) {
-												for (int i : E_prescription_ids[e_strata_id]) {
-													if (xE[e_strata_id][s5R][s6R][i] != null) {
-														for (int period : static_periods) {		// Loop all periods of user-defined
-															int t = period + iter;				// this is a special case we need to adjust
-															if (xE[e_strata_id][s5R][s6R][i][t] > 0) {		// if variable is defined, this value would be > 0   (this also removes the need of checking conversion and rotation) 
-																int var_index = xE[e_strata_id][s5R][s6R][i][t];
-																double para_value = parameter_info.get_total_value(
-																		var_info_array[var_index].get_prescription_id(),
-																		var_info_array[var_index].get_row_id(),
-																		parameters_indexes,
-																		dynamic_dentifiers_column_indexes, 
-																		dynamic_identifiers,
-																		var_cost_value[var_index]);
-																para_value = para_value * multiplier;
-																																										
-																if (para_value > 0) {	// only add if parameter is non zero
-																	c10_indexlist.get(c10_num).add(var_index);
-																	c10_valuelist.get(c10_num).add((double) para_value);
-																}
-															}
-														}
-													}
-												}
-											}
-										}
-									}
+						for (int var_index = 0; var_index < nvars; var_index++) {
+							Information_Variable this_var_info = var_info_array[var_index];
+							if (map_static_layer1.get(this_var_info.get_layer1()) != null
+									&& map_static_layer2.get(this_var_info.get_layer2()) != null
+									&& map_static_layer3.get(this_var_info.get_layer3()) != null
+									&& map_static_layer4.get(this_var_info.get_layer4()) != null
+									&& map_static_layer5.get(this_var_info.get_layer5()) != null
+									&& map_static_layer6.get(this_var_info.get_layer6()) != null
+//									&& map_static_period.get(String.valueOf(this_var_info.get_period() + iter)) != null) 	// this is a special case we need to back-adjust the already adjusted period
+									&& map_static_period.get(this_var_info.get_period() + iter) != null) 	// this is a special case we need to back-adjust the already adjusted period
+							{
+								double para_value = parameter_info.get_total_value(
+										this_var_info.get_prescription_id(),
+										this_var_info.get_row_id(),
+										parameters_indexes,
+										dynamic_dentifiers_column_indexes, 
+										dynamic_identifiers,
+										var_cost_value[var_index]);
+								para_value = para_value * multiplier;
+																																		
+								if (para_value > 0) {	// only add if parameter is non zero
+									c10_indexlist.get(c10_num).add(var_index);
+									c10_valuelist.get(c10_num).add((double) para_value);
 								}
 							}
 						}
 						
-						// Add regenerated variables xR[s1][s2][s3][s4][s5][s6][s5R][s6R][i][t][a]--------------------------------------------------------------
-						for (String r_strata : common_R_strata) {
-							int r_strata_id = map_R_strata_to_strata_id.get(r_strata);			// Note we need index from model_R_strata not common_R_trata
-							if (xR[r_strata_id] != null) {
-								for (int s5R = 0; s5R < total_layer5; s5R++) {
-									if (xR[r_strata_id][s5R] != null) {
-										for (int s6R = 0; s6R < total_layer6; s6R++) {
-											if (xR[r_strata_id][s5R][s6R] != null) {
-												for (int i : R_prescription_ids[r_strata_id]) {
-													if (xR[r_strata_id][s5R][s6R][i] != null) {
-														for (int period : static_periods) {		// Loop all periods of user-defined
-															int t = period + iter; 				// this is a special case we need to adjust
-															if (xR[r_strata_id][s5R][s6R][i][t] != null) {
-																for (int a = 1; a <= t - 1; a++) {
-																	if (xR[r_strata_id][s5R][s6R][i][t][a] > 0) {		// if variable is defined, this value would be > 0   (this also removes the need of checking conversion and rotation)
-																		int var_index = xR[r_strata_id][s5R][s6R][i][t][a];
-																		double para_value = parameter_info.get_total_value(
-																				var_info_array[var_index].get_prescription_id(),
-																				var_info_array[var_index].get_row_id(),
-																				parameters_indexes,
-																				dynamic_dentifiers_column_indexes, 
-																				dynamic_identifiers,
-																				var_cost_value[var_index]);
-																		para_value = para_value * multiplier;
-																																												
-																		if (para_value > 0) { // only add if parameter is non zero
-																			c10_indexlist.get(c10_num).add(var_index);
-																			c10_valuelist.get(c10_num).add((double) para_value);
-																		}
-																	}
-																}
-															}
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}					
+						
+						
+						
+						
+						
+						
+//						List<Integer> static_periods = read.get_static_periods_in_row(id).stream().map(Integer::parseInt).collect(Collectors.toList());	// convert List<String> --> List<Integer>
+//						Set<String> static_strata = read.get_static_strata_in_row(id);
+//						int multiplier_col = constraint_column_names_list.indexOf("bc_multiplier");
+//						double multiplier = (!bc_values[id][multiplier_col].equals("null")) ?  Double.parseDouble(bc_values[id][multiplier_col]) : 0;	// if multiplier = null --> 0
+//									
+//						// These 4 lines create the intersection sets, the original id could be retrieved from the 2 maps: map_E_strata_to_strata_id & map_R_strata_to_strata_id
+//						List<String> common_E_strata = new ArrayList<String>(E_model_strata);
+//						List<String> common_R_strata = new ArrayList<String>(R_model_strata);
+//						common_E_strata.retainAll(static_strata);
+//						common_R_strata.retainAll(static_strata);
+//						
+//						// Add existing variables xE[s1][s2][s3][s4][s5][s6](s5R)(s6R)(i)(t) --------------------------------------------------------------
+//						for (String e_strata : common_E_strata) {
+//							int e_strata_id = map_E_strata_to_strata_id.get(e_strata);			// Note we need index from model_strata not common_trata
+//							if (xE[e_strata_id] != null) {
+//								for (int s5R = 0; s5R < total_layer5; s5R++) {
+//									if (xE[e_strata_id][s5R] != null) {
+//										for (int s6R = 0; s6R < total_layer6; s6R++) {
+//											if (xE[e_strata_id][s5R][s6R] != null) {
+//												for (int i : E_prescription_ids[e_strata_id]) {
+//													if (xE[e_strata_id][s5R][s6R][i] != null) {
+//														for (int period : static_periods) {		// Loop all periods of user-defined
+//															int t = period + iter;				// this is a special case we need to adjust
+//															if (xE[e_strata_id][s5R][s6R][i][t] > 0) {		// if variable is defined, this value would be > 0   (this also removes the need of checking conversion and rotation) 
+//																int var_index = xE[e_strata_id][s5R][s6R][i][t];
+//																double para_value = parameter_info.get_total_value(
+//																		var_info_array[var_index].get_prescription_id(),
+//																		var_info_array[var_index].get_row_id(),
+//																		parameters_indexes,
+//																		dynamic_dentifiers_column_indexes, 
+//																		dynamic_identifiers,
+//																		var_cost_value[var_index]);
+//																para_value = para_value * multiplier;
+//																																										
+//																if (para_value > 0) {	// only add if parameter is non zero
+//																	c10_indexlist.get(c10_num).add(var_index);
+//																	c10_valuelist.get(c10_num).add((double) para_value);
+//																}
+//															}
+//														}
+//													}
+//												}
+//											}
+//										}
+//									}
+//								}
+//							}
+//						}
+//						
+//						// Add regenerated variables xR[s1][s2][s3][s4][s5][s6][s5R][s6R][i][t][a]--------------------------------------------------------------
+//						for (String r_strata : common_R_strata) {
+//							int r_strata_id = map_R_strata_to_strata_id.get(r_strata);			// Note we need index from model_R_strata not common_R_trata
+//							if (xR[r_strata_id] != null) {
+//								for (int s5R = 0; s5R < total_layer5; s5R++) {
+//									if (xR[r_strata_id][s5R] != null) {
+//										for (int s6R = 0; s6R < total_layer6; s6R++) {
+//											if (xR[r_strata_id][s5R][s6R] != null) {
+//												for (int i : R_prescription_ids[r_strata_id]) {
+//													if (xR[r_strata_id][s5R][s6R][i] != null) {
+//														for (int period : static_periods) {		// Loop all periods of user-defined
+//															int t = period + iter; 				// this is a special case we need to adjust
+//															if (xR[r_strata_id][s5R][s6R][i][t] != null) {
+//																for (int a = 1; a <= t - 1; a++) {
+//																	if (xR[r_strata_id][s5R][s6R][i][t][a] > 0) {		// if variable is defined, this value would be > 0   (this also removes the need of checking conversion and rotation)
+//																		int var_index = xR[r_strata_id][s5R][s6R][i][t][a];
+//																		double para_value = parameter_info.get_total_value(
+//																				var_info_array[var_index].get_prescription_id(),
+//																				var_info_array[var_index].get_row_id(),
+//																				parameters_indexes,
+//																				dynamic_dentifiers_column_indexes, 
+//																				dynamic_identifiers,
+//																				var_cost_value[var_index]);
+//																		para_value = para_value * multiplier;
+//																																												
+//																		if (para_value > 0) { // only add if parameter is non zero
+//																			c10_indexlist.get(c10_num).add(var_index);
+//																			c10_valuelist.get(c10_num).add((double) para_value);
+//																		}
+//																	}
+//																}
+//															}
+//														}
+//													}
+//												}
+//											}
+//										}
+//									}
+//								}
+//							}
+//						}					
 						
 						// Add bounds
 						c10_lblist.add((double) 0);
@@ -3741,6 +3786,32 @@ public class Solve_Iterations {
 		return (status == 0) || (status == 1) || (status == 11) || (status == 12);
 	}
 	// End of For LPSOLVE only ----------------------------------------------------------------------------------------
+	
+	private List<String> getCommonElements(final List<String> listA, final List<String> listB) {
+		final Map<Integer, List<String>> hashA = new HashMap<Integer, List<String>>(listA.size());
+		final Iterator<String> a = listA.iterator();
+		
+		while (a.hasNext()) {
+			final String item = a.next();
+			List<String> subList = hashA.get(item.hashCode());
+			if (subList == null) {
+				subList = new ArrayList<String>(4);
+				hashA.put(item.hashCode(), subList);
+			}
+			subList.add(item);
+		}
+
+		final List<String> results = new ArrayList<String>();
+		final Iterator<String> i = listB.iterator();
+		while (i.hasNext()) {
+			final String item = i.next();
+			final List<String> list = hashA.get(item.hashCode());
+			if (list != null && list.contains(item))
+				results.add(item);
+		}
+
+		return results;
+	}
 	
 }
 

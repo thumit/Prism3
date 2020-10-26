@@ -120,6 +120,20 @@ public class Identifiers_Processing {
 	}
 		
 	
+//	if (is_range_identifier(this_dynamic_identifier.get(0))) {	//if this is a range identifier (the 1st element of this identifier contains ",")
+//	private boolean is_range_identifier(String s) throws SAXException {
+//		char[] a = s.toCharArray();
+//		boolean valid = false;
+//		for (char c : a) {
+//			valid = (c <= ',');
+//			if (valid) {
+//				return valid;
+//			}
+//		}
+//		return valid;
+//	}
+	
+	
 	public List<List<String>> get_static_identifiers(String static_identifiers_info) {
 		// tokenizer is used instead of String.split because it is faster
 		// Read the whole cell which include a string with many ; 
