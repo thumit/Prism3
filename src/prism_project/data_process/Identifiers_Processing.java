@@ -91,13 +91,13 @@ public class Identifiers_Processing {
 	}	
 	
 	
-	public Boolean are_all_dynamic_identifiers_matched(int prescription_id, int row_id, List<String> dynamic_identifiers_column_indexes, List<List<String>> dynamic_identifiers) {
-		if (!dynamic_identifiers_column_indexes.get(0).equals("NoIdentifier")) {	//If there are dynamic identifiers, Check if in the same row of this yield table we have all the dynamic identifiers match	
+	public Boolean are_all_dynamic_identifiers_matched(int prescription_id, int row_id, List<Integer> dynamic_identifiers_column_indexes, List<List<String>> dynamic_identifiers) {
+		if (dynamic_identifiers_column_indexes != null) {	//If there are dynamic identifiers, Check if in the same row of this yield table we have all the dynamic identifiers match	
 			int identifiers_count = 0;
 			for (List<String> this_dynamic_identifier : dynamic_identifiers) {	// loop all dynamic identifiers
-				int current_dynamic_column = Integer.parseInt(dynamic_identifiers_column_indexes.get(identifiers_count));		//This is the yield table column of the dynamic identifier
+				int col_id = dynamic_identifiers_column_indexes.get(identifiers_count);		//This is the yield table column of the dynamic identifier
 				if (this_dynamic_identifier.get(0).contains(",")) {	//if this is a range identifier (the 1st element of this identifier contains ",")							
-					double yt_value = Double.parseDouble(yield_tables_values[prescription_id][row_id][current_dynamic_column]);
+					double yt_value = Double.parseDouble(yield_tables_values[prescription_id][row_id][col_id]);
 					for (String range : this_dynamic_identifier) {	//Loop all ranges of this range identifier
 						StringTokenizer tok = new StringTokenizer(range, ",");	// split by ,
 						// will for sure have 2 items in the range --> do not need while check here
@@ -108,7 +108,7 @@ public class Identifiers_Processing {
 						}
 					}										
 				} else { // if this is a discrete identifier
-					int index = Collections.binarySearch(this_dynamic_identifier, yield_tables_values[prescription_id][row_id][current_dynamic_column]);
+					int index = Collections.binarySearch(this_dynamic_identifier, yield_tables_values[prescription_id][row_id][col_id]);
 					if (index < 0) 	{	// If all selected items in this list do not contain the value in the same column (This is String comparison, we may need to change to present data manually change by users, ex. ponderosa 221 vs 221.00) 
 						return false;			
 					}
@@ -172,18 +172,21 @@ public class Identifiers_Processing {
 	}
 	
 	
-	public List<String> get_dynamic_dentifiers_column_indexes(String dynamic_identifiers_info) {
-		// tokenizer is used instead of String.split because it is faster
-		// Read the whole cell which include a string with many ; 
-		List<String> dynamic_dentifiers_column_indexes = new ArrayList<String>();
-		StringTokenizer t1 = new StringTokenizer(dynamic_identifiers_info, ";");
-		while (t1.hasMoreTokens()) {		// loop through each element (separated by ;) --> loop each dynamic identifier
-			String infor = t1.nextToken();
-			
-			StringTokenizer t2 = new StringTokenizer(infor, " ");	// info_array = the array storing all the elements split by " "
-			if (t2.hasMoreTokens()) dynamic_dentifiers_column_indexes.add(t2.nextToken().replaceAll("\\s+",""));		// add the first element which is the identifier column index
+	public List<Integer> get_dynamic_dentifiers_column_indexes(String dynamic_identifiers_info) {
+		if (!dynamic_identifiers_info.equals("NoIdentifier")) {
+			// tokenizer is used instead of String.split because it is faster
+			// Read the whole cell which include a string with many ; 
+			List<Integer> dynamic_dentifiers_column_indexes = new ArrayList<Integer>();
+			StringTokenizer t1 = new StringTokenizer(dynamic_identifiers_info, ";");
+			while (t1.hasMoreTokens()) {		// loop through each element (separated by ;) --> loop each dynamic identifier
+				String infor = t1.nextToken();
+				
+				StringTokenizer t2 = new StringTokenizer(infor, " ");	// info_array = the array storing all the elements split by " "
+				if (t2.hasMoreTokens()) dynamic_dentifiers_column_indexes.add(Integer.valueOf(t2.nextToken().replaceAll("\\s+","")));		// add the first element which is the identifier column index
+			}
+			return dynamic_dentifiers_column_indexes;
 		}
-		return dynamic_dentifiers_column_indexes;
+		return null;	// when there is "NoIdentifier"
 	}
 	
 	

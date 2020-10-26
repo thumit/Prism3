@@ -241,11 +241,11 @@ public class Read_Input {
 			int category_dynamic_identifiers_col = 3;
 			// This array stores dynamic identifiers in each row of the input table
 			List<List<String>>[] all_priority_condition_dynamic_identifiers = new ArrayList[category_total_rows];
-			List<String>[] all_priority_condition_dynamic_dentifiers_column_indexes = new ArrayList[category_total_rows];
+			List<Integer>[] all_priority_condition_dynamic_dentifiers_column_indexes = new ArrayList[category_total_rows];
 			for (int priority = 0; priority < category_total_rows; priority++) {	// Looping from the highest priority condition to the lowest, each priority is a row in the table GUI
 				String dynamic_identifiers_info = category_data[priority][category_dynamic_identifiers_col];	
 				List<List<String>> category_dynamic_identifiers = identifiers_processing.get_dynamic_identifiers(dynamic_identifiers_info);
-				List<String> category_dynamic_identifiers_column_indexes = identifiers_processing.get_dynamic_dentifiers_column_indexes(dynamic_identifiers_info);
+				List<Integer> category_dynamic_identifiers_column_indexes = identifiers_processing.get_dynamic_dentifiers_column_indexes(dynamic_identifiers_info);
 				all_priority_condition_dynamic_identifiers[priority] = category_dynamic_identifiers;
 				all_priority_condition_dynamic_dentifiers_column_indexes[priority] = category_dynamic_identifiers_column_indexes;
 			}
@@ -320,7 +320,7 @@ public class Read_Input {
 			int assignment_dynamic_identifiers_col = 4;
 			List<List<String>>[] all_condition_static_identifiers = new ArrayList[assignment_total_rows];	// This array stores static identifiers in each row of the input table
 			List<List<String>>[] all_condition_dynamic_identifiers = new ArrayList[assignment_total_rows];	// This array stores dynamic identifiers in each row of the input table
-			List<String>[] all_condition_dynamic_dentifiers_column_indexes = new ArrayList[assignment_total_rows];
+			List<Integer>[] all_condition_dynamic_dentifiers_column_indexes = new ArrayList[assignment_total_rows];
 			for (int aggregation_condition = 0; aggregation_condition < assignment_total_rows; aggregation_condition++) {		// Loop all aggregation conditions
 				String static_identifiers_info = assignment_data[aggregation_condition][assignment_static_identifiers_col];	
 				List<List<String>> assignment_static_identifiers = identifiers_processing.get_static_identifiers(static_identifiers_info);
@@ -328,7 +328,7 @@ public class Read_Input {
 				
 				String dynamic_identifiers_info = assignment_data[aggregation_condition][assignment_dynamic_identifiers_col];	
 				List<List<String>> assignment_dynamic_identifiers = identifiers_processing.get_dynamic_identifiers(dynamic_identifiers_info);
-				List<String> assignment_dynamic_identifiers_column_indexes = identifiers_processing.get_dynamic_dentifiers_column_indexes(dynamic_identifiers_info);
+				List<Integer> assignment_dynamic_identifiers_column_indexes = identifiers_processing.get_dynamic_dentifiers_column_indexes(dynamic_identifiers_info);
 				all_condition_dynamic_identifiers[aggregation_condition] = assignment_dynamic_identifiers;
 				all_condition_dynamic_dentifiers_column_indexes[aggregation_condition] = assignment_dynamic_identifiers_column_indexes;
 			}
@@ -776,9 +776,9 @@ public class Read_Input {
 	}	
 	
 	
-	public List<String> get_dynamic_identifiers_column_indexes_in_row(int row) {	//Column 8 in the GUI table "Dynamic identifiers". The whole is contained by UC_value[i][8]
+	public List<Integer> get_dynamic_identifiers_column_indexes_in_row(int row) {	//Column 8 in the GUI table "Dynamic identifiers". The whole is contained by UC_value[i][8]
 		String dynamic_identifiers_info = bc_data[row][dynamic_identifiers_col];		//Note: row 0 is the title only, row 1 is constraint 1,.....
-		List<String> dynamic_identifiers_column_indexes = identifiers_processing.get_dynamic_dentifiers_column_indexes(dynamic_identifiers_info);
+		List<Integer> dynamic_identifiers_column_indexes = identifiers_processing.get_dynamic_dentifiers_column_indexes(dynamic_identifiers_info);
 		return dynamic_identifiers_column_indexes;
 	}	
 	

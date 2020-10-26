@@ -29,12 +29,11 @@ public class Information_Parameter {
 	}
 	
 	public double get_total_value(int prescription_id, int row_id,
-			List<String> parameters_indexes, List<String> dynamic_dentifiers_column_indexes, List<List<String>> dynamic_identifiers, double cost_value) {		// Note: already sort each of the dynamic_identifiers in Panel_Solve
-		String first_dynamic_identifier_index = dynamic_dentifiers_column_indexes.get(0);
+			List<String> parameters_indexes, List<Integer> dynamic_dentifiers_column_indexes, List<List<String>> dynamic_identifiers, double cost_value) {		// Note: already sort each of the dynamic_identifiers in Panel_Solve
 		String first_parameter_index = parameters_indexes.get(0);
 		double value_to_return = 0;						
 		
-		if (first_dynamic_identifier_index.equals("NoIdentifier") && first_parameter_index.equals("NoParameter")) {	// This is the only case when we don't need to check yield table
+		if (dynamic_dentifiers_column_indexes == null /* NoIdentifier */ && first_parameter_index.equals("NoParameter")) {	// This is the only case when we don't need to check yield table
 			value_to_return = 1;
 		} else {	// Check the prescription (a.k.a. yield table) 				
 			if (row_id != -9999 && row_id < yield_tables_values[prescription_id].length) { 	// If row in this prescription exists (not exists when row_id = -9999 or >= total rows in that prescription)

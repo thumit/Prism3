@@ -1636,7 +1636,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 														
 								List<List<String>> static_identifiers = new ArrayList<>(identifiers_processing.get_static_identifiers(current_static_identifiers));
 								List<List<String>> dynamic_identifiers = new ArrayList<>(identifiers_processing.get_dynamic_identifiers(current_dynamic_identifiers));
-								List<String> dynamic_dentifiers_column_indexes = new ArrayList<>(identifiers_processing.get_dynamic_dentifiers_column_indexes(current_dynamic_identifiers));
+								List<Integer> dynamic_dentifiers_column_indexes = new ArrayList<>(identifiers_processing.get_dynamic_dentifiers_column_indexes(current_dynamic_identifiers));
 								List<String> parameters_indexes = new ArrayList<String>(identifiers_processing.get_parameters_indexes(current_parameter_index));
 														
 								// Process all the variables in output05 and use static_identifiers to trim to get the var_name_list & var_value_list
@@ -1945,7 +1945,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 
 		private double[] get_results(Read_Database read_database, List<Information_Variable> var_info,
 				List<Integer> var_iter, List<Double> var_value, List<Double> var_cost, double multiplier,
-				List<String> parameters_indexes_list, List<String> dynamic_dentifiers_column_indexes,
+				List<String> parameters_indexes_list, List<Integer> dynamic_dentifiers_column_indexes,
 				List<List<String>> dynamic_identifiers) {			// var_info, var_iter, var_value, var_cost are results after filtered by static_identifiers
 			 
 			double[] sum_all = new double[total_iteration];

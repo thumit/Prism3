@@ -30,7 +30,7 @@ public class Information_Cost {
 	private Identifiers_Processing identifiers_processing;
 	private List<List<String>>[] all_priority_condition_static_identifiers;
 	private List<List<String>>[] all_priority_condition_dynamic_identifiers;
-	private List<String>[] all_priority_condition_dynamic_dentifiers_column_indexes;
+	private List<Integer>[] all_priority_condition_dynamic_dentifiers_column_indexes;
 	private String[][] all_priority_condition_info;	
 	
 	private int activity_col_id;
