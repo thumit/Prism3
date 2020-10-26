@@ -1848,7 +1848,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						formatter.setMinimumFractionDigits(0);
 						formatter.setMaximumFractionDigits(2);
 						String percentage = formatter.format((Number) getValueAt(row, column));
-						tip = percentage + "% of the area subjected to this disturbance will be regenerated as cover type " + getValueAt(row, 1).toString();
+						tip = percentage + "% of the area subjected to this disturbance will be regenerated as cover type " + getValueAt(row, 0).toString() + ", size class " + getValueAt(row, 1).toString();
 					
 						// Show problem tip 		NOTE: we need to use getValueAt because of the compact view feature which makes mismatching between full data and displayed data
 						double total_percentage = 0;
