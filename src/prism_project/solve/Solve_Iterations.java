@@ -2043,29 +2043,29 @@ public class Solve_Iterations {
 						for (String e_strata : common_E_strata) {
 							int e_strata_id = map_E_strata_to_strata_id.get(e_strata);			// Note we need index from model_strata not common_trata
 							if (xE[e_strata_id] != null) {
-								int total_no_1 = xE[e_strata_id].length;
-								for (int s5R = 0; s5R < total_no_1; s5R++) {
-									int total_no_2 = xE[e_strata_id][s5R].length;
-									for (int s6R = 0; s6R < total_no_2; s6R++) {
-										if (xE[e_strata_id][s5R][s6R] != null) {
-											for (int i : E_prescription_ids[e_strata_id]) {
-												if (xE[e_strata_id][s5R][s6R][i] != null) {
-													for (int period : static_periods) {		// Loop all periods of user-defined
-														int t = period + iter;				// this is a special case we need to adjust
-														if (xE[e_strata_id][s5R][s6R][i][t] > 0) {		// if variable is defined, this value would be > 0   (this also removes the need of checking conversion and rotation) 
-															int var_index = xE[e_strata_id][s5R][s6R][i][t];
-															double para_value = parameter_info.get_total_value(
-																	var_info_array[var_index].get_prescription_id(),
-																	var_info_array[var_index].get_row_id(),
-																	parameters_indexes,
-																	dynamic_dentifiers_column_indexes, 
-																	dynamic_identifiers,
-																	var_cost_value[var_index]);
-															para_value = para_value * multiplier;
-																																									
-															if (para_value > 0) {	// only add if parameter is non zero
-																c10_indexlist.get(c10_num).add(var_index);
-																c10_valuelist.get(c10_num).add((double) para_value);
+								for (int s5R = 0; s5R < total_layer5; s5R++) {
+									if (xE[e_strata_id][s5R] != null) {
+										for (int s6R = 0; s6R < total_layer6; s6R++) {
+											if (xE[e_strata_id][s5R][s6R] != null) {
+												for (int i : E_prescription_ids[e_strata_id]) {
+													if (xE[e_strata_id][s5R][s6R][i] != null) {
+														for (int period : static_periods) {		// Loop all periods of user-defined
+															int t = period + iter;				// this is a special case we need to adjust
+															if (xE[e_strata_id][s5R][s6R][i][t] > 0) {		// if variable is defined, this value would be > 0   (this also removes the need of checking conversion and rotation) 
+																int var_index = xE[e_strata_id][s5R][s6R][i][t];
+																double para_value = parameter_info.get_total_value(
+																		var_info_array[var_index].get_prescription_id(),
+																		var_info_array[var_index].get_row_id(),
+																		parameters_indexes,
+																		dynamic_dentifiers_column_indexes, 
+																		dynamic_identifiers,
+																		var_cost_value[var_index]);
+																para_value = para_value * multiplier;
+																																										
+																if (para_value > 0) {	// only add if parameter is non zero
+																	c10_indexlist.get(c10_num).add(var_index);
+																	c10_valuelist.get(c10_num).add((double) para_value);
+																}
 															}
 														}
 													}
