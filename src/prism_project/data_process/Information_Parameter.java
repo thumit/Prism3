@@ -45,8 +45,8 @@ public class Information_Parameter {
 						value_to_return = cost_value;			
 					} else {	// If this is a constraint with Parameters		
 						for (String index : parameters_indexes) {		// Loop all parameters_indexes_list 	
-							int col = Integer.parseInt(index);						
-							value_to_return = value_to_return + Double.parseDouble(yield_tables_values[prescription_id][row_id][col]);		// then add to the total of all parameters found
+							int col_id = Integer.parseInt(index);						
+							value_to_return = value_to_return + Double.parseDouble(yield_tables_values[prescription_id][row_id][col_id]);		// then add to the total of all parameters found
 						}
 					}						
 				}			
