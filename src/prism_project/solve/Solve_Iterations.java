@@ -697,35 +697,33 @@ public class Solve_Iterations {
 							if (row_id != -9999 && row_id < total_rows_of_precription[prescription_id]) {	
 							// This second if then is not necessary because we already have it in the function call 
 							// It is here to help not create unnecessary Cost objects and therefore would save processing time
-								int s5 = Collections.binarySearch(layer5, var_info.get_layer5());
-								int t = var_info.get_period();
-								int tR = var_info.get_rotation_period();
-								double discounted_value = 1 / Math.pow(1 + annual_discount_rate, total_years_in_one_period * (t - 1));
-								
 								List<String> conversion_after_disturbances_classification_list = new ArrayList<String>();	// i.e. P P disturbance		P D disturbance
 								List<Double> conversion_after_disturbances_total_loss_rate_list = new ArrayList<Double>();	// i.e. 0.25				0.75
 								
-								if (t != tR) {		// Note: no replacing disturbance in the period = rotation period --> no conversion cost after replacing disturbance
+								if (var_info.get_period() != var_info.get_rotation_period()) {		// Note: no replacing disturbance in the period = rotation period --> no conversion cost after replacing disturbance
 									double[] user_loss_rate = map_var_index_to_user_loss_rates.get(var_index);
 									double[][][] conversion_rate_mean = new double[total_disturbances][][];
 									
 									for (int s5R = 0; s5R < total_layer5; s5R++) {
 										for (int s6R = 0; s6R < total_layer6; s6R++) {
-											double total_loss_rate_for_this_conversion = 0;
-											for (int k = 0; k < total_disturbances; k++) {
-												if (var_rd_condition_id[var_index][k] != -9999) {
-													conversion_rate_mean[k] = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index][k]);
-													total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (user_loss_rate[k] / 100) * (conversion_rate_mean[k][s5R][s6R] / 100);
+											if (has_R_prescriptions[s5R][s6R]) {
+												double total_loss_rate_for_this_conversion = 0;
+												for (int k = 0; k < total_disturbances; k++) {
+													if (var_rd_condition_id[var_index][k] != -9999) {
+														conversion_rate_mean[k] = disturbance_info.get_conversion_rate_mean_from_rd_condition_id(var_rd_condition_id[var_index][k]);
+														total_loss_rate_for_this_conversion = total_loss_rate_for_this_conversion + (user_loss_rate[k] / 100) * (conversion_rate_mean[k][s5R][s6R] / 100);
+													}
+												}
+												if (total_loss_rate_for_this_conversion > 0) {
+													conversion_after_disturbances_classification_list.add(layer5.get(s5R) + " " + layer6.get(s6R) + " " + "disturbance");
+													conversion_after_disturbances_total_loss_rate_list.add(total_loss_rate_for_this_conversion);
 												}
 											}
-											if (total_loss_rate_for_this_conversion > 0) {
-												conversion_after_disturbances_classification_list.add(layer5.get(s5) + " " + layer5.get(s5R) + " " + "disturbance");
-												conversion_after_disturbances_total_loss_rate_list.add(total_loss_rate_for_this_conversion);
-											}														
 										}														
 									}
 								}
 								
+								double discounted_value = 1 / Math.pow(1 + annual_discount_rate, total_years_in_one_period * (var_info.get_period() - 1));		// this is adjusted period for rolling horizon model
 								var_cost_value[var_index] = cost_info.get_cost_value(
 										var_info, cost_condition_list,
 										conversion_after_disturbances_classification_list,
@@ -746,9 +744,6 @@ public class Solve_Iterations {
 					// CREATE CONSTRAINTS-------------------------------------------------
 					// CREATE CONSTRAINTS-------------------------------------------------
 					// CREATE CONSTRAINTS-------------------------------------------------
-
-					
-					
 					// Constraints 2-------------------------------------------------
 					List<List<Integer>> c2_indexlist = new ArrayList<List<Integer>>();	
 					List<List<Double>> c2_valuelist = new ArrayList<List<Double>>();
