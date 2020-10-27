@@ -28,24 +28,23 @@ public class Information_Parameter {
 		yield_tables_values = read_database.get_yield_tables_values();
 	}
 	
-	public double get_total_value(int prescription_id, int row_id,
-			List<String> parameters_indexes, List<Integer> dynamic_dentifiers_column_indexes, List<List<String>> dynamic_identifiers, double cost_value) {		// Note: already sort each of the dynamic_identifiers in Panel_Solve
-		String first_parameter_index = parameters_indexes.get(0);
+	public double get_total_value(int prescription_id, int row_id, 
+			int parameters_type, List<Integer> parameters_indexes,
+			List<Integer> dynamic_dentifiers_column_indexes, List<List<String>> dynamic_identifiers, double cost_value) {		// Note: already sort each of the dynamic_identifiers in Panel_Solve
 		double value_to_return = 0;						
 		
-		if (dynamic_dentifiers_column_indexes == null /* NoIdentifier */ && first_parameter_index.equals("NoParameter")) {	// This is the only case when we don't need to check yield table
+		if (dynamic_dentifiers_column_indexes == null /* NoIdentifier */ && parameters_type == 0 /*"NoParameter"*/) {	// This is the only case when we don't need to check yield table
 			value_to_return = 1;
 		} else {	// Check the prescription (a.k.a. yield table) 				
 			if (row_id != -9999 && row_id < yield_tables_values[prescription_id].length) { 	// If row in this prescription exists (not exists when row_id = -9999 or >= total rows in that prescription)
 				boolean constraint_dynamic_identifiers_matched = identifiers_processing.are_all_dynamic_identifiers_matched(prescription_id, row_id, dynamic_dentifiers_column_indexes, dynamic_identifiers);								
 				if (constraint_dynamic_identifiers_matched) {					
-					if (first_parameter_index.equals("NoParameter")) {			// Return 1 if NoParameter & all dynamic identifiers match
+					if (parameters_type == 0) {			// if "NoParameter" & all dynamic identifiers match then return 1 
 						value_to_return = 1;							
-					} else if (first_parameter_index.equals("CostParameter")) {			// If this is a cost constraint
+					} else if (parameters_type == 1) {	// if "CostParameter" & all dynamic identifiers match
 						value_to_return = cost_value;			
-					} else {	// If this is a constraint with Parameters		
-						for (String index : parameters_indexes) {		// Loop all parameters_indexes_list 	
-							int col_id = Integer.parseInt(index);						
+					} else {							// if this is a constraint with Parameters		
+						for (int col_id : parameters_indexes) {		// Loop all parameters_indexes_list 	
 							value_to_return = value_to_return + Double.parseDouble(yield_tables_values[prescription_id][row_id][col_id]);		// then add to the total of all parameters found
 						}
 					}						

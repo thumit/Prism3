@@ -190,13 +190,35 @@ public class Identifiers_Processing {
 	}
 	
 	
-	public List<String> get_parameters_indexes(String parameters_info) {
-		List<String> parameters_indexes_list = new ArrayList<String>();
-		//Read the whole cell into array
-		String[] parameter_indexes_array = parameters_info.split("\\s+");			
-		for (int i = 0; i < parameter_indexes_array.length; i++) {	
-			parameters_indexes_list.add(parameter_indexes_array[i].replaceAll("\\s+",""));
-		}				
-		return parameters_indexes_list;
+	
+	public int get_parameters_type(String parameters_info) {
+		if (parameters_info.equals("NoParameter")) return 0;
+		if (parameters_info.equals("CostParameter")) return 1;
+		return 2;
 	}
+	
+	
+	public List<Integer> get_parameters_indexes(String parameters_info) {	
+		if (!parameters_info.equals("NoParameter") && !parameters_info.equals("CostParameter")) {
+			List<Integer> parameters_indexes_list = new ArrayList<Integer>();
+			//Read the whole cell into array
+			String[] parameter_indexes_array = parameters_info.split("\\s+");			
+			for (int i = 0; i < parameter_indexes_array.length; i++) {	
+				parameters_indexes_list.add(Integer.valueOf(parameter_indexes_array[i].replaceAll("\\s+","")));
+			}	
+			return parameters_indexes_list;
+		}
+		return null;
+	}	
+	
+	
+//	public List<String> get_parameters_indexes(String parameters_info) {
+//		List<String> parameters_indexes_list = new ArrayList<String>();
+//		// Read the whole cell into array
+//		String[] parameter_indexes_array = parameters_info.split("\\s+");
+//		for (int i = 0; i < parameter_indexes_array.length; i++) {
+//			parameters_indexes_list.add(parameter_indexes_array[i].replaceAll("\\s+", ""));
+//		}
+//		return parameters_indexes_list;
+//	}
 }

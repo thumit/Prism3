@@ -2065,9 +2065,10 @@ public class Solve_Iterations {
 						long bc_time_start = System.currentTimeMillis();		// measure time before adding each basic constraint
 						
 						
-						List<String> parameters_indexes = read.get_parameters_indexes_in_row(id);			// Get the parameter indexes list
-						List<List<String>> dynamic_identifiers = read.get_dynamic_identifiers_in_row(id);	// Get the dynamic identifiers indexes list
-						List<Integer> dynamic_dentifiers_column_indexes = read.get_dynamic_identifiers_column_indexes_in_row(id);
+						int parameters_type = read.get_parameters_type_in_row(id);						// Get the parameter type: 0 = NoParameter, 1 = CostParameter, 2 = Others
+						List<Integer> parameters_indexes = read.get_parameters_indexes_in_row(id);		// Get the parameter indexes list (not null only when parameters_type is not 0 or 1)
+						List<List<String>> dynamic_identifiers = read.get_dynamic_identifiers_in_row(id);	
+						List<Integer> dynamic_dentifiers_column_indexes = read.get_dynamic_identifiers_column_indexes_in_row(id);	// Get the dynamic identifiers indexes list (not null only when it is not NoIdentifier)
 
 						
 						// Add constraint
@@ -2121,7 +2122,7 @@ public class Solve_Iterations {
 								double para_value = parameter_info.get_total_value(
 										this_var_info.get_prescription_id(),
 										this_var_info.get_row_id(),
-										parameters_indexes,
+										parameters_type, parameters_indexes,
 										dynamic_dentifiers_column_indexes, 
 										dynamic_identifiers,
 										var_cost_value[var_index]);

@@ -1630,14 +1630,15 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 								}
 								
 								double multiplier = (data9[i][3] != null) ?  (double) data9[i][3] : 0;	//if multiplier = null --> 0
-								String current_parameter_index = (String) data9[i][8];
-								String current_static_identifiers = (String) data9[i][9];
-								String current_dynamic_identifiers = (String) data9[i][10];
+								String current_parameters_info = (String) data9[i][8];
+								String current_static_identifiers_info = (String) data9[i][9];
+								String current_dynamic_identifiers_info = (String) data9[i][10];
 														
-								List<List<String>> static_identifiers = identifiers_processing.get_static_identifiers(current_static_identifiers);
-								List<List<String>> dynamic_identifiers = identifiers_processing.get_dynamic_identifiers(current_dynamic_identifiers);
-								List<Integer> dynamic_dentifiers_column_indexes = identifiers_processing.get_dynamic_dentifiers_column_indexes(current_dynamic_identifiers);
-								List<String> parameters_indexes = identifiers_processing.get_parameters_indexes(current_parameter_index);
+								List<List<String>> static_identifiers = identifiers_processing.get_static_identifiers(current_static_identifiers_info);
+								List<List<String>> dynamic_identifiers = identifiers_processing.get_dynamic_identifiers(current_dynamic_identifiers_info);
+								List<Integer> dynamic_dentifiers_column_indexes = identifiers_processing.get_dynamic_dentifiers_column_indexes(current_dynamic_identifiers_info);
+								int parameters_type = identifiers_processing.get_parameters_type(current_parameters_info);	// Get the parameter type: 0 = NoParameter, 1 = CostParameter, 2 = Others
+								List<Integer> parameters_indexes = identifiers_processing.get_parameters_indexes(current_parameters_info);
 														
 								// Process all the variables in output05 and use static_identifiers to trim to get the var_name_list & var_value_list
 								List<Information_Variable> var_info = new ArrayList<Information_Variable>();
@@ -1655,7 +1656,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 								}	
 										
 								// Get the sum result and update the GUI table
-								double[] iterations_values = query_os.get_results(read_database, var_info, var_iter, var_value, var_cost, multiplier, parameters_indexes, dynamic_dentifiers_column_indexes, dynamic_identifiers);
+								double[] iterations_values = query_os.get_results(read_database, var_info, var_iter, var_value, var_cost, multiplier, parameters_type, parameters_indexes, dynamic_dentifiers_column_indexes, dynamic_identifiers);
 								for (int iter_col = 12; iter_col < colCount9; iter_col++) {
 									int current_iter = iter_col - 12;
 		    						data9[i][iter_col] = iterations_values[current_iter];
@@ -1945,7 +1946,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 
 		private double[] get_results(Read_Database read_database, List<Information_Variable> var_info,
 				List<Integer> var_iter, List<Double> var_value, List<Double> var_cost, double multiplier,
-				List<String> parameters_indexes_list, List<Integer> dynamic_dentifiers_column_indexes,
+				int parameters_type, List<Integer> parameters_indexes, List<Integer> dynamic_dentifiers_column_indexes,
 				List<List<String>> dynamic_identifiers) {			// var_info, var_iter, var_value, var_cost are results after filtered by static_identifiers
 			 
 			double[] sum_all = new double[total_iteration];
@@ -1962,9 +1963,8 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 				double para_value = parameter_info.get_total_value(
 						var_info.get(var_index).get_prescription_id(),
 						var_info.get(var_index).get_row_id(),
-						parameters_indexes_list,
-						dynamic_dentifiers_column_indexes, 
-						dynamic_identifiers,
+						parameters_type, parameters_indexes,
+						dynamic_dentifiers_column_indexes, dynamic_identifiers,
 						var_cost.get(var_index));
 				para_value = para_value * multiplier;
 				

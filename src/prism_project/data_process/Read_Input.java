@@ -771,23 +771,27 @@ public class Read_Input {
 	
 	public List<List<String>> get_dynamic_identifiers_in_row(int row) {
 		String dynamic_identifiers_info = bc_data[row][dynamic_identifiers_col];		//Note: row 0 is the title only, row 1 is constraint 1,.....
-		List<List<String>> dynamic_identifiers = identifiers_processing.get_dynamic_identifiers(dynamic_identifiers_info);
-		return dynamic_identifiers;
+		return identifiers_processing.get_dynamic_identifiers(dynamic_identifiers_info);
 	}	
 	
 	
 	public List<Integer> get_dynamic_identifiers_column_indexes_in_row(int row) {	//Column 8 in the GUI table "Dynamic identifiers". The whole is contained by UC_value[i][8]
 		String dynamic_identifiers_info = bc_data[row][dynamic_identifiers_col];		//Note: row 0 is the title only, row 1 is constraint 1,.....
-		List<Integer> dynamic_identifiers_column_indexes = identifiers_processing.get_dynamic_dentifiers_column_indexes(dynamic_identifiers_info);
-		return dynamic_identifiers_column_indexes;
+		return identifiers_processing.get_dynamic_dentifiers_column_indexes(dynamic_identifiers_info);
 	}	
 	
 	
-	public List<String> get_parameters_indexes_in_row(int row) {	
-		String parameters_info = bc_data[row][parameter_index_col];			
-		List<String> parameters_indexes_list = identifiers_processing.get_parameters_indexes(parameters_info);
-		return parameters_indexes_list;
+	public int get_parameters_type_in_row(int row) {	
+		String parameters_info = bc_data[row][parameter_index_col];	
+		return identifiers_processing.get_parameters_type(parameters_info);
 	}	
+	
+	
+	public List<Integer> get_parameters_indexes_in_row(int row) {	
+		String parameters_info = bc_data[row][parameter_index_col];	
+		return identifiers_processing.get_parameters_indexes(parameters_info);
+	}	
+	
 	
 	//-------------------------------------------------------------------------------------------------------------------------------------------------
 	//For input_09_flow_constraints
