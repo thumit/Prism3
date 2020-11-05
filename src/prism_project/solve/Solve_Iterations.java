@@ -536,6 +536,7 @@ public class Solve_Iterations {
 											vublist.add(Double.MAX_VALUE);
 											xE[e_strata_id][s5R][s6R][i][t] = nvars;
 											nvars++;
+											System.out.print("x_E_" + nvars);
 										}
 									}
 								}
@@ -568,6 +569,7 @@ public class Solve_Iterations {
 											vublist.add(Double.MAX_VALUE);
 											xE[e_strata_id][s5R][s6R][i][t] = nvars;
 											nvars++;
+											System.out.print("x_E_" + nvars);
 										}
 									}
 								}
@@ -615,6 +617,7 @@ public class Solve_Iterations {
 													vublist.add(Double.MAX_VALUE);
 													xR[r_strata_id][s5R][s6R][i][t][a] = nvars;
 													nvars++;
+													System.out.print("x_R_" + nvars);
 												}
 											}
 										}
@@ -651,6 +654,7 @@ public class Solve_Iterations {
 													vublist.add(Double.MAX_VALUE);
 													xR[r_strata_id][s5R][s6R][i][t][a] = nvars;
 													nvars++;
+													System.out.print("x_R_" + nvars);
 												}
 											}
 										}
@@ -1571,7 +1575,7 @@ public class Solve_Iterations {
 										// Testing this very fast method
 										if (map_model_strata_4layers_to_strata_id.get(strata_4layers) != null) {
 											int strata_4layers_id = map_model_strata_4layers_to_strata_id.get(strata_4layers);
-											for (int var_index : set_of_x_index[strata_4layers_id][t]) {
+											for (int var_index : set_of_x_index[strata_4layers_id][t]) {	// include x with period = rotation_period is ok because the user_loss_rate is set to 0 for those cases 
 												if (var_rd_condition_id[var_index] != null) {		// if there is replacing disturbance associated with this variable
 													double[] user_loss_rate = map_var_index_to_user_loss_rates.get(var_index);
 													double[][][] conversion_rate_mean = new double[total_disturbances][][];
@@ -1873,7 +1877,7 @@ public class Solve_Iterations {
 										}
 										
 										
-										String r_strata = strata_4layers + "_" + layer5.get(s5R) + "_" + layer6.get(s6R);		// = s1,s2,s3,s4,s5R,s6R
+										String r_strata = strata_4layers + "_" + layer5.get(s5R) + "_" + layer6.get(s6R);		// = s1,s2,s3,s4,s5R,s6R = f_strata (same first 6 indexes)
 										int r_strata_id = (map_R_strata_to_strata_id.get(r_strata) != null) ? map_R_strata_to_strata_id.get(r_strata) : -1;
 								
 										
