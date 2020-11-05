@@ -1831,7 +1831,7 @@ public class Solve_Iterations {
 										
 			
 										// NON-FIRE VARIABLES:	(for only variables with clear-cuts)
-										// Add sigma(s5)(s6)(i) xE[s1,s2,s3,s4,s5,s6][s5R][s6R][i][t=tR]
+										// Add sigma(s5)(s6)(i) xE[s1,s2,s3,s4,s5,s6][i][s5R][s6R][t=tR]
 										for (int s5 = 0; s5 < total_layer5; s5++) {
 											for (int s6 = 0; s6 < total_layer6; s6++) {
 												String e_strata = strata_4layers + "_" + layer5.get(s5) + "_" + layer6.get(s6);
@@ -1839,13 +1839,12 @@ public class Solve_Iterations {
 												if (e_strata_id >= 0) {
 													for (int i : E_1_prescription_ids[e_strata_id]) {	
 														int rotation_period = total_rows_of_precription[i]; // tR = total rows of this prescription
-														if (t == rotation_period 
-																&& xE[e_strata_id] != null 
-																	&& xE[e_strata_id][s5R] != null
-																		&& xE[e_strata_id][s5R][s6R] != null
-																			&& xE[e_strata_id][s5R][s6R][i] != null
-																				&& xE[e_strata_id][s5R][s6R][i][t] > 0) {		// if variable is defined, this value would be > 0
-															c8_indexlist.get(c8_num).add(xE[e_strata_id][s5R][s6R][i][t]);
+														if (t == rotation_period
+																&& xE[e_strata_id][i] != null
+																	&& xE[e_strata_id][i][s5R] != null
+																		&& xE[e_strata_id][i][s5R][s6R] != null
+																			&& xE[e_strata_id][i][s5R][s6R][t] > 0) {		// if variable is defined, this value would be > 0
+															c8_indexlist.get(c8_num).add(xE[e_strata_id][i][s5R][s6R][t]);
 															c8_valuelist.get(c8_num).add((double) 1);
 														}
 													}
@@ -1853,7 +1852,7 @@ public class Solve_Iterations {
 											}
 										}
 										
-										// Add sigma(s5)(s6)(i)(a) xR[s1][s2][s3][s4][s5][s6][s5R][i][t][a]
+										// Add sigma(s5)(s6)(i)(a) xR[s1][s2][s3][s4][s5][s6][i][s5R][s6R][t][a=aR]
 										for (int s5 = 0; s5 < total_layer5; s5++) {
 											for (int s6 = 0; s6 < total_layer6; s6++) {
 												String r_strata = strata_4layers + "_" + layer5.get(s5) + "_" + layer6.get(s6);		// = s1,s2,s3,s4,s5,s6
@@ -1863,13 +1862,12 @@ public class Solve_Iterations {
 														int rotation_age = total_rows_of_precription[i]; 
 														for (int a = 1; a <= t - 1; a++) {	
 															if (a == rotation_age 
-																	&& xR[r_strata_id] != null
-																		&& xR[r_strata_id][s5R] != null
-																			&& xR[r_strata_id][s5R][s6R] != null
-																				&& xR[r_strata_id][s5R][s6R][i] != null
-																					&& xR[r_strata_id][s5R][s6R][i][t] != null
-																						&& xR[r_strata_id][s5R][s6R][i][t][a] > 0) {	// if variable is defined, this value would be > 0
-																c8_indexlist.get(c8_num).add(xR[r_strata_id][s5R][s6R][i][t][a]);
+																	&& xR[r_strata_id][i] != null
+																			&& xR[r_strata_id][i][s5R] != null
+																				&& xR[r_strata_id][i][s5R][s6R] != null
+																					&& xR[r_strata_id][i][s5R][s6R][t] != null
+																						&& xR[r_strata_id][i][s5R][s6R][t][a] > 0) {	// if variable is defined, this value would be > 0
+																c8_indexlist.get(c8_num).add(xR[r_strata_id][i][s5R][s6R][t][a]);
 																c8_valuelist.get(c8_num).add((double) 1);
 															}
 														}
@@ -1883,19 +1881,20 @@ public class Solve_Iterations {
 										int r_strata_id = (map_R_strata_to_strata_id.get(r_strata) != null) ? map_R_strata_to_strata_id.get(r_strata) : -1;
 								
 										
-										// Add -sigma(s5R')(s6R')(i) xR(s1,s2,s3,s4,s5,s6][s5R'][s6R'][i][t+1][1]
-										for (int s5RR = 0; s5RR < total_layer5; s5RR++) {
-											for (int s6RR = 0; s6RR < total_layer6; s6RR++) {
-												if (r_strata_id >= 0) {
-													for (int i : R_prescription_ids[r_strata_id]) {
-														if(xR[r_strata_id] != null
-																&& xR[r_strata_id][s5RR] != null
-																		&& xR[r_strata_id][s5RR][s6RR] != null
-																		&& xR[r_strata_id][s5RR][s6RR][i] != null
-																			&& xR[r_strata_id][s5RR][s6RR][i][t + 1] != null
-																				&& xR[r_strata_id][s5RR][s6RR][i][t + 1][1] > 0) {	// if variable is defined, this value would be > 0 
-															c8_indexlist.get(c8_num).add(xR[r_strata_id][s5RR][s6RR][i][t + 1][1]);
-															c8_valuelist.get(c8_num).add((double) -1);
+										// Add -sigma(s5R')(s6R')(i) xR(s1,s2,s3,s4,s5,s6][i][s5R'][s6R'][t+1][1]
+										if (r_strata_id >= 0) {
+											for (int i : R_prescription_ids[r_strata_id]) {
+												if(xR[r_strata_id][i] != null) {
+													for (int s5RR = 0; s5RR < xR[r_strata_id][i].length; s5RR++) {
+														if (xR[r_strata_id][i][s5RR] != null) {
+															for (int s6RR = 0; s6RR < xR[r_strata_id][i][s5RR].length; s6RR++) {
+																if(xR[r_strata_id][i][s5RR][s6RR] != null
+																		&& xR[r_strata_id][i][s5RR][s6RR][t + 1] != null
+																			&& xR[r_strata_id][i][s5RR][s6RR][t + 1][1] > 0) {	// if variable is defined, this value would be > 0 
+																	c8_indexlist.get(c8_num).add(xR[r_strata_id][i][s5RR][s6RR][t + 1][1]);
+																	c8_valuelist.get(c8_num).add((double) -1);
+																}
+															}
 														}
 													}
 												}
@@ -1943,85 +1942,87 @@ public class Solve_Iterations {
 					int c9_num = 0;
 					
 					for (int r_strata_id = 0; r_strata_id < total_R_model_strata; r_strata_id++) {
-						for (int s5R = 0; s5R < total_layer5; s5R++) {
-							for (int s6R = 0; s6R < total_layer6; s6R++) {
-								// non-clear-cut prescriptions
-								for (int i : R_0_prescription_ids[r_strata_id]) {
-									int t_regen = (iter == 0) ? 2 : 1;	// this is because iteration 0 could not have regenerated forest in period 1, but iterations >= 1 do have regenerated forest strata
-									for (int t = t_regen + iter; t <= total_periods - 1 + iter; t++) {  
-										for (int a = 1; a <= t - 1; a++) {
-											if (xR[r_strata_id][s5R] != null
-													&& xR[r_strata_id][s5R][s6R] != null
-													 	&& xR[r_strata_id][s5R][s6R][i] != null
-															&& xR[r_strata_id][s5R][s6R][i][t] != null
-																&& xR[r_strata_id][s5R][s6R][i] != null
-																	&& xR[r_strata_id][s5R][s6R][i][t][a] > 0) {		// if variable is defined, this value would be > 0 
-												// Add constraint
-												c9_indexlist.add(new ArrayList<Integer>());
-												c9_valuelist.add(new ArrayList<Double>());
-												
-												// Add xR[s1,s2,s3,s4,s5,s6][s5R][s6R][i][t][a]
-												int var_index = xR[r_strata_id][s5R][s6R][i][t][a];
-												double[] user_loss_rate = map_var_index_to_user_loss_rates.get(var_index);
-												double total_loss_rate = 0;
-												for (int k = 0; k < total_disturbances; k++) {
-													total_loss_rate = total_loss_rate + user_loss_rate[k] / 100;
-												}
-												if (total_loss_rate != 1) {	// only add if parameter is non zero
-													c9_indexlist.get(c9_num).add(xR[r_strata_id][s5R][s6R][i][t][a]);
-													c9_valuelist.get(c9_num).add((double) 1 - total_loss_rate);		// SR Fire loss Rate = P(-->x)
-												}
+						String strata = R_model_strata.get(r_strata_id);
+						int s5 = s5_for_R_model_strata[r_strata_id];
+						int s6 = s6_for_R_model_strata[r_strata_id];
+						if (has_R_prescriptions[s5][s6]) {
+							Set<Integer> filter_set;
+							
+							// non-clear-cut prescriptions (R_0)
+							filter_set = new HashSet<Integer>(set_of_prescription_ids_for_R_strata[r_strata_id]);
+							filter_set.retainAll(R_0_prescription_ids[r_strata_id]);	// filter out the R_0 prescriptions only
+							for (int i : filter_set) {
+								int s5R = 0;
+								int s6R = 0;
+								int t_regen = (iter == 0) ? 2 : 1;	// this is because iteration 0 could not have regenerated forest in period 1, but iterations >= 1 do have regenerated forest strata
+								for (int t = t_regen + iter; t <= total_periods - 1 + iter; t++) {
+									for (int a = 1; a <= t - 1; a++) {
+										// Add constraint
+										c9_indexlist.add(new ArrayList<Integer>());
+										c9_valuelist.add(new ArrayList<Double>());
 										
-												// Add - xR[s1,s2,s3,s4,s5,s6][s5R][s6R][i][t+1][a+1]		
-												c9_indexlist.get(c9_num).add(xR[r_strata_id][s5R][s6R][i][t + 1][a + 1]);
-												c9_valuelist.get(c9_num).add((double) -1);																					
-												
-												// Add bounds
-												c9_lblist.add((double) 0);
-												c9_ublist.add((double) 0);
-												c9_num++;	
-											}
+										// Add xR[s1,s2,s3,s4,s5,s6][i][s5R][s6R][t][a]
+										int var_index = xR[r_strata_id][i][s5R][s6R][t][a];
+										double[] user_loss_rate = map_var_index_to_user_loss_rates.get(var_index);
+										double total_loss_rate = 0;
+										for (int k = 0; k < total_disturbances; k++) {
+											total_loss_rate = total_loss_rate + user_loss_rate[k] / 100;
 										}
+										if (total_loss_rate != 1) {	// only add if parameter is non zero
+											c9_indexlist.get(c9_num).add(xR[r_strata_id][i][s5R][s6R][t][a]);
+											c9_valuelist.get(c9_num).add((double) 1 - total_loss_rate);		// SR Fire loss Rate = P(-->x)
+										}
+								
+										// Add - xR[s1,s2,s3,s4,s5,s6][s5R][s6R][i][t+1][a+1]		
+										c9_indexlist.get(c9_num).add(xR[r_strata_id][i][s5R][s6R][t + 1][a + 1]);
+										c9_valuelist.get(c9_num).add((double) -1);																					
+										
+										// Add bounds
+										c9_lblist.add((double) 0);
+										c9_ublist.add((double) 0);
+										c9_num++;	
 									}
 								}
-								
-								// clear-cut prescriptions
-								for (int i : R_1_prescription_ids[r_strata_id]) {
-									int rotation_age = total_rows_of_precription[i]; 
-									int t_regen = (iter == 0) ? 2 : 1;	// this is because iteration 0 could not have regenerated forest in period 1, but iterations >= 1 do have regenerated forest strata
-									for (int t = t_regen + iter; t <= total_periods - 1 + iter; t++) {
-										for (int a = 1; a <= t - 1; a++) {
-											int rotation_period = rotation_age + t - a;
-											if (a < rotation_age) {	// add this condition which is important. This would also make t < rotation_period
-												if (xR[r_strata_id][s5R] != null
-														&& xR[r_strata_id][s5R][s6R] != null
-															&& xR[r_strata_id][s5R][s6R][i] != null
-																&& xR[r_strata_id][s5R][s6R][i][t] != null
-																	&& xR[r_strata_id][s5R][s6R][i][t][a] > 0) {		// if variable is defined, this value would be > 0  
-													// Add constraint
-													c9_indexlist.add(new ArrayList<Integer>());
-													c9_valuelist.add(new ArrayList<Double>());
-													
-													// Add xR(s1,s2,s3,s4,s5)[s5R][i][t][a]
-													int var_index = xR[r_strata_id][s5R][s6R][i][t][a];
-													double[] user_loss_rate = map_var_index_to_user_loss_rates.get(var_index);
-													double total_loss_rate = 0;
-													for (int k = 0; k < total_disturbances; k++) {
-														total_loss_rate = total_loss_rate + user_loss_rate[k] / 100;
+							}
+							
+							// clear-cut prescriptions (R_1)
+							filter_set = new HashSet<Integer>(set_of_prescription_ids_for_R_strata[r_strata_id]);
+							filter_set.retainAll(R_1_prescription_ids[r_strata_id]);	// filter out the R_1 prescriptions only
+							for (int i : filter_set) {
+								int rotation_age = total_rows_of_precription[i]; 
+								for (int s5R = 0; s5R < total_layer5; s5R++) {
+									for (int s6R = 0; s6R < total_layer6; s6R++) {
+										if (has_R_prescriptions[s5R][s6R] && set_of_prescription_ids_for_R_strata_with_s5R_s6R[r_strata_id][s5R][s6R].contains(i)) {	// if this prescription leads to s5R s6R regeneration
+											int t_regen = (iter == 0) ? 2 : 1;	// this is because iteration 0 could not have regenerated forest in period 1, but iterations >= 1 do have regenerated forest strata
+											for (int t = t_regen + iter; t <= total_periods - 1 + iter; t++) {
+												int A_FINAL = Math.min(rotation_age, t - 1);	
+												for (int a = 1; a <= A_FINAL; a++) {	// this loop guarantees that prescriptions with clear-cut beyond planning horizon are allowed a <= A_FINAL --> a <= rotation_age --> rotation_age + t - rotation_period <= rotation_age --> t <= rotation_period
+													if (a < rotation_age) {	// add this condition which is important. This would also make t < rotation_period
+														// Add constraint
+														c9_indexlist.add(new ArrayList<Integer>());
+														c9_valuelist.add(new ArrayList<Double>());
+														
+														// Add xR(s1,s2,s3,s4,s5)[i]s5R][s6R][t][a]
+														int var_index = xR[r_strata_id][i][s5R][s6R][t][a];
+														double[] user_loss_rate = map_var_index_to_user_loss_rates.get(var_index);
+														double total_loss_rate = 0;
+														for (int k = 0; k < total_disturbances; k++) {
+															total_loss_rate = total_loss_rate + user_loss_rate[k] / 100;
+														}
+														if (total_loss_rate != 1) {	// only add if parameter is non zero
+															c9_indexlist.get(c9_num).add(xR[r_strata_id][i][s5R][s6R][t][a]);
+															c9_valuelist.get(c9_num).add((double) 1 - total_loss_rate);		// SR Fire loss Rate = P(-->x)
+														}
+												
+														// Add - xR(s1,s2,s3,s4,s5,s6)[i][s5R][s6R][t+1][a+1]		
+														c9_indexlist.get(c9_num).add(xR[r_strata_id][i][s5R][s6R][t + 1][a + 1]);
+														c9_valuelist.get(c9_num).add((double) -1);																					
+														
+														// Add bounds
+														c9_lblist.add((double) 0);
+														c9_ublist.add((double) 0);
+														c9_num++;
 													}
-													if (total_loss_rate != 1) {	// only add if parameter is non zero
-														c9_indexlist.get(c9_num).add(xR[r_strata_id][s5R][s6R][i][t][a]);
-														c9_valuelist.get(c9_num).add((double) 1 - total_loss_rate);		// SR Fire loss Rate = P(-->x)
-													}
-											
-													// Add - xR(s1,s2,s3,s4,s5,s6)[s5R][i][t+1][a+1]		
-													c9_indexlist.get(c9_num).add(xR[r_strata_id][s5R][s6R][i][t + 1][a + 1]);
-													c9_valuelist.get(c9_num).add((double) -1);																					
-													
-													// Add bounds
-													c9_lblist.add((double) 0);
-													c9_ublist.add((double) 0);
-													c9_num++;	
 												}
 											}
 										}
@@ -2030,7 +2031,6 @@ public class Solve_Iterations {
 							}
 						}
 					}
-																			
 						
 					double[] c9_lb = Stream.of(c9_lblist.toArray(new Double[c9_lblist.size()])).mapToDouble(Double::doubleValue).toArray();
 					double[] c9_ub = Stream.of(c9_ublist.toArray(new Double[c9_ublist.size()])).mapToDouble(Double::doubleValue).toArray();		
