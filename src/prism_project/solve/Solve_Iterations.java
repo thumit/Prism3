@@ -1362,64 +1362,61 @@ public class Solve_Iterations {
 					List<Double> c6_ublist = new ArrayList<Double>();
 					int c6_num = 0;
 					
-					for (int strata_id = 0; strata_id < total_E_model_strata; strata_id++) {
-						for (int s5R = 0; s5R < total_layer5; s5R++) {
-							for (int s6R = 0; s6R < total_layer6; s6R++) {
+					for (int e_strata_id = 0; e_strata_id < total_E_model_strata; e_strata_id++) {
+						Set<Integer> filter_set;
+						
+						// non-clear-cut prescriptions (E_0)
+						filter_set = new HashSet<Integer>(set_of_prescription_ids_for_E_strata[e_strata_id]);
+						filter_set.retainAll(E_0_prescription_ids[e_strata_id]);	// filter out the E_0 prescriptions only
+						for (int i : filter_set) {
+							int s5R = 0;
+							int s6R = 0;
+							for (int t = 1 + iter; t <= total_periods + iter - 1; t++) {	// --> always loop to the ending period of the horizon (allow missing row ids)
+								// Add constraint
+								c6_indexlist.add(new ArrayList<Integer>());
+								c6_valuelist.add(new ArrayList<Double>());
 								
-								// non-clear-cut prescriptions
-								for (int i : E_0_prescription_ids[strata_id]) {
-									int T_END = total_periods + iter; // to allow missing row_id for E_0 prescriptions --> always loop to the ending period of the horizon
-									for (int t = 1 + iter; t <= T_END - 1; t++) {
-										if (xE[strata_id] != null 
-												&& xE[strata_id][s5R] != null
-													&& xE[strata_id][s5R][s6R] != null
-														&& xE[strata_id][s5R][s6R][i] != null
-															&& xE[strata_id][s5R][s6R][i][t] > 0) {		// if variable is defined, this value would be > 0
-											// Add constraint
-											c6_indexlist.add(new ArrayList<Integer>());
-											c6_valuelist.add(new ArrayList<Double>());
-											
-											// Add xE[s1,s2,s3,s4,s5,s6][s5R][i][t]
-											int var_index = xE[strata_id][s5R][s6R][i][t];
-											double[] user_loss_rate = map_var_index_to_user_loss_rates.get(var_index);
-											double total_loss_rate = 0;
-											for (int k = 0; k < total_disturbances; k++) {
-												total_loss_rate = total_loss_rate + user_loss_rate[k] / 100;
-											}
-											
-											if (total_loss_rate != 1) {	// only add if parameter is non zero
-												c6_indexlist.get(c6_num).add(xE[strata_id][s5R][s6R][i][t]);
-												c6_valuelist.get(c6_num).add((double) 1 - total_loss_rate);		// SR Fire loss Rate = P(-->x)
-											}
-											
-											// Add -xE[s1,s2,s3,s4,s5,s6][s5R][i][t+1]
-											c6_indexlist.get(c6_num).add(xE[strata_id][s5R][s6R][i][t + 1]);
-											c6_valuelist.get(c6_num).add((double) -1);
-											
-											// Add bounds
-											c6_lblist.add((double) 0);
-											c6_ublist.add((double) 0);
-											c6_num++;
-										}
-									}
+								// Add xE[s1,s2,s3,s4,s5,s6][s5R][i][t]
+								int var_index = xE[e_strata_id][i][s5R][s6R][t];
+								double[] user_loss_rate = map_var_index_to_user_loss_rates.get(var_index);
+								double total_loss_rate = 0;
+								for (int k = 0; k < total_disturbances; k++) {
+									total_loss_rate = total_loss_rate + user_loss_rate[k] / 100;
 								}
 								
-								// clear-cut prescriptions
-								for (int i : E_1_prescription_ids[strata_id]) {
-									int rotation_period = total_rows_of_precription[i]; // T_END = tR = total rows of this prescription
-									int T_FINAL = Math.min(rotation_period, total_periods + iter);	// --> always loop to the rotation period (if within the horizon) or to the ending period of the horizon (if out of the planning horizon)
-									for (int t = 1 + iter; t <= T_FINAL - 1; t++) {
-										if (xE[strata_id] != null 
-												&& xE[strata_id][s5R][s6R] != null
-													&& xE[strata_id][s5R][s6R] != null
-														&& xE[strata_id][s5R][s6R][i] != null
-															&& xE[strata_id][s5R][s6R][i][t] > 0) {		// if variable is defined, this value would be > 0
+								if (total_loss_rate != 1) {	// only add if parameter is non zero
+									c6_indexlist.get(c6_num).add(xE[e_strata_id][i][s5R][s6R][t]);
+									c6_valuelist.get(c6_num).add((double) 1 - total_loss_rate);		// SR Fire loss Rate = P(-->x)
+								}
+								
+								// Add -xE[s1,s2,s3,s4,s5,s6][i][s5R][s6R][+1]
+								c6_indexlist.get(c6_num).add(xE[e_strata_id][i][s5R][s6R][t + 1]);
+								c6_valuelist.get(c6_num).add((double) -1);
+								
+								// Add bounds
+								c6_lblist.add((double) 0);
+								c6_ublist.add((double) 0);
+								c6_num++;
+							}						
+						}
+						
+						// clear-cut prescriptions (E_1)
+						filter_set = new HashSet<Integer>(set_of_prescription_ids_for_E_strata[e_strata_id]);
+						filter_set.retainAll(E_1_prescription_ids[e_strata_id]);	// filter out the E_1 prescriptions only
+						for (int i : filter_set) {
+							int rotation_period = total_rows_of_precription[i]; // tR = total rows of this prescription
+							int rotation_age = rotation_period + starting_age_class_for_prescription[i] - 1;
+							int T_FINAL = Math.min(rotation_period, total_periods + iter);	// --> always loop to the rotation period (if tR within the horizon) or to the ending period of the horizon (if tR out of the planning horizon)
+							for (int s5R = 0; s5R < total_layer5; s5R++) {
+								for (int s6R = 0; s6R < total_layer6; s6R++) {
+									if (has_R_prescriptions[s5R][s6R] && set_of_prescription_ids_for_E_strata_with_s5R_s6R[e_strata_id][s5R][s6R].contains(i)) {	// if this prescription leads to s5R s6R regeneration
+										for (int t = 1 + iter; t <= T_FINAL - 1; t++) {		// this loop guarantees that prescriptions with clear-cut beyond planning horizon are allowed
 											// Add constraint
 											c6_indexlist.add(new ArrayList<Integer>());
 											c6_valuelist.add(new ArrayList<Double>());
 											
-											// Add xE[s1,s2,s3,s4,s5,s6][s5R][i][t]
-											int var_index = xE[strata_id][s5R][s6R][i][t];
+											// Add xE[s1,s2,s3,s4,s5,s6][i][s5R][s6R][t]
+											int var_index = xE[e_strata_id][i][s5R][s6R][t];
 											double[] user_loss_rate = map_var_index_to_user_loss_rates.get(var_index);
 											double total_loss_rate = 0;
 											for (int k = 0; k < total_disturbances; k++) {
@@ -1427,12 +1424,12 @@ public class Solve_Iterations {
 											}
 											
 											if (total_loss_rate != 1) {	// only add if parameter is non zero
-												c6_indexlist.get(c6_num).add(xE[strata_id][s5R][s6R][i][t]);
+												c6_indexlist.get(c6_num).add(xE[e_strata_id][i][s5R][s6R][t]);
 												c6_valuelist.get(c6_num).add((double) 1 - total_loss_rate);		// SR Fire loss Rate = P(-->x)
 											}
 											
-											// Add - xE(s1,s2,s3,s4,s5,s6)[s5R][i][t+1]		
-											c6_indexlist.get(c6_num).add(xE[strata_id][s5R][s6R][i][t + 1]);
+											// Add - xE[s1,s2,s3,s4,s5,s6][i][s5R][s6R][t+1]	
+											c6_indexlist.get(c6_num).add(xE[e_strata_id][i][s5R][s6R][t + 1]);
 											c6_valuelist.get(c6_num).add((double) -1);																					
 											
 											// Add bounds
@@ -1575,11 +1572,9 @@ public class Solve_Iterations {
 										c7_indexlist.get(c7_num).add(fire[f_strata_id][t]);
 										c7_valuelist.get(c7_num).add((double) 1);	
 										
-										// Add existing variables: -sigma(s5,s6,s5R',s6R',i) xE(s1,s2,s3,s4,s5,s6)(s5R')(s6R')(i)(t)	----------------------------------------------
-										// Add regeneration variables	-sigma(s5,s6,s5R',s6R',i,a)	xR[s1][s2][s3][s4][s5][s6][s5R'][s6R'][i][t][a]	----------------------------------------------
-
-										
 										// Testing this very fast method
+										// Add existing variables: 		-sigma(s5,s6,s5R',s6R',i) xE(s1,s2,s3,s4,s5,s6)(i)(s5R')(s6R')(t)	----------------------------------------------
+										// Add regeneration variables	-sigma(s5,s6,s5R',s6R',i,a)	xR[s1][s2][s3][s4][s5][s6][i][s5R'][s6R'][t][a]	----------------------------------------------
 										if (map_model_strata_4layers_to_strata_id.get(strata_4layers) != null) {
 											int strata_4layers_id = map_model_strata_4layers_to_strata_id.get(strata_4layers);
 											for (int var_index : set_of_x_index[strata_4layers_id][t]) {	// include x with period = rotation_period is ok because the user_loss_rate is set to 0 for those cases 
