@@ -2144,7 +2144,7 @@ public class Solve_Iterations {
 						
 						
 						
-//						// This method is much more slower 						
+//						// This method is much more slower (It is not correct since the static periods are not yet integrated into the below code)						
 //						List<Integer> static_periods = read.get_static_periods_in_row(id).stream().map(Integer::parseInt).collect(Collectors.toList());	// convert List<String> --> List<Integer>
 //						Set<String> static_strata = read.get_static_strata_in_row(id);
 //						int multiplier_col = constraint_column_names_list.indexOf("bc_multiplier");
