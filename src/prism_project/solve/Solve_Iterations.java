@@ -531,7 +531,7 @@ public class Solve_Iterations {
 								vublist.add(Double.MAX_VALUE);
 								xE[e_strata_id][i][s5R][s6R][t] = nvars;
 								nvars++;
-								System.out.println("x_E_" + nvars);
+//								System.out.println("x_E_" + nvars);
 							}						
 						}
 						
@@ -567,7 +567,7 @@ public class Solve_Iterations {
 											vublist.add(Double.MAX_VALUE);
 											xE[e_strata_id][i][s5R][s6R][t] = nvars;
 											nvars++;
-											System.out.println("x_E_" + nvars);
+//											System.out.println("x_E_" + nvars);
 										}
 									}
 								}
@@ -612,7 +612,7 @@ public class Solve_Iterations {
 										vublist.add(Double.MAX_VALUE);
 										xR[r_strata_id][i][s5R][s6R][t][a] = nvars;
 										nvars++;
-										System.out.println("x_R_" + nvars);
+//										System.out.println("x_R_" + nvars);
 									}
 								}
 							}
@@ -652,7 +652,7 @@ public class Solve_Iterations {
 													vublist.add(Double.MAX_VALUE);
 													xR[r_strata_id][i][s5R][s6R][t][a] = nvars;
 													nvars++;
-													System.out.println("x_R_" + nvars);
+//													System.out.println("x_R_" + nvars);
 												}
 											}
 										}
@@ -2147,6 +2147,7 @@ public class Solve_Iterations {
 						
 						
 						
+//						// This method is much more slower 						
 //						List<Integer> static_periods = read.get_static_periods_in_row(id).stream().map(Integer::parseInt).collect(Collectors.toList());	// convert List<String> --> List<Integer>
 //						Set<String> static_strata = read.get_static_strata_in_row(id);
 //						int multiplier_col = constraint_column_names_list.indexOf("bc_multiplier");
@@ -2162,31 +2163,56 @@ public class Solve_Iterations {
 //						for (String e_strata : common_E_strata) {
 //							int e_strata_id = map_E_strata_to_strata_id.get(e_strata);			// Note we need index from model_strata not common_trata
 //							if (xE[e_strata_id] != null) {
-//								for (int s5R = 0; s5R < total_layer5; s5R++) {
-//									if (xE[e_strata_id][s5R] != null) {
+//								Set<Integer> filter_set;
+//								
+//								// non-clear-cut prescriptions (E_0)
+//								filter_set = new HashSet<Integer>(set_of_prescription_ids_for_E_strata[e_strata_id]);
+//								filter_set.retainAll(E_0_prescription_ids[e_strata_id]);	// filter out the E_0 prescriptions only
+//								for (int i : filter_set) {
+//									int s5R = 0;
+//									int s6R = 0;
+//									for (int t = 1 + iter; t <= total_periods + iter; t++) {	// --> always loop to the ending period of the horizon (allow missing row ids)
+//										int var_index = xE[e_strata_id][i][s5R][s6R][t];
+//										double para_value = parameter_info.get_total_value(
+//												var_info_array[var_index].get_prescription_id(),
+//												var_info_array[var_index].get_row_id(),
+//												parameters_type, parameters_indexes,
+//												dynamic_dentifiers_column_indexes, 
+//												dynamic_identifiers,
+//												var_cost_value[var_index]);
+//										para_value = para_value * multiplier;
+//																																				
+//										if (para_value > 0) {	// only add if parameter is non zero
+//											c10_indexlist.get(c10_num).add(var_index);
+//											c10_valuelist.get(c10_num).add((double) para_value);
+//										}
+//									}						
+//								}
+//								
+//								// clear-cut prescriptions (E_1)
+//								filter_set = new HashSet<Integer>(set_of_prescription_ids_for_E_strata[e_strata_id]);
+//								filter_set.retainAll(E_1_prescription_ids[e_strata_id]);	// filter out the E_1 prescriptions only
+//								for (int i : filter_set) {
+//									int rotation_period = total_rows_of_precription[i]; // tR = total rows of this prescription
+//									int rotation_age = rotation_period + starting_age_class_for_prescription[i] - 1;
+//									int T_FINAL = Math.min(rotation_period, total_periods + iter);	// --> always loop to the rotation period (if tR within the horizon) or to the ending period of the horizon (if tR out of the planning horizon)
+//									for (int s5R = 0; s5R < total_layer5; s5R++) {
 //										for (int s6R = 0; s6R < total_layer6; s6R++) {
-//											if (xE[e_strata_id][s5R][s6R] != null) {
-//												for (int i : E_prescription_ids[e_strata_id]) {
-//													if (xE[e_strata_id][s5R][s6R][i] != null) {
-//														for (int period : static_periods) {		// Loop all periods of user-defined
-//															int t = period + iter;				// this is a special case we need to adjust
-//															if (xE[e_strata_id][s5R][s6R][i][t] > 0) {		// if variable is defined, this value would be > 0   (this also removes the need of checking conversion and rotation) 
-//																int var_index = xE[e_strata_id][s5R][s6R][i][t];
-//																double para_value = parameter_info.get_total_value(
-//																		var_info_array[var_index].get_prescription_id(),
-//																		var_info_array[var_index].get_row_id(),
-//																		parameters_indexes,
-//																		dynamic_dentifiers_column_indexes, 
-//																		dynamic_identifiers,
-//																		var_cost_value[var_index]);
-//																para_value = para_value * multiplier;
-//																																										
-//																if (para_value > 0) {	// only add if parameter is non zero
-//																	c10_indexlist.get(c10_num).add(var_index);
-//																	c10_valuelist.get(c10_num).add((double) para_value);
-//																}
-//															}
-//														}
+//											if (has_R_prescriptions[s5R][s6R] && set_of_prescription_ids_for_E_strata_with_s5R_s6R[e_strata_id][s5R][s6R].contains(i)) {	// if this prescription leads to s5R s6R regeneration
+//												for (int t = 1 + iter; t <= T_FINAL; t++) {		// this loop guarantees that prescriptions with clear-cut beyond planning horizon are allowed
+//													int var_index = xE[e_strata_id][i][s5R][s6R][t];
+//													double para_value = parameter_info.get_total_value(
+//															var_info_array[var_index].get_prescription_id(),
+//															var_info_array[var_index].get_row_id(),
+//															parameters_type, parameters_indexes,
+//															dynamic_dentifiers_column_indexes, 
+//															dynamic_identifiers,
+//															var_cost_value[var_index]);
+//													para_value = para_value * multiplier;
+//																																							
+//													if (para_value > 0) {	// only add if parameter is non zero
+//														c10_indexlist.get(c10_num).add(var_index);
+//														c10_valuelist.get(c10_num).add((double) para_value);
 //													}
 //												}
 //											}
@@ -2200,33 +2226,64 @@ public class Solve_Iterations {
 //						for (String r_strata : common_R_strata) {
 //							int r_strata_id = map_R_strata_to_strata_id.get(r_strata);			// Note we need index from model_R_strata not common_R_trata
 //							if (xR[r_strata_id] != null) {
-//								for (int s5R = 0; s5R < total_layer5; s5R++) {
-//									if (xR[r_strata_id][s5R] != null) {
-//										for (int s6R = 0; s6R < total_layer6; s6R++) {
-//											if (xR[r_strata_id][s5R][s6R] != null) {
-//												for (int i : R_prescription_ids[r_strata_id]) {
-//													if (xR[r_strata_id][s5R][s6R][i] != null) {
-//														for (int period : static_periods) {		// Loop all periods of user-defined
-//															int t = period + iter; 				// this is a special case we need to adjust
-//															if (xR[r_strata_id][s5R][s6R][i][t] != null) {
-//																for (int a = 1; a <= t - 1; a++) {
-//																	if (xR[r_strata_id][s5R][s6R][i][t][a] > 0) {		// if variable is defined, this value would be > 0   (this also removes the need of checking conversion and rotation)
-//																		int var_index = xR[r_strata_id][s5R][s6R][i][t][a];
-//																		double para_value = parameter_info.get_total_value(
-//																				var_info_array[var_index].get_prescription_id(),
-//																				var_info_array[var_index].get_row_id(),
-//																				parameters_indexes,
-//																				dynamic_dentifiers_column_indexes, 
-//																				dynamic_identifiers,
-//																				var_cost_value[var_index]);
-//																		para_value = para_value * multiplier;
-//																																												
-//																		if (para_value > 0) { // only add if parameter is non zero
-//																			c10_indexlist.get(c10_num).add(var_index);
-//																			c10_valuelist.get(c10_num).add((double) para_value);
-//																		}
-//																	}
-//																}
+//								int s5 = s5_for_R_model_strata[r_strata_id];
+//								int s6 = s6_for_R_model_strata[r_strata_id];
+//								if (has_R_prescriptions[s5][s6]) {
+//									Set<Integer> filter_set;
+//									
+//									// non-clear-cut prescriptions (R_0)
+//									filter_set = new HashSet<Integer>(set_of_prescription_ids_for_R_strata[r_strata_id]);
+//									filter_set.retainAll(R_0_prescription_ids[r_strata_id]);	// filter out the R_0 prescriptions only
+//									for (int i : filter_set) {
+//										int s5R = 0;
+//										int s6R = 0;
+//										int t_regen = (iter == 0) ? 2 : 1;	// this is because iteration 0 could not have regenerated forest in period 1, but iterations >= 1 do have regenerated forest strata
+//										for (int t = t_regen + iter; t <= total_periods + iter; t++) {
+//											xR[r_strata_id][i][s5R][s6R][t] = new int[t];		// age class of regen forest could be at max = t - 1
+//											for (int a = 1; a <= t - 1; a++) {
+//												int var_index = xR[r_strata_id][i][s5R][s6R][t][a];
+//												double para_value = parameter_info.get_total_value(
+//														var_info_array[var_index].get_prescription_id(),
+//														var_info_array[var_index].get_row_id(),
+//														parameters_type, parameters_indexes,
+//														dynamic_dentifiers_column_indexes, 
+//														dynamic_identifiers,
+//														var_cost_value[var_index]);
+//												para_value = para_value * multiplier;
+//																																						
+//												if (para_value > 0) { // only add if parameter is non zero
+//													c10_indexlist.get(c10_num).add(var_index);
+//													c10_valuelist.get(c10_num).add((double) para_value);
+//												}
+//											}
+//										}
+//									}
+//									
+//									// clear-cut prescriptions (R_1)
+//									filter_set = new HashSet<Integer>(set_of_prescription_ids_for_R_strata[r_strata_id]);
+//									filter_set.retainAll(R_1_prescription_ids[r_strata_id]);	// filter out the R_1 prescriptions only
+//									for (int i : filter_set) {
+//										int rotation_age = total_rows_of_precription[i]; 
+//										for (int s5R = 0; s5R < total_layer5; s5R++) {
+//											for (int s6R = 0; s6R < total_layer6; s6R++) {
+//												if (has_R_prescriptions[s5R][s6R] && set_of_prescription_ids_for_R_strata_with_s5R_s6R[r_strata_id][s5R][s6R].contains(i)) {	// if this prescription leads to s5R s6R regeneration
+//													int t_regen = (iter == 0) ? 2 : 1;	// this is because iteration 0 could not have regenerated forest in period 1, but iterations >= 1 do have regenerated forest strata
+//													for (int t = t_regen + iter; t <= total_periods + iter; t++) {
+//														int A_FINAL = Math.min(rotation_age, t - 1);	
+//														for (int a = 1; a <= A_FINAL; a++) {	// this loop guarantees that prescriptions with clear-cut beyond planning horizon are allowed a <= A_FINAL --> a <= rotation_age --> rotation_age + t - rotation_period <= rotation_age --> t <= rotation_period
+//															int var_index = xR[r_strata_id][i][s5R][s6R][t][a];
+//															double para_value = parameter_info.get_total_value(
+//																	var_info_array[var_index].get_prescription_id(),
+//																	var_info_array[var_index].get_row_id(),
+//																	parameters_type, parameters_indexes,
+//																	dynamic_dentifiers_column_indexes, 
+//																	dynamic_identifiers,
+//																	var_cost_value[var_index]);
+//															para_value = para_value * multiplier;
+//																																									
+//															if (para_value > 0) { // only add if parameter is non zero
+//																c10_indexlist.get(c10_num).add(var_index);
+//																c10_valuelist.get(c10_num).add((double) para_value);
 //															}
 //														}
 //													}
@@ -2236,7 +2293,7 @@ public class Solve_Iterations {
 //									}
 //								}
 //							}
-//						}					
+//						}	
 						
 						// Add bounds
 						c10_lblist.add((double) 0);
