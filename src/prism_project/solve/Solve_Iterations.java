@@ -1777,23 +1777,22 @@ public class Solve_Iterations {
 											}
 											
 											
+											// Add -sigma(s5R')(s6R')(i) xR(s1,s2,s3,s4,s5,s6][i][s5R'][s6R'][t+1][1]
 											String r_strata = strata_4layers + "_" + layer5.get(s5R) + "_" + layer6.get(s6R);		// = s1,s2,s3,s4,s5R,s6R
 											int r_strata_id = (map_R_strata_to_strata_id.get(r_strata) != null) ? map_R_strata_to_strata_id.get(r_strata) : -1;
-											
-											
-											// Add -sigma(s5R')(s6R')(i) xR(s1,s2,s3,s4,s5,s6][s5R'][s6R'][i][t+1][1]
-											for (int s5RR = 0; s5RR < total_layer5; s5RR++) {
-												for (int s6RR = 0; s6RR < total_layer6; s6RR++) {
-													if (r_strata_id >= 0) {
-														for (int i : R_prescription_ids[r_strata_id]) {
-															if(xR[r_strata_id] != null
-																	&& xR[r_strata_id][s5RR] != null
-																		&& xR[r_strata_id][s5RR][s6RR] != null
-																			&& xR[r_strata_id][s5RR][s6RR][i] != null
-																				&& xR[r_strata_id][s5RR][s6RR][i][t + 1] != null
-																					&& xR[r_strata_id][s5RR][s6RR][i][t + 1][1] > 0) {	// if variable is defined, this value would be > 0 
-																c8_indexlist.get(c8_num).add(xR[r_strata_id][s5RR][s6RR][i][t + 1][1]);
-																c8_valuelist.get(c8_num).add((double) -1);
+											if (r_strata_id >= 0) {
+												for (int i : R_prescription_ids[r_strata_id]) {
+													if(xR[r_strata_id][i] != null) {
+														for (int s5RR = 0; s5RR < xR[r_strata_id][i].length; s5RR++) {
+															if (xR[r_strata_id][i][s5RR] != null) {
+																for (int s6RR = 0; s6RR < xR[r_strata_id][i][s5RR].length; s6RR++) {
+																	if(xR[r_strata_id][i][s5RR][s6RR] != null
+																			&& xR[r_strata_id][i][s5RR][s6RR][t + 1] != null
+																				&& xR[r_strata_id][i][s5RR][s6RR][t + 1][1] > 0) {	// if variable is defined, this value would be > 0 
+																		c8_indexlist.get(c8_num).add(xR[r_strata_id][i][s5RR][s6RR][t + 1][1]);
+																		c8_valuelist.get(c8_num).add((double) -1);
+																	}
+																}
 															}
 														}
 													}
@@ -1877,11 +1876,9 @@ public class Solve_Iterations {
 										}
 										
 										
+										// Add -sigma(s5R')(s6R')(i) xR(s1,s2,s3,s4,s5,s6][i][s5R'][s6R'][t+1][1]
 										String r_strata = strata_4layers + "_" + layer5.get(s5R) + "_" + layer6.get(s6R);		// = s1,s2,s3,s4,s5R,s6R = f_strata (same first 6 indexes)
 										int r_strata_id = (map_R_strata_to_strata_id.get(r_strata) != null) ? map_R_strata_to_strata_id.get(r_strata) : -1;
-								
-										
-										// Add -sigma(s5R')(s6R')(i) xR(s1,s2,s3,s4,s5,s6][i][s5R'][s6R'][t+1][1]
 										if (r_strata_id >= 0) {
 											for (int i : R_prescription_ids[r_strata_id]) {
 												if(xR[r_strata_id][i] != null) {
