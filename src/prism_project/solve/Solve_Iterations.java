@@ -267,7 +267,7 @@ public class Solve_Iterations {
 				List<Double> flow_lowerbound_percentage_list = read.get_flow_lowerbound_percentage_list();
 				List<Double> flow_upperbound_percentage_list = read.get_flow_upperbound_percentage_list();			
 				System.out.println("Reading process finished for all core inputs          " + dateFormat.format(new Date()));
-				System.out.println("Optimization models will be built based on Prism-Formulation-15-v3");
+				System.out.println("Optimization models will be built based on Prism-Formulation-15-v4");
 				
 				// Get info: input_11_state_id
 				LinkedHashMap<String, String> map_prescription_and_row_id_to_state_id = read.get_map_prescription_and_row_id_to_state_id();
@@ -2119,8 +2119,8 @@ public class Solve_Iterations {
 									&& map_static_layer4.get(this_var_info.get_layer4()) != null
 									&& map_static_layer5.get(this_var_info.get_layer5()) != null
 									&& map_static_layer6.get(this_var_info.get_layer6()) != null
-//									&& map_static_period.get(String.valueOf(this_var_info.get_period() + iter)) != null) 	// this is a special case we need to back-adjust the already adjusted period
-									&& map_static_period.get(this_var_info.get_period() + iter) != null) 	// this is a special case we need to back-adjust the already adjusted period
+//									&& map_static_period.get(String.valueOf(this_var_info.get_period())) != null) 	// period from the variable was already adjusted 
+									&& map_static_period.get(this_var_info.get_period()) != null) 					// period from the variable was already adjusted
 							{
 								double para_value = parameter_info.get_total_value(
 										this_var_info.get_prescription_id(),
