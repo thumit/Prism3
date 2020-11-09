@@ -374,12 +374,12 @@ public class Solve_Iterations {
 					
 					
 					// Currently use for equation 7b only
-					Set<Integer>[][] set_of_x_index;
-					set_of_x_index = new HashSet[total_model_strata_4layers][];
+					Set<Integer>[][] set_of_x_index_for_7b;
+					set_of_x_index_for_7b = new HashSet[total_model_strata_4layers][];
 					for (int strata_4layers_id = 0; strata_4layers_id < total_model_strata_4layers; strata_4layers_id++) {
-						set_of_x_index[strata_4layers_id] = new HashSet[total_periods + 1 + iter];
+						set_of_x_index_for_7b[strata_4layers_id] = new HashSet[total_periods + 1 + iter];
 						for (int t = 1 + iter; t <= total_periods + iter; t++) {
-							set_of_x_index[strata_4layers_id][t] = new HashSet<Integer>();
+							set_of_x_index_for_7b[strata_4layers_id][t] = new HashSet<Integer>();
 						}
 					}
 					
@@ -405,15 +405,15 @@ public class Solve_Iterations {
 					int[] u = new int [total_softConstraints];	// u(j)
 					int[] z = new int [total_hardConstraints];	// z(k)
 					int[] v = new int [total_freeConstraints];	// v(n)
-	//				int[][][][] xE = new int[total_E_model_strata][total_layer5][total_layer6][[total_prescriptions][total_periods + 1 + iter];	//xE(s1,s2,s3,s4,s5,s6)(s5R)(s6R)(i)(t)
-	//				int[][][][][] xR = new int[total_R_model_strata][total_layer5][total_layer6][total_prescriptions][total_periods + 1 + iter][total_age_classes = t - 1];		//xR(s1,s2,s3,s4,s5,s6)(s5R)(s6R)(i)(t)(a)
+	//				int[][][][] xE = new int[total_E_model_strata][total_layer5][total_layer6][[total_prescriptions][total_periods + 1 + iter];	// xE[s1,s2,s3,s4,s5,s6][s5R][s6R][i][t]
+	//				int[][][][][] xR = new int[total_R_model_strata][total_layer5][total_layer6][total_prescriptions][total_periods + 1 + iter][total_age_classes = t - 1];		// xR[s1,s2,s3,s4,s5,s6][s5R][s6R][i][t][a]
 	//										// total_Periods + 1 + iter because tR starts from 1 to total_Periods + iter, ignore the 0		
 	//										// total_age_classes can be max at a = t - 1	
-					int[][][][][] xE = null;		// xE(s1,s2,s3,s4,s5,s6)(s5R)(s6R)(i)(t)				
-					int[][][][][][] xR = null;		// xR(s1,s2,s3,s4,s5,s6)(s5R)(s6R)(i)(t)(a)
-					int[][] fire = new int[total_R_model_strata][total_periods + 1 + iter];		// f(s1,s2,s3,s4,s5R,s6R(t)		-->  replacing-disturbance variables			
+					int[][][][][] xE = null;		// xE[s1,s2,s3,s4,s5,s6][s5R][s6R][i][t]				
+					int[][][][][][] xR = null;		// xR[s1,s2,s3,s4,s5,s6][s5R][s6R][i][t][a]
+					int[][] fire = new int[total_R_model_strata][total_periods + 1 + iter];		// f[s1,s2,s3,s4,s5R,s6R][t]		-->  replacing-disturbance variables			
 					
-					// get the area parameter for existing strata V(s1,s2,s3,s4,s5,s6)
+					// get the area parameter for existing strata V[s1,s2,s3,s4,s5,s6]
 					String[][] E_model_strata_data = read.get_ms_data();	
 					double[] E_strata_area = new double[total_E_model_strata];
 					for (int id = 0; id < total_E_model_strata; id++) {
@@ -521,7 +521,7 @@ public class Solve_Iterations {
 								String strata_4layers = var_info.get_layer1() + "_" + var_info.get_layer2() + "_" + var_info.get_layer3() + "_" + var_info.get_layer4();
 								if (map_model_strata_4layers_to_strata_id.get(strata_4layers) != null) {
 									int strata_4layers_id = map_model_strata_4layers_to_strata_id.get(strata_4layers);
-									set_of_x_index[strata_4layers_id][t].add(nvars);
+									set_of_x_index_for_7b[strata_4layers_id][t].add(nvars);
 								}
 									
 								var_info_list.add(var_info);
@@ -557,7 +557,7 @@ public class Solve_Iterations {
 											String strata_4layers = var_info.get_layer1() + "_" + var_info.get_layer2() + "_" + var_info.get_layer3() + "_" + var_info.get_layer4();
 											if (map_model_strata_4layers_to_strata_id.get(strata_4layers) != null) {
 												int strata_4layers_id = map_model_strata_4layers_to_strata_id.get(strata_4layers);
-												set_of_x_index[strata_4layers_id][t].add(nvars);
+												set_of_x_index_for_7b[strata_4layers_id][t].add(nvars);
 											}
 											
 											var_info_list.add(var_info);
@@ -602,7 +602,7 @@ public class Solve_Iterations {
 										String strata_4layers = var_info.get_layer1() + "_" + var_info.get_layer2() + "_" + var_info.get_layer3() + "_" + var_info.get_layer4();
 										if (map_model_strata_4layers_to_strata_id.get(strata_4layers) != null) {
 											int strata_4layers_id = map_model_strata_4layers_to_strata_id.get(strata_4layers);
-											set_of_x_index[strata_4layers_id][t].add(nvars);
+											set_of_x_index_for_7b[strata_4layers_id][t].add(nvars);
 										}
 										
 										var_info_list.add(var_info);
@@ -642,7 +642,7 @@ public class Solve_Iterations {
 													String strata_4layers = var_info.get_layer1() + "_" + var_info.get_layer2() + "_" + var_info.get_layer3() + "_" + var_info.get_layer4();
 													if (map_model_strata_4layers_to_strata_id.get(strata_4layers) != null) {
 														int strata_4layers_id = map_model_strata_4layers_to_strata_id.get(strata_4layers);
-														set_of_x_index[strata_4layers_id][t].add(nvars);
+														set_of_x_index_for_7b[strata_4layers_id][t].add(nvars);
 													}
 													
 													var_info_list.add(var_info);
@@ -1074,7 +1074,7 @@ public class Solve_Iterations {
 									sorted_map_var_index_to_var_state_id.put(entry.getKey(), entry.getValue());
 								});
 								map_var_index_to_var_state_id = null;	// delete the unsorted map
-	//							// test printing
+	//							// test printing blocks with same state_id
 	//							String current_state_id = "state_id would never have a space";
 	//							for (int var_index : sorted_map_var_index_to_var_state_id.keySet()) {
 	//								String state_id = sorted_map_var_index_to_var_state_id.get(var_index);
@@ -1086,56 +1086,6 @@ public class Solve_Iterations {
 	//								System.out.println(var_index + "                 " + var_name + "                 state_id =                 " + state_id);
 	//							};
 	//							System.out.println("----------------------------------------------------------------------");
-	//							// Example printing blocks with same state_id:
-	//									143493                 xMS_E_A_N_C_B_D_F_0_2                 state_id =                 1_0_13_61_45_27_2_0
-	//
-	//									845                 xNG_E_A_N_C_B_D_F_0_2                 state_id =                 1_1_18_68_39_27_2_3
-	//									65216                 xEA_E_A_N_C_B_D_F_12_D_1_2                 state_id =                 1_1_18_68_39_27_2_3
-	//									65239                 xEA_E_A_N_C_B_D_F_13_D_1_2                 state_id =                 1_1_18_68_39_27_2_3
-	//									65264                 xEA_E_A_N_C_B_D_F_14_D_1_2                 state_id =                 1_1_18_68_39_27_2_3
-	//									65291                 xEA_E_A_N_C_B_D_F_15_D_1_2                 state_id =                 1_1_18_68_39_27_2_3
-	//									65320                 xEA_E_A_N_C_B_D_F_16_D_1_2                 state_id =                 1_1_18_68_39_27_2_3
-	//									143513                 xMS_E_A_N_C_B_D_F_1_2                 state_id =                 1_1_18_68_39_27_2_3
-	//									143533                 xMS_E_A_N_C_B_D_F_2_2                 state_id =                 1_1_18_68_39_27_2_3
-	//									143553                 xMS_E_A_N_C_B_D_F_3_2                 state_id =                 1_1_18_68_39_27_2_3
-	//									143573                 xMS_E_A_N_C_B_D_F_4_2                 state_id =                 1_1_18_68_39_27_2_3
-	//
-	//									24925                 xPB_E_A_N_C_B_D_F_0_2                 state_id =                 1_1_18_68_40_27_2_3
-	//									24945                 xPB_E_A_N_C_B_D_F_1_2                 state_id =                 1_1_18_68_40_27_2_3
-	//									24965                 xPB_E_A_N_C_B_D_F_2_2                 state_id =                 1_1_18_68_40_27_2_3
-	//									65205                 xEA_E_A_N_C_B_D_F_12_D_0_2                 state_id =                 1_1_18_68_40_27_2_3
-	//									65227                 xEA_E_A_N_C_B_D_F_13_D_0_2                 state_id =                 1_1_18_68_40_27_2_3
-	//									65251                 xEA_E_A_N_C_B_D_F_14_D_0_2                 state_id =                 1_1_18_68_40_27_2_3
-	//									65277                 xEA_E_A_N_C_B_D_F_15_D_0_2                 state_id =                 1_1_18_68_40_27_2_3
-	//									65305                 xEA_E_A_N_C_B_D_F_16_D_0_2                 state_id =                 1_1_18_68_40_27_2_3
-	//
-	//									55445                 xGS_E_A_N_C_B_D_F_0_2                 state_id =                 1_1_18_87_40_27_2_3
-	//									----------------------------------------------------------------------
-	//
-	//									143593                 xMS_E_A_N_C_B_D_G_0_2                 state_id =                 1_0_13_61_45_27_2_0
-	//
-	//									55465                 xGS_E_A_N_C_B_D_G_0_2                 state_id =                 1_1_86_10_50_27_2_1
-	//
-	//									24985                 xPB_E_A_N_C_B_D_G_0_2                 state_id =                 1_1_95_42_60_27_2_1
-	//									25005                 xPB_E_A_N_C_B_D_G_1_2                 state_id =                 1_1_95_42_60_27_2_1
-	//									25025                 xPB_E_A_N_C_B_D_G_2_2                 state_id =                 1_1_95_42_60_27_2_1
-	//
-	//									65335                 xEA_E_A_N_C_B_D_G_12_D_0_2                 state_id =                 1_1_95_45_61_27_2_1
-	//									65357                 xEA_E_A_N_C_B_D_G_13_D_0_2                 state_id =                 1_1_95_45_61_27_2_1
-	//									65381                 xEA_E_A_N_C_B_D_G_14_D_0_2                 state_id =                 1_1_95_45_61_27_2_1
-	//									65407                 xEA_E_A_N_C_B_D_G_15_D_0_2                 state_id =                 1_1_95_45_61_27_2_1
-	//									65435                 xEA_E_A_N_C_B_D_G_16_D_0_2                 state_id =                 1_1_95_45_61_27_2_1
-	//
-	//									865                 xNG_E_A_N_C_B_D_G_0_2                 state_id =                 1_1_95_45_7_27_2_1
-	//									65346                 xEA_E_A_N_C_B_D_G_12_D_1_2                 state_id =                 1_1_95_45_7_27_2_1
-	//									65369                 xEA_E_A_N_C_B_D_G_13_D_1_2                 state_id =                 1_1_95_45_7_27_2_1
-	//									65394                 xEA_E_A_N_C_B_D_G_14_D_1_2                 state_id =                 1_1_95_45_7_27_2_1
-	//									65421                 xEA_E_A_N_C_B_D_G_15_D_1_2                 state_id =                 1_1_95_45_7_27_2_1
-	//									65450                 xEA_E_A_N_C_B_D_G_16_D_1_2                 state_id =                 1_1_95_45_7_27_2_1
-	//									143613                 xMS_E_A_N_C_B_D_G_1_2                 state_id =                 1_1_95_45_7_27_2_1
-	//									143633                 xMS_E_A_N_C_B_D_G_2_2                 state_id =                 1_1_95_45_7_27_2_1
-	//									143653                 xMS_E_A_N_C_B_D_G_3_2                 state_id =                 1_1_95_45_7_27_2_1
-	//									143673                 xMS_E_A_N_C_B_D_G_4_2                 state_id =                 1_1_95_45_7_27_2_1
 								
 								
 								// Note that because
@@ -1159,7 +1109,7 @@ public class Solve_Iterations {
 								}
 								all_blocks.add(this_block); // add the last block
 														
-	//							// test printing: same result as above example
+	//							// test printing:
 	//							for (List<Integer> block : all_blocks) {
 	//								System.out.println(); // a blank line for a new block
 	//								for (int var_index : block) {
@@ -1577,7 +1527,7 @@ public class Solve_Iterations {
 										// Add regeneration variables	-sigma(s5,s6,s5R',s6R',i,a)	xR[s1][s2][s3][s4][s5][s6][i][s5R'][s6R'][t][a]	----------------------------------------------
 										if (map_model_strata_4layers_to_strata_id.get(strata_4layers) != null) {
 											int strata_4layers_id = map_model_strata_4layers_to_strata_id.get(strata_4layers);
-											for (int var_index : set_of_x_index[strata_4layers_id][t]) {	// include x with period = rotation_period is ok because the user_loss_rate is set to 0 for those cases 
+											for (int var_index : set_of_x_index_for_7b[strata_4layers_id][t]) {	// include x with period = rotation_period is ok because the user_loss_rate is set to 0 for those cases 
 												if (var_rd_condition_id[var_index] != null) {		// if there is replacing disturbance associated with this variable
 													double[] user_loss_rate = map_var_index_to_user_loss_rates.get(var_index);
 													double[][][] conversion_rate_mean = new double[total_disturbances][][];
@@ -2108,7 +2058,6 @@ public class Solve_Iterations {
 						LinkedHashMap<String, Integer> map_static_layer4 = read.get_map_static_layer_in_row(3, id);
 						LinkedHashMap<String, Integer> map_static_layer5 = read.get_map_static_layer_in_row(4, id);
 						LinkedHashMap<String, Integer> map_static_layer6 = read.get_map_static_layer_in_row(5, id);
-//						LinkedHashMap<String, Integer> map_static_period = read.get_map_static_layer_in_row(6, id);
 						LinkedHashMap<Integer, Integer> map_static_period = read.get_map_static_period_in_row(id);
 						
 						for (int var_index = 0; var_index < nvars; var_index++) {
@@ -2119,7 +2068,6 @@ public class Solve_Iterations {
 									&& map_static_layer4.get(this_var_info.get_layer4()) != null
 									&& map_static_layer5.get(this_var_info.get_layer5()) != null
 									&& map_static_layer6.get(this_var_info.get_layer6()) != null
-//									&& map_static_period.get(String.valueOf(this_var_info.get_period())) != null) 	// period from the variable was already adjusted 
 									&& map_static_period.get(this_var_info.get_period()) != null) 					// period from the variable was already adjusted
 							{
 								double para_value = parameter_info.get_total_value(
