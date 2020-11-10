@@ -40,7 +40,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import lpsolve.LpSolve;
@@ -248,6 +247,13 @@ public class Solve_Iterations {
 				
 				// Get info: input_08_basic_constraints
 				List<String> constraint_column_names_list = read.get_constraint_column_names_list();
+				int constraint_id_col = constraint_column_names_list.indexOf("bc_id");
+				int constraint_type_col = constraint_column_names_list.indexOf("bc_type");
+				int multiplier_col = constraint_column_names_list.indexOf("bc_multiplier");
+				int lowerbound_col = constraint_column_names_list.indexOf("lowerbound");
+				int lowerbound_perunit_penalty_col = constraint_column_names_list.indexOf("lowerbound_perunit_penalty");
+				int upperbound_col = constraint_column_names_list.indexOf("upperbound");
+				int upperbound_perunit_penalty_col = constraint_column_names_list.indexOf("upperbound_perunit_penalty");
 				String[][] bc_values = read.get_bc_data();		
 				int total_softConstraints = read.get_total_soft_constraints();
 				double[] softConstraints_LB = read.get_soft_constraints_LB();
@@ -2013,24 +2019,16 @@ public class Solve_Iterations {
 					int current_freeConstraint = 0;
 					int current_softConstraint = 0;
 					int current_hardConstraint = 0;	
-						
+					
 					// Add -y(j) + user_defined_variables = 0		or 			-z(k) + user_defined_variables = 0		or 			-v(n) + user_defined_variables = 0
 					for (int id = 1; id < total_freeConstraints + total_softConstraints + total_hardConstraints + 1; id++) {	//Loop from 1 because the first row of the userConstraint file is just title
 						long bc_time_start = System.currentTimeMillis();		// measure time before adding each basic constraint
-						
-						
-						int parameters_type = read.get_parameters_type_in_row(id);						// Get the parameter type: 0 = NoParameter, 1 = CostParameter, 2 = Others
-						List<Integer> parameters_indexes = read.get_parameters_indexes_in_row(id);		// Get the parameter indexes list (not null only when parameters_type is not 0 or 1)
-						List<List<String>> dynamic_identifiers = read.get_dynamic_identifiers_in_row(id);	
-						List<Integer> dynamic_dentifiers_column_indexes = read.get_dynamic_identifiers_column_indexes_in_row(id);	// Get the dynamic identifiers indexes list (not null only when it is not NoIdentifier)
-
 						
 						// Add constraint
 						c10_indexlist.add(new ArrayList<Integer>());
 						c10_valuelist.add(new ArrayList<Double>());
 	
 						// Add -y(j) or -z(k) or -v(n)
-						int constraint_type_col = constraint_column_names_list.indexOf("bc_type");				
 						switch (bc_values[id][constraint_type_col]) {
 						case "SOFT":
 							c10_indexlist.get(c10_num).add(y[current_softConstraint]);
@@ -2048,50 +2046,144 @@ public class Solve_Iterations {
 							current_freeConstraint++;
 							break;
 						}
-											
+							
+						
+						int parameters_type = read.get_parameters_type_in_row(id);						// Get the parameter type: 0 = NoParameter, 1 = CostParameter, 2 = Others
+						List<Integer> parameters_indexes = read.get_parameters_indexes_in_row(id);		// Get the parameter indexes list (not null only when parameters_type is not 0 or 1)
+						List<List<String>> dynamic_identifiers = read.get_dynamic_identifiers_in_row(id);	
+						List<Integer> dynamic_dentifiers_column_indexes = read.get_dynamic_identifiers_column_indexes_in_row(id);	// Get the dynamic identifiers indexes list (not null only when it is not NoIdentifier)
 						
 						// Add user_defined_variables and parameters------------------------------------
-						int multiplier_col = constraint_column_names_list.indexOf("bc_multiplier");
-						double multiplier = (!bc_values[id][multiplier_col].equals("null")) ?  Double.parseDouble(bc_values[id][multiplier_col]) : 0;	// if multiplier = null --> 0
-						LinkedHashMap<String, Integer> map_static_layer1 = read.get_map_static_layer_in_row(0, id);
-						LinkedHashMap<String, Integer> map_static_layer2 = read.get_map_static_layer_in_row(1, id);
-						LinkedHashMap<String, Integer> map_static_layer3 = read.get_map_static_layer_in_row(2, id);
-						LinkedHashMap<String, Integer> map_static_layer4 = read.get_map_static_layer_in_row(3, id);
-						LinkedHashMap<String, Integer> map_static_layer5 = read.get_map_static_layer_in_row(4, id);
-						LinkedHashMap<String, Integer> map_static_layer6 = read.get_map_static_layer_in_row(5, id);
-						LinkedHashMap<Integer, Integer> map_static_period = read.get_map_static_period_in_row(id);
+//						double multiplier = (!bc_values[id][multiplier_col].equals("null")) ?  Double.parseDouble(bc_values[id][multiplier_col]) : 0;	// if multiplier = null --> 0
+//						LinkedHashMap<String, Integer> map_static_layer1 = read.get_map_static_layer_in_row(0, id);
+//						LinkedHashMap<String, Integer> map_static_layer2 = read.get_map_static_layer_in_row(1, id);
+//						LinkedHashMap<String, Integer> map_static_layer3 = read.get_map_static_layer_in_row(2, id);
+//						LinkedHashMap<String, Integer> map_static_layer4 = read.get_map_static_layer_in_row(3, id);
+//						LinkedHashMap<String, Integer> map_static_layer5 = read.get_map_static_layer_in_row(4, id);
+//						LinkedHashMap<String, Integer> map_static_layer6 = read.get_map_static_layer_in_row(5, id);
+//						LinkedHashMap<Integer, Integer> map_static_period = read.get_map_static_period_in_row(id);
+//						
+//						for (int var_index = 0; var_index < nvars; var_index++) {
+//							Information_Variable this_var_info = var_info_array[var_index];
+//							if (map_static_layer1.get(this_var_info.get_layer1()) != null
+//									&& map_static_layer2.get(this_var_info.get_layer2()) != null
+//									&& map_static_layer3.get(this_var_info.get_layer3()) != null
+//									&& map_static_layer4.get(this_var_info.get_layer4()) != null
+//									&& map_static_layer5.get(this_var_info.get_layer5()) != null
+//									&& map_static_layer6.get(this_var_info.get_layer6()) != null
+//									&& map_static_period.get(this_var_info.get_period()) != null) 					// period from the variable was already adjusted
+//							{
+//								double para_value = parameter_info.get_total_value(
+//										this_var_info.get_prescription_id(),
+//										this_var_info.get_row_id(),
+//										parameters_type, parameters_indexes,
+//										dynamic_dentifiers_column_indexes, 
+//										dynamic_identifiers,
+//										var_cost_value[var_index]);
+//								para_value = para_value * multiplier;
+//																																		
+//								if (para_value > 0) {	// only add if parameter is non zero
+//									c10_indexlist.get(c10_num).add(var_index);
+//									c10_valuelist.get(c10_num).add((double) para_value);
+//								}
+//							}
+//						}
+
 						
-						for (int var_index = 0; var_index < nvars; var_index++) {
-							Information_Variable this_var_info = var_info_array[var_index];
-							if (map_static_layer1.get(this_var_info.get_layer1()) != null
-									&& map_static_layer2.get(this_var_info.get_layer2()) != null
-									&& map_static_layer3.get(this_var_info.get_layer3()) != null
-									&& map_static_layer4.get(this_var_info.get_layer4()) != null
-									&& map_static_layer5.get(this_var_info.get_layer5()) != null
-									&& map_static_layer6.get(this_var_info.get_layer6()) != null
-									&& map_static_period.get(this_var_info.get_period()) != null) 					// period from the variable was already adjusted
-							{
-								double para_value = parameter_info.get_total_value(
-										this_var_info.get_prescription_id(),
-										this_var_info.get_row_id(),
-										parameters_type, parameters_indexes,
-										dynamic_dentifiers_column_indexes, 
-										dynamic_identifiers,
-										var_cost_value[var_index]);
-								para_value = para_value * multiplier;
-																																		
-								if (para_value > 0) {	// only add if parameter is non zero
-									c10_indexlist.get(c10_num).add(var_index);
-									c10_valuelist.get(c10_num).add((double) para_value);
-								}
+						
+						
+						// This method is much more faster	
+						LinkedHashMap<Integer, Integer> map_static_period = read.get_map_static_period_in_row(id);
+						// List<Integer> static_periods = read.get_static_periods_in_row(id).stream().map(Integer::parseInt).collect(Collectors.toList());	// convert List<String> --> List<Integer>
+						Set<String> static_strata = read.get_static_strata_in_row(id);
+						double multiplier = (!bc_values[id][multiplier_col].equals("null")) ?  Double.parseDouble(bc_values[id][multiplier_col]) : 0;	// if multiplier = null --> 0
+						// These 4 lines create the intersection sets, the original id could be retrieved from the 2 maps: map_E_strata_to_strata_id & map_R_strata_to_strata_id
+						List<String> common_E_strata = new ArrayList<String>(E_model_strata);
+						List<String> common_R_strata = new ArrayList<String>(R_model_strata);
+						common_E_strata.retainAll(static_strata);
+						common_R_strata.retainAll(static_strata);
+						
+						// Add existing variables xE[s1][s2][s3][s4][s5][s6](s5R)(s6R)(i)(t) --------------------------------------------------------------
+						for (String e_strata : common_E_strata) {
+							int e_strata_id = map_E_strata_to_strata_id.get(e_strata);			// Note we need index from model_strata not common_trata
+							if (xE[e_strata_id] != null) {
+								for (int i : E_prescription_ids[e_strata_id]) {
+									if (xE[e_strata_id][i] != null) {
+										for (int s5R = 0; s5R < xE[e_strata_id][i].length; s5R++) {
+											if (xE[e_strata_id][i][s5R] != null) {
+												for (int s6R = 0; s6R < xE[e_strata_id][i][s5R].length; s6R++) {
+													if (xE[e_strata_id][i][s5R][s6R] != null) {		// if variable is defined, this value would be > 0 
+														for (int t = 1 + iter; t <= total_periods + iter; t++) {	// --> always loop to the ending period of the horizon (allow missing row ids)
+															int var_index = xE[e_strata_id][i][s5R][s6R][t];
+															if (map_static_period.get(var_info_array[var_index].get_period()) != null) {
+																double para_value = parameter_info.get_total_value(
+																		var_info_array[var_index].get_prescription_id(),
+																		var_info_array[var_index].get_row_id(),
+																		parameters_type, parameters_indexes,
+																		dynamic_dentifiers_column_indexes, 
+																		dynamic_identifiers,
+																		var_cost_value[var_index]);
+																para_value = para_value * multiplier;
+																																										
+																if (para_value > 0) {	// only add if parameter is non zero
+																	c10_indexlist.get(c10_num).add(var_index);
+																	c10_valuelist.get(c10_num).add((double) para_value);
+																}	
+															}
+														}	
+													}
+												}
+											}
+										}	
+									}
+								}	
 							}
 						}
 						
+						// Add regenerated variables xR[s1][s2][s3][s4][s5][s6][s5R][s6R][i][t][a]--------------------------------------------------------------
+						for (String r_strata : common_R_strata) {
+							int r_strata_id = map_R_strata_to_strata_id.get(r_strata);			// Note we need index from model_R_strata not common_R_trata
+							if (xR[r_strata_id] != null) {
+								for (int i : R_prescription_ids[r_strata_id]) {
+									if(xR[r_strata_id][i] != null) {
+										for (int s5R = 0; s5R < xR[r_strata_id][i].length; s5R++) {
+											if(xR[r_strata_id][i][s5R] != null) {
+												for (int s6R = 0; s6R < xR[r_strata_id][i][s5R].length; s6R++) {
+													if(xR[r_strata_id][i][s5R][s6R] != null) {
+														int t_regen = (iter == 0) ? 2 : 1;	// this is because iteration 0 could not have regenerated forest in period 1, but iterations >= 1 do have regenerated forest strata
+														for (int t = t_regen + iter; t <= total_periods + iter; t++) {
+															if(xR[r_strata_id][i][s5R][s6R][t] != null) {
+																for (int a = 1; a <= t - 1; a++) {
+																	int var_index = xR[r_strata_id][i][s5R][s6R][t][a];
+																	if (map_static_period.get(var_info_array[var_index].get_period()) != null) {
+																		double para_value = parameter_info.get_total_value(
+																				var_info_array[var_index].get_prescription_id(),
+																				var_info_array[var_index].get_row_id(),
+																				parameters_type, parameters_indexes,
+																				dynamic_dentifiers_column_indexes, 
+																				dynamic_identifiers,
+																				var_cost_value[var_index]);
+																		para_value = para_value * multiplier;
+																																												
+																		if (para_value > 0) { // only add if parameter is non zero
+																			c10_indexlist.get(c10_num).add(var_index);
+																			c10_valuelist.get(c10_num).add((double) para_value);
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}						
 						
 						
-						
-						
-						
+
 						
 //						// This method is much more slower	
 //						LinkedHashMap<Integer, Integer> map_static_period = read.get_map_static_period_in_row(id);
@@ -2309,8 +2401,6 @@ public class Solve_Iterations {
 						current_freeConstraint = 0;
 						current_softConstraint = 0;
 						current_hardConstraint = 0;	
-						int constraint_type_col = constraint_column_names_list.indexOf("bc_type");				
-						int constraint_id_col = constraint_column_names_list.indexOf("bc_id");
 						
 						for (int i = 1; i < total_freeConstraints + total_softConstraints + total_hardConstraints + 1; i++) {	// Loop from 1 because the first row of the Basic Constraints file is just title												
 							int ID = Integer.parseInt(bc_values[i][constraint_id_col]);
@@ -2826,11 +2916,6 @@ public class Solve_Iterations {
 									current_freeConstraint = 0;
 									current_softConstraint = 0;
 									current_hardConstraint = 0;	
-									int constraint_type_col = constraint_column_names_list.indexOf("bc_type");	
-									int lowerbound_col = constraint_column_names_list.indexOf("lowerbound");
-									int lowerbound_perunit_penalty_col = constraint_column_names_list.indexOf("lowerbound_perunit_penalty");
-									int upperbound_col = constraint_column_names_list.indexOf("upperbound");
-									int upperbound_perunit_penalty_col = constraint_column_names_list.indexOf("upperbound_perunit_penalty");
 									
 									for (int i = 1; i < total_freeConstraints + total_softConstraints + total_hardConstraints + 1; i++) {	// loop from 1 because the first row of the Basic Constraints file is just title												
 										fileOut.newLine();
@@ -3396,11 +3481,6 @@ public class Solve_Iterations {
 									current_freeConstraint = 0;
 									current_softConstraint = 0;
 									current_hardConstraint = 0;	
-									int constraint_type_col = constraint_column_names_list.indexOf("bc_type");	
-									int lowerbound_col = constraint_column_names_list.indexOf("lowerbound");
-									int lowerbound_perunit_penalty_col = constraint_column_names_list.indexOf("lowerbound_perunit_penalty");
-									int upperbound_col = constraint_column_names_list.indexOf("upperbound");
-									int upperbound_perunit_penalty_col = constraint_column_names_list.indexOf("upperbound_perunit_penalty");
 									
 									for (int i = 1; i < total_freeConstraints + total_softConstraints + total_hardConstraints + 1; i++) {	// loop from 1 because the first row of the Basic Constraints file is just title												
 										fileOut.newLine();
