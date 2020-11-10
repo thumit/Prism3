@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import lpsolve.LpSolve;
@@ -2092,8 +2093,9 @@ public class Solve_Iterations {
 						
 						
 						
-//						// This method is much more slower (It is not correct since the static periods are not yet integrated into the below code)						
-//						List<Integer> static_periods = read.get_static_periods_in_row(id).stream().map(Integer::parseInt).collect(Collectors.toList());	// convert List<String> --> List<Integer>
+//						// This method is much more slower	
+//						LinkedHashMap<Integer, Integer> map_static_period = read.get_map_static_period_in_row(id);
+//						// List<Integer> static_periods = read.get_static_periods_in_row(id).stream().map(Integer::parseInt).collect(Collectors.toList());	// convert List<String> --> List<Integer>
 //						Set<String> static_strata = read.get_static_strata_in_row(id);
 //						int multiplier_col = constraint_column_names_list.indexOf("bc_multiplier");
 //						double multiplier = (!bc_values[id][multiplier_col].equals("null")) ?  Double.parseDouble(bc_values[id][multiplier_col]) : 0;	// if multiplier = null --> 0
@@ -2118,18 +2120,20 @@ public class Solve_Iterations {
 //									int s6R = 0;
 //									for (int t = 1 + iter; t <= total_periods + iter; t++) {	// --> always loop to the ending period of the horizon (allow missing row ids)
 //										int var_index = xE[e_strata_id][i][s5R][s6R][t];
-//										double para_value = parameter_info.get_total_value(
-//												var_info_array[var_index].get_prescription_id(),
-//												var_info_array[var_index].get_row_id(),
-//												parameters_type, parameters_indexes,
-//												dynamic_dentifiers_column_indexes, 
-//												dynamic_identifiers,
-//												var_cost_value[var_index]);
-//										para_value = para_value * multiplier;
-//																																				
-//										if (para_value > 0) {	// only add if parameter is non zero
-//											c10_indexlist.get(c10_num).add(var_index);
-//											c10_valuelist.get(c10_num).add((double) para_value);
+//										if (map_static_period.get(var_info_array[var_index].get_period()) != null) {
+//											double para_value = parameter_info.get_total_value(
+//													var_info_array[var_index].get_prescription_id(),
+//													var_info_array[var_index].get_row_id(),
+//													parameters_type, parameters_indexes,
+//													dynamic_dentifiers_column_indexes, 
+//													dynamic_identifiers,
+//													var_cost_value[var_index]);
+//											para_value = para_value * multiplier;
+//																																					
+//											if (para_value > 0) {	// only add if parameter is non zero
+//												c10_indexlist.get(c10_num).add(var_index);
+//												c10_valuelist.get(c10_num).add((double) para_value);
+//											}	
 //										}
 //									}						
 //								}
@@ -2146,18 +2150,20 @@ public class Solve_Iterations {
 //											if (has_R_prescriptions[s5R][s6R] && set_of_prescription_ids_for_E_strata_with_s5R_s6R[e_strata_id][s5R][s6R].contains(i)) {	// if this prescription leads to s5R s6R regeneration
 //												for (int t = 1 + iter; t <= T_FINAL; t++) {		// this loop guarantees that prescriptions with clear-cut beyond planning horizon are allowed
 //													int var_index = xE[e_strata_id][i][s5R][s6R][t];
-//													double para_value = parameter_info.get_total_value(
-//															var_info_array[var_index].get_prescription_id(),
-//															var_info_array[var_index].get_row_id(),
-//															parameters_type, parameters_indexes,
-//															dynamic_dentifiers_column_indexes, 
-//															dynamic_identifiers,
-//															var_cost_value[var_index]);
-//													para_value = para_value * multiplier;
-//																																							
-//													if (para_value > 0) {	// only add if parameter is non zero
-//														c10_indexlist.get(c10_num).add(var_index);
-//														c10_valuelist.get(c10_num).add((double) para_value);
+//													if (map_static_period.get(var_info_array[var_index].get_period()) != null) {
+//														double para_value = parameter_info.get_total_value(
+//																var_info_array[var_index].get_prescription_id(),
+//																var_info_array[var_index].get_row_id(),
+//																parameters_type, parameters_indexes,
+//																dynamic_dentifiers_column_indexes, 
+//																dynamic_identifiers,
+//																var_cost_value[var_index]);
+//														para_value = para_value * multiplier;
+//																																								
+//														if (para_value > 0) {	// only add if parameter is non zero
+//															c10_indexlist.get(c10_num).add(var_index);
+//															c10_valuelist.get(c10_num).add((double) para_value);
+//														}	
 //													}
 //												}
 //											}
@@ -2184,21 +2190,22 @@ public class Solve_Iterations {
 //										int s6R = 0;
 //										int t_regen = (iter == 0) ? 2 : 1;	// this is because iteration 0 could not have regenerated forest in period 1, but iterations >= 1 do have regenerated forest strata
 //										for (int t = t_regen + iter; t <= total_periods + iter; t++) {
-//											xR[r_strata_id][i][s5R][s6R][t] = new int[t];		// age class of regen forest could be at max = t - 1
 //											for (int a = 1; a <= t - 1; a++) {
 //												int var_index = xR[r_strata_id][i][s5R][s6R][t][a];
-//												double para_value = parameter_info.get_total_value(
-//														var_info_array[var_index].get_prescription_id(),
-//														var_info_array[var_index].get_row_id(),
-//														parameters_type, parameters_indexes,
-//														dynamic_dentifiers_column_indexes, 
-//														dynamic_identifiers,
-//														var_cost_value[var_index]);
-//												para_value = para_value * multiplier;
-//																																						
-//												if (para_value > 0) { // only add if parameter is non zero
-//													c10_indexlist.get(c10_num).add(var_index);
-//													c10_valuelist.get(c10_num).add((double) para_value);
+//												if (map_static_period.get(var_info_array[var_index].get_period()) != null) {
+//													double para_value = parameter_info.get_total_value(
+//															var_info_array[var_index].get_prescription_id(),
+//															var_info_array[var_index].get_row_id(),
+//															parameters_type, parameters_indexes,
+//															dynamic_dentifiers_column_indexes, 
+//															dynamic_identifiers,
+//															var_cost_value[var_index]);
+//													para_value = para_value * multiplier;
+//																																							
+//													if (para_value > 0) { // only add if parameter is non zero
+//														c10_indexlist.get(c10_num).add(var_index);
+//														c10_valuelist.get(c10_num).add((double) para_value);
+//													}
 //												}
 //											}
 //										}
@@ -2217,18 +2224,20 @@ public class Solve_Iterations {
 //														int A_FINAL = Math.min(rotation_age, t - 1);	
 //														for (int a = 1; a <= A_FINAL; a++) {	// this loop guarantees that prescriptions with clear-cut beyond planning horizon are allowed a <= A_FINAL --> a <= rotation_age --> rotation_age + t - rotation_period <= rotation_age --> t <= rotation_period
 //															int var_index = xR[r_strata_id][i][s5R][s6R][t][a];
-//															double para_value = parameter_info.get_total_value(
-//																	var_info_array[var_index].get_prescription_id(),
-//																	var_info_array[var_index].get_row_id(),
-//																	parameters_type, parameters_indexes,
-//																	dynamic_dentifiers_column_indexes, 
-//																	dynamic_identifiers,
-//																	var_cost_value[var_index]);
-//															para_value = para_value * multiplier;
-//																																									
-//															if (para_value > 0) { // only add if parameter is non zero
-//																c10_indexlist.get(c10_num).add(var_index);
-//																c10_valuelist.get(c10_num).add((double) para_value);
+//															if (map_static_period.get(var_info_array[var_index].get_period()) != null) {
+//																double para_value = parameter_info.get_total_value(
+//																		var_info_array[var_index].get_prescription_id(),
+//																		var_info_array[var_index].get_row_id(),
+//																		parameters_type, parameters_indexes,
+//																		dynamic_dentifiers_column_indexes, 
+//																		dynamic_identifiers,
+//																		var_cost_value[var_index]);
+//																para_value = para_value * multiplier;
+//																																										
+//																if (para_value > 0) { // only add if parameter is non zero
+//																	c10_indexlist.get(c10_num).add(var_index);
+//																	c10_valuelist.get(c10_num).add((double) para_value);
+//																}
 //															}
 //														}
 //													}
