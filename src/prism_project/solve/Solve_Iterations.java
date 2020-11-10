@@ -248,6 +248,7 @@ public class Solve_Iterations {
 				// Get info: input_08_basic_constraints
 				List<String> constraint_column_names_list = read.get_constraint_column_names_list();
 				int constraint_id_col = constraint_column_names_list.indexOf("bc_id");
+				int constraint_description_col = constraint_column_names_list.indexOf("bc_description");
 				int constraint_type_col = constraint_column_names_list.indexOf("bc_type");
 				int multiplier_col = constraint_column_names_list.indexOf("bc_multiplier");
 				int lowerbound_col = constraint_column_names_list.indexOf("lowerbound");
@@ -2109,13 +2110,13 @@ public class Solve_Iterations {
 							if (xE[e_strata_id] != null) {
 								for (int i : E_prescription_ids[e_strata_id]) {
 									if (xE[e_strata_id][i] != null) {
-										for (int s5R = 0; s5R < xE[e_strata_id][i].length; s5R++) {
+										for (int s5R = 0; s5R < xE[e_strata_id][i].length; s5R++) {		// must use length here for E_0
 											if (xE[e_strata_id][i][s5R] != null) {
-												for (int s6R = 0; s6R < xE[e_strata_id][i][s5R].length; s6R++) {
+												for (int s6R = 0; s6R < xE[e_strata_id][i][s5R].length; s6R++) {	// must use length here for E_0
 													if (xE[e_strata_id][i][s5R][s6R] != null) {		// if variable is defined, this value would be > 0 
 														for (int t = 1 + iter; t <= total_periods + iter; t++) {	// --> always loop to the ending period of the horizon (allow missing row ids)
 															int var_index = xE[e_strata_id][i][s5R][s6R][t];
-															if (map_static_period.get(var_info_array[var_index].get_period()) != null) {
+															if (map_static_period.get(var_info_array[var_index].get_period()) != null) {	// check period
 																double para_value = parameter_info.get_total_value(
 																		var_info_array[var_index].get_prescription_id(),
 																		var_info_array[var_index].get_row_id(),
@@ -2146,16 +2147,16 @@ public class Solve_Iterations {
 							if (xR[r_strata_id] != null) {
 								for (int i : R_prescription_ids[r_strata_id]) {
 									if(xR[r_strata_id][i] != null) {
-										for (int s5R = 0; s5R < xR[r_strata_id][i].length; s5R++) {
+										for (int s5R = 0; s5R < xR[r_strata_id][i].length; s5R++) {		// must use length here for R_0
 											if(xR[r_strata_id][i][s5R] != null) {
-												for (int s6R = 0; s6R < xR[r_strata_id][i][s5R].length; s6R++) {
+												for (int s6R = 0; s6R < xR[r_strata_id][i][s5R].length; s6R++) {	// must use length here for R_0
 													if(xR[r_strata_id][i][s5R][s6R] != null) {
 														int t_regen = (iter == 0) ? 2 : 1;	// this is because iteration 0 could not have regenerated forest in period 1, but iterations >= 1 do have regenerated forest strata
 														for (int t = t_regen + iter; t <= total_periods + iter; t++) {
 															if(xR[r_strata_id][i][s5R][s6R][t] != null) {
 																for (int a = 1; a <= t - 1; a++) {
 																	int var_index = xR[r_strata_id][i][s5R][s6R][t][a];
-																	if (map_static_period.get(var_info_array[var_index].get_period()) != null) {
+																	if (map_static_period.get(var_info_array[var_index].get_period()) != null) {	// check period
 																		double para_value = parameter_info.get_total_value(
 																				var_info_array[var_index].get_prescription_id(),
 																				var_info_array[var_index].get_row_id(),
@@ -2348,9 +2349,7 @@ public class Solve_Iterations {
 						
 						long bc_time_end = System.currentTimeMillis();		// measure time after reading this basic constraint
 						double bc_time_reading = (double) (bc_time_end - bc_time_start) / 1000;
-						int id_col = constraint_column_names_list.indexOf("bc_id");
-						int description_col = constraint_column_names_list.indexOf("bc_description");
-						System.out.println("           - Time (seconds) for reading basic constraint " + bc_values[id][id_col] + " - " + bc_values[id][description_col] + "             " + bc_time_reading);
+						System.out.println("           - Time (seconds) for reading basic constraint " + bc_values[id][constraint_id_col] + " - " + bc_values[id][constraint_description_col] + "             " + bc_time_reading);
 					}
 					
 					// Clear arrays not used any more before final step of constraint 10 & solving -------------------------------------------------------------
