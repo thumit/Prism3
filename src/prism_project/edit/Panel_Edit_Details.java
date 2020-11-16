@@ -1218,8 +1218,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		
         // Header tool-tip
 		String[] headerToolTips = new String[colCount4a];
-        headerToolTips[0] = "layer5 regenerated after the occurrence of stand replacing disturbances";
-        headerToolTips[1] = "layer6 regenerated after the occurrence of stand replacing disturbances";
+        headerToolTips[0] = "layer5 regenerated after implementing clear-cut activities";
+        headerToolTips[1] = "layer6 regenerated after implementing clear-cut activities";
         
 		
 		// Create a table-------------------------------------------------------------		
