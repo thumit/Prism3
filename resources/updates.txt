@@ -1456,4 +1456,4 @@ All changes in this block are associated with PrismAlpha3.1.04.jar, Prism-Formul
 	- Minor UI adjustments: column width, column visibility, terms correction, tool-tips
 ----------November 2020 updates---------------
 614. Change layer6 attribute color from red to black and modify layer6 tool-tip since layer6 is now applicable for both existing and regenerated strata.
-
+615. Thicken the lower border of Prism's main screen for easier size adjustment
