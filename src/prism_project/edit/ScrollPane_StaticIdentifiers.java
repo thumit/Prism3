@@ -84,15 +84,11 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 			String title_tooltip = layers_title_toolip.get(i);
 			
 			layers_title_label.add(title);
-			if (layers_title.get(i).equals("layer6")) {
-				title.setForeground(Color.RED);
-				layers_title_label.get(i).setToolTipText(title_tooltip + " (only apply to existing strata, i.e. methods with _E)");
-			} else if (layers_title.get(i).equals("rotation_period") || layers_title.get(i).equals("rotation_age") || layers_title.get(i).equals("regen_layer5")) {
-				title.setForeground(Color.BLUE);
-				layers_title_label.get(i).setToolTipText(title_tooltip + " (only apply to even-age methods, i.e. EA_E and EA_R)");
-			} else {
-				layers_title_label.get(i).setToolTipText(title_tooltip);
-			}					
+			layers_title_label.get(i).setToolTipText(title_tooltip);
+//			if (layers_title.get(i).equals("layer6")) {
+//				title.setForeground(Color.RED);
+//				layers_title_label.get(i).setToolTipText(title_tooltip + " (only apply to existing strata, i.e. methods with _E)");
+//			}				
 			
 			// add listeners to select all or deselect all
 			int curent_index = i;
@@ -133,15 +129,6 @@ public class ScrollPane_StaticIdentifiers extends JScrollPane {
 				checkboxStaticIdentifiers.get(i).add(new JCheckBox(all_layers.get(i).get(j)));
 				checkboxStaticIdentifiers.get(i).get(j).setToolTipText(all_layers_toolip.get(i).get(j));
 				checkboxStaticIdentifiers.get(i).get(j).setSelected(true);
-				
-				if (layers_title.get(i).equals("layer6")) {
-					checkboxStaticIdentifiers.get(i).get(j).setForeground(Color.RED);
-				} else if (layers_title.get(i).equals("rotation_period") || layers_title.get(i).equals("rotation_age") || layers_title.get(i).equals("regen_layer5")) {
-					checkboxStaticIdentifiers.get(i).get(j).setForeground(Color.BLUE);
-				} else {
-					
-				}
-				
 				c1.gridx = i;
 				c1.gridy = j + 1;
 				identifiers_panel.add(checkboxStaticIdentifiers.get(i).get(j), c1);

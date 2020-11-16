@@ -1432,3 +1432,28 @@ All changes in this block are associated with PrismAlpha3.1.03.jar, Prism-Formul
 	- full stochastic: Before solving an iteration, re-simulate disturbances for the period 1 variables of the previous iteration based on stochastic modelling approach regardless of what defined by users in the Natural Disturbances screen
 All changes in this block are associated with PrismAlpha3.1.04.jar, Prism-Formulation-14.docx
 --------------------------------------------------------------------------
+611. Allow using layer 6 (size class) for modelling regenerated strata. Deliverables:
+	- New formulation: Prism-Formulation-15-v4.docx (attached)
+	- New format of prescription’s name in the yield tables. Prescription’s name will use either one of the four following prefixes: E_0, E_1, R_0, R_1. Ten existing yield tables have been converted to the new format for future testing.
+	- User interface and logic for following inputs are updated to capture the usage of layer5 and layer6 for both existing strata and regenerated strata: Prescription Assignment, Natural Disturbances, Management Cost.
+	- Update logic for reading new inputs. This includes reclassification of the new prescriptions; new reading and storing method for variables; new processing for identifiers; new processing for disturbances.
+	- Update logic for solving based on the new formulation (Prism-Formulation-15-v4):
+		+ Modify variable definition: add layer6 to x_R; add layer6_regen to both x_E and x_R; add layer6_regen to f; and optimize f variables by using only 6 indexes.
+		+ Modify following equations: 5, 6, 7a, 7b, 8a, 8b, 9, 10
+		+ Modify the mapping and pre-calculation before solving
+		+ Modify the functions to generate loss from replacing disturbances
+	- Multiple model conversions and tests are done to guarantee correct results for solving both single model or rolling horizon models based on the new Prism formulation. Results:
+		+ Correct/matching optimal solutions (with models feasible for conversion to new format such CGNF)
+		+ Can effectively and efficiently solve small-medium model size
+		+ Memory and speed issues for solving very large model (i.e. Cannot finish reading the NPC with 12 million variables and 12 million constraints).
+	- Modify the NOSQL-MODE for correct projection based on the new formulation and the optimal solution.
+	- Some speed boost for reading and solving in Prism by processing the identifiers and Parameters using Integer.
+612. PRISM is updated to use the latest Java technology JDK15
+613. Others:
+	- In General Inputs screen, the maximum planning periods is now 100 (instead of 99 previously)
+	- In Prescription screen: Quick Edit feature is now added (not existing previously)
+	- In Prescription Assignment, Natural Disturbances, Management Cost screens: only feasible combinations of layer5_regen and layer6_regen will be shown (which have available R prescriptions in the yield tables).
+	- Minor UI adjustments: column width, column visibility, terms correction, tool-tips
+----------November 2020 updates---------------
+614. Change layer6 attribute color from red to black and modify layer6 tool-tip since layer6 is now applicable for both existing and regenerated strata.
+
