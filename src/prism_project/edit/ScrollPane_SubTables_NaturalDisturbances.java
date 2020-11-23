@@ -39,14 +39,14 @@ public class ScrollPane_SubTables_NaturalDisturbances extends JScrollPane {
 		
 	
 		conversion_rate_mean_scrollpane = new JScrollPane(/*this.table6c*/);
-		TitledBorder border = new TitledBorder("Post disturbance regeneration rate (%)");
+		TitledBorder border = new TitledBorder("Post disturbance transition (%)");	// mean
 		border.setTitleJustification(TitledBorder.CENTER);
 		conversion_rate_mean_scrollpane.setBorder(border);
 		conversion_rate_mean_scrollpane.setPreferredSize(new Dimension(0, 0));
 			
 		
 		conversion_rate_std_scrollpane = new JScrollPane(/*this.table6d*/);
-		border = new TitledBorder("Post disturbance regeneration rate std");
+		border = new TitledBorder("Post disturbance transition std");	// std
 		border.setTitleJustification(TitledBorder.CENTER);
 		conversion_rate_std_scrollpane.setBorder(border);
 		conversion_rate_std_scrollpane.setPreferredSize(new Dimension(0, 0));

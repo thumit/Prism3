@@ -1470,15 +1470,15 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				// Set icon for cells
 				if (column == 2) {
 					if (getValueAt(row, 2).toString().equals("Local simulation")) {
-						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_blue.png"));
+						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_green.png"));
 					} else if (getValueAt(row, 2).toString().equals("Global adjustment")) {
-						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_red.png"));
+						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_orange.png"));
 					}
 				} else if (column == 4) {
 					if (getValueAt(row, 4).toString().equals("Deterministic")) {
-						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_blue.png"));
+						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_green.png"));
 					} else if (getValueAt(row, 4).toString().equals("Stochastic")) {
-						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_red.png"));
+						((DefaultTableCellRenderer) component).setIcon(IconHandle.get_scaledImageIcon(10, 10, "icon_circle_orange.png"));
 					}
 				}
 				
@@ -1676,6 +1676,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		table_handle.setColumnVisible("static_identifiers", false);
 		table_handle.setColumnVisible("dynamic_identifiers", false);
 		table_handle.setColumnVisible("original_dynamic_identifiers", false);
+//		table6.getColumnModel().moveColumn(9, 5);
+//		table6.getColumnModel().moveColumn(10, 6);
+//		table6.getColumnModel().moveColumn(11, 7);
   
 		table6.setAutoResizeMode(0);		// 0 = JTable.AUTO_RESIZE_OFF
 		table6.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);  
@@ -1698,7 +1701,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			rowCount6c = total_layer5 * total_layer6;
 			colCount6c =  3;
 			data6c = new Object[rowCount6c][colCount6c];
-			columnNames6c = new String[] {"layer5_regen", "layer6_regen", "mean"};
+			columnNames6c = new String[] {"layer5_regen", "layer6_regen", "transit_rate"};
 	        
 			// Populate the data matrix
 	        int row = 0;
@@ -2303,12 +2306,12 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		
         // header tool-tip
 		String[] headerToolTips = new String[colCount7a];
-		headerToolTips[0] = "all unique activities found from yield_tables in your selected database";
+		headerToolTips[0] = "all unique activities found from yield_tables in your database";
         headerToolTips[1] = "currency per unit of area where an activity is implemented";
 		if (yield_tables_column_names != null) {      
 	        for (int i = 2; i < colCount7a; i++) {
 	        	int yt_col = i - 2;
-	        	headerToolTips[i] = "currency per unit of " + yield_tables_column_names[yt_col] + " produced by an activity";	
+	        	headerToolTips[i] = "currency per unit of " + yield_tables_column_names[yt_col] + " associated with an activity";	
 			}
 		}
 	
@@ -2524,10 +2527,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		
         // header tool-tip
 		String[] headerToolTips = new String[colCount7b];
-		headerToolTips[0] = "layer5 regenerated after the occurrence of stand replacing disturbances";
-        headerToolTips[1] = "layer6 regenerated after the occurrence of stand replacing disturbances";
-        headerToolTips[2] = "currency per area unit of cover type conversion by cleat-cut";
-        headerToolTips[3] = "currency per area unit of cover type conversion by stand replacing disturbance event";
+		headerToolTips[0] = "layer5 regenerated after implementation of clear-cut activities or occurrence of stand replacing disturbances";
+        headerToolTips[1] = "layer6 regenerated after implementation of clear-cut activities or occurrence of stand replacing disturbances";
+        headerToolTips[2] = "currency per area unit of transition after cleat-cut";
+        headerToolTips[3] = "currency per area unit of transition after stand replacing disturbance event";
 		
         
 		//Create a table-------------------------------------------------------------			

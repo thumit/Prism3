@@ -57,14 +57,14 @@ public class ScrollPane_SubTables_ManagementCost extends JScrollPane {
 		
 	
 		action_base_adjust_scrollpane = new JScrollPane(/*this.table7a*/);
-		TitledBorder border = new TitledBorder("Activity cost per unit of column header");
+		TitledBorder border = new TitledBorder("Activity-based costs");
 		border.setTitleJustification(TitledBorder.CENTER);
 		action_base_adjust_scrollpane.setBorder(border);
 		action_base_adjust_scrollpane.setPreferredSize(new Dimension(0, 0));
 		
 		
 		conversion_base_adjust_scrollpane = new JScrollPane(/*this.table7b*/);
-		border = new TitledBorder("Regeneration cost per area unit of column header");
+		border = new TitledBorder("Post management/disturbance transition costs");
 		border.setTitleJustification(TitledBorder.CENTER);
 		conversion_base_adjust_scrollpane.setBorder(border);
 		conversion_base_adjust_scrollpane.setPreferredSize(new Dimension(0, 0));
