@@ -58,7 +58,7 @@ public class Statistics {
 		double[] global_adjusted_back_transformed_loss_rate = new double[total_disturbances];
 		double total_pecentage = 0;
 		for (int k = 0; k < total_disturbances; k++) {
-			global_adjusted_back_transformed_loss_rate[k] = back_transformed_global_adjustment[k] * get_back_transformed_number(transformed_loss_rate[k], transform_function[k], parameter_a[k], parameter_b[k]);	
+			global_adjusted_back_transformed_loss_rate[k] = back_transformed_global_adjustment[k] / 100 * get_back_transformed_number(transformed_loss_rate[k], transform_function[k], parameter_a[k], parameter_b[k]);	
 			total_pecentage = total_pecentage + global_adjusted_back_transformed_loss_rate[k];
 		}
 		if (total_pecentage <= 100) return global_adjusted_back_transformed_loss_rate;
