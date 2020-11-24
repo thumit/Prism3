@@ -247,14 +247,17 @@ public class Solve_Iterations {
 				
 				// Get info: input_08_basic_constraints
 				List<String> constraint_column_names_list = read.get_constraint_column_names_list();
-				int constraint_id_col = constraint_column_names_list.indexOf("bc_id");
-				int constraint_description_col = constraint_column_names_list.indexOf("bc_description");
-				int constraint_type_col = constraint_column_names_list.indexOf("bc_type");
-				int multiplier_col = constraint_column_names_list.indexOf("bc_multiplier");
-				int lowerbound_col = constraint_column_names_list.indexOf("lowerbound");
-				int lowerbound_perunit_penalty_col = constraint_column_names_list.indexOf("lowerbound_perunit_penalty");
-				int upperbound_col = constraint_column_names_list.indexOf("upperbound");
-				int upperbound_perunit_penalty_col = constraint_column_names_list.indexOf("upperbound_perunit_penalty");
+				int constraint_id_col = -9999, constraint_description_col = -9999, constraint_type_col = -9999, multiplier_col = -9999, lowerbound_col = -9999, lowerbound_perunit_penalty_col = -9999, upperbound_col = -9999, upperbound_perunit_penalty_col = -9999;
+				if (constraint_column_names_list != null) {
+					constraint_id_col = constraint_column_names_list.indexOf("bc_id");
+					constraint_description_col = constraint_column_names_list.indexOf("bc_description");
+					constraint_type_col = constraint_column_names_list.indexOf("bc_type");
+					multiplier_col = constraint_column_names_list.indexOf("bc_multiplier");
+					lowerbound_col = constraint_column_names_list.indexOf("lowerbound");
+					lowerbound_perunit_penalty_col = constraint_column_names_list.indexOf("lowerbound_perunit_penalty");
+					upperbound_col = constraint_column_names_list.indexOf("upperbound");
+					upperbound_perunit_penalty_col = constraint_column_names_list.indexOf("upperbound_perunit_penalty");
+				}
 				String[][] bc_values = read.get_bc_data();		
 				int total_softConstraints = read.get_total_soft_constraints();
 				double[] softConstraints_LB = read.get_soft_constraints_LB();

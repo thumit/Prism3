@@ -64,7 +64,7 @@ public class Statistics {
 		if (total_pecentage <= 100) return global_adjusted_back_transformed_loss_rate;
 		
 		/* adjustment (the case when total_pecentage > 100): 
-		 Example:	 In the area specified by this variable we have 3 stand replacing disturbances with below back_transformed_loss_rate
+		 Example:	 In the area specified by this variable we have 3 stand replacing disturbances with below global_adjusted_back_transformed_loss_rate
 		 SR1 = 80%
 		 SR2 = 50%
 		 SR3 = 70%
