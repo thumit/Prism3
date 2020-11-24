@@ -239,14 +239,14 @@ public class Information_Disturbance {
 		if (global_adjustment_rd_condition_id != -9999) {					
 			return map_global_adjustment_rd_condition_id_to_back_transformed_adjustment_value.get(global_adjustment_rd_condition_id);
 		}
-		return 1;	// global multiplier = 1 for no adjustment
+		return 100;	// global multiplier = 100% = 1 for no adjustment
 	}
 	
 	public double get_back_transformed_global_adjustment_for_using_across_iteration(int global_adjustment_rd_condition_id) {
 		if (global_adjustment_rd_condition_id != -9999) {					
 			return map_global_adjustment_rd_condition_id_to_back_transformed_adjustment_value_for_using_across_iteration.get(global_adjustment_rd_condition_id);
 		}
-		return 1;	// global multiplier = 1 for no adjustment
+		return 100;	// global multiplier = 100% = 1 for no adjustment
 	}
 	
 	private LinkedHashMap<Integer, Double> create_a_new_instance_of_mapping_global_adjustment() {

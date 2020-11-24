@@ -44,7 +44,6 @@ import java.util.stream.Stream;
 
 import lpsolve.LpSolve;
 import lpsolve.LpSolveException;
-import prism_convenience.FilesHandle;
 import prism_convenience.PrismTableModel;
 import prism_project.data_process.Information_Cost;
 import prism_project.data_process.Information_Disturbance;
@@ -175,7 +174,7 @@ public class Solve_Iterations {
 				File input_02_file = new File(runFolder.getAbsolutePath() + "/input_02_model_strata.txt");
 				File input_03_file = new File(runFolder.getAbsolutePath() + "/input_03_prescription_category.txt");
 				File input_04_file = new File(runFolder.getAbsolutePath() + "/input_04_prescription_assignment.txt");
-				File input_06_file = new File(runFolder.getAbsolutePath() + "/input_06_natural_disturbances.txt");		if (!input_06_file.exists()) input_06_file = FilesHandle.get_file_input_06(); // if there is no disturbance defined
+				File input_06_file = new File(runFolder.getAbsolutePath() + "/input_06_natural_disturbances.txt");
 				File input_07_file = new File(runFolder.getAbsolutePath() + "/input_07_management_cost.txt");
 				File input_08_file = new File(runFolder.getAbsolutePath() + "/input_08_basic_constraints.txt");
 				File input_09_file = new File(runFolder.getAbsolutePath() + "/input_09_flow_constraints.txt");
@@ -2573,17 +2572,21 @@ public class Solve_Iterations {
 												total_loss_rate = total_loss_rate + Double.valueOf(user_loss_rate[k]);
 											}
 											fileOut.write("\t" + total_loss_rate); 
-											fileOut.write("\t"); 
-											for (int k = 0; k < total_disturbances; k++) {
-												fileOut.write(var_rd_condition_id[i][k] + " ");
-											}
-											fileOut.write("\t"); 
-											for (int k = 0; k < total_disturbances; k++) {
-												fileOut.write(var_global_adjustment_rd_condition_id[i][k] + " ");
+											
+											if (total_disturbances == 0) {
+												fileOut.write("\t" + "-9999" + "\t" + "-9999");
+											} else {
+												fileOut.write("\t"); 
+												for (int k = 0; k < total_disturbances; k++) {
+													fileOut.write(var_rd_condition_id[i][k] + " ");
+												}
+												fileOut.write("\t"); 
+												for (int k = 0; k < total_disturbances; k++) {
+													fileOut.write(var_global_adjustment_rd_condition_id[i][k] + " ");
+												}
 											}
 										} else {
-											fileOut.write("\t" + "-9999" + "\t" + "-9999");
-											fileOut.write("\t" + "-9999" + "\t" + "-9999");
+											fileOut.write("\t" + "-9999" + "\t" + "-9999" + "\t" + "-9999");
 										}
 									}
 								}
@@ -3138,17 +3141,21 @@ public class Solve_Iterations {
 												total_loss_rate = total_loss_rate + Double.valueOf(user_loss_rate[k]);
 											}
 											fileOut.write("\t" + total_loss_rate); 
-											fileOut.write("\t"); 
-											for (int k = 0; k < total_disturbances; k++) {
-												fileOut.write(var_rd_condition_id[i][k] + " ");
-											}
-											fileOut.write("\t"); 
-											for (int k = 0; k < total_disturbances; k++) {
-												fileOut.write(var_global_adjustment_rd_condition_id[i][k] + " ");
+											
+											if (total_disturbances == 0) {
+												fileOut.write("\t" + "-9999" + "\t" + "-9999");
+											} else {
+												fileOut.write("\t"); 
+												for (int k = 0; k < total_disturbances; k++) {
+													fileOut.write(var_rd_condition_id[i][k] + " ");
+												}
+												fileOut.write("\t"); 
+												for (int k = 0; k < total_disturbances; k++) {
+													fileOut.write(var_global_adjustment_rd_condition_id[i][k] + " ");
+												}
 											}
 										} else {
-											fileOut.write("\t" + "-9999" + "\t" + "-9999");
-											fileOut.write("\t" + "-9999" + "\t" + "-9999");
+											fileOut.write("\t" + "-9999" + "\t" + "-9999" + "\t" + "-9999");
 										}
 									}
 								}
@@ -3565,6 +3572,7 @@ public class Solve_Iterations {
 	
 	// apply to eq (6) (7b) (9) and printing some outputs
 	private double[] get_user_loss_rates_for_this_var(int[][] var_rd_condition_id, int[][] var_global_adjustment_rd_condition_id, int var_index, Information_Disturbance disturbance_info) {
+		if (disturbance_info == null) return null; 
 		Statistics stat = new Statistics();
 		int total_disturbances = disturbance_info.get_total_disturbances();
 		String[] modelling_approach = new String[total_disturbances];
@@ -3595,6 +3603,7 @@ public class Solve_Iterations {
 			LinkedHashMap<String, int[]> map_var_name_to_var_rd_condition_id,
 			LinkedHashMap<String, int[]> map_var_name_to_var_global_adjustment_rd_condition_id,
 			Information_Disturbance disturbance_info) {
+		if (disturbance_info == null) return null;
 		Statistics stat = new Statistics();
 		int total_disturbances = disturbance_info.get_total_disturbances();
 		String[] modelling_approach = new String[total_disturbances];
@@ -3672,8 +3681,10 @@ public class Solve_Iterations {
 
 			// apply the total new loss rate to period 2 variable and return the value
 			double total_new_loss_rates = 0;
-			for (double i : map_var_name_to_var_new_loss_rates.get(period_one_var_name)) {	// each i is the stochastic rate for one SR
-				total_new_loss_rates = total_new_loss_rates + i;
+			if (map_var_name_to_var_new_loss_rates.get(period_one_var_name) != null) {
+				for (double i : map_var_name_to_var_new_loss_rates.get(period_one_var_name)) {	// each i is the stochastic rate for one SR
+					total_new_loss_rates = total_new_loss_rates + i;
+				}
 			}
 			
 			// Calculate the period 2 variable after the consequence of stochastic loss

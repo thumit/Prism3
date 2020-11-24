@@ -1459,3 +1459,6 @@ All changes in this block are associated with PrismAlpha3.1.04.jar, Prism-Formul
 615. Thicken the lower border of Prism's main screen for easier size adjustment
 616. Change terms in Prescription Assignment, Natural Disturbances, Management Cost screens
 617. Very important: global adjustment is now percentage. Previously 1 means 1 as multiplier. Now 100 means 1 as multiplier (100%)
+618. Fix null error for solving models when there is no basic constraints
+619. Fix the bug in 617 update where several functions in the Information_Disturbance class still return 1 but should return 100.
+620. Very inportant: remove the need of the input_06_natural_disturbances.txt file in the resource folder. 
