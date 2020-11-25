@@ -1464,3 +1464,4 @@ All changes in this block are associated with PrismAlpha3.1.04.jar, Prism-Formul
 620. Very inportant: remove the need of the input_06_natural_disturbances.txt file in the resource folder. 
 621. Good speed boost by moving length out of the for loop, applied only in Solve_Iterations class
 622. Good speed and memory boost by removing unused objects in the Information_Variable class
+623. Little speed boost by moving length out of the for loop, applied only in Information_Disturbance class

@@ -120,7 +120,7 @@ public class Information_Disturbance {
 		if (t != tR) {	// this would automatically filter the x variable
 			if (row_id != -9999 && row_id < yield_tables_values[prescription_id].length) { 	// If row in this prescription exists (not exists when row_id = -9999 or >= total rows in that prescription)
 				int priority = 0;
-				while (id == -9999 && priority < all_priority_condition_info.length) { // loop all condition associated with  the disturbance k until found the one matched 
+				while (id == -9999 && priority < condition_count) { // loop all condition associated with  the disturbance k until found the one matched 
 					if (all_condition_category[priority].equals("Local simulation")
 							&& map_disturbance_name_to_id.get(all_condition_disturbance_name[priority]) == k
 								&& identifiers_processing.are_all_static_identifiers_matched(var_info, all_priority_condition_static_identifiers[priority])
@@ -144,7 +144,7 @@ public class Information_Disturbance {
 		if (t != tR) {	// this would automatically filter the x variable
 			if (row_id != -9999 && row_id < yield_tables_values[prescription_id].length) { 	// If row in this prescription exists (not exists when row_id = -9999 or >= total rows in that prescription)
 				int priority = 0;
-				while (id == -9999 && priority < all_priority_condition_info.length) { // loop all condition associated with  the disturbance k until found the one matched 
+				while (id == -9999 && priority < condition_count) { // loop all condition associated with  the disturbance k until found the one matched 
 					if (all_condition_category[priority].equals("Global adjustment")
 							&& map_disturbance_name_to_id.get(all_condition_disturbance_name[priority]) == k
 								&& identifiers_processing.are_all_static_identifiers_matched(var_info, all_priority_condition_static_identifiers[priority])
