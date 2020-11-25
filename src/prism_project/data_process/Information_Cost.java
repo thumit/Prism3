@@ -118,7 +118,7 @@ public class Information_Cost {
 				// add conversion cost for post management action (i.e clear cut) or post replacing disturbance (i.e. SRFire)
 				// note only one of them is true: for example if it is clear cut --> no replacing disturbance anymore, replacing disturbance can happen in areas where no clear cut implemented
 				if (var_info.get_rotation_period() == var_info.get_period()) {	// period is the rotation period (this if guarantees variable to be EA_E or EA_R)
-					String conversion_cost_to_apply = var_info.get_regenerated_covertype() + " " + var_info.get_regenerated_sizeclass() + " " + "activity";
+					String conversion_cost_to_apply = var_info.get_layer5_regen() + " " + var_info.get_layer6_regen() + " " + "activity";
 					if (final_conversion_cost_column_list.get(item).equals(conversion_cost_to_apply)) {
 						value_to_return = value_to_return + Double.parseDouble(final_conversion_cost_value_list.get(item));
 					} 

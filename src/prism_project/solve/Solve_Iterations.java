@@ -277,7 +277,7 @@ public class Solve_Iterations {
 				List<Double> flow_lowerbound_percentage_list = read.get_flow_lowerbound_percentage_list();
 				List<Double> flow_upperbound_percentage_list = read.get_flow_upperbound_percentage_list();			
 				System.out.println("Reading process finished for all core inputs          " + dateFormat.format(new Date()));
-				System.out.println("Optimization models will be built based on Prism-Formulation-15-v4");
+				System.out.println("Optimization models will be built based on Prism-Formulation-15-v5");
 				
 				// Get info: input_11_state_id
 				LinkedHashMap<String, String> map_prescription_and_row_id_to_state_id = read.get_map_prescription_and_row_id_to_state_id();
@@ -696,35 +696,35 @@ public class Solve_Iterations {
 					// Convert lists to 1-D arrays
 					double[] objvals = Stream.of(objlist.toArray(new Double[objlist.size()])).mapToDouble(Double::doubleValue).toArray();
 					objlist = null;			// Clear the lists to save memory
-					String[] vname = vnamelist.toArray(new String[vnamelist.size()]);
+					String[] vname = vnamelist.toArray(new String[nvars]);
 					vnamelist = null;		// Clear the lists to save memory
 					double[] vlb = Stream.of(vlblist.toArray(new Double[vlblist.size()])).mapToDouble(Double::doubleValue).toArray();
 					vlblist = null;			// Clear the lists to save memory
 					double[] vub = Stream.of(vublist.toArray(new Double[vublist.size()])).mapToDouble(Double::doubleValue).toArray();
 					vublist = null;			// Clear the lists to save memory
-					Information_Variable[] var_info_array = new Information_Variable[vname.length];		// This array stores variable information
-					for (int i = 0; i < vname.length; i++) {
+					Information_Variable[] var_info_array = new Information_Variable[nvars];		// This array stores variable information
+					for (int i = 0; i < nvars; i++) {
 						var_info_array[i] = var_info_list.get(i);
 					}	
 					var_info_list = null;	// Clear the lists to save memory
 					
 					
 					// This array stores cost information
-					double[] var_cost_value = new double[vname.length];
+					double[] var_cost_value = new double[nvars];
 								
 					// This array stores replacing disturbances information
 					String disturbance_option = data[row][1].toString();
 					LinkedHashMap<Integer, double[]> map_var_index_to_user_loss_rates = new LinkedHashMap<Integer, double[]>();	// this map var_index to the user loss rates array[k]
-					int[][] var_rd_condition_id = new int[vname.length][];
-					int[][] var_global_adjustment_rd_condition_id = new int[vname.length][];
-					for (int i = 0; i < vname.length; i++) {
+					int[][] var_rd_condition_id = new int[nvars][];
+					int[][] var_global_adjustment_rd_condition_id = new int[nvars][];
+					for (int i = 0; i < nvars; i++) {
 						var_rd_condition_id[i] = new int[total_disturbances];
 						var_global_adjustment_rd_condition_id[i] = new int[total_disturbances];
 					}
 
 					
 					System.out.println("Connecting " + new DecimalFormat("###,###,###").format(nvars) + " variables to disturbance & cost logic...");
-					for (int var_index = 0; var_index < vname.length; var_index++) {
+					for (int var_index = 0; var_index < nvars; var_index++) {
 						Information_Variable var_info = var_info_array[var_index];
 						int prescription_id = var_info_array[var_index].get_prescription_id();
 						int row_id = var_info.get_row_id();
@@ -784,7 +784,7 @@ public class Solve_Iterations {
 							}
 						}
 						// Print
-						if (var_index + 1 > 1 && ((var_index + 1) % 30000 == 0 || var_index + 1 == vname.length)) {
+						if (var_index + 1 > 1 && ((var_index + 1) % 30000 == 0 || var_index + 1 == nvars)) {
 							System.out.println("           - Established connections:           " + new DecimalFormat("###,###,###").format(var_index + 1) + "             " + dateFormat.format(new Date()));
 						}
 					}
@@ -898,9 +898,11 @@ public class Solve_Iterations {
 							// Add sigma[s5R][s6R][i] xE[s1,s2,s3,s4,s5,s6][i][s5R][s6R][1] 
 							for (int i : E_prescription_ids[strata_id]) {
 								if (xE[strata_id][i] != null) {
-									for (int s5R = 0; s5R < xE[strata_id][i].length; s5R++) {
+									int LEN1 = xE[strata_id][i].length;
+									for (int s5R = 0; s5R < LEN1; s5R++) {
 										if (xE[strata_id][i][s5R] != null) {
-											for (int s6R = 0; s6R < xE[strata_id][i][s5R].length; s6R++) {
+											int LEN2 = xE[strata_id][i][s5R].length;
+											for (int s6R = 0; s6R < LEN2; s6R++) {
 												if (xE[strata_id][i][s5R][s6R] != null
 														&& xE[strata_id][i][s5R][s6R][1] > 0) {		// if variable is defined, this value would be > 0  
 													c5_indexlist.get(c5_num).add(xE[strata_id][i][s5R][s6R][1]);
@@ -982,9 +984,11 @@ public class Solve_Iterations {
 						for (int strata_id = 0; strata_id < total_E_model_strata; strata_id++) {
 							for (int i : E_prescription_ids[strata_id]) {
 								if (xE[strata_id][i] != null) {
-									for (int s5R = 0; s5R < xE[strata_id][i].length; s5R++) {
+									int LEN1 = xE[strata_id][i].length;
+									for (int s5R = 0; s5R < LEN1; s5R++) {
 										if (xE[strata_id][i][s5R] != null) {
-											for (int s6R = 0; s6R < xE[strata_id][i][s5R].length; s6R++) {
+											int LEN2 = xE[strata_id][i][s5R].length;
+											for (int s6R = 0; s6R < LEN2; s6R++) {
 												if (xE[strata_id][i][s5R][s6R] != null
 														&& xE[strata_id][i][s5R][s6R][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
 													// Simulate stochastic SRs to get final_value which is the period 2 solution after stochastic disturbances
@@ -1009,9 +1013,11 @@ public class Solve_Iterations {
 						for (int r_strata_id = 0; r_strata_id < total_R_model_strata; r_strata_id++) {
 							for (int i : R_prescription_ids[r_strata_id]) {
 								if(xR[r_strata_id][i] != null) {
-									for (int s5R = 0; s5R < xR[r_strata_id][i].length; s5R++) {
+									int LEN1 = xR[r_strata_id][i].length;
+									for (int s5R = 0; s5R < LEN1; s5R++) {
 										if(xR[r_strata_id][i][s5R] != null) {
-											for (int s6R = 0; s6R < xR[r_strata_id][i][s5R].length; s6R++) {
+											int LEN2 = xR[r_strata_id][i][s5R].length;
+											for (int s6R = 0; s6R < LEN2; s6R++) {
 												if(xR[r_strata_id][i][s5R][s6R] != null) {
 													int t = 1 + iter;
 													for (int a = 2; a <= t - 1; a++) {		// to exclude regenerated variables at age class 1
@@ -1061,9 +1067,11 @@ public class Solve_Iterations {
 								LinkedHashMap<Integer, String> map_var_index_to_var_state_id = new LinkedHashMap<Integer, String>();	// map all relevant variables in iteration 1+M
 								for (int i : E_prescription_ids[e_strata_id]) {
 									if (xE[e_strata_id][i] != null) {
-										for (int s5R = 0; s5R < xE[e_strata_id][i].length; s5R++) {
+										int LEN1 = xE[e_strata_id][i].length;
+										for (int s5R = 0; s5R < LEN1; s5R++) {
 											if (xE[e_strata_id][i][s5R] != null) {
-												for (int s6R = 0; s6R < xE[e_strata_id][i][s5R].length; s6R++) {
+												int LEN2 = xE[e_strata_id][i][s5R].length;
+												for (int s6R = 0; s6R < LEN2; s6R++) {
 													if (xE[e_strata_id][i][s5R][s6R] != null
 															&& xE[e_strata_id][i][s5R][s6R][1 + iter] > 0) {		// if variable is defined, this value would be > 0 
 														int var_index = xE[e_strata_id][i][s5R][s6R][1 + iter];
@@ -1179,9 +1187,11 @@ public class Solve_Iterations {
 								LinkedHashMap<Integer, String> map_var_index_to_var_state_id = new LinkedHashMap<Integer, String>();	// map all relevant variables in iteration 1+M
 								for (int i : R_prescription_ids[r_strata_id]) {
 									if(xR[r_strata_id][i] != null) {
-										for (int s5R = 0; s5R < xR[r_strata_id][i].length; s5R++) {
+										int LEN1 = xR[r_strata_id][i].length;
+										for (int s5R = 0; s5R < LEN1; s5R++) {
 											if(xR[r_strata_id][i][s5R] != null) {
-												for (int s6R = 0; s6R < xR[r_strata_id][i][s5R].length; s6R++) {
+												int LEN2 = xR[r_strata_id][i][s5R].length;
+												for (int s6R = 0; s6R < LEN2; s6R++) {
 													if(xR[r_strata_id][i][s5R][s6R] != null) {
 														int t = 1 + iter;
 														for (int a = 2; a <= t - 1; a++) {		// to exclude regenerated variables at age class 1
@@ -1743,9 +1753,11 @@ public class Solve_Iterations {
 											if (r_strata_id >= 0) {
 												for (int i : R_prescription_ids[r_strata_id]) {
 													if(xR[r_strata_id][i] != null) {
-														for (int s5RR = 0; s5RR < xR[r_strata_id][i].length; s5RR++) {
+														int LEN1 = xR[r_strata_id][i].length;
+														for (int s5RR = 0; s5RR < LEN1; s5RR++) {
 															if (xR[r_strata_id][i][s5RR] != null) {
-																for (int s6RR = 0; s6RR < xR[r_strata_id][i][s5RR].length; s6RR++) {
+																int LEN2 = xR[r_strata_id][i][s5RR].length;
+																for (int s6RR = 0; s6RR < LEN2; s6RR++) {
 																	if(xR[r_strata_id][i][s5RR][s6RR] != null
 																			&& xR[r_strata_id][i][s5RR][s6RR][t + 1] != null
 																				&& xR[r_strata_id][i][s5RR][s6RR][t + 1][1] > 0) {	// if variable is defined, this value would be > 0 
@@ -1842,9 +1854,11 @@ public class Solve_Iterations {
 										if (r_strata_id >= 0) {
 											for (int i : R_prescription_ids[r_strata_id]) {
 												if(xR[r_strata_id][i] != null) {
-													for (int s5RR = 0; s5RR < xR[r_strata_id][i].length; s5RR++) {
+													int LEN1 = xR[r_strata_id][i].length;
+													for (int s5RR = 0; s5RR < LEN1; s5RR++) {
 														if (xR[r_strata_id][i][s5RR] != null) {
-															for (int s6RR = 0; s6RR < xR[r_strata_id][i][s5RR].length; s6RR++) {
+															int LEN2 = xR[r_strata_id][i][s5RR].length;
+															for (int s6RR = 0; s6RR < LEN2; s6RR++) {
 																if(xR[r_strata_id][i][s5RR][s6RR] != null
 																		&& xR[r_strata_id][i][s5RR][s6RR][t + 1] != null
 																			&& xR[r_strata_id][i][s5RR][s6RR][t + 1][1] > 0) {	// if variable is defined, this value would be > 0 
@@ -2112,9 +2126,11 @@ public class Solve_Iterations {
 							if (xE[e_strata_id] != null) {
 								for (int i : E_prescription_ids[e_strata_id]) {
 									if (xE[e_strata_id][i] != null) {
-										for (int s5R = 0; s5R < xE[e_strata_id][i].length; s5R++) {		// must use length here for E_0
+										int LEN1 = xE[e_strata_id][i].length;
+										for (int s5R = 0; s5R < LEN1; s5R++) {		// must use length here for E_0
 											if (xE[e_strata_id][i][s5R] != null) {
-												for (int s6R = 0; s6R < xE[e_strata_id][i][s5R].length; s6R++) {	// must use length here for E_0
+												int LEN2 = xE[e_strata_id][i][s5R].length;
+												for (int s6R = 0; s6R < LEN2; s6R++) {	// must use length here for E_0
 													if (xE[e_strata_id][i][s5R][s6R] != null) {		// if variable is defined, this value would be > 0 
 														for (int t = 1 + iter; t <= total_periods + iter; t++) {	// --> always loop to the ending period of the horizon (allow missing row ids)
 															int var_index = xE[e_strata_id][i][s5R][s6R][t];
@@ -2149,9 +2165,11 @@ public class Solve_Iterations {
 							if (xR[r_strata_id] != null) {
 								for (int i : R_prescription_ids[r_strata_id]) {
 									if(xR[r_strata_id][i] != null) {
-										for (int s5R = 0; s5R < xR[r_strata_id][i].length; s5R++) {		// must use length here for R_0
+										int LEN1 = xR[r_strata_id][i].length;
+										for (int s5R = 0; s5R < LEN1; s5R++) {		// must use length here for R_0
 											if(xR[r_strata_id][i][s5R] != null) {
-												for (int s6R = 0; s6R < xR[r_strata_id][i][s5R].length; s6R++) {	// must use length here for R_0
+												int LEN2 = xR[r_strata_id][i][s5R].length;
+												for (int s6R = 0; s6R < LEN2; s6R++) {	// must use length here for R_0
 													if(xR[r_strata_id][i][s5R][s6R] != null) {
 														int t_regen = (iter == 0) ? 2 : 1;	// this is because iteration 0 could not have regenerated forest in period 1, but iterations >= 1 do have regenerated forest strata
 														for (int t = t_regen + iter; t <= total_periods + iter; t++) {
@@ -2728,7 +2746,7 @@ public class Solve_Iterations {
 												+ "\t" + String.valueOf(var_info_array[i].get_age()).replace("-9999",  "") 
 												+ "\t" + String.valueOf(var_info_array[i].get_rotation_period()).replace("-9999",  "") 
 												+ "\t" + String.valueOf(var_info_array[i].get_rotation_age()).replace("-9999",  "") 
-												+ "\t" + var_info_array[i].get_regenerated_covertype()
+												+ "\t" + var_info_array[i].get_layer5_regen()
 												+ "\t" + data_connection + "\t" + var_info_array[i].get_prescription_id() + "\t" + var_info_array[i].get_prescription() + "\t" + var_row_id);
 	//									for (int col = 2; col < yield_tables_column_names.length; col++) {		// do not write prescription & row_id in the yield_tables
 	//										if (data_connection.equals("good")) {
@@ -3297,7 +3315,7 @@ public class Solve_Iterations {
 												+ "\t" + String.valueOf(var_info_array[i].get_age()).replace("-9999",  "") 
 												+ "\t" + String.valueOf(var_info_array[i].get_rotation_period()).replace("-9999",  "") 
 												+ "\t" + String.valueOf(var_info_array[i].get_rotation_age()).replace("-9999",  "") 
-												+ "\t" + var_info_array[i].get_regenerated_covertype()
+												+ "\t" + var_info_array[i].get_layer5_regen()
 												+ "\t" + data_connection + "\t" + var_info_array[i].get_prescription_id() + "\t" + var_info_array[i].get_prescription() + "\t" + var_row_id);
 	//									for (int col = 2; col < yield_tables_column_names.length; col++) {		// do not write prescription & row_id in the yield_tables
 	//										if (data_connection.equals("good")) {

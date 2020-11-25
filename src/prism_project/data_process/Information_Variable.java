@@ -17,19 +17,13 @@
 
 package prism_project.data_process;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class Information_Variable {
-	private String var_name, method, layer1, layer2, layer3, layer4, layer5, layer6, layer5_regen, layer6_regen, forest_status;	// layer5_regen = regenerated cover type = s5R (after clear-cut or SR occurrence), while layer5 = s5 (before clear-cut or SR occurrence)
-	private int iter, period, age, prescription_id, rotation_period, rotation_age;
+	private String var_name, method, layer1, layer2, layer3, layer4, layer5, layer6, layer5_regen, layer6_regen, forest_status;	// layer5_regen = s5R (after clear-cut or SR occurrence), while layer5 = s5 (before clear-cut or SR occurrence)
+	private int iter, period, age, prescription_id, row_id, rotation_period, rotation_age;
 	private String prescription;
-	private int row_id;
-	private int[] prescription_id_and_row_id;
 	
 	public Information_Variable(int iter, String var_name, Read_Database read_database) {
 		String[] yield_tables_names = read_database.get_yield_tables_names();			
-		List<String> prescriptions_list = Arrays.asList(yield_tables_names);
 		int[] starting_age_class_for_prescription = read_database.get_starting_age_class_for_prescription();
 		
 		// Set up
@@ -51,8 +45,9 @@ public class Information_Variable {
 		age = -9999;
 		prescription = "";
 		prescription_id = -9999;
-		row_id = -9999;
-		
+		row_id = -9999;		
+		// For x variables added here, prescription always exists, while row_id might not exist in the yield tables
+		// For f variables added here, both prescription_id and row_id would be = -9999
 		
 		try {
 			String first_four_letters_of_var_name = var_name.substring(0, 4);
@@ -75,7 +70,7 @@ public class Information_Variable {
 				// rotation_age and rotation_period are set manually
 				
 				forest_status = "E";
-				prescription = prescriptions_list.get(prescription_id);
+				prescription = yield_tables_names[prescription_id];
 				row_id = period - 1;
 				period = period - iter;		// adjust period. Eg. period 1 + iter should be adjusted to be 1. This is to apply condition in cost, disturbance, other inputs...
 				break;
@@ -96,7 +91,7 @@ public class Information_Variable {
 				// rotation_age and rotation_period are set manually
 				
 				forest_status = "R";
-				prescription = prescriptions_list.get(prescription_id);
+				prescription = yield_tables_names[prescription_id];
 				row_id = age - 1;
 				period = period - iter;		// adjust period. Eg. period 1 + iter should be adjusted to be 1. This is to apply condition in cost, disturbance, other inputs...
 				break;
@@ -118,21 +113,12 @@ public class Information_Variable {
 		} catch (Exception e) {
 			// No worry if catching error. Because variable without method jump into this --> no need warning here
 		}
-
-		
-		
-		// if this is the f variable or variable that is not in the 4 main types (NC_E, NC_R, EA_E, EA_R) then both prescription_id and row_id would be = -9999 (defined at the start)
-		// Note prescription always exists, while row_id might not exist in the yield tables
-		prescription_id_and_row_id = new int [2];	// first index is prescription, second index is row_id  
-		prescription_id_and_row_id[0] = prescription_id;
-		prescription_id_and_row_id[1] = row_id;		// Note prescription always exists, while row_id might not exist in the yield tables
 	}
 	
 	
 	public String get_var_name() {
 		return var_name;
 	}
-	
 	
 	public String get_layer1() {
 		return layer1;
@@ -162,11 +148,11 @@ public class Information_Variable {
 		return method;
 	}
 	
-	public String get_regenerated_covertype() {
+	public String get_layer5_regen() {
 		return layer5_regen;
 	}	
 	
-	public String get_regenerated_sizeclass() {
+	public String get_layer6_regen() {
 		return layer6_regen;
 	}
 	
