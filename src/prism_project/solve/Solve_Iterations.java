@@ -155,8 +155,9 @@ public class Solve_Iterations {
 				String[][][] yield_tables_values = read_database.get_yield_tables_values();
 				int[] starting_age_class_for_prescription = read_database.get_starting_age_class_for_prescription();
 				String[] yield_tables_column_names = read_database.get_yield_tables_column_names();
-				String[] yield_tables_names = read_database.get_yield_tables_names();			
+				String[] yield_tables_names = read_database.get_yield_tables_names();	
 				int total_prescriptions = yield_tables_values.length;
+				int[] total_rows_of_precription = read_database.get_total_rows_of_precription();
 				int activity_col_id = read_database.get_activity_column_index();
 				boolean[][] has_R_prescriptions = read_database.get_has_R_prescriptions();
 				
@@ -321,11 +322,6 @@ public class Solve_Iterations {
 					// Pre-calculations to speed up reading time----------------------------------------------------
 					// Pre-calculations to speed up reading time----------------------------------------------------
 					// Pre-identify s5 and s6 for each stratum and Pre-caterorize prescriptions for each stratum
-					int[] total_rows_of_precription = new int[total_prescriptions];
-					for (int i = 0; i < total_prescriptions; i++) {
-						total_rows_of_precription[i] = yield_tables_values[i].length;		// In case of existing prescription, tR = total rows of this prescription 
-					}
-					
 					int[] s5_for_E_model_strata = new int[total_E_model_strata]; 
 					int[] s6_for_E_model_strata = new int[total_E_model_strata];
 					int[] s5_for_R_model_strata = new int[total_R_model_strata];

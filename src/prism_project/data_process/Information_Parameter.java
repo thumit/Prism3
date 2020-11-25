@@ -22,10 +22,12 @@ import java.util.List;
 public class Information_Parameter {
 	private Identifiers_Processing identifiers_processing;
 	private String[][][] yield_tables_values;
+	private int[] total_rows_of_precription;
 	
 	public Information_Parameter(Read_Database read_database) {
 		identifiers_processing = new Identifiers_Processing(read_database);
 		yield_tables_values = read_database.get_yield_tables_values();
+		total_rows_of_precription = read_database.get_total_rows_of_precription();
 	}
 	
 	public double get_total_value(int prescription_id, int row_id, 
@@ -36,7 +38,7 @@ public class Information_Parameter {
 		if (dynamic_dentifiers_column_indexes == null /* NoIdentifier */ && parameters_type == 0 /*"NoParameter"*/) {	// This is the only case when we don't need to check yield table
 			value_to_return = 1;
 		} else {	// Check the prescription (a.k.a. yield table) 				
-			if (row_id != -9999 && row_id < yield_tables_values[prescription_id].length) { 	// If row in this prescription exists (not exists when row_id = -9999 or >= total rows in that prescription)
+			if (row_id != -9999 && row_id < total_rows_of_precription[prescription_id]) { 	// If row in this prescription exists (not exists when row_id = -9999 or >= total rows in that prescription)
 				boolean constraint_dynamic_identifiers_matched = identifiers_processing.are_all_dynamic_identifiers_matched(prescription_id, row_id, dynamic_dentifiers_column_indexes, dynamic_identifiers);								
 				if (constraint_dynamic_identifiers_matched) {					
 					if (parameters_type == 0) {			// if "NoParameter" & all dynamic identifiers match then return 1 

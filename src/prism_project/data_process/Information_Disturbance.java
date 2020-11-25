@@ -29,13 +29,13 @@ public class Information_Disturbance {
 	private LinkedHashMap<String, Integer> map_disturbance_name_to_id = new LinkedHashMap<String, Integer>();
 	
 	private Identifiers_Processing identifiers_processing;
+	private int[] total_rows_of_precription;
+	
 	private int condition_count;
 	private List<List<String>>[] all_priority_condition_static_identifiers;
 	private List<List<String>>[] all_priority_condition_dynamic_identifiers;
 	private List<Integer>[] all_priority_condition_dynamic_dentifiers_column_indexes;
 	private String[][] all_priority_condition_info;	
-	private String[][][] yield_tables_values;
-	
 	private String[] all_condition_category;
 	private String[] all_condition_disturbance_name;
 	private String[] all_condition_modelling_approach;
@@ -49,12 +49,11 @@ public class Information_Disturbance {
 	
 	
 	public Information_Disturbance(Read_Database read_database, List<String> disturbance_condition_list) {	// Create this class once for each iteration
+		identifiers_processing = new Identifiers_Processing(read_database);
+		total_rows_of_precription = read_database.get_total_rows_of_precription();
 		List<List<String>> all_layers =  read_database.get_all_layers();
 		List<String> layer5 = all_layers.get(4);		total_layer5 = layer5.size();
 		List<String> layer6 = all_layers.get(5);		total_layer6 = layer6.size();
-		
-		identifiers_processing = new Identifiers_Processing(read_database);
-		yield_tables_values = read_database.get_yield_tables_values();
 		
 		condition_count = disturbance_condition_list.size();
 		all_priority_condition_static_identifiers = new ArrayList[condition_count];
@@ -118,7 +117,7 @@ public class Information_Disturbance {
 		
 		int id = -9999;		// return -9999 if there is clear cut activity for x variable. In the case when variable is not x (f, y, z, v, l, b) then t = tR =-9999 --> always return -9999
 		if (t != tR) {	// this would automatically filter the x variable
-			if (row_id != -9999 && row_id < yield_tables_values[prescription_id].length) { 	// If row in this prescription exists (not exists when row_id = -9999 or >= total rows in that prescription)
+			if (row_id != -9999 && row_id < total_rows_of_precription[prescription_id]) { 	// If row in this prescription exists (not exists when row_id = -9999 or >= total rows in that prescription)
 				int priority = 0;
 				while (id == -9999 && priority < condition_count) { // loop all condition associated with  the disturbance k until found the one matched 
 					if (all_condition_category[priority].equals("Local simulation")
@@ -142,7 +141,7 @@ public class Information_Disturbance {
 		
 		int id = -9999;		// return -9999 if there is clear cut activity for x variable. In the case when variable is not x (f, y, z, v, l, b) then t = tR =-9999 --> always return -9999
 		if (t != tR) {	// this would automatically filter the x variable
-			if (row_id != -9999 && row_id < yield_tables_values[prescription_id].length) { 	// If row in this prescription exists (not exists when row_id = -9999 or >= total rows in that prescription)
+			if (row_id != -9999 && row_id < total_rows_of_precription[prescription_id]) { 	// If row in this prescription exists (not exists when row_id = -9999 or >= total rows in that prescription)
 				int priority = 0;
 				while (id == -9999 && priority < condition_count) { // loop all condition associated with  the disturbance k until found the one matched 
 					if (all_condition_category[priority].equals("Global adjustment")

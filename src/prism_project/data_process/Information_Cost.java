@@ -28,19 +28,21 @@ import java.util.StringTokenizer;
 //This class is created only when there is at least 1 condition --> no need to check null condition
 public class Information_Cost {
 	private Identifiers_Processing identifiers_processing;
+	private String[][][] yield_tables_values;
+	private int[] total_rows_of_precription;
+	private int activity_col_id;
+	private List<String> yield_tables_original_col_names_list, yield_tables_sorted_col_names_list;
+	private int[] get_original_col_id_from_sorted_col_id;
+	
 	private List<List<String>>[] all_priority_condition_static_identifiers;
 	private List<List<String>>[] all_priority_condition_dynamic_identifiers;
 	private List<Integer>[] all_priority_condition_dynamic_dentifiers_column_indexes;
 	private String[][] all_priority_condition_info;	
 	
-	private int activity_col_id;
-	private String[][][] yield_tables_values;
-	private List<String> yield_tables_original_col_names_list, yield_tables_sorted_col_names_list;
-	private int[] get_original_col_id_from_sorted_col_id;
-	
 	public Information_Cost(Read_Database read_database, List<String> cost_condition_list) {
 		identifiers_processing = new Identifiers_Processing(read_database);
 		yield_tables_values = read_database.get_yield_tables_values();
+		total_rows_of_precription = read_database.get_total_rows_of_precription();
 		
 		
 		all_priority_condition_static_identifiers = new ArrayList[cost_condition_list.size()];
@@ -88,7 +90,7 @@ public class Information_Cost {
 		double value_to_return = 0;
 
 		
-		if (row_id != -9999 && row_id < yield_tables_values[prescription_id].length) { 	// If row in this prescription exists (not exists when row_id = -9999 or >= total rows in that prescription)
+		if (row_id != -9999 && row_id < total_rows_of_precription[prescription_id]) { 	// If row in this prescription exists (not exists when row_id = -9999 or >= total rows in that prescription)
 			String var_activity = yield_tables_values[prescription_id][row_id][activity_col_id];
 			
 			// The following includes information for action_cost and conversion_cost

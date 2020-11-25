@@ -54,6 +54,7 @@ public class Read_Database {
 	private String[] yield_tables_column_names;
 	private String[] yield_tables_column_types;
 	private List<String>[] unique_values_list;
+	private int[] total_rows_of_precription;
 	private int[] starting_age_class_for_prescription;
 	private boolean[][] has_R_prescriptions;
 	
@@ -182,7 +183,10 @@ public class Read_Database {
 			}		
 			
 			
-			
+			total_rows_of_precription = new int[prescription_count];
+			for (int i = 0; i < total_prescriptions; i++) {
+				total_rows_of_precription[i] = yield_tables_values[i].length;		// In case of existing prescription, tR = total rows of this prescription 
+			}
 			
 			//---------------------------------------------------------------------------------------------
 			//---------------------------------------------------------------------------------------------
@@ -501,6 +505,10 @@ public class Read_Database {
 
 	public String[] get_yield_tables_names() {
 		return yield_tables_names;
+	}
+	
+	public int[] get_total_rows_of_precription() {
+		return total_rows_of_precription;
 	}
 	
 	public int get_activity_column_index() {
