@@ -111,11 +111,11 @@ public class PrismMain extends JFrame {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice gd = ge.getDefaultScreenDevice();
 		if (gd.isWindowTranslucencySupported(WindowTranslucency.TRANSLUCENT)) {
-//			setDefaultLookAndFeelDecorated(true);												// 1: activate this 1 with 2  --> then we can disable 2 lines in the middle
+//			setDefaultLookAndFeelDecorated(true);											// 1: activate this 1 with 2  --> then we can disable 2 lines in the middle
 			main = new PrismMain();
 		 	main.setUndecorated(true);		// to help make translucent windows
 			main.setOpacity(1f);
-//			main.setBackground(new Color(0, 0, 0, 0.0f)); // alpha <1 = transparent;			// 2: activate this 2 with 1  --> then we can disable 2 lines in the middle
+//			main.setBackground(new Color(0, 0, 0, 0.0f)); // alpha <1 = transparent;		// 2: activate this 2 with 1  --> then we can disable 2 lines in the middle
 			
 		 	
 			// Need border so cr can work
