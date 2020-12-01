@@ -119,7 +119,7 @@ public class PrismMain extends JFrame {
 			
 		 	
 			// Need border so cr can work
-			Border tempBorder = BorderFactory.createMatteBorder(3, 1, 3, 1, ColorUtil.makeTransparent(Color.BLACK, 255));
+			Border tempBorder = BorderFactory.createMatteBorder(3, 2, 3, 2, ColorUtil.makeTransparent(Color.BLACK, 255));
 //			Border tempBorder1 = BorderFactory.createMatteBorder(3, 0, 1, 0, ColorUtil.makeTransparent(Color.BLACK, 255));
 //			Border tempBorder2 = BorderFactory.createMatteBorder(0, 3, 2, 3, ColorUtil.makeTransparent(Color.BLACK, 255));
 //			tempBorder = BorderFactory.createCompoundBorder(tempBorder1, tempBorder2);

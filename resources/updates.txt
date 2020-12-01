@@ -1466,3 +1466,4 @@ All changes in this block are associated with PrismAlpha3.1.04.jar, Prism-Formul
 622. Good speed and memory boost by removing unused objects in the Information_Variable class
 623. Little speed boost by moving length out of the for loop, applied only in Information_Disturbance class
 624. Fix the bug #131: Range dynamic identifiers working incorrectly
+625. Reorganize inputs in the Natural Disturbances screen for better user control

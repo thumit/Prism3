@@ -1461,8 +1461,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				
 				if (column == 1 || column == 2) {
 					tableColumn.setMinWidth(150);
-				} else if (column == 5) {
-					tableColumn.setMinWidth(110);
 				} else {
 					tableColumn.setPreferredWidth(maxWidth);
 				}
@@ -1482,21 +1480,6 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					}
 				}
 				
-//				if (getValueAt(row, 11).toString().equals("true")) {	// because we hide 5 columns
-//					if ((column == 2 && getValueAt(row, 2).toString().equals("Global adjustment")) || column == 3 || column == 16) {
-//						// uncheck this condition if the condition category is global and disturbance_id in this condition is not in the list of disturbances in the local simulation category
-//						List<String> disturbances_list = new ArrayList<String>();	// list of disturbances in the local simulation category where model_condition = true
-//						for (int r = 0; r < rowCount6; r++) {
-//							if (((String) data6[r][2]).equals("Local simulation") && ((boolean) data6[r][16]) == true) {
-//								disturbances_list.add((String) data6[r][3]);
-//							}
-//						}
-//						if (!disturbances_list.contains((String) data6[row][3])) {
-//							data6[row][16] = false;
-//						}
-//					}
-//				}
-				
 				// THIS IS VERY SLOW
 				// uncheck every condition where the condition category is global and disturbance_id in this condition is not in the list of disturbances in the local simulation category (set to true)
 				Set<String> disturbances_set = new HashSet<String>();	// list of disturbances in the local simulation category where model_condition = true
@@ -1506,9 +1489,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					}
 				}
 				for (int r = 0; r < getRowCount(); r++) {	// loop all visible rows only (filter might show only some rows)
-					if (getValueAt(r, 11).toString().equals("true") && getValueAt(r, 2).toString().equals("Global adjustment")) {	// 11 not 16 because we hide 5 columns
+					if (getValueAt(r, 7).toString().equals("true") && getValueAt(r, 2).toString().equals("Global adjustment")) {	// 11 not 16 because we hide 5 columns, 7 instead of 11 because we move 11 to 7 (end of this void)
 						if (!disturbances_set.contains(String.valueOf(getValueAt(r, 3)))) {
-							setValueAt(false, r, 11);
+							setValueAt(false, r, 7);
 						}
 					}
 				}
@@ -1676,9 +1659,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		table_handle.setColumnVisible("static_identifiers", false);
 		table_handle.setColumnVisible("dynamic_identifiers", false);
 		table_handle.setColumnVisible("original_dynamic_identifiers", false);
-//		table6.getColumnModel().moveColumn(9, 5);
-//		table6.getColumnModel().moveColumn(10, 6);
-//		table6.getColumnModel().moveColumn(11, 7);
+		table6.getColumnModel().moveColumn(9, 5);
+		table6.getColumnModel().moveColumn(10, 6);
+		table6.getColumnModel().moveColumn(11, 7);
+		table6.getColumnModel().moveColumn(8, 11); // 8 is now loss_rate_data
   
 		table6.setAutoResizeMode(0);		// 0 = JTable.AUTO_RESIZE_OFF
 		table6.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);  
