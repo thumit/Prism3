@@ -22,27 +22,6 @@ ON output_05_management_details.prescription = yield_tables.prescription AND out
 vacuum
 vacuum
 ----------
-other test
-SELECT
-SUBSTR(prescription, 1, INSTR(prescription, "_")-1) as CoverType,
-vegt
-
-FROM yield_tables
-----------
-compare cover type
-SELECT
-SUBSTR(prescription, 1, INSTR(prescription, "_")-1) as prescription_vegt, vegt,
-
-CASE WHEN SUBSTR(prescription, 1, INSTR(prescription, "_")-1) = vegt then 'correct' else 'fail' end AS Compare
-
-From yield_tables;
-----------
-check MS prescriptions with a few information
-select prescription, row_id, age_class, age, qmd, action_type from yield_tables where prescription Like '%_MS_E%'
-----------
-rename column row_id to row
-ALTER TABLE yield_tables RENAME COLUMN row_id TO row
-----------
 test strata check 1 (future use in read_existig_strata)
 SELECT  
 COUNT (strata_id) as total_strata, 
@@ -57,18 +36,19 @@ SELECT
 FROM existing_strata
 GROUP BY strata_id HAVING COUNT(*) > 1
 ----------
-test count existing_strata (simple, no use in read_existig_strata)
-SELECT  COUNT (DISTINCT strata_id) as total_unique_strata
-FROM  (SELECT (layer1 || layer2 || layer3 || layer4 || layer5 || layer6) as strata_id FROM existing_strata)
+rename column row_id to row
+ALTER TABLE yield_tables RENAME COLUMN row_id TO row
+----------
+compare cover type
+SELECT
+SUBSTR(prescription, 1, INSTR(prescription, "_")-1) as prescription_vegt, vegt,
+
+CASE WHEN SUBSTR(prescription, 1, INSTR(prescription, "_")-1) = vegt then 'correct' else 'fail' end AS Compare
+
+From yield_tables;
 ----------
 test3 strata
 SELECT (layer1 || layer2 || layer3 || layer4 || layer5 || layer6) as strata_id, layer1, layer2, layer3, layer4, layer5, layer6, acres FROM  existing_strata ORDER BY (layer1 || layer2 || layer3 || layer4 || layer5 || layer6) ASC;
-----------
-test-read existing strata 1
-SELECT COUNT (DISTINCT strata_id) FROM (SELECT (layer1 || layer2 || layer3 || layer4 || layer5 || layer6) as strata_id FROM existing_strata);
-----------
-test-read existing strata 2
-SELECT * FROM existing_strata ORDER BY (layer1 || layer2 || layer3 || layer4 || layer5 || layer6) ASC;
 ----------
 test substring
 SELECT
@@ -207,6 +187,21 @@ OR prescription LIKE '%\_BS\_E\_%' ESCAPE '\')
 )
 )
 ----------
+2.0 Very good to use - split method 1
+SELECT 
+SUBSTR(pres, 1, INSTR(pres, '_')-1) as e_covertype,
+SUBSTR(pres, INSTR(pres, '_')+1, INSTR(SUBSTR(pres, INSTR(pres, '_')+1), '_')-1) as e_sizeclass,
+MIN(CAST(rotation_age as decimal)) AS e_min_rotation_age, 
+MAX(CAST(rotation_age as decimal)) AS e_max_rotation_age
+FROM 
+
+(SELECT DISTINCT prescription AS pres, 
+action_type AS final_activity, 
+CAST(age_class as decimal) AS rotation_age
+FROM yield_tables WHERE prescription LIKE '%\_EA\_E\_%' ESCAPE '\' GROUP BY prescription)
+
+GROUP BY e_covertype, e_sizeclass
+----------
 3.1 Very good to use - split method 1
 SELECT
 Covertype,
@@ -317,21 +312,6 @@ OR prescription LIKE '%\_BS\_E\_%' ESCAPE '\')
 GROUP BY
 Covertype,
 Sizeclass
-----------
-2.0 Very good to use - split method 1
-SELECT 
-SUBSTR(pres, 1, INSTR(pres, '_')-1) as e_covertype,
-SUBSTR(pres, INSTR(pres, '_')+1, INSTR(SUBSTR(pres, INSTR(pres, '_')+1), '_')-1) as e_sizeclass,
-MIN(CAST(rotation_age as decimal)) AS e_min_rotation_age, 
-MAX(CAST(rotation_age as decimal)) AS e_max_rotation_age
-FROM 
-
-(SELECT DISTINCT prescription AS pres, 
-action_type AS final_activity, 
-CAST(age_class as decimal) AS rotation_age
-FROM yield_tables WHERE prescription LIKE '%\_EA\_E\_%' ESCAPE '\' GROUP BY prescription)
-
-GROUP BY e_covertype, e_sizeclass
 ----------
 test percent rank (SQLITE 3.27 only)
 SELECT 
@@ -710,28 +690,6 @@ FROM
 GROUP BY
 Covertype
 ----------
-new 3.1 better
-SELECT
-SUBSTR(DISTINCT prescription, 5, INSTR(DISTINCT prescription, "_")-1) as CoverType,
-SUM(case when prescription LIKE '%\E\_0\_%' ESCAPE '\' then 1 else 0 end) E_0_Prescriptions,
-SUM(case when prescription LIKE '%\E\_1\_%' ESCAPE '\' then 1 else 0 end) E_1_Prescriptions,
-SUM(case when prescription LIKE '%\R\_0\_%' ESCAPE '\' then 1 else 0 end) R_0_Prescriptions,
-SUM(case when prescription LIKE '%\R\_1\_%' ESCAPE '\' then 1 else 0 end) R_1_Prescriptions,
-SUM(case when prescription LIKE '%%' then 1 else 0 end) Total_Prescriptions
-FROM (SELECT DISTINCT prescription FROM yield_tables)
-GROUP BY CoverType
-
-UNION ALL
-
-SELECT
-'Total_Prescriptions' as CoverType2,
-SUM(case when prescription LIKE '%\E\_0\_%' ESCAPE '\' then 1 else 0 end) E_0,
-SUM(case when prescription LIKE '%\E\_1\_%' ESCAPE '\' then 1 else 0 end) E_1,
-SUM(case when prescription LIKE '%\R\_0\_%' ESCAPE '\' then 1 else 0 end) R_0,
-SUM(case when prescription LIKE '%\R\_1\_%' ESCAPE '\' then 1 else 0 end) R_1,
-SUM(case when prescription LIKE '%%' then 1 else 0 end) Total_Prescriptions
-FROM (SELECT DISTINCT prescription FROM yield_tables)
-----------
 new 2.0
 SELECT
 Covertype,
@@ -787,6 +745,63 @@ WHERE prescription LIKE '%E\_1\_%' ESCAPE '\' GROUP BY prescription)
 
 
 GROUP BY Covertype, Sizeclass
+----------
+new 2.0 with upgrades
+SELECT
+Covertype,
+Sizeclass,
+Status,
+MIN(CAST(rotation_age as INTEGER)) AS min_rotation_age, 
+MAX(CAST(rotation_age as INTEGER)) AS max_rotation_age
+FROM
+
+
+
+(
+SELECT
+rotation_age,
+Status,
+Clearcut,
+Covertype,
+SUBSTR(Leftover, 1, INSTR(Leftover, '_')-1) AS Sizeclass,
+SUBSTR(Leftover, INSTR(Leftover, '_')+1) AS Leftover
+FROM
+
+(
+SELECT
+rotation_age,
+Status,
+Clearcut,
+SUBSTR(Leftover, 1, INSTR(Leftover, '_')-1) AS Covertype,
+SUBSTR(Leftover, INSTR(Leftover, '_')+1) AS Leftover
+FROM
+
+(
+SELECT
+rotation_age,
+Status,
+SUBSTR(Leftover, 1, INSTR(Leftover, '_')-1) AS Clearcut,
+SUBSTR(Leftover, INSTR(Leftover, '_')+1) AS Leftover
+FROM
+
+(
+SELECT 
+rotation_age,
+SUBSTR(prescription, 1, INSTR(prescription, '_')-1) AS Status,
+SUBSTR(prescription, INSTR(prescription, '_')+1) AS Leftover
+FROM
+(SELECT DISTINCT prescription, 
+MAX(CAST(age_class as INTEGER)) AS rotation_age
+FROM yield_tables
+WHERE SUBSTR(prescription, 3, 1) = '1' GROUP BY prescription)
+)
+)
+)
+)
+
+
+
+GROUP BY Status, Covertype, Sizeclass
 ----------
 new 2.1
 SELECT
@@ -1108,7 +1123,7 @@ create new existing strata table
 CREATE TABLE existing_strata_new AS
 SELECT (layer1 || '_' || layer2 || '_' || layer3 || '_' || layer4 || '_' || layer5 || '_' || layer6) as strata_id, layer1, layer2, layer3, layer4, layer5, layer6, acres FROM  existing_strata
 ----------
-Count R prescriptions
+count R prescriptions
 SELECT
 Covertype,
 Sizeclass,
@@ -1172,6 +1187,75 @@ SELECT
 SUM(case when SUBSTR(prescription, 1, 3) = 'R_0' then 1 else 0 end) R_0,
 SUM(case when SUBSTR(prescription, 1, 3) = 'R_1' then 1 else 0 end) R_1,
 SUM(case when SUBSTR(prescription, 1, 2) = 'R_' then 1 else 0 end) Total_Prescriptions
+FROM (SELECT DISTINCT prescription FROM yield_tables)
+----------
+count prescriptions by cover type and size class
+SELECT
+Covertype,
+Sizeclass,
+SUM(CASE when Status = 'E' AND Clearcut = '0' then 1 else 0 end) E_0_Prescriptions,
+SUM(CASE when Status = 'E' AND Clearcut = '1' then 1 else 0 end) E_1_Prescriptions,
+SUM(CASE when Status = 'R' AND Clearcut = '0' then 1 else 0 end) R_0_Prescriptions,
+SUM(CASE when Status = 'R' AND Clearcut = '1' then 1 else 0 end) R_1_Prescriptions,
+SUM(1) Total_Prescriptions
+FROM
+
+
+
+(
+SELECT
+Status,
+Clearcut,
+Covertype,
+SUBSTR(Leftover, 1, INSTR(Leftover, '_')-1) as Sizeclass,
+SUBSTR(Leftover, INSTR(Leftover, '_')+1) as Leftover
+FROM
+
+(
+SELECT
+Status,
+Clearcut,
+SUBSTR(Leftover, 1, INSTR(Leftover, '_')-1) as Covertype,
+SUBSTR(Leftover, INSTR(Leftover, '_')+1) as Leftover
+FROM
+
+(
+SELECT
+Status,
+SUBSTR(Leftover, 1, INSTR(Leftover, '_')-1) as Clearcut,
+SUBSTR(Leftover, INSTR(Leftover, '_')+1) as Leftover
+FROM
+
+(
+SELECT 
+SUBSTR(pres, 1, INSTR(pres, '_')-1) as Status,
+SUBSTR(pres, INSTR(pres, '_')+1) as Leftover
+FROM
+(SELECT DISTINCT prescription  as pres FROM yield_tables)
+)
+)
+)
+)
+
+
+
+GROUP BY
+Covertype,
+Sizeclass
+
+
+
+
+UNION ALL
+
+SELECT
+'Total_Prescriptions' as CoverType2,
+'' as SizeClass2,
+SUM(case when SUBSTR(prescription, 1, 3) = 'E_0' then 1 else 0 end) E_0,
+SUM(case when SUBSTR(prescription, 1, 3) = 'E_1' then 1 else 0 end) E_1,
+SUM(case when SUBSTR(prescription, 1, 3) = 'R_0' then 1 else 0 end) R_0,
+SUM(case when SUBSTR(prescription, 1, 3) = 'R_1' then 1 else 0 end) R_1,
+SUM(1) Total_Prescriptions
 FROM (SELECT DISTINCT prescription FROM yield_tables)
 ----------
 Examine R prescriptions

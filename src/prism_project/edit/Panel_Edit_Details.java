@@ -5115,6 +5115,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						btn_Edit.setEnabled(true);
 						quick_edit.enable_all_apply_buttons();
 						natural_disturbances_tables_ScrollPane.show_2_tables();
+						if (((String) data6[currentRow][2]).equals("Global adjustment")) natural_disturbances_tables_ScrollPane.hide_2_tables();
 					} else {		// Disable Edit
 						btn_Edit.setEnabled(false);
 						quick_edit.disable_all_apply_buttons();

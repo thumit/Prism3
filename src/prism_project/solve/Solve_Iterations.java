@@ -2889,7 +2889,11 @@ public class Solve_Iterations {
 								fileOut.write(iter + "\t" + "Rolling horizon - iterating method" + "\t" + data[row][2].toString());
 								
 								fileOut.newLine();
-								fileOut.write(iter + "\t" + "Rolling horizon - disturbance option" + "\t" + data[row][1].toString());
+								if (iter ==0) {
+									fileOut.write(iter + "\t" + "Rolling horizon - disturbance option" + "\t" + "user defined");
+								} else {
+									fileOut.write(iter + "\t" + "Rolling horizon - disturbance option" + "\t" + data[row][1].toString());
+								}
 								
 								fileOut.newLine();
 								fileOut.write(iter + "\t" + "Prism version when problem solved" + "\t" + PrismMain.get_prism_version());
@@ -3458,7 +3462,11 @@ public class Solve_Iterations {
 								fileOut.write(iter + "\t" + "Rolling horizon - iterative method" + "\t" + data[row][2].toString());
 								
 								fileOut.newLine();
-								fileOut.write(iter + "\t" + "Rolling horizon - disturbance option" + "\t" + data[row][1].toString());
+								if (iter ==0) {
+									fileOut.write(iter + "\t" + "Rolling horizon - disturbance option" + "\t" + "user defined");
+								} else {
+									fileOut.write(iter + "\t" + "Rolling horizon - disturbance option" + "\t" + data[row][1].toString());
+								}
 								
 								fileOut.newLine();
 								fileOut.write(iter + "\t" + "Prism version when problem solved" + "\t" + PrismMain.get_prism_version());

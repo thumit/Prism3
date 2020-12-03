@@ -98,7 +98,7 @@ public class Panel_Project extends JLayeredPane {
 	private JButton btnNewRun, btnDeleteRun, btnEditRun, btnRefresh, btn_compact, btnSolveRun, btnCollectMemory, btnSave, btnHint;
 	private List<JButton> buttons_list;
 	private Boolean is_compact_view = false;
-	private MarqueePanel maequee_panel = new MarqueePanel();;
+	private MarqueePanel maequee_panel = new MarqueePanel();
 	
 	private File[] listOfEditRuns;
 	private File currentProjectFolder, currentRunFolder;

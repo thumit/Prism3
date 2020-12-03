@@ -25,6 +25,48 @@ FROM summarize_output_05_management_details WHERE data_connection NOT LIKE 'good
 
 ORDER BY iteration, prescription, row_id
 ----------
+1.3. list duplicated existing strata
+SELECT 
+(layer1 || layer2 || layer3 || layer4 || layer5 || layer6) as strata_id, layer1, layer2, layer3, layer4, layer5, layer6, COUNT(*) as count
+FROM existing_strata
+GROUP BY strata_id HAVING COUNT(*) > 1
+----------
+1.4. list duplicated rows in the yield tables
+SELECT prescription, row_id
+FROM yield_tables
+GROUP BY prescription, row_id
+HAVING COUNT(prescription || row_id) >1
+ORDER BY prescription, CAST(row_id AS DECMAL)
+----------
+1.5.1. every period area check 1
+SELECT
+CAST(iteration AS DECIMAL) AS iteration, CAST(var_period AS DECIMAL) AS period, 
+ROUND(SUM(var_value), 2) AS area
+FROM
+
+(
+SELECT *
+FROM summarize_output_05_management_details LEFT JOIN yield_tables
+ON 
+summarize_output_05_management_details.prescription = yield_tables.prescription 
+AND 
+summarize_output_05_management_details.row_id = yield_tables.row_id
+)
+
+GROUP BY iteration, period
+ORDER BY iteration, period
+----------
+1.5.2. every period area check 2
+SELECT
+CAST(iteration AS DECIMAL) AS iteration, CAST(var_period AS DECIMAL) AS period, 
+ROUND(SUM(var_value), 2) AS area
+FROM
+
+summarize_output_05_management_details
+
+GROUP BY iteration, period
+ORDER BY iteration, period
+----------
 ------------------------------------------------------------- AREA-------------------------------------------------------------
 
 ----------
@@ -131,22 +173,7 @@ GROUP BY iteration, period, activity, forest_status) AS t
 
 GROUP BY iteration, period
 ----------
-4.2. harvest volume by iteration, activity
-SELECT iteration, activity,
-ROUND(SUM(CASE WHEN t.volume > 0 AND t.forest_status = 'E' THEN t.volume END), 2) AS E_harvest_volume,
-ROUND(SUM(CASE WHEN t.volume > 0 AND t.forest_status = 'R' THEN t.volume END), 2) AS R_harvest_volume,
-ROUND(SUM(CASE WHEN t.volume > 0 THEN t.volume END), 2) AS total_harvest_volume
-FROM
-
-(SELECT 
-CAST(iteration AS INTEGER) as iteration, CAST(var_period AS INTEGER) as period, var_forest_status AS forest_status, activity AS activity, SUM(var_value*rmcuft) as volume
-FROM summarize_output_05_management_details LEFT JOIN yield_tables USING  (prescription, row_id)
-WHERE rmcuft > 0
-GROUP BY iteration, period, activity, forest_status) AS t
-
-GROUP BY iteration, activity
-----------
-4.3. harvest volume by iteration, period, activity
+4.2. harvest volume by iteration, period, activity
 SELECT iteration, period, activity,
 ROUND(SUM(CASE WHEN t.volume > 0 AND t.forest_status = 'E' THEN t.volume END), 2) AS E_harvest_volume,
 ROUND(SUM(CASE WHEN t.volume > 0 AND t.forest_status = 'R' THEN t.volume END), 2) AS R_harvest_volume,
@@ -161,10 +188,28 @@ GROUP BY iteration, period, activity, forest_status) AS t
 
 GROUP BY iteration, period, activity
 ----------
+------------------------------------------------------------- COST-------------------------------------------------------------
+
+----------
+5.1. management cost by iteration, period
+SELECT iteration, period,
+ROUND(SUM(CASE WHEN t.cost > 0 AND t.forest_status = 'E' THEN t.cost END), 2) AS E_cost,
+ROUND(SUM(CASE WHEN t.cost > 0 AND t.forest_status = 'R' THEN t.cost END), 2) AS R_cost,
+ROUND(SUM(CASE WHEN t.cost > 0 THEN t.cost END), 2) AS total_cost
+FROM
+
+(SELECT 
+CAST(iteration AS INTEGER) as iteration, CAST(var_period AS INTEGER) as period, var_forest_status AS forest_status, activity AS activity, SUM(var_value*var_per_area_unit_cost) as cost
+FROM summarize_output_05_management_details LEFT JOIN yield_tables USING  (prescription, row_id)
+WHERE var_per_area_unit_cost > 0
+GROUP BY iteration, period, activity, forest_status) AS t
+
+GROUP BY iteration, period
+----------
 -----------------------------------------------------------ACTIVITY---------------------------------------------------------
 
 ----------
-5.1. activity excluding "no-action" by iteration, period
+6.1. activity excluding "no-action" by iteration, period
 SELECT 
 iteration, var_period as period, var_layer1 as layer1, var_layer2 as layer2, var_layer3 as layer3, var_layer4 as layer4, var_layer5 as layer5, var_layer6 as layer6, var_forest_status as forest_status, age_class,
 activity as activity, ROUND(var_value, 2) as area, 
@@ -178,7 +223,7 @@ FROM summarize_output_05_management_details LEFT JOIN yield_tables USING  (presc
 WHERE activity NOT LIKE 'no-action'
 ORDER BY CAST(iteration AS INTEGER), CAST(period AS INTEGER), forest_status, layer1, layer2, layer3, layer4, layer5, layer6, CAST(age_class AS INTEGER), activity
 ----------
-5.2. activity excluding "no-action" by iteration, period (more details)
+6.2. activity excluding "no-action" by iteration, period (more details)
 SELECT * FROM
 
 
@@ -203,19 +248,19 @@ LEFT JOIN yield_tables USING  (prescription, row_id)
 ------------------------------------------------------------OTHERS----------------------------------------------------------
 
 ----------
-6.1. all records of the optimal solution
+7.1. all records of the optimal solution
 SELECT * FROM summarize_output_05_management_details
 ----------
-6.2. all records of the optimal solution (more details)
+7.2. all records of the optimal solution (more details)
 SELECT *
 FROM summarize_output_05_management_details LEFT JOIN yield_tables USING  (prescription, row_id)
 ----------
-6.3. strata definition
+7.3. strata definition
 SELECT * FROM strata_definition ORDER BY layer_id, attribute_id ASC
 ----------
-6.4. existing strata
+7.4. existing strata
 SELECT * FROM existing_strata ORDER BY (layer1 || layer2 || layer3 || layer4 || layer5 || layer6) ASC
 ----------
-6.5. yield tables
+7.5. yield tables
 SELECT * FROM yield_tables ORDER BY prescription, CAST(row_id AS INTEGER) ASC
 ----------

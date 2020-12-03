@@ -148,8 +148,8 @@ public class Panel_Solve extends JLayeredPane implements ActionListener {
 					if (table.getColumnName(column).equals("Model")) tip = getValueAt(row, column).toString();
 					if (table.getColumnName(column).equals("From Iteration") && getValueAt(row, column).toString().equals("restart")) tip = "solve from iteration 0";
 					if (table.getColumnName(column).equals("From Iteration") && getValueAt(row, column).toString().equals("continue")) tip = "solve from last solved iteration";
-					if (table.getColumnName(column).equals("Disturbance Option") && getValueAt(row, column).toString().equals("user defined")) tip = "Before solving an iteration, re-simulate disturbances for the period 1 variables of the previous iteration based on user-defined modelling approach in the Natural Disturbances screen";
-					if (table.getColumnName(column).equals("Disturbance Option") && getValueAt(row, column).toString().equals("full stochastic")) tip = "Before solving an iteration, re-simulate disturbances for the period 1 variables of the previous iteration based on stochastic modelling approach regardless of what defined by users in the Natural Disturbances screen";
+					if (table.getColumnName(column).equals("Disturbance Option") && getValueAt(row, column).toString().equals("user defined")) tip = "Re-simulate disturbances on the first period management solution of the previous iteration based on user-defined modelling approach as in the Natural Disturbances screen";
+					if (table.getColumnName(column).equals("Disturbance Option") && getValueAt(row, column).toString().equals("full stochastic")) tip = "Re-simulate disturbances on the first period management solution of the previous iteration based on stochastic modelling approach regardless of what defined in the Natural Disturbances screen";
 				}
 				return tip;
 			}	

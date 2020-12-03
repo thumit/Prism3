@@ -94,7 +94,7 @@ public class Panel_QuickEdit_ManagementCost extends JPanel {
 		
 		
 		// Add Label-------------------------------------------------------------------------------------------------
-		qd1.add(new JLabel("Activity cost"), PrismGridBagLayoutHandle.get_c(c, "CENTER", 
+		qd1.add(new JLabel("activity cost"), PrismGridBagLayoutHandle.get_c(c, "CENTER", 
 				1, 2, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
 				0, 0, 0, 0));		// insets top, left, bottom, right
 				
@@ -192,7 +192,7 @@ public class Panel_QuickEdit_ManagementCost extends JPanel {
 			
 		
 		// Add Label-------------------------------------------------------------------------------------------------
-		qd2.add(new JLabel("Regen cost"), PrismGridBagLayoutHandle.get_c(c, "CENTER", 
+		qd2.add(new JLabel("transition cost"), PrismGridBagLayoutHandle.get_c(c, "CENTER", 
 				1, 2, 1, 1, 0, 0, 	// gridx, gridy, gridwidth, gridheight, weightx, weighty
 				0, 0, 0, 0));		// insets top, left, bottom, right
 

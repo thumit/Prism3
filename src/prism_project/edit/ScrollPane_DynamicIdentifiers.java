@@ -68,10 +68,10 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 	private JPanel dynamic_identifiersPanel;
 	private JPanel select_Panel;
 	
-	public ScrollPane_DynamicIdentifiers(Read_Database read_Database) {	
+	public ScrollPane_DynamicIdentifiers(Read_Database read_database) {	
 		
-		String[][][] yield_tables_values = read_Database.get_yield_tables_values();
-		String[] yield_tables_column_names = read_Database.get_yield_tables_column_names();	
+		String[][][] yield_tables_values = read_database.get_yield_tables_values();
+		String[] yield_tables_column_names = read_database.get_yield_tables_column_names();	
 		
 		// Define the Panel contains everything --------------------------
 		dynamic_identifiersPanel = new JPanel();
@@ -96,16 +96,13 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 		
 		
 	    if (yield_tables_column_names != null && allDynamicIdentifiers == null) {				
-			
 			checkboxDynamicIdentifiers = new ArrayList<List<JCheckBox>>();	
 			allDynamicIdentifiers = new ArrayList<JCheckBox>();
-			
 			for (int i = 0; i < yield_tables_column_names.length; i++) {
 				String YTcolumnName = yield_tables_column_names[i];
-
 				checkboxDynamicIdentifiers.add(new ArrayList<JCheckBox>());		//add empty List
 				allDynamicIdentifiers.add(new JCheckBox(YTcolumnName));		//add checkbox
-				allDynamicIdentifiers.get(i).setToolTipText(read_Database.get_parameter_tooltip(YTcolumnName) + " (Column index: " + i + ")");		//add toolTip
+				allDynamicIdentifiers.get(i).setToolTipText(read_database.get_parameter_tooltip(YTcolumnName) + " (Column index: " + i + ")");		//add toolTip
 				
 				// add checkboxParameter to the Panel
 			    c2.gridx = 0;
@@ -157,7 +154,6 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 		
 			//Add all dynamic identifiers labels
 			allDynamicIdentifiers_ScrollPane = new ArrayList<JScrollPane>();
-			
 			for (int i = 0; i < yield_tables_column_names.length; i++) {
 				String YTcolumnName = allDynamicIdentifiers.get(i).getText();		
 				allDynamicIdentifiers_ScrollPane.add(new JScrollPane());			//Add ScrollPane
@@ -233,7 +229,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 							c_list.weighty = 1;
 							
 							
-							List<String> unique_values_list = read_Database.get_col_unique_values_list(currentCheckBoxIndex);									
+							List<String> unique_values_list = read_database.get_col_unique_values_list(currentCheckBoxIndex);									
 							
 							//Add Labels of unique values to listPanel
 							for (int j = 0; j < unique_values_list.size(); j++) {
@@ -312,7 +308,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 											String nameOfColumnAndUniqueValue = currentCheckBoxName + " " + unique_values_list.get(j);	//The name
 																		
 											checkboxDynamicIdentifiers.get(currentCheckBoxIndex).add(new JCheckBox(unique_values_list.get(j)));
-											checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(j).setToolTipText(read_Database.get_parameter_tooltip(nameOfColumnAndUniqueValue));	//ToolTip of this Name from Prism Library;
+											checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(j).setToolTipText(read_database.get_parameter_tooltip(nameOfColumnAndUniqueValue));	//ToolTip of this Name from Prism Library;
 											c_dP.gridx = 0;
 											c_dP.gridy = 1 + j;
 											discretePanel.add(checkboxDynamicIdentifiers.get(currentCheckBoxIndex).get(j), c_dP);
@@ -320,7 +316,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 											c_dP.gridx = 1;
 											c_dP.gridy = 1 + j;
 											JTextField name_TF = new JTextField(20);
-											name_TF.setText(read_Database.get_parameter_tooltip(nameOfColumnAndUniqueValue));	//ToolTip of this Name from Prism Library
+											name_TF.setText(read_database.get_parameter_tooltip(nameOfColumnAndUniqueValue));	//ToolTip of this Name from Prism Library
 											discretePanel.add(name_TF, c_dP);
 											
 											//Add listener for TextField to be toolTip
