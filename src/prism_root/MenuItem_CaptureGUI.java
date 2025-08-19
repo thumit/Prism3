@@ -53,7 +53,7 @@ public class MenuItem_CaptureGUI extends JMenuItem {
 					
 					String warningText = "You have 5 seconds to \"right click\" anywhere inside Prism.\nPicture will be saved to Desktop.";
 					String ExitOption[] = { "Start now", "Cancel" };
-					int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warningText, "Image Capture",
+					int response = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(), warningText, "Image Capture",
 							JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(32, 32, "icon_camera.png"), ExitOption, ExitOption[0]);
 					if (response == 0) {
 						Thread thread = new Thread() { // Make a thread to allow capture screen within 5 seconds
@@ -63,7 +63,7 @@ public class MenuItem_CaptureGUI extends JMenuItem {
 									setText("5s Image Capture ON");
 									
 									// Get all components - except JMenu
-									for (Component comp : getAllComponents(PrismMain.get_main())) {
+									for (Component comp : getAllComponents(Prism3Main.get_main())) {
 										if (!(comp instanceof JMenu)) comp_list.add(comp);
 									}
 									

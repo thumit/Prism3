@@ -24,7 +24,7 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
 
-import prism_root.PrismMain;
+import prism_root.Prism3Main;
 
 public class IconHandle {
 	public IconHandle() {
@@ -33,7 +33,7 @@ public class IconHandle {
 
 	public static ImageIcon get_scaledImageIcon(int width, int height, String imageName) {
 		try {
-			ImageIcon icon = new ImageIcon(PrismMain.get_Prism_DesktopPane().getClass().getResource("/" + imageName));
+			ImageIcon icon = new ImageIcon(Prism3Main.get_Prism_DesktopPane().getClass().getResource("/" + imageName));
 			Image scaleImage = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
 			ImageIcon scaledImageIcon = new ImageIcon(scaleImage);				
 			return scaledImageIcon;
@@ -44,7 +44,7 @@ public class IconHandle {
 	
 	public static ImageIcon get_scaledImageIcon_replicate(int width, int height, String imageName) {
 		try {
-			ImageIcon icon = new ImageIcon(PrismMain.get_Prism_DesktopPane().getClass().getResource("/" + imageName));
+			ImageIcon icon = new ImageIcon(Prism3Main.get_Prism_DesktopPane().getClass().getResource("/" + imageName));
 			Image scaleImage = icon.getImage().getScaledInstance(width, height, Image.SCALE_REPLICATE);
 			ImageIcon scaledImageIcon = new ImageIcon(scaleImage);				
 			return scaledImageIcon;
@@ -55,7 +55,7 @@ public class IconHandle {
 	
 	public static ImageIcon get_rotated_scaledImageIcon(int width, int height, String imageName) {
 		try {
-			ImageIcon icon = new ImageIcon(PrismMain.get_Prism_DesktopPane().getClass().getResource("/" + imageName));
+			ImageIcon icon = new ImageIcon(Prism3Main.get_Prism_DesktopPane().getClass().getResource("/" + imageName));
 			BufferedImage bi = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
 			Graphics g = bi.createGraphics();
 			// paint the Icon to the BufferedImage.

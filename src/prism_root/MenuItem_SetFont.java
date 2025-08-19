@@ -64,7 +64,7 @@ import prism_convenience.WindowAppearanceHandle;
 public class MenuItem_SetFont extends JMenuItem {
 	private JSpinner spin;
 	
-	public MenuItem_SetFont(PrismMain main) {
+	public MenuItem_SetFont(Prism3Main main) {
 		setText("Change Font");
 		setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_font.png"));
 		
@@ -178,7 +178,7 @@ public class MenuItem_SetFont extends JMenuItem {
 				// Add Font size & type to a panel
 				JPanel combined_panel = new JPanel(new GridBagLayout());
 				combined_panel.setMinimumSize(new Dimension(600, 300));
-				combined_panel.setPreferredSize(new Dimension((int) (PrismMain.get_main().getWidth() * 0.6), (int) (PrismMain.get_main().getHeight() * 0.5)));
+				combined_panel.setPreferredSize(new Dimension((int) (Prism3Main.get_main().getWidth() * 0.6), (int) (Prism3Main.get_main().getHeight() * 0.5)));
 				// These codes make the popupPanel resizable
 				combined_panel.addHierarchyListener(new HierarchyListener() {
 				    public void hierarchyChanged(HierarchyEvent e) {
@@ -220,7 +220,7 @@ public class MenuItem_SetFont extends JMenuItem {
 				//--------------------------------------------------------------------------------------------------------------------
 				// Add the panel to a pop-up panel
 				String ExitOption[] = { "Apply changes" };
-				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), combined_panel,
+				int response = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(), combined_panel,
 						"Select Font", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
 						IconHandle.get_scaledImageIcon(40, 40, "icon_font.png"), ExitOption, ExitOption[0]);
 

@@ -117,7 +117,7 @@ import prism_convenience.TableColumnsHandle;
 import prism_convenience.ToolBarWithBgImage;
 import prism_project.data_process.Read_Database;
 import prism_project.data_process.Statistics;
-import prism_root.PrismMain;
+import prism_root.Prism3Main;
 
 public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 	private JSplitPane great_splitpane;
@@ -350,7 +350,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				}
 				
 				// Get everything show up nicely
-				PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());	//this can replace the below 2 lines
+				Prism3Main.get_Prism_DesktopPane().getSelectedFrame().setSize(Prism3Main.get_Prism_DesktopPane().getSelectedFrame().getSize());	//this can replace the below 2 lines
 //				PrismMain.get_main().revalidate();
 //		    	PrismMain.get_main().repaint(); 
 			}
@@ -508,10 +508,10 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			file_database = database_to_load;
 			
 			// Read the tables (strata_definition, existing_strata, yield_tables) of the database-------------------
-			read_database = PrismMain.get_databases_linkedlist().return_read_database_if_exist(file_database);
+			read_database = Prism3Main.get_databases_linkedlist().return_read_database_if_exist(file_database);
 			if (read_database == null) {
 				read_database = new Read_Database(file_database);	// Read the database
-				PrismMain.get_databases_linkedlist().update(file_database, read_database);			
+				Prism3Main.get_databases_linkedlist().update(file_database, read_database);			
 			}
 			
 			panel_General_Inputs.get_database_directory_textfield().setText(file_database.getAbsolutePath());
@@ -551,8 +551,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		}
 		
 		great_splitpane.setLeftComponent(panel_General_Inputs);	// Show the General_Inputs of the selected Run
-		PrismMain.get_Prism_DesktopPane().getSelectedFrame().revalidate();
-		PrismMain.get_Prism_DesktopPane().getSelectedFrame().repaint();
+		Prism3Main.get_Prism_DesktopPane().getSelectedFrame().revalidate();
+		Prism3Main.get_Prism_DesktopPane().getSelectedFrame().repaint();
     }
     
 	
@@ -1719,7 +1719,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
         	@Override
     		public void setValueAt(Object value, int row, int col) {
     			if (/*value != null && */col >= 2 && (((Number) value).doubleValue() < 0 || ((Number) value).doubleValue() > 100)) {		// not allow null to be set
-    				JOptionPane.showMessageDialog(PrismMain.get_Prism_DesktopPane(), "Your input has not been accepted. Only double values in the range 0-100 (%) would be allowed.");
+    				JOptionPane.showMessageDialog(Prism3Main.get_Prism_DesktopPane(), "Your input has not been accepted. Only double values in the range 0-100 (%) would be allowed.");
     			} else {
     				data6c[row][col] = value;
     				// this is to address the case when the changes are made for only one cell. Without the if then, when we use quick edit to change multiple cells there would be many fireTableDataChanged() are called --> very slow
@@ -1956,7 +1956,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
         	@Override
     		public void setValueAt(Object value, int row, int col) {
     			if (/*value != null && */col >= 2 && (((Number) value).doubleValue() < 0 || ((Number) value).doubleValue() > 100)) {		// not allow null to be set
-    				JOptionPane.showMessageDialog(PrismMain.get_Prism_DesktopPane(), "Your input has not been accepted. Only double values in the range 0-100 (%) would be allowed.");
+    				JOptionPane.showMessageDialog(Prism3Main.get_Prism_DesktopPane(), "Your input has not been accepted. Only double values in the range 0-100 (%) would be allowed.");
     			} else {
     				data6d[row][col] = value;
     				// this is to address the case when the changes are made for only one cell. Without the if then, when we use quick edit to change multiple cells there would be many fireTableDataChanged() are called --> very slow
@@ -2320,7 +2320,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
         	@Override
     		public void setValueAt(Object value, int row, int col) {
         		if (value != null && col > 0 && ((Number) value).doubleValue() < 0) {			// allow null to be set
-    				JOptionPane.showMessageDialog(PrismMain.get_Prism_DesktopPane(), "Your input has not been accepted. Cost cannot be negative.");
+    				JOptionPane.showMessageDialog(Prism3Main.get_Prism_DesktopPane(), "Your input has not been accepted. Cost cannot be negative.");
     			} else {
     				data7a[row][col] = value;
     				// this is to address the case when the changes are made for only one cell. Without the if then, when we use quick edit to change multiple cells there would be many fireTableDataChanged() are called --> very slow
@@ -2537,7 +2537,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
         	@Override
     		public void setValueAt(Object value, int row, int col) {
         		if (value != null && col >= 2 && ((Number) value).doubleValue() < 0) {
-    				JOptionPane.showMessageDialog(PrismMain.get_Prism_DesktopPane(), "Your input has not been accepted. Cost cannot be negative.");
+    				JOptionPane.showMessageDialog(Prism3Main.get_Prism_DesktopPane(), "Your input has not been accepted. Cost cannot be negative.");
     			} else {
     				data7b[row][col] = value;   
     				// this is to address the case when the changes are made for only one cell. Without the if then, when we use quick edit to change multiple cells there would be many fireTableDataChanged() are called --> very slow
@@ -2727,7 +2727,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			@Override
 			public void setValueAt(Object value, int row, int col) {
 				if (value != null && (col >= 3 && col <= 7) && ((Number) value).doubleValue() < 0) {		// allow null to be set, and not allow negative numbers
-    				JOptionPane.showMessageDialog(PrismMain.get_Prism_DesktopPane(), "Your input has not been accepted. Only null or positive values are allowed");
+    				JOptionPane.showMessageDialog(Prism3Main.get_Prism_DesktopPane(), "Your input has not been accepted. Only null or positive values are allowed");
     			} else {
     				data8[row][col] = value;
     				if (col == 2) {
@@ -2931,7 +2931,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			@Override
 			public void setValueAt(Object value, int row, int col) {
 				if (value != null && (col >= 4 && col <= 5) && ((Number) value).doubleValue() < 0) {		// allow null to be set, and not allow negative numbers
-    				JOptionPane.showMessageDialog(PrismMain.get_Prism_DesktopPane(), "Your input has not been accepted. Only null or positive values are allowed");
+    				JOptionPane.showMessageDialog(Prism3Main.get_Prism_DesktopPane(), "Your input has not been accepted. Only null or positive values are allowed");
     			} else {
     				data9[row][col] = value;
     				// this is to address the case when the changes are made for only one cell. Without the if then, when we use quick edit to change multiple cells there would be many fireTableDataChanged() are called --> very slow
@@ -3132,9 +3132,9 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			@Override
 			public void setValueAt(Object value, int row, int col) {
 				if (value != null && (col == 6) && (((Number) value).doubleValue() < 0 || ((Number) value).doubleValue() > 100)) {	// allow null to be set
-    				JOptionPane.showMessageDialog(PrismMain.get_Prism_DesktopPane(), "Your input has not been accepted. Only null or double values in the range 0-100 (%) would be allowed.");
+    				JOptionPane.showMessageDialog(Prism3Main.get_Prism_DesktopPane(), "Your input has not been accepted. Only null or double values in the range 0-100 (%) would be allowed.");
     			} else if (value != null && (col == 7) && ((Number) value).doubleValue() < 0) {		// allow null to be set, and not allow negative numbers
-    				JOptionPane.showMessageDialog(PrismMain.get_Prism_DesktopPane(), "Your input has not been accepted. Only null or positive values are allowed");
+    				JOptionPane.showMessageDialog(Prism3Main.get_Prism_DesktopPane(), "Your input has not been accepted. Only null or positive values are allowed");
     			} else {
     				data10[row][col] = value;
     				// this is to address the case when the changes are made for only one cell. Without the if then, when we use quick edit to change multiple cells there would be many fireTableDataChanged() are called --> very slow
@@ -3665,7 +3665,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 								String warningText = "Importation failed. \"" + file_database.getName() + "\" needs revision.\n";
 								warningText = warningText + "Data will be reverted to your last save.";
 								String ExitOption[] = {"OK"};
-								int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warningText, "Database importation warning",
+								int response = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(), warningText, "Database importation warning",
 										JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption, ExitOption[0]);
 								
 								// revert when changing database fails
@@ -3687,8 +3687,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 							}
 							
 							// remember the new database when the database change is successful and the database is not remembered yet
-							if (PrismMain.get_databases_linkedlist().return_read_database_if_exist(file_database) == null) {
-								PrismMain.get_databases_linkedlist().update(file_database, read_database);	
+							if (Prism3Main.get_databases_linkedlist().return_read_database_if_exist(file_database) == null) {
+								Prism3Main.get_databases_linkedlist().update(file_database, read_database);	
 							}		
 									
 							this.interrupt();
@@ -3699,8 +3699,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 
 				private void change_database() {
 					// read the tables (strata_definition, existing_strata, yield_tables) of the database-------------------
-					if (PrismMain.get_databases_linkedlist().return_read_database_if_exist(file_database) != null) {
-						read_database = PrismMain.get_databases_linkedlist().return_read_database_if_exist(file_database);
+					if (Prism3Main.get_databases_linkedlist().return_read_database_if_exist(file_database) != null) {
+						read_database = Prism3Main.get_databases_linkedlist().return_read_database_if_exist(file_database);
 					} else {
 						read_database = new Read_Database(file_database);	// Read the database
 					}
@@ -3735,8 +3735,8 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					// update readme.txt in General Inputs
 					DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd   -   HH:mm:ss");
 					readme.setText(null);
-					readme.append("Model is last edited by:     " + PrismMain.get_prism_version()  + "     on     " + dateFormat.format(new Date()) + "\n");
-					readme.append("Model is created by:     " + PrismMain.get_prism_version()   + "     on     " + dateFormat.format(new Date()) + "\n");
+					readme.append("Model is last edited by:     " + Prism3Main.get_prism_version()  + "     on     " + dateFormat.format(new Date()) + "\n");
+					readme.append("Model is created by:     " + Prism3Main.get_prism_version()   + "     on     " + dateFormat.format(new Date()) + "\n");
 					readme.append("Model location:     " + file_runfolder + "\n");
 					readme.append("Model database:     " + file_runfolder.getAbsolutePath() + "\\database.db" + "\n");
 					readme.append("Original database:     " + file_database.getAbsolutePath() + "\n");
@@ -3774,7 +3774,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				readme.append("Browse & Import a database before writting here");
 			}
 			PrismTitleScrollPane readme_scrollpane = new PrismTitleScrollPane("Model Description", "CENTER", readme);
- 			readme_scrollpane.setPreferredSize(new Dimension((int) (PrismMain.get_main().getPreferredSize().width * 0.55), 100));
+ 			readme_scrollpane.setPreferredSize(new Dimension((int) (Prism3Main.get_main().getPreferredSize().width * 0.55), 100));
  			// End of Load readme file-----------------------------------------------------------------
  			// End of Load readme file-----------------------------------------------------------------
 		    
@@ -4017,14 +4017,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						scrollpane_QuickEdit.setVisible(true);
 						// Get everything show up nicely
 						great_splitpane.setLeftComponent(panel_Model_Strata);
-						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
+						Prism3Main.get_Prism_DesktopPane().getSelectedFrame().setSize(Prism3Main.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				} else {
 					btnQuickEdit.setToolTipText("Show Quick Edit Tool");
 					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
 					scrollpane_QuickEdit.setVisible(false);
 					// Get everything show up nicely
 					great_splitpane.setLeftComponent(panel_Model_Strata);
-					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
+					Prism3Main.get_Prism_DesktopPane().getSelectedFrame().setSize(Prism3Main.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				}
 			});
 			
@@ -4379,7 +4379,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				}				
 				
 				String ExitOption[] = {"Delete", "Cancel"};
-				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), "Delete now?", "Confirm Delete",
+				int response = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(), "Delete now?", "Confirm Delete",
 						JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[1]);
 				if (response == 0) {
 					// Get selected rows
@@ -4436,14 +4436,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						scrollpane_QuickEdit.setVisible(true);
 						// Get everything show up nicely
 						great_splitpane.setLeftComponent(panel_Prescription_Category);
-						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
+						Prism3Main.get_Prism_DesktopPane().getSelectedFrame().setSize(Prism3Main.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				} else {
 					btnQuickEdit.setToolTipText("Show Quick Edit Tool");
 					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
 					scrollpane_QuickEdit.setVisible(false);
 					// Get everything show up nicely
 					great_splitpane.setLeftComponent(panel_Prescription_Category);
-					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
+					Prism3Main.get_Prism_DesktopPane().getSelectedFrame().setSize(Prism3Main.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				}				
 			});
 			
@@ -4802,7 +4802,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				}				
 				
 				String ExitOption[] = {"Delete", "Cancel"};
-				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), "Delete now?", "Confirm Delete",
+				int response = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(), "Delete now?", "Confirm Delete",
 						JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
 				if (response == 0) {
 					// Get selected rows
@@ -4872,14 +4872,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						scrollpane_QuickEdit.setVisible(true);
 						// Get everything show up nicely
 						great_splitpane.setLeftComponent(panel_Prescription_Assignment);
-						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
+						Prism3Main.get_Prism_DesktopPane().getSelectedFrame().setSize(Prism3Main.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				} else {
 					btnQuickEdit.setToolTipText("Show Quick Edit Tool");
 					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
 					scrollpane_QuickEdit.setVisible(false);
 					// Get everything show up nicely
 					great_splitpane.setLeftComponent(panel_Prescription_Assignment);
-					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
+					Prism3Main.get_Prism_DesktopPane().getSelectedFrame().setSize(Prism3Main.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				}				
 			});
 			
@@ -5269,7 +5269,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				}				
 				
 				String ExitOption[] = {"Delete", "Cancel"};
-				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), "Delete now?", "Confirm Delete",
+				int response = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(), "Delete now?", "Confirm Delete",
 						JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
 				if (response == 0) {
 					// Get selected rows
@@ -5312,7 +5312,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				}				
 				
 				String ExitOption[] = {"Generate data", "Cancel"};
-				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), "Generate mean and std based on your loss rates, normalizing function, and associated parameters?", "Confirm Generate",
+				int response = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(), "Generate mean and std based on your loss rates, normalizing function, and associated parameters?", "Confirm Generate",
 						JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
 				if (response == 0) {
 					// Get selected rows
@@ -5401,14 +5401,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					scrollpane_QuickEdit.setVisible(true);
 					// Get everything show up nicely
 					great_splitpane.setLeftComponent(panel_Natural_Disturbances);
-					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
+					Prism3Main.get_Prism_DesktopPane().getSelectedFrame().setSize(Prism3Main.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				} else {
 					btnQuickEdit.setToolTipText("Show Quick Edit Tool");
 					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
 					scrollpane_QuickEdit.setVisible(false);
 					// Get everything show up nicely
 					great_splitpane.setLeftComponent(panel_Natural_Disturbances);
-					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
+					Prism3Main.get_Prism_DesktopPane().getSelectedFrame().setSize(Prism3Main.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				}
  			});				
 			
@@ -5810,7 +5810,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				}				
 				
 				String ExitOption[] = {"Delete", "Cancel"};
-				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), "Delete now?", "Confirm Delete",
+				int response = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(), "Delete now?", "Confirm Delete",
 						JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
 				if (response == 0) {
 					// Get selected rows
@@ -5879,14 +5879,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					scrollpane_QuickEdit.setVisible(true);
 					// Get everything show up nicely
 					great_splitpane.setLeftComponent(panel_Management_Cost);
-					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
+					Prism3Main.get_Prism_DesktopPane().getSelectedFrame().setSize(Prism3Main.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				} else {
 					btnQuickEdit.setToolTipText("Show Quick Edit Tool");
 					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
 					scrollpane_QuickEdit.setVisible(false);
 					// Get everything show up nicely
 					great_splitpane.setLeftComponent(panel_Management_Cost);
-					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
+					Prism3Main.get_Prism_DesktopPane().getSelectedFrame().setSize(Prism3Main.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				}
  			});				
 			
@@ -6239,7 +6239,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				
 				
 				String ExitOption[] = {"Add Constraints","Cancel"};
-				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), constraint_split_ScrollPanel, "Create multiple constraints - checked items will be split",
+				int response = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(), constraint_split_ScrollPanel, "Create multiple constraints - checked items will be split",
 						JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, ExitOption, ExitOption[0]);
 				if (response == 0) {	// Add Constraints
 					// calculate parameter_permutation
@@ -6303,7 +6303,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					if (total_constraints > 1000) {
 						String ExitOption2[] = {"Add","Cancel"};
 						String warningText = "Prism is going to add " + total_constraints + " constraints. It might take time. Continue to add?";
-						response2 = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warningText, "Confirm adding constraints",
+						response2 = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(), warningText, "Confirm adding constraints",
 								JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption2, ExitOption2[1]);
 					}
 					if (response2 == 0) {	
@@ -6778,7 +6778,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				// Popup for Delete
 				if (warning_message.equals("")) {  // the case when basic ids are NOT in the flows
 					String ExitOption[] = {"Delete", "Cancel"};
-					int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), "Delete now?", "Confirm Delete",
+					int response = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(), "Delete now?", "Confirm Delete",
 							JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
 					if (response == 0) {
 						// Get values to the new data8
@@ -6817,7 +6817,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					warning_scrollpane.get_nested_scrollpane().setPreferredSize(new Dimension(550, 300));
 					
 					String ExitOption[] = {"OK"};
-					int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warning_scrollpane, "Delete is denied",
+					int response = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(), warning_scrollpane, "Delete is denied",
 							JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption, ExitOption[0]);
 					if (response == 0) {
 						
@@ -6885,14 +6885,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					scrollpane_QuickEdit.setVisible(true);
 					// Get everything show up nicely
 					great_splitpane.setLeftComponent(panel_Basic_Constraints);
-					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
+					Prism3Main.get_Prism_DesktopPane().getSelectedFrame().setSize(Prism3Main.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				} else {
 					btnQuickEdit.setToolTipText("Show Quick Edit Tool");
 					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
 					scrollpane_QuickEdit.setVisible(false);
 					// Get everything show up nicely
 					great_splitpane.setLeftComponent(panel_Basic_Constraints);
-					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
+					Prism3Main.get_Prism_DesktopPane().getSelectedFrame().setSize(Prism3Main.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				}
  			});				
 			
@@ -7299,7 +7299,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						warning_scrollpane.get_nested_scrollpane().setPreferredSize(new Dimension(550, 200));
 						
 						String ExitOption[] = {"OK"};
-						int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warning_scrollpane, "Flow cannot be added",
+						int response = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(), warning_scrollpane, "Flow cannot be added",
 								JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption, ExitOption[0]);
 					} else {	  // the case when flow arrangement does not contain any non-existing basic constraints --> add flow
 						if (table9.isEditing()) {
@@ -7357,7 +7357,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 							
 							// show message that IDLE will be changed to FREE
 							String ExitOption[] = {"OK"};
-							int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warning_scrollpane, "Flow is added by turning some IDLE basic constraints into FREE",
+							int response = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(), warning_scrollpane, "Flow is added by turning some IDLE basic constraints into FREE",
 									JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption, ExitOption[0]);
 						}
 					}
@@ -7380,7 +7380,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						warning_scrollpane.get_nested_scrollpane().setPreferredSize(new Dimension(550, 200));
 						
 						String ExitOption[] = {"OK"};
-						int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warning_scrollpane, "Flow cannot be modified",
+						int response = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(), warning_scrollpane, "Flow cannot be modified",
 								JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption, ExitOption[0]);
 					} else {	  // the case when flow arrangement does not contain any non-existing basic constraints --> add flow
 						if (table9.isEditing()) {
@@ -7429,7 +7429,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 							
 							// show message that IDLE will be changed to FREE
 							String ExitOption[] = {"OK"};
-							int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warning_scrollpane, "Flow is modified by turning some IDLE basic constraints into FREE",
+							int response = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(), warning_scrollpane, "Flow is modified by turning some IDLE basic constraints into FREE",
 									JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption, ExitOption[0]);
 						}
 					}
@@ -7460,7 +7460,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 				}				
 				
 				String ExitOption[] = {"Delete", "Cancel"};
-				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), "Delete now?", "Confirm Delete",
+				int response = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(), "Delete now?", "Confirm Delete",
 						JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
 				if (response == 0) {
 					// Get selected rows
@@ -7649,14 +7649,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 					scrollpane_QuickEdit.setVisible(true);
 					// Get everything show up nicely
 					great_splitpane.setLeftComponent(panel_Flow_Constraints);
-					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
+					Prism3Main.get_Prism_DesktopPane().getSelectedFrame().setSize(Prism3Main.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				} else {
 					btnQuickEdit.setToolTipText("Show Quick Edit Tool");
 					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
 					scrollpane_QuickEdit.setVisible(false);
 					// Get everything show up nicely
 					great_splitpane.setLeftComponent(panel_Flow_Constraints);
-					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
+					Prism3Main.get_Prism_DesktopPane().getSelectedFrame().setSize(Prism3Main.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				}
  			});				
 			
@@ -7880,7 +7880,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			warning_scrollpane.get_nested_scrollpane().setPreferredSize(new Dimension(550, 300));
 			
 			String ExitOption[] = {"OK"};
-			int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warning_scrollpane, "Constraints turn into FREE",
+			int response = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(), warning_scrollpane, "Constraints turn into FREE",
 					JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption, ExitOption[0]);
 			
 			return true;
@@ -8030,14 +8030,14 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 						scrollpane_QuickEdit.setVisible(true);
 						// Get everything show up nicely
 						great_splitpane.setLeftComponent(panel_Area_Merging);
-						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
+						Prism3Main.get_Prism_DesktopPane().getSelectedFrame().setSize(Prism3Main.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				} else {
 					btnQuickEdit.setToolTipText("Show Quick Edit Tool");
 					btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
 					scrollpane_QuickEdit.setVisible(false);
 					// Get everything show up nicely
 					great_splitpane.setLeftComponent(panel_Area_Merging);
-					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
+					Prism3Main.get_Prism_DesktopPane().getSelectedFrame().setSize(Prism3Main.get_Prism_DesktopPane().getSelectedFrame().getSize());
 				}				
 			});
 			
@@ -8239,7 +8239,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 		File databaseFile = new File(file_runfolder.getAbsolutePath() + "/" + "database.db");	
 		try {
 			if (file_database != null) Files.copy(file_database.toPath(), databaseFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-			PrismMain.get_databases_linkedlist().update(databaseFile, read_database);	// Allow saving the databse.db into remember list after stop editing and save					
+			Prism3Main.get_databases_linkedlist().update(databaseFile, read_database);	// Allow saving the databse.db into remember list after stop editing and save					
 		} catch (IOException e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 		}
@@ -8261,7 +8261,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			}
 			// Write new last time edited
 			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd   -   HH:mm:ss");
-			readme.getDocument().insertString(0, "Model is last edited by:     " + PrismMain.get_prism_version()  + "     on     " + dateFormat.format(new Date()) + "\n", null);
+			readme.getDocument().insertString(0, "Model is last edited by:     " + Prism3Main.get_prism_version()  + "     on     " + dateFormat.format(new Date()) + "\n", null);
 			pw = new FileWriter(file_runfolder.getAbsolutePath() + "/" + "readme.txt");
 			readme.write(pw);
 			pw.close();

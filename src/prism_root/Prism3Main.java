@@ -79,7 +79,7 @@ import prism_project.Panel_Project;
 import prism_project.data_process.LinkedList_Databases;
 
 @SuppressWarnings("serial")
-public class PrismMain extends JFrame {
+public class Prism3Main extends JFrame {
 	// Define variables------------------------------------------------------------------------
 	private static PrismMenuBar 		prism_Menubar;
 	private PrismMenu 					menuFile, menuUtility, menuWindow, menuHelp,
@@ -99,7 +99,7 @@ public class PrismMain extends JFrame {
 	private String 						currentProject;
 	private static PrismDesktopPane 	prism_DesktopPane;
 	private static PrismContentPane 	prism_ContentPane;
-	private static PrismMain 			main;
+	private static Prism3Main 			main;
 	private static ComponentResizer 	cr;
 	
 	private static LinkedList_Databases databases_linkedlist = new LinkedList_Databases();
@@ -112,7 +112,7 @@ public class PrismMain extends JFrame {
 		GraphicsDevice gd = ge.getDefaultScreenDevice();
 		if (gd.isWindowTranslucencySupported(WindowTranslucency.TRANSLUCENT)) {
 //			setDefaultLookAndFeelDecorated(true);											// 1: activate this 1 with 2  --> then we can disable 2 lines in the middle
-			main = new PrismMain();
+			main = new Prism3Main();
 		 	main.setUndecorated(true);		// to help make translucent windows
 			main.setOpacity(1f);
 //			main.setBackground(new Color(0, 0, 0, 0.0f)); // alpha <1 = transparent;		// 2: activate this 2 with 1  --> then we can disable 2 lines in the middle
@@ -139,7 +139,7 @@ public class PrismMain extends JFrame {
 	}
 
 	//--------------------------------------------------------------------------------------------------------------------------------
-	public PrismMain() {
+	public Prism3Main() {
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
@@ -268,7 +268,7 @@ public class PrismMain extends JFrame {
 					@Override
 			        public void menuSelected(MenuEvent e) {						
 						//Only allow to change look and feel if No Frame is opened, this is to prevent fail performance of the components after changing look and feel
-						if (PrismMain.get_Prism_DesktopPane().getAllFrames().length ==  0) {
+						if (Prism3Main.get_Prism_DesktopPane().getAllFrames().length ==  0) {
 							setLookAndFeel.setEnabled(true);
 							setFont.setEnabled(true);
 						} else {
@@ -316,7 +316,7 @@ public class PrismMain extends JFrame {
 						String titleText = "Project's name";
 						while (stop_naming == false) {
 					  		String ExitOption[] = {"OK","Cancel"};
-							int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), projectName_JTextField, titleText,
+							int response = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(), projectName_JTextField, titleText,
 									JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
 							if (response == 0) {
 								// Find all the existing projects in the "Projects" folder		
@@ -413,8 +413,8 @@ public class PrismMain extends JFrame {
 							prism_DesktopPane.process_image();
 							setLogo.setText("Hide Logo");
 						}	
-						PrismMain.get_main().revalidate();	// very important to make the background not show lagging from previous paint
-				    	PrismMain.get_main().repaint();		// very important to make the background not show lagging from previous paint
+						Prism3Main.get_main().revalidate();	// very important to make the background not show lagging from previous paint
+				    	Prism3Main.get_main().repaint();		// very important to make the background not show lagging from previous paint
 					}
 				});
 				
@@ -469,7 +469,7 @@ public class PrismMain extends JFrame {
 						boolean is_Database_Management_opened = false;
 						
 						// display Database Management if it was already created
-						for (JInternalFrame i : PrismMain.get_Prism_DesktopPane().getAllFrames()) {		// Loop all displayed internalFrames
+						for (JInternalFrame i : Prism3Main.get_Prism_DesktopPane().getAllFrames()) {		// Loop all displayed internalFrames
 							if (i.getTitle().equals("Database Management")) {
 								is_Database_Management_opened = true;
 								if (!i.isSelected()) {	 // if it is not selected --> select it
@@ -491,8 +491,8 @@ public class PrismMain extends JFrame {
 							DatabaseManagement_Frame.setSize((int) (getWidth()/1.08),(int) (getHeight()/1.19));
 							DatabaseManagement_Frame.setLocation((int) ((getWidth() - DatabaseManagement_Frame.getWidth())/2),
 																((int) ((getHeight() - DatabaseManagement_Frame.getHeight())/2.75)));	//Set the DatabaseManagement_Frame near the center of the Main frame
-							if (PrismMain.get_Prism_DesktopPane().getSelectedFrame() != null) {	//or Set the DatabaseManagement_Frame near the recently opened JInternalFrame
-								DatabaseManagement_Frame.setLocation(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getX() + 25, PrismMain.get_Prism_DesktopPane().getSelectedFrame().getY() + 25);
+							if (Prism3Main.get_Prism_DesktopPane().getSelectedFrame() != null) {	//or Set the DatabaseManagement_Frame near the recently opened JInternalFrame
+								DatabaseManagement_Frame.setLocation(Prism3Main.get_Prism_DesktopPane().getSelectedFrame().getX() + 25, Prism3Main.get_Prism_DesktopPane().getSelectedFrame().getY() + 25);
 							}
 							
 							// Note: visible first for the JIframe to be selected, pack at the end would be fail for JIframe to be selected (PrismMain.mainFrameReturn().getSelectedFrame = null)
@@ -501,39 +501,39 @@ public class PrismMain extends JFrame {
 							DatabaseManagement_Frame.add(new Panel_DatabaseManagement(), BorderLayout.CENTER); // add panel
 							DatabaseManagement_Frame.addInternalFrameListener(new InternalFrameListener() {
 								public void internalFrameActivated(InternalFrameEvent e) {
-									PrismMain.get_main().revalidate();	// very important to make the background not show lagging from previous paint
-							    	PrismMain.get_main().repaint();		// very important to make the background not show lagging from previous paint
+									Prism3Main.get_main().revalidate();	// very important to make the background not show lagging from previous paint
+							    	Prism3Main.get_main().repaint();		// very important to make the background not show lagging from previous paint
 								}
 
 								public void internalFrameClosed(InternalFrameEvent e) {
 									prism_ContentPane.start_painting();
-									PrismMain.get_main().revalidate();	// very important to make the background not show lagging from previous paint
-							    	PrismMain.get_main().repaint();		// very important to make the background not show lagging from previous paint
+									Prism3Main.get_main().revalidate();	// very important to make the background not show lagging from previous paint
+							    	Prism3Main.get_main().repaint();		// very important to make the background not show lagging from previous paint
 								}
 
 								public void internalFrameClosing(InternalFrameEvent e) {
-									PrismMain.get_main().revalidate();	// very important to make the background not show lagging from previous paint
-							    	PrismMain.get_main().repaint();		// very important to make the background not show lagging from previous paint
+									Prism3Main.get_main().revalidate();	// very important to make the background not show lagging from previous paint
+							    	Prism3Main.get_main().repaint();		// very important to make the background not show lagging from previous paint
 								}
 
 								public void internalFrameDeactivated(InternalFrameEvent e) {
-									PrismMain.get_main().revalidate();	// very important to make the background not show lagging from previous paint
-							    	PrismMain.get_main().repaint();		// very important to make the background not show lagging from previous paint
+									Prism3Main.get_main().revalidate();	// very important to make the background not show lagging from previous paint
+							    	Prism3Main.get_main().repaint();		// very important to make the background not show lagging from previous paint
 								}
 
 								public void internalFrameDeiconified(InternalFrameEvent e) {
-									PrismMain.get_main().revalidate();	// very important to make the background not show lagging from previous paint
-							    	PrismMain.get_main().repaint();		// very important to make the background not show lagging from previous paint
+									Prism3Main.get_main().revalidate();	// very important to make the background not show lagging from previous paint
+							    	Prism3Main.get_main().repaint();		// very important to make the background not show lagging from previous paint
 								}
 
 								public void internalFrameIconified(InternalFrameEvent e) {
-									PrismMain.get_main().revalidate();	// very important to make the background not show lagging from previous paint
-							    	PrismMain.get_main().repaint();		// very important to make the background not show lagging from previous paint
+									Prism3Main.get_main().revalidate();	// very important to make the background not show lagging from previous paint
+							    	Prism3Main.get_main().repaint();		// very important to make the background not show lagging from previous paint
 								}
 
 								public void internalFrameOpened(InternalFrameEvent e) {
-									PrismMain.get_main().revalidate();	// very important to make the background not show lagging from previous paint
-							    	PrismMain.get_main().repaint();		// very important to make the background not show lagging from previous paint
+									Prism3Main.get_main().revalidate();	// very important to make the background not show lagging from previous paint
+							    	Prism3Main.get_main().repaint();		// very important to make the background not show lagging from previous paint
 								}
 							});
 							
@@ -541,26 +541,26 @@ public class PrismMain extends JFrame {
 							DatabaseManagement_Frame.addComponentListener(new ComponentListener() {
 								@Override
 								public void componentResized(ComponentEvent e) {
-									PrismMain.get_main().revalidate();	// very important to make the background not show lagging from previous paint
-							    	PrismMain.get_main().repaint();		// very important to make the background not show lagging from previous paint
+									Prism3Main.get_main().revalidate();	// very important to make the background not show lagging from previous paint
+							    	Prism3Main.get_main().repaint();		// very important to make the background not show lagging from previous paint
 								}
 
 								@Override
 								public void componentMoved(ComponentEvent e) {
-									PrismMain.get_main().revalidate();	// very important to make the background not show lagging from previous paint
-							    	PrismMain.get_main().repaint();		// very important to make the background not show lagging from previous paint
+									Prism3Main.get_main().revalidate();	// very important to make the background not show lagging from previous paint
+							    	Prism3Main.get_main().repaint();		// very important to make the background not show lagging from previous paint
 								}
 
 								@Override
 								public void componentShown(ComponentEvent e) {
-									PrismMain.get_main().revalidate();	// very important to make the background not show lagging from previous paint
-							    	PrismMain.get_main().repaint();		// very important to make the background not show lagging from previous paint
+									Prism3Main.get_main().revalidate();	// very important to make the background not show lagging from previous paint
+							    	Prism3Main.get_main().repaint();		// very important to make the background not show lagging from previous paint
 								}
 
 								@Override
 								public void componentHidden(ComponentEvent e) {
-									PrismMain.get_main().revalidate();	// very important to make the background not show lagging from previous paint
-							    	PrismMain.get_main().repaint();		// very important to make the background not show lagging from previous paint
+									Prism3Main.get_main().revalidate();	// very important to make the background not show lagging from previous paint
+							    	Prism3Main.get_main().repaint();		// very important to make the background not show lagging from previous paint
 								}
 							});
 						}
@@ -577,7 +577,7 @@ public class PrismMain extends JFrame {
 		boolean is_currentProject_opened = false;
 		
 		// display project if it was already created
-		for (JInternalFrame i : PrismMain.get_Prism_DesktopPane().getAllFrames()) {		// Loop all displayed internalFrames
+		for (JInternalFrame i : Prism3Main.get_Prism_DesktopPane().getAllFrames()) {		// Loop all displayed internalFrames
 			if (i.getTitle().equals(currentProject)) {
 				try {
 					i.setSelected(true);
@@ -598,8 +598,8 @@ public class PrismMain extends JFrame {
 			ProjectInternalFrame.setSize((int) (getWidth()/1.08),(int) (getHeight()/1.19));		
 			ProjectInternalFrame.setLocation((int) ((getWidth() - ProjectInternalFrame.getWidth())/2),
 											((int) ((getHeight() - ProjectInternalFrame.getHeight())/2.75)));	//Set the ProjectInternalFrame near the center of the Main frame
-			if (PrismMain.get_Prism_DesktopPane().getSelectedFrame() != null) {	//or Set the ProjectInternalFrame near the recently opened JInternalFrame
-				ProjectInternalFrame.setLocation(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getX() + 25, PrismMain.get_Prism_DesktopPane().getSelectedFrame().getY() + 25);
+			if (Prism3Main.get_Prism_DesktopPane().getSelectedFrame() != null) {	//or Set the ProjectInternalFrame near the recently opened JInternalFrame
+				ProjectInternalFrame.setLocation(Prism3Main.get_Prism_DesktopPane().getSelectedFrame().getX() + 25, Prism3Main.get_Prism_DesktopPane().getSelectedFrame().getY() + 25);
 			}
 				
 			// Note: visible first for the JIframe to be selected, pack at the end would be fail for JIframe to be selected (PrismMain.mainFrameReturn().getSelectedFrame = null)
@@ -608,46 +608,46 @@ public class PrismMain extends JFrame {
 			ProjectInternalFrame.add(new Panel_Project(currentProject), BorderLayout.CENTER); // add panel
 			ProjectInternalFrame.addInternalFrameListener(new InternalFrameListener() {
 				public void internalFrameActivated(InternalFrameEvent e) {
-					PrismMain.get_main().revalidate();	// very important to make the background not show lagging from previous paint
-			    	PrismMain.get_main().repaint();		// very important to make the background not show lagging from previous paint
+					Prism3Main.get_main().revalidate();	// very important to make the background not show lagging from previous paint
+			    	Prism3Main.get_main().repaint();		// very important to make the background not show lagging from previous paint
 				}
 
 				public void internalFrameClosed(InternalFrameEvent e) {
-					PrismMain.get_main().revalidate();	// very important to make the background not show lagging from previous paint
-			    	PrismMain.get_main().repaint();		// very important to make the background not show lagging from previous paint
+					Prism3Main.get_main().revalidate();	// very important to make the background not show lagging from previous paint
+			    	Prism3Main.get_main().repaint();		// very important to make the background not show lagging from previous paint
 				}
 
 				public void internalFrameClosing(InternalFrameEvent e) {
 					String ExitOption[] = { "Close", "Cancel" };
-					int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), "Close now?",
+					int response = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(), "Close now?",
 							"Close Project", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
 					if (response == 0) {
 						ProjectInternalFrame.dispose();
 						prism_ContentPane.start_painting();
 					}
 					
-					PrismMain.get_main().revalidate();	// very important to make the background not show lagging from previous paint
-			    	PrismMain.get_main().repaint();		// very important to make the background not show lagging from previous paint
+					Prism3Main.get_main().revalidate();	// very important to make the background not show lagging from previous paint
+			    	Prism3Main.get_main().repaint();		// very important to make the background not show lagging from previous paint
 				}
 
 				public void internalFrameDeactivated(InternalFrameEvent e) {
-					PrismMain.get_main().revalidate();	// very important to make the background not show lagging from previous paint
-			    	PrismMain.get_main().repaint();		// very important to make the background not show lagging from previous paint
+					Prism3Main.get_main().revalidate();	// very important to make the background not show lagging from previous paint
+			    	Prism3Main.get_main().repaint();		// very important to make the background not show lagging from previous paint
 				}
 
 				public void internalFrameDeiconified(InternalFrameEvent e) {
-					PrismMain.get_main().revalidate();	// very important to make the background not show lagging from previous paint
-			    	PrismMain.get_main().repaint();		// very important to make the background not show lagging from previous paint
+					Prism3Main.get_main().revalidate();	// very important to make the background not show lagging from previous paint
+			    	Prism3Main.get_main().repaint();		// very important to make the background not show lagging from previous paint
 				}
 
 				public void internalFrameIconified(InternalFrameEvent e) {
-					PrismMain.get_main().revalidate();	// very important to make the background not show lagging from previous paint
-			    	PrismMain.get_main().repaint();		// very important to make the background not show lagging from previous paint
+					Prism3Main.get_main().revalidate();	// very important to make the background not show lagging from previous paint
+			    	Prism3Main.get_main().repaint();		// very important to make the background not show lagging from previous paint
 				}
 
 				public void internalFrameOpened(InternalFrameEvent e) {
-					PrismMain.get_main().revalidate();	// very important to make the background not show lagging from previous paint
-			    	PrismMain.get_main().repaint();		// very important to make the background not show lagging from previous paint
+					Prism3Main.get_main().revalidate();	// very important to make the background not show lagging from previous paint
+			    	Prism3Main.get_main().repaint();		// very important to make the background not show lagging from previous paint
 				}
 			});
 			
@@ -655,26 +655,26 @@ public class PrismMain extends JFrame {
 			ProjectInternalFrame.addComponentListener(new ComponentListener() {
 				@Override
 				public void componentResized(ComponentEvent e) {
-					PrismMain.get_main().revalidate();	// very important to make the background not show lagging from previous paint
-			    	PrismMain.get_main().repaint();		// very important to make the background not show lagging from previous paint
+					Prism3Main.get_main().revalidate();	// very important to make the background not show lagging from previous paint
+			    	Prism3Main.get_main().repaint();		// very important to make the background not show lagging from previous paint
 				}
 
 				@Override
 				public void componentMoved(ComponentEvent e) {
-					PrismMain.get_main().revalidate();	// very important to make the background not show lagging from previous paint
-			    	PrismMain.get_main().repaint();		// very important to make the background not show lagging from previous paint
+					Prism3Main.get_main().revalidate();	// very important to make the background not show lagging from previous paint
+			    	Prism3Main.get_main().repaint();		// very important to make the background not show lagging from previous paint
 				}
 
 				@Override
 				public void componentShown(ComponentEvent e) {
-					PrismMain.get_main().revalidate();	// very important to make the background not show lagging from previous paint
-			    	PrismMain.get_main().repaint();		// very important to make the background not show lagging from previous paint
+					Prism3Main.get_main().revalidate();	// very important to make the background not show lagging from previous paint
+			    	Prism3Main.get_main().repaint();		// very important to make the background not show lagging from previous paint
 				}
 
 				@Override
 				public void componentHidden(ComponentEvent e) {
-					PrismMain.get_main().revalidate();	// very important to make the background not show lagging from previous paint
-			    	PrismMain.get_main().repaint();		// very important to make the background not show lagging from previous paint
+					Prism3Main.get_main().revalidate();	// very important to make the background not show lagging from previous paint
+			    	Prism3Main.get_main().repaint();		// very important to make the background not show lagging from previous paint
 				}
 			});
 		}
@@ -683,7 +683,7 @@ public class PrismMain extends JFrame {
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public void exitPRISM() {
 		String ExitOption[] = {"Exit","Cancel"};
-		int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(),"Exit now?", "Exit PRISM",
+		int response = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(),"Exit now?", "Exit PRISM",
 				JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
 		if (response == 0) {		
 //			main.setVisible(false);
@@ -751,7 +751,7 @@ public class PrismMain extends JFrame {
 		return prism_ContentPane;
 	} 
 	
-	public static PrismMain get_main() {
+	public static Prism3Main get_main() {
 		return main;
 	}
 

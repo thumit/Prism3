@@ -44,15 +44,15 @@ import prism_convenience.PrismTitleScrollPane;
 public class OptionPane_About extends JOptionPane {
 	
 	public OptionPane_About() {
-		for (JInternalFrame i: PrismMain.get_Prism_DesktopPane().getAllFrames()) {
+		for (JInternalFrame i: Prism3Main.get_Prism_DesktopPane().getAllFrames()) {
 			i.setVisible(false);
 		} 
 		
 		String ExitOption[] = { "OK" };
-		int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), new ScrollPane_License_Popup(),
+		int response = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(), new ScrollPane_License_Popup(),
 				"ABOUT PRISM", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, ExitOption, ExitOption[0]);
 
-		for (JInternalFrame i: PrismMain.get_Prism_DesktopPane().getAllFrames()) {
+		for (JInternalFrame i: Prism3Main.get_Prism_DesktopPane().getAllFrames()) {
 			i.setVisible(true);
 		} 
 	}
@@ -113,7 +113,7 @@ class ScrollPane_License_Popup extends JScrollPane {
 		            Dialog dialog = (Dialog)window;
 		            if (!dialog.isResizable()) {
 		                dialog.setResizable(true);
-		                dialog.setPreferredSize(new Dimension((int) (PrismMain.get_main().getWidth() / 1.1), (int) (PrismMain.get_main().getHeight() / 1.21)));
+		                dialog.setPreferredSize(new Dimension((int) (Prism3Main.get_main().getWidth() / 1.1), (int) (Prism3Main.get_main().getHeight() / 1.21)));
 		            }
 		        }
 		    }

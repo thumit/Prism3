@@ -49,7 +49,7 @@ public class MenuItem_SetLookAndFeel extends JMenuItem {
 																	//Doing those 2 things will make Nimbus has the title when JFrame main 1st start (also make: Metal LAF has title)	
 																	//Reson to set true or false is to change the component resize behavior, see Dzung's code
 	
-	public MenuItem_SetLookAndFeel(PrismMain main, ComponentResizer cr) {
+	public MenuItem_SetLookAndFeel(Prism3Main main, ComponentResizer cr) {
 		setText("Change Look and Feel");
 		setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_laf.png"));
 		
@@ -127,7 +127,7 @@ public class MenuItem_SetLookAndFeel extends JMenuItem {
 				
 				// Add lookfeelPanel to a Popup Panel
 				String ExitOption[] = { "Ok" };
-				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), radioPanel,
+				int response = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(), radioPanel,
 						"Look and Feel", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
 						IconHandle.get_scaledImageIcon(40, 40, "icon_laf.png"), ExitOption, ExitOption[0]);
 

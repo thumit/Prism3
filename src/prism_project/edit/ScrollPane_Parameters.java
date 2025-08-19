@@ -37,7 +37,7 @@ import javax.swing.border.TitledBorder;
 import prism_convenience.ColorUtil;
 import prism_convenience.IconHandle;
 import prism_project.data_process.Read_Database;
-import prism_root.PrismMain;
+import prism_root.Prism3Main;
 
 public class ScrollPane_Parameters extends JScrollPane {	
 	private JCheckBox checkboxNoParameter, checkboxCostParameter;
@@ -170,7 +170,7 @@ public class ScrollPane_Parameters extends JScrollPane {
 			}
 
 			//Do a resize to same size for JInteral Frame of the project to help repaint the checkboxVariables added					
-			PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());	
+			Prism3Main.get_Prism_DesktopPane().getSelectedFrame().setSize(Prism3Main.get_Prism_DesktopPane().getSelectedFrame().getSize());	
 		}
 
 		

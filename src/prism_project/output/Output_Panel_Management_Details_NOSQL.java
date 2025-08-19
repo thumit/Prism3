@@ -96,7 +96,7 @@ import prism_project.data_process.Read_Input;
 import prism_project.edit.ScrollPane_DynamicIdentifiers;
 import prism_project.edit.ScrollPane_Parameters;
 import prism_project.edit.ScrollPane_StaticIdentifiers;
-import prism_root.PrismMain;
+import prism_root.Prism3Main;
 
 public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implements ItemListener {
 	//table input_09_basic_constraints.txt
@@ -137,12 +137,12 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 		
 		// Some set up ---------------------------------------------------------------------------			
 		file_database = new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/database.db");
-		read_database = PrismMain.get_databases_linkedlist().return_read_database_if_exist(file_database);
+		read_database = Prism3Main.get_databases_linkedlist().return_read_database_if_exist(file_database);
 		if (read_database == null) {
 			read_database = new Read_Database(file_database);	// Read the database
-			PrismMain.get_databases_linkedlist().update(file_database, read_database);			
-			System.out.println(PrismMain.get_databases_linkedlist().size());
-			for (LinkedList_Databases_Item rr: PrismMain.get_databases_linkedlist()) {
+			Prism3Main.get_databases_linkedlist().update(file_database, read_database);			
+			System.out.println(Prism3Main.get_databases_linkedlist().size());
+			for (LinkedList_Databases_Item rr: Prism3Main.get_databases_linkedlist()) {
 				System.out.println(rr.file_database.getAbsolutePath() + rr.last_modify);
 			}
 		}
@@ -337,7 +337,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 			@Override
 			public void setValueAt(Object value, int row, int col) {
 				if (value != null && (col >= 3 && col <= 7) && ((Number) value).doubleValue() < 0) {		// allow null to be set, and not allow negative numbers
-    				JOptionPane.showMessageDialog(PrismMain.get_Prism_DesktopPane(),
+    				JOptionPane.showMessageDialog(Prism3Main.get_Prism_DesktopPane(),
     						"Your input has not been accepted. Only null or positive values are allowed");
     			} else {
     				data9[row][col] = value;
@@ -847,7 +847,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 					
 					
 					String ExitOption[] = {"Add Queries","Cancel"};
-					int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), constraint_split_ScrollPanel, "Create multiple queries - checked items will be split",
+					int response = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(), constraint_split_ScrollPanel, "Create multiple queries - checked items will be split",
 							JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, ExitOption, ExitOption[0]);
 					if (response == 0) {	// Add Constraints
 						// calculate parameter_permutation
@@ -912,7 +912,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 						if (total_constraints > 10000) {
 							String ExitOption2[] = {"Yes","No"};
 							String warningText = "You are going to add " + total_constraints + " constraints. It would take some time. Continue to add ?";
-							response2 = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warningText, "Confirm adding constraints",
+							response2 = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(), warningText, "Confirm adding constraints",
 									JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption2, ExitOption2[1]);
 							
 						}
@@ -1448,7 +1448,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {	
 					String ExitOption[] = {"Delete", "Cancel"};
-					int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), "Delete now?", "Confirm Delete",
+					int response = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(), "Delete now?", "Confirm Delete",
 							JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
 					if (response == 0) {
 						//Cancel editing before delete
@@ -1718,7 +1718,7 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 				@Override
 				public void actionPerformed(ActionEvent actionEvent) {	
 					String ExitOption[] = {"Clear values", "Cancel"};
-					int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), "Clear values from all iterations now?", "Confirm Clear",
+					int response = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(), "Clear values from all iterations now?", "Confirm Clear",
 							JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
 					if (response == 0) {
 						// cancel editing before clear
@@ -1791,13 +1791,13 @@ public class Output_Panel_Management_Details_NOSQL extends JLayeredPane implemen
 						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_hide.png"));
 						scrollpane_QuickEdit.setVisible(true);
 						// Get everything show up nicely
-						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
+						Prism3Main.get_Prism_DesktopPane().getSelectedFrame().setSize(Prism3Main.get_Prism_DesktopPane().getSelectedFrame().getSize());
 					} else {
 						btnQuickEdit.setToolTipText("Show Quick Edit Tool");
 						btnQuickEdit.setIcon(IconHandle.get_scaledImageIcon(25, 25, "icon_show.png"));
 						scrollpane_QuickEdit.setVisible(false);
 						// Get everything show up nicely
-						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
+						Prism3Main.get_Prism_DesktopPane().getSelectedFrame().setSize(Prism3Main.get_Prism_DesktopPane().getSelectedFrame().getSize());
 					}
 				}
 			});			

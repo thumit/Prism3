@@ -23,7 +23,7 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import prism_convenience.FilesHandle;
-import prism_root.PrismMain;
+import prism_root.Prism3Main;
 
 public class FilesChooser {
 	
@@ -36,7 +36,7 @@ public class FilesChooser {
 		chooser.setApproveButtonText("Import");
 		chooser.setApproveButtonToolTipText("Import files as table");
 		
-		int returnValue = chooser.showOpenDialog(PrismMain.get_Prism_DesktopPane());
+		int returnValue = chooser.showOpenDialog(Prism3Main.get_Prism_DesktopPane());
 		File[] files = null;
 		if (returnValue == JFileChooser.APPROVE_OPTION) {
 
@@ -57,7 +57,7 @@ public class FilesChooser {
 		chooser.setFileFilter(filter);
 		chooser.setAcceptAllFileFilterUsed(false);
 		
-		int returnValue = chooser.showOpenDialog(PrismMain.get_Prism_DesktopPane());
+		int returnValue = chooser.showOpenDialog(Prism3Main.get_Prism_DesktopPane());
 		File[] files = null;
 		if (returnValue == JFileChooser.APPROVE_OPTION) {
 

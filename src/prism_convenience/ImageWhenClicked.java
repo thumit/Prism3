@@ -37,7 +37,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 
-import prism_root.PrismMain;
+import prism_root.Prism3Main;
 
 // Use the following codes to add listeners, then click on the FComponent to get Desktop Image
 // abcxyz_component.addMouseListener(new ImageWhenClicked());
@@ -62,7 +62,7 @@ public class ImageWhenClicked extends MouseAdapter {
 					capture_all.addActionListener(new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent actionEvent) {
-							create_desktop_image(PrismMain.get_main(), "PRISM");
+							create_desktop_image(Prism3Main.get_main(), "PRISM");
 							popup.setVisible(false);
 						}
 					});

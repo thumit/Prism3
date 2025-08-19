@@ -52,7 +52,7 @@ import prism_project.data_process.Information_Variable;
 import prism_project.data_process.Read_Database;
 import prism_project.data_process.Read_Input;
 import prism_project.data_process.Statistics;
-import prism_root.PrismMain;
+import prism_root.Prism3Main;
 
 public class Solve_Iterations {
 	private File problem_file, solution_file, output_general_outputs_file, output_variables_file,
@@ -145,10 +145,10 @@ public class Solve_Iterations {
 				
 				// Database must be read first
 				file_database = new File(runFolder.getAbsolutePath() + "/database.db");
-				Read_Database read_database = PrismMain.get_databases_linkedlist().return_read_database_if_exist(file_database);
+				Read_Database read_database = Prism3Main.get_databases_linkedlist().return_read_database_if_exist(file_database);
 				if (read_database == null) {
 					read_database = new Read_Database(file_database);	// Read the database
-					PrismMain.get_databases_linkedlist().update(file_database, read_database);			
+					Prism3Main.get_databases_linkedlist().update(file_database, read_database);			
 				}
 				
 				// Database Info
@@ -2896,7 +2896,7 @@ public class Solve_Iterations {
 								}
 								
 								fileOut.newLine();
-								fileOut.write(iter + "\t" + "Prism version when problem solved" + "\t" + PrismMain.get_prism_version());
+								fileOut.write(iter + "\t" + "Prism version when problem solved" + "\t" + Prism3Main.get_prism_version());
 								
 								fileOut.newLine();
 								fileOut.write(iter + "\t" + "Date & time problem solved" + "\t" + dateFormat.format(new Date()));
@@ -3469,7 +3469,7 @@ public class Solve_Iterations {
 								}
 								
 								fileOut.newLine();
-								fileOut.write(iter + "\t" + "Prism version when problem solved" + "\t" + PrismMain.get_prism_version());
+								fileOut.write(iter + "\t" + "Prism version when problem solved" + "\t" + Prism3Main.get_prism_version());
 								
 								fileOut.newLine();
 								fileOut.write(iter + "\t" + "Date & time problem solved" + "\t" + dateFormat.format(new Date()));

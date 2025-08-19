@@ -30,7 +30,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import prism_root.PrismMain;
+import prism_root.Prism3Main;
 
 public class PrismIconPanel extends JPanel {
 
@@ -62,16 +62,16 @@ public class PrismIconPanel extends JPanel {
 					btnIconify.setText("ON");
 					scrollPane.setViewportView(nestedCOmponent);
 					// Get everything show up nicely
-					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());	//this can replace the below 2 lines
-					PrismMain.get_Prism_DesktopPane().getSelectedFrame().revalidate();
-					PrismMain.get_Prism_DesktopPane().getSelectedFrame().repaint();
+					Prism3Main.get_Prism_DesktopPane().getSelectedFrame().setSize(Prism3Main.get_Prism_DesktopPane().getSelectedFrame().getSize());	//this can replace the below 2 lines
+					Prism3Main.get_Prism_DesktopPane().getSelectedFrame().revalidate();
+					Prism3Main.get_Prism_DesktopPane().getSelectedFrame().repaint();
 				} else {
 					btnIconify.setText("OFF");
 					scrollPane.setViewportView(null);
 					// Get everything show up nicely
-					PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());	//this can replace the below 2 lines
-					PrismMain.get_Prism_DesktopPane().getSelectedFrame().revalidate();
-					PrismMain.get_Prism_DesktopPane().getSelectedFrame().repaint();
+					Prism3Main.get_Prism_DesktopPane().getSelectedFrame().setSize(Prism3Main.get_Prism_DesktopPane().getSelectedFrame().getSize());	//this can replace the below 2 lines
+					Prism3Main.get_Prism_DesktopPane().getSelectedFrame().revalidate();
+					Prism3Main.get_Prism_DesktopPane().getSelectedFrame().repaint();
 				}
 			}
 		});

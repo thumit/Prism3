@@ -82,21 +82,21 @@ public class PrismContentPane extends JPanel {
 								c = toolkit.createCustomCursor(scaleImage, new Point(getX(), getY()), "new_cursor");
 								
 								
-								ImageIcon icon = new ImageIcon(PrismMain.get_Prism_DesktopPane().getClass().getResource("/icon_target.png"));
+								ImageIcon icon = new ImageIcon(Prism3Main.get_Prism_DesktopPane().getClass().getResource("/icon_target.png"));
 								scaleImage = icon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);		// 32*32 is the smallest size for window cursor 
 								c = toolkit.createCustomCursor(scaleImage, new Point(16, 16), "new_cursor");	// center of the 32*32 image
-								PrismMain.get_main().getGlassPane().setCursor(c);
+								Prism3Main.get_main().getGlassPane().setCursor(c);
 							} catch (IOException e1) {
 								e1.printStackTrace();
 							}
 						}
 						
-						if (PrismMain.get_main().getGlassPane().getCursor() != c) {
-							PrismMain.get_main().getGlassPane().setCursor(c);
+						if (Prism3Main.get_main().getGlassPane().getCursor() != c) {
+							Prism3Main.get_main().getGlassPane().setCursor(c);
 						} else {
-							PrismMain.get_main().getGlassPane().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+							Prism3Main.get_main().getGlassPane().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 						}
-						PrismMain.get_main().getGlassPane().setVisible(PrismMain.get_main().getGlassPane().getCursor() == c);
+						Prism3Main.get_main().getGlassPane().setVisible(Prism3Main.get_main().getGlassPane().getCursor() == c);
 					}
 					
 					else 	// on other area --> control the painting of spectrum light
@@ -147,7 +147,7 @@ public class PrismContentPane extends JPanel {
 
 							// Add sliderPanel to a Popup Panel
 							String ExitOption[] = { "OK"};
-							int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), sliderPanel,
+							int response = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(), sliderPanel,
 									"Spectrum light speed", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
 									IconHandle.get_scaledImageIcon(40, 40, "icon_main.png"), ExitOption, ExitOption[0]);
 							if (response == 0) {
@@ -157,7 +157,7 @@ public class PrismContentPane extends JPanel {
 					});
 					popup.add(speedMenuItem);	
 					// Show the JmenuItems on selected node when it is right clicked
-					popup.show(PrismMain.get_prism_ContentPane(), e.getX(), e.getY());
+					popup.show(Prism3Main.get_prism_ContentPane(), e.getX(), e.getY());
 				}
 			}
 		});
@@ -220,7 +220,7 @@ public class PrismContentPane extends JPanel {
 	
 	
 	private class Rotator {
-		private Color last_use_main_background = PrismMain.get_main().getBackground();
+		private Color last_use_main_background = Prism3Main.get_main().getBackground();
 		private ScheduledExecutorService executor;
 		private Runnable task;
 		private double angle;
@@ -253,19 +253,19 @@ public class PrismContentPane extends JPanel {
 		}
 
 	    public void stop() {
-	    	PrismMain.get_main().setBackground(last_use_main_background);
-	    	PrismMain.get_prism_Menubar().set_bright_background_color();
+	    	Prism3Main.get_main().setBackground(last_use_main_background);
+	    	Prism3Main.get_prism_Menubar().set_bright_background_color();
 	    	
 	    	executor.shutdown(); // shutdown will allow the final iteration to finish executing where shutdownNow() will kill it immediately
 	    }
 	    
 	    public void start() {
-	    	if (PrismMain.get_Prism_DesktopPane().getAllFrames().length == 0) { // show spectrum light only when all internal frames are closed
+	    	if (Prism3Main.get_Prism_DesktopPane().getAllFrames().length == 0) { // show spectrum light only when all internal frames are closed
 	    		float min = 0.0f;
 		    	float max = 0.5f;
 		    	float random = min + new Random().nextFloat() * (max - min);
-		    	PrismMain.get_main().setBackground(new Color(0, 0, 0, random));
-		    	PrismMain.get_prism_Menubar().set_dark_background_color();
+		    	Prism3Main.get_main().setBackground(new Color(0, 0, 0, random));
+		    	Prism3Main.get_prism_Menubar().set_dark_background_color();
 		    	 
 		    	if (executor != null) executor.shutdown(); // shutdown will allow the final iteration to finish executing where shutdownNow() will kill it immediately
 		    	int initialDelay = 0;

@@ -53,7 +53,7 @@ import javax.swing.event.DocumentListener;
 import prism_convenience.ColorUtil;
 import prism_convenience.IconHandle;
 import prism_project.data_process.Read_Database;
-import prism_root.PrismMain;
+import prism_root.Prism3Main;
 
 public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 	private String scrollpane_name = "Dynamic Identifiers  -  use yield attributes to filter variables";
@@ -140,7 +140,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 							//Do a resize to same size for JInteral Frame of the project to help repaint	
 							revalidate();
 							repaint();
-							PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());	
+							Prism3Main.get_Prism_DesktopPane().getSelectedFrame().setSize(Prism3Main.get_Prism_DesktopPane().getSelectedFrame().getSize());	
 						} 
 					}
 				}
@@ -505,10 +505,10 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 											        	// Apply change to the GUI
 														defineScrollPane.setViewportView(rangePanel);
 										        	} else {
-										        		JOptionPane.showMessageDialog(PrismMain.get_Prism_DesktopPane(), "'Min value' must be less than or equal to 'Max value'");														        																							
+										        		JOptionPane.showMessageDialog(Prism3Main.get_Prism_DesktopPane(), "'Min value' must be less than or equal to 'Max value'");														        																							
 										        	}
 												} catch (NumberFormatException ex) {
-													JOptionPane.showMessageDialog(PrismMain.get_Prism_DesktopPane(),
+													JOptionPane.showMessageDialog(Prism3Main.get_Prism_DesktopPane(),
 															"'Min value' and 'Max value' must be numbers");
 												}
 											}
@@ -567,7 +567,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 							popupPanel.add(defineScrollPane, c_popup);
 							//---------------------------------------------------------------------------------------------------
 							
-							int response = JOptionPane.showConfirmDialog(PrismMain.get_Prism_DesktopPane(), popupPanel,
+							int response = JOptionPane.showConfirmDialog(Prism3Main.get_Prism_DesktopPane(), popupPanel,
 									"Add   '" + currentCheckBoxName + "'   to the set of dynamic identifiers ?", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null);
 							if (response == JOptionPane.NO_OPTION) {
 								allDynamicIdentifiers.get(currentCheckBoxIndex).setSelected(false);
@@ -615,7 +615,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 						//Do a resize to same size for JInteral Frame of the project to help repaint the identifier ScrollPane added or removed	
 						revalidate();
 						repaint();
-						PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
+						Prism3Main.get_Prism_DesktopPane().getSelectedFrame().setSize(Prism3Main.get_Prism_DesktopPane().getSelectedFrame().getSize());
 					}
 				});
 			}
@@ -623,7 +623,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 			//Do a resize to same size for JInteral Frame of the project to help repaint the checkboxes added		
 			revalidate();
 			repaint();
-			PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());	
+			Prism3Main.get_Prism_DesktopPane().getSelectedFrame().setSize(Prism3Main.get_Prism_DesktopPane().getSelectedFrame().getSize());	
 		}
 		
 
@@ -647,7 +647,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 				// Do a resize to same size for JInteral Frame of the project to help repaint	
 				revalidate();
 				repaint();
-				PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());
+				Prism3Main.get_Prism_DesktopPane().getSelectedFrame().setSize(Prism3Main.get_Prism_DesktopPane().getSelectedFrame().getSize());
 			}
 		});	
 		
@@ -897,7 +897,7 @@ public class ScrollPane_DynamicIdentifiers extends JScrollPane {
 			// Do a resize to same size for JInteral Frame of the project to help repaint	
 			revalidate();
 			repaint();
-			PrismMain.get_Prism_DesktopPane().getSelectedFrame().setSize(PrismMain.get_Prism_DesktopPane().getSelectedFrame().getSize());	
+			Prism3Main.get_Prism_DesktopPane().getSelectedFrame().setSize(Prism3Main.get_Prism_DesktopPane().getSelectedFrame().getSize());	
 		}	
 	}
 	

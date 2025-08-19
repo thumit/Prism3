@@ -84,7 +84,7 @@ import prism_convenience.PrismGridBagLayoutHandle;
 import prism_convenience.PrismTableModel;
 import prism_convenience.TableColumnsHandle;
 import prism_project.data_process.Read_Input;
-import prism_root.PrismMain;
+import prism_root.Prism3Main;
 
 // Panel_Flow_Constraints--------------------------------------------------------------------------------	
 public class Output_Panel_Flow_Constraints extends JLayeredPane {
@@ -230,7 +230,7 @@ public class Output_Panel_Flow_Constraints extends JLayeredPane {
 			zoom_scrollpane.setViewportView(scroll_bar_chart.getViewport().getView());
 			
 			String ExitOption[] = { "OK" };
-			int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), zoom_scrollpane,
+			int response = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(), zoom_scrollpane,
 					"Prism Chart", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, ExitOption, ExitOption[0]);
 			
 //			PrismMain.get_main().setVisible(true);

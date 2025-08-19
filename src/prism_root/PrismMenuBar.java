@@ -59,7 +59,7 @@ public class PrismMenuBar extends JMenuBar implements MouseListener, MouseMotion
 	
 	public void addFrameFeatures() {	
 		add(Box.createGlue());		// shift components to the right by using glue
-		JLabel title = new JLabel(PrismMain.get_prism_version());
+		JLabel title = new JLabel(Prism3Main.get_prism_version());
 		add(title);
 		add(Box.createGlue());
 		
@@ -68,7 +68,7 @@ public class PrismMenuBar extends JMenuBar implements MouseListener, MouseMotion
 		// this button will be shifted right on the menubar
 		Action actionMinimize = new AbstractAction() {
 			public void actionPerformed(ActionEvent evt) {
-				PrismMain.get_main().minimize();
+				Prism3Main.get_main().minimize();
 			}
 		};
 		buttonMinimize = new JButton(actionMinimize);
@@ -95,7 +95,7 @@ public class PrismMenuBar extends JMenuBar implements MouseListener, MouseMotion
 		// this button will be shifted right on the menubar
 		Action actionMaximize = new AbstractAction() {
 			public void actionPerformed(ActionEvent evt) {
-				PrismMain.get_main().restore();
+				Prism3Main.get_main().restore();
 				if (buttonMaximize.getToolTipText().equals("Maximize")) {
 					buttonMaximize.setToolTipText("Restore");
 				} else {
@@ -127,7 +127,7 @@ public class PrismMenuBar extends JMenuBar implements MouseListener, MouseMotion
 		// this button will be shifted right on the menubar
 		Action actionExit = new AbstractAction() {
 			public void actionPerformed(ActionEvent evt) {
-				PrismMain.get_main().exitPRISM();
+				Prism3Main.get_main().exitPRISM();
 			}
 		};
 		buttonExit = new JButton(actionExit);
@@ -172,8 +172,8 @@ public class PrismMenuBar extends JMenuBar implements MouseListener, MouseMotion
 		}
 		
 		// For all menus and menu items
-		for (int i = 0; i < PrismMain.get_prism_Menubar().getMenuCount(); i++) {
-			JMenu menu = PrismMain.get_prism_Menubar().getMenu(i);
+		for (int i = 0; i < Prism3Main.get_prism_Menubar().getMenuCount(); i++) {
+			JMenu menu = Prism3Main.get_prism_Menubar().getMenu(i);
 			if (menu != null) {
 				menu.setBackground(back_color);
 				menu.setForeground(fore_color);
@@ -219,8 +219,8 @@ public class PrismMenuBar extends JMenuBar implements MouseListener, MouseMotion
 		}
 		
 		// For all menus and menu items
-		for (int i = 0; i < PrismMain.get_prism_Menubar().getMenuCount(); i++) {
-			JMenu menu = PrismMain.get_prism_Menubar().getMenu(i);
+		for (int i = 0; i < Prism3Main.get_prism_Menubar().getMenuCount(); i++) {
+			JMenu menu = Prism3Main.get_prism_Menubar().getMenu(i);
 			if (menu != null) {
 				menu.setBackground(back_color);
 				menu.setForeground(fore_color);
@@ -282,7 +282,7 @@ public class PrismMenuBar extends JMenuBar implements MouseListener, MouseMotion
 	public void mouseClicked(MouseEvent e) {
 		if (SwingUtilities.isLeftMouseButton(e)) {
 			if (e.getClickCount() == 2) {
-				PrismMain.get_main().restore();
+				Prism3Main.get_main().restore();
 				if (buttonMaximize.getToolTipText().equals("Maximize")) {
 					buttonMaximize.setToolTipText("Restore");
 				} else {
@@ -319,15 +319,15 @@ public class PrismMenuBar extends JMenuBar implements MouseListener, MouseMotion
 	//For mouse motion listener
 	@Override
 	public void mouseDragged(MouseEvent event) {
-		if (PrismMain.get_main().getExtendedState() != JFrame.NORMAL) {
-			PrismMain.get_main().setExtendedState(JFrame.NORMAL);		//Set normal Jframe size when start dragging
+		if (Prism3Main.get_main().getExtendedState() != JFrame.NORMAL) {
+			Prism3Main.get_main().setExtendedState(JFrame.NORMAL);		//Set normal Jframe size when start dragging
 			//make the JFrame have the top center move to the cursor location)
-			if (pX > PrismMain.get_main().getWidth()/2) {
-				pX =  PrismMain.get_main().getWidth()/2;
+			if (pX > Prism3Main.get_main().getWidth()/2) {
+				pX =  Prism3Main.get_main().getWidth()/2;
 			} 	
 		} else {		
-		PrismMain.get_main().setLocation(PrismMain.get_main().getLocation().x + event.getX() - pX, 
-				PrismMain.get_main().getLocation().y + event.getY() - pY);		//when dragged, move the frame
+		Prism3Main.get_main().setLocation(Prism3Main.get_main().getLocation().x + event.getX() - pX, 
+				Prism3Main.get_main().getLocation().y + event.getY() - pY);		//when dragged, move the frame
 		}
 	}
 

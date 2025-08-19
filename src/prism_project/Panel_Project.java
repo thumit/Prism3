@@ -89,7 +89,7 @@ import prism_project.output.Output_Panel_Management_Details_SQL;
 import prism_project.output.Output_Panel_Management_Overview;
 import prism_project.solve.Panel_Solve;
 import prism_root.OptionPane_Startup;
-import prism_root.PrismMain;
+import prism_root.Prism3Main;
 @SuppressWarnings("serial")
 public class Panel_Project extends JLayeredPane {
 	private JSplitPane splitPanel;
@@ -561,12 +561,12 @@ public class Panel_Project extends JLayeredPane {
 									scrollPane_Right.setViewportView(management_details_SQL_panel);
 									
 									File file_database = new File(currentProjectFolder.getAbsolutePath() + "/" + currentRun + "/database.db");
-									Read_Database read_database = PrismMain.get_databases_linkedlist().return_read_database_if_exist(file_database);
+									Read_Database read_database = Prism3Main.get_databases_linkedlist().return_read_database_if_exist(file_database);
 									if (read_database == null) {
 										read_database = new Read_Database(file_database);	// Read the database
-										PrismMain.get_databases_linkedlist().update(file_database, read_database);			
-										System.out.println(PrismMain.get_databases_linkedlist().size());
-										for (LinkedList_Databases_Item rr: PrismMain.get_databases_linkedlist()) {
+										Prism3Main.get_databases_linkedlist().update(file_database, read_database);			
+										System.out.println(Prism3Main.get_databases_linkedlist().size());
+										for (LinkedList_Databases_Item rr: Prism3Main.get_databases_linkedlist()) {
 											System.out.println(rr.file_database.getAbsolutePath() + rr.last_modify);
 										}
 									}
@@ -756,8 +756,8 @@ public class Panel_Project extends JLayeredPane {
 								Thread thread = new Thread() {			// Make a thread so JFrame will not be frozen
 									public void run() {
 										edit_Runs();
-										PrismMain.get_Prism_DesktopPane().getSelectedFrame().revalidate();
-										PrismMain.get_Prism_DesktopPane().getSelectedFrame().repaint();
+										Prism3Main.get_Prism_DesktopPane().getSelectedFrame().revalidate();
+										Prism3Main.get_Prism_DesktopPane().getSelectedFrame().repaint();
 										this.interrupt();
 									}
 								};
@@ -945,7 +945,7 @@ public class Panel_Project extends JLayeredPane {
 			    if (contents != null) {
 					for (File f : contents) {								
 						if (f.getName().endsWith(".db")) {
-							PrismMain.get_databases_linkedlist().remove(f);		// If this is the database then remove it from RAM because the old run is going to be renamed
+							Prism3Main.get_databases_linkedlist().remove(f);		// If this is the database then remove it from RAM because the old run is going to be renamed
 						}
 					}
 				}
@@ -1062,7 +1062,7 @@ public class Panel_Project extends JLayeredPane {
 		if (selectionPaths != null) {		//at least 1 run has to be selected 
 			//Ask to delete 
 			String ExitOption[] = {"Delete", "Cancel"};
-			int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), "Selected Runs will be deleted?", "Confirm Delete",
+			int response = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(), "Selected Runs will be deleted?", "Confirm Delete",
 					JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
 			if (response == 0) {
 				DefaultTreeModel model = (DefaultTreeModel) projectTree.getModel();
@@ -1078,7 +1078,7 @@ public class Panel_Project extends JLayeredPane {
 					    if (contents != null) {
 							for (File f : contents) {								
 								if (f.getName().endsWith(".db")) {
-										PrismMain.get_databases_linkedlist().remove(f);		// If this is the database then remove it from RAM before delete
+										Prism3Main.get_databases_linkedlist().remove(f);		// If this is the database then remove it from RAM before delete
 								}
 								f.delete();
 					        }
@@ -1147,7 +1147,7 @@ public class Panel_Project extends JLayeredPane {
 		// For Stop Editing
 		else if (btnEditRun.getToolTipText() == "Stop Editing") {
 			String[] ExitOption = { "Stop & save", "Stop & don't save", "Cancel"};
-			int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(),"Outputs from all runs listed on the left screen will be deleted when click 'Stop & save'\n Your option?", "Stop Editing",
+			int response = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(),"Outputs from all runs listed on the left screen will be deleted when click 'Stop & save'\n Your option?", "Stop Editing",
 					JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
 			
 			if (response == 0 || response == 1) { // Yes or No			
@@ -1253,7 +1253,7 @@ public class Panel_Project extends JLayeredPane {
 					if (solvePanel != null) {
 						this.add(solvePanel);
 					} else {
-						File jar_file = new File(PrismMain.get_main().getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
+						File jar_file = new File(Prism3Main.get_main().getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
 						String directory ="";
 						try {
 							directory = URLDecoder.decode(jar_file.getParentFile().getAbsolutePath(), "utf-8");
@@ -1268,7 +1268,7 @@ public class Panel_Project extends JLayeredPane {
 								+ "2. Use the correct version (32bit or 64bit) of the .jar and .dll files for all the above 3 steps \n"
 								+ "3. If your CPLEX version is higher than 12.61, just rename the .dll file to 'cplex1261.dll' before doing step 3 \n";
 						String[] ExitOption = { "OK"};
-						int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), msg, "Solver Requirement",
+						int response = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(), msg, "Solver Requirement",
 								JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_Warning.png"), ExitOption, ExitOption[0]);
 					}
 				}
@@ -1317,7 +1317,7 @@ public class Panel_Project extends JLayeredPane {
 		// The below is used to rename all input files in version 1.2.01 to the new names as required by version 1.2.02
 		
 		String ask_ExitOption[] = { "Update", "Cancel"};
-		int ask_response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), "Update will be instant.\nYou are recommended to make copies of the runs before updating, just in case", "Runs update",
+		int ask_response = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(), "Update will be instant.\nYou are recommended to make copies of the runs before updating, just in case", "Runs update",
 				JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(32, 32, "icon_light_on_yellow.png"), ask_ExitOption, ask_ExitOption[0]);
 		if (ask_response == 0) {
 			//Some set up ---------------------------------------------------------------	
@@ -1456,7 +1456,7 @@ public class Panel_Project extends JLayeredPane {
 				if (file_changed_count > 0) warningText = file_changed_count + " files have been modified.\n";
 				warningText = warningText + "\nHighlighted runs are updated to the lastest version 3.0.02.\n"; 
 				String ExitOption[] = { "OK"};
-				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warningText, "Runs update",
+				int response = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(), warningText, "Runs update",
 						JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(32, 32, "icon_light_on_yellow.png"), ExitOption, ExitOption[0]);
 			}
 		}

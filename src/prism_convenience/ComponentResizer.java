@@ -24,7 +24,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import prism_root.MenuItem_SetLookAndFeel;
-import prism_root.PrismMain;
+import prism_root.Prism3Main;
 
 /**
  *  The ComponentResizer allows you to resize a component by dragging a border

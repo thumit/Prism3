@@ -87,7 +87,7 @@ import javax.swing.table.TableRowSorter;
 import prism_convenience.IconHandle;
 import prism_convenience.PrismTableModel;
 import prism_convenience.ToolBarWithBgImage;
-import prism_root.PrismMain;
+import prism_root.Prism3Main;
 
 public class Setting {
 	private Panel_Query_Libraries query_panel;
@@ -111,11 +111,11 @@ public class Setting {
 			}
 		});
 		popup_scroll.setBorder(null);
-		popup_scroll.setPreferredSize(new Dimension((int) (PrismMain.get_main().getWidth() * 0.8), (int) (PrismMain.get_main().getHeight() * 0.8)));
+		popup_scroll.setPreferredSize(new Dimension((int) (Prism3Main.get_main().getWidth() * 0.8), (int) (Prism3Main.get_main().getHeight() * 0.8)));
 		popup_scroll.setViewportView(query_panel);
 
 		String ExitOption[] = { "Exit" };
-		int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), popup_scroll, "Customize Queries - Note that Prism always restores 'System Library' to default",
+		int response = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(), popup_scroll, "Customize Queries - Note that Prism always restores 'System Library' to default",
 				JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, ExitOption, ExitOption[0]);
 		if (response == 0) {
 		}
@@ -206,7 +206,7 @@ public class Setting {
 			JSplitPane split_pane = new JSplitPane();
 			split_pane.setOrientation(JSplitPane.VERTICAL_SPLIT);
 			split_pane.setDividerSize(3);
-			split_pane.setDividerLocation((int) (PrismMain.get_main().getHeight() * 0.4));
+			split_pane.setDividerLocation((int) (Prism3Main.get_main().getHeight() * 0.4));
 			split_pane.setResizeWeight(0.2);
 						
 			JPanel upper_panel = new JPanel();
@@ -749,7 +749,7 @@ public class Setting {
 			// Delete
 			btn_Delete.addActionListener(e -> {
 				String ExitOption[] = {"Delete", "Cancel"};
-				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), "Delete now?", "Confirm Delete",
+				int response = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(), "Delete now?", "Confirm Delete",
 						JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_question.png"), ExitOption, ExitOption[0]);
 				if (response == 0) {
 					if (table.isEditing()) {

@@ -39,7 +39,7 @@ import prism_convenience.IconHandle;
 
 public class MenuItem_SetTransparency extends JMenuItem {
 
-	public MenuItem_SetTransparency(PrismMain main) {
+	public MenuItem_SetTransparency(Prism3Main main) {
 		setText("Change Transparency");
 		setIcon(IconHandle.get_scaledImageIcon(15, 15, "icon_glassy.png"));
 
@@ -79,7 +79,7 @@ public class MenuItem_SetTransparency extends JMenuItem {
 				
 				// Add sliderPanel to a Popup Panel
 				String ExitOption[] = { "Ok" };
-				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), sliderPanel,
+				int response = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(), sliderPanel,
 						"Transparency", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
 						IconHandle.get_scaledImageIcon(40, 40, "icon_glassy.png"), ExitOption, ExitOption[0]);
 				if (response == 0) {

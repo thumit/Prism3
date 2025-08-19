@@ -53,7 +53,7 @@ import prism_convenience.PrismGridBagLayoutHandle;
 import prism_convenience.PrismTableModel;
 import prism_project.output.Chart;
 import prism_project.output.Chart_Rotator;
-import prism_root.PrismMain;
+import prism_root.Prism3Main;
 
 public class Panel_SR_Probability extends JLayeredPane {
 	
@@ -93,7 +93,7 @@ public class Panel_SR_Probability extends JLayeredPane {
 			@Override
     		public void setValueAt(Object value, int row, int col) {
     			if (col == 1 && (((Number) value).doubleValue() < 0 || ((Number) value).doubleValue() > 100)) {		// not allow null to be set
-    				JOptionPane.showMessageDialog(PrismMain.get_Prism_DesktopPane(), "Your input has not been accepted. Only double values in the range 0-100 (%) would be allowed.");
+    				JOptionPane.showMessageDialog(Prism3Main.get_Prism_DesktopPane(), "Your input has not been accepted. Only double values in the range 0-100 (%) would be allowed.");
     			} else {
     				data[row][col] = value;
     			}

@@ -61,7 +61,7 @@ import prism_convenience.PrismTitleScrollPane;
 public class OptionPane_Startup extends JOptionPane {
 
 	public static void Set_Memory() {
-		File jar_file = new File(PrismMain.get_main().getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
+		File jar_file = new File(Prism3Main.get_main().getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
 		File restart = new File(FilesHandle.get_temporaryFolder() + "/Restart");	// This folder works as a check. We need the first time restart to activate G1 when we running the jar out of eclipse IDE
 		
 					
@@ -102,9 +102,9 @@ public class OptionPane_Startup extends JOptionPane {
 			}
 		} else {			
 			if (previous_project_name.equals("")) {						
-				PrismMain.get_main().setVisible(false);
+				Prism3Main.get_main().setVisible(false);
 				String ExitOption[] = {"Start","Exit"};
-				int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), new ScrollPane_Popup(jar_file, memory_file), "Welcome",
+				int response = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(), new ScrollPane_Popup(jar_file, memory_file), "Welcome",
 						JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, ExitOption, ExitOption[0]);
 				if (response == 0) {
 					restart.delete();
@@ -112,13 +112,13 @@ public class OptionPane_Startup extends JOptionPane {
 					restart.delete();
 					System.exit(0);
 				}
-				PrismMain.get_main().setVisible(true);
+				Prism3Main.get_main().setVisible(true);
 			} else if (previous_project_name.equals("after change font")) {
 				restart.delete();
 				Memory_File.create_memory_file(memory_file, previous_max_memory, "");
 			} else {	// When people press the collect memory button in the Panel_Project --> don't need to show the interface to change max memory, open the project instead
 				restart.delete();
-				PrismMain.get_main().create_project_internal_frame(previous_project_name);
+				Prism3Main.get_main().create_project_internal_frame(previous_project_name);
 				Memory_File.create_memory_file(memory_file, previous_max_memory, "");
 			}
 		}	
@@ -127,7 +127,7 @@ public class OptionPane_Startup extends JOptionPane {
 	
 	
 	public static void Restart_Project(String currentProject) {
-		File jar_file = new File(PrismMain.get_main().getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
+		File jar_file = new File(Prism3Main.get_main().getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
 		
 		if (jar_file.getName().endsWith(".jar")) {	// If not running in Eclipse --> "Collect Memory" button works
 			File memory_file = new File(FilesHandle.get_temporaryFolder() + "/prism_memory.txt");	// Store the last time MAx Memory is saved by users: just an integer number			
@@ -221,7 +221,7 @@ class ScrollPane_Popup extends JScrollPane {
 		
 		
 		JLabel label1 = new JLabel(IconHandle.get_scaledImageIcon(230, 70, "prism_ice.png"));
-		JLabel label2 = new JLabel(PrismMain.get_prism_version().toLowerCase().replace("prism", ""));
+		JLabel label2 = new JLabel(Prism3Main.get_prism_version().toLowerCase().replace("prism", ""));
 		JLabel label3 = new JLabel("Change maximum memory (GigaBytes) PRISM is allowed to use");
 		int total_memory = Integer.valueOf(formatSize(totalSize).substring(0, formatSize(totalSize).lastIndexOf('.')));
 		int max_combo_value = total_memory - (int) (total_memory * 0.1);

@@ -40,7 +40,7 @@ import javax.swing.JOptionPane;
 import prism_convenience.FilesHandle;
 import prism_convenience.IconHandle;
 import prism_convenience.StringHandle;
-import prism_root.PrismMain;
+import prism_root.Prism3Main;
 
 public class Read_Database {
 	private Connection conn = null;
@@ -332,7 +332,7 @@ public class Read_Database {
 			String warningText = "yield_tables does not meet Prism's data requirements\n";
 			warningText = warningText + e.getClass().getName() + ": " + e.getMessage();
 			String ExitOption[] = {"OK"};
-			int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warningText, "Database error",
+			int response = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(), warningText, "Database error",
 					JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption, ExitOption[0]);
 		} finally {
 			// Close in case not closing properly, not need to print out because the exception only happens when there is null to close
@@ -377,7 +377,7 @@ public class Read_Database {
 			String warningText = "existing_strata does not meet Prism's data requirements\n";
 			warningText = warningText + e.getClass().getName() + ": " + e.getMessage();
 			String ExitOption[] = {"OK"};
-			int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warningText, "Database error",
+			int response = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(), warningText, "Database error",
 					JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption, ExitOption[0]);
 		} finally {
 			// Close in case not closing properly, not need to print out because the exception only happens when there is null to close
@@ -475,7 +475,7 @@ public class Read_Database {
 			String warningText = "strata_definition does not meet Prism's data requirements\n";
 			warningText = warningText + e.getClass().getName() + ": " + e.getMessage();
 			String ExitOption[] = {"OK"};
-			int response = JOptionPane.showOptionDialog(PrismMain.get_Prism_DesktopPane(), warningText, "Database error",
+			int response = JOptionPane.showOptionDialog(Prism3Main.get_Prism_DesktopPane(), warningText, "Database error",
 					JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, IconHandle.get_scaledImageIcon(50, 50, "icon_warning.png"), ExitOption, ExitOption[0]);
 		} finally {
 			// Close in case not closing properly, not need to print out because the exception only happens when there is null to close
