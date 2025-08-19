@@ -680,7 +680,7 @@ public class Panel_Edit_Details extends JLayeredPane implements ActionListener {
 			data1[1][1] = "10";
 			data1[2][1] = "0";
 			data1[3][1] = "CPLEX";
-			data1[4][1] = "100";
+			data1[4][1] = "6000";
 			data1[5][1] = "false";
 			data1[6][1] = "false";
 		}
